@@ -25,6 +25,7 @@ package dev.galacticraft.impl.internal.mixin.gear;
 import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.impl.internal.inventory.MappedInventory;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.world.inventory.GearInventory;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -53,7 +54,7 @@ public abstract class ServerPlayerMixin implements GearInventoryProvider {
 
     @Unique
     private SimpleContainer galacticraft_createGearInventory() {
-        SimpleContainer inv = new SimpleContainer(12);
+        SimpleContainer inv = new GearInventory();
         inv.addListener((inventory) -> {
             FriendlyByteBuf buf = PacketByteBufs.create();
             buf.writeInt(((ServerPlayer) (Object) this).getId());

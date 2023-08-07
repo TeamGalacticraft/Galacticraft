@@ -22,9 +22,14 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -195,9 +200,21 @@ public class GCCreativeModeTabs {
                 output.accept(OXYGEN_MASK);
                 output.accept(OXYGEN_GEAR);
 
-                output.accept(SMALL_OXYGEN_TANK);
-                output.accept(MEDIUM_OXYGEN_TANK);
-                output.accept(LARGE_OXYGEN_TANK);
+                try (Transaction t = Transaction.openOuter()) {
+                    output.accept(SMALL_OXYGEN_TANK);
+                    ContainerItemContext smallContext = ContainerItemContext.withInitial(SMALL_OXYGEN_TANK.getDefaultInstance());
+                    var storage = smallContext.find(FluidStorage.ITEM);
+                    storage.insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
+                    output.accept(smallContext.getItemVariant().toStack());
+                    output.accept(MEDIUM_OXYGEN_TANK);
+                    ContainerItemContext mediumContext = ContainerItemContext.withInitial(MEDIUM_OXYGEN_TANK.getDefaultInstance());
+                    mediumContext.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
+                    output.accept(mediumContext.getItemVariant().toStack());
+                    output.accept(LARGE_OXYGEN_TANK);
+                    ContainerItemContext largeContext = ContainerItemContext.withInitial(LARGE_OXYGEN_TANK.getDefaultInstance());
+                    largeContext.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
+                    output.accept(largeContext.getItemVariant().toStack());
+                }
                 output.accept(INFINITE_OXYGEN_TANK);
 
                 output.accept(SHIELD_CONTROLLER);

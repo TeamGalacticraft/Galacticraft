@@ -594,6 +594,10 @@ public interface Constant {
         String OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_decompressor_energy_consumption_rate";
 
         String CLIENT = "config.galacticraft.client";
+
+        String PLAYER = "config.galacticraft.player";
+        String PLAYER_LIFE_SUPPORT = "config.galacticraft.lifesupport";
+        String PLAYER_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.player.lifesupport.oxygen_consumption_rate";
         String SKYBOX = "config.galacticraft.client.skybox";
         String MULTICOLOR_STARS = "config.galacticraft.client.skybox.multicolor_stars";
     }
@@ -764,8 +768,12 @@ public interface Constant {
             Style WHITE_STYLE = Style.EMPTY.withColor(ChatFormatting.WHITE);
             Style DARK_BLUE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_BLUE);
 
-            static Style getStorageLevelColor(double scale) {
-                return Style.EMPTY.withColor(TextColor.fromRgb(((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8)));
+            static int getStorageLevelColor(double scale) {
+                return ((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8);
+            }
+
+            static Style getStorageLevelStyle(double scale) {
+                return Style.EMPTY.withColor(TextColor.fromRgb(getStorageLevelColor(scale)));
             }
 
             static Style getRainbow(int ticks) {

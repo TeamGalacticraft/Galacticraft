@@ -25,6 +25,7 @@ package dev.galacticraft.mod.config;
 import com.google.gson.annotations.Expose;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.config.Config;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -60,6 +61,8 @@ public class ConfigImpl implements Config {
     private long oxygenCompressorEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     @Expose
     private long oxygenDecompressorEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
+    @Expose
+    private long playerOxygenConsumptionRate = FluidConstants.DROPLET;
     @Expose
     private boolean hide_alpha_warning = false;
     @Expose
@@ -228,5 +231,15 @@ public class ConfigImpl implements Config {
     @Override
     public void setOxygenDecompressorEnergyConsumptionRate(long amount) {
         this.oxygenDecompressorEnergyConsumptionRate = amount;
+    }
+
+    @Override
+    public long playerOxygenConsuptionRate() {
+        return this.playerOxygenConsumptionRate;
+    }
+
+    @Override
+    public void setPlayerOxygenConsumptionRate(long amount) {
+        this.playerOxygenConsumptionRate = amount;
     }
 }
