@@ -594,6 +594,10 @@ public interface Constant {
         String OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_decompressor_energy_consumption_rate";
 
         String CLIENT = "config.galacticraft.client";
+
+        String PLAYER = "config.galacticraft.player";
+        String PLAYER_LIFE_SUPPORT = "config.galacticraft.lifesupport";
+        String PLAYER_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.player.lifesupport.oxygen_consumption_rate";
         String SKYBOX = "config.galacticraft.client.skybox";
         String MULTICOLOR_STARS = "config.galacticraft.client.skybox.multicolor_stars";
     }
