@@ -59,6 +59,23 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.HEAVY_DUTY_SWORD)
                 .add(GCItems.DESH_SWORD)
                 .add(GCItems.TITANIUM_SWORD);
+        this.getOrCreateTagBuilder(ItemTags.CLUSTER_MAX_HARVESTABLES)
+                .add(GCItems.HEAVY_DUTY_PICKAXE)
+                .add(GCItems.DESH_PICKAXE)
+                .add(GCItems.TITANIUM_PICKAXE);
+        this.getOrCreateTagBuilder(ItemTags.TRIMMABLE_ARMOR)
+                .add(GCItems.HEAVY_DUTY_HELMET)
+                .add(GCItems.HEAVY_DUTY_CHESTPLATE)
+                .add(GCItems.HEAVY_DUTY_LEGGINGS)
+                .add(GCItems.HEAVY_DUTY_BOOTS)
+                .add(GCItems.DESH_HELMET)
+                .add(GCItems.DESH_CHESTPLATE)
+                .add(GCItems.DESH_LEGGINGS)
+                .add(GCItems.DESH_BOOTS)
+                .add(GCItems.TITANIUM_HELMET)
+                .add(GCItems.TITANIUM_CHESTPLATE)
+                .add(GCItems.TITANIUM_LEGGINGS)
+                .add(GCItems.TITANIUM_BOOTS);
 
         this.getOrCreateTagBuilder(GCTags.ALUMINUM_INGOTS)
                 .add(GCItems.ALUMINUM_INGOT);
