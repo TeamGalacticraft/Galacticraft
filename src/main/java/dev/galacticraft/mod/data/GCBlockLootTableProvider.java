@@ -27,8 +27,6 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.data.loot.BlockLootSubProvider;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -41,8 +39,6 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
-import java.util.function.BiConsumer;
-
 import static dev.galacticraft.mod.content.GCBlocks.*;
 
 public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
@@ -51,7 +47,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
     }
 
     public LootTable.Builder siliconOreDrops(Block ore) {
-        return createSilkTouchDispatchTable(ore, applyExplosionDecay(ore, LootItem.lootTableItem(GCItems.RAW_SILICON)
+        return createSilkTouchDispatchTable(ore, this.applyExplosionDecay(ore, LootItem.lootTableItem(GCItems.RAW_SILICON)
                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(4.0F, 6.0F)))
                 .apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))
         ));
@@ -59,198 +55,198 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
     @Override
     public void generate() {
-        dropOther(GLOWSTONE_TORCH, GCItems.GLOWSTONE_TORCH);
-        dropOther(GLOWSTONE_WALL_TORCH, GCItems.GLOWSTONE_TORCH);
-        dropOther(UNLIT_TORCH, GCItems.UNLIT_TORCH);
-        dropOther(UNLIT_WALL_TORCH, GCItems.UNLIT_TORCH);
+        this.dropOther(GLOWSTONE_TORCH, GCItems.GLOWSTONE_TORCH);
+        this.dropOther(GLOWSTONE_WALL_TORCH, GCItems.GLOWSTONE_TORCH);
+        this.dropOther(UNLIT_TORCH, GCItems.UNLIT_TORCH);
+        this.dropOther(UNLIT_WALL_TORCH, GCItems.UNLIT_TORCH);
 
-        dropSelf(GLOWSTONE_LANTERN);
-        dropSelf(UNLIT_LANTERN);
+        this.dropSelf(GLOWSTONE_LANTERN);
+        this.dropSelf(UNLIT_LANTERN);
 
-        dropSelf(ALUMINUM_DECORATION);
-        dropSelf(ALUMINUM_DECORATION_SLAB);
-        dropSelf(ALUMINUM_DECORATION_STAIRS);
-        dropSelf(ALUMINUM_DECORATION_WALL);
-        dropSelf(DETAILED_ALUMINUM_DECORATION);
-        dropSelf(DETAILED_ALUMINUM_DECORATION_SLAB);
-        dropSelf(DETAILED_ALUMINUM_DECORATION_STAIRS);
-        dropSelf(DETAILED_ALUMINUM_DECORATION_WALL);
+        this.dropSelf(ALUMINUM_DECORATION);
+        this.dropSelf(ALUMINUM_DECORATION_SLAB);
+        this.dropSelf(ALUMINUM_DECORATION_STAIRS);
+        this.dropSelf(ALUMINUM_DECORATION_WALL);
+        this.dropSelf(DETAILED_ALUMINUM_DECORATION);
+        this.dropSelf(DETAILED_ALUMINUM_DECORATION_SLAB);
+        this.dropSelf(DETAILED_ALUMINUM_DECORATION_STAIRS);
+        this.dropSelf(DETAILED_ALUMINUM_DECORATION_WALL);
 
-        dropSelf(BRONZE_DECORATION);
-        dropSelf(BRONZE_DECORATION_SLAB);
-        dropSelf(BRONZE_DECORATION_STAIRS);
-        dropSelf(BRONZE_DECORATION_WALL);
-        dropSelf(DETAILED_BRONZE_DECORATION);
-        dropSelf(DETAILED_BRONZE_DECORATION_SLAB);
-        dropSelf(DETAILED_BRONZE_DECORATION_STAIRS);
-        dropSelf(DETAILED_BRONZE_DECORATION_WALL);
+        this.dropSelf(BRONZE_DECORATION);
+        this.dropSelf(BRONZE_DECORATION_SLAB);
+        this.dropSelf(BRONZE_DECORATION_STAIRS);
+        this.dropSelf(BRONZE_DECORATION_WALL);
+        this.dropSelf(DETAILED_BRONZE_DECORATION);
+        this.dropSelf(DETAILED_BRONZE_DECORATION_SLAB);
+        this.dropSelf(DETAILED_BRONZE_DECORATION_STAIRS);
+        this.dropSelf(DETAILED_BRONZE_DECORATION_WALL);
 
-        dropSelf(COPPER_DECORATION);
-        dropSelf(COPPER_DECORATION_SLAB);
-        dropSelf(COPPER_DECORATION_STAIRS);
-        dropSelf(COPPER_DECORATION_WALL);
-        dropSelf(DETAILED_COPPER_DECORATION);
-        dropSelf(DETAILED_COPPER_DECORATION_SLAB);
-        dropSelf(DETAILED_COPPER_DECORATION_STAIRS);
-        dropSelf(DETAILED_COPPER_DECORATION_WALL);
+        this.dropSelf(COPPER_DECORATION);
+        this.dropSelf(COPPER_DECORATION_SLAB);
+        this.dropSelf(COPPER_DECORATION_STAIRS);
+        this.dropSelf(COPPER_DECORATION_WALL);
+        this.dropSelf(DETAILED_COPPER_DECORATION);
+        this.dropSelf(DETAILED_COPPER_DECORATION_SLAB);
+        this.dropSelf(DETAILED_COPPER_DECORATION_STAIRS);
+        this.dropSelf(DETAILED_COPPER_DECORATION_WALL);
 
-        dropSelf(IRON_DECORATION);
-        dropSelf(IRON_DECORATION_SLAB);
-        dropSelf(IRON_DECORATION_STAIRS);
-        dropSelf(IRON_DECORATION_WALL);
-        dropSelf(DETAILED_IRON_DECORATION);
-        dropSelf(DETAILED_IRON_DECORATION_SLAB);
-        dropSelf(DETAILED_IRON_DECORATION_STAIRS);
-        dropSelf(DETAILED_IRON_DECORATION_WALL);
+        this.dropSelf(IRON_DECORATION);
+        this.dropSelf(IRON_DECORATION_SLAB);
+        this.dropSelf(IRON_DECORATION_STAIRS);
+        this.dropSelf(IRON_DECORATION_WALL);
+        this.dropSelf(DETAILED_IRON_DECORATION);
+        this.dropSelf(DETAILED_IRON_DECORATION_SLAB);
+        this.dropSelf(DETAILED_IRON_DECORATION_STAIRS);
+        this.dropSelf(DETAILED_IRON_DECORATION_WALL);
 
-        dropSelf(METEORIC_IRON_DECORATION);
-        dropSelf(METEORIC_IRON_DECORATION_SLAB);
-        dropSelf(METEORIC_IRON_DECORATION_STAIRS);
-        dropSelf(METEORIC_IRON_DECORATION_WALL);
-        dropSelf(DETAILED_METEORIC_IRON_DECORATION);
-        dropSelf(DETAILED_METEORIC_IRON_DECORATION_SLAB);
-        dropSelf(DETAILED_METEORIC_IRON_DECORATION_STAIRS);
-        dropSelf(DETAILED_METEORIC_IRON_DECORATION_WALL);
+        this.dropSelf(METEORIC_IRON_DECORATION);
+        this.dropSelf(METEORIC_IRON_DECORATION_SLAB);
+        this.dropSelf(METEORIC_IRON_DECORATION_STAIRS);
+        this.dropSelf(METEORIC_IRON_DECORATION_WALL);
+        this.dropSelf(DETAILED_METEORIC_IRON_DECORATION);
+        this.dropSelf(DETAILED_METEORIC_IRON_DECORATION_SLAB);
+        this.dropSelf(DETAILED_METEORIC_IRON_DECORATION_STAIRS);
+        this.dropSelf(DETAILED_METEORIC_IRON_DECORATION_WALL);
 
-        dropSelf(STEEL_DECORATION);
-        dropSelf(STEEL_DECORATION_SLAB);
-        dropSelf(STEEL_DECORATION_STAIRS);
-        dropSelf(STEEL_DECORATION_WALL);
-        dropSelf(DETAILED_STEEL_DECORATION);
-        dropSelf(DETAILED_STEEL_DECORATION_SLAB);
-        dropSelf(DETAILED_STEEL_DECORATION_STAIRS);
-        dropSelf(DETAILED_STEEL_DECORATION_WALL);
+        this.dropSelf(STEEL_DECORATION);
+        this.dropSelf(STEEL_DECORATION_SLAB);
+        this.dropSelf(STEEL_DECORATION_STAIRS);
+        this.dropSelf(STEEL_DECORATION_WALL);
+        this.dropSelf(DETAILED_STEEL_DECORATION);
+        this.dropSelf(DETAILED_STEEL_DECORATION_SLAB);
+        this.dropSelf(DETAILED_STEEL_DECORATION_STAIRS);
+        this.dropSelf(DETAILED_STEEL_DECORATION_WALL);
 
-        dropSelf(TIN_DECORATION);
-        dropSelf(TIN_DECORATION_SLAB);
-        dropSelf(TIN_DECORATION_STAIRS);
-        dropSelf(TIN_DECORATION_WALL);
-        dropSelf(DETAILED_TIN_DECORATION);
-        dropSelf(DETAILED_TIN_DECORATION_SLAB);
-        dropSelf(DETAILED_TIN_DECORATION_STAIRS);
-        dropSelf(DETAILED_TIN_DECORATION_WALL);
+        this.dropSelf(TIN_DECORATION);
+        this.dropSelf(TIN_DECORATION_SLAB);
+        this.dropSelf(TIN_DECORATION_STAIRS);
+        this.dropSelf(TIN_DECORATION_WALL);
+        this.dropSelf(DETAILED_TIN_DECORATION);
+        this.dropSelf(DETAILED_TIN_DECORATION_SLAB);
+        this.dropSelf(DETAILED_TIN_DECORATION_STAIRS);
+        this.dropSelf(DETAILED_TIN_DECORATION_WALL);
 
-        dropSelf(TITANIUM_DECORATION);
-        dropSelf(TITANIUM_DECORATION_SLAB);
-        dropSelf(TITANIUM_DECORATION_STAIRS);
-        dropSelf(TITANIUM_DECORATION_WALL);
-        dropSelf(DETAILED_TITANIUM_DECORATION);
-        dropSelf(DETAILED_TITANIUM_DECORATION_SLAB);
-        dropSelf(DETAILED_TITANIUM_DECORATION_STAIRS);
-        dropSelf(DETAILED_TITANIUM_DECORATION_WALL);
+        this.dropSelf(TITANIUM_DECORATION);
+        this.dropSelf(TITANIUM_DECORATION_SLAB);
+        this.dropSelf(TITANIUM_DECORATION_STAIRS);
+        this.dropSelf(TITANIUM_DECORATION_WALL);
+        this.dropSelf(DETAILED_TITANIUM_DECORATION);
+        this.dropSelf(DETAILED_TITANIUM_DECORATION_SLAB);
+        this.dropSelf(DETAILED_TITANIUM_DECORATION_STAIRS);
+        this.dropSelf(DETAILED_TITANIUM_DECORATION_WALL);
 
-        dropSelf(DARK_DECORATION);
-        dropSelf(DARK_DECORATION_SLAB);
-        dropSelf(DARK_DECORATION_STAIRS);
-        dropSelf(DARK_DECORATION_WALL);
-        dropSelf(DETAILED_DARK_DECORATION);
-        dropSelf(DETAILED_DARK_DECORATION_SLAB);
-        dropSelf(DETAILED_DARK_DECORATION_STAIRS);
-        dropSelf(DETAILED_DARK_DECORATION_WALL);
+        this.dropSelf(DARK_DECORATION);
+        this.dropSelf(DARK_DECORATION_SLAB);
+        this.dropSelf(DARK_DECORATION_STAIRS);
+        this.dropSelf(DARK_DECORATION_WALL);
+        this.dropSelf(DETAILED_DARK_DECORATION);
+        this.dropSelf(DETAILED_DARK_DECORATION_SLAB);
+        this.dropSelf(DETAILED_DARK_DECORATION_STAIRS);
+        this.dropSelf(DETAILED_DARK_DECORATION_WALL);
 
-        dropSelf(MOON_TURF);
-        dropSelf(MOON_DIRT);
-        dropOther(MOON_DIRT_PATH, GCItems.MOON_DIRT);
-        dropSelf(MOON_SURFACE_ROCK);
+        this.dropSelf(MOON_TURF);
+        this.dropSelf(MOON_DIRT);
+        this.dropOther(MOON_DIRT_PATH, GCItems.MOON_DIRT);
+        this.dropSelf(MOON_SURFACE_ROCK);
 
-        add(MOON_ROCK, createSingleItemTableWithSilkTouch(MOON_ROCK, COBBLED_MOON_ROCK));
-        dropSelf(MOON_ROCK_SLAB);
-        dropSelf(MOON_ROCK_STAIRS);
-        dropSelf(MOON_ROCK_WALL);
+        this.add(MOON_ROCK, this.createSingleItemTableWithSilkTouch(MOON_ROCK, COBBLED_MOON_ROCK));
+        this.dropSelf(MOON_ROCK_SLAB);
+        this.dropSelf(MOON_ROCK_STAIRS);
+        this.dropSelf(MOON_ROCK_WALL);
 
-        dropSelf(COBBLED_MOON_ROCK);
-        dropSelf(COBBLED_MOON_ROCK_SLAB);
-        dropSelf(COBBLED_MOON_ROCK_STAIRS);
-        dropSelf(COBBLED_MOON_ROCK_WALL);
+        this.dropSelf(COBBLED_MOON_ROCK);
+        this.dropSelf(COBBLED_MOON_ROCK_SLAB);
+        this.dropSelf(COBBLED_MOON_ROCK_STAIRS);
+        this.dropSelf(COBBLED_MOON_ROCK_WALL);
 
-        add(LUNASLATE, createSingleItemTableWithSilkTouch(LUNASLATE, COBBLED_LUNASLATE));
-        dropSelf(LUNASLATE_SLAB);
-        dropSelf(LUNASLATE_STAIRS);
-        dropSelf(LUNASLATE_WALL);
+        this.add(LUNASLATE, this.createSingleItemTableWithSilkTouch(LUNASLATE, COBBLED_LUNASLATE));
+        this.dropSelf(LUNASLATE_SLAB);
+        this.dropSelf(LUNASLATE_STAIRS);
+        this.dropSelf(LUNASLATE_WALL);
 
-        dropSelf(COBBLED_LUNASLATE);
-        dropSelf(COBBLED_LUNASLATE_SLAB);
-        dropSelf(COBBLED_LUNASLATE_STAIRS);
-        dropSelf(COBBLED_LUNASLATE_WALL);
+        this.dropSelf(COBBLED_LUNASLATE);
+        this.dropSelf(COBBLED_LUNASLATE_SLAB);
+        this.dropSelf(COBBLED_LUNASLATE_STAIRS);
+        this.dropSelf(COBBLED_LUNASLATE_WALL);
 
-        dropSelf(MOON_BASALT);
-        dropSelf(MOON_BASALT_SLAB);
-        dropSelf(MOON_BASALT_STAIRS);
-        dropSelf(MOON_BASALT_WALL);
+        this.dropSelf(MOON_BASALT);
+        this.dropSelf(MOON_BASALT_SLAB);
+        this.dropSelf(MOON_BASALT_STAIRS);
+        this.dropSelf(MOON_BASALT_WALL);
 
-        dropSelf(MOON_BASALT_BRICK);
-        dropSelf(MOON_BASALT_BRICK_SLAB);
-        dropSelf(MOON_BASALT_BRICK_STAIRS);
-        dropSelf(MOON_BASALT_BRICK_WALL);
+        this.dropSelf(MOON_BASALT_BRICK);
+        this.dropSelf(MOON_BASALT_BRICK_SLAB);
+        this.dropSelf(MOON_BASALT_BRICK_STAIRS);
+        this.dropSelf(MOON_BASALT_BRICK_WALL);
 
-        dropSelf(CRACKED_MOON_BASALT_BRICK);
-        dropSelf(CRACKED_MOON_BASALT_BRICK_SLAB);
-        dropSelf(CRACKED_MOON_BASALT_BRICK_STAIRS);
-        dropSelf(CRACKED_MOON_BASALT_BRICK_WALL);
+        this.dropSelf(CRACKED_MOON_BASALT_BRICK);
+        this.dropSelf(CRACKED_MOON_BASALT_BRICK_SLAB);
+        this.dropSelf(CRACKED_MOON_BASALT_BRICK_STAIRS);
+        this.dropSelf(CRACKED_MOON_BASALT_BRICK_WALL);
 
-        dropSelf(MARS_SURFACE_ROCK);
-        dropSelf(MARS_SUB_SURFACE_ROCK);
+        this.dropSelf(MARS_SURFACE_ROCK);
+        this.dropSelf(MARS_SUB_SURFACE_ROCK);
 
-        add(MARS_STONE, createSingleItemTableWithSilkTouch(MARS_STONE, MARS_COBBLESTONE));
-        dropSelf(MARS_STONE_SLAB);
-        dropSelf(MARS_STONE_STAIRS);
-        dropSelf(MARS_STONE_WALL);
+        this.add(MARS_STONE, this.createSingleItemTableWithSilkTouch(MARS_STONE, MARS_COBBLESTONE));
+        this.dropSelf(MARS_STONE_SLAB);
+        this.dropSelf(MARS_STONE_STAIRS);
+        this.dropSelf(MARS_STONE_WALL);
 
-        dropSelf(MARS_COBBLESTONE);
-        dropSelf(MARS_COBBLESTONE_SLAB);
-        dropSelf(MARS_COBBLESTONE_STAIRS);
-        dropSelf(MARS_COBBLESTONE_WALL);
+        this.dropSelf(MARS_COBBLESTONE);
+        this.dropSelf(MARS_COBBLESTONE_SLAB);
+        this.dropSelf(MARS_COBBLESTONE_STAIRS);
+        this.dropSelf(MARS_COBBLESTONE_WALL);
 
-        dropSelf(ASTEROID_ROCK);
-        dropSelf(ASTEROID_ROCK_1);
-        dropSelf(ASTEROID_ROCK_2);
+        this.dropSelf(ASTEROID_ROCK);
+        this.dropSelf(ASTEROID_ROCK_1);
+        this.dropSelf(ASTEROID_ROCK_2);
 
-        dropSelf(SOFT_VENUS_ROCK);
-        dropSelf(HARD_VENUS_ROCK);
-        dropSelf(SCORCHED_VENUS_ROCK);
-        add(VOLCANIC_ROCK, createSilkTouchOnlyTable(VOLCANIC_ROCK));
-        dropSelf(PUMICE);
-        dropWhenSilkTouch(VAPOR_SPOUT);
+        this.dropSelf(SOFT_VENUS_ROCK);
+        this.dropSelf(HARD_VENUS_ROCK);
+        this.dropSelf(SCORCHED_VENUS_ROCK);
+        this.add(VOLCANIC_ROCK, createSilkTouchOnlyTable(VOLCANIC_ROCK));
+        this.dropSelf(PUMICE);
+        this.dropWhenSilkTouch(VAPOR_SPOUT);
 
-        dropSelf(WALKWAY);
-        dropSelf(PIPE_WALKWAY);
-        dropSelf(WIRE_WALKWAY);
-        dropSelf(TIN_LADDER);
-        dropSelf(GRATING);
+        this.dropSelf(WALKWAY);
+        this.dropSelf(PIPE_WALKWAY);
+        this.dropSelf(WIRE_WALKWAY);
+        this.dropSelf(TIN_LADDER);
+        this.dropSelf(GRATING);
 
-        dropSelf(ALUMINUM_WIRE);
-        dropSelf(SEALABLE_ALUMINUM_WIRE);
-        dropSelf(HEAVY_SEALABLE_ALUMINUM_WIRE);
-        dropSelf(GLASS_FLUID_PIPE);
+        this.dropSelf(ALUMINUM_WIRE);
+        this.dropSelf(SEALABLE_ALUMINUM_WIRE);
+        this.dropSelf(HEAVY_SEALABLE_ALUMINUM_WIRE);
+        this.dropSelf(GLASS_FLUID_PIPE);
 
-        dropSelf(SQUARE_LIGHT_PANEL);
-        dropSelf(SPOTLIGHT_LIGHT_PANEL);
-        dropSelf(LINEAR_LIGHT_PANEL);
-        dropSelf(DASHED_LIGHT_PANEL);
-        dropSelf(DIAGONAL_LIGHT_PANEL);
+        this.dropSelf(SQUARE_LIGHT_PANEL);
+        this.dropSelf(SPOTLIGHT_LIGHT_PANEL);
+        this.dropSelf(LINEAR_LIGHT_PANEL);
+        this.dropSelf(DASHED_LIGHT_PANEL);
+        this.dropSelf(DIAGONAL_LIGHT_PANEL);
 
-        dropSelf(VACUUM_GLASS);
-        dropSelf(CLEAR_VACUUM_GLASS);
-        dropSelf(STRONG_VACUUM_GLASS);
+        this.dropSelf(VACUUM_GLASS);
+        this.dropSelf(CLEAR_VACUUM_GLASS);
+        this.dropSelf(STRONG_VACUUM_GLASS);
 
-        add(SILICON_ORE, siliconOreDrops(SILICON_ORE));
-        add(DEEPSLATE_SILICON_ORE, siliconOreDrops(DEEPSLATE_SILICON_ORE));
-        add(MOON_COPPER_ORE, createCopperOreDrops(MOON_COPPER_ORE));
-        add(LUNASLATE_COPPER_ORE, createCopperOreDrops(MOON_COPPER_ORE));
+        this.add(SILICON_ORE, this.siliconOreDrops(SILICON_ORE));
+        this.add(DEEPSLATE_SILICON_ORE, this.siliconOreDrops(DEEPSLATE_SILICON_ORE));
+        this.add(MOON_COPPER_ORE, this.createCopperOreDrops(MOON_COPPER_ORE));
+        this.add(LUNASLATE_COPPER_ORE, this.createCopperOreDrops(MOON_COPPER_ORE));
 
-        add(TIN_ORE, createOreDrop(TIN_ORE, GCItems.RAW_TIN));
-        add(DEEPSLATE_TIN_ORE, createOreDrop(DEEPSLATE_TIN_ORE, GCItems.RAW_TIN));
-        add(MOON_TIN_ORE, createOreDrop(MOON_TIN_ORE, GCItems.RAW_TIN));
-        add(LUNASLATE_TIN_ORE, createOreDrop(LUNASLATE_TIN_ORE, GCItems.RAW_TIN));
+        this.add(TIN_ORE, this.createOreDrop(TIN_ORE, GCItems.RAW_TIN));
+        this.add(DEEPSLATE_TIN_ORE, this.createOreDrop(DEEPSLATE_TIN_ORE, GCItems.RAW_TIN));
+        this.add(MOON_TIN_ORE, this.createOreDrop(MOON_TIN_ORE, GCItems.RAW_TIN));
+        this.add(LUNASLATE_TIN_ORE, this.createOreDrop(LUNASLATE_TIN_ORE, GCItems.RAW_TIN));
 
-        add(ALUMINUM_ORE, createOreDrop(ALUMINUM_ORE, GCItems.RAW_ALUMINUM));
-        add(DEEPSLATE_ALUMINUM_ORE, createOreDrop(ALUMINUM_ORE, GCItems.RAW_ALUMINUM));
+        this.add(ALUMINUM_ORE, this.createOreDrop(ALUMINUM_ORE, GCItems.RAW_ALUMINUM));
+        this.add(DEEPSLATE_ALUMINUM_ORE, this.createOreDrop(ALUMINUM_ORE, GCItems.RAW_ALUMINUM));
 
-        add(DESH_ORE, createOreDrop(DESH_ORE, GCItems.RAW_DESH));
+        this.add(DESH_ORE, this.createOreDrop(DESH_ORE, GCItems.RAW_DESH));
 
-        add(ILMENITE_ORE, createOreDrop(ILMENITE_ORE, GCItems.RAW_TITANIUM));
+        this.add(ILMENITE_ORE, this.createOreDrop(ILMENITE_ORE, GCItems.RAW_TITANIUM));
 
-        add(GALENA_ORE, createOreDrop(GALENA_ORE, GCItems.RAW_LEAD));
+        this.add(GALENA_ORE, this.createOreDrop(GALENA_ORE, GCItems.RAW_LEAD));
 
         this.add(MOON_CHEESE_BLOCK, noDrop());
         this.add(CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.CANDLE));
@@ -271,22 +267,22 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.add(RED_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.RED_CANDLE));
         this.add(BLACK_CANDLE_MOON_CHEESE_BLOCK, createCandleCakeDrops(Blocks.BLACK_CANDLE));
 
-        dropSelf(SILICON_BLOCK);
-        dropSelf(METEORIC_IRON_BLOCK);
-        dropSelf(DESH_BLOCK);
-        dropSelf(TITANIUM_BLOCK);
-        dropSelf(LEAD_BLOCK);
-        dropSelf(LUNAR_SAPPHIRE_BLOCK);
+        this.dropSelf(SILICON_BLOCK);
+        this.dropSelf(METEORIC_IRON_BLOCK);
+        this.dropSelf(DESH_BLOCK);
+        this.dropSelf(TITANIUM_BLOCK);
+        this.dropSelf(LEAD_BLOCK);
+        this.dropSelf(LUNAR_SAPPHIRE_BLOCK);
 
-        add(FALLEN_METEOR, block -> BlockLootSubProvider.createSilkTouchDispatchTable(block, this.applyExplosionDecay(block, LootItem.lootTableItem(GCItems.RAW_METEORIC_IRON).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 2.0f))))));
+        this.add(FALLEN_METEOR, block -> BlockLootSubProvider.createSilkTouchDispatchTable(block, this.applyExplosionDecay(block, LootItem.lootTableItem(GCItems.RAW_METEORIC_IRON).apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 2.0f))))));
 
-        dropSelf(LUNAR_CARTOGRAPHY_TABLE);
+        this.dropSelf(LUNAR_CARTOGRAPHY_TABLE);
 
-        add(CAVERNOUS_VINE, BlockLootSubProvider::createShearsOnlyDrop);
-        add(POISONOUS_CAVERNOUS_VINE, BlockLootSubProvider::createShearsOnlyDrop);
-        add(
+        this.add(CAVERNOUS_VINE, BlockLootSubProvider::createShearsOnlyDrop);
+        this.add(POISONOUS_CAVERNOUS_VINE, BlockLootSubProvider::createShearsOnlyDrop);
+        this.add(
                 MOON_BERRY_BUSH,
-                blockx -> applyExplosionDecay(
+                blockx -> this.applyExplosionDecay(
                         blockx,
                         LootTable.lootTable()
                                 .withPool(
@@ -310,34 +306,34 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
                 )
         );
 
-        dropSelf(ROCKET_LAUNCH_PAD);
-        dropSelf(AIR_LOCK_CONTROLLER);
-        dropSelf(AIR_LOCK_FRAME);
+        this.dropSelf(ROCKET_LAUNCH_PAD);
+        this.dropSelf(AIR_LOCK_CONTROLLER);
+        this.dropSelf(AIR_LOCK_FRAME);
 
-        dropOther(CRYOGENIC_CHAMBER_PART, CRYOGENIC_CHAMBER);
+        this.dropOther(CRYOGENIC_CHAMBER_PART, CRYOGENIC_CHAMBER);
 
-        dropSelf(CRYOGENIC_CHAMBER);
-        dropSelf(CIRCUIT_FABRICATOR);
-        dropSelf(COMPRESSOR);
-        dropSelf(ELECTRIC_COMPRESSOR);
-        dropSelf(COAL_GENERATOR);
-        dropSelf(BASIC_SOLAR_PANEL);
-        dropSelf(ADVANCED_SOLAR_PANEL);
-        dropSelf(ENERGY_STORAGE_MODULE);
-        dropSelf(ELECTRIC_FURNACE);
-        dropSelf(ELECTRIC_ARC_FURNACE);
-        dropSelf(REFINERY);
-        dropSelf(OXYGEN_COLLECTOR);
-        dropSelf(OXYGEN_SEALER);
-        dropSelf(OXYGEN_BUBBLE_DISTRIBUTOR);
-        dropSelf(OXYGEN_DECOMPRESSOR);
-        dropSelf(OXYGEN_COMPRESSOR);
-        dropSelf(OXYGEN_STORAGE_MODULE);
-        dropSelf(FUEL_LOADER);
+        this.dropSelf(CRYOGENIC_CHAMBER);
+        this.dropSelf(CIRCUIT_FABRICATOR);
+        this.dropSelf(COMPRESSOR);
+        this.dropSelf(ELECTRIC_COMPRESSOR);
+        this.dropSelf(COAL_GENERATOR);
+        this.dropSelf(BASIC_SOLAR_PANEL);
+        this.dropSelf(ADVANCED_SOLAR_PANEL);
+        this.dropSelf(ENERGY_STORAGE_MODULE);
+        this.dropSelf(ELECTRIC_FURNACE);
+        this.dropSelf(ELECTRIC_ARC_FURNACE);
+        this.dropSelf(REFINERY);
+        this.dropSelf(OXYGEN_COLLECTOR);
+        this.dropSelf(OXYGEN_SEALER);
+        this.dropSelf(OXYGEN_BUBBLE_DISTRIBUTOR);
+        this.dropSelf(OXYGEN_DECOMPRESSOR);
+        this.dropSelf(OXYGEN_COMPRESSOR);
+        this.dropSelf(OXYGEN_STORAGE_MODULE);
+        this.dropSelf(FUEL_LOADER);
 
-        dropSelf(PLAYER_TRANSPORT_TUBE);
-        dropSelf(ROCKET_WORKBENCH);
+        this.dropSelf(PLAYER_TRANSPORT_TUBE);
+        this.dropSelf(ROCKET_WORKBENCH);
 
-        add(AIR_LOCK_SEAL, noDrop());
+        this.add(AIR_LOCK_SEAL, noDrop());
     }
 }

@@ -68,7 +68,7 @@ public class ShapelessCompressorRecipeBuilder implements RecipeBuilder {
     }
 
     public ShapelessCompressorRecipeBuilder requires(ItemLike itemLike, int i) {
-        for(int j = 0; j < i; ++j) {
+        for (var j = 0; j < i; ++j) {
             this.requires(Ingredient.of(itemLike));
         }
 
@@ -80,7 +80,7 @@ public class ShapelessCompressorRecipeBuilder implements RecipeBuilder {
     }
 
     public ShapelessCompressorRecipeBuilder requires(Ingredient ingredient, int i) {
-        for(int j = 0; j < i; ++j) {
+        for (var j = 0; j < i; ++j) {
             this.ingredients.add(ingredient);
         }
 
@@ -123,15 +123,15 @@ public class ShapelessCompressorRecipeBuilder implements RecipeBuilder {
 
         @Override
         public void serializeRecipeData(JsonObject jsonRecipe) {
-            JsonArray jsonIngredients = new JsonArray();
+            var jsonIngredients = new JsonArray();
 
-            for(Ingredient ingredient : this.ingredients) {
+            for(var ingredient : this.ingredients) {
                 jsonIngredients.add(ingredient.toJson());
             }
 
             jsonRecipe.add("ingredients", jsonIngredients);
 
-            JsonObject itemJson = new JsonObject();
+            var itemJson = new JsonObject();
             itemJson.addProperty("item", BuiltInRegistries.ITEM.getKey(this.result).toString());
             if (this.count > 1) {
                 itemJson.addProperty("count", this.count);

@@ -26,7 +26,6 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 
 import com.mojang.serialization.Lifecycle;
@@ -73,11 +72,11 @@ public class GCLevelStemProvider implements DataProvider {
 				}
 			});
 			CompletableFuture<?>[] futures = new CompletableFuture[entries.size()];
-			int i = 0;
-			RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, registries);
-			for (Map.Entry<ResourceLocation, LevelStem> entry : entries.entrySet()) {
-				CompletableFuture<?> completableFuture = CompletableFuture.supplyAsync(() -> LevelStem.CODEC.encodeStart(ops, entry.getValue()).get().orThrow())
-						.thenCompose((json -> DataProvider.saveStable(output, json, this.path.json(entry.getKey()))));
+			var i = 0;
+			var ops = RegistryOps.create(JsonOps.INSTANCE, registries);
+			for (var entry : entries.entrySet()) {
+				var completableFuture = CompletableFuture.supplyAsync(() -> LevelStem.CODEC.encodeStart(ops, entry.getValue()).get().orThrow())
+						.thenCompose(json -> DataProvider.saveStable(output, json, this.path.json(entry.getKey())));
 				futures[i++] = completableFuture;
 			}
 			return CompletableFuture.allOf(futures);
