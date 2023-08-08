@@ -55,10 +55,8 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
     @Override
     public void generate() {
-        this.dropOther(GLOWSTONE_TORCH, GCItems.GLOWSTONE_TORCH);
-        this.dropOther(GLOWSTONE_WALL_TORCH, GCItems.GLOWSTONE_TORCH);
-        this.dropOther(UNLIT_TORCH, GCItems.UNLIT_TORCH);
-        this.dropOther(UNLIT_WALL_TORCH, GCItems.UNLIT_TORCH);
+        this.dropSelf(GLOWSTONE_TORCH);
+        this.dropSelf(UNLIT_TORCH);
 
         this.dropSelf(GLOWSTONE_LANTERN);
         this.dropSelf(UNLIT_LANTERN);
@@ -206,7 +204,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(SCORCHED_VENUS_ROCK);
         this.add(VOLCANIC_ROCK, createSilkTouchOnlyTable(VOLCANIC_ROCK));
         this.dropSelf(PUMICE);
-        this.dropWhenSilkTouch(VAPOR_SPOUT);
+        this.add(VAPOR_SPOUT, this.createSingleItemTableWithSilkTouch(VAPOR_SPOUT, SOFT_VENUS_ROCK));
 
         this.dropSelf(WALKWAY);
         this.dropSelf(PIPE_WALKWAY);
@@ -306,10 +304,12 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
                 )
         );
 
+        //TODO Drop with 9 pads
         this.dropSelf(ROCKET_LAUNCH_PAD);
         this.dropSelf(AIR_LOCK_CONTROLLER);
         this.dropSelf(AIR_LOCK_FRAME);
 
+        //TODO Fix part table
         this.dropOther(CRYOGENIC_CHAMBER_PART, CRYOGENIC_CHAMBER);
 
         this.dropSelf(CRYOGENIC_CHAMBER);

@@ -38,7 +38,7 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider arg) {
+    protected void addTags(HolderLookup.Provider provider) {
         this.getOrCreateTagBuilder(ItemTags.AXES)
                 .add(GCItems.HEAVY_DUTY_AXE)
                 .add(GCItems.DESH_AXE)

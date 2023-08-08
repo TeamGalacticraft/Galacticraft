@@ -133,9 +133,6 @@
     "galacticraft:moon_basalt_brick",
     "galacticraft:cracked_moon_basalt_brick",
     "galacticraft:mars_stone",
-    "galacticraft:mars_cobblestone",
-    "galacticraft:moon_turf",
-    "galacticraft:moon_dirt",
-    "galacticraft:moon_dirt_path"
+    "galacticraft:mars_cobblestone"
   ]
 }
