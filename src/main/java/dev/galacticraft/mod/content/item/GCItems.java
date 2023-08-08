@@ -382,20 +382,20 @@ public class GCItems {
     public static final Item TIER_3_HEAVY_DUTY_PLATE = new Item(new Item.Properties());
 
     // ARMOR
-    public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.HELMET, (new Item.Properties()));
-    public static final Item HEAVY_DUTY_CHESTPLATE = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.CHESTPLATE, (new Item.Properties()));
-    public static final Item HEAVY_DUTY_LEGGINGS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.LEGGINGS, (new Item.Properties()));
-    public static final Item HEAVY_DUTY_BOOTS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.BOOTS, (new Item.Properties()));
+    public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties());
+    public static final Item HEAVY_DUTY_CHESTPLATE = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.CHESTPLATE, new Item.Properties());
+    public static final Item HEAVY_DUTY_LEGGINGS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.LEGGINGS, new Item.Properties());
+    public static final Item HEAVY_DUTY_BOOTS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.BOOTS, new Item.Properties());
 
-    public static final Item DESH_HELMET = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.HELMET, (new Item.Properties()));
-    public static final Item DESH_CHESTPLATE = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.CHESTPLATE, (new Item.Properties()));
-    public static final Item DESH_LEGGINGS = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.LEGGINGS, (new Item.Properties()));
-    public static final Item DESH_BOOTS = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.BOOTS, (new Item.Properties()));
+    public static final Item DESH_HELMET = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.HELMET, new Item.Properties());
+    public static final Item DESH_CHESTPLATE = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.CHESTPLATE, new Item.Properties());
+    public static final Item DESH_LEGGINGS = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.LEGGINGS, new Item.Properties());
+    public static final Item DESH_BOOTS = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.BOOTS, new Item.Properties());
 
-    public static final Item TITANIUM_HELMET = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.HELMET, (new Item.Properties()));
-    public static final Item TITANIUM_CHESTPLATE = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.CHESTPLATE, (new Item.Properties()));
-    public static final Item TITANIUM_LEGGINGS = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.LEGGINGS, (new Item.Properties()));
-    public static final Item TITANIUM_BOOTS = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.BOOTS, (new Item.Properties()));
+    public static final Item TITANIUM_HELMET = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.HELMET, new Item.Properties());
+    public static final Item TITANIUM_CHESTPLATE = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.CHESTPLATE, new Item.Properties());
+    public static final Item TITANIUM_LEGGINGS = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.LEGGINGS, new Item.Properties());
+    public static final Item TITANIUM_BOOTS = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.BOOTS, new Item.Properties());
 
     public static final Item SENSOR_GLASSES = new ArmorItem(GCArmorMaterial.SENSOR_GLASSES, ArmorItem.Type.HELMET, new Item.Properties());
 
