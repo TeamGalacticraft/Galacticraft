@@ -63,9 +63,10 @@ import net.minecraft.world.level.material.PushReaction;
 @SuppressWarnings("unused")
 public class GCBlocks {
     // TORCHES
-    public static final Block GLOWSTONE_TORCH = new GlowstoneTorchBlock(BlockBehaviour.Properties.copy(Blocks.TORCH));
+    // These 2 torches are special, it's need to register early so others can use dropsLike() reference
+    public static final Block GLOWSTONE_TORCH = register(Constant.Block.GLOWSTONE_TORCH, new GlowstoneTorchBlock(BlockBehaviour.Properties.of().noCollission().instabreak().lightLevel(blockStatex -> 14).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY)));
+    public static final Block UNLIT_TORCH = register(Constant.Block.UNLIT_TORCH, new UnlitTorchBlock(BlockBehaviour.Properties.of().noCollission().instabreak().lightLevel(blockStatex -> 0).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY)));
     public static final Block GLOWSTONE_WALL_TORCH = new GlowstoneWallTorchBlock(BlockBehaviour.Properties.copy(GLOWSTONE_TORCH).dropsLike(GLOWSTONE_TORCH));
-    public static final Block UNLIT_TORCH = new UnlitTorchBlock(BlockBehaviour.Properties.copy(Blocks.TORCH).lightLevel(state -> 0));
     public static final Block UNLIT_WALL_TORCH = new UnlitWallTorchBlock(BlockBehaviour.Properties.copy(UNLIT_TORCH).dropsLike(UNLIT_TORCH));
 
     // LANTERNS
@@ -231,7 +232,7 @@ public class GCBlocks {
     public static final Block SCORCHED_VENUS_ROCK = new ScorchedRockBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F));
     public static final Block VOLCANIC_ROCK = new VolcanicRockBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.2F, 0.5F));
     public static final Block PUMICE = new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F));
-    public static final Block VAPOR_SPOUT = new VaporSpoutBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).instrument(NoteBlockInstrument.BASEDRUM).noLootTable().strength(1.5F, 2.0F));
+    public static final Block VAPOR_SPOUT = new VaporSpoutBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 2.0F));
 
     // MISC DECOR
     public static final Block WALKWAY = new WalkwayBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0f, 5.0f).sound(SoundType.METAL));
@@ -348,17 +349,19 @@ public class GCBlocks {
     public static final AirlockBlock AIR_LOCK_CONTROLLER = new AirlockBlock(true, BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK));
     public static final Block AIR_LOCK_SEAL = new Block(BlockBehaviour.Properties.copy(AIR_LOCK_FRAME));
 
+    public static Block register(String id, Block block) {
+        return Registry.register(BuiltInRegistries.BLOCK, Constant.id(id), block);
+    }
+
     public static void register() {
         FlammableBlockRegistry.getDefaultInstance().add(FUEL, 80, 130);
         FlammableBlockRegistry.getDefaultInstance().add(CRUDE_OIL, 60, 100);
         FlattenableBlockRegistry.register(MOON_DIRT, MOON_DIRT_PATH.defaultBlockState());
 
         // TORCHES
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GLOWSTONE_TORCH), GLOWSTONE_TORCH);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GLOWSTONE_WALL_TORCH), GLOWSTONE_WALL_TORCH);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GLOWSTONE_LANTERN), GLOWSTONE_LANTERN);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.UNLIT_TORCH), UNLIT_TORCH);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.UNLIT_WALL_TORCH), UNLIT_WALL_TORCH);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GLOWSTONE_LANTERN), GLOWSTONE_LANTERN);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.UNLIT_LANTERN), UNLIT_LANTERN);
 
         // FLUIDS
