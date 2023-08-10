@@ -162,7 +162,6 @@ repositories {
             includeGroup("mezz.jei")
         }
     }
-    mavenLocal()
 }
 
 dependencies {

@@ -22,21 +22,14 @@
 
 package dev.galacticraft.mod.data.content;
 
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
-
-import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
-
 import com.mojang.serialization.Lifecycle;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
-
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.RegistryOps;
@@ -44,6 +37,11 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.dimension.LevelStem;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 public class GCLevelStemProvider implements DataProvider {
 	private final PackOutput.PathProvider path;
@@ -73,11 +71,11 @@ public class GCLevelStemProvider implements DataProvider {
 				}
 			});
 			CompletableFuture<?>[] futures = new CompletableFuture[entries.size()];
-			int i = 0;
-			RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, registries);
-			for (Map.Entry<ResourceLocation, LevelStem> entry : entries.entrySet()) {
-				CompletableFuture<?> completableFuture = CompletableFuture.supplyAsync(() -> LevelStem.CODEC.encodeStart(ops, entry.getValue()).get().orThrow())
-						.thenCompose((json -> DataProvider.saveStable(output, json, this.path.json(entry.getKey()))));
+			var i = 0;
+			var ops = RegistryOps.create(JsonOps.INSTANCE, registries);
+			for (var entry : entries.entrySet()) {
+				var completableFuture = CompletableFuture.supplyAsync(() -> LevelStem.CODEC.encodeStart(ops, entry.getValue()).get().orThrow())
+						.thenCompose(json -> DataProvider.saveStable(output, json, this.path.json(entry.getKey())));
 				futures[i++] = completableFuture;
 			}
 			return CompletableFuture.allOf(futures);

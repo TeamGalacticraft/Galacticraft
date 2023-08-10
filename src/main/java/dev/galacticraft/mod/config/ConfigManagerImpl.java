@@ -240,9 +240,24 @@ public class ConfigManagerImpl implements ConfigManager {
 
         SubCategoryBuilder skybox = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Constant.Config.SKYBOX));
 
+        SubCategoryBuilder lifeSupport = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Constant.Config.PLAYER_LIFE_SUPPORT));
+
+        // TODO: If set to 0, disable the player oxygen system
+        lifeSupport.add(new LongFieldBuilder(
+                Component.translatable(Constant.Config.RESET),
+                Component.translatable(Constant.Config.PLAYER_OXYGEN_CONSUMPTION_RATE),
+                this.config.playerOxygenConsuptionRate())
+                .setSaveConsumer(this.config::setPlayerOxygenConsumptionRate)
+                .setDefaultValue(1)
+                .setMin(0)
+                .setMax(100000)
+                .build()
+        );
+
         b.getOrCreateCategory(Component.translatable(Constant.Config.DEBUG)).addEntry(dB.build());
         b.getOrCreateCategory(Component.translatable(Constant.Config.ENERGY)).addEntry(wires.build()).addEntry(machines.build());
         b.getOrCreateCategory(Component.translatable(Constant.Config.CLIENT)).addEntry(skybox.build());
+        b.getOrCreateCategory(Component.translatable(Constant.Config.PLAYER)).addEntry(lifeSupport.build());
 
         return b.build();
     }

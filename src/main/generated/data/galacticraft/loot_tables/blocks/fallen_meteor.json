@@ -24,7 +24,7 @@
                   }
                 }
               ],
-              "name": "minecraft:air"
+              "name": "galacticraft:fallen_meteor"
             },
             {
               "type": "minecraft:item",

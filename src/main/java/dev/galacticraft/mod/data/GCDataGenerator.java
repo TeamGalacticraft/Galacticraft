@@ -32,7 +32,8 @@ import dev.galacticraft.mod.content.GCCelestialBodies;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.GCTeleporterTypes;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
-import dev.galacticraft.mod.data.content.*;
+import dev.galacticraft.mod.data.content.BootstrapDataProvider;
+import dev.galacticraft.mod.data.content.GCLevelStemProvider;
 import dev.galacticraft.mod.data.model.GCModelProvider;
 import dev.galacticraft.mod.data.tag.*;
 import dev.galacticraft.mod.structure.GCStructureSets;
@@ -110,8 +111,6 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
 
     @Override
     public void buildRegistry(RegistrySetBuilder registryBuilder) {
-        DataGeneratorEntrypoint.super.buildRegistry(registryBuilder);
-
         registryBuilder.add(AddonRegistries.GALAXY, GalaxyImpl::bootstrapRegistries);
         registryBuilder.add(RocketRegistries.ROCKET_CONE, GCRocketParts::bootstrapCone);
         registryBuilder.add(RocketRegistries.ROCKET_BODY, GCRocketParts::bootstrapBody);

@@ -29,6 +29,7 @@ import dev.galacticraft.impl.accessor.SoundSystemAccessor;
 import dev.galacticraft.impl.client.accessor.ClientResearchAccessor;
 import dev.galacticraft.impl.internal.inventory.MappedInventory;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.world.inventory.GearInventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -59,7 +60,7 @@ public abstract class AbstractClientPlayerEntityMixin implements ClientResearchA
 
     @Unique
     private SimpleContainer galacticraft_createGearInventory() {
-        SimpleContainer inv = new SimpleContainer(12);
+        SimpleContainer inv = new GearInventory();
         inv.addListener((inventory) -> {
             float pressure = CelestialBody.getByDimension(this.clientLevel).map(body -> body.atmosphere().pressure()).orElse(1.0f);
             if (pressure != 1.0f) {

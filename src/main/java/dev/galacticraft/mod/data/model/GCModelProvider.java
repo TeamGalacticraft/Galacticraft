@@ -22,11 +22,16 @@
 
 package dev.galacticraft.mod.data.model;
 
-import dev.galacticraft.mod.accessor.BlockModelGeneratorsAccessor;
+import com.google.common.collect.Maps;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.BlockFamily;
 import net.minecraft.data.models.BlockModelGenerators;
 import net.minecraft.data.models.ItemModelGenerators;
 import net.minecraft.data.models.blockstates.MultiVariantGenerator;
@@ -35,16 +40,15 @@ import net.minecraft.data.models.blockstates.Variant;
 import net.minecraft.data.models.blockstates.VariantProperties;
 import net.minecraft.data.models.model.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-
 public class GCModelProvider extends FabricModelProvider {
-    public static final TexturedModel.Provider DETAILED_DECORATION = TexturedModel.createDefault(GCModelProvider::createDetailedTexture, ModelTemplates.CUBE_BOTTOM_TOP);
+    private static final TexturedModel.Provider DETAILED_DECORATION = TexturedModel.createDefault(GCModelProvider::createDetailedTexture, ModelTemplates.CUBE_BOTTOM_TOP);
 
     public GCModelProvider(FabricDataOutput output) {
         super(output);
@@ -52,7 +56,23 @@ public class GCModelProvider extends FabricModelProvider {
 
     @Override
     public void generateBlockStateModels(BlockModelGenerators generator) {
-        ((BlockModelGeneratorsAccessor)generator).setTexturedModels(new HashMap<>(((BlockModelGeneratorsAccessor)generator).getTexturedModels()));
+        // GENERATE ALL GCBlockFamilies
+        generator.texturedModels = Maps.newHashMap(generator.texturedModels);
+
+        putDetailedTextured(generator, GCBlocks.DETAILED_ALUMINUM_DECORATION);
+        putDetailedTextured(generator, GCBlocks.DETAILED_BRONZE_DECORATION);
+        putDetailedTextured(generator, GCBlocks.DETAILED_COPPER_DECORATION);
+        putDetailedTextured(generator, GCBlocks.DETAILED_IRON_DECORATION);
+        putDetailedTextured(generator, GCBlocks.DETAILED_METEORIC_IRON_DECORATION);
+        putDetailedTextured(generator, GCBlocks.DETAILED_STEEL_DECORATION);
+        putDetailedTextured(generator, GCBlocks.DETAILED_TIN_DECORATION);
+        putDetailedTextured(generator, GCBlocks.DETAILED_TITANIUM_DECORATION);
+        putDetailedTextured(generator, GCBlocks.DETAILED_DARK_DECORATION);
+
+        GCBlockFamilies.getAllFamilies()
+                .filter(BlockFamily::shouldGenerateModel)
+                .forEach(blockFamily -> generator.family(blockFamily.getBaseBlock()).generateFor(blockFamily));
+
         // TORCHES
         generator.createNormalTorch(GCBlocks.GLOWSTONE_TORCH, GCBlocks.GLOWSTONE_WALL_TORCH);
         generator.createNormalTorch(GCBlocks.UNLIT_TORCH, GCBlocks.UNLIT_WALL_TORCH);
@@ -61,69 +81,15 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createLantern(GCBlocks.GLOWSTONE_LANTERN);
         generator.createLantern(GCBlocks.UNLIT_LANTERN);
 
-        // DECORATIONS
-        generator.family(GCBlocks.ALUMINUM_DECORATION).generateFor(GCBlockFamilies.ALUMINUM_DECORATIONS);
-        generateDetailedTexture(generator, GCBlocks.DETAILED_ALUMINUM_DECORATION, GCBlocks.ALUMINUM_DECORATION);
-        generator.family(GCBlocks.DETAILED_ALUMINUM_DECORATION).generateFor(GCBlockFamilies.DETAILED_ALUMINUM_DECORATIONS);
-
-        generator.family(GCBlocks.BRONZE_DECORATION).generateFor(GCBlockFamilies.BRONZE_DECORATIONS);
-        generateDetailedTexture(generator, GCBlocks.DETAILED_BRONZE_DECORATION, GCBlocks.BRONZE_DECORATION);
-        generator.family(GCBlocks.DETAILED_BRONZE_DECORATION).generateFor(GCBlockFamilies.DETAILED_BRONZE_DECORATIONS);
-
-        generator.family(GCBlocks.COPPER_DECORATION).generateFor(GCBlockFamilies.COPPER_DECORATIONS);
-        generateDetailedTexture(generator, GCBlocks.DETAILED_COPPER_DECORATION, GCBlocks.COPPER_DECORATION);
-        generator.family(GCBlocks.DETAILED_COPPER_DECORATION).generateFor(GCBlockFamilies.DETAILED_COPPER_DECORATIONS);
-
-        generator.family(GCBlocks.IRON_DECORATION).generateFor(GCBlockFamilies.IRON_DECORATIONS);
-        generateDetailedTexture(generator, GCBlocks.DETAILED_IRON_DECORATION, GCBlocks.IRON_DECORATION);
-        generator.family(GCBlocks.DETAILED_IRON_DECORATION).generateFor(GCBlockFamilies.DETAILED_IRON_DECORATIONS);
-
-        generator.family(GCBlocks.METEORIC_IRON_DECORATION).generateFor(GCBlockFamilies.METEORIC_IRON_DECORATIONS);
-        generateDetailedTexture(generator, GCBlocks.DETAILED_METEORIC_IRON_DECORATION, GCBlocks.METEORIC_IRON_DECORATION);
-        generator.family(GCBlocks.DETAILED_METEORIC_IRON_DECORATION).generateFor(GCBlockFamilies.DETAILED_METEORIC_IRON_DECORATIONS);
-
-        generator.family(GCBlocks.STEEL_DECORATION).generateFor(GCBlockFamilies.STEEL_DECORATIONS);
-        generateDetailedTexture(generator, GCBlocks.DETAILED_STEEL_DECORATION, GCBlocks.STEEL_DECORATION);
-        generator.family(GCBlocks.DETAILED_STEEL_DECORATION).generateFor(GCBlockFamilies.DETAILED_STEEL_DECORATIONS);
-
-        generator.family(GCBlocks.TIN_DECORATION).generateFor(GCBlockFamilies.TIN_DECORATIONS);
-        generateDetailedTexture(generator, GCBlocks.DETAILED_TIN_DECORATION, GCBlocks.TIN_DECORATION);
-        generator.family(GCBlocks.DETAILED_TIN_DECORATION).generateFor(GCBlockFamilies.DETAILED_TIN_DECORATIONS);
-
-        generator.family(GCBlocks.TITANIUM_DECORATION).generateFor(GCBlockFamilies.TITANIUM_DECORATIONS);
-        generateDetailedTexture(generator, GCBlocks.DETAILED_TITANIUM_DECORATION, GCBlocks.TITANIUM_DECORATION);
-        generator.family(GCBlocks.DETAILED_TITANIUM_DECORATION).generateFor(GCBlockFamilies.DETAILED_TITANIUM_DECORATIONS);
-
-        generator.family(GCBlocks.DARK_DECORATION).generateFor(GCBlockFamilies.DARK_DECORATIONS);
-        generateDetailedTexture(generator, GCBlocks.DETAILED_DARK_DECORATION, GCBlocks.DARK_DECORATION);
-        generator.family(GCBlocks.DETAILED_DARK_DECORATION).generateFor(GCBlockFamilies.DETAILED_DARK_DECORATIONS);
-
         // MOON NAUTRAL
-        TextureMapping textureMapping = new TextureMapping()
-                .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(GCBlocks.MOON_DIRT))
-                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(GCBlocks.MOON_TURF))
-                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(GCBlocks.MOON_TURF, "_side"));
-        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(GCBlocks.MOON_TURF, ModelTemplates.CUBE_BOTTOM_TOP.create(GCBlocks.MOON_TURF, textureMapping, generator.modelOutput)));
-
+        this.createMoonTurf(generator);
         generator.createTrivialCube(GCBlocks.MOON_DIRT);
         createRotatedDelegate(generator, GCBlocks.MOON_DIRT_PATH);
         generator.createTrivialCube(GCBlocks.MOON_SURFACE_ROCK);
 
-        generator.family(GCBlocks.MOON_ROCK).generateFor(GCBlockFamilies.MOON_ROCKS);
-        generator.family(GCBlocks.COBBLED_MOON_ROCK).generateFor(GCBlockFamilies.COBBLED_MOON_ROCKS);
-        generator.family(GCBlocks.LUNASLATE).generateFor(GCBlockFamilies.LUNASLATES);
-        generator.family(GCBlocks.COBBLED_LUNASLATE).generateFor(GCBlockFamilies.COBBLED_LUNASLATES);
-        generator.family(GCBlocks.MOON_BASALT).generateFor(GCBlockFamilies.MOON_BASALTS);
-        generator.family(GCBlocks.MOON_BASALT_BRICK).generateFor(GCBlockFamilies.MOON_BASALT_BRICKS);
-        generator.family(GCBlocks.CRACKED_MOON_BASALT_BRICK).generateFor(GCBlockFamilies.CRACKED_MOON_BASALT_BRICKS);
-
-        generator.createNonTemplateModelBlock(GCBlocks.FALLEN_METEOR);
-
         // MARS NATURAL
         generator.createTrivialCube(GCBlocks.MARS_SURFACE_ROCK);
         generator.createTrivialCube(GCBlocks.MARS_SUB_SURFACE_ROCK);
-        generator.family(GCBlocks.MARS_STONE).generateFor(GCBlockFamilies.MARS_STONES);
-        generator.family(GCBlocks.MARS_COBBLESTONE).generateFor(GCBlockFamilies.MARS_COBBLESTONES);
 
         // ASTEROID NATURAL
         generator.createTrivialCube(GCBlocks.ASTEROID_ROCK);
@@ -136,7 +102,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.SCORCHED_VENUS_ROCK);
         generator.createTrivialCube(GCBlocks.VOLCANIC_ROCK);
         generator.createTrivialCube(GCBlocks.PUMICE);
-        generator.createNonTemplateModelBlock(GCBlocks.VAPOR_SPOUT);
+        this.createVaporSpout(generator);
 
         // MISC DECOR
 //        generator.createNonTemplateModelBlock(GCBlocks.WALKWAY);
@@ -151,8 +117,9 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.SEALABLE_ALUMINUM_WIRE);
         generator.createTrivialCube(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE);
 //        generator.createNonTemplateModelBlock(GCBlocks.GLASS_FLUID_PIPE);
-//        generator.createNonTemplateModelBlock(GCBlocks.ROCKET_LAUNCH_PAD);
+        this.createRocketLaunchPadBlock(generator);
         generator.createNonTemplateModelBlock(GCBlocks.ROCKET_WORKBENCH);
+        generator.createNonTemplateModelBlock(GCBlocks.FALLEN_METEOR);
 
         // LIGHT PANELS
         generator.createNonTemplateModelBlock(GCBlocks.SQUARE_LIGHT_PANEL); //todo
@@ -257,12 +224,32 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createNonTemplateModelBlock(GCBlocks.FUEL);
 
         generator.createTrivialCube(GCBlocks.AIR_LOCK_FRAME);
-        generator.createNonTemplateModelBlock(GCBlocks.AIR_LOCK_CONTROLLER);
+        this.createAirLockController(generator);
         generator.createNonTemplateModelBlock(GCBlocks.AIR_LOCK_SEAL);
     }
 
-    private static void generateDetailedTexture(BlockModelGenerators generator, Block detailedBlock, Block baseBlock) { //todo use base block to gen (AW the model constructor?)
-        ((BlockModelGeneratorsAccessor)generator).getTexturedModels().put(detailedBlock, DETAILED_DECORATION.get(detailedBlock));
+    private void createMoonTurf(BlockModelGenerators generator) {
+        var block = GCBlocks.MOON_TURF;
+        var textureMapping = new TextureMapping()
+                .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(GCBlocks.MOON_DIRT))
+                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(block))
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block, "_side"));
+        generator.createTrivialBlock(block, textureMapping, ModelTemplates.CUBE_BOTTOM_TOP);
+    }
+
+    private void createVaporSpout(BlockModelGenerators generator) {
+        var textureMapping = new TextureMapping().put(TextureSlot.SIDE, TextureMapping.getBlockTexture(GCBlocks.SOFT_VENUS_ROCK)).put(TextureSlot.TOP, TextureMapping.getBlockTexture(GCBlocks.VAPOR_SPOUT));
+        generator.createTrivialBlock(GCBlocks.VAPOR_SPOUT, textureMapping, ModelTemplates.CUBE_TOP);
+    }
+
+    private void createAirLockController(BlockModelGenerators generator) {
+        var block = GCBlocks.AIR_LOCK_CONTROLLER;
+        var textureMapping = TextureMapping.column(TextureMapping.getBlockTexture(block), TextureMapping.getBlockTexture(GCBlocks.AIR_LOCK_FRAME));
+        generator.createTrivialBlock(block, textureMapping, ModelTemplates.CUBE_COLUMN);
+    }
+
+    private static void putDetailedTextured(BlockModelGenerators generator, Block detailedBlock) {
+        generator.texturedModels.put(detailedBlock, DETAILED_DECORATION.get(detailedBlock));
     }
 
     private static void createRotatedDelegate(BlockModelGenerators generator, Block block) {
@@ -362,20 +349,14 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.TIER_3_HEAVY_DUTY_PLATE, ModelTemplates.FLAT_ITEM);
 
         // ARMOR
-        generator.generateFlatItem(GCItems.HEAVY_DUTY_HELMET, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.HEAVY_DUTY_CHESTPLATE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.HEAVY_DUTY_LEGGINGS, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.HEAVY_DUTY_BOOTS, ModelTemplates.FLAT_ITEM);
-
-        generator.generateFlatItem(GCItems.DESH_HELMET, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.DESH_CHESTPLATE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.DESH_LEGGINGS, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.DESH_BOOTS, ModelTemplates.FLAT_ITEM);
-
-        generator.generateFlatItem(GCItems.TITANIUM_HELMET, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.TITANIUM_CHESTPLATE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.TITANIUM_LEGGINGS, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.TITANIUM_BOOTS, ModelTemplates.FLAT_ITEM);
+        for (var item : BuiltInRegistries.ITEM.asLookup().filterElements(item -> BuiltInRegistries.ITEM.getKey(item).getNamespace().equals(Constant.MOD_ID)).listElements().map(Holder::value).toList()) {
+            if (item == GCItems.SENSOR_GLASSES) {
+                continue;
+            }
+            if (item instanceof ArmorItem armorItem) {
+                generator.generateArmorTrims(armorItem);
+            }
+        }
 
         generator.generateFlatItem(GCItems.SENSOR_GLASSES, ModelTemplates.FLAT_ITEM);
 
@@ -441,10 +422,17 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.THERMAL_PADDING_CHESTPIECE, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.THERMAL_PADDING_LEGGINGS, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.THERMAL_PADDING_BOOTS, ModelTemplates.FLAT_ITEM);
+
         // ROCKETS
+        generator.generateFlatItem(GCItems.ROCKET_ENGINE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.ROCKET_FINS, ModelTemplates.FLAT_ITEM);
 //        generator.generateFlatItem(GCItems.ROCKET, ModelTemplates.FLAT_ITEM);
 
         // SCHEMATICS
+        generator.generateFlatItem(GCItems.BASIC_ROCKET_BODY_SCHEMATIC, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.BASIC_ROCKET_BOTTOM_SCHEMATIC, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.BASIC_ROCKET_CONE_SCHEMATIC, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.BASIC_ROCKET_FINS_SCHEMATIC, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.TIER_2_ROCKET_SCHEMATIC, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.CARGO_ROCKET_SCHEMATIC, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.MOON_BUGGY_SCHEMATIC, ModelTemplates.FLAT_ITEM);
@@ -453,8 +441,8 @@ public class GCModelProvider extends FabricModelProvider {
     }
 
     @Contract("_ -> new")
-    public static @NotNull TextureMapping createDetailedTexture(@NotNull Block block) {
-        ResourceLocation side = TextureMapping.getBlockTexture(block, "_side");
+    private static @NotNull TextureMapping createDetailedTexture(@NotNull Block block) {
+        var side = TextureMapping.getBlockTexture(block, "_side");
         return new TextureMapping()
                 .put(TextureSlot.WALL, side)
                 .put(TextureSlot.SIDE, side)
@@ -474,13 +462,48 @@ public class GCModelProvider extends FabricModelProvider {
                 .select(6, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(GCBlocks.MOON_CHEESE_BLOCK, "_slice6")))));
     }
 
-    private void createCandleCheeseBlock(BlockModelGenerators generators, Block block, Block block2) {
-        var resourceLocation9 = ModelTemplates.CANDLE_CAKE.create(block2, candleCheeseBlock(block, false), generators.modelOutput);
-        var resourceLocation10 = ModelTemplates.CANDLE_CAKE.createWithSuffix(block2, "_lit", candleCheeseBlock(block, true), generators.modelOutput);
-        generators.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block2).with(BlockModelGenerators.createBooleanModelDispatch(BlockStateProperties.LIT, resourceLocation10, resourceLocation9)));
+    private void createCandleCheeseBlock(BlockModelGenerators generators, Block candle, Block cheese) {
+        var cheeseCake = ModelTemplates.CANDLE_CAKE.create(cheese, candleCheeseBlock(candle, false), generators.modelOutput);
+        var litCheeseCake = ModelTemplates.CANDLE_CAKE.createWithSuffix(cheese, "_lit", candleCheeseBlock(candle, true), generators.modelOutput);
+        generators.blockStateOutput.accept(MultiVariantGenerator.multiVariant(cheese).with(BlockModelGenerators.createBooleanModelDispatch(BlockStateProperties.LIT, litCheeseCake, cheeseCake)));
+    }
+
+    private void createRocketLaunchPadBlock(BlockModelGenerators generator) {
+        var block = GCBlocks.ROCKET_LAUNCH_PAD;
+        var centerModel = ModelLocationUtils.getModelLocation(block, "_center");
+        var corner = GCModelTemplates.ROCKET_LAUNCH_PAD_PART.createWithSuffix(block, "_corner", rocketLaunchPadPart("_corner"), generator.modelOutput);
+        var side = GCModelTemplates.ROCKET_LAUNCH_PAD_PART.createWithSuffix(block, "_side", rocketLaunchPadPart("_side"), generator.modelOutput);
+        var defaultModel = Variant.variant().with(VariantProperties.MODEL, centerModel);
+
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(RocketLaunchPadBlock.PART)
+                .select(RocketLaunchPadBlock.Part.NONE, defaultModel)
+                .select(RocketLaunchPadBlock.Part.CENTER, defaultModel)
+                .select(RocketLaunchPadBlock.Part.NORTH_WEST, Variant.variant().with(VariantProperties.MODEL, corner))
+                .select(RocketLaunchPadBlock.Part.NORTH_EAST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90).with(VariantProperties.MODEL, corner))
+                .select(RocketLaunchPadBlock.Part.SOUTH_WEST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270).with(VariantProperties.MODEL, corner))
+                .select(RocketLaunchPadBlock.Part.SOUTH_EAST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180).with(VariantProperties.MODEL, corner))
+                .select(RocketLaunchPadBlock.Part.NORTH, Variant.variant().with(VariantProperties.MODEL, side))
+                .select(RocketLaunchPadBlock.Part.WEST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270).with(VariantProperties.MODEL, side))
+                .select(RocketLaunchPadBlock.Part.SOUTH, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180).with(VariantProperties.MODEL, side))
+                .select(RocketLaunchPadBlock.Part.EAST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90).with(VariantProperties.MODEL, side))
+        ));
+        generator.delegateItemModel(block, centerModel);
+    }
+
+    private static TextureMapping rocketLaunchPadPart(String suffix) {
+        return new TextureMapping()
+                .put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(GCBlocks.ROCKET_LAUNCH_PAD, suffix))
+                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(GCBlocks.ROCKET_LAUNCH_PAD, suffix))
+                .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(GCBlocks.ROCKET_LAUNCH_PAD))
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(GCBlocks.ROCKET_LAUNCH_PAD));
     }
 
     private static TextureMapping candleCheeseBlock(Block block, boolean lit) {
-        return new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(GCBlocks.MOON_CHEESE_BLOCK, "_side")).put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(GCBlocks.MOON_CHEESE_BLOCK)).put(TextureSlot.TOP, TextureMapping.getBlockTexture(GCBlocks.MOON_CHEESE_BLOCK)).put(TextureSlot.SIDE, TextureMapping.getBlockTexture(GCBlocks.MOON_CHEESE_BLOCK, "_side")).put(TextureSlot.CANDLE, TextureMapping.getBlockTexture(block, lit ? "_lit" : ""));
+        return new TextureMapping()
+                .put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(GCBlocks.MOON_CHEESE_BLOCK, "_side"))
+                .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(GCBlocks.MOON_CHEESE_BLOCK))
+                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(GCBlocks.MOON_CHEESE_BLOCK))
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(GCBlocks.MOON_CHEESE_BLOCK, "_side"))
+                .put(TextureSlot.CANDLE, TextureMapping.getBlockTexture(block, lit ? "_lit" : ""));
     }
 }
