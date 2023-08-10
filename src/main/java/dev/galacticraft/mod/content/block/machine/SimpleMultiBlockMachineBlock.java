@@ -25,7 +25,6 @@ package dev.galacticraft.mod.content.block.machine;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.api.block.MultiBlockMachineBlock;
 import dev.galacticraft.mod.api.block.MultiBlockPart;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -45,12 +44,12 @@ public class SimpleMultiBlockMachineBlock<T extends MachineBlockEntity, P extend
     /**
      * Note: BlockEntity of the partBlock must implement {@link MultiBlockPart}
      */
-    public static <T extends MachineBlockEntity, P extends BaseEntityBlock> SimpleMultiBlockMachineBlock<T, P> create(FabricBlockSettings settings, MachineBlockEntityFactory<T> type, List<BlockPos> parts, P partBlock) {
-        return new SimpleMultiBlockMachineBlock<>(settings, type, parts, partBlock);
+    public static <T extends MachineBlockEntity, P extends BaseEntityBlock> SimpleMultiBlockMachineBlock<T, P> create(Properties properties, MachineBlockEntityFactory<T> type, List<BlockPos> parts, P partBlock) {
+        return new SimpleMultiBlockMachineBlock<>(properties, type, parts, partBlock);
     }
 
-    protected SimpleMultiBlockMachineBlock(Properties settings, MachineBlockEntityFactory<T> factory, List<BlockPos> parts, P partBlock) {
-        super(settings, factory);
+    protected SimpleMultiBlockMachineBlock(Properties properties, MachineBlockEntityFactory<T> factory, List<BlockPos> parts, P partBlock) {
+        super(properties, factory);
         this.parts = parts;
         this.partState = partBlock.defaultBlockState();
     }

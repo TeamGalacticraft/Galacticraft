@@ -67,6 +67,6 @@ public class CircuitFabricatorRecipeBuilder extends GCRecipeBuilder {
         if (this.time > 1) {
             recipeJson.addProperty("time", this.time);
         }
-        createResult(recipeJson);
+        this.createResult(recipeJson);
     }
 }

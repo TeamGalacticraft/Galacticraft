@@ -20,26 +20,21 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.data.tag;
+package dev.galacticraft.mod.data.model;
 
-import dev.galacticraft.mod.misc.banner.GCBannerPatterns;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.tags.BannerPatternTags;
-import net.minecraft.world.level.block.entity.BannerPattern;
+import java.util.Optional;
 
-import java.util.concurrent.CompletableFuture;
+import dev.galacticraft.mod.Constant;
+import net.minecraft.data.models.model.ModelTemplate;
+import net.minecraft.data.models.model.ModelTemplates;
+import net.minecraft.data.models.model.TextureSlot;
 
-public class GCBannerTagProvider extends FabricTagProvider<BannerPattern> {
-    public GCBannerTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
-        super(output, Registries.BANNER_PATTERN, registriesFuture);
-    }
+public class GCModelTemplates {
+    public static final ModelTemplate SPAWN_EGG = ModelTemplates.createItem("template_spawn_egg");
 
-    @Override
-    protected void addTags(HolderLookup.Provider arg) {
-        this.getOrCreateTagBuilder(BannerPatternTags.NO_ITEM_REQUIRED)
-                .add(GCBannerPatterns.ROCKET_KEY);
+    public static final ModelTemplate ROCKET_LAUNCH_PAD_PART = create("rocket_launch_pad_part", TextureSlot.PARTICLE, TextureSlot.TOP, TextureSlot.BOTTOM, TextureSlot.SIDE);
+
+    private static ModelTemplate create(String string, TextureSlot... textureSlots) {
+        return new ModelTemplate(Optional.of(Constant.id("block/" + string)), Optional.empty(), textureSlots);
     }
 }

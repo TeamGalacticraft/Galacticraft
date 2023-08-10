@@ -81,20 +81,20 @@ public class ShapedCompressorRecipeBuilder extends GCRecipeBuilder {
 
     @Override
     public void serializeRecipeData(JsonObject jsonRecipe) {
-        JsonArray patternJson = new JsonArray();
+        var patternJson = new JsonArray();
 
-        for(String string : this.pattern) {
+        for(var string : this.pattern) {
             patternJson.add(string);
         }
 
         jsonRecipe.add("pattern", patternJson);
-        JsonObject keyJson = new JsonObject();
+        var keyJson = new JsonObject();
 
-        for(Map.Entry<Character, Ingredient> entry : this.key.entrySet()) {
+        for(var entry : this.key.entrySet()) {
             keyJson.add(String.valueOf(entry.getKey()), entry.getValue().toJson());
         }
 
         jsonRecipe.add("key", keyJson);
-        createResult(jsonRecipe);
+        this.createResult(jsonRecipe);
     }
 }

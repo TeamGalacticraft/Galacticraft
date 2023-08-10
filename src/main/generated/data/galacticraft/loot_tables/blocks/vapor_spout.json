@@ -24,25 +24,16 @@
                   }
                 }
               ],
-              "name": "galacticraft:fallen_meteor"
+              "name": "galacticraft:vapor_spout"
             },
             {
               "type": "minecraft:item",
-              "functions": [
+              "conditions": [
                 {
-                  "add": false,
-                  "count": {
-                    "type": "minecraft:uniform",
-                    "max": 2.0,
-                    "min": 1.0
-                  },
-                  "function": "minecraft:set_count"
-                },
-                {
-                  "function": "minecraft:explosion_decay"
+                  "condition": "minecraft:survives_explosion"
                 }
               ],
-              "name": "galacticraft:raw_meteoric_iron"
+              "name": "galacticraft:soft_venus_rock"
             }
           ]
         }
