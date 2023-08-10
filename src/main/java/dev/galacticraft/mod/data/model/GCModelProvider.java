@@ -25,11 +25,14 @@ package dev.galacticraft.mod.data.model;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import com.google.common.collect.Maps;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.models.BlockModelGenerators;
 import net.minecraft.data.models.ItemModelGenerators;
@@ -39,6 +42,7 @@ import net.minecraft.data.models.blockstates.Variant;
 import net.minecraft.data.models.blockstates.VariantProperties;
 import net.minecraft.data.models.model.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -345,20 +349,14 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.TIER_3_HEAVY_DUTY_PLATE, ModelTemplates.FLAT_ITEM);
 
         // ARMOR
-        generator.generateFlatItem(GCItems.HEAVY_DUTY_HELMET, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.HEAVY_DUTY_CHESTPLATE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.HEAVY_DUTY_LEGGINGS, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.HEAVY_DUTY_BOOTS, ModelTemplates.FLAT_ITEM);
-
-        generator.generateFlatItem(GCItems.DESH_HELMET, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.DESH_CHESTPLATE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.DESH_LEGGINGS, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.DESH_BOOTS, ModelTemplates.FLAT_ITEM);
-
-        generator.generateFlatItem(GCItems.TITANIUM_HELMET, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.TITANIUM_CHESTPLATE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.TITANIUM_LEGGINGS, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.TITANIUM_BOOTS, ModelTemplates.FLAT_ITEM);
+        for (var item : BuiltInRegistries.ITEM.asLookup().filterElements(item -> BuiltInRegistries.ITEM.getKey(item).getNamespace().equals(Constant.MOD_ID)).listElements().map(Holder::value).toList()) {
+            if (item == GCItems.SENSOR_GLASSES) {
+                continue;
+            }
+            if (item instanceof ArmorItem armorItem) {
+                generator.generateArmorTrims(armorItem);
+            }
+        }
 
         generator.generateFlatItem(GCItems.SENSOR_GLASSES, ModelTemplates.FLAT_ITEM);
 
