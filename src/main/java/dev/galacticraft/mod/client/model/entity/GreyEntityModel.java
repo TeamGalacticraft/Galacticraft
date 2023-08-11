@@ -24,15 +24,21 @@ package dev.galacticraft.mod.client.model.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
+import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.ZombieModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.HumanoidArm;
+import org.joml.Quaternionf;
 
-public class GreyEntityModel<T extends Entity> extends EntityModel<T> {
+public class GreyEntityModel<T extends Entity> extends EntityModel<T> implements ArmedModel {
 	private final ModelPart Body;
 	private final ModelPart Left_Arm;
 	private final ModelPart Right_Arm;
@@ -93,5 +99,12 @@ public class GreyEntityModel<T extends Entity> extends EntityModel<T> {
 		Left_Leg.render(poseStack, buffer, packedLight, packedOverlay);
 		Right_Leg.render(poseStack, buffer, packedLight, packedOverlay);
 		Head.render(poseStack, buffer, packedLight, packedOverlay);
+	}
+
+	@Override
+	public void translateToHand(HumanoidArm humanoidArm, PoseStack poseStack) {
+		poseStack.mulPose(new Quaternionf().rotationZYX(0,0,(float) Math.toRadians(-20)));
+		poseStack.translate(0.13,-0.1,0.5);
+		Right_Arm.translateAndRotate(poseStack);
 	}
 }
