@@ -22,12 +22,14 @@
 
 package dev.galacticraft.mod.content.entity;
 
+import com.mojang.serialization.Dynamic;
 import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import dev.galacticraft.mod.content.entity.grey.GreyEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
@@ -41,8 +43,8 @@ public class ArchGreyEntity extends GreyEntity {
     }
 
     @Override
-    protected void registerGoals() {
-
+    protected Brain<?> makeBrain(Dynamic<?> dynamic) {
+        return this.brainProvider().makeBrain(dynamic);
     }
 
     @Override

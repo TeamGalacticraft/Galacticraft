@@ -26,6 +26,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Dynamic;
 import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
+import dev.galacticraft.mod.content.GCEntityMemoryModuleTypes;
+import dev.galacticraft.mod.content.GCEntitySensorTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -57,24 +59,16 @@ import java.util.Set;
 public class GreyEntity extends PathfinderMob implements InventoryCarrier, Npc {
     private final SimpleContainer inventory = new SimpleContainer(1);
 
-    // @Nullable
-    // private FollowPlayerGoal followPlayerGoal;
-    // @Nullable
-    // private GreyAvoidEntityGoal greyAvoidEntityGoal;
-
-    boolean isNearbyPlayer;
-    boolean allowedToRemoveFollowingGoal = true;
-    int tickAgeNearOrAwayFromPlayer = 0;
-
     private static final Set<Item> WANTED_ITEMS = ImmutableSet.of(Items.DIAMOND);
 
     protected static final ImmutableList<SensorType<? extends Sensor<? super GreyEntity>>> SENSOR_TYPES = ImmutableList
-            .of(SensorType.NEAREST_ITEMS);
+            .of(SensorType.NEAREST_ITEMS, SensorType.NEAREST_PLAYERS, GCEntitySensorTypes.NEAREST_ARCH_GREY_SENSOR);
     protected static final ImmutableList<MemoryModuleType<?>> MEMORY_TYPES = ImmutableList.of(MemoryModuleType.PATH,
-            MemoryModuleType.LOOK_TARGET, MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES,
+            MemoryModuleType.LOOK_TARGET, MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES, MemoryModuleType.NEAREST_VISIBLE_PLAYER,
             MemoryModuleType.WALK_TARGET, MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE, MemoryModuleType.HURT_BY,
             MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM, MemoryModuleType.ITEM_PICKUP_COOLDOWN_TICKS,
-            MemoryModuleType.IS_PANICKING);
+            MemoryModuleType.IS_PANICKING, MemoryModuleType.NEAREST_VISIBLE_ATTACKABLE_PLAYER, GCEntityMemoryModuleTypes.NEAREST_ARCH_GREY
+    );
 
     public GreyEntity(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
