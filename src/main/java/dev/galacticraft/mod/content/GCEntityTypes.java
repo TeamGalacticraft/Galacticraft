@@ -25,6 +25,7 @@ package dev.galacticraft.mod.content;
 import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.*;
+import dev.galacticraft.mod.content.entity.grey.GreyEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.core.Registry;
