@@ -55,7 +55,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-// FIXME: figure out why the grey occasionally follows random outside of the arch grey such as cows, villagers, and other mobs ):
 public class GreyEntity extends PathfinderMob implements InventoryCarrier, Npc {
     private final SimpleContainer inventory = new SimpleContainer(1);
 
