@@ -23,14 +23,13 @@
 package dev.galacticraft.mod.content.entity;
 
 import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
+import dev.galacticraft.mod.content.entity.grey.GreyEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FollowMobGoal;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -53,12 +52,6 @@ public class ArchGreyEntity extends GreyEntity {
 
     @Override
     protected void populateDefaultEquipmentSlots(RandomSource randomSource, DifficultyInstance difficultyInstance) {
-
-    }
-
-
-    @Override
-    public void doTick() {
 
     }
 

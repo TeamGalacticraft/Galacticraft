@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.content.entity.goals;
 
-import dev.galacticraft.mod.content.entity.GreyEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.control.LookControl;
@@ -34,6 +33,8 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
+
+import dev.galacticraft.mod.content.entity.grey.GreyEntity;
 
 public class FollowPlayerGoal extends Goal {
     private final Mob mob;

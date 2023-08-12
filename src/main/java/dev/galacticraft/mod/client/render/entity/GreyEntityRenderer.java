@@ -28,7 +28,7 @@ import dev.galacticraft.mod.client.model.entity.ArchGreyEntityModel;
 import dev.galacticraft.mod.client.model.entity.GreyEntityModel;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import dev.galacticraft.mod.content.entity.ArchGreyEntity;
-import dev.galacticraft.mod.content.entity.GreyEntity;
+import dev.galacticraft.mod.content.entity.grey.GreyEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.*;
