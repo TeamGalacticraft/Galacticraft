@@ -9,26 +9,21 @@ import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.mod.content.GCEntityMemoryModuleTypes;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.ArchGreyEntity;
+import dev.galacticraft.mod.content.entity.ai.behavior.GoToArchGreyOnZoneLeave;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.*;
-import net.minecraft.world.entity.ai.behavior.declarative.BehaviorBuilder;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
-import net.minecraft.world.entity.animal.allay.AllayAi;
-import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.level.Level;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 // TODO: need to reimplement avoiding the player after 3 seconds if too close
 public class GreyAi {
@@ -46,7 +41,8 @@ public class GreyAi {
         brain.addActivity(Activity.CORE, 0,
                 ImmutableList.of(new Swim(0.8f), new AnimalPanic(2.5f), new LookAtTargetSink(45, 90),
                         new MoveToTargetSink(),
-                        new CountDownCooldownTicks(MemoryModuleType.ITEM_PICKUP_COOLDOWN_TICKS)));
+                        new CountDownCooldownTicks(MemoryModuleType.ITEM_PICKUP_COOLDOWN_TICKS)
+                ));
 
     }
 
@@ -54,15 +50,14 @@ public class GreyAi {
 
         brain.addActivity(Activity.IDLE,
                 ImmutableList.of(
-                        Pair.of(1, SetEntityLookTarget.create(EntityType.PLAYER, 10.0f)),
-                        Pair.of(1, StayCloseToTarget.create(GreyAi::getNearestPlayerPositionTracker, GreyAi::inRangeOfArchGrey, 3, 0, 0.9f)),
+                        Pair.of(0, SetEntityLookTarget.create(EntityType.PLAYER, 10.0f)),
+                        Pair.of(0, StayCloseToTarget.create(GreyAi::getNearestPlayerPositionTracker, Entity::isAlive, 3, 0, 0.9f)),
                         // if it gets too far from the nearest arch grey, go to it
-                        // FIXME: figure out why it doesn't go fully to the nearest arch grey (intended behavior is ignoring all tasks until 3 blocks away)
-                        Pair.of(2, SetEntityLookTarget.create(GCEntityTypes.ARCH_GREY, 60.0f)),
-                        Pair.of(2, StayCloseToTarget.create(GreyAi::getNearestArchGreyPositionTracker, Entity::isAlive, 2, 20, 0.9f)),
-                        Pair.of(3, SetEntityLookTarget.create(EntityType.ITEM, 10.0f)),
-                        Pair.of(3, GoToWantedItem.create(grey -> true, 0.9f, true, 10)),
-                        Pair.of(4, new RunOne<GreyEntity>(
+                        Pair.of(1, SetEntityLookTarget.create(GCEntityTypes.ARCH_GREY, 60.0f)),
+                        Pair.of(1, GoToArchGreyOnZoneLeave.create(GreyAi::getNearestArchGreyPositionTracker, Entity::isAlive, 2, 20, 1.0f)),
+                        Pair.of(2, SetEntityLookTarget.create(EntityType.ITEM, 10.0f)),
+                        Pair.of(2, GoToWantedItem.create(grey -> true, 0.9f, true, 10)),
+                        Pair.of(3, new RunOne<GreyEntity>(
                                 ImmutableList.of(
                                         Pair.of(new DoNothing(20, 100), 1),
                                         Pair.of(RandomStroll.stroll(0.6f), 1)))
@@ -70,20 +65,6 @@ public class GreyAi {
                 )
         );
 
-    }
-
-    private static boolean inRangeOfArchGrey(LivingEntity livingEntity) {
-        Optional<ArchGreyEntity> archGreyOptional = livingEntity.getBrain().getMemory(GCEntityMemoryModuleTypes.NEAREST_ARCH_GREY);
-        if (archGreyOptional.isPresent()) {
-            ArchGreyEntity archGrey = archGreyOptional.get();
-            if (archGrey.distanceTo(livingEntity) <= 17) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return true;
-        }
     }
 
     public static void updateActivity(GreyEntity grey) {

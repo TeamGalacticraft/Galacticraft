@@ -67,7 +67,8 @@ public class GreyEntity extends PathfinderMob implements InventoryCarrier, Npc {
             MemoryModuleType.LOOK_TARGET, MemoryModuleType.NEAREST_VISIBLE_LIVING_ENTITIES, MemoryModuleType.NEAREST_VISIBLE_PLAYER,
             MemoryModuleType.WALK_TARGET, MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE, MemoryModuleType.HURT_BY,
             MemoryModuleType.NEAREST_VISIBLE_WANTED_ITEM, MemoryModuleType.ITEM_PICKUP_COOLDOWN_TICKS,
-            MemoryModuleType.IS_PANICKING, MemoryModuleType.NEAREST_VISIBLE_ATTACKABLE_PLAYER, GCEntityMemoryModuleTypes.NEAREST_ARCH_GREY
+            MemoryModuleType.IS_PANICKING, MemoryModuleType.NEAREST_VISIBLE_ATTACKABLE_PLAYER, GCEntityMemoryModuleTypes.NEAREST_ARCH_GREY,
+            GCEntityMemoryModuleTypes.GREY_LEFT_ARCH_GREY_ZONE
     );
 
     public GreyEntity(EntityType<? extends PathfinderMob> entityType, Level level) {
@@ -152,5 +153,6 @@ public class GreyEntity extends PathfinderMob implements InventoryCarrier, Npc {
     @Override
     public SimpleContainer getInventory() {
         return this.inventory;
+
     }
 }
