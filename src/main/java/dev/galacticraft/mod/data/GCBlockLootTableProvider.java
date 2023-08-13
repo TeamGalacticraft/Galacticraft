@@ -276,8 +276,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         this.dropSelf(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
 
-        this.add(GCBlocks.CAVERNOUS_VINE, BlockLootSubProvider::createShearsOnlyDrop);
-        this.add(GCBlocks.POISONOUS_CAVERNOUS_VINE, BlockLootSubProvider::createShearsOnlyDrop);
+        this.add(GCBlocks.CAVERNOUS_VINES, BlockLootSubProvider::createShearsOnlyDrop);
         this.add(GCBlocks.MOON_BERRY_BUSH, block -> this.applyExplosionDecay(block, LootTable.lootTable()
                         .withPool(LootPool.lootPool()
                                 .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SweetBerryBushBlock.AGE, 3)))

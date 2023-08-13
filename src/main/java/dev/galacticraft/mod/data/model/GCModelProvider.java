@@ -28,6 +28,7 @@ import com.google.common.collect.Maps;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.decoration.GratingBlock;
+import dev.galacticraft.mod.content.block.environment.CavernousVines;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -183,8 +184,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.copyModel(Blocks.CARTOGRAPHY_TABLE, GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
 
         // MISC WORLD GEN
-//        generator.createNonTemplateModelBlock(GCBlocks.CAVERNOUS_VINE);
-//        generator.createNonTemplateModelBlock(GCBlocks.POISONOUS_CAVERNOUS_VINE);
+        this.createCavernousVines(generator);
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(GCBlocks.MOON_BERRY_BUSH)
                         .with(PropertyDispatch.property(BlockStateProperties.AGE_3)
                                         .generate(integer -> Variant.variant().with(VariantProperties.MODEL, generator.createSuffixedVariant(GCBlocks.MOON_BERRY_BUSH, "_stage" + integer, ModelTemplates.CROSS, TextureMapping::cross)))
@@ -458,15 +458,16 @@ public class GCModelProvider extends FabricModelProvider {
     }
 
     private void createCheeseBlock(BlockModelGenerators generators) {
+        var block = GCBlocks.MOON_CHEESE_BLOCK;
         generators.createSimpleFlatItemModel(GCItems.MOON_CHEESE_BLOCK);
-        generators.blockStateOutput.accept(MultiVariantGenerator.multiVariant(GCBlocks.MOON_CHEESE_BLOCK).with(PropertyDispatch.property(BlockStateProperties.BITES)
-                .select(0, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(GCBlocks.MOON_CHEESE_BLOCK)))
-                .select(1, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(GCBlocks.MOON_CHEESE_BLOCK, "_slice1")))
-                .select(2, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(GCBlocks.MOON_CHEESE_BLOCK, "_slice2")))
-                .select(3, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(GCBlocks.MOON_CHEESE_BLOCK, "_slice3")))
-                .select(4, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(GCBlocks.MOON_CHEESE_BLOCK, "_slice4")))
-                .select(5, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(GCBlocks.MOON_CHEESE_BLOCK, "_slice5")))
-                .select(6, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(GCBlocks.MOON_CHEESE_BLOCK, "_slice6")))));
+        generators.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(BlockStateProperties.BITES)
+                .select(0, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block)))
+                .select(1, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_slice1")))
+                .select(2, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_slice2")))
+                .select(3, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_slice3")))
+                .select(4, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_slice4")))
+                .select(5, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_slice5")))
+                .select(6, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_slice6")))));
     }
 
     private void createCandleCheeseBlock(BlockModelGenerators generators, Block candle, Block cheese) {
@@ -478,8 +479,8 @@ public class GCModelProvider extends FabricModelProvider {
     private void createRocketLaunchPadBlock(BlockModelGenerators generator) {
         var block = GCBlocks.ROCKET_LAUNCH_PAD;
         var centerModel = ModelLocationUtils.getModelLocation(block, "_center");
-        var corner = GCModelTemplates.ROCKET_LAUNCH_PAD_PART.createWithSuffix(block, "_corner", rocketLaunchPadPart("_corner"), generator.modelOutput);
-        var side = GCModelTemplates.ROCKET_LAUNCH_PAD_PART.createWithSuffix(block, "_side", rocketLaunchPadPart("_side"), generator.modelOutput);
+        var corner = GCModelTemplates.ROCKET_LAUNCH_PAD_PART.createWithSuffix(block, "_corner", rocketLaunchPadPart(block, "_corner"), generator.modelOutput);
+        var side = GCModelTemplates.ROCKET_LAUNCH_PAD_PART.createWithSuffix(block, "_side", rocketLaunchPadPart(block, "_side"), generator.modelOutput);
         var defaultModel = Variant.variant().with(VariantProperties.MODEL, centerModel);
 
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(RocketLaunchPadBlock.PART)
@@ -497,20 +498,33 @@ public class GCModelProvider extends FabricModelProvider {
         generator.delegateItemModel(block, centerModel);
     }
 
-    private static TextureMapping rocketLaunchPadPart(String suffix) {
-        return new TextureMapping()
-                .put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(GCBlocks.ROCKET_LAUNCH_PAD, suffix))
-                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(GCBlocks.ROCKET_LAUNCH_PAD, suffix))
-                .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(GCBlocks.ROCKET_LAUNCH_PAD))
-                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(GCBlocks.ROCKET_LAUNCH_PAD));
+    private void createCavernousVines(BlockModelGenerators generator) {
+        var cavernousVines = GCBlocks.CAVERNOUS_VINES;
+        var cavernousVinesPlant = GCBlocks.CAVERNOUS_VINES_PLANT;
+        generator.skipAutoItemBlock(cavernousVinesPlant);
+        generator.createSimpleFlatItemModel(cavernousVines);
+        var resourceLocation = generator.createSuffixedVariant(cavernousVines, "", ModelTemplates.CROSS, TextureMapping::cross);
+        var resourceLocation2 = generator.createSuffixedVariant(cavernousVines, "_poisonous", ModelTemplates.CROSS, TextureMapping::cross);
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(cavernousVines).with(BlockModelGenerators.createBooleanModelDispatch(CavernousVines.POISONOUS, resourceLocation2, resourceLocation)));
+        var resourceLocation3 = generator.createSuffixedVariant(cavernousVinesPlant, "", ModelTemplates.CROSS, TextureMapping::cross);
+        var resourceLocation4 = generator.createSuffixedVariant(cavernousVinesPlant, "_poisonous", ModelTemplates.CROSS, TextureMapping::cross);
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(cavernousVinesPlant).with(BlockModelGenerators.createBooleanModelDispatch(CavernousVines.POISONOUS, resourceLocation4, resourceLocation3)));
     }
 
-    private static TextureMapping candleCheeseBlock(Block block, boolean lit) {
+    private static TextureMapping rocketLaunchPadPart(Block block, String suffix) {
+        return new TextureMapping()
+                .put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(block, suffix))
+                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(block, suffix))
+                .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(block))
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block));
+    }
+
+    private static TextureMapping candleCheeseBlock(Block candle, boolean lit) {
         return new TextureMapping()
                 .put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(GCBlocks.MOON_CHEESE_BLOCK, "_side"))
                 .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(GCBlocks.MOON_CHEESE_BLOCK))
                 .put(TextureSlot.TOP, TextureMapping.getBlockTexture(GCBlocks.MOON_CHEESE_BLOCK))
                 .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(GCBlocks.MOON_CHEESE_BLOCK, "_side"))
-                .put(TextureSlot.CANDLE, TextureMapping.getBlockTexture(block, lit ? "_lit" : ""));
+                .put(TextureSlot.CANDLE, TextureMapping.getBlockTexture(candle, lit ? "_lit" : ""));
     }
 }

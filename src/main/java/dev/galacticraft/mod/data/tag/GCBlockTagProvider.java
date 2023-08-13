@@ -86,7 +86,11 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 );
 
         this.getOrCreateTagBuilder(BlockTags.CLIMBABLE)
-                .add(GCBlocks.TIN_LADDER);
+                .add(
+                        GCBlocks.TIN_LADDER,
+                        GCBlocks.CAVERNOUS_VINES,
+                        GCBlocks.CAVERNOUS_VINES_PLANT
+                );
 
         var stairs = new Block[] {
                 GCBlocks.TIN_DECORATION_STAIRS,

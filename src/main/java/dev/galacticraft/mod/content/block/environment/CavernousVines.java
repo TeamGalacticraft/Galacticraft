@@ -22,44 +22,43 @@
 
 package dev.galacticraft.mod.content.block.environment;
 
-import dev.galacticraft.mod.content.GCBlocks;
+import java.util.function.ToIntFunction;
+
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class PoisonousCavernousVineBlock extends CavernousVineBlock {
-    public PoisonousCavernousVineBlock(Properties settings) {
-        super(settings);
-    }
+public interface CavernousVines {
+    VoxelShape SHAPE = Block.box(1.0, 0.0, 1.0, 15.0, 16.0, 15.0);
+    BooleanProperty POISONOUS = BooleanProperty.create("poisonous");
+    BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    float CHANCE_OF_POISONOUS_VINES = 0.6F;
 
-    @Override
-    public void onCollided(LivingEntity entity) {
-        super.onCollided(entity);
-        entity.hurt(new DamageSource(entity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.VINE_POISON)), 5.0f);
-        entity.setYRot(entity.getYRot() + 0.4F); // Spin the player
-    }
-
-    @Override
-    public InteractionResult use(BlockState blockState, Level world, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
-        if (player.getItemInHand(hand).getItem() instanceof ShearsItem) {
-            world.setBlockAndUpdate(blockPos, GCBlocks.CAVERNOUS_VINE.defaultBlockState().setValue(VINES, blockState.getValue(VINES)));
-            world.playLocalSound(blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundEvents.GRASS_BREAK, SoundSource.BLOCKS, 1f, 1f, true);
-            return InteractionResult.SUCCESS;
+    static void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
+        if (!(entity instanceof LivingEntity livingEntity) || livingEntity instanceof Player player && player.getAbilities().instabuild) {
+            return;
         }
-        return InteractionResult.SUCCESS;
+        if (blockState.getValue(POISONOUS)) {
+            livingEntity.hurt(new DamageSource(livingEntity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.VINE_POISON)), 0.5f);
+        }
+        livingEntity.setDeltaMovement(livingEntity.getDeltaMovement().x, 0.1D, livingEntity.getDeltaMovement().z);
+        livingEntity.setYRot(livingEntity.getYRot() + 0.1F); // Spin the entity
+    }
+
+    static ToIntFunction<BlockState> emission(int i) {
+        return blockState -> blockState.getValue(POISONOUS) ? i : 0;
     }
 }

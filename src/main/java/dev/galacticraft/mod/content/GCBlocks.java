@@ -314,8 +314,8 @@ public class GCBlocks {
     public static final Block LUNAR_CARTOGRAPHY_TABLE = new LunarCartographyTableBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).ignitedByLava().instrument(NoteBlockInstrument.BASS).strength(2.5F).sound(SoundType.WOOD));
 
     // MISC WORLD GEN
-    public static final Block CAVERNOUS_VINE = new CavernousVineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).pushReaction(PushReaction.DESTROY).noLootTable().noCollission().lightLevel(blockstate -> 0).sound(SoundType.GRASS).randomTicks());
-    public static final Block POISONOUS_CAVERNOUS_VINE = new PoisonousCavernousVineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).pushReaction(PushReaction.DESTROY).noLootTable().noCollission().lightLevel(blockstate -> 3).sound(SoundType.GRASS).randomTicks());
+    public static final Block CAVERNOUS_VINES = register(Constant.Block.CAVERNOUS_VINES, new CavernousVinesBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).randomTicks().noCollission().lightLevel(CavernousVines.emission(8)).instabreak().sound(SoundType.CAVE_VINES).pushReaction(PushReaction.DESTROY)));
+    public static final Block CAVERNOUS_VINES_PLANT = new CavernousVinesPlantBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).noCollission().lightLevel(CavernousVines.emission(8)).instabreak().sound(SoundType.CAVE_VINES).pushReaction(PushReaction.DESTROY).dropsLike(CAVERNOUS_VINES));
     public static final Block MOON_BERRY_BUSH = new MoonBerryBushBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).pushReaction(PushReaction.DESTROY).noLootTable().noCollission().lightLevel(blockstate -> 3).sound(SoundType.SWEET_BERRY_BUSH).randomTicks());
 
     // DUMMY
@@ -356,6 +356,8 @@ public class GCBlocks {
     public static void register() {
         FlammableBlockRegistry.getDefaultInstance().add(FUEL, 80, 130);
         FlammableBlockRegistry.getDefaultInstance().add(CRUDE_OIL, 60, 100);
+        FlammableBlockRegistry.getDefaultInstance().add(CAVERNOUS_VINES, 15, 60);
+        FlammableBlockRegistry.getDefaultInstance().add(CAVERNOUS_VINES_PLANT, 15, 60);
         FlattenableBlockRegistry.register(MOON_DIRT, MOON_DIRT_PATH.defaultBlockState());
 
         // TORCHES
@@ -600,8 +602,7 @@ public class GCBlocks {
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.LUNAR_CARTOGRAPHY_TABLE), LUNAR_CARTOGRAPHY_TABLE);
 
         // MISC WORLD GEN
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.CAVERNOUS_VINE), CAVERNOUS_VINE);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.POISONOUS_CAVERNOUS_VINE), POISONOUS_CAVERNOUS_VINE);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.CAVERNOUS_VINES_PLANT), CAVERNOUS_VINES_PLANT);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_BERRY_BUSH), MOON_BERRY_BUSH);
 
         // DUMMY
