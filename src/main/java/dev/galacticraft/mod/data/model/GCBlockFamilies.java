@@ -45,7 +45,6 @@ public class GCBlockFamilies {
     public static final BlockFamily DETAILED_ALUMINUM_DECORATIONS = builder(DETAILED_ALUMINUM_DECORATION)
             .slab(DETAILED_ALUMINUM_DECORATION_SLAB)
             .stairs(DETAILED_ALUMINUM_DECORATION_STAIRS)
-            .wall(DETAILED_ALUMINUM_DECORATION_WALL)
             .getFamily();
 
     public static final BlockFamily BRONZE_DECORATIONS = builder(BRONZE_DECORATION)
@@ -56,7 +55,6 @@ public class GCBlockFamilies {
     public static final BlockFamily DETAILED_BRONZE_DECORATIONS = builder(DETAILED_BRONZE_DECORATION)
             .slab(DETAILED_BRONZE_DECORATION_SLAB)
             .stairs(DETAILED_BRONZE_DECORATION_STAIRS)
-            .wall(DETAILED_BRONZE_DECORATION_WALL)
             .getFamily();
 
     public static final BlockFamily COPPER_DECORATIONS = builder(COPPER_DECORATION)
@@ -67,7 +65,6 @@ public class GCBlockFamilies {
     public static final BlockFamily DETAILED_COPPER_DECORATIONS = builder(DETAILED_COPPER_DECORATION)
             .slab(DETAILED_COPPER_DECORATION_SLAB)
             .stairs(DETAILED_COPPER_DECORATION_STAIRS)
-            .wall(DETAILED_COPPER_DECORATION_WALL)
             .getFamily();
 
     public static final BlockFamily IRON_DECORATIONS = builder(IRON_DECORATION)
@@ -78,7 +75,6 @@ public class GCBlockFamilies {
     public static final BlockFamily DETAILED_IRON_DECORATIONS = builder(DETAILED_IRON_DECORATION)
             .slab(DETAILED_IRON_DECORATION_SLAB)
             .stairs(DETAILED_IRON_DECORATION_STAIRS)
-            .wall(DETAILED_IRON_DECORATION_WALL)
             .getFamily();
 
     public static final BlockFamily METEORIC_IRON_DECORATIONS = builder(METEORIC_IRON_DECORATION)
@@ -89,7 +85,6 @@ public class GCBlockFamilies {
     public static final BlockFamily DETAILED_METEORIC_IRON_DECORATIONS = builder(DETAILED_METEORIC_IRON_DECORATION)
             .slab(DETAILED_METEORIC_IRON_DECORATION_SLAB)
             .stairs(DETAILED_METEORIC_IRON_DECORATION_STAIRS)
-            .wall(DETAILED_METEORIC_IRON_DECORATION_WALL)
             .getFamily();
 
     public static final BlockFamily STEEL_DECORATIONS = builder(STEEL_DECORATION)
@@ -100,7 +95,6 @@ public class GCBlockFamilies {
     public static final BlockFamily DETAILED_STEEL_DECORATIONS = builder(DETAILED_STEEL_DECORATION)
             .slab(DETAILED_STEEL_DECORATION_SLAB)
             .stairs(DETAILED_STEEL_DECORATION_STAIRS)
-            .wall(DETAILED_STEEL_DECORATION_WALL)
             .getFamily();
 
     public static final BlockFamily TIN_DECORATIONS = builder(TIN_DECORATION)
@@ -111,7 +105,6 @@ public class GCBlockFamilies {
     public static final BlockFamily DETAILED_TIN_DECORATIONS = builder(DETAILED_TIN_DECORATION)
             .slab(DETAILED_TIN_DECORATION_SLAB)
             .stairs(DETAILED_TIN_DECORATION_STAIRS)
-            .wall(DETAILED_TIN_DECORATION_WALL)
             .getFamily();
 
     public static final BlockFamily TITANIUM_DECORATIONS = builder(TITANIUM_DECORATION)
@@ -122,7 +115,6 @@ public class GCBlockFamilies {
     public static final BlockFamily DETAILED_TITANIUM_DECORATIONS = builder(DETAILED_TITANIUM_DECORATION)
             .slab(DETAILED_TITANIUM_DECORATION_SLAB)
             .stairs(DETAILED_TITANIUM_DECORATION_STAIRS)
-            .wall(DETAILED_TITANIUM_DECORATION_WALL)
             .getFamily();
 
     public static final BlockFamily DARK_DECORATIONS = builder(DARK_DECORATION)
@@ -133,7 +125,6 @@ public class GCBlockFamilies {
     public static final BlockFamily DETAILED_DARK_DECORATIONS = builder(DETAILED_DARK_DECORATION)
             .slab(DETAILED_DARK_DECORATION_SLAB)
             .stairs(DETAILED_DARK_DECORATION_STAIRS)
-            .wall(DETAILED_DARK_DECORATION_WALL)
             .getFamily();
 
     // STONES

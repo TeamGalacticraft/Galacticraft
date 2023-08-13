@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.data.model;
 
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import com.google.common.collect.Maps;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
@@ -47,7 +46,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class GCModelProvider extends FabricModelProvider {
-    private static final TexturedModel.Provider DETAILED_DECORATION = TexturedModel.createDefault(GCModelProvider::createDetailedTexture, ModelTemplates.CUBE_BOTTOM_TOP);
+    private static final TexturedModel.Provider DETAILED_DECORATION = TexturedModel.createDefault(GCModelProvider::detailedTexture, ModelTemplates.CUBE_BOTTOM_TOP);
 
     public GCModelProvider(FabricDataOutput output) {
         super(output);
@@ -70,12 +69,22 @@ public class GCModelProvider extends FabricModelProvider {
         putDetailedTextured(generator, GCBlocks.DETAILED_TIN_DECORATION);
         putDetailedTextured(generator, GCBlocks.DETAILED_TITANIUM_DECORATION);
         putDetailedTextured(generator, GCBlocks.DETAILED_DARK_DECORATION);
-        putDetailedTextured(generator, GCBlocks.DETAILED_DARK_DECORATION);
         generator.texturedModels.put(GCBlocks.LUNASLATE, TexturedModel.COLUMN_WITH_WALL.get(GCBlocks.LUNASLATE));
 
         GCBlockFamilies.getAllFamilies()
                 .filter(BlockFamily::shouldGenerateModel)
                 .forEach(blockFamily -> generator.family(blockFamily.getBaseBlock()).generateFor(blockFamily));
+
+        // DETAILED WALL - Special case!
+        this.detailedWall(generator, GCBlocks.DETAILED_ALUMINUM_DECORATION, GCBlocks.DETAILED_ALUMINUM_DECORATION_WALL);
+        this.detailedWall(generator, GCBlocks.DETAILED_BRONZE_DECORATION, GCBlocks.DETAILED_BRONZE_DECORATION_WALL);
+        this.detailedWall(generator, GCBlocks.DETAILED_COPPER_DECORATION, GCBlocks.DETAILED_COPPER_DECORATION_WALL);
+        this.detailedWall(generator, GCBlocks.DETAILED_IRON_DECORATION, GCBlocks.DETAILED_IRON_DECORATION_WALL);
+        this.detailedWall(generator, GCBlocks.DETAILED_METEORIC_IRON_DECORATION, GCBlocks.DETAILED_METEORIC_IRON_DECORATION_WALL);
+        this.detailedWall(generator, GCBlocks.DETAILED_STEEL_DECORATION, GCBlocks.DETAILED_STEEL_DECORATION_WALL);
+        this.detailedWall(generator, GCBlocks.DETAILED_TIN_DECORATION, GCBlocks.DETAILED_TIN_DECORATION_WALL);
+        this.detailedWall(generator, GCBlocks.DETAILED_TITANIUM_DECORATION, GCBlocks.DETAILED_TITANIUM_DECORATION_WALL);
+        this.detailedWall(generator, GCBlocks.DETAILED_DARK_DECORATION, GCBlocks.DETAILED_DARK_DECORATION_WALL);
 
         // TORCHES
         generator.createNormalTorch(GCBlocks.GLOWSTONE_TORCH, GCBlocks.GLOWSTONE_WALL_TORCH);
@@ -198,7 +207,6 @@ public class GCModelProvider extends FabricModelProvider {
 
         // DUMMY
         generator.createAirLikeBlock(GCBlocks.SOLAR_PANEL_PART, GCItems.BLUE_SOLAR_WAFER);
-//        generator.createAirLikeBlock(GCBlocks.CRYOGENIC_CHAMBER_PART, GCItems.DARK_DECORATION); //todo
 
         // MISC MACHINES
 //        generator.createNonTemplateModelBlock(GCBlocks.CRYOGENIC_CHAMBER);
@@ -258,6 +266,16 @@ public class GCModelProvider extends FabricModelProvider {
                         .select(GratingBlock.State.LOWER, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_lower")))
                         .select(GratingBlock.State.UPPER, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_upper")))));
         generator.delegateItemModel(block, ModelLocationUtils.getModelLocation(block, "_lower"));
+    }
+
+    private void detailedWall(BlockModelGenerators generator, Block base, Block wall) {
+        var mapping = GCModelProvider.detailedTexture(base);
+        var wallPost = GCModelTemplates.DETAILED_WALL_POST.create(wall, mapping, generator.modelOutput);
+        var wallLowSide = GCModelTemplates.DETAILED_WALL_LOW_SIDE.create(wall, mapping, generator.modelOutput);
+        var wallTallSide = GCModelTemplates.DETAILED_WALL_TALL_SIDE.create(wall, mapping, generator.modelOutput);
+        generator.blockStateOutput.accept(BlockModelGenerators.createWall(wall, wallPost, wallLowSide, wallTallSide));
+        var wallInventory = GCModelTemplates.DETAILED_WALL_INVENTORY.create(wall, mapping, generator.modelOutput);
+        generator.delegateItemModel(wall, wallInventory);
     }
 
     private static void putDetailedTextured(BlockModelGenerators generator, Block detailedBlock) {
@@ -453,13 +471,13 @@ public class GCModelProvider extends FabricModelProvider {
     }
 
     @Contract("_ -> new")
-    private static @NotNull TextureMapping createDetailedTexture(@NotNull Block block) {
-        var side = TextureMapping.getBlockTexture(block, "_side");
+    private static TextureMapping detailedTexture(Block block) {
+        var resourceLocation = TextureMapping.getBlockTexture(block, "_side");
         return new TextureMapping()
-                .put(TextureSlot.WALL, side)
-                .put(TextureSlot.SIDE, side)
-                .put(TextureSlot.TOP, new ResourceLocation(TextureMapping.getBlockTexture(block).toString().replace("detailed_", "")))
-                .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(block, "_top"));
+                .put(TextureSlot.WALL, resourceLocation)
+                .put(TextureSlot.SIDE, resourceLocation)
+                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(block, "_top"))
+                .put(TextureSlot.BOTTOM, new ResourceLocation(TextureMapping.getBlockTexture(block).toString().replace("detailed_", "")));
     }
 
     private void createCheeseBlock(BlockModelGenerators generators) {
