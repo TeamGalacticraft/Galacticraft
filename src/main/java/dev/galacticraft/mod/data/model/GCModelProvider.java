@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import com.google.common.collect.Maps;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.block.decoration.GratingBlock;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -36,10 +37,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.models.BlockModelGenerators;
 import net.minecraft.data.models.ItemModelGenerators;
-import net.minecraft.data.models.blockstates.MultiVariantGenerator;
-import net.minecraft.data.models.blockstates.PropertyDispatch;
-import net.minecraft.data.models.blockstates.Variant;
-import net.minecraft.data.models.blockstates.VariantProperties;
+import net.minecraft.data.models.blockstates.*;
 import net.minecraft.data.models.model.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ArmorItem;
@@ -110,10 +108,10 @@ public class GCModelProvider extends FabricModelProvider {
 //        generator.createNonTemplateModelBlock(GCBlocks.WIRE_WALKWAY);
         generator.createNonTemplateHorizontalBlock(GCBlocks.TIN_LADDER);
         generator.createSimpleFlatItemModel(GCBlocks.TIN_LADDER);
-//        generator.createNonTemplateModelBlock(GCBlocks.GRATING);
+        this.createGrating(generator);
 
         // SPECIAL
-//        generator.createNonTemplateModelBlock(GCBlocks.ALUMINUM_WIRE);
+        generator.createSimpleFlatItemModel(GCItems.ALUMINUM_WIRE);
         generator.createTrivialCube(GCBlocks.SEALABLE_ALUMINUM_WIRE);
         generator.createTrivialCube(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE);
 //        generator.createNonTemplateModelBlock(GCBlocks.GLASS_FLUID_PIPE);
@@ -246,6 +244,15 @@ public class GCModelProvider extends FabricModelProvider {
         var block = GCBlocks.AIR_LOCK_CONTROLLER;
         var textureMapping = TextureMapping.column(TextureMapping.getBlockTexture(block), TextureMapping.getBlockTexture(GCBlocks.AIR_LOCK_FRAME));
         generator.createTrivialBlock(block, textureMapping, ModelTemplates.CUBE_COLUMN);
+    }
+
+    private void createGrating(BlockModelGenerators generator) {
+        var block = GCBlocks.GRATING;
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block)
+                .with(PropertyDispatch.property(GratingBlock.STATE)
+                        .select(GratingBlock.State.LOWER, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_lower")))
+                        .select(GratingBlock.State.UPPER, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_upper")))));
+        generator.delegateItemModel(block, ModelLocationUtils.getModelLocation(block, "_lower"));
     }
 
     private static void putDetailedTextured(BlockModelGenerators generator, Block detailedBlock) {
