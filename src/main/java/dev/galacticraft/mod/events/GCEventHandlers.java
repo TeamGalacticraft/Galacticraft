@@ -23,8 +23,10 @@
 package dev.galacticraft.mod.events;
 
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.impl.rocket.RocketDataImpl;
 import dev.galacticraft.mod.accessor.CryogenicAccessor;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
+import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -33,6 +35,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -45,6 +48,7 @@ public class GCEventHandlers {
         EntitySleepEvents.ALLOW_SLEEPING.register(GCEventHandlers::sleepInSpace);
         EntitySleepEvents.ALLOW_SLEEP_TIME.register(GCEventHandlers::canCryoSleep);
         EntitySleepEvents.STOP_SLEEPING.register(GCEventHandlers::onWakeFromCryoSleep);
+        ItemInputEvents.CREATE.register(GCEventHandlers::onItemCreate);
     }
 
     public static InteractionResult allowCryogenicSleep(LivingEntity entity, BlockPos sleepingPos, BlockState state, boolean vanillaResult) {
@@ -92,6 +96,12 @@ public class GCEventHandlers {
 //            if (serverLevel.areAllPlayersAsleep() && ws.getGameRules().getBoolean("doDaylightCycle")) {
 //                WorldUtil.setNextMorning(ws);
 //            }
+        }
+    }
+
+    public static void onItemCreate(ItemStack itemStack) {
+        if (itemStack.getItem() == GCItems.ROCKET) {
+            itemStack.setTag(RocketDataImpl.DEFAULT_ROCKET);
         }
     }
 }

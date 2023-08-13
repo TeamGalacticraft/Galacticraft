@@ -11,6 +11,7 @@
     "DimensionTypeMixin",
     "EntityMixin",
     "FlowingFluidMixin",
+    "ItemInputMixin",
     "ItemStackMixin",
     "LanternBlockMixin",
     "ModelProviderMixin",
