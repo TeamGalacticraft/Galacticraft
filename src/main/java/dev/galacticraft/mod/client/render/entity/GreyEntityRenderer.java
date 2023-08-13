@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.client.render.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.ArchGreyEntityModel;
 import dev.galacticraft.mod.client.model.entity.GreyEntityModel;
@@ -33,12 +34,13 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.Items;
 
 public class GreyEntityRenderer extends MobRenderer<GreyEntity, EntityModel<GreyEntity>> {
-
     private final ItemRenderer itemRenderer;
     public GreyEntityRenderer(EntityRendererProvider.Context context, EntityModel<GreyEntity> model) {
         super(context, model, 0.4f);
@@ -63,5 +65,19 @@ public class GreyEntityRenderer extends MobRenderer<GreyEntity, EntityModel<Grey
     @Override
     public void render(GreyEntity mob, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i) {
         super.render(mob, f, g, poseStack, multiBufferSource, i);
+        if (!mob.getItemRaw().isEmpty()) {
+            poseStack.pushPose();
+            poseStack.mulPose(Axis.YN.rotationDegrees(mob.getYRot()));
+            poseStack.translate(-0.6,1.4,-0.05);
+            this.itemRenderer.renderStatic(mob.getItemRaw(), ItemDisplayContext.GROUND, i, OverlayTexture.NO_OVERLAY, poseStack, multiBufferSource, mob.level(), mob.getId());
+            poseStack.popPose();
+            poseStack.pushPose();
+            poseStack.mulPose(Axis.YN.rotationDegrees(mob.getYRot()));
+            poseStack.translate(0.035,0.7,-0.06);
+            poseStack.scale(2,2,2);
+            // FIXME: make the chain + wanted item follow death
+            this.itemRenderer.renderStatic(Items.CHAIN.getDefaultInstance(), ItemDisplayContext.GROUND, i, OverlayTexture.NO_OVERLAY, poseStack, multiBufferSource, mob.level(), mob.getId());
+            poseStack.popPose();
+        }
     }
 }

@@ -25,6 +25,7 @@ package dev.galacticraft.mod.client.model.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import dev.galacticraft.mod.content.entity.grey.GreyEntity;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.PlayerModel;
@@ -88,6 +89,25 @@ public class GreyEntityModel<T extends Entity> extends EntityModel<T> implements
 		float armSwingScale = 1.0F;
 		Right_Arm.xRot = Mth.cos(limbSwing * 0.6662F + Mth.PI) * 2.0F * limbSwingAmount * 0.5F / armSwingScale;
 		Left_Arm.xRot = Mth.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F / armSwingScale;
+
+		// normalize the body to prevent dance from overlapping
+		// FIXME: I think looking around doesn't work now but need to test
+		Head.yRot = 0;
+		Head.y = 9;
+		Left_Arm.zRot = (float) Math.toRadians(0);
+
+		// dance when holding item
+		if (!((GreyEntity) entity).getItemRaw().isEmpty()) {
+			Left_Arm.xRot = (float) Math.toRadians(0);
+			Left_Arm.zRot = (float) Math.toRadians(-220);
+
+			float angleRange = 90; // Range between 180 and 360 degrees
+			float angleOffset = 315; // Starting angle
+
+			float oscillation = (float) (angleRange * 0.5f * (1.0f + Math.cos((float) Math.toRadians(ageInTicks * 20)))); // Cosine oscillation between -1 and 1
+			Head.yRot = (float) Math.toRadians(angleOffset + oscillation);
+			Head.y =  (float) Math.cos(ageInTicks) + 7;
+		}
 	}
 
 

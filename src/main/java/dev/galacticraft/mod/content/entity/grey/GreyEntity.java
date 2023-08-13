@@ -29,6 +29,12 @@ import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import dev.galacticraft.mod.content.GCEntityMemoryModuleTypes;
 import dev.galacticraft.mod.content.GCEntitySensorTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
@@ -44,8 +50,11 @@ import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.piglin.Piglin;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.npc.Npc;
+import net.minecraft.world.entity.projectile.EyeOfEnder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -56,7 +65,26 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 
 public class GreyEntity extends PathfinderMob implements InventoryCarrier, Npc {
-    private final SimpleContainer inventory = new SimpleContainer(1);
+
+    // spawn packet stuff
+    @Override
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return new ClientboundAddEntityPacket(this);
+    }
+
+    @Override
+    public void recreateFromPacket(ClientboundAddEntityPacket clientboundAddEntityPacket) {
+        super.recreateFromPacket(clientboundAddEntityPacket);
+    }
+
+    private final SimpleContainer inventory = new SimpleContainer(1){
+        @Override
+        public int getMaxStackSize() {
+            return 1;
+        }
+    };
+
+    private static final EntityDataAccessor<ItemStack> DATA_ITEM_STACK = SynchedEntityData.defineId(GreyEntity.class, EntityDataSerializers.ITEM_STACK);
 
     private static final Set<Item> WANTED_ITEMS = ImmutableSet.of(Items.DIAMOND);
 
@@ -73,6 +101,26 @@ public class GreyEntity extends PathfinderMob implements InventoryCarrier, Npc {
     public GreyEntity(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
         this.setCanPickUpLoot(true);
+    }
+
+    static {
+        EntityDataSerializers.registerSerializer(DATA_ITEM_STACK.getSerializer());
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.getEntityData().define(DATA_ITEM_STACK, ItemStack.EMPTY);
+    }
+
+    public void setItem(ItemStack itemStack) {
+        this.getEntityData().set(DATA_ITEM_STACK, itemStack);
+    }
+
+
+
+    public ItemStack getItemRaw() {
+        return this.getEntityData().get(DATA_ITEM_STACK);
     }
 
     protected Brain.Provider<GreyEntity> brainProvider() {
@@ -104,15 +152,47 @@ public class GreyEntity extends PathfinderMob implements InventoryCarrier, Npc {
     }
 
     @Override
+    public void readAdditionalSaveData(CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
+        this.readInventoryFromTag(compoundTag);
+        ItemStack itemStack = ItemStack.of(compoundTag.getCompound("Item"));
+        this.setItem(itemStack);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compoundTag) {
+        super.addAdditionalSaveData(compoundTag);
+        this.writeInventoryToTag(compoundTag);
+        ItemStack itemStack = this.getItemRaw();
+        if (!itemStack.isEmpty()) {
+            compoundTag.put("Item", itemStack.save(new CompoundTag()));
+        }
+    }
+
+    @Override
     protected void pickUpItem(ItemEntity itemEntity) {
-        InventoryCarrier.pickUpItem(this, this, itemEntity);
+        ItemStack itemStack = itemEntity.getItem();
+        if (!itemStack.isEmpty() && itemStack.getCount() > 0) {
+            ItemStack pickedUpItem = itemStack.copy();
+            pickedUpItem.setCount(1); // Pick up only one item
+            // Handle the picked up item as needed, for example:
+            this.inventory.addItem(pickedUpItem);
+            this.take(itemEntity, 1); // animation to take item from ground
+            setItem(getInventory().getItem(0));
+            itemStack.shrink(1); // Decrease the count of the original item stack
+            if (itemStack.isEmpty()) {
+                itemEntity.remove(RemovalReason.DISCARDED); // Remove the item entity if the stack is empty
+            }
+        }
+
+        this.onItemPickup(itemEntity);
     }
 
     @Override
     public boolean wantsToPickUp(ItemStack itemStack) {
         Item item = itemStack.getItem();
         System.out.println(item);
-        return (WANTED_ITEMS.contains(item) && this.getInventory().canAddItem(itemStack));
+        return (WANTED_ITEMS.contains(item) && this.getInventory().canAddItem(itemStack) && this.getInventory().isEmpty());
     }
 
     @Nullable
@@ -150,8 +230,17 @@ public class GreyEntity extends PathfinderMob implements InventoryCarrier, Npc {
     }
 
     @Override
+    public void tick() {
+        super.tick();
+        doTick();
+    }
+
+    public void doTick() {
+
+    }
+
+    @Override
     public SimpleContainer getInventory() {
         return this.inventory;
-
     }
 }

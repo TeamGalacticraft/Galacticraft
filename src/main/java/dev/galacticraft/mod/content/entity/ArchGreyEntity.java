@@ -57,6 +57,11 @@ public class ArchGreyEntity extends GreyEntity {
 
     }
 
+    @Override
+    public void doTick() {
+
+    }
+
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MOVEMENT_SPEED, 0.35F)
