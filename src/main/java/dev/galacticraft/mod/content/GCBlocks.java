@@ -180,13 +180,13 @@ public class GCBlocks {
     public static final Block COBBLED_MOON_ROCK_STAIRS = new StairBlock(COBBLED_MOON_ROCK.defaultBlockState(), BlockBehaviour.Properties.copy(COBBLED_MOON_ROCK));
     public static final Block COBBLED_MOON_ROCK_WALL = new WallBlock(BlockBehaviour.Properties.copy(COBBLED_MOON_ROCK));
 
-    public static final Block LUNASLATE = new Block(BlockBehaviour.Properties.of().mapColor(MapColor.DEEPSLATE).instrument(NoteBlockInstrument.BASEDRUM).strength(3.5F, 6.0F));
-    public static final Block LUNASLATE_SLAB = new SlabBlock(BlockBehaviour.Properties.copy(LUNASLATE).strength(4.0F, 6.0F));
+    public static final Block LUNASLATE = new RotatedPillarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.DEEPSLATE).instrument(NoteBlockInstrument.BASEDRUM).strength(3.0F, 6.0F).requiresCorrectToolForDrops().sound(SoundType.DEEPSLATE));
+    public static final Block LUNASLATE_SLAB = new SlabBlock(BlockBehaviour.Properties.copy(LUNASLATE));
     public static final Block LUNASLATE_STAIRS = new StairBlock(LUNASLATE.defaultBlockState(), BlockBehaviour.Properties.copy(LUNASLATE));
     public static final Block LUNASLATE_WALL = new WallBlock(BlockBehaviour.Properties.copy(LUNASLATE));
 
-    public static final Block COBBLED_LUNASLATE = new Block(BlockBehaviour.Properties.of().mapColor(MapColor.DEEPSLATE).instrument(NoteBlockInstrument.BASEDRUM).strength(3.5F, 6.0F));
-    public static final Block COBBLED_LUNASLATE_SLAB = new SlabBlock(BlockBehaviour.Properties.copy(COBBLED_LUNASLATE).strength(4.0F, 6.0F));
+    public static final Block COBBLED_LUNASLATE = new Block(BlockBehaviour.Properties.copy(LUNASLATE).strength(3.5F, 6.0F));
+    public static final Block COBBLED_LUNASLATE_SLAB = new SlabBlock(BlockBehaviour.Properties.copy(COBBLED_LUNASLATE));
     public static final Block COBBLED_LUNASLATE_STAIRS = new StairBlock(COBBLED_LUNASLATE.defaultBlockState(), BlockBehaviour.Properties.copy(COBBLED_LUNASLATE));
     public static final Block COBBLED_LUNASLATE_WALL = new WallBlock(BlockBehaviour.Properties.copy(COBBLED_LUNASLATE));
 

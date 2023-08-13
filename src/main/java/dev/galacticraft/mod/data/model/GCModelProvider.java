@@ -57,6 +57,9 @@ public class GCModelProvider extends FabricModelProvider {
     public void generateBlockStateModels(BlockModelGenerators generator) {
         // GENERATE ALL GCBlockFamilies
         generator.texturedModels = Maps.newHashMap(generator.texturedModels);
+        generator.fullBlockModelCustomGenerators = Maps.newHashMap(generator.fullBlockModelCustomGenerators);
+
+        generator.fullBlockModelCustomGenerators.put(GCBlocks.LUNASLATE, BlockModelGenerators::createMirroredColumnGenerator);
 
         putDetailedTextured(generator, GCBlocks.DETAILED_ALUMINUM_DECORATION);
         putDetailedTextured(generator, GCBlocks.DETAILED_BRONZE_DECORATION);
@@ -67,6 +70,8 @@ public class GCModelProvider extends FabricModelProvider {
         putDetailedTextured(generator, GCBlocks.DETAILED_TIN_DECORATION);
         putDetailedTextured(generator, GCBlocks.DETAILED_TITANIUM_DECORATION);
         putDetailedTextured(generator, GCBlocks.DETAILED_DARK_DECORATION);
+        putDetailedTextured(generator, GCBlocks.DETAILED_DARK_DECORATION);
+        generator.texturedModels.put(GCBlocks.LUNASLATE, TexturedModel.COLUMN_WITH_WALL.get(GCBlocks.LUNASLATE));
 
         GCBlockFamilies.getAllFamilies()
                 .filter(BlockFamily::shouldGenerateModel)
