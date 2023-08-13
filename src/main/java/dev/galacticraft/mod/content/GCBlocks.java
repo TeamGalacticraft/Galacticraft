@@ -320,7 +320,7 @@ public class GCBlocks {
 
     // DUMMY
     public static final BaseEntityBlock SOLAR_PANEL_PART = new SolarPanelPartBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(-1.0F, 5.0F).noLootTable().sound(SoundType.METAL));
-    public static final BaseEntityBlock CRYOGENIC_CHAMBER_PART = new CryogenicChamberPart(BlockBehaviour.Properties.of().noOcclusion().isSuffocating(GCBlocks::never).isViewBlocking(GCBlocks::never).mapColor(MapColor.METAL).strength(-1.0F, 5.0F).noLootTable().sound(SoundType.METAL));
+    public static final BaseEntityBlock CRYOGENIC_CHAMBER_PART = new CryogenicChamberPart(BlockBehaviour.Properties.of().noOcclusion().isSuffocating(GCBlocks::never).isViewBlocking(GCBlocks::never).mapColor(MapColor.METAL).strength(3.0F, 5.0F).noLootTable().sound(SoundType.METAL));
 
     // MISC MACHINES
     public static final Block CRYOGENIC_CHAMBER = new CryogenicChamberBlock(BlockBehaviour.Properties.of().noOcclusion().isSuffocating(GCBlocks::never).isViewBlocking(GCBlocks::never).mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL));
