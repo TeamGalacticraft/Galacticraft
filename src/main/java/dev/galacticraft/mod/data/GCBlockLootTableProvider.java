@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.data;
 
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
@@ -38,6 +39,7 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
@@ -292,8 +294,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
                 )
         );
 
-        //TODO Drop with 9 pads
-        this.dropSelf(GCBlocks.ROCKET_LAUNCH_PAD);
+        this.add(GCBlocks.ROCKET_LAUNCH_PAD, this::createRocketLaunchPadTable);
         this.dropSelf(GCBlocks.AIR_LOCK_CONTROLLER);
         this.dropSelf(GCBlocks.AIR_LOCK_FRAME);
 
@@ -323,5 +324,18 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.ROCKET_WORKBENCH);
 
         this.add(GCBlocks.AIR_LOCK_SEAL, noDrop());
+    }
+
+    private LootTable.Builder createRocketLaunchPadTable(Block block) {
+        return LootTable.lootTable().withPool(this.applyExplosionCondition(block, LootPool.lootPool()
+                .setRolls(ConstantValue.exactly(1.0F))
+                .add(LootItem.lootTableItem(block)
+                        .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+                                .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(RocketLaunchPadBlock.PART, RocketLaunchPadBlock.Part.NONE))))))
+                .withPool(this.applyExplosionCondition(block, LootPool.lootPool()
+                        .setRolls(ConstantValue.exactly(9.0F))
+                        .add(LootItem.lootTableItem(block)
+                                .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+                                        .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(RocketLaunchPadBlock.PART, RocketLaunchPadBlock.Part.CENTER))))));
     }
 }
