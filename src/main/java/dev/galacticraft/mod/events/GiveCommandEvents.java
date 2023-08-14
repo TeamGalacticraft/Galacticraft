@@ -26,19 +26,30 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.world.item.ItemStack;
 
-public interface ItemInputEvents {
+public final class GiveCommandEvents {
+    private GiveCommandEvents() {
+    }
+
     /**
-     * An event that is called when {@link net.minecraft.commands.arguments.item.ItemInput#createItemStack(int, boolean)} is invoked.
+     * An event that is called when using {@code /give} to get items.
      *
-     * <p>Used for create {@link ItemStack} compound tag before it get into the inventory.<p>
+     * <p>Used for modify {@link ItemStack} before spawn an {@link ItemStack} to the executor.<p>
      */
-    Event<Create> CREATE = EventFactory.createArrayBacked(Create.class, callbacks -> itemStack -> {
+    public static final Event<Modify> MODIFY = EventFactory.createArrayBacked(Modify.class, callbacks -> previousItemStack -> {
         for (var callback : callbacks) {
-            callback.onCreate(itemStack);
+            return callback.modify(previousItemStack);
         }
+        return previousItemStack;
     });
 
-    interface Create {
-        void onCreate(ItemStack itemStack);
+    @FunctionalInterface
+    public interface Modify {
+        /**
+         * Modifies current {@link ItemStack} on give command.
+         *
+         * @param previousItemStack a default value of {@link ItemStack}.
+         * @return Modified {@code ItemStack} or default value.
+         */
+        ItemStack modify(ItemStack previousItemStack);
     }
 }

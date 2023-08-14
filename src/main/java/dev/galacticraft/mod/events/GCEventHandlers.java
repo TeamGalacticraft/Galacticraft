@@ -48,7 +48,7 @@ public class GCEventHandlers {
         EntitySleepEvents.ALLOW_SLEEPING.register(GCEventHandlers::sleepInSpace);
         EntitySleepEvents.ALLOW_SLEEP_TIME.register(GCEventHandlers::canCryoSleep);
         EntitySleepEvents.STOP_SLEEPING.register(GCEventHandlers::onWakeFromCryoSleep);
-        ItemInputEvents.CREATE.register(GCEventHandlers::onItemCreate);
+        GiveCommandEvents.MODIFY.register(GCEventHandlers::modifyOnGive);
     }
 
     public static InteractionResult allowCryogenicSleep(LivingEntity entity, BlockPos sleepingPos, BlockState state, boolean vanillaResult) {
@@ -99,9 +99,11 @@ public class GCEventHandlers {
         }
     }
 
-    public static void onItemCreate(ItemStack itemStack) {
-        if (itemStack.getItem() == GCItems.ROCKET) {
-            itemStack.setTag(RocketDataImpl.DEFAULT_ROCKET);
+    public static ItemStack modifyOnGive(ItemStack previousItemStack) {
+        // This will set default data of an empty Rocket item when /give command is used, it also checks required tags for Rocket item to be rendered properly.
+        if (previousItemStack.is(GCItems.ROCKET) && (!previousItemStack.hasTag() || previousItemStack.hasTag() && !previousItemStack.getTag().getAllKeys().containsAll(RocketDataImpl.DEFAULT_ROCKET.getAllKeys()))) {
+            previousItemStack.setTag(RocketDataImpl.DEFAULT_ROCKET);
         }
+        return previousItemStack;
     }
 }

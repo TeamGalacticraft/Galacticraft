@@ -54,7 +54,7 @@ public record RocketDataImpl(int color, ResourceLocation cone, ResourceLocation 
         tag.put("Upgrade", new ListTag());
     });
 
-    public static RocketDataImpl fromNbt(@Nullable CompoundTag nbt) {
+    public static RocketDataImpl fromNbt(CompoundTag nbt) {
         if (nbt.getBoolean("Empty")) return empty();
         ListTag upgradeList = nbt.getList("Upgrade", Tag.TAG_STRING);
         ResourceLocation[] upgrades = new ResourceLocation[upgradeList.size()];

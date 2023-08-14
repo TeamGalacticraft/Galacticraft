@@ -24,17 +24,16 @@ package dev.galacticraft.mod.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-import dev.galacticraft.mod.events.ItemInputEvents;
-import net.minecraft.commands.arguments.item.ItemInput;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Slice;
+import dev.galacticraft.mod.events.GiveCommandEvents;
+import net.minecraft.server.commands.GiveCommand;
 import net.minecraft.world.item.ItemStack;
 
-@Mixin(ItemInput.class)
-public class ItemInputMixin {
-    @Inject(method = "createItemStack", at = @At(value = "FIELD", target = "net/minecraft/commands/arguments/item/ItemInput.tag:Lnet/minecraft/nbt/CompoundTag;", ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void gc$addItemInputEvent(int count, boolean checkMaxCount, CallbackInfoReturnable<ItemStack> info, ItemStack itemStack) {
-        ItemInputEvents.CREATE.invoker().onCreate(itemStack);
+@Mixin(GiveCommand.class)
+public class GiveCommandMixin {
+    @ModifyVariable(method = "giveItem", at = @At(value = "STORE"), slice = @Slice(from = @At(value = "INVOKE", target = "java/lang/Math.min(II)I", remap = false)), index = 11, ordinal = 1)
+    private static ItemStack gc$injectGiveCommandEvents(ItemStack previousItemStack) {
+        return GiveCommandEvents.MODIFY.invoker().modify(previousItemStack);
     }
 }
