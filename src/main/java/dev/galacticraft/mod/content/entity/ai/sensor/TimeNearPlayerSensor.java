@@ -35,13 +35,13 @@ public class TimeNearPlayerSensor extends Sensor<LivingEntity> {
     protected void doTick(ServerLevel serverLevel, LivingEntity mob) {
         Brain<?> brain = mob.getBrain();
         if (brain.getMemory(MemoryModuleType.NEAREST_PLAYERS).isPresent()) {
-            List<Player> players = brain.getMemory(MemoryModuleType.NEAREST_PLAYERS).get().stream().filter(player -> player.distanceTo(mob) <= 4).toList();
+            List<Player> players = new java.util.ArrayList<>(brain.getMemory(MemoryModuleType.NEAREST_PLAYERS).get().stream().filter(player -> player.distanceTo(mob) <= 4).toList());
+            players.sort(Comparator.comparingDouble(mob::distanceToSqr));
             if (brain.getMemory(GCEntityMemoryModuleTypes.TICKS_TIME_NEAR_PLAYER).isPresent()) {
                 int tickNearPlayer = brain.getMemory(GCEntityMemoryModuleTypes.TICKS_TIME_NEAR_PLAYER).get();
                 if (!players.isEmpty()) {
-                    Vec3 modifiedDelta = mob.getDeltaMovement().normalize().add(0, 1, 0);
-                    if (modifiedDelta.equals(Vec3.ZERO)) {
-                        // if not moving, add ticks
+                    if (mob.distanceTo(players.get(0)) <= 3) {
+                        // if close to player, update ticks
                         brain.setMemory(GCEntityMemoryModuleTypes.TICKS_TIME_NEAR_PLAYER, tickNearPlayer + 1);
                     } else {
                         // set tick to 0

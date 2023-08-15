@@ -62,6 +62,7 @@ public class NearestArchGreySensor extends Sensor<LivingEntity> {
                 if (mob.distanceTo(archGrey) < 19.0) {
                     if (mob.distanceTo(archGrey) < 4.0 ) {
                         brain.setMemory(GCEntityMemoryModuleTypes.GREY_LEFT_ARCH_GREY_ZONE, false);
+                        brain.setMemory(GCEntityMemoryModuleTypes.SHOULD_AVOID_PLAYER, false);
                     }
                 } else {
                     brain.setMemory(GCEntityMemoryModuleTypes.GREY_LEFT_ARCH_GREY_ZONE, true);
