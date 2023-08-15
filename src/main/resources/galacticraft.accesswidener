@@ -8,6 +8,7 @@ accessible method net/minecraft/world/item/HoeItem                              
 accessible method net/minecraft/world/item/PickaxeItem                                       <init> (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V
 accessible method net/minecraft/world/level/levelgen/structure/pools/LegacySinglePoolElement <init> (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/core/Holder;Lnet/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool$Projection;)V
 accessible method net/minecraft/client/particle/DripParticle$FallingParticle <init> (Lnet/minecraft/client/multiplayer/ClientLevel;DDDLnet/minecraft/world/level/material/Fluid;)V
+accessible method net/minecraft/world/entity/ai/behavior/Behavior tryStart (Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;J)Z
 
 # private classes
 accessible class  net/minecraft/world/level/biome/MultiNoiseBiomeSourceParameterList$Preset$SourceProvider
@@ -21,6 +22,8 @@ accessible class  net/minecraft/core/RegistrySynchronization$NetworkedRegistryDa
 
 # fields in final classes
 accessible field  net/minecraft/world/level/levelgen/SurfaceRules$Context   biome    Ljava/util/function/Supplier;
+accessible field net/minecraft/world/entity/ai/behavior/Behavior endTimestamp J
+accessible field net/minecraft/world/entity/ai/behavior/Behavior status Lnet/minecraft/world/entity/ai/behavior/Behavior$Status;
 
 # final classes
 extendable class net/minecraft/world/SimpleMenuProvider
@@ -43,3 +46,4 @@ mutable field net/minecraft/data/models/BlockModelGenerators fullBlockModelCusto
 
 # private methods
 extendable method net/minecraft/world/entity/LivingEntity setPosToBed (Lnet/minecraft/core/BlockPos;)V
+extendable method net/minecraft/world/entity/ai/behavior/Behavior tryStart (Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;J)Z
