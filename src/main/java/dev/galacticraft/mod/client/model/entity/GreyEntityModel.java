@@ -24,16 +24,12 @@ package dev.galacticraft.mod.client.model.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import dev.galacticraft.mod.content.entity.grey.GreyEntity;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.model.ZombieModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
@@ -91,13 +87,14 @@ public class GreyEntityModel<T extends Entity> extends EntityModel<T> implements
 		Left_Arm.xRot = Mth.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F / armSwingScale;
 
 		// normalize the body to prevent dance from overlapping
-		// FIXME: I think looking around doesn't work now but need to test
-		Head.yRot = 0;
-		Head.y = 9;
+		Head.yRot = netHeadYaw * ((float)Math.PI / 180);
+		Head.xRot = headPitch * ((float)Math.PI / 180);
 		Left_Arm.zRot = (float) Math.toRadians(0);
+		Head.y = 9;
 
 		// dance when holding item
-		if (!((GreyEntity) entity).getItemRaw().isEmpty()) {
+		if  (!((GreyEntity) entity).getHeldItemRaw().isEmpty()) {
+			// FIXME: going up and down feels kinda rough
 			Left_Arm.xRot = (float) Math.toRadians(0);
 			Left_Arm.zRot = (float) Math.toRadians(-220);
 
@@ -106,7 +103,8 @@ public class GreyEntityModel<T extends Entity> extends EntityModel<T> implements
 
 			float oscillation = (float) (angleRange * 0.5f * (1.0f + Math.cos((float) Math.toRadians(ageInTicks * 20)))); // Cosine oscillation between -1 and 1
 			Head.yRot = (float) Math.toRadians(angleOffset + oscillation);
-			Head.y =  (float) Math.cos(ageInTicks) + 7;
+			// FIXME: minor graphical thing but fix to start from extending the neck instead of the middle of the air
+			Head.y =  (float) Math.cos(((GreyEntity) entity).getTicksHoldingWantedItem()) + 7;
 		}
 	}
 

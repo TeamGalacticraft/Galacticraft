@@ -36,7 +36,6 @@ import net.minecraft.client.renderer.entity.*;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.Items;
 
@@ -65,17 +64,18 @@ public class GreyEntityRenderer extends MobRenderer<GreyEntity, EntityModel<Grey
     @Override
     public void render(GreyEntity mob, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i) {
         super.render(mob, f, g, poseStack, multiBufferSource, i);
-        if (!mob.getItemRaw().isEmpty()) {
+        if (!mob.getHeldItemRaw().isEmpty()) {
             poseStack.pushPose();
             poseStack.mulPose(Axis.YN.rotationDegrees(mob.getYRot()));
             poseStack.translate(-0.6,1.4,-0.05);
-            this.itemRenderer.renderStatic(mob.getItemRaw(), ItemDisplayContext.GROUND, i, OverlayTexture.NO_OVERLAY, poseStack, multiBufferSource, mob.level(), mob.getId());
+            // FIXME: make the item follow when a grey dies
+            this.itemRenderer.renderStatic(mob.getHeldItemRaw(), ItemDisplayContext.GROUND, i, OverlayTexture.NO_OVERLAY, poseStack, multiBufferSource, mob.level(), mob.getId());
             poseStack.popPose();
             poseStack.pushPose();
             poseStack.mulPose(Axis.YN.rotationDegrees(mob.getYRot()));
             poseStack.translate(0.035,0.7,-0.06);
             poseStack.scale(2,2,2);
-            // FIXME: make the chain + wanted item follow death
+            // TODO: actually model a grey neck and render only when holding item
             this.itemRenderer.renderStatic(Items.CHAIN.getDefaultInstance(), ItemDisplayContext.GROUND, i, OverlayTexture.NO_OVERLAY, poseStack, multiBufferSource, mob.level(), mob.getId());
             poseStack.popPose();
         }

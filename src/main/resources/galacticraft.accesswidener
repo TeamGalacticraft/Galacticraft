@@ -32,10 +32,15 @@ accessible method net/minecraft/world/entity/ai/sensing/SensorType register (Lja
 accessible method net/minecraft/world/entity/ai/memory/MemoryModuleType register (Ljava/lang/String;Lcom/mojang/serialization/Codec;)Lnet/minecraft/world/entity/ai/memory/MemoryModuleType;
 accessible method net/minecraft/world/entity/ai/memory/MemoryModuleType register (Ljava/lang/String;)Lnet/minecraft/world/entity/ai/memory/MemoryModuleType;
 
+accessible method net/minecraft/world/entity/ai/behavior/Behavior tryStart (Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;J)Z
+
 # private fields
 accessible field net/minecraft/client/resources/model/ModelManager bakedRegistry Ljava/util/Map;
 accessible field net/minecraft/data/worldgen/ProcessorLists EMPTY Lnet/minecraft/resources/ResourceKey;
 accessible field net/minecraft/world/level/block/DispenserBlock DISPENSER_REGISTRY Ljava/util/Map;
+accessible field net/minecraft/world/entity/ai/behavior/Behavior endTimestamp J
+accessible field net/minecraft/world/entity/ai/behavior/Behavior status Lnet/minecraft/world/entity/ai/behavior/Behavior$Status;
 
 # private methods
 extendable method net/minecraft/world/entity/LivingEntity setPosToBed (Lnet/minecraft/core/BlockPos;)V
+extendable method net/minecraft/world/entity/ai/behavior/Behavior tryStart (Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;J)Z

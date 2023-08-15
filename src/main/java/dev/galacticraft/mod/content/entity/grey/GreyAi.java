@@ -28,7 +28,9 @@ import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.mod.content.GCEntityMemoryModuleTypes;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.ArchGreyEntity;
+import dev.galacticraft.mod.content.entity.ai.behavior.ForceLookAtPlayerLookTarget;
 import dev.galacticraft.mod.content.entity.ai.behavior.GoToArchGreyOnZoneLeave;
+import dev.galacticraft.mod.content.entity.ai.behavior.StayCloseToPlayerThenRetreat;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -58,7 +60,9 @@ public class GreyAi {
     private static void initCoreActivity(Brain<GreyEntity> brain) {
 
         brain.addActivity(Activity.CORE, 0,
-                ImmutableList.of(new Swim(0.8f), new AnimalPanic(2.5f), new LookAtTargetSink(45, 90),
+                ImmutableList.of(new Swim(0.8f), new AnimalPanic(2.5f),
+                        new ForceLookAtPlayerLookTarget<>(),
+                        new LookAtTargetSink(45, 90),
                         new MoveToTargetSink(),
                         new CountDownCooldownTicks(MemoryModuleType.ITEM_PICKUP_COOLDOWN_TICKS)
                 ));
@@ -70,10 +74,10 @@ public class GreyAi {
         brain.addActivity(Activity.IDLE,
                 ImmutableList.of(
                         Pair.of(0, SetEntityLookTarget.create(EntityType.PLAYER, 10.0f)),
-                        Pair.of(0, StayCloseToTarget.create(GreyAi::getNearestPlayerPositionTracker, Entity::isAlive, 3, 0, 0.9f)),
+                        Pair.of(0, StayCloseToPlayerThenRetreat.create(GreyAi::getNearestPlayerPositionTracker, Entity::isAlive, 2, 0.9f)),
                         // if it gets too far from the nearest arch grey, go to it
                         Pair.of(1, SetEntityLookTarget.create(GCEntityTypes.ARCH_GREY, 60.0f)),
-                        Pair.of(1, GoToArchGreyOnZoneLeave.create(GreyAi::getNearestArchGreyPositionTracker, Entity::isAlive, 2, 20, 1.0f)),
+                        Pair.of(1, GoToArchGreyOnZoneLeave.create(GreyAi::getNearestArchGreyPositionTracker, Entity::isAlive, 2 , 1.0f)),
                         Pair.of(2, SetEntityLookTarget.create(EntityType.ITEM, 10.0f)),
                         Pair.of(2, GoToWantedItem.create(grey -> true, 0.9f, true, 10)),
                         Pair.of(3, new RunOne<GreyEntity>(

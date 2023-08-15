@@ -35,9 +35,9 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class GoToArchGreyOnZoneLeave {
-    public static BehaviorControl<LivingEntity> create(Function<LivingEntity, Optional<PositionTracker>> function, Predicate<LivingEntity> predicate, int closeEnoughDist, int distanceToLeave, float speedModifier) {
+    public static BehaviorControl<LivingEntity> create(Function<LivingEntity, Optional<PositionTracker>> function, Predicate<LivingEntity> predicate, int closeEnoughDist, float speedModifier) {
         return BehaviorBuilder.create(instance -> instance.group(instance.registered(MemoryModuleType.LOOK_TARGET), instance.registered(MemoryModuleType.WALK_TARGET), instance.registered(GCEntityMemoryModuleTypes.GREY_LEFT_ARCH_GREY_ZONE)).apply(instance, (memoryAccessor, memoryAccessor2, memoryAccessor3) -> (serverLevel, livingEntity, l) -> {
-            Optional optional = (Optional)function.apply(livingEntity);
+            Optional optional = (Optional) function.apply(livingEntity);
             Optional<Boolean> outArchGreyZoneOptional = instance.tryGet(memoryAccessor3);
             if (optional.isEmpty() || !predicate.test(livingEntity)) {
                 return false;
