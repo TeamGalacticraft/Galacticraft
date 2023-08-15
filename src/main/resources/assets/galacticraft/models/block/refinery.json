@@ -1,5 +1,10 @@
 {
-  "parent": "block/cube",
+  "machinelib:generated": "machinelib:z_axis",
+  "data": {
+    "front": "galacticraft:block/refinery_front",
+    "back": "galacticraft:block/refinery_back",
+    "sided": true
+  },
   "textures": {
     "up": "galacticraft:block/machine",
     "down": "galacticraft:block/machine",

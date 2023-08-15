@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,17 +22,17 @@
 
 package dev.galacticraft.mod.recipe;
 
-import net.minecraft.inventory.Inventory;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeType;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public interface CompressingRecipe extends Recipe<Inventory> {
+public interface CompressingRecipe extends Recipe<Container> {
     @Override
     default RecipeType<? extends CompressingRecipe> getType() {
-        return GalacticraftRecipe.COMPRESSING_TYPE;
+        return GCRecipes.COMPRESSING_TYPE;
     }
 
     int getTime();

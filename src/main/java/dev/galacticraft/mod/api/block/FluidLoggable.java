@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,63 +22,65 @@
 
 package dev.galacticraft.mod.api.block;
 
+import com.google.common.collect.Lists;
 import dev.galacticraft.mod.Constant;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FluidDrainable;
-import net.minecraft.block.FluidFillable;
-import net.minecraft.fluid.FlowableFluid;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.state.property.Property;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.WorldAccess;
-
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.BucketPickup;
+import net.minecraft.world.level.block.LiquidBlockContainer;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public interface FluidLoggable extends FluidDrainable, FluidFillable {
-    FluidState EMPTY_STATE = Fluids.EMPTY.getDefaultState();
-    Identifier INVALID = new Identifier("invalid");
+public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
+    FluidState EMPTY_STATE = Fluids.EMPTY.defaultFluidState();
+    ResourceLocation INVALID = new ResourceLocation("invalid");
     String DOT_REP = "_gc_dot_";
     String DASH_REP = "_gc_dash_"; // yes this is bad.... but who's going to name a mod/fluid something like that
     String COLON_REP = "_gc_colon_";
 
-    Property<Identifier> FLUID = new Property<>("fluid", Identifier.class) {
-        private static final List<Identifier> VALUES = new LinkedList<>();
-
-        @Override
-        public Collection<Identifier> getValues() {
-            if (VALUES.isEmpty()) {
-                for (Fluid f : Registry.FLUID) {
-                    if (f instanceof FlowableFluid) {
-                        VALUES.add(Registry.FLUID.getId(f));
+    Property<ResourceLocation> FLUID = new Property<>("fluid", ResourceLocation.class) {
+        private static final List<ResourceLocation> VALUES = Util.make(Lists.newArrayList(), list ->
+        {
+            if (list.isEmpty()) {
+                for (var fluid : BuiltInRegistries.FLUID) {
+                    if (fluid instanceof FlowingFluid) {
+                        list.add(BuiltInRegistries.FLUID.getKey(fluid));
                     }
                 }
-                VALUES.add(Constant.Misc.EMPTY);
-                VALUES.add(INVALID);
+                list.add(Constant.Misc.EMPTY);
+                list.add(INVALID);
             }
+        });
+
+        @Override
+        public Collection<ResourceLocation> getPossibleValues() {
             return VALUES;
         }
 
         @Override
-        public Optional<Identifier> parse(String name) {
-            return Optional.of(new Identifier(name.replace(DOT_REP, ".").replace(DASH_REP, "-").replace(COLON_REP, ":")));
+        public Optional<ResourceLocation> getValue(String name) {
+            return Optional.of(new ResourceLocation(name.replace(DOT_REP, ".").replace(DASH_REP, "-").replace(COLON_REP, ":")));
         }
 
         @Override
-        public String name(Identifier value) {
+        public String getName(ResourceLocation value) {
             if (value.toString().contains(DOT_REP) || value.toString().contains(DASH_REP) || value.toString().contains(COLON_REP))
                 throw new RuntimeException("Bad fluid!" + value);
             return value.toString().replace(".", DOT_REP).replace("-", DASH_REP).replace(":", COLON_REP);
@@ -86,53 +88,59 @@ public interface FluidLoggable extends FluidDrainable, FluidFillable {
     };
 
     @Override
-    default boolean canFillWithFluid(BlockView view, BlockPos pos, BlockState state, Fluid fluid) {
-        if (!(fluid instanceof FlowableFluid)) return false;
-        return this.isEmpty(state);
+    default boolean canPlaceLiquid(BlockGetter view, BlockPos pos, BlockState state, Fluid fluid) {
+        return fluid instanceof FlowingFluid;
     }
 
     @Override
-    default boolean tryFillWithFluid(WorldAccess world, BlockPos pos, BlockState state, FluidState fluidState) {
-        if (!(fluidState.getFluid() instanceof FlowableFluid)) return false;
+    default boolean placeLiquid(LevelAccessor world, BlockPos pos, BlockState state, FluidState fluidState) {
+        if (!(fluidState.getType() instanceof FlowingFluid))
+            return false;
         if (this.isEmpty(state)) {
-            if (!world.isClient()) {
-                world.setBlockState(pos, state
-                        .with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
-                        .with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1)), 3);
-                world.getFluidTickScheduler().schedule(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
+            if (!world.isClientSide()) {
+                world.setBlock(pos, state.setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType())).setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)).setValue(FlowingFluid.FALLING, fluidState.getValue(FlowingFluid.FALLING)), 3);
+                world.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
             }
             return true;
-        } else if (Registry.FLUID.getId(fluidState.getFluid()).equals(state.get(FLUID))) {
-            if (!world.isClient()) {
-                world.setBlockState(pos, state.with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1)), 3);
-                world.getFluidTickScheduler().schedule(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
+        }
+        else if (BuiltInRegistries.FLUID.getKey(fluidState.getType()).equals(state.getValue(FLUID))) {
+            if (!world.isClientSide()) {
+                world.setBlock(pos, state.setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)).setValue(FlowingFluid.FALLING, fluidState.getValue(FlowingFluid.FALLING)), 3);
+                world.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
             }
             return true;
-        } else if (fluidState.getFluid() == Fluids.EMPTY) {
-            world.setBlockState(pos, state.with(FLUID, Constant.Misc.EMPTY).with(FlowableFluid.LEVEL, 1), 3);
+        }
+        // replace current grating fluid or make it contains source block
+        else if (!BuiltInRegistries.FLUID.get(state.getValue(FLUID)).defaultFluidState().isSource() || !BuiltInRegistries.FLUID.getKey(fluidState.getType()).equals(state.getValue(FLUID))) {
+            if (!world.isClientSide()) {
+                world.setBlock(pos, state.setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType())).setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)), 3);
+                world.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
+            }
+            return true;
+        }
+        else if (fluidState.getType() == Fluids.EMPTY) {
+            world.setBlock(pos, state.setValue(FLUID, Constant.Misc.EMPTY).setValue(FlowingFluid.LEVEL, 1).setValue(FlowingFluid.FALLING, false), 3);
         }
         return false;
     }
 
     @Override
-    default ItemStack tryDrainFluid(WorldAccess world, BlockPos pos, BlockState state) {
+    default ItemStack pickupBlock(LevelAccessor world, BlockPos pos, BlockState state) {
         if (!this.isEmpty(state)) {
-            world.setBlockState(pos, state.with(FLUID, Constant.Misc.EMPTY), 3);
-            if (world.getFluidState(pos).isStill()) {
-                return new ItemStack(Registry.FLUID.get(state.get(FLUID)).getBucketItem());
+            if (BuiltInRegistries.FLUID.get(state.getValue(FLUID)).defaultFluidState().isSource()) {
+                world.setBlock(pos, state.setValue(FLUID, Constant.Misc.EMPTY).setValue(FlowingFluid.LEVEL, 1), 3);
+                return new ItemStack(BuiltInRegistries.FLUID.get(state.getValue(FLUID)).getBucket());
             }
         }
         return ItemStack.EMPTY;
     }
-    
+
     default boolean isEmpty(BlockState state) {
-        return state.get(FLUID).equals(Constant.Misc.EMPTY) || state.get(FLUID).equals(INVALID);
+        return state.getValue(FLUID).equals(Constant.Misc.EMPTY) || state.getValue(FLUID).equals(INVALID);
     }
 
-    BlockState getPlacementState(ItemPlacementContext context);
-
     @Override
-    default Optional<SoundEvent> getBucketFillSound() {
-        return Fluids.WATER.getBucketFillSound();
+    default Optional<SoundEvent> getPickupSound() {
+        return Optional.empty();
     }
 }

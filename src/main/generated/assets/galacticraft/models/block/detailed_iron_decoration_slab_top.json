@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "galacticraft:block/iron_decoration",
+    "side": "galacticraft:block/detailed_iron_decoration_side",
+    "top": "galacticraft:block/detailed_iron_decoration_top"
+  }
+}

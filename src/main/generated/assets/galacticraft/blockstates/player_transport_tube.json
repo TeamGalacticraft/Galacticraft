@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "galacticraft:block/player_transport_tube"
+    }
+  }
+}

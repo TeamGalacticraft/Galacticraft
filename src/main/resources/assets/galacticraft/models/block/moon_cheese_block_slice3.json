@@ -1,0 +1,22 @@
+{
+    "textures": {
+        "particle": "galacticraft:block/moon_cheese_block_side",
+        "bottom": "galacticraft:block/moon_cheese_block",
+        "top": "galacticraft:block/moon_cheese_block",
+        "side": "galacticraft:block/moon_cheese_block_side",
+        "inside": "galacticraft:block/moon_cheese_block_inner"
+    },
+    "elements": [
+        {   "from": [ 7, 0, 1 ],
+            "to": [ 15, 8, 15 ],
+            "faces": {
+                "down":  { "texture": "#bottom", "cullface": "down" },
+                "up":    { "texture": "#top" },
+                "north": { "texture": "#side" },
+                "south": { "texture": "#side" },
+                "west":  { "texture": "#inside" },
+                "east":  { "texture": "#side" }
+            }
+        }
+    ]
+}

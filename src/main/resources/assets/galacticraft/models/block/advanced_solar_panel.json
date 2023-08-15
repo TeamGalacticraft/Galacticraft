@@ -1,12 +1,7 @@
 {
-  "parent": "block/cube",
-  "textures": {
-    "up": "galacticraft:block/solar_panel",
-    "down": "galacticraft:block/machine",
-    "north": "galacticraft:block/advanced_solar_panel",
-    "south": "galacticraft:block/machine_power_output",
-    "east": "galacticraft:block/machine_side",
-    "west": "galacticraft:block/machine_side",
-    "particle": "galacticraft:block/machine"
+  "machinelib:generated": "galacticraft:solar_panel",
+  "data": {
+    "front": "galacticraft:block/advanced_solar_panel",
+    "top": "galacticraft:block/solar_panel"
   }
 }

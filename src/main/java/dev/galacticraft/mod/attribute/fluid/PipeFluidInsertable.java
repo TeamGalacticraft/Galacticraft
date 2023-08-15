@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,41 +22,32 @@
 
 package dev.galacticraft.mod.attribute.fluid;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.FluidInsertable;
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+import dev.galacticraft.machinelib.api.fluid.FluidStack;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Collections;
+import java.util.Iterator;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class PipeFluidInsertable implements FluidInsertable {
+public class PipeFluidInsertable implements Storage<FluidVariant>, StorageView<FluidVariant> {
     private final Direction direction;
-    private final FluidAmount maxTransfer;
+    private final long maxTransfer;
     private final BlockPos pipe;
     private @Nullable PipeNetwork network;
 
-    public PipeFluidInsertable(Direction direction, FluidAmount maxTransfer, BlockPos pipe) {
+    public PipeFluidInsertable(Direction direction, long maxTransfer, BlockPos pipe) {
         this.direction = direction;
         this.maxTransfer = maxTransfer;
         this.pipe = pipe;
-    }
-
-    @Override
-    public FluidVolume attemptInsertion(FluidVolume volume, Simulation simulation) {
-        if (this.network != null) {
-            return this.network.insert(this.pipe, volume, direction, simulation);
-        }
-        return volume;
-    }
-
-    @Override
-    public FluidInsertable getPureInsertable() {
-        return this;
     }
 
     public void setNetwork(@Nullable PipeNetwork network) {
@@ -71,5 +62,48 @@ public class PipeFluidInsertable implements FluidInsertable {
                 ", pipe=" + pipe +
                 ", network=" + network +
                 '}';
+    }
+
+    @Override
+    public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {
+        if (this.network != null) {
+            return this.network.insert(this.pipe, FluidStack.create(resource.getFluid(), resource.getNbt(), maxAmount), direction, transaction);
+        }
+        return 0;
+    }
+
+    @Override
+    public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
+        return 0;
+    }
+
+    @Override
+    public long simulateExtract(FluidVariant resource, long maxAmount, @Nullable TransactionContext transaction) {
+        return 0;
+    }
+
+    @Override
+    public boolean isResourceBlank() {
+        return true;
+    }
+
+    @Override
+    public FluidVariant getResource() {
+        return FluidVariant.blank();
+    }
+
+    @Override
+    public long getAmount() {
+        return 0;
+    }
+
+    @Override
+    public long getCapacity() {
+        return this.maxTransfer;
+    }
+
+    @Override
+    public Iterator<StorageView<FluidVariant>> iterator() {
+        return Collections.emptyIterator();
     }
 }

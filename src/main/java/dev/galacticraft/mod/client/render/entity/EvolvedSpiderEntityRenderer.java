@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,35 +23,35 @@
 package dev.galacticraft.mod.client.render.entity;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.render.entity.feature.EvolvedSpiderEyesFeatureRenderer;
-import dev.galacticraft.mod.entity.EvolvedSpiderEntity;
+import dev.galacticraft.mod.client.render.entity.feature.EvolvedSpiderEyesRenderLayer;
+import dev.galacticraft.mod.content.entity.EvolvedSpiderEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.client.render.entity.model.EntityModelLayers;
-import net.minecraft.client.render.entity.model.SpiderEntityModel;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.model.SpiderModel;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class EvolvedSpiderEntityRenderer extends MobEntityRenderer<EvolvedSpiderEntity, SpiderEntityModel<EvolvedSpiderEntity>> {
-    public static final Identifier TEXTURE = new Identifier(Constant.MOD_ID, "textures/entity/evolved/spider.png");
+public class EvolvedSpiderEntityRenderer extends MobRenderer<EvolvedSpiderEntity, SpiderModel<EvolvedSpiderEntity>> {
+    public static final ResourceLocation TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/entity/evolved/spider.png");
 
-    public EvolvedSpiderEntityRenderer(EntityRendererFactory.Context context) {
-        super(context, new SpiderEntityModel<>(context.getPart(EntityModelLayers.SPIDER)), 0.8f);
-        this.addFeature(new EvolvedSpiderEyesFeatureRenderer<>(this));
+    public EvolvedSpiderEntityRenderer(EntityRendererProvider.Context context) {
+        super(context, new SpiderModel<>(context.bakeLayer(ModelLayers.SPIDER)), 0.8f);
+        this.addLayer(new EvolvedSpiderEyesRenderLayer<>(this));
     }
 
     @Override
-    protected float getLyingAngle(EvolvedSpiderEntity spiderEntity) {
+    protected float getFlipDegrees(EvolvedSpiderEntity spiderEntity) {
         return 180.0F;
     }
 
     @Override
-    public Identifier getTexture(EvolvedSpiderEntity spiderEntity) {
+    public ResourceLocation getTextureLocation(EvolvedSpiderEntity spiderEntity) {
         return TEXTURE;
     }
 }

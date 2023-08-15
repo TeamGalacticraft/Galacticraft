@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "galacticraft:block/cryo_0", "y": 180 },
+    "facing=east":  { "model": "galacticraft:block/cryo_0", "y": 270 },
+    "facing=west":  { "model": "galacticraft:block/cryo_0", "y": 90 },
+    "facing=south": { "model": "galacticraft:block/cryo_0", "y": 0 }
+  }
+}

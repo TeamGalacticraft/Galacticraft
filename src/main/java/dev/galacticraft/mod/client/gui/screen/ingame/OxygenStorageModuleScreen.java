@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,43 +22,47 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
+import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
+import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
-import dev.galacticraft.mod.block.entity.OxygenStorageModuleBlockEntity;
-import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
+import dev.galacticraft.mod.content.block.entity.machine.OxygenStorageModuleBlockEntity;
+import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-
-import java.math.RoundingMode;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorageModuleBlockEntity, SimpleMachineScreenHandler<OxygenStorageModuleBlockEntity>> {
-    public OxygenStorageModuleScreen(SimpleMachineScreenHandler<OxygenStorageModuleBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, title, Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
+public class OxygenStorageModuleScreen extends MachineScreen<OxygenStorageModuleBlockEntity, MachineMenu<OxygenStorageModuleBlockEntity>> {
+    public OxygenStorageModuleScreen(MachineMenu<OxygenStorageModuleBlockEntity> handler, Inventory inv, Component title) {
+        super(handler, title, Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
     }
 
     @Override
-    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        super.renderBackground(matrices, delta, mouseX, mouseY);
-        this.drawOxygenBufferBar(matrices);
+    protected void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.renderBackground(graphics, mouseX, mouseY, delta);
+        this.drawOxygenBufferBar(graphics);
 
-        drawCenteredText(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.current_oxygen", this.machine.fluidInv().getInvFluid(0).amount().asInt(1000, RoundingMode.HALF_DOWN)), width / 2, y + 33, Formatting.DARK_GRAY.getColorValue());
-        drawCenteredText(matrices, textRenderer, I18n.translate("ui.galacticraft.machine.max_oxygen", this.machine.fluidInv().getMaxAmount_F(0).asInt(1000, RoundingMode.HALF_DOWN)), width / 2, y + 45, Formatting.DARK_GRAY.getColorValue());
+        graphics.drawCenteredString(font, I18n.get("ui.galacticraft.machine.current_oxygen", this.menu.fluidStorage.getSlot(GCSlotGroupTypes.OXYGEN_TANK).getAmount()), width / 2, topPos + 33, ChatFormatting.DARK_GRAY.getColor());
+        graphics.drawCenteredString(font, I18n.get("ui.galacticraft.machine.max_oxygen", this.menu.fluidStorage.getSlot(GCSlotGroupTypes.OXYGEN_TANK).getCapacity()), width / 2, topPos + 45, ChatFormatting.DARK_GRAY.getColor());
     }
 
-    private void drawOxygenBufferBar(MatrixStack matrices) {
-        double oxygenScale = this.machine.fluidInv().getInvFluid(0).amount().div(this.machine.fluidInv().getMaxAmount_F(0)).asInexactDouble();
+    @Override
+    protected void drawTanks(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+//        super.drawTanks(matrices, mouseX, mouseY, delta);
+    }
 
-        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
-        this.drawTexture(matrices, this.x + 52, this.y + 57, 176, 0, (int) (72.0D * oxygenScale), 3);
+    private void drawOxygenBufferBar(GuiGraphics graphics) {
+        FluidResourceSlot slot = this.menu.fluidStorage.getSlot(GCSlotGroupTypes.OXYGEN_TANK);
+        double oxygenScale = (double)slot.getAmount() / (double)slot.getCapacity();
+
+        graphics.blit(Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN, this.leftPos + 52, this.topPos + 57, 176, 0, (int) (72.0D * oxygenScale), 3);
     }
 }

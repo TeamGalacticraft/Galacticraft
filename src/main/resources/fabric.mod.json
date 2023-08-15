@@ -117,60 +117,51 @@
 
   "environment": "*",
   "entrypoints": {
-    "main": [ "dev.galacticraft.mod.Galacticraft" ],
-    "client": [ "dev.galacticraft.mod.GalacticraftClient" ],
+    "main": [
+      "dev.galacticraft.impl.internal.fabric.GalacticraftAPI",
+      "dev.galacticraft.mod.Galacticraft"
+    ],
+    "client": [
+      "dev.galacticraft.impl.internal.client.fabric.GalacticraftAPIClient",
+      "dev.galacticraft.mod.GalacticraftClient"
+    ],
+    "fabric-datagen": [
+      "dev.galacticraft.mod.data.GCDataGenerator"
+    ],
     "modmenu": [ "dev.galacticraft.mod.compat.modmenu.ModMenuApiImpl" ],
-    "rei": [
-      "dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin",
+    "rei_client": [
+      "dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin"
+    ],
+    "rei_common": [
       "dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin"
+    ],
+    "jei_mod_plugin": [
+      "dev.galacticraft.mod.compat.jei.GCJEIPlugin"
     ]
   },
   "mixins": [
-    "galacticraft.mixins.json"
+    "galacticraft.mixins.json",
+    "galacticraft-api.mixins.json"
   ],
   "accessWidener": "galacticraft.accesswidener",
   "custom": {
-    "waila:plugins": {
-      "id": "galacticraft:plugin",
-      "initializer": "dev.galacticraft.mod.compat.waila.GalacticraftWailaPlugin"
+    "loom:injected_interfaces": {
+      "net/minecraft/class_3222": [
+        "dev/galacticraft/api/accessor/GearInventoryProvider",
+        "dev/galacticraft/mod/accessor/ServerPlayerAccessor"
+      ],
+      "net/minecraft/class_742": ["dev/galacticraft/api/accessor/GearInventoryProvider"],
+      "net/minecraft/class_1309": ["dev/galacticraft/api/accessor/GearInventoryProvider"],
+      "net/minecraft/class_1937": ["dev/galacticraft/api/accessor/LevelOxygenAccessor"],
+      "net/minecraft/class_1657": ["dev/galacticraft/mod/accessor/CryogenicAccessor"]
     }
   },
   "depends": {
-    "minecraft": ">=1.17.1",
-    "fabricloader": ">=0.11.3",
-    "galacticraft-api": ">=0.4.0-prealpha.14+1.17",
-    "libblockattributes_core": ">=0.9",
-    "libblockattributes_items": ">=0.9",
-    "libblockattributes_fluids": ">=0.9",
-    "galacticraftenergy": ">=0.2.1",
-
-    "fabric-api-base": "*",
-    "fabric-biome-api-v1": "*",
-    "fabric-blockrenderlayer-v1": "*",
-    "fabric-command-api-v1": "*",
-    "fabric-content-registries-v0": "*",
-    "fabric-item-groups-v0": "*",
-    "fabric-lifecycle-events-v1": "*",
-    "fabric-models-v0": "*",
-    "fabric-networking-blockentity-v0": "*",
-    "fabric-networking-api-v1": "*",
-    "fabric-object-builder-api-v1": "*",
-    "fabric-particles-v1": "*",
-    "fabric-registry-sync-v0": "*",
-    "fabric-renderer-api-v1": "*",
-    "fabric-renderer-indigo": "*",
-    "fabric-renderer-registries-v1": "*",
-    "fabric-rendering-fluids-v1": "*",
-    "fabric-rendering-v1": "*",
-    "fabric-resource-loader-v0": "*",
-    "fabric-screen-handler-api-v1": "*",
-    "fabric-structure-api-v1": "*",
-    "fabric-tag-extensions-v0": "*",
-    "fabric-textures-v0": "*",
-    "fabric-tool-attribute-api-v1": "*"
+    "minecraft": ">=1.20.1",
+    "fabricloader": ">=0.14.17"
   },
   "suggests": {
-    "modmenu": ">=1.16",
-    "waila": ">=2"
+    "modmenu": "*",
+    "waila": "*"
   }
 }

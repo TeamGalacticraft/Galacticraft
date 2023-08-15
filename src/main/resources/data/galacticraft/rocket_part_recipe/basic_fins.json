@@ -1,0 +1,18 @@
+{
+  "type": "galacticraft:slotted_default",
+  "config": {
+    "key": {
+      "F": {
+        "item": "galacticraft:rocket_fins"
+      }
+    },
+    "pattern": [
+      "F",
+      "F"
+    ],
+    "result": {
+      "type": "galacticraft:rocket_fin",
+      "id": "galacticraft:tier_1"
+    }
+  }
+}

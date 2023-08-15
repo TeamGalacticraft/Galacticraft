@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,23 +23,25 @@
 package dev.galacticraft.mod.api.block.entity;
 
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public interface Walkway extends Connected, BlockEntityClientSerializable {
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+
+public interface Walkway extends Connected {
+    @Nullable
     Direction getDirection();
 
     void setDirection(@NotNull Direction direction);
 
-    default void writeWalkwayNbt(NbtCompound nbt) {
+    default void writeWalkwayNbt(CompoundTag nbt) {
         nbt.putByte(Constant.Nbt.DIRECTION, (byte) Objects.requireNonNullElse(this.getDirection(), Direction.UP).ordinal());
     }
 
-    default void readWalkwayNbt(NbtCompound nbt) {
-        this.setDirection(Direction.values()[nbt.getByte(Constant.Nbt.DIRECTION)]);
+    default void readWalkwayNbt(CompoundTag nbt) {
+        this.setDirection(Constant.Misc.DIRECTIONS[nbt.getByte(Constant.Nbt.DIRECTION)]);
     }
 }

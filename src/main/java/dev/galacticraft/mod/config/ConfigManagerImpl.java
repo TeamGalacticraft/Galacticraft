@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,19 +25,18 @@ package dev.galacticraft.mod.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.config.Config;
 import dev.galacticraft.mod.api.config.ConfigManager;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder;
-import me.shedaniel.clothconfig2.impl.builders.IntFieldBuilder;
+import me.shedaniel.clothconfig2.impl.builders.LongFieldBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,7 +61,7 @@ public class ConfigManagerImpl implements ConfigManager {
         try {
             org.apache.commons.io.FileUtils.writeStringToFile(this.file, this.gson.toJson(this.config), Charset.defaultCharset());
         } catch (IOException e) {
-            Galacticraft.LOGGER.error("Failed to save config.", e);
+            Constant.LOGGER.error("Failed to save config.", e);
         }
     }
 
@@ -71,14 +70,14 @@ public class ConfigManagerImpl implements ConfigManager {
         try {
             this.file.getParentFile().mkdirs();
             if (!this.file.exists()) {
-                Galacticraft.LOGGER.info("Failed to find config file, creating one.");
+                Constant.LOGGER.info("Failed to find config file, creating one.");
                 this.save();
             } else {
                 byte[] bytes = Files.readAllBytes(Paths.get(this.file.getPath()));
                 this.config = this.gson.fromJson(new String(bytes, Charset.defaultCharset()), ConfigImpl.class);
             }
         } catch (IOException e) {
-            Galacticraft.LOGGER.error("Failed to load config.", e);
+            Constant.LOGGER.error("Failed to load config.", e);
         }
     }
 
@@ -92,14 +91,14 @@ public class ConfigManagerImpl implements ConfigManager {
     public Screen getScreen(Screen parent) {
         ConfigBuilder b = ConfigBuilder.create()
                 .setParentScreen(parent)
-                .setTitle(new TranslatableText(Constant.Config.TITLE))
+                .setTitle(Component.translatable(Constant.Config.TITLE))
                 .setSavingRunnable(this::save);
 
-        SubCategoryBuilder dB = ConfigEntryBuilder.create().startSubCategory(new TranslatableText(Constant.Config.DEBUG));
+        SubCategoryBuilder dB = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Constant.Config.DEBUG));
 
         dB.add(new BooleanToggleBuilder(
-                new TranslatableText(Constant.Config.RESET),
-                new TranslatableText(Constant.Config.DEBUG_LOGGING),
+                Component.translatable(Constant.Config.RESET),
+                Component.translatable(Constant.Config.DEBUG_LOGGING),
                 this.config.isDebugLogEnabled())
                 .setSaveConsumer(flag -> this.config.setDebugLog(flag))
                 .setDefaultValue(false)
@@ -107,111 +106,111 @@ public class ConfigManagerImpl implements ConfigManager {
         );
 
         dB.add(new BooleanToggleBuilder(
-                new TranslatableText(Constant.Config.RESET),
-                new TranslatableText(Constant.Config.HIDE_ALPHA_WARNING),
+                Component.translatable(Constant.Config.RESET),
+                Component.translatable(Constant.Config.HIDE_ALPHA_WARNING),
                 this.config.isAlphaWarningHidden())
                 .setSaveConsumer(flag -> this.config.setAlphaWarningHidden(flag))
                 .setDefaultValue(false)
                 .build()
         );
 
-        SubCategoryBuilder wires = ConfigEntryBuilder.create().startSubCategory(new TranslatableText(Constant.Config.WIRES));
+        SubCategoryBuilder wires = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Constant.Config.WIRES));
 
-        wires.add(new IntFieldBuilder(
-                new TranslatableText(Constant.Config.RESET),
-                new TranslatableText(Constant.Config.WIRE_ENERGY_TRANSFER_LIMIT),
+        wires.add(new LongFieldBuilder(
+                Component.translatable(Constant.Config.RESET),
+                Component.translatable(Constant.Config.WIRE_ENERGY_TRANSFER_LIMIT),
                 this.config.wireTransferLimit())
                 .setSaveConsumer(this.config::setWireTransferLimit)
                 .setDefaultValue(480)
                 .build()
         );
 
-        wires.add(new IntFieldBuilder(
-                new TranslatableText(Constant.Config.RESET),
-                new TranslatableText(Constant.Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT),
+        wires.add(new LongFieldBuilder(
+                Component.translatable(Constant.Config.RESET),
+                Component.translatable(Constant.Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT),
                 this.config.heavyWireTransferLimit())
                 .setSaveConsumer(this.config::setHeavyWireTransferLimit)
                 .setDefaultValue(1440)
                 .build()
         );
 
-        SubCategoryBuilder machines = ConfigEntryBuilder.create().startSubCategory(new TranslatableText(Constant.Config.MACHINES));
+        SubCategoryBuilder machines = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Constant.Config.MACHINES));
 
-        machines.add(new IntFieldBuilder(
-                new TranslatableText(Constant.Config.RESET),
-                new TranslatableText(Constant.Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE),
+        machines.add(new LongFieldBuilder(
+                Component.translatable(Constant.Config.RESET),
+                Component.translatable(Constant.Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE),
                 this.config.coalGeneratorEnergyProductionRate())
                 .setSaveConsumer(this.config::setCoalGeneratorEnergyProductionRate)
                 .setDefaultValue(120)
                 .build()
         );
 
-        machines.add(new IntFieldBuilder(
-                new TranslatableText(Constant.Config.RESET),
-                new TranslatableText(Constant.Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE),
+        machines.add(new LongFieldBuilder(
+                Component.translatable(Constant.Config.RESET),
+                Component.translatable(Constant.Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE),
                 this.config.solarPanelEnergyProductionRate())
                 .setSaveConsumer(this.config::setSolarPanelEnergyProductionRate)
                 .setDefaultValue(44)
                 .build()
         );
 
-        machines.add(new IntFieldBuilder(
-                new TranslatableText(Constant.Config.RESET),
-                new TranslatableText(Constant.Config.CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE),
+        machines.add(new LongFieldBuilder(
+                Component.translatable(Constant.Config.RESET),
+                Component.translatable(Constant.Config.CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE),
                 this.config.circuitFabricatorEnergyConsumptionRate())
                 .setSaveConsumer(this.config::setCircuitFabricatorEnergyConsumptionRate)
                 .setDefaultValue(20)
                 .build()
         );
 
-        machines.add(new IntFieldBuilder(
-                new TranslatableText(Constant.Config.RESET),
-                new TranslatableText(Constant.Config.ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
+        machines.add(new LongFieldBuilder(
+                Component.translatable(Constant.Config.RESET),
+                Component.translatable(Constant.Config.ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
                 this.config.electricCompressorEnergyConsumptionRate())
                 .setSaveConsumer(this.config::setElectricCompressorEnergyConsumptionRate)
                 .setDefaultValue(75)
                 .build()
         );
 
-        machines.add(new IntFieldBuilder(
-                new TranslatableText(Constant.Config.RESET),
-                new TranslatableText(Constant.Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE),
+        machines.add(new LongFieldBuilder(
+                Component.translatable(Constant.Config.RESET),
+                Component.translatable(Constant.Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE),
                 this.config.oxygenCollectorEnergyConsumptionRate())
                 .setSaveConsumer(this.config::setOxygenCollectorEnergyConsumptionRate)
                 .setDefaultValue(10)
                 .build()
         );
 
-        machines.add(new IntFieldBuilder(
-                new TranslatableText(Constant.Config.RESET),
-                new TranslatableText(Constant.Config.REFINERY_ENERGY_CONSUMPTION_RATE),
+        machines.add(new LongFieldBuilder(
+                Component.translatable(Constant.Config.RESET),
+                Component.translatable(Constant.Config.REFINERY_ENERGY_CONSUMPTION_RATE),
                 this.config.refineryEnergyConsumptionRate())
                 .setSaveConsumer(this.config::setRefineryEnergyConsumptionRate)
                 .setDefaultValue(60)
                 .build()
         );
 
-        machines.add(new IntFieldBuilder(
-                new TranslatableText(Constant.Config.RESET),
-                new TranslatableText(Constant.Config.ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE),
+        machines.add(new LongFieldBuilder(
+                Component.translatable(Constant.Config.RESET),
+                Component.translatable(Constant.Config.ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE),
                 this.config.electricFurnaceEnergyConsumptionRate())
                 .setSaveConsumer(this.config::setElectricFurnaceEnergyConsumptionRate)
                 .setDefaultValue(20)
                 .build()
         );
 
-        machines.add(new IntFieldBuilder(
-                new TranslatableText(Constant.Config.RESET),
-                new TranslatableText(Constant.Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE),
+        machines.add(new LongFieldBuilder(
+                Component.translatable(Constant.Config.RESET),
+                Component.translatable(Constant.Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE),
                 this.config.energyStorageModuleStorageSize())
                 .setSaveConsumer(this.config::setEnergyStorageModuleStorageSize)
                 .setDefaultValue(500_000)
                 .build()
         );
 
-        machines.add(new IntFieldBuilder(
-                new TranslatableText(Constant.Config.RESET),
-                new TranslatableText(Constant.Config.ENERGY_STORAGE_SIZE),
+        machines.add(new LongFieldBuilder(
+                Component.translatable(Constant.Config.RESET),
+                Component.translatable(Constant.Config.ENERGY_STORAGE_SIZE),
                 this.config.machineEnergyStorageSize())
                 .setSaveConsumer(this.config::setMachineEnergyStorageSize)
                 .setDefaultValue(30_000)
@@ -219,9 +218,9 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
         
-        machines.add(new IntFieldBuilder(
-                new TranslatableText(Constant.Config.RESET),
-                new TranslatableText(Constant.Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
+        machines.add(new LongFieldBuilder(
+                Component.translatable(Constant.Config.RESET),
+                Component.translatable(Constant.Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
                 this.config.oxygenCompressorEnergyConsumptionRate())
                 .setSaveConsumer(this.config::setOxygenCompressorEnergyConsumptionRate)
                 .setDefaultValue(15)
@@ -229,9 +228,9 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        machines.add(new IntFieldBuilder(
-                new TranslatableText(Constant.Config.RESET),
-                new TranslatableText(Constant.Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE),
+        machines.add(new LongFieldBuilder(
+                Component.translatable(Constant.Config.RESET),
+                Component.translatable(Constant.Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE),
                 this.config.oxygenDecompressorEnergyConsumptionRate())
                 .setSaveConsumer(this.config::setOxygenDecompressorEnergyConsumptionRate)
                 .setDefaultValue(15)
@@ -239,20 +238,26 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        SubCategoryBuilder skybox = ConfigEntryBuilder.create().startSubCategory(new TranslatableText(Constant.Config.SKYBOX));
+        SubCategoryBuilder skybox = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Constant.Config.SKYBOX));
 
-        skybox.add(new BooleanToggleBuilder(
-                new TranslatableText(Constant.Config.RESET),
-                new TranslatableText(Constant.Config.MULTICOLOR_STARS),
-                this.config.areMoreMulticoloredStarsEnabled())
-                .setSaveConsumer(flag -> this.config.setMoreMulticolorStars(flag))
-                .setDefaultValue(false)
+        SubCategoryBuilder lifeSupport = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Constant.Config.PLAYER_LIFE_SUPPORT));
+
+        // TODO: If set to 0, disable the player oxygen system
+        lifeSupport.add(new LongFieldBuilder(
+                Component.translatable(Constant.Config.RESET),
+                Component.translatable(Constant.Config.PLAYER_OXYGEN_CONSUMPTION_RATE),
+                this.config.playerOxygenConsuptionRate())
+                .setSaveConsumer(this.config::setPlayerOxygenConsumptionRate)
+                .setDefaultValue(1)
+                .setMin(0)
+                .setMax(100000)
                 .build()
         );
 
-        b.getOrCreateCategory(new TranslatableText(Constant.Config.DEBUG)).addEntry(dB.build());
-        b.getOrCreateCategory(new TranslatableText(Constant.Config.ENERGY)).addEntry(wires.build()).addEntry(machines.build());
-        b.getOrCreateCategory(new TranslatableText(Constant.Config.CLIENT)).addEntry(skybox.build());
+        b.getOrCreateCategory(Component.translatable(Constant.Config.DEBUG)).addEntry(dB.build());
+        b.getOrCreateCategory(Component.translatable(Constant.Config.ENERGY)).addEntry(wires.build()).addEntry(machines.build());
+        b.getOrCreateCategory(Component.translatable(Constant.Config.CLIENT)).addEntry(skybox.build());
+        b.getOrCreateCategory(Component.translatable(Constant.Config.PLAYER)).addEntry(lifeSupport.build());
 
         return b.build();
     }

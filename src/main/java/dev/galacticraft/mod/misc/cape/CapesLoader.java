@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,8 @@ package dev.galacticraft.mod.misc.cape;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import dev.galacticraft.mod.Galacticraft;
-import net.minecraft.util.Util;
+import dev.galacticraft.mod.Constant;
+import net.minecraft.Util;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -50,10 +50,10 @@ public class CapesLoader {
     private static final Type PLAYER_CAPE_DATA_TYPE = new TypeToken<List<PlayerCapeData>>(){}.getType();
 
     public static void load() {
-        Util.getMainWorkerExecutor().execute(() -> {
+        Util.backgroundExecutor().execute(() -> {
             long startLoad = System.currentTimeMillis();
             Gson gson = new GsonBuilder().create();
-            Galacticraft.LOGGER.info("Loading capes data...");
+            Constant.LOGGER.info("Loading capes data...");
             try {
                 List<PlayerCapeData> players = gson.fromJson(
                         IOUtils.toString(
@@ -67,9 +67,9 @@ public class CapesLoader {
                     UUID_CAPE_MAP.put(player.uuid, player.cape);
                 }
             } catch (IOException e) {
-                Galacticraft.LOGGER.warn("Failed to load capes.", e);
+                Constant.LOGGER.warn("Failed to load capes.", e);
             }
-            Galacticraft.LOGGER.info("Loaded capes for {} players. (Took {}ms)", UUID_CAPE_MAP.size(), System.currentTimeMillis()-startLoad);
+            Constant.LOGGER.info("Loaded capes for {} players. (Took {}ms)", UUID_CAPE_MAP.size(), System.currentTimeMillis()-startLoad);
         });
     }
 }

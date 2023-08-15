@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/wall_inventory",
+  "textures": {
+    "wall": "galacticraft:block/meteoric_iron_decoration"
+  }
+}

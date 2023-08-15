@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,43 +24,42 @@ package dev.galacticraft.mod.world.gen.carver;
 
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.world.gen.carver.config.CraterCarverConfig;
-import net.minecraft.structure.StructureStart;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.ChunkSectionPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.ChunkRegion;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.carver.Carver;
-import net.minecraft.world.gen.carver.CarverContext;
-import net.minecraft.world.gen.chunk.AquiferSampler;
-import net.minecraft.world.gen.feature.StructureFeature;
+import dev.galacticraft.mod.world.gen.structure.GCStructures;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.chunk.CarvingMask;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.levelgen.Aquifer;
+import net.minecraft.world.level.levelgen.carver.CarvingContext;
+import net.minecraft.world.level.levelgen.carver.WorldCarver;
+import net.minecraft.world.level.levelgen.structure.Structure;
 
-import java.util.BitSet;
-import java.util.Random;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CraterCarver extends Carver<CraterCarverConfig> {
+public class CraterCarver extends WorldCarver<CraterCarverConfig> {
     public CraterCarver(Codec<CraterCarverConfig> configCodec) {
         super(configCodec);
     }
 
     @Override
-    public boolean carve(CarverContext context, CraterCarverConfig config, Chunk chunk, Function<BlockPos, Biome> posToBiome, Random random, AquiferSampler aquiferSampler, ChunkPos pos, BitSet carvingMask) {
-        int y = 127;//config.y.get(random, context);
+    public boolean carve(CarvingContext context, CraterCarverConfig config, ChunkAccess chunk, Function<BlockPos, Holder<Biome>> posToBiome, RandomSource random, Aquifer aquiferSampler, ChunkPos pos, CarvingMask carvingMask) {
+        int y = config.y.sample(random, context);
         //pos = center chunk pos
-        BlockPos craterCenter = pos.getBlockPos(random.nextInt(16), y, random.nextInt(16));
+        BlockPos craterCenter = pos.getBlockAt(random.nextInt(16), y, random.nextInt(16));
 
-        if (!chunk.getStructureReferences(StructureFeature.VILLAGE).isEmpty()) {
+        if (!chunk.getReferencesForStructure(context.registryAccess().registryOrThrow(Registries.STRUCTURE).getOrThrow(GCStructures.Moon.VILLAGE)).isEmpty()) {
             return false;
         }
 
-        BlockPos.Mutable mutable = craterCenter.mutableCopy();
+        BlockPos.MutableBlockPos mutable = craterCenter.mutable();
 
         double radius = 8 + (random.nextDouble() * (config.maxRadius - config.minRadius));
         if (random.nextBoolean() && radius < (config.minRadius + config.idealRangeOffset) || radius > (config.maxRadius - config.idealRangeOffset))
@@ -71,8 +70,8 @@ public class CraterCarver extends Carver<CraterCarverConfig> {
             for (int innerChunkZ = 0; innerChunkZ < 16; innerChunkZ++) {
                 double toDig = 0;
 
-                double xDev = Math.abs((chunk.getPos().getOffsetX(innerChunkX)) - craterCenter.getX());
-                double zDev = Math.abs((chunk.getPos().getOffsetZ(innerChunkZ)) - craterCenter.getZ());
+                double xDev = Math.abs((chunk.getPos().getBlockX(innerChunkX)) - craterCenter.getX());
+                double zDev = Math.abs((chunk.getPos().getBlockZ(innerChunkZ)) - craterCenter.getZ());
                 if (xDev >= 0 && xDev < 32 && zDev >= 0 && zDev < 32) {
                     if (xDev * xDev + zDev * zDev < radius * radius) { //distance to crater and depth
                         xDev /= radius;
@@ -90,17 +89,17 @@ public class CraterCarver extends Carver<CraterCarverConfig> {
                         toDig++; // Increase crater depth, but for sum, not each crater
                         if (fresh) toDig++; // Dig one more block, because we're not replacing the top with turf
                     }
-                    BlockPos.Mutable copy = new BlockPos.Mutable();
+                    BlockPos.MutableBlockPos copy = new BlockPos.MutableBlockPos();
                     mutable.set(innerChunkX, y, innerChunkZ);
                     for (int dug = 0; dug < toDig; dug++) {
                         mutable.move(Direction.DOWN);
-                        if (!chunk.getBlockState(mutable).isAir() || carvingMask.get(innerChunkX + (innerChunkZ << 4) + ((mutable.getY() + 128) << 8)) || dug > 0) {
-                            chunk.setBlockState(mutable, CAVE_AIR, false);
+                        if (!chunk.getBlockState(mutable).isAir() || carvingMask.get(innerChunkX, mutable.getY() + 64, innerChunkZ) || dug > 0) {
+                            chunk.setBlockState(mutable, AIR, false);
                             if (dug == 0) {
-                                carvingMask.set(innerChunkX + (innerChunkZ << 4) + ((mutable.getY() + 128) << 8), true);
+                                carvingMask.set(innerChunkX, mutable.getY() + 64, innerChunkZ);
                             }
                             if (!fresh && dug + 1 >= toDig && !chunk.getBlockState(copy.set(mutable).move(Direction.DOWN, 2)).isAir()) {
-                                chunk.setBlockState(mutable.move(Direction.DOWN), posToBiome.apply(chunk.getPos().getBlockPos(mutable.getX(), mutable.getY(), mutable.getZ())).getGenerationSettings().getSurfaceConfig().getTopMaterial(), false);
+                                context.topMaterial(posToBiome, chunk, mutable, false).ifPresent(blockStatex -> chunk.setBlockState(mutable.move(Direction.DOWN), blockStatex, false));
                             }
                         } else {
                             dug--;
@@ -112,12 +111,8 @@ public class CraterCarver extends Carver<CraterCarverConfig> {
         return true;
     }
 
-    public Stream<? extends StructureStart<?>> getStructuresWithChildren(Chunk chunk, ChunkRegion region, StructureFeature<?> feature) {
-        return chunk.getStructureReferences(feature).stream().map(l -> ChunkSectionPos.from(new ChunkPos(l), chunk.getBottomSectionCoord())).map(posx -> chunk.getStructureStart(feature)).filter(structureStart -> structureStart != null && structureStart.hasChildren());
-    }
-
     @Override
-    public boolean shouldCarve(CraterCarverConfig config, Random random) {
+    public boolean isStartChunk(CraterCarverConfig config, RandomSource random) {
         return random.nextFloat() <= config.probability;
     }
 }

@@ -1,7 +1,0 @@
-{
-  "config": {
-    "start_pool": "galacticraft:moon_pillager_base/entrances",
-    "size": 10
-  },
-  "type": "galacticraft:moon_pillager_base"
-}

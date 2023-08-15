@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +22,29 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
+import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
-import dev.galacticraft.mod.block.entity.EnergyStorageModuleBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
-import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
+import dev.galacticraft.mod.content.block.entity.machine.EnergyStorageModuleBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class EnergyStorageModuleScreen extends MachineHandledScreen<EnergyStorageModuleBlockEntity, SimpleMachineScreenHandler<EnergyStorageModuleBlockEntity>> {
-    public EnergyStorageModuleScreen(SimpleMachineScreenHandler<EnergyStorageModuleBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, title, Constant.ScreenTexture.ENERGY_STORAGE_MODULE_SCREEN);
-    }
+public class EnergyStorageModuleScreen extends MachineScreen<EnergyStorageModuleBlockEntity, MachineMenu<EnergyStorageModuleBlockEntity>> {
+    public EnergyStorageModuleScreen(MachineMenu<EnergyStorageModuleBlockEntity> handler, Inventory inv, Component title) {
+        super(handler, title, Constant.ScreenTexture.ENERGY_STORAGE_MODULE_SCREEN);
 
+        this.capacitorX = 54;
+        this.capacitorY = 20;
+    }
 
     @Override
     protected void init() {
         super.init();
-        this.addDrawableChild(new CapacitorWidget(this, this.x + 54, this.y + 20, 48));
     }
 }

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "galacticraft:models/block/basic_solar_panel"
+    }
+  }
+}

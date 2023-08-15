@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,60 +22,63 @@
 
 package dev.galacticraft.mod.api.block;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.block.entity.WireBlockEntity;
 import dev.galacticraft.mod.api.wire.Wire;
-import dev.galacticraft.mod.util.EnergyUtil;
+import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.api.EnergyStorage;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public abstract class WireBlock extends Block implements BlockEntityProvider {
-    public WireBlock(Settings settings) {
-        super(settings);
+public abstract class WireBlock extends Block implements EntityBlock {
+    public WireBlock(Properties settings) {
+        super(settings.pushReaction(PushReaction.BLOCK));
     }
 
     @Override
     @Deprecated
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient() && Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!world.isClientSide() && Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof Wire wire) {
-                Galacticraft.LOGGER.debug(wire.getNetwork());
+                Constant.LOGGER.info("Network: {}", wire.getNetwork());
             }
         }
-        return super.onUse(state, world, pos, player, hand, hit);
+        return super.use(state, world, pos, player, hand, hit);
     }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        super.neighborUpdate(state, world, pos, block, fromPos, notify);
-        if (!world.isClient()) {
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+        super.neighborChanged(state, world, pos, block, fromPos, notify);
+        if (!world.isClientSide()) {
             final BlockEntity blockEntity = world.getBlockEntity(pos);
             Wire wire = (Wire) blockEntity;
             assert wire != null;
             final BlockEntity blockEntityAdj = world.getBlockEntity(fromPos);
-            if (wire.canConnect(Direction.fromVector(fromPos.subtract(pos)))) {
+            BlockPos delta = fromPos.subtract(pos);
+            if (wire.canConnect(Direction.fromDelta(delta.getX(), delta.getY(), delta.getZ()))) {
                 if (blockEntityAdj instanceof Wire wire1) {
-                    if (wire1.canConnect(Direction.fromVector(fromPos.subtract(pos)).getOpposite())) {
+                    if (wire1.canConnect(Direction.fromDelta(delta.getX(), delta.getY(), delta.getZ()).getOpposite())) {
                         wire.getOrCreateNetwork().addWire(fromPos, wire1);
                     }
                 } else {
-                    if (EnergyUtil.canAccessEnergy(world, fromPos, Direction.fromVector(fromPos.subtract(pos)))) {
+
+                    if (EnergyStorage.SIDED.find(world, fromPos, Direction.fromDelta(delta.getX(), delta.getY(), delta.getZ()).getOpposite()) != null) {
                         wire.getOrCreateNetwork().updateConnection(pos, fromPos);
                     } else if (wire.getNetwork() != null) {
                         wire.getNetwork().updateConnection(pos, fromPos);
@@ -85,12 +88,7 @@ public abstract class WireBlock extends Block implements BlockEntityProvider {
         }
     }
 
-    @Override
-    public PistonBehavior getPistonBehavior(BlockState state) {
-        return PistonBehavior.BLOCK;
-    }
-
     @Nullable
     @Override
-    public abstract WireBlockEntity createBlockEntity(BlockPos pos, BlockState state);
+    public abstract WireBlockEntity newBlockEntity(BlockPos pos, BlockState state);
 }

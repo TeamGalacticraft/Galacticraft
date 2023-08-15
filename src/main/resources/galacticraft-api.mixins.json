@@ -1,0 +1,39 @@
+{
+  "required": true,
+  "package": "dev.galacticraft.impl.internal.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MinecraftServerMixin",
+    "client.AbstractContainerScreenMixin",
+    "gear.LivingEntityMixin",
+    "gear.PlayerListMixin",
+    "gear.ServerPlayerMixin",
+    "gravity.EntityGravityMixin",
+    "gravity.LivingEntityMixin",
+    "oxygen.ChunkHolderMixin",
+    "oxygen.ChunkSerializerMixin",
+    "oxygen.EmptyLevelChunkMixin",
+    "oxygen.ImposterProtoChunkMixin",
+    "oxygen.LevelChunkMixin",
+    "oxygen.LevelChunkSectionMixin",
+    "oxygen.LevelMixin",
+    "oxygen.ProtoChunkMixin",
+    "registry.RegistryDataLoaderMixin",
+    "registry.RegistrySyncronizationMixin",
+    "research.AdvancementRewardsMixin",
+    "research.ServerPlayerMixin"
+  ],
+  "client": [
+    "client.AbstractClientPlayerEntityMixin",
+    "client.ClientPlayNetworkHandlerMixin",
+    "client.MinecraftClientMixin",
+    "client.ParticleAccessor",
+    "client.ParticleManagerMixin",
+    "client.SoundEngineMixin",
+    "client.SoundManagerAccessor"
+  ],
+  "minVersion": "0.8.0",
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

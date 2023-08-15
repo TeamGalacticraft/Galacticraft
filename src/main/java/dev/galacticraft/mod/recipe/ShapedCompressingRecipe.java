@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,20 +26,18 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.google.gson.*;
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
-
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.Level;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -51,13 +49,13 @@ import java.util.Set;
 public class ShapedCompressingRecipe implements CompressingRecipe {
    private final int width;
    private final int height;
-   private final DefaultedList<Ingredient> inputs;
+   private final NonNullList<Ingredient> inputs;
    private final ItemStack output;
-   private final Identifier id;
+   private final ResourceLocation id;
    private final String group;
    private final int time;
 
-   public ShapedCompressingRecipe(Identifier id, String group, int width, int height, DefaultedList<Ingredient> ingredients, ItemStack output, int time) {
+   public ShapedCompressingRecipe(ResourceLocation id, String group, int width, int height, NonNullList<Ingredient> ingredients, ItemStack output, int time) {
       this.id = id;
       this.group = group;
       this.width = width;
@@ -68,13 +66,13 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
    }
 
    @Override
-   public Identifier getId() {
+   public ResourceLocation getId() {
       return this.id;
    }
 
    @Override
    public RecipeSerializer<?> getSerializer() {
-      return GalacticraftRecipe.SHAPED_COMPRESSING_SERIALIZER;
+      return GCRecipes.SHAPED_COMPRESSING_SERIALIZER;
    }
 
    @Override
@@ -83,24 +81,23 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
    }
 
    @Override
-   public ItemStack getOutput() {
-      return this.output;
-   }
-
-   @Override
-   public DefaultedList<Ingredient> getIngredients() {
+   public NonNullList<Ingredient> getIngredients() {
       return this.inputs;
    }
 
    @Override
-   @Environment(EnvType.CLIENT)
-   public boolean fits(int width, int height) {
+   public boolean canCraftInDimensions(int width, int height) {
       return width >= this.width && height >= this.height;
    }
 
    @Override
-   public boolean matches(Inventory inv, World world) {
-      if (inv.size() != 9) throw new AssertionError();
+   public ItemStack getResultItem(RegistryAccess registryAccess) {
+      return this.output;
+   }
+
+   @Override
+   public boolean matches(Container inv, Level world) {
+      if (inv.getContainerSize() != 9) throw new AssertionError();
       for(int i = 0; i <= 3 - this.width; ++i) {
          for(int j = 0; j <= 3 - this.height; ++j) {
             if (this.matchesSmall(inv, i, j, true)) {
@@ -116,8 +113,13 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
       return false;
    }
 
-   private boolean matchesSmall(Inventory inv, int offsetX, int offsetY, boolean bl) {
-      if (inv.size() != 9) throw new AssertionError();
+   @Override
+   public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+      return this.getResultItem(registryAccess).copy();
+   }
+
+   private boolean matchesSmall(Container inv, int offsetX, int offsetY, boolean bl) {
+      if (inv.getContainerSize() != 9) throw new AssertionError();
       for(int x = 0; x < 3; ++x) {
          for(int y = 0; y < 3; ++y) {
             int k = x - offsetX;
@@ -131,18 +133,13 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
                }
             }
 
-            if (!ingredient.test(inv.getStack(x + y * 3))) {
+            if (!ingredient.test(inv.getItem(x + y * 3))) {
                return false;
             }
          }
       }
 
       return true;
-   }
-
-   @Override
-   public ItemStack craft(Inventory Inventory) {
-      return this.getOutput().copy();
    }
 
    public int getWidth() {
@@ -153,8 +150,8 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
       return this.height;
    }
 
-   private static DefaultedList<Ingredient> getIngredients(String[] pattern, Map<String, Ingredient> key, int width, int height) {
-      DefaultedList<Ingredient> defaultedList = DefaultedList.ofSize(width * height, Ingredient.EMPTY);
+   private static NonNullList<Ingredient> getIngredients(String[] pattern, Map<String, Ingredient> key, int width, int height) {
+      NonNullList<Ingredient> defaultedList = NonNullList.withSize(width * height, Ingredient.EMPTY);
       Set<String> set = new HashSet<>(key.keySet());
       set.remove(" ");
 
@@ -240,7 +237,7 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
          throw new JsonSyntaxException("Invalid pattern: empty pattern not allowed");
       } else {
          for(int i = 0; i < strings.length; ++i) {
-            String string = JsonHelper.asString(json.get(i), "pattern[" + i + "]");
+            String string = GsonHelper.convertToString(json.get(i), "pattern[" + i + "]");
             if (string.length() > 3) {
                throw new JsonSyntaxException("Invalid pattern: too many columns, 3 is maximum");
             }
@@ -276,12 +273,12 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
    }
 
    public static ItemStack getItemStack(JsonObject json) {
-      String string = JsonHelper.getString(json, "item");
-      Item item = Registry.ITEM.getOrEmpty(new Identifier(string)).orElseThrow(() -> new JsonSyntaxException("Unknown item '" + string + "'"));
+      String string = GsonHelper.getAsString(json, "item");
+      Item item = BuiltInRegistries.ITEM.getOptional(new ResourceLocation(string)).orElseThrow(() -> new JsonSyntaxException("Unknown item '" + string + "'"));
       if (json.has("data")) {
          throw new JsonParseException("Disallowed data tag found");
       } else {
-         int i = JsonHelper.getInt(json, "count", 1);
+         int i = GsonHelper.getAsInt(json, "count", 1);
          return new ItemStack(item, i);
       }
    }
@@ -295,46 +292,46 @@ public class ShapedCompressingRecipe implements CompressingRecipe {
       INSTANCE;
 
       @Override
-      public ShapedCompressingRecipe read(Identifier id, JsonObject object) {
-         String string = JsonHelper.getString(object, "group", "");
-         int time = JsonHelper.getInt(object, "time", 200);
-         Map<String, Ingredient> map = ShapedCompressingRecipe.getComponents(JsonHelper.getObject(object, "key"));
-         String[] pattern = ShapedCompressingRecipe.combinePattern(ShapedCompressingRecipe.getPattern(JsonHelper.getArray(object, "pattern")));
+      public ShapedCompressingRecipe fromJson(ResourceLocation id, JsonObject object) {
+         String string = GsonHelper.getAsString(object, "group", "");
+         int time = GsonHelper.getAsInt(object, "time", 200);
+         Map<String, Ingredient> map = ShapedCompressingRecipe.getComponents(GsonHelper.getAsJsonObject(object, "key"));
+         String[] pattern = ShapedCompressingRecipe.combinePattern(ShapedCompressingRecipe.getPattern(GsonHelper.getAsJsonArray(object, "pattern")));
          int width = pattern[0].length();
          int height = pattern.length;
-         DefaultedList<Ingredient> defaultedList = ShapedCompressingRecipe.getIngredients(pattern, map, width, height);
-         ItemStack itemStack = ShapedCompressingRecipe.getItemStack(JsonHelper.getObject(object, "result"));
+         NonNullList<Ingredient> defaultedList = ShapedCompressingRecipe.getIngredients(pattern, map, width, height);
+         ItemStack itemStack = ShapedCompressingRecipe.getItemStack(GsonHelper.getAsJsonObject(object, "result"));
          return new ShapedCompressingRecipe(id, string, width, height, defaultedList, itemStack, time);
       }
 
       @Override
-      public ShapedCompressingRecipe read(Identifier id, PacketByteBuf buf) {
+      public ShapedCompressingRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
          int width = buf.readVarInt();
          int height = buf.readVarInt();
-         String string = buf.readString(Constant.Misc.MAX_STRING_READ);
+         String string = buf.readUtf(Constant.Misc.MAX_STRING_READ);
          int time = buf.readInt();
-         DefaultedList<Ingredient> ingredients = DefaultedList.ofSize(width * height, Ingredient.EMPTY);
+         NonNullList<Ingredient> ingredients = NonNullList.withSize(width * height, Ingredient.EMPTY);
 
          for(int k = 0; k < ingredients.size(); ++k) {
-            ingredients.set(k, Ingredient.fromPacket(buf));
+            ingredients.set(k, Ingredient.fromNetwork(buf));
          }
 
-         ItemStack output = buf.readItemStack();
+         ItemStack output = buf.readItem();
          return new ShapedCompressingRecipe(id, string, width, height, ingredients, output, time);
       }
 
       @Override
-      public void write(PacketByteBuf buf, ShapedCompressingRecipe recipe) {
+      public void toNetwork(FriendlyByteBuf buf, ShapedCompressingRecipe recipe) {
          buf.writeVarInt(recipe.width);
          buf.writeVarInt(recipe.height);
-         buf.writeString(recipe.group);
+         buf.writeUtf(recipe.group);
          buf.writeInt(recipe.time);
 
          for (Ingredient ingredient : recipe.inputs) {
-            ingredient.write(buf);
+            ingredient.toNetwork(buf);
          }
 
-         buf.writeItemStack(recipe.output);
+         buf.writeItem(recipe.output);
       }
    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.api.solarpanel;
 
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
-public record LightSource(Text name, double strength, double atmosphericInterference) {
+public record LightSource(Component name, double strength, double atmosphericInterference) {
 }

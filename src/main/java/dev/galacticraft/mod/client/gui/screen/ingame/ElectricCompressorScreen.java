@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,25 +23,24 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
+import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
-import dev.galacticraft.mod.block.entity.ElectricCompressorBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
+import dev.galacticraft.mod.content.block.entity.machine.ElectricCompressorBlockEntity;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
-import dev.galacticraft.mod.screen.RecipeMachineScreenHandler;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompressorBlockEntity, RecipeMachineScreenHandler<Inventory, CompressingRecipe, ElectricCompressorBlockEntity>> {
+public class ElectricCompressorScreen extends MachineScreen<ElectricCompressorBlockEntity, RecipeMachineMenu<Container, CompressingRecipe, ElectricCompressorBlockEntity>> {
     private static final int PROGRESS_U = 177;
     private static final int PROGRESS_V = 0;
     private static final int PROGRESS_X = 87;
@@ -49,26 +48,20 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
 
-    public ElectricCompressorScreen(RecipeMachineScreenHandler<Inventory, CompressingRecipe, ElectricCompressorBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, title, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
+    public ElectricCompressorScreen(RecipeMachineMenu<Container, CompressingRecipe, ElectricCompressorBlockEntity> handler, Inventory inv, Component title) {
+        super(handler, title, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
     }
 
     @Override
-    protected void init() {
-        super.init();
-        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 8, 48));
+    protected void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.renderBackground(graphics, mouseX, mouseY, delta);
+        this.drawCraftProgressBar(graphics);
     }
 
-    @Override
-    protected void renderBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        super.renderBackground(matrices, delta, mouseX, mouseY);
-        this.drawCraftProgressBar(matrices);
-    }
-
-    protected void drawCraftProgressBar(MatrixStack matrices) {
-        float progressScale = (((float)this.machine.progress()) / ((float)this.machine.maxProgress()));
+    protected void drawCraftProgressBar(GuiGraphics graphics) {
+        float progressScale = (((float)this.menu.getProgress()) / ((float)this.menu.getMaxProgress()));
 
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
-        DrawableUtil.drawProgressTexture(matrices, this.x + PROGRESS_X, this.y + PROGRESS_Y, PROGRESS_U, PROGRESS_V, (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
+        DrawableUtil.drawProgressTexture(graphics.pose(), this.leftPos + PROGRESS_X, this.topPos + PROGRESS_Y, PROGRESS_U, PROGRESS_V, (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,20 +22,10 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.entity.damage.GalacticraftDamageSource;
-import dev.galacticraft.mod.tag.GalacticraftTag;
-import dev.galacticraft.mod.world.dimension.GalacticraftDimension;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.tag.Tag;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.TeleportTarget;
-import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
+import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
+import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.world.dimension.GCDimensions;
+import net.minecraft.core.registries.Registries;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -44,6 +34,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.UUID;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.portal.PortalInfo;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -52,39 +52,39 @@ import java.util.UUID;
 public abstract class EntityMixin {
 
     @Shadow
-    public abstract Vec3d getVelocity();
+    public abstract Vec3 getDeltaMovement();
 
     @Shadow
-    private float yaw;
+    private float yRot;
 
     @Shadow
-    private float pitch;
+    private float xRot;
 
     @Shadow
-    public World world;
+    public Level level;
 
-    @Inject(method = "getTeleportTarget", at = @At("HEAD"), cancellable = true)
-    private void getTeleportTargetGC(ServerWorld destination, CallbackInfoReturnable<TeleportTarget> cir) {
-        if (destination.getRegistryKey().equals(GalacticraftDimension.MOON) || this.world.getRegistryKey().equals(GalacticraftDimension.MOON)) { //TODO lander/parachute stuff
-            BlockPos pos = destination.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, destination.getSpawnPos());
-            cir.setReturnValue(new TeleportTarget(new Vec3d((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D), this.getVelocity(), this.yaw, this.pitch));
+    @Inject(method = "findDimensionEntryPoint", at = @At("HEAD"), cancellable = true)
+    private void getTeleportTargetGC(ServerLevel destination, CallbackInfoReturnable<PortalInfo> cir) {
+        if (destination.dimension().equals(GCDimensions.MOON) || this.level.dimension().equals(GCDimensions.MOON)) { //TODO lander/parachute stuff
+            BlockPos pos = destination.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, destination.getSharedSpawnPos());
+            cir.setReturnValue(new PortalInfo(new Vec3((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D), this.getDeltaMovement(), this.yRot, this.xRot));
         }
     }
 
     @Shadow
-    public abstract boolean updateMovementInFluid(Tag<Fluid> tag, double d);
+    public abstract boolean updateFluidHeightAndDoFluidPushing(TagKey<Fluid> tag, double d);
 
     @Shadow
     public abstract boolean isOnFire();
 
     @Shadow
-    private Vec3d pos;
+    private Vec3 position;
 
     @Shadow
     protected UUID uuid;
 
     @Shadow
-    public abstract boolean isPlayer();
+    public abstract boolean isAlwaysTicking();
 
     @Shadow
     private int id;
@@ -93,16 +93,15 @@ public abstract class EntityMixin {
     public abstract boolean isInvulnerable();
 
     @Shadow
-    public abstract boolean damage(DamageSource source, float amount);
+    public abstract boolean hurt(DamageSource source, float amount);
 
-    @Inject(method = "checkWaterState", at = @At("TAIL"), cancellable = true)
+    @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At("TAIL"), cancellable = true)
     private void checkWaterStateGC(CallbackInfo ci) {
-        if (this.updateMovementInFluid(GalacticraftTag.OIL, 0.0028d) || this.updateMovementInFluid(GalacticraftTag.FUEL, 0.0028d)) {
-            if (this.isOnFire())
-            {
-                world.createExplosion(world.getEntityById(id), pos.x, pos.y, pos.z, 0f, Explosion.DestructionType.NONE);
-                if ((this.isPlayer() && !world.getPlayerByUuid(uuid).isCreative()) || !this.isInvulnerable()) {
-                    this.damage(GalacticraftDamageSource.OIL_BOOM, 20.0f);
+        if (this.updateFluidHeightAndDoFluidPushing(GCTags.OIL, 0.0028d) || this.updateFluidHeightAndDoFluidPushing(GCTags.FUEL, 0.0028d)) {
+            if (this.isOnFire()) {
+                level.explode(level.getEntity(id), position.x, position.y, position.z, 0f, Level.ExplosionInteraction.NONE);
+                if ((this.isAlwaysTicking() && !level.getPlayerByUUID(uuid).isCreative()) || !this.isInvulnerable()) {
+                    this.hurt(new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.OIL_BOOM)), 20.0f);
                 }
             }
         }

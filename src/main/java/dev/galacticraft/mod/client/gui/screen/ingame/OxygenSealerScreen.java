@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2022 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,28 +22,39 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
+import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.client.screen.MachineHandledScreen;
-import dev.galacticraft.mod.block.entity.OxygenSealerBlockEntity;
-import dev.galacticraft.mod.client.gui.widget.machine.CapacitorWidget;
-import dev.galacticraft.mod.screen.SimpleMachineScreenHandler;
+import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class OxygenSealerScreen extends MachineHandledScreen<OxygenSealerBlockEntity, SimpleMachineScreenHandler<OxygenSealerBlockEntity>> {
-    public OxygenSealerScreen(SimpleMachineScreenHandler<OxygenSealerBlockEntity> handler, PlayerInventory inv, Text title) {
-        super(handler, inv, title, Constant.ScreenTexture.OXYGEN_SEALER_SCREEN);
+public class OxygenSealerScreen extends MachineScreen<OxygenSealerBlockEntity, MachineMenu<OxygenSealerBlockEntity>> {
+    public OxygenSealerScreen(MachineMenu<OxygenSealerBlockEntity> handler, Inventory inv, Component title) {
+        super(handler, title, Constant.ScreenTexture.OXYGEN_SEALER_SCREEN);
     }
 
     @Override
     protected void init() {
         super.init();
-        this.addDrawableChild(new CapacitorWidget(this, this.x + 8, this.y + 8, 48));
+        addRenderableWidget(Button.builder(Component.literal("Disable Seal"), button -> ClientPlayNetworking.send(Constant.Packet.DISABLE_SEAL, PacketByteBufs.create())).pos(this.leftPos + 60, this.topPos + 50).size(80, 15).build());
+    }
+
+    @Override
+    protected void renderForeground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.renderForeground(graphics, mouseX, mouseY, delta);
+
+        graphics.drawString(this.font, Component.translatable("ui.galacticraft.machine.status").append(this.menu.configuration.getStatus().name()), this.leftPos + 50, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
     }
 }
