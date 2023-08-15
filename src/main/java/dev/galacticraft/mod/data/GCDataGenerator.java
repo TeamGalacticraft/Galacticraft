@@ -110,8 +110,6 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
 
     @Override
     public void buildRegistry(RegistrySetBuilder registryBuilder) {
-        DataGeneratorEntrypoint.super.buildRegistry(registryBuilder);
-
         registryBuilder.add(AddonRegistries.GALAXY, GalaxyImpl::bootstrapRegistries);
         registryBuilder.add(RocketRegistries.ROCKET_CONE, GCRocketParts::bootstrapCone);
         registryBuilder.add(RocketRegistries.ROCKET_BODY, GCRocketParts::bootstrapBody);

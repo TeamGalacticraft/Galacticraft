@@ -30,6 +30,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 public interface RocketData {
@@ -45,8 +46,9 @@ public interface RocketData {
         return new RocketDataImpl(color, cone, body, fin, booster, bottom, upgrades);
     }
 
-    static @NotNull @Unmodifiable RocketData fromNbt(CompoundTag nbt) {
-        return RocketDataImpl.fromNbt(nbt);
+    @Unmodifiable
+    static RocketData fromNbt(@Nullable CompoundTag nbt) {
+        return RocketDataImpl.fromNbt(nbt == null ? RocketDataImpl.DEFAULT_ROCKET : nbt);
     }
 
     @Contract(pure = true)

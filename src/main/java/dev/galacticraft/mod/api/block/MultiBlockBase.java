@@ -38,20 +38,20 @@ import net.minecraft.world.level.block.state.BlockState;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public interface MultiBlockBase {
-    default void onPartDestroyed(Level world, Player player, BlockState state, BlockPos pos, BlockState partState, BlockPos partPos) {
-        world.destroyBlock(pos, !player.isCreative());
+    default void onPartDestroyed(Level level, Player player, BlockState blockState, BlockPos blockPos, BlockState partState, BlockPos partPos) {
+        level.destroyBlock(blockPos, !player.isCreative());
 
-        for (BlockPos otherPart : this.getOtherParts(state)) {
-            otherPart = otherPart.immutable().offset(pos);
-            if (!world.getBlockState(otherPart).isAir()) {
-                world.setBlock(otherPart, Blocks.AIR.defaultBlockState(), 3);
+        for (var otherPart : this.getOtherParts(blockState)) {
+            otherPart = otherPart.immutable().offset(blockPos);
+            if (!level.getBlockState(otherPart).isAir()) {
+                level.setBlock(otherPart, Blocks.AIR.defaultBlockState(), 3);
             }
         }
     }
 
-    @Unmodifiable List<BlockPos> getOtherParts(BlockState state);
+    @Unmodifiable List<BlockPos> getOtherParts(BlockState blockState);
 
-    void onMultiBlockPlaced(Level world, BlockPos pos, BlockState state);
+    void onMultiBlockPlaced(Level level, BlockPos blockPos, BlockState blockState);
 
     default InteractionResult onMultiBlockUse(BlockState blockState, Level level, BlockPos basePos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         return InteractionResult.PASS;

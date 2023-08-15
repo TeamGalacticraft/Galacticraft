@@ -453,8 +453,7 @@ public class GCCreativeModeTabs {
                 output.accept(LUNAR_CARTOGRAPHY_TABLE);
 
                 // MISC WORLD GEN
-                output.accept(CAVERNOUS_VINE);
-                output.accept(POISONOUS_CAVERNOUS_VINE);
+                output.accept(CAVERNOUS_VINES);
 
                 // MISC MACHINES
                 output.accept(CRYOGENIC_CHAMBER);

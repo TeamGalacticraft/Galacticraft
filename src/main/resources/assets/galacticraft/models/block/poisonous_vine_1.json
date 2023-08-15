@@ -1,6 +1,0 @@
-{
-  "parent": "galacticraft:block/vine_model",
-  "textures": {
-    "cross": "galacticraft:block/poisonous_cavernous_vine_1"
-  }
-}

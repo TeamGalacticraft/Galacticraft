@@ -38,15 +38,15 @@ public class GCFluidTagProvider extends FabricTagProvider.FluidTagProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
-        tag(GCTags.OIL)
-                .add(GCFluids.CRUDE_OIL.builtInRegistryHolder().key())
-                .add(GCFluids.FLOWING_CRUDE_OIL.builtInRegistryHolder().key());
-        tag(GCTags.FUEL)
-                .add(GCFluids.FUEL.builtInRegistryHolder().key())
-                .add(GCFluids.FLOWING_FUEL.builtInRegistryHolder().key());
-        tag(GCTags.LIQUID_OXYGEN)
-                .add(GCFluids.LIQUID_OXYGEN.builtInRegistryHolder().key());
-        tag(GCTags.OXYGEN)
-                .add(Gases.OXYGEN.builtInRegistryHolder().key());
+        this.getOrCreateTagBuilder(GCTags.OIL)
+                .add(GCFluids.CRUDE_OIL)
+                .add(GCFluids.FLOWING_CRUDE_OIL);
+        this.getOrCreateTagBuilder(GCTags.FUEL)
+                .add(GCFluids.FUEL)
+                .add(GCFluids.FLOWING_FUEL);
+        this.getOrCreateTagBuilder(GCTags.LIQUID_OXYGEN)
+                .add(GCFluids.LIQUID_OXYGEN);
+        this.getOrCreateTagBuilder(GCTags.OXYGEN)
+                .add(Gases.OXYGEN);
     }
 }

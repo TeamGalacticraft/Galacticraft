@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "part=center": {
+      "model": "galacticraft:block/rocket_launch_pad_center"
+    },
+    "part=east": {
+      "model": "galacticraft:block/rocket_launch_pad_side",
+      "y": 90
+    },
+    "part=none": {
+      "model": "galacticraft:block/rocket_launch_pad_center"
+    },
+    "part=north": {
+      "model": "galacticraft:block/rocket_launch_pad_side"
+    },
+    "part=north_east": {
+      "model": "galacticraft:block/rocket_launch_pad_corner",
+      "y": 90
+    },
+    "part=north_west": {
+      "model": "galacticraft:block/rocket_launch_pad_corner"
+    },
+    "part=south": {
+      "model": "galacticraft:block/rocket_launch_pad_side",
+      "y": 180
+    },
+    "part=south_east": {
+      "model": "galacticraft:block/rocket_launch_pad_corner",
+      "y": 180
+    },
+    "part=south_west": {
+      "model": "galacticraft:block/rocket_launch_pad_corner",
+      "y": 270
+    },
+    "part=west": {
+      "model": "galacticraft:block/rocket_launch_pad_side",
+      "y": 270
+    }
+  }
+}
