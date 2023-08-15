@@ -33,6 +33,7 @@ accessible method net/minecraft/data/worldgen/Structures structure (Lnet/minecra
 accessible method net/minecraft/world/level/levelgen/NoiseRouterData overworld (Lnet/minecraft/core/HolderGetter;Lnet/minecraft/core/HolderGetter;ZZ)Lnet/minecraft/world/level/levelgen/NoiseRouter;
 accessible method net/minecraft/data/models/model/ModelTemplates createItem (Ljava/lang/String;[Lnet/minecraft/data/models/model/TextureSlot;)Lnet/minecraft/data/models/model/ModelTemplate;
 accessible method net/minecraft/world/entity/ai/memory/MemoryModuleType register (Ljava/lang/String;)Lnet/minecraft/world/entity/ai/memory/MemoryModuleType;
+accessible method net/minecraft/world/entity/ai/sensing/SensorType register (Ljava/lang/String;Ljava/util/function/Supplier;)Lnet/minecraft/world/entity/ai/sensing/SensorType;
 
 # private fields
 accessible field net/minecraft/client/resources/model/ModelManager bakedRegistry Ljava/util/Map;
