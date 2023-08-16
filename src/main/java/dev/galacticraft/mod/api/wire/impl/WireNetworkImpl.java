@@ -47,7 +47,7 @@ import java.util.function.BiFunction;
 public class WireNetworkImpl implements WireNetwork {
     private final @NotNull ServerLevel world;
     private final @NotNull Object2ObjectOpenHashMap<BlockPos, EnergyStorage> storages = new Object2ObjectOpenHashMap<>();
-    private final @NotNull ObjectSet<BlockPos> wires = new ObjectLinkedOpenHashSet<>(1);
+    private final @NotNull Object2ObjectOpenHashMap<BlockPos, Wire> wires = new Object2ObjectOpenHashMap<>(1);
     private final @NotNull ObjectSet<WireNetwork> peerNetworks = new ObjectLinkedOpenHashSet<>(0);
     private boolean markedForRemoval = false;
     private final long maxTransferRate;
@@ -70,7 +70,7 @@ public class WireNetworkImpl implements WireNetwork {
         assert pos.equals(((BlockEntity) wire).getBlockPos());
         if (this.isCompatibleWith(wire)) {
             wire.setNetwork(this);
-            this.wires.add(pos);
+            this.wires.put(pos, wire);
             for (Direction direction : Constant.Misc.DIRECTIONS) {
                 if (wire.canConnect(direction)) {
                     BlockEntity blockEntity = world.getBlockEntity(pos.relative(direction));
@@ -109,7 +109,7 @@ public class WireNetworkImpl implements WireNetwork {
             BlockEntity entity = this.world.getBlockEntity(pos);
             if (entity instanceof Wire wire && !entity.isRemoved()) {
                 wire.setNetwork(this);
-                this.wires.add(pos);
+                this.wires.put(pos, wire);
             }
         }
 
@@ -119,12 +119,19 @@ public class WireNetworkImpl implements WireNetwork {
 
     @Override
     public void removeWire(Wire wire, @NotNull BlockPos removedPos) {
+        if (!this.world.isLoaded(removedPos)) {
+            Constant.LOGGER.debug("Removing wire from unloaded chunk, removing entire network");
+            this.wires.values().forEach(w -> w.setNetwork(null));
+            this.markForRemoval();
+            return;
+        }
+
         if (this.markedForRemoval()) {
             this.wires.clear();
             Constant.LOGGER.warn("Tried to remove wire from removed network!");
             return;
         }
-        assert this.wires.contains(removedPos) : "Tried to remove wire that does not exist!";
+        assert this.wires.containsKey(removedPos) : "Tried to remove wire that does not exist!";
         this.wires.remove(removedPos);
         if (this.wires.isEmpty()) {
             this.markForRemoval();
@@ -138,7 +145,7 @@ public class WireNetworkImpl implements WireNetwork {
         for (Direction direction : Constant.Misc.DIRECTIONS) {
             if (wire.canConnect(direction)) {
                 BlockPos adjacentWirePos = removedPos.relative(direction);
-                if (this.wires.contains(adjacentWirePos)) {
+                if (this.wires.containsKey(adjacentWirePos)) {
                     if (((Wire) Objects.requireNonNull(this.world.getBlockEntity(adjacentWirePos))).canConnect(direction.getOpposite())) {
                         adjacent.add(adjacentWirePos); // Don't bother testing if it was unable to connect
                     }
@@ -177,7 +184,7 @@ public class WireNetworkImpl implements WireNetwork {
             Wire wire = (Wire) world.getBlockEntity(pos);
             if (wire.canConnect(direction)) {
                 pos1 = pos.relative(direction);
-                if (this.wires.contains(pos1)) {
+                if (this.wires.containsKey(pos1)) {
                     if (world.getBlockEntity(pos1) instanceof Wire wire1 && wire1.canConnect(direction.getOpposite())) {
                         if (!list.contains(pos1)) {
                             list.add(pos1);
@@ -195,7 +202,7 @@ public class WireNetworkImpl implements WireNetwork {
             if (map.remove(adjacentPos) != null) {
                 for (Direction dir : Constant.Misc.DIRECTIONS) {
                     if (dir == direction.getOpposite()) continue;
-                    if (this.wires.contains(adjacentPos.relative(dir))) {
+                    if (this.wires.containsKey(adjacentPos.relative(dir))) {
                         if (((Wire) world.getBlockEntity(adjacentPos.relative(dir))).canConnect(dir.getOpposite())) {
                             T value = function.apply(adjacentPos, dir);
                             if (value != null) {
@@ -303,7 +310,7 @@ public class WireNetworkImpl implements WireNetwork {
 
     @Override
     public Collection<BlockPos> getAllWires() {
-        return this.wires;
+        return this.wires.keySet();
     }
 
     @Override
@@ -331,7 +338,7 @@ public class WireNetworkImpl implements WireNetwork {
         return "WireNetworkImpl{" +
                 "world=" + world.dimension().location() +
                 ", insertable=" + storages +
-                ", wires=" + wires +
+                ", wires=" + wires.keySet() +
                 ", markedForRemoval=" + markedForRemoval +
                 ", maxTransferRate=" + maxTransferRate +
                 ", tickId=" + tickId +

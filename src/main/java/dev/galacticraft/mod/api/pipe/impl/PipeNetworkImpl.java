@@ -48,7 +48,7 @@ import java.util.function.BiFunction;
 public class PipeNetworkImpl implements PipeNetwork {
     private final @NotNull ServerLevel world;
     private final @NotNull Object2ObjectOpenHashMap<BlockPos, Storage<FluidVariant>> insertable = new Object2ObjectOpenHashMap<>();
-    private final @NotNull ObjectSet<BlockPos> pipes = new ObjectLinkedOpenHashSet<>(1);
+    private final @NotNull Object2ObjectOpenHashMap<BlockPos, Pipe> pipes = new Object2ObjectOpenHashMap<>(1);
     private final @NotNull ObjectSet<PipeNetwork> peerNetworks = new ObjectLinkedOpenHashSet<>(0);
     private boolean markedForRemoval = false;
     private final long maxTransferRate;
@@ -72,7 +72,7 @@ public class PipeNetworkImpl implements PipeNetwork {
         assert pos.equals(((BlockEntity) pipe).getBlockPos());
         if (this.isCompatibleWith(pipe)) {
             pipe.setNetwork(this);
-            this.pipes.add(pos);
+            this.pipes.put(pos, pipe);
             for (Direction direction : Constant.Misc.DIRECTIONS) {
                 if (pipe.canConnect(direction)) {
                     BlockEntity blockEntity = world.getBlockEntity(pos.relative(direction));
@@ -112,7 +112,7 @@ public class PipeNetworkImpl implements PipeNetwork {
             BlockEntity entity = this.world.getBlockEntity(pos);
             if (entity instanceof Pipe pipe && !entity.isRemoved()) {
                 pipe.setNetwork(this);
-                this.pipes.add(pos);
+                this.pipes.put(pos, pipe);
             }
         }
 
@@ -122,12 +122,19 @@ public class PipeNetworkImpl implements PipeNetwork {
 
     @Override
     public void removePipe(Pipe pipe, @NotNull BlockPos removedPos) {
+        if (!this.world.isLoaded(removedPos)) {
+            Constant.LOGGER.debug("Removing pipe from unloaded chunk, removing entire network");
+            this.pipes.values().forEach(p -> p.setNetwork(null));
+            this.markForRemoval();
+            return;
+        }
+
         if (this.markedForRemoval()) {
             this.pipes.clear();
             Constant.LOGGER.warn("Tried to remove pipe from removed network!");
             return;
         }
-        assert this.pipes.contains(removedPos) : "Tried to remove pipe that does not exist!";
+        assert this.pipes.containsKey(removedPos) : "Tried to remove pipe that does not exist!";
         this.pipes.remove(removedPos);
         if (this.pipes.isEmpty()) {
             this.markForRemoval();
@@ -144,7 +151,7 @@ public class PipeNetworkImpl implements PipeNetwork {
         for (Direction direction : Constant.Misc.DIRECTIONS) {
             if (pipe.canConnect(direction)) {
                 BlockPos adjacentPipePos = removedPos.relative(direction);
-                if (this.pipes.contains(adjacentPipePos)) {
+                if (this.pipes.containsKey(adjacentPipePos)) {
                     if (((Pipe) Objects.requireNonNull(this.world.getBlockEntity(adjacentPipePos))).canConnect(direction.getOpposite())) {
                         adjacent.add(adjacentPipePos); // Don't bother testing if it was unable to connect
                     }
@@ -183,7 +190,7 @@ public class PipeNetworkImpl implements PipeNetwork {
             Pipe pipe = (Pipe) world.getBlockEntity(pos);
             if (pipe.canConnect(direction)) {
                 pos1 = pos.relative(direction);
-                if (this.pipes.contains(pos1)) {
+                if (this.pipes.containsKey(pos1)) {
                     if (world.getBlockEntity(pos1) instanceof Pipe pipe1 && pipe1.canConnect(direction.getOpposite())) {
                         if (!list.contains(pos1)) {
                             list.add(pos1);
@@ -201,7 +208,7 @@ public class PipeNetworkImpl implements PipeNetwork {
             if (map.remove(adjacentPos) != null) {
                 for (Direction direction1 : Constant.Misc.DIRECTIONS) {
                     if (direction1 == direction.getOpposite()) continue;
-                    if (this.pipes.contains(adjacentPos.relative(direction1))) {
+                    if (this.pipes.containsKey(adjacentPos.relative(direction1))) {
                         if (((Pipe) world.getBlockEntity(adjacentPos.relative(direction1))).canConnect(direction1.getOpposite())) {
                             T value = function.apply(adjacentPos, direction1);
                             if (value != null) {
@@ -335,7 +342,7 @@ public class PipeNetworkImpl implements PipeNetwork {
 
     @Override
     public Collection<BlockPos> getAllPipes() {
-        return this.pipes;
+        return this.pipes.keySet();
     }
 
     @Override
@@ -363,7 +370,7 @@ public class PipeNetworkImpl implements PipeNetwork {
         return "PipeNetworkImpl{" +
                 "world=" + world.dimension().location() +
                 ", insertable=" + insertable +
-                ", pipes=" + pipes +
+                ", pipes=" + pipes.keySet() +
                 ", markedForRemoval=" + markedForRemoval +
                 ", maxTransferRate=" + maxTransferRate +
                 ", tickId=" + tickId +
