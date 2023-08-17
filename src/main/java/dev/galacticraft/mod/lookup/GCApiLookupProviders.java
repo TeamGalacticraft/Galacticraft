@@ -34,6 +34,7 @@ import dev.galacticraft.mod.content.item.OxygenTankItem;
 import dev.galacticraft.mod.storage.SingleTypeStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import team.reborn.energy.api.EnergyStorage;
@@ -86,11 +87,10 @@ public class GCApiLookupProviders {
 
         FluidStorage.ITEM.registerForItems((itemStack, context) -> {
             long amount = itemStack.getTag() != null ? itemStack.getTag().getLong(Constant.Nbt.VALUE) : 0;
-            return new SingleTypeStorage<>(FluidVariant.of(Gases.OXYGEN), ((OxygenTankItem) itemStack.getItem()).capacity, FluidVariant.blank(), amount) {
+            return new SingleTypeStorage<>(FluidVariant.of(Gases.OXYGEN), context, ((OxygenTankItem) itemStack.getItem()).capacity, FluidVariant.blank(), amount) {
                 @Override
                 protected void onFinalCommit() {
                     super.onFinalCommit();
-                    itemStack.getOrCreateTag().putLong(Constant.Nbt.VALUE, this.getAmount());
                 }
             };
         }, GCItems.SMALL_OXYGEN_TANK, GCItems.MEDIUM_OXYGEN_TANK, GCItems.LARGE_OXYGEN_TANK);

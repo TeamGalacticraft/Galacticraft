@@ -175,6 +175,8 @@ public class GCItems {
     public static final Item CRACKED_MOON_BASALT_BRICK_STAIRS = new BlockItem(GCBlocks.CRACKED_MOON_BASALT_BRICK_STAIRS, new Item.Properties());
     public static final Item CRACKED_MOON_BASALT_BRICK_WALL = new BlockItem(GCBlocks.CRACKED_MOON_BASALT_BRICK_WALL, new Item.Properties());
 
+    public static final Item FALLEN_METEOR = new BlockItem(GCBlocks.FALLEN_METEOR, new Item.Properties());
+
     // MARS NATURAL
     public static final Item MARS_SURFACE_ROCK = new BlockItem(GCBlocks.MARS_SURFACE_ROCK, new Item.Properties());
     public static final Item MARS_SUB_SURFACE_ROCK = new BlockItem(GCBlocks.MARS_SUB_SURFACE_ROCK, new Item.Properties());
@@ -262,8 +264,7 @@ public class GCItems {
     public static final Item LUNAR_CARTOGRAPHY_TABLE = new BlockItem(GCBlocks.LUNAR_CARTOGRAPHY_TABLE, new Item.Properties());
 
     // MISC WORLD GEN
-    public static final Item CAVERNOUS_VINE = new BlockItem(GCBlocks.CAVERNOUS_VINE, new Item.Properties());
-    public static final Item POISONOUS_CAVERNOUS_VINE = new BlockItem(GCBlocks.POISONOUS_CAVERNOUS_VINE, new Item.Properties());
+    public static final Item CAVERNOUS_VINES = new BlockItem(GCBlocks.CAVERNOUS_VINES, new Item.Properties());
 
     // MISC MACHINES
     public static final Item CRYOGENIC_CHAMBER = new BlockItem(GCBlocks.CRYOGENIC_CHAMBER, new Item.Properties());
@@ -380,20 +381,20 @@ public class GCItems {
     public static final Item TIER_3_HEAVY_DUTY_PLATE = new Item(new Item.Properties());
 
     // ARMOR
-    public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.HELMET, (new Item.Properties()));
-    public static final Item HEAVY_DUTY_CHESTPLATE = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.CHESTPLATE, (new Item.Properties()));
-    public static final Item HEAVY_DUTY_LEGGINGS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.LEGGINGS, (new Item.Properties()));
-    public static final Item HEAVY_DUTY_BOOTS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.BOOTS, (new Item.Properties()));
+    public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties());
+    public static final Item HEAVY_DUTY_CHESTPLATE = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.CHESTPLATE, new Item.Properties());
+    public static final Item HEAVY_DUTY_LEGGINGS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.LEGGINGS, new Item.Properties());
+    public static final Item HEAVY_DUTY_BOOTS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.BOOTS, new Item.Properties());
 
-    public static final Item DESH_HELMET = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.HELMET, (new Item.Properties()));
-    public static final Item DESH_CHESTPLATE = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.CHESTPLATE, (new Item.Properties()));
-    public static final Item DESH_LEGGINGS = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.LEGGINGS, (new Item.Properties()));
-    public static final Item DESH_BOOTS = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.BOOTS, (new Item.Properties()));
+    public static final Item DESH_HELMET = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.HELMET, new Item.Properties());
+    public static final Item DESH_CHESTPLATE = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.CHESTPLATE, new Item.Properties());
+    public static final Item DESH_LEGGINGS = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.LEGGINGS, new Item.Properties());
+    public static final Item DESH_BOOTS = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.BOOTS, new Item.Properties());
 
-    public static final Item TITANIUM_HELMET = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.HELMET, (new Item.Properties()));
-    public static final Item TITANIUM_CHESTPLATE = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.CHESTPLATE, (new Item.Properties()));
-    public static final Item TITANIUM_LEGGINGS = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.LEGGINGS, (new Item.Properties()));
-    public static final Item TITANIUM_BOOTS = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.BOOTS, (new Item.Properties()));
+    public static final Item TITANIUM_HELMET = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.HELMET, new Item.Properties());
+    public static final Item TITANIUM_CHESTPLATE = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.CHESTPLATE, new Item.Properties());
+    public static final Item TITANIUM_LEGGINGS = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.LEGGINGS, new Item.Properties());
+    public static final Item TITANIUM_BOOTS = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.BOOTS, new Item.Properties());
 
     public static final Item SENSOR_GLASSES = new ArmorItem(GCArmorMaterial.SENSOR_GLASSES, ArmorItem.Type.HELMET, new Item.Properties());
 
@@ -611,6 +612,8 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CRACKED_MOON_BASALT_BRICK_STAIRS), CRACKED_MOON_BASALT_BRICK_STAIRS);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CRACKED_MOON_BASALT_BRICK_WALL), CRACKED_MOON_BASALT_BRICK_WALL);
 
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.FALLEN_METEOR), FALLEN_METEOR);
+
         // MARS NATURAL
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MARS_SURFACE_ROCK), MARS_SURFACE_ROCK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MARS_SUB_SURFACE_ROCK), MARS_SUB_SURFACE_ROCK);
@@ -698,8 +701,7 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.LUNAR_CARTOGRAPHY_TABLE), LUNAR_CARTOGRAPHY_TABLE);
 
         // MISC WORLD GEN
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CAVERNOUS_VINE), CAVERNOUS_VINE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.POISONOUS_CAVERNOUS_VINE), POISONOUS_CAVERNOUS_VINE);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CAVERNOUS_VINES), CAVERNOUS_VINES);
 
         // MISC MACHINES
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CRYOGENIC_CHAMBER), CRYOGENIC_CHAMBER);

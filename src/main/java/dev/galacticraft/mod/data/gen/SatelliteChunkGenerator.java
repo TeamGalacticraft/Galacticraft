@@ -31,7 +31,6 @@ import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -73,8 +72,8 @@ public class SatelliteChunkGenerator extends ChunkGenerator {
     public static final Codec<StructureTemplate> STRUCTURE_CODEC = new Codec<>() {
         @Override
         public <T> DataResult<Pair<StructureTemplate, T>> decode(DynamicOps<T> ops, T input) {
-            StructureTemplate structure = new StructureTemplate();
-            Tag nbtElement = ops.convertTo(NbtOps.INSTANCE, input);
+            var structure = new StructureTemplate();
+            var nbtElement = ops.convertTo(NbtOps.INSTANCE, input);
             if (nbtElement instanceof CompoundTag compound) {
                 if (ops instanceof RegistryOps<T> registryOps) {
                     structure.load(registryOps.getter(Registries.BLOCK).orElseThrow(), compound);
@@ -106,7 +105,7 @@ public class SatelliteChunkGenerator extends ChunkGenerator {
     }
 
     public StructureTemplate getStructure() {
-        return structure;
+        return this.structure;
     }
 
     @Override
@@ -203,7 +202,7 @@ public class SatelliteChunkGenerator extends ChunkGenerator {
     }
 
     public Holder<Biome> getBiome() {
-        return biome;
+        return this.biome;
     }
 
     @Override

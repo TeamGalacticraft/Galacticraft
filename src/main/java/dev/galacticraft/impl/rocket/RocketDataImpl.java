@@ -28,6 +28,8 @@ import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCRocketParts;
+import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
@@ -35,17 +37,24 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
+import org.jetbrains.annotations.*;
 
 @ApiStatus.Internal
 public record RocketDataImpl(int color, ResourceLocation cone, ResourceLocation body, ResourceLocation fin, ResourceLocation booster,
                              ResourceLocation bottom, ResourceLocation[] upgrades) implements RocketData {
     public static final RocketDataImpl EMPTY = new RocketDataImpl(0xffffffff, Constant.Misc.INVALID, Constant.Misc.INVALID, Constant.Misc.INVALID, Constant.Misc.INVALID, Constant.Misc.INVALID, new ResourceLocation[0]);
+    public static final CompoundTag DEFAULT_ROCKET = Util.make(new CompoundTag(), tag -> {
+        tag.putInt("Tier", 1);
+        tag.putInt("Color", 0xFFFFFFFF);
+        tag.putString("Cone", GCRocketParts.TIER_1_CONE.location().toString());
+        tag.putString("Body", GCRocketParts.TIER_1_BODY.location().toString());
+        tag.putString("Fin", GCRocketParts.TIER_1_FIN.location().toString());
+        tag.putString("Booster", GCRocketParts.TIER_1_BOOSTER.location().toString());
+        tag.putString("Bottom", GCRocketParts.TIER_1_BOTTOM.location().toString());
+        tag.put("Upgrade", new ListTag());
+    });
 
-    public static RocketDataImpl fromNbt(@NotNull CompoundTag nbt) {
+    public static RocketDataImpl fromNbt(CompoundTag nbt) {
         if (nbt.getBoolean("Empty")) return empty();
         ListTag upgradeList = nbt.getList("Upgrade", Tag.TAG_STRING);
         ResourceLocation[] upgrades = new ResourceLocation[upgradeList.size()];

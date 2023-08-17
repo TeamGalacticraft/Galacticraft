@@ -160,7 +160,7 @@ public class GCMachineTypes {
             GCMenuTypes.COMPRESSOR,
             MachineEnergyStorage::empty,
             MachineItemStorage.builder()
-                    .single(GCSlotGroupTypes.SOLID_FUEL, ItemResourceSlot.builder().pos(8, 70).filter((item, tag) -> FuelRegistry.INSTANCE.get(item) > 0)::build)
+                    .single(GCSlotGroupTypes.SOLID_FUEL, ItemResourceSlot.builder().pos(83, 47).filter((item, tag) -> FuelRegistry.INSTANCE.get(item) > 0)::build)
                     .group(GCSlotGroupTypes.GENERIC_INPUT,
                             generate3x3Grid(17, 17)::build
                     ).single(GCSlotGroupTypes.GENERIC_OUTPUT, ItemResourceSlot.builder()
@@ -182,7 +182,7 @@ public class GCMachineTypes {
             ),
             MachineItemStorage.builder()
                     .single(GCSlotGroupTypes.ENERGY_TO_SELF, ItemResourceSlot.builder()
-                            .pos(8, 61)
+                            .pos(8, 62)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT)
                             ::build
@@ -235,7 +235,7 @@ public class GCMachineTypes {
             ),
             MachineItemStorage.builder()
                     .single(GCSlotGroupTypes.ENERGY_TO_SELF, ItemResourceSlot.builder()
-                            .pos(8, 61)
+                            .pos(8, 62)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT)
                             ::build
@@ -262,12 +262,12 @@ public class GCMachineTypes {
             ),
             MachineItemStorage.builder()
                     .single(GCSlotGroupTypes.ENERGY_TO_SELF, ItemResourceSlot.builder()
-                            .pos(102, 24)
+                            .pos(102, 48)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT)
                             ::build
                     ).single(GCSlotGroupTypes.ENERGY_TO_ITEM, ItemResourceSlot.builder()
-                            .pos(102, 48)
+                            .pos(102, 24)
                             .filter(ResourceFilters.CAN_INSERT_ENERGY)
                             .strictFilter(ResourceFilters.CAN_INSERT_ENERGY_STRICT)
                             ::build
@@ -287,12 +287,12 @@ public class GCMachineTypes {
             ),
             MachineItemStorage.builder()
                     .single(GCSlotGroupTypes.ENERGY_TO_SELF, ItemResourceSlot.builder()
-                            .pos(8, 61)
+                            .pos(8, 62)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT)
                             ::build
                     ).single(GCSlotGroupTypes.FUEL_INPUT, ItemResourceSlot.builder()
-                            .pos(80, 61)
+                            .pos(80, 62)
                             .filter(ResourceFilters.isFluidStorage())
                             .strictFilter(ResourceFilters.canExtractFluidStrict(GCFluids.FUEL)) // fixme: fuel api?
                             ::build
@@ -390,7 +390,7 @@ public class GCMachineTypes {
                     )::build,
             MachineFluidStorage.builder()
                     .single(GCSlotGroupTypes.OXYGEN_INPUT, FluidResourceSlot.builder()
-                            .pos(31, 8)
+                            .pos(30, 8)
                             .capacity(OxygenCompressorBlockEntity.MAX_OXYGEN)
                             .filter(ResourceFilters.ofResource(Gases.OXYGEN))
                             ::build
@@ -447,14 +447,14 @@ public class GCMachineTypes {
                             .strictFilter(ResourceFilters.CAN_EXTRACT_ENERGY_STRICT)
                             ::build
                     ).single(GCSlotGroupTypes.OXYGEN_TO_SELF, ItemResourceSlot.builder() // todo: drop for decompressor?
-                            .pos(31, 62)
+                            .pos(30, 62)
                             .filter(ResourceFilters.isFluidStorage())
                             .strictFilter(ResourceFilters.canExtractFluidStrict(Gases.OXYGEN))
                             ::build
                     )::build,
             MachineFluidStorage.builder()
                     .single(GCSlotGroupTypes.OXYGEN_INPUT, FluidResourceSlot.builder()
-                            .pos(31, 8)
+                            .pos(30, 8)
                             .capacity(OxygenSealerBlockEntity.MAX_OXYGEN)
                             .filter(ResourceFilters.ofResource(Gases.OXYGEN))
                             ::build
@@ -506,13 +506,15 @@ public class GCMachineTypes {
                     )::build,
             MachineFluidStorage.builder()
                     .single(GCSlotGroupTypes.OIL_INPUT, FluidResourceSlot.builder()
-                            .pos(122, 28)
+                            .pos(123, 29)
+                            .height(47)
                             .capacity(RefineryBlockEntity.MAX_CAPACITY)
                             .filter(ResourceFilters.ofResource(GCFluids.CRUDE_OIL))
                             ::build
                     )
                     .single(GCSlotGroupTypes.FUEL_OUTPUT, FluidResourceSlot.builder()
-                            .pos(152, 28)
+                            .pos(153, 29)
+                            .height(47)
                             .capacity(RefineryBlockEntity.MAX_CAPACITY)
                             .filter(ResourceFilters.ofResource(GCFluids.FUEL))
                             ::build
