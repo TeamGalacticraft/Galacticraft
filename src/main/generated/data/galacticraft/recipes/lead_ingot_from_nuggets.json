@@ -1,15 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "misc",
+  "group": "lead_ingot",
   "key": {
-    "I": {
+    "#": {
       "item": "galacticraft:lead_nugget"
     }
   },
   "pattern": [
-    "III",
-    "III",
-    "III"
+    "###",
+    "###",
+    "###"
   ],
   "result": {
     "item": "galacticraft:lead_ingot"

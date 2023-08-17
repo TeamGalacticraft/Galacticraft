@@ -1,6 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
+  "group": "meteoric_iron_ingot",
   "ingredients": [
     {
       "item": "galacticraft:meteoric_iron_block"

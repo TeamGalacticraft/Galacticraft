@@ -32,8 +32,11 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.data.recipes.*;
+import net.minecraft.data.recipes.packs.VanillaRecipeProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -203,55 +206,32 @@ public class GCRecipeProvider extends FabricRecipeProvider {
         CircuitFabricatorRecipeBuilder.create(GCItems.SOLAR_ARRAY_WAFER, 3)
                 .requires(GCItems.SOLAR_DUST)
                 .save(exporter);
-        
+
         // Nuggets <-> Ingots
-        buildExpansionCompressionPair(exporter, GCItems.METEORIC_IRON_NUGGET, GCItems.METEORIC_IRON_INGOT, null, "_from_nuggets");
-        buildExpansionCompressionPair(exporter, GCItems.DESH_NUGGET, GCItems.DESH_INGOT, null, "_from_nuggets");
-        buildExpansionCompressionPair(exporter, GCItems.LEAD_NUGGET, GCItems.LEAD_INGOT, null, "_from_nuggets");
-        buildExpansionCompressionPair(exporter, GCItems.ALUMINUM_NUGGET, GCItems.ALUMINUM_INGOT, null, "_from_nuggets");
-        buildExpansionCompressionPair(exporter, GCItems.TIN_NUGGET, GCItems.TIN_INGOT, null, "_from_nuggets");
-        buildExpansionCompressionPair(exporter, GCItems.TITANIUM_NUGGET, GCItems.TITANIUM_INGOT, null, "_from_nuggets");
-
+        GCRecipeProvider.nineBlockStorageRecipesWithCustomPacking(exporter, RecipeCategory.MISC, GCItems.METEORIC_IRON_NUGGET, RecipeCategory.MISC, GCItems.METEORIC_IRON_INGOT, "meteoric_iron_ingot_from_nuggets", "meteoric_iron_ingot");
+        GCRecipeProvider.nineBlockStorageRecipesWithCustomPacking(exporter, RecipeCategory.MISC, GCItems.DESH_NUGGET, RecipeCategory.MISC, GCItems.DESH_INGOT, "desh_ingot_from_nuggets", "desh_ingot");
+        GCRecipeProvider.nineBlockStorageRecipesWithCustomPacking(exporter, RecipeCategory.MISC, GCItems.LEAD_NUGGET, RecipeCategory.MISC, GCItems.LEAD_INGOT, "lead_ingot_from_nuggets", "lead_ingot");
+        GCRecipeProvider.nineBlockStorageRecipesWithCustomPacking(exporter, RecipeCategory.MISC, GCItems.ALUMINUM_NUGGET, RecipeCategory.MISC, GCItems.ALUMINUM_INGOT, "aluminum_ingot_from_nuggets", "aluminum_ingot");
+        GCRecipeProvider.nineBlockStorageRecipesWithCustomPacking(exporter, RecipeCategory.MISC, GCItems.TIN_NUGGET, RecipeCategory.MISC, GCItems.TIN_INGOT, "tin_ingot_from_nuggets", "tin_ingot");
+        GCRecipeProvider.nineBlockStorageRecipesWithCustomPacking(exporter, RecipeCategory.MISC, GCItems.TITANIUM_NUGGET, RecipeCategory.MISC, GCItems.TITANIUM_INGOT, "titanium_ingot_from_nuggets", "titanium_ingot");
         // Ingots <-> Blocks
-        buildExpansionCompressionPair(exporter, GCItems.METEORIC_IRON_INGOT, GCItems.METEORIC_IRON_BLOCK, "_from_block", null);
-        buildExpansionCompressionPair(exporter, GCItems.DESH_INGOT, GCItems.DESH_BLOCK, "_from_block", null);
-        buildExpansionCompressionPair(exporter, GCItems.LEAD_INGOT, GCItems.LEAD_BLOCK, "_from_block", null);
+        GCRecipeProvider.nineBlockStorageRecipesRecipesWithCustomUnpacking(exporter, RecipeCategory.MISC, GCItems.METEORIC_IRON_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.METEORIC_IRON_BLOCK, "meteoric_iron_ingot_from_block", "meteoric_iron_ingot");
+        GCRecipeProvider.nineBlockStorageRecipesRecipesWithCustomUnpacking(exporter, RecipeCategory.MISC, GCItems.DESH_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.DESH_BLOCK, "desh_ingot_from_block", "desh_ingot");
+        GCRecipeProvider.nineBlockStorageRecipesRecipesWithCustomUnpacking(exporter, RecipeCategory.MISC, GCItems.LEAD_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.LEAD_BLOCK, "lead_ingot_from_block", "lead_ingot");
         // skips aluminum and tin blocks
-        buildExpansionCompressionPair(exporter, GCItems.TITANIUM_INGOT, GCItems.TITANIUM_BLOCK, "_from_block", null);
+        GCRecipeProvider.nineBlockStorageRecipesRecipesWithCustomUnpacking(exporter, RecipeCategory.MISC, GCItems.TITANIUM_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.TITANIUM_BLOCK, "titanium_ingot_from_block", "titanium_ingot");
     }
 
-    private void build3x3Compression(Consumer<FinishedRecipe> exporter, Item input, Item result,
-                                     @Nullable String suffix) {
-        ShapedRecipeBuilder recipe = ShapedRecipeBuilder.shaped(RecipeCategory.MISC, result, 1)
-                .define('I', input)
-                .pattern("III")
-                .pattern("III")
-                .pattern("III")
-                .unlockedBy(getHasName(input), has(input));
-        if (suffix != null) {
-            recipe.save(exporter, RecipeBuilder.getDefaultRecipeId(result).withSuffix(suffix));
-        } else {
-            recipe.save(exporter);
-        }
+    // Code copied from RecipeProvider class with changes to save with GC mod id
+    public static void nineBlockStorageRecipesWithCustomPacking(Consumer<FinishedRecipe> consumer, RecipeCategory recipeCategory, ItemLike itemLike, RecipeCategory recipeCategory2, ItemLike itemLike2, String string, String string2) {
+        GCRecipeProvider.nineBlockStorageRecipes(consumer, recipeCategory, itemLike, recipeCategory2, itemLike2, string, string2, RecipeProvider.getSimpleRecipeName(itemLike), null);
     }
-
-    private void build9Expansion(Consumer<FinishedRecipe> exporter, Item input, Item result,
-                                 @Nullable String suffix) {
-        ShapelessRecipeBuilder recipe = ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, result, 9)
-                .requires(input, 1)
-                .unlockedBy(getHasName(input), has(input));
-        if (suffix != null) {
-            recipe.save(exporter, RecipeBuilder.getDefaultRecipeId(result).withSuffix(suffix));
-        } else {
-            recipe.save(exporter);
-        }
+    public static void nineBlockStorageRecipesRecipesWithCustomUnpacking(Consumer<FinishedRecipe> consumer, RecipeCategory recipeCategory, ItemLike itemLike, RecipeCategory recipeCategory2, ItemLike itemLike2, String string, String string2) {
+        GCRecipeProvider.nineBlockStorageRecipes(consumer, recipeCategory, itemLike, recipeCategory2, itemLike2, RecipeProvider.getSimpleRecipeName(itemLike2), null, string, string2);
     }
-
-    private void buildExpansionCompressionPair(Consumer<FinishedRecipe> exporter, Item expansionVariant,
-                                               Item compressedVariant, @Nullable String suffixExpansion,
-                                               @Nullable String suffixCompressed) {
-        build3x3Compression(exporter, expansionVariant, compressedVariant, suffixCompressed);
-        build9Expansion(exporter, compressedVariant, expansionVariant, suffixExpansion);
+    public static void nineBlockStorageRecipes(Consumer<FinishedRecipe> consumer, RecipeCategory recipeCategory, ItemLike itemLike, RecipeCategory recipeCategory2, ItemLike itemLike2, String string, @Nullable String string2, String string3, @Nullable String string4) {
+        ShapelessRecipeBuilder.shapeless(recipeCategory, itemLike, 9).requires(itemLike2).group(string4).unlockedBy(RecipeProvider.getHasName(itemLike2), RecipeProvider.has(itemLike2)).save(consumer, Constant.id(string3));
+        ShapedRecipeBuilder.shaped(recipeCategory2, itemLike2).define(Character.valueOf('#'), itemLike).pattern("###").pattern("###").pattern("###").group(string2).unlockedBy(RecipeProvider.getHasName(itemLike), RecipeProvider.has(itemLike)).save(consumer, Constant.id(string));
     }
 
 }

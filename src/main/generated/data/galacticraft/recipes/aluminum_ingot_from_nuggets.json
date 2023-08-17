@@ -1,15 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "misc",
+  "group": "aluminum_ingot",
   "key": {
-    "I": {
+    "#": {
       "item": "galacticraft:aluminum_nugget"
     }
   },
   "pattern": [
-    "III",
-    "III",
-    "III"
+    "###",
+    "###",
+    "###"
   ],
   "result": {
     "item": "galacticraft:aluminum_ingot"

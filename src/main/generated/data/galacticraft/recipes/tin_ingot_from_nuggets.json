@@ -1,15 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "misc",
+  "group": "tin_ingot",
   "key": {
-    "I": {
+    "#": {
       "item": "galacticraft:tin_nugget"
     }
   },
   "pattern": [
-    "III",
-    "III",
-    "III"
+    "###",
+    "###",
+    "###"
   ],
   "result": {
     "item": "galacticraft:tin_ingot"

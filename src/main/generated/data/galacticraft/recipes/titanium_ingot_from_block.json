@@ -1,6 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
+  "group": "titanium_ingot",
   "ingredients": [
     {
       "item": "galacticraft:titanium_block"

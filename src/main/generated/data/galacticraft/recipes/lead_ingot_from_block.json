@@ -1,6 +1,7 @@
 {
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
+  "group": "lead_ingot",
   "ingredients": [
     {
       "item": "galacticraft:lead_block"

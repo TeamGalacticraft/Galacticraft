@@ -1,15 +1,15 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
+  "category": "building",
   "key": {
-    "I": {
+    "#": {
       "item": "galacticraft:meteoric_iron_ingot"
     }
   },
   "pattern": [
-    "III",
-    "III",
-    "III"
+    "###",
+    "###",
+    "###"
   ],
   "result": {
     "item": "galacticraft:meteoric_iron_block"
