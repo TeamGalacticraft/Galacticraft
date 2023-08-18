@@ -78,19 +78,8 @@ public class FluidPipeWalkwayBlockEntity extends PipeBlockEntity implements Walk
     @Override
     public void calculateConnections() {
         for (var direction : Constant.Misc.DIRECTIONS) {
-            if (this.getDirection() != direction) {
-                if (this.level.getBlockEntity(this.getBlockPos().relative(direction)) instanceof Pipe pipe) {
-                    if (pipe.canConnect(direction.getOpposite())) {
-                        this.getConnections()[direction.ordinal()] = true;
-                        continue;
-                    }
-                }
-                else if (FluidUtil.canAccessFluid(this.level, this.getBlockPos().relative(direction), direction)) {
-                    this.getConnections()[direction.ordinal()] = true;
-                    continue;
-                }
-            }
-            this.getConnections()[direction.ordinal()] = false;
+            var otherBlockEntity = this.level.getBlockEntity(this.getBlockPos().relative(direction));
+            this.getConnections()[direction.ordinal()] = otherBlockEntity instanceof Pipe pipe && pipe.canConnect(direction.getOpposite()) || FluidUtil.canAccessFluid(this.level, this.getBlockPos().relative(direction), direction);
         }
     }
 }
