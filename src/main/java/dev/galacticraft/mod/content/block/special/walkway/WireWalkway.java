@@ -22,13 +22,13 @@
 
 package dev.galacticraft.mod.content.block.special.walkway;
 
-import dev.galacticraft.mod.Constant;
+import com.google.common.collect.Lists;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.WireBlock;
-import dev.galacticraft.mod.api.block.entity.Walkway;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import dev.galacticraft.mod.content.block.entity.networked.WireWalkwayBlockEntity;
+import dev.galacticraft.mod.content.block.special.aluminumwire.tier1.AluminumWireBlock;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import dev.galacticraft.mod.util.DirectionUtil;
 import net.minecraft.core.BlockPos;
@@ -46,6 +46,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
@@ -72,12 +73,32 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
 
     @Override
     public VoxelShape getShape(BlockState blockState, BlockGetter level, BlockPos blockPos, CollisionContext context) {
-        if (level.getBlockEntity(blockPos) instanceof Walkway walkway && walkway.getDirection() != null) {
+        if (level.getBlockEntity(blockPos) instanceof WireWalkwayBlockEntity walkway) {
             var index = getFacingMask(walkway.getDirection());
-            if (SHAPES[index] != null) {
-                return SHAPES[index];
+            var shapes = Lists.newArrayList(ConnectingBlockUtil.WALKWAY_TOP);
+
+            if (walkway.getConnections()[2]) {
+                shapes.add(AluminumWireBlock.NORTH);
             }
-            return SHAPES[index] = ConnectingBlockUtil.createWalkwayShape(walkway.getDirection());
+            if (walkway.getConnections()[3]) {
+                shapes.add(AluminumWireBlock.SOUTH);
+            }
+            if (walkway.getConnections()[5]) {
+                shapes.add(AluminumWireBlock.EAST);
+            }
+            if (walkway.getConnections()[4]) {
+                shapes.add(AluminumWireBlock.WEST);
+            }
+            if (walkway.getConnections()[1]) {
+                shapes.add(AluminumWireBlock.UP);
+            }
+            if (walkway.getConnections()[0]) {
+                shapes.add(AluminumWireBlock.DOWN);
+            }
+            if (SHAPES[index] != null) {
+                return Shapes.or(SHAPES[index], shapes.toArray(VoxelShape[]::new));
+            }
+            return Shapes.or(SHAPES[index] = ConnectingBlockUtil.createWalkwayShape(walkway.getDirection()), shapes.toArray(VoxelShape[]::new));
         }
         return ConnectingBlockUtil.WALKWAY_TOP;
     }
@@ -94,25 +115,8 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
     @Override
     public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity livingEntity, ItemStack itemStack) {
         super.setPlacedBy(level, blockPos, blockState, livingEntity, itemStack);
-
-        if (level.getBlockEntity(blockPos) instanceof Walkway walkway) {
+        if (level.getBlockEntity(blockPos) instanceof WireWalkwayBlockEntity walkway) {
             walkway.setDirection(Direction.orderedByNearest(livingEntity)[0].getOpposite());
-
-            for (var direction : Constant.Misc.DIRECTIONS) {
-                if (walkway.getDirection() != direction) {
-                    if (level.getBlockEntity(blockPos.relative(direction)) instanceof Wire wire) {
-                        if (wire.canConnect(direction.getOpposite())) {
-                            walkway.getConnections()[direction.ordinal()] = true;
-                            continue;
-                        }
-                    }
-                    else if (EnergyStorage.SIDED.find(level, blockPos.relative(direction), direction.getOpposite()) != null) {
-                        walkway.getConnections()[direction.ordinal()] = true;
-                        continue;
-                    }
-                }
-                walkway.getConnections()[direction.ordinal()] = false;
-            }
             level.updateNeighborsAt(blockPos, blockState.getBlock());
         }
     }
@@ -130,10 +134,10 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
         super.neighborChanged(blockState, level, blockPos, block, fromPos, notify);
         var distance = fromPos.subtract(blockPos);
 
-        if (Math.abs(distance.getX() + distance.getY() + distance.getZ()) == 1 && level.getBlockEntity(blockPos) instanceof Walkway walkway) {
+        if (Math.abs(distance.getX() + distance.getY() + distance.getZ()) == 1 && level.getBlockEntity(blockPos) instanceof WireWalkwayBlockEntity walkway) {
             var direction = DirectionUtil.fromNormal(distance);
             if (direction != walkway.getDirection()) {
-                if (level.getBlockEntity(blockPos.relative(direction)) instanceof Wire wire) {
+                if (level.getBlockEntity(blockPos.relative(direction)) instanceof Wire wire && wire instanceof WireWalkwayBlockEntity) {
                     if (wire.canConnect(direction.getOpposite())) {
                         if (walkway.getConnections()[direction.ordinal()] != (walkway.getConnections()[direction.ordinal()] = true)) {
                             level.neighborChanged(blockPos.relative(direction), blockState.getBlock(), blockPos);
