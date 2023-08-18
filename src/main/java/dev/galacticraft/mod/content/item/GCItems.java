@@ -204,7 +204,7 @@ public class GCItems {
 
     // MISC DECOR
     public static final Item WALKWAY = new BlockItem(GCBlocks.WALKWAY, new Item.Properties());
-    public static final Item PIPE_WALKWAY = new BlockItem(GCBlocks.PIPE_WALKWAY, new Item.Properties());
+    public static final Item FLUID_PIPE_WALKWAY = new BlockItem(GCBlocks.FLUID_PIPE_WALKWAY, new Item.Properties());
     public static final Item WIRE_WALKWAY = new BlockItem(GCBlocks.WIRE_WALKWAY, new Item.Properties());
     public static final Item TIN_LADDER = new BlockItem(GCBlocks.TIN_LADDER, new Item.Properties());
     public static final Item GRATING = new BlockItem(GCBlocks.GRATING, new Item.Properties());
@@ -641,7 +641,7 @@ public class GCItems {
 
         // MISC DECOR
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.WALKWAY), WALKWAY);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.PIPE_WALKWAY), PIPE_WALKWAY);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.FLUID_PIPE_WALKWAY), FLUID_PIPE_WALKWAY);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.WIRE_WALKWAY), WIRE_WALKWAY);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.TIN_LADDER), TIN_LADDER);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.GRATING), GRATING);

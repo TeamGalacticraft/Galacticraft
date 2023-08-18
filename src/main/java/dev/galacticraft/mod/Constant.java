@@ -233,7 +233,7 @@ public interface Constant {
         String STRONG_VACUUM_GLASS = "vacuum_glass_strong";
         String WALKWAY = "walkway";
         String WIRE_WALKWAY = "wire_walkway";
-        String PIPE_WALKWAY = "pipe_walkway";
+        String FLUID_PIPE_WALKWAY = "fluid_pipe_walkway";
 
         //  Environment
         String GLOWSTONE_TORCH = "glowstone_torch";

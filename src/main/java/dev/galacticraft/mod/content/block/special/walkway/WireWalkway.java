@@ -67,7 +67,7 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
     }
 
     private static int getFacingMask(Direction direction) {
-        return 1 << (direction.get3DDataValue());
+        return 1 << direction.get3DDataValue();
     }
 
     @Override
