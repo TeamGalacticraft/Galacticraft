@@ -22,15 +22,12 @@
 
 package dev.galacticraft.mod.client.model;
 
-import com.mojang.datafixers.util.Pair;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
 import java.util.function.Function;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.InventoryMenu;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -45,7 +42,6 @@ public class WireUnbakedModel implements UnbakedModel {
 
     @Override
     public void resolveParents(Function<ResourceLocation, UnbakedModel> function) {
-
     }
 
     @Override

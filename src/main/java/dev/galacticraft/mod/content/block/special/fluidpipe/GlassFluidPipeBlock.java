@@ -52,13 +52,13 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GlassFluidPipeBlock extends FluidPipe {
-    private static final VoxelShape NORTH = box(6, 6, 0, 10, 10, 10);
-    private static final VoxelShape EAST = box(6, 6, 6, 16, 10, 10);
-    private static final VoxelShape SOUTH = box(6, 6, 6, 10, 10, 16);
-    private static final VoxelShape WEST = box(0, 6, 6, 10, 10, 10);
-    private static final VoxelShape UP = box(6, 6, 6, 10, 16, 10);
-    private static final VoxelShape DOWN = box(6, 0, 6, 10, 10, 10);
-    private static final VoxelShape NONE = box(6, 6, 6, 10, 10, 10);
+    public static final VoxelShape NORTH = box(6, 6, 0, 10, 10, 10);
+    public static final VoxelShape EAST = box(6, 6, 6, 16, 10, 10);
+    public static final VoxelShape SOUTH = box(6, 6, 6, 10, 10, 16);
+    public static final VoxelShape WEST = box(0, 6, 6, 10, 10, 10);
+    public static final VoxelShape UP = box(6, 6, 6, 10, 16, 10);
+    public static final VoxelShape DOWN = box(6, 0, 6, 10, 10, 10);
+    public static final VoxelShape NONE = box(6, 6, 6, 10, 10, 10);
 
     public GlassFluidPipeBlock(Properties settings) {
         super(settings);

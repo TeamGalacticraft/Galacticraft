@@ -39,7 +39,7 @@ import dev.galacticraft.mod.content.block.special.aluminumwire.tier1.SealableAlu
 import dev.galacticraft.mod.content.block.special.aluminumwire.tier2.HeavySealableAluminumWireBlock;
 import dev.galacticraft.mod.content.block.special.fluidpipe.GlassFluidPipeBlock;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
-import dev.galacticraft.mod.content.block.special.walkway.PipeWalkway;
+import dev.galacticraft.mod.content.block.special.walkway.FluidPipeWalkway;
 import dev.galacticraft.mod.content.block.special.walkway.WalkwayBlock;
 import dev.galacticraft.mod.content.block.special.walkway.WireWalkway;
 import dev.galacticraft.mod.util.MultiBlockUtil;
@@ -236,7 +236,7 @@ public class GCBlocks {
 
     // MISC DECOR
     public static final Block WALKWAY = new WalkwayBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0f, 5.0f).sound(SoundType.METAL));
-    public static final Block PIPE_WALKWAY = new PipeWalkway(BlockBehaviour.Properties.copy(WALKWAY));
+    public static final Block FLUID_PIPE_WALKWAY = new FluidPipeWalkway(BlockBehaviour.Properties.copy(WALKWAY));
     public static final Block WIRE_WALKWAY = new WireWalkway(BlockBehaviour.Properties.copy(WALKWAY));
     public static final Block TIN_LADDER = new TinLadderBlock(BlockBehaviour.Properties.of().forceSolidOff().noOcclusion().pushReaction(PushReaction.DESTROY).strength(1.0f, 1.0f).sound(SoundType.METAL));
     public static final Block GRATING = new GratingBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(2.5f, 6.0f).sound(SoundType.METAL));
@@ -524,7 +524,7 @@ public class GCBlocks {
 
         // MISC DECOR
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.WALKWAY), WALKWAY);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.PIPE_WALKWAY), PIPE_WALKWAY);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.FLUID_PIPE_WALKWAY), FLUID_PIPE_WALKWAY);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.WIRE_WALKWAY), WIRE_WALKWAY);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.TIN_LADDER), TIN_LADDER);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GRATING), GRATING);
