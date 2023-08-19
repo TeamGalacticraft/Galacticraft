@@ -26,6 +26,8 @@ import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -35,6 +37,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 
 import static dev.galacticraft.mod.content.item.GCItems.*;
@@ -233,6 +236,21 @@ public class GCCreativeModeTabs {
                 output.accept(MOON_BUGGY_SCHEMATIC);
                 output.accept(TIER_3_ROCKET_SCHEMATIC);
                 output.accept(ASTRO_MINER_SCHEMATIC);
+
+                // SPAWN EGGS
+                output.accept(ARCH_GREY_SPAWN_EGG);
+                output.accept(COMET_CUBE_SPAWN_EGG);
+                output.accept(GAZER_SPAWN_EGG);
+                output.accept(GREY_SPAWN_EGG);
+                output.accept(OLI_GRUB_SPAWN_EGG);
+                output.accept(RUMBLER_SPAWN_EGG);
+                output.accept(EVOLVED_CREEPER_SPAWN_EGG);
+                output.accept(EVOLVED_EVOKER_SPAWN_EGG);
+                output.accept(EVOLVED_PILLAGER_SPAWN_EGG);
+                output.accept(EVOLVED_SKELETON_SPAWN_EGG);
+                output.accept(EVOLVED_SPIDER_SPAWN_EGG);
+                output.accept(EVOLVED_VINDICATOR_SPAWN_EGG);
+                output.accept(EVOLVED_ZOMBIE_SPAWN_EGG);
             })
             .build();
 
@@ -487,8 +505,25 @@ public class GCCreativeModeTabs {
             }).build();
 
     public static void register() {
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.SPAWN_EGGS).register(GCCreativeModeTabs::modifySpawnEggsTab);
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, new ResourceLocation(Constant.MOD_ID, Constant.Item.ITEM_GROUP), ITEMS_GROUP);
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, new ResourceLocation(Constant.MOD_ID, Constant.Block.ITEM_GROUP_BLOCKS), BLOCKS_GROUP);
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, new ResourceLocation(Constant.MOD_ID, Constant.Block.ITEM_GROUP_MACHINES), MACHINES_GROUP);
+    }
+
+    private static void modifySpawnEggsTab(FabricItemGroupEntries entries) {
+        entries.accept(ARCH_GREY_SPAWN_EGG);
+        entries.accept(COMET_CUBE_SPAWN_EGG);
+        entries.accept(GAZER_SPAWN_EGG);
+        entries.accept(GREY_SPAWN_EGG);
+        entries.accept(OLI_GRUB_SPAWN_EGG);
+        entries.accept(RUMBLER_SPAWN_EGG);
+        entries.accept(EVOLVED_CREEPER_SPAWN_EGG);
+        entries.accept(EVOLVED_EVOKER_SPAWN_EGG);
+        entries.accept(EVOLVED_PILLAGER_SPAWN_EGG);
+        entries.accept(EVOLVED_SKELETON_SPAWN_EGG);
+        entries.accept(EVOLVED_SPIDER_SPAWN_EGG);
+        entries.accept(EVOLVED_VINDICATOR_SPAWN_EGG);
+        entries.accept(EVOLVED_ZOMBIE_SPAWN_EGG);
     }
 }

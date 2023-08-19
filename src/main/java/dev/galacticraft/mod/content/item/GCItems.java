@@ -24,11 +24,13 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -478,7 +480,22 @@ public class GCItems {
     public static final Item MOON_BUGGY_SCHEMATIC = new SchematicItem(new Item.Properties());
     public static final Item TIER_3_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties());
     public static final Item ASTRO_MINER_SCHEMATIC = new SchematicItem(new Item.Properties());
-    
+
+    // SPAWN EGGS
+    public static final Item ARCH_GREY_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.ARCH_GREY, 6644835, 1533249, new Item.Properties());
+    public static final Item COMET_CUBE_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.COMET_CUBE, 14014680, 8168948, new Item.Properties());
+    public static final Item GAZER_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.GAZER, 7960693, 13488590, new Item.Properties());
+    public static final Item GREY_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.GREY, 6644835, 7773761, new Item.Properties());
+    public static final Item OLI_GRUB_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.OLI_GRUB, 4408623, 12963451, new Item.Properties());
+    public static final Item RUMBLER_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.RUMBLER, 2895671, 8022631, new Item.Properties());
+    public static final Item EVOLVED_CREEPER_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_CREEPER, 894731, 0, new Item.Properties());
+    public static final Item EVOLVED_EVOKER_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_EVOKER, 9804699, 1973274, new Item.Properties());
+    public static final Item EVOLVED_PILLAGER_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_PILLAGER, 5451574, 9804699, new Item.Properties());
+    public static final Item EVOLVED_SKELETON_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_SKELETON, 12698049, 4802889, new Item.Properties());
+    public static final Item EVOLVED_SPIDER_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_SPIDER, 3419431, 11013646, new Item.Properties());
+    public static final Item EVOLVED_VINDICATOR_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_VINDICATOR, 9804699, 2580065, new Item.Properties());
+    public static final Item EVOLVED_ZOMBIE_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_ZOMBIE, 44975, 7969893, new Item.Properties());
+
     public static void register() {
         // === START BLOCKS ===
         // TORCHES
@@ -918,6 +935,21 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.AIR_LOCK_FRAME), AIR_LOCK_FRAME);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.AIR_LOCK_CONTROLLER), AIR_LOCK_CONTROLLER);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.AIR_LOCK_SEAL), AIR_LOCK_SEAL);
+
+        // SPAWN EGGS
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.ARCH_GREY_SPAWN_EGG), ARCH_GREY_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.COMET_CUBE_SPAWN_EGG), COMET_CUBE_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.GAZER_SPAWN_EGG), GAZER_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.GREY_SPAWN_EGG), GREY_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.OLI_GRUB_SPAWN_EGG), OLI_GRUB_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.RUMBLER_SPAWN_EGG), RUMBLER_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.EVOLVED_CREEPER_SPAWN_EGG), EVOLVED_CREEPER_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.EVOLVED_EVOKER_SPAWN_EGG), EVOLVED_EVOKER_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.EVOLVED_PILLAGER_SPAWN_EGG), EVOLVED_PILLAGER_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.EVOLVED_SKELETON_SPAWN_EGG), EVOLVED_SKELETON_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.EVOLVED_SPIDER_SPAWN_EGG), EVOLVED_SPIDER_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.EVOLVED_VINDICATOR_SPAWN_EGG), EVOLVED_VINDICATOR_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.EVOLVED_ZOMBIE_SPAWN_EGG), EVOLVED_ZOMBIE_SPAWN_EGG);
 
         DispenserBlock.registerBehavior(FUEL_BUCKET, DispenserBlock.DISPENSER_REGISTRY.get(Items.WATER_BUCKET));
         DispenserBlock.registerBehavior(CRUDE_OIL_BUCKET, DispenserBlock.DISPENSER_REGISTRY.get(Items.WATER_BUCKET));

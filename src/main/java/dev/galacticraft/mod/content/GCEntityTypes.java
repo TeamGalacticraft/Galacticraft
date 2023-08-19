@@ -30,7 +30,6 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -72,8 +71,8 @@ public class GCEntityTypes {
         Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.GREY), GREY);
         Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.ARCH_GREY), ARCH_GREY);
 
-        Registry.register(BuiltInRegistries.ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Entity.BUBBLE), BUBBLE);
-        Registry.register(BuiltInRegistries.ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Entity.ROCKET), ROCKET);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.BUBBLE), BUBBLE);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.ROCKET), ROCKET);
         Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.LANDER), LANDER);
 
         FabricDefaultAttributeRegistry.register(EVOLVED_ZOMBIE, EvolvedZombieEntity.createAttributes().add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D).add(Attributes.MOVEMENT_SPEED, 0.35D).add(Attributes.MAX_HEALTH, 30.0D));

@@ -537,6 +537,12 @@ public interface Constant {
         String MOON_BUGGY_SCHEMATIC = "moon_buggy_schematic";
         String ASTRO_MINER_SCHEMATIC = "astro_miner_schematic";
 
+        String ARCH_GREY_SPAWN_EGG = "arch_grey_spawn_egg";
+        String COMET_CUBE_SPAWN_EGG = "comet_cube_spawn_egg";
+        String GAZER_SPAWN_EGG = "gazer_spawn_egg";
+        String GREY_SPAWN_EGG = "grey_spawn_egg";
+        String OLI_GRUB_SPAWN_EGG = "oli_grub_spawn_egg";
+        String RUMBLER_SPAWN_EGG = "rumbler_spawn_egg";
         String EVOLVED_ZOMBIE_SPAWN_EGG = "evolved_zombie_spawn_egg";
         String EVOLVED_PILLAGER_SPAWN_EGG = "evolved_pillager_spawn_egg";
         String EVOLVED_VINDICATOR_SPAWN_EGG = "evolved_vindicator_spawn_egg";
