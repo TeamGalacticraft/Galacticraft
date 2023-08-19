@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.client.render.entity.feature;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
@@ -34,7 +33,6 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
@@ -48,7 +46,7 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> extends RenderLayer<T, M> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/entity/oxygen_gear.png");
+    private static final ResourceLocation TEXTURE = Constant.id("textures/entity/oxygen_gear.png");
     private final @Nullable ModelPart mask;
     private final @Nullable ModelPart tank;
     private final @Nullable ModelPart pipe;
@@ -72,18 +70,18 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
             this.pipe = null;
             return;
         }
-        MeshDefinition modelData = new MeshDefinition();
-        PartDefinition modelPartData = modelData.getRoot();
+        var modelData = new MeshDefinition();
+        var modelPartData = modelData.getRoot();
         if (head != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 10).addBox(-5.0F, -9.0F, -5.0F, 10, 10, 10, CubeDeformation.NONE), PartPose.offset(head.x, head.y, head.z));
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 10).addBox(-5.0F, -10.0F, -6.0F, 10.0F, 10.0F, 10.0F, new CubeDeformation(0.1f)), PartPose.offset(head.x, head.y, head.z));
         }
 
         if (body != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, 1.0F, 2.0F, 8, 6, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 17).addBox(-2.0F, -3.0F, 0.0F, 4, 5, 8, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 0).addBox(0.0F, 1.0F, 3.0F, 4.0F, 6.0F, 4.0F, CubeDeformation.NONE).texOffs(16, 0).addBox(-4.0F, 1.0F, 3.0F, 4.0F, 6.0F, 4.0F, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 20).addBox(2.0F, -4.0F, 4.0F, 0.0F, 5.0F, 5.0F, CubeDeformation.NONE).texOffs(50, 20).addBox(-2.0F, -4.0F, 4.0F, 0.0F, 5.0F, 5.0F, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
         }
 
-        root = modelPartData.bake(64, 32);
+        root = modelPartData.bake(64, 64);
 
         if (head != null) {
             this.mask = root.getChild(Constant.ModelPartName.OXYGEN_MASK);
@@ -101,20 +99,22 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
     }
 
     @Override
-    public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-        VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
-        if (mask != null) {
-            matrices.pushPose();
-            matrices.mulPose(Axis.YP.rotationDegrees(headYaw));
-            matrices.mulPose(Axis.XP.rotationDegrees(headPitch));
-            mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
-            matrices.popPose();
+    public void render(PoseStack poseStack, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
+        var vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
+        if (this.mask != null) {
+            poseStack.pushPose();
+            poseStack.mulPose(Axis.YP.rotationDegrees(headYaw));
+            poseStack.mulPose(Axis.XP.rotationDegrees(headPitch));
+            this.mask.render(poseStack, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+            poseStack.popPose();
         }
 
         if (this.tank != null) {
-            assert this.pipe != null;
-            this.tank.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
-            this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+            this.tank.render(poseStack, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+
+            if (this.pipe != null) {
+                this.pipe.render(poseStack, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+            }
         }
     }
 
