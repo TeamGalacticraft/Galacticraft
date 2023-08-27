@@ -459,7 +459,7 @@ public class GCItems {
     public static final Item THERMAL_PADDING_LEGGINGS = new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.LEGGINGS);
     public static final Item THERMAL_PADDING_BOOTS = new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.BOOTS);
     // ROCKETS
-    public static final Item ROCKET = new RocketItem(new Item.Properties());
+    public static final Item ROCKET = new RocketItem(new Item.Properties().stacksTo(1));
 
     // ROCKET PIECES
     public static final Item ROCKET_FINS = new Item(new Item.Properties());
