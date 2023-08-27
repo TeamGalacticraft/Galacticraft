@@ -22,9 +22,8 @@
 
 package dev.galacticraft.mod.content.block.special.walkway;
 
-import dev.galacticraft.mod.Constant;
+import com.google.common.collect.Lists;
 import dev.galacticraft.mod.api.block.FluidLoggable;
-import dev.galacticraft.mod.api.block.entity.Walkway;
 import dev.galacticraft.mod.content.block.entity.WalkwayBlockEntity;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import dev.galacticraft.mod.util.DirectionUtil;
@@ -49,12 +48,20 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
+    private static final int OFFSET = 2;
+    private static final VoxelShape NORTH = box(8 - OFFSET, 8 - OFFSET, 0, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
+    private static final VoxelShape EAST = box(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 16, 8 + OFFSET, 8 + OFFSET);
+    private static final VoxelShape SOUTH = box(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 16);
+    private static final VoxelShape WEST = box(0, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
+    private static final VoxelShape UP = box(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 16, 8 + OFFSET);
+    private static final VoxelShape DOWN = box(8 - OFFSET, 0, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
     private static final VoxelShape[] SHAPES = new VoxelShape[64];
 
     public WalkwayBlock(Properties settings) {
@@ -66,17 +73,37 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
     }
 
     private static int getFacingMask(Direction direction) {
-        return 1 << (direction.get3DDataValue());
+        return 1 << direction.get3DDataValue();
     }
 
     @Override
     public VoxelShape getShape(BlockState blockState, BlockGetter level, BlockPos blockPos, CollisionContext context) {
-        if (level.getBlockEntity(blockPos) instanceof Walkway walkway && walkway.getDirection() != null) {
+        if (level.getBlockEntity(blockPos) instanceof WalkwayBlockEntity walkway) {
             var index = getFacingMask(walkway.getDirection());
-            if (SHAPES[index] != null) {
-                return SHAPES[index];
+            var shapes = Lists.newArrayList(ConnectingBlockUtil.WALKWAY_TOP);
+
+            if (walkway.getConnections()[2]) {
+                shapes.add(NORTH);
             }
-            return SHAPES[index] = ConnectingBlockUtil.createWalkwayShape(walkway.getDirection());
+            if (walkway.getConnections()[3]) {
+                shapes.add(SOUTH);
+            }
+            if (walkway.getConnections()[5]) {
+                shapes.add(EAST);
+            }
+            if (walkway.getConnections()[4]) {
+                shapes.add(WEST);
+            }
+            if (walkway.getConnections()[1]) {
+                shapes.add(UP);
+            }
+            if (walkway.getConnections()[0]) {
+                shapes.add(DOWN);
+            }
+            if (SHAPES[index] != null) {
+                return Shapes.or(SHAPES[index], shapes.toArray(VoxelShape[]::new));
+            }
+            return Shapes.or(SHAPES[index] = ConnectingBlockUtil.createWalkwayShape(walkway.getDirection()), shapes.toArray(VoxelShape[]::new));
         }
         return ConnectingBlockUtil.WALKWAY_TOP;
     }
@@ -93,22 +120,8 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
     @Override
     public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity livingEntity, ItemStack itemStack) {
         super.setPlacedBy(level, blockPos, blockState, livingEntity, itemStack);
-
-        if (level.getBlockEntity(blockPos) instanceof Walkway walkway) {
+        if (level.getBlockEntity(blockPos) instanceof WalkwayBlockEntity walkway) {
             walkway.setDirection(Direction.orderedByNearest(livingEntity)[0].getOpposite());
-            var mutable = new BlockPos.MutableBlockPos();
-
-            for (var direction : Constant.Misc.DIRECTIONS) {
-                if (walkway.getDirection() != direction) {
-                    if (level.getBlockEntity(mutable.set(blockPos).move(direction)) instanceof Walkway walkway2) {
-                        if (walkway2.getDirection() != direction.getOpposite()) {
-                            walkway2.getConnections()[direction.ordinal()] = true;
-                            continue;
-                        }
-                    }
-                }
-                walkway.getConnections()[direction.ordinal()] = false;
-            }
             level.updateNeighborsAt(blockPos, blockState.getBlock());
         }
     }
@@ -126,10 +139,10 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
         super.neighborChanged(blockState, level, blockPos, block, fromPos, notify);
         var distance = fromPos.subtract(blockPos);
 
-        if (Math.abs(distance.getX() + distance.getY() + distance.getZ()) == 1 && level.getBlockEntity(blockPos) instanceof Walkway walkway) {
+        if (Math.abs(distance.getX() + distance.getY() + distance.getZ()) == 1 && level.getBlockEntity(blockPos) instanceof WalkwayBlockEntity walkway) {
             var direction = DirectionUtil.fromNormal(distance);
 
-            if (level.getBlockEntity(fromPos) instanceof Walkway walkway2 && walkway2.getDirection() != null) {
+            if (level.getBlockEntity(fromPos) instanceof WalkwayBlockEntity walkway2 && walkway2.getDirection() != null) {
                 if (!fromPos.relative(walkway2.getDirection()).equals(blockPos)) {
                     if (!blockPos.relative(walkway.getDirection()).equals(fromPos)) {
                         if (walkway.getConnections()[direction.ordinal()] != (walkway.getConnections()[direction.ordinal()] = true)) {

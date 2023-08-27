@@ -233,7 +233,7 @@ public interface Constant {
         String STRONG_VACUUM_GLASS = "vacuum_glass_strong";
         String WALKWAY = "walkway";
         String WIRE_WALKWAY = "wire_walkway";
-        String PIPE_WALKWAY = "pipe_walkway";
+        String FLUID_PIPE_WALKWAY = "fluid_pipe_walkway";
 
         //  Environment
         String GLOWSTONE_TORCH = "glowstone_torch";
@@ -242,8 +242,8 @@ public interface Constant {
         String UNLIT_TORCH = "unlit_torch";
         String UNLIT_WALL_TORCH = "unlit_wall_torch";
         String UNLIT_LANTERN = "unlit_lantern";
-        String CAVERNOUS_VINE = "cavernous_vine";
-        String POISONOUS_CAVERNOUS_VINE = "poisonous_cavernous_vine";
+        String CAVERNOUS_VINES = "cavernous_vines";
+        String CAVERNOUS_VINES_PLANT = "cavernous_vines_plant";
         String MOON_BERRY_BUSH = "moon_berry_bush";
         String WEB_TORCH = "web_torch";
         String FALLEN_METEOR = "fallen_meteor";
@@ -594,6 +594,10 @@ public interface Constant {
         String OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_decompressor_energy_consumption_rate";
 
         String CLIENT = "config.galacticraft.client";
+
+        String PLAYER = "config.galacticraft.player";
+        String PLAYER_LIFE_SUPPORT = "config.galacticraft.lifesupport";
+        String PLAYER_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.player.lifesupport.oxygen_consumption_rate";
         String SKYBOX = "config.galacticraft.client.skybox";
         String MULTICOLOR_STARS = "config.galacticraft.client.skybox.multicolor_stars";
     }

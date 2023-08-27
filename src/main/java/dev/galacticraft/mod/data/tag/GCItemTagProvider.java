@@ -26,6 +26,7 @@ import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.ItemTags;
 
@@ -37,46 +38,74 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider arg) {
-        this.tag(ItemTags.AXES)
-                .add(this.reverseLookup(GCItems.HEAVY_DUTY_AXE))
-                .add(this.reverseLookup(GCItems.DESH_AXE))
-                .add(this.reverseLookup(GCItems.TITANIUM_AXE));
-        this.tag(ItemTags.HOES)
-                .add(this.reverseLookup(GCItems.HEAVY_DUTY_HOE))
-                .add(this.reverseLookup(GCItems.DESH_HOE))
-                .add(this.reverseLookup(GCItems.TITANIUM_HOE));
-        this.tag(ItemTags.PICKAXES)
-                .add(this.reverseLookup(GCItems.HEAVY_DUTY_PICKAXE))
-                .add(this.reverseLookup(GCItems.DESH_PICKAXE))
-                .add(this.reverseLookup(GCItems.TITANIUM_PICKAXE));
-        this.tag(ItemTags.SHOVELS)
-                .add(this.reverseLookup(GCItems.HEAVY_DUTY_SHOVEL))
-                .add(this.reverseLookup(GCItems.DESH_SHOVEL))
-                .add(this.reverseLookup(GCItems.TITANIUM_SHOVEL));
-        this.tag(ItemTags.SWORDS)
-                .add(this.reverseLookup(GCItems.HEAVY_DUTY_SWORD))
-                .add(this.reverseLookup(GCItems.DESH_SWORD))
-                .add(this.reverseLookup(GCItems.TITANIUM_SWORD));
+    protected void addTags(HolderLookup.Provider provider) {
+        this.getOrCreateTagBuilder(ItemTags.AXES)
+                .add(GCItems.HEAVY_DUTY_AXE)
+                .add(GCItems.DESH_AXE)
+                .add(GCItems.TITANIUM_AXE);
+        this.getOrCreateTagBuilder(ItemTags.HOES)
+                .add(GCItems.HEAVY_DUTY_HOE)
+                .add(GCItems.DESH_HOE)
+                .add(GCItems.TITANIUM_HOE);
+        this.getOrCreateTagBuilder(ItemTags.PICKAXES)
+                .add(GCItems.HEAVY_DUTY_PICKAXE)
+                .add(GCItems.DESH_PICKAXE)
+                .add(GCItems.TITANIUM_PICKAXE);
+        this.getOrCreateTagBuilder(ItemTags.SHOVELS)
+                .add(GCItems.HEAVY_DUTY_SHOVEL)
+                .add(GCItems.DESH_SHOVEL)
+                .add(GCItems.TITANIUM_SHOVEL);
+        this.getOrCreateTagBuilder(ItemTags.SWORDS)
+                .add(GCItems.HEAVY_DUTY_SWORD)
+                .add(GCItems.DESH_SWORD)
+                .add(GCItems.TITANIUM_SWORD);
+        this.getOrCreateTagBuilder(ItemTags.CLUSTER_MAX_HARVESTABLES)
+                .add(GCItems.HEAVY_DUTY_PICKAXE)
+                .add(GCItems.DESH_PICKAXE)
+                .add(GCItems.TITANIUM_PICKAXE);
+        this.getOrCreateTagBuilder(ItemTags.TRIMMABLE_ARMOR)
+                .add(GCItems.HEAVY_DUTY_HELMET)
+                .add(GCItems.HEAVY_DUTY_CHESTPLATE)
+                .add(GCItems.HEAVY_DUTY_LEGGINGS)
+                .add(GCItems.HEAVY_DUTY_BOOTS)
+                .add(GCItems.DESH_HELMET)
+                .add(GCItems.DESH_CHESTPLATE)
+                .add(GCItems.DESH_LEGGINGS)
+                .add(GCItems.DESH_BOOTS)
+                .add(GCItems.TITANIUM_HELMET)
+                .add(GCItems.TITANIUM_CHESTPLATE)
+                .add(GCItems.TITANIUM_LEGGINGS)
+                .add(GCItems.TITANIUM_BOOTS);
 
-        this.tag(GCTags.ALUMINUM_INGOTS)
-                .add(this.reverseLookup(GCItems.ALUMINUM_INGOT));
-        this.tag(GCTags.RAW_ALUMINUM_ORES)
-                .add(this.reverseLookup(GCItems.RAW_ALUMINUM));
-        this.tag(GCTags.LEAD_INGOTS)
-                .add(this.reverseLookup(GCItems.LEAD_INGOT));
-        this.tag(GCTags.RAW_LEAD_ORES)
-                .add(this.reverseLookup(GCItems.RAW_LEAD));
-        this.tag(GCTags.SILICONS)
-                .add(this.reverseLookup(GCItems.RAW_SILICON));
-        this.tag(GCTags.TIN_INGOTS)
-                .add(this.reverseLookup(GCItems.TIN_INGOT));
-        this.tag(GCTags.RAW_TIN_ORES)
-                .add(this.reverseLookup(GCItems.RAW_TIN));
-        this.tag(ItemTags.CREEPER_DROP_MUSIC_DISCS); //fixme
+        this.getOrCreateTagBuilder(GCTags.ALUMINUM_INGOTS)
+                .add(GCItems.ALUMINUM_INGOT);
+        this.getOrCreateTagBuilder(GCTags.RAW_ALUMINUM_ORES)
+                .add(GCItems.RAW_ALUMINUM);
+        this.getOrCreateTagBuilder(GCTags.LEAD_INGOTS)
+                .add(GCItems.LEAD_INGOT);
+        this.getOrCreateTagBuilder(GCTags.RAW_LEAD_ORES)
+                .add(GCItems.RAW_LEAD);
+        this.getOrCreateTagBuilder(GCTags.SILICONS)
+                .add(GCItems.RAW_SILICON);
+        this.getOrCreateTagBuilder(GCTags.TIN_INGOTS)
+                .add(GCItems.TIN_INGOT);
+        this.getOrCreateTagBuilder(GCTags.RAW_TIN_ORES)
+                .add(GCItems.RAW_TIN);
+        this.getOrCreateTagBuilder(ItemTags.CREEPER_DROP_MUSIC_DISCS); //fixme
         //        "galacticraft:legacy_music_disc_mars",
         //        "galacticraft:legacy_music_disc_mimas",
         //        "galacticraft:legacy_music_disc_orbit",
         //        "galacticraft:legacy_music_disc_spacerace"
+
+        // Ore Tags
+        this.getOrCreateTagBuilder(ConventionalItemTags.ORES).add(
+                GCItems.SILICON_ORE, GCItems.DEEPSLATE_SILICON_ORE,
+                GCItems.MOON_COPPER_ORE, GCItems.LUNASLATE_COPPER_ORE,
+                GCItems.TIN_ORE, GCItems.DEEPSLATE_TIN_ORE, GCItems.MOON_TIN_ORE, GCItems.LUNASLATE_TIN_ORE,
+                GCItems.ALUMINUM_ORE, GCItems.DEEPSLATE_ALUMINUM_ORE,
+                GCItems.DESH_ORE,
+                GCItems.ILMENITE_ORE,
+                GCItems.GALENA_ORE
+        );
     }
 }

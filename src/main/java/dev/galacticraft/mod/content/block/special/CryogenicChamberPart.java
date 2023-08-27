@@ -50,6 +50,7 @@ public class CryogenicChamberPart extends BaseEntityBlock {
 
     public CryogenicChamberPart(Properties properties) {
         super(properties);
+        this.registerDefaultState(this.getStateDefinition().any().setValue(TOP, false));
     }
 
     @Override
@@ -65,7 +66,6 @@ public class CryogenicChamberPart extends BaseEntityBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        super.createBlockStateDefinition(builder);
         builder.add(CryogenicChamberBlock.FACING, TOP);
     }
 
@@ -75,44 +75,44 @@ public class CryogenicChamberPart extends BaseEntityBlock {
     }
 
     @Override
-    public void playerWillDestroy(Level world, BlockPos partPos, BlockState partState, Player player) {
-        BlockEntity partBE = world.getBlockEntity(partPos);
-        CryogenicChamberPartBlockEntity be = (CryogenicChamberPartBlockEntity) partBE;
+    public void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+        var partBE = level.getBlockEntity(blockPos);
+        var be = (CryogenicChamberPartBlockEntity) partBE;
 
         if (be == null || be.basePos == BlockPos.ZERO) {
             return;
         }
-        BlockPos basePos = new BlockPos(be.basePos);
-        BlockState baseState = world.getBlockState(basePos);
+        var basePos = new BlockPos(be.basePos);
+        var baseState = level.getBlockState(basePos);
 
         if (baseState.isAir()) {
             // The base has been destroyed already.
             return;
         }
 
-        MultiBlockBase block = (MultiBlockBase) baseState.getBlock();
-        block.onPartDestroyed(world, player, baseState, basePos, partState, partPos);
+        var block = (MultiBlockBase) baseState.getBlock();
+        block.onPartDestroyed(level, player, baseState, basePos, blockState, blockPos);
 
-        super.destroy(world, partPos, partState);
+        super.destroy(level, blockPos, blockState);
     }
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        BlockEntity partBE = level.getBlockEntity(blockPos);
-        CryogenicChamberPartBlockEntity be = (CryogenicChamberPartBlockEntity) partBE;
+        var partBE = level.getBlockEntity(blockPos);
+        var be = (CryogenicChamberPartBlockEntity) partBE;
 
         if (be == null || be.basePos == BlockPos.ZERO) {
             return InteractionResult.PASS;
         }
-        BlockPos basePos = new BlockPos(be.basePos);
-        BlockState baseState = level.getBlockState(basePos);
+        var basePos = new BlockPos(be.basePos);
+        var baseState = level.getBlockState(basePos);
 
         if (baseState.isAir()) {
             // The base has been destroyed already.
             return InteractionResult.PASS;
         }
 
-        MultiBlockBase block = (MultiBlockBase) baseState.getBlock();
+        var block = (MultiBlockBase) baseState.getBlock();
         return block.onMultiBlockUse(blockState, level, basePos, player, interactionHand, blockHitResult);
     }
 

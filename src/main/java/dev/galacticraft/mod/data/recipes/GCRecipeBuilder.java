@@ -94,7 +94,7 @@ public abstract class GCRecipeBuilder implements RecipeBuilder, FinishedRecipe {
 
     @Override
     public JsonObject serializeRecipe() {
-        JsonObject jsonRecipe = FinishedRecipe.super.serializeRecipe();
+        var jsonRecipe = FinishedRecipe.super.serializeRecipe();
         if (!this.group.isEmpty()) {
             jsonRecipe.addProperty("group", this.group);
         }
@@ -107,8 +107,8 @@ public abstract class GCRecipeBuilder implements RecipeBuilder, FinishedRecipe {
     }
 
     protected void createResult(JsonObject jsonRecipe) {
-        JsonObject itemJson = new JsonObject();
-        itemJson.addProperty("item", BuiltInRegistries.ITEM.getKey(getResult()).toString());
+        var itemJson = new JsonObject();
+        itemJson.addProperty("item", BuiltInRegistries.ITEM.getKey(this.getResult()).toString());
         if (this.count > 1) {
             itemJson.addProperty("count", this.count);
         }

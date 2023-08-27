@@ -39,7 +39,7 @@ public class GCStructureTagProvider extends FabricTagProvider<Structure> {
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
-        tag(GCTags.MOON_RUINS)
+        this.getOrCreateTagBuilder(GCTags.MOON_RUINS)
                 .add(GCStructures.Moon.RUINS);
     }
 }

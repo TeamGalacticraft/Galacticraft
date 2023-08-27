@@ -529,7 +529,10 @@
         "then_run": {
           "type": "minecraft:block",
           "result_state": {
-            "Name": "galacticraft:lunaslate"
+            "Name": "galacticraft:lunaslate",
+            "Properties": {
+              "axis": "y"
+            }
           }
         }
       }

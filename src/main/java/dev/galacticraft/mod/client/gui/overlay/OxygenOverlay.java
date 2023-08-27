@@ -58,10 +58,10 @@ public class OxygenOverlay {
                     if (storage != null) {
                         StorageView<FluidVariant> exact = storage.exactView(FluidVariant.of(Gases.OXYGEN));
                         if (exact != null) {
-                            DrawableUtil.drawOxygenBuffer(graphics.pose(), mc.getWindow().getGuiScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * i), 5, exact.getAmount(), exact.getCapacity());
+                            DrawableUtil.drawOxygenBuffer(graphics.pose(), mc.getWindow().getGuiScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * (i + 4)), 5, exact.getAmount(), exact.getCapacity());
                         }
                     } else if (mc.player.isCreative()) {
-                        DrawableUtil.drawOxygenBuffer(graphics.pose(), mc.getWindow().getGuiScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * i), 5, 1, 1);
+                        DrawableUtil.drawOxygenBuffer(graphics.pose(), mc.getWindow().getGuiScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * (i + 4)), 5, 1, 1);
                     }
                 }
             }

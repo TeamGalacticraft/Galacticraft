@@ -51,7 +51,7 @@ public class BootstrapDataProvider<T> extends FabricDynamicRegistryProvider {
 
     @Override
     protected void configure(HolderLookup.Provider registries, Entries entries) {
-        consumer.accept(new GeneratingBootstrapContext<>(registries, entries));
+        this.consumer.accept(new GeneratingBootstrapContext<>(registries, entries));
     }
 
     @Override

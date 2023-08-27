@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "poisonous=false": {
+      "model": "galacticraft:block/cavernous_vines_plant"
+    },
+    "poisonous=true": {
+      "model": "galacticraft:block/cavernous_vines_plant_poisonous"
+    }
+  }
+}

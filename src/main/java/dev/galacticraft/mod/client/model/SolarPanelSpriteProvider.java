@@ -41,14 +41,12 @@ import java.util.function.Function;
 
 public class SolarPanelSpriteProvider implements MachineModelRegistry.SpriteProvider {
     private TextureAtlasSprite front;
-    private TextureAtlasSprite back;
     private TextureAtlasSprite top;
     private TextureAtlasSprite machineSide;
     private TextureAtlasSprite machine;
 
     public SolarPanelSpriteProvider(JsonObject json, Function<Material, TextureAtlasSprite> function) {
         this.front = function.apply(new net.minecraft.client.resources.model.Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation(GsonHelper.getAsString(json, "front"))));
-        this.back = function.apply(new net.minecraft.client.resources.model.Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation(GsonHelper.getAsString(json, "back"))));
         this.top = function.apply(new net.minecraft.client.resources.model.Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation(GsonHelper.getAsString(json, "top"))));
         this.machine = function.apply(MachineBakedModel.MACHINE);
         this.machineSide = function.apply(MachineBakedModel.MACHINE_SIDE);
@@ -57,7 +55,6 @@ public class SolarPanelSpriteProvider implements MachineModelRegistry.SpriteProv
     @Override
     public @NotNull TextureAtlasSprite getSpritesForState(@Nullable MachineBlockEntity machine, @Nullable ItemStack stack, @NotNull BlockFace face) {
         if (face == BlockFace.FRONT) return this.front;
-        if (face == BlockFace.BACK) return this.back;
         if (face == BlockFace.TOP) return this.top;
         if (face.side()) return this.machineSide;
         return this.machine;
