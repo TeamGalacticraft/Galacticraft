@@ -22,26 +22,82 @@
 
 package dev.galacticraft.mod.world.biome;
 
+import dev.galacticraft.mod.content.GCEntityTypes;
+import dev.galacticraft.mod.content.GCSounds;
+import dev.galacticraft.mod.world.gen.feature.GCOrePlacedFeatures;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.data.worldgen.biome.OverworldBiomes;
-import net.minecraft.world.level.biome.Biome;
+import net.minecraft.sounds.Musics;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.biome.*;
+import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public class MoonBiomes {
     public static Biome createCometTundra(HolderGetter<PlacedFeature> featureLookup, HolderGetter<ConfiguredWorldCarver<?>> carverLookup) {
-        return OverworldBiomes.plains(featureLookup, carverLookup, false, false, false); //fixme
+        return MoonBiomes.moon(featureLookup, carverLookup);
     }
 
     public static Biome createBasalticMare(HolderGetter<PlacedFeature> featureLookup, HolderGetter<ConfiguredWorldCarver<?>> carverLookup) {
-        return OverworldBiomes.plains(featureLookup, carverLookup, false, false, false); //fixme
+        return MoonBiomes.moon(featureLookup, carverLookup);
     }
 
     public static Biome createLunarHighlands(HolderGetter<PlacedFeature> featureLookup, HolderGetter<ConfiguredWorldCarver<?>> carverLookup) {
-        return OverworldBiomes.plains(featureLookup, carverLookup, false, false, false); //fixme
+        return MoonBiomes.moon(featureLookup, carverLookup);
     }
 
     public static Biome createOlivineSpikes(HolderGetter<PlacedFeature> featureLookup, HolderGetter<ConfiguredWorldCarver<?>> carverLookup) {
-        return OverworldBiomes.plains(featureLookup, carverLookup, false, false, false); //fixme
+        return MoonBiomes.moon(featureLookup, carverLookup);
+    }
+
+    public static void monsters(MobSpawnSettings.Builder builder, int zombieWeight, int zombieVillagerWeight, int selektonWeight) {
+        builder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_SPIDER, 100, 4, 4));
+        builder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_ZOMBIE, zombieWeight, 4, 4));
+//        builder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_ZOMBIE_VILLAGER, zombieVillagerWeight, 1, 1));
+        builder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_SKELETON, selektonWeight, 4, 4));
+        builder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_CREEPER, 100, 4, 4));
+//        builder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_SLIME, 100, 4, 4));
+//        builder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_ENDERMAN, 10, 1, 4));
+//        builder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_WITCH, 5, 1, 1));
+    }
+
+    public static void addDefaultMoonOres(BiomeGenerationSettings.Builder builder) {
+        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GCOrePlacedFeatures.ORE_COPPER_MOON);
+        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GCOrePlacedFeatures.ORE_COPPER_LARGE_MOON);
+
+        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GCOrePlacedFeatures.ORE_TIN_SMALL_MOON);
+        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GCOrePlacedFeatures.ORE_TIN_MIDDLE_MOON);
+        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GCOrePlacedFeatures.ORE_TIN_UPPER_MOON);
+    }
+
+    public static void addDefaultSoftDisks(BiomeGenerationSettings.Builder builder) {
+        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GCOrePlacedFeatures.BASALT_DISK_MOON);
+    }
+
+    public static Biome moon(
+            HolderGetter<PlacedFeature> featureGetter, HolderGetter<ConfiguredWorldCarver<?>> carverGetter
+    ) {
+        MobSpawnSettings.Builder spawnBuilder = new MobSpawnSettings.Builder();
+        BiomeGenerationSettings.Builder generation = new BiomeGenerationSettings.Builder(featureGetter, carverGetter);
+        BiomeSpecialEffects.Builder specialEffects = new BiomeSpecialEffects.Builder();
+        specialEffects.waterColor(4159204)
+                .waterFogColor(329011)
+                .fogColor(10518688)
+                .skyColor(0)
+                .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS)
+                .backgroundMusic(Musics.createGameMusic(GCSounds.MUSIC_MOON));
+
+        MoonBiomes.addDefaultMoonOres(generation);
+        MoonBiomes.addDefaultSoftDisks(generation);
+        MoonBiomes.monsters(spawnBuilder, 95, 5, 100);
+
+        return new Biome.BiomeBuilder()
+                .mobSpawnSettings(spawnBuilder.build())
+                .hasPrecipitation(false)
+                .temperature(0.0F)
+                .downfall(0.0F)
+                .specialEffects(specialEffects.build())
+                .generationSettings(generation.build())
+                .build();
     }
 }

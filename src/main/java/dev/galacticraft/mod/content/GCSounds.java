@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content;
 
 import dev.galacticraft.mod.Constant;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -32,10 +33,11 @@ import net.minecraft.sounds.SoundEvent;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GCSounds {
-    public static final SoundEvent MUSIC_MOON = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "music.music_moon"));
-    public static final SoundEvent MUSIC_CREDITS = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "music.music_credits"));
-    public static final SoundEvent MUSIC_ORBIT = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "music.music_orbit"));
-    public static final SoundEvent MUSIC_MARS = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "music.music_mars"));
+    private static final GCRegistry<SoundEvent> SOUNDS = new GCRegistry<>(BuiltInRegistries.SOUND_EVENT);
+    public static final Holder.Reference<SoundEvent> MUSIC_MOON = register("music.music_moon");
+    public static final Holder.Reference<SoundEvent> MUSIC_CREDITS = register("music.music_credits");
+    public static final Holder.Reference<SoundEvent> MUSIC_ORBIT = register("music.music_orbit");
+    public static final Holder.Reference<SoundEvent> MUSIC_MARS = register("music.music_mars");
     public static final SoundEvent PLAYER_UNLOCKCHEST = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "player.unlockchest"));
     public static final SoundEvent PLAYER_PARACHUTE = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "player.parachute"));
     public static final SoundEvent PLAYER_OPENAIRLOCK = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "player.openairlock"));
@@ -56,11 +58,11 @@ public class GCSounds {
     public static final SoundEvent MUSIC_LEGACY_ORBIT = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "music.legacy.orbit"));
     public static final SoundEvent MUSIC_LEGACY_SPACERACE = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "music.legacy.spacerace"));
 
+    public static Holder.Reference<SoundEvent> register(String id) {
+        return SOUNDS.registerForHolder(id, SoundEvent.createVariableRangeEvent(Constant.id(id)));
+    }
+
     public static void register() {
-        Registry.register(BuiltInRegistries.SOUND_EVENT, MUSIC_MOON.getLocation(), MUSIC_MOON);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, MUSIC_CREDITS.getLocation(), MUSIC_CREDITS);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, MUSIC_ORBIT.getLocation(), MUSIC_ORBIT);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, MUSIC_MARS.getLocation(), MUSIC_MARS);
         Registry.register(BuiltInRegistries.SOUND_EVENT, PLAYER_UNLOCKCHEST.getLocation(), PLAYER_UNLOCKCHEST);
         Registry.register(BuiltInRegistries.SOUND_EVENT, PLAYER_PARACHUTE.getLocation(), PLAYER_PARACHUTE);
         Registry.register(BuiltInRegistries.SOUND_EVENT, PLAYER_OPENAIRLOCK.getLocation(), PLAYER_OPENAIRLOCK);

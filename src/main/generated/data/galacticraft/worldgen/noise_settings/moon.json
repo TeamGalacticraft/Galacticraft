@@ -452,12 +452,6 @@
                         "Name": "galacticraft:moon_turf"
                       }
                     }
-                  },
-                  {
-                    "type": "minecraft:block",
-                    "result_state": {
-                      "Name": "galacticraft:aluminum_decoration"
-                    }
                   }
                 ]
               }
@@ -500,12 +494,6 @@
                       "result_state": {
                         "Name": "galacticraft:moon_dirt"
                       }
-                    }
-                  },
-                  {
-                    "type": "minecraft:block",
-                    "result_state": {
-                      "Name": "galacticraft:aluminum_decoration"
                     }
                   }
                 ]
