@@ -395,8 +395,8 @@ public class GCCreativeModeTabs {
 
                 // MISC DECOR
                 output.accept(WALKWAY);
-                output.accept(PIPE_WALKWAY);
                 output.accept(WIRE_WALKWAY);
+                output.accept(FLUID_PIPE_WALKWAY);
                 output.accept(TIN_LADDER);
                 output.accept(GRATING);
 
@@ -453,8 +453,7 @@ public class GCCreativeModeTabs {
                 output.accept(LUNAR_CARTOGRAPHY_TABLE);
 
                 // MISC WORLD GEN
-                output.accept(CAVERNOUS_VINE);
-                output.accept(POISONOUS_CAVERNOUS_VINE);
+                output.accept(CAVERNOUS_VINES);
 
                 // MISC MACHINES
                 output.accept(CRYOGENIC_CHAMBER);

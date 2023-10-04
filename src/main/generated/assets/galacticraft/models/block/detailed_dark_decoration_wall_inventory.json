@@ -1,6 +1,8 @@
 {
-  "parent": "minecraft:block/wall_inventory",
+  "parent": "galacticraft:block/detailed_wall_inventory",
   "textures": {
-    "wall": "galacticraft:block/detailed_dark_decoration_side"
+    "bottom": "galacticraft:block/dark_decoration",
+    "side": "galacticraft:block/detailed_dark_decoration_side",
+    "top": "galacticraft:block/detailed_dark_decoration_top"
   }
 }

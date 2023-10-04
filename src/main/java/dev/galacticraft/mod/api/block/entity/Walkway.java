@@ -24,7 +24,6 @@ package dev.galacticraft.mod.api.block.entity;
 
 import dev.galacticraft.mod.Constant;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -32,7 +31,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 
 public interface Walkway extends Connected {
-    @Nullable
     Direction getDirection();
 
     void setDirection(@NotNull Direction direction);

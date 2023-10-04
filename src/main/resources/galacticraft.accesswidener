@@ -38,6 +38,8 @@ accessible field net/minecraft/world/level/block/DispenserBlock DISPENSER_REGIST
 # private final fields
 accessible field net/minecraft/data/models/BlockModelGenerators texturedModels Ljava/util/Map;
 mutable field net/minecraft/data/models/BlockModelGenerators texturedModels Ljava/util/Map;
+accessible field net/minecraft/data/models/BlockModelGenerators fullBlockModelCustomGenerators Ljava/util/Map;
+mutable field net/minecraft/data/models/BlockModelGenerators fullBlockModelCustomGenerators Ljava/util/Map;
 
 # private methods
 extendable method net/minecraft/world/entity/LivingEntity setPosToBed (Lnet/minecraft/core/BlockPos;)V

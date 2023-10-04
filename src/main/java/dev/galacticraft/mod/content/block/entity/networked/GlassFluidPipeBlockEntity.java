@@ -68,7 +68,7 @@ public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colore
     public void calculateConnections() {
         for (var direction : Constant.Misc.DIRECTIONS) {
             var otherBlockEntity = this.level.getBlockEntity(this.getBlockPos().relative(direction));
-            this.getConnections()[direction.ordinal()] = (otherBlockEntity instanceof Pipe pipe && pipe.canConnect(direction.getOpposite())) || FluidUtil.canAccessFluid(this.level, this.getBlockPos().relative(direction), direction);
+            this.getConnections()[direction.ordinal()] = otherBlockEntity instanceof Pipe pipe && pipe.canConnect(direction.getOpposite()) || FluidUtil.canAccessFluid(this.level, this.getBlockPos().relative(direction), direction);
         }
     }
 }

@@ -23,8 +23,10 @@
 package dev.galacticraft.mod.events;
 
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.impl.rocket.RocketDataImpl;
 import dev.galacticraft.mod.accessor.CryogenicAccessor;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
+import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -33,6 +35,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -45,6 +48,7 @@ public class GCEventHandlers {
         EntitySleepEvents.ALLOW_SLEEPING.register(GCEventHandlers::sleepInSpace);
         EntitySleepEvents.ALLOW_SLEEP_TIME.register(GCEventHandlers::canCryoSleep);
         EntitySleepEvents.STOP_SLEEPING.register(GCEventHandlers::onWakeFromCryoSleep);
+        GiveCommandEvents.MODIFY.register(GCEventHandlers::modifyOnGive);
     }
 
     public static InteractionResult allowCryogenicSleep(LivingEntity entity, BlockPos sleepingPos, BlockState state, boolean vanillaResult) {
@@ -93,5 +97,13 @@ public class GCEventHandlers {
 //                WorldUtil.setNextMorning(ws);
 //            }
         }
+    }
+
+    public static ItemStack modifyOnGive(ItemStack previousItemStack) {
+        // This will set default data of an empty Rocket item when /give command is used, it also checks required tags for Rocket item to be rendered properly.
+        if (previousItemStack.is(GCItems.ROCKET) && (!previousItemStack.hasTag() || previousItemStack.hasTag() && !previousItemStack.getTag().getAllKeys().containsAll(RocketDataImpl.DEFAULT_ROCKET.getAllKeys()))) {
+            previousItemStack.setTag(RocketDataImpl.DEFAULT_ROCKET);
+        }
+        return previousItemStack;
     }
 }

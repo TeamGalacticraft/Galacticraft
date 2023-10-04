@@ -204,7 +204,7 @@ public class GCItems {
 
     // MISC DECOR
     public static final Item WALKWAY = new BlockItem(GCBlocks.WALKWAY, new Item.Properties());
-    public static final Item PIPE_WALKWAY = new BlockItem(GCBlocks.PIPE_WALKWAY, new Item.Properties());
+    public static final Item FLUID_PIPE_WALKWAY = new BlockItem(GCBlocks.FLUID_PIPE_WALKWAY, new Item.Properties());
     public static final Item WIRE_WALKWAY = new BlockItem(GCBlocks.WIRE_WALKWAY, new Item.Properties());
     public static final Item TIN_LADDER = new BlockItem(GCBlocks.TIN_LADDER, new Item.Properties());
     public static final Item GRATING = new BlockItem(GCBlocks.GRATING, new Item.Properties());
@@ -264,8 +264,7 @@ public class GCItems {
     public static final Item LUNAR_CARTOGRAPHY_TABLE = new BlockItem(GCBlocks.LUNAR_CARTOGRAPHY_TABLE, new Item.Properties());
 
     // MISC WORLD GEN
-    public static final Item CAVERNOUS_VINE = new BlockItem(GCBlocks.CAVERNOUS_VINE, new Item.Properties());
-    public static final Item POISONOUS_CAVERNOUS_VINE = new BlockItem(GCBlocks.POISONOUS_CAVERNOUS_VINE, new Item.Properties());
+    public static final Item CAVERNOUS_VINES = new BlockItem(GCBlocks.CAVERNOUS_VINES, new Item.Properties());
 
     // MISC MACHINES
     public static final Item CRYOGENIC_CHAMBER = new BlockItem(GCBlocks.CRYOGENIC_CHAMBER, new Item.Properties());
@@ -642,7 +641,7 @@ public class GCItems {
 
         // MISC DECOR
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.WALKWAY), WALKWAY);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.PIPE_WALKWAY), PIPE_WALKWAY);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.FLUID_PIPE_WALKWAY), FLUID_PIPE_WALKWAY);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.WIRE_WALKWAY), WIRE_WALKWAY);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.TIN_LADDER), TIN_LADDER);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.GRATING), GRATING);
@@ -702,8 +701,7 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.LUNAR_CARTOGRAPHY_TABLE), LUNAR_CARTOGRAPHY_TABLE);
 
         // MISC WORLD GEN
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CAVERNOUS_VINE), CAVERNOUS_VINE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.POISONOUS_CAVERNOUS_VINE), POISONOUS_CAVERNOUS_VINE);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CAVERNOUS_VINES), CAVERNOUS_VINES);
 
         // MISC MACHINES
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CRYOGENIC_CHAMBER), CRYOGENIC_CHAMBER);

@@ -1,7 +1,0 @@
-{
-  "parent": "galacticraft:block/glass_fluid_pipe/glass_fluid_pipe_base",
-  "textures": {
-    "particle": "galacticraft:block/glass_fluid_pipe/pink",
-    "color":    "galacticraft:block/glass_fluid_pipe/pink"
-  }
-}

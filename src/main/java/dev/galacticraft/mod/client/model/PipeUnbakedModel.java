@@ -22,10 +22,8 @@
 
 package dev.galacticraft.mod.client.model;
 
-import com.mojang.datafixers.util.Pair;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
 import java.util.function.Function;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;

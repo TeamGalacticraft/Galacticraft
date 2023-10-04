@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.data;
 
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
@@ -38,6 +39,7 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
 public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
@@ -206,7 +208,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.add(GCBlocks.VAPOR_SPOUT, this.createSingleItemTableWithSilkTouch(GCBlocks.VAPOR_SPOUT, GCBlocks.SOFT_VENUS_ROCK));
 
         this.dropSelf(GCBlocks.WALKWAY);
-        this.dropSelf(GCBlocks.PIPE_WALKWAY);
+        this.dropSelf(GCBlocks.FLUID_PIPE_WALKWAY);
         this.dropSelf(GCBlocks.WIRE_WALKWAY);
         this.dropSelf(GCBlocks.TIN_LADDER);
         this.dropSelf(GCBlocks.GRATING);
@@ -276,8 +278,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         this.dropSelf(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
 
-        this.add(GCBlocks.CAVERNOUS_VINE, BlockLootSubProvider::createShearsOnlyDrop);
-        this.add(GCBlocks.POISONOUS_CAVERNOUS_VINE, BlockLootSubProvider::createShearsOnlyDrop);
+        this.add(GCBlocks.CAVERNOUS_VINES, BlockLootSubProvider::createShearsOnlyDrop);
         this.add(GCBlocks.MOON_BERRY_BUSH, block -> this.applyExplosionDecay(block, LootTable.lootTable()
                         .withPool(LootPool.lootPool()
                                 .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SweetBerryBushBlock.AGE, 3)))
@@ -293,14 +294,9 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
                 )
         );
 
-        //TODO Drop with 9 pads
-        this.dropSelf(GCBlocks.ROCKET_LAUNCH_PAD);
+        this.add(GCBlocks.ROCKET_LAUNCH_PAD, this::createRocketLaunchPadTable);
         this.dropSelf(GCBlocks.AIR_LOCK_CONTROLLER);
         this.dropSelf(GCBlocks.AIR_LOCK_FRAME);
-
-        //TODO Fix part table
-        this.dropOther(GCBlocks.CRYOGENIC_CHAMBER_PART, GCBlocks.CRYOGENIC_CHAMBER);
-
         this.dropSelf(GCBlocks.CRYOGENIC_CHAMBER);
         this.dropSelf(GCBlocks.CIRCUIT_FABRICATOR);
         this.dropSelf(GCBlocks.COMPRESSOR);
@@ -324,5 +320,18 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.ROCKET_WORKBENCH);
 
         this.add(GCBlocks.AIR_LOCK_SEAL, noDrop());
+    }
+
+    private LootTable.Builder createRocketLaunchPadTable(Block block) {
+        return LootTable.lootTable().withPool(this.applyExplosionCondition(block, LootPool.lootPool()
+                .setRolls(ConstantValue.exactly(1.0F))
+                .add(LootItem.lootTableItem(block)
+                        .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+                                .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(RocketLaunchPadBlock.PART, RocketLaunchPadBlock.Part.NONE))))))
+                .withPool(this.applyExplosionCondition(block, LootPool.lootPool()
+                        .setRolls(ConstantValue.exactly(9.0F))
+                        .add(LootItem.lootTableItem(block)
+                                .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+                                        .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(RocketLaunchPadBlock.PART, RocketLaunchPadBlock.Part.CENTER))))));
     }
 }

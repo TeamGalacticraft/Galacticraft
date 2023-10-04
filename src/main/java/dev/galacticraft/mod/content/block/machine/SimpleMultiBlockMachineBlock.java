@@ -55,20 +55,20 @@ public class SimpleMultiBlockMachineBlock<T extends MachineBlockEntity, P extend
     }
 
     @Override
-    public void onMultiBlockPlaced(Level world, BlockPos pos, BlockState state) {
-        for (BlockPos otherPart : this.getOtherParts(state)) {
-            otherPart = otherPart.immutable().offset(pos);
-            world.setBlockAndUpdate(otherPart, this.partState);
+    public void onMultiBlockPlaced(Level level, BlockPos blockPos, BlockState blockState) {
+        for (BlockPos otherPart : this.getOtherParts(blockState)) {
+            otherPart = otherPart.immutable().offset(blockPos);
+            level.setBlockAndUpdate(otherPart, this.partState);
 
-            BlockEntity part = world.getBlockEntity(otherPart);
+            BlockEntity part = level.getBlockEntity(otherPart);
             assert part != null; // This will never be null because world.setBlockState will put a blockentity there.
-            ((MultiBlockPart) part).setBasePos(pos);
+            ((MultiBlockPart) part).setBasePos(blockPos);
             part.setChanged();
         }
     }
 
     @Override
-    public @Unmodifiable List<BlockPos> getOtherParts(BlockState state) {
+    public @Unmodifiable List<BlockPos> getOtherParts(BlockState blockState) {
         return this.parts;
     }
 }

@@ -86,7 +86,11 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 );
 
         this.getOrCreateTagBuilder(BlockTags.CLIMBABLE)
-                .add(GCBlocks.TIN_LADDER);
+                .add(
+                        GCBlocks.TIN_LADDER,
+                        GCBlocks.CAVERNOUS_VINES,
+                        GCBlocks.CAVERNOUS_VINES_PLANT
+                );
 
         var stairs = new Block[] {
                 GCBlocks.TIN_DECORATION_STAIRS,
@@ -214,7 +218,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.GRATING,
                         GCBlocks.WALKWAY,
                         GCBlocks.WIRE_WALKWAY,
-                        GCBlocks.PIPE_WALKWAY,
+                        GCBlocks.FLUID_PIPE_WALKWAY,
                         GCBlocks.CRYOGENIC_CHAMBER,
                         GCBlocks.CRYOGENIC_CHAMBER_PART,
                         GCBlocks.SOLAR_PANEL_PART,
@@ -288,7 +292,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.GRATING,
                         GCBlocks.WALKWAY,
                         GCBlocks.WIRE_WALKWAY,
-                        GCBlocks.PIPE_WALKWAY,
+                        GCBlocks.FLUID_PIPE_WALKWAY,
                         GCBlocks.MOON_COPPER_ORE,
                         GCBlocks.LUNASLATE_COPPER_ORE,
                         GCBlocks.TIN_ORE,
