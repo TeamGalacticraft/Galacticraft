@@ -1,12 +1,13 @@
 {
   "type": "minecraft:crafting_shapeless",
+  "category": "misc",
   "ingredients": [
     {
       "item": "galacticraft:lead_ingot"
     }
   ],
   "result": {
-    "item": "galacticraft:lead_nugget",
-    "count": 9
+    "count": 9,
+    "item": "galacticraft:lead_nugget"
   }
 }

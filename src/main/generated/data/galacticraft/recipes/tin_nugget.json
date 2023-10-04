@@ -1,12 +1,13 @@
 {
   "type": "minecraft:crafting_shapeless",
+  "category": "misc",
   "ingredients": [
     {
       "item": "galacticraft:tin_ingot"
     }
   ],
   "result": {
-    "item": "galacticraft:tin_nugget",
-    "count": 9
+    "count": 9,
+    "item": "galacticraft:tin_nugget"
   }
 }
