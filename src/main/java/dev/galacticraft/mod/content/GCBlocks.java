@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.content;
 
-import java.util.function.ToIntFunction;
-
 import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.decoration.GratingBlock;
@@ -56,6 +54,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
+
+import java.util.function.ToIntFunction;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>

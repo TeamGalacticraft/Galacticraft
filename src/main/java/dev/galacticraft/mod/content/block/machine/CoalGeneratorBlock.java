@@ -31,32 +31,20 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CoalGeneratorBlock extends MachineBlock<CoalGeneratorBlockEntity> {
-    public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
-
     public CoalGeneratorBlock(Properties settings) {
         super(settings, CoalGeneratorBlockEntity::new);
-        this.registerDefaultState(this.defaultBlockState().setValue(ACTIVE, false));
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        super.createBlockStateDefinition(builder);
-        builder.add(ACTIVE);
     }
 
     @Override
     public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource rand) {
-        if (state.getValue(ACTIVE) && world.getBlockEntity(pos) instanceof CoalGeneratorBlockEntity machine && machine.getHeat() > 0) {
+        if (isActive(state)) {
             double x = (double) pos.getX() + 0.5D;
             double y = pos.getY();
             double z = (double) pos.getZ() + 0.5D;

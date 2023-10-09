@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
@@ -55,6 +56,7 @@ public class OxygenSealerScreen extends MachineScreen<OxygenSealerBlockEntity, M
     protected void renderForeground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.renderForeground(graphics, mouseX, mouseY, delta);
 
-        graphics.drawString(this.font, Component.translatable("ui.galacticraft.machine.status").append(this.menu.configuration.getStatus().name()), this.leftPos + 50, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
+        MachineStatus status = this.menu.state.getStatus();
+        graphics.drawString(this.font, Component.translatable("ui.galacticraft.machine.status").append(status != null ? status.getText() : Component.empty()), this.leftPos + 50, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
     }
 }

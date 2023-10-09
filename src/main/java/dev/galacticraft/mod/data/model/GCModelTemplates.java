@@ -22,13 +22,13 @@
 
 package dev.galacticraft.mod.data.model;
 
-import java.util.Optional;
-
 import dev.galacticraft.mod.Constant;
 import net.minecraft.data.models.model.ModelTemplate;
 import net.minecraft.data.models.model.ModelTemplates;
 import net.minecraft.data.models.model.TextureSlot;
 import net.minecraft.resources.ResourceLocation;
+
+import java.util.Optional;
 
 public class GCModelTemplates {
     public static final ModelTemplate SPAWN_EGG = ModelTemplates.createItem("template_spawn_egg");

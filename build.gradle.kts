@@ -47,8 +47,7 @@ val runtimeOptional        = project.property("optional_dependencies.enabled").t
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("1.3-SNAPSHOT")
-    id("io.github.juuxel.loom-vineflower") version("1.11.0")
+    id("fabric-loom") version("1.4-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
     id("org.ajoberstar.grgit") version("5.2.0")
 }
@@ -274,10 +273,6 @@ license {
     setHeader(project.file("LICENSE_HEADER.txt"))
     include("**/dev/galacticraft/**/*.java")
     include("build.gradle.kts")
-}
-
-vineflower {
-    addToRuntimeClasspath.set(true)
 }
 
 tasks.withType(JavaCompile::class) {

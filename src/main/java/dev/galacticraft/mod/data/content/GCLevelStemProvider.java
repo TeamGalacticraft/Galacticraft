@@ -22,20 +22,14 @@
 
 package dev.galacticraft.mod.data.content;
 
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
-
 import com.mojang.serialization.JsonOps;
-
 import com.mojang.serialization.Lifecycle;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
-
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.RegistryOps;
@@ -43,6 +37,11 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.dimension.LevelStem;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 public class GCLevelStemProvider implements DataProvider {
 	private final PackOutput.PathProvider path;

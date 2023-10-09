@@ -22,15 +22,16 @@
 
 package dev.galacticraft.mod.data.model;
 
-import static dev.galacticraft.mod.content.GCBlocks.*;
-import java.util.Map;
-import java.util.stream.Stream;
-
-import org.jetbrains.annotations.Contract;
 import com.google.common.collect.Maps;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Contract;
+
+import java.util.Map;
+import java.util.stream.Stream;
+
+import static dev.galacticraft.mod.content.GCBlocks.*;
 
 @SuppressWarnings("unused")
 public class GCBlockFamilies {

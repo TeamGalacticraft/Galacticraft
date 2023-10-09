@@ -45,6 +45,8 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 public class GCModelProvider extends FabricModelProvider {
     private static final TexturedModel.Provider DETAILED_DECORATION = TexturedModel.createDefault(GCModelProvider::detailedTexture, ModelTemplates.CUBE_BOTTOM_TOP);

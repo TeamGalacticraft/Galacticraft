@@ -77,7 +77,7 @@ public class InfiniteOxygenTankItem extends Item implements Storage<FluidVariant
 
     @Override
     public int getBarColor(ItemStack stack) {
-        if (++this.ticks > 1000) this.ticks -= 1000;
+        if (++this.ticks > 1000) this.ticks = 0;
         return Mth.hsvToRgb(this.ticks / 1000.0f, 1, 1);
     }
 

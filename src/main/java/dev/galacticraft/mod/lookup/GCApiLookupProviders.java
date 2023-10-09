@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.lookup;
 
-import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCBlocks;
@@ -34,7 +34,6 @@ import dev.galacticraft.mod.content.item.OxygenTankItem;
 import dev.galacticraft.mod.storage.SingleTypeStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import team.reborn.energy.api.EnergyStorage;

@@ -29,7 +29,6 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.SolarPanelMenu;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
@@ -48,6 +47,7 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements SolarPanel {
+    public static final int CHARGE_SLOT = 0;
     private final boolean[] blockage = new boolean[9];
     private int blocked = 0;
     public long currentEnergyGeneration = 0;
@@ -59,7 +59,7 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
     @Override
     public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("charge");
-        this.drainPowerToStack(GCSlotGroupTypes.ENERGY_TO_ITEM);
+        this.drainPowerToStack(CHARGE_SLOT);
         profiler.pop();
         this.blocked = 0;
         for (int x = -1; x < 2; x++) {
@@ -73,21 +73,21 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
     }
 
     @Override
-    public @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+    public @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("transfer");
-        this.trySpreadEnergy(world, state);
+        this.trySpreadEnergy(level, state);
         profiler.pop();
         if (this.blocked == 9) return GCMachineStatuses.BLOCKED;
         if (this.energyStorage().isFull()) return MachineStatuses.CAPACITOR_FULL;
         MachineStatus status = null;
         double multiplier = (9.0 - this.blocked) / 9.0;
         if (this.blocked > 0) status = GCMachineStatuses.PARTIALLY_BLOCKED;
-        if (world.isRaining() || world.isThundering()) {
+        if (level.isRaining() || level.isThundering()) {
             if (status == null) status = GCMachineStatuses.RAIN;
             multiplier *= 0.5;
         }
-        if (!world.isDay()) status = GCMachineStatuses.NIGHT;
-        double time = world.getDayTime() % 24000;
+        if (!level.isDay()) status = GCMachineStatuses.NIGHT;
+        double time = level.getDayTime() % 24000;
         if (time > 6000) time = 12000L - time;
         profiler.push("transaction");
         try (Transaction transaction = Transaction.openOuter()) {

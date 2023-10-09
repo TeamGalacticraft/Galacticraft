@@ -43,7 +43,7 @@ public class BasicSolarPanelScreen extends SolarPanelScreen<BasicSolarPanelBlock
 
     @Override
     public void appendEnergyTooltip(List<Component> list) {
-        if (this.menu.configuration.getStatus().type().isActive()) {
+        if (this.menu.state.isActive()) {
             list.add(Component.translatable("ui.galacticraft.machine.gj_per_t", this.menu.getCurrentEnergyGeneration()).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
         }
     }
