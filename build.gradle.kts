@@ -150,12 +150,6 @@ repositories {
             includeGroup("lol.bai")
         }
     }
-    maven("https://maven2.bai.lol") {
-        content {
-            includeGroup("mcp.mobius.waila")
-            includeGroup("lol.bai")
-        }
-    }
     maven("https://maven.blamejared.com/") {
         content {
             includeGroup("mezz.jei")
@@ -319,23 +313,25 @@ fun getVersionDecoration(): String {
     if ((System.getenv("DISABLE_VERSION_DECORATION") ?: "false") == "true") return ""
     if (project.hasProperty("release")) return ""
 
-    var decoration = "+build"
-    if (grgit.head() == null) {
-        decoration += ".unknown"
-    } else {
-        val branch = grgit.branch.current()
-        if (branch != null && branch.name != "main") {
-            decoration += ".${branch.name}"
-        }
-        val commitHashLines = grgit.head().abbreviatedId
-        if (commitHashLines != null && commitHashLines.isNotEmpty()) {
-            decoration += "-${commitHashLines}"
-        }
+    if (project.hasProperty("grgit")) {
+        val grgit = project.property("grgit") as org.ajoberstar.grgit.Grgit?
+        if (grgit?.head() != null) {
+            var decoration = "+build"
+            val branch = grgit.branch?.current()
+            if (branch != null && branch.name != "main") {
+                decoration += ".${branch.name}"
+            }
+            val commitHashLines = grgit.head().abbreviatedId
+            if (commitHashLines != null && commitHashLines.isNotEmpty()) {
+                decoration += "-${commitHashLines}"
+            }
 
-        if (!grgit.status().isClean) {
-            decoration += "-modified"
+            if (!grgit.status().isClean) {
+                decoration += "-modified"
+            }
+            return decoration
         }
     }
-    return decoration
+    return "+build.unknown"
 }
 
