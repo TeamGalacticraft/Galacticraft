@@ -73,6 +73,8 @@ public class Galacticraft implements ModInitializer {
         GCEntityDataSerializers.register();
         GCEntityTypes.register();
         GCLootTables.register();
+        GCEntityMemoryModuleTypes.register();
+        GCEntitySensorTypes.register();
         GCGases.register();
         GCOrePlacedFeatures.register();
         GCPlacedFeatures.register();

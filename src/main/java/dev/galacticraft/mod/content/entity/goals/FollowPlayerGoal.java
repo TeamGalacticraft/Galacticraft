@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.entity.goals;
 
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -33,6 +34,8 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 
+import dev.galacticraft.mod.content.entity.grey.GreyEntity;
+
 public class FollowPlayerGoal extends Goal {
     private final Mob mob;
     private Player followingPlayer;
@@ -42,11 +45,23 @@ public class FollowPlayerGoal extends Goal {
     private int timeToRecalcPath;
     private float oldWaterCost;
 
+    private boolean followInCreative;
+
+
     public FollowPlayerGoal(Mob mob, double areaSize, double speedModifier) {
         this.mob = mob;
         this.navigation = mob.getNavigation();
         this.areaSize = areaSize;
         this.speedModifier = speedModifier;
+        this.followInCreative = true;
+        this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+    }
+    public FollowPlayerGoal(Mob mob, double areaSize, double speedModifier, boolean followInCreative) {
+        this.mob = mob;
+        this.navigation = mob.getNavigation();
+        this.areaSize = areaSize;
+        this.speedModifier = speedModifier;
+        this.followInCreative = followInCreative;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
 
@@ -57,6 +72,12 @@ public class FollowPlayerGoal extends Goal {
             for(Player player : list) {
                 if (!player.isInvisible()) {
                     this.followingPlayer = player;
+                    if (!followInCreative) {
+                        if (player.isCreative() || player.isSpectator()) {
+                            this.followingPlayer = null;
+                            return false;
+                        }
+                    }
                     return true;
                 }
             }

@@ -22,25 +22,34 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.ArchGreyEntityModel;
 import dev.galacticraft.mod.client.model.entity.GreyEntityModel;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import dev.galacticraft.mod.content.entity.ArchGreyEntity;
-import dev.galacticraft.mod.content.entity.GreyEntity;
+import dev.galacticraft.mod.content.entity.grey.GreyEntity;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.*;
+import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.Items;
 
 public class GreyEntityRenderer extends MobRenderer<GreyEntity, EntityModel<GreyEntity>> {
+    private final ItemRenderer itemRenderer;
     public GreyEntityRenderer(EntityRendererProvider.Context context, EntityModel<GreyEntity> model) {
         super(context, model, 0.4f);
+        this.itemRenderer = context.getItemRenderer();
     }
 
     public GreyEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new GreyEntityModel<>(context.bakeLayer(GCEntityModelLayer.GREY)), 0.4f);
+        this.itemRenderer = context.getItemRenderer();
+        this.addLayer(new ItemInHandLayer(this, context.getItemInHandRenderer()));
     }
 
     public static GreyEntityRenderer arch(EntityRendererProvider.Context context) {
@@ -50,5 +59,25 @@ public class GreyEntityRenderer extends MobRenderer<GreyEntity, EntityModel<Grey
     @Override
     public ResourceLocation getTextureLocation(GreyEntity entity) {
         return entity instanceof ArchGreyEntity ? Constant.id(Constant.EntityTexture.ARCH_GREY) : Constant.id(Constant.EntityTexture.GREY);
+    }
+
+    @Override
+    public void render(GreyEntity mob, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i) {
+        super.render(mob, f, g, poseStack, multiBufferSource, i);
+        if (!mob.getHeldItemRaw().isEmpty()) {
+            poseStack.pushPose();
+            poseStack.mulPose(Axis.YN.rotationDegrees(mob.getYRot()));
+            poseStack.translate(-0.6,1.4,-0.05);
+            // FIXME: make the item follow when a grey dies
+            this.itemRenderer.renderStatic(mob.getHeldItemRaw(), ItemDisplayContext.GROUND, i, OverlayTexture.NO_OVERLAY, poseStack, multiBufferSource, mob.level(), mob.getId());
+            poseStack.popPose();
+            poseStack.pushPose();
+            poseStack.mulPose(Axis.YN.rotationDegrees(mob.getYRot()));
+            poseStack.translate(0.035,0.7,-0.06);
+            poseStack.scale(2,2,2);
+            // TODO: actually model a grey neck and render only when holding item
+            this.itemRenderer.renderStatic(Items.CHAIN.getDefaultInstance(), ItemDisplayContext.GROUND, i, OverlayTexture.NO_OVERLAY, poseStack, multiBufferSource, mob.level(), mob.getId());
+            poseStack.popPose();
+        }
     }
 }
