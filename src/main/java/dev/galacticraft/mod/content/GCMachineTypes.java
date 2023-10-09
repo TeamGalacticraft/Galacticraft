@@ -275,15 +275,15 @@ public class GCMachineTypes {
             ),
             MachineItemStorage.of(
                     ItemResourceSlot.builder(InputType.TRANSFER)
-                            .pos(8, 61)
+                            .pos(8, 62)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
                     ItemResourceSlot.builder(InputType.TRANSFER)
-                            .pos(80, 61)
+                            .pos(80, 62)
                             .filter(ResourceFilters.canExtractFluid(GCFluids.FUEL)) // fixme: fuel api?,
             ),
             MachineFluidStorage.of(
                     FluidResourceSlot.builder(InputType.INPUT)
-                            .height(0)
+                            .hidden()
                             .capacity(FluidConstants.BUCKET * 50)
                             .filter(ResourceFilters.ofResource(GCFluids.FUEL)) // fixme: tag?
             )
@@ -458,19 +458,19 @@ public class GCMachineTypes {
                             .pos(8, 7)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
                     ItemResourceSlot.builder(InputType.TRANSFER)
-                            .pos(124, 7)
+                            .pos(123, 7)
                             .filter(ResourceFilters.canExtractFluid(GCFluids.CRUDE_OIL)), // fixme: tag?,
                     ItemResourceSlot.builder(InputType.TRANSFER)
-                            .pos(154, 7)
+                            .pos(153, 7)
                             .filter(ResourceFilters.canInsertFluid(GCFluids.FUEL)) // fixme: tag?
             ),
             MachineFluidStorage.of(
                     FluidResourceSlot.builder(InputType.INPUT)
-                            .pos(122, 28)
+                            .pos(123, 29)
                             .capacity(RefineryBlockEntity.MAX_CAPACITY)
                             .filter(ResourceFilters.ofResource(GCFluids.CRUDE_OIL)),
                     FluidResourceSlot.builder(InputType.RECIPE_OUTPUT)
-                            .pos(152, 28)
+                            .pos(153, 29)
                             .capacity(RefineryBlockEntity.MAX_CAPACITY)
                             .filter(ResourceFilters.ofResource(GCFluids.FUEL))
             )

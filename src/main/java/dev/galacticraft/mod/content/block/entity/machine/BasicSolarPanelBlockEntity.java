@@ -22,108 +22,18 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
-import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.machine.MachineStatus;
-import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.block.entity.SolarPanel;
+import dev.galacticraft.mod.api.block.entity.AbstractSolarPanelBlockEntity;
 import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.machine.GCMachineStatuses;
-import dev.galacticraft.mod.screen.SolarPanelMenu;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements SolarPanel {
-    public static final int CHARGE_SLOT = 0;
-    private final boolean[] blockage = new boolean[9];
-    private int blocked = 0;
-    public long currentEnergyGeneration = 0;
-
+public class BasicSolarPanelBlockEntity extends AbstractSolarPanelBlockEntity {
     public BasicSolarPanelBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.BASIC_SOLAR_PANEL, pos, state);
-    }
-
-    @Override
-    public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        profiler.push("charge");
-        this.drainPowerToStack(CHARGE_SLOT);
-        profiler.pop();
-        this.blocked = 0;
-        for (int x = -1; x < 2; x++) {
-            for (int z = -1; z < 2; z++) {
-                //noinspection AssignmentUsedAsCondition
-                if (this.blockage[(z + 1) * 3 + (x + 1)] = !world.canSeeSky(pos.offset(x, 2, z))) {
-                    this.blocked++;
-                }
-            }
-        }
-    }
-
-    @Override
-    public @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        profiler.push("transfer");
-        this.trySpreadEnergy(level, state);
-        profiler.pop();
-        if (this.blocked == 9) return GCMachineStatuses.BLOCKED;
-        if (this.energyStorage().isFull()) return MachineStatuses.CAPACITOR_FULL;
-        MachineStatus status = null;
-        double multiplier = (9.0 - this.blocked) / 9.0;
-        if (this.blocked > 0) status = GCMachineStatuses.PARTIALLY_BLOCKED;
-        if (level.isRaining() || level.isThundering()) {
-            if (status == null) status = GCMachineStatuses.RAIN;
-            multiplier *= 0.5;
-        }
-        if (!level.isDay()) status = GCMachineStatuses.NIGHT;
-        double time = level.getDayTime() % 24000;
-        if (time > 6000) time = 12000L - time;
-        profiler.push("transaction");
-        try (Transaction transaction = Transaction.openOuter()) {
-            this.energyStorage().insert((long)(Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate() * (time / 6000.0) * multiplier) * 4L, transaction);
-            transaction.commit();
-        }
-        profiler.pop();
-        return status == null ? GCMachineStatuses.COLLECTING : status;
-    }
-
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
-        if (this.getSecurity().hasAccess(player)) {
-            return new SolarPanelMenu<>(
-                    syncId,
-                    ((ServerPlayer) player),
-                    this
-            );
-        }
-        return null;
-    }
-
-    @Override
-    public void writeScreenOpeningData(ServerPlayer player, @NotNull FriendlyByteBuf buf) {
-        super.writeScreenOpeningData(player, buf);
-
-        buf.writeBoolean(this.followsSun());
-        buf.writeBoolean(this.nightCollection());
-        buf.writeByte(this.getSource().ordinal());
-        buf.writeVarLong(this.getCurrentEnergyGeneration());
-    }
-
-    @Override
-    public boolean @NotNull [] getBlockage() {
-        return this.blockage;
     }
 
     @Override
@@ -137,19 +47,9 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements So
     }
 
     @Override
-    public SolarPanelSource getSource() {
-        assert this.level != null;
-        if (this.level.dimensionType().hasCeiling()) return SolarPanelSource.NO_LIGHT_SOURCE;
-        if (this.level.isDay()) {
-            if (this.level.isRaining()) return SolarPanelSource.OVERCAST;
-            return SolarPanelSource.DAY;
-        } else {
-            return SolarPanelSource.NIGHT;
-        }
-    }
-
-    @Override
-    public long getCurrentEnergyGeneration() {
-        return this.currentEnergyGeneration;
+    protected long calculateEnergyProduction(long time, double multiplier) {
+        double cos = Math.cos(this.level.getSunAngle(1.0f));
+        if (cos <= 0) return 0;
+        return (long) (Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate() * cos * multiplier);
     }
 }
