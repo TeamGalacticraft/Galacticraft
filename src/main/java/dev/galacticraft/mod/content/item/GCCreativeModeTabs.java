@@ -32,10 +32,14 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
 import static dev.galacticraft.mod.content.item.GCItems.*;
 
@@ -181,21 +185,19 @@ public class GCCreativeModeTabs {
 
                 //GALACTICRAFT INVENTORY
                 output.accept(PARACHUTE);
-                output.accept(ORANGE_PARACHUTE);
-                output.accept(MAGENTA_PARACHUTE);
-                output.accept(LIGHT_BLUE_PARACHUTE);
-                output.accept(YELLOW_PARACHUTE);
-                output.accept(LIME_PARACHUTE);
-                output.accept(PINK_PARACHUTE);
-                output.accept(GRAY_PARACHUTE);
-                output.accept(LIGHT_GRAY_PARACHUTE);
-                output.accept(CYAN_PARACHUTE);
-                output.accept(PURPLE_PARACHUTE);
-                output.accept(BLUE_PARACHUTE);
-                output.accept(BROWN_PARACHUTE);
-                output.accept(GREEN_PARACHUTE);
-                output.accept(RED_PARACHUTE);
-                output.accept(BLACK_PARACHUTE);
+
+                for (DyeColor color : DyeColor.values()) {
+                    ItemStack stack = new ItemStack(GCBlocks.PARACHEST);
+                    CompoundTag itemTag = new CompoundTag();
+                    CompoundTag blockStateTag;
+
+                    blockStateTag = new CompoundTag();
+                    itemTag.put("BlockStateTag", blockStateTag);
+                    blockStateTag.putString("color", color.getName());
+
+                    stack.setTag(itemTag);
+                    output.accept(stack);
+                }
 
                 output.accept(OXYGEN_MASK);
                 output.accept(OXYGEN_GEAR);

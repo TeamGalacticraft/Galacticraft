@@ -23,24 +23,12 @@
 package dev.galacticraft.mod.content;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.stats.StatFormatter;
+import net.minecraft.stats.Stats;
 
-/**
- * Helper class to make registering things cleaner
- */
-public class GCRegistry<T> {
-    private final Registry<T> registry;
+public class GCStats {
+    public static final ResourceLocation OPEN_PARACHEST = Stats.makeCustomStat(Constant.MOD_ID + ":open_parachest", StatFormatter.DEFAULT);
 
-    public GCRegistry(Registry<T> registry) {
-        this.registry = registry;
-    }
-
-    public <V extends T> V register(String id, V object) {
-        return Registry.register(registry, Constant.id(id), object);
-    }
-
-    public <V extends T> Holder.Reference<V> registerForHolder(String id, V object) {
-        return (Holder.Reference<V>) Registry.registerForHolder(registry, Constant.id(id), object);
-    }
+    public static void register() {}
 }

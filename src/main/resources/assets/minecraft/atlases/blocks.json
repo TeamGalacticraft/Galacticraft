@@ -11,6 +11,11 @@
       "prefix": "slot/"
     },
     {
+      "type": "directory",
+      "source": "model",
+      "prefix": "model/"
+    },
+    {
       "type": "minecraft:single",
       "resource": "galacticraft:model/rocket"
     },

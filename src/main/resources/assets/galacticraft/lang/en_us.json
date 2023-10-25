@@ -377,6 +377,8 @@
   "info.galacticraft.amount.k": "%sK GJ",
   "info.galacticraft.amount.m": "%sM GJ",
   "info.galacticraft.amount.g": "%sG GJ",
+  "block.galacticraft.parachest.description": "Parachests will fall from the sky after landing on certain planets/moons, such as Earth. Contains rocket, fuel, and cargo from previous launch.",
+  "block.galacticraft.parachest": "Parachest",
   "block.galacticraft.coal_generator.description": "Burns coal and charcoal for energy. The simplest but least efficient energy method.",
   "block.galacticraft.compressor.description": "Compressor will process ingots into their compressed equivalents.",
   "block.galacticraft.electric_compressor.description": "Electric Compressor will process ingots into their compressed equivalents. Compresses two at a time, making it more effective than its predecessor.",

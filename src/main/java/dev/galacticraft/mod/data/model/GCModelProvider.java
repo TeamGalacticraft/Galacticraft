@@ -22,6 +22,10 @@
 
 package dev.galacticraft.mod.data.model;
 
+import com.google.gson.JsonPrimitive;
+import dev.galacticraft.mod.content.block.special.ParaChestBlock;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import org.jetbrains.annotations.Contract;
 import com.google.common.collect.Maps;
 import dev.galacticraft.mod.Constant;
@@ -243,6 +247,26 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.AIR_LOCK_FRAME);
         this.createAirLockController(generator);
         generator.createNonTemplateModelBlock(GCBlocks.AIR_LOCK_SEAL);
+
+        var para = MultiPartGenerator.multiPart(GCBlocks.PARACHEST);
+        GCBlocks.PARACHEST.getStateDefinition().getPossibleStates().forEach(state -> {
+            para.with(Condition.condition().term(ParaChestBlock.FACING, state.getValue(ParaChestBlock.FACING))/*.term(ParaChestBlock.COLOR, state.getValue(ParaChestBlock.COLOR))*/, Variant.variant()
+                    .with(VariantProperties.Y_ROT, getRotationFromDirection(state.getValue(ParaChestBlock.FACING)))
+                    .with(VariantProperties.MODEL, new ResourceLocation("galacticraft:block/parachest/parachest")));
+            para.with(Condition.condition().term(ParaChestBlock.COLOR, state.getValue(ParaChestBlock.COLOR)), Variant.variant()
+                    .with(VariantProperties.Y_ROT, getRotationFromDirection(state.getValue(ParaChestBlock.FACING)))
+                    .with(VariantProperties.MODEL, new ResourceLocation("galacticraft:block/parachest/" + state.getValue(ParaChestBlock.COLOR) + "_chute")));
+        });
+        generator.blockStateOutput.accept(para);
+    }
+
+    public static VariantProperties.Rotation getRotationFromDirection(Direction direction) {
+        return switch (direction) {
+            case DOWN, UP, NORTH -> VariantProperties.Rotation.R0;
+            case SOUTH -> VariantProperties.Rotation.R180;
+            case WEST -> VariantProperties.Rotation.R270;
+            case EAST -> VariantProperties.Rotation.R90;
+        };
     }
 
     private void createMoonTurf(BlockModelGenerators generator) {

@@ -93,6 +93,7 @@ public class Galacticraft implements ModInitializer {
         GCMachineStatuses.register();
         GCBannerPatterns.register();
         GCTeleporterTypes.register();
+        GCStats.register();
         GCEventHandlers.init();
         Constant.LOGGER.info("Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

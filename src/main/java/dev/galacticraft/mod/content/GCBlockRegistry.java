@@ -22,25 +22,21 @@
 
 package dev.galacticraft.mod.content;
 
-import dev.galacticraft.mod.Constant;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 
-/**
- * Helper class to make registering things cleaner
- */
-public class GCRegistry<T> {
-    private final Registry<T> registry;
+public class GCBlockRegistry extends GCRegistry<Block> {
+    private final GCRegistry<Item> ITEMS = new GCRegistry<>(BuiltInRegistries.ITEM);
 
-    public GCRegistry(Registry<T> registry) {
-        this.registry = registry;
+    public GCBlockRegistry() {
+        super(BuiltInRegistries.BLOCK);
     }
 
-    public <V extends T> V register(String id, V object) {
-        return Registry.register(registry, Constant.id(id), object);
-    }
-
-    public <V extends T> Holder.Reference<V> registerForHolder(String id, V object) {
-        return (Holder.Reference<V>) Registry.registerForHolder(registry, Constant.id(id), object);
+    public <T extends Block> T registerWithItem(String id, T val) {
+        register(id, val);
+        ITEMS.register(id, new BlockItem(val, new Item.Properties()));
+        return val;
     }
 }

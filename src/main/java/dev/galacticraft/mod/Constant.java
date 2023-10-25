@@ -746,6 +746,7 @@ public interface Constant {
         String AIR_LOCK_CONTROLLER_MENU = "air_lock_menu";
         String ROCKET_WORKBENCH_MENU = "rocket_workbench_menu";
         String ROCKET = "rocket";
+        String PARACHEST = "parachest";
     }
 
     interface LootTable {

@@ -62,6 +62,8 @@ import java.util.function.ToIntFunction;
  */
 @SuppressWarnings("unused")
 public class GCBlocks {
+    public static final GCBlockRegistry BLOCKS = new GCBlockRegistry();
+
     // TORCHES
     // These 2 torches are special, it's need to register early so others can use dropsLike() reference
     public static final Block GLOWSTONE_TORCH = register(Constant.Block.GLOWSTONE_TORCH, new GlowstoneTorchBlock(BlockBehaviour.Properties.of().noCollission().instabreak().lightLevel(blockStatex -> 14).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY)));
@@ -74,13 +76,13 @@ public class GCBlocks {
     public static final Block UNLIT_LANTERN = new UnlitLanternBlock(BlockBehaviour.Properties.copy(Blocks.LANTERN).lightLevel(state -> 0));
 
     // FLUIDS
-    public static final LiquidBlock CRUDE_OIL = new CrudeOilBlock(GCFluids.CRUDE_OIL, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK)
+    public static final LiquidBlock CRUDE_OIL = BLOCKS.register(Constant.Block.CRUDE_OIL, new CrudeOilBlock(GCFluids.CRUDE_OIL, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK)
             .noCollission().pushReaction(PushReaction.DESTROY).ignitedByLava().replaceable().liquid()
-            .strength(100.0F, 1000.0F).noLootTable());
+            .strength(100.0F, 1000.0F).noLootTable()));
 
-    public static final LiquidBlock FUEL = new LiquidBlock(GCFluids.FUEL, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW)
+    public static final LiquidBlock FUEL = BLOCKS.register(Constant.Block.FUEL, new LiquidBlock(GCFluids.FUEL, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW)
             .noCollission().pushReaction(PushReaction.DESTROY).ignitedByLava().replaceable().liquid()
-            .strength(50.0F, 50.0F).noLootTable());
+            .strength(50.0F, 50.0F).noLootTable()));
 
     // DECORATION BLOCKS
     public static final Block ALUMINUM_DECORATION = new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F));
@@ -247,7 +249,8 @@ public class GCBlocks {
     public static final Block HEAVY_SEALABLE_ALUMINUM_WIRE = new HeavySealableAluminumWireBlock(BlockBehaviour.Properties.copy(TIN_DECORATION));
     public static final Block GLASS_FLUID_PIPE = new GlassFluidPipeBlock(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).sound(SoundType.GLASS));
     public static final Block ROCKET_LAUNCH_PAD = new RocketLaunchPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F));
-    public static final Block ROCKET_WORKBENCH = new RocketWorkbench(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F));
+    public static final Block ROCKET_WORKBENCH = BLOCKS.register(Constant.Block.ROCKET_WORKBENCH, new RocketWorkbench(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F)));
+    public static final Block PARACHEST = BLOCKS.registerWithItem(Constant.Block.PARACHEST, new ParaChestBlock(BlockBehaviour.Properties.of()));
 
     // LIGHT PANELS
     public static final Block SQUARE_LIGHT_PANEL = new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL));
@@ -365,10 +368,6 @@ public class GCBlocks {
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.UNLIT_WALL_TORCH), UNLIT_WALL_TORCH);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GLOWSTONE_LANTERN), GLOWSTONE_LANTERN);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.UNLIT_LANTERN), UNLIT_LANTERN);
-
-        // FLUIDS
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.CRUDE_OIL), CRUDE_OIL);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.FUEL), FUEL);
 
         // DECORATION BLOCKS
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ALUMINUM_DECORATION), ALUMINUM_DECORATION);
@@ -535,7 +534,6 @@ public class GCBlocks {
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE), HEAVY_SEALABLE_ALUMINUM_WIRE);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GLASS_FLUID_PIPE), GLASS_FLUID_PIPE);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ROCKET_LAUNCH_PAD), ROCKET_LAUNCH_PAD);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ROCKET_WORKBENCH), ROCKET_WORKBENCH);
 
         // LIGHT PANELS
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.SQUARE_LIGHT_PANEL), SQUARE_LIGHT_PANEL);

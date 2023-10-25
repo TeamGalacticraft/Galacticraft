@@ -69,13 +69,14 @@ public class GCMenuTypes {
     public static final MenuType<MachineMenu<OxygenStorageModuleBlockEntity>> OXYGEN_STORAGE_MODULE = MachineMenu.createSimple(() -> GCMachineTypes.OXYGEN_STORAGE_MODULE);
     public static final MenuType<MachineMenu<EnergyStorageModuleBlockEntity>> ENERGY_STORAGE_MODULE = MachineMenu.createSimple(() -> GCMachineTypes.ENERGY_STORAGE_MODULE);
 
-    public static final MenuType<GCPlayerInventoryMenu> PLAYER_INV_GC = new MenuType<>(GCPlayerInventoryMenu::new, FeatureFlagSet.of(FeatureFlags.VANILLA));
+    public static final MenuType<GCPlayerInventoryMenu> PLAYER_INV_GC = new MenuType<>(GCPlayerInventoryMenu::new, FeatureFlags.VANILLA_SET);
 
     public static final ExtendedScreenHandlerType<FuelLoaderMenu> FUEL_LOADER = new ExtendedScreenHandlerType<>(FuelLoaderMenu::new);
 
-    public static final MenuType<AirlockControllerMenu> AIRLOCK_CONTROLLER_MENU = new MenuType<>(AirlockControllerMenu::new, FeatureFlagSet.of(FeatureFlags.VANILLA));
+    public static final MenuType<AirlockControllerMenu> AIRLOCK_CONTROLLER_MENU = new MenuType<>(AirlockControllerMenu::new, FeatureFlags.VANILLA_SET);
     public static final MenuType<RocketWorkbenchMenu> ROCKET_WORKBENCH = new ExtendedScreenHandlerType<>(RocketWorkbenchMenu::new);
     public static final ExtendedScreenHandlerType<RocketMenu> ROCKET = new ExtendedScreenHandlerType<>(RocketMenu::new);
+    public static final MenuType<ParachestMenu> PARACHEST = new ExtendedScreenHandlerType<>(ParachestMenu::new);
 
     public static void register() {
         Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.PLAYER_INVENTORY_MENU), PLAYER_INV_GC);
@@ -105,5 +106,6 @@ public class GCMenuTypes {
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.AIR_LOCK_CONTROLLER_MENU), AIRLOCK_CONTROLLER_MENU);
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.ROCKET_WORKBENCH_MENU), ROCKET_WORKBENCH);
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.ROCKET), ROCKET);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.PARACHEST), PARACHEST);
     }
 }

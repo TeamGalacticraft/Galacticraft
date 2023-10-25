@@ -320,6 +320,8 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.ROCKET_WORKBENCH);
 
         this.add(GCBlocks.AIR_LOCK_SEAL, noDrop());
+
+        dropSelf(GCBlocks.PARACHEST);
     }
 
     private LootTable.Builder createRocketLaunchPadTable(Block block) {
