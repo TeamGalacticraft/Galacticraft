@@ -23,33 +23,34 @@
 import java.time.format.DateTimeFormatter
 
 // Minecraft, Mappings, Loader Versions
-val minecraftVersion       = project.property("minecraft.version").toString()
-val loaderVersion          = project.property("loader.version").toString()
+val minecraftVersion         = project.property("minecraft.version").toString()
+val loaderVersion            = project.property("loader.version").toString()
+val parchmentVersion         = project.property("parchment.version").toString()
 
 // Mod Info
-val modVersion             = project.property("mod.version").toString()
-val modName                = project.property("mod.name").toString()
-val modGroup               = project.property("mod.group").toString()
+val modVersion               = project.property("mod.version").toString()
+val modName                  = project.property("mod.name").toString()
+val modGroup                 = project.property("mod.group").toString()
 
 // Dependency Versions
-val fabricVersion          = project.property("fabric.version").toString()
-val clothConfigVersion     = project.property("cloth.config.version").toString()
-val modMenuVersion         = project.property("modmenu.version").toString()
+val fabricVersion            = project.property("fabric.version").toString()
+val clothConfigVersion       = project.property("cloth.config.version").toString()
+val modMenuVersion           = project.property("modmenu.version").toString()
 val dynamicdimensionsVersion = project.property("dynamicdimensions.version").toString()
-val machineLibVersion      = project.property("machinelib.version").toString()
-val reiVersion             = project.property("rei.version").toString()
-val jeiVersion             = project.property("jei.version").toString()
-val badpacketsVersion      = project.property("badpackets.version").toString()
-val wthitVersion           = project.property("wthit.version").toString()
-val portingLibVersion      = project.property("porting.lib.version").toString()
-val runtimeOptional        = project.property("optional_dependencies.enabled").toString().toBoolean() && System.getenv("CI") == null
+val machineLibVersion        = project.property("machinelib.version").toString()
+val reiVersion               = project.property("rei.version").toString()
+val jeiVersion               = project.property("jei.version").toString()
+val badpacketsVersion        = project.property("badpackets.version").toString()
+val wthitVersion             = project.property("wthit.version").toString()
+val portingLibVersion        = project.property("porting.lib.version").toString()
+val runtimeOptional          = project.property("optional_dependencies.enabled").toString().toBoolean() && System.getenv("CI") == null
 
 plugins {
     java
     `maven-publish`
     id("fabric-loom") version("1.4-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
-    id("org.ajoberstar.grgit") version("5.2.0")
+    id("org.ajoberstar.grgit") version("5.2.1")
 }
 
 java {
@@ -155,12 +156,22 @@ repositories {
             includeGroup("mezz.jei")
         }
     }
+    maven("https://maven.parchmentmc.org") {
+        content {
+            includeGroup("org.parchmentmc.data")
+        }
+    }
 }
 
 dependencies {
     // Minecraft, Mappings, Loader
     minecraft("com.mojang:minecraft:$minecraftVersion")
-    mappings(loom.officialMojangMappings())
+    mappings(loom.layered {
+        officialMojangMappings()
+        if (!parchmentVersion.isEmpty()) {
+            parchment("org.parchmentmc.data:parchment-$minecraftVersion:$parchmentVersion@zip")
+        }
+    })
     modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
 
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")

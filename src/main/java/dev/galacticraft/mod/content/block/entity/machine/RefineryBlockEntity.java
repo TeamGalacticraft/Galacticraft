@@ -27,16 +27,12 @@ import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
-import dev.galacticraft.machinelib.api.util.GenericApiUtil;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -71,14 +67,8 @@ public class RefineryBlockEntity extends MachineBlockEntity { //fixme
         super.tickConstant(world, pos, state, profiler);
         this.chargeFromStack(CHARGE_SLOT);
 
-        Storage<FluidVariant> storage = this.itemStorage().getSlot(OIL_INPUT_SLOT).find(FluidStorage.ITEM);
-        if (storage != null && storage.supportsExtraction()) {
-            GenericApiUtil.move(FluidVariant.of(GCFluids.CRUDE_OIL), storage, this.fluidStorage().getSlot(OIL_TANK), FluidConstants.BUCKET * 64, null);
-        }
-        storage = this.itemStorage().getSlot(FUEL_OUTPUT_SLOT).find(FluidStorage.ITEM);
-        if (storage != null && storage.supportsInsertion()) {
-            GenericApiUtil.move(FluidVariant.of(GCFluids.FUEL), this.fluidStorage().getSlot(FUEL_TANK), storage, FluidConstants.BUCKET * 64, null);
-        }
+        this.takeFluidFromStack(OIL_INPUT_SLOT, OIL_TANK, GCFluids.CRUDE_OIL);
+        this.insertFluidToStack(FUEL_OUTPUT_SLOT, FUEL_TANK, GCFluids.FUEL);
     }
 
     @Override

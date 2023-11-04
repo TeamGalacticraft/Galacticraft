@@ -27,7 +27,7 @@ import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
-import dev.galacticraft.machinelib.api.util.GenericApiUtil;
+import dev.galacticraft.machinelib.api.util.StorageHelper;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
@@ -35,6 +35,7 @@ import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -72,12 +73,12 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
         Storage<FluidVariant> tank = this.itemStorage().getSlot(OXYGEN_INPUT_SLOT).find(FluidStorage.ITEM);
         profiler.pop();
         if (tank == null) return GCMachineStatuses.MISSING_OXYGEN_TANK;
-        if (tank.simulateExtract(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null) == 0) return GCMachineStatuses.EMPTY_OXYGEN_TANK;
+        if (StorageUtil.simulateExtract(tank, FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null) == 0) return GCMachineStatuses.EMPTY_OXYGEN_TANK;
         profiler.push("transaction");
 
         try {
             if (this.energyStorage().extractExact(Galacticraft.CONFIG_MANAGER.get().oxygenDecompressorEnergyConsumptionRate())) {
-                GenericApiUtil.move(FluidVariant.of(Gases.OXYGEN), tank, this.fluidStorage().getSlot(OXYGEN_TANK), Long.MAX_VALUE, null);
+                StorageHelper.move(FluidVariant.of(Gases.OXYGEN), tank, this.fluidStorage().getSlot(OXYGEN_TANK), Long.MAX_VALUE, null);
                 return GCMachineStatuses.DECOMPRESSING;
             } else {
                 return MachineStatuses.NOT_ENOUGH_ENERGY;
