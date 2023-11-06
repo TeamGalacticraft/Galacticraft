@@ -43,11 +43,6 @@ public final class InvalidRocketBodyType extends RocketBodyType<DefaultRocketBod
     }
 
     @Override
-    public int getUpgradeCapacity(@NotNull DefaultRocketBodyConfig config) {
-        return 0;
-    }
-
-    @Override
     public void tick(@NotNull Rocket rocket, @NotNull DefaultRocketBodyConfig config) {
     }
 

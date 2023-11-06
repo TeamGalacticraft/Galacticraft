@@ -35,7 +35,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -45,13 +44,16 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Mixin(AbstractClientPlayer.class)
 public abstract class AbstractClientPlayerEntityMixin implements ClientResearchAccessor, GearInventoryProvider {
-    @Unique private final List<ResourceLocation> unlockedResearch = new ArrayList<>();
     @Shadow @Final public ClientLevel clientLevel;
+
+    @Shadow public abstract boolean isCreative();
+
+    @Unique private final Set<ResourceLocation> unlockedResearch = new HashSet<>();
 
     private final @Unique SimpleContainer gearInv = galacticraft_createGearInventory();
     private final @Unique Container tankInv = MappedInventory.create(this.gearInv, 4, 5);
@@ -83,21 +85,20 @@ public abstract class AbstractClientPlayerEntityMixin implements ClientResearchA
     }
 
     @Override
-    public void readChanges(FriendlyByteBuf buf) {
-        byte size = buf.readByte();
-
-        for (byte i = 0; i < size; i++) {
-            if (buf.readBoolean()) {
-                this.unlockedResearch.add(new ResourceLocation(buf.readUtf()));
-            } else {
-                this.unlockedResearch.remove(new ResourceLocation(buf.readUtf()));
-            }
-        }
+    public boolean galacticraft$isUnlocked(ResourceLocation id) {
+        if (this.isCreative()) return true;
+        return this.unlockedResearch.contains(id);
     }
 
     @Override
-    public boolean hasUnlockedResearch(ResourceLocation id) {
-        return this.unlockedResearch.contains(id);
+    public void galacticraft$updateResearch(boolean add, ResourceLocation[] ids) {
+        for (ResourceLocation id : ids) {
+            if (add) {
+                this.unlockedResearch.add(id);
+            } else {
+                this.unlockedResearch.remove(id);
+            }
+        }
     }
 
     @Override

@@ -72,7 +72,7 @@ public class VariableSizedContainer implements Container {
                     this.stacks.add(ItemStack.EMPTY);
                 }
             }
-            this.listener.run();
+            if (this.listener != null) this.listener.run();
         }
     }
 

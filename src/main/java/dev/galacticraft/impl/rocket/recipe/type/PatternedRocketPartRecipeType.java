@@ -26,7 +26,7 @@ import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipeSlot;
 import dev.galacticraft.api.rocket.recipe.type.RocketPartRecipeType;
 import dev.galacticraft.impl.rocket.recipe.config.PatternedRocketPartRecipeConfig;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.Holder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -54,7 +54,7 @@ public class PatternedRocketPartRecipeType extends RocketPartRecipeType<Patterne
     }
 
     @Override
-    public @NotNull ResourceKey<? extends RocketPart<?, ?>> output(PatternedRocketPartRecipeConfig config) {
+    public Holder.@NotNull Reference<? extends RocketPart<?, ?>> output(PatternedRocketPartRecipeConfig config) {
         return config.output();
     }
 }

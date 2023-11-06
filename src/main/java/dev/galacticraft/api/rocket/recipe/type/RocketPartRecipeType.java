@@ -24,10 +24,11 @@ package dev.galacticraft.api.rocket.recipe.type;
 
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.api.rocket.part.RocketPartTypes;
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipeSlot;
 import dev.galacticraft.api.rocket.recipe.config.RocketPartRecipeConfig;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.Holder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -50,5 +51,9 @@ public abstract class RocketPartRecipeType<C extends RocketPartRecipeConfig> {
     public abstract int width(C config);
     public abstract int height(C config);
     public abstract @NotNull List<RocketPartRecipeSlot> slots(C config);
-    public abstract @NotNull ResourceKey<? extends RocketPart<?, ?>> output(C config);
+    public abstract @NotNull Holder.Reference<? extends RocketPart<?, ?>> output(C config);
+
+    public RocketPartTypes partType(C config) {
+        return RocketPartTypes.fromPart(this.output(config).key());
+    }
 }

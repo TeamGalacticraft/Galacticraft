@@ -53,14 +53,4 @@ public non-sealed interface RocketBody<C extends RocketBodyConfig, T extends Roc
     default int getMaxPassengers() {
         return this.type().getMaxPassengers(this.config());
     }
-
-    /**
-     * Returns the maximum number of upgrades that can be installed on this rocket.
-     *
-     * @return the maximum number of upgrades that can be installed on this rocket.
-     */
-    @Contract(pure = true)
-    default int getUpgradeCapacity() {
-        return this.type().getUpgradeCapacity(this.config());
-    }
 }

@@ -25,11 +25,5 @@ package dev.galacticraft.api.accessor;
 import net.minecraft.resources.ResourceLocation;
 
 public interface ResearchAccessor {
-    /**
-     * Returns whether the supplied rocket part is unlocked for the player
-     *
-     * @param id The ID of the rocket part to test for
-     * @return whether the supplied rocket part is unlocked for the player
-     */
-    boolean hasUnlockedResearch(ResourceLocation id);
+    boolean galacticraft$isUnlocked(ResourceLocation id);
 }

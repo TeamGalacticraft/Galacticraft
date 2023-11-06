@@ -42,11 +42,6 @@ public final class BasicRocketBodyType extends RocketBodyType<BasicRocketBodyCon
     }
 
     @Override
-    public int getUpgradeCapacity(@NotNull BasicRocketBodyConfig config) {
-        return config.upgradeCapacity();
-    }
-
-    @Override
     public void tick(@NotNull Rocket rocket, @NotNull BasicRocketBodyConfig config) {
     }
 

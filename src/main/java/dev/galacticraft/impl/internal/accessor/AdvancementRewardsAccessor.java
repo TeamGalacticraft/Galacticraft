@@ -27,5 +27,5 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface AdvancementRewardsAccessor {
-    void setRocketPartRewards(@NotNull ResourceLocation @Nullable [] parts);
+    void setRocketPartRecipeRewards(@NotNull ResourceLocation @Nullable [] recipes);
 }

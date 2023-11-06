@@ -54,11 +54,4 @@ public non-sealed abstract class RocketBodyType<C extends RocketBodyConfig> impl
      */
     @Contract(pure = true)
     public abstract int getMaxPassengers(@NotNull C config);
-
-    /**
-     * Returns the maximum number of upgrades that can be installed on this rocket.
-     * @return the maximum number of upgrades that can be installed on this rocket.
-     */
-    @Contract(pure = true)
-    public abstract int getUpgradeCapacity(@NotNull C config);
 }
