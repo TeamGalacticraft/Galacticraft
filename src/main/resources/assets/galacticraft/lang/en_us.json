@@ -644,6 +644,14 @@
   "ui.galacticraft.gases.nitrous_dioxide": "Nitrous Dioxide",
   "ui.galacticraft.gases.iodine": "Iodine",
 
+  "ui.galacticraft.cone": "Cone",
+  "ui.galacticraft.body": "Body",
+  "ui.galacticraft.fins": "Fins",
+  "ui.galacticraft.booster": "Booster",
+  "ui.galacticraft.engine": "Engine",
+  "ui.galacticraft.upgrade": "Upgrade",
+  "ui.galacticraft.color": "Color",
+
   "command.galacticraft.debug.registry.dump": "Dumped: %s",
   "command.galacticraft.debug.registry.id": "%s - %s: %s"
 }

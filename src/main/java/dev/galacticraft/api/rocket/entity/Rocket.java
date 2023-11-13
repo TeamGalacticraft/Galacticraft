@@ -56,7 +56,7 @@ public interface Rocket extends RocketData {
 
     RocketBottom<?, ?> getBottom();
 
-    RocketUpgrade<?, ?>[] getUpgrades();
+    RocketUpgrade<?, ?> getUpgrade();
 
     @NotNull BlockPos getLinkedPad();
 

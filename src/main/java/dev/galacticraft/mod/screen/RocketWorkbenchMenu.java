@@ -30,6 +30,8 @@ import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity.RecipeSelection;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -43,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RocketWorkbenchMenu extends AbstractContainerMenu {
-    public static final int SPACING = 4;
+    public static final int SPACING = 2;
 
     public static final int SCREEN_CENTER_BASE_X = 88;
     public static final int SCREEN_CENTER_BASE_Y = 144;
@@ -65,6 +67,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu {
     public int additionalHeight = 0;
 
     public final Inventory playerInventory;
+    public final Registry<RocketPartRecipe<?, ?>> recipeRegistry;
 
     public RocketWorkbenchMenu(int syncId, RocketWorkbenchBlockEntity workbench, Inventory playerInventory) {
         super(GCMenuTypes.ROCKET_WORKBENCH, syncId);
@@ -77,7 +80,10 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu {
         List<RocketPartRecipe<?, ?>> bottoms = new ArrayList<>();
         List<RocketPartRecipe<?, ?>> upgrades = new ArrayList<>();
 
-        for (Holder<RocketPartRecipe<?, ?>> recipe : playerInventory.player.level().registryAccess().registryOrThrow(RocketRegistries.ROCKET_PART_RECIPE).asHolderIdMap()) {
+        RegistryAccess registryAccess = playerInventory.player.level().registryAccess();
+        this.recipeRegistry = registryAccess.registryOrThrow(RocketRegistries.ROCKET_PART_RECIPE);
+
+        for (Holder<RocketPartRecipe<?, ?>> recipe : recipeRegistry.asHolderIdMap()) {
             if (recipe.unwrapKey().map(e -> ((ResearchAccessor) playerInventory.player).galacticraft$isUnlocked(e.location())).orElse(false)) {
                 switch (recipe.value().partType()) {
                     case CONE -> cones.add(recipe.value());

@@ -35,7 +35,7 @@ public final class ConstantTravelPredicateType extends TravelPredicateType<Const
     }
 
     @Override
-    public Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, RocketCone<?, ?> cone, RocketBody<?, ?> body, RocketFin<?, ?> fin, RocketBooster<?, ?> booster, RocketBottom<?, ?> bottom, RocketUpgrade<?, ?>[] upgrades, ConstantTravelPredicateConfig config) {
+    public Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, RocketCone<?, ?> cone, RocketBody<?, ?> body, RocketFin<?, ?> fin, RocketBooster<?, ?> booster, RocketBottom<?, ?> bottom, RocketUpgrade<?, ?> upgrade, ConstantTravelPredicateConfig config) {
         return config.type();
     }
 }

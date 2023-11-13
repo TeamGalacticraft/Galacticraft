@@ -24,20 +24,27 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
+import dev.galacticraft.api.entity.rocket.render.RocketPartRenderer;
+import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
+import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartTypes;
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
-import dev.galacticraft.api.rocket.recipe.RocketPartRecipeSlot;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.gui.BatchedRenderer;
+import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +117,6 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
     protected void init() {
         this.imageWidth = BASE_UI_WIDTH;
         this.imageHeight = BASE_UI_HEIGHT + CAP_HEIGHT + this.menu.additionalHeight;
-        this.inventoryLabelY = this.imageHeight - 96;
         super.init();
     }
 
@@ -121,7 +127,9 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
 
     @Override
     protected void renderBg(GuiGraphics graphics, float delta, int mouseX, int mouseY) {
-        drawSelection(graphics, mouseX, mouseY);
+        this.inventoryLabelY = this.imageHeight - 96 + this.menu.additionalHeight;
+
+        drawSelection(graphics, mouseX, mouseY, delta);
 
         try (BatchedRenderer render = new BatchedRenderer(Tesselator.getInstance().getBuilder(), graphics.pose(), Constant.ScreenTexture.ROCKET_WORKBENCH_SCREEN, 512, 256)) {
             render.blit(this.leftPos, this.topPos + this.menu.additionalHeight + CAP_HEIGHT, 0, 0, BASE_UI_WIDTH, BASE_UI_HEIGHT);
@@ -134,7 +142,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
 
             for (Slot slot : this.menu.slots) {
                 if (slot.container instanceof VariableSizedContainer) {
-                    batchNormalSlot(render, slot.x - 1, slot.y - 1);
+                    render.blit(this.leftPos + slot.x - 1, this.topPos + slot.y - 1, NORMAL_SLOT_U, NORMAL_SLOT_V, NORMAL_SLOT_SIZE, NORMAL_SLOT_SIZE);
                 }
             }
         }
@@ -220,8 +228,13 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
                 for (int x = 0; x < 5; x++) {
                     if (mouseIn(mouseX, mouseY, 11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, RECIPE_WIDTH, RECIPE_HEIGHT)) {
                         if (i < this.recipes.size()) {
-                            this.getSelection().setSelection(this.recipes.get(i));
-                            return true;
+                            if (button == GLFW.GLFW_MOUSE_BUTTON_1) {
+                                this.getSelection().setSelection(this.recipes.get(i));
+                                return true;
+                            } else if (button == GLFW.GLFW_MOUSE_BUTTON_2) {
+                                //todo
+                                return true;
+                            }
                         }
                     }
                     ++i;
@@ -240,7 +253,8 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
 
         if (openTab != Tab.COLOR) {
             RocketWorkbenchMenu.RecipeCollection recipes = getRecipes();
-            List<RocketPartRecipe<?, ?>> joined = new ArrayList<>(recipes.getCraftable().size() + recipes.getUncraftable().size());
+            List<RocketPartRecipe<?, ?>> joined = new ArrayList<>(recipes.getCraftable().size() + recipes.getUncraftable().size() + 1);
+            joined.add(null);
             joined.addAll(recipes.getCraftable());
             joined.addAll(recipes.getUncraftable()); //fixme
             this.recipes = joined;
@@ -249,13 +263,14 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
         }
     }
 
-    private void drawSelection(GuiGraphics graphics, int mouseX, int mouseY) {
+    private void drawSelection(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         PoseStack pose = graphics.pose();
         pose.pushPose();
         pose.translate(this.leftPos - SELECTION_SCREEN_WIDTH - SCREEN_SPACING, this.topPos, 0);
         mouseX -= this.leftPos - SELECTION_SCREEN_WIDTH - SCREEN_SPACING;
         mouseY -= this.topPos;
 
+        int size = this.recipes != null ? this.recipes.size() : 0;
         try (BatchedRenderer render = new BatchedRenderer(Tesselator.getInstance().getBuilder(), pose, Constant.ScreenTexture.ROCKET_SELECTION, 256, 256)) {
             render.blit(0, 0, 0, 0, SELECTION_SCREEN_WIDTH, SELECTION_SCREEN_HEIGHT);
 
@@ -273,18 +288,14 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
 
             if (this.openTab != Tab.COLOR) {
                 assert this.recipes != null;
-//                int u = this.showAll ? FILTER_ALL_U : FILTER_KNOWN_U;
-//                int v = mouseIn(mouseX, mouseY, 110, 10, FILTER_WIDTH, FILTER_HEIGHT) ? FILTER_V_HOVER : FILTER_V;
-//                render.blit(110, 10, u, v, FILTER_WIDTH, FILTER_HEIGHT);
-
-                final int pages = Math.floorDiv(this.recipes.size(), 35) + this.recipes.size() % 35 == 0 ? 0 : 1;
+                final int pages = Math.floorDiv(size, 35) + size % 35 == 0 ? 0 : 1;
 
                 if (this.page >= pages) {
                     this.page = 0;
                 }
                 int i = this.page * 5 * 7;
-                for (int y = 0; y < 7 && i < this.recipes.size(); y++) {
-                    for (int x = 0; x < 5 && i < this.recipes.size(); x++) {
+                for (int y = 0; y < 7 && i < size; y++) {
+                    for (int x = 0; x < 5 && i < size; x++) {
                         RocketPartRecipe<?, ?> recipe = this.recipes.get(i);
                         render.blit(11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, isKnown(recipe) ? RECIPE_KNOWN_U : RECIPE_UNKNOWN_U, RECIPE_V, RECIPE_WIDTH, RECIPE_HEIGHT);
                         if (recipe != null && mouseIn(mouseX, mouseY, 11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, RECIPE_WIDTH, RECIPE_HEIGHT)) {
@@ -297,39 +308,41 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
                 //todo color
             }
         }
-        //todo: draw partS
+
+        {
+            int y = 8;
+            for (Tab tab : Tab.values()) {
+                if (tab == Tab.COLOR) {
+                    graphics.renderFakeItem(new ItemStack(Items.RED_DYE), -TAB_WIDTH + 8, y);
+                } else {
+                    RocketPartRendererRegistry.INSTANCE.getRenderer(tab.part).renderGUI(graphics, -TAB_WIDTH + 8, y, mouseX, mouseY, delta);
+                }
+                y += TAB_SPACING + TAB_HEIGHT;
+            }
+        }
+        if (this.openTab != Tab.COLOR) {
+            assert this.recipes != null;
+
+            int i = this.page * 5 * 7;
+            for (int y = 0; y < 7 && i < size; y++) {
+                for (int x = 0; x < 5 && i < size; x++) {
+                    RocketPartRecipe<?, ?> recipe = this.recipes.get(i);
+                    if (recipe != null) {
+                        RocketPartRenderer renderer = RocketPartRendererRegistry.INSTANCE.getRenderer(recipe.output().key());
+                        renderer.renderGUI(graphics, 11 + x * RECIPE_WIDTH + 4, 29 + y * RECIPE_HEIGHT + 4, mouseX, mouseY, delta);
+                    }
+                    i++;
+                }
+            }
+        } else {
+            
+        }
+        graphics.drawString(this.font, this.openTab.name, 12, 14, 0xEEEEEE, true);
         pose.popPose();
     }
 
     private boolean isKnown(RocketPartRecipe<?, ?> recipe) {
         return true;
-    }
-
-    private void batchUpgradeSlot(BatchedRenderer renderer, int x, int y) {
-        renderer.blit(this.leftPos + x, this.topPos + y, BLUE_SLOT_U, BLUE_SLOT_V, COLOURED_SLOT_SIZE, COLOURED_SLOT_SIZE);
-    }
-
-    private void mirrored(BatchedRenderer renderer, RocketPartRecipe<?, ?> recipe, VariableSizedContainer container, int leftEdge, int rightSide, int bottomEdge) {
-        List<RocketPartRecipeSlot> slots = recipe.slots();
-        for (RocketPartRecipeSlot slot : slots) { //fixme add mirrored property to slot
-            int x = slot.x() > 0 ? slot.x() + 1 : slot.x() - 1;
-            if (x < 0) {
-                batchNormalSlot(renderer, leftEdge - x - 18 - RocketWorkbenchMenu.SPACING - 1, bottomEdge - recipe.height() + slot.y() - 1);
-            } else {
-                batchNormalSlot(renderer, rightSide + x + RocketWorkbenchMenu.SPACING - 1, bottomEdge - recipe.height() + slot.y() - 1);
-            }
-        }
-    }
-
-    private void centered(BatchedRenderer renderer, RocketPartRecipe<?, ?> recipe, VariableSizedContainer container, int leftSide, int bottomEdge) {
-        List<RocketPartRecipeSlot> slots = recipe.slots();
-        for (RocketPartRecipeSlot slot : slots) {
-            batchNormalSlot(renderer, slot.x() + leftSide - 1, bottomEdge - recipe.height() + slot.y() - 1);
-        }
-    }
-
-    private void batchNormalSlot(BatchedRenderer renderer, int x, int y) {
-        renderer.blit(this.leftPos + x, this.topPos + y, NORMAL_SLOT_U, NORMAL_SLOT_V, NORMAL_SLOT_SIZE, NORMAL_SLOT_SIZE);
     }
 
     private static boolean mouseIn(double mouseX, double mouseY, int x, int y, int width, int height) {
@@ -359,18 +372,22 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
     }
 
     private enum Tab {
-        CONE(RocketPartTypes.CONE),
-        BODY(RocketPartTypes.BODY),
-        FINS(RocketPartTypes.FIN),
-        BOOSTER(RocketPartTypes.BOOSTER),
-        BOTTOM(RocketPartTypes.BOTTOM),
-        UPGRADE(RocketPartTypes.UPGRADE),
-        COLOR(null);
+        CONE(RocketPartTypes.CONE, GCRocketParts.TIER_1_CONE, Component.translatable("ui.galacticraft.cone")),
+        BODY(RocketPartTypes.BODY, GCRocketParts.TIER_1_BODY, Component.translatable("ui.galacticraft.body")),
+        FINS(RocketPartTypes.FIN, GCRocketParts.TIER_1_FIN, Component.translatable("ui.galacticraft.fins")),
+        BOOSTER(RocketPartTypes.BOOSTER, GCRocketParts.TIER_1_BOOSTER, Component.translatable("ui.galacticraft.booster")),
+        BOTTOM(RocketPartTypes.BOTTOM, GCRocketParts.TIER_1_BOTTOM, Component.translatable("ui.galacticraft.engine")),
+        UPGRADE(RocketPartTypes.UPGRADE, GCRocketParts.STORAGE_UPGRADE, Component.translatable("ui.galacticraft.upgrade")),
+        COLOR(null, null, Component.translatable("ui.galacticraft.color"));
 
         private final RocketPartTypes type;
+        private final ResourceKey<? extends RocketPart<?, ?>> part;
+        private final Component name;
 
-        Tab(RocketPartTypes type) {
+        Tab(RocketPartTypes type, ResourceKey<? extends RocketPart<?, ?>> part, Component name) {
             this.type = type;
+            this.part = part;
+            this.name = name;
         }
     }
 }

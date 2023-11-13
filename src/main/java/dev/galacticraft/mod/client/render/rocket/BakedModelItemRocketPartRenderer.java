@@ -52,8 +52,8 @@ public class BakedModelItemRocketPartRenderer implements RocketPartRenderer {
     }
 
     @Override
-    public void renderGUI(ClientLevel world, GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        graphics.renderItem(stack, (int)graphics.pose().last().pose().m03(), (int)graphics.pose().last().pose().m13());
+    public void renderGUI(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float delta) {
+        graphics.renderFakeItem(this.stack, x, y);
     }
 
     @Override

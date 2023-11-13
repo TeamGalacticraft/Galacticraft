@@ -50,7 +50,10 @@ public abstract class RocketPartRecipeType<C extends RocketPartRecipeConfig> {
 
     public abstract int width(C config);
     public abstract int height(C config);
+//    public abstract void placeLeft(List<RocketPartRecipeSlot> slots, int rightEdge, C config);
+//    public abstract void placeRight(List<RocketPartRecipeSlot> slots, int leftEdge, C config);
     public abstract @NotNull List<RocketPartRecipeSlot> slots(C config);
+//    public abstract @NotNull List<Ingredient> ingredients(C config);
     public abstract @NotNull Holder.Reference<? extends RocketPart<?, ?>> output(C config);
 
     public RocketPartTypes partType(C config) {

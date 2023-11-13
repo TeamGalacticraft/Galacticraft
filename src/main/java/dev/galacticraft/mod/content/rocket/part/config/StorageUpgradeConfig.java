@@ -22,8 +22,9 @@
 
 package dev.galacticraft.mod.content.rocket.part.config;
 
+import com.mojang.serialization.Codec;
 import dev.galacticraft.api.rocket.part.config.RocketUpgradeConfig;
-import net.minecraft.world.item.crafting.Ingredient;
 
-public record StorageUpgradeConfig(Ingredient recipe) implements RocketUpgradeConfig {
+public record StorageUpgradeConfig(int chests) implements RocketUpgradeConfig {
+    public static final Codec<StorageUpgradeConfig> CODEC = Codec.intRange(1, 3).xmap(StorageUpgradeConfig::new, StorageUpgradeConfig::chests);
 }

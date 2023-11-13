@@ -74,7 +74,8 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
 
-        tag.put("Output", this.output.createTag().get(0));
+        ListTag tag1 = this.output.createTag();
+        if (!tag1.isEmpty()) tag.put("Output", tag1.get(0));
         tag.put("Cone", this.cone.toTag());
         tag.put("Body", this.body.toTag());
         tag.put("Fins", this.fins.toTag());

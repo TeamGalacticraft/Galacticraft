@@ -37,7 +37,7 @@ public record ConfiguredTravelPredicate<C extends TravelPredicateConfig, T exten
     public static final Codec<Holder<ConfiguredTravelPredicate<?, ?>>> CODEC = RegistryFileCodec.create(RocketRegistries.TRAVEL_PREDICATE, DIRECT_CODEC);
     public static final Codec<HolderSet<ConfiguredTravelPredicate<?, ?>>> LIST_CODEC = RegistryCodecs.homogeneousList(RocketRegistries.TRAVEL_PREDICATE, DIRECT_CODEC);
 
-    public TravelPredicateType.Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, RocketCone<?, ?> cone, RocketBody<?, ?> body, RocketFin<?, ?> fin, RocketBooster<?, ?> booster, RocketBottom<?, ?> bottom, RocketUpgrade<?, ?>[] upgrades) {
-        return this.type.canTravel(from, to, cone, body, fin, booster, bottom, upgrades, this.config);
+    public TravelPredicateType.Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, RocketCone<?, ?> cone, RocketBody<?, ?> body, RocketFin<?, ?> fin, RocketBooster<?, ?> booster, RocketBottom<?, ?> bottom, RocketUpgrade<?, ?> upgrade) {
+        return this.type.canTravel(from, to, cone, body, fin, booster, bottom, upgrade, this.config);
     }
 }

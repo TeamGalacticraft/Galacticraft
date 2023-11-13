@@ -32,7 +32,6 @@ import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyType;
-import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
@@ -42,8 +41,6 @@ import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.events.RocketEvents;
 import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.util.FluidUtil;
-import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
@@ -52,14 +49,10 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.base.SingleFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -88,6 +81,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
 
+import java.util.Objects;
+
 public class RocketEntity extends Entity implements Rocket {
     private static final EntityDataAccessor<LaunchStage> STAGE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.LAUNCH_STAGE);
 
@@ -106,8 +101,8 @@ public class RocketEntity extends Entity implements Rocket {
     public static final EntityDataAccessor<ResourceLocation> ROCKET_FIN = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.ROCKET_PART);
     public static final EntityDataAccessor<ResourceLocation> ROCKET_BOOSTER = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.ROCKET_PART);
     public static final EntityDataAccessor<ResourceLocation> ROCKET_BOTTOM = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.ROCKET_PART);
-    public static final EntityDataAccessor<ResourceLocation[]> ROCKET_UPGRADES = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.ROCKET_UPGRADES);
-    private final boolean debugMode = FabricLoader.getInstance().isDevelopmentEnvironment();
+    public static final EntityDataAccessor<ResourceLocation> ROCKET_UPGRADE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.ROCKET_PART);
+    private final boolean debugMode = false && FabricLoader.getInstance().isDevelopmentEnvironment();
 
     private BlockPos linkedPad = BlockPos.ZERO;
     private final SingleFluidStorage tank = SingleFluidStorage.withFixedCapacity(FluidUtil.bucketsToDroplets(100), () -> {});
@@ -177,14 +172,8 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     @Override
-    public RocketUpgrade<?, ?>[] getUpgrades() {
-        ResourceLocation[] keys = this.upgrades();
-        Registry<RocketUpgrade<?, ?>> registry = this.level().registryAccess().registryOrThrow(RocketRegistries.ROCKET_UPGRADE);
-        RocketUpgrade[] upgrades = new RocketUpgrade[keys.length];
-        for (int i = 0; i < keys.length; i++) {
-            upgrades[i] = registry.get(keys[i]);
-        }
-        return upgrades;
+    public RocketUpgrade<?, ?> getUpgrade() {
+        return this.level().registryAccess().registryOrThrow(RocketRegistries.ROCKET_UPGRADE).get(this.upgrade());
     }
 
     @Override
@@ -373,12 +362,12 @@ public class RocketEntity extends Entity implements Rocket {
         this.entityData.define(DAMAGE_WOBBLE_SIDE, 0);
         this.entityData.define(DAMAGE_WOBBLE_STRENGTH, 0.0F);
 
-        this.entityData.define(ROCKET_CONE, BuiltinObjects.INVALID_ROCKET_CONE.location());
-        this.entityData.define(ROCKET_BODY, BuiltinObjects.INVALID_ROCKET_BODY.location());
-        this.entityData.define(ROCKET_FIN, BuiltinObjects.INVALID_ROCKET_FIN.location());
-        this.entityData.define(ROCKET_BOOSTER, BuiltinObjects.INVALID_ROCKET_BOOSTER.location());
-        this.entityData.define(ROCKET_BOTTOM, BuiltinObjects.INVALID_ROCKET_BOTTOM.location());
-        this.entityData.define(ROCKET_UPGRADES, new ResourceLocation[0]);
+        this.entityData.define(ROCKET_CONE, null);
+        this.entityData.define(ROCKET_BODY, null);
+        this.entityData.define(ROCKET_FIN, null);
+        this.entityData.define(ROCKET_BOOSTER, null);
+        this.entityData.define(ROCKET_BOTTOM, null);
+        this.entityData.define(ROCKET_UPGRADE, null);
     }
 
     @Override
@@ -511,8 +500,9 @@ public class RocketEntity extends Entity implements Rocket {
                     }
                     for (Entity entity : getPassengers()) {
                         if (entity instanceof ServerPlayer serverPlayer) {
-                            serverPlayer.setCelestialScreenState(RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.bottom(), this.upgrades()));
-                            FriendlyByteBuf buf = PacketByteBufs.create().writeNbt(RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.bottom(), this.upgrades()).toNbt(new CompoundTag()));
+                            RocketData data = RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.bottom(), this.upgrade());
+                            serverPlayer.galacticraft$openCelestialScreen(data);
+                            FriendlyByteBuf buf = PacketByteBufs.create().writeNbt(data.toNbt(new CompoundTag()));
                             buf.writeInt(id);
                             ServerPlayNetworking.send(serverPlayer, new ResourceLocation(Constant.MOD_ID, "planet_menu_open"), buf);
                             remove(RemovalReason.UNLOADED_WITH_PLAYER);
@@ -576,23 +566,18 @@ public class RocketEntity extends Entity implements Rocket {
         this.getEntityData().set(ROCKET_BOTTOM, id);
     }
 
-    public void setUpgrades(ResourceLocation[] ids) {
-        this.getEntityData().set(ROCKET_UPGRADES, ids);
+    public void setUpgrade(ResourceLocation id) {
+        this.getEntityData().set(ROCKET_UPGRADE, id);
     }
 
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
-        this.setCone(new ResourceLocation(tag.getString("Cone")));
-        this.setBody(new ResourceLocation(tag.getString("Body")));
-        this.setFin(new ResourceLocation(tag.getString("Fin")));
-        this.setBooster(new ResourceLocation(tag.getString("Booster")));
-        this.setBottom(new ResourceLocation(tag.getString("Bottom")));
-        ListTag list = tag.getList("Upgrades", Tag.TAG_STRING);
-        ResourceLocation[] upgrades = new ResourceLocation[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            upgrades[i] = new ResourceLocation(list.getString(i));
-        }
-        this.setUpgrades(upgrades);
+        this.setCone(tag.contains("Cone") ? new ResourceLocation(tag.getString("Cone")) : null);
+        this.setBody(tag.contains("Body") ? new ResourceLocation(tag.getString("Body")) : null);
+        this.setFin(tag.contains("Fin") ? new ResourceLocation(tag.getString("Fin")) : null);
+        this.setBooster(tag.contains("Booster") ? new ResourceLocation(tag.getString("Booster")) : null);
+        this.setBottom(tag.contains("Bottom") ? new ResourceLocation(tag.getString("Bottom")) : null);
+        this.setUpgrade(tag.contains("Upgrade") ? new ResourceLocation(tag.getString("Upgrade")) : null);
 
         if (tag.contains("Color")) {
             this.setColor(tag.getInt("Color"));
@@ -615,16 +600,12 @@ public class RocketEntity extends Entity implements Rocket {
 
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
-        tag.putString("Cone", this.cone().toString());
-        tag.putString("Body", this.body().toString());
-        tag.putString("Fin", this.fin().toString());
-        tag.putString("Booster", this.booster().toString());
-        tag.putString("Bottom", this.bottom().toString());
-        ListTag list = new ListTag();
-        for (ResourceLocation upgrade : this.upgrades()) {
-            list.add(StringTag.valueOf(upgrade.toString()));
-        }
-        tag.put("Upgrades", list);
+        if (this.cone() != null) tag.putString("Cone", Objects.requireNonNull(this.cone()).toString());
+        if (this.body() != null) tag.putString("Body", Objects.requireNonNull(this.body()).toString());
+        if (this.fin() != null) tag.putString("Fin", Objects.requireNonNull(this.fin()).toString());
+        if (this.booster() != null) tag.putString("Booster", Objects.requireNonNull(this.booster()).toString());
+        if (this.bottom() != null) tag.putString("Bottom", Objects.requireNonNull(this.bottom()).toString());
+        if (this.upgrade() != null) tag.putString("Upgrade", Objects.requireNonNull(this.upgrade()).toString());
 
         tag.putString("Stage", getLaunchStage().name());
         tag.putDouble("Speed", this.getSpeed());
@@ -646,7 +627,7 @@ public class RocketEntity extends Entity implements Rocket {
         buf.writeDouble(getZ());
         buf.writeByte((int) (this.getXRot() / 360F * 256F));
         buf.writeByte((int) (this.getYRot() / 360F * 256F));
-        CompoundTag nbt = RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.bottom(), this.upgrades()).toNbt(new CompoundTag());
+        CompoundTag nbt = RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.bottom(), this.upgrade()).toNbt(new CompoundTag());
         buf.writeNbt(nbt);
         return ServerPlayNetworking.createS2CPacket(Constant.id("rocket_spawn"), buf);
     }
@@ -696,36 +677,25 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     @Override
-    public ResourceLocation[] upgrades() {
-        return this.getEntityData().get(ROCKET_UPGRADES);
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return false;
+    public @Nullable ResourceLocation upgrade() {
+        return this.getEntityData().get(ROCKET_UPGRADE);
     }
 
     @Override
     public boolean canTravel(RegistryAccess manager, CelestialBody<?, ?> from, CelestialBody<?, ?> to) {
-        Object2BooleanMap<ResourceLocation> map = new Object2BooleanArrayMap<>();
-        TravelPredicateType.Result type = TravelPredicateType.Result.PASS;
         RocketCone<?, ?> cone = this.getCone();
         RocketBody<?, ?> body = this.getBody();
         RocketFin<?, ?> fin = this.getFin();
         RocketBooster<?, ?> booster = this.getBooster();
         RocketBottom<?, ?> bottom = this.getBottom();
-        RocketUpgrade<?, ?>[] upgrades = this.getUpgrades();
+        RocketUpgrade<?, ?> upgrade = this.getUpgrade();
         TravelPredicateType.Result result = TravelPredicateType.Result.PASS;
-        result = result.merge(cone.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrades));
-        result = result.merge(body.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrades));
-        result = result.merge(fin.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrades));
-        result = result.merge(booster.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrades));
-        result = result.merge(bottom.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrades));
-        int i = 0;
-        while (result != TravelPredicateType.Result.BLOCK && i < upgrades.length) {
-            result = result.merge(upgrades[i].travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrades));
-            i++;
-        }
+        result = result.merge(cone.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
+        result = result.merge(body.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
+        result = result.merge(fin.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
+        result = result.merge(booster.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
+        result = result.merge(bottom.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
+        result = result.merge(upgrade.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
         return result == TravelPredicateType.Result.ALLOW;
     }
 
@@ -737,6 +707,6 @@ public class RocketEntity extends Entity implements Rocket {
         this.setFin(data.fin());
         this.setBooster(data.booster());
         this.setBottom(data.bottom());
-        this.setUpgrades(data.upgrades());
+        this.setUpgrade(data.upgrade());
     }
 }

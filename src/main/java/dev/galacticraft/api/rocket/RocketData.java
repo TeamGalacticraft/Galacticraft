@@ -37,23 +37,18 @@ public interface RocketData {
     ResourceLocation INVALID_ID = Constant.Misc.INVALID;
 
     @Contract("_, _, _, _, _, _, _ -> new")
-    static @NotNull RocketData create(int color, ResourceLocation cone, ResourceLocation body, ResourceLocation fin, ResourceLocation booster, ResourceLocation bottom, ResourceLocation[] upgrades) {
+    static @NotNull RocketData create(int color, ResourceLocation cone, ResourceLocation body, ResourceLocation fin, ResourceLocation booster, ResourceLocation bottom, ResourceLocation upgrade) {
         assert cone != INVALID_ID
                 && body != INVALID_ID
                 && fin != INVALID_ID
                 && booster != INVALID_ID
                 && bottom != INVALID_ID;
-        return new RocketDataImpl(color, cone, body, fin, booster, bottom, upgrades);
+        return new RocketDataImpl(color, cone, body, fin, booster, bottom, upgrade);
     }
 
     @Unmodifiable
     static RocketData fromNbt(@Nullable CompoundTag nbt) {
         return RocketDataImpl.fromNbt(nbt == null ? RocketDataImpl.DEFAULT_ROCKET : nbt);
-    }
-
-    @Contract(pure = true)
-    static @NotNull @Unmodifiable RocketData empty() {
-        return RocketDataImpl.empty();
     }
 
     CompoundTag toNbt(CompoundTag nbt);
@@ -76,24 +71,17 @@ public interface RocketData {
         return this.color() >> 24 & 0xFF;
     }
 
-    default int upgradeCount() {
-        return this.upgrades().length;
-    }
+    @Nullable ResourceLocation cone();
 
-    ResourceLocation cone();
+    @Nullable ResourceLocation body();
 
-    ResourceLocation body();
+    @Nullable ResourceLocation fin();
 
-    ResourceLocation fin();
+    @Nullable ResourceLocation booster();
 
-    ResourceLocation booster();
+    @Nullable ResourceLocation bottom();
 
-    ResourceLocation bottom();
-
-    ResourceLocation[] upgrades();
-
-    boolean isEmpty();
+    @Nullable ResourceLocation upgrade();
 
     boolean canTravel(RegistryAccess manager, CelestialBody<?, ?> from, CelestialBody<?, ?> to);
-
 }

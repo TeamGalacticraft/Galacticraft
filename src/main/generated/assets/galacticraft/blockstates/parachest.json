@@ -15,8 +15,7 @@
         "y": 0
       },
       "when": {
-        "color": "white",
-        "facing": "north"
+        "color": "white"
       }
     },
     {
@@ -34,8 +33,7 @@
         "y": 180
       },
       "when": {
-        "color": "white",
-        "facing": "south"
+        "color": "white"
       }
     },
     {
@@ -53,8 +51,7 @@
         "y": 270
       },
       "when": {
-        "color": "white",
-        "facing": "west"
+        "color": "white"
       }
     },
     {
@@ -72,8 +69,7 @@
         "y": 90
       },
       "when": {
-        "color": "white",
-        "facing": "east"
+        "color": "white"
       }
     },
     {
@@ -91,8 +87,7 @@
         "y": 0
       },
       "when": {
-        "color": "orange",
-        "facing": "north"
+        "color": "orange"
       }
     },
     {
@@ -110,8 +105,7 @@
         "y": 180
       },
       "when": {
-        "color": "orange",
-        "facing": "south"
+        "color": "orange"
       }
     },
     {
@@ -129,8 +123,7 @@
         "y": 270
       },
       "when": {
-        "color": "orange",
-        "facing": "west"
+        "color": "orange"
       }
     },
     {
@@ -148,8 +141,7 @@
         "y": 90
       },
       "when": {
-        "color": "orange",
-        "facing": "east"
+        "color": "orange"
       }
     },
     {
@@ -167,8 +159,7 @@
         "y": 0
       },
       "when": {
-        "color": "magenta",
-        "facing": "north"
+        "color": "magenta"
       }
     },
     {
@@ -186,8 +177,7 @@
         "y": 180
       },
       "when": {
-        "color": "magenta",
-        "facing": "south"
+        "color": "magenta"
       }
     },
     {
@@ -205,8 +195,7 @@
         "y": 270
       },
       "when": {
-        "color": "magenta",
-        "facing": "west"
+        "color": "magenta"
       }
     },
     {
@@ -224,8 +213,7 @@
         "y": 90
       },
       "when": {
-        "color": "magenta",
-        "facing": "east"
+        "color": "magenta"
       }
     },
     {
@@ -243,8 +231,7 @@
         "y": 0
       },
       "when": {
-        "color": "light_blue",
-        "facing": "north"
+        "color": "light_blue"
       }
     },
     {
@@ -262,8 +249,7 @@
         "y": 180
       },
       "when": {
-        "color": "light_blue",
-        "facing": "south"
+        "color": "light_blue"
       }
     },
     {
@@ -281,8 +267,7 @@
         "y": 270
       },
       "when": {
-        "color": "light_blue",
-        "facing": "west"
+        "color": "light_blue"
       }
     },
     {
@@ -300,8 +285,7 @@
         "y": 90
       },
       "when": {
-        "color": "light_blue",
-        "facing": "east"
+        "color": "light_blue"
       }
     },
     {
@@ -319,8 +303,7 @@
         "y": 0
       },
       "when": {
-        "color": "yellow",
-        "facing": "north"
+        "color": "yellow"
       }
     },
     {
@@ -338,8 +321,7 @@
         "y": 180
       },
       "when": {
-        "color": "yellow",
-        "facing": "south"
+        "color": "yellow"
       }
     },
     {
@@ -357,8 +339,7 @@
         "y": 270
       },
       "when": {
-        "color": "yellow",
-        "facing": "west"
+        "color": "yellow"
       }
     },
     {
@@ -376,8 +357,7 @@
         "y": 90
       },
       "when": {
-        "color": "yellow",
-        "facing": "east"
+        "color": "yellow"
       }
     },
     {
@@ -395,8 +375,7 @@
         "y": 0
       },
       "when": {
-        "color": "lime",
-        "facing": "north"
+        "color": "lime"
       }
     },
     {
@@ -414,8 +393,7 @@
         "y": 180
       },
       "when": {
-        "color": "lime",
-        "facing": "south"
+        "color": "lime"
       }
     },
     {
@@ -433,8 +411,7 @@
         "y": 270
       },
       "when": {
-        "color": "lime",
-        "facing": "west"
+        "color": "lime"
       }
     },
     {
@@ -452,8 +429,7 @@
         "y": 90
       },
       "when": {
-        "color": "lime",
-        "facing": "east"
+        "color": "lime"
       }
     },
     {
@@ -471,8 +447,7 @@
         "y": 0
       },
       "when": {
-        "color": "pink",
-        "facing": "north"
+        "color": "pink"
       }
     },
     {
@@ -490,8 +465,7 @@
         "y": 180
       },
       "when": {
-        "color": "pink",
-        "facing": "south"
+        "color": "pink"
       }
     },
     {
@@ -509,8 +483,7 @@
         "y": 270
       },
       "when": {
-        "color": "pink",
-        "facing": "west"
+        "color": "pink"
       }
     },
     {
@@ -528,8 +501,7 @@
         "y": 90
       },
       "when": {
-        "color": "pink",
-        "facing": "east"
+        "color": "pink"
       }
     },
     {
@@ -547,8 +519,7 @@
         "y": 0
       },
       "when": {
-        "color": "gray",
-        "facing": "north"
+        "color": "gray"
       }
     },
     {
@@ -566,8 +537,7 @@
         "y": 180
       },
       "when": {
-        "color": "gray",
-        "facing": "south"
+        "color": "gray"
       }
     },
     {
@@ -585,8 +555,7 @@
         "y": 270
       },
       "when": {
-        "color": "gray",
-        "facing": "west"
+        "color": "gray"
       }
     },
     {
@@ -604,8 +573,7 @@
         "y": 90
       },
       "when": {
-        "color": "gray",
-        "facing": "east"
+        "color": "gray"
       }
     },
     {
@@ -623,8 +591,7 @@
         "y": 0
       },
       "when": {
-        "color": "light_gray",
-        "facing": "north"
+        "color": "light_gray"
       }
     },
     {
@@ -642,8 +609,7 @@
         "y": 180
       },
       "when": {
-        "color": "light_gray",
-        "facing": "south"
+        "color": "light_gray"
       }
     },
     {
@@ -661,8 +627,7 @@
         "y": 270
       },
       "when": {
-        "color": "light_gray",
-        "facing": "west"
+        "color": "light_gray"
       }
     },
     {
@@ -680,8 +645,7 @@
         "y": 90
       },
       "when": {
-        "color": "light_gray",
-        "facing": "east"
+        "color": "light_gray"
       }
     },
     {
@@ -699,8 +663,7 @@
         "y": 0
       },
       "when": {
-        "color": "cyan",
-        "facing": "north"
+        "color": "cyan"
       }
     },
     {
@@ -718,8 +681,7 @@
         "y": 180
       },
       "when": {
-        "color": "cyan",
-        "facing": "south"
+        "color": "cyan"
       }
     },
     {
@@ -737,8 +699,7 @@
         "y": 270
       },
       "when": {
-        "color": "cyan",
-        "facing": "west"
+        "color": "cyan"
       }
     },
     {
@@ -756,8 +717,7 @@
         "y": 90
       },
       "when": {
-        "color": "cyan",
-        "facing": "east"
+        "color": "cyan"
       }
     },
     {
@@ -775,8 +735,7 @@
         "y": 0
       },
       "when": {
-        "color": "purple",
-        "facing": "north"
+        "color": "purple"
       }
     },
     {
@@ -794,8 +753,7 @@
         "y": 180
       },
       "when": {
-        "color": "purple",
-        "facing": "south"
+        "color": "purple"
       }
     },
     {
@@ -813,8 +771,7 @@
         "y": 270
       },
       "when": {
-        "color": "purple",
-        "facing": "west"
+        "color": "purple"
       }
     },
     {
@@ -832,8 +789,7 @@
         "y": 90
       },
       "when": {
-        "color": "purple",
-        "facing": "east"
+        "color": "purple"
       }
     },
     {
@@ -851,8 +807,7 @@
         "y": 0
       },
       "when": {
-        "color": "blue",
-        "facing": "north"
+        "color": "blue"
       }
     },
     {
@@ -870,8 +825,7 @@
         "y": 180
       },
       "when": {
-        "color": "blue",
-        "facing": "south"
+        "color": "blue"
       }
     },
     {
@@ -889,8 +843,7 @@
         "y": 270
       },
       "when": {
-        "color": "blue",
-        "facing": "west"
+        "color": "blue"
       }
     },
     {
@@ -908,8 +861,7 @@
         "y": 90
       },
       "when": {
-        "color": "blue",
-        "facing": "east"
+        "color": "blue"
       }
     },
     {
@@ -927,8 +879,7 @@
         "y": 0
       },
       "when": {
-        "color": "brown",
-        "facing": "north"
+        "color": "brown"
       }
     },
     {
@@ -946,8 +897,7 @@
         "y": 180
       },
       "when": {
-        "color": "brown",
-        "facing": "south"
+        "color": "brown"
       }
     },
     {
@@ -965,8 +915,7 @@
         "y": 270
       },
       "when": {
-        "color": "brown",
-        "facing": "west"
+        "color": "brown"
       }
     },
     {
@@ -984,8 +933,7 @@
         "y": 90
       },
       "when": {
-        "color": "brown",
-        "facing": "east"
+        "color": "brown"
       }
     },
     {
@@ -1003,8 +951,7 @@
         "y": 0
       },
       "when": {
-        "color": "green",
-        "facing": "north"
+        "color": "green"
       }
     },
     {
@@ -1022,8 +969,7 @@
         "y": 180
       },
       "when": {
-        "color": "green",
-        "facing": "south"
+        "color": "green"
       }
     },
     {
@@ -1041,8 +987,7 @@
         "y": 270
       },
       "when": {
-        "color": "green",
-        "facing": "west"
+        "color": "green"
       }
     },
     {
@@ -1060,8 +1005,7 @@
         "y": 90
       },
       "when": {
-        "color": "green",
-        "facing": "east"
+        "color": "green"
       }
     },
     {
@@ -1079,8 +1023,7 @@
         "y": 0
       },
       "when": {
-        "color": "red",
-        "facing": "north"
+        "color": "red"
       }
     },
     {
@@ -1098,8 +1041,7 @@
         "y": 180
       },
       "when": {
-        "color": "red",
-        "facing": "south"
+        "color": "red"
       }
     },
     {
@@ -1117,8 +1059,7 @@
         "y": 270
       },
       "when": {
-        "color": "red",
-        "facing": "west"
+        "color": "red"
       }
     },
     {
@@ -1136,8 +1077,7 @@
         "y": 90
       },
       "when": {
-        "color": "red",
-        "facing": "east"
+        "color": "red"
       }
     },
     {
@@ -1155,8 +1095,7 @@
         "y": 0
       },
       "when": {
-        "color": "black",
-        "facing": "north"
+        "color": "black"
       }
     },
     {
@@ -1174,8 +1113,7 @@
         "y": 180
       },
       "when": {
-        "color": "black",
-        "facing": "south"
+        "color": "black"
       }
     },
     {
@@ -1193,8 +1131,7 @@
         "y": 270
       },
       "when": {
-        "color": "black",
-        "facing": "west"
+        "color": "black"
       }
     },
     {
@@ -1212,8 +1149,7 @@
         "y": 90
       },
       "when": {
-        "color": "black",
-        "facing": "east"
+        "color": "black"
       }
     }
   ]

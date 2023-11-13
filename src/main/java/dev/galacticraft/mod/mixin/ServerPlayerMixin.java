@@ -39,24 +39,39 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin implements ServerPlayerAccessor {
     private @Unique @Nullable RocketData rocketData = null;
+    private @Unique boolean celestialActive = false;
 
     @Override
-    public RocketData getCelestialScreenState() {
+    public boolean galacticraft$isCelestialScreenActive() {
+        return this.celestialActive;
+    }
+
+    @Override
+    public void galacticraft$closeCelestialScreen() {
+        this.celestialActive = false;
+        this.rocketData = null;
+    }
+
+    @Override
+    public @Nullable RocketData galacticraft$getCelestialScreenState() {
         return this.rocketData;
     }
 
     @Override
-    public void setCelestialScreenState(RocketData data) {
+    public void galacticraft$openCelestialScreen(@Nullable RocketData data) {
+        this.celestialActive = true;
         this.rocketData = data;
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
-    private void writeCustomDataToNbt_gc(CompoundTag nbt, CallbackInfo ci) {
+    private void writeCelestialData(CompoundTag nbt, CallbackInfo ci) {
+        nbt.putBoolean("CelestialActive", this.celestialActive);
         if (this.rocketData != null) nbt.put("CelestialState", this.rocketData.toNbt(new CompoundTag()));
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
-    private void readCustomDataFromNbt_gc(CompoundTag nbt, CallbackInfo ci) {
+    private void readCelestialData(CompoundTag nbt, CallbackInfo ci) {
+        this.celestialActive = nbt.getBoolean("CelestialActive");
         if (nbt.contains("CelestialState")) {
             this.rocketData = RocketData.fromNbt(nbt.getCompound("CelestialState"));
         }

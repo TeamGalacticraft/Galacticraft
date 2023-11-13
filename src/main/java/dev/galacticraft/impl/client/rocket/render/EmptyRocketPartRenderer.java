@@ -38,7 +38,7 @@ public enum EmptyRocketPartRenderer implements RocketPartRenderer {
     private static boolean hasWarned = false;
 
     @Override
-    public void renderGUI(ClientLevel world, GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void renderGUI(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float delta) {
         if (!hasWarned) {
             hasWarned = true;
             Constant.LOGGER.warn("EmptyRocketPartRenderer renderer is in use! RocketPartRenderer wasn't registered?");
