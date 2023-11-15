@@ -25,7 +25,6 @@ package dev.galacticraft.mod.data;
 import com.mojang.serialization.Lifecycle;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.RocketRegistries;
-import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.impl.universe.galaxy.GalaxyImpl;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCCelestialBodies;
@@ -118,7 +117,6 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         registryBuilder.add(RocketRegistries.ROCKET_BOOSTER, GCRocketParts::bootstrapBooster);
         registryBuilder.add(RocketRegistries.ROCKET_BOTTOM, GCRocketParts::bootstrapBottom);
         registryBuilder.add(RocketRegistries.ROCKET_UPGRADE, GCRocketParts::bootstrapUpgrade);
-        registryBuilder.add(RocketRegistries.ROCKET_PART_RECIPE, RocketPartRecipe::bootstrapRegistries);
 
         registryBuilder.add(Registries.BIOME, Lifecycle.stable(), GCBiomes::bootstrapRegistries);
         registryBuilder.add(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, Lifecycle.stable(), GCMultiNoiseBiomeSourceParameterLists::bootstrapRegistries);

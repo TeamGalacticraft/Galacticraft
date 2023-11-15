@@ -25,7 +25,6 @@ package dev.galacticraft.impl.internal.mixin.registry;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.part.*;
-import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
@@ -58,7 +57,6 @@ public abstract class RegistryDataLoaderMixin {
         WORLDGEN_REGISTRIES.add(new RegistryDataLoader.RegistryData<>(RocketRegistries.ROCKET_BOOSTER, RocketBooster.DIRECT_CODEC));
         WORLDGEN_REGISTRIES.add(new RegistryDataLoader.RegistryData<>(RocketRegistries.ROCKET_BOTTOM, RocketBottom.DIRECT_CODEC));
         WORLDGEN_REGISTRIES.add(new RegistryDataLoader.RegistryData<>(RocketRegistries.ROCKET_UPGRADE, RocketUpgrade.DIRECT_CODEC));
-        WORLDGEN_REGISTRIES.add(new RegistryDataLoader.RegistryData<>(RocketRegistries.ROCKET_PART_RECIPE, RocketPartRecipe.DIRECT_CODEC));
 
         WORLDGEN_REGISTRIES.add(new RegistryDataLoader.RegistryData<>(AddonRegistries.CELESTIAL_TELEPORTER, CelestialTeleporter.DIRECT_CODEC));
     }

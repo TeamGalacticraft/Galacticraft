@@ -22,13 +22,11 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.api.accessor.ResearchAccessor;
 import dev.galacticraft.api.registry.RocketRegistries;
+import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
-import dev.galacticraft.api.rocket.recipe.RocketPartRecipeSlot;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity.RecipeSelection;
-import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
@@ -67,35 +65,11 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu {
     public int additionalHeight = 0;
 
     public final Inventory playerInventory;
-    public final Registry<RocketPartRecipe<?, ?>> recipeRegistry;
 
     public RocketWorkbenchMenu(int syncId, RocketWorkbenchBlockEntity workbench, Inventory playerInventory) {
         super(GCMenuTypes.ROCKET_WORKBENCH, syncId);
         this.playerInventory = playerInventory;
 
-        List<RocketPartRecipe<?, ?>> cones = new ArrayList<>();
-        List<RocketPartRecipe<?, ?>> bodies = new ArrayList<>();
-        List<RocketPartRecipe<?, ?>> fins = new ArrayList<>();
-        List<RocketPartRecipe<?, ?>> boosters = new ArrayList<>();
-        List<RocketPartRecipe<?, ?>> bottoms = new ArrayList<>();
-        List<RocketPartRecipe<?, ?>> upgrades = new ArrayList<>();
-
-        RegistryAccess registryAccess = playerInventory.player.level().registryAccess();
-        this.recipeRegistry = registryAccess.registryOrThrow(RocketRegistries.ROCKET_PART_RECIPE);
-
-        for (Holder<RocketPartRecipe<?, ?>> recipe : recipeRegistry.asHolderIdMap()) {
-            if (recipe.unwrapKey().map(e -> ((ResearchAccessor) playerInventory.player).galacticraft$isUnlocked(e.location())).orElse(false)) {
-                switch (recipe.value().partType()) {
-                    case CONE -> cones.add(recipe.value());
-                    case BODY -> bodies.add(recipe.value());
-                    case FIN -> fins.add(recipe.value());
-                    case BOOSTER -> boosters.add(recipe.value());
-                    case BOTTOM -> bottoms.add(recipe.value());
-                    case UPGRADE -> upgrades.add(recipe.value());
-                }
-            }
-        }
-        
         this.cone = workbench.cone;
         this.body = workbench.body;
         this.fins = workbench.fins;
@@ -110,12 +84,13 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu {
         this.bottom.inventory.setListener(this::onSizeChange);
         this.upgrade.inventory.setListener(this::onSizeChange);
 
-        this.coneRecipes = new RecipeCollection(cones);
-        this.bodyRecipes = new RecipeCollection(bodies);
-        this.finsRecipes = new RecipeCollection(fins);
-        this.boosterRecipes = new RecipeCollection(boosters);
-        this.bottomRecipes = new RecipeCollection(bottoms);
-        this.upgradeRecipes = new RecipeCollection(upgrades);
+        RegistryAccess registryAccess = playerInventory.player.level().registryAccess();
+        this.coneRecipes = new RecipeCollection(registryAccess.registryOrThrow(RocketRegistries.ROCKET_CONE));
+        this.bodyRecipes = new RecipeCollection(registryAccess.registryOrThrow(RocketRegistries.ROCKET_BODY));
+        this.finsRecipes = new RecipeCollection(registryAccess.registryOrThrow(RocketRegistries.ROCKET_FIN));
+        this.boosterRecipes = new RecipeCollection(registryAccess.registryOrThrow(RocketRegistries.ROCKET_BOOSTER));
+        this.bottomRecipes = new RecipeCollection(registryAccess.registryOrThrow(RocketRegistries.ROCKET_BOTTOM));
+        this.upgradeRecipes = new RecipeCollection(registryAccess.registryOrThrow(RocketRegistries.ROCKET_UPGRADE));
 
         StackedContents contents = new StackedContents();
         playerInventory.fillStackedContents(contents);
@@ -155,53 +130,96 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu {
     public void onSizeChange() {
         this.slots.clear();
 
-        this.additionalHeight = calculateAdditionalHeight(this.cone.selection, this.body.selection, this.fins.selection, this.booster.selection, this.bottom.selection, this.upgrade.selection);
+        RocketPartRecipe<?, ?> bottom = this.bottom.getRecipe();
+        RocketPartRecipe<?, ?> body = this.body.getRecipe();
+        RocketPartRecipe<?, ?> cone = this.cone.getRecipe();
+        RocketPartRecipe<?, ?> fins = this.fins.getRecipe();
+        RocketPartRecipe<?, ?> booster = this.booster.getRecipe();
+        RocketPartRecipe<?, ?> upgrade = this.upgrade.getRecipe();
+        this.additionalHeight = calculateAdditionalHeight(cone, body, fins, booster, bottom, upgrade);
 
-        int midsectionWidth = Math.max((this.bottom.selection != null ? this.bottom.selection.width() : 0), Math.max((this.body.selection != null ? this.body.selection.width() : 0), (this.cone.selection != null ? this.cone.selection.width() : 0)));
-        int leftEdge = SCREEN_CENTER_BASE_X - midsectionWidth / 2;
-        int rightSide = SCREEN_CENTER_BASE_X + midsectionWidth / 2;
+        final int[] ext = {0, 0};
+        final int[] ext1 = {0, 0};
+        final int[] ext2 = {0, 0};
 
-        if (this.bottom.selection != null) {
-            int leftSide = SCREEN_CENTER_BASE_X - this.bottom.selection.width() / 2;
-            int bottomEdge = SCREEN_CENTER_BASE_Y + this.additionalHeight;
-            centered(this.bottom.selection, this.bottom.inventory, leftSide, bottomEdge);
+        if (bottom != null) {
+            bottom.place((i, x, y, filter) -> {
+                        ext[0] = Math.min(ext[0], x - SCREEN_CENTER_BASE_X);
+                        ext[1] = Math.max(ext[1], x - SCREEN_CENTER_BASE_X + 18);
+                        this.slots.add(new Slot(this.bottom.inventory, i, x, y));
+                    },
+                    SCREEN_CENTER_BASE_X,
+                    SCREEN_CENTER_BASE_X,
+                    SCREEN_CENTER_BASE_Y + this.additionalHeight);
         }
 
-        if (this.body.selection != null) {
-            int leftSide = SCREEN_CENTER_BASE_X - this.body.selection.width() / 2;
-            int bottomEdge = (SCREEN_CENTER_BASE_Y + this.additionalHeight) - (this.bottom.selection != null ? this.bottom.selection.height() + SPACING : 0);
-            centered(this.body.selection, this.body.inventory, leftSide, bottomEdge);
+        if (body != null) {
+            body.place((i, x, y, filter) -> {
+                        ext1[0] = Math.min(ext1[0], x - SCREEN_CENTER_BASE_X);
+                        ext1[1] = Math.max(ext1[1], x - SCREEN_CENTER_BASE_X + 18);
+                        this.slots.add(new Slot(this.body.inventory, i, x, y));
+                    },
+                    SCREEN_CENTER_BASE_X,
+                    SCREEN_CENTER_BASE_X,
+                    SCREEN_CENTER_BASE_Y + this.additionalHeight
+                            - (bottom != null ? bottom.height() + SPACING : 0));
         }
 
-        if (this.cone.selection != null) {
-            int leftSide = SCREEN_CENTER_BASE_X - this.cone.selection.width() / 2;
-            int bottomEdge = (SCREEN_CENTER_BASE_Y + this.additionalHeight) - (this.bottom.selection != null ? this.bottom.selection.height() + SPACING : 0) - (this.body.selection != null ? this.body.selection.height() + SPACING : 0);
-            centered(this.cone.selection, this.cone.inventory, leftSide, bottomEdge);
+        if (cone != null) {
+            cone.place((i, x, y, filter) -> {
+                        ext2[0] = Math.min(ext2[0], x - SCREEN_CENTER_BASE_X);
+                        ext2[1] = Math.max(ext2[1], x - SCREEN_CENTER_BASE_X + 18);
+                        this.slots.add(new Slot(this.cone.inventory, i, x, y));
+                    },
+                    SCREEN_CENTER_BASE_X,
+                    SCREEN_CENTER_BASE_X,
+                    SCREEN_CENTER_BASE_Y + this.additionalHeight
+                            - (bottom != null ? bottom.height() + SPACING : 0)
+                            - (body != null ? body.height() + SPACING : 0)
+            );
         }
 
-        if (this.booster.selection != null) {
-            int bottomEdge = SCREEN_CENTER_BASE_Y + this.additionalHeight;
-            mirrored(this.booster.selection, this.booster.inventory, leftEdge, rightSide, bottomEdge);
-        }
-
-        if (this.fins.selection != null) {
-            int bottomEdge = SCREEN_CENTER_BASE_Y + this.additionalHeight - (this.booster.selection != null ? this.booster.selection.height() + SPACING : 0);
-            mirrored(this.fins.selection, this.fins.inventory, leftEdge, rightSide, bottomEdge);
-        }
-
-        if (this.upgrade.selection != null) {
-            final int baseX = 11;
-            int y = 62 + this.additionalHeight;
-            int x = baseX;
-            for (int i = 0; i < this.upgrade.inventory.getContainerSize(); i++) {
-                this.addSlot(new Slot(this.upgrade.inventory, 0, x, y - 2));
-                if (x == baseX) {
-                    x += 21;
-                } else {
-                    x = baseX;
-                    y -= 21;
-                }
+        if (fins != null) {
+            if (fins.height() > (bottom != null ? bottom.height() : 0)) {
+                ext[0] = Math.min(ext[0], ext1[0]);
+                ext[1] = Math.max(ext[1], ext1[1]);
             }
+            if (fins.height() > (bottom != null ? bottom.height() : 0) + (body != null ? body.height() : 0)) {
+                ext[0] = Math.min(ext[0], ext2[0]);
+                ext[1] = Math.max(ext[1], ext2[1]);
+            }
+            fins.place((i, x, y, filter) -> this.slots.add(new Slot(this.fins.inventory, i, x, y)),
+                    SCREEN_CENTER_BASE_X + ext[0] - SPACING,
+                    SCREEN_CENTER_BASE_X + ext[1] + SPACING,
+                    SCREEN_CENTER_BASE_Y + this.additionalHeight
+            );
+        }
+
+        if (booster != null) {
+            if (booster.height() + (fins != null ? fins.height() : 0) > (bottom != null ? bottom.height() : 0)) {
+                ext[0] = Math.min(ext[0], ext1[0]);
+                ext[1] = Math.max(ext[1], ext1[1]);
+            }
+            if (booster.height() + (fins != null ? fins.height() : 0) > (bottom != null ? bottom.height() : 0) + (body != null ? body.height() : 0)) {
+                ext[0] = Math.min(ext[0], ext2[0]);
+                ext[1] = Math.max(ext[1], ext2[1]);
+            }
+
+            booster.place((i, x, y, filter) -> this.slots.add(new Slot(this.booster.inventory, i, x, y)),
+                    SCREEN_CENTER_BASE_X + ext[0] - SPACING,
+                    SCREEN_CENTER_BASE_X + ext[1] + SPACING,
+                    SCREEN_CENTER_BASE_Y + this.additionalHeight
+                            - (fins != null ? fins.height() + SPACING : 0)
+            );
+
+        }
+
+        if (upgrade != null) {
+            upgrade.place((i, x, y, filter) -> this.slots.add(new Slot(this.upgrade.inventory, i, x, y)),
+                    11, //FIXME
+                    11,
+                    62 + this.additionalHeight //FIXME
+            );
         }
 
         for (int row = 0; row < 3; ++row) {
@@ -215,54 +233,37 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu {
         }
     }
 
-    private void mirrored(RocketPartRecipe<?, ?> recipe, VariableSizedContainer container, int leftEdge, int rightSide, int bottomEdge) {
-        List<RocketPartRecipeSlot> slots = recipe.slots();
-        for (int i = 0; i < slots.size(); i++) {
-            RocketPartRecipeSlot slot = slots.get(i);
-            int x = slot.x();
-            if (x < 0) {
-                this.addSlot(new Slot(container, i, leftEdge - x - 18 - SPACING, bottomEdge - recipe.height() + slot.y()));
-            } else {
-                this.addSlot(new Slot(container, i, rightSide + x + SPACING, bottomEdge - recipe.height() + slot.y()));
-            }
-        }
-    }
-
-    private void centered(RocketPartRecipe<?, ?> recipe, VariableSizedContainer container, int leftSide, int bottomEdge) {
-        List<RocketPartRecipeSlot> slots = recipe.slots();
-        for (int i = 0; i < slots.size(); i++) {
-            RocketPartRecipeSlot slot = slots.get(i);
-            this.addSlot(new Slot(container, i, slot.x() + leftSide, bottomEdge - recipe.height() + slot.y()));
-        }
-    }
-
     public static class RecipeCollection {
-        private final List<RocketPartRecipe<?, ?>> recipes;
-        private final List<RocketPartRecipe<?, ?>> uncraftable = new ArrayList<>();
-        private final List<RocketPartRecipe<?, ?>> craftable = new ArrayList<>();
+        private final Registry<? extends RocketPart<?, ?>> recipes;
+        private final List<Holder.Reference<? extends RocketPart<?, ?>>> uncraftable = new ArrayList<>();
+        private final List<Holder.Reference<? extends RocketPart<?, ?>>> craftable = new ArrayList<>();
 
-        public RecipeCollection(List<RocketPartRecipe<?, ?>> recipes) {
+        public RecipeCollection(Registry<? extends RocketPart<?, ?>> recipes) {
             this.recipes = recipes;
         }
 
-        public List<RocketPartRecipe<?, ?>> getCraftable() {
+        public List<Holder.Reference<? extends RocketPart<?, ?>>> getCraftable() {
             return craftable;
         }
 
-        public List<RocketPartRecipe<?, ?>> getUncraftable() {
+        public List<Holder.Reference<? extends RocketPart<?, ?>>> getUncraftable() {
             return uncraftable;
         }
 
         public void calculateCraftable(StackedContents contents) {
             this.craftable.clear();
             this.uncraftable.clear();
-            for (RocketPartRecipe<?, ?> recipe : this.recipes) {
-                if (contents.canCraft(recipe, null)) {
-                    this.craftable.add(recipe);
-                } else {
-                    this.uncraftable.add(recipe);
+
+            this.recipes.holders().forEach(holder -> {
+                RocketPartRecipe<?, ?> recipe = holder.value().getRecipe();
+                if (recipe != null) {
+                    if (contents.canCraft(recipe, null)) {
+                        this.craftable.add(holder);
+                    } else {
+                        this.uncraftable.add(holder);
+                    }
                 }
-            }
+            });
         }
     }
 }

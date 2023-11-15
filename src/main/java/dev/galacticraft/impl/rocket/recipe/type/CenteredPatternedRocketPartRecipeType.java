@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2023 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ package dev.galacticraft.impl.rocket.recipe.type;
 
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipeSlot;
 import dev.galacticraft.api.rocket.recipe.type.RocketPartRecipeType;
-import dev.galacticraft.impl.rocket.recipe.config.PatternedRocketPartRecipeConfig;
+import dev.galacticraft.impl.rocket.recipe.config.CenteredPatternedRocketPartRecipeConfig;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -34,26 +34,27 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class PatternedRocketPartRecipeType extends RocketPartRecipeType<PatternedRocketPartRecipeConfig> {
-    public static final RocketPartRecipeType<PatternedRocketPartRecipeConfig> INSTANCE = new PatternedRocketPartRecipeType();
+public class CenteredPatternedRocketPartRecipeType extends RocketPartRecipeType<CenteredPatternedRocketPartRecipeConfig> {
+    public static final RocketPartRecipeType<CenteredPatternedRocketPartRecipeConfig> INSTANCE = new CenteredPatternedRocketPartRecipeType();
 
-    private PatternedRocketPartRecipeType() {
-        super(PatternedRocketPartRecipeConfig.CODEC);
+    private CenteredPatternedRocketPartRecipeType() {
+        super(CenteredPatternedRocketPartRecipeConfig.CODEC);
     }
 
     @Override
-    public int slots(PatternedRocketPartRecipeConfig config) {
-        return config.left().size() + config.right().size();
+    public int slots(CenteredPatternedRocketPartRecipeConfig config) {
+        return config.slots().size();
     }
 
     @Override
-    public int height(PatternedRocketPartRecipeConfig config) {
+    public int height(CenteredPatternedRocketPartRecipeConfig config) {
         return config.height();
     }
 
     @Override
-    public void place(@NotNull SlotConsumer consumer, int leftEdge, int rightEdge, int bottomEdge, PatternedRocketPartRecipeConfig config) {
-        List<RocketPartRecipeSlot> slots = config.left();
+    public void place(@NotNull SlotConsumer consumer, int leftEdge, int rightEdge, int bottomEdge, CenteredPatternedRocketPartRecipeConfig config) {
+        if (leftEdge != rightEdge) throw new UnsupportedOperationException();
+        List<RocketPartRecipeSlot> slots = config.slots();
         for (int i = 0; i < slots.size(); i++) {
             RocketPartRecipeSlot slot = slots.get(i);
             consumer.createSlot(i, leftEdge + slot.x(), bottomEdge - this.height(config) + slot.y(), (item, tag) -> {
@@ -64,38 +65,19 @@ public class PatternedRocketPartRecipeType extends RocketPartRecipeType<Patterne
                 return slot.ingredient().test(stack);
             });
         }
-        int size = slots.size();
-        slots = config.right();
-        for (int i = 0; i < slots.size(); i++) {
-            RocketPartRecipeSlot slot = slots.get(i);
-            consumer.createSlot(i + size, rightEdge + slot.x(), bottomEdge - this.height(config) + slot.y(), (item, tag) -> {
-                if (item == null) return true;
-
-                ItemStack stack = new ItemStack(item, 1);
-                stack.setTag(tag);
-                return slot.ingredient().test(stack);
-            });
-        }
     }
 
     @Override
-    public @NotNull NonNullList<Ingredient> ingredients(PatternedRocketPartRecipeConfig config) {
+    public @NotNull NonNullList<Ingredient> ingredients(CenteredPatternedRocketPartRecipeConfig config) {
         return config.ingredients();
     }
 
     @Override
-    public boolean matches(Container container, Level level, PatternedRocketPartRecipeConfig config) {
-        List<RocketPartRecipeSlot> left = config.left();
-        for (int i = 0, leftSize = left.size(); i < leftSize; i++) {
+    public boolean matches(Container container, Level level, CenteredPatternedRocketPartRecipeConfig config) {
+        List<RocketPartRecipeSlot> slots = config.slots();
+        for (int i = 0, n = slots.size(); i < n; i++) {
             ItemStack stack = container.getItem(i);
-            if (stack.isEmpty() || !left.get(i).ingredient().test(stack)) {
-                return false;
-            }
-        }
-        List<RocketPartRecipeSlot> right = config.right();
-        for (int i = 0, rightSize = right.size(); i < rightSize; i++) {
-            ItemStack stack = container.getItem(left.size() + i);
-            if (stack.isEmpty() || !left.get(i).ingredient().test(stack)) {
+            if (stack.isEmpty() || !slots.get(i).ingredient().test(stack)) {
                 return false;
             }
         }

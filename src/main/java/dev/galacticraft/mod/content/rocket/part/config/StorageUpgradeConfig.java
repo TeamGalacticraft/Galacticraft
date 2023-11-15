@@ -23,8 +23,13 @@
 package dev.galacticraft.mod.content.rocket.part.config;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.rocket.part.config.RocketUpgradeConfig;
+import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 
-public record StorageUpgradeConfig(int chests) implements RocketUpgradeConfig {
-    public static final Codec<StorageUpgradeConfig> CODEC = Codec.intRange(1, 3).xmap(StorageUpgradeConfig::new, StorageUpgradeConfig::chests);
+public record StorageUpgradeConfig(int chests, RocketPartRecipe<?, ?> recipe) implements RocketUpgradeConfig {
+    public static final Codec<StorageUpgradeConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.INT.fieldOf("chests").forGetter(StorageUpgradeConfig::chests),
+            RocketPartRecipe.DIRECT_CODEC.fieldOf("recipe").forGetter(StorageUpgradeConfig::recipe)
+    ).apply(instance, StorageUpgradeConfig::new));
 }

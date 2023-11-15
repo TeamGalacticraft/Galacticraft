@@ -22,17 +22,19 @@
 
 package dev.galacticraft.mod.content.block.entity;
 
-import dev.galacticraft.api.registry.RocketRegistries;
+import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -119,37 +121,48 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
     public class RecipeSelection {
         public final VariableSizedContainer inventory;
         @Nullable
-        public RocketPartRecipe<?, ?> selection = null;
+        public Holder.Reference<? extends RocketPart<?, ?>> selection = null;
 
         public RecipeSelection(VariableSizedContainer inventory) {
             this.inventory = inventory;
         }
 
-        public void setSelection(@Nullable RocketPartRecipe<?, ?> selection) {
+        public void setSelection(@Nullable Holder.Reference<? extends RocketPart<?, ?>> selection) {
             if (this.selection != selection) {
                 this.selection = selection;
                 if (selection != null) {
-                    this.inventory.resize(selection.slots().size());
+                    assert selection.value().getRecipe() != null;
+                    this.inventory.resize(selection.value().getRecipe().slots());
                 } else {
                     this.inventory.resize(0);
                 }
             }
         }
 
-        public @Nullable RocketPartRecipe<?, ?> getSelection() {
-            return selection;
+        public @Nullable RocketPart<?, ?> getSelection() {
+            return this.selection != null ? this.selection.value() : null;
+        }
+
+        public @Nullable RocketPartRecipe<?, ?> getRecipe() {
+            return this.selection != null ? this.selection.value().getRecipe() != null ? this.selection.value().getRecipe() : null : null;
         }
 
         public CompoundTag toTag() {
             CompoundTag nbt = this.inventory.toTag();
-            if (this.selection != null) nbt.putString("selection", RocketWorkbenchBlockEntity.this.level.registryAccess().registryOrThrow(RocketRegistries.ROCKET_PART_RECIPE).getKey(this.selection).toString());
+            if (this.selection != null) {
+                nbt.putString("sel_reg", this.selection.key().registry().toString());
+                nbt.putString("sel_loc", this.selection.key().location().toString());
+            }
             return nbt;
         }
 
         public void readTag(CompoundTag nbt) {
             this.inventory.readTag(nbt);
-            String sel = nbt.getString("selection");
-            if (!sel.isEmpty()) this.setSelection(RocketWorkbenchBlockEntity.this.level.registryAccess().registryOrThrow(RocketRegistries.ROCKET_PART_RECIPE).get(new ResourceLocation(sel)));
+            String selReg = nbt.getString("sel_reg");
+            String selLoc = nbt.getString("sel_loc");
+            if (!selReg.isEmpty() && !selLoc.isEmpty()) {
+                this.setSelection((Holder.Reference<? extends RocketPart<?, ?>>) RocketWorkbenchBlockEntity.this.level.registryAccess().registryOrThrow(ResourceKey.createRegistryKey(new ResourceLocation(selReg))).get(new ResourceLocation(selLoc)));
+            }
         }
     }
 }

@@ -26,8 +26,10 @@ import com.mojang.serialization.Codec;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.config.RocketPartConfig;
+import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Base rocket part interface.
@@ -47,4 +49,6 @@ public sealed interface RocketPartType<C extends RocketPartConfig> permits Rocke
     @NotNull Codec<? extends RocketPart<C, ? extends RocketPartType<C>>> codec();
 
     @NotNull ConfiguredTravelPredicate<?, ?> travelPredicate(@NotNull C config);
+
+    @Nullable RocketPartRecipe<?,?> getRecipe(C config);
 }

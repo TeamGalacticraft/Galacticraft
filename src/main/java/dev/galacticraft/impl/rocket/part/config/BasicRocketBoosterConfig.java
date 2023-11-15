@@ -25,13 +25,19 @@ package dev.galacticraft.impl.rocket.part.config;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.rocket.part.config.RocketBoosterConfig;
+import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
+import org.jetbrains.annotations.Nullable;
 
-public record BasicRocketBoosterConfig(ConfiguredTravelPredicate<?, ?> predicate, double maxVelocity, double acceleration, long fuelUsage) implements RocketBoosterConfig {
+import java.util.Optional;
+
+public record BasicRocketBoosterConfig(ConfiguredTravelPredicate<?, ?> predicate, double maxVelocity, double acceleration, long fuelUsage, @Nullable RocketPartRecipe<?,?> recipe) implements RocketBoosterConfig {
     public static final Codec<BasicRocketBoosterConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ConfiguredTravelPredicate.DIRECT_CODEC.fieldOf("predicate").forGetter(BasicRocketBoosterConfig::predicate),
             Codec.DOUBLE.fieldOf("max_velocity").forGetter(BasicRocketBoosterConfig::maxVelocity),
             Codec.DOUBLE.fieldOf("acceleration").forGetter(BasicRocketBoosterConfig::acceleration),
-            Codec.LONG.fieldOf("fuel_usage").forGetter(BasicRocketBoosterConfig::fuelUsage)
-    ).apply(instance, BasicRocketBoosterConfig::new));
+            Codec.LONG.fieldOf("fuel_usage").forGetter(BasicRocketBoosterConfig::fuelUsage),
+            RocketPartRecipe.DIRECT_CODEC.optionalFieldOf("recipe").forGetter(config -> Optional.ofNullable(config.recipe))
+    ).apply(instance, (ConfiguredTravelPredicate<?, ?> predicate, Double maxVelocity, Double acceleration, Long fuelUsage, Optional<RocketPartRecipe<?, ?>> recipe) ->
+            new BasicRocketBoosterConfig(predicate, maxVelocity, acceleration, fuelUsage, recipe.orElse(null))));
 }

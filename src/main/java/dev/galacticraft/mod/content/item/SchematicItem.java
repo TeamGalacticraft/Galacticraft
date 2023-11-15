@@ -23,10 +23,9 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.item.Schematic;
-import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
-import net.minecraft.core.Registry;
+import dev.galacticraft.api.rocket.part.RocketPart;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -42,11 +41,13 @@ public class SchematicItem extends Item implements Schematic {
     }
 
     @Override
-    public @Nullable RocketPartRecipe<?, ?> getRecipe(Registry<RocketPartRecipe<?, ?>> registry, @NotNull ItemStack stack) {
+    public @Nullable ResourceKey<? extends RocketPart<?, ?>> getPart(@NotNull ItemStack stack) {
         CompoundTag tag = stack.getTag();
         if (tag != null) {
-            if (tag.contains("recipe", Tag.TAG_STRING)) {
-                return registry.get(new ResourceLocation(tag.getString("recipe")));
+            String registry = tag.getString("registry");
+            String location = tag.getString("location");
+            if (!registry.isEmpty() && !location.isEmpty()) {
+                return ResourceKey.create(ResourceKey.createRegistryKey(new ResourceLocation(registry)), new ResourceLocation(location));
             }
         }
         return null;

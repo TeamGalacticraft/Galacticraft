@@ -24,7 +24,6 @@ package dev.galacticraft.api.registry;
 
 import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.api.rocket.part.type.*;
-import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.api.rocket.recipe.type.RocketPartRecipeType;
 import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
 import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
@@ -51,5 +50,4 @@ public final class RocketRegistries {
     public static final ResourceKey<Registry<RocketBooster<?, ?>>> ROCKET_BOOSTER = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "rocket_booster"));
     public static final ResourceKey<Registry<RocketBottom<?, ?>>> ROCKET_BOTTOM = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "rocket_bottom"));
     public static final ResourceKey<Registry<RocketUpgrade<?, ?>>> ROCKET_UPGRADE = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "rocket_upgrade"));
-    public static final ResourceKey<Registry<RocketPartRecipe<?, ?>>> ROCKET_PART_RECIPE = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "rocket_part_recipe"));
 }

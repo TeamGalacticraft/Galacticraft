@@ -28,7 +28,6 @@ import dev.galacticraft.api.entity.rocket.render.RocketPartRenderer;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartTypes;
-import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.gui.BatchedRenderer;
 import dev.galacticraft.mod.content.GCRocketParts;
@@ -37,6 +36,7 @@ import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Inventory;
@@ -106,7 +106,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
     private Tab openTab;
 
     private int page = 0;
-    private @Nullable List<RocketPartRecipe<?, ?>> recipes = null;
+    private @Nullable List<Holder.Reference<? extends RocketPart<?, ?>>> recipes = null;
 
     public RocketWorkbenchScreen(RocketWorkbenchMenu menu, Inventory inventory, Component component) {
         super(menu, inventory, component);
@@ -253,7 +253,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
 
         if (openTab != Tab.COLOR) {
             RocketWorkbenchMenu.RecipeCollection recipes = getRecipes();
-            List<RocketPartRecipe<?, ?>> joined = new ArrayList<>(recipes.getCraftable().size() + recipes.getUncraftable().size() + 1);
+            List<Holder.Reference<? extends RocketPart<?, ?>>> joined = new ArrayList<>(recipes.getCraftable().size() + recipes.getUncraftable().size() + 1);
             joined.add(null);
             joined.addAll(recipes.getCraftable());
             joined.addAll(recipes.getUncraftable()); //fixme
@@ -296,10 +296,10 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
                 int i = this.page * 5 * 7;
                 for (int y = 0; y < 7 && i < size; y++) {
                     for (int x = 0; x < 5 && i < size; x++) {
-                        RocketPartRecipe<?, ?> recipe = this.recipes.get(i);
-                        render.blit(11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, isKnown(recipe) ? RECIPE_KNOWN_U : RECIPE_UNKNOWN_U, RECIPE_V, RECIPE_WIDTH, RECIPE_HEIGHT);
-                        if (recipe != null && mouseIn(mouseX, mouseY, 11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, RECIPE_WIDTH, RECIPE_HEIGHT)) {
-                            setTooltipForNextRenderPass(Component.literal(recipe.output().key().location().toString())); //todo
+                        Holder.Reference<? extends RocketPart<?, ?>> part = this.recipes.get(i);
+                        render.blit(11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, isKnown(part) ? RECIPE_KNOWN_U : RECIPE_UNKNOWN_U, RECIPE_V, RECIPE_WIDTH, RECIPE_HEIGHT);
+                        if (part != null && mouseIn(mouseX, mouseY, 11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, RECIPE_WIDTH, RECIPE_HEIGHT)) {
+                            setTooltipForNextRenderPass(Component.literal(part.key().location().toString())); //todo
                         }
                         i++;
                     }
@@ -326,9 +326,9 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
             int i = this.page * 5 * 7;
             for (int y = 0; y < 7 && i < size; y++) {
                 for (int x = 0; x < 5 && i < size; x++) {
-                    RocketPartRecipe<?, ?> recipe = this.recipes.get(i);
+                    Holder.Reference<? extends RocketPart<?, ?>> recipe = this.recipes.get(i);
                     if (recipe != null) {
-                        RocketPartRenderer renderer = RocketPartRendererRegistry.INSTANCE.getRenderer(recipe.output().key());
+                        RocketPartRenderer renderer = RocketPartRendererRegistry.INSTANCE.getRenderer(recipe.key());
                         renderer.renderGUI(graphics, 11 + x * RECIPE_WIDTH + 4, 29 + y * RECIPE_HEIGHT + 4, mouseX, mouseY, delta);
                     }
                     i++;
@@ -341,7 +341,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
         pose.popPose();
     }
 
-    private boolean isKnown(RocketPartRecipe<?, ?> recipe) {
+    private boolean isKnown(Holder.Reference<? extends RocketPart<?, ?>> recipe) {
         return true;
     }
 

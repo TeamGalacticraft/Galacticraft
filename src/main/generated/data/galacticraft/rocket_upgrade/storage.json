@@ -1,13 +1,7 @@
 {
-  "type": "galacticraft:basic",
+  "type": "galacticraft:storage",
   "config": {
-    "fuel_capacity": 1296000,
-    "predicate": {
-      "type": "galacticraft:access_weight",
-      "config": {
-        "weight": 1
-      }
-    },
+    "chests": 1,
     "recipe": {
       "type": "galacticraft:centered_patterned",
       "config": {
@@ -15,7 +9,7 @@
         "slots": [
           {
             "ingredient": {
-              "item": "galacticraft:rocket_engine"
+              "item": "minecraft:chest"
             },
             "x": -9,
             "y": 0

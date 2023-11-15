@@ -25,9 +25,11 @@ package dev.galacticraft.impl.rocket.part.type;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.rocket.part.type.RocketBoosterType;
+import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
 import dev.galacticraft.impl.rocket.part.config.BasicRocketBoosterConfig;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class BasicRocketBoosterType extends RocketBoosterType<BasicRocketBoosterConfig> {
     public static final BasicRocketBoosterType INSTANCE = new BasicRocketBoosterType(BasicRocketBoosterConfig.CODEC);
@@ -58,5 +60,10 @@ public final class BasicRocketBoosterType extends RocketBoosterType<BasicRocketB
     @Override
     public @NotNull ConfiguredTravelPredicate<?, ?> travelPredicate(@NotNull BasicRocketBoosterConfig config) {
         return config.predicate();
+    }
+
+    @Override
+    public @Nullable RocketPartRecipe<?, ?> getRecipe(BasicRocketBoosterConfig config) {
+        return config.recipe();
     }
 }

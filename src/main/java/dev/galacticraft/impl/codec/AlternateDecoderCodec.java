@@ -31,9 +31,9 @@ import com.mojang.serialization.DynamicOps;
 public record AlternateDecoderCodec<A>(Decoder<A> alternative, Codec<A> main) implements Codec<A> {
     @Override
     public <T> DataResult<Pair<A, T>> decode(DynamicOps<T> ops, T input) {
-        DataResult<Pair<A, T>> decode = this.alternative.decode(ops, input);
+        DataResult<Pair<A, T>> decode = this.main.decode(ops, input);
         if (decode.error().isPresent()) {
-            return this.main.decode(ops, input);
+            return this.alternative.decode(ops, input);
         } else {
             return decode;
         }

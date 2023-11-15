@@ -23,9 +23,17 @@
 package dev.galacticraft.impl.rocket.part.config;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.rocket.part.config.RocketConeConfig;
+import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
+import org.jetbrains.annotations.Nullable;
 
-public record BasicRocketConeConfig(ConfiguredTravelPredicate<?, ?> predicate) implements RocketConeConfig {
-    public static final Codec<BasicRocketConeConfig> CODEC = ConfiguredTravelPredicate.DIRECT_CODEC.xmap(BasicRocketConeConfig::new, BasicRocketConeConfig::predicate);
+import java.util.Optional;
+
+public record BasicRocketConeConfig(ConfiguredTravelPredicate<?, ?> predicate, @Nullable RocketPartRecipe<?,?> recipe) implements RocketConeConfig {
+    public static final Codec<BasicRocketConeConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            ConfiguredTravelPredicate.DIRECT_CODEC.fieldOf("predicate").forGetter(BasicRocketConeConfig::predicate),
+            RocketPartRecipe.DIRECT_CODEC.optionalFieldOf("recipe").forGetter(config -> Optional.ofNullable(config.recipe))
+    ).apply(instance, (ConfiguredTravelPredicate<?, ?> predicate, Optional<RocketPartRecipe<?, ?>> recipe) -> new BasicRocketConeConfig(predicate, recipe.orElse(null))));
 }

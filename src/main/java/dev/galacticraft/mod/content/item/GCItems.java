@@ -25,6 +25,7 @@ package dev.galacticraft.mod.content.item;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
+import dev.galacticraft.mod.content.GCRocketParts;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -468,10 +469,10 @@ public class GCItems {
     public static final Item ROCKET_ENGINE = new Item(new Item.Properties());
 
     // SCHEMATICS
-    public static final Item BASIC_ROCKET_CONE_SCHEMATIC = new RocketPartSchematic(new Item.Properties().stacksTo(1).rarity(Rarity.RARE), Constant.id("basic_cone"));
-    public static final Item BASIC_ROCKET_BODY_SCHEMATIC = new RocketPartSchematic(new Item.Properties().stacksTo(1).rarity(Rarity.RARE), Constant.id("basic_body"));
-    public static final Item BASIC_ROCKET_FINS_SCHEMATIC = new RocketPartSchematic(new Item.Properties().stacksTo(1).rarity(Rarity.RARE), Constant.id("basic_fins"));
-    public static final Item BASIC_ROCKET_BOTTOM_SCHEMATIC = new RocketPartSchematic(new Item.Properties().stacksTo(1).rarity(Rarity.RARE), Constant.id("basic_bottom"));
+    public static final Item BASIC_ROCKET_CONE_SCHEMATIC = new RocketPartSchematic(new Item.Properties().stacksTo(1).rarity(Rarity.RARE), GCRocketParts.TIER_1_CONE);
+    public static final Item BASIC_ROCKET_BODY_SCHEMATIC = new RocketPartSchematic(new Item.Properties().stacksTo(1).rarity(Rarity.RARE), GCRocketParts.TIER_1_BODY);
+    public static final Item BASIC_ROCKET_FINS_SCHEMATIC = new RocketPartSchematic(new Item.Properties().stacksTo(1).rarity(Rarity.RARE), GCRocketParts.TIER_1_FIN);
+    public static final Item BASIC_ROCKET_BOTTOM_SCHEMATIC = new RocketPartSchematic(new Item.Properties().stacksTo(1).rarity(Rarity.RARE), GCRocketParts.TIER_1_BOTTOM);
 
     public static final Item TIER_2_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties());
     public static final Item CARGO_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties());

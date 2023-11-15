@@ -25,11 +25,16 @@ package dev.galacticraft.impl.rocket.part.config;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.rocket.part.config.RocketBottomConfig;
+import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
+import org.jetbrains.annotations.Nullable;
 
-public record BasicRocketBottomConfig(ConfiguredTravelPredicate<?, ?> predicate, long fuelCapacity) implements RocketBottomConfig {
+import java.util.Optional;
+
+public record BasicRocketBottomConfig(ConfiguredTravelPredicate<?, ?> predicate, long fuelCapacity, @Nullable RocketPartRecipe<?,?> recipe) implements RocketBottomConfig {
     public static final Codec<BasicRocketBottomConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ConfiguredTravelPredicate.DIRECT_CODEC.fieldOf("predicate").forGetter(BasicRocketBottomConfig::predicate),
-            Codec.LONG.fieldOf("fuel_capacity").forGetter(BasicRocketBottomConfig::fuelCapacity)
-    ).apply(instance, BasicRocketBottomConfig::new));
+            Codec.LONG.fieldOf("fuel_capacity").forGetter(BasicRocketBottomConfig::fuelCapacity),
+            RocketPartRecipe.DIRECT_CODEC.optionalFieldOf("recipe").forGetter(config -> Optional.ofNullable(config.recipe))
+    ).apply(instance, (ConfiguredTravelPredicate<?, ?> predicate, Long fuelCapacity, Optional<RocketPartRecipe<?, ?>> recipe) -> new BasicRocketBottomConfig(predicate, fuelCapacity, recipe.orElse(null))));
 }

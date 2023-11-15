@@ -23,17 +23,11 @@
 package dev.galacticraft.impl.rocket.recipe.config;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Decoder;
-import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.galacticraft.api.registry.RocketRegistries;
-import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipeSlot;
 import dev.galacticraft.api.rocket.recipe.config.RocketPartRecipeConfig;
 import dev.galacticraft.impl.codec.AlternateDecoderCodec;
@@ -42,52 +36,37 @@ import it.unimi.dsi.fastutil.chars.Char2IntArrayMap;
 import it.unimi.dsi.fastutil.chars.Char2IntMap;
 import it.unimi.dsi.fastutil.chars.Char2ObjectArrayMap;
 import it.unimi.dsi.fastutil.chars.Char2ObjectMap;
-import net.minecraft.core.Holder;
-import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record PatternedRocketPartRecipeConfig(int width, int height, @NotNull List<RocketPartRecipeSlot> slots, Holder.Reference<? extends RocketPart<?, ?>> output) implements RocketPartRecipeConfig {
-    private static final Codec<ResourceKey<? extends RocketPart<?, ?>>> ROCKET_PART_RESOURCE_KEY_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("registry").forGetter(ResourceKey::registry),
-            ResourceLocation.CODEC.fieldOf("location").forGetter(ResourceKey::location)
-    ).apply(instance, (registry, value) -> ResourceKey.create(ResourceKey.createRegistryKey(registry), value)));
-
-    private static final Codec<Holder.Reference<? extends RocketPart<?, ?>>> ARB_PART_CODEC = new Codec<>() {
-        @Override
-        public <T> DataResult<Pair<Holder.Reference<? extends RocketPart<?, ?>>, T>> decode(DynamicOps<T> ops, T input) {
-            return DataResult.success(Pair.of(ROCKET_PART_RESOURCE_KEY_CODEC.decode(ops, input).map(key -> ((RegistryOps<T>) ops).getter(ResourceKey.<RocketPart<?, ?>>createRegistryKey(key.getFirst().registry())).get().get((ResourceKey<RocketPart<?, ?>>) key.getFirst()).get()).get().orThrow(), input));
-        }
-
-        @Override
-        public <T> DataResult<T> encode(Holder.Reference<? extends RocketPart<?, ?>> input, DynamicOps<T> ops, T prefix) {
-            return ROCKET_PART_RESOURCE_KEY_CODEC.encode(input.key(), ops, prefix);
-        }
-    };
-
+public record PatternedRocketPartRecipeConfig(int height, @NotNull List<RocketPartRecipeSlot> right, @NotNull List<RocketPartRecipeSlot> left, @NotNull
+                                              NonNullList<Ingredient> ingredients) implements RocketPartRecipeConfig {
     private static final Codec<PatternedRocketPartRecipeConfig> INTERNAL_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.INT.fieldOf("width").forGetter(PatternedRocketPartRecipeConfig::width),
             Codec.INT.fieldOf("height").forGetter(PatternedRocketPartRecipeConfig::height),
-            RocketPartRecipeSlot.CODEC.listOf().fieldOf("slots").forGetter(PatternedRocketPartRecipeConfig::slots),
-            ARB_PART_CODEC.fieldOf("output").forGetter(PatternedRocketPartRecipeConfig::output)
-    ).apply(instance, PatternedRocketPartRecipeConfig::new));
+            RocketPartRecipeSlot.CODEC.listOf().fieldOf("right").forGetter(PatternedRocketPartRecipeConfig::right),
+            RocketPartRecipeSlot.CODEC.listOf().fieldOf("left").forGetter(PatternedRocketPartRecipeConfig::left)
+    ).apply(instance, (height, right, left) -> {
+        NonNullList<Ingredient> ingredients = NonNullList.createWithCapacity(right.size() + left.size());
+        for (RocketPartRecipeSlot slot : right) {
+            ingredients.add(slot.ingredient());
+        }
+        for (RocketPartRecipeSlot slot : left) {
+            ingredients.add(slot.ingredient());
+        }
+        return new PatternedRocketPartRecipeConfig(height, right, left, ingredients);
+    }));
 
     public static final Decoder<PatternedRocketPartRecipeConfig> PRETTY_DECODER = (JsonDecoder<PatternedRocketPartRecipeConfig>) (ops, elem) -> {
         JsonObject json = elem.getAsJsonObject();
-        JsonObject result = json.getAsJsonObject("result");
-        ResourceKey<RocketPart<?, ?>> key1 = ResourceKey.create(
-                ResourceKey.createRegistryKey(new ResourceLocation(result.get("type").getAsString())),
-                new ResourceLocation(result.get("id").getAsString())
-        );
 
-        Holder.Reference<? extends RocketPart<?, ?>> output = ((RegistryOps<?>)ops).getter(ResourceKey.<RocketPart<?, ?>>createRegistryKey(key1.registry())).orElseThrow().get(key1).get();
         Char2ObjectMap<Ingredient> ingredients = new Char2ObjectArrayMap<>();
         Char2IntMap spacing = new Char2IntArrayMap();
-        spacing.put(' ', 16);
+        spacing.put(' ', 18);
+        spacing.put('.', 9);
+
         json.getAsJsonObject("key").asMap().forEach((s, element) -> {
             char key = s.charAt(0);
             if (spacing.containsKey(key) || ingredients.containsKey(key)) {
@@ -96,36 +75,79 @@ public record PatternedRocketPartRecipeConfig(int width, int height, @NotNull Li
             if (element.isJsonPrimitive()) {
                 spacing.put(key, element.getAsInt());
             } else {
-
                 ingredients.put(key, Ingredient.fromJson(element));
             }
         });
-        JsonArray array = json.getAsJsonArray("pattern");
-        assert array.size() > 0;
 
-        boolean mirrored = (!json.has("mirrored") && (key1.isFor(RocketRegistries.ROCKET_BOOSTER) || key1.isFor(RocketRegistries.ROCKET_FIN))) || (json.has("mirrored") && json.get("mirrored").getAsBoolean());
+        return PatternedRocketPartRecipeConfig.parse(spacing, ingredients,
+                json.getAsJsonArray("left").asList().stream().map(JsonElement::getAsString).toList(),
+                json.getAsJsonArray("right").asList().stream().map(JsonElement::getAsString).toList());
+    };
 
-        ImmutableList.Builder<RocketPartRecipeSlot> slots = ImmutableList.builder();
-        int width = 0;
-        int x = mirrored ? 1 : 0;
-        int y = 0;
-        for (JsonElement element : array) {
-            for (char c : element.getAsString().toCharArray()) {
+    @NotNull
+    public static PatternedRocketPartRecipeConfig parse(Char2IntMap spacing, Char2ObjectMap<Ingredient> ingredients, List<String> leftPattern, List<String> rightPattern) {
+        ImmutableList.Builder<RocketPartRecipeSlot> left = ImmutableList.builder();
+        int[] widths = new int[leftPattern.size()];
+        for (int i = 0; i < leftPattern.size(); i++) {
+            String s = leftPattern.get(i);
+            int x = 0;
+            for (char c : s.toCharArray()) {
                 if (spacing.containsKey(c)) {
                     x += spacing.get(c);
                 } else {
-                    slots.add(RocketPartRecipeSlot.create(x, y, ingredients.get(c)));
-                    if (mirrored) slots.add(RocketPartRecipeSlot.create(-x, y, ingredients.get(c)));
+                    assert ingredients.containsKey(c);
                     x += 18;
                 }
             }
-            width = Math.max(width, x);
-            y += 18;
-            x = mirrored ? 1 : 0;
+            widths[i] = x;
         }
 
-        return new PatternedRocketPartRecipeConfig(width, y, slots.build(), output);
-    };
+        int y = 0;
+        for (int i = 0; i < leftPattern.size(); i++) {
+            int x = 0;
+            for (char c : leftPattern.get(i).toCharArray()) {
+                if (spacing.containsKey(c)) {
+                    x += spacing.get(c);
+                } else {
+                    left.add(RocketPartRecipeSlot.create(-widths[i] + x, y, ingredients.get(c)));
+                    x += 18;
+                }
+            }
+            y += 18;
+        }
+
+        int height = y;
+
+        ImmutableList.Builder<RocketPartRecipeSlot> right = ImmutableList.builder();
+        y = 0;
+        for (String s : rightPattern) {
+            int x = 0;
+            char[] chars = s.toCharArray();
+            for (char c : chars) {
+                if (spacing.containsKey(c)) {
+                    x += spacing.get(c);
+                } else {
+                    right.add(RocketPartRecipeSlot.create(x, y, ingredients.get(c)));
+                    x += 18;
+                }
+            }
+            y += 18;
+        }
+
+        height = Math.max(height, y);
+
+        ImmutableList<RocketPartRecipeSlot> leftB = left.build();
+        ImmutableList<RocketPartRecipeSlot> rightB = right.build();
+        NonNullList<Ingredient> ingredientsList = NonNullList.createWithCapacity(rightB.size() + leftB.size());
+        for (RocketPartRecipeSlot slot : rightB) {
+            ingredientsList.add(slot.ingredient());
+        }
+        for (RocketPartRecipeSlot slot : leftB) {
+            ingredientsList.add(slot.ingredient());
+        }
+
+        return new PatternedRocketPartRecipeConfig(height, rightB, leftB, ingredientsList);
+    }
 
     public static final Codec<PatternedRocketPartRecipeConfig> CODEC = new AlternateDecoderCodec<>(PRETTY_DECODER, INTERNAL_CODEC);
 }

@@ -25,9 +25,11 @@ package dev.galacticraft.impl.rocket.part.type;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.rocket.part.type.RocketBodyType;
+import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
 import dev.galacticraft.impl.rocket.part.config.BasicRocketBodyConfig;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class BasicRocketBodyType extends RocketBodyType<BasicRocketBodyConfig> {
     public static final BasicRocketBodyType INSTANCE = new BasicRocketBodyType(BasicRocketBodyConfig.CODEC);
@@ -48,5 +50,10 @@ public final class BasicRocketBodyType extends RocketBodyType<BasicRocketBodyCon
     @Override
     public @NotNull ConfiguredTravelPredicate<?, ?> travelPredicate(@NotNull BasicRocketBodyConfig config) {
         return config.predicate();
+    }
+
+    @Override
+    public @Nullable RocketPartRecipe<?, ?> getRecipe(BasicRocketBodyConfig config) {
+        return config.recipe();
     }
 }

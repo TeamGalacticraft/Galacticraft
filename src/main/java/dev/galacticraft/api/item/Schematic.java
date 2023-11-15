@@ -22,8 +22,8 @@
 
 package dev.galacticraft.api.item;
 
-import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
-import net.minecraft.core.Registry;
+import dev.galacticraft.api.rocket.part.RocketPart;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,5 +32,5 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public interface Schematic {
-    @Nullable RocketPartRecipe<?, ?> getRecipe(Registry<RocketPartRecipe<?, ?>> registry, @NotNull ItemStack stack);
+    @Nullable ResourceKey<? extends RocketPart<?, ?>> getPart(@NotNull ItemStack stack);
 }

@@ -27,6 +27,7 @@ import dev.galacticraft.api.rocket.part.type.*;
 import dev.galacticraft.api.rocket.recipe.type.RocketPartRecipeType;
 import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
 import dev.galacticraft.impl.rocket.part.type.*;
+import dev.galacticraft.impl.rocket.recipe.type.CenteredPatternedRocketPartRecipeType;
 import dev.galacticraft.impl.rocket.recipe.type.PatternedRocketPartRecipeType;
 import dev.galacticraft.impl.rocket.travelpredicate.type.*;
 import dev.galacticraft.mod.Constant;
@@ -90,6 +91,7 @@ public final class BuiltInRocketRegistries {
         Registry.register(ROCKET_BOTTOM_TYPE, new ResourceLocation(Constant.MOD_ID, "basic"), BasicRocketBottomType.INSTANCE);
         Registry.register(ROCKET_UPGRADE_TYPE, new ResourceLocation(Constant.MOD_ID, "storage"), StorageUpgradeType.INSTANCE);
 
-        Registry.register(ROCKET_PART_RECIPE_TYPE, Constant.id("slotted_default"), PatternedRocketPartRecipeType.INSTANCE);
+        Registry.register(ROCKET_PART_RECIPE_TYPE, Constant.id("wrap_patterned"), PatternedRocketPartRecipeType.INSTANCE);
+        Registry.register(ROCKET_PART_RECIPE_TYPE, Constant.id("centered_patterned"), CenteredPatternedRocketPartRecipeType.INSTANCE);
     }
 }
