@@ -34,12 +34,16 @@ import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.Holder;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -77,23 +81,17 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
 
     private static final int TAB_SPACING = 1;
     private static final int TAB_SELECTED_U = 219;
-    private static final int TAB_SELECTED_V = 127;
+    private static final int TAB_SELECTED_V = 91;
     private static final int TAB_U = 224;
-    private static final int TAB_V = 154;
+    private static final int TAB_V = 118;
     private static final int TAB_HEIGHT = 26;
     private static final int TAB_WIDTH = 30;
     private static final int TAB_SELECTED_WIDTH = 35;
 
-    private static final int FILTER_ALL_U = 202;
-    private static final int FILTER_KNOWN_U = 230;
-    private static final int FILTER_V = 0;
-    private static final int FILTER_V_HOVER = 18;
-    private static final int FILTER_WIDTH = 26;
-    private static final int FILTER_HEIGHT = 16;
-
-    private static final int RECIPE_KNOWN_U = 204;
-    private static final int RECIPE_UNKNOWN_U = 231;
+    private static final int RECIPE_CRAFTABLE_U = 204;
+    private static final int RECIPE_UNCRAFTABLE_U = 231;
     private static final int RECIPE_V = 36;
+    private static final int RECIPE_SELECTED_V = 63;
     private static final int RECIPE_WIDTH = 25;
     private static final int RECIPE_HEIGHT = 25;
 
@@ -107,6 +105,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
 
     private int page = 0;
     private @Nullable List<Holder.Reference<? extends RocketPart<?, ?>>> recipes = null;
+    private int timesInventoryChanged;
 
     public RocketWorkbenchScreen(RocketWorkbenchMenu menu, Inventory inventory, Component component) {
         super(menu, inventory, component);
@@ -123,6 +122,23 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
     @Override
     public void onClose() {
         super.onClose();
+    }
+
+    @Override
+    protected void containerTick() {
+        super.containerTick();
+        if (this.timesInventoryChanged != this.menu.playerInventory.getTimesChanged()) {
+            this.timesInventoryChanged = this.menu.playerInventory.getTimesChanged();
+
+            StackedContents contents = new StackedContents();
+            this.menu.playerInventory.fillStackedContents(contents);
+            this.menu.coneRecipes.calculateCraftable(contents);
+            this.menu.bodyRecipes.calculateCraftable(contents);
+            this.menu.finsRecipes.calculateCraftable(contents);
+            this.menu.boosterRecipes.calculateCraftable(contents);
+            this.menu.bottomRecipes.calculateCraftable(contents);
+            this.menu.upgradeRecipes.calculateCraftable(contents);
+        }
     }
 
     @Override
@@ -146,57 +162,6 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
                 }
             }
         }
-    }
-
-    private void drawSlots(BatchedRenderer render, float delta, int mouseX, int mouseY) {
-
-//        RocketPartRecipe<?, ?> bottomSelection = this.menu.bottom.getSelection();
-//
-//        int midsectionWidth = Math.max((bottomSelection != null ? bottomSelection.width() : 0), Math.max((this.menu.body.getSelection() != null ? this.menu.body.getSelection().width() : 0), (this.menu.cone.getSelection() != null ? this.menu.cone.getSelection().width() : 0)));
-//        int leftEdge = RocketWorkbenchMenu.SCREEN_CENTER_BASE_X - midsectionWidth / 2;
-//        int rightSide = RocketWorkbenchMenu.SCREEN_CENTER_BASE_X + midsectionWidth / 2;
-//
-//        if (bottomSelection != null) {
-//            int leftSide = RocketWorkbenchMenu.SCREEN_CENTER_BASE_X - bottomSelection.width() / 2;
-//            int bottomEdge = RocketWorkbenchMenu.SCREEN_CENTER_BASE_Y + this.menu.additionalHeight;
-//            centered(render, bottomSelection, this.menu.bottom.inventory, leftSide, bottomEdge);
-//        }
-//
-//        if (this.menu.body.getSelection() != null) {
-//            int leftSide = RocketWorkbenchMenu.SCREEN_CENTER_BASE_X - this.menu.body.getSelection().width() / 2;
-//            int bottomEdge = (RocketWorkbenchMenu.SCREEN_CENTER_BASE_Y + this.menu.additionalHeight) - (bottomSelection != null ? bottomSelection.height() + RocketWorkbenchMenu.SPACING : 0);
-//            centered(render, this.menu.body.getSelection(), this.menu.body.inventory, leftSide, bottomEdge);
-//        }
-//
-//        if (this.menu.cone.getSelection() != null) {
-//            int leftSide = RocketWorkbenchMenu.SCREEN_CENTER_BASE_X - this.menu.cone.getSelection().width() / 2;
-//            int bottomEdge = (RocketWorkbenchMenu.SCREEN_CENTER_BASE_Y + this.menu.additionalHeight) - (bottomSelection != null ? bottomSelection.height() + RocketWorkbenchMenu.SPACING : 0) - (this.menu.body.getSelection() != null ? this.menu.body.getSelection().height() + RocketWorkbenchMenu.SPACING : 0);
-//            centered(render, this.menu.cone.getSelection(), this.menu.cone.inventory, leftSide, bottomEdge);
-//        }
-//
-//        if (this.menu.booster.getSelection() != null) {
-//            int bottomEdge = RocketWorkbenchMenu.SCREEN_CENTER_BASE_Y + this.menu.additionalHeight;
-//            mirrored(render, this.menu.booster.getSelection(), this.menu.booster.inventory, leftEdge, rightSide, bottomEdge);
-//        }
-//
-//        if (this.menu.fins.getSelection() != null) {
-//            int bottomEdge = RocketWorkbenchMenu.SCREEN_CENTER_BASE_Y + this.menu.additionalHeight - (this.menu.booster.getSelection() != null ? this.menu.booster.getSelection().height() + RocketWorkbenchMenu.SPACING : 0);
-//            mirrored(render, this.menu.fins.getSelection(), this.menu.fins.inventory, leftEdge, rightSide, bottomEdge);
-//        }
-//
-//        final int baseX = 11 - 2;
-//        int y = 58 + this.menu.additionalHeight;
-//        int x = baseX;
-////        for (int k = 0; k < this.menu.upgradeCapacity; k++) { //fixme
-////            batchUpgradeSlot(render, x, y);
-////            if (x == baseX) {
-////                x += 21;
-////            } else {
-////                x = baseX;
-////                y -= 21;
-////            }
-////        }
-
     }
 
     @Override
@@ -230,6 +195,15 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
                         if (i < this.recipes.size()) {
                             if (button == GLFW.GLFW_MOUSE_BUTTON_1) {
                                 this.getSelection().setSelection(this.recipes.get(i));
+                                FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+                                buf.writeByte(this.openTab.type.ordinal());
+                                if (this.recipes.get(i) != null) {
+                                    buf.writeBoolean(true);
+                                    buf.writeResourceLocation(this.recipes.get(i).key().location());
+                                } else {
+                                    buf.writeBoolean(false);
+                                }
+                                ClientPlayNetworking.send(Constant.Packet.SELECT_PART, buf);
                                 return true;
                             } else if (button == GLFW.GLFW_MOUSE_BUTTON_2) {
                                 //todo
@@ -297,7 +271,9 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
                 for (int y = 0; y < 7 && i < size; y++) {
                     for (int x = 0; x < 5 && i < size; x++) {
                         Holder.Reference<? extends RocketPart<?, ?>> part = this.recipes.get(i);
-                        render.blit(11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, isKnown(part) ? RECIPE_KNOWN_U : RECIPE_UNKNOWN_U, RECIPE_V, RECIPE_WIDTH, RECIPE_HEIGHT);
+                        int uOffset = isCraftable(part) ? RECIPE_CRAFTABLE_U : RECIPE_UNCRAFTABLE_U;
+                        int vOffset = this.getSelection().selection == part ? RECIPE_SELECTED_V : RECIPE_V;
+                        render.blit(11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, uOffset, vOffset, RECIPE_WIDTH, RECIPE_HEIGHT);
                         if (part != null && mouseIn(mouseX, mouseY, 11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, RECIPE_WIDTH, RECIPE_HEIGHT)) {
                             setTooltipForNextRenderPass(Component.literal(part.key().location().toString())); //todo
                         }
@@ -341,8 +317,8 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
         pose.popPose();
     }
 
-    private boolean isKnown(Holder.Reference<? extends RocketPart<?, ?>> recipe) {
-        return true;
+    private boolean isCraftable(Holder.Reference<? extends RocketPart<?, ?>> recipe) {
+        return recipe == null || this.getRecipes().getCraftable().contains(recipe);
     }
 
     private static boolean mouseIn(double mouseX, double mouseY, int x, int y, int width, int height) {

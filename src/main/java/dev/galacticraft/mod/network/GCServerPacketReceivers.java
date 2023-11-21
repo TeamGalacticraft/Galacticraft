@@ -26,6 +26,8 @@ import dev.galacticraft.api.accessor.SatelliteAccessor;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.entity.Rocket;
+import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.api.rocket.part.RocketPartTypes;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.mod.Constant;
@@ -36,10 +38,12 @@ import dev.galacticraft.mod.events.GCEventHandlers;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
 import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
 import dev.galacticraft.mod.screen.RocketMenu;
+import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;
@@ -97,6 +101,22 @@ public class GCServerPacketReceivers {
                             machine.setTargetSize(max);
                         }
                     }
+                }
+            });
+        });
+
+        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.SELECT_PART, (server, player, handler, buf, responseSender) -> {
+            RocketPartTypes value = RocketPartTypes.values()[buf.readByte()];
+            ResourceKey<? extends RocketPart<?, ?>> key;
+            if (buf.readBoolean()) {
+                key = ResourceKey.<RocketPart<?, ?>>create(((ResourceKey) value.key), buf.readResourceLocation());
+            } else {
+                key = null;
+            }
+            server.execute(() -> {
+                if (player.containerMenu instanceof RocketWorkbenchMenu menu) {
+                    menu.getSelection(value).setSelection(key == null ? null : server.registryAccess().registryOrThrow(value.key).getHolderOrThrow((ResourceKey<RocketPart<?, ?>>) key));
+                    menu.workbench.setChanged();
                 }
             });
         });

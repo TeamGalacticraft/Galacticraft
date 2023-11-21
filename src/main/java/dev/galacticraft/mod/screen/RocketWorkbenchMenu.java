@@ -24,29 +24,38 @@ package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.api.rocket.part.RocketPartTypes;
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
+import dev.galacticraft.machinelib.api.filter.ResourceFilter;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity.RecipeSelection;
+import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
+import dev.galacticraft.mod.mixin.AbstractContainerMenuAccessor;
+import dev.galacticraft.mod.world.inventory.RocketResultSlot;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RocketWorkbenchMenu extends AbstractContainerMenu {
+public class RocketWorkbenchMenu extends AbstractContainerMenu implements VariableSizedContainer.Listener {
     public static final int SPACING = 2;
 
     public static final int SCREEN_CENTER_BASE_X = 88;
-    public static final int SCREEN_CENTER_BASE_Y = 144;
+    public static final int SCREEN_CENTER_BASE_Y = 158;
 
     public final RecipeSelection cone;
     public final RecipeSelection body;
@@ -62,6 +71,8 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu {
     public final RecipeCollection bottomRecipes;
     public final RecipeCollection upgradeRecipes;
 
+    public final RocketWorkbenchBlockEntity workbench;
+
     public int additionalHeight = 0;
 
     public final Inventory playerInventory;
@@ -76,13 +87,14 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu {
         this.booster = workbench.booster;
         this.bottom = workbench.bottom;
         this.upgrade = workbench.upgrade;
+        this.workbench = workbench;
 
-        this.cone.inventory.setListener(this::onSizeChange);
-        this.body.inventory.setListener(this::onSizeChange);
-        this.fins.inventory.setListener(this::onSizeChange);
-        this.booster.inventory.setListener(this::onSizeChange);
-        this.bottom.inventory.setListener(this::onSizeChange);
-        this.upgrade.inventory.setListener(this::onSizeChange);
+        this.cone.inventory.addListener(this);
+        this.body.inventory.addListener(this);
+        this.fins.inventory.addListener(this);
+        this.booster.inventory.addListener(this);
+        this.bottom.inventory.addListener(this);
+        this.upgrade.inventory.addListener(this);
 
         RegistryAccess registryAccess = playerInventory.player.level().registryAccess();
         this.coneRecipes = new RecipeCollection(registryAccess.registryOrThrow(RocketRegistries.ROCKET_CONE));
@@ -101,7 +113,18 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu {
         this.bottomRecipes.calculateCraftable(contents);
         this.upgradeRecipes.calculateCraftable(contents);
 
-        this.onSizeChange();
+        this.onSizeChanged();
+    }
+
+    @Override
+    public void removed(Player player) {
+        super.removed(player);
+        this.cone.inventory.removeListener(this);
+        this.body.inventory.removeListener(this);
+        this.fins.inventory.removeListener(this);
+        this.booster.inventory.removeListener(this);
+        this.bottom.inventory.removeListener(this);
+        this.upgrade.inventory.removeListener(this);
     }
 
     public RocketWorkbenchMenu(int syncId, Inventory playerInventory, FriendlyByteBuf buf) {
@@ -109,26 +132,61 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu {
     }
 
     public static int calculateAdditionalHeight(RocketPartRecipe<?, ?> cone, RocketPartRecipe<?, ?> body, RocketPartRecipe<?, ?> fins, RocketPartRecipe<?, ?> booster, RocketPartRecipe<?, ?> bottom, RocketPartRecipe<?, ?> upgrade) {
-        int rocketHeight = Math.max(126, Math.max(Math.max(
+        int rocketHeight = Math.max(140, Math.max(Math.max(
                         (bottom != null ? bottom.height() + SPACING : 0) + (body != null ? body.height() + SPACING : 0) + (cone != null ? cone.height() + SPACING : 0),
                         (booster != null ? booster.height() + SPACING : 0) + (fins != null ? fins.height() + SPACING : 0)),
                 35 + (upgrade != null ? SPACING : 0) + ((int)Math.ceil(1 / 2.0)) * 19));
 
-        return rocketHeight - 126;
+        return rocketHeight - 140;
     }
 
     @Override
-    public @NotNull ItemStack quickMoveStack(Player player, int i) {
-        return ItemStack.EMPTY;
+    public @NotNull ItemStack quickMoveStack(Player player, int index) {
+        ItemStack out = ItemStack.EMPTY;
+        Slot slot = this.slots.get(index);
+        ItemStack stack = slot.getItem();
+        if (!stack.isEmpty()) {
+            out = stack.copy();
+            int slots = this.slots.size();
+            if (index < slots - 9 * 4) {
+                if (!this.moveItemStackTo(stack, slots - 9 * 4, slots, true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.moveItemStackTo(stack, 0, slots - 9 * 4, false)) {
+                return ItemStack.EMPTY;
+            }
+
+            if (stack.isEmpty()) {
+                slot.setByPlayer(ItemStack.EMPTY);
+            } else {
+                slot.setChanged();
+            }
+        }
+
+        return out;
+    }
+
+    public RocketWorkbenchBlockEntity.RecipeSelection getSelection(RocketPartTypes type) {
+        return switch (type) {
+            case CONE -> this.cone;
+            case BODY -> this.body;
+            case FIN -> this.fins;
+            case BOOSTER -> this.booster;
+            case BOTTOM -> this.bottom;
+            case UPGRADE -> this.upgrade;
+        };
     }
 
     @Override
     public boolean stillValid(Player player) {
-        return this.playerInventory.stillValid(player);
+        return Container.stillValidBlockEntity(this.workbench, player);
     }
 
-    public void onSizeChange() {
+    @Override
+    public void onSizeChanged() {
         this.slots.clear();
+        ((AbstractContainerMenuAccessor)this).getLastSlots().clear();
+        ((AbstractContainerMenuAccessor)this).getDataSlots().clear();
 
         RocketPartRecipe<?, ?> bottom = this.bottom.getRecipe();
         RocketPartRecipe<?, ?> body = this.body.getRecipe();
@@ -146,7 +204,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu {
             bottom.place((i, x, y, filter) -> {
                         ext[0] = Math.min(ext[0], x - SCREEN_CENTER_BASE_X);
                         ext[1] = Math.max(ext[1], x - SCREEN_CENTER_BASE_X + 18);
-                        this.slots.add(new Slot(this.bottom.inventory, i, x, y));
+                        this.addSlot(new RocketCraftingSlot(this.bottom.inventory, i, x, y, filter));
                     },
                     SCREEN_CENTER_BASE_X,
                     SCREEN_CENTER_BASE_X,
@@ -157,7 +215,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu {
             body.place((i, x, y, filter) -> {
                         ext1[0] = Math.min(ext1[0], x - SCREEN_CENTER_BASE_X);
                         ext1[1] = Math.max(ext1[1], x - SCREEN_CENTER_BASE_X + 18);
-                        this.slots.add(new Slot(this.body.inventory, i, x, y));
+                        this.addSlot(new RocketCraftingSlot(this.body.inventory, i, x, y, filter));
                     },
                     SCREEN_CENTER_BASE_X,
                     SCREEN_CENTER_BASE_X,
@@ -169,7 +227,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu {
             cone.place((i, x, y, filter) -> {
                         ext2[0] = Math.min(ext2[0], x - SCREEN_CENTER_BASE_X);
                         ext2[1] = Math.max(ext2[1], x - SCREEN_CENTER_BASE_X + 18);
-                        this.slots.add(new Slot(this.cone.inventory, i, x, y));
+                        this.addSlot(new RocketCraftingSlot(this.cone.inventory, i, x, y, filter));
                     },
                     SCREEN_CENTER_BASE_X,
                     SCREEN_CENTER_BASE_X,
@@ -188,7 +246,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu {
                 ext[0] = Math.min(ext[0], ext2[0]);
                 ext[1] = Math.max(ext[1], ext2[1]);
             }
-            fins.place((i, x, y, filter) -> this.slots.add(new Slot(this.fins.inventory, i, x, y)),
+            fins.place((i, x, y, filter) -> this.addSlot(new RocketCraftingSlot(this.fins.inventory, i, x, y, filter)),
                     SCREEN_CENTER_BASE_X + ext[0] - SPACING,
                     SCREEN_CENTER_BASE_X + ext[1] + SPACING,
                     SCREEN_CENTER_BASE_Y + this.additionalHeight
@@ -205,7 +263,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu {
                 ext[1] = Math.max(ext[1], ext2[1]);
             }
 
-            booster.place((i, x, y, filter) -> this.slots.add(new Slot(this.booster.inventory, i, x, y)),
+            booster.place((i, x, y, filter) -> this.addSlot(new RocketCraftingSlot(this.booster.inventory, i, x, y, filter)),
                     SCREEN_CENTER_BASE_X + ext[0] - SPACING,
                     SCREEN_CENTER_BASE_X + ext[1] + SPACING,
                     SCREEN_CENTER_BASE_Y + this.additionalHeight
@@ -215,12 +273,14 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu {
         }
 
         if (upgrade != null) {
-            upgrade.place((i, x, y, filter) -> this.slots.add(new Slot(this.upgrade.inventory, i, x, y)),
+            upgrade.place((i, x, y, filter) -> this.addSlot(new RocketCraftingSlot(this.upgrade.inventory, i, x, y, filter)),
                     11, //FIXME
                     11,
                     62 + this.additionalHeight //FIXME
             );
         }
+
+        this.addSlot(new RocketResultSlot(this, this.workbench.output, 0, 194, 136 + this.additionalHeight));
 
         for (int row = 0; row < 3; ++row) {
             for (int column = 0; column < 9; ++column) {
@@ -230,6 +290,30 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu {
 
         for (int column = 0; column < 9; ++column) {
             this.addSlot(new Slot(this.playerInventory, column, column * 18 + 8, 225 + this.additionalHeight));
+        }
+    }
+
+    @Override
+    public void onItemChanged() {
+        RocketPartRecipe<?, ?> recipe = this.cone.getRecipe();
+        boolean craftable = recipe != null && recipe.matches(this.cone.inventory, this.workbench.getLevel());
+        recipe = this.body.getRecipe();
+        craftable = craftable && (recipe != null && recipe.matches(this.body.inventory, this.workbench.getLevel()));
+        recipe = this.fins.getRecipe();
+        craftable = craftable && (recipe != null && recipe.matches(this.fins.inventory, this.workbench.getLevel()));
+        recipe = this.booster.getRecipe();
+        craftable = craftable && (recipe == null || recipe.matches(this.booster.inventory, this.workbench.getLevel()));
+        recipe = this.bottom.getRecipe();
+        craftable = craftable && (recipe != null && recipe.matches(this.bottom.inventory, this.workbench.getLevel()));
+        recipe = this.upgrade.getRecipe();
+        craftable = craftable && (recipe == null ||recipe.matches(this.upgrade.inventory, this.workbench.getLevel()));
+        if (craftable) {
+            ItemStack stack = new ItemStack(GCItems.ROCKET, 1);
+            CompoundTag tag = new CompoundTag(); //TODO
+            stack.setTag(tag);
+            this.workbench.output.setItem(0, stack);
+        } else {
+            this.workbench.output.setItem(0, ItemStack.EMPTY);
         }
     }
 
@@ -264,6 +348,20 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu {
                     }
                 }
             });
+        }
+    }
+
+    private static class RocketCraftingSlot extends Slot {
+        private final ResourceFilter<Item> filter;
+
+        public RocketCraftingSlot(Container container, int slot, int x, int y, ResourceFilter<Item> filter) {
+            super(container, slot, x, y);
+            this.filter = filter;
+        }
+
+        @Override
+        public boolean mayPlace(ItemStack stack) {
+            return stack.isEmpty() || this.filter.test(stack.getItem(), stack.getTag());
         }
     }
 }

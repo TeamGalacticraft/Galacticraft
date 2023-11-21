@@ -29,14 +29,16 @@ import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class VariableSizedContainer implements Container {
     private int targetSize;
     private final ArrayList<ItemStack> stacks;
-    private Runnable listener = null;
+    private final List<Listener> listeners = new ArrayList<>();
 
     public VariableSizedContainer(int targetSize) {
         this.targetSize = targetSize;
@@ -47,12 +49,16 @@ public class VariableSizedContainer implements Container {
         }
     }
 
-    public void setListener(Runnable listener) {
-        this.listener = listener;
+    public void addListener(Listener listener) {
+        this.listeners.add(listener);
     }
 
-    public void removeListener() {
-        this.listener = null;
+    public void removeListener(Listener listener) {
+        this.listeners.remove(listener);
+    }
+
+    public int getTargetSize() {
+        return targetSize;
     }
 
     public void resize(int size) {
@@ -72,7 +78,10 @@ public class VariableSizedContainer implements Container {
                     this.stacks.add(ItemStack.EMPTY);
                 }
             }
-            if (this.listener != null) this.listener.run();
+        }
+
+        for (Listener listener : this.listeners) {
+            listener.onSizeChanged();
         }
     }
 
@@ -90,16 +99,12 @@ public class VariableSizedContainer implements Container {
     }
 
     @Override
-    public ItemStack getItem(int i) {
-        if (i >= this.stacks.size()) {
-            System.out.println("oob!");
-            return ItemStack.EMPTY;
-        }
+    public @NotNull ItemStack getItem(int i) {
         return this.stacks.get(i);
     }
 
     @Override
-    public ItemStack removeItem(int i, int j) {
+    public @NotNull ItemStack removeItem(int i, int j) {
         ItemStack itemStack = ContainerHelper.removeItem(this.stacks, i, j);
         if (!itemStack.isEmpty()) {
             this.setChanged();
@@ -109,7 +114,7 @@ public class VariableSizedContainer implements Container {
     }
 
     @Override
-    public ItemStack removeItemNoUpdate(int i) {
+    public @NotNull ItemStack removeItemNoUpdate(int i) {
         ItemStack itemStack = this.stacks.get(i);
         if (itemStack.isEmpty()) {
             return ItemStack.EMPTY;
@@ -139,6 +144,9 @@ public class VariableSizedContainer implements Container {
                     break;
                 }
             }
+        }
+        for (Listener listener : this.listeners) {
+            listener.onItemChanged();
         }
     }
 
@@ -183,5 +191,9 @@ public class VariableSizedContainer implements Container {
         for (int i = 0; i < items.size(); i++) {
             this.stacks.add(ItemStack.of(items.getCompound(i)));
         }
+    }
+    public interface Listener {
+        void onSizeChanged();
+        void onItemChanged();
     }
 }

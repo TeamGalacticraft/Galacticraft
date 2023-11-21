@@ -4,6 +4,7 @@
   "plugin": "dev.galacticraft.mod.GalacticraftMixinPlugin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "AbstractContainerMenuAccessor",
     "AbstractSkeletonEntityAccessor",
     "BucketItemAccessor",
     "BucketItemMixin",

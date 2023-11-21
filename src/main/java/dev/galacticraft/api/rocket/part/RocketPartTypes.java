@@ -26,6 +26,7 @@ import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.part.config.*;
 import dev.galacticraft.api.rocket.part.type.*;
 import dev.galacticraft.mod.Constant;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 
@@ -37,14 +38,14 @@ public enum RocketPartTypes {
     BOTTOM(RocketRegistries.ROCKET_BOTTOM, RocketBottomConfig.class, RocketBottomType.class, RocketBottom.class, Component.translatable("ui.galacticraft.engine")),
     UPGRADE(RocketRegistries.ROCKET_UPGRADE, RocketUpgradeConfig.class, RocketUpgradeType.class, RocketUpgrade.class, Component.translatable("ui.galacticraft.upgrade"));
 
-//    private final ResourceKey<? extends Registry<? super RocketPart<?, ?>>> key;
+    public final ResourceKey<? extends Registry<? extends RocketPart<?, ?>>> key;
     private final Class<? extends RocketPartConfig> config;
     private final Class<? extends RocketPartType> type;
     private final Class<? extends RocketPart> part;
     public final Component name;
 
-    <C extends RocketPartConfig, T extends RocketPartType<C>, P extends RocketPart<C, T>> RocketPartTypes(Object key, Class<C> config, Class<T> type, Class<P> part, Component name) {
-//        this.key = key;
+    <C extends RocketPartConfig, T extends RocketPartType<C>, P extends RocketPart<C, T>> RocketPartTypes(ResourceKey<? extends Registry<? extends RocketPart<?, ?>>> key, Class<C> config, Class<T> type, Class<P> part, Component name) {
+        this.key = key;
         this.config = config;
         this.type = type;
         this.part = part;

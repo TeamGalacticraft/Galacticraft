@@ -51,10 +51,9 @@ public class RocketWorkbench extends BaseEntityBlock {
             BlockEntity entity = level.getBlockEntity(pos);
             if (entity instanceof RocketWorkbenchBlockEntity workbench) {
                 player.openMenu(workbench);
-                return InteractionResult.CONSUME;
             }
         }
-        return super.use(blockState, level, pos, player, interactionHand, blockHitResult);
+        return InteractionResult.CONSUME;
     }
 
     @Nullable

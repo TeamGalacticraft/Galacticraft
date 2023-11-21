@@ -933,6 +933,7 @@ public interface Constant {
         ResourceLocation ROCKET_PITCH = id("rocket_pitch");
         ResourceLocation ROCKET_YAW = id("rocket_yaw");
         ResourceLocation OPEN_SCREEN = id("open_screen");
+        ResourceLocation SELECT_PART = id("select_part");
 
         ResourceLocation LANDER_PITCH = id("lander_pitch");
         ResourceLocation LANDER_YAW = id("lander_yaw");
