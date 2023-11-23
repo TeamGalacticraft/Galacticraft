@@ -29,6 +29,7 @@ import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.satellite.SatelliteRecipe;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
+import dev.galacticraft.api.universe.celestialbody.CelestialHandler;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
@@ -48,6 +49,7 @@ public record PlanetConfig(@NotNull MutableComponent name, @NotNull MutableCompo
                            @NotNull ResourceKey<Galaxy> galaxy, @NotNull ResourceKey<CelestialBody<?, ?>> parent,
                            @NotNull CelestialPosition<?, ?> position, @NotNull CelestialDisplay<?, ?> display,
                            @NotNull ResourceKey<Level> world, Holder<CelestialTeleporter<?, ?>> teleporter, @NotNull GasComposition atmosphere, float gravity,
+                           CelestialHandler celestialHandler,
                            int accessWeight, int dayTemperature, int nightTemperature,
                            @NotNull Optional<SatelliteRecipe> satelliteRecipe) implements CelestialBodyConfig {
     public static final Codec<PlanetConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -61,6 +63,7 @@ public record PlanetConfig(@NotNull MutableComponent name, @NotNull MutableCompo
             RegistryFileCodec.create(AddonRegistries.CELESTIAL_TELEPORTER, CelestialTeleporter.DIRECT_CODEC).fieldOf("teleporter").forGetter(PlanetConfig::teleporter),
             GasComposition.CODEC.fieldOf("atmosphere").forGetter(PlanetConfig::atmosphere),
             Codec.FLOAT.fieldOf("gravity").forGetter(PlanetConfig::gravity),
+            CelestialHandler.CODEC.fieldOf("celestial_handler").forGetter(PlanetConfig::celestialHandler),
             Codec.INT.fieldOf("access_weight").forGetter(PlanetConfig::accessWeight),
             Codec.INT.fieldOf("day_temperature").forGetter(PlanetConfig::dayTemperature),
             Codec.INT.fieldOf("night_temperature").forGetter(PlanetConfig::nightTemperature),

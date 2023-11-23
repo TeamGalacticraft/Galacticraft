@@ -86,12 +86,12 @@ public class ParaChestBlockEntity extends RandomizableContainerBlockEntity imple
     }
 
     @Override
-    protected NonNullList<ItemStack> getItems() {
+    public NonNullList<ItemStack> getItems() {
         return this.inventory;
     }
 
     @Override
-    protected void setItems(NonNullList<ItemStack> items) {
+    public void setItems(NonNullList<ItemStack> items) {
         this.inventory = items;
     }
 

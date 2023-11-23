@@ -46,6 +46,8 @@ public interface Constant {
     String COMMON_NAMESPACE = "c";
     Logger LOGGER = LogManager.getLogger("Galacticraft");
 
+    float RADIANS_TO_DEGREES = 180F / 3.1415927F;
+
     @Contract(value = "_ -> new", pure = true)
     static @NotNull ResourceLocation id(String id) {
         return new ResourceLocation(MOD_ID, id);  
@@ -649,6 +651,7 @@ public interface Constant {
         String T1_ROCKET = "t1_rocket";
         String ROCKET = "rocket";
         String LANDER = "lander";
+        String PARACHEST = "parachest";
         String BUBBLE = "bubble";
         String EVOLVED_SKELETON = "evolved_skeleton";
         String EVOLVED_SPIDER = "evolved_spider";
@@ -935,6 +938,7 @@ public interface Constant {
         ResourceLocation LANDER_YAW = id("lander_yaw");
         ResourceLocation LANDER_ACCERLERATE = id("lander_accelerate");
         ResourceLocation ENTITY_UPDATE = id("entity_update");
+        ResourceLocation PLANET_TP = id("planet_tp");
     }
 
     interface Structure {

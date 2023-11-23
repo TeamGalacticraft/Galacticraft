@@ -68,7 +68,9 @@ public record ParaChestBakedModel(BakedModel parent, Map<DyeColor, BakedModel> b
 
                 Property<?> property = stateDefinition.getProperty("color");
                 if (property != null) {
-                    bakedChutes.get(property.getValue(blockStateTag.getString("color")).get()).emitItemQuads(stack, randomSupplier, context);
+                    property.getValue(blockStateTag.getString("color")).ifPresent(color -> {
+                        bakedChutes.get(color).emitItemQuads(stack, randomSupplier, context);
+                    });
                 }
         } else {
             bakedChutes.get(DyeColor.WHITE).emitItemQuads(stack, randomSupplier, context);

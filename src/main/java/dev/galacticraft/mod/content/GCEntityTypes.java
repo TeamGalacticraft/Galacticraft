@@ -55,6 +55,7 @@ public class GCEntityTypes {
     public static final EntityType<BubbleEntity> BUBBLE = FabricEntityTypeBuilder.create(MobCategory.MISC, BubbleEntity::new).fireImmune().dimensions(EntityDimensions.fixed(0, 0)).disableSaving().disableSummon().build();
     public static final EntityType<RocketEntity> ROCKET = FabricEntityTypeBuilder.create(MobCategory.MISC, RocketEntity::new).trackRangeBlocks(32).trackedUpdateRate(2).forceTrackedVelocityUpdates(false).dimensions(EntityDimensions.fixed(2.3F, 5.25F)).build(); //PLAYER VALUES
     public static final EntityType<LanderEntity> LANDER = FabricEntityTypeBuilder.create(MobCategory.MISC, LanderEntity::new).trackRangeBlocks(32).dimensions(EntityDimensions.fixed(2.5F, 4F)).fireImmune().build();
+    public static final EntityType<ParachestEntity> PARACHEST = FabricEntityTypeBuilder.<ParachestEntity>create(MobCategory.MISC, ParachestEntity::new).trackRangeBlocks(150).trackedUpdateRate(5).dimensions(EntityDimensions.fixed(1.0F, 1.0F)).build();
 
     public static void register() {
         Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.EVOLVED_ZOMBIE), EVOLVED_ZOMBIE);
@@ -74,6 +75,7 @@ public class GCEntityTypes {
         Registry.register(BuiltInRegistries.ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Entity.BUBBLE), BUBBLE);
         Registry.register(BuiltInRegistries.ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Entity.ROCKET), ROCKET);
         Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.LANDER), LANDER);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.PARACHEST), PARACHEST);
 
         FabricDefaultAttributeRegistry.register(EVOLVED_ZOMBIE, EvolvedZombieEntity.createAttributes().add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D).add(Attributes.MOVEMENT_SPEED, 0.35D).add(Attributes.MAX_HEALTH, 30.0D));
         FabricDefaultAttributeRegistry.register(EVOLVED_CREEPER, EvolvedCreeperEntity.createAttributes().add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D));

@@ -109,7 +109,7 @@ public class RocketEntity extends Entity implements Rocket {
     public static final EntityDataAccessor<ResourceLocation> ROCKET_BOOSTER = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.ROCKET_PART);
     public static final EntityDataAccessor<ResourceLocation> ROCKET_BOTTOM = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.ROCKET_PART);
     public static final EntityDataAccessor<ResourceLocation[]> ROCKET_UPGRADES = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.ROCKET_UPGRADES);
-    private final boolean debugMode = false && FabricLoader.getInstance().isDevelopmentEnvironment();
+    private final boolean debugMode = FabricLoader.getInstance().isDevelopmentEnvironment();
 
     private BlockPos linkedPad = BlockPos.ZERO;
     private final SingleFluidStorage tank = SingleFluidStorage.withFixedCapacity(FluidUtil.bucketsToDroplets(100), () -> {});
@@ -268,7 +268,7 @@ public class RocketEntity extends Entity implements Rocket {
         if (!this.getPassengers().isEmpty() && ticksSinceJump > 10) {
             if (this.getFirstPassenger() instanceof ServerPlayer) {
                 if (getLaunchStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
-                    if (!isTankEmpty()) {
+                    if (!isTankEmpty() || debugMode) {
                         this.timeBeforeLaunch = 400;
                         this.setLaunchStage(this.getLaunchStage().next());
                         if (getLaunchStage() == LaunchStage.WARNING) {

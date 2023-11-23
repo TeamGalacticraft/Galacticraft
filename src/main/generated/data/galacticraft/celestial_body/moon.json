@@ -8,6 +8,7 @@
       "pressure": 3.0E-15,
       "temperature": 23.0
     },
+    "celestial_handler": "galacticraft:default",
     "day_temperature": 105,
     "description": "planet.galacticraft.moon.desc",
     "display": {

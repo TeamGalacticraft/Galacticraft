@@ -129,6 +129,7 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.register(GCEntityTypes.BUBBLE, BubbleEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.ROCKET, RocketEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.LANDER, LanderEntityRenderer::new);
+        EntityRendererRegistry.register(GCEntityTypes.PARACHEST, ParachestRenderer::new);
 
         GCBlockEntityRenderer.register();
         GCClientPacketReceiver.register();
