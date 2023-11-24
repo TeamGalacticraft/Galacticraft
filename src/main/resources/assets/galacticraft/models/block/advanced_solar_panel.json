@@ -1,8 +1,0 @@
-{
-  "machinelib:generated": "galacticraft:solar_panel",
-  "data": {
-    "front": "galacticraft:block/advanced_solar_panel",
-    "back": "galacticraft:block/machine_power_output",
-    "top": "galacticraft:block/solar_panel"
-  }
-}

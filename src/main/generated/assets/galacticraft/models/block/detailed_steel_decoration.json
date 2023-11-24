@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/cube_bottom_top",
-  "textures": {
-    "bottom": "galacticraft:block/detailed_steel_decoration_top",
-    "side": "galacticraft:block/detailed_steel_decoration_side",
-    "top": "galacticraft:block/steel_decoration"
-  }
-}

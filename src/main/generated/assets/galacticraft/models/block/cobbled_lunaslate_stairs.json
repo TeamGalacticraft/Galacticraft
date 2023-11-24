@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/stairs",
-  "textures": {
-    "bottom": "galacticraft:block/cobbled_lunaslate",
-    "side": "galacticraft:block/cobbled_lunaslate",
-    "top": "galacticraft:block/cobbled_lunaslate"
-  }
-}

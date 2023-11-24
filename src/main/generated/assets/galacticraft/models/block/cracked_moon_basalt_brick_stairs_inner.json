@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/inner_stairs",
-  "textures": {
-    "bottom": "galacticraft:block/cracked_moon_basalt_brick",
-    "side": "galacticraft:block/cracked_moon_basalt_brick",
-    "top": "galacticraft:block/cracked_moon_basalt_brick"
-  }
-}

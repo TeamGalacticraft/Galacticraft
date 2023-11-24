@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab",
-  "textures": {
-    "bottom": "galacticraft:block/lunaslate",
-    "side": "galacticraft:block/lunaslate",
-    "top": "galacticraft:block/lunaslate"
-  }
-}
