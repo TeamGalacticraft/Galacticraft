@@ -41,6 +41,8 @@ import dev.galacticraft.mod.screen.RocketMenu;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -107,15 +109,15 @@ public class GCServerPacketReceivers {
 
         ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.SELECT_PART, (server, player, handler, buf, responseSender) -> {
             RocketPartTypes value = RocketPartTypes.values()[buf.readByte()];
-            ResourceKey<? extends RocketPart<?, ?>> key;
+            ResourceKey<RocketPart<?, ?>> key;
             if (buf.readBoolean()) {
-                key = ResourceKey.<RocketPart<?, ?>>create(((ResourceKey) value.key), buf.readResourceLocation());
+                key = ResourceKey.create(((ResourceKey<? extends Registry<RocketPart<?, ?>>>) value.key), buf.readResourceLocation());
             } else {
                 key = null;
             }
             server.execute(() -> {
                 if (player.containerMenu instanceof RocketWorkbenchMenu menu) {
-                    menu.getSelection(value).setSelection(key == null ? null : server.registryAccess().registryOrThrow(value.key).getHolderOrThrow((ResourceKey<RocketPart<?, ?>>) key));
+                    menu.getSelection(value).setSelection(key == null ? null : (Holder.Reference) server.registryAccess().registryOrThrow(value.key).getHolderOrThrow(key));
                     menu.workbench.setChanged();
                 }
             });

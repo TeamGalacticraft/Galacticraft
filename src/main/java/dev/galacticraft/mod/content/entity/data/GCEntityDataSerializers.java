@@ -30,79 +30,17 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 public class GCEntityDataSerializers {
-    public static final EntityDataSerializer<LaunchStage> LAUNCH_STAGE = new EntityDataSerializer<>() {
-        @Override
-        public void write(FriendlyByteBuf buf, LaunchStage stage) {
-            buf.writeEnum(stage);
-        }
-
-        @Override
-        public LaunchStage read(FriendlyByteBuf buf) {
-            return buf.readEnum(LaunchStage.class);
-        }
-
-        @Override
-        public LaunchStage copy(LaunchStage stage) {
-            return stage;
-        }
-    };
-
-    public static final EntityDataSerializer<ResourceLocation> ROCKET_PART = new EntityDataSerializer<>() {
-        @Override
-        public void write(FriendlyByteBuf buf, ResourceLocation id) {
-            buf.writeResourceLocation(id);
-        }
-
-        @Override
-        public @NotNull ResourceLocation read(FriendlyByteBuf buf) {
-            return buf.readResourceLocation();
-        }
-
-        @Contract(value = "_ -> param1", pure = true)
-        @Override
-        public @NotNull ResourceLocation copy(ResourceLocation id) {
-            return id;
-        }
-    };
+    public static final EntityDataSerializer<LaunchStage> LAUNCH_STAGE = EntityDataSerializer.simpleEnum(LaunchStage.class);
+    public static final EntityDataSerializer<ResourceLocation> IDENTIFIER = EntityDataSerializer.simple(FriendlyByteBuf::writeResourceLocation, FriendlyByteBuf::readResourceLocation);
 
     public static final EntityDataAccessor<Boolean> IS_IN_CRYO_SLEEP_ID = SynchedEntityData.defineId(
             Player.class, EntityDataSerializers.BOOLEAN
     );
-    public static final EntityDataSerializer<ResourceLocation[]> ROCKET_UPGRADES = new EntityDataSerializer<>() {
-        @Override
-        public void write(FriendlyByteBuf buf, ResourceLocation[] ids) {
-            buf.writeVarInt(ids.length);
-            for (ResourceLocation id : ids) {
-                buf.writeResourceLocation(id);
-            }
-        }
-
-        @Override
-        public ResourceLocation @NotNull [] read(FriendlyByteBuf buf) {
-            int s = buf.readVarInt();
-            ResourceLocation[] ids = new ResourceLocation[s];
-            for (int i = 0; i < s; i++) {
-                ids[i] = buf.readResourceLocation();
-            }
-            return ids;
-        }
-
-        @Contract(value = "_ -> param1", pure = true)
-        @Override
-        public @NotNull ResourceLocation[] copy(ResourceLocation[] id) {
-            ResourceLocation[] temp = new ResourceLocation[id.length];
-            System.arraycopy(id, 0, temp, 0, id.length);
-            return temp;
-        }
-    };
 
     public static void register() {
         EntityDataSerializers.registerSerializer(LAUNCH_STAGE);
-        EntityDataSerializers.registerSerializer(ROCKET_PART);
-        EntityDataSerializers.registerSerializer(ROCKET_UPGRADES);
+        EntityDataSerializers.registerSerializer(IDENTIFIER);
     }
 }

@@ -27,7 +27,6 @@ import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.impl.client.rocket.render.BakedModelRocketPartRenderer;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCRocketParts;
-import net.fabricmc.fabric.api.client.model.BakedModelManagerHelper;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Sheets;
@@ -48,14 +47,14 @@ import java.util.List;
 import java.util.Objects;
 
 public class GalacticraftRocketPartRenderers {
-    private static final ResourceLocation DEFAULT_CONE = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_cone_basic.json");
-    private static final ResourceLocation ADVANCED_CONE = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_cone_advanced.json");
-    private static final ResourceLocation SLOPED_CONE = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_cone_sloped.json");
-    private static final ResourceLocation DEFAULT_BODY = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_body.json");
-    private static final ResourceLocation DEFAULT_FIN = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_fins.json");
-    private static final ResourceLocation DEFAULT_BOTTOM = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_bottom.json");
-    private static final ResourceLocation BOOSTER_TIER_1 = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_thruster_tier_1.json");
-    private static final ResourceLocation BOOSTER_TIER_2 = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_thruster_tier_2.json");
+    private static final ResourceLocation DEFAULT_CONE = new ResourceLocation(Constant.MOD_ID, "misc/rocket_cone_basic");
+    private static final ResourceLocation ADVANCED_CONE = new ResourceLocation(Constant.MOD_ID, "misc/rocket_cone_advanced");
+    private static final ResourceLocation SLOPED_CONE = new ResourceLocation(Constant.MOD_ID, "misc/rocket_cone_sloped");
+    private static final ResourceLocation DEFAULT_BODY = new ResourceLocation(Constant.MOD_ID, "misc/rocket_body");
+    private static final ResourceLocation DEFAULT_FIN = new ResourceLocation(Constant.MOD_ID, "misc/rocket_fins");
+    private static final ResourceLocation DEFAULT_BOTTOM = new ResourceLocation(Constant.MOD_ID, "misc/rocket_bottom");
+    private static final ResourceLocation BOOSTER_TIER_1 = new ResourceLocation(Constant.MOD_ID, "misc/rocket_thruster_tier_1");
+    private static final ResourceLocation BOOSTER_TIER_2 = new ResourceLocation(Constant.MOD_ID, "misc/rocket_thruster_tier_2");
 
     private static BakedModel EMPTY_MODEL = new BakedModel() {
         @Override
@@ -100,15 +99,15 @@ public class GalacticraftRocketPartRenderers {
     };
 
     public static void register() {
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(BakedModelManagerHelper.getModel(Minecraft.getInstance().getModelManager(), DEFAULT_CONE))), Sheets::translucentCullBlockSheet));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.ADVANCED_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(BakedModelManagerHelper.getModel(Minecraft.getInstance().getModelManager(), ADVANCED_CONE))), Sheets::translucentCullBlockSheet));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.SLOPED_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(BakedModelManagerHelper.getModel(Minecraft.getInstance().getModelManager(), SLOPED_CONE))), Sheets::translucentCullBlockSheet));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_BODY, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(BakedModelManagerHelper.getModel(Minecraft.getInstance().getModelManager(), DEFAULT_BODY))), Sheets::translucentCullBlockSheet));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_FIN, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(BakedModelManagerHelper.getModel(Minecraft.getInstance().getModelManager(), DEFAULT_FIN))), Sheets::translucentCullBlockSheet));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_BOTTOM, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(BakedModelManagerHelper.getModel(Minecraft.getInstance().getModelManager(), DEFAULT_BOTTOM))), Sheets::translucentCullBlockSheet));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().getModel(DEFAULT_CONE))), Sheets::translucentCullBlockSheet));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.ADVANCED_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().getModel(ADVANCED_CONE))), Sheets::translucentCullBlockSheet));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.SLOPED_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().getModel(SLOPED_CONE))), Sheets::translucentCullBlockSheet));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_BODY, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().getModel(DEFAULT_BODY))), Sheets::translucentCullBlockSheet));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_FIN, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().getModel(DEFAULT_FIN))), Sheets::translucentCullBlockSheet));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_BOTTOM, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().getModel(DEFAULT_BOTTOM))), Sheets::translucentCullBlockSheet));
         RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.STORAGE_UPGRADE, new BakedModelItemRocketPartRenderer(Items.CHEST.getDefaultInstance(), null));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_BOOSTER, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(BakedModelManagerHelper.getModel(Minecraft.getInstance().getModelManager(), BOOSTER_TIER_1))), Sheets::translucentCullBlockSheet));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_2_BOOSTER, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(BakedModelManagerHelper.getModel(Minecraft.getInstance().getModelManager(), BOOSTER_TIER_2))), Sheets::translucentCullBlockSheet));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_BOOSTER, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().getModel(BOOSTER_TIER_1))), Sheets::translucentCullBlockSheet));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_2_BOOSTER, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().getModel(BOOSTER_TIER_2))), Sheets::translucentCullBlockSheet));
     }
 
     public static void registerModelLoader() {

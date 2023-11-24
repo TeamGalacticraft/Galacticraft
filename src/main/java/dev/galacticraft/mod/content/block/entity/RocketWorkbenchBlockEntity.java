@@ -22,7 +22,8 @@
 
 package dev.galacticraft.mod.content.block.entity;
 
-import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.api.registry.RocketRegistries;
+import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
@@ -30,6 +31,7 @@ import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -37,7 +39,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -53,18 +54,14 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
         public boolean canPlaceItem(int index, ItemStack stack) {
             return false;
         }
-
-        @Override
-        public boolean canTakeItem(Container target, int index, ItemStack stack) {
-            return true;
-        }
     };
-    public final RecipeSelection cone = new RecipeSelection(new VariableSizedContainer(0));
-    public final RecipeSelection body = new RecipeSelection(new VariableSizedContainer(0));
-    public final RecipeSelection fins = new RecipeSelection(new VariableSizedContainer(0));
-    public final RecipeSelection booster = new RecipeSelection(new VariableSizedContainer(0));
-    public final RecipeSelection bottom = new RecipeSelection(new VariableSizedContainer(0));
-    public final RecipeSelection upgrade = new RecipeSelection(new VariableSizedContainer(0));
+
+    public final RecipeSelection<RocketCone<?, ?>> cone = new RecipeSelection<>(RocketRegistries.ROCKET_CONE, new VariableSizedContainer(0));
+    public final RecipeSelection<RocketBody<?, ?>> body = new RecipeSelection<>(RocketRegistries.ROCKET_BODY, new VariableSizedContainer(0));
+    public final RecipeSelection<RocketFin<?, ?>> fins = new RecipeSelection<>(RocketRegistries.ROCKET_FIN, new VariableSizedContainer(0));
+    public final RecipeSelection<RocketBooster<?, ?>> booster = new RecipeSelection<>(RocketRegistries.ROCKET_BOOSTER, new VariableSizedContainer(0));
+    public final RecipeSelection<RocketBottom<?, ?>> bottom = new RecipeSelection<>(RocketRegistries.ROCKET_BOTTOM, new VariableSizedContainer(0));
+    public final RecipeSelection<RocketUpgrade<?, ?>> upgrade = new RecipeSelection<>(RocketRegistries.ROCKET_UPGRADE, new VariableSizedContainer(0));
 
     public byte[] color = new byte[4];
 
@@ -90,9 +87,11 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        ListTag list = new ListTag();
-        list.add(tag.get("Output"));
-        this.output.fromTag(list);
+        if (tag.contains("Output")) {
+            ListTag list = new ListTag();
+            list.add(tag.get("Output"));
+            this.output.fromTag(list);
+        }
         this.cone.readTag(tag.getCompound("Cone"));
         this.body.readTag(tag.getCompound("Body"));
         this.fins.readTag(tag.getCompound("Fins"));
@@ -118,16 +117,18 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
         return new RocketWorkbenchMenu(i, this, inventory);
     }
 
-    public class RecipeSelection {
+    public class RecipeSelection<P extends RocketPart<?, ?>> {
+        private final ResourceKey<Registry<P>> key;
         public final VariableSizedContainer inventory;
         @Nullable
-        public Holder.Reference<? extends RocketPart<?, ?>> selection = null;
+        public Holder.Reference<P> selection = null;
 
-        public RecipeSelection(VariableSizedContainer inventory) {
+        public RecipeSelection(ResourceKey<Registry<P>> key, VariableSizedContainer inventory) {
+            this.key = key;
             this.inventory = inventory;
         }
 
-        public void setSelection(@Nullable Holder.Reference<? extends RocketPart<?, ?>> selection) {
+        public void setSelection(@Nullable Holder.Reference<P> selection) {
             if (this.selection != selection) {
                 this.selection = selection;
                 if (selection != null) {
@@ -139,7 +140,7 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
             }
         }
 
-        public @Nullable RocketPart<?, ?> getSelection() {
+        public @Nullable P getSelection() {
             return this.selection != null ? this.selection.value() : null;
         }
 
@@ -150,19 +151,21 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
         public CompoundTag toTag() {
             CompoundTag nbt = this.inventory.toTag();
             if (this.selection != null) {
-                nbt.putString("sel_reg", this.selection.key().registry().toString());
-                nbt.putString("sel_loc", this.selection.key().location().toString());
+                nbt.putString("selection", this.selection.key().location().toString());
             }
             return nbt;
         }
 
         public void readTag(CompoundTag nbt) {
             this.inventory.readTag(nbt);
-            String selReg = nbt.getString("sel_reg");
-            String selLoc = nbt.getString("sel_loc");
-            if (!selReg.isEmpty() && !selLoc.isEmpty()) {
-                this.setSelection((Holder.Reference<? extends RocketPart<?, ?>>) RocketWorkbenchBlockEntity.this.level.registryAccess().registryOrThrow(ResourceKey.createRegistryKey(new ResourceLocation(selReg))).get(new ResourceLocation(selLoc)));
+            String selLoc = nbt.getString("selection");
+            if (!selLoc.isEmpty()) {
+                this.setSelection(RocketWorkbenchBlockEntity.this.level.registryAccess().registryOrThrow(this.key).getHolderOrThrow(ResourceKey.create(this.key, new ResourceLocation(selLoc))));
             }
+        }
+
+        public @Nullable ResourceKey<P> getSelectionKey() {
+            return this.selection == null ? null : this.selection.key();
         }
     }
 }

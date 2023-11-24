@@ -22,27 +22,25 @@
 
 package dev.galacticraft.api.rocket;
 
+import dev.galacticraft.api.registry.RocketRegistries;
+import dev.galacticraft.api.rocket.part.*;
+import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.rocket.RocketDataImpl;
-import dev.galacticraft.mod.Constant;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.FastColor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 public interface RocketData {
-    ResourceLocation INVALID_ID = Constant.Misc.INVALID;
-
     @Contract("_, _, _, _, _, _, _ -> new")
-    static @NotNull RocketData create(int color, ResourceLocation cone, ResourceLocation body, ResourceLocation fin, ResourceLocation booster, ResourceLocation bottom, ResourceLocation upgrade) {
-        assert cone != INVALID_ID
-                && body != INVALID_ID
-                && fin != INVALID_ID
-                && booster != INVALID_ID
-                && bottom != INVALID_ID;
+    static @NotNull RocketData create(int color, @Nullable ResourceKey<RocketCone<?, ?>> cone, @Nullable ResourceKey<RocketBody<?, ?>> body,
+                                      @Nullable ResourceKey<RocketFin<?, ?>> fin, @Nullable ResourceKey<RocketBooster<?, ?>> booster,
+                                      @Nullable ResourceKey<RocketBottom<?, ?>> bottom, @Nullable ResourceKey<RocketUpgrade<?, ?>> upgrade) {
         return new RocketDataImpl(color, cone, body, fin, booster, bottom, upgrade);
     }
 
@@ -51,37 +49,71 @@ public interface RocketData {
         return RocketDataImpl.fromNbt(nbt == null ? RocketDataImpl.DEFAULT_ROCKET : nbt);
     }
 
-    CompoundTag toNbt(CompoundTag nbt);
-
     int color();
 
     default int red() {
-        return this.color() >> 16 & 0xFF;
+        return FastColor.ARGB32.red(this.color());
     }
 
     default int green() {
-        return this.color() >> 8 & 0xFF;
+        return FastColor.ARGB32.green(this.color());
     }
 
     default int blue() {
-        return this.color() & 0xFF;
+        return FastColor.ARGB32.blue(this.color());
     }
 
     default int alpha() {
-        return this.color() >> 24 & 0xFF;
+        return FastColor.ARGB32.alpha(this.color());
     }
 
-    @Nullable ResourceLocation cone();
+    @Nullable ResourceKey<RocketCone<?, ?>> cone();
 
-    @Nullable ResourceLocation body();
+    @Nullable ResourceKey<RocketBody<?, ?>> body();
 
-    @Nullable ResourceLocation fin();
+    @Nullable ResourceKey<RocketFin<?, ?>> fin();
 
-    @Nullable ResourceLocation booster();
+    @Nullable ResourceKey<RocketBooster<?, ?>> booster();
 
-    @Nullable ResourceLocation bottom();
+    @Nullable ResourceKey<RocketBottom<?, ?>> bottom();
 
-    @Nullable ResourceLocation upgrade();
+    @Nullable ResourceKey<RocketUpgrade<?, ?>> upgrade();
 
-    boolean canTravel(RegistryAccess manager, CelestialBody<?, ?> from, CelestialBody<?, ?> to);
-}
+    default void toNbt(@NotNull CompoundTag nbt) {
+        nbt.putInt("Color", this.color());
+        if (this.cone() != null) nbt.putString("Cone", this.cone().location().toString());
+        if (this.body() != null) nbt.putString("Body", this.body().location().toString());
+        if (this.fin() != null) nbt.putString("Fin", this.fin().location().toString());
+        if (this.booster() != null) nbt.putString("Booster", this.booster().location().toString());
+        if (this.bottom() != null) nbt.putString("Bottom", this.bottom().location().toString());
+        if (this.upgrade() != null) nbt.putString("Upgrade", this.upgrade().location().toString());
+    }
+
+    default boolean isValid() {
+        return this.cone() != null && this.body() != null && this.fin() != null && this.bottom() != null;
+    }
+
+    default boolean canTravel(@NotNull RegistryAccess manager, CelestialBody<?, ?> from, CelestialBody<?, ?> to) {
+        if (!this.isValid()) return false;
+        TravelPredicateType.Result type = TravelPredicateType.Result.PASS;
+        RocketCone<?, ?> cone = manager.registryOrThrow(RocketRegistries.ROCKET_CONE).get(this.cone());
+        RocketBody<?, ?> body = manager.registryOrThrow(RocketRegistries.ROCKET_BODY).get(this.body());
+        RocketFin<?, ?> fin = manager.registryOrThrow(RocketRegistries.ROCKET_FIN).get(this.fin());
+        RocketBooster<?, ?> booster = manager.registryOrThrow(RocketRegistries.ROCKET_BOOSTER).get(this.booster());
+        RocketBottom<?, ?> bottom = manager.registryOrThrow(RocketRegistries.ROCKET_BOTTOM).get(this.bottom());
+        RocketUpgrade<?, ?> upgrade = manager.registryOrThrow(RocketRegistries.ROCKET_UPGRADE).get(this.upgrade());
+
+        assert cone != null;
+        assert body != null;
+        assert fin != null;
+        assert bottom != null;
+
+        type = type.merge(cone.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
+        type = type.merge(body.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
+        type = type.merge(fin.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
+        type = type.merge(booster == null ? TravelPredicateType.Result.PASS : booster.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
+        type = type.merge(bottom.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
+        type = type.merge(upgrade == null ? TravelPredicateType.Result.PASS : upgrade.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
+
+        return type == TravelPredicateType.Result.ALLOW;
+    }}

@@ -66,7 +66,11 @@ public abstract class ServerPlayerMixin implements ServerPlayerAccessor {
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
     private void writeCelestialData(CompoundTag nbt, CallbackInfo ci) {
         nbt.putBoolean("CelestialActive", this.celestialActive);
-        if (this.rocketData != null) nbt.put("CelestialState", this.rocketData.toNbt(new CompoundTag()));
+        if (this.rocketData != null) {
+            CompoundTag nbt1 = new CompoundTag();
+            this.rocketData.toNbt(nbt1);
+            nbt.put("CelestialState", nbt1);
+        }
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))

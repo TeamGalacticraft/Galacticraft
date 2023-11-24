@@ -28,7 +28,6 @@ import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.rocket.part.*;
-import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyType;
@@ -49,7 +48,6 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.base.SingleFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -60,10 +58,10 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -77,9 +75,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3d;
 
 import java.util.Objects;
 
@@ -96,12 +94,12 @@ public class RocketEntity extends Entity implements Rocket {
 
     public static final EntityDataAccessor<Float> SPEED = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.FLOAT);
 
-    public static final EntityDataAccessor<ResourceLocation> ROCKET_CONE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.ROCKET_PART);
-    public static final EntityDataAccessor<ResourceLocation> ROCKET_BODY = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.ROCKET_PART);
-    public static final EntityDataAccessor<ResourceLocation> ROCKET_FIN = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.ROCKET_PART);
-    public static final EntityDataAccessor<ResourceLocation> ROCKET_BOOSTER = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.ROCKET_PART);
-    public static final EntityDataAccessor<ResourceLocation> ROCKET_BOTTOM = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.ROCKET_PART);
-    public static final EntityDataAccessor<ResourceLocation> ROCKET_UPGRADE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.ROCKET_PART);
+    public static final EntityDataAccessor<ResourceLocation> ROCKET_CONE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
+    public static final EntityDataAccessor<ResourceLocation> ROCKET_BODY = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
+    public static final EntityDataAccessor<ResourceLocation> ROCKET_FIN = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
+    public static final EntityDataAccessor<ResourceLocation> ROCKET_BOOSTER = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
+    public static final EntityDataAccessor<ResourceLocation> ROCKET_BOTTOM = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
+    public static final EntityDataAccessor<ResourceLocation> ROCKET_UPGRADE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
     private final boolean debugMode = false && FabricLoader.getInstance().isDevelopmentEnvironment();
 
     private BlockPos linkedPad = BlockPos.ZERO;
@@ -230,16 +228,6 @@ public class RocketEntity extends Entity implements Rocket {
         return false;
     }
 
-    @Override
-    public Vector3d getVelocity() {
-        return null;
-    }
-
-    @Override
-    public BlockPos getBlockPos() {
-        return this.blockPosition();
-    }
-
     private long ticksSinceJump = 0;
 
     public SingleFluidStorage getTank() {
@@ -293,8 +281,8 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     @Override
-    public Entity getEntity() {
-        return null;
+    public Entity getAsEntity() {
+        return this;
     }
 
     @Override
@@ -502,7 +490,9 @@ public class RocketEntity extends Entity implements Rocket {
                         if (entity instanceof ServerPlayer serverPlayer) {
                             RocketData data = RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.bottom(), this.upgrade());
                             serverPlayer.galacticraft$openCelestialScreen(data);
-                            FriendlyByteBuf buf = PacketByteBufs.create().writeNbt(data.toNbt(new CompoundTag()));
+                            CompoundTag nbt = new CompoundTag();
+                            data.toNbt(nbt);
+                            FriendlyByteBuf buf = PacketByteBufs.create().writeNbt(nbt);
                             buf.writeInt(id);
                             ServerPlayNetworking.send(serverPlayer, new ResourceLocation(Constant.MOD_ID, "planet_menu_open"), buf);
                             remove(RemovalReason.UNLOADED_WITH_PLAYER);
@@ -594,6 +584,12 @@ public class RocketEntity extends Entity implements Rocket {
         this.linkedPad = new BlockPos(tag.getInt("lX"), tag.getInt("lY"), tag.getInt("lZ"));
     }
 
+    @Override
+    @ApiStatus.Internal
+    public void setLevel(Level level) {
+        super.setLevel(level);
+    }
+
     public void setColor(int color) {
         this.getEntityData().set(COLOR, color);
     }
@@ -617,7 +613,7 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
         FriendlyByteBuf buf = PacketByteBufs.create();
         buf.writeVarInt(BuiltInRegistries.ENTITY_TYPE.getId(this.getType()));
         buf.writeVarInt(this.getId());
@@ -627,7 +623,8 @@ public class RocketEntity extends Entity implements Rocket {
         buf.writeDouble(getZ());
         buf.writeByte((int) (this.getXRot() / 360F * 256F));
         buf.writeByte((int) (this.getYRot() / 360F * 256F));
-        CompoundTag nbt = RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.bottom(), this.upgrade()).toNbt(new CompoundTag());
+        CompoundTag nbt = new CompoundTag();
+        RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.bottom(), this.upgrade()).toNbt(nbt);
         buf.writeNbt(nbt);
         return ServerPlayNetworking.createS2CPacket(Constant.id("rocket_spawn"), buf);
     }
@@ -637,76 +634,48 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     @Override
-    public SoundSource getSoundSource() {
-        return super.getSoundSource();
-    }
-
-    @Override
-    public CompoundTag toNbt(CompoundTag nbt) {
-        return null;
-    }
-
-    @Override
     public int color() {
         return this.getEntityData().get(COLOR);
     }
 
     @Override
-    public ResourceLocation cone() {
-        return this.getEntityData().get(ROCKET_CONE);
+    public @Nullable ResourceKey<RocketCone<?, ?>> cone() {
+        return ResourceKey.create(RocketRegistries.ROCKET_CONE, this.getEntityData().get(ROCKET_CONE));
     }
 
     @Override
-    public ResourceLocation body() {
-        return this.getEntityData().get(ROCKET_BODY);
+    public @Nullable ResourceKey<RocketBody<?, ?>> body() {
+        return ResourceKey.create(RocketRegistries.ROCKET_BODY, this.getEntityData().get(ROCKET_BODY));
     }
 
     @Override
-    public ResourceLocation fin() {
-        return this.getEntityData().get(ROCKET_FIN);
+    public @Nullable ResourceKey<RocketFin<?, ?>> fin() {
+        return ResourceKey.create(RocketRegistries.ROCKET_FIN, this.getEntityData().get(ROCKET_FIN));
     }
 
     @Override
-    public ResourceLocation booster() {
-        return this.getEntityData().get(ROCKET_BOOSTER);
+    public @Nullable ResourceKey<RocketBooster<?, ?>> booster() {
+        return ResourceKey.create(RocketRegistries.ROCKET_BOOSTER, this.getEntityData().get(ROCKET_BOOSTER));
     }
 
     @Override
-    public ResourceLocation bottom() {
-        return this.getEntityData().get(ROCKET_BOTTOM);
+    public @Nullable ResourceKey<RocketBottom<?, ?>> bottom() {
+        return ResourceKey.create(RocketRegistries.ROCKET_BOTTOM, this.getEntityData().get(ROCKET_BOTTOM));
     }
 
     @Override
-    public @Nullable ResourceLocation upgrade() {
-        return this.getEntityData().get(ROCKET_UPGRADE);
-    }
-
-    @Override
-    public boolean canTravel(RegistryAccess manager, CelestialBody<?, ?> from, CelestialBody<?, ?> to) {
-        RocketCone<?, ?> cone = this.getCone();
-        RocketBody<?, ?> body = this.getBody();
-        RocketFin<?, ?> fin = this.getFin();
-        RocketBooster<?, ?> booster = this.getBooster();
-        RocketBottom<?, ?> bottom = this.getBottom();
-        RocketUpgrade<?, ?> upgrade = this.getUpgrade();
-        TravelPredicateType.Result result = TravelPredicateType.Result.PASS;
-        result = result.merge(cone.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
-        result = result.merge(body.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
-        result = result.merge(fin.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
-        result = result.merge(booster.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
-        result = result.merge(bottom.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
-        result = result.merge(upgrade.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
-        return result == TravelPredicateType.Result.ALLOW;
+    public @Nullable ResourceKey<RocketUpgrade<?, ?>> upgrade() {
+        return ResourceKey.create(RocketRegistries.ROCKET_UPGRADE, this.getEntityData().get(ROCKET_UPGRADE));
     }
 
     public void setData(RocketData data) {
         this.setColor(data.color());
 
-        this.setCone(data.cone());
-        this.setBody(data.body());
-        this.setFin(data.fin());
-        this.setBooster(data.booster());
-        this.setBottom(data.bottom());
-        this.setUpgrade(data.upgrade());
+        this.setCone(data.cone() != null ? data.cone().location() : null);
+        this.setBody(data.body() != null ? data.body().location() : null);
+        this.setFin(data.fin() != null ? data.fin().location() : null);
+        this.setBooster(data.booster() != null ? data.booster().location() : null);
+        this.setBottom(data.bottom() != null ? data.bottom().location() : null);
+        this.setUpgrade(data.upgrade() != null ? data.upgrade().location() : null);
     }
 }

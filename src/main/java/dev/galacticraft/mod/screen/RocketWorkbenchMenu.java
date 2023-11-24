@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.api.registry.RocketRegistries;
-import dev.galacticraft.api.rocket.part.RocketPart;
-import dev.galacticraft.api.rocket.part.RocketPartTypes;
+import dev.galacticraft.api.rocket.RocketData;
+import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.machinelib.api.filter.ResourceFilter;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
@@ -57,12 +57,12 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
     public static final int SCREEN_CENTER_BASE_X = 88;
     public static final int SCREEN_CENTER_BASE_Y = 158;
 
-    public final RecipeSelection cone;
-    public final RecipeSelection body;
-    public final RecipeSelection fins;
-    public final RecipeSelection booster;
-    public final RecipeSelection bottom;
-    public final RecipeSelection upgrade;
+    public final RecipeSelection<RocketCone<?, ?>> cone;
+    public final RecipeSelection<RocketBody<?, ?>> body;
+    public final RecipeSelection<RocketFin<?, ?>> fins;
+    public final RecipeSelection<RocketBooster<?, ?>> booster;
+    public final RecipeSelection<RocketBottom<?, ?>> bottom;
+    public final RecipeSelection<RocketUpgrade<?, ?>> upgrade;
 
     public final RecipeCollection coneRecipes;
     public final RecipeCollection bodyRecipes;
@@ -166,7 +166,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         return out;
     }
 
-    public RocketWorkbenchBlockEntity.RecipeSelection getSelection(RocketPartTypes type) {
+    public RocketWorkbenchBlockEntity.RecipeSelection<?> getSelection(RocketPartTypes type) {
         return switch (type) {
             case CONE -> this.cone;
             case BODY -> this.body;
@@ -186,7 +186,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
     public void onSizeChanged() {
         this.slots.clear();
         ((AbstractContainerMenuAccessor)this).getLastSlots().clear();
-        ((AbstractContainerMenuAccessor)this).getDataSlots().clear();
+        ((AbstractContainerMenuAccessor)this).getRemoteSlots().clear();
 
         RocketPartRecipe<?, ?> bottom = this.bottom.getRecipe();
         RocketPartRecipe<?, ?> body = this.body.getRecipe();
@@ -291,12 +291,16 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         for (int column = 0; column < 9; ++column) {
             this.addSlot(new Slot(this.playerInventory, column, column * 18 + 8, 225 + this.additionalHeight));
         }
+
+        this.onItemChanged();
     }
 
     @Override
     public void onItemChanged() {
+        RocketData rocketData = RocketData.create(-1, this.cone.getSelectionKey(), this.body.getSelectionKey(), this.fins.getSelectionKey(), this.booster.getSelectionKey(), this.bottom.getSelectionKey(), this.upgrade.getSelectionKey());
+        boolean craftable = rocketData.isValid();
         RocketPartRecipe<?, ?> recipe = this.cone.getRecipe();
-        boolean craftable = recipe != null && recipe.matches(this.cone.inventory, this.workbench.getLevel());
+        craftable = craftable && (recipe != null && recipe.matches(this.cone.inventory, this.workbench.getLevel()));
         recipe = this.body.getRecipe();
         craftable = craftable && (recipe != null && recipe.matches(this.body.inventory, this.workbench.getLevel()));
         recipe = this.fins.getRecipe();
@@ -309,7 +313,8 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         craftable = craftable && (recipe == null ||recipe.matches(this.upgrade.inventory, this.workbench.getLevel()));
         if (craftable) {
             ItemStack stack = new ItemStack(GCItems.ROCKET, 1);
-            CompoundTag tag = new CompoundTag(); //TODO
+            CompoundTag tag = new CompoundTag();
+            rocketData.toNbt(tag);
             stack.setTag(tag);
             this.workbench.output.setItem(0, stack);
         } else {
