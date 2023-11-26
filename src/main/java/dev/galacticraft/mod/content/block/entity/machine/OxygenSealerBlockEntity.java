@@ -172,11 +172,11 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                 profiler.pop();
                 return GCMachineStatuses.SEALED;
             } else {
-                this.tryClearSeal(world);
+                this.tryClearSeal(level);
                 return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
             }
         } else {
-            this.tryClearSeal(world);
+            this.tryClearSeal(level);
             return MachineStatuses.NOT_ENOUGH_ENERGY;
         }
     }
@@ -196,9 +196,9 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineStatus tickDisabled(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+    protected void tickDisabled(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         this.tryClearSeal(world);
-        return super.tickDisabled(world, pos, state, profiler);
+        super.tickDisabled(world, pos, state, profiler);
     }
 
     @Override

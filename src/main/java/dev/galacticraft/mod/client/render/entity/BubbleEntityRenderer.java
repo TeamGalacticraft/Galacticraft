@@ -66,7 +66,7 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
             ((ClientLevel) entity.level()).removeEntity(entity.getId(), Entity.RemovalReason.DISCARDED);
             return;
         }
-        if (!machine.isBubbleVisible() || machine.isDisabled(entity.level())) {
+        if (!machine.isBubbleVisible() || machine.isDisabled()) {
             return;
         }
         double size = machine.getSize();

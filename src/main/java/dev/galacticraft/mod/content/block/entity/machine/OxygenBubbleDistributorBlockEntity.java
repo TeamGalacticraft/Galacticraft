@@ -59,7 +59,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     public static final int CHARGE_SLOT = 0;
-    public static final int OXYGEN_INPUT_SLOT = 1;
+    public static final int OXYGEN_INPUT_SLOT = 0; // REVIEW: should this be 0 or 1?
     public static final int OXYGEN_TANK = 0;
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
     private boolean bubbleVisible = true;
@@ -105,28 +105,27 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
                         player.connection.send(entity.getAddEntityPacket());
                     }
                 } else if (!this.bubbleVisible && this.bubbleId != -1) {
-                    world.getEntity(bubbleId).remove(Entity.RemovalReason.DISCARDED);
+                    level.getEntity(bubbleId).remove(Entity.RemovalReason.DISCARDED);
                     this.bubbleId = -1;
                 }
                 profiler.pop();
 
-                this.trySyncSize(world, pos, profiler);
+                this.trySyncSize(level, pos, profiler);
+
+                if (this.prevSize != this.size || this.players != level.players().size()) { // REVIEW: why do we need this?e
+                    this.players = level.players().size();
+                    this.prevSize = this.size;
+                    profiler.push("network");
+                    for (ServerPlayer player : level.players()) {
+                        ServerPlayNetworking.send(player, Constant.Packet.BUBBLE_SIZE, new FriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeDouble(this.size)));
+                    }
+                    profiler.pop();
+                }
 
                 profiler.push("bubbler_distributor_transfer");
                 long oxygenRequired = Math.max((long) ((4.0 / 3.0) * Math.PI * this.size * this.size * this.size), 1);
-                FluidResourceSlot slot = this.fluidStorage().getSlot(GCSlotGroupTypes.OXYGEN_INPUT);
-                // if (this.prevSize != this.size || this.players != level.players().size()) {
-                //     this.players = level.players().size();
-                //     this.prevSize = this.size;
-                //     profiler.push("network");
-                //     for (ServerPlayer player : level.players()) {
-                //         ServerPlayNetworking.send(player, Constant.Packet.BUBBLE_SIZE, new FriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeDouble(this.size)));
-                //     }
-                //     profiler.pop();
-                // }
-                // profiler.push("bubbler_distributor_transfer");
-                // long oxygenRequired = ((long) ((4.0 / 3.0) * Math.PI * this.size * this.size * this.size));
-                // FluidResourceSlot slot = this.fluidStorage().getSlot(OXYGEN_TANK);
+                FluidResourceSlot slot = this.fluidStorage().getSlot(OXYGEN_INPUT_SLOT);
+
                 if (slot.canExtract(oxygenRequired)) {
                     slot.extract(oxygenRequired);
                     this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate());
@@ -154,7 +153,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
 
         if (this.size > 0) {
             this.setSize(this.size - 0.2D);
-            this.trySyncSize(world, pos, profiler);
+            this.trySyncSize(level, pos, profiler);
             distributeOxygenToArea(this.size, true); // technically this oxygen is being created from thin air
         }
 
@@ -172,10 +171,10 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected @NotNull MachineStatus tickDisabled(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+    protected void tickDisabled(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         this.distributeOxygenToArea(this.prevSize, false); // REVIEW: Inefficient?
 
-        return super.tickDisabled(world, pos, state, profiler);
+        super.tickDisabled(world, pos, state, profiler);
     }
 
     private void trySyncSize(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull ProfilerFiller profiler) {
