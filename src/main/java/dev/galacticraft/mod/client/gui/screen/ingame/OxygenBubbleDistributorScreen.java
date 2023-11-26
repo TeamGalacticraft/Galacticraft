@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
@@ -107,14 +108,15 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
         super.renderForeground(graphics, mouseX, mouseY, delta);
         textField.setValue(String.valueOf(this.menu.targetSize));
 
-        graphics.drawString(this.font, Component.translatable("ui.galacticraft.machine.status").append(this.menu.configuration.getStatus().name()), this.leftPos + 60, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
+        MachineStatus status = this.menu.state.getStatus();
+        graphics.drawString(this.font, Component.translatable("ui.galacticraft.machine.status").append(status != null ? status.getText() : Component.empty()), this.leftPos + 60, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
 
         this.textField.render(graphics, mouseX, mouseY, delta);
 
         this.textField.setX(this.leftPos + 132);
         this.textField.setY(this.topPos + 59);
 
-        if (this.menu.configuration.getStatus().type().isActive()) {
+        if (this.menu.state.isActive()) {
             graphics.drawString(this.font, Component.translatable("ui.galacticraft.bubble_distributor.current_size", FORMAT.format(this.menu.size)).setStyle(Constant.Text.Color.DARK_GRAY_STYLE), this.leftPos + 60, this.topPos + 42, ChatFormatting.DARK_GRAY.getColor(), false);
         }
     }

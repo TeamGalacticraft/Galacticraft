@@ -32,7 +32,6 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
@@ -46,6 +45,8 @@ public interface Constant {
     String MOD_ID = "galacticraft";
     String COMMON_NAMESPACE = "c";
     Logger LOGGER = LogManager.getLogger("Galacticraft");
+
+    float RADIANS_TO_DEGREES = 180F / 3.1415927F;
 
     @Contract(value = "_ -> new", pure = true)
     static @NotNull ResourceLocation id(String id) {
@@ -233,7 +234,7 @@ public interface Constant {
         String STRONG_VACUUM_GLASS = "vacuum_glass_strong";
         String WALKWAY = "walkway";
         String WIRE_WALKWAY = "wire_walkway";
-        String PIPE_WALKWAY = "pipe_walkway";
+        String FLUID_PIPE_WALKWAY = "fluid_pipe_walkway";
 
         //  Environment
         String GLOWSTONE_TORCH = "glowstone_torch";
@@ -242,8 +243,8 @@ public interface Constant {
         String UNLIT_TORCH = "unlit_torch";
         String UNLIT_WALL_TORCH = "unlit_wall_torch";
         String UNLIT_LANTERN = "unlit_lantern";
-        String CAVERNOUS_VINE = "cavernous_vine";
-        String POISONOUS_CAVERNOUS_VINE = "poisonous_cavernous_vine";
+        String CAVERNOUS_VINES = "cavernous_vines";
+        String CAVERNOUS_VINES_PLANT = "cavernous_vines_plant";
         String MOON_BERRY_BUSH = "moon_berry_bush";
         String WEB_TORCH = "web_torch";
         String FALLEN_METEOR = "fallen_meteor";
@@ -558,8 +559,10 @@ public interface Constant {
     }
 
     interface Particle {
-        String DRIPPING_FUEL_PARTICLE = "dripping_fuel_particle";
-        String DRIPPING_CRUDE_OIL_PARTICLE = "dripping_crude_oil_particle";
+        String DRIPPING_FUEL = "dripping_fuel";
+        String FALLING_FUEL = "falling_fuel";
+        String DRIPPING_CRUDE_OIL = "dripping_crude_oil";
+        String FALLING_CRUDE_OIL = "falling_crude_oil";
         String CRYOGENIC_PARTICLE = "cryogenic_particle";
         String LANDER_FLAME = "lander_flame_particle";
     }
@@ -592,6 +595,10 @@ public interface Constant {
         String OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_decompressor_energy_consumption_rate";
 
         String CLIENT = "config.galacticraft.client";
+
+        String PLAYER = "config.galacticraft.player";
+        String PLAYER_LIFE_SUPPORT = "config.galacticraft.lifesupport";
+        String PLAYER_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.player.lifesupport.oxygen_consumption_rate";
         String SKYBOX = "config.galacticraft.client.skybox";
         String MULTICOLOR_STARS = "config.galacticraft.client.skybox.multicolor_stars";
     }
@@ -644,6 +651,7 @@ public interface Constant {
         String T1_ROCKET = "t1_rocket";
         String ROCKET = "rocket";
         String LANDER = "lander";
+        String PARACHEST = "parachest";
         String BUBBLE = "bubble";
         String EVOLVED_SKELETON = "evolved_skeleton";
         String EVOLVED_SPIDER = "evolved_spider";
@@ -741,6 +749,7 @@ public interface Constant {
         String AIR_LOCK_CONTROLLER_MENU = "air_lock_menu";
         String ROCKET_WORKBENCH_MENU = "rocket_workbench_menu";
         String ROCKET = "rocket";
+        String PARACHEST = "parachest";
     }
 
     interface LootTable {
@@ -762,8 +771,12 @@ public interface Constant {
             Style WHITE_STYLE = Style.EMPTY.withColor(ChatFormatting.WHITE);
             Style DARK_BLUE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_BLUE);
 
-            static Style getStorageLevelColor(double scale) {
-                return Style.EMPTY.withColor(TextColor.fromRgb(((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8)));
+            static int getStorageLevelColor(double scale) {
+                return ((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8);
+            }
+
+            static Style getStorageLevelStyle(double scale) {
+                return Style.EMPTY.withColor(TextColor.fromRgb(getStorageLevelColor(scale)));
             }
 
             static Style getRainbow(int ticks) {
@@ -854,10 +867,6 @@ public interface Constant {
         int CHUNK_SECTION_AREA = WIDTH * WIDTH * SECTION_HEIGHT;
     }
 
-    interface Property {
-        BooleanProperty ACTIVE = BooleanProperty.create("active");
-    }
-
     interface Energy {
         long T1_MACHINE_ENERGY_USAGE = 100; // TODO: adjust these later
         long T2_MACHINE_ENERGY_USAGE = 200;
@@ -929,6 +938,7 @@ public interface Constant {
         ResourceLocation LANDER_YAW = id("lander_yaw");
         ResourceLocation LANDER_ACCERLERATE = id("lander_accelerate");
         ResourceLocation ENTITY_UPDATE = id("entity_update");
+        ResourceLocation PLANET_TP = id("planet_tp");
     }
 
     interface Structure {

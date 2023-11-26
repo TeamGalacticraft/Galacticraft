@@ -22,40 +22,52 @@
 
 package dev.galacticraft.mod.content.block.environment;
 
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.FlintAndSteelItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.TorchBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class UnlitTorchBlock extends TorchBlock {
-    public UnlitTorchBlock(Properties settings) {
-        super(settings, null);
+    public UnlitTorchBlock(Properties properties) {
+        super(properties, null);
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (player.getItemInHand(hand).getItem() instanceof FlintAndSteelItem) {
-            world.setBlockAndUpdate(pos, Blocks.TORCH.defaultBlockState());
-            ItemStack stack = player.getItemInHand(hand).copy();
-            stack.hurtAndBreak(1, player, e -> {});
-            player.setItemInHand(hand, stack);
+    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        var itemStack = player.getItemInHand(interactionHand);
+
+        if (itemStack.is(ItemTags.CREEPER_IGNITERS)) {
+            level.playSound(null, blockPos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
+            level.setBlockAndUpdate(blockPos, Blocks.TORCH.defaultBlockState());
+            level.gameEvent(player, GameEvent.BLOCK_CHANGE, blockPos);
+
+            if (player instanceof ServerPlayer serverPlayer) {
+                CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, blockPos, itemStack);
+                itemStack.hurtAndBreak(1, player, playerx -> playerx.broadcastBreakEvent(interactionHand));
+            }
+
+            return InteractionResult.sidedSuccess(level.isClientSide());
         }
-        return super.use(state, world, pos, player, hand, hit);
+        return super.use(blockState, level, blockPos, player, interactionHand, blockHitResult);
     }
 
     @Override
-    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
+    public void animateTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource random) {
         // stop particles from spawning
     }
 }

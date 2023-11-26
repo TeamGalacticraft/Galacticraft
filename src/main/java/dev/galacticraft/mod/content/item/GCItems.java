@@ -50,6 +50,7 @@ public class GCItems {
 
     // LANTERNS
     public static final Item GLOWSTONE_LANTERN = new BlockItem(GCBlocks.GLOWSTONE_LANTERN, new Item.Properties());
+    public static final Item UNLIT_LANTERN = new BlockItem(GCBlocks.UNLIT_LANTERN, new Item.Properties());
 
     // DECORATION BLOCKS
     public static final Item ALUMINUM_DECORATION = new BlockItem(GCBlocks.ALUMINUM_DECORATION, new Item.Properties());
@@ -174,6 +175,8 @@ public class GCItems {
     public static final Item CRACKED_MOON_BASALT_BRICK_STAIRS = new BlockItem(GCBlocks.CRACKED_MOON_BASALT_BRICK_STAIRS, new Item.Properties());
     public static final Item CRACKED_MOON_BASALT_BRICK_WALL = new BlockItem(GCBlocks.CRACKED_MOON_BASALT_BRICK_WALL, new Item.Properties());
 
+    public static final Item FALLEN_METEOR = new BlockItem(GCBlocks.FALLEN_METEOR, new Item.Properties());
+
     // MARS NATURAL
     public static final Item MARS_SURFACE_ROCK = new BlockItem(GCBlocks.MARS_SURFACE_ROCK, new Item.Properties());
     public static final Item MARS_SUB_SURFACE_ROCK = new BlockItem(GCBlocks.MARS_SUB_SURFACE_ROCK, new Item.Properties());
@@ -201,7 +204,7 @@ public class GCItems {
 
     // MISC DECOR
     public static final Item WALKWAY = new BlockItem(GCBlocks.WALKWAY, new Item.Properties());
-    public static final Item PIPE_WALKWAY = new BlockItem(GCBlocks.PIPE_WALKWAY, new Item.Properties());
+    public static final Item FLUID_PIPE_WALKWAY = new BlockItem(GCBlocks.FLUID_PIPE_WALKWAY, new Item.Properties());
     public static final Item WIRE_WALKWAY = new BlockItem(GCBlocks.WIRE_WALKWAY, new Item.Properties());
     public static final Item TIN_LADDER = new BlockItem(GCBlocks.TIN_LADDER, new Item.Properties());
     public static final Item GRATING = new BlockItem(GCBlocks.GRATING, new Item.Properties());
@@ -261,8 +264,7 @@ public class GCItems {
     public static final Item LUNAR_CARTOGRAPHY_TABLE = new BlockItem(GCBlocks.LUNAR_CARTOGRAPHY_TABLE, new Item.Properties());
 
     // MISC WORLD GEN
-    public static final Item CAVERNOUS_VINE = new BlockItem(GCBlocks.CAVERNOUS_VINE, new Item.Properties());
-    public static final Item POISONOUS_CAVERNOUS_VINE = new BlockItem(GCBlocks.POISONOUS_CAVERNOUS_VINE, new Item.Properties());
+    public static final Item CAVERNOUS_VINES = new BlockItem(GCBlocks.CAVERNOUS_VINES, new Item.Properties());
 
     // MISC MACHINES
     public static final Item CRYOGENIC_CHAMBER = new BlockItem(GCBlocks.CRYOGENIC_CHAMBER, new Item.Properties());
@@ -379,20 +381,20 @@ public class GCItems {
     public static final Item TIER_3_HEAVY_DUTY_PLATE = new Item(new Item.Properties());
 
     // ARMOR
-    public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.HELMET, (new Item.Properties()));
-    public static final Item HEAVY_DUTY_CHESTPLATE = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.CHESTPLATE, (new Item.Properties()));
-    public static final Item HEAVY_DUTY_LEGGINGS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.LEGGINGS, (new Item.Properties()));
-    public static final Item HEAVY_DUTY_BOOTS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.BOOTS, (new Item.Properties()));
+    public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties());
+    public static final Item HEAVY_DUTY_CHESTPLATE = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.CHESTPLATE, new Item.Properties());
+    public static final Item HEAVY_DUTY_LEGGINGS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.LEGGINGS, new Item.Properties());
+    public static final Item HEAVY_DUTY_BOOTS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.BOOTS, new Item.Properties());
 
-    public static final Item DESH_HELMET = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.HELMET, (new Item.Properties()));
-    public static final Item DESH_CHESTPLATE = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.CHESTPLATE, (new Item.Properties()));
-    public static final Item DESH_LEGGINGS = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.LEGGINGS, (new Item.Properties()));
-    public static final Item DESH_BOOTS = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.BOOTS, (new Item.Properties()));
+    public static final Item DESH_HELMET = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.HELMET, new Item.Properties());
+    public static final Item DESH_CHESTPLATE = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.CHESTPLATE, new Item.Properties());
+    public static final Item DESH_LEGGINGS = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.LEGGINGS, new Item.Properties());
+    public static final Item DESH_BOOTS = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.BOOTS, new Item.Properties());
 
-    public static final Item TITANIUM_HELMET = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.HELMET, (new Item.Properties()));
-    public static final Item TITANIUM_CHESTPLATE = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.CHESTPLATE, (new Item.Properties()));
-    public static final Item TITANIUM_LEGGINGS = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.LEGGINGS, (new Item.Properties()));
-    public static final Item TITANIUM_BOOTS = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.BOOTS, (new Item.Properties()));
+    public static final Item TITANIUM_HELMET = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.HELMET, new Item.Properties());
+    public static final Item TITANIUM_CHESTPLATE = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.CHESTPLATE, new Item.Properties());
+    public static final Item TITANIUM_LEGGINGS = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.LEGGINGS, new Item.Properties());
+    public static final Item TITANIUM_BOOTS = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.BOOTS, new Item.Properties());
 
     public static final Item SENSOR_GLASSES = new ArmorItem(GCArmorMaterial.SENSOR_GLASSES, ArmorItem.Type.HELMET, new Item.Properties());
 
@@ -415,7 +417,7 @@ public class GCItems {
     public static final Item TITANIUM_AXE = new AxeItem(GCToolMaterial.TITANIUM, 6.0F, -3.1F, new Item.Properties());
     public static final Item TITANIUM_HOE = new HoeItem(GCToolMaterial.TITANIUM, -3, -1.0F, new Item.Properties());
 
-    public static final Item STANDARD_WRENCH = new StandardWrenchItem(new Item.Properties());
+    public static final Item STANDARD_WRENCH = new StandardWrenchItem(new Item.Properties().durability(256));
 
     // BATTERIES
     public static final Item BATTERY = new BatteryItem(new Item.Properties(), 15000, 500);
@@ -459,7 +461,7 @@ public class GCItems {
     public static final Item THERMAL_PADDING_LEGGINGS = new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.LEGGINGS);
     public static final Item THERMAL_PADDING_BOOTS = new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.BOOTS);
     // ROCKETS
-    public static final Item ROCKET = new RocketItem(new Item.Properties());
+    public static final Item ROCKET = new RocketItem(new Item.Properties().stacksTo(1));
 
     // ROCKET PIECES
     public static final Item ROCKET_FINS = new Item(new Item.Properties());
@@ -485,6 +487,7 @@ public class GCItems {
 
         // LANTERNS
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.GLOWSTONE_LANTERN), GLOWSTONE_LANTERN);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.UNLIT_LANTERN), UNLIT_LANTERN);
 
         // DECORATION BLOCKS
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ALUMINUM_DECORATION), ALUMINUM_DECORATION);
@@ -609,6 +612,8 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CRACKED_MOON_BASALT_BRICK_STAIRS), CRACKED_MOON_BASALT_BRICK_STAIRS);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CRACKED_MOON_BASALT_BRICK_WALL), CRACKED_MOON_BASALT_BRICK_WALL);
 
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.FALLEN_METEOR), FALLEN_METEOR);
+
         // MARS NATURAL
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MARS_SURFACE_ROCK), MARS_SURFACE_ROCK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MARS_SUB_SURFACE_ROCK), MARS_SUB_SURFACE_ROCK);
@@ -636,7 +641,7 @@ public class GCItems {
 
         // MISC DECOR
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.WALKWAY), WALKWAY);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.PIPE_WALKWAY), PIPE_WALKWAY);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.FLUID_PIPE_WALKWAY), FLUID_PIPE_WALKWAY);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.WIRE_WALKWAY), WIRE_WALKWAY);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.TIN_LADDER), TIN_LADDER);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.GRATING), GRATING);
@@ -696,8 +701,7 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.LUNAR_CARTOGRAPHY_TABLE), LUNAR_CARTOGRAPHY_TABLE);
 
         // MISC WORLD GEN
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CAVERNOUS_VINE), CAVERNOUS_VINE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.POISONOUS_CAVERNOUS_VINE), POISONOUS_CAVERNOUS_VINE);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CAVERNOUS_VINES), CAVERNOUS_VINES);
 
         // MISC MACHINES
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CRYOGENIC_CHAMBER), CRYOGENIC_CHAMBER);

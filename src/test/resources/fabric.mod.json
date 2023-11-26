@@ -25,7 +25,7 @@
   "environment": "*",
   "entrypoints": {
     "fabric-gametest": [
-      "dev.galacticraft.mod.gametest.test.GalacticraftTestSuite",
+      "dev.galacticraft.mod.gametest.test.GratingTestSuite",
       "dev.galacticraft.mod.gametest.test.machine.CircuitFabricatorTestSuite",
       "dev.galacticraft.mod.gametest.test.machine.CoalGeneratorTestSuite",
       "dev.galacticraft.mod.gametest.test.machine.CompressorTestSuite",

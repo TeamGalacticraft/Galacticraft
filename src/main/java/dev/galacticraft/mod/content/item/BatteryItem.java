@@ -24,18 +24,15 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.DrawableUtil;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import team.reborn.energy.api.EnergyStorage;
-import team.reborn.energy.api.base.SimpleBatteryItem;
 import team.reborn.energy.api.base.SimpleEnergyItem;
 
 import java.util.List;
@@ -57,7 +54,7 @@ public class BatteryItem extends Item implements SimpleEnergyItem {
 
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> lines, TooltipFlag context) {
-        lines.add(Component.translatable("tooltip.galacticraft.energy_remaining", DrawableUtil.getEnergyDisplay(getStoredEnergy(stack))).setStyle(Constant.Text.Color.getStorageLevelColor(1.0 - ((double)getStoredEnergy(stack)) / ((double)this.getEnergyCapacity(stack)))));
+        lines.add(Component.translatable("tooltip.galacticraft.energy_remaining", DrawableUtil.getEnergyDisplay(getStoredEnergy(stack)).setStyle(Constant.Text.Color.getStorageLevelStyle(1.0 - ((double)getStoredEnergy(stack)) / ((double)this.getEnergyCapacity(stack))))));
         super.appendHoverText(stack, world, lines, context);
     }
 

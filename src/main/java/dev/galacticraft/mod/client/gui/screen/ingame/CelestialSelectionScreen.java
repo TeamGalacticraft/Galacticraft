@@ -461,7 +461,7 @@ public class CelestialSelectionScreen extends Screen {
             if (this.data == RocketData.empty() || this.data.canTravel(manager, this.fromBody, this.selectedBody)) {
                 try {
                     assert this.minecraft != null;
-                    ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "planet_tp"), PacketByteBufs.create().writeResourceLocation(celestialBodyRegistry.getKey(this.selectedBody)));
+                    ClientPlayNetworking.send(Constant.Packet.PLANET_TP, PacketByteBufs.create().writeResourceLocation(celestialBodyRegistry.getKey(this.selectedBody)));
                     this.minecraft.setScreen(new SpaceTravelScreen(isSatellite(selectedBody) ? ((Satellite) this.selectedBody.type()).getCustomName(this.selectedBody.config()).getString() : ((TranslatableContents)this.selectedBody.name().getContents()).getKey(), ((Landable) this.selectedBody.type()).world(this.selectedBody.config())));
                 } catch (Exception e) {
                     e.printStackTrace();

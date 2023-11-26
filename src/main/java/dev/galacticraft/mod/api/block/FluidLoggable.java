@@ -22,11 +22,13 @@
 
 package dev.galacticraft.mod.api.block;
 
+import com.google.common.collect.Lists;
 import dev.galacticraft.mod.Constant;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -54,19 +56,21 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
     String COLON_REP = "_gc_colon_";
 
     Property<ResourceLocation> FLUID = new Property<>("fluid", ResourceLocation.class) {
-        private static final List<ResourceLocation> VALUES = new ArrayList<>();
+        private static final List<ResourceLocation> VALUES = Util.make(Lists.newArrayList(), list ->
+        {
+            if (list.isEmpty()) {
+                for (var fluid : BuiltInRegistries.FLUID) {
+                    if (fluid instanceof FlowingFluid) {
+                        list.add(BuiltInRegistries.FLUID.getKey(fluid));
+                    }
+                }
+                list.add(Constant.Misc.EMPTY);
+                list.add(INVALID);
+            }
+        });
 
         @Override
         public Collection<ResourceLocation> getPossibleValues() {
-            if (VALUES.isEmpty()) {
-                for (var fluid : BuiltInRegistries.FLUID) {
-                    if (fluid instanceof FlowingFluid) {
-                        VALUES.add(BuiltInRegistries.FLUID.getKey(fluid));
-                    }
-                }
-                VALUES.add(Constant.Misc.EMPTY);
-                VALUES.add(INVALID);
-            }
             return VALUES;
         }
 

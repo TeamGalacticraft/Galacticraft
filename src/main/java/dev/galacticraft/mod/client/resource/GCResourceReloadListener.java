@@ -23,8 +23,7 @@
 package dev.galacticraft.mod.client.resource;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.model.WalkwayBakedModel;
-import dev.galacticraft.mod.client.model.WireBakedModel;
+import dev.galacticraft.mod.client.model.*;
 import dev.galacticraft.mod.client.render.entity.BubbleEntityRenderer;
 import dev.galacticraft.mod.content.GCFluids;
 import net.fabricmc.api.EnvType;
@@ -40,7 +39,6 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.inventory.InventoryMenu;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.function.Function;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -59,9 +57,12 @@ public class GCResourceReloadListener implements SimpleSynchronousResourceReload
 
     @Override
     public void onResourceManagerReload(ResourceManager resourceManager) {
-        Function<ResourceLocation, TextureAtlasSprite> atlas = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS);
+        var atlas = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS);
         WireBakedModel.invalidate();
         WalkwayBakedModel.invalidate();
+        WireWalkwayBakedModel.invalidate();
+        PipeBakedModel.invalidate();
+        FluidPipeWalkwayBakedModel.invalidate();
         FluidRenderHandler oil = (view, pos, state) -> new TextureAtlasSprite[]{atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/crude_oil_still")), atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/crude_oil_flowing"))};
         FluidRenderHandler fuel = (view, pos, state) -> new TextureAtlasSprite[]{atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/fuel_still")), atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/fuel_flowing"))};
         FluidRenderHandler oxygen = (view, pos, state) -> new TextureAtlasSprite[]{atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/oxygen")), atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/oxygen"))};

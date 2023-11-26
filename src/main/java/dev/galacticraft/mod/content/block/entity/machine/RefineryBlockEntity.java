@@ -27,18 +27,12 @@ import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
-import dev.galacticraft.machinelib.api.util.GenericApiUtil;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.content.block.machine.RefineryBlock;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -55,6 +49,12 @@ import org.jetbrains.annotations.VisibleForTesting;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class RefineryBlockEntity extends MachineBlockEntity { //fixme
+    public static final int CHARGE_SLOT = 0;
+    public static final int OIL_INPUT_SLOT = 1;
+    public static final int FUEL_OUTPUT_SLOT = 2;
+    public static final int OIL_TANK = 0;
+    public static final int FUEL_TANK = 1;
+
     @VisibleForTesting
     public static final long MAX_CAPACITY = FluidUtil.bucketsToDroplets(8);
 
@@ -65,23 +65,17 @@ public class RefineryBlockEntity extends MachineBlockEntity { //fixme
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
-        this.chargeFromStack(GCSlotGroupTypes.ENERGY_TO_SELF);
+        this.chargeFromStack(CHARGE_SLOT);
 
-        Storage<FluidVariant> storage = this.itemStorage().getSlot(GCSlotGroupTypes.OIL_FROM_ITEM).find(FluidStorage.ITEM);
-        if (storage != null && storage.supportsExtraction()) {
-            GenericApiUtil.move(FluidVariant.of(GCFluids.CRUDE_OIL), storage, this.fluidStorage().getSlot(GCSlotGroupTypes.OIL_INPUT), FluidConstants.BUCKET * 64, null);
-        }
-        storage = this.itemStorage().getSlot(GCSlotGroupTypes.FUEL_TO_ITEM).find(FluidStorage.ITEM);
-        if (storage != null && storage.supportsInsertion()) {
-            GenericApiUtil.move(FluidVariant.of(GCFluids.FUEL), this.fluidStorage().getSlot(GCSlotGroupTypes.FUEL_OUTPUT), storage, FluidConstants.BUCKET * 64, null);
-        }
+        this.takeFluidFromStack(OIL_INPUT_SLOT, OIL_TANK, GCFluids.CRUDE_OIL);
+        this.insertFluidToStack(FUEL_OUTPUT_SLOT, FUEL_TANK, GCFluids.FUEL);
     }
 
     @Override
-    protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        FluidResourceSlot oilTank = this.fluidStorage().getSlot(GCSlotGroupTypes.OIL_INPUT);
+    protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        FluidResourceSlot oilTank = this.fluidStorage().getSlot(OIL_TANK);
         if (oilTank.isEmpty()) return GCMachineStatuses.MISSING_OIL;
-        FluidResourceSlot fuelTank = this.fluidStorage().getSlot(GCSlotGroupTypes.FUEL_OUTPUT);
+        FluidResourceSlot fuelTank = this.fluidStorage().getSlot(FUEL_TANK);
         if (fuelTank.isFull()) return GCMachineStatuses.FUEL_TANK_FULL;
         profiler.push("transaction");
         try {
@@ -91,21 +85,13 @@ public class RefineryBlockEntity extends MachineBlockEntity { //fixme
                     this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().refineryEnergyConsumptionRate());
                     fuelTank.insert(GCFluids.FUEL, oilTank.extract(GCFluids.CRUDE_OIL, space));
                 }
-                return GCMachineStatuses.ACTIVE;
+                return MachineStatuses.ACTIVE;
             } else {
                 return MachineStatuses.NOT_ENOUGH_ENERGY;
             }
         } finally {
             profiler.pop();
         }
-    }
-
-    @Override
-    public void setStatus(@NotNull MachineStatus status) {
-        if (this.getStatus() != status) {
-            this.level.setBlockAndUpdate(this.worldPosition, this.getBlockState().setValue(RefineryBlock.ACTIVE, status.type().isActive()));
-        }
-        super.setStatus(status);
     }
 
     @Nullable

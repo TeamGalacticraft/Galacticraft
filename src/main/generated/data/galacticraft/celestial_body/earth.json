@@ -25,6 +25,7 @@
       "pressure": 1.0,
       "temperature": 15.0
     },
+    "celestial_handler": "galacticraft:overworld",
     "day_temperature": 21,
     "description": "planet.galacticraft.earth.description",
     "display": {

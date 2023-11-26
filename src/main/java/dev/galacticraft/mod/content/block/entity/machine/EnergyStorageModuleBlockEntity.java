@@ -24,10 +24,9 @@ package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
-import dev.galacticraft.mod.screen.GCMenuTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,6 +42,8 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
+    public static final int CHARGE_SELF_SLOT = 0;
+    public static final int CHARGE_ITEM_SLOT = 1;
     public EnergyStorageModuleBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.ENERGY_STORAGE_MODULE, pos, state);
     }
@@ -60,14 +61,14 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
-        this.chargeFromStack(GCSlotGroupTypes.ENERGY_TO_SELF);
-        this.drainPowerToStack(GCSlotGroupTypes.ENERGY_TO_ITEM);
+        this.chargeFromStack(CHARGE_SELF_SLOT);
+        this.drainPowerToStack(CHARGE_ITEM_SLOT);
     }
 
     @Override
-    protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        this.trySpreadEnergy(world, state);
-        return MachineStatus.INVALID;
+    protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        this.trySpreadEnergy(level, state);
+        return MachineStatuses.ACTIVE;
     }
 
     @Nullable

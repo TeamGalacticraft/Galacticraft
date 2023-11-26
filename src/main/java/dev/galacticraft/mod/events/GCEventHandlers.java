@@ -22,17 +22,31 @@
 
 package dev.galacticraft.mod.events;
 
+import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.mod.accessor.LivingEntityAccessor;
+import dev.galacticraft.api.universe.celestialbody.landable.Landable;
+import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
+import dev.galacticraft.impl.rocket.RocketDataImpl;
+import dev.galacticraft.impl.universe.celestialbody.config.PlanetConfig;
+import dev.galacticraft.mod.accessor.CryogenicAccessor;
+import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
+import dev.galacticraft.mod.content.entity.ParachestEntity;
+import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -45,10 +59,11 @@ public class GCEventHandlers {
         EntitySleepEvents.ALLOW_SLEEPING.register(GCEventHandlers::sleepInSpace);
         EntitySleepEvents.ALLOW_SLEEP_TIME.register(GCEventHandlers::canCryoSleep);
         EntitySleepEvents.STOP_SLEEPING.register(GCEventHandlers::onWakeFromCryoSleep);
+        GiveCommandEvents.MODIFY.register(GCEventHandlers::modifyOnGive);
     }
 
     public static InteractionResult allowCryogenicSleep(LivingEntity entity, BlockPos sleepingPos, BlockState state, boolean vanillaResult) {
-        if (entity instanceof LivingEntityAccessor player) {
+        if (entity instanceof CryogenicAccessor player) {
             if (player.isInCryoSleep()) {
                 return InteractionResult.SUCCESS;
             }
@@ -57,7 +72,7 @@ public class GCEventHandlers {
     }
 
     public static Direction changeSleepPosition(LivingEntity entity, BlockPos sleepingPos, @Nullable Direction sleepingDirection) {
-        if (((LivingEntityAccessor)entity).isInCryoSleep()) {
+        if (entity instanceof CryogenicAccessor player && player.isInCryoSleep()) {
             BlockState state = entity.level().getBlockState(sleepingPos);
             if (state.getBlock() instanceof CryogenicChamberBlock)
                 return state.getValue(CryogenicChamberBlock.FACING);
@@ -78,20 +93,53 @@ public class GCEventHandlers {
     }
 
     public static InteractionResult canCryoSleep(Player player, BlockPos sleepingPos, boolean vanillaResult) {
-        if (((LivingEntityAccessor)player).isInCryoSleep())
+        if (player.isInCryoSleep())
             return InteractionResult.SUCCESS;
         return vanillaResult ? InteractionResult.SUCCESS : InteractionResult.PASS;
     }
 
     public static void onWakeFromCryoSleep(LivingEntity entity, BlockPos sleepingPos) {
         Level level = entity.level();
-        if (!level.isClientSide && level instanceof ServerLevel serverLevel) {
+        if (!level.isClientSide && level instanceof ServerLevel serverLevel && entity instanceof CryogenicAccessor player) {
             entity.heal(5.0F);
-            ((LivingEntityAccessor)entity).setCryogenicChamberCooldown(6000);
+            player.setCryogenicChamberCooldown(6000);
 
 //            if (serverLevel.areAllPlayersAsleep() && ws.getGameRules().getBoolean("doDaylightCycle")) {
 //                WorldUtil.setNextMorning(ws);
 //            }
         }
+    }
+
+    public static ItemStack modifyOnGive(ItemStack previousItemStack) {
+        // This will set default data of an empty Rocket item when /give command is used, it also checks required tags for Rocket item to be rendered properly.
+        if (previousItemStack.is(GCItems.ROCKET) && (!previousItemStack.hasTag() || previousItemStack.hasTag() && !previousItemStack.getTag().getAllKeys().containsAll(RocketDataImpl.DEFAULT_ROCKET.getAllKeys()))) {
+            previousItemStack.setTag(RocketDataImpl.DEFAULT_ROCKET);
+        }
+        return previousItemStack;
+    }
+
+    public static void onPlayerChangePlanets(MinecraftServer server, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody) {
+        if (body.type() instanceof Landable landable && (player.getCelestialScreenState().canTravel(server.registryAccess(), fromBody, body) || player.getCelestialScreenState() == RocketData.empty())) {
+            player.setCelestialScreenState(null);
+            if (body.config() instanceof PlanetConfig planetConfig) {
+                var chestSpawn = planetConfig.celestialHandler().getParaChestSpawnLocation(player.serverLevel(), player, player.getRandom());
+                if (chestSpawn != null) {
+                    ParachestEntity chest = new ParachestEntity(GCEntityTypes.PARACHEST, player.serverLevel(), NonNullList.of(new ItemStack(Items.DIAMOND)), 81000);
+
+                    chest.setPos(chestSpawn);
+                    chest.color = DyeColor.RED;//player.getGearInv().getParachuteInSlot().isEmpty() ? EnumDyeColor.WHITE : ItemParaChute.getDyeEnumFromParachuteDamage(stats.getParachuteInSlot().getItemDamage());
+
+                    player.serverLevel().addFreshEntity(chest);
+                }
+            }
+            ((CelestialTeleporter)landable.teleporter(body.config()).value()).onEnterAtmosphere(server.getLevel(landable.world(body.config())), player, body, fromBody);
+        } else {
+            player.connection.disconnect(Component.literal("Invalid planet teleport packet received."));
+        }
+    }
+
+
+    public static void onPlayerTick(Player player) {
+
     }
 }

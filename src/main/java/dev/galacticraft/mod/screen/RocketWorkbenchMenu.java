@@ -115,7 +115,6 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu {
     }
 
     public void onSizeChange() {
-        System.out.println(Thread.currentThread().getName());
         this.slots.clear();
 
         this.coneRecipe = this.getRecipe(RocketRegistries.ROCKET_CONE);

@@ -77,7 +77,7 @@ public abstract class LevelMixin implements LevelOxygenAccessor, InternalLevelOx
 
     @Override
     public void setBreathable(int x, int y, int z, boolean value) {
-        if (withinWorldSize(x, z)) {
+        if (withinWorldSize(x, z) && y >= this.getMinBuildHeight() && y < this.getMaxBuildHeight()) {
             this.setBreathableChunk(this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z)), x & 15, y, z & 15, value);
         }
     }
@@ -85,6 +85,7 @@ public abstract class LevelMixin implements LevelOxygenAccessor, InternalLevelOx
     @Override
     public void setBreathableChunk(LevelChunk chunk, int x, int y, int z, boolean value) {
         assert x >= 0 && x < 16 && z >= 0 && z < 16;
+        if (y < this.getMinBuildHeight() || y >= this.getMaxBuildHeight()) return;
         ((ChunkOxygenAccessor) chunk).galacticraft$setInverted(x, y, z, this.breathable ^ value);
     }
 

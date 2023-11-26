@@ -29,11 +29,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class WireWalkwayBlockEntity extends WireBlockEntity implements Walkway {
-    @Nullable
-    private Direction direction = null;
+    private Direction direction;
 
     public WireWalkwayBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.WIRE_WALKWAY, pos, state, 240);
@@ -49,11 +47,9 @@ public class WireWalkwayBlockEntity extends WireBlockEntity implements Walkway {
     public void load(CompoundTag nbt) {
         super.load(nbt);
         this.readWalkwayNbt(nbt);
-        this.setSectionDirty(this.level, this.worldPosition);
     }
 
     @Override
-    @Nullable
     public Direction getDirection() {
         return this.direction;
     }
@@ -70,7 +66,6 @@ public class WireWalkwayBlockEntity extends WireBlockEntity implements Walkway {
 
     @Override
     public boolean canConnect(Direction direction) {
-        if (this.direction == null) return false;
         return direction != this.direction;
     }
 }

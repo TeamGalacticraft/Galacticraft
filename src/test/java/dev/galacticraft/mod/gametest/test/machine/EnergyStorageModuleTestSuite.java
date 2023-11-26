@@ -28,7 +28,6 @@ import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.EnergyStorageModuleBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
 import org.jetbrains.annotations.NotNull;
@@ -48,8 +47,8 @@ public final class EnergyStorageModuleTestSuite extends MachineGameTest<EnergySt
     @GameTestGenerator
     public @NotNull List<TestFunction> generateTests() {
         List<TestFunction> functions = super.generateTests();
-        functions.add(this.createChargeFromEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_SELF, GCItems.INFINITE_BATTERY));
-        functions.add(this.createDrainToEnergyItemTest(GCSlotGroupTypes.ENERGY_TO_ITEM, GCItems.BATTERY));
+        functions.add(this.createChargeFromEnergyItemTest(EnergyStorageModuleBlockEntity.CHARGE_SELF_SLOT, GCItems.INFINITE_BATTERY));
+        functions.add(this.createDrainToEnergyItemTest(EnergyStorageModuleBlockEntity.CHARGE_ITEM_SLOT, GCItems.BATTERY));
         return functions;
     }
 }

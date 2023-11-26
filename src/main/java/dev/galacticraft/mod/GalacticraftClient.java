@@ -32,10 +32,7 @@ import dev.galacticraft.mod.client.gui.overlay.RocketOverlay;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.*;
 import dev.galacticraft.mod.client.network.GCClientPacketReceiver;
-import dev.galacticraft.mod.client.particle.CryoFreezeParticle;
-import dev.galacticraft.mod.client.particle.DrippingFuelProvider;
-import dev.galacticraft.mod.client.particle.DrippingOilProvider;
-import dev.galacticraft.mod.client.particle.LanderParticle;
+import dev.galacticraft.mod.client.particle.*;
 import dev.galacticraft.mod.client.render.block.entity.GCBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.dimension.EmptyCloudRenderer;
 import dev.galacticraft.mod.client.render.dimension.EmptyWeatherRenderer;
@@ -66,6 +63,8 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
+import net.fabricmc.fabric.api.client.model.loading.v1.PreparableModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
@@ -76,6 +75,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.material.Fluids;
 
 /**
@@ -111,6 +111,7 @@ public class GalacticraftClient implements ClientModInitializer {
         MenuScreens.register(GCMenuTypes.AIRLOCK_CONTROLLER_MENU, AirlockControllerScreen::new);
         MenuScreens.register(GCMenuTypes.ROCKET_WORKBENCH, RocketWorkbenchScreen::new);
         MenuScreens.register(GCMenuTypes.ROCKET, RocketInventoryScreen::new);
+        MenuScreens.register(GCMenuTypes.PARACHEST, ParachestScreen::new);
 
         EntityRendererRegistry.register(GCEntityTypes.EVOLVED_ZOMBIE, EvolvedZombieRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.EVOLVED_CREEPER, EvolvedCreeperEntityRenderer::new);
@@ -128,6 +129,7 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.register(GCEntityTypes.BUBBLE, BubbleEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.ROCKET, RocketEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.LANDER, LanderEntityRenderer::new);
+        EntityRendererRegistry.register(GCEntityTypes.PARACHEST, ParachestRenderer::new);
 
         GCBlockEntityRenderer.register();
         GCClientPacketReceiver.register();
@@ -140,7 +142,7 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.GLASS_FLUID_PIPE, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.WALKWAY, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.WIRE_WALKWAY, RenderType.cutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.PIPE_WALKWAY, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.FLUID_PIPE_WALKWAY, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.MOON_BERRY_BUSH, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.GLOWSTONE_TORCH, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.GLOWSTONE_WALL_TORCH, RenderType.cutout());
@@ -148,20 +150,27 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.UNLIT_WALL_TORCH, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.GLOWSTONE_LANTERN, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.UNLIT_LANTERN, RenderType.cutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.POISONOUS_CAVERNOUS_VINE, RenderType.cutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.CAVERNOUS_VINE, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.CAVERNOUS_VINES, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.CAVERNOUS_VINES_PLANT, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), GCBlocks.CRYOGENIC_CHAMBER, GCBlocks.CRYOGENIC_CHAMBER_PART, GCBlocks.PLAYER_TRANSPORT_TUBE);
 
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new GCResourceReloadListener());
 
-        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_FUEL_PARTICLE, DrippingFuelProvider::new);
-        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_CRUDE_OIL_PARTICLE, DrippingOilProvider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_FUEL, DrippingFuelProvider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.FALLING_FUEL, FallingFuelProvider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_CRUDE_OIL, DrippingOilProvider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.FALLING_CRUDE_OIL, FallingCrudeOilProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.CRYOGENIC_PARTICLE, CryoFreezeParticle.Provider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.LANDER_FLAME_PARTICLE, LanderParticle.Provider::new);
 
         MachineModelRegistry.register(new ResourceLocation(Constant.MOD_ID, "solar_panel"), SolarPanelSpriteProvider::new);
         MachineModelRegistry.register(new ResourceLocation(Constant.MOD_ID, "oxygen_sealer"), OxygenSealerSpriteProvider::new);
 
+        ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> {
+            for (var color : DyeColor.values()) {
+                out.accept(Constant.id("block/" + color + "_fluid_pipe_walkway"));
+            }
+        });
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(resourceManager -> (resourceId, context) -> {
             if (WireBakedModel.WIRE_MARKER.equals(resourceId)) {
                 return WireUnbakedModel.INSTANCE;
@@ -169,13 +178,15 @@ public class GalacticraftClient implements ClientModInitializer {
                 return WalkwayUnbakedModel.INSTANCE;
             } else if (WireWalkwayBakedModel.WIRE_WALKWAY_MARKER.equals(resourceId)) {
                 return WireWalkwayUnbakedModel.INSTANCE;
-            } else if (PipeWalkwayBakedModel.PIPE_WALKWAY_MARKER.equals(resourceId)) {
-                return PipeWalkwayUnbakedModel.INSTANCE;
+            } else if (FluidPipeWalkwayBakedModel.FLUID_PIPE_WALKWAY_MARKER.equals(resourceId)) {
+                return FluidPipeWalkwayUnbakedModel.INSTANCE;
             } else if (PipeBakedModel.GLASS_FLUID_PIPE_MARKER.equals(resourceId)) {
                 return PipeUnbakedModel.INSTANCE;
             }
             return null;
         });
+
+        ModelLoadingPlugin.register(GCModelLoader.INSTANCE);
 
         DimensionRenderingRegistry.registerDimensionEffects(GCDimensions.MOON.location(), MoonDimensionEffects.INSTANCE);
         DimensionRenderingRegistry.registerCloudRenderer(GCDimensions.MOON, EmptyCloudRenderer.INSTANCE);
@@ -199,6 +210,10 @@ public class GalacticraftClient implements ClientModInitializer {
         InventoryTabRegistry.INSTANCE.register(GCItems.ROCKET.getDefaultInstance(), () -> {
             ClientPlayNetworking.send(Constant.Packet.OPEN_GC_ROCKET, new FriendlyByteBuf(Unpooled.buffer(0)));
         }, player -> player.getVehicle() instanceof RocketEntity, RocketMenu.class);
+
+        LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
+
+        });
 
         Constant.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

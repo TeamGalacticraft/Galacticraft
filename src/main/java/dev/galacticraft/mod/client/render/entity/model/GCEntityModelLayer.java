@@ -25,6 +25,7 @@ package dev.galacticraft.mod.client.render.entity.model;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.*;
 import dev.galacticraft.mod.client.render.block.entity.BasicSolarPanelBlockEntityRenderer;
+import dev.galacticraft.mod.client.render.entity.ParachestRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
@@ -34,8 +35,6 @@ import net.minecraft.resources.ResourceLocation;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GCEntityModelLayer {
-    public static final ModelLayerLocation EVOLVED_CREEPER = new ModelLayerLocation(new ResourceLocation(Constant.MOD_ID, "evolved_creeper"), "main");
-    public static final ModelLayerLocation EVOLVED_CREEPER_ARMOR = new ModelLayerLocation(new ResourceLocation(Constant.MOD_ID, "evolved_creeper_armor"), "armor");
     public static final ModelLayerLocation GAZER = new ModelLayerLocation(Constant.id("gazer"), "main");
     public static final ModelLayerLocation RUMBLER = new ModelLayerLocation(Constant.id("rumbler"), "main");
     public static final ModelLayerLocation COMET_CUBE = new ModelLayerLocation(Constant.id("comet_cube"), "main");
@@ -44,10 +43,9 @@ public class GCEntityModelLayer {
     public static final ModelLayerLocation ARCH_GREY = new ModelLayerLocation(Constant.id("arch_grey"), "main");
     public static final ModelLayerLocation SOLAR_PANEL = new ModelLayerLocation(new ResourceLocation(Constant.MOD_ID, "solar_panel"), "main");
     public static final ModelLayerLocation LANDER = new ModelLayerLocation(new ResourceLocation(Constant.MOD_ID, "lander"), "main");
+    public static final ModelLayerLocation PARACHEST = new ModelLayerLocation(Constant.id("parachest"), "main");
 
     public static void register() {
-        EntityModelLayerRegistry.registerModelLayer(EVOLVED_CREEPER, () -> EvolvedCreeperEntityModel.getTexturedModelData(CubeDeformation.NONE));
-        EntityModelLayerRegistry.registerModelLayer(EVOLVED_CREEPER_ARMOR, () -> EvolvedCreeperEntityModel.getTexturedModelData(new CubeDeformation(2.0f)));
         EntityModelLayerRegistry.registerModelLayer(GAZER, GazerEntityModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(RUMBLER, RumblerEntityModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(COMET_CUBE, CometCubeEntityModel::createBodyLayer);
@@ -55,6 +53,7 @@ public class GCEntityModelLayer {
         EntityModelLayerRegistry.registerModelLayer(GREY, GreyEntityModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(ARCH_GREY, ArchGreyEntityModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(LANDER, LanderModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(PARACHEST, ParachestModel::createParachuteLayer);
 
         EntityModelLayerRegistry.registerModelLayer(SOLAR_PANEL, BasicSolarPanelBlockEntityRenderer::getTexturedModelData);
     }

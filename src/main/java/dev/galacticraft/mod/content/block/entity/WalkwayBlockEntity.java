@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.entity;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.Walkway;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import net.minecraft.core.BlockPos;
@@ -31,11 +32,9 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class WalkwayBlockEntity extends BlockEntity implements Walkway {
-    @Nullable
-    private Direction direction = null;
+    private Direction direction;
     private final boolean[] connections = new boolean[6];
 
     public WalkwayBlockEntity(BlockPos pos, BlockState state) {
@@ -54,11 +53,9 @@ public class WalkwayBlockEntity extends BlockEntity implements Walkway {
         super.load(nbt);
         this.readConnectionNbt(nbt);
         this.readWalkwayNbt(nbt);
-        this.setSectionDirty(this.level, this.worldPosition);
     }
 
     @Override
-    @Nullable
     public Direction getDirection() {
         return this.direction;
     }
@@ -70,17 +67,17 @@ public class WalkwayBlockEntity extends BlockEntity implements Walkway {
 
     @Override
     public void calculateConnections() {
-        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
-        for (Direction direction : Direction.values()) {
-            if (getDirection() != direction) {
-                if (level.getBlockEntity(mutable.set(getBlockPos()).move(direction)) instanceof Walkway walkway) {
+        var mutable = new BlockPos.MutableBlockPos();
+        for (var direction : Constant.Misc.DIRECTIONS) {
+            if (this.getDirection() != direction) {
+                if (this.level.getBlockEntity(mutable.set(this.getBlockPos()).move(direction)) instanceof WalkwayBlockEntity walkway) {
                     if (walkway.getDirection() != direction.getOpposite()) {
-                        getConnections()[direction.ordinal()] = true;
+                        this.getConnections()[direction.ordinal()] = true;
                         continue;
                     }
                 }
             }
-            getConnections()[direction.ordinal()] = false;
+            this.getConnections()[direction.ordinal()] = false;
         }
     }
 

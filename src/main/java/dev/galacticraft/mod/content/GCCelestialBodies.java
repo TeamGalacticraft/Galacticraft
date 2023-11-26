@@ -115,6 +115,7 @@ public class GCCelestialBodies {
                                 .gas(Gases.IODINE_ID, 0.010)
                                 .build(),
                         1.0f,
+                        GCCelestialHandlers.OVERWORLD,
                         0,
                         21, //todo
                         15, //todo
@@ -136,6 +137,7 @@ public class GCCelestialBodies {
                         .pressure(3.0E-15F)
                         .build(),
                 0.166F,
+                GCCelestialHandlers.DEFAULT,
                 1,
                 105,
                 -180,

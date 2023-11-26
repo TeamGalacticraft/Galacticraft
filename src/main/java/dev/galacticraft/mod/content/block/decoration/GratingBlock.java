@@ -51,7 +51,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public class GratingBlock extends Block implements FluidLoggable {
     @VisibleForTesting
-    public static final EnumProperty<GratingState> GRATING_STATE = EnumProperty.create("grating_state", GratingState.class);
+    public static final EnumProperty<State> STATE = EnumProperty.create("state", State.class);
     private static final VoxelShape UPPER_SHAPE = Block.box(0.0D, 14.0D, 0.0D, 16.0D, 16.0D, 16.0D);
     private static final VoxelShape LOWER_SHAPE = Block.box(0.0D, 6.0D, 0.0D, 16.0D, 8.0D, 16.0D);
 
@@ -60,7 +60,7 @@ public class GratingBlock extends Block implements FluidLoggable {
         this.registerDefaultState(this.getStateDefinition().any()
                 .setValue(FLUID, new ResourceLocation("invalid"))
                 .setValue(FlowingFluid.LEVEL, 8)
-                .setValue(GRATING_STATE, GratingState.UPPER)
+                .setValue(STATE, State.UPPER)
                 .setValue(FlowingFluid.FALLING, false));
     }
 
@@ -69,14 +69,14 @@ public class GratingBlock extends Block implements FluidLoggable {
     public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {
         FluidState fluidState = blockPlaceContext.getLevel().getFluidState(blockPlaceContext.getClickedPos());
         BlockPos blockPos = blockPlaceContext.getClickedPos();
-        BlockState blockState = this.defaultBlockState().setValue(GRATING_STATE, GratingState.LOWER).setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType())).setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)).setValue(FlowingFluid.FALLING, fluidState.hasProperty(FlowingFluid.FALLING) ? fluidState.getValue(FlowingFluid.FALLING) : false);
+        BlockState blockState = this.defaultBlockState().setValue(STATE, State.LOWER).setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType())).setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)).setValue(FlowingFluid.FALLING, fluidState.hasProperty(FlowingFluid.FALLING) ? fluidState.getValue(FlowingFluid.FALLING) : false);
         Direction direction = blockPlaceContext.getClickedFace();
-        return direction != Direction.DOWN && (direction == Direction.UP || !(blockPlaceContext.getClickLocation().y - (double) blockPos.getY() > 0.5)) ? blockState : blockState.setValue(GRATING_STATE, GratingState.UPPER);
+        return direction != Direction.DOWN && (direction == Direction.UP || !(blockPlaceContext.getClickLocation().y - (double) blockPos.getY() > 0.5)) ? blockState : blockState.setValue(STATE, State.UPPER);
     }
 
     @Override
     public VoxelShape getShape(BlockState blockState, BlockGetter blockView, BlockPos blockPos, CollisionContext context) {
-        return blockState.getValue(GRATING_STATE) == GratingState.UPPER ? UPPER_SHAPE : LOWER_SHAPE;
+        return blockState.getValue(STATE) == State.UPPER ? UPPER_SHAPE : LOWER_SHAPE;
     }
 
     @Override
@@ -90,7 +90,7 @@ public class GratingBlock extends Block implements FluidLoggable {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FLUID, GRATING_STATE, FlowingFluid.LEVEL, FlowingFluid.FALLING);
+        builder.add(FLUID, STATE, FlowingFluid.LEVEL, FlowingFluid.FALLING);
     }
 
     @Override
@@ -112,13 +112,13 @@ public class GratingBlock extends Block implements FluidLoggable {
     }
 
     @VisibleForTesting
-    public enum GratingState implements StringRepresentable {
+    public enum State implements StringRepresentable {
         UPPER("upper"),
         LOWER("lower");
 
         private final String name;
 
-        GratingState(String name) {
+        State(String name) {
             this.name = name;
         }
 

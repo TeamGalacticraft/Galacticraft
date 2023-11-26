@@ -22,15 +22,24 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
 import static dev.galacticraft.mod.content.item.GCItems.*;
 
@@ -176,28 +185,38 @@ public class GCCreativeModeTabs {
 
                 //GALACTICRAFT INVENTORY
                 output.accept(PARACHUTE);
-                output.accept(ORANGE_PARACHUTE);
-                output.accept(MAGENTA_PARACHUTE);
-                output.accept(LIGHT_BLUE_PARACHUTE);
-                output.accept(YELLOW_PARACHUTE);
-                output.accept(LIME_PARACHUTE);
-                output.accept(PINK_PARACHUTE);
-                output.accept(GRAY_PARACHUTE);
-                output.accept(LIGHT_GRAY_PARACHUTE);
-                output.accept(CYAN_PARACHUTE);
-                output.accept(PURPLE_PARACHUTE);
-                output.accept(BLUE_PARACHUTE);
-                output.accept(BROWN_PARACHUTE);
-                output.accept(GREEN_PARACHUTE);
-                output.accept(RED_PARACHUTE);
-                output.accept(BLACK_PARACHUTE);
+
+                for (DyeColor color : DyeColor.values()) {
+                    ItemStack stack = new ItemStack(GCBlocks.PARACHEST);
+                    CompoundTag itemTag = new CompoundTag();
+                    CompoundTag blockStateTag;
+
+                    blockStateTag = new CompoundTag();
+                    itemTag.put("BlockStateTag", blockStateTag);
+                    blockStateTag.putString("color", color.getName());
+
+                    stack.setTag(itemTag);
+                    output.accept(stack);
+                }
 
                 output.accept(OXYGEN_MASK);
                 output.accept(OXYGEN_GEAR);
 
-                output.accept(SMALL_OXYGEN_TANK);
-                output.accept(MEDIUM_OXYGEN_TANK);
-                output.accept(LARGE_OXYGEN_TANK);
+                try (Transaction t = Transaction.openOuter()) {
+                    output.accept(SMALL_OXYGEN_TANK);
+                    ContainerItemContext smallContext = ContainerItemContext.withInitial(SMALL_OXYGEN_TANK.getDefaultInstance());
+                    var storage = smallContext.find(FluidStorage.ITEM);
+                    storage.insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
+                    output.accept(smallContext.getItemVariant().toStack());
+                    output.accept(MEDIUM_OXYGEN_TANK);
+                    ContainerItemContext mediumContext = ContainerItemContext.withInitial(MEDIUM_OXYGEN_TANK.getDefaultInstance());
+                    mediumContext.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
+                    output.accept(mediumContext.getItemVariant().toStack());
+                    output.accept(LARGE_OXYGEN_TANK);
+                    ContainerItemContext largeContext = ContainerItemContext.withInitial(LARGE_OXYGEN_TANK.getDefaultInstance());
+                    largeContext.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
+                    output.accept(largeContext.getItemVariant().toStack());
+                }
                 output.accept(INFINITE_OXYGEN_TANK);
 
                 output.accept(SHIELD_CONTROLLER);
@@ -229,6 +248,7 @@ public class GCCreativeModeTabs {
 
                 // LANTERNS
                 output.accept(GLOWSTONE_LANTERN);
+                output.accept(UNLIT_LANTERN);
 
                 // DECORATION BLOCKS
                 output.accept(ALUMINUM_DECORATION);
@@ -377,8 +397,8 @@ public class GCCreativeModeTabs {
 
                 // MISC DECOR
                 output.accept(WALKWAY);
-                output.accept(PIPE_WALKWAY);
                 output.accept(WIRE_WALKWAY);
+                output.accept(FLUID_PIPE_WALKWAY);
                 output.accept(TIN_LADDER);
                 output.accept(GRATING);
 
@@ -435,8 +455,7 @@ public class GCCreativeModeTabs {
                 output.accept(LUNAR_CARTOGRAPHY_TABLE);
 
                 // MISC WORLD GEN
-                output.accept(CAVERNOUS_VINE);
-                output.accept(POISONOUS_CAVERNOUS_VINE);
+                output.accept(CAVERNOUS_VINES);
 
                 // MISC MACHINES
                 output.accept(CRYOGENIC_CHAMBER);

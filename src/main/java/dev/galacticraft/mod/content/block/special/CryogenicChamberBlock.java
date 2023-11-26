@@ -22,13 +22,13 @@
 
 package dev.galacticraft.mod.content.block.special;
 
-import dev.galacticraft.mod.accessor.LivingEntityAccessor;
 import dev.galacticraft.mod.api.block.MultiBlockBase;
 import dev.galacticraft.mod.api.block.MultiBlockPart;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.CryogenicChamberBlockEntity;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -36,6 +36,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
@@ -45,21 +46,26 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
 
 public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlockBase {
-    protected static final List<BlockPos> PARTS = List.of(new BlockPos(0, 1, 0), new BlockPos(0, 2, 0));
+    private static final List<BlockPos> PARTS = List.of(new BlockPos(0, 1, 0), new BlockPos(0, 2, 0));
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public CryogenicChamberBlock(Properties properties) {
         super(properties);
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
     }
 
     @Override
-    public @Unmodifiable List<BlockPos> getOtherParts(BlockState state) {
+    @Unmodifiable
+    public List<BlockPos> getOtherParts(BlockState blockState) {
         return PARTS;
     }
 
@@ -70,7 +76,6 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        super.createBlockStateDefinition(builder);
         builder.add(FACING);
     }
 
@@ -90,44 +95,56 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
     }
 
     @Override
-    public void onMultiBlockPlaced(Level world, BlockPos pos, BlockState state) {
-        boolean isTop = false;
-        for (BlockPos otherPart : this.getOtherParts(state)) {
-            otherPart = otherPart.immutable().offset(pos);
-            world.setBlockAndUpdate(otherPart, GCBlocks.CRYOGENIC_CHAMBER_PART.defaultBlockState().setValue(FACING, state.getValue(FACING)).setValue(CryogenicChamberPart.TOP, isTop));
+    public void onMultiBlockPlaced(Level level, BlockPos blockPos, BlockState blockState) {
+        var isTop = false;
+        for (var otherPart : this.getOtherParts(blockState)) {
+            otherPart = otherPart.immutable().offset(blockPos);
+            level.setBlockAndUpdate(otherPart, GCBlocks.CRYOGENIC_CHAMBER_PART.defaultBlockState().setValue(FACING, blockState.getValue(FACING)).setValue(CryogenicChamberPart.TOP, isTop));
             isTop = true;
 
-            BlockEntity part = world.getBlockEntity(otherPart);
-            assert part != null; // This will never be null because world.setBlockState will put a blockentity there.
-            ((MultiBlockPart) part).setBasePos(pos);
+            var part = level.getBlockEntity(otherPart);
+            assert part != null; // This will never be null because level.setBlockState will put a blockentity there.
+            ((MultiBlockPart) part).setBasePos(blockPos);
             part.setChanged();
         }
     }
 
     @Override
-    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        super.setPlacedBy(world, pos, state, placer, itemStack);
-        this.onMultiBlockPlaced(world, pos, state);
+    public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity placer, ItemStack itemStack) {
+        super.setPlacedBy(level, blockPos, blockState, placer, itemStack);
+        this.onMultiBlockPlaced(level, blockPos, blockState);
     }
 
     @Override
-    public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
-        super.playerWillDestroy(world, pos, state, player);
-        for (BlockPos otherPart : this.getOtherParts(state)) {
-            otherPart = otherPart.immutable().offset(pos);
-            world.setBlock(otherPart, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+    public void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+        super.playerWillDestroy(level, blockPos, blockState, player);
+        for (var otherPart : this.getOtherParts(blockState)) {
+            otherPart = otherPart.immutable().offset(blockPos);
+            level.destroyBlock(otherPart, false);
         }
     }
 
     @Override
-    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
-        for (BlockPos otherPart : this.getOtherParts(state)) {
-            otherPart = otherPart.immutable().offset(pos);
-            if (!world.getBlockState(otherPart).canBeReplaced()) {
+    public void onPartDestroyed(Level level, Player player, BlockState blockState, BlockPos blockPos, BlockState partState, BlockPos partPos) {
+        level.destroyBlock(blockPos, !player.isCreative());
+
+        for (var otherPart : this.getOtherParts(blockState)) {
+            otherPart = otherPart.immutable().offset(blockPos);
+            if (!level.getBlockState(otherPart).isAir()) {
+                level.destroyBlock(otherPart, false);
+            }
+        }
+    }
+
+    @Override
+    public boolean canSurvive(BlockState blockState, LevelReader level, BlockPos blockPos) {
+        for (var otherPart : this.getOtherParts(blockState)) {
+            otherPart = otherPart.immutable().offset(blockPos);
+            if (!level.getBlockState(otherPart).canBeReplaced()) {
                 return false;
             }
         }
-        return super.canSurvive(state, world, pos);
+        return super.canSurvive(blockState, level, blockPos);
     }
 
     @Override
@@ -137,27 +154,42 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        return onMultiBlockUse(blockState, level, blockPos, player, interactionHand, blockHitResult);
+        return this.onMultiBlockUse(blockState, level, blockPos, player, interactionHand, blockHitResult);
     }
 
     @Override
     public InteractionResult onMultiBlockUse(BlockState blockState, Level level, BlockPos basePos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        if (level.isClientSide())
+        if (level.isClientSide()) {
             return InteractionResult.CONSUME;
-
-        ((LivingEntityAccessor) player).startCryogenicSleep(basePos);
-
-        return InteractionResult.PASS;
+        }
+        player.startCryogenicSleep(basePos).ifLeft(bedSleepingProblem -> {
+            if (bedSleepingProblem.getMessage() != null) {
+                player.displayClientMessage(bedSleepingProblem.getMessage(), true);
+            }
+        });
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public void animateTick(BlockState blockState, Level level, BlockPos pos, RandomSource rand) {
-        level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY(), pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, 0.05 + rand.nextDouble() * 0.01, 0.0);
-        level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY(), pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, 0.05 + rand.nextDouble() * 0.01, 0.0);
-        level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY(), pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, 0.05 + rand.nextDouble() * 0.01, 0.0);
+    public void animateTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource random) {
+        for (var i = 0; i < 3; i++) {
+            level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, blockPos.getX() + 0.3 + random.nextDouble() * 0.4, blockPos.getY(), blockPos.getZ() + 0.3 + random.nextDouble() * 0.4, 0.0, 0.05 + random.nextDouble() * 0.01, 0.0);
+            level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, blockPos.getX() + 0.3 + random.nextDouble() * 0.4, blockPos.getY() + 2.9F, blockPos.getZ() + 0.3 + random.nextDouble() * 0.4, 0.0, -0.05 - random.nextDouble() * 0.01, 0.0);
+        }
+    }
 
-        level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY() + 2.9F, pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, -0.05 - rand.nextDouble() * 0.01, 0.0);
-        level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY() + 2.9F, pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, -0.05 - rand.nextDouble() * 0.01, 0.0);
-        level.addParticle(GCParticleTypes.CRYOGENIC_PARTICLE, pos.getX() + 0.3 + rand.nextDouble() * 0.4, pos.getY() + 2.9F, pos.getZ() + 0.3 + rand.nextDouble() * 0.4, 0.0, -0.05 - rand.nextDouble() * 0.01, 0.0);
+    @Override
+    public VoxelShape getVisualShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
+        return Shapes.empty();
+    }
+
+    @Override
+    public float getShadeBrightness(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+        return 1.0F;
+    }
+
+    @Override
+    public boolean propagatesSkylightDown(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+        return true;
     }
 }

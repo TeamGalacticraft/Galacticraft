@@ -35,6 +35,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.content.entity.LanderEntity;
 import dev.galacticraft.mod.content.entity.RocketEntity;
+import dev.galacticraft.mod.events.GCEventHandlers;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
 import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
@@ -218,7 +219,7 @@ public class GCServerPacketReceivers {
             entity.setDeltaMovement(motion);
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "planet_tp"), ((server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.PLANET_TP, ((server, player, handler, buf, responseSender) -> {
             FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
             if (player.getCelestialScreenState() != null) {
                 server.execute(() -> {
@@ -226,12 +227,7 @@ public class GCServerPacketReceivers {
                     CelestialBody<?, ?> body = ((SatelliteAccessor) server).getSatellites().get(id);
                     CelestialBody<?, ?> fromBody = CelestialBody.getByDimension(player.level()).orElseThrow();
                     if (body == null) body = server.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).get(id);
-                    if (body.type() instanceof Landable landable && (player.getCelestialScreenState().canTravel(server.registryAccess(), fromBody, body) || player.getCelestialScreenState() == RocketData.empty())) {
-                        player.setCelestialScreenState(null);
-                        ((CelestialTeleporter)landable.teleporter(body.config()).value()).onEnterAtmosphere(server.getLevel(landable.world(body.config())), player, body, fromBody);
-                    } else {
-                        player.connection.disconnect(Component.literal("Invalid planet teleport packet received."));
-                    }
+                    GCEventHandlers.onPlayerChangePlanets(server, player, body, fromBody);
                 });
             } else {
                 player.connection.disconnect(Component.literal("Invalid planet teleport packet received."));

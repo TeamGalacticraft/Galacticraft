@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.rocket.RocketData;
+import dev.galacticraft.impl.rocket.RocketDataImpl;
 import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.GCBlocks;
@@ -93,18 +94,9 @@ public class RocketItem extends Item {
 
     @Override
     public ItemStack getDefaultInstance() {
-        ItemStack stack = new ItemStack(this);
-        CompoundTag tag = new CompoundTag();
-        tag.putInt("Tier", 1);
-        tag.putInt("Color", 0xFFFFFFFF);
-        tag.putString("Cone", GCRocketParts.TIER_1_CONE.location().toString());
-        tag.putString("Body", GCRocketParts.TIER_1_BODY.location().toString());
-        tag.putString("Fin", GCRocketParts.TIER_1_FIN.location().toString());
-        tag.putString("Booster", GCRocketParts.TIER_1_BOOSTER.location().toString());
-        tag.putString("Bottom", GCRocketParts.TIER_1_BOTTOM.location().toString());
-        tag.put("Upgrade", new ListTag());
-        stack.setTag(tag);
-        return stack;
+        var itemStack = super.getDefaultInstance();
+        itemStack.setTag(RocketDataImpl.DEFAULT_ROCKET);
+        return itemStack;
     }
 
     @Override

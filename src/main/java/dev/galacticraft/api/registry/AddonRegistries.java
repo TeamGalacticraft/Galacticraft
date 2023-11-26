@@ -24,6 +24,7 @@ package dev.galacticraft.api.registry;
 
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyType;
+import dev.galacticraft.api.universe.celestialbody.CelestialHandler;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.type.CelestialTeleporterType;
 import dev.galacticraft.api.universe.display.CelestialDisplayType;
@@ -45,4 +46,5 @@ public final class AddonRegistries {
     public static final ResourceKey<Registry<Galaxy>> GALAXY = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "galaxy"));
     public static final ResourceKey<Registry<CelestialBody<?, ?>>> CELESTIAL_BODY = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "celestial_body"));
     public static final ResourceKey<Registry<CelestialTeleporter<?, ?>>> CELESTIAL_TELEPORTER = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "celestial_teleporter"));
+    public static final ResourceKey<Registry<CelestialHandler>> CELESTIAL_HANDLER = ResourceKey.createRegistryKey(Constant.id("celestial_handler"));
 }

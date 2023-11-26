@@ -56,13 +56,17 @@ import net.minecraft.world.phys.BlockHitResult;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Mixin(BucketItem.class)
-public abstract class BucketItemMixin {
+public abstract class BucketItemMixin extends Item {
     @Shadow
     @Final
     Fluid content;
 
     @Shadow
     abstract void playEmptySound(@Nullable Player player, LevelAccessor levelAccessor, BlockPos blockPos);
+
+    BucketItemMixin() {
+        super(null);
+    }
 
     @Inject(method = "emptyContents", cancellable = true, at = @At("HEAD"))
     private void emptyFluidLoggable_gc(@Nullable Player player, Level level, BlockPos blockPos, @Nullable BlockHitResult blockHitResult, CallbackInfoReturnable<Boolean> info) {
@@ -98,7 +102,7 @@ public abstract class BucketItemMixin {
                     from = @At(value = "FIELD", target = "net/minecraft/world/level/material/Fluids.WATER:Lnet/minecraft/world/level/material/FlowingFluid;")),
             index = 10, ordinal = 2)
     private BlockPos checkIfFluidLoggableOnUse_gc(BlockPos defaultValue, Level level, Player player, InteractionHand interactionHand) {
-        var blockHitResult = Item.getPlayerPOVHitResult(level, player, this.content == Fluids.EMPTY ? ClipContext.Fluid.SOURCE_ONLY : ClipContext.Fluid.NONE);
+        var blockHitResult = getPlayerPOVHitResult(level, player, this.content == Fluids.EMPTY ? ClipContext.Fluid.SOURCE_ONLY : ClipContext.Fluid.NONE);
         var blockPos = blockHitResult.getBlockPos();
         var blockState = level.getBlockState(blockPos);
         return blockState.getBlock() instanceof FluidLoggable ? blockPos : defaultValue;

@@ -1,0 +1,450 @@
+{
+        "color=white,facing=north": { 
+			"model": "galacticraft:block/parachest/parachest",
+			"textures": {
+				"chute": "galacticraft:model/parachute/white"
+			}
+		},
+        "color=white,facing=east":  { 
+			"model": "galacticraft:block/parachest/parachest",
+			"y": 90,
+			"textures": {
+				"chute": "galacticraft:model/parachute/white"
+			}
+		},
+        "color=white,facing=south": { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 180,
+			"textures": {
+				"chute": "galacticraft:model/parachute/white"
+			}
+		},
+        "color=white,facing=west":  { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 270,
+			"textures": {
+				"chute": "galacticraft:model/parachute/white"
+			}
+		},
+		
+        "color=black,facing=north": { 
+			"model": "galacticraft:block/parachest/parachest",
+			"textures": {
+				"chute": "galacticraft:model/parachute/black"
+			}
+		},
+        "color=black,facing=east":  { 
+			"model": "galacticraft:block/parachest/parachest",
+			"y": 90,
+			"textures": {
+				"chute": "galacticraft:model/parachute/black"
+			}
+		},
+        "color=black,facing=south": { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 180,
+			"textures": {
+				"chute": "galacticraft:model/parachute/black"
+			}
+		},
+        "color=black,facing=west":  { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 270,
+			"textures": {
+				"chute": "galacticraft:model/parachute/black"
+			}
+		},
+		
+        "color=light_blue,facing=north": { 
+			"model": "galacticraft:block/parachest/parachest",
+			"textures": {
+				"chute": "galacticraft:model/parachute/blue"
+			}
+		},
+        "color=light_blue,facing=east":  { 
+			"model": "galacticraft:block/parachest/parachest",
+			"y": 90,
+			"textures": {
+				"chute": "galacticraft:model/parachute/blue"
+			}
+		},
+        "color=light_blue,facing=south": { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 180,
+			"textures": {
+				"chute": "galacticraft:model/parachute/blue"
+			}
+		},
+        "color=light_blue,facing=west":  { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 270,
+			"textures": {
+				"chute": "galacticraft:model/parachute/blue"
+			}
+		},
+		
+        "color=brown,facing=north": { 
+			"model": "galacticraft:block/parachest/parachest",
+			"textures": {
+				"chute": "galacticraft:model/parachute/brown"
+			}
+		},
+        "color=brown,facing=east":  { 
+			"model": "galacticraft:block/parachest/parachest",
+			"y": 90,
+			"textures": {
+				"chute": "galacticraft:model/parachute/brown"
+			}
+		},
+        "color=brown,facing=south": { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 180,
+			"textures": {
+				"chute": "galacticraft:model/parachute/brown"
+			}
+		},
+        "color=brown,facing=west":  { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 270,
+			"textures": {
+				"chute": "galacticraft:model/parachute/brown"
+			}
+		},
+		
+        "color=blue,facing=north": { 
+			"model": "galacticraft:block/parachest/parachest",
+			"textures": {
+				"chute": "galacticraft:model/parachute/darkblue"
+			}
+		},
+        "color=blue,facing=east":  { 
+			"model": "galacticraft:block/parachest/parachest",
+			"y": 90,
+			"textures": {
+				"chute": "galacticraft:model/parachute/darkblue"
+			}
+		},
+        "color=blue,facing=south": { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 180,
+			"textures": {
+				"chute": "galacticraft:model/parachute/darkblue"
+			}
+		},
+        "color=blue,facing=west":  { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 270,
+			"textures": {
+				"chute": "galacticraft:model/parachute/darkblue"
+			}
+		},
+		
+        "color=gray,facing=north": { 
+			"model": "galacticraft:block/parachest/parachest",
+			"textures": {
+				"chute": "galacticraft:model/parachute/darkgray"
+			}
+		},
+        "color=gray,facing=east":  { 
+			"model": "galacticraft:block/parachest/parachest",
+			"y": 90,
+			"textures": {
+				"chute": "galacticraft:model/parachute/darkgray"
+			}
+		},
+        "color=gray,facing=south": { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 180,
+			"textures": {
+				"chute": "galacticraft:model/parachute/darkgray"
+			}
+		},
+        "color=gray,facing=west":  { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 270,
+			"textures": {
+				"chute": "galacticraft:model/parachute/darkgray"
+			}
+		},
+		
+        "color=green,facing=north": { 
+			"model": "galacticraft:block/parachest/parachest",
+			"textures": {
+				"chute": "galacticraft:model/parachute/green"
+			}
+		},
+        "color=green,facing=east":  { 
+			"model": "galacticraft:block/parachest/parachest",
+			"y": 90,
+			"textures": {
+				"chute": "galacticraft:model/parachute/green"
+			}
+		},
+        "color=green,facing=south": { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 180,
+			"textures": {
+				"chute": "galacticraft:model/parachute/green"
+			}
+		},
+        "color=green,facing=west":  { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 270,
+			"textures": {
+				"chute": "galacticraft:model/parachute/green"
+			}
+		},
+		
+        "color=light_gray,facing=north": { 
+			"model": "galacticraft:block/parachest/parachest",
+			"textures": {
+				"chute": "galacticraft:model/parachute/gray"
+			}
+		},
+        "color=light_gray,facing=east":  { 
+			"model": "galacticraft:block/parachest/parachest",
+			"y": 90,
+			"textures": {
+				"chute": "galacticraft:model/parachute/gray"
+			}
+		},
+        "color=light_gray,facing=south": { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 180,
+			"textures": {
+				"chute": "galacticraft:model/parachute/gray"
+			}
+		},
+        "color=light_gray,facing=west":  { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 270,
+			"textures": {
+				"chute": "galacticraft:model/parachute/gray"
+			}
+		},
+		
+        "color=lime,facing=north": { 
+			"model": "galacticraft:block/parachest/parachest",
+			"textures": {
+				"chute": "galacticraft:model/parachute/lime"
+			}
+		},
+        "color=lime,facing=east":  { 
+			"model": "galacticraft:block/parachest/parachest",
+			"y": 90,
+			"textures": {
+				"chute": "galacticraft:model/parachute/lime"
+			}
+		},
+        "color=lime,facing=south": { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 180,
+			"textures": {
+				"chute": "galacticraft:model/parachute/lime"
+			}
+		},
+        "color=lime,facing=west":  { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 270,
+			"textures": {
+				"chute": "galacticraft:model/parachute/lime"
+			}
+		},
+		
+        "color=magenta,facing=north": { 
+			"model": "galacticraft:block/parachest/parachest",
+			"textures": {
+				"chute": "galacticraft:model/parachute/magenta"
+			}
+		},
+        "color=magenta,facing=east":  { 
+			"model": "galacticraft:block/parachest/parachest",
+			"y": 90,
+			"textures": {
+				"chute": "galacticraft:model/parachute/magenta"
+			}
+		},
+        "color=magenta,facing=south": { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 180,
+			"textures": {
+				"chute": "galacticraft:model/parachute/magenta"
+			}
+		},
+        "color=magenta,facing=west":  { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 270,
+			"textures": {
+				"chute": "galacticraft:model/parachute/magenta"
+			}
+		},
+		
+        "color=orange,facing=north": { 
+			"model": "galacticraft:block/parachest/parachest",
+			"textures": {
+				"chute": "galacticraft:model/parachute/orange"
+			}
+		},
+        "color=orange,facing=east":  { 
+			"model": "galacticraft:block/parachest/parachest",
+			"y": 90,
+			"textures": {
+				"chute": "galacticraft:model/parachute/orange"
+			}
+		},
+        "color=orange,facing=south": { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 180,
+			"textures": {
+				"chute": "galacticraft:model/parachute/orange"
+			}
+		},
+        "color=orange,facing=west":  { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 270,
+			"textures": {
+				"chute": "galacticraft:model/parachute/orange"
+			}
+		},
+		
+        "color=pink,facing=north": { 
+			"model": "galacticraft:block/parachest/parachest",
+			"textures": {
+				"chute": "galacticraft:model/parachute/pink"
+			}
+		},
+        "color=pink,facing=east":  { 
+			"model": "galacticraft:block/parachest/parachest",
+			"y": 90,
+			"textures": {
+				"chute": "galacticraft:model/parachute/pink"
+			}
+		},
+        "color=pink,facing=south": { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 180,
+			"textures": {
+				"chute": "galacticraft:model/parachute/pink"
+			}
+		},
+        "color=pink,facing=west":  { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 270,
+			"textures": {
+				"chute": "galacticraft:model/parachute/pink"
+			}
+		},
+		
+        "color=purple,facing=north": { 
+			"model": "galacticraft:block/parachest/parachest",
+			"textures": {
+				"chute": "galacticraft:model/parachute/purple"
+			}
+		},
+        "color=purple,facing=east":  { 
+			"model": "galacticraft:block/parachest/parachest",
+			"y": 90,
+			"textures": {
+				"chute": "galacticraft:model/parachute/purple"
+			}
+		},
+        "color=purple,facing=south": { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 180,
+			"textures": {
+				"chute": "galacticraft:model/parachute/purple"
+			}
+		},
+        "color=purple,facing=west":  { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 270,
+			"textures": {
+				"chute": "galacticraft:model/parachute/purple"
+			}
+		},
+		
+        "color=red,facing=north": { 
+			"model": "galacticraft:block/parachest/parachest",
+			"textures": {
+				"chute": "galacticraft:model/parachute/red"
+			}
+		},
+        "color=red,facing=east":  { 
+			"model": "galacticraft:block/parachest/parachest",
+			"y": 90,
+			"textures": {
+				"chute": "galacticraft:model/parachute/red"
+			}
+		},
+        "color=red,facing=south": { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 180,
+			"textures": {
+				"chute": "galacticraft:model/parachute/red"
+			}
+		},
+        "color=red,facing=west":  { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 270,
+			"textures": {
+				"chute": "galacticraft:model/parachute/red"
+			}
+		},
+		
+        "color=cyan,facing=north": { 
+			"model": "galacticraft:block/parachest/parachest",
+			"textures": {
+				"chute": "galacticraft:model/parachute/cyan"
+			}
+		},
+        "color=cyan,facing=east":  { 
+			"model": "galacticraft:block/parachest/parachest",
+			"y": 90,
+			"textures": {
+				"chute": "galacticraft:model/parachute/cyan"
+			}
+		},
+        "color=cyan,facing=south": { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 180,
+			"textures": {
+				"chute": "galacticraft:model/parachute/cyan"
+			}
+		},
+        "color=cyan,facing=west":  { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 270,
+			"textures": {
+				"chute": "galacticraft:model/parachute/cyan"
+			}
+		},
+		
+        "color=yellow,facing=north": { 
+			"model": "galacticraft:block/parachest/parachest",
+			"textures": {
+				"chute": "galacticraft:model/parachute/yellow"
+			}
+		},
+        "color=yellow,facing=east":  { 
+			"model": "galacticraft:block/parachest/parachest",
+			"y": 90,
+			"textures": {
+				"chute": "galacticraft:model/parachute/yellow"
+			}
+		},
+        "color=yellow,facing=south": { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 180,
+			"textures": {
+				"chute": "galacticraft:model/parachute/yellow"
+			}
+		},
+        "color=yellow,facing=west":  { 
+			"model": "galacticraft:block/parachest/parachest", 
+			"y": 270,
+			"textures": {
+				"chute": "galacticraft:model/parachute/yellow"
+			}
+		}
+    }
+}

@@ -104,11 +104,9 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
         if (mask != null) {
-            matrices.pushPose();
-            matrices.mulPose(Axis.YP.rotationDegrees(headYaw));
-            matrices.mulPose(Axis.XP.rotationDegrees(headPitch));
+            mask.yRot = headYaw * (float) (Math.PI / 180.0);
+            mask.xRot = headPitch * (float) (Math.PI / 180.0);
             mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
-            matrices.popPose();
         }
 
         if (this.tank != null) {

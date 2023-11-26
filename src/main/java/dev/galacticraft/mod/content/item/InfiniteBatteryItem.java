@@ -60,13 +60,18 @@ public class InfiniteBatteryItem extends Item implements EnergyStorage {
     }
 
     @Override
+    public boolean isBarVisible(ItemStack itemStack) {
+        return true;
+    }
+
+    @Override
     public int getBarWidth(ItemStack stack) {
         return 13;
     }
 
     @Override
     public int getBarColor(ItemStack stack) {
-        if (++ticks > 1000) ticks -= 1000;
+        if (++ticks > 1000) ticks = 0;
         return Mth.hsvToRgb(this.ticks / 1000.0f, 1, 1);
     }
 

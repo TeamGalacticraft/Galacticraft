@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
-import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
@@ -33,7 +33,6 @@ import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.entity.BubbleEntity;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
 import dev.galacticraft.mod.util.FluidUtil;
 import io.netty.buffer.Unpooled;
@@ -59,6 +58,9 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
+    public static final int CHARGE_SLOT = 0;
+    public static final int OXYGEN_INPUT_SLOT = 1;
+    public static final int OXYGEN_TANK = 0;
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
     private boolean bubbleVisible = true;
     private double size = 0;
@@ -75,13 +77,13 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
         profiler.push("extract_resources");
-        this.chargeFromStack(GCSlotGroupTypes.ENERGY_TO_SELF);
-        this.takeFluidFromStack(GCSlotGroupTypes.OXYGEN_TO_SELF, GCSlotGroupTypes.OXYGEN_INPUT, Gases.OXYGEN);
+        this.chargeFromStack(CHARGE_SLOT);
+        this.takeFluidFromStack(OXYGEN_INPUT_SLOT, OXYGEN_TANK, Gases.OXYGEN);
         profiler.pop();
     }
 
     @Override
-    protected @NotNull MachineStatus tick(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+    protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("transaction");
         MachineStatus status;
         distributeOxygenToArea(this.prevSize, false);
@@ -92,14 +94,14 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
                     this.setSize(Math.max(this.size - 0.1F, this.targetSize));
                 }
                 if (this.size > 0.0D && this.bubbleVisible && this.bubbleId == -1) {
-                    BubbleEntity entity = GCEntityTypes.BUBBLE.create(world);
+                    BubbleEntity entity = GCEntityTypes.BUBBLE.create(level);
                     entity.setPosRaw(this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ());
                     entity.xo = this.getBlockPos().getX();
                     entity.yo = this.getBlockPos().getY();
                     entity.zo = this.getBlockPos().getZ();
-                    world.addFreshEntity(entity);
+                    level.addFreshEntity(entity);
                     this.bubbleId = entity.getId();
-                    for (ServerPlayer player : world.players()) {
+                    for (ServerPlayer player : level.players()) {
                         player.connection.send(entity.getAddEntityPacket());
                     }
                 } else if (!this.bubbleVisible && this.bubbleId != -1) {
@@ -113,6 +115,18 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
                 profiler.push("bubbler_distributor_transfer");
                 long oxygenRequired = Math.max((long) ((4.0 / 3.0) * Math.PI * this.size * this.size * this.size), 1);
                 FluidResourceSlot slot = this.fluidStorage().getSlot(GCSlotGroupTypes.OXYGEN_INPUT);
+                // if (this.prevSize != this.size || this.players != level.players().size()) {
+                //     this.players = level.players().size();
+                //     this.prevSize = this.size;
+                //     profiler.push("network");
+                //     for (ServerPlayer player : level.players()) {
+                //         ServerPlayNetworking.send(player, Constant.Packet.BUBBLE_SIZE, new FriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeDouble(this.size)));
+                //     }
+                //     profiler.pop();
+                // }
+                // profiler.push("bubbler_distributor_transfer");
+                // long oxygenRequired = ((long) ((4.0 / 3.0) * Math.PI * this.size * this.size * this.size));
+                // FluidResourceSlot slot = this.fluidStorage().getSlot(OXYGEN_TANK);
                 if (slot.canExtract(oxygenRequired)) {
                     slot.extract(oxygenRequired);
                     this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate());
@@ -134,7 +148,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         }
         profiler.push("size");
         if (this.bubbleId != -1 && this.size <= 0) {
-            world.getEntity(bubbleId).remove(Entity.RemovalReason.DISCARDED);
+            level.getEntity(bubbleId).remove(Entity.RemovalReason.DISCARDED);
             this.bubbleId = -1;
         }
 

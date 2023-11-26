@@ -22,14 +22,12 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
-import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.machine.GCMachineStatuses;
-import dev.galacticraft.mod.machine.storage.io.GCSlotGroupTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -47,47 +45,24 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Container, SmeltingRecipe> {
+public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<Container, SmeltingRecipe> {
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
     public static final int OUTPUT_SLOT = 2;
 
-    private final @NotNull Container craftingInv;
-
     public ElectricFurnaceBlockEntity(BlockPos pos, BlockState state) {
-        super(GCMachineTypes.ELECTRIC_FURNACE, pos, state, RecipeType.SMELTING);
-        this.craftingInv = this.itemStorage().getCraftingView(GCSlotGroupTypes.GENERIC_INPUT);
+        super(GCMachineTypes.ELECTRIC_FURNACE, pos, state, RecipeType.SMELTING, INPUT_SLOT, OUTPUT_SLOT);
     }
 
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
-        this.chargeFromStack(GCSlotGroupTypes.ENERGY_TO_SELF);
+        this.chargeFromStack(CHARGE_SLOT);
     }
 
     @Override
-    public @NotNull Container craftingInv() {
-        return this.craftingInv;
-    }
-
-    @Override
-    protected void outputStacks(@NotNull SmeltingRecipe recipe) {
-        this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).insertStack(recipe.getResultItem(this.level.registryAccess()));
-    }
-
-    @Override
-    protected boolean canOutputStacks(@NotNull SmeltingRecipe recipe) {
-        return this.itemStorage().getGroup(GCSlotGroupTypes.GENERIC_OUTPUT).canInsertStack(recipe.getResultItem(this.level.registryAccess()));
-    }
-
-    @Override
-    protected void extractCraftingMaterials(@NotNull SmeltingRecipe recipe) {
-        this.itemStorage().getSlot(GCSlotGroupTypes.GENERIC_INPUT).extractOne();
-    }
-
-    @Override
-    protected @NotNull MachineStatus workingStatus() {
-        return GCMachineStatuses.ACTIVE;
+    protected @NotNull MachineStatus workingStatus(SmeltingRecipe recipe) {
+        return MachineStatuses.ACTIVE;
     }
 
     @Override
@@ -101,7 +76,7 @@ public class ElectricFurnaceBlockEntity extends RecipeMachineBlockEntity<Contain
     }
 
     @Override
-    protected int getProcessTime(@NotNull SmeltingRecipe recipe) {
+    public int getProcessingTime(@NotNull SmeltingRecipe recipe) {
         return recipe.getCookingTime();
     }
 

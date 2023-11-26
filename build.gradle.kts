@@ -23,34 +23,34 @@
 import java.time.format.DateTimeFormatter
 
 // Minecraft, Mappings, Loader Versions
-val minecraftVersion       = project.property("minecraft.version").toString()
-val loaderVersion          = project.property("loader.version").toString()
+val minecraftVersion         = project.property("minecraft.version").toString()
+val loaderVersion            = project.property("loader.version").toString()
+val parchmentVersion         = project.property("parchment.version").toString()
 
 // Mod Info
-val modVersion             = project.property("mod.version").toString()
-val modName                = project.property("mod.name").toString()
-val modGroup               = project.property("mod.group").toString()
+val modVersion               = project.property("mod.version").toString()
+val modName                  = project.property("mod.name").toString()
+val modGroup                 = project.property("mod.group").toString()
 
 // Dependency Versions
-val fabricVersion          = project.property("fabric.version").toString()
-val clothConfigVersion     = project.property("cloth.config.version").toString()
-val modMenuVersion         = project.property("modmenu.version").toString()
+val fabricVersion            = project.property("fabric.version").toString()
+val clothConfigVersion       = project.property("cloth.config.version").toString()
+val modMenuVersion           = project.property("modmenu.version").toString()
 val dynamicdimensionsVersion = project.property("dynamicdimensions.version").toString()
-val machineLibVersion      = project.property("machinelib.version").toString()
-val reiVersion             = project.property("rei.version").toString()
-val jeiVersion             = project.property("jei.version").toString()
-val badpacketsVersion      = project.property("badpackets.version").toString()
-val wthitVersion           = project.property("wthit.version").toString()
-val portingLibVersion      = project.property("porting.lib.version").toString()
-val runtimeOptional        = project.property("optional_dependencies.enabled").toString().toBoolean() && System.getenv("CI") == null
+val machineLibVersion        = project.property("machinelib.version").toString()
+val reiVersion               = project.property("rei.version").toString()
+val jeiVersion               = project.property("jei.version").toString()
+val badpacketsVersion        = project.property("badpackets.version").toString()
+val wthitVersion             = project.property("wthit.version").toString()
+val portingLibVersion        = project.property("porting.lib.version").toString()
+val runtimeOptional          = project.property("optional_dependencies.enabled").toString().toBoolean() && System.getenv("CI") == null
 
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("1.3-SNAPSHOT")
-    id("io.github.juuxel.loom-vineflower") version("1.11.0")
+    id("fabric-loom") version("1.4-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
-    id("org.ajoberstar.grgit") version("5.2.0")
+    id("org.ajoberstar.grgit") version("5.2.1")
 }
 
 java {
@@ -151,15 +151,14 @@ repositories {
             includeGroup("lol.bai")
         }
     }
-    maven("https://maven2.bai.lol") {
-        content {
-            includeGroup("mcp.mobius.waila")
-            includeGroup("lol.bai")
-        }
-    }
     maven("https://maven.blamejared.com/") {
         content {
             includeGroup("mezz.jei")
+        }
+    }
+    maven("https://maven.parchmentmc.org") {
+        content {
+            includeGroup("org.parchmentmc.data")
         }
     }
 }
@@ -167,7 +166,12 @@ repositories {
 dependencies {
     // Minecraft, Mappings, Loader
     minecraft("com.mojang:minecraft:$minecraftVersion")
-    mappings(loom.officialMojangMappings())
+    mappings(loom.layered {
+        officialMojangMappings()
+        if (!parchmentVersion.isEmpty()) {
+            parchment("org.parchmentmc.data:parchment-$minecraftVersion:$parchmentVersion@zip")
+        }
+    })
     modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
 
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
@@ -276,10 +280,6 @@ license {
     include("build.gradle.kts")
 }
 
-vineflower {
-    addToRuntimeClasspath.set(true)
-}
-
 tasks.withType(JavaCompile::class) {
     options.encoding = "UTF-8"
     options.release.set(17)
@@ -324,23 +324,25 @@ fun getVersionDecoration(): String {
     if ((System.getenv("DISABLE_VERSION_DECORATION") ?: "false") == "true") return ""
     if (project.hasProperty("release")) return ""
 
-    var decoration = "+build"
-    if (grgit.head() == null) {
-        decoration += ".unknown"
-    } else {
-        val branch = grgit.branch.current()
-        if (branch != null && branch.name != "main") {
-            decoration += ".${branch.name}"
-        }
-        val commitHashLines = grgit.head().abbreviatedId
-        if (commitHashLines != null && commitHashLines.isNotEmpty()) {
-            decoration += "-${commitHashLines}"
-        }
+    if (project.hasProperty("grgit")) {
+        val grgit = project.property("grgit") as org.ajoberstar.grgit.Grgit?
+        if (grgit?.head() != null) {
+            var decoration = "+build"
+            val branch = grgit.branch?.current()
+            if (branch != null && branch.name != "main") {
+                decoration += ".${branch.name}"
+            }
+            val commitHashLines = grgit.head().abbreviatedId
+            if (commitHashLines != null && commitHashLines.isNotEmpty()) {
+                decoration += "-${commitHashLines}"
+            }
 
-        if (!grgit.status().isClean) {
-            decoration += "-modified"
+            if (!grgit.status().isClean) {
+                decoration += "-modified"
+            }
+            return decoration
         }
     }
-    return decoration
+    return "+build.unknown"
 }
 

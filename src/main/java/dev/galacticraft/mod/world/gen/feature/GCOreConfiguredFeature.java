@@ -82,7 +82,7 @@ public class GCOreConfiguredFeature {
         context.register(ORE_TIN_SMALL, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(TIN_ORES, 3)));
         context.register(ORE_ALUMINUM, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(ALUMINUM_ORES, 7)));
         context.register(ORE_ALUMINUM_SMALL, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(ALUMINUM_ORES, 3)));
-        context.register(BASALT_DISK_MOON, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(BASE_STONE_MOON, GCBlocks.MOON_BASALT.defaultBlockState(), 33)));
+        // context.register(BASALT_DISK_MOON, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(BASE_STONE_MOON, GCBlocks.MOON_BASALT.defaultBlockState(), 33)));
         context.register(ORE_COPPER_SMALL_MOON, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(COPPER_ORES_MOON, 10)));
         context.register(ORE_COPPER_LARGE_MOON, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(COPPER_ORES_MOON, 20)));
         context.register(ORE_TIN_MOON, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(TIN_ORES_MOON, 6)));

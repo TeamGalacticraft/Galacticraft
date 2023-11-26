@@ -54,13 +54,11 @@ public class MoonSurfaceRules {
 
     private static final RuleSource SECONDARY_MATERIAL = SurfaceRules.sequence(
             SurfaceRules.ifTrue(IS_MARE, MOON_BASALT),
-            SurfaceRules.ifTrue(IS_HIGHLANDS, MOON_DIRT),
-            DEBUG_STATE
+            SurfaceRules.ifTrue(IS_HIGHLANDS, MOON_DIRT)
     );
     private static final RuleSource SURFACE_MATERIAL = SurfaceRules.sequence(
             SurfaceRules.ifTrue(IS_MARE, MOON_BASALT),
-            SurfaceRules.ifTrue(IS_HIGHLANDS, MOON_TURF),
-            DEBUG_STATE
+            SurfaceRules.ifTrue(IS_HIGHLANDS, MOON_TURF)
     );
     private static final RuleSource SURFACE_GENERATION = SurfaceRules.sequence(
             SurfaceRules.ifTrue(SurfaceRules.ON_FLOOR, SURFACE_MATERIAL),
