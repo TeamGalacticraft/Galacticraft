@@ -44,11 +44,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -105,22 +103,12 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
                         player.connection.send(entity.getAddEntityPacket());
                     }
                 } else if (!this.bubbleVisible && this.bubbleId != -1) {
-                    level.getEntity(bubbleId).remove(Entity.RemovalReason.DISCARDED);
+                    level.getEntity(bubbleId).discard();
                     this.bubbleId = -1;
                 }
                 profiler.pop();
 
                 this.trySyncSize(level, pos, profiler);
-
-                if (this.prevSize != this.size || this.players != level.players().size()) { // REVIEW: why do we need this?e
-                    this.players = level.players().size();
-                    this.prevSize = this.size;
-                    profiler.push("network");
-                    for (ServerPlayer player : level.players()) {
-                        ServerPlayNetworking.send(player, Constant.Packet.BUBBLE_SIZE, new FriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeDouble(this.size)));
-                    }
-                    profiler.pop();
-                }
 
                 profiler.push("bubbler_distributor_transfer");
                 long oxygenRequired = Math.max((long) ((4.0 / 3.0) * Math.PI * this.size * this.size * this.size), 1);
@@ -147,7 +135,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         }
         profiler.push("size");
         if (this.bubbleId != -1 && this.size <= 0) {
-            level.getEntity(bubbleId).remove(Entity.RemovalReason.DISCARDED);
+            level.getEntity(bubbleId).discard();
             this.bubbleId = -1;
         }
 
@@ -171,13 +159,16 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected void tickDisabled(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+    protected void tickDisabled(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         this.distributeOxygenToArea(this.prevSize, false); // REVIEW: Inefficient?
+        this.size = 0; // I believe this is needed to allow multiple bubbles in a level?
+        this.trySyncSize(level, pos, profiler);
 
-        super.tickDisabled(world, pos, state, profiler);
+        super.tickDisabled(level, pos, state, profiler);
     }
 
     private void trySyncSize(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull ProfilerFiller profiler) {
+        // Could maybe get away with running this 1 in 10 ticks to reduce network traffic
         if (this.prevSize != this.size || this.players != world.players().size()) {
             this.players = world.players().size();
             this.prevSize = this.size;
@@ -246,7 +237,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     public boolean isBubbleVisible() {
-        return bubbleVisible;
+        return this.bubbleVisible;
     }
     public void setBubbleVisible(boolean bubbleVisible) {
         this.bubbleVisible = bubbleVisible;
@@ -264,6 +255,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     public @NotNull CompoundTag getUpdateTag() {
         CompoundTag tag = super.getUpdateTag();
 
+        tag.putInt(Constant.Nbt.MAX_SIZE, this.targetSize); // REVIEW: should we be sending this along? Because we do save it
         tag.putDouble(Constant.Nbt.SIZE, this.size);
         tag.putBoolean(Constant.Nbt.VISIBLE, this.bubbleVisible);
         return tag;

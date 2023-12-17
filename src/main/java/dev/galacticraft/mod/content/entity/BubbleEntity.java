@@ -116,11 +116,6 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    public boolean broadcastToPlayer(ServerPlayer spectator) {
-        return false;
-    }
-
-    @Override
     public boolean canChangeDimensions() {
         return false;
     }
