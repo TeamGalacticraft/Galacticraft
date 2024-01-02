@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,20 +22,17 @@
 
 package dev.galacticraft.mod.data.model;
 
-import com.google.gson.JsonPrimitive;
-import dev.galacticraft.mod.content.block.special.ParaChestBlock;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import org.jetbrains.annotations.Contract;
 import com.google.common.collect.Maps;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.decoration.GratingBlock;
 import dev.galacticraft.mod.content.block.environment.CavernousVines;
+import dev.galacticraft.mod.content.block.special.ParaChestBlock;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.BlockFamily;
@@ -50,7 +47,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 public class GCModelProvider extends FabricModelProvider {
     private static final TexturedModel.Provider DETAILED_DECORATION = TexturedModel.createDefault(GCModelProvider::detailedTexture, ModelTemplates.CUBE_BOTTOM_TOP);

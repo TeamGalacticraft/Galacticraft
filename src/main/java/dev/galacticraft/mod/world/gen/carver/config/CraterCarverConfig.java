@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@ package dev.galacticraft.mod.world.gen.carver.config;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.mod.tag.GCTags;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.world.level.levelgen.VerticalAnchor;

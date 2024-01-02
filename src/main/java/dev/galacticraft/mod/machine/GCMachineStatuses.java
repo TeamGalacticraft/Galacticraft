@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,7 @@
 package dev.galacticraft.mod.machine;
 
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
-import dev.galacticraft.mod.Constant;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 public final class GCMachineStatuses {
     public static final MachineStatus COLLECTING = MachineStatus.create("machine_status.galacticraft.collecting", ChatFormatting.GREEN, MachineStatus.Type.WORKING);

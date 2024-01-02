@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,8 +21,6 @@
  */
 
 package dev.galacticraft.mod.content.block.special;
-
-import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
@@ -52,6 +50,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.Map;
 
 public class CandleMoonCheeseBlock extends AbstractCandleBlock {
     public static final BooleanProperty LIT = AbstractCandleBlock.LIT;

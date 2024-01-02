@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,18 +27,20 @@ import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.mixin.MultiNoiseBiomeSourceParameterListPresetAccessor;
 import dev.galacticraft.mod.world.biome.GCBiomes;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.biome.*;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.Climate.Parameter;
+import net.minecraft.world.level.biome.MultiNoiseBiomeSourceParameterList;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>

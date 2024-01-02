@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,13 +24,13 @@ package dev.galacticraft.mod.compat.rei.client;
 
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.machinelib.impl.Constant.TextureCoordinate;
-import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultCompressingCategory;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultFabricationCategory;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultShapedCompressingDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultShapelessCompressingDisplay;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;

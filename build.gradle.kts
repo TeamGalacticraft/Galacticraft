@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +21,11 @@
  */
 
 import java.time.format.DateTimeFormatter
+
+// Build Info
+val buildNumber = System.getenv("BUILD_NUMBER") ?: ""
+val commitHash = (System.getenv("GITHUB_SHA") ?: grgit.head().id)!!
+val prerelease = (System.getenv("PRE_RELEASE") ?: "false") == "true"
 
 // Minecraft, Mappings, Loader Versions
 val minecraftVersion         = project.property("minecraft.version").toString()
@@ -69,7 +74,23 @@ sourceSets {
 }
 
 group = modGroup
-version = modVersion + getVersionDecoration()
+version = buildString {
+    append(modVersion)
+    if (prerelease) {
+        append("-pre")
+    }
+    append('+')
+    if (buildNumber.isNotBlank()) {
+        append(buildNumber)
+    } else if (commitHash.isNotEmpty()) {
+        append(commitHash.substring(0, 8))
+        if (!grgit.status().isClean) {
+            append("-dirty")
+        }
+    } else {
+        append("unknown")
+    }
+}
 println("Galacticraft: $version")
 base.archivesName.set(modName)
 
@@ -80,31 +101,30 @@ loom {
     runs {
         runConfigs.forEach {
             it.property("mixin.hotSwap", "true")
+            it.property("mixin.debug.export", "true")
         }
         register("datagen") {
             server()
             name("Data Generation")
             runDir("build/datagen")
-            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.modid=galacticraft"/*, "-Dgalacticraft.mixin.compress_datagen"*/, "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}", "-Dfabric-api.datagen.strict-validation=false")
+            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.modid=galacticraft", "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}", "-Dfabric-api.datagen.strict-validation=false")
         }
         register("datagenClient") {
             client()
             name("Data Generation Client")
             runDir("build/datagen")
-            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.modid=galacticraft"/*, "-Dgalacticraft.mixin.compress_datagen"*/, "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}", "-Dfabric-api.datagen.strict-validation")
+            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.modid=galacticraft", "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}", "-Dfabric-api.datagen.strict-validation")
         }
         register("gametest") {
             server()
             name("Game Test")
             source(sourceSets.test.get())
-            property("mixin.hotSwap", "true")
             vmArg("-Dfabric-api.gametest")
         }
         register("gametestClient") {
             client()
             name("Game Test Client")
             source(sourceSets.test.get())
-            property("mixin.hotSwap", "true")
             vmArg("-Dfabric-api.gametest")
         }
     }
@@ -261,10 +281,9 @@ publishing {
         }
     }
     repositories {
-        val isSnapshot: Boolean = System.getenv("SNAPSHOT")?.equals("true") ?: true
         val mavenRelease = "https://maven.galacticraft.dev/repository/maven-releases/"
         val mavenSnapshot = "https://maven.galacticraft.dev/repository/maven-snapshots/"
-        maven(if(isSnapshot) mavenSnapshot else mavenRelease) {
+        maven(if(prerelease) mavenSnapshot else mavenRelease) {
             name = "maven"
             credentials(PasswordCredentials::class)
             authentication {
@@ -318,31 +337,3 @@ fun DependencyHandler.includedDependency(dependencyNotation: String, dependencyC
 fun DependencyHandler.includedRuntimeDependency(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
     include(modRuntimeOnly(dependencyNotation, dependencyConfiguration), dependencyConfiguration)
 }
-
-// inspired by https://github.com/TerraformersMC/GradleScripts/blob/2.0/ferry.gradle
-fun getVersionDecoration(): String {
-    if ((System.getenv("DISABLE_VERSION_DECORATION") ?: "false") == "true") return ""
-    if (project.hasProperty("release")) return ""
-
-    if (project.hasProperty("grgit")) {
-        val grgit = project.property("grgit") as org.ajoberstar.grgit.Grgit?
-        if (grgit?.head() != null) {
-            var decoration = "+build"
-            val branch = grgit.branch?.current()
-            if (branch != null && branch.name != "main") {
-                decoration += ".${branch.name}"
-            }
-            val commitHashLines = grgit.head().abbreviatedId
-            if (commitHashLines != null && commitHashLines.isNotEmpty()) {
-                decoration += "-${commitHashLines}"
-            }
-
-            if (!grgit.status().isClean) {
-                decoration += "-modified"
-            }
-            return decoration
-        }
-    }
-    return "+build.unknown"
-}
-

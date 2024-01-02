@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,24 +25,19 @@ package dev.galacticraft.mod.network;
 import dev.galacticraft.api.accessor.SatelliteAccessor;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.rocket.LaunchStage;
-import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.api.universe.celestialbody.landable.Landable;
-import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.content.entity.LanderEntity;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import dev.galacticraft.mod.events.GCEventHandlers;
-import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
 import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
 import dev.galacticraft.mod.screen.RocketMenu;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -53,7 +48,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 

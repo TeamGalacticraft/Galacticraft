@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,6 @@ import dev.galacticraft.api.universe.display.CelestialDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.dynamicdimensions.api.DynamicDimensionRegistry;
-import dev.galacticraft.mod.data.gen.SatelliteChunkGenerator;
 import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
 import dev.galacticraft.impl.universe.display.type.IconCelestialDisplayType;
@@ -44,6 +43,7 @@ import dev.galacticraft.impl.universe.position.config.OrbitalCelestialPositionCo
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.impl.universe.position.type.OrbitalCelestialPositionType;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.data.gen.SatelliteChunkGenerator;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;

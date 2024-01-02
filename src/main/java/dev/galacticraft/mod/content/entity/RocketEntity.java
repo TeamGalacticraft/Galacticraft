@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,13 +34,12 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyType;
 import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.events.RocketEvents;
-import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.util.FluidUtil;
 import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
@@ -84,7 +83,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

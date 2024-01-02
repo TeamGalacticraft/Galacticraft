@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,9 +29,9 @@ import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.registry.BuiltInRocketRegistries;
 import dev.galacticraft.dynamicdimensions.api.event.DynamicDimensionLoadCallback;
 import dev.galacticraft.impl.internal.command.GCApiCommands;
-import dev.galacticraft.mod.data.gen.SatelliteChunkGenerator;
 import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.data.gen.SatelliteChunkGenerator;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;

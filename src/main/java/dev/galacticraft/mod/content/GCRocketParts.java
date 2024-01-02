@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,26 +22,18 @@
 
 package dev.galacticraft.mod.content;
 
-import dev.galacticraft.api.registry.BuiltInRocketRegistries;
 import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.part.*;
-import dev.galacticraft.api.rocket.part.type.RocketConeType;
 import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
 import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
-import dev.galacticraft.impl.rocket.part.RocketConeImpl;
 import dev.galacticraft.impl.rocket.part.config.*;
 import dev.galacticraft.impl.rocket.part.type.*;
 import dev.galacticraft.impl.rocket.travelpredicate.config.AccessWeightTravelPredicateConfig;
 import dev.galacticraft.impl.rocket.travelpredicate.type.AccessWeightTravelPredicateType;
 import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.rocket.part.config.StorageUpgradeConfig;
-import dev.galacticraft.mod.content.rocket.part.type.StorageUpgradeType;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.Ingredient;
-import org.apache.http.config.Registry;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

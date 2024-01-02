@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,8 @@ package dev.galacticraft.mod.world.gen.structure;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCEntityTypes;
-import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.structure.GCStructureTemplatePools;
+import dev.galacticraft.mod.tag.GCTags;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderOwner;
 import net.minecraft.core.HolderSet;

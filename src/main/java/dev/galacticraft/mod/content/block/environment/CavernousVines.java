@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.content.block.environment;
 
-import java.util.function.ToIntFunction;
-
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -37,6 +35,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.function.ToIntFunction;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>

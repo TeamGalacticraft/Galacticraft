@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,6 @@
 
 package dev.galacticraft.impl.internal.fabric;
 
-import dev.galacticraft.api.registry.AddonRegistries;
-import dev.galacticraft.api.registry.RocketRegistries;
-import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
-import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
-import dev.galacticraft.impl.rocket.part.*;
-import dev.galacticraft.impl.universe.galaxy.GalaxyImpl;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.core.RegistrySetBuilder;
 

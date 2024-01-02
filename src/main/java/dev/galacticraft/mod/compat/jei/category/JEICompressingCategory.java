@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.compat.jei.category;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.compat.jei.GCJEIRecipeTypes;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +23,10 @@
 package dev.galacticraft.mod.api.block.entity;
 
 import dev.galacticraft.mod.Constant;
-import java.util.Objects;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.DyeColor;
+
+import java.util.Objects;
 
 public interface Colored {
     DyeColor getColor();
