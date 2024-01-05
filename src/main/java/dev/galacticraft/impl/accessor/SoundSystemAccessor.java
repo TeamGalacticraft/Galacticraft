@@ -29,5 +29,5 @@ import org.jetbrains.annotations.ApiStatus;
  */
 @ApiStatus.Internal
 public interface SoundSystemAccessor {
-    void updateAtmosphericVolumeMultiplier(float multiplier);
+    void galacticraft$updateAtmosphericVolumeMultiplier(float multiplier);
 }

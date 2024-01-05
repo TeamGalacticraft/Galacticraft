@@ -37,13 +37,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
+@SuppressWarnings("UnusedMixin")
 @Mixin(targets = "net/minecraft/world/level/levelgen/structure/pools/JigsawPlacement$Placer")
 public abstract class StructurePoolGeneratorMixin {
     @SuppressWarnings("UnnecessaryQualifiedMemberReference") // MCDev doesn't realize that it is required since it is targeting a private class
     @Inject(method = "Lnet/minecraft/world/level/levelgen/structure/pools/JigsawPlacement$Placer;tryPlacingChildren(Lnet/minecraft/world/level/levelgen/structure/PoolElementStructurePiece;Lorg/apache/commons/lang3/mutable/MutableObject;IZLnet/minecraft/world/level/LevelHeightAccessor;Lnet/minecraft/world/level/levelgen/RandomState;)V", at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Object;)V", remap = false), require = 0)
     public void extraDebugInfoGC(PoolElementStructurePiece piece, MutableObject<VoxelShape> mutableObject, int i, boolean bl, LevelHeightAccessor levelHeightAccessor, RandomState randomState, CallbackInfo ci) {
         if (Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled()) {
-            Constant.LOGGER.warn("Pool referencer: {}", piece.toString());
+            Constant.LOGGER.warn("Referenced by: {}", piece.toString());
         }
     }
 }

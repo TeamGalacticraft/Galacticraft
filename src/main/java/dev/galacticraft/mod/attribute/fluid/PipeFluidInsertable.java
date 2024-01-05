@@ -77,11 +77,6 @@ public class PipeFluidInsertable implements Storage<FluidVariant>, StorageView<F
     }
 
     @Override
-    public long simulateExtract(FluidVariant resource, long maxAmount, @Nullable TransactionContext transaction) {
-        return 0;
-    }
-
-    @Override
     public boolean isResourceBlank() {
         return true;
     }

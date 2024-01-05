@@ -99,14 +99,17 @@ public abstract class LevelMixin implements LevelOxygenAccessor, InternalLevelOx
         this.breathable = breathable;
     }
 
+    @Unique
     private boolean withinBuildHeight(int y) {
         return y >= this.getMinBuildHeight() && y < this.getMaxBuildHeight();
     }
 
+    @Unique
     private static boolean withinWorldSize(int x, int z) {
         return x >= -Level.MAX_LEVEL_SIZE && z >= -Level.MAX_LEVEL_SIZE && x < Level.MAX_LEVEL_SIZE && z < Level.MAX_LEVEL_SIZE;
     }
 
+    @Unique
     private boolean validPosition(int x, int y, int z) {
         return this.withinBuildHeight(y) && withinWorldSize(x, z);
     }

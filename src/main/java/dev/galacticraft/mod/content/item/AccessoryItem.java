@@ -42,7 +42,7 @@ public class AccessoryItem extends Item implements Accessory {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
-        Container inv = user.getAccessories();
+        Container inv = user.galacticraft$getAccessories();
         boolean alreadyEquipped = false;
         int minAcceptableSlot = -1;
         ItemStack copy = user.getItemInHand(hand).copy();

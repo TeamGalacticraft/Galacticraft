@@ -66,7 +66,7 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
         super(GCMenuTypes.PLAYER_INV_GC, syncId);
 
         this.player = player;
-        this.inventory = player.getGearInv();
+        this.inventory = player.galacticraft$getGearInv();
 
         for (int slotY = 0; slotY < 4; ++slotY) {
             EquipmentSlot slot = EQUIPMENT_SLOT_ORDER[slotY];

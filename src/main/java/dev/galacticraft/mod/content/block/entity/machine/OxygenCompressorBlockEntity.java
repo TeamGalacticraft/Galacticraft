@@ -74,27 +74,31 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
         Storage<FluidVariant> tank = this.itemStorage().getSlot(OXYGEN_OUTPUT_SLOT).find(FluidStorage.ITEM);
         profiler.pop();
         if (tank == null) return GCMachineStatuses.MISSING_OXYGEN_TANK;
-        long space = tank.simulateInsert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null);
+        long space;
+        try (Transaction transaction = Transaction.openOuter()) {
+            space = tank.insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, transaction);
+        }
         if (!tank.supportsInsertion() || space == 0) return GCMachineStatuses.OXYGEN_TANK_FULL;
+
         profiler.push("transaction");
-        try {
-            if (this.energyStorage().canExtract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate())) {
-                long available = oxygenStorage.extract(Gases.OXYGEN, space);
-                if (available > 0) {
-                    this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate());
-                    try (Transaction transaction = Transaction.openOuter()) {
-                        tank.insert(FluidVariant.of(Gases.OXYGEN), available, transaction);
-                        transaction.commit();
-                    }
+        if (this.energyStorage().canExtract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate())) {
+            long available = oxygenStorage.extract(Gases.OXYGEN, space);
+            if (available > 0) {
+                this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate());
+                try (Transaction transaction = Transaction.openOuter()) {
+                    tank.insert(FluidVariant.of(Gases.OXYGEN), available, transaction);
+                    transaction.commit();
+                    profiler.pop();
+                    return GCMachineStatuses.COMPRESSING;
                 }
             } else {
-                return MachineStatuses.NOT_ENOUGH_ENERGY;
+                profiler.pop();
+                return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
             }
-        } finally {
+        } else {
             profiler.pop();
+            return MachineStatuses.NOT_ENOUGH_ENERGY;
         }
-
-        return GCMachineStatuses.COMPRESSING;
     }
 
     @Nullable

@@ -28,13 +28,13 @@ import net.minecraft.util.Unit;
 import net.minecraft.world.entity.player.Player;
 
 public interface CryogenicAccessor {
-    Either<Player.BedSleepingProblem, Unit> startCryogenicSleep(BlockPos blockPos);
+    Either<Player.BedSleepingProblem, Unit> galacticraft$startCryogenicSleep(BlockPos blockPos);
 
-    void stopCryogenicSleep(boolean resetSleepCounter, boolean sync);
+    void galacticraft$stopCryogenicSleep(boolean resetSleepCounter, boolean sync);
 
-    int getCryogenicChamberCooldown();
+    int galacticraft$getCryogenicChamberCooldown();
 
-    void setCryogenicChamberCooldown(int cryogenicChamberCooldown);
+    void galacticraft$setCryogenicChamberCooldown(int cryogenicChamberCooldown);
 
-    boolean isInCryoSleep();
+    boolean galacticraft$isInCryoSleep();
 }

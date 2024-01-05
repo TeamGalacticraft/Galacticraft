@@ -61,7 +61,7 @@ public abstract class EntityMixin {
     private float xRot;
 
     @Shadow
-    public Level level;
+    private Level level;
 
     @Inject(method = "findDimensionEntryPoint", at = @At("HEAD"), cancellable = true)
     private void getTeleportTargetGC(ServerLevel destination, CallbackInfoReturnable<PortalInfo> cir) {
@@ -95,7 +95,7 @@ public abstract class EntityMixin {
     @Shadow
     public abstract boolean hurt(DamageSource source, float amount);
 
-    @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At("TAIL"), cancellable = true)
+    @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At("TAIL"))
     private void checkWaterStateGC(CallbackInfo ci) {
         if (this.updateFluidHeightAndDoFluidPushing(GCTags.OIL, 0.0028d) || this.updateFluidHeightAndDoFluidPushing(GCTags.FUEL, 0.0028d)) {
             if (this.isOnFire()) {

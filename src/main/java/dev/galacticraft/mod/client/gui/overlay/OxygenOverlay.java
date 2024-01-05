@@ -52,7 +52,7 @@ public class OxygenOverlay {
                 RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
                 RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OVERLAY);
                 assert mc.player != null;
-                Container inv = mc.player.getOxygenTanks();
+                Container inv = mc.player.galacticraft$getOxygenTanks();
                 for (int i = 0; i < inv.getContainerSize(); i++) {
                     Storage<FluidVariant> storage = ContainerItemContext.withConstant(inv.getItem(i)).find(FluidStorage.ITEM);
                     if (storage != null) {

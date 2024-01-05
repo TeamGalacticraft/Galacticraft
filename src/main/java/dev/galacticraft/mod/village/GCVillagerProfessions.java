@@ -48,11 +48,7 @@ public class GCVillagerProfessions {
     public static final VillagerProfession LUNAR_CARTOGRAPHER = register(new ResourceLocation(Constant.MOD_ID, "lunar_cartographer"), GCPointOfInterestTypes.LUNAR_CARTOGRAPHER, SoundEvents.VILLAGER_WORK_CARTOGRAPHER);
 
     public static VillagerProfession register(ResourceLocation id, ResourceKey<PoiType> resourceKey, @Nullable SoundEvent soundEvent) {
-        return new VillagerProfession(id.toString(), (holder) -> {
-            return holder.is(resourceKey);
-        }, (holder) -> {
-            return holder.is(resourceKey);
-        }, ImmutableSet.<Item>builder().build(), ImmutableSet.<Block>builder().build(), soundEvent);
+        return new VillagerProfession(id.toString(), (holder) -> holder.is(resourceKey), (holder) -> holder.is(resourceKey), ImmutableSet.<Item>builder().build(), ImmutableSet.<Block>builder().build(), soundEvent);
     }
 
     public static void register() {

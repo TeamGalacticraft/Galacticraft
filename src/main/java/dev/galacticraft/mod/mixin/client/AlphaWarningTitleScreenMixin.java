@@ -36,6 +36,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -47,11 +48,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(TitleScreen.class)
 @Environment(EnvType.CLIENT)
 public abstract class AlphaWarningTitleScreenMixin extends Screen {
+
+    @Unique
     private static boolean warningHidden = false;
+    @Unique
     private static final ResourceLocation ALPHA_WARNING_GC_TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/gui/alpha_warning.png");
+    @Unique
     private static final Component ALPHA_WARNING_GC_HEADER = Component.translatable("ui.galacticraft.alpha_warning.header");
+    @Unique
     private static final Component ALPHA_WARNING_GC_CONTENT1 = Component.translatable("ui.galacticraft.alpha_warning.content1");
+    @Unique
     private static final Component ALPHA_WARNING_GC_CONTENT2 = Component.translatable("ui.galacticraft.alpha_warning.content2");
+    @Unique
     private static final Component ALPHA_WARNING_GC_CONTENT3 = Component.translatable("ui.galacticraft.alpha_warning.content3");
 
     protected AlphaWarningTitleScreenMixin(Component title) {

@@ -143,7 +143,7 @@ class AirLockProtocol
         this.minZ = 6000000;
         this.maxZ = -6000000;
 
-        this.adjacentAirLocks = new ArrayList<BlockPos>();
+        this.adjacentAirLocks = new ArrayList<>();
         this.checked.clear();
         final BlockPos headPos = this.head.getBlockPos();
         this.checked.add(headPos);

@@ -66,7 +66,7 @@ public abstract class SoundEngineMixin implements SoundSystemAccessor {
     }
 
     @Override
-    public void updateAtmosphericVolumeMultiplier(float multiplier) {
+    public void galacticraft$updateAtmosphericVolumeMultiplier(float multiplier) {
         this.multiplier = multiplier;
         this.updateCategoryVolume(null, this.listener.getGain());
     }

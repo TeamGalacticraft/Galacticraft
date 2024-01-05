@@ -50,7 +50,7 @@ public abstract class ChunkHolderMixin {
 
     @Shadow @Final private ChunkHolder.PlayerProvider playerProvider;
 
-    @Shadow @Final private ChunkPos pos;
+    @Shadow @Final ChunkPos pos;
 
     @Inject(method = "broadcastChanges", at = @At("HEAD"))
     private void galacticraft_flushOxygenPackets(LevelChunk chunk, CallbackInfo ci) {

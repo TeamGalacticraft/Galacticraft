@@ -86,12 +86,7 @@ public class GCApiLookupProviders {
 
         FluidStorage.ITEM.registerForItems((itemStack, context) -> {
             long amount = itemStack.getTag() != null ? itemStack.getTag().getLong(Constant.Nbt.VALUE) : 0;
-            return new SingleTypeStorage<>(FluidVariant.of(Gases.OXYGEN), context, ((OxygenTankItem) itemStack.getItem()).capacity, FluidVariant.blank(), amount) {
-                @Override
-                protected void onFinalCommit() {
-                    super.onFinalCommit();
-                }
-            };
+            return new SingleTypeStorage<>(FluidVariant.of(Gases.OXYGEN), context, ((OxygenTankItem) itemStack.getItem()).capacity, FluidVariant.blank(), amount);
         }, GCItems.SMALL_OXYGEN_TANK, GCItems.MEDIUM_OXYGEN_TANK, GCItems.LARGE_OXYGEN_TANK);
         FluidStorage.ITEM.registerSelf(GCItems.INFINITE_OXYGEN_TANK);
     }

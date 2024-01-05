@@ -84,7 +84,7 @@ public class GalacticraftAPI implements ModInitializer {
         GcApiEntityAttributes.init();
 
         DynamicDimensionLoadCallback.register((minecraftServer, dynamicDimensionLoader) -> {
-            ((SatelliteAccessor) minecraftServer).loadSatellites(dynamicDimensionLoader);
+            ((SatelliteAccessor) minecraftServer).galacticraft$loadSatellites(dynamicDimensionLoader);
         });
         Gases.init();
         Constant.LOGGER.info("Initialization Complete. (Took {}ms).", System.currentTimeMillis() - startInitTime);

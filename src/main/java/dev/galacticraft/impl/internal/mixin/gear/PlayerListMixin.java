@@ -47,7 +47,7 @@ public abstract class PlayerListMixin {
     @Inject(method = "placeNewPlayer", at = @At("RETURN"))
     private void galacticraft_syncGearInventory(Connection connection, ServerPlayer player, CallbackInfo ci) {
         FriendlyByteBuf buf = PacketByteBufs.create();
-        Container inventory = player.getGearInv();
+        Container inventory = player.galacticraft$getGearInv();
         buf.writeInt(player.getId());
         buf.writeInt(inventory.getContainerSize());
         for (int i = 0; i < inventory.getContainerSize(); i++) {

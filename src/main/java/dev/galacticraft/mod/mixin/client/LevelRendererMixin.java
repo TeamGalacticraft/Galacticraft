@@ -80,6 +80,7 @@ public class LevelRendererMixin {
     }
 
 
+    @Unique
     private float normalize(float x, float inMin, float inMax, float outMin, float outMax) {
         float outRange = outMax - outMin;
         float inRange  = inMax - inMin;

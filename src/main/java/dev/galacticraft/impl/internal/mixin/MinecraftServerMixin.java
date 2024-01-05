@@ -58,17 +58,17 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
     @Shadow @Final protected LevelStorageSource.LevelStorageAccess storageSource;
 
     @Override
-    public @Unmodifiable Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> getSatellites() {
+    public @Unmodifiable Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> galacticraft$getSatellites() {
         return ImmutableMap.copyOf(this.satellites);
     }
 
     @Override
-    public void addSatellite(ResourceLocation id, CelestialBody<SatelliteConfig, SatelliteType> satellite) {
+    public void galacticraft$addSatellite(ResourceLocation id, CelestialBody<SatelliteConfig, SatelliteType> satellite) {
         this.satellites.put(id, satellite);
     }
 
     @Override
-    public void removeSatellite(ResourceLocation id) {
+    public void galacticraft$removeSatellite(ResourceLocation id) {
         this.satellites.remove(id);
     }
 
@@ -107,7 +107,7 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
     }
 
     @Override
-    public void loadSatellites(DynamicDimensionLoadCallback.DynamicDimensionLoader dynamicDimensionLoader) {
+    public void galacticraft$loadSatellites(DynamicDimensionLoadCallback.DynamicDimensionLoader dynamicDimensionLoader) {
         for (Map.Entry<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> entry : this.satellites.entrySet()) {
             LevelStem levelStem = entry.getValue().config().dimensionOptions();
             dynamicDimensionLoader.loadDynamicDimension(entry.getKey(), levelStem.generator(), levelStem.type().value());

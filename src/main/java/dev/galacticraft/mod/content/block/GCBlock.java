@@ -61,7 +61,7 @@ public class GCBlock extends Block {
     public boolean triggerEvent(BlockState blockState, Level level, BlockPos blockPos, int i, int j) {
         super.triggerEvent(blockState, level, blockPos, i, j);
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
-        return blockEntity == null ? false : blockEntity.triggerEvent(i, j);
+        return blockEntity != null && blockEntity.triggerEvent(i, j);
     }
 
     @Nullable

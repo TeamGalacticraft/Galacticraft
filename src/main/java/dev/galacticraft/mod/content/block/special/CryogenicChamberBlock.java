@@ -162,7 +162,7 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
         if (level.isClientSide()) {
             return InteractionResult.CONSUME;
         }
-        player.startCryogenicSleep(basePos).ifLeft(bedSleepingProblem -> {
+        player.galacticraft$startCryogenicSleep(basePos).ifLeft(bedSleepingProblem -> {
             if (bedSleepingProblem.getMessage() != null) {
                 player.displayClientMessage(bedSleepingProblem.getMessage(), true);
             }

@@ -218,7 +218,7 @@ public class GCServerPacketReceivers {
             if (player.getCelestialScreenState() != null) {
                 server.execute(() -> {
                     ResourceLocation id = buffer.readResourceLocation();
-                    CelestialBody<?, ?> body = ((SatelliteAccessor) server).getSatellites().get(id);
+                    CelestialBody<?, ?> body = ((SatelliteAccessor) server).galacticraft$getSatellites().get(id);
                     CelestialBody<?, ?> fromBody = CelestialBody.getByDimension(player.level()).orElseThrow();
                     if (body == null) body = server.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).get(id);
                     GCEventHandlers.onPlayerChangePlanets(server, player, body, fromBody);

@@ -45,12 +45,12 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientSatelliteAc
     private final @Unique List<SatelliteListener> listeners = new ArrayList<>();
 
     @Override
-    public Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> getSatellites() {
+    public Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> galacticraft$getSatellites() {
         return this.satellites;
     }
 
     @Override
-    public void addSatellite(ResourceLocation id, CelestialBody<SatelliteConfig, SatelliteType> satellite) {
+    public void galacticraft$addSatellite(ResourceLocation id, CelestialBody<SatelliteConfig, SatelliteType> satellite) {
         this.satellites.put(id, satellite);
         for (SatelliteListener listener : this.listeners) {
             listener.onSatelliteUpdated(satellite, true);
@@ -58,7 +58,7 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientSatelliteAc
     }
 
     @Override
-    public void removeSatellite(ResourceLocation id) {
+    public void galacticraft$removeSatellite(ResourceLocation id) {
         CelestialBody<SatelliteConfig, SatelliteType> removed = this.satellites.remove(id);
         for (SatelliteListener listener : this.listeners) {
             listener.onSatelliteUpdated(removed, false);

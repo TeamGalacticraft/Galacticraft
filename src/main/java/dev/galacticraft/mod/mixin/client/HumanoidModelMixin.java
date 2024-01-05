@@ -57,7 +57,7 @@ public class HumanoidModelMixin<T extends LivingEntity> {
 
     @Shadow public HumanoidModel.ArmPose rightArmPose;
 
-    @Inject(at = @At("HEAD"), method = "setupAnim")
+    @Inject(at = @At("HEAD"), method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V")
     private void standInRocketGC(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo ci) {
         if (((HumanoidModel<T>) (Object) this).riding) {
             if (livingEntity.getVehicle() instanceof RocketEntity) {
@@ -100,7 +100,7 @@ public class HumanoidModelMixin<T extends LivingEntity> {
         }
         
         
-        if (entity instanceof CryogenicAccessor player && player.isInCryoSleep()) { // TODO: possibly cleaner way of doing this?
+        if (entity instanceof CryogenicAccessor player && player.galacticraft$isInCryoSleep()) { // TODO: possibly cleaner way of doing this?
             this.hat.xRot = 45F;
             this.hat.yRot = 0;
             this.head.xRot = 45F;

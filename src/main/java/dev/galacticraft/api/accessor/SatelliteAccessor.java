@@ -31,11 +31,11 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.Map;
 
 public interface SatelliteAccessor {
-    Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> getSatellites();
+    Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> galacticraft$getSatellites();
 
-    void addSatellite(ResourceLocation id, CelestialBody<SatelliteConfig, SatelliteType> satellite);
+    void galacticraft$addSatellite(ResourceLocation id, CelestialBody<SatelliteConfig, SatelliteType> satellite);
 
-    void removeSatellite(ResourceLocation id);
+    void galacticraft$removeSatellite(ResourceLocation id);
 
-    void loadSatellites(DynamicDimensionLoadCallback.DynamicDimensionLoader dynamicDimensionLoader);
+    void galacticraft$loadSatellites(DynamicDimensionLoadCallback.DynamicDimensionLoader dynamicDimensionLoader);
 }

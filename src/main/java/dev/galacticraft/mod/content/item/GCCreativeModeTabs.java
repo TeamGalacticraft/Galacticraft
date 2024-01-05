@@ -25,6 +25,7 @@ package dev.galacticraft.mod.content.item;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.storage.PlaceholderItemStorage;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -201,20 +202,25 @@ public class GCCreativeModeTabs {
                 output.accept(OXYGEN_GEAR);
 
                 try (Transaction t = Transaction.openOuter()) {
+                    PlaceholderItemStorage itemStorage = new PlaceholderItemStorage();
+                    ContainerItemContext context = ContainerItemContext.ofSingleSlot(itemStorage);
+
                     output.accept(SMALL_OXYGEN_TANK);
-                    ContainerItemContext smallContext = ContainerItemContext.withInitial(SMALL_OXYGEN_TANK.getDefaultInstance());
-                    var storage = smallContext.find(FluidStorage.ITEM);
-                    storage.insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
-                    output.accept(smallContext.getItemVariant().toStack());
+                    itemStorage.setItem(SMALL_OXYGEN_TANK);
+                    context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
+                    output.accept(itemStorage.variant.toStack());
+
                     output.accept(MEDIUM_OXYGEN_TANK);
-                    ContainerItemContext mediumContext = ContainerItemContext.withInitial(MEDIUM_OXYGEN_TANK.getDefaultInstance());
-                    mediumContext.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
-                    output.accept(mediumContext.getItemVariant().toStack());
+                    itemStorage.setItem(MEDIUM_OXYGEN_TANK);
+                    context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
+                    output.accept(itemStorage.variant.toStack());
+
                     output.accept(LARGE_OXYGEN_TANK);
-                    ContainerItemContext largeContext = ContainerItemContext.withInitial(LARGE_OXYGEN_TANK.getDefaultInstance());
-                    largeContext.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
-                    output.accept(largeContext.getItemVariant().toStack());
+                    itemStorage.setItem(LARGE_OXYGEN_TANK);
+                    context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
+                    output.accept(itemStorage.variant.toStack());
                 }
+
                 output.accept(INFINITE_OXYGEN_TANK);
 
                 output.accept(SHIELD_CONTROLLER);

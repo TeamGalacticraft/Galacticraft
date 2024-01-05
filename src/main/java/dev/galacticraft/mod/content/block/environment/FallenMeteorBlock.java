@@ -78,7 +78,7 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
 
     @Override
     public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        var i = state.getValue(HEAT);
+        int i = state.getValue(HEAT);
 
         if (i > 0) {
             if (random.nextInt(500) == 0) {

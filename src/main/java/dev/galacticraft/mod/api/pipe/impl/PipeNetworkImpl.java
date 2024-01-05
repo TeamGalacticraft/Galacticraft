@@ -30,6 +30,7 @@ import it.unimi.dsi.fastutil.objects.*;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -269,7 +270,7 @@ public class PipeNetworkImpl implements PipeNetwork {
             this.transferred = 0;
             this.fluidTransferred = null;
         } else {
-            if (this.fluidTransferred != null && amount.fluid() != this.fluidTransferred) {
+            if (this.fluidTransferred != null && amount.fluid() != this.fluidTransferred.getFluid()) {
                 return amount;
             }
         }
@@ -309,7 +310,10 @@ public class PipeNetworkImpl implements PipeNetwork {
             for (ObjectIterator<Object2ObjectMap.Entry<BlockPos, Storage<FluidVariant>>> it = this.getInsertable().object2ObjectEntrySet().fastIterator(); it.hasNext(); ) {
                 Map.Entry<BlockPos, Storage<FluidVariant>> entry = it.next();
                 if (entry.getKey().equals(source)) continue;
-                long success = entry.getValue().simulateInsert(stack.variant(), stack.amount(), context);
+                long success;
+                try (Transaction transaction = Transaction.openNested(context)) {
+                    success = entry.getValue().insert(stack.variant(), stack.amount(), transaction);
+                }
                 if (success > 0) {
                     requested = requested + success;
                     if (requested >= this.maxTransferRate - this.transferred) {

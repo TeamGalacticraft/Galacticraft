@@ -59,10 +59,10 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public abstract class BucketItemMixin extends Item {
     @Shadow
     @Final
-    Fluid content;
+    private Fluid content;
 
     @Shadow
-    abstract void playEmptySound(@Nullable Player player, LevelAccessor levelAccessor, BlockPos blockPos);
+    protected abstract void playEmptySound(@Nullable Player player, LevelAccessor levelAccessor, BlockPos blockPos);
 
     BucketItemMixin() {
         super(null);

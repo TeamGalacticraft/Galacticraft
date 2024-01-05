@@ -34,6 +34,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -41,11 +42,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Camera.class)
 public abstract class CameraMixin {
     @Shadow
-    abstract void move(double d, double e, double f);
+    protected abstract void move(double d, double e, double f);
 
     @Shadow
-    abstract void setRotation(float f, float g);
+    protected abstract void setRotation(float f, float g);
 
+    @Unique
     private static float sleepDirectionToRotationCryo(Direction direction) {
         return switch (direction) {
             default -> 0.0F;
@@ -57,7 +59,7 @@ public abstract class CameraMixin {
 
     @Inject(method = "setup", at = @At("TAIL"))
     private void gc$rotateCamera(BlockGetter blockGetter, Entity entity, boolean detached, boolean thirdPersonReverse, float partialTicks, CallbackInfo ci) {
-        if (entity instanceof Player player && player.isInCryoSleep()) {
+        if (entity instanceof Player player && player.galacticraft$isInCryoSleep()) {
             var x = Mth.floor(entity.getX());
             var y = Mth.floor(entity.getY());
             var z = Mth.floor(entity.getZ());

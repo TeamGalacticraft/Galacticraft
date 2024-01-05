@@ -45,7 +45,7 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class AluminumWireBlock extends WireBlock {
-    // If we start at 8,8,8 and subtract/add to/from 8, we do operations starting from the centre.
+    // If we start at 8,8,8 and subtract/add to/from 8, we do operations starting from the center.
     private static final int OFFSET = 2;
     public static final VoxelShape NORTH = box(8 - OFFSET, 8 - OFFSET, 0, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
     public static final VoxelShape EAST = box(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 16, 8 + OFFSET, 8 + OFFSET);

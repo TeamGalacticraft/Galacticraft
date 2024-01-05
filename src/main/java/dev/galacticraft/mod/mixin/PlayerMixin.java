@@ -47,7 +47,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class PlayerMixin extends LivingEntity implements CryogenicAccessor {
 
     @Shadow
-    int sleepCounter;
+    private int sleepCounter;
 
     @Unique
     private int cryogenicChamberCooldown;
@@ -57,22 +57,22 @@ public abstract class PlayerMixin extends LivingEntity implements CryogenicAcces
     }
 
     @Override
-    public boolean isInCryoSleep() {
+    public boolean galacticraft$isInCryoSleep() {
         return this.entityData.get(GCEntityDataSerializers.IS_IN_CRYO_SLEEP_ID);
     }
 
     @Override
-    public int getCryogenicChamberCooldown() {
+    public int galacticraft$getCryogenicChamberCooldown() {
         return this.cryogenicChamberCooldown;
     }
 
     @Override
-    public void setCryogenicChamberCooldown(int cryogenicChamberCooldown) {
+    public void galacticraft$setCryogenicChamberCooldown(int cryogenicChamberCooldown) {
         this.cryogenicChamberCooldown = cryogenicChamberCooldown;
     }
 
     @Override
-    public Either<Player.BedSleepingProblem, Unit> startCryogenicSleep(BlockPos blockPos) {
+    public Either<Player.BedSleepingProblem, Unit> galacticraft$startCryogenicSleep(BlockPos blockPos) {
         var problem = EntitySleepEvents.ALLOW_SLEEPING.invoker().allowSleep(Player.class.cast(this), blockPos);
         if (problem != null) {
             return Either.left(problem);
@@ -91,7 +91,7 @@ public abstract class PlayerMixin extends LivingEntity implements CryogenicAcces
     }
 
     @Override
-    public void stopCryogenicSleep(boolean resetSleepCounter, boolean sync) {
+    public void galacticraft$stopCryogenicSleep(boolean resetSleepCounter, boolean sync) {
         EntitySleepEvents.STOP_SLEEPING.invoker().onStopSleeping(Player.class.cast(this), this.getSleepingPos().get());
         var optional = this.getSleepingPos();
 
@@ -115,7 +115,7 @@ public abstract class PlayerMixin extends LivingEntity implements CryogenicAcces
 
     @Override
     public void setPosToBed(BlockPos blockPos) {
-        if (this.isInCryoSleep()) {
+        if (this.galacticraft$isInCryoSleep()) {
             this.setPos(blockPos.getX() + 0.5d, blockPos.getY() + 1, blockPos.getZ() + 0.5d);
             return;
         }
@@ -124,8 +124,8 @@ public abstract class PlayerMixin extends LivingEntity implements CryogenicAcces
 
     @Inject(method = "stopSleepInBed", at = @At("HEAD"), cancellable = true)
     private void gc$stopCryoSleep(boolean resetSleepCounter, boolean sync, CallbackInfo ci) {
-        if (this.isInCryoSleep()) {
-            this.stopCryogenicSleep(resetSleepCounter, sync);
+        if (this.galacticraft$isInCryoSleep()) {
+            this.galacticraft$stopCryogenicSleep(resetSleepCounter, sync);
             ci.cancel();
         }
     }
@@ -147,14 +147,14 @@ public abstract class PlayerMixin extends LivingEntity implements CryogenicAcces
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void gc$tickCryo(CallbackInfo ci) {
-        if (this.getCryogenicChamberCooldown() > 0) {
-            this.setCryogenicChamberCooldown(this.getCryogenicChamberCooldown() - 1);
+        if (this.galacticraft$getCryogenicChamberCooldown() > 0) {
+            this.galacticraft$setCryogenicChamberCooldown(this.galacticraft$getCryogenicChamberCooldown() - 1);
         }
     }
 
     @Inject(method = "aiStep", at = @At("HEAD"), cancellable = true)
     private void gc$preventMovement(CallbackInfo ci) {
-        if (this.isInCryoSleep()) {
+        if (this.galacticraft$isInCryoSleep()) {
             ci.cancel();
         }
     }

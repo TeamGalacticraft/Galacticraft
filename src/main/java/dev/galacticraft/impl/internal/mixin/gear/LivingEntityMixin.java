@@ -75,8 +75,8 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     @Inject(method = "tick", at = @At(value = "RETURN"))
     private void tickAccessories(CallbackInfo ci) {
         LivingEntity thisEntity = ((LivingEntity) (Object) this);
-        for (int i = 0; i < this.getAccessories().getContainerSize(); i++) {
-            ItemStack stack = this.getAccessories().getItem(i);
+        for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
+            ItemStack stack = this.galacticraft$getAccessories().getItem(i);
             if (stack.getItem() instanceof Accessory accessory) {
                 accessory.tick(thisEntity);
             }
@@ -92,8 +92,8 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
 
         boolean mask = false;
         boolean gear = false;
-        for (int i = 0; i < this.getAccessories().getContainerSize(); i++) {
-            Item item = this.getAccessories().getItem(i).getItem();
+        for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
+            Item item = this.galacticraft$getAccessories().getItem(i).getItem();
             if (!mask && item instanceof OxygenMask) {
                 mask = true;
                 if (gear) break;
@@ -104,7 +104,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
         }
 
         if (mask && gear) {
-            InventoryStorage tankInv = InventoryStorage.of(getOxygenTanks(), null);
+            InventoryStorage tankInv = InventoryStorage.of(galacticraft$getOxygenTanks(), null);
             for (int i = 0; i < tankInv.getSlotCount(); i++) {
                 Storage<FluidVariant> storage = ContainerItemContext.ofSingleSlot(tankInv.getSlot(i)).find(FluidStorage.ITEM);
                 if (storage != null) {
@@ -123,7 +123,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     @Inject(method = "dropEquipment", at = @At(value = "RETURN"))
     private void galacticraft_dropGearInventory(CallbackInfo ci) {
         if (!this.level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
-            Container gearInv = this.getGearInv();
+            Container gearInv = this.galacticraft$getGearInv();
             for (int i = 0; i < gearInv.getContainerSize(); ++i) {
                 ItemStack itemStack = gearInv.getItem(i);
                 gearInv.setItem(i, ItemStack.EMPTY);
@@ -140,40 +140,40 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     }
 
     @Override
-    public Container getGearInv() {
+    public Container galacticraft$getGearInv() {
         return GalacticraftAPI.EMPTY_INV;
     }
 
     @Override
-    public Container getOxygenTanks() {
+    public Container galacticraft$getOxygenTanks() {
         return GalacticraftAPI.EMPTY_INV;
     }
 
     @Override
-    public Container getThermalArmor() {
+    public Container galacticraft$getThermalArmor() {
         return GalacticraftAPI.EMPTY_INV;
     }
 
     @Override
-    public Container getAccessories() {
+    public Container galacticraft$getAccessories() {
         return GalacticraftAPI.EMPTY_INV;
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
     private void galacticraft_writeGearInventory(CompoundTag nbt, CallbackInfo ci) {
-        this.writeGearToNbt(nbt);
+        this.galacticraft$writeGearToNbt(nbt);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
     private void galacticraft_readGearInventory(CompoundTag tag, CallbackInfo ci) {
-        this.readGearFromNbt(tag);
+        this.galacticraft$readGearFromNbt(tag);
     }
 
     @Override
-    public void writeGearToNbt(CompoundTag tag) {
+    public void galacticraft$writeGearToNbt(CompoundTag tag) {
     }
 
     @Override
-    public void readGearFromNbt(CompoundTag tag) {
+    public void galacticraft$readGearFromNbt(CompoundTag tag) {
     }
 }

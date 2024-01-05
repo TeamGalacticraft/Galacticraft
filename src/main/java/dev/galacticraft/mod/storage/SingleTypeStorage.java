@@ -31,9 +31,8 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 
@@ -62,9 +61,9 @@ public class SingleTypeStorage<T, V extends TransferVariant<T>> extends Snapshot
             updateSnapshots(transaction);
             maxAmount = Math.min(maxAmount, this.capacity - this.amount);
             this.amount += maxAmount;
-            ItemStack updatedStack = context.getItemVariant().toStack();
-            updatedStack.getOrCreateTag().putLong(Constant.Nbt.VALUE, this.getAmount());
-            if (context.exchange(ItemVariant.of(updatedStack), 1, transaction) == 1) {
+            CompoundTag tag = this.context.getItemVariant().copyOrCreateNbt();
+            tag.putLong(Constant.Nbt.VALUE, this.getAmount());
+            if (context.exchange(ItemVariant.of(this.context.getItemVariant().getItem(), tag), 1, transaction) == 1) {
                 return maxAmount;
             }
         }
@@ -77,9 +76,9 @@ public class SingleTypeStorage<T, V extends TransferVariant<T>> extends Snapshot
             updateSnapshots(transaction);
             maxAmount = Math.min(maxAmount, this.amount);
             this.amount -= maxAmount;
-            ItemStack updatedStack = context.getItemVariant().toStack();
-            updatedStack.getOrCreateTag().putLong(Constant.Nbt.VALUE, this.getAmount());
-            if (context.exchange(ItemVariant.of(updatedStack), 1, transaction) == 1) {
+            CompoundTag tag = this.context.getItemVariant().copyOrCreateNbt();
+            tag.putLong(Constant.Nbt.VALUE, this.getAmount());
+            if (context.exchange(ItemVariant.of(this.context.getItemVariant().getItem(), tag), 1, transaction) == 1) {
                 return maxAmount;
             }
         }
@@ -88,12 +87,12 @@ public class SingleTypeStorage<T, V extends TransferVariant<T>> extends Snapshot
 
     @Override
     public boolean isResourceBlank() {
-        return resource.isBlank();
+        return this.amount == 0;
     }
 
     @Override
     public V getResource() {
-        return this.resource;
+        return this.amount == 0 ? this.blankResource : this.resource;
     }
 
     @Override
@@ -107,13 +106,8 @@ public class SingleTypeStorage<T, V extends TransferVariant<T>> extends Snapshot
     }
 
     @Override
-    public Iterator<StorageView<V>> iterator() {
+    public @NotNull Iterator<StorageView<V>> iterator() {
         return Iterators.singletonIterator(this);
-    }
-
-    @Override
-    public @Nullable StorageView<V> exactView(V resource) {
-        return this.resource.equals(resource) ? this : null;
     }
 
     @Override

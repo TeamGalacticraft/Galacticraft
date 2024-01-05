@@ -68,15 +68,15 @@ public abstract class AbstractClientPlayerEntityMixin implements ClientResearchA
                     ItemStack stack = inventory.getItem(i);
                     if (stack.getItem() instanceof Accessory accessory && accessory.enablesHearing()) {
                         ((SoundSystemAccessor) ((SoundManagerAccessor) Minecraft.getInstance().getSoundManager()).getSoundSystem())
-                                .updateAtmosphericVolumeMultiplier(1.0f);
+                                .galacticraft$updateAtmosphericVolumeMultiplier(1.0f);
                         return;
                     } else {
                         ((SoundSystemAccessor) ((SoundManagerAccessor) Minecraft.getInstance().getSoundManager()).getSoundSystem())
-                                .updateAtmosphericVolumeMultiplier(pressure);
+                                .galacticraft$updateAtmosphericVolumeMultiplier(pressure);
                     }
                 }
             } else {
-                ((SoundSystemAccessor) ((SoundManagerAccessor) Minecraft.getInstance().getSoundManager()).getSoundSystem()).updateAtmosphericVolumeMultiplier(pressure);
+                ((SoundSystemAccessor) ((SoundManagerAccessor) Minecraft.getInstance().getSoundManager()).getSoundSystem()).galacticraft$updateAtmosphericVolumeMultiplier(pressure);
             }
         });
         return inv;
@@ -101,32 +101,32 @@ public abstract class AbstractClientPlayerEntityMixin implements ClientResearchA
     }
 
     @Override
-    public SimpleContainer getGearInv() {
+    public SimpleContainer galacticraft$getGearInv() {
         return this.gearInv;
     }
 
     @Override
-    public Container getOxygenTanks() {
+    public Container galacticraft$getOxygenTanks() {
         return this.tankInv;
     }
 
     @Override
-    public Container getThermalArmor() {
+    public Container galacticraft$getThermalArmor() {
         return this.thermalArmorInv;
     }
 
     @Override
-    public Container getAccessories() {
+    public Container galacticraft$getAccessories() {
         return this.accessoryInv;
     }
 
     @Override
-    public void writeGearToNbt(CompoundTag tag) {
-        tag.put(Constant.Nbt.GEAR_INV, this.getGearInv().createTag());
+    public void galacticraft$writeGearToNbt(CompoundTag tag) {
+        tag.put(Constant.Nbt.GEAR_INV, this.galacticraft$getGearInv().createTag());
     }
 
     @Override
-    public void readGearFromNbt(CompoundTag tag) {
-        this.getGearInv().fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND));
+    public void galacticraft$readGearFromNbt(CompoundTag tag) {
+        this.galacticraft$getGearInv().fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND));
     }
 }

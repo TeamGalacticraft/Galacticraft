@@ -32,7 +32,6 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -53,28 +52,28 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
         if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 129, this.topPos + 8, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT)) {
             Storage<FluidVariant> storage = ContainerItemContext.withConstant(this.menu.inventory.getItem(GCPlayerInventoryMenu.OXYGEN_TANK_1_SLOT)).find(FluidStorage.ITEM);
             if (storage != null) {
-                try (Transaction transaction = Transaction.openOuter()) {
-                    StorageView<FluidVariant> exact = storage.exactView(FluidVariant.of(Gases.OXYGEN));
-                    if (exact != null) {
-                        graphics.renderTooltip(this.font, Component.translatable("ui.galacticraft.player_inv_screen.oxygen_tank_level", 1, exact.getAmount(), exact.getCapacity()), mouseX, mouseY);
-                    } else {
-                        long l = storage.extract(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, transaction);
-                        graphics.renderTooltip(this.font, Component.translatable("ui.galacticraft.player_inv_screen.oxygen_tank_level", 1, l, "???"), mouseX, mouseY);
+                long capacity = 0;
+                long amount = 0;
+                for (StorageView<FluidVariant> view : storage) {
+                    if (view.isResourceBlank() || view.getResource().getFluid() == Gases.OXYGEN) {
+                        capacity += view.getCapacity();
+                        amount += view.getAmount();
                     }
                 }
+                graphics.renderTooltip(this.font, Component.translatable("ui.galacticraft.player_inv_screen.oxygen_tank_level", 1, amount, capacity), mouseX, mouseY);
             }
         } else if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 152, this.topPos + 8, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT)) {
             Storage<FluidVariant> storage = ContainerItemContext.withConstant(this.menu.inventory.getItem(GCPlayerInventoryMenu.OXYGEN_TANK_2_SLOT)).find(FluidStorage.ITEM);
             if (storage != null) {
-                try (Transaction transaction = Transaction.openOuter()) {
-                    StorageView<FluidVariant> exact = storage.exactView(FluidVariant.of(Gases.OXYGEN));
-                    if (exact != null) {
-                        graphics.renderTooltip(this.font, Component.translatable("ui.galacticraft.player_inv_screen.oxygen_tank_level", 2, exact.getAmount(), exact.getCapacity()), mouseX, mouseY);
-                    } else {
-                        long l = storage.extract(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, transaction);
-                        graphics.renderTooltip(this.font, Component.translatable("ui.galacticraft.player_inv_screen.oxygen_tank_level", 2, l, "???"), mouseX, mouseY);
+                long capacity = 0;
+                long amount = 0;
+                for (StorageView<FluidVariant> view : storage) {
+                    if (view.isResourceBlank() || view.getResource().getFluid() == Gases.OXYGEN) {
+                        capacity += view.getCapacity();
+                        amount += view.getAmount();
                     }
                 }
+                graphics.renderTooltip(this.font, Component.translatable("ui.galacticraft.player_inv_screen.oxygen_tank_level", 2, amount, capacity), mouseX, mouseY);
             }
         }
         super.renderTooltip(graphics, mouseX, mouseY);
@@ -94,16 +93,32 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
         graphics.blit(Constant.ScreenTexture.PLAYER_INVENTORY_SCREEN, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
         Storage<FluidVariant> storage1 = ContainerItemContext.withConstant(this.menu.inventory.getItem(GCPlayerInventoryMenu.OXYGEN_TANK_1_SLOT)).find(FluidStorage.ITEM);
         if (storage1 != null) {
-            StorageView<FluidVariant> exact = storage1.exactView(FluidVariant.of(Gases.OXYGEN));
-            if (exact != null) {
-                DrawableUtil.drawOxygenBuffer(graphics.pose(), this.leftPos + 129, this.topPos + 8, exact.getAmount(), exact.getCapacity());
+            long capacity = 0;
+            long amount = 0;
+            for (StorageView<FluidVariant> view : storage1) {
+                if (view.isResourceBlank() || view.getResource().getFluid() == Gases.OXYGEN) {
+                    capacity += view.getCapacity();
+                    amount += view.getAmount();
+                }
+            }
+
+            if (capacity > 0) {
+                DrawableUtil.drawOxygenBuffer(graphics.pose(), this.leftPos + 129, this.topPos + 8, amount, capacity);
             }
         }
         Storage<FluidVariant> storage2 = ContainerItemContext.withConstant(this.menu.inventory.getItem(GCPlayerInventoryMenu.OXYGEN_TANK_2_SLOT)).find(FluidStorage.ITEM);
         if (storage2 != null) {
-            StorageView<FluidVariant> exact = storage2.exactView(FluidVariant.of(Gases.OXYGEN));
-            if (exact != null) {
-                DrawableUtil.drawOxygenBuffer(graphics.pose(), this.leftPos + 152, this.topPos + 8, exact.getAmount(), exact.getCapacity());
+            long capacity = 0;
+            long amount = 0;
+            for (StorageView<FluidVariant> view : storage2) {
+                if (view.isResourceBlank() || view.getResource().getFluid() == Gases.OXYGEN) {
+                    capacity += view.getCapacity();
+                    amount += view.getAmount();
+                }
+            }
+
+            if (capacity > 0) {
+                DrawableUtil.drawOxygenBuffer(graphics.pose(), this.leftPos + 152, this.topPos + 8, amount, capacity);
             }
         }
 

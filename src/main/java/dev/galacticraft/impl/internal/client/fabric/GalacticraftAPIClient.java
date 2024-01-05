@@ -52,12 +52,10 @@ public class GalacticraftAPIClient implements ClientModInitializer {
             FriendlyByteBuf buf = new FriendlyByteBuf(buffer.copy());
             client.execute(() -> ((ClientResearchAccessor) Objects.requireNonNull(client.player)).readChanges(buf));
         });
-        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "add_satellite"), (client, networkHandler, buffer, sender) -> {
-            ((SatelliteAccessor) networkHandler).addSatellite(buffer.readResourceLocation(), new CelestialBody<>(SatelliteType.INSTANCE, SatelliteConfig.CODEC.decode(NbtOps.INSTANCE, buffer.readNbt()).get().orThrow().getFirst()));
-        });
+        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "add_satellite"), (client, networkHandler, buffer, sender) -> ((SatelliteAccessor) networkHandler).galacticraft$addSatellite(buffer.readResourceLocation(), new CelestialBody<>(SatelliteType.INSTANCE, SatelliteConfig.CODEC.decode(NbtOps.INSTANCE, buffer.readNbt()).get().orThrow().getFirst())));
         ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "remove_satellite"), (client, networkHandler, buffer, sender) -> {
             FriendlyByteBuf buf = new FriendlyByteBuf(buffer.copy());
-            ((SatelliteAccessor) networkHandler).removeSatellite(buf.readResourceLocation());
+            ((SatelliteAccessor) networkHandler).galacticraft$removeSatellite(buf.readResourceLocation());
         });
         ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "oxygen_update"), (client, handler, buf, responseSender) -> {
             int x = buf.readInt();
@@ -73,7 +71,7 @@ public class GalacticraftAPIClient implements ClientModInitializer {
             }
             client.execute(() -> {
                 for (int i = 0; i < stacks.length; i++) {
-                    ((GearInventoryProvider) Objects.requireNonNull(client.level.getEntity(entity))).getGearInv().setItem(i, stacks[i]);
+                    ((GearInventoryProvider) Objects.requireNonNull(client.level.getEntity(entity))).galacticraft$getGearInv().setItem(i, stacks[i]);
                 }
             });
         });

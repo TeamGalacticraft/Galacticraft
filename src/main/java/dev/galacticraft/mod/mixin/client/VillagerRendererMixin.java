@@ -43,7 +43,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class VillagerRendererMixin {
     private static final @Unique ResourceLocation MOON_TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/entity/villager/moon_villager.png");
 
-    @Inject(method = "getTextureLocation", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getTextureLocation(Lnet/minecraft/world/entity/npc/Villager;)Lnet/minecraft/resources/ResourceLocation;", at = @At("HEAD"), cancellable = true)
     private void getMoonTexture_gc(Villager villagerEntity, CallbackInfoReturnable<ResourceLocation> cir) {
         if (MoonVillagerTypes.MOON_VILLAGER_TYPE_REGISTRY.contains(villagerEntity.getVillagerData().getType())) {
             cir.setReturnValue(MOON_TEXTURE);
