@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRenderer;
@@ -30,14 +32,19 @@ import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartTypes;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.gui.BatchedRenderer;
+import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
+import dev.galacticraft.mod.content.entity.RocketEntity;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.SmithingScreen;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.Holder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -48,6 +55,8 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -107,9 +116,13 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
     private @Nullable List<Holder.Reference<? extends RocketPart<?, ?>>> recipes = null;
     private int timesInventoryChanged;
 
+    private final RocketEntity entity;
+
     public RocketWorkbenchScreen(RocketWorkbenchMenu menu, Inventory inventory, Component component) {
         super(menu, inventory, component);
         this.setOpenTab(Tab.CONE);
+        this.entity = new RocketEntity(GCEntityTypes.ROCKET, menu.workbench.getLevel());
+        this.inventoryLabelX = this.inventoryLabelY = Integer.MAX_VALUE;
     }
 
     @Override
@@ -136,9 +149,16 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
             this.menu.bodyRecipes.calculateCraftable(contents);
             this.menu.finsRecipes.calculateCraftable(contents);
             this.menu.boosterRecipes.calculateCraftable(contents);
-            this.menu.bottomRecipes.calculateCraftable(contents);
+            this.menu.engineRecipes.calculateCraftable(contents);
             this.menu.upgradeRecipes.calculateCraftable(contents);
         }
+
+        this.entity.setCone(this.menu.cone.selection != null ? this.menu.cone.selection.key().location() : null);
+        this.entity.setBody(this.menu.body.selection != null ? this.menu.body.selection.key().location() : null);
+        this.entity.setFin(this.menu.fins.selection != null ? this.menu.fins.selection.key().location() : null);
+        this.entity.setBooster(this.menu.booster.selection != null ? this.menu.booster.selection.key().location() : null);
+        this.entity.setEngine(this.menu.engine.selection != null ? this.menu.engine.selection.key().location() : null);
+        this.entity.setUpgrade(this.menu.upgrade.selection != null ? this.menu.upgrade.selection.key().location() : null);
     }
 
     @Override
@@ -162,6 +182,8 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
                 }
             }
         }
+
+        renderEntityInInventory(graphics, this.leftPos + 204.5, this.topPos + 110, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, this.entity);
     }
 
     @Override
@@ -317,6 +339,28 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
         pose.popPose();
     }
 
+    public static void renderEntityInInventory(
+            GuiGraphics guiGraphics, double x, double y, int scale, Quaternionf pose, @Nullable Quaternionf cameraOrientation, RocketEntity entity
+    ) {
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(x, y, 50.0);
+        guiGraphics.pose().mulPoseMatrix(new Matrix4f().scaling((float)scale, (float)scale, (float)(-scale)));
+        guiGraphics.pose().mulPose(pose);
+        Lighting.setupForEntityInInventory();
+        EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+        if (cameraOrientation != null) {
+            cameraOrientation.conjugate();
+            entityRenderDispatcher.overrideCameraOrientation(cameraOrientation);
+        }
+
+        entityRenderDispatcher.setRenderShadow(false);
+        RenderSystem.runAsFancy(() -> entityRenderDispatcher.render(entity, 0.0, 0.0, 0.0, 0.0F, 1.0F, guiGraphics.pose(), guiGraphics.bufferSource(), 15728880));
+        guiGraphics.flush();
+        entityRenderDispatcher.setRenderShadow(true);
+        guiGraphics.pose().popPose();
+        Lighting.setupFor3DItems();
+    }
+
     private boolean isCraftable(Holder.Reference<? extends RocketPart<?, ?>> recipe) {
         return recipe == null || this.getRecipes().getCraftable().contains(recipe);
     }
@@ -331,7 +375,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
             case BODY -> this.menu.body;
             case FIN -> this.menu.fins;
             case BOOSTER -> this.menu.booster;
-            case BOTTOM -> this.menu.bottom;
+            case ENGINE -> this.menu.engine;
             case UPGRADE -> this.menu.upgrade;
         };
     }
@@ -342,7 +386,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
             case BODY -> this.menu.bodyRecipes;
             case FIN -> this.menu.finsRecipes;
             case BOOSTER -> this.menu.boosterRecipes;
-            case BOTTOM -> this.menu.bottomRecipes;
+            case ENGINE -> this.menu.engineRecipes;
             case UPGRADE -> this.menu.upgradeRecipes;
         };
     }
@@ -352,7 +396,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
         BODY(RocketPartTypes.BODY, GCRocketParts.TIER_1_BODY, Component.translatable("ui.galacticraft.body")),
         FINS(RocketPartTypes.FIN, GCRocketParts.TIER_1_FIN, Component.translatable("ui.galacticraft.fins")),
         BOOSTER(RocketPartTypes.BOOSTER, GCRocketParts.TIER_1_BOOSTER, Component.translatable("ui.galacticraft.booster")),
-        BOTTOM(RocketPartTypes.BOTTOM, GCRocketParts.TIER_1_BOTTOM, Component.translatable("ui.galacticraft.engine")),
+        ENGINE(RocketPartTypes.ENGINE, GCRocketParts.TIER_1_ENGINE, Component.translatable("ui.galacticraft.engine")),
         UPGRADE(RocketPartTypes.UPGRADE, GCRocketParts.STORAGE_UPGRADE, Component.translatable("ui.galacticraft.upgrade")),
         COLOR(null, null, Component.translatable("ui.galacticraft.color"));
 

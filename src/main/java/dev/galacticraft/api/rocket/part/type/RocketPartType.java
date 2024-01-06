@@ -33,9 +33,9 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Base rocket part interface.
- * To create a custom rocket part, extend {@link RocketBottomType}, {@link RocketBoosterType}, {@link RocketBottomType}, {@link RocketConeType}, {@link RocketFinType}, or {@link RocketUpgradeType}
+ * To create a custom rocket part, extend {@link RocketEngineType}, {@link RocketBoosterType}, {@link RocketEngineType}, {@link RocketConeType}, {@link RocketFinType}, or {@link RocketUpgradeType}
  */
-public sealed interface RocketPartType<C extends RocketPartConfig> permits RocketBodyType, RocketBoosterType, RocketBottomType, RocketConeType, RocketFinType, RocketUpgradeType {
+public sealed interface RocketPartType<C extends RocketPartConfig> permits RocketBodyType, RocketBoosterType, RocketEngineType, RocketConeType, RocketFinType, RocketUpgradeType {
 
     @NotNull RocketPart<C, ? extends RocketPartType<C>> configure(@NotNull C config);
 

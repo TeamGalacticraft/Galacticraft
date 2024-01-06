@@ -20,21 +20,40 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.rocket.part.config;
+package dev.galacticraft.impl.rocket.part.type;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.galacticraft.api.rocket.part.config.RocketBottomConfig;
+import dev.galacticraft.api.rocket.entity.Rocket;
+import dev.galacticraft.api.rocket.part.type.RocketEngineType;
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
+import dev.galacticraft.impl.rocket.part.config.BasicRocketEngineConfig;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
+public final class BasicRocketEngineType extends RocketEngineType<BasicRocketEngineConfig> {
+    public static final BasicRocketEngineType INSTANCE = new BasicRocketEngineType(BasicRocketEngineConfig.CODEC);
 
-public record BasicRocketBottomConfig(ConfiguredTravelPredicate<?, ?> predicate, long fuelCapacity, @Nullable RocketPartRecipe<?,?> recipe) implements RocketBottomConfig {
-    public static final Codec<BasicRocketBottomConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ConfiguredTravelPredicate.DIRECT_CODEC.fieldOf("predicate").forGetter(BasicRocketBottomConfig::predicate),
-            Codec.LONG.fieldOf("fuel_capacity").forGetter(BasicRocketBottomConfig::fuelCapacity),
-            RocketPartRecipe.DIRECT_CODEC.optionalFieldOf("recipe").forGetter(config -> Optional.ofNullable(config.recipe))
-    ).apply(instance, (ConfiguredTravelPredicate<?, ?> predicate, Long fuelCapacity, Optional<RocketPartRecipe<?, ?>> recipe) -> new BasicRocketBottomConfig(predicate, fuelCapacity, recipe.orElse(null))));
+    private BasicRocketEngineType(@NotNull Codec<BasicRocketEngineConfig> configCodec) {
+        super(configCodec);
+    }
+
+    @Override
+    public long getFuelCapacity(@NotNull BasicRocketEngineConfig config) {
+        return config.fuelCapacity();
+    }
+
+    @Override
+    public void tick(@NotNull Rocket rocket, @NotNull BasicRocketEngineConfig config) {
+    }
+
+    @Override
+    public @NotNull ConfiguredTravelPredicate<?, ?> travelPredicate(@NotNull BasicRocketEngineConfig config) {
+        return config.predicate();
+    }
+
+    @Override
+    public @Nullable RocketPartRecipe<?, ?> getRecipe(BasicRocketEngineConfig config) {
+        return config.recipe();
+    }
 }

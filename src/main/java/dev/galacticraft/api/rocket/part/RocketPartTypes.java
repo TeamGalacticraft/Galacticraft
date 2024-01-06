@@ -35,7 +35,7 @@ public enum RocketPartTypes {
     BODY(RocketRegistries.ROCKET_BODY, RocketBodyConfig.class, RocketBodyType.class, RocketBody.class, Component.translatable("ui.galacticraft.body")),
     FIN(RocketRegistries.ROCKET_FIN, RocketFinConfig.class, RocketFinType.class, RocketFin.class, Component.translatable("ui.galacticraft.fins")),
     BOOSTER(RocketRegistries.ROCKET_BOOSTER, RocketBoosterConfig.class, RocketBoosterType.class, RocketBooster.class, Component.translatable("ui.galacticraft.booster")),
-    BOTTOM(RocketRegistries.ROCKET_BOTTOM, RocketBottomConfig.class, RocketBottomType.class, RocketBottom.class, Component.translatable("ui.galacticraft.engine")),
+    ENGINE(RocketRegistries.ROCKET_ENGINE, RocketEngineConfig.class, RocketEngineType.class, RocketEngine.class, Component.translatable("ui.galacticraft.engine")),
     UPGRADE(RocketRegistries.ROCKET_UPGRADE, RocketUpgradeConfig.class, RocketUpgradeType.class, RocketUpgrade.class, Component.translatable("ui.galacticraft.upgrade"));
 
     public final ResourceKey<? extends Registry<? extends RocketPart<?, ?>>> key;
@@ -67,8 +67,8 @@ public enum RocketPartTypes {
             case "rocket_booster" -> {
                 return BOOSTER;
             }
-            case "rocket_bottom" -> {
-                return BOTTOM;
+            case "rocket_engine" -> {
+                return ENGINE;
             }
             case "rocket_upgrade" -> {
                 return UPGRADE;

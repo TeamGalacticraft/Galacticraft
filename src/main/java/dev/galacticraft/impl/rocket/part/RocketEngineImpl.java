@@ -22,10 +22,10 @@
 
 package dev.galacticraft.impl.rocket.part;
 
-import dev.galacticraft.api.rocket.part.RocketBottom;
-import dev.galacticraft.api.rocket.part.config.RocketBottomConfig;
-import dev.galacticraft.api.rocket.part.type.RocketBottomType;
+import dev.galacticraft.api.rocket.part.RocketEngine;
+import dev.galacticraft.api.rocket.part.config.RocketEngineConfig;
+import dev.galacticraft.api.rocket.part.type.RocketEngineType;
 import org.jetbrains.annotations.NotNull;
 
-public record RocketBottomImpl<C extends RocketBottomConfig, T extends RocketBottomType<C>>(@NotNull C config, @NotNull T type) implements RocketBottom<C, T> {
+public record RocketEngineImpl<C extends RocketEngineConfig, T extends RocketEngineType<C>>(@NotNull C config, @NotNull T type) implements RocketEngine<C, T> {
 }

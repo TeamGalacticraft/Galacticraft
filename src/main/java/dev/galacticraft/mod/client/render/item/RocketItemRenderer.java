@@ -81,7 +81,7 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
         }
         RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
         matrices.translate(0.0D, -1.75D, 0.0D);
-        ResourceKey<? extends RocketPart<?, ?>> part = data.bottom();
+        ResourceKey<? extends RocketPart<?, ?>> part = data.engine();
         if (part != null) {
             matrices.pushPose();
             RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(level, matrices, rocket, vertexConsumers, 0, light);

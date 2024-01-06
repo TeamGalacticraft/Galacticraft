@@ -1,7 +1,7 @@
-# Blender v2.79 (sub 0) OBJ File: 'rocketbottomFinalV2.blend'
+# Blender v2.79 (sub 0) OBJ File: 'rocketEngineFinalV2.blend'
 # www.blender.org
-mtllib rocket_bottom.mtl
-o RocketBottom_Cube.013
+mtllib rocket_engine.mtl
+o RocketEngine_Cube.013
 v -0.437500 -0.375000 0.437500
 v -0.437500 -0.125000 0.437500
 v -0.437500 -0.375000 -0.437500

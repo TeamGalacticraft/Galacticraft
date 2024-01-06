@@ -25,9 +25,9 @@ package dev.galacticraft.api.rocket.part;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.registry.BuiltInRocketRegistries;
 import dev.galacticraft.api.registry.RocketRegistries;
-import dev.galacticraft.api.rocket.part.config.RocketBottomConfig;
-import dev.galacticraft.api.rocket.part.type.RocketBottomType;
-import dev.galacticraft.impl.rocket.part.RocketBottomImpl;
+import dev.galacticraft.api.rocket.part.config.RocketEngineConfig;
+import dev.galacticraft.api.rocket.part.type.RocketEngineType;
+import dev.galacticraft.impl.rocket.part.RocketEngineImpl;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
@@ -35,14 +35,14 @@ import net.minecraft.resources.RegistryFileCodec;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public non-sealed interface RocketBottom<C extends RocketBottomConfig, T extends RocketBottomType<C>> extends RocketPart<C, T> {
-    Codec<RocketBottom<?, ?>> DIRECT_CODEC = BuiltInRocketRegistries.ROCKET_BOTTOM_TYPE.byNameCodec().dispatch(RocketBottom::type, RocketBottomType::codec);
-    Codec<Holder<RocketBottom<?, ?>>> CODEC = RegistryFileCodec.create(RocketRegistries.ROCKET_BOTTOM, DIRECT_CODEC);
-    Codec<HolderSet<RocketBottom<?, ?>>> LIST_CODEC = RegistryCodecs.homogeneousList(RocketRegistries.ROCKET_BOTTOM, DIRECT_CODEC);
+public non-sealed interface RocketEngine<C extends RocketEngineConfig, T extends RocketEngineType<C>> extends RocketPart<C, T> {
+    Codec<RocketEngine<?, ?>> DIRECT_CODEC = BuiltInRocketRegistries.ROCKET_ENGINE_TYPE.byNameCodec().dispatch(RocketEngine::type, RocketEngineType::codec);
+    Codec<Holder<RocketEngine<?, ?>>> CODEC = RegistryFileCodec.create(RocketRegistries.ROCKET_ENGINE, DIRECT_CODEC);
+    Codec<HolderSet<RocketEngine<?, ?>>> LIST_CODEC = RegistryCodecs.homogeneousList(RocketRegistries.ROCKET_ENGINE, DIRECT_CODEC);
 
     @Contract(pure = true, value = "_, _ -> new")
-    static @NotNull <C extends RocketBottomConfig, T extends RocketBottomType<C>> RocketBottom<C, T> create(@NotNull C config, @NotNull T type) {
-        return new RocketBottomImpl<>(config, type);
+    static @NotNull <C extends RocketEngineConfig, T extends RocketEngineType<C>> RocketEngine<C, T> create(@NotNull C config, @NotNull T type) {
+        return new RocketEngineImpl<>(config, type);
     }
 
     /**

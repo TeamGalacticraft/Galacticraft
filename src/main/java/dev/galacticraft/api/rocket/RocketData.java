@@ -40,8 +40,8 @@ public interface RocketData {
     @Contract("_, _, _, _, _, _, _ -> new")
     static @NotNull RocketData create(int color, @Nullable ResourceKey<RocketCone<?, ?>> cone, @Nullable ResourceKey<RocketBody<?, ?>> body,
                                       @Nullable ResourceKey<RocketFin<?, ?>> fin, @Nullable ResourceKey<RocketBooster<?, ?>> booster,
-                                      @Nullable ResourceKey<RocketBottom<?, ?>> bottom, @Nullable ResourceKey<RocketUpgrade<?, ?>> upgrade) {
-        return new RocketDataImpl(color, cone, body, fin, booster, bottom, upgrade);
+                                      @Nullable ResourceKey<RocketEngine<?, ?>> engine, @Nullable ResourceKey<RocketUpgrade<?, ?>> upgrade) {
+        return new RocketDataImpl(color, cone, body, fin, booster, engine, upgrade);
     }
 
     @Unmodifiable
@@ -75,7 +75,7 @@ public interface RocketData {
 
     @Nullable ResourceKey<RocketBooster<?, ?>> booster();
 
-    @Nullable ResourceKey<RocketBottom<?, ?>> bottom();
+    @Nullable ResourceKey<RocketEngine<?, ?>> engine();
 
     @Nullable ResourceKey<RocketUpgrade<?, ?>> upgrade();
 
@@ -85,12 +85,12 @@ public interface RocketData {
         if (this.body() != null) nbt.putString("Body", this.body().location().toString());
         if (this.fin() != null) nbt.putString("Fin", this.fin().location().toString());
         if (this.booster() != null) nbt.putString("Booster", this.booster().location().toString());
-        if (this.bottom() != null) nbt.putString("Bottom", this.bottom().location().toString());
+        if (this.engine() != null) nbt.putString("Engine", this.engine().location().toString());
         if (this.upgrade() != null) nbt.putString("Upgrade", this.upgrade().location().toString());
     }
 
     default boolean isValid() {
-        return this.cone() != null && this.body() != null && this.fin() != null && this.bottom() != null;
+        return this.cone() != null && this.body() != null && this.fin() != null && this.engine() != null;
     }
 
     default boolean canTravel(@NotNull RegistryAccess manager, CelestialBody<?, ?> from, CelestialBody<?, ?> to) {
@@ -100,20 +100,20 @@ public interface RocketData {
         RocketBody<?, ?> body = manager.registryOrThrow(RocketRegistries.ROCKET_BODY).get(this.body());
         RocketFin<?, ?> fin = manager.registryOrThrow(RocketRegistries.ROCKET_FIN).get(this.fin());
         RocketBooster<?, ?> booster = manager.registryOrThrow(RocketRegistries.ROCKET_BOOSTER).get(this.booster());
-        RocketBottom<?, ?> bottom = manager.registryOrThrow(RocketRegistries.ROCKET_BOTTOM).get(this.bottom());
+        RocketEngine<?, ?> engine = manager.registryOrThrow(RocketRegistries.ROCKET_ENGINE).get(this.engine());
         RocketUpgrade<?, ?> upgrade = manager.registryOrThrow(RocketRegistries.ROCKET_UPGRADE).get(this.upgrade());
 
         assert cone != null;
         assert body != null;
         assert fin != null;
-        assert bottom != null;
+        assert engine != null;
 
-        type = type.merge(cone.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
-        type = type.merge(body.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
-        type = type.merge(fin.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
-        type = type.merge(booster == null ? TravelPredicateType.Result.PASS : booster.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
-        type = type.merge(bottom.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
-        type = type.merge(upgrade == null ? TravelPredicateType.Result.PASS : upgrade.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrade));
+        type = type.merge(cone.travelPredicate().canTravel(from, to, cone, body, fin, booster, engine, upgrade));
+        type = type.merge(body.travelPredicate().canTravel(from, to, cone, body, fin, booster, engine, upgrade));
+        type = type.merge(fin.travelPredicate().canTravel(from, to, cone, body, fin, booster, engine, upgrade));
+        type = type.merge(booster == null ? TravelPredicateType.Result.PASS : booster.travelPredicate().canTravel(from, to, cone, body, fin, booster, engine, upgrade));
+        type = type.merge(engine.travelPredicate().canTravel(from, to, cone, body, fin, booster, engine, upgrade));
+        type = type.merge(upgrade == null ? TravelPredicateType.Result.PASS : upgrade.travelPredicate().canTravel(from, to, cone, body, fin, booster, engine, upgrade));
 
         return type == TravelPredicateType.Result.ALLOW;
     }}

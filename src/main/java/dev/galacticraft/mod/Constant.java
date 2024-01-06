@@ -555,7 +555,7 @@ public interface Constant {
         String BASIC_ROCKET_CONE_SCHEMATIC = "basic_rocket_cone_schematic";
         String BASIC_ROCKET_BODY_SCHEMATIC = "basic_rocket_body_schematic";
         String BASIC_ROCKET_FINS_SCHEMATIC = "basic_rocket_fins_schematic";
-        String BASIC_ROCKET_BOTTOM_SCHEMATIC = "basic_rocket_bottom_schematic";
+        String BASIC_ROCKET_ENGINE_SCHEMATIC = "basic_rocket_engine_schematic";
     }
 
     interface Particle {

@@ -96,7 +96,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(BootstrapDataProvider.create("Rocket Bodies", GCRocketParts::bootstrapBody));
         pack.addProvider(BootstrapDataProvider.create("Rocket Fins", GCRocketParts::bootstrapFin));
         pack.addProvider(BootstrapDataProvider.create("Rocket Boosters", GCRocketParts::bootstrapBooster));
-        pack.addProvider(BootstrapDataProvider.create("Rocket Bottoms", GCRocketParts::bootstrapBottom));
+        pack.addProvider(BootstrapDataProvider.create("Rocket Engines", GCRocketParts::bootstrapEngine));
         pack.addProvider(BootstrapDataProvider.create("Rocket Upgrades", GCRocketParts::bootstrapUpgrade));
 
         // models
@@ -115,7 +115,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         registryBuilder.add(RocketRegistries.ROCKET_BODY, GCRocketParts::bootstrapBody);
         registryBuilder.add(RocketRegistries.ROCKET_FIN, GCRocketParts::bootstrapFin);
         registryBuilder.add(RocketRegistries.ROCKET_BOOSTER, GCRocketParts::bootstrapBooster);
-        registryBuilder.add(RocketRegistries.ROCKET_BOTTOM, GCRocketParts::bootstrapBottom);
+        registryBuilder.add(RocketRegistries.ROCKET_ENGINE, GCRocketParts::bootstrapEngine);
         registryBuilder.add(RocketRegistries.ROCKET_UPGRADE, GCRocketParts::bootstrapUpgrade);
 
         registryBuilder.add(Registries.BIOME, Lifecycle.stable(), GCBiomes::bootstrapRegistries);

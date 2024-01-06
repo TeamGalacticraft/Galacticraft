@@ -22,5 +22,5 @@
 
 package dev.galacticraft.api.rocket.part.config;
 
-public sealed interface RocketPartConfig permits RocketBodyConfig, RocketBoosterConfig, RocketBottomConfig, RocketConeConfig, RocketFinConfig, RocketUpgradeConfig {
+public sealed interface RocketPartConfig permits RocketBodyConfig, RocketBoosterConfig, RocketEngineConfig, RocketConeConfig, RocketFinConfig, RocketUpgradeConfig {
 }

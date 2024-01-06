@@ -36,9 +36,9 @@ public final class OrTravelPredicateType extends TravelPredicateType<OrTravelPre
     }
 
     @Override
-    public Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, RocketCone<?, ?> cone, RocketBody<?, ?> body, RocketFin<?, ?> fin, RocketBooster<?, ?> booster, RocketBottom<?, ?> bottom, RocketUpgrade<?, ?> upgrade, OrTravelPredicateConfig config) {
+    public Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, RocketCone<?, ?> cone, RocketBody<?, ?> body, RocketFin<?, ?> fin, RocketBooster<?, ?> booster, RocketEngine<?, ?> engine, RocketUpgrade<?, ?> upgrade, OrTravelPredicateConfig config) {
         for (ConfiguredTravelPredicate<?, ?> predicate : config.predicates()) {
-            Result result = predicate.canTravel(from, to, cone, body, fin, booster, bottom, upgrade);
+            Result result = predicate.canTravel(from, to, cone, body, fin, booster, engine, upgrade);
             if (result != Result.PASS) return result;
         }
         return Result.PASS;

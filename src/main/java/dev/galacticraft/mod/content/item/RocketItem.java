@@ -119,7 +119,7 @@ public class RocketItem extends Item {
                 id = new ResourceLocation(tag.getString("body"));
                 tooltip.add(Component.translatable("tooltip.galacticraft.part_type.booster", Component.translatable("tooltip." + id.getNamespace() + ".booster." + id.getPath() + ".name")).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
                 id = new ResourceLocation(tag.getString("body"));
-                tooltip.add(Component.translatable("tooltip.galacticraft.part_type.bottom", Component.translatable("tooltip." + id.getNamespace() + ".bottom." + id.getPath() + ".name")).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+                tooltip.add(Component.translatable("tooltip.galacticraft.part_type.engine", Component.translatable("tooltip." + id.getNamespace() + ".engine." + id.getPath() + ".name")).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
                 ListTag list = tag.getList("upgrades", Tag.TAG_STRING);
                 for (int i = 0; i < list.size(); i++) {
                     id = new ResourceLocation(list.getString(i));

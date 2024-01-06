@@ -31,8 +31,7 @@
       "galacticraft:ore_copper_large_moon",
       "galacticraft:ore_tin_small_moon",
       "galacticraft:ore_tin_middle_moon",
-      "galacticraft:ore_tin_upper_moon",
-      "galacticraft:disk_basalt_moon"
+      "galacticraft:ore_tin_upper_moon"
     ]
   ],
   "has_precipitation": false,

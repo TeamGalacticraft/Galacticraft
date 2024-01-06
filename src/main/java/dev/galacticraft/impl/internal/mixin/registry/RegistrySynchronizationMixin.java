@@ -57,7 +57,7 @@ public abstract class RegistrySynchronizationMixin {
         put(builder, RocketRegistries.ROCKET_BODY, RocketBody.DIRECT_CODEC);
         put(builder, RocketRegistries.ROCKET_FIN, RocketFin.DIRECT_CODEC);
         put(builder, RocketRegistries.ROCKET_BOOSTER, RocketBooster.DIRECT_CODEC);
-        put(builder, RocketRegistries.ROCKET_BOTTOM, RocketBottom.DIRECT_CODEC);
+        put(builder, RocketRegistries.ROCKET_ENGINE, RocketEngine.DIRECT_CODEC);
         put(builder, RocketRegistries.ROCKET_UPGRADE, RocketUpgrade.DIRECT_CODEC);
 
         put(builder, AddonRegistries.CELESTIAL_TELEPORTER, CelestialTeleporter.DIRECT_CODEC);

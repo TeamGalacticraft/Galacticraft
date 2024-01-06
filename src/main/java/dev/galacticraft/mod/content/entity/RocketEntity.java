@@ -98,7 +98,7 @@ public class RocketEntity extends Entity implements Rocket {
     public static final EntityDataAccessor<ResourceLocation> ROCKET_BODY = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
     public static final EntityDataAccessor<ResourceLocation> ROCKET_FIN = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
     public static final EntityDataAccessor<ResourceLocation> ROCKET_BOOSTER = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
-    public static final EntityDataAccessor<ResourceLocation> ROCKET_BOTTOM = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
+    public static final EntityDataAccessor<ResourceLocation> ROCKET_ENGINE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
     public static final EntityDataAccessor<ResourceLocation> ROCKET_UPGRADE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
     private final boolean debugMode = false && FabricLoader.getInstance().isDevelopmentEnvironment();
 
@@ -165,8 +165,8 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     @Override
-    public RocketBottom<?, ?> getBottom() {
-        return this.level().registryAccess().registryOrThrow(RocketRegistries.ROCKET_BOTTOM).get(this.bottom());
+    public RocketEngine<?, ?> getEngine() {
+        return this.level().registryAccess().registryOrThrow(RocketRegistries.ROCKET_ENGINE).get(this.engine());
     }
 
     @Override
@@ -354,7 +354,7 @@ public class RocketEntity extends Entity implements Rocket {
         this.entityData.define(ROCKET_BODY, null);
         this.entityData.define(ROCKET_FIN, null);
         this.entityData.define(ROCKET_BOOSTER, null);
-        this.entityData.define(ROCKET_BOTTOM, null);
+        this.entityData.define(ROCKET_ENGINE, null);
         this.entityData.define(ROCKET_UPGRADE, null);
     }
 
@@ -488,7 +488,7 @@ public class RocketEntity extends Entity implements Rocket {
                     }
                     for (Entity entity : getPassengers()) {
                         if (entity instanceof ServerPlayer serverPlayer) {
-                            RocketData data = RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.bottom(), this.upgrade());
+                            RocketData data = RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.engine(), this.upgrade());
                             serverPlayer.galacticraft$openCelestialScreen(data);
                             CompoundTag nbt = new CompoundTag();
                             data.toNbt(nbt);
@@ -552,8 +552,8 @@ public class RocketEntity extends Entity implements Rocket {
         this.getEntityData().set(ROCKET_BOOSTER, id);
     }
 
-    public void setBottom(ResourceLocation id) {
-        this.getEntityData().set(ROCKET_BOTTOM, id);
+    public void setEngine(ResourceLocation id) {
+        this.getEntityData().set(ROCKET_ENGINE, id);
     }
 
     public void setUpgrade(ResourceLocation id) {
@@ -566,7 +566,7 @@ public class RocketEntity extends Entity implements Rocket {
         this.setBody(tag.contains("Body") ? new ResourceLocation(tag.getString("Body")) : null);
         this.setFin(tag.contains("Fin") ? new ResourceLocation(tag.getString("Fin")) : null);
         this.setBooster(tag.contains("Booster") ? new ResourceLocation(tag.getString("Booster")) : null);
-        this.setBottom(tag.contains("Bottom") ? new ResourceLocation(tag.getString("Bottom")) : null);
+        this.setEngine(tag.contains("Engine") ? new ResourceLocation(tag.getString("Engine")) : null);
         this.setUpgrade(tag.contains("Upgrade") ? new ResourceLocation(tag.getString("Upgrade")) : null);
 
         if (tag.contains("Color")) {
@@ -600,7 +600,7 @@ public class RocketEntity extends Entity implements Rocket {
         if (this.body() != null) tag.putString("Body", Objects.requireNonNull(this.body()).toString());
         if (this.fin() != null) tag.putString("Fin", Objects.requireNonNull(this.fin()).toString());
         if (this.booster() != null) tag.putString("Booster", Objects.requireNonNull(this.booster()).toString());
-        if (this.bottom() != null) tag.putString("Bottom", Objects.requireNonNull(this.bottom()).toString());
+        if (this.engine() != null) tag.putString("Engine", Objects.requireNonNull(this.engine()).toString());
         if (this.upgrade() != null) tag.putString("Upgrade", Objects.requireNonNull(this.upgrade()).toString());
 
         tag.putString("Stage", getLaunchStage().name());
@@ -624,7 +624,7 @@ public class RocketEntity extends Entity implements Rocket {
         buf.writeByte((int) (this.getXRot() / 360F * 256F));
         buf.writeByte((int) (this.getYRot() / 360F * 256F));
         CompoundTag nbt = new CompoundTag();
-        RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.bottom(), this.upgrade()).toNbt(nbt);
+        RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.engine(), this.upgrade()).toNbt(nbt);
         buf.writeNbt(nbt);
         return ServerPlayNetworking.createS2CPacket(Constant.id("rocket_spawn"), buf);
     }
@@ -659,8 +659,8 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     @Override
-    public @Nullable ResourceKey<RocketBottom<?, ?>> bottom() {
-        return ResourceKey.create(RocketRegistries.ROCKET_BOTTOM, this.getEntityData().get(ROCKET_BOTTOM));
+    public @Nullable ResourceKey<RocketEngine<?, ?>> engine() {
+        return ResourceKey.create(RocketRegistries.ROCKET_ENGINE, this.getEntityData().get(ROCKET_ENGINE));
     }
 
     @Override
@@ -675,7 +675,7 @@ public class RocketEntity extends Entity implements Rocket {
         this.setBody(data.body() != null ? data.body().location() : null);
         this.setFin(data.fin() != null ? data.fin().location() : null);
         this.setBooster(data.booster() != null ? data.booster().location() : null);
-        this.setBottom(data.bottom() != null ? data.bottom().location() : null);
+        this.setEngine(data.engine() != null ? data.engine().location() : null);
         this.setUpgrade(data.upgrade() != null ? data.upgrade().location() : null);
     }
 }

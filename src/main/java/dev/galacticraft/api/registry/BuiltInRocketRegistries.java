@@ -61,8 +61,8 @@ public final class BuiltInRocketRegistries {
             RocketRegistries.ROCKET_BOOSTER_TYPE
     ).buildAndRegister();
 
-    public static final WritableRegistry<RocketBottomType<?>> ROCKET_BOTTOM_TYPE = FabricRegistryBuilder.createSimple(
-            RocketRegistries.ROCKET_BOTTOM_TYPE
+    public static final WritableRegistry<RocketEngineType<?>> ROCKET_ENGINE_TYPE = FabricRegistryBuilder.createSimple(
+            RocketRegistries.ROCKET_ENGINE_TYPE
     ).buildAndRegister();
 
     public static final WritableRegistry<RocketUpgradeType<?>> ROCKET_UPGRADE_TYPE = FabricRegistryBuilder.createSimple(
@@ -88,7 +88,7 @@ public final class BuiltInRocketRegistries {
         Registry.register(ROCKET_BODY_TYPE, new ResourceLocation(Constant.MOD_ID, "basic"), BasicRocketBodyType.INSTANCE);
         Registry.register(ROCKET_FIN_TYPE, new ResourceLocation(Constant.MOD_ID, "basic"), BasicRocketFinType.INSTANCE);
         Registry.register(ROCKET_BOOSTER_TYPE, new ResourceLocation(Constant.MOD_ID, "basic"), BasicRocketBoosterType.INSTANCE);
-        Registry.register(ROCKET_BOTTOM_TYPE, new ResourceLocation(Constant.MOD_ID, "basic"), BasicRocketBottomType.INSTANCE);
+        Registry.register(ROCKET_ENGINE_TYPE, new ResourceLocation(Constant.MOD_ID, "basic"), BasicRocketEngineType.INSTANCE);
         Registry.register(ROCKET_UPGRADE_TYPE, new ResourceLocation(Constant.MOD_ID, "storage"), StorageUpgradeType.INSTANCE);
 
         Registry.register(ROCKET_PART_RECIPE_TYPE, Constant.id("wrap_patterned"), PatternedRocketPartRecipeType.INSTANCE);

@@ -55,7 +55,7 @@ public abstract class RegistryDataLoaderMixin {
         WORLDGEN_REGISTRIES.add(new RegistryDataLoader.RegistryData<>(RocketRegistries.ROCKET_BODY, RocketBody.DIRECT_CODEC));
         WORLDGEN_REGISTRIES.add(new RegistryDataLoader.RegistryData<>(RocketRegistries.ROCKET_FIN, RocketFin.DIRECT_CODEC));
         WORLDGEN_REGISTRIES.add(new RegistryDataLoader.RegistryData<>(RocketRegistries.ROCKET_BOOSTER, RocketBooster.DIRECT_CODEC));
-        WORLDGEN_REGISTRIES.add(new RegistryDataLoader.RegistryData<>(RocketRegistries.ROCKET_BOTTOM, RocketBottom.DIRECT_CODEC));
+        WORLDGEN_REGISTRIES.add(new RegistryDataLoader.RegistryData<>(RocketRegistries.ROCKET_ENGINE, RocketEngine.DIRECT_CODEC));
         WORLDGEN_REGISTRIES.add(new RegistryDataLoader.RegistryData<>(RocketRegistries.ROCKET_UPGRADE, RocketUpgrade.DIRECT_CODEC));
 
         WORLDGEN_REGISTRIES.add(new RegistryDataLoader.RegistryData<>(AddonRegistries.CELESTIAL_TELEPORTER, CelestialTeleporter.DIRECT_CODEC));

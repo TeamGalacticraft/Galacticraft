@@ -47,7 +47,7 @@ public class GCRocketParts {
     public static final ResourceKey<RocketBody<?, ?>> TIER_1_BODY = body("tier_1");
     public static final ResourceKey<RocketFin<?, ?>> TIER_1_FIN = fin("tier_1");
     public static final ResourceKey<RocketBooster<?, ?>> TIER_1_BOOSTER = booster("tier_1");
-    public static final ResourceKey<RocketBottom<?, ?>> TIER_1_BOTTOM = bottom("tier_1");
+    public static final ResourceKey<RocketEngine<?, ?>> TIER_1_ENGINE = engine("tier_1");
 
     public static final ResourceKey<RocketCone<?, ?>> ADVANCED_CONE = cone("advanced_cone"); //todo implement these again
     public static final ResourceKey<RocketCone<?, ?>> SLOPED_CONE = cone("sloped_cone");
@@ -156,10 +156,10 @@ public class GCRocketParts {
         );
     }
 
-    public static void bootstrapBottom(BootstapContext<RocketBottom<?, ?>> context) {
-        context.register(TIER_1_BOTTOM,
-                BasicRocketBottomType.INSTANCE.configure(
-                        new BasicRocketBottomConfig(
+    public static void bootstrapEngine(BootstapContext<RocketEngine<?, ?>> context) {
+        context.register(TIER_1_ENGINE,
+                BasicRocketEngineType.INSTANCE.configure(
+                        new BasicRocketEngineConfig(
                                 AccessWeightTravelPredicateType.INSTANCE.configure(
                                         new AccessWeightTravelPredicateConfig(1, TravelPredicateType.Result.PASS)
                                 ),
@@ -202,8 +202,8 @@ public class GCRocketParts {
     }
 
     @Contract(pure = true)
-    private static @NotNull ResourceKey<RocketBottom<?, ?>> bottom(@NotNull String id) {
-        return Constant.key(RocketRegistries.ROCKET_BOTTOM, id);
+    private static @NotNull ResourceKey<RocketEngine<?, ?>> engine(@NotNull String id) {
+        return Constant.key(RocketRegistries.ROCKET_ENGINE, id);
     }
 
     @Contract(pure = true)

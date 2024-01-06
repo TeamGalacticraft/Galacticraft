@@ -20,40 +20,37 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.rocket.part.type;
+package dev.galacticraft.api.rocket.part.type;
 
 import com.mojang.serialization.Codec;
-import dev.galacticraft.api.rocket.entity.Rocket;
-import dev.galacticraft.api.rocket.part.type.RocketBottomType;
-import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
-import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
-import dev.galacticraft.impl.rocket.part.config.BasicRocketBottomConfig;
+import dev.galacticraft.api.rocket.part.RocketEngine;
+import dev.galacticraft.api.rocket.part.config.RocketEngineConfig;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public final class BasicRocketBottomType extends RocketBottomType<BasicRocketBottomConfig> {
-    public static final BasicRocketBottomType INSTANCE = new BasicRocketBottomType(BasicRocketBottomConfig.CODEC);
+/**
+ * The engine of a rocket. Controls how much fuel the rocket can hold.
+ */
+public non-sealed abstract class RocketEngineType<C extends RocketEngineConfig> implements RocketPartType<C> {
+    private final @NotNull Codec<RocketEngine<C, RocketEngineType<C>>> codec;
 
-    private BasicRocketBottomType(@NotNull Codec<BasicRocketBottomConfig> configCodec) {
-        super(configCodec);
+    protected RocketEngineType(@NotNull Codec<C> configCodec) {
+        this.codec = configCodec.fieldOf("config").xmap(this::configure, RocketEngine::config).codec();
     }
 
     @Override
-    public long getFuelCapacity(@NotNull BasicRocketBottomConfig config) {
-        return config.fuelCapacity();
+    public @NotNull RocketEngine<C, RocketEngineType<C>> configure(@NotNull C config) {
+        return RocketEngine.create(config, this);
     }
 
     @Override
-    public void tick(@NotNull Rocket rocket, @NotNull BasicRocketBottomConfig config) {
+    public @NotNull Codec<RocketEngine<C, RocketEngineType<C>>> codec() {
+        return this.codec;
     }
 
-    @Override
-    public @NotNull ConfiguredTravelPredicate<?, ?> travelPredicate(@NotNull BasicRocketBottomConfig config) {
-        return config.predicate();
-    }
-
-    @Override
-    public @Nullable RocketPartRecipe<?, ?> getRecipe(BasicRocketBottomConfig config) {
-        return config.recipe();
-    }
+    /**
+     * Returns the fuel capacity of this rocket.
+     * @return the fuel capacity of this rocket. 1 bucket = 81000.
+     * @see net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants
+     */
+    public abstract long getFuelCapacity(@NotNull C config);
 }

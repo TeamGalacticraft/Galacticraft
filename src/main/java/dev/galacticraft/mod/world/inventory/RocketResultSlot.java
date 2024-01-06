@@ -89,8 +89,8 @@ public class RocketResultSlot extends Slot {
         for (int i = 0; i < this.menu.booster.inventory.getTargetSize(); i++) {
             this.menu.booster.inventory.removeItem(i, 1);
         }
-        for (int i = 0; i < this.menu.bottom.inventory.getTargetSize(); i++) {
-            this.menu.bottom.inventory.removeItem(i, 1);
+        for (int i = 0; i < this.menu.engine.inventory.getTargetSize(); i++) {
+            this.menu.engine.inventory.removeItem(i, 1);
         }
         for (int i = 0; i < this.menu.upgrade.inventory.getTargetSize(); i++) {
             this.menu.upgrade.inventory.removeItem(i, 1);

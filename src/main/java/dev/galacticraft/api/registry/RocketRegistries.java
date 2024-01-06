@@ -40,7 +40,7 @@ public final class RocketRegistries {
     public static final ResourceKey<Registry<RocketBodyType<?>>> ROCKET_BODY_TYPE = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "rocket_body_type"));
     public static final ResourceKey<Registry<RocketFinType<?>>> ROCKET_FIN_TYPE = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "rocket_fin_type"));
     public static final ResourceKey<Registry<RocketBoosterType<?>>> ROCKET_BOOSTER_TYPE = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "rocket_booster_type"));
-    public static final ResourceKey<Registry<RocketBottomType<?>>> ROCKET_BOTTOM_TYPE = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "rocket_bottom_type"));
+    public static final ResourceKey<Registry<RocketEngineType<?>>> ROCKET_ENGINE_TYPE = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "rocket_engine_type"));
     public static final ResourceKey<Registry<RocketUpgradeType<?>>> ROCKET_UPGRADE_TYPE = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "rocket_upgrade_type"));
     public static final ResourceKey<Registry<RocketPartRecipeType<?>>> ROCKET_PART_RECIPE_TYPE = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "rocket_part_recipe_type"));
 
@@ -48,6 +48,6 @@ public final class RocketRegistries {
     public static final ResourceKey<Registry<RocketBody<?, ?>>> ROCKET_BODY = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "rocket_body"));
     public static final ResourceKey<Registry<RocketFin<?, ?>>> ROCKET_FIN = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "rocket_fin"));
     public static final ResourceKey<Registry<RocketBooster<?, ?>>> ROCKET_BOOSTER = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "rocket_booster"));
-    public static final ResourceKey<Registry<RocketBottom<?, ?>>> ROCKET_BOTTOM = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "rocket_bottom"));
+    public static final ResourceKey<Registry<RocketEngine<?, ?>>> ROCKET_ENGINE = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "rocket_engine"));
     public static final ResourceKey<Registry<RocketUpgrade<?, ?>>> ROCKET_UPGRADE = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "rocket_upgrade"));
 }

@@ -472,7 +472,7 @@ public class GCItems {
     public static final Item BASIC_ROCKET_CONE_SCHEMATIC = new RocketPartSchematic(new Item.Properties().stacksTo(1).rarity(Rarity.RARE), GCRocketParts.TIER_1_CONE);
     public static final Item BASIC_ROCKET_BODY_SCHEMATIC = new RocketPartSchematic(new Item.Properties().stacksTo(1).rarity(Rarity.RARE), GCRocketParts.TIER_1_BODY);
     public static final Item BASIC_ROCKET_FINS_SCHEMATIC = new RocketPartSchematic(new Item.Properties().stacksTo(1).rarity(Rarity.RARE), GCRocketParts.TIER_1_FIN);
-    public static final Item BASIC_ROCKET_BOTTOM_SCHEMATIC = new RocketPartSchematic(new Item.Properties().stacksTo(1).rarity(Rarity.RARE), GCRocketParts.TIER_1_BOTTOM);
+    public static final Item BASIC_ROCKET_ENGINE_SCHEMATIC = new RocketPartSchematic(new Item.Properties().stacksTo(1).rarity(Rarity.RARE), GCRocketParts.TIER_1_ENGINE);
 
     public static final Item TIER_2_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties());
     public static final Item CARGO_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties());
@@ -908,7 +908,7 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.BASIC_ROCKET_CONE_SCHEMATIC), BASIC_ROCKET_CONE_SCHEMATIC);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.BASIC_ROCKET_BODY_SCHEMATIC), BASIC_ROCKET_BODY_SCHEMATIC);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.BASIC_ROCKET_FINS_SCHEMATIC), BASIC_ROCKET_FINS_SCHEMATIC);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.BASIC_ROCKET_BOTTOM_SCHEMATIC), BASIC_ROCKET_BOTTOM_SCHEMATIC);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.BASIC_ROCKET_ENGINE_SCHEMATIC), BASIC_ROCKET_ENGINE_SCHEMATIC);
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.TIER_2_ROCKET_SCHEMATIC), TIER_2_ROCKET_SCHEMATIC);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CARGO_ROCKET_SCHEMATIC), CARGO_ROCKET_SCHEMATIC);

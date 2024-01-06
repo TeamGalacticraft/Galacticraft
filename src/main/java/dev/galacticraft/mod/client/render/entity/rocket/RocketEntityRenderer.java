@@ -74,7 +74,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
 //        RenderSystem.setShaderTexture(0, getTextureLocation(entity));
         matrices.translate(0.0D, -1.75D, 0.0D);
 
-        ResourceKey<? extends RocketPart<?, ?>> part = entity.bottom();
+        ResourceKey<? extends RocketPart<?, ?>> part = entity.engine();
         if (part != null) {
             matrices.pushPose();
             RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);

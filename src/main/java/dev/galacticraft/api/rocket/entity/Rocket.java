@@ -49,7 +49,7 @@ public interface Rocket extends RocketData {
 
     @Nullable RocketBooster<?, ?> getBooster();
 
-    @Nullable RocketBottom<?, ?> getBottom();
+    @Nullable RocketEngine<?, ?> getEngine();
 
     @Nullable RocketUpgrade<?, ?> getUpgrade();
 

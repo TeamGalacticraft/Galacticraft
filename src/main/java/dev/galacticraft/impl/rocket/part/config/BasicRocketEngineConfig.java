@@ -20,36 +20,21 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.api.rocket.part;
+package dev.galacticraft.impl.rocket.part.config;
 
-import dev.galacticraft.api.rocket.entity.Rocket;
-import dev.galacticraft.api.rocket.part.config.RocketPartConfig;
-import dev.galacticraft.api.rocket.part.type.RocketPartType;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.galacticraft.api.rocket.part.config.RocketEngineConfig;
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public sealed interface RocketPart<C extends RocketPartConfig, T extends RocketPartType<C>> permits RocketBody, RocketBooster, RocketEngine, RocketCone, RocketFin, RocketUpgrade {
-    @NotNull C config();
+import java.util.Optional;
 
-    @NotNull T type();
-
-    default @Nullable RocketPartRecipe<?, ?> getRecipe() {
-        return this.type().getRecipe(this.config());
-    }
-
-    /**
-     * Called every tick when this part is applied to a placed rocket.
-     * The rocket may not have launched yet.
-     *
-     * @param rocket the rocket that this part is a part of.
-     */
-    default void tick(@NotNull Rocket rocket) {
-        this.type().tick(rocket, this.config());
-    }
-
-    default @NotNull ConfiguredTravelPredicate<?, ?> travelPredicate() {
-        return this.type().travelPredicate(this.config());
-    }
+public record BasicRocketEngineConfig(ConfiguredTravelPredicate<?, ?> predicate, long fuelCapacity, @Nullable RocketPartRecipe<?,?> recipe) implements RocketEngineConfig {
+    public static final Codec<BasicRocketEngineConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            ConfiguredTravelPredicate.DIRECT_CODEC.fieldOf("predicate").forGetter(BasicRocketEngineConfig::predicate),
+            Codec.LONG.fieldOf("fuel_capacity").forGetter(BasicRocketEngineConfig::fuelCapacity),
+            RocketPartRecipe.DIRECT_CODEC.optionalFieldOf("recipe").forGetter(config -> Optional.ofNullable(config.recipe))
+    ).apply(instance, (ConfiguredTravelPredicate<?, ?> predicate, Long fuelCapacity, Optional<RocketPartRecipe<?, ?>> recipe) -> new BasicRocketEngineConfig(predicate, fuelCapacity, recipe.orElse(null))));
 }

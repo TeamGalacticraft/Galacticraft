@@ -243,13 +243,7 @@ public class GCServerPacketReceivers {
                     CelestialBody<?, ?> body = ((SatelliteAccessor) server).galacticraft$getSatellites().get(id);
                     CelestialBody<?, ?> fromBody = CelestialBody.getByDimension(player.level()).orElseThrow();
                     if (body == null) body = server.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).get(id);
-                    if (body.type() instanceof Landable landable && (player.galacticraft$getCelestialScreenState() == null || player.galacticraft$getCelestialScreenState().canTravel(server.registryAccess(), fromBody, body))) {
-                        player.galacticraft$closeCelestialScreen();
-                        ((CelestialTeleporter)landable.teleporter(body.config()).value()).onEnterAtmosphere(server.getLevel(landable.world(body.config())), player, body, fromBody);
-                        GCEventHandlers.onPlayerChangePlanets(server, player, body, fromBody);
-                    } else {
-                        player.connection.disconnect(Component.literal("Invalid planet teleport packet received."));
-                    }
+                    GCEventHandlers.onPlayerChangePlanets(server, player, body, fromBody);
                 });
             } else {
                 player.connection.disconnect(Component.literal("Invalid planet teleport packet received."));

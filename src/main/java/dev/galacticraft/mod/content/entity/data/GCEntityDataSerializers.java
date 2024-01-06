@@ -33,7 +33,31 @@ import net.minecraft.world.entity.player.Player;
 
 public class GCEntityDataSerializers {
     public static final EntityDataSerializer<LaunchStage> LAUNCH_STAGE = EntityDataSerializer.simpleEnum(LaunchStage.class);
-    public static final EntityDataSerializer<ResourceLocation> IDENTIFIER = EntityDataSerializer.simple(FriendlyByteBuf::writeResourceLocation, FriendlyByteBuf::readResourceLocation);
+    public static final EntityDataSerializer<ResourceLocation> IDENTIFIER = new EntityDataSerializer<>() {
+        @Override
+        public void write(FriendlyByteBuf buffer, ResourceLocation value) {
+            if (value == null) {
+                buffer.writeBoolean(false);
+            } else {
+                buffer.writeBoolean(true);
+                buffer.writeResourceLocation(value);
+            }
+        }
+
+        @Override
+        public ResourceLocation read(FriendlyByteBuf buffer) {
+            if (buffer.readBoolean()) {
+                return buffer.readResourceLocation();
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        public ResourceLocation copy(ResourceLocation value) {
+            return value;
+        }
+    };
 
     public static final EntityDataAccessor<Boolean> IS_IN_CRYO_SLEEP_ID = SynchedEntityData.defineId(
             Player.class, EntityDataSerializers.BOOLEAN

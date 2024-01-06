@@ -60,7 +60,7 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
     public final RecipeSelection<RocketBody<?, ?>> body = new RecipeSelection<>(RocketRegistries.ROCKET_BODY, new VariableSizedContainer(0));
     public final RecipeSelection<RocketFin<?, ?>> fins = new RecipeSelection<>(RocketRegistries.ROCKET_FIN, new VariableSizedContainer(0));
     public final RecipeSelection<RocketBooster<?, ?>> booster = new RecipeSelection<>(RocketRegistries.ROCKET_BOOSTER, new VariableSizedContainer(0));
-    public final RecipeSelection<RocketBottom<?, ?>> bottom = new RecipeSelection<>(RocketRegistries.ROCKET_BOTTOM, new VariableSizedContainer(0));
+    public final RecipeSelection<RocketEngine<?, ?>> engine = new RecipeSelection<>(RocketRegistries.ROCKET_ENGINE, new VariableSizedContainer(0));
     public final RecipeSelection<RocketUpgrade<?, ?>> upgrade = new RecipeSelection<>(RocketRegistries.ROCKET_UPGRADE, new VariableSizedContainer(0));
 
     public byte[] color = new byte[4];
@@ -79,7 +79,7 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
         tag.put("Body", this.body.toTag());
         tag.put("Fins", this.fins.toTag());
         tag.put("Booster", this.booster.toTag());
-        tag.put("Bottom", this.bottom.toTag());
+        tag.put("Engine", this.engine.toTag());
         tag.put("Upgrade", this.upgrade.toTag());
         tag.putByteArray("Color", this.color);
     }
@@ -96,7 +96,7 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
         this.body.readTag(tag.getCompound("Body"));
         this.fins.readTag(tag.getCompound("Fins"));
         this.booster.readTag(tag.getCompound("Booster"));
-        this.bottom.readTag(tag.getCompound("Bottom"));
+        this.engine.readTag(tag.getCompound("Engine"));
         this.upgrade.readTag(tag.getCompound("Upgrade"));
         this.color = tag.getByteArray("Color");
     }

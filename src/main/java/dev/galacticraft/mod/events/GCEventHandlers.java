@@ -118,7 +118,7 @@ public class GCEventHandlers {
     }
 
     public static void onPlayerChangePlanets(MinecraftServer server, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody) {
-        if (body.type() instanceof Landable landable && (player.galacticraft$getCelestialScreenState().canTravel(server.registryAccess(), fromBody, body) || player.galacticraft$getCelestialScreenState() == null)) {
+        if (body.type() instanceof Landable landable && player.galacticraft$isCelestialScreenActive() && (player.galacticraft$getCelestialScreenState() == null || player.galacticraft$getCelestialScreenState().canTravel(server.registryAccess(), fromBody, body))) {
             player.galacticraft$closeCelestialScreen();
             if (body.config() instanceof PlanetConfig planetConfig) {
                 var chestSpawn = planetConfig.celestialHandler().getParaChestSpawnLocation(player.serverLevel(), player, player.getRandom());

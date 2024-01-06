@@ -37,7 +37,7 @@ public final class AccessWeightTravelPredicateType extends TravelPredicateType<A
     }
 
     @Override
-    public Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, RocketCone<?, ?> cone, RocketBody<?, ?> body, RocketFin<?, ?> fin, RocketBooster<?, ?> booster, RocketBottom<?, ?> bottom, RocketUpgrade<?, ?> upgrade, AccessWeightTravelPredicateConfig config) {
+    public Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, RocketCone<?, ?> cone, RocketBody<?, ?> body, RocketFin<?, ?> fin, RocketBooster<?, ?> booster, RocketEngine<?, ?> engine, RocketUpgrade<?, ?> upgrade, AccessWeightTravelPredicateConfig config) {
         if (to.type() instanceof Tiered tiered) {
             int weight = tiered.accessWeight(to.config());
             if (weight <= config.weight()) {

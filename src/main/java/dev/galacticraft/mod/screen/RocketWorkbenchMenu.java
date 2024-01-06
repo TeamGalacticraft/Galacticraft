@@ -61,14 +61,14 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
     public final RecipeSelection<RocketBody<?, ?>> body;
     public final RecipeSelection<RocketFin<?, ?>> fins;
     public final RecipeSelection<RocketBooster<?, ?>> booster;
-    public final RecipeSelection<RocketBottom<?, ?>> bottom;
+    public final RecipeSelection<RocketEngine<?, ?>> engine;
     public final RecipeSelection<RocketUpgrade<?, ?>> upgrade;
 
     public final RecipeCollection coneRecipes;
     public final RecipeCollection bodyRecipes;
     public final RecipeCollection finsRecipes;
     public final RecipeCollection boosterRecipes;
-    public final RecipeCollection bottomRecipes;
+    public final RecipeCollection engineRecipes;
     public final RecipeCollection upgradeRecipes;
 
     public final RocketWorkbenchBlockEntity workbench;
@@ -85,7 +85,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         this.body = workbench.body;
         this.fins = workbench.fins;
         this.booster = workbench.booster;
-        this.bottom = workbench.bottom;
+        this.engine = workbench.engine;
         this.upgrade = workbench.upgrade;
         this.workbench = workbench;
 
@@ -93,7 +93,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         this.body.inventory.addListener(this);
         this.fins.inventory.addListener(this);
         this.booster.inventory.addListener(this);
-        this.bottom.inventory.addListener(this);
+        this.engine.inventory.addListener(this);
         this.upgrade.inventory.addListener(this);
 
         RegistryAccess registryAccess = playerInventory.player.level().registryAccess();
@@ -101,7 +101,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         this.bodyRecipes = new RecipeCollection(registryAccess.registryOrThrow(RocketRegistries.ROCKET_BODY));
         this.finsRecipes = new RecipeCollection(registryAccess.registryOrThrow(RocketRegistries.ROCKET_FIN));
         this.boosterRecipes = new RecipeCollection(registryAccess.registryOrThrow(RocketRegistries.ROCKET_BOOSTER));
-        this.bottomRecipes = new RecipeCollection(registryAccess.registryOrThrow(RocketRegistries.ROCKET_BOTTOM));
+        this.engineRecipes = new RecipeCollection(registryAccess.registryOrThrow(RocketRegistries.ROCKET_ENGINE));
         this.upgradeRecipes = new RecipeCollection(registryAccess.registryOrThrow(RocketRegistries.ROCKET_UPGRADE));
 
         StackedContents contents = new StackedContents();
@@ -110,7 +110,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         this.bodyRecipes.calculateCraftable(contents);
         this.finsRecipes.calculateCraftable(contents);
         this.boosterRecipes.calculateCraftable(contents);
-        this.bottomRecipes.calculateCraftable(contents);
+        this.engineRecipes.calculateCraftable(contents);
         this.upgradeRecipes.calculateCraftable(contents);
 
         this.onSizeChanged();
@@ -123,7 +123,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         this.body.inventory.removeListener(this);
         this.fins.inventory.removeListener(this);
         this.booster.inventory.removeListener(this);
-        this.bottom.inventory.removeListener(this);
+        this.engine.inventory.removeListener(this);
         this.upgrade.inventory.removeListener(this);
     }
 
@@ -131,9 +131,9 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         this(syncId, (RocketWorkbenchBlockEntity) playerInventory.player.level().getBlockEntity(buf.readBlockPos()), playerInventory);
     }
 
-    public static int calculateAdditionalHeight(RocketPartRecipe<?, ?> cone, RocketPartRecipe<?, ?> body, RocketPartRecipe<?, ?> fins, RocketPartRecipe<?, ?> booster, RocketPartRecipe<?, ?> bottom, RocketPartRecipe<?, ?> upgrade) {
+    public static int calculateAdditionalHeight(RocketPartRecipe<?, ?> cone, RocketPartRecipe<?, ?> body, RocketPartRecipe<?, ?> fins, RocketPartRecipe<?, ?> booster, RocketPartRecipe<?, ?> engine, RocketPartRecipe<?, ?> upgrade) {
         int rocketHeight = Math.max(140, Math.max(Math.max(
-                        (bottom != null ? bottom.height() + SPACING : 0) + (body != null ? body.height() + SPACING : 0) + (cone != null ? cone.height() + SPACING : 0),
+                        (engine != null ? engine.height() + SPACING : 0) + (body != null ? body.height() + SPACING : 0) + (cone != null ? cone.height() + SPACING : 0),
                         (booster != null ? booster.height() + SPACING : 0) + (fins != null ? fins.height() + SPACING : 0)),
                 35 + (upgrade != null ? SPACING : 0) + ((int)Math.ceil(1 / 2.0)) * 19));
 
@@ -172,7 +172,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
             case BODY -> this.body;
             case FIN -> this.fins;
             case BOOSTER -> this.booster;
-            case BOTTOM -> this.bottom;
+            case ENGINE -> this.engine;
             case UPGRADE -> this.upgrade;
         };
     }
@@ -188,23 +188,23 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         ((AbstractContainerMenuAccessor)this).getLastSlots().clear();
         ((AbstractContainerMenuAccessor)this).getRemoteSlots().clear();
 
-        RocketPartRecipe<?, ?> bottom = this.bottom.getRecipe();
+        RocketPartRecipe<?, ?> engine = this.engine.getRecipe();
         RocketPartRecipe<?, ?> body = this.body.getRecipe();
         RocketPartRecipe<?, ?> cone = this.cone.getRecipe();
         RocketPartRecipe<?, ?> fins = this.fins.getRecipe();
         RocketPartRecipe<?, ?> booster = this.booster.getRecipe();
         RocketPartRecipe<?, ?> upgrade = this.upgrade.getRecipe();
-        this.additionalHeight = calculateAdditionalHeight(cone, body, fins, booster, bottom, upgrade);
+        this.additionalHeight = calculateAdditionalHeight(cone, body, fins, booster, engine, upgrade);
 
         final int[] ext = {0, 0};
         final int[] ext1 = {0, 0};
         final int[] ext2 = {0, 0};
 
-        if (bottom != null) {
-            bottom.place((i, x, y, filter) -> {
+        if (engine != null) {
+            engine.place((i, x, y, filter) -> {
                         ext[0] = Math.min(ext[0], x - SCREEN_CENTER_BASE_X);
                         ext[1] = Math.max(ext[1], x - SCREEN_CENTER_BASE_X + 18);
-                        this.addSlot(new RocketCraftingSlot(this.bottom.inventory, i, x, y, filter));
+                        this.addSlot(new RocketCraftingSlot(this.engine.inventory, i, x, y, filter));
                     },
                     SCREEN_CENTER_BASE_X,
                     SCREEN_CENTER_BASE_X,
@@ -220,7 +220,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
                     SCREEN_CENTER_BASE_X,
                     SCREEN_CENTER_BASE_X,
                     SCREEN_CENTER_BASE_Y + this.additionalHeight
-                            - (bottom != null ? bottom.height() + SPACING : 0));
+                            - (engine != null ? engine.height() + SPACING : 0));
         }
 
         if (cone != null) {
@@ -232,17 +232,17 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
                     SCREEN_CENTER_BASE_X,
                     SCREEN_CENTER_BASE_X,
                     SCREEN_CENTER_BASE_Y + this.additionalHeight
-                            - (bottom != null ? bottom.height() + SPACING : 0)
+                            - (engine != null ? engine.height() + SPACING : 0)
                             - (body != null ? body.height() + SPACING : 0)
             );
         }
 
         if (fins != null) {
-            if (fins.height() > (bottom != null ? bottom.height() : 0)) {
+            if (fins.height() > (engine != null ? engine.height() : 0)) {
                 ext[0] = Math.min(ext[0], ext1[0]);
                 ext[1] = Math.max(ext[1], ext1[1]);
             }
-            if (fins.height() > (bottom != null ? bottom.height() : 0) + (body != null ? body.height() : 0)) {
+            if (fins.height() > (engine != null ? engine.height() : 0) + (body != null ? body.height() : 0)) {
                 ext[0] = Math.min(ext[0], ext2[0]);
                 ext[1] = Math.max(ext[1], ext2[1]);
             }
@@ -254,11 +254,11 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         }
 
         if (booster != null) {
-            if (booster.height() + (fins != null ? fins.height() : 0) > (bottom != null ? bottom.height() : 0)) {
+            if (booster.height() + (fins != null ? fins.height() : 0) > (engine != null ? engine.height() : 0)) {
                 ext[0] = Math.min(ext[0], ext1[0]);
                 ext[1] = Math.max(ext[1], ext1[1]);
             }
-            if (booster.height() + (fins != null ? fins.height() : 0) > (bottom != null ? bottom.height() : 0) + (body != null ? body.height() : 0)) {
+            if (booster.height() + (fins != null ? fins.height() : 0) > (engine != null ? engine.height() : 0) + (body != null ? body.height() : 0)) {
                 ext[0] = Math.min(ext[0], ext2[0]);
                 ext[1] = Math.max(ext[1], ext2[1]);
             }
@@ -274,9 +274,11 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
 
         if (upgrade != null) {
             upgrade.place((i, x, y, filter) -> this.addSlot(new RocketCraftingSlot(this.upgrade.inventory, i, x, y, filter)),
-                    11, //FIXME
-                    11,
-                    62 + this.additionalHeight //FIXME
+                    18,
+                    18,
+                    SCREEN_CENTER_BASE_Y + this.additionalHeight
+                            - (engine != null ? engine.height() + SPACING : 0)
+                            - (body != null ? body.height() + SPACING : 0)
             );
         }
 
@@ -297,7 +299,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
 
     @Override
     public void onItemChanged() {
-        RocketData rocketData = RocketData.create(-1, this.cone.getSelectionKey(), this.body.getSelectionKey(), this.fins.getSelectionKey(), this.booster.getSelectionKey(), this.bottom.getSelectionKey(), this.upgrade.getSelectionKey());
+        RocketData rocketData = RocketData.create(-1, this.cone.getSelectionKey(), this.body.getSelectionKey(), this.fins.getSelectionKey(), this.booster.getSelectionKey(), this.engine.getSelectionKey(), this.upgrade.getSelectionKey());
         boolean craftable = rocketData.isValid();
         RocketPartRecipe<?, ?> recipe = this.cone.getRecipe();
         craftable = craftable && (recipe != null && recipe.matches(this.cone.inventory, this.workbench.getLevel()));
@@ -307,8 +309,8 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         craftable = craftable && (recipe != null && recipe.matches(this.fins.inventory, this.workbench.getLevel()));
         recipe = this.booster.getRecipe();
         craftable = craftable && (recipe == null || recipe.matches(this.booster.inventory, this.workbench.getLevel()));
-        recipe = this.bottom.getRecipe();
-        craftable = craftable && (recipe != null && recipe.matches(this.bottom.inventory, this.workbench.getLevel()));
+        recipe = this.engine.getRecipe();
+        craftable = craftable && (recipe != null && recipe.matches(this.engine.inventory, this.workbench.getLevel()));
         recipe = this.upgrade.getRecipe();
         craftable = craftable && (recipe == null ||recipe.matches(this.upgrade.inventory, this.workbench.getLevel()));
         if (craftable) {
