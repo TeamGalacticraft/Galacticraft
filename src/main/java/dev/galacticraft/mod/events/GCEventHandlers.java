@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.events;
 
-import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
@@ -119,8 +118,8 @@ public class GCEventHandlers {
     }
 
     public static void onPlayerChangePlanets(MinecraftServer server, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody) {
-        if (body.type() instanceof Landable landable && (player.getCelestialScreenState().canTravel(server.registryAccess(), fromBody, body) || player.getCelestialScreenState() == RocketData.empty())) {
-            player.setCelestialScreenState(null);
+        if (body.type() instanceof Landable landable && (player.galacticraft$getCelestialScreenState().canTravel(server.registryAccess(), fromBody, body) || player.galacticraft$getCelestialScreenState() == null)) {
+            player.galacticraft$closeCelestialScreen();
             if (body.config() instanceof PlanetConfig planetConfig) {
                 var chestSpawn = planetConfig.celestialHandler().getParaChestSpawnLocation(player.serverLevel(), player, player.getRandom());
                 if (chestSpawn != null) {
