@@ -24,7 +24,7 @@ import java.time.format.DateTimeFormatter
 
 // Build Info
 val buildNumber = System.getenv("BUILD_NUMBER") ?: ""
-val commitHash = (System.getenv("GITHUB_SHA") ?: grgit.head().id)!!
+val commitHash = System.getenv("GITHUB_SHA") ?: project.getCommitHash()
 val prerelease = (System.getenv("PRE_RELEASE") ?: "false") == "true"
 
 // Minecraft, Mappings, Loader Versions
@@ -53,7 +53,7 @@ val runtimeOptional          = project.property("optional_dependencies.enabled")
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("1.4-SNAPSHOT")
+    id("fabric-loom") version("1.5-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
     id("org.ajoberstar.grgit") version("5.2.1")
 }
@@ -68,7 +68,7 @@ sourceSets {
     main {
         resources {
             srcDir("src/main/generated")
-            exclude(".cache/**")
+            exclude(".cache/")
         }
     }
 }
@@ -84,8 +84,10 @@ version = buildString {
         append(buildNumber)
     } else if (commitHash.isNotEmpty()) {
         append(commitHash.substring(0, 8))
-        if (!grgit.status().isClean) {
-            append("-dirty")
+        if (project.hasProperty("grgit")) {
+            if ((project.property("grgit") as org.ajoberstar.grgit.Grgit?)?.status()?.isClean != true) {
+                append("-dirty")
+            }
         }
     } else {
         append("unknown")
@@ -107,25 +109,22 @@ loom {
             server()
             name("Data Generation")
             runDir("build/datagen")
-            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.modid=galacticraft", "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}", "-Dfabric-api.datagen.strict-validation=false")
-        }
-        register("datagenClient") {
-            client()
-            name("Data Generation Client")
-            runDir("build/datagen")
-            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.modid=galacticraft", "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}", "-Dfabric-api.datagen.strict-validation")
+            property("fabric-api.datagen")
+            property("fabric-api.datagen.modid", "galacticraft")
+            property("fabric-api.datagen.output-dir", project.file("src/main/generated").toString())
+            property("fabric-api.datagen.strict-validation", "false")
         }
         register("gametest") {
             server()
             name("Game Test")
             source(sourceSets.test.get())
-            vmArg("-Dfabric-api.gametest")
+            property("fabric-api.gametest")
         }
         register("gametestClient") {
             client()
             name("Game Test Client")
             source(sourceSets.test.get())
-            vmArg("-Dfabric-api.gametest")
+            property("fabric-api.gametest")
         }
     }
 }
@@ -186,12 +185,15 @@ repositories {
 dependencies {
     // Minecraft, Mappings, Loader
     minecraft("com.mojang:minecraft:$minecraftVersion")
-    mappings(loom.layered {
-        officialMojangMappings()
-        if (!parchmentVersion.isEmpty()) {
+    mappings(if (parchmentVersion.isNotEmpty()) {
+        loom.layered {
+            officialMojangMappings()
             parchment("org.parchmentmc.data:parchment-$minecraftVersion:$parchmentVersion@zip")
         }
+    } else {
+        loom.officialMojangMappings()
     })
+
     modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
 
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
@@ -249,6 +251,10 @@ tasks.processResources {
                 file: File -> file.writeText(groovy.json.JsonOutput.toJson(groovy.json.JsonSlurper().parse(file)))
         }
     }
+}
+
+tasks.javadoc {
+    options.encoding = "UTF-8"
 }
 
 tasks.create<Jar>("javadocJar") {
@@ -336,4 +342,11 @@ fun DependencyHandler.includedDependency(dependencyNotation: String, dependencyC
 
 fun DependencyHandler.includedRuntimeDependency(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
     include(modRuntimeOnly(dependencyNotation, dependencyConfiguration), dependencyConfiguration)
+}
+
+fun Project.getCommitHash(): String {
+    if (hasProperty("grgit")) {
+        return (property("grgit") as org.ajoberstar.grgit.Grgit?)?.head()?.id ?: ""
+    }
+    return ""
 }
