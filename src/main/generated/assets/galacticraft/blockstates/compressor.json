@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft:models/block/compressor"
+      "model": "galacticraft:machine/compressor"
     }
   }
 }

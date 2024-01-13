@@ -1,6 +1,6 @@
 {
-  "machinelib:generated": "machinelib:z_axis",
-  "data": {
+  "machinelib:generate": "machinelib:z_axis",
+  "sprites": {
     "front": "galacticraft:block/circuit_fabricator",
     "back": "galacticraft:block/machine_power_input",
     "sided": true

@@ -1,6 +1,6 @@
 {
-  "machinelib:generated": "machinelib:z_axis",
-  "data": {
+  "machinelib:generate": "machinelib:z_axis",
+  "sprites": {
     "front": "galacticraft:block/oxygen_compressor",
     "back": "galacticraft:block/oxygen_compressor_back",
     "sided": true

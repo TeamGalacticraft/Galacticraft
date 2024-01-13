@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft:models/block/electric_furnace"
+      "model": "galacticraft:machine/electric_furnace"
     }
   }
 }

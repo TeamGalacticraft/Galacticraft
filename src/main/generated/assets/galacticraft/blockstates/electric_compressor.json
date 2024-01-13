@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft:models/block/electric_compressor"
+      "model": "galacticraft:machine/electric_compressor"
     }
   }
 }

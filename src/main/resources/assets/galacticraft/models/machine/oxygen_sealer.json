@@ -1,6 +1,6 @@
 {
-  "machinelib:generated": "galacticraft:oxygen_sealer",
-  "data": {
+  "machinelib:generate": "galacticraft:oxygen_sealer",
+  "sprites": {
     "right": "galacticraft:block/machine_power_input",
     "left": "galacticraft:block/machine_fluid_input",
     "top": "galacticraft:block/oxygen_sealer_top"

@@ -1,6 +1,6 @@
 {
-  "machinelib:generated": "machinelib:front_face",
-  "data": {
+  "machinelib:generate": "machinelib:front_face",
+  "sprites": {
     "sprite": "galacticraft:block/energy_storage_module_0"
   }
 }

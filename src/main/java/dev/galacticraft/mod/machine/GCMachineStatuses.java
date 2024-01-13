@@ -26,32 +26,29 @@ import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import net.minecraft.ChatFormatting;
 
 public final class GCMachineStatuses {
-    public static final MachineStatus COLLECTING = MachineStatus.create("machine_status.galacticraft.collecting", ChatFormatting.GREEN, MachineStatus.Type.WORKING);
-    public static final MachineStatus PARTIALLY_BLOCKED = MachineStatus.create("machine_status.galacticraft.partially_blocked", ChatFormatting.GRAY, MachineStatus.Type.PARTIALLY_WORKING);
-    public static final MachineStatus BLOCKED = MachineStatus.create("machine_status.galacticraft.blocked", ChatFormatting.RED, MachineStatus.Type.OTHER);
-    public static final MachineStatus NIGHT = MachineStatus.create("machine_status.galacticraft.night", ChatFormatting.DARK_BLUE, MachineStatus.Type.PARTIALLY_WORKING);
-    public static final MachineStatus RAIN = MachineStatus.create("machine_status.galacticraft.rain", ChatFormatting.BLUE, MachineStatus.Type.PARTIALLY_WORKING);
-    public static final MachineStatus FABRICATING = MachineStatus.create("machine_status.galacticraft.fabricating", ChatFormatting.GREEN, MachineStatus.Type.WORKING);
-    public static final MachineStatus NO_FUEL = MachineStatus.create("machine_status.galacticraft.no_fuel", ChatFormatting.RED, MachineStatus.Type.MISSING_ITEMS);
-    public static final MachineStatus GENERATING = MachineStatus.create("machine_status.galacticraft.generating", ChatFormatting.GREEN, MachineStatus.Type.WORKING);
-    public static final MachineStatus WARMING_UP = MachineStatus.create("machine_status.galacticraft.warming_up", ChatFormatting.GOLD, MachineStatus.Type.PARTIALLY_WORKING);
-    public static final MachineStatus COOLING_DOWN = MachineStatus.create("machine_status.galacticraft.cooling_down", ChatFormatting.AQUA, MachineStatus.Type.PARTIALLY_WORKING);
-    public static final MachineStatus COMPRESSING = MachineStatus.create("machine_status.galacticraft.compressing", ChatFormatting.GREEN, MachineStatus.Type.WORKING);
-    public static final MachineStatus NOT_ENOUGH_OXYGEN = MachineStatus.create("machine_status.galacticraft.not_enough_oxygen", ChatFormatting.RED, MachineStatus.Type.MISSING_RESOURCE);
-    public static final MachineStatus MISSING_OIL = MachineStatus.create("machine_status.galacticraft.missing_oil", ChatFormatting.RED, MachineStatus.Type.MISSING_FLUIDS);
-    public static final MachineStatus FUEL_TANK_FULL = MachineStatus.create("machine_status.galacticraft.fuel_tank_full", ChatFormatting.GOLD, MachineStatus.Type.OTHER);
-    public static final MachineStatus MISSING_OXYGEN_TANK = MachineStatus.create("machine_status.galacticraft.missing_oxygen_tank", ChatFormatting.RED, MachineStatus.Type.MISSING_ITEMS);
-    public static final MachineStatus OXYGEN_TANK_FULL = MachineStatus.create("machine_status.galacticraft.oxygen_tank_full", ChatFormatting.GOLD, MachineStatus.Type.OTHER);
-    public static final MachineStatus DECOMPRESSING = MachineStatus.create("machine_status.galacticraft.decompressing", ChatFormatting.GREEN, MachineStatus.Type.WORKING);
-    public static final MachineStatus EMPTY_OXYGEN_TANK = MachineStatus.create("machine_status.galacticraft.empty_oxygen_tank", ChatFormatting.RED, MachineStatus.Type.MISSING_RESOURCE);
-    public static final MachineStatus ALREADY_SEALED = MachineStatus.create("machine_status.galacticraft.already_sealed", ChatFormatting.RED, MachineStatus.Type.OTHER);
-    public static final MachineStatus AREA_TOO_LARGE = MachineStatus.create("machine_status.galacticraft.area_too_large", ChatFormatting.RED, MachineStatus.Type.OTHER);
-    public static final MachineStatus SEALED = MachineStatus.create("machine_status.galacticraft.sealed", ChatFormatting.GREEN, MachineStatus.Type.WORKING);
-    public static final MachineStatus DISTRIBUTING = MachineStatus.create("machine_status.galacticraft.distributing", ChatFormatting.GREEN, MachineStatus.Type.WORKING);
-    /**
-     * The fuel loader is loading fuel into the rocket.
-     */
-    public static final MachineStatus LOADING = MachineStatus.create("ui.galacticraft.machinestatus.loading", ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    public static final MachineStatus COLLECTING = MachineStatus.create("ui.galacticraft.status.collecting", ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    public static final MachineStatus PARTIALLY_BLOCKED = MachineStatus.create("ui.galacticraft.status.partially_blocked", ChatFormatting.GRAY, MachineStatus.Type.PARTIALLY_WORKING);
+    public static final MachineStatus BLOCKED = MachineStatus.create("ui.galacticraft.status.blocked", ChatFormatting.RED, MachineStatus.Type.OTHER);
+    public static final MachineStatus NIGHT = MachineStatus.create("ui.galacticraft.status.night", ChatFormatting.DARK_BLUE, MachineStatus.Type.PARTIALLY_WORKING);
+    public static final MachineStatus RAIN = MachineStatus.create("ui.galacticraft.status.rain", ChatFormatting.BLUE, MachineStatus.Type.PARTIALLY_WORKING);
+    public static final MachineStatus FABRICATING = MachineStatus.create("ui.galacticraft.status.fabricating", ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    public static final MachineStatus NO_FUEL = MachineStatus.create("ui.galacticraft.status.no_fuel", ChatFormatting.RED, MachineStatus.Type.MISSING_ITEMS);
+    public static final MachineStatus GENERATING = MachineStatus.create("ui.galacticraft.status.generating", ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    public static final MachineStatus WARMING_UP = MachineStatus.create("ui.galacticraft.status.warming_up", ChatFormatting.GOLD, MachineStatus.Type.PARTIALLY_WORKING);
+    public static final MachineStatus COOLING_DOWN = MachineStatus.create("ui.galacticraft.status.cooling_down", ChatFormatting.AQUA, MachineStatus.Type.PARTIALLY_WORKING);
+    public static final MachineStatus COMPRESSING = MachineStatus.create("ui.galacticraft.status.compressing", ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    public static final MachineStatus NOT_ENOUGH_OXYGEN = MachineStatus.create("ui.galacticraft.status.not_enough_oxygen", ChatFormatting.RED, MachineStatus.Type.MISSING_RESOURCE);
+    public static final MachineStatus MISSING_OIL = MachineStatus.create("ui.galacticraft.status.missing_oil", ChatFormatting.RED, MachineStatus.Type.MISSING_FLUIDS);
+    public static final MachineStatus FUEL_TANK_FULL = MachineStatus.create("ui.galacticraft.status.fuel_tank_full", ChatFormatting.GOLD, MachineStatus.Type.OTHER);
+    public static final MachineStatus MISSING_OXYGEN_TANK = MachineStatus.create("ui.galacticraft.status.missing_oxygen_tank", ChatFormatting.RED, MachineStatus.Type.MISSING_ITEMS);
+    public static final MachineStatus OXYGEN_TANK_FULL = MachineStatus.create("ui.galacticraft.status.oxygen_tank_full", ChatFormatting.GOLD, MachineStatus.Type.OTHER);
+    public static final MachineStatus DECOMPRESSING = MachineStatus.create("ui.galacticraft.status.decompressing", ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    public static final MachineStatus EMPTY_OXYGEN_TANK = MachineStatus.create("ui.galacticraft.status.empty_oxygen_tank", ChatFormatting.RED, MachineStatus.Type.MISSING_RESOURCE);
+    public static final MachineStatus ALREADY_SEALED = MachineStatus.create("ui.galacticraft.status.already_sealed", ChatFormatting.RED, MachineStatus.Type.OTHER);
+    public static final MachineStatus AREA_TOO_LARGE = MachineStatus.create("ui.galacticraft.status.area_too_large", ChatFormatting.RED, MachineStatus.Type.OTHER);
+    public static final MachineStatus SEALED = MachineStatus.create("ui.galacticraft.status.sealed", ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    public static final MachineStatus DISTRIBUTING = MachineStatus.create("ui.galacticraft.status.distributing", ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    public static final MachineStatus LOADING = MachineStatus.create("ui.galacticraft.status.distributing", ChatFormatting.GREEN, MachineStatus.Type.WORKING);
 
     /**
      * The fuel loader doesn't have any fuel.

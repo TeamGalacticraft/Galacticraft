@@ -4,7 +4,6 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "MinecraftServerMixin",
-    "client.AbstractContainerScreenMixin",
     "gear.LivingEntityMixin",
     "gear.PlayerListMixin",
     "gear.ServerPlayerMixin",
@@ -19,12 +18,13 @@
     "oxygen.LevelMixin",
     "oxygen.ProtoChunkMixin",
     "registry.RegistryDataLoaderMixin",
-    "registry.RegistrySyncronizationMixin",
+    "registry.RegistrySynchronizationMixin",
     "research.AdvancementRewardsMixin",
     "research.ServerPlayerMixin"
   ],
   "client": [
     "client.AbstractClientPlayerEntityMixin",
+    "client.AbstractContainerScreenMixin",
     "client.ClientPlayNetworkHandlerMixin",
     "client.MinecraftClientMixin",
     "client.ParticleAccessor",

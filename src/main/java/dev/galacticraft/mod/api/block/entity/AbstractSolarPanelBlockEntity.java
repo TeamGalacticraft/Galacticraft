@@ -26,7 +26,6 @@ import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.machine.MachineType;
-import dev.galacticraft.machinelib.api.util.BlockFace;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.SolarPanelMenu;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -98,11 +97,6 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
     }
 
     protected abstract long calculateEnergyProduction(long time, double multiplier);
-
-    @Override
-    public boolean isFaceLocked(BlockFace face) {
-        return face == BlockFace.TOP;
-    }
 
     @Nullable
     @Override

@@ -324,8 +324,13 @@ public class GCModelProvider extends FabricModelProvider {
         generator.blockStateOutput.accept(BlockModelGenerators.createRotatedVariant(block, ModelLocationUtils.getModelLocation(block)));
     }
 
+    public static ResourceLocation getMachineModelLocation(Block block) {
+        ResourceLocation resourceLocation = BuiltInRegistries.BLOCK.getKey(block);
+        return resourceLocation.withPrefix("machine/");
+    }
+
     private static void createMachineDelegate(BlockModelGenerators generator, Block block) { //todo: look into why we need this prefix
-        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block, ModelLocationUtils.getModelLocation(block).withPrefix("models/")));
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block, getMachineModelLocation(block)));
     }
 
     @Override

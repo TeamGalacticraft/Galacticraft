@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft:models/block/oxygen_decompressor"
+      "model": "galacticraft:machine/oxygen_decompressor"
     }
   }
 }

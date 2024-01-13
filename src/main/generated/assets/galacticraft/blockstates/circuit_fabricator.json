@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft:models/block/circuit_fabricator"
+      "model": "galacticraft:machine/circuit_fabricator"
     }
   }
 }
