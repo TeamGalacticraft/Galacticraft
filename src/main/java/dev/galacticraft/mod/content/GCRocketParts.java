@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,26 +22,23 @@
 
 package dev.galacticraft.mod.content;
 
-import dev.galacticraft.api.registry.BuiltInRocketRegistries;
+import dev.galacticraft.api.data.RocketPartRecipeBuilder;
 import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.part.*;
-import dev.galacticraft.api.rocket.part.type.RocketConeType;
-import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
 import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
-import dev.galacticraft.impl.rocket.part.RocketConeImpl;
 import dev.galacticraft.impl.rocket.part.config.*;
 import dev.galacticraft.impl.rocket.part.type.*;
 import dev.galacticraft.impl.rocket.travelpredicate.config.AccessWeightTravelPredicateConfig;
 import dev.galacticraft.impl.rocket.travelpredicate.type.AccessWeightTravelPredicateType;
-import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.rocket.part.config.StorageUpgradeConfig;
 import dev.galacticraft.mod.content.rocket.part.type.StorageUpgradeType;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import org.apache.http.config.Registry;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,7 +47,7 @@ public class GCRocketParts {
     public static final ResourceKey<RocketBody<?, ?>> TIER_1_BODY = body("tier_1");
     public static final ResourceKey<RocketFin<?, ?>> TIER_1_FIN = fin("tier_1");
     public static final ResourceKey<RocketBooster<?, ?>> TIER_1_BOOSTER = booster("tier_1");
-    public static final ResourceKey<RocketBottom<?, ?>> TIER_1_BOTTOM = bottom("tier_1");
+    public static final ResourceKey<RocketEngine<?, ?>> TIER_1_ENGINE = engine("tier_1");
 
     public static final ResourceKey<RocketCone<?, ?>> ADVANCED_CONE = cone("advanced_cone"); //todo implement these again
     public static final ResourceKey<RocketCone<?, ?>> SLOPED_CONE = cone("sloped_cone");
@@ -59,89 +56,129 @@ public class GCRocketParts {
     public static final ResourceKey<RocketUpgrade<?, ?>> STORAGE_UPGRADE = upgrade("storage");
 
     public static void bootstrapCone(BootstapContext<RocketCone<?, ?>> context) {
-        context.register(BuiltinObjects.INVALID_ROCKET_CONE, RocketCone.create(DefaultRocketConeConfig.INSTANCE, InvalidRocketConeType.INSTANCE));
         context.register(TIER_1_CONE,
-                RocketCone.create(
+                BasicRocketConeType.INSTANCE.configure(
                         new BasicRocketConeConfig(
-                                new ConfiguredTravelPredicate<>(
-                                        new AccessWeightTravelPredicateConfig(1, TravelPredicateType.Result.PASS),
-                                        AccessWeightTravelPredicateType.INSTANCE
-                                )
-                        ),
-                        BasicRocketConeType.INSTANCE
+                                AccessWeightTravelPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(1, TravelPredicateType.Result.PASS)),
+                                RocketPartRecipeBuilder.create()
+                                        .define('T', Ingredient.of(Items.REDSTONE_TORCH))
+                                        .define('D', Ingredient.of(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                                        .center("T")
+                                        .center("D")
+                                        .center("DD")
+                                        .build()
+                        )
+                )
+        );
+        context.register(SLOPED_CONE,
+                BasicRocketConeType.INSTANCE.configure(
+                        new BasicRocketConeConfig(
+                                AccessWeightTravelPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(1, TravelPredicateType.Result.PASS)),
+                                RocketPartRecipeBuilder.create()
+                                        .define('T', Ingredient.of(Items.REDSTONE_TORCH))
+                                        .define('D', Ingredient.of(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                                        .center("T")
+                                        .center("DD")
+                                        .center("DD")
+                                        .build()
+                        )
+                )
+        );
+        context.register(ADVANCED_CONE,
+                BasicRocketConeType.INSTANCE.configure(
+                        new BasicRocketConeConfig(
+                                AccessWeightTravelPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(1, TravelPredicateType.Result.PASS)),
+                                RocketPartRecipeBuilder.create()
+                                        .define('T', Ingredient.of(Items.REDSTONE_TORCH))
+                                        .define('D', Ingredient.of(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                                        .center("T")
+                                        .center("DD")
+                                        .center("DD")
+                                        .build()
+                        )
                 )
         );
     }
 
     public static void bootstrapBody(BootstapContext<RocketBody<?, ?>> context) {
-        context.register(BuiltinObjects.INVALID_ROCKET_BODY, RocketBody.create(DefaultRocketBodyConfig.INSTANCE, InvalidRocketBodyType.INSTANCE));
         context.register(TIER_1_BODY,
-                RocketBody.create(
-                        new BasicRocketBodyConfig(
-                                new ConfiguredTravelPredicate<>(
-                                        new AccessWeightTravelPredicateConfig(1, TravelPredicateType.Result.PASS),
-                                        AccessWeightTravelPredicateType.INSTANCE
-                                )
-                                , 1, 1
-                        ),
-                        BasicRocketBodyType.INSTANCE
-                )
+                BasicRocketBodyType.INSTANCE.configure(new BasicRocketBodyConfig(
+                        AccessWeightTravelPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(1, TravelPredicateType.Result.PASS)),
+                        1,
+                        RocketPartRecipeBuilder.create()
+                                .define('D', Ingredient.of(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                                .left("D")
+                                .left("D")
+                                .left("D")
+                                .left("D")
+                                .right("D")
+                                .right("D")
+                                .right("D")
+                                .right("D")
+                                .build()
+                ))
         );
     }
 
     public static void bootstrapFin(BootstapContext<RocketFin<?, ?>> context) {
-        context.register(BuiltinObjects.INVALID_ROCKET_FIN, RocketFin.create(DefaultRocketFinConfig.INSTANCE, InvalidRocketFinType.INSTANCE));
         context.register(TIER_1_FIN,
-                RocketFin.create(
+                BasicRocketFinType.INSTANCE.configure(
                         new BasicRocketFinConfig(
-                                new ConfiguredTravelPredicate<>(
-                                        new AccessWeightTravelPredicateConfig(1, TravelPredicateType.Result.PASS),
-                                        AccessWeightTravelPredicateType.INSTANCE
+                                AccessWeightTravelPredicateType.INSTANCE.configure(
+                                        new AccessWeightTravelPredicateConfig(1, TravelPredicateType.Result.PASS)
                                 ),
-                                false
-                        ),
-                        BasicRocketFinType.INSTANCE
+                                false,
+                                RocketPartRecipeBuilder.create()
+                                        .define('F', Ingredient.of(GCItems.ROCKET_FINS))
+                                        .left("F")
+                                        .left("F")
+                                        .right("F")
+                                        .right("F")
+                                        .build()
+                        )
                 )
         );
     }
 
     public static void bootstrapBooster(BootstapContext<RocketBooster<?, ?>> context) {
-        context.register(BuiltinObjects.INVALID_ROCKET_BOOSTER, RocketBooster.create(DefaultRocketBoosterConfig.INSTANCE, InvalidRocketBoosterType.INSTANCE));
         context.register(TIER_1_BOOSTER,
-                RocketBooster.create(
+                BasicRocketBoosterType.INSTANCE.configure(
                         new BasicRocketBoosterConfig(
-                                new ConfiguredTravelPredicate<>(
-                                        new AccessWeightTravelPredicateConfig(1, TravelPredicateType.Result.PASS),
-                                        AccessWeightTravelPredicateType.INSTANCE
+                                AccessWeightTravelPredicateType.INSTANCE.configure(
+                                        new AccessWeightTravelPredicateConfig(1, TravelPredicateType.Result.PASS)
                                 ),
-                                0, 0, 0
-                        ),
-                        BasicRocketBoosterType.INSTANCE
+                                0,
+                                0,
+                                0,
+                                null //fixme no t1 booster (t2 only!)
+                        )
                 )
         );
     }
 
-    public static void bootstrapBottom(BootstapContext<RocketBottom<?, ?>> context) {
-        context.register(BuiltinObjects.INVALID_ROCKET_BOTTOM, RocketBottom.create(DefaultRocketBottomConfig.INSTANCE, InvalidRocketBottomType.INSTANCE));
-        context.register(TIER_1_BOTTOM,
-                RocketBottom.create(
-                        new BasicRocketBottomConfig(
-                                new ConfiguredTravelPredicate<>(
-                                        new AccessWeightTravelPredicateConfig(1, TravelPredicateType.Result.PASS),
-                                        AccessWeightTravelPredicateType.INSTANCE
+    public static void bootstrapEngine(BootstapContext<RocketEngine<?, ?>> context) {
+        context.register(TIER_1_ENGINE,
+                BasicRocketEngineType.INSTANCE.configure(
+                        new BasicRocketEngineConfig(
+                                AccessWeightTravelPredicateType.INSTANCE.configure(
+                                        new AccessWeightTravelPredicateConfig(1, TravelPredicateType.Result.PASS)
                                 ),
-                                1296000
-                        ),
-                        BasicRocketBottomType.INSTANCE
+                                FluidConstants.BUCKET * 16,
+                                RocketPartRecipeBuilder.create()
+                                        .define('E', Ingredient.of(GCItems.ROCKET_ENGINE))
+                                        .center("E")
+                                        .build()
+                        )
                 )
         );
     }
 
     public static void bootstrapUpgrade(BootstapContext<RocketUpgrade<?, ?>> context) {
-        context.register(BuiltinObjects.INVALID_ROCKET_UPGRADE, RocketUpgrade.create(DefaultRocketUpgradeConfig.INSTANCE, InvalidRocketUpgradeType.INSTANCE));
-//        context.register(STORAGE_UPGRADE,
-//                RocketUpgrade.create(new StorageUpgradeConfig(Ingredient.EMPTY), null)
-//        );
+        context.register(STORAGE_UPGRADE, RocketUpgrade.create(new StorageUpgradeConfig(1,
+                RocketPartRecipeBuilder.create()
+                        .define('C', Ingredient.of(Items.CHEST))
+                        .center("C")
+                        .build()), StorageUpgradeType.INSTANCE));
     }
 
     @Contract(pure = true)
@@ -165,104 +202,12 @@ public class GCRocketParts {
     }
 
     @Contract(pure = true)
-    private static @NotNull ResourceKey<RocketBottom<?, ?>> bottom(@NotNull String id) {
-        return Constant.key(RocketRegistries.ROCKET_BOTTOM, id);
+    private static @NotNull ResourceKey<RocketEngine<?, ?>> engine(@NotNull String id) {
+        return Constant.key(RocketRegistries.ROCKET_ENGINE, id);
     }
 
     @Contract(pure = true)
     private static @NotNull ResourceKey<RocketUpgrade<?, ?>> upgrade(@NotNull String id) {
         return Constant.key(RocketRegistries.ROCKET_UPGRADE, id);
     }
-
-//    public static final RocketPart DEFAULT_CONE = RocketPart.Builder.create()
-//            .name(Component.translatable("rocket_part.galacticraft.default_cone"))
-//            .travelPredicate(AccessWeightPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(1, TravelPredicateType.AccessType.PASS)))
-//            .type(RocketPartType.CONE)
-//            .research(Constant.id(Constant.MOD_ID))
-//            .build();
-//
-//    public static final RocketPart DEFAULT_BODY = RocketPart.Builder.create()
-//            .name(Component.translatable("rocket_part.galacticraft.default_body"))
-//            .travelPredicate(AccessWeightPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(1, TravelPredicateType.AccessType.PASS)))
-//            .type(RocketPartType.BODY)
-//            .research(Constant.id(Constant.MOD_ID))
-//            .build();
-//
-//    public static final RocketPart DEFAULT_FIN = RocketPart.Builder.create()
-//            .name(Component.translatable("rocket_part.galacticraft.default_fin"))
-//            .travelPredicate(AccessWeightPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(1, TravelPredicateType.AccessType.PASS)))
-//            .type(RocketPartType.FIN)
-//            .research(Constant.id(Constant.MOD_ID))
-//            .build();
-//
-//    public static final RocketPart NO_BOOSTER = RocketPart.Builder.create()
-//            .name(Component.translatable("rocket_part.galacticraft.default_booster"))
-//            .travelPredicate(AccessWeightPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(1, TravelPredicateType.AccessType.PASS)))
-//            .type(RocketPartType.BOOSTER)
-//            .recipe(false)
-//            .research(Constant.id(Constant.MOD_ID))
-//            .build();
-//
-//    public static final RocketPart DEFAULT_BOTTOM = RocketPart.Builder.create()
-//            .name(Component.translatable("rocket_part.galacticraft.default_bottom"))
-//            .travelPredicate(AccessWeightPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(1, TravelPredicateType.AccessType.PASS)))
-//            .type(RocketPartType.BOTTOM)
-//            .research(Constant.id(Constant.MOD_ID))
-//            .build();
-//
-//    public static final RocketPart ADVANCED_CONE = RocketPart.Builder.create()
-//            .name(Component.translatable("rocket_part.galacticraft.advanced_cone"))
-//            .travelPredicate(ConstantTravelPredicateType.INSTANCE.configure(new AccessTypeTravelPredicateConfig(TravelPredicateType.AccessType.PASS)))
-//            .type(RocketPartType.CONE)
-//            .research(Constant.id(Constant.MOD_ID))
-//            .build();
-//
-//    public static final RocketPart SLOPED_CONE = RocketPart.Builder.create()
-//            .name(Component.translatable("rocket_part.galacticraft.cone_sloped"))
-//            .travelPredicate(ConstantTravelPredicateType.INSTANCE.configure(new AccessTypeTravelPredicateConfig(TravelPredicateType.AccessType.PASS)))
-//            .type(RocketPartType.CONE)
-//            .research(Constant.id(Constant.MOD_ID))
-//            .build();
-//
-//    public static final RocketPart BOOSTER_TIER_1 = RocketPart.Builder.create()
-//            .name(Component.translatable("rocket_part.galacticraft.booster_1"))
-//            .travelPredicate(AccessWeightPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(2, TravelPredicateType.AccessType.PASS)))
-//            .type(RocketPartType.BOOSTER)
-//            .research(Constant.id(Constant.MOD_ID))
-//            .build();
-//
-//    public static final RocketPart BOOSTER_TIER_2 = RocketPart.Builder.create()
-//            .name(Component.translatable("rocket_part.galacticraft.booster_2"))
-//            .travelPredicate(AccessWeightPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(3, TravelPredicateType.AccessType.PASS)))
-//            .type(RocketPartType.BOOSTER)
-//            .research(Constant.id(Constant.MOD_ID))
-//            .build();
-//
-//    public static final RocketPart NO_UPGRADE = RocketPart.Builder.create()
-//            .name(Component.translatable("rocket_part.galacticraft.default_upgrade"))
-//            .travelPredicate(ConstantTravelPredicateType.INSTANCE.configure(new AccessTypeTravelPredicateConfig(TravelPredicateType.AccessType.PASS)))
-//            .type(RocketPartType.UPGRADE)
-//            .research(Constant.id(Constant.MOD_ID))
-//            .build();
-//
-//    public static final RocketPart STORAGE_UPGRADE = RocketPart.Builder.create()
-//            .name(Component.translatable("rocket_part.galacticraft.storage_upgrade"))
-//            .travelPredicate(ConstantTravelPredicateType.INSTANCE.configure(new AccessTypeTravelPredicateConfig(TravelPredicateType.AccessType.PASS)))
-//            .type(RocketPartType.UPGRADE)
-//            .research(Constant.id(Constant.MOD_ID))
-//            .build();
-//
-//    public static void register() {
-//        Registry.register(AddonRegistry.ROCKET_PART, new ResourceLocation(Constant.MOD_ID, "default_cone"), DEFAULT_CONE);
-//        Registry.register(AddonRegistry.ROCKET_PART, new ResourceLocation(Constant.MOD_ID, "default_body"), DEFAULT_BODY);
-//        Registry.register(AddonRegistry.ROCKET_PART, new ResourceLocation(Constant.MOD_ID, "default_fin"), DEFAULT_FIN);
-//        Registry.register(AddonRegistry.ROCKET_PART, new ResourceLocation(Constant.MOD_ID, "default_booster"), NO_BOOSTER);
-//        Registry.register(AddonRegistry.ROCKET_PART, new ResourceLocation(Constant.MOD_ID, "default_bottom"), DEFAULT_BOTTOM);
-//        Registry.register(AddonRegistry.ROCKET_PART, new ResourceLocation(Constant.MOD_ID, "advanced_cone"), ADVANCED_CONE);
-//        Registry.register(AddonRegistry.ROCKET_PART, new ResourceLocation(Constant.MOD_ID, "sloped_cone"), SLOPED_CONE);
-//        Registry.register(AddonRegistry.ROCKET_PART, new ResourceLocation(Constant.MOD_ID, "booster_1"), BOOSTER_TIER_1);
-//        Registry.register(AddonRegistry.ROCKET_PART, new ResourceLocation(Constant.MOD_ID, "booster_2"), BOOSTER_TIER_2);
-//        Registry.register(AddonRegistry.ROCKET_PART, new ResourceLocation(Constant.MOD_ID, "default_upgrade"), NO_UPGRADE);
-//        Registry.register(AddonRegistry.ROCKET_PART, new ResourceLocation(Constant.MOD_ID, "storage_upgrade"), STORAGE_UPGRADE);
-//    }
 }

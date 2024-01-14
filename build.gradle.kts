@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +21,11 @@
  */
 
 import java.time.format.DateTimeFormatter
+
+// Build Info
+val buildNumber = System.getenv("BUILD_NUMBER") ?: ""
+val commitHash = System.getenv("GITHUB_SHA") ?: project.getCommitHash()
+val prerelease = (System.getenv("PRE_RELEASE") ?: "false") == "true"
 
 // Minecraft, Mappings, Loader Versions
 val minecraftVersion         = project.property("minecraft.version").toString()
@@ -48,7 +53,7 @@ val runtimeOptional          = project.property("optional_dependencies.enabled")
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("1.4-SNAPSHOT")
+    id("fabric-loom") version("1.5-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
     id("org.ajoberstar.grgit") version("5.2.1")
 }
@@ -63,13 +68,31 @@ sourceSets {
     main {
         resources {
             srcDir("src/main/generated")
-            exclude(".cache/**")
+            exclude(".cache/")
         }
     }
 }
 
 group = modGroup
-version = modVersion + getVersionDecoration()
+version = buildString {
+    append(modVersion)
+    if (prerelease) {
+        append("-pre")
+    }
+    append('+')
+    if (buildNumber.isNotBlank()) {
+        append(buildNumber)
+    } else if (commitHash.isNotEmpty()) {
+        append(commitHash.substring(0, 8))
+        if (project.hasProperty("grgit")) {
+            if ((project.property("grgit") as org.ajoberstar.grgit.Grgit?)?.status()?.isClean != true) {
+                append("-dirty")
+            }
+        }
+    } else {
+        append("unknown")
+    }
+}
 println("Galacticraft: $version")
 base.archivesName.set(modName)
 
@@ -80,37 +103,34 @@ loom {
     runs {
         runConfigs.forEach {
             it.property("mixin.hotSwap", "true")
+            it.property("mixin.debug.export", "true")
         }
         register("datagen") {
             server()
             name("Data Generation")
             runDir("build/datagen")
-            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.modid=galacticraft"/*, "-Dgalacticraft.mixin.compress_datagen"*/, "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}", "-Dfabric-api.datagen.strict-validation=false")
-        }
-        register("datagenClient") {
-            client()
-            name("Data Generation Client")
-            runDir("build/datagen")
-            vmArgs("-Dfabric-api.datagen", "-Dfabric-api.datagen.modid=galacticraft"/*, "-Dgalacticraft.mixin.compress_datagen"*/, "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}", "-Dfabric-api.datagen.strict-validation")
+            property("fabric-api.datagen")
+            property("fabric-api.datagen.modid", "galacticraft")
+            property("fabric-api.datagen.output-dir", project.file("src/main/generated").toString())
+            property("fabric-api.datagen.strict-validation", "false")
         }
         register("gametest") {
             server()
             name("Game Test")
             source(sourceSets.test.get())
-            property("mixin.hotSwap", "true")
-            vmArg("-Dfabric-api.gametest")
+            property("fabric-api.gametest")
         }
         register("gametestClient") {
             client()
             name("Game Test Client")
             source(sourceSets.test.get())
-            property("mixin.hotSwap", "true")
-            vmArg("-Dfabric-api.gametest")
+            property("fabric-api.gametest")
         }
     }
 }
 
 repositories {
+    mavenLocal()
     maven("https://maven.galacticraft.net/repository/maven-releases/") {
         content {
             includeGroup("dev.galacticraft")
@@ -166,12 +186,15 @@ repositories {
 dependencies {
     // Minecraft, Mappings, Loader
     minecraft("com.mojang:minecraft:$minecraftVersion")
-    mappings(loom.layered {
-        officialMojangMappings()
-        if (!parchmentVersion.isEmpty()) {
+    mappings(if (parchmentVersion.isNotEmpty()) {
+        loom.layered {
+            officialMojangMappings()
             parchment("org.parchmentmc.data:parchment-$minecraftVersion:$parchmentVersion@zip")
         }
+    } else {
+        loom.officialMojangMappings()
     })
+
     modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
 
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
@@ -231,6 +254,10 @@ tasks.processResources {
     }
 }
 
+tasks.javadoc {
+    options.encoding = "UTF-8"
+}
+
 tasks.create<Jar>("javadocJar") {
     from(tasks.javadoc)
     archiveClassifier.set("javadoc")
@@ -261,10 +288,9 @@ publishing {
         }
     }
     repositories {
-        val isSnapshot: Boolean = System.getenv("SNAPSHOT")?.equals("true") ?: true
         val mavenRelease = "https://maven.galacticraft.dev/repository/maven-releases/"
         val mavenSnapshot = "https://maven.galacticraft.dev/repository/maven-snapshots/"
-        maven(if(isSnapshot) mavenSnapshot else mavenRelease) {
+        maven(if(prerelease) mavenSnapshot else mavenRelease) {
             name = "maven"
             credentials(PasswordCredentials::class)
             authentication {
@@ -319,30 +345,9 @@ fun DependencyHandler.includedRuntimeDependency(dependencyNotation: String, depe
     include(modRuntimeOnly(dependencyNotation, dependencyConfiguration), dependencyConfiguration)
 }
 
-// inspired by https://github.com/TerraformersMC/GradleScripts/blob/2.0/ferry.gradle
-fun getVersionDecoration(): String {
-    if ((System.getenv("DISABLE_VERSION_DECORATION") ?: "false") == "true") return ""
-    if (project.hasProperty("release")) return ""
-
-    if (project.hasProperty("grgit")) {
-        val grgit = project.property("grgit") as org.ajoberstar.grgit.Grgit?
-        if (grgit?.head() != null) {
-            var decoration = "+build"
-            val branch = grgit.branch?.current()
-            if (branch != null && branch.name != "main") {
-                decoration += ".${branch.name}"
-            }
-            val commitHashLines = grgit.head().abbreviatedId
-            if (commitHashLines != null && commitHashLines.isNotEmpty()) {
-                decoration += "-${commitHashLines}"
-            }
-
-            if (!grgit.status().isClean) {
-                decoration += "-modified"
-            }
-            return decoration
-        }
+fun Project.getCommitHash(): String {
+    if (hasProperty("grgit")) {
+        return (property("grgit") as org.ajoberstar.grgit.Grgit?)?.head()?.id ?: ""
     }
-    return "+build.unknown"
+    return ""
 }
-

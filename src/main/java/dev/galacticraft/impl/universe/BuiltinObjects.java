@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,6 @@ package dev.galacticraft.impl.universe;
 
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.BuiltInAddonRegistries;
-import dev.galacticraft.api.registry.RocketRegistries;
-import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
@@ -47,12 +45,6 @@ public class BuiltinObjects {
     public static final ResourceKey<Galaxy> MILKY_WAY_KEY = ResourceKey.create(AddonRegistries.GALAXY, new ResourceLocation(Constant.MOD_ID, "milky_way"));
     public static final ResourceKey<CelestialBody<?, ?>> SOL_KEY = ResourceKey.create(AddonRegistries.CELESTIAL_BODY, new ResourceLocation(Constant.MOD_ID, "sol"));
     public static final ResourceKey<CelestialBody<?, ?>> EARTH_KEY = ResourceKey.create(AddonRegistries.CELESTIAL_BODY, new ResourceLocation(Constant.MOD_ID, "earth"));
-    public static final ResourceKey<RocketCone<?, ?>> INVALID_ROCKET_CONE = ResourceKey.create(RocketRegistries.ROCKET_CONE, Constant.Misc.INVALID);
-    public static final ResourceKey<RocketBody<?, ?>> INVALID_ROCKET_BODY = ResourceKey.create(RocketRegistries.ROCKET_BODY, Constant.Misc.INVALID);
-    public static final ResourceKey<RocketFin<?, ?>> INVALID_ROCKET_FIN = ResourceKey.create(RocketRegistries.ROCKET_FIN, Constant.Misc.INVALID);
-    public static final ResourceKey<RocketBooster<?, ?>> INVALID_ROCKET_BOOSTER = ResourceKey.create(RocketRegistries.ROCKET_BOOSTER, Constant.Misc.INVALID);
-    public static final ResourceKey<RocketBottom<?, ?>> INVALID_ROCKET_BOTTOM = ResourceKey.create(RocketRegistries.ROCKET_BOTTOM, Constant.Misc.INVALID);
-    public static final ResourceKey<RocketUpgrade<?, ?>> INVALID_ROCKET_UPGRADE = ResourceKey.create(RocketRegistries.ROCKET_UPGRADE, Constant.Misc.INVALID);
 
     public static final ResourceKey<CelestialTeleporter<?, ?>> DIRECT_CELESTIAL_TELEPORTER = ResourceKey.create(AddonRegistries.CELESTIAL_TELEPORTER, Constant.id("direct"));
 

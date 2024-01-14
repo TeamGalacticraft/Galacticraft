@@ -1,0 +1,17 @@
+{
+  "machinelib:generate": "galacticraft:oxygen_sealer",
+  "sprites": {
+    "right": "galacticraft:block/machine_power_input",
+    "left": "galacticraft:block/machine_fluid_input",
+    "top": "galacticraft:block/oxygen_sealer_top"
+  },
+  "textures": {
+    "up": "galacticraft:block/oxygen_sealer_top",
+    "down": "galacticraft:block/machine",
+    "north": "galacticraft:block/machine_side",
+    "south": "galacticraft:block/machine_side",
+    "east": "galacticraft:block/machine_power_input",
+    "west": "galacticraft:block/machine_fluid_input",
+    "particle": "galacticraft:block/machine"
+  }
+}

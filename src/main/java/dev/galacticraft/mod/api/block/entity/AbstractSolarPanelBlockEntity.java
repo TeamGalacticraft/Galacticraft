@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,10 +26,8 @@ import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.machine.MachineType;
-import dev.galacticraft.machinelib.api.util.BlockFace;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.SolarPanelMenu;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
@@ -88,21 +86,13 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
         if (time > 6000) time = 12000L - time;
 
         profiler.push("transaction");
-        try (Transaction transaction = Transaction.openOuter()) {
-            this.currentEnergyGeneration = calculateEnergyProduction(time, multiplier);
-            this.energyStorage().insert(this.currentEnergyGeneration, transaction);
-            transaction.commit();
-        }
+        this.currentEnergyGeneration = calculateEnergyProduction(time, multiplier);
+        this.energyStorage().insert(this.currentEnergyGeneration);
         profiler.pop();
         return status == null ? GCMachineStatuses.COLLECTING : status;
     }
 
     protected abstract long calculateEnergyProduction(long time, double multiplier);
-
-    @Override
-    public boolean isFaceLocked(BlockFace face) {
-        return face == BlockFace.TOP;
-    }
 
     @Nullable
     @Override

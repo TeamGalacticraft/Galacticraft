@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,10 +22,7 @@
 
 package dev.galacticraft.mod.content.entity.data;
 
-import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.LaunchStage;
-import dev.galacticraft.api.rocket.part.RocketCone;
-import net.minecraft.core.Holder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializer;
@@ -33,79 +30,32 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 public class GCEntityDataSerializers {
-    public static final EntityDataSerializer<LaunchStage> LAUNCH_STAGE = new EntityDataSerializer<>() {
+    public static final EntityDataSerializer<LaunchStage> LAUNCH_STAGE = EntityDataSerializer.simpleEnum(LaunchStage.class);
+    public static final EntityDataSerializer<ResourceLocation> IDENTIFIER = new EntityDataSerializer<>() {
         @Override
-        public void write(FriendlyByteBuf buf, LaunchStage stage) {
-            buf.writeEnum(stage);
+        public void write(FriendlyByteBuf buffer, ResourceLocation value) {
+            buffer.writeResourceLocation(value);
         }
 
         @Override
-        public LaunchStage read(FriendlyByteBuf buf) {
-            return buf.readEnum(LaunchStage.class);
+        public ResourceLocation read(FriendlyByteBuf buffer) {
+            return buffer.readResourceLocation();
         }
 
         @Override
-        public LaunchStage copy(LaunchStage stage) {
-            return stage;
-        }
-    };
-
-    public static final EntityDataSerializer<ResourceLocation> ROCKET_PART = new EntityDataSerializer<>() {
-        @Override
-        public void write(FriendlyByteBuf buf, ResourceLocation id) {
-            buf.writeResourceLocation(id);
-        }
-
-        @Override
-        public @NotNull ResourceLocation read(FriendlyByteBuf buf) {
-            return buf.readResourceLocation();
-        }
-
-        @Contract(value = "_ -> param1", pure = true)
-        @Override
-        public @NotNull ResourceLocation copy(ResourceLocation id) {
-            return id;
+        public ResourceLocation copy(ResourceLocation value) {
+            return value;
         }
     };
 
     public static final EntityDataAccessor<Boolean> IS_IN_CRYO_SLEEP_ID = SynchedEntityData.defineId(
             Player.class, EntityDataSerializers.BOOLEAN
     );
-    public static final EntityDataSerializer<ResourceLocation[]> ROCKET_UPGRADES = new EntityDataSerializer<>() {
-        @Override
-        public void write(FriendlyByteBuf buf, ResourceLocation[] ids) {
-            buf.writeVarInt(ids.length);
-            for (ResourceLocation id : ids) {
-                buf.writeResourceLocation(id);
-            }
-        }
-
-        @Override
-        public ResourceLocation @NotNull [] read(FriendlyByteBuf buf) {
-            int s = buf.readVarInt();
-            ResourceLocation[] ids = new ResourceLocation[s];
-            for (int i = 0; i < s; i++) {
-                ids[i] = buf.readResourceLocation();
-            }
-            return ids;
-        }
-
-        @Contract(value = "_ -> param1", pure = true)
-        @Override
-        public @NotNull ResourceLocation[] copy(ResourceLocation[] id) {
-            ResourceLocation[] temp = new ResourceLocation[id.length];
-            System.arraycopy(id, 0, temp, 0, id.length);
-            return temp;
-        }
-    };
 
     public static void register() {
         EntityDataSerializers.registerSerializer(LAUNCH_STAGE);
-        EntityDataSerializers.registerSerializer(ROCKET_PART);
-        EntityDataSerializers.registerSerializer(ROCKET_UPGRADES);
+        EntityDataSerializers.registerSerializer(IDENTIFIER);
     }
 }

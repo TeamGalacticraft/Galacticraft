@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -54,11 +54,4 @@ public non-sealed abstract class RocketBodyType<C extends RocketBodyConfig> impl
      */
     @Contract(pure = true)
     public abstract int getMaxPassengers(@NotNull C config);
-
-    /**
-     * Returns the maximum number of upgrades that can be installed on this rocket.
-     * @return the maximum number of upgrades that can be installed on this rocket.
-     */
-    @Contract(pure = true)
-    public abstract int getUpgradeCapacity(@NotNull C config);
 }

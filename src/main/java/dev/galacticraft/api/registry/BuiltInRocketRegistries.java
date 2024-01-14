@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,11 +27,12 @@ import dev.galacticraft.api.rocket.part.type.*;
 import dev.galacticraft.api.rocket.recipe.type.RocketPartRecipeType;
 import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
 import dev.galacticraft.impl.rocket.part.type.*;
+import dev.galacticraft.impl.rocket.recipe.type.CenteredPatternedRocketPartRecipeType;
 import dev.galacticraft.impl.rocket.recipe.type.PatternedRocketPartRecipeType;
 import dev.galacticraft.impl.rocket.travelpredicate.type.*;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.rocket.part.type.StorageUpgradeType;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
-import net.minecraft.core.DefaultedMappedRegistry;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
@@ -44,55 +45,34 @@ public final class BuiltInRocketRegistries {
                     true
             )).buildAndRegister();
 
-    public static final WritableRegistry<RocketConeType<?>> ROCKET_CONE_TYPE = FabricRegistryBuilder.from(
-            new DefaultedMappedRegistry<>(Constant.Misc.INVALID.toString(),
-                    RocketRegistries.ROCKET_CONE_TYPE,
-                    Lifecycle.experimental(),
-                    false
-            )).buildAndRegister();
+    public static final WritableRegistry<RocketConeType<?>> ROCKET_CONE_TYPE = FabricRegistryBuilder.createSimple(
+            RocketRegistries.ROCKET_CONE_TYPE
+    ).buildAndRegister();
 
-    public static final WritableRegistry<RocketBodyType<?>> ROCKET_BODY_TYPE = FabricRegistryBuilder.from(
-            new DefaultedMappedRegistry<>(Constant.Misc.INVALID.toString(),
-                    RocketRegistries.ROCKET_BODY_TYPE,
-                    Lifecycle.experimental(),
-                    false
-            )).buildAndRegister();
+    public static final WritableRegistry<RocketBodyType<?>> ROCKET_BODY_TYPE = FabricRegistryBuilder.createSimple(
+            RocketRegistries.ROCKET_BODY_TYPE
+    ).buildAndRegister();
 
-    public static final WritableRegistry<RocketFinType<?>> ROCKET_FIN_TYPE = FabricRegistryBuilder.from(
-            new DefaultedMappedRegistry<>(Constant.Misc.INVALID.toString(),
-                    RocketRegistries.ROCKET_FIN_TYPE,
-                    Lifecycle.experimental(),
-                    false
-            )).buildAndRegister();
+    public static final WritableRegistry<RocketFinType<?>> ROCKET_FIN_TYPE = FabricRegistryBuilder.createSimple(
+            RocketRegistries.ROCKET_FIN_TYPE
+    ).buildAndRegister();
 
-    public static final WritableRegistry<RocketBoosterType<?>> ROCKET_BOOSTER_TYPE = FabricRegistryBuilder.from(
-            new DefaultedMappedRegistry<>(Constant.Misc.INVALID.toString(),
-                    RocketRegistries.ROCKET_BOOSTER_TYPE,
-                    Lifecycle.experimental(),
-                    false
-            )).buildAndRegister();
+    public static final WritableRegistry<RocketBoosterType<?>> ROCKET_BOOSTER_TYPE = FabricRegistryBuilder.createSimple(
+            RocketRegistries.ROCKET_BOOSTER_TYPE
+    ).buildAndRegister();
 
-    public static final WritableRegistry<RocketBottomType<?>> ROCKET_BOTTOM_TYPE = FabricRegistryBuilder.from(
-            new DefaultedMappedRegistry<>(Constant.Misc.INVALID.toString(),
-                    RocketRegistries.ROCKET_BOTTOM_TYPE,
-                    Lifecycle.experimental(),
-                    false
-            )).buildAndRegister();
+    public static final WritableRegistry<RocketEngineType<?>> ROCKET_ENGINE_TYPE = FabricRegistryBuilder.createSimple(
+            RocketRegistries.ROCKET_ENGINE_TYPE
+    ).buildAndRegister();
 
-    public static final WritableRegistry<RocketUpgradeType<?>> ROCKET_UPGRADE_TYPE = FabricRegistryBuilder.from(
-            new DefaultedMappedRegistry<>(Constant.Misc.INVALID.toString(),
-                    RocketRegistries.ROCKET_UPGRADE_TYPE,
-                    Lifecycle.experimental(),
-                    false
-            )).buildAndRegister();
+    public static final WritableRegistry<RocketUpgradeType<?>> ROCKET_UPGRADE_TYPE = FabricRegistryBuilder.createSimple(
+            RocketRegistries.ROCKET_UPGRADE_TYPE
+    ).buildAndRegister();
 
 
-    public static final WritableRegistry<RocketPartRecipeType<?>> ROCKET_PART_RECIPE_TYPE = FabricRegistryBuilder.from(
-            new DefaultedMappedRegistry<>(Constant.id("slotted_default").toString(),
-                    RocketRegistries.ROCKET_PART_RECIPE_TYPE,
-                    Lifecycle.experimental(),
-                    false
-            )).buildAndRegister();
+    public static final WritableRegistry<RocketPartRecipeType<?>> ROCKET_PART_RECIPE_TYPE = FabricRegistryBuilder.createSimple(
+            RocketRegistries.ROCKET_PART_RECIPE_TYPE
+    ).buildAndRegister();
 
     public static void initialize() {
     }
@@ -104,21 +84,14 @@ public final class BuiltInRocketRegistries {
         Registry.register(TRAVEL_PREDICATE_TYPE, new ResourceLocation(Constant.MOD_ID, "and"), AndTravelPredicateType.INSTANCE);
         Registry.register(TRAVEL_PREDICATE_TYPE, new ResourceLocation(Constant.MOD_ID, "or"), OrTravelPredicateType.INSTANCE);
 
-        Registry.register(ROCKET_CONE_TYPE, Constant.Misc.INVALID, InvalidRocketConeType.INSTANCE);
-        Registry.register(ROCKET_BODY_TYPE, Constant.Misc.INVALID, InvalidRocketBodyType.INSTANCE);
-        Registry.register(ROCKET_FIN_TYPE, Constant.Misc.INVALID, InvalidRocketFinType.INSTANCE);
-        Registry.register(ROCKET_BOOSTER_TYPE, Constant.Misc.INVALID, InvalidRocketBoosterType.INSTANCE);
-        Registry.register(ROCKET_BOTTOM_TYPE, Constant.Misc.INVALID, InvalidRocketBottomType.INSTANCE);
-        Registry.register(ROCKET_UPGRADE_TYPE, Constant.Misc.INVALID, InvalidRocketUpgradeType.INSTANCE);
-
         Registry.register(ROCKET_CONE_TYPE, new ResourceLocation(Constant.MOD_ID, "basic"), BasicRocketConeType.INSTANCE);
         Registry.register(ROCKET_BODY_TYPE, new ResourceLocation(Constant.MOD_ID, "basic"), BasicRocketBodyType.INSTANCE);
         Registry.register(ROCKET_FIN_TYPE, new ResourceLocation(Constant.MOD_ID, "basic"), BasicRocketFinType.INSTANCE);
         Registry.register(ROCKET_BOOSTER_TYPE, new ResourceLocation(Constant.MOD_ID, "basic"), BasicRocketBoosterType.INSTANCE);
-        Registry.register(ROCKET_BOTTOM_TYPE, new ResourceLocation(Constant.MOD_ID, "basic"), BasicRocketBottomType.INSTANCE);
+        Registry.register(ROCKET_ENGINE_TYPE, new ResourceLocation(Constant.MOD_ID, "basic"), BasicRocketEngineType.INSTANCE);
+        Registry.register(ROCKET_UPGRADE_TYPE, new ResourceLocation(Constant.MOD_ID, "storage"), StorageUpgradeType.INSTANCE);
 
-        Registry.register(ROCKET_PART_RECIPE_TYPE, Constant.id("slotted_default"), PatternedRocketPartRecipeType.INSTANCE);
-
-        Registry.register(ROCKET_UPGRADE_TYPE, new ResourceLocation(Constant.MOD_ID, "no_upgrade"), NoUpgradeRocketUpgradeType.INSTANCE);
+        Registry.register(ROCKET_PART_RECIPE_TYPE, Constant.id("wrap_patterned"), PatternedRocketPartRecipeType.INSTANCE);
+        Registry.register(ROCKET_PART_RECIPE_TYPE, Constant.id("centered_patterned"), CenteredPatternedRocketPartRecipeType.INSTANCE);
     }
 }

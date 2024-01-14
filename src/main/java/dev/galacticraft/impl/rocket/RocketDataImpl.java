@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,113 +25,43 @@ package dev.galacticraft.impl.rocket;
 import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.*;
-import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
-import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCRocketParts;
 import net.minecraft.Util;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 @ApiStatus.Internal
-public record RocketDataImpl(int color, ResourceLocation cone, ResourceLocation body, ResourceLocation fin, ResourceLocation booster,
-                             ResourceLocation bottom, ResourceLocation[] upgrades) implements RocketData {
-    public static final RocketDataImpl EMPTY = new RocketDataImpl(0xffffffff, Constant.Misc.INVALID, Constant.Misc.INVALID, Constant.Misc.INVALID, Constant.Misc.INVALID, Constant.Misc.INVALID, new ResourceLocation[0]);
+public record RocketDataImpl(int color, @Nullable ResourceKey<RocketCone<?, ?>> cone, @Nullable ResourceKey<RocketBody<?, ?>> body,
+                             @Nullable ResourceKey<RocketFin<?, ?>> fin, @Nullable ResourceKey<RocketBooster<?, ?>> booster,
+                             @Nullable ResourceKey<RocketEngine<?, ?>> engine, @Nullable ResourceKey<RocketUpgrade<?, ?>> upgrade) implements RocketData {
+
     public static final CompoundTag DEFAULT_ROCKET = Util.make(new CompoundTag(), tag -> {
-        tag.putInt("Tier", 1);
-        tag.putInt("Color", 0xFFFFFFFF);
-        tag.putString("Cone", GCRocketParts.TIER_1_CONE.location().toString());
-        tag.putString("Body", GCRocketParts.TIER_1_BODY.location().toString());
-        tag.putString("Fin", GCRocketParts.TIER_1_FIN.location().toString());
-        tag.putString("Booster", GCRocketParts.TIER_1_BOOSTER.location().toString());
-        tag.putString("Bottom", GCRocketParts.TIER_1_BOTTOM.location().toString());
-        tag.put("Upgrade", new ListTag());
+        RocketData.create(0xFFFFFFFF,
+                        GCRocketParts.TIER_1_CONE,
+                        GCRocketParts.TIER_1_BODY,
+                        GCRocketParts.TIER_1_FIN,
+                        null,
+                        GCRocketParts.TIER_1_ENGINE,
+                        null)
+                .toNbt(tag);
     });
 
-    public static RocketDataImpl fromNbt(CompoundTag nbt) {
-        if (nbt.getBoolean("Empty")) return empty();
-        ListTag upgradeList = nbt.getList("Upgrade", Tag.TAG_STRING);
-        ResourceLocation[] upgrades = new ResourceLocation[upgradeList.size()];
-        for (int i = 0; i < upgradeList.size(); i++) {
-            upgrades[i] = new ResourceLocation(upgradeList.getString(i));
-        }
+    @Contract("_ -> new")
+    public static @NotNull RocketDataImpl fromNbt(CompoundTag nbt) {
         return new RocketDataImpl(
                 nbt.getInt("Color"),
-                new ResourceLocation(nbt.getString("Cone")),
-                new ResourceLocation(nbt.getString("Body")),
-                new ResourceLocation(nbt.getString("Fin")),
-                new ResourceLocation(nbt.getString("Booster")),
-                new ResourceLocation(nbt.getString("Bottom")),
-                upgrades
+                nbt.contains("Cone") ? ResourceKey.create(RocketRegistries.ROCKET_CONE, new ResourceLocation(nbt.getString("Cone"))) : null,
+                nbt.contains("Body") ? ResourceKey.create(RocketRegistries.ROCKET_BODY, new ResourceLocation(nbt.getString("Body"))) : null,
+                nbt.contains("Fin") ? ResourceKey.create(RocketRegistries.ROCKET_FIN, new ResourceLocation(nbt.getString("Fin"))) : null,
+                nbt.contains("Booster") ? ResourceKey.create(RocketRegistries.ROCKET_BOOSTER, new ResourceLocation(nbt.getString("Booster"))) : null,
+                nbt.contains("Engine") ? ResourceKey.create(RocketRegistries.ROCKET_ENGINE, new ResourceLocation(nbt.getString("Engine"))) : null,
+                nbt.contains("Upgrade") ? ResourceKey.create(RocketRegistries.ROCKET_UPGRADE, new ResourceLocation(nbt.getString("Upgrade"))) : null
         );
-    }
-
-    public static @Unmodifiable @NotNull RocketDataImpl empty() {
-        return EMPTY;
-    }
-
-    @Contract("_ -> param1")
-    @Override
-    public @NotNull CompoundTag toNbt(@NotNull CompoundTag nbt) {
-        if (this.isEmpty()) {
-            nbt.putBoolean("Empty", true);
-            return nbt;
-        }
-        nbt.putInt("Color", this.color());
-        nbt.putString("Cone", this.cone().toString());
-        nbt.putString("Body", this.body().toString());
-        nbt.putString("Fin", this.fin().toString());
-        nbt.putString("Booster", this.booster().toString());
-        nbt.putString("Bottom", this.bottom().toString());
-        ListTag list = new ListTag();
-        for (ResourceLocation upgrade : this.upgrades) {
-            list.add(StringTag.valueOf(upgrade.toString()));
-        }
-        nbt.put("Upgrades", list);
-        return nbt;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return this == EMPTY;
-    }
-
-    @Override
-    public boolean canTravel(@NotNull RegistryAccess manager, CelestialBody<?, ?> from, CelestialBody<?, ?> to) {
-        TravelPredicateType.Result type = TravelPredicateType.Result.PASS;
-        RocketCone<?, ?> cone = manager.registryOrThrow(RocketRegistries.ROCKET_CONE).get(this.cone());
-        RocketBody<?, ?> body = manager.registryOrThrow(RocketRegistries.ROCKET_BODY).get(this.body());
-        RocketFin<?, ?> fin = manager.registryOrThrow(RocketRegistries.ROCKET_FIN).get(this.fin());
-        RocketBooster<?, ?> booster = manager.registryOrThrow(RocketRegistries.ROCKET_BOOSTER).get(this.booster());
-        RocketBottom<?, ?> bottom = manager.registryOrThrow(RocketRegistries.ROCKET_BOTTOM).get(this.bottom());
-        RocketUpgrade<?, ?>[] upgrades = new RocketUpgrade[this.upgrades.length];
-
-        Registry<RocketUpgrade<?, ?>> registry = manager.registryOrThrow(RocketRegistries.ROCKET_UPGRADE);
-        for (int i = 0; i < this.upgrades.length; i++) {
-            upgrades[i] = registry.get(this.upgrades[i]);
-            assert upgrades[i] != null;
-        }
-        assert cone != null;
-        assert body != null;
-        assert fin != null;
-        assert booster != null;
-        assert bottom != null;
-
-        type = type.merge(cone.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrades));
-        type = type.merge(body.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrades));
-        type = type.merge(fin.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrades));
-        type = type.merge(booster.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrades));
-        type = type.merge(bottom.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrades));
-        for (RocketUpgrade<?, ?> upgrade : upgrades) {
-            type = type.merge(upgrade.travelPredicate().canTravel(from, to, cone, body, fin, booster, bottom, upgrades));
-        }
-
-        return type == TravelPredicateType.Result.ALLOW;
     }
 }

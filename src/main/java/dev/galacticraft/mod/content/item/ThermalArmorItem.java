@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
@@ -50,7 +49,7 @@ public class ThermalArmorItem extends Item {
 
     @Override //should sync with server
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
-        Container inv = player.getThermalArmor();
+        Container inv = player.galacticraft$getThermalArmor();
         ItemStack thermalPiece = inv.getItem(this.getSlotIdForType(this.getSlotGroup()));
         if (thermalPiece.isEmpty()) {
             inv.setItem(this.getSlotIdForType(getSlotGroup()), player.getItemInHand(hand));

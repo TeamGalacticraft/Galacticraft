@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -66,7 +66,7 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
         super(GCMenuTypes.PLAYER_INV_GC, syncId);
 
         this.player = player;
-        this.inventory = player.getGearInv();
+        this.inventory = player.galacticraft$getGearInv();
 
         for (int slotY = 0; slotY < 4; ++slotY) {
             EquipmentSlot slot = EQUIPMENT_SLOT_ORDER[slotY];

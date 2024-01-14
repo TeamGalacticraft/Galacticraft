@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft:models/block/fuel_loader"
+      "model": "galacticraft:machine/fuel_loader"
     }
   }
 }

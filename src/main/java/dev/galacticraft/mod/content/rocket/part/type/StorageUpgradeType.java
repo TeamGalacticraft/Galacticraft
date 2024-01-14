@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,25 +22,26 @@
 
 package dev.galacticraft.mod.content.rocket.part.type;
 
-import com.mojang.serialization.Codec;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.rocket.part.type.RocketUpgradeType;
+import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
 import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
 import dev.galacticraft.impl.rocket.travelpredicate.config.ConstantTravelPredicateConfig;
 import dev.galacticraft.impl.rocket.travelpredicate.type.ConstantTravelPredicateType;
 import dev.galacticraft.mod.content.rocket.part.config.StorageUpgradeConfig;
-import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class StorageUpgradeType extends RocketUpgradeType<StorageUpgradeConfig> {
-    protected StorageUpgradeType(@NotNull Codec<StorageUpgradeConfig> configCodec) {
-        super(configCodec);
+    public static final StorageUpgradeType INSTANCE = new StorageUpgradeType();
+
+    protected StorageUpgradeType() {
+        super(StorageUpgradeConfig.CODEC);
     }
 
-    @Override
-    public @NotNull Ingredient upgradeRecipe(@NotNull StorageUpgradeConfig config) {
-        return config.recipe();
+    public int getSlots(@NotNull StorageUpgradeConfig config) {
+        return config.chests() * 27;
     }
 
     @Override
@@ -51,5 +52,10 @@ public class StorageUpgradeType extends RocketUpgradeType<StorageUpgradeConfig> 
     @Override
     public @NotNull ConfiguredTravelPredicate<?, ?> travelPredicate(@NotNull StorageUpgradeConfig config) {
         return ConstantTravelPredicateType.INSTANCE.configure(new ConstantTravelPredicateConfig(TravelPredicateType.Result.PASS));
+    }
+
+    @Override
+    public @Nullable RocketPartRecipe<?, ?> getRecipe(StorageUpgradeConfig config) {
+        return config.recipe();
     }
 }

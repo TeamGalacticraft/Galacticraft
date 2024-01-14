@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,9 +25,11 @@ package dev.galacticraft.impl.rocket.part.type;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.rocket.part.type.RocketConeType;
+import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
 import dev.galacticraft.impl.rocket.part.config.BasicRocketConeConfig;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class BasicRocketConeType extends RocketConeType<BasicRocketConeConfig> {
     public static final BasicRocketConeType INSTANCE = new BasicRocketConeType(BasicRocketConeConfig.CODEC);
@@ -43,5 +45,10 @@ public final class BasicRocketConeType extends RocketConeType<BasicRocketConeCon
     @Override
     public @NotNull ConfiguredTravelPredicate<?, ?> travelPredicate(@NotNull BasicRocketConeConfig config) {
         return config.predicate();
+    }
+
+    @Override
+    public @Nullable RocketPartRecipe<?, ?> getRecipe(BasicRocketConeConfig config) {
+        return config.recipe();
     }
 }

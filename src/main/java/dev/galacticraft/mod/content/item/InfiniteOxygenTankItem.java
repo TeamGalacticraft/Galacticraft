@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,7 +35,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
@@ -92,11 +91,6 @@ public class InfiniteOxygenTankItem extends Item implements Storage<FluidVariant
     }
 
     @Override
-    public long simulateInsert(FluidVariant resource, long maxAmount, @Nullable TransactionContext transaction) {
-        return 0;
-    }
-
-    @Override
     public boolean supportsExtraction() {
         return true;
     }
@@ -130,23 +124,7 @@ public class InfiniteOxygenTankItem extends Item implements Storage<FluidVariant
     }
 
     @Override
-    public long simulateExtract(FluidVariant resource, long maxAmount, @Nullable TransactionContext transaction) {
-        if (resource.isOf(Gases.OXYGEN)) {
-            return maxAmount;
-        }
-        return 0;
-    }
-
-    @Override
     public Iterator<StorageView<FluidVariant>> iterator() {
         return Iterators.singletonIterator(this);
-    }
-
-    @Override
-    public @Nullable StorageView<FluidVariant> exactView(@NotNull FluidVariant resource) {
-        if (resource.isOf(Gases.OXYGEN)) {
-            return this;
-        }
-        return null;
     }
 }

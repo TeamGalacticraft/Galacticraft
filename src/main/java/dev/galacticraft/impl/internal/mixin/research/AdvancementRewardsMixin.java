@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,7 +45,7 @@ import java.util.Arrays;
 public abstract class AdvancementRewardsMixin implements AdvancementRewardsAccessor {
     @Unique
     @NotNull
-    private ResourceLocation @Nullable [] rocketParts = null;
+    private ResourceLocation @Nullable [] rocketPartRecipes = null;
 
     @Inject(method = "deserialize", at = @At("RETURN"))
     private static void galacticraft_parseRocketPartReward(JsonObject json, CallbackInfoReturnable<AdvancementRewards> cir) {
@@ -56,25 +56,23 @@ public abstract class AdvancementRewardsMixin implements AdvancementRewardsAcces
             for (int i = 0; i < array.size(); i++) {
                 ids[i] = new ResourceLocation(array.get(i).getAsString());
             }
-            ((AdvancementRewardsAccessor) rewards).setRocketPartRewards(ids);
+            ((AdvancementRewardsAccessor) rewards).setRocketPartRecipeRewards(ids);
         }
     }
 
     @Inject(method = "grant", at = @At("RETURN"))
     private void galacticraft_applyRocketPartsToPlayer(ServerPlayer player, CallbackInfo ci) {
-        if (this.rocketParts != null) {
-            for (ResourceLocation id : this.rocketParts) {
-                ((ServerResearchAccessor) player).unlockResearch(id, true);
-            }
+        if (this.rocketPartRecipes != null) {
+            ((ServerResearchAccessor) player).galacticraft$unlockRocketPartRecipes(this.rocketPartRecipes);
         }
     }
 
     @Inject(method = "serializeToJson", at = @At("RETURN"), cancellable = true)
     private void galacticraft_writeRocketPartRewardsToJson(CallbackInfoReturnable<JsonElement> cir) {
-        if (this.rocketParts != null) {
+        if (this.rocketPartRecipes != null) {
             JsonObject object = cir.getReturnValue().getAsJsonObject();
             JsonArray array = new JsonArray();
-            for (ResourceLocation id : this.rocketParts) {
+            for (ResourceLocation id : this.rocketPartRecipes) {
                 array.add(id.toString());
             }
             object.add("rocket_parts", array);
@@ -85,11 +83,11 @@ public abstract class AdvancementRewardsMixin implements AdvancementRewardsAcces
     @Inject(method = "toString", at = @At("RETURN"), cancellable = true)
     private void galacticraft_appendRocketPartsToString(CallbackInfoReturnable<String> cir) {
         String s = cir.getReturnValue();
-        cir.setReturnValue(s.substring(0, s.length() - 1) + ", parts=" + Arrays.toString(this.rocketParts) + '}');
+        cir.setReturnValue(s.substring(0, s.length() - 1) + ", parts=" + Arrays.toString(this.rocketPartRecipes) + '}');
     }
 
     @Override
-    public void setRocketPartRewards(@NotNull ResourceLocation @Nullable [] parts) {
-        this.rocketParts = parts;
+    public void setRocketPartRecipeRewards(@NotNull ResourceLocation @Nullable [] recipes) {
+        this.rocketPartRecipes = recipes;
     }
 }

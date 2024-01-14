@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,10 +37,10 @@ public final class AndTravelPredicateType extends TravelPredicateType<AndTravelP
     }
 
     @Override
-    public Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, RocketCone<?, ?> cone, RocketBody<?, ?> body, RocketFin<?, ?> fin, RocketBooster<?, ?> booster, RocketBottom<?, ?> bottom, RocketUpgrade<?, ?>[] upgrades, AndTravelPredicateConfig config) {
+    public Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, RocketCone<?, ?> cone, RocketBody<?, ?> body, RocketFin<?, ?> fin, RocketBooster<?, ?> booster, RocketEngine<?, ?> engine, RocketUpgrade<?, ?> upgrade, AndTravelPredicateConfig config) {
         Result result = Result.PASS;
         for (ConfiguredTravelPredicate<?, ?> predicate : config.predicates()) {
-            result = result.merge(predicate.canTravel(from, to, cone, body, fin, booster, bottom, upgrades));
+            result = result.merge(predicate.canTravel(from, to, cone, body, fin, booster, engine, upgrade));
         }
         return result;
     }

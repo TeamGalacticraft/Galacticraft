@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,12 +25,17 @@ package dev.galacticraft.impl.rocket.part.config;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.rocket.part.config.RocketBodyConfig;
+import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
+import org.jetbrains.annotations.Nullable;
 
-public record BasicRocketBodyConfig(ConfiguredTravelPredicate<?, ?> predicate, int maxPassengers, int upgradeCapacity) implements RocketBodyConfig {
+import java.util.Optional;
+
+public record BasicRocketBodyConfig(ConfiguredTravelPredicate<?, ?> predicate, int maxPassengers, @Nullable RocketPartRecipe<?,?> recipe) implements RocketBodyConfig {
     public static final Codec<BasicRocketBodyConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ConfiguredTravelPredicate.DIRECT_CODEC.fieldOf("predicate").forGetter(BasicRocketBodyConfig::predicate),
             Codec.INT.fieldOf("max_passengers").forGetter(BasicRocketBodyConfig::maxPassengers),
-            Codec.INT.fieldOf("upgrade_capacity").forGetter(BasicRocketBodyConfig::upgradeCapacity)
-    ).apply(instance, BasicRocketBodyConfig::new));
+            RocketPartRecipe.DIRECT_CODEC.optionalFieldOf("recipe").forGetter(config -> Optional.ofNullable(config.recipe))
+    ).apply(instance, (ConfiguredTravelPredicate<?, ?> predicate, Integer maxPassengers, Optional<RocketPartRecipe<?, ?>> recipe) ->
+            new BasicRocketBodyConfig(predicate, maxPassengers, recipe.orElse(null))));
 }

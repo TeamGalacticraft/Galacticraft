@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -50,7 +50,7 @@ public abstract class ChunkHolderMixin {
 
     @Shadow @Final private ChunkHolder.PlayerProvider playerProvider;
 
-    @Shadow @Final private ChunkPos pos;
+    @Shadow @Final ChunkPos pos;
 
     @Inject(method = "broadcastChanges", at = @At("HEAD"))
     private void galacticraft_flushOxygenPackets(LevelChunk chunk, CallbackInfo ci) {

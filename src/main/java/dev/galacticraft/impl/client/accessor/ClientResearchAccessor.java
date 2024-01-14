@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,11 +25,11 @@ package dev.galacticraft.impl.client.accessor;
 import dev.galacticraft.api.accessor.ResearchAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 
 @Environment(EnvType.CLIENT)
 @ApiStatus.Internal
 public interface ClientResearchAccessor extends ResearchAccessor {
-    void readChanges(FriendlyByteBuf buf);
+    void galacticraft$updateResearch(boolean add, ResourceLocation[] ids);
 }

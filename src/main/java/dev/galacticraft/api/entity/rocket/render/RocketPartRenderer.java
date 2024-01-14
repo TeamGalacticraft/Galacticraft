@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,13 +36,14 @@ public interface RocketPartRenderer {
     /**
      * Called when this rocket part is being rendered inside a gui/screen.
      *
-     * @param world    the client world of the main player
      * @param graphics the gui graphics which has various methods for gui rendering; it also contains the matrix stack
+     * @param x
+     * @param y
      * @param mouseX   the x position of the mouse
      * @param mouseY   the y position of the mouse
      * @param delta    time in-between ticks
      */
-    default void renderGUI(ClientLevel world, GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    default void renderGUI(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float delta) {
     }
 
     void render(ClientLevel world, PoseStack matrices, Rocket rocket, MultiBufferSource vertices, float delta, int light);

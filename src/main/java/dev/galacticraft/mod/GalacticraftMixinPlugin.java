@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,8 +35,6 @@ import java.util.Set;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftMixinPlugin implements IMixinConfigPlugin {
-    private static final boolean COMPRESS_DATAGEN = System.getProperty("fabric-api.datagen") != null && System.getProperty("galacticraft.mixin.compress_datagen") != null;
-
     @Override
     public void onLoad(String mixinPackage) {
     }
@@ -61,9 +59,6 @@ public class GalacticraftMixinPlugin implements IMixinConfigPlugin {
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
             if (Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled()) {
                 optionalMixins.add(Constant.Mixin.STRUCTURE_POOL_DEBUG);
-            }
-            if (COMPRESS_DATAGEN) {
-                optionalMixins.add(Constant.Mixin.DATAGEN_COMPRESSION);
             }
         }
         return optionalMixins;

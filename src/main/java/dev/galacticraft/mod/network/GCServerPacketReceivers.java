@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,26 +25,27 @@ package dev.galacticraft.mod.network;
 import dev.galacticraft.api.accessor.SatelliteAccessor;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.rocket.LaunchStage;
-import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.entity.Rocket;
+import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.api.rocket.part.RocketPartTypes;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.api.universe.celestialbody.landable.Landable;
-import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.content.entity.LanderEntity;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import dev.galacticraft.mod.events.GCEventHandlers;
-import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
 import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
 import dev.galacticraft.mod.screen.RocketMenu;
+import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;
@@ -53,7 +54,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -103,6 +103,22 @@ public class GCServerPacketReceivers {
                             machine.setTargetSize(max);
                         }
                     }
+                }
+            });
+        });
+
+        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.SELECT_PART, (server, player, handler, buf, responseSender) -> {
+            RocketPartTypes value = RocketPartTypes.values()[buf.readByte()];
+            ResourceKey<RocketPart<?, ?>> key;
+            if (buf.readBoolean()) {
+                key = ResourceKey.create(((ResourceKey<? extends Registry<RocketPart<?, ?>>>) value.key), buf.readResourceLocation());
+            } else {
+                key = null;
+            }
+            server.execute(() -> {
+                if (player.containerMenu instanceof RocketWorkbenchMenu menu) {
+                    menu.getSelection(value).setSelection(key == null ? null : (Holder.Reference) server.registryAccess().registryOrThrow(value.key).getHolderOrThrow(key));
+                    menu.workbench.setChanged();
                 }
             });
         });
@@ -221,10 +237,10 @@ public class GCServerPacketReceivers {
 
         ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.PLANET_TP, ((server, player, handler, buf, responseSender) -> {
             FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
-            if (player.getCelestialScreenState() != null) {
+            if (player.galacticraft$isCelestialScreenActive()) {
                 server.execute(() -> {
                     ResourceLocation id = buffer.readResourceLocation();
-                    CelestialBody<?, ?> body = ((SatelliteAccessor) server).getSatellites().get(id);
+                    CelestialBody<?, ?> body = ((SatelliteAccessor) server).galacticraft$getSatellites().get(id);
                     CelestialBody<?, ?> fromBody = CelestialBody.getByDimension(player.level()).orElseThrow();
                     if (body == null) body = server.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).get(id);
                     GCEventHandlers.onPlayerChangePlanets(server, player, body, fromBody);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,6 @@ package dev.galacticraft.mod.content;
 
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
-import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.machine.MachineType;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
@@ -37,7 +36,6 @@ import dev.galacticraft.machinelib.api.transfer.InputType;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.screen.*;
@@ -49,14 +47,11 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 
-import java.util.List;
-
 public class GCMachineTypes {
     public static final MachineType<CoalGeneratorBlockEntity, CoalGeneratorMenu> COAL_GENERATOR = MachineType.create(
             GCBlocks.COAL_GENERATOR,
             GCBlockEntityTypes.COAL_GENERATOR,
             GCMenuTypes.COAL_GENERATOR,
-            List.of(GCMachineStatuses.NO_FUEL, GCMachineStatuses.WARMING_UP, GCMachineStatuses.GENERATING, GCMachineStatuses.COOLING_DOWN, MachineStatuses.CAPACITOR_FULL),
             () -> MachineEnergyStorage.create(
                     Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize(),
                     Galacticraft.CONFIG_MANAGER.get().coalGeneratorEnergyProductionRate() * 2,
@@ -78,7 +73,6 @@ public class GCMachineTypes {
             GCBlocks.BASIC_SOLAR_PANEL,
             GCBlockEntityTypes.BASIC_SOLAR_PANEL,
             GCMenuTypes.BASIC_SOLAR_PANEL,
-            List.of(GCMachineStatuses.BLOCKED, GCMachineStatuses.PARTIALLY_BLOCKED, GCMachineStatuses.COLLECTING, GCMachineStatuses.RAIN, GCMachineStatuses.NIGHT, MachineStatuses.CAPACITOR_FULL),
             () -> MachineEnergyStorage.create(
                     Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize(),
                     Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate() * 2,
@@ -97,7 +91,6 @@ public class GCMachineTypes {
             GCBlocks.ADVANCED_SOLAR_PANEL,
             GCBlockEntityTypes.ADVANCED_SOLAR_PANEL,
             GCMenuTypes.ADVANCED_SOLAR_PANEL,
-            List.of(GCMachineStatuses.BLOCKED, GCMachineStatuses.PARTIALLY_BLOCKED, GCMachineStatuses.COLLECTING, GCMachineStatuses.RAIN, GCMachineStatuses.NIGHT, MachineStatuses.CAPACITOR_FULL),
             () -> MachineEnergyStorage.create(
                     Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize(),
                     Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate() * 2,
@@ -116,7 +109,6 @@ public class GCMachineTypes {
             GCBlocks.CIRCUIT_FABRICATOR,
             GCBlockEntityTypes.CIRCUIT_FABRICATOR,
             GCMenuTypes.CIRCUIT_FABRICATOR,
-            List.of(GCMachineStatuses.FABRICATING, MachineStatuses.NOT_ENOUGH_ENERGY, MachineStatuses.OUTPUT_FULL, MachineStatuses.INVALID_RECIPE),
             () -> MachineEnergyStorage.create(
                     Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize(),
                     Galacticraft.CONFIG_MANAGER.get().circuitFabricatorEnergyConsumptionRate() * 2,
@@ -151,7 +143,6 @@ public class GCMachineTypes {
             GCBlocks.COMPRESSOR,
             GCBlockEntityTypes.COMPRESSOR,
             GCMenuTypes.COMPRESSOR,
-            List.of(GCMachineStatuses.COMPRESSING, GCMachineStatuses.NO_FUEL, MachineStatuses.OUTPUT_FULL, MachineStatuses.INVALID_RECIPE),
             MachineEnergyStorage::empty,
             MachineItemStorage.builder()
                     .add(ItemResourceSlot.builder(InputType.TRANSFER)
@@ -169,7 +160,6 @@ public class GCMachineTypes {
             GCBlocks.ELECTRIC_ARC_FURNACE,
             GCBlockEntityTypes.ELECTRIC_ARC_FURNACE,
             GCMenuTypes.ELECTRIC_ARC_FURNACE,
-            List.of(MachineStatuses.ACTIVE, MachineStatuses.NOT_ENOUGH_ENERGY, MachineStatuses.OUTPUT_FULL, MachineStatuses.INVALID_RECIPE),
             () -> MachineEnergyStorage.create(
                     Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize(),
                     Galacticraft.CONFIG_MANAGER.get().electricArcFurnaceEnergyConsumptionRate() * 2,
@@ -194,7 +184,6 @@ public class GCMachineTypes {
             GCBlocks.ELECTRIC_COMPRESSOR,
             GCBlockEntityTypes.ELECTRIC_COMPRESSOR,
             GCMenuTypes.ELECTRIC_COMPRESSOR,
-            List.of(GCMachineStatuses.COMPRESSING, MachineStatuses.NOT_ENOUGH_ENERGY, MachineStatuses.OUTPUT_FULL, MachineStatuses.INVALID_RECIPE),
             () -> MachineEnergyStorage.create(
                     Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize(),
                     Galacticraft.CONFIG_MANAGER.get().electricCompressorEnergyConsumptionRate() * 2,
@@ -220,7 +209,6 @@ public class GCMachineTypes {
             GCBlocks.ELECTRIC_FURNACE,
             GCBlockEntityTypes.ELECTRIC_FURNACE,
             GCMenuTypes.ELECTRIC_FURNACE,
-            List.of(MachineStatuses.ACTIVE, MachineStatuses.NOT_ENOUGH_ENERGY, MachineStatuses.OUTPUT_FULL, MachineStatuses.INVALID_RECIPE),
             () -> MachineEnergyStorage.create(
                     Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize(),
                     Galacticraft.CONFIG_MANAGER.get().electricFurnaceEnergyConsumptionRate() * 2,
@@ -243,7 +231,6 @@ public class GCMachineTypes {
             GCBlocks.ENERGY_STORAGE_MODULE,
             GCBlockEntityTypes.ENERGY_STORAGE_MODULE,
             GCMenuTypes.ENERGY_STORAGE_MODULE,
-            List.of(MachineStatuses.ACTIVE),
             () -> MachineEnergyStorage.create(
                     Galacticraft.CONFIG_MANAGER.get().energyStorageModuleStorageSize(),
                     Galacticraft.CONFIG_MANAGER.get().energyStorageModuleStorageSize() / 200,
@@ -265,7 +252,6 @@ public class GCMachineTypes {
             GCBlocks.FUEL_LOADER,
             GCBlockEntityTypes.FUEL_LOADER,
             GCMenuTypes.FUEL_LOADER,
-            List.of(GCMachineStatuses.NO_ROCKET, GCMachineStatuses.LOADING, MachineStatuses.NOT_ENOUGH_ENERGY),
             () -> MachineEnergyStorage.create(
                     Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize(),
                     150 * 2, // fixme
@@ -279,7 +265,7 @@ public class GCMachineTypes {
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(80, 62)
-                            .filter(ResourceFilters.canExtractFluid(GCFluids.FUEL)) // fixme: fuel api?,
+                            .filter(ResourceFilters.canExtractFluid(GCFluids.FUEL)) // fixme: fuel tag?,
             ),
             MachineFluidStorage.of(
                     FluidResourceSlot.builder(InputType.INPUT)
@@ -293,7 +279,6 @@ public class GCMachineTypes {
             GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR,
             GCBlockEntityTypes.OXYGEN_BUBBLE_DISTRIBUTOR,
             GCMenuTypes.OXYGEN_BUBBLE_DISTRIBUTOR,
-            List.of(GCMachineStatuses.DISTRIBUTING, GCMachineStatuses.NOT_ENOUGH_OXYGEN, MachineStatuses.NOT_ENOUGH_ENERGY),
             () -> MachineEnergyStorage.create(
                     Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize(),
                     Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate() * 2, // fixme
@@ -321,7 +306,6 @@ public class GCMachineTypes {
             GCBlocks.OXYGEN_COLLECTOR,
             GCBlockEntityTypes.OXYGEN_COLLECTOR,
             GCMenuTypes.OXYGEN_COLLECTOR,
-            List.of(GCMachineStatuses.OXYGEN_TANK_FULL, GCMachineStatuses.COLLECTING, GCMachineStatuses.NOT_ENOUGH_OXYGEN, MachineStatuses.NOT_ENOUGH_ENERGY),
             () -> MachineEnergyStorage.create(
                     Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize(),
                     Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate() * 2,
@@ -346,7 +330,6 @@ public class GCMachineTypes {
             GCBlocks.OXYGEN_COMPRESSOR,
             GCBlockEntityTypes.OXYGEN_COMPRESSOR,
             GCMenuTypes.OXYGEN_COMPRESSOR,
-            List.of(GCMachineStatuses.OXYGEN_TANK_FULL, GCMachineStatuses.COMPRESSING, GCMachineStatuses.NOT_ENOUGH_OXYGEN, MachineStatuses.NOT_ENOUGH_ENERGY, GCMachineStatuses.MISSING_OXYGEN_TANK),
             () -> MachineEnergyStorage.create(
                     Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize(),
                     Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate() * 2,
@@ -374,7 +357,6 @@ public class GCMachineTypes {
             GCBlocks.OXYGEN_DECOMPRESSOR,
             GCBlockEntityTypes.OXYGEN_DECOMPRESSOR,
             GCMenuTypes.OXYGEN_DECOMPRESSOR,
-            List.of(GCMachineStatuses.EMPTY_OXYGEN_TANK, GCMachineStatuses.COMPRESSING, MachineStatuses.NOT_ENOUGH_ENERGY, GCMachineStatuses.MISSING_OXYGEN_TANK),
             () -> MachineEnergyStorage.create(
                     Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize(),
                     Galacticraft.CONFIG_MANAGER.get().oxygenDecompressorEnergyConsumptionRate() * 2,
@@ -402,7 +384,6 @@ public class GCMachineTypes {
             GCBlocks.OXYGEN_SEALER,
             GCBlockEntityTypes.OXYGEN_SEALER,
             GCMenuTypes.OXYGEN_SEALER,
-            List.of(GCMachineStatuses.ALREADY_SEALED, GCMachineStatuses.AREA_TOO_LARGE, GCMachineStatuses.SEALED, GCMachineStatuses.NOT_ENOUGH_OXYGEN, MachineStatuses.NOT_ENOUGH_ENERGY),
             () -> MachineEnergyStorage.create(
                     Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize(),
                     Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate() * 2, // fixme
@@ -430,7 +411,6 @@ public class GCMachineTypes {
             GCBlocks.OXYGEN_STORAGE_MODULE,
             GCBlockEntityTypes.OXYGEN_STORAGE_MODULE,
             GCMenuTypes.OXYGEN_STORAGE_MODULE,
-            List.of(MachineStatuses.ACTIVE),
             MachineEnergyStorage::empty,
             MachineItemStorage::empty,
             MachineFluidStorage.of(
@@ -445,7 +425,6 @@ public class GCMachineTypes {
             GCBlocks.REFINERY,
             GCBlockEntityTypes.REFINERY,
             GCMenuTypes.REFINERY,
-            List.of(GCMachineStatuses.MISSING_OIL, GCMachineStatuses.FUEL_TANK_FULL, MachineStatuses.ACTIVE, MachineStatuses.NOT_ENOUGH_ENERGY),
             () -> MachineEnergyStorage.create(
                     Galacticraft.CONFIG_MANAGER.get().machineEnergyStorageSize(),
                     Galacticraft.CONFIG_MANAGER.get().refineryEnergyConsumptionRate() * 2,

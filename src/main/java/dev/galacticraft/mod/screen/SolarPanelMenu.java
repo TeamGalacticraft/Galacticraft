@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineType;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.menu.sync.MenuSyncHandler;
+import dev.galacticraft.machinelib.api.util.BlockFace;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -100,5 +101,10 @@ public class SolarPanelMenu<Machine extends MachineBlockEntity & SolarPanel> ext
 
     public void setEnergyGeneration(long energyGeneration) {
         this.energyGeneration = energyGeneration;
+    }
+
+    @Override
+    public boolean isFaceLocked(@NotNull BlockFace face) {
+        return face == BlockFace.TOP;
     }
 }

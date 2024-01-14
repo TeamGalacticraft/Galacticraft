@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,13 +27,13 @@ import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
+import dev.galacticraft.machinelib.api.util.StorageHelper;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
@@ -52,13 +52,15 @@ public class OxygenOverlay {
                 RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
                 RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OVERLAY);
                 assert mc.player != null;
-                Container inv = mc.player.getOxygenTanks();
+                Container inv = mc.player.galacticraft$getOxygenTanks();
                 for (int i = 0; i < inv.getContainerSize(); i++) {
                     Storage<FluidVariant> storage = ContainerItemContext.withConstant(inv.getItem(i)).find(FluidStorage.ITEM);
                     if (storage != null) {
-                        StorageView<FluidVariant> exact = storage.exactView(FluidVariant.of(Gases.OXYGEN));
-                        if (exact != null) {
-                            DrawableUtil.drawOxygenBuffer(graphics.pose(), mc.getWindow().getGuiScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * (i + 4)), 5, exact.getAmount(), exact.getCapacity());
+                        long amount = StorageHelper.calculateCapacity(FluidVariant.of(Gases.OXYGEN), storage, null);
+                        long capacity = StorageHelper.calculateCapacity(FluidVariant.of(Gases.OXYGEN), storage, null);
+
+                        if (capacity > 0) {
+                            DrawableUtil.drawOxygenBuffer(graphics.pose(), mc.getWindow().getGuiScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * (i + 4)), 5, amount, capacity);
                         }
                     } else if (mc.player.isCreative()) {
                         DrawableUtil.drawOxygenBuffer(graphics.pose(), mc.getWindow().getGuiScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * (i + 4)), 5, 1, 1);

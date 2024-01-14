@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,7 +45,6 @@ import dev.galacticraft.api.universe.celestialbody.satellite.Orbitable;
 import dev.galacticraft.api.universe.celestialbody.star.Star;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
-import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.mod.Constant;
@@ -106,7 +105,7 @@ public class CelestialSelectionScreen extends Screen {
     protected static int BORDER_SIZE = 0;
     protected static int BORDER_EDGE_SIZE = 0;
     protected final boolean mapMode;
-    private final RocketData data;
+    private final @Nullable RocketData data;
     public final boolean canCreateStations;
     protected float zoom = 0.0F;
     protected float planetZoom = 0.0F;
@@ -172,7 +171,7 @@ public class CelestialSelectionScreen extends Screen {
         this.bodiesToRender.clear();
         this.bodiesToRender.addAll(celestialBodyRegistry.stream().collect(Collectors.toList()));
         assert this.minecraft != null;
-        this.bodiesToRender.addAll(((ClientSatelliteAccessor) Objects.requireNonNull(this.minecraft.getConnection())).getSatellites().values());
+        this.bodiesToRender.addAll(((ClientSatelliteAccessor) Objects.requireNonNull(this.minecraft.getConnection())).galacticraft$getSatellites().values());
         ((ClientSatelliteAccessor) Objects.requireNonNull(this.minecraft.getConnection())).addListener(this.listener);
     }
 
@@ -397,7 +396,7 @@ public class CelestialSelectionScreen extends Screen {
             return false;
         }
 
-        if (this.data != RocketData.empty() && !this.data.canTravel(manager, this.fromBody, atBody)) {
+        if (this.data != null && !this.data.canTravel(manager, this.fromBody, atBody)) {
             // If parent body is unreachable, the satellite is also unreachable
             return false;
         }
@@ -405,7 +404,7 @@ public class CelestialSelectionScreen extends Screen {
         boolean foundSatellite = false;
         assert this.minecraft != null;
         assert this.minecraft.level != null;
-        for (CelestialBody<SatelliteConfig, SatelliteType> type : ((SatelliteAccessor) this.minecraft.getConnection()).getSatellites().values()) {
+        for (CelestialBody<SatelliteConfig, SatelliteType> type : ((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().values()) {
             if (type.parent(manager) == atBody) {
                 assert this.minecraft.player != null;
                 if (type.type().ownershipData(type.config()).owner().equals(this.minecraft.player.getUUID())) {
@@ -458,7 +457,7 @@ public class CelestialSelectionScreen extends Screen {
         assert !this.mapMode;
         if (this.selectedBody != null && this.selectedBody.type() instanceof Landable landable) {
             landable.world(this.selectedBody.config());
-            if (this.data == RocketData.empty() || this.data.canTravel(manager, this.fromBody, this.selectedBody)) {
+            if (this.data == null || this.data.canTravel(manager, this.fromBody, this.selectedBody)) {
                 try {
                     assert this.minecraft != null;
                     ClientPlayNetworking.send(Constant.Packet.PLANET_TP, PacketByteBufs.create().writeResourceLocation(celestialBodyRegistry.getKey(this.selectedBody)));
@@ -570,7 +569,7 @@ public class CelestialSelectionScreen extends Screen {
 
         if (this.selectedBody != null && !this.mapMode) {
             if (a) {
-                if (!(isSatellite(this.selectedBody)) || !this.selectedStationOwner.equals("")) {
+                if (!(isSatellite(this.selectedBody)) || !this.selectedStationOwner.isEmpty()) {
                     this.teleportToSelectedBody();
                 }
                 clickHandled = true;
@@ -623,7 +622,7 @@ public class CelestialSelectionScreen extends Screen {
 
                 CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody;
                 assert this.minecraft != null;
-                int stationListSize = ((SatelliteAccessor) this.minecraft.getConnection()).getSatellites().size();
+                int stationListSize = ((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().size();
                 int max = Math.min((this.height / 2) / 14, stationListSize);
 
                 int xPos;
@@ -651,7 +650,7 @@ public class CelestialSelectionScreen extends Screen {
                     clickHandled = true;
                 }
 
-                Iterator<CelestialBody<SatelliteConfig, SatelliteType>> it = ((SatelliteAccessor) this.minecraft.getConnection()).getSatellites().values().iterator();
+                Iterator<CelestialBody<SatelliteConfig, SatelliteType>> it = ((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().values().iterator();
                 int i = 0;
                 int j = 0;
                 while (it.hasNext() && i < max) {
@@ -818,7 +817,7 @@ public class CelestialSelectionScreen extends Screen {
                         }
 
                         //Auto select if it's a spacestation and there is only a single entry
-                        if (isSatellite(this.selectedBody) && ((SatelliteAccessor) this.minecraft.getConnection()).getSatellites().values().stream().filter(s -> s.parent(manager) == this.selectedBody.parent(manager)).count() == 1) {
+                        if (isSatellite(this.selectedBody) && ((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().values().stream().filter(s -> s.parent(manager) == this.selectedBody.parent(manager)).count() == 1) {
                             this.selectedStationOwner = ((Satellite) this.selectedBody.type()).ownershipData(this.selectedBody.config()).username();
                         }
 
@@ -1330,7 +1329,7 @@ public class CelestialSelectionScreen extends Screen {
                     RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_1);
                     RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
                     CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody;
-                    int stationListSize = (int) ((SatelliteAccessor) this.minecraft.getConnection()).getSatellites().values().stream().filter(s -> s.parent(manager) == this.selectedBody.parent(manager)).count();
+                    int stationListSize = (int) ((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().values().stream().filter(s -> s.parent(manager) == this.selectedBody.parent(manager)).count();
 
                     int max = Math.min((this.height / 2) / 14, stationListSize);
                     this.blit(RHS - 95, LHS, 95, 53, this.selectedStationOwner.length() == 0 ? 95 : 0, 186, 95, 53, false, false);
@@ -1348,7 +1347,7 @@ public class CelestialSelectionScreen extends Screen {
                     this.blit(RHS - 85, LHS + 49 + max * 14, 61, 4, 0, 239, 61, 4, false, true);
                     RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
 
-                    if (((SatelliteAccessor) this.minecraft.getConnection()).getSatellites().values().stream().noneMatch(s -> s.parent(manager) == this.selectedBody.parent(manager) && s.type().ownershipData(s.config()).canAccess(this.minecraft.player))) {
+                    if (((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().values().stream().noneMatch(s -> s.parent(manager) == this.selectedBody.parent(manager) && s.type().ownershipData(s.config()).canAccess(this.minecraft.player))) {
                         str = I18n.get("ui.galacticraft.celestialselection.select_ss");
                         this.drawSplitString(graphics, str, RHS - 47, LHS + 20, 91, WHITE, false, false);
                     } else {
@@ -1358,7 +1357,7 @@ public class CelestialSelectionScreen extends Screen {
                         graphics.drawString(this.font, str, RHS - 47 - this.font.width(str) / 2, LHS + 30, WHITE, false);
                     }
 
-                    Iterator<CelestialBody<SatelliteConfig, SatelliteType>> it = ((SatelliteAccessor) this.minecraft.getConnection()).getSatellites().values().stream().filter(s -> s.parent(manager) == this.selectedBody.parent(manager) && s.type().ownershipData(s.config()).canAccess(this.minecraft.player)).iterator();
+                    Iterator<CelestialBody<SatelliteConfig, SatelliteType>> it = ((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().values().stream().filter(s -> s.parent(manager) == this.selectedBody.parent(manager) && s.type().ownershipData(s.config()).canAccess(this.minecraft.player)).iterator();
                     int i = 0;
                     int j = 0;
                     while (it.hasNext() && i < max) {
@@ -1545,7 +1544,7 @@ public class CelestialSelectionScreen extends Screen {
                 this.blit(width / 2 - 47, LHS, 94, 11, 0, 414, 188, 22, false, false);
                 if (this.selectedBody.type() instanceof Tiered tiered && tiered.accessWeight(this.selectedBody.config()) >= 0 && (!(isSatellite(this.selectedBody)))) {
                     boolean canReach;
-                    if (this.data != RocketData.empty() && !this.data.canTravel(manager, this.fromBody, this.selectedBody)) {
+                    if (this.data != null && !this.data.canTravel(manager, this.fromBody, this.selectedBody)) {
                         canReach = false;
                         RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1.0F);
                     } else {
@@ -1574,7 +1573,7 @@ public class CelestialSelectionScreen extends Screen {
 
                 if (!this.mapMode) {
                     resetShader(GameRenderer::getPositionTexColorShader);
-                    if (this.data != RocketData.empty() && !this.data.canTravel(manager, this.fromBody, this.selectedBody) || !(this.selectedBody.type() instanceof Landable) || isSatellite(this.selectedBody) && !((Satellite) this.selectedBody.type()).ownershipData(this.selectedBody.config()).canAccess(this.minecraft.player))
+                    if (this.data != null && !this.data.canTravel(manager, this.fromBody, this.selectedBody) || !(this.selectedBody.type() instanceof Landable) || isSatellite(this.selectedBody) && !((Satellite) this.selectedBody.type()).ownershipData(this.selectedBody.config()).canAccess(this.minecraft.player))
                     {
                         RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1);
                     } else {
@@ -1668,7 +1667,7 @@ public class CelestialSelectionScreen extends Screen {
     private List<CelestialBody<SatelliteConfig, SatelliteType>> getVisibleSatellitesForCelestialBody(CelestialBody<?, ?> selectedBody) {
         if (selectedBody == null || selectedBody.type() instanceof Satellite) return Collections.emptyList();
         List<CelestialBody<SatelliteConfig, SatelliteType>> list = new LinkedList<>();
-        for (CelestialBody<SatelliteConfig, SatelliteType> satellite : ((SatelliteAccessor) this.minecraft.getConnection()).getSatellites().values()) {
+        for (CelestialBody<SatelliteConfig, SatelliteType> satellite : ((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().values()) {
             if (satellite.parent(manager) == selectedBody && satellite.type().ownershipData(satellite.config()).canAccess(this.minecraft.player)) {
                 list.add(satellite);
             }
@@ -1695,7 +1694,7 @@ public class CelestialSelectionScreen extends Screen {
             resetShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_0);
             float brightness = child.equals(this.selectedBody) ? 0.2F : 0.0F;
-            if (child.type() instanceof Landable<?> && (this.data == RocketData.empty() || this.fromBody == null || this.data.canTravel(manager, this.fromBody, child))) {
+            if (child.type() instanceof Landable<?> && (this.data == null || this.fromBody == null || this.data.canTravel(manager, this.fromBody, child))) {
                 RenderSystem.setShaderColor(0.0F, 0.6F + brightness, 0.0F, scale / 95.0F);
             } else {
                 RenderSystem.setShaderColor(0.6F + brightness, 0.0F, 0.0F, scale / 95.0F);

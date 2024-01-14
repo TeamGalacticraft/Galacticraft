@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,21 +22,44 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
-import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
-import dev.galacticraft.api.rocket.recipe.RocketPartRecipeSlot;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import dev.galacticraft.api.entity.rocket.render.RocketPartRenderer;
+import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
+import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.api.rocket.part.RocketPartTypes;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.client.gui.BatchedRenderer;
+import dev.galacticraft.mod.content.GCEntityTypes;
+import dev.galacticraft.mod.content.GCRocketParts;
+import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
+import dev.galacticraft.mod.content.entity.RocketEntity;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.gui.screens.inventory.SmithingScreen;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.core.Holder;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkbenchMenu> {
@@ -54,22 +77,58 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
 
     private static final int COLOURED_SLOT_SIZE = 20;
 
-    private static final int OUTPUT_SLOT_U = 478;
     private static final int OUTPUT_SLOT_V = 40;
     private static final int OUTPUT_SLOT_SIZE = 34;
 
-    private static final int NORMAL_SLOT_U = 27;
-    private static final int NORMAL_SLOT_V = 121;
+    private static final int NORMAL_SLOT_U = 452;
+    private static final int NORMAL_SLOT_V = 0;
     private static final int NORMAL_SLOT_SIZE = 18;
+
+    private static final int SELECTION_SCREEN_WIDTH = 147;
+    private static final int SELECTION_SCREEN_HEIGHT = 248;
+    private static final int SCREEN_SPACING = 4;
+
+    private static final int TAB_SPACING = 1;
+    private static final int TAB_SELECTED_U = 219;
+    private static final int TAB_SELECTED_V = 91;
+    private static final int TAB_U = 224;
+    private static final int TAB_V = 118;
+    private static final int TAB_HEIGHT = 26;
+    private static final int TAB_WIDTH = 30;
+    private static final int TAB_SELECTED_WIDTH = 35;
+
+    private static final int RECIPE_CRAFTABLE_U = 204;
+    private static final int RECIPE_UNCRAFTABLE_U = 231;
+    private static final int RECIPE_V = 36;
+    private static final int RECIPE_SELECTED_V = 63;
+    private static final int RECIPE_WIDTH = 25;
+    private static final int RECIPE_HEIGHT = 25;
+
+    private static final int BASE_UI_WIDTH = 234;
+    private static final int MAIN_UI_WIDTH = 177;
+    private static final int BASE_UI_HEIGHT = 245;
+    private static final int CAP_HEIGHT = 4;
+    private static final int HEIGHT_EXT_U = 234;
+
+    private Tab openTab;
+
+    private int page = 0;
+    private @Nullable List<Holder.Reference<? extends RocketPart<?, ?>>> recipes = null;
+    private int timesInventoryChanged;
+
+    private final RocketEntity entity;
 
     public RocketWorkbenchScreen(RocketWorkbenchMenu menu, Inventory inventory, Component component) {
         super(menu, inventory, component);
+        this.setOpenTab(Tab.CONE);
+        this.entity = new RocketEntity(GCEntityTypes.ROCKET, menu.workbench.getLevel());
+        this.inventoryLabelX = this.inventoryLabelY = Integer.MAX_VALUE;
     }
 
     @Override
     protected void init() {
-        this.imageWidth = 223;
-        this.imageHeight = 204 + 4 + this.menu.additionalDistance;
+        this.imageWidth = BASE_UI_WIDTH;
+        this.imageHeight = BASE_UI_HEIGHT + CAP_HEIGHT + this.menu.additionalHeight;
         super.init();
     }
 
@@ -79,120 +138,276 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float f, int i, int j) {
-        BufferBuilder buffer = Tesselator.getInstance().getBuilder();
-        beginBatch(buffer, Constant.ScreenTexture.ROCKET_WORKBENCH_SCREEN);
+    protected void containerTick() {
+        super.containerTick();
+        if (this.timesInventoryChanged != this.menu.playerInventory.getTimesChanged()) {
+            this.timesInventoryChanged = this.menu.playerInventory.getTimesChanged();
 
-        batchBlit(buffer, graphics.pose(), this.leftPos, this.topPos, 0, 204, 195, 4, 512, 256);
-
-        if (this.menu.additionalDistance > 0) {
-            batchBlit(buffer, graphics.pose(), this.leftPos, this.topPos + 4, 223, 0, 195, this.menu.additionalDistance, 512, 256);
+            StackedContents contents = new StackedContents();
+            this.menu.playerInventory.fillStackedContents(contents);
+            this.menu.coneRecipes.calculateCraftable(contents);
+            this.menu.bodyRecipes.calculateCraftable(contents);
+            this.menu.finsRecipes.calculateCraftable(contents);
+            this.menu.boosterRecipes.calculateCraftable(contents);
+            this.menu.engineRecipes.calculateCraftable(contents);
+            this.menu.upgradeRecipes.calculateCraftable(contents);
         }
 
-        batchBlit(buffer, graphics.pose(), this.leftPos, this.topPos + 4 + this.menu.additionalDistance, 0, 0, this.imageWidth, 204, 512, 256);
+        this.entity.setCone(this.menu.cone.selection != null ? this.menu.cone.selection.key().location() : null);
+        this.entity.setBody(this.menu.body.selection != null ? this.menu.body.selection.key().location() : null);
+        this.entity.setFin(this.menu.fins.selection != null ? this.menu.fins.selection.key().location() : null);
+        this.entity.setBooster(this.menu.booster.selection != null ? this.menu.booster.selection.key().location() : null);
+        this.entity.setEngine(this.menu.engine.selection != null ? this.menu.engine.selection.key().location() : null);
+        this.entity.setUpgrade(this.menu.upgrade.selection != null ? this.menu.upgrade.selection.key().location() : null);
+    }
 
-        int midsectionWidth = Math.max((this.menu.bottomRecipe != null ? this.menu.bottomRecipe.width() : 0), Math.max((this.menu.bodyRecipe != null ? this.menu.bodyRecipe.width() : 0), (this.menu.coneRecipe != null ? this.menu.coneRecipe.width() : 0)));
-        int leftEdge = RocketWorkbenchMenu.SCREEN_CENTER_BASE_X - midsectionWidth / 2;
-        int rightSide = RocketWorkbenchMenu.SCREEN_CENTER_BASE_X + midsectionWidth / 2;
+    @Override
+    protected void renderBg(GuiGraphics graphics, float delta, int mouseX, int mouseY) {
+        this.inventoryLabelY = this.imageHeight - 96 + this.menu.additionalHeight;
 
-        if (this.menu.bottomRecipe != null) {
-            int leftSide = RocketWorkbenchMenu.SCREEN_CENTER_BASE_X - this.menu.bottomRecipe.width() / 2;
-            int bottomEdge = RocketWorkbenchMenu.SCREEN_CENTER_BASE_Y + this.menu.additionalDistance;
-            centered(buffer, graphics.pose(), this.menu.bottomRecipe, this.menu.bottom, leftSide, bottomEdge);
-        }
+        drawSelection(graphics, mouseX, mouseY, delta);
 
-        if (this.menu.bodyRecipe != null) {
-            int leftSide = RocketWorkbenchMenu.SCREEN_CENTER_BASE_X - this.menu.bodyRecipe.width() / 2;
-            int bottomEdge = (RocketWorkbenchMenu.SCREEN_CENTER_BASE_Y + this.menu.additionalDistance) - (this.menu.bottomRecipe != null ? this.menu.bottomRecipe.height() + RocketWorkbenchMenu.SPACING : 0);
-            centered(buffer, graphics.pose(), this.menu.bodyRecipe, this.menu.body, leftSide, bottomEdge);
-        }
+        try (BatchedRenderer render = new BatchedRenderer(Tesselator.getInstance().getBuilder(), graphics.pose(), Constant.ScreenTexture.ROCKET_WORKBENCH_SCREEN, 512, 256)) {
+            render.blit(this.leftPos, this.topPos + this.menu.additionalHeight + CAP_HEIGHT, 0, 0, BASE_UI_WIDTH, BASE_UI_HEIGHT);
 
-        if (this.menu.coneRecipe != null) {
-            int leftSide = RocketWorkbenchMenu.SCREEN_CENTER_BASE_X - this.menu.coneRecipe.width() / 2;
-            int bottomEdge = (RocketWorkbenchMenu.SCREEN_CENTER_BASE_Y + this.menu.additionalDistance) - (this.menu.bottomRecipe != null ? this.menu.bottomRecipe.height() + RocketWorkbenchMenu.SPACING : 0) - (this.menu.bodyRecipe != null ? this.menu.bodyRecipe.height() + RocketWorkbenchMenu.SPACING : 0);
-            centered(buffer, graphics.pose(), this.menu.coneRecipe, this.menu.cone, leftSide, bottomEdge);
-        }
+            if (this.menu.additionalHeight > 0) {
+                render.blit(this.leftPos, this.topPos + CAP_HEIGHT, HEIGHT_EXT_U, 0, MAIN_UI_WIDTH, this.menu.additionalHeight);
+            }
 
-        if (this.menu.boosterRecipe != null) {
-            int bottomEdge = RocketWorkbenchMenu.SCREEN_CENTER_BASE_Y + this.menu.additionalDistance;
-            mirrored(buffer, graphics.pose(), this.menu.boosterRecipe, this.menu.booster, leftEdge, rightSide, bottomEdge);
-        }
+            render.blit(this.leftPos, this.topPos, 0, BASE_UI_HEIGHT, BASE_UI_WIDTH, CAP_HEIGHT);
 
-        if (this.menu.finsRecipe != null) {
-            int bottomEdge = RocketWorkbenchMenu.SCREEN_CENTER_BASE_Y + this.menu.additionalDistance - (this.menu.boosterRecipe != null ? this.menu.boosterRecipe.height() + RocketWorkbenchMenu.SPACING : 0);
-            mirrored(buffer, graphics.pose(), this.menu.finsRecipe, this.menu.fins, leftEdge, rightSide, bottomEdge);
-        }
-
-        if (this.menu.upgradeCapacity > 0) {
-            final int baseX = 11 - 2;
-            int y = 58 + this.menu.additionalDistance;
-            int x = baseX;
-            for (int k = 0; k < this.menu.upgradeCapacity; k++) {
-                batchUpgradeSlot(buffer, graphics.pose(), x, y);
-                if (x == baseX) {
-                    x += 21;
-                } else {
-                    x = baseX;
-                    y -= 21;
+            for (Slot slot : this.menu.slots) {
+                if (slot.container instanceof VariableSizedContainer) {
+                    render.blit(this.leftPos + slot.x - 1, this.topPos + slot.y - 1, NORMAL_SLOT_U, NORMAL_SLOT_V, NORMAL_SLOT_SIZE, NORMAL_SLOT_SIZE);
                 }
             }
         }
-        endBatch(buffer);
+
+        renderEntityInInventory(graphics, this.leftPos + 204.5, this.topPos + 110, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, this.entity);
     }
 
-    private void batchUpgradeSlot(BufferBuilder buffer, PoseStack poseStack, int x, int y) {
-        batchBlit(buffer, poseStack, this.leftPos + x, this.topPos + y, BLUE_SLOT_U, BLUE_SLOT_V, COLOURED_SLOT_SIZE, COLOURED_SLOT_SIZE, 512, 256);
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        return super.mouseClicked(mouseX, mouseY, button) | clickSelection(mouseX, mouseY, button);
     }
 
-    private void mirrored(BufferBuilder buffer, PoseStack poseStack, RocketPartRecipe<?, ?> recipe, VariableSizedContainer container, int leftEdge, int rightSide, int bottomEdge) {
-        List<RocketPartRecipeSlot> slots = recipe.slots();
-        for (RocketPartRecipeSlot slot : slots) { //fixme add mirrored property to slot
-            int x = slot.x() > 0 ? slot.x() + 1 : slot.x() - 1;
-            if (x < 0) {
-                batchNormalSlot(buffer, poseStack, leftEdge - x - 18 - RocketWorkbenchMenu.SPACING - 1, bottomEdge - recipe.height() + slot.y() - 1);
-            } else {
-                batchNormalSlot(buffer, poseStack, rightSide + x + RocketWorkbenchMenu.SPACING - 1, bottomEdge - recipe.height() + slot.y() - 1);
+    public boolean clickSelection(double mouseX, double mouseY, int button) {
+        mouseX -= this.leftPos - SELECTION_SCREEN_WIDTH - SCREEN_SPACING;
+        mouseY -= this.topPos;
+
+        {
+            int y = 4;
+            for (Tab tab : Tab.values()) {
+                if (tab != this.openTab) {
+                    if (mouseIn(mouseX, mouseY, -TAB_WIDTH, y, TAB_WIDTH, TAB_HEIGHT)) {
+                        this.setOpenTab(tab);
+                        return true;
+                    }
+                }
+                y += TAB_SPACING + TAB_HEIGHT;
             }
         }
+
+        if (this.openTab != Tab.COLOR) {
+            assert this.recipes != null;
+            int i = this.page * 5 * 7;
+            for (int y = 0; y < 7; y++) {
+                for (int x = 0; x < 5; x++) {
+                    if (mouseIn(mouseX, mouseY, 11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, RECIPE_WIDTH, RECIPE_HEIGHT)) {
+                        if (i < this.recipes.size()) {
+                            if (button == GLFW.GLFW_MOUSE_BUTTON_1) {
+                                this.getSelection().setSelection(this.recipes.get(i));
+                                FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+                                buf.writeByte(this.openTab.type.ordinal());
+                                if (this.recipes.get(i) != null) {
+                                    buf.writeBoolean(true);
+                                    buf.writeResourceLocation(this.recipes.get(i).key().location());
+                                } else {
+                                    buf.writeBoolean(false);
+                                }
+                                ClientPlayNetworking.send(Constant.Packet.SELECT_PART, buf);
+                                return true;
+                            } else if (button == GLFW.GLFW_MOUSE_BUTTON_2) {
+                                //todo
+                                return true;
+                            }
+                        }
+                    }
+                    ++i;
+                }
+            }
+        } else {
+
+        }
+        return false;
     }
 
-    private void centered(BufferBuilder buffer, PoseStack poseStack, RocketPartRecipe<?, ?> recipe, VariableSizedContainer container, int leftSide, int bottomEdge) {
-        List<RocketPartRecipeSlot> slots = recipe.slots();
-        for (RocketPartRecipeSlot slot : slots) {
-            batchNormalSlot(buffer, poseStack, slot.x() + leftSide - 1, bottomEdge - recipe.height() + slot.y() - 1);
+
+    public void setOpenTab(Tab openTab) {
+        this.openTab = openTab;
+        this.page = 0;
+
+        if (openTab != Tab.COLOR) {
+            RocketWorkbenchMenu.RecipeCollection recipes = getRecipes();
+            List<Holder.Reference<? extends RocketPart<?, ?>>> joined = new ArrayList<>(recipes.getCraftable().size() + recipes.getUncraftable().size() + 1);
+            joined.add(null);
+            joined.addAll(recipes.getCraftable());
+            joined.addAll(recipes.getUncraftable()); //fixme
+            this.recipes = joined;
+        } else {
+            this.recipes = null;
         }
     }
 
-    private void batchNormalSlot(BufferBuilder buffer, PoseStack poseStack, int x, int y) {
-        batchBlit(buffer, poseStack, this.leftPos + x, this.topPos + y, NORMAL_SLOT_U, NORMAL_SLOT_V, NORMAL_SLOT_SIZE, NORMAL_SLOT_SIZE, 512, 256);
+    private void drawSelection(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        PoseStack pose = graphics.pose();
+        pose.pushPose();
+        pose.translate(this.leftPos - SELECTION_SCREEN_WIDTH - SCREEN_SPACING, this.topPos, 0);
+        mouseX -= this.leftPos - SELECTION_SCREEN_WIDTH - SCREEN_SPACING;
+        mouseY -= this.topPos;
+
+        int size = this.recipes != null ? this.recipes.size() : 0;
+        try (BatchedRenderer render = new BatchedRenderer(Tesselator.getInstance().getBuilder(), pose, Constant.ScreenTexture.ROCKET_SELECTION, 256, 256)) {
+            render.blit(0, 0, 0, 0, SELECTION_SCREEN_WIDTH, SELECTION_SCREEN_HEIGHT);
+
+            {
+                int y = 4;
+                for (Tab tab : Tab.values()) {
+                    if (tab == this.openTab) {
+                        render.blit(-(TAB_SELECTED_WIDTH - 3), y, TAB_SELECTED_U, TAB_SELECTED_V, TAB_SELECTED_WIDTH, TAB_HEIGHT);
+                    } else {
+                        render.blit(-TAB_WIDTH, y, TAB_U, TAB_V, TAB_WIDTH, TAB_HEIGHT);
+                    }
+                    y += TAB_SPACING + TAB_HEIGHT;
+                }
+            }
+
+            if (this.openTab != Tab.COLOR) {
+                assert this.recipes != null;
+                final int pages = Math.floorDiv(size, 35) + size % 35 == 0 ? 0 : 1;
+
+                if (this.page >= pages) {
+                    this.page = 0;
+                }
+                int i = this.page * 5 * 7;
+                for (int y = 0; y < 7 && i < size; y++) {
+                    for (int x = 0; x < 5 && i < size; x++) {
+                        Holder.Reference<? extends RocketPart<?, ?>> part = this.recipes.get(i);
+                        int uOffset = isCraftable(part) ? RECIPE_CRAFTABLE_U : RECIPE_UNCRAFTABLE_U;
+                        int vOffset = this.getSelection().selection == part ? RECIPE_SELECTED_V : RECIPE_V;
+                        render.blit(11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, uOffset, vOffset, RECIPE_WIDTH, RECIPE_HEIGHT);
+                        if (part != null && mouseIn(mouseX, mouseY, 11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, RECIPE_WIDTH, RECIPE_HEIGHT)) {
+                            setTooltipForNextRenderPass(Component.literal(part.key().location().toString())); //todo
+                        }
+                        i++;
+                    }
+                }
+            } else {
+                //todo color
+            }
+        }
+
+        {
+            int y = 8;
+            for (Tab tab : Tab.values()) {
+                if (tab == Tab.COLOR) {
+                    graphics.renderFakeItem(new ItemStack(Items.RED_DYE), -TAB_WIDTH + 8, y);
+                } else {
+                    RocketPartRendererRegistry.INSTANCE.getRenderer(tab.part).renderGUI(graphics, -TAB_WIDTH + 8, y, mouseX, mouseY, delta);
+                }
+                y += TAB_SPACING + TAB_HEIGHT;
+            }
+        }
+        if (this.openTab != Tab.COLOR) {
+            assert this.recipes != null;
+
+            int i = this.page * 5 * 7;
+            for (int y = 0; y < 7 && i < size; y++) {
+                for (int x = 0; x < 5 && i < size; x++) {
+                    Holder.Reference<? extends RocketPart<?, ?>> recipe = this.recipes.get(i);
+                    if (recipe != null) {
+                        RocketPartRenderer renderer = RocketPartRendererRegistry.INSTANCE.getRenderer(recipe.key());
+                        renderer.renderGUI(graphics, 11 + x * RECIPE_WIDTH + 4, 29 + y * RECIPE_HEIGHT + 4, mouseX, mouseY, delta);
+                    }
+                    i++;
+                }
+            }
+        } else {
+            
+        }
+        graphics.drawString(this.font, this.openTab.name, 12, 14, 0xEEEEEE, true);
+        pose.popPose();
     }
 
-    private static void beginBatch(BufferBuilder buffer, ResourceLocation texture) {
-        RenderSystem.setShaderTexture(0, texture);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+    public static void renderEntityInInventory(
+            GuiGraphics guiGraphics, double x, double y, int scale, Quaternionf pose, @Nullable Quaternionf cameraOrientation, RocketEntity entity
+    ) {
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(x, y, 50.0);
+        guiGraphics.pose().mulPoseMatrix(new Matrix4f().scaling((float)scale, (float)scale, (float)(-scale)));
+        guiGraphics.pose().mulPose(pose);
+        Lighting.setupForEntityInInventory();
+        EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+        if (cameraOrientation != null) {
+            cameraOrientation.conjugate();
+            entityRenderDispatcher.overrideCameraOrientation(cameraOrientation);
+        }
+
+        entityRenderDispatcher.setRenderShadow(false);
+        RenderSystem.runAsFancy(() -> entityRenderDispatcher.render(entity, 0.0, 0.0, 0.0, 0.0F, 1.0F, guiGraphics.pose(), guiGraphics.bufferSource(), 15728880));
+        guiGraphics.flush();
+        entityRenderDispatcher.setRenderShadow(true);
+        guiGraphics.pose().popPose();
+        Lighting.setupFor3DItems();
     }
 
-    private static void endBatch(BufferBuilder buffer) {
-        BufferUploader.drawWithShader(buffer.end());
+    private boolean isCraftable(Holder.Reference<? extends RocketPart<?, ?>> recipe) {
+        return recipe == null || this.getRecipes().getCraftable().contains(recipe);
     }
 
-    private static void batchBlit(BufferBuilder buffer, PoseStack poseStack, int i, int j, int k, int l, float f, float g, int m, int n, int o, int p) {
-        batchBlit(buffer, poseStack, i, i + k, j, j + l, m, n, f, g, o, p);
+    private static boolean mouseIn(double mouseX, double mouseY, int x, int y, int width, int height) {
+        return mouseX >= x && mouseY >= y && mouseX <= x + width && mouseY <= y + height;
     }
 
-    private static void batchBlit(BufferBuilder buffer, PoseStack poseStack, int i, int j, float f, float g, int k, int l, int m, int n) {
-        batchBlit(buffer, poseStack, i, j, k, l, f, g, k, l, m, n);
+    private RocketWorkbenchBlockEntity.RecipeSelection getSelection() {
+        return switch (openTab.type) {
+            case CONE -> this.menu.cone;
+            case BODY -> this.menu.body;
+            case FIN -> this.menu.fins;
+            case BOOSTER -> this.menu.booster;
+            case ENGINE -> this.menu.engine;
+            case UPGRADE -> this.menu.upgrade;
+        };
     }
 
-    private static void batchBlit(BufferBuilder buffer, PoseStack poseStack, int i, int j, int k, int l, int n, int o, float f, float g, int p, int q) {
-        innerBatchBlit(buffer, poseStack.last().pose(), i, j, k, l, (f + 0.0F) / (float)p, (f + (float)n) / (float)p, (g + 0.0F) / (float)q, (g + (float)o) / (float)q);
+    private RocketWorkbenchMenu.RecipeCollection getRecipes() {
+        return switch (openTab.type) {
+            case CONE -> this.menu.coneRecipes;
+            case BODY -> this.menu.bodyRecipes;
+            case FIN -> this.menu.finsRecipes;
+            case BOOSTER -> this.menu.boosterRecipes;
+            case ENGINE -> this.menu.engineRecipes;
+            case UPGRADE -> this.menu.upgradeRecipes;
+        };
     }
 
-    private static void innerBatchBlit(BufferBuilder buffer, Matrix4f matrix, int x1, int x2, int y1, int y2, float u1, float u2, float v1, float v2) {
-        buffer.vertex(matrix, (float)x1, (float)y1, 0).uv(u1, v1).endVertex();
-        buffer.vertex(matrix, (float)x1, (float)y2, 0).uv(u1, v2).endVertex();
-        buffer.vertex(matrix, (float)x2, (float)y2, 0).uv(u2, v2).endVertex();
-        buffer.vertex(matrix, (float)x2, (float)y1, 0).uv(u2, v1).endVertex();
+    private enum Tab {
+        CONE(RocketPartTypes.CONE, GCRocketParts.TIER_1_CONE, Component.translatable("ui.galacticraft.cone")),
+        BODY(RocketPartTypes.BODY, GCRocketParts.TIER_1_BODY, Component.translatable("ui.galacticraft.body")),
+        FINS(RocketPartTypes.FIN, GCRocketParts.TIER_1_FIN, Component.translatable("ui.galacticraft.fins")),
+        BOOSTER(RocketPartTypes.BOOSTER, GCRocketParts.TIER_1_BOOSTER, Component.translatable("ui.galacticraft.booster")),
+        ENGINE(RocketPartTypes.ENGINE, GCRocketParts.TIER_1_ENGINE, Component.translatable("ui.galacticraft.engine")),
+        UPGRADE(RocketPartTypes.UPGRADE, GCRocketParts.STORAGE_UPGRADE, Component.translatable("ui.galacticraft.upgrade")),
+        COLOR(null, null, Component.translatable("ui.galacticraft.color"));
+
+        private final RocketPartTypes type;
+        private final ResourceKey<? extends RocketPart<?, ?>> part;
+        private final Component name;
+
+        Tab(RocketPartTypes type, ResourceKey<? extends RocketPart<?, ?>> part, Component name) {
+            this.type = type;
+            this.part = part;
+            this.name = name;
+        }
     }
 }

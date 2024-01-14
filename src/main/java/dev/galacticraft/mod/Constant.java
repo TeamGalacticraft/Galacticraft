@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -555,7 +555,7 @@ public interface Constant {
         String BASIC_ROCKET_CONE_SCHEMATIC = "basic_rocket_cone_schematic";
         String BASIC_ROCKET_BODY_SCHEMATIC = "basic_rocket_body_schematic";
         String BASIC_ROCKET_FINS_SCHEMATIC = "basic_rocket_fins_schematic";
-        String BASIC_ROCKET_BOTTOM_SCHEMATIC = "basic_rocket_bottom_schematic";
+        String BASIC_ROCKET_ENGINE_SCHEMATIC = "basic_rocket_engine_schematic";
     }
 
     interface Particle {
@@ -615,6 +615,7 @@ public interface Constant {
         ResourceLocation ENERGY_STORAGE_MODULE_SCREEN = id("textures/gui/energy_storage_module_screen.png");
         ResourceLocation OXYGEN_COLLECTOR_SCREEN = id("textures/gui/oxygen_collector_screen.png");
         ResourceLocation ROCKET_WORKBENCH_SCREEN = id("textures/gui/rocket_workbench.png");
+        ResourceLocation ROCKET_SELECTION = id("textures/gui/rocket_part_selection.png");
 
         ResourceLocation MACHINE_CONFIG_PANELS = id("textures/gui/machine_config.png");
         ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
@@ -859,6 +860,7 @@ public interface Constant {
         String ITEMS = "Items";
         String GASES = "Gases";
         String CRYOGENIC_COOLDOWN = "cryogenic_cooldown";
+        String ROCKET_UUID = "RocketUuid";
     }
 
     interface Chunk {
@@ -885,7 +887,6 @@ public interface Constant {
     @ApiStatus.Internal
     interface Mixin {
         String STRUCTURE_POOL_DEBUG = "StructurePoolGeneratorMixin";
-        String DATAGEN_COMPRESSION = "DataProviderMixin";
     }
 
     interface Recipe {
@@ -933,6 +934,7 @@ public interface Constant {
         ResourceLocation ROCKET_PITCH = id("rocket_pitch");
         ResourceLocation ROCKET_YAW = id("rocket_yaw");
         ResourceLocation OPEN_SCREEN = id("open_screen");
+        ResourceLocation SELECT_PART = id("select_part");
 
         ResourceLocation LANDER_PITCH = id("lander_pitch");
         ResourceLocation LANDER_YAW = id("lander_yaw");

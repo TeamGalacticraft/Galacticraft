@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -66,7 +66,7 @@ public abstract class SoundEngineMixin implements SoundSystemAccessor {
     }
 
     @Override
-    public void updateAtmosphericVolumeMultiplier(float multiplier) {
+    public void galacticraft$updateAtmosphericVolumeMultiplier(float multiplier) {
         this.multiplier = multiplier;
         this.updateCategoryVolume(null, this.listener.getGain());
     }

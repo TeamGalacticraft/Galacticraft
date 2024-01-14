@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,24 +39,43 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin implements ServerPlayerAccessor {
     private @Unique @Nullable RocketData rocketData = null;
+    private @Unique boolean celestialActive = false;
 
     @Override
-    public RocketData getCelestialScreenState() {
+    public boolean galacticraft$isCelestialScreenActive() {
+        return this.celestialActive;
+    }
+
+    @Override
+    public void galacticraft$closeCelestialScreen() {
+        this.celestialActive = false;
+        this.rocketData = null;
+    }
+
+    @Override
+    public @Nullable RocketData galacticraft$getCelestialScreenState() {
         return this.rocketData;
     }
 
     @Override
-    public void setCelestialScreenState(RocketData data) {
+    public void galacticraft$openCelestialScreen(@Nullable RocketData data) {
+        this.celestialActive = true;
         this.rocketData = data;
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
-    private void writeCustomDataToNbt_gc(CompoundTag nbt, CallbackInfo ci) {
-        if (this.rocketData != null) nbt.put("CelestialState", this.rocketData.toNbt(new CompoundTag()));
+    private void writeCelestialData(CompoundTag nbt, CallbackInfo ci) {
+        nbt.putBoolean("CelestialActive", this.celestialActive);
+        if (this.rocketData != null) {
+            CompoundTag nbt1 = new CompoundTag();
+            this.rocketData.toNbt(nbt1);
+            nbt.put("CelestialState", nbt1);
+        }
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
-    private void readCustomDataFromNbt_gc(CompoundTag nbt, CallbackInfo ci) {
+    private void readCelestialData(CompoundTag nbt, CallbackInfo ci) {
+        this.celestialActive = nbt.getBoolean("CelestialActive");
         if (nbt.contains("CelestialState")) {
             this.rocketData = RocketData.fromNbt(nbt.getCompound("CelestialState"));
         }

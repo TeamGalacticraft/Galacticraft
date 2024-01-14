@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,11 +26,19 @@ import dev.galacticraft.api.rocket.RocketData;
 import org.jetbrains.annotations.Nullable;
 
 public interface ServerPlayerAccessor {
-    default @Nullable RocketData getCelestialScreenState() {
+    default boolean galacticraft$isCelestialScreenActive() {
         throw new RuntimeException("This must be overridden!");
     }
 
-    default void setCelestialScreenState(@Nullable RocketData data) {
+    default void galacticraft$closeCelestialScreen() {
+        throw new RuntimeException("This must be overridden!");
+    }
+
+    default @Nullable RocketData galacticraft$getCelestialScreenState() {
+        throw new RuntimeException("This must be overridden!");
+    }
+
+    default void galacticraft$openCelestialScreen(@Nullable RocketData data) {
         throw new RuntimeException("This must be overridden!");
     }
 }

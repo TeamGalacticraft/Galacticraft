@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,27 +29,27 @@ import net.minecraft.world.Container;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public interface GearInventoryProvider {
-    default Container getGearInv() {
+    default Container galacticraft$getGearInv() {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default Container getOxygenTanks() {
+    default Container galacticraft$getOxygenTanks() {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default Container getThermalArmor() {
+    default Container galacticraft$getThermalArmor() {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default Container getAccessories() {
+    default Container galacticraft$getAccessories() {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default void writeGearToNbt(CompoundTag tag) {
+    default void galacticraft$writeGearToNbt(CompoundTag tag) {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default void readGearFromNbt(CompoundTag tag) {
+    default void galacticraft$readGearFromNbt(CompoundTag tag) {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 }

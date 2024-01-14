@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +23,15 @@
 package dev.galacticraft.api.rocket.recipe.type;
 
 import com.mojang.serialization.Codec;
-import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
-import dev.galacticraft.api.rocket.recipe.RocketPartRecipeSlot;
 import dev.galacticraft.api.rocket.recipe.config.RocketPartRecipeConfig;
-import net.minecraft.resources.ResourceKey;
+import dev.galacticraft.machinelib.api.filter.ResourceFilter;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 public abstract class RocketPartRecipeType<C extends RocketPartRecipeConfig> {
     private final @NotNull Codec<RocketPartRecipe<C, RocketPartRecipeType<C>>> codec;
@@ -47,8 +48,18 @@ public abstract class RocketPartRecipeType<C extends RocketPartRecipeConfig> {
         return RocketPartRecipe.create(config, this);
     }
 
-    public abstract int width(C config);
+    public abstract int slots(C config);
+
     public abstract int height(C config);
-    public abstract @NotNull List<RocketPartRecipeSlot> slots(C config);
-    public abstract @NotNull ResourceKey<? extends RocketPart<?, ?>> output(C config);
+
+    public abstract void place(@NotNull SlotConsumer consumer, int leftEdge, int rightEdge, int bottomEdge, C config);
+
+    public abstract @NotNull NonNullList<Ingredient> ingredients(C config);
+
+    public abstract boolean matches(Container container, Level level, C config);
+
+    @FunctionalInterface
+    public interface SlotConsumer {
+        void createSlot(int index, int x, int y, ResourceFilter<Item> filter);
+    }
 }

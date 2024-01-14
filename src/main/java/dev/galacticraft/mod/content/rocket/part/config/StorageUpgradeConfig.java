@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,14 @@
 
 package dev.galacticraft.mod.content.rocket.part.config;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.rocket.part.config.RocketUpgradeConfig;
-import net.minecraft.world.item.crafting.Ingredient;
+import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 
-public record StorageUpgradeConfig(Ingredient recipe) implements RocketUpgradeConfig {
+public record StorageUpgradeConfig(int chests, RocketPartRecipe<?, ?> recipe) implements RocketUpgradeConfig {
+    public static final Codec<StorageUpgradeConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.INT.fieldOf("chests").forGetter(StorageUpgradeConfig::chests),
+            RocketPartRecipe.DIRECT_CODEC.fieldOf("recipe").forGetter(StorageUpgradeConfig::recipe)
+    ).apply(instance, StorageUpgradeConfig::new));
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,13 +25,19 @@ package dev.galacticraft.api.rocket.part;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.rocket.part.config.RocketPartConfig;
 import dev.galacticraft.api.rocket.part.type.RocketPartType;
+import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public sealed interface RocketPart<C extends RocketPartConfig, T extends RocketPartType<C>> permits RocketBody, RocketBooster, RocketBottom, RocketCone, RocketFin, RocketUpgrade {
+public sealed interface RocketPart<C extends RocketPartConfig, T extends RocketPartType<C>> permits RocketBody, RocketBooster, RocketEngine, RocketCone, RocketFin, RocketUpgrade {
     @NotNull C config();
 
     @NotNull T type();
+
+    default @Nullable RocketPartRecipe<?, ?> getRecipe() {
+        return this.type().getRecipe(this.config());
+    }
 
     /**
      * Called every tick when this part is applied to a placed rocket.

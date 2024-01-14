@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,9 +31,9 @@ import com.mojang.serialization.DynamicOps;
 public record AlternateDecoderCodec<A>(Decoder<A> alternative, Codec<A> main) implements Codec<A> {
     @Override
     public <T> DataResult<Pair<A, T>> decode(DynamicOps<T> ops, T input) {
-        DataResult<Pair<A, T>> decode = this.alternative.decode(ops, input);
+        DataResult<Pair<A, T>> decode = this.main.decode(ops, input);
         if (decode.error().isPresent()) {
-            return this.main.decode(ops, input);
+            return this.alternative.decode(ops, input);
         } else {
             return decode;
         }

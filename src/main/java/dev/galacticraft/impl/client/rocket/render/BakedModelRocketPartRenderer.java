@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -54,18 +54,19 @@ public record BakedModelRocketPartRenderer(Supplier<BakedModel> model,
     }
 
     @Override
-    public void renderGUI(ClientLevel world, GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void renderGUI(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float delta) {
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
-        PoseStack matrices = graphics.pose();
-        matrices.translate(0, 0, 150);
-        matrices.translate(8, 8, 8);
-        model.get().getTransforms().getTransform(ItemDisplayContext.GUI).apply(false, matrices);
-        matrices.mulPose(Axis.XN.rotationDegrees(35));
-        matrices.mulPose(Axis.YP.rotationDegrees(225));
-        matrices.mulPose(Axis.ZP.rotationDegrees(180));
-        matrices.scale(16, 16, 16);
+        PoseStack pose = graphics.pose();
+        pose.pushPose();
+        pose.translate(x, y, 10);
+        pose.translate(8, 16, 8);
+        model.get().getTransforms().getTransform(ItemDisplayContext.GUI).apply(false, pose);
+        pose.mulPose(Axis.XN.rotationDegrees(35));
+        pose.mulPose(Axis.YP.rotationDegrees(225));
+        pose.mulPose(Axis.ZP.rotationDegrees(180));
+        pose.scale(10, 10, 10);
 
-        PoseStack.Pose entry = matrices.last();
+        PoseStack.Pose entry = pose.last();
         Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
         RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
         RenderSystem.setShaderTexture(0, this.model.get().getParticleIcon().atlasLocation());
@@ -87,6 +88,7 @@ public record BakedModelRocketPartRenderer(Supplier<BakedModel> model,
         if (model.get().usesBlockLight()) {
             Lighting.setupFor3DItems();
         }
+        pose.popPose();
     }
 
     @Override

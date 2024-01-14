@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -49,15 +49,18 @@ public class GalacticraftAPIClient implements ClientModInitializer {
     public void onInitializeClient() {
         Constant.LOGGER.info("Loaded client module");
         ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "research_update"), (client, networkHandler, buffer, sender) -> {
-            FriendlyByteBuf buf = new FriendlyByteBuf(buffer.copy());
-            client.execute(() -> ((ClientResearchAccessor) Objects.requireNonNull(client.player)).readChanges(buf));
+            int len = buffer.readVarInt();
+            boolean add = buffer.readBoolean();
+            ResourceLocation[] ids = new ResourceLocation[len];
+            for (int i = 0; i < len; i++) {
+                ids[i] = new ResourceLocation(buffer.readUtf());
+            }
+            client.execute(() -> ((ClientResearchAccessor) Objects.requireNonNull(client.player)).galacticraft$updateResearch(add, ids));
         });
-        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "add_satellite"), (client, networkHandler, buffer, sender) -> {
-            ((SatelliteAccessor) networkHandler).addSatellite(buffer.readResourceLocation(), new CelestialBody<>(SatelliteType.INSTANCE, SatelliteConfig.CODEC.decode(NbtOps.INSTANCE, buffer.readNbt()).get().orThrow().getFirst()));
-        });
+        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "add_satellite"), (client, networkHandler, buffer, sender) -> ((SatelliteAccessor) networkHandler).galacticraft$addSatellite(buffer.readResourceLocation(), new CelestialBody<>(SatelliteType.INSTANCE, SatelliteConfig.CODEC.decode(NbtOps.INSTANCE, buffer.readNbt()).get().orThrow().getFirst())));
         ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "remove_satellite"), (client, networkHandler, buffer, sender) -> {
             FriendlyByteBuf buf = new FriendlyByteBuf(buffer.copy());
-            ((SatelliteAccessor) networkHandler).removeSatellite(buf.readResourceLocation());
+            ((SatelliteAccessor) networkHandler).galacticraft$removeSatellite(buf.readResourceLocation());
         });
         ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "oxygen_update"), (client, handler, buf, responseSender) -> {
             int x = buf.readInt();
@@ -73,7 +76,7 @@ public class GalacticraftAPIClient implements ClientModInitializer {
             }
             client.execute(() -> {
                 for (int i = 0; i < stacks.length; i++) {
-                    ((GearInventoryProvider) Objects.requireNonNull(client.level.getEntity(entity))).getGearInv().setItem(i, stacks[i]);
+                    ((GearInventoryProvider) Objects.requireNonNull(client.level.getEntity(entity))).galacticraft$getGearInv().setItem(i, stacks[i]);
                 }
             });
         });

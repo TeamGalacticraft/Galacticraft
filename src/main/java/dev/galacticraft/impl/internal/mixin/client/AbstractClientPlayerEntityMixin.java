@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,7 +35,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -45,13 +44,16 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Mixin(AbstractClientPlayer.class)
 public abstract class AbstractClientPlayerEntityMixin implements ClientResearchAccessor, GearInventoryProvider {
-    @Unique private final List<ResourceLocation> unlockedResearch = new ArrayList<>();
     @Shadow @Final public ClientLevel clientLevel;
+
+    @Shadow public abstract boolean isCreative();
+
+    @Unique private final Set<ResourceLocation> unlockedResearch = new HashSet<>();
 
     private final @Unique SimpleContainer gearInv = galacticraft_createGearInventory();
     private final @Unique Container tankInv = MappedInventory.create(this.gearInv, 4, 5);
@@ -68,65 +70,64 @@ public abstract class AbstractClientPlayerEntityMixin implements ClientResearchA
                     ItemStack stack = inventory.getItem(i);
                     if (stack.getItem() instanceof Accessory accessory && accessory.enablesHearing()) {
                         ((SoundSystemAccessor) ((SoundManagerAccessor) Minecraft.getInstance().getSoundManager()).getSoundSystem())
-                                .updateAtmosphericVolumeMultiplier(1.0f);
+                                .galacticraft$updateAtmosphericVolumeMultiplier(1.0f);
                         return;
                     } else {
                         ((SoundSystemAccessor) ((SoundManagerAccessor) Minecraft.getInstance().getSoundManager()).getSoundSystem())
-                                .updateAtmosphericVolumeMultiplier(pressure);
+                                .galacticraft$updateAtmosphericVolumeMultiplier(pressure);
                     }
                 }
             } else {
-                ((SoundSystemAccessor) ((SoundManagerAccessor) Minecraft.getInstance().getSoundManager()).getSoundSystem()).updateAtmosphericVolumeMultiplier(pressure);
+                ((SoundSystemAccessor) ((SoundManagerAccessor) Minecraft.getInstance().getSoundManager()).getSoundSystem()).galacticraft$updateAtmosphericVolumeMultiplier(pressure);
             }
         });
         return inv;
     }
 
     @Override
-    public void readChanges(FriendlyByteBuf buf) {
-        byte size = buf.readByte();
+    public boolean galacticraft$isUnlocked(ResourceLocation id) {
+        if (this.isCreative()) return true;
+        return this.unlockedResearch.contains(id);
+    }
 
-        for (byte i = 0; i < size; i++) {
-            if (buf.readBoolean()) {
-                this.unlockedResearch.add(new ResourceLocation(buf.readUtf()));
+    @Override
+    public void galacticraft$updateResearch(boolean add, ResourceLocation[] ids) {
+        for (ResourceLocation id : ids) {
+            if (add) {
+                this.unlockedResearch.add(id);
             } else {
-                this.unlockedResearch.remove(new ResourceLocation(buf.readUtf()));
+                this.unlockedResearch.remove(id);
             }
         }
     }
 
     @Override
-    public boolean hasUnlockedResearch(ResourceLocation id) {
-        return this.unlockedResearch.contains(id);
-    }
-
-    @Override
-    public SimpleContainer getGearInv() {
+    public SimpleContainer galacticraft$getGearInv() {
         return this.gearInv;
     }
 
     @Override
-    public Container getOxygenTanks() {
+    public Container galacticraft$getOxygenTanks() {
         return this.tankInv;
     }
 
     @Override
-    public Container getThermalArmor() {
+    public Container galacticraft$getThermalArmor() {
         return this.thermalArmorInv;
     }
 
     @Override
-    public Container getAccessories() {
+    public Container galacticraft$getAccessories() {
         return this.accessoryInv;
     }
 
     @Override
-    public void writeGearToNbt(CompoundTag tag) {
-        tag.put(Constant.Nbt.GEAR_INV, this.getGearInv().createTag());
+    public void galacticraft$writeGearToNbt(CompoundTag tag) {
+        tag.put(Constant.Nbt.GEAR_INV, this.galacticraft$getGearInv().createTag());
     }
 
     @Override
-    public void readGearFromNbt(CompoundTag tag) {
-        this.getGearInv().fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND));
+    public void galacticraft$readGearFromNbt(CompoundTag tag) {
+        this.galacticraft$getGearInv().fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND));
     }
 }

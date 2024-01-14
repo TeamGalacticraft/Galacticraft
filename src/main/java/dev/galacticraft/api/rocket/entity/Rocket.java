@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,17 +25,14 @@ package dev.galacticraft.api.rocket.entity;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.*;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3d;
-
-import java.util.List;
 
 public interface Rocket extends RocketData {
     /**
@@ -46,17 +43,17 @@ public interface Rocket extends RocketData {
 
     void setLaunchStage(LaunchStage stage);
 
-    RocketCone<?, ?> getCone();
+    @Nullable RocketCone<?, ?> getCone();
 
-    RocketBody<?, ?> getBody();
+    @Nullable RocketBody<?, ?> getBody();
 
-    RocketFin<?, ?> getFin();
+    @Nullable RocketFin<?, ?> getFin();
 
-    RocketBooster<?, ?> getBooster();
+    @Nullable RocketBooster<?, ?> getBooster();
 
-    RocketBottom<?, ?> getBottom();
+    @Nullable RocketEngine<?, ?> getEngine();
 
-    RocketUpgrade<?, ?>[] getUpgrades();
+    @Nullable RocketUpgrade<?, ?> getUpgrade();
 
     @NotNull BlockPos getLinkedPad();
 
@@ -85,28 +82,7 @@ public interface Rocket extends RocketData {
     @Nullable Fluid getFuelTankFluid();
     long getFuelTankAmount();
     long getFuelTankCapacity();
+    Storage<FluidVariant> getFuelTank();
 
-    // utility entity methods
-
-    Entity getEntity();
-
-    Level level();
-
-    Vec3 position();
-
-    BlockPos blockPosition();
-
-    Vector3d getVelocity();
-
-    BlockPos getBlockPos();
-
-    double getX();
-
-    double getY();
-
-    double getZ();
-
-    List<Entity> getPassengers();
-
-    // end utility entity methods
+    Entity asEntity();
 }

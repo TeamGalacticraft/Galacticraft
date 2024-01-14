@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,15 +22,13 @@
 
 package dev.galacticraft.mod.client.render.entity.rocket;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
-import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.LaunchStage;
+import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -76,10 +74,10 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
 //        RenderSystem.setShaderTexture(0, getTextureLocation(entity));
         matrices.translate(0.0D, -1.75D, 0.0D);
 
-        ResourceLocation part = entity.bottom();
+        ResourceKey<? extends RocketPart<?, ?>> part = entity.engine();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(ResourceKey.create(RocketRegistries.ROCKET_BOTTOM, part)).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
             matrices.popPose();
         }
 
@@ -88,14 +86,14 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         part = entity.booster();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(ResourceKey.create(RocketRegistries.ROCKET_BOOSTER, part)).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
             matrices.popPose();
         }
 
         part = entity.fin();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(ResourceKey.create(RocketRegistries.ROCKET_FIN, part)).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
             matrices.popPose();
         }
 
@@ -104,7 +102,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         part = entity.body();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(ResourceKey.create(RocketRegistries.ROCKET_BODY, part)).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
             matrices.popPose();
         }
 
@@ -113,7 +111,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         part = entity.cone();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(ResourceKey.create(RocketRegistries.ROCKET_CONE, part)).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
             matrices.popPose();
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@ package dev.galacticraft.mod.content.item;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.storage.PlaceholderItemStorage;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -35,11 +36,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.BlockState;
 
 import static dev.galacticraft.mod.content.item.GCItems.*;
 
@@ -203,20 +202,25 @@ public class GCCreativeModeTabs {
                 output.accept(OXYGEN_GEAR);
 
                 try (Transaction t = Transaction.openOuter()) {
+                    PlaceholderItemStorage itemStorage = new PlaceholderItemStorage();
+                    ContainerItemContext context = ContainerItemContext.ofSingleSlot(itemStorage);
+
                     output.accept(SMALL_OXYGEN_TANK);
-                    ContainerItemContext smallContext = ContainerItemContext.withInitial(SMALL_OXYGEN_TANK.getDefaultInstance());
-                    var storage = smallContext.find(FluidStorage.ITEM);
-                    storage.insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
-                    output.accept(smallContext.getItemVariant().toStack());
+                    itemStorage.setItem(SMALL_OXYGEN_TANK);
+                    context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
+                    output.accept(itemStorage.variant.toStack());
+
                     output.accept(MEDIUM_OXYGEN_TANK);
-                    ContainerItemContext mediumContext = ContainerItemContext.withInitial(MEDIUM_OXYGEN_TANK.getDefaultInstance());
-                    mediumContext.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
-                    output.accept(mediumContext.getItemVariant().toStack());
+                    itemStorage.setItem(MEDIUM_OXYGEN_TANK);
+                    context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
+                    output.accept(itemStorage.variant.toStack());
+
                     output.accept(LARGE_OXYGEN_TANK);
-                    ContainerItemContext largeContext = ContainerItemContext.withInitial(LARGE_OXYGEN_TANK.getDefaultInstance());
-                    largeContext.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
-                    output.accept(largeContext.getItemVariant().toStack());
+                    itemStorage.setItem(LARGE_OXYGEN_TANK);
+                    context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
+                    output.accept(itemStorage.variant.toStack());
                 }
+
                 output.accept(INFINITE_OXYGEN_TANK);
 
                 output.accept(SHIELD_CONTROLLER);

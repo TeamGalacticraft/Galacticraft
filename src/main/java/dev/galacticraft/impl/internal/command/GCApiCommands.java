@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -70,16 +70,16 @@ public class GCApiCommands {
                         return 1;
                     })).then(Commands.literal("get").then(Commands.argument("id", ResourceLocationArgument.id()).executes(context -> {
                         Registry<?> registry = RegistryArgumentType.getRegistry(context, "registry");
-                        context.getSource().sendSuccess(() -> Component.translatable("command.galacticraft.debug.registry.id", registry.key().location(), registry.get(ResourceLocationArgument.getId(context, "id"))), true);
+                        context.getSource().sendSuccess(() -> Component.translatable("command.galacticraft.debug.registry.id", registry.key().location(), ResourceLocationArgument.getId(context, "id"), registry.get(ResourceLocationArgument.getId(context, "id"))), true);
                         return 1;
                     }))).then(Commands.literal("get_raw").then(Commands.argument("id", IntegerArgumentType.integer()).executes(context -> {
                         Registry<?> registry = RegistryArgumentType.getRegistry(context, "registry");
-                        context.getSource().sendSuccess(() -> Component.translatable("command.galacticraft.debug.registry.id", registry.key().location(), registry.byId(IntegerArgumentType.getInteger(context, "id"))), true);
+                        context.getSource().sendSuccess(() -> Component.translatable("command.galacticraft.debug.registry.id", registry.key().location(), ResourceLocationArgument.getId(context, "id"), registry.byId(IntegerArgumentType.getInteger(context, "id"))), true);
                         return 1;
                     }))).then(Commands.literal("to_raw").then(Commands.argument("id", ResourceLocationArgument.id()).executes(context -> {
                         Registry<? super Object> registry = RegistryArgumentType.getRegistry(context, "registry");
                         Object o = registry.get(ResourceLocationArgument.getId(context, "id"));
-                        context.getSource().sendSuccess(() -> Component.translatable("command.galacticraft.debug.registry.id", registry.key().location(), registry.getId(o)), true);
+                        context.getSource().sendSuccess(() -> Component.translatable("command.galacticraft.debug.registry.id", registry.key().location(), o, registry.getId(o)), true);
                         return 1;
                     }))).then(Commands.literal("dump_values").then(Commands.argument("id", ResourceLocationArgument.id()).executes(context -> {
                         CommandSourceStack source = context.getSource();

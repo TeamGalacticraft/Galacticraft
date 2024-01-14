@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.events;
 
-import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
@@ -64,7 +63,7 @@ public class GCEventHandlers {
 
     public static InteractionResult allowCryogenicSleep(LivingEntity entity, BlockPos sleepingPos, BlockState state, boolean vanillaResult) {
         if (entity instanceof CryogenicAccessor player) {
-            if (player.isInCryoSleep()) {
+            if (player.galacticraft$isInCryoSleep()) {
                 return InteractionResult.SUCCESS;
             }
         }
@@ -72,7 +71,7 @@ public class GCEventHandlers {
     }
 
     public static Direction changeSleepPosition(LivingEntity entity, BlockPos sleepingPos, @Nullable Direction sleepingDirection) {
-        if (entity instanceof CryogenicAccessor player && player.isInCryoSleep()) {
+        if (entity instanceof CryogenicAccessor player && player.galacticraft$isInCryoSleep()) {
             BlockState state = entity.level().getBlockState(sleepingPos);
             if (state.getBlock() instanceof CryogenicChamberBlock)
                 return state.getValue(CryogenicChamberBlock.FACING);
@@ -93,7 +92,7 @@ public class GCEventHandlers {
     }
 
     public static InteractionResult canCryoSleep(Player player, BlockPos sleepingPos, boolean vanillaResult) {
-        if (player.isInCryoSleep())
+        if (player.galacticraft$isInCryoSleep())
             return InteractionResult.SUCCESS;
         return vanillaResult ? InteractionResult.SUCCESS : InteractionResult.PASS;
     }
@@ -102,7 +101,7 @@ public class GCEventHandlers {
         Level level = entity.level();
         if (!level.isClientSide && level instanceof ServerLevel serverLevel && entity instanceof CryogenicAccessor player) {
             entity.heal(5.0F);
-            player.setCryogenicChamberCooldown(6000);
+            player.galacticraft$setCryogenicChamberCooldown(6000);
 
 //            if (serverLevel.areAllPlayersAsleep() && ws.getGameRules().getBoolean("doDaylightCycle")) {
 //                WorldUtil.setNextMorning(ws);
@@ -119,8 +118,8 @@ public class GCEventHandlers {
     }
 
     public static void onPlayerChangePlanets(MinecraftServer server, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody) {
-        if (body.type() instanceof Landable landable && (player.getCelestialScreenState().canTravel(server.registryAccess(), fromBody, body) || player.getCelestialScreenState() == RocketData.empty())) {
-            player.setCelestialScreenState(null);
+        if (body.type() instanceof Landable landable && player.galacticraft$isCelestialScreenActive() && (player.galacticraft$getCelestialScreenState() == null || player.galacticraft$getCelestialScreenState().canTravel(server.registryAccess(), fromBody, body))) {
+            player.galacticraft$closeCelestialScreen();
             if (body.config() instanceof PlanetConfig planetConfig) {
                 var chestSpawn = planetConfig.celestialHandler().getParaChestSpawnLocation(player.serverLevel(), player, player.getRandom());
                 if (chestSpawn != null) {

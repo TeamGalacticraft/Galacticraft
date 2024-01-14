@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,14 +26,16 @@ import com.mojang.serialization.Codec;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.config.RocketPartConfig;
+import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Base rocket part interface.
- * To create a custom rocket part, extend {@link RocketBottomType}, {@link RocketBoosterType}, {@link RocketBottomType}, {@link RocketConeType}, {@link RocketFinType}, or {@link RocketUpgradeType}
+ * To create a custom rocket part, extend {@link RocketEngineType}, {@link RocketBoosterType}, {@link RocketEngineType}, {@link RocketConeType}, {@link RocketFinType}, or {@link RocketUpgradeType}
  */
-public sealed interface RocketPartType<C extends RocketPartConfig> permits RocketBodyType, RocketBoosterType, RocketBottomType, RocketConeType, RocketFinType, RocketUpgradeType {
+public sealed interface RocketPartType<C extends RocketPartConfig> permits RocketBodyType, RocketBoosterType, RocketEngineType, RocketConeType, RocketFinType, RocketUpgradeType {
 
     @NotNull RocketPart<C, ? extends RocketPartType<C>> configure(@NotNull C config);
 
@@ -47,4 +49,6 @@ public sealed interface RocketPartType<C extends RocketPartConfig> permits Rocke
     @NotNull Codec<? extends RocketPart<C, ? extends RocketPartType<C>>> codec();
 
     @NotNull ConfiguredTravelPredicate<?, ?> travelPredicate(@NotNull C config);
+
+    @Nullable RocketPartRecipe<?,?> getRecipe(C config);
 }

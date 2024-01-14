@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,8 +36,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public class ClientPacketListenerMixin {
     @Inject(method = "handleAnimate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;stopSleepInBed(ZZ)V"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     private void gc$handleCryoStop(ClientboundAnimatePacket clientboundAnimatePacket, CallbackInfo ci, Entity entity, Player player) {
-        if (player.isInCryoSleep()) {
-            player.stopCryogenicSleep(false, false);
+        if (player.galacticraft$isInCryoSleep()) {
+            player.galacticraft$stopCryogenicSleep(false, false);
             ci.cancel();
         }
     }

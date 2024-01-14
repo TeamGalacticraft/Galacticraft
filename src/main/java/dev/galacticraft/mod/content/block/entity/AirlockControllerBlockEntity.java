@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -81,23 +81,13 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
 
             if ((this.active || !this.redstoneActivation) && this.playerDistanceActivation)
             {
-                double distance = 0D;
-
-                switch (this.playerDistanceSelection)
-                {
-                    case 0:
-                        distance = 1.0D;
-                        break;
-                    case 1:
-                        distance = 2.0D;
-                        break;
-                    case 2:
-                        distance = 5.0D;
-                        break;
-                    case 3:
-                        distance = 10.0D;
-                        break;
-                }
+                double distance = switch (this.playerDistanceSelection) {
+                    case 0 -> 1.0D;
+                    case 1 -> 2.0D;
+                    case 2 -> 5.0D;
+                    case 3 -> 10.0D;
+                    default -> 0D;
+                };
 
                 Vec3 minPos = new Vec3(getBlockPos().getX() + 0.5D - distance, getBlockPos().getY() + 0.5D - distance, getBlockPos().getZ() + 0.5D - distance);
                 Vec3 maxPos = new Vec3(getBlockPos().getX() + 0.5D + distance, getBlockPos().getY() + 0.5D + distance, getBlockPos().getZ() + 0.5D + distance);

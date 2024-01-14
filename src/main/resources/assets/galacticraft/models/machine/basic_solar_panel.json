@@ -1,0 +1,7 @@
+{
+  "machinelib:generate": "galacticraft:solar_panel",
+  "sprites": {
+    "front": "galacticraft:block/basic_solar_panel",
+    "top": "galacticraft:block/solar_panel"
+  }
+}

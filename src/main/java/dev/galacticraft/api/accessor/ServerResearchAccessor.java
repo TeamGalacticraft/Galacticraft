@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,18 +22,9 @@
 
 package dev.galacticraft.api.accessor;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
 public interface ServerResearchAccessor extends ResearchAccessor {
-    void unlockResearch(ResourceLocation id, boolean unlocked);
-
-    boolean isResearchDirty();
-
-    FriendlyByteBuf writeResearchChanges(FriendlyByteBuf buf);
-
-    CompoundTag writeResearchToNbt(CompoundTag nbt);
-
-    void readResearchFromNbt(CompoundTag nbt);
+    void galacticraft$unlockRocketPartRecipes(ResourceLocation... id);
+    void galacticraft$unlearnRocketPartRecipes(ResourceLocation... id);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@ package dev.galacticraft.mod.data;
 import com.mojang.serialization.Lifecycle;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.RocketRegistries;
-import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.impl.universe.galaxy.GalaxyImpl;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCCelestialBodies;
@@ -97,7 +96,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(BootstrapDataProvider.create("Rocket Bodies", GCRocketParts::bootstrapBody));
         pack.addProvider(BootstrapDataProvider.create("Rocket Fins", GCRocketParts::bootstrapFin));
         pack.addProvider(BootstrapDataProvider.create("Rocket Boosters", GCRocketParts::bootstrapBooster));
-        pack.addProvider(BootstrapDataProvider.create("Rocket Bottoms", GCRocketParts::bootstrapBottom));
+        pack.addProvider(BootstrapDataProvider.create("Rocket Engines", GCRocketParts::bootstrapEngine));
         pack.addProvider(BootstrapDataProvider.create("Rocket Upgrades", GCRocketParts::bootstrapUpgrade));
 
         // models
@@ -116,9 +115,8 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         registryBuilder.add(RocketRegistries.ROCKET_BODY, GCRocketParts::bootstrapBody);
         registryBuilder.add(RocketRegistries.ROCKET_FIN, GCRocketParts::bootstrapFin);
         registryBuilder.add(RocketRegistries.ROCKET_BOOSTER, GCRocketParts::bootstrapBooster);
-        registryBuilder.add(RocketRegistries.ROCKET_BOTTOM, GCRocketParts::bootstrapBottom);
+        registryBuilder.add(RocketRegistries.ROCKET_ENGINE, GCRocketParts::bootstrapEngine);
         registryBuilder.add(RocketRegistries.ROCKET_UPGRADE, GCRocketParts::bootstrapUpgrade);
-        registryBuilder.add(RocketRegistries.ROCKET_PART_RECIPE, RocketPartRecipe::bootstrapRegistries);
 
         registryBuilder.add(Registries.BIOME, Lifecycle.stable(), GCBiomes::bootstrapRegistries);
         registryBuilder.add(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, Lifecycle.stable(), GCMultiNoiseBiomeSourceParameterLists::bootstrapRegistries);

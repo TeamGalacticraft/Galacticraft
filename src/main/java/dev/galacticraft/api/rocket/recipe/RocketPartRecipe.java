@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,26 +24,19 @@ package dev.galacticraft.api.rocket.recipe;
 
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.registry.BuiltInRocketRegistries;
-import dev.galacticraft.api.registry.RocketRegistries;
-import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.recipe.config.RocketPartRecipeConfig;
 import dev.galacticraft.api.rocket.recipe.type.RocketPartRecipeType;
 import dev.galacticraft.impl.rocket.recipe.RocketPartRecipeImpl;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.NonNullList;
 import net.minecraft.data.worldgen.BootstapContext;
-import net.minecraft.resources.RegistryFileCodec;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
-public interface RocketPartRecipe<C extends RocketPartRecipeConfig, T extends RocketPartRecipeType<C>> {
+public interface RocketPartRecipe<C extends RocketPartRecipeConfig, T extends RocketPartRecipeType<C>> extends Recipe<Container> {
     Codec<RocketPartRecipe<?, ?>> DIRECT_CODEC = BuiltInRocketRegistries.ROCKET_PART_RECIPE_TYPE.byNameCodec().dispatch(RocketPartRecipe::type, RocketPartRecipeType::codec);
-    Codec<Holder<RocketPartRecipe<?, ?>>> CODEC = RegistryFileCodec.create(RocketRegistries.ROCKET_PART_RECIPE, DIRECT_CODEC);
-    Codec<HolderSet<RocketPartRecipe<?, ?>>> LIST_CODEC = RegistryCodecs.homogeneousList(RocketRegistries.ROCKET_PART_RECIPE, DIRECT_CODEC);
 
     @Contract("_, _ -> new")
     static <C extends RocketPartRecipeConfig, T extends RocketPartRecipeType<C>> @NotNull RocketPartRecipe<C, RocketPartRecipeType<C>> create(C config, T type) {
@@ -54,14 +47,14 @@ public interface RocketPartRecipe<C extends RocketPartRecipeConfig, T extends Ro
 
     @NotNull C config();
 
-    // PIXELS
-    int width();
+    int slots();
 
-    int height();
+    int height(); // pixels
 
-    @NotNull List<RocketPartRecipeSlot> slots();
+    void place(@NotNull RocketPartRecipeType.SlotConsumer consumer, int leftEdge, int rightEdge, int bottomEdge);
 
-    ResourceKey<? extends RocketPart<?, ?>> output();
+    @Override
+    @NotNull NonNullList<Ingredient> getIngredients();
 
     static void bootstrapRegistries(BootstapContext<RocketPartRecipe<?, ?>> context) {
 

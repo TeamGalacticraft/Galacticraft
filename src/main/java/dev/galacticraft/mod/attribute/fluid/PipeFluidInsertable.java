@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -73,11 +73,6 @@ public class PipeFluidInsertable implements Storage<FluidVariant>, StorageView<F
 
     @Override
     public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
-        return 0;
-    }
-
-    @Override
-    public long simulateExtract(FluidVariant resource, long maxAmount, @Nullable TransactionContext transaction) {
         return 0;
     }
 

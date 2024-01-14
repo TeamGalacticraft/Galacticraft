@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -52,8 +52,8 @@ public class BakedModelItemRocketPartRenderer implements RocketPartRenderer {
     }
 
     @Override
-    public void renderGUI(ClientLevel world, GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        graphics.renderItem(stack, (int)graphics.pose().last().pose().m03(), (int)graphics.pose().last().pose().m13());
+    public void renderGUI(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float delta) {
+        graphics.renderFakeItem(this.stack, x, y);
     }
 
     @Override

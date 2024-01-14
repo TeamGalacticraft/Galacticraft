@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -143,7 +143,7 @@ class AirLockProtocol
         this.minZ = 6000000;
         this.maxZ = -6000000;
 
-        this.adjacentAirLocks = new ArrayList<BlockPos>();
+        this.adjacentAirLocks = new ArrayList<>();
         this.checked.clear();
         final BlockPos headPos = this.head.getBlockPos();
         this.checked.add(headPos);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,24 +23,19 @@
 package dev.galacticraft.impl.internal.fabric;
 
 import dev.galacticraft.api.accessor.SatelliteAccessor;
-import dev.galacticraft.api.accessor.ServerResearchAccessor;
 import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.registry.BuiltInRocketRegistries;
 import dev.galacticraft.dynamicdimensions.api.event.DynamicDimensionLoadCallback;
 import dev.galacticraft.impl.internal.command.GCApiCommands;
-import dev.galacticraft.mod.data.gen.SatelliteChunkGenerator;
 import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.mod.Constant;
-import io.netty.buffer.Unpooled;
+import dev.galacticraft.mod.data.gen.SatelliteChunkGenerator;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleContainer;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -52,13 +47,6 @@ public class GalacticraftAPI implements ModInitializer {
     public void onInitialize() {
         long startInitTime = System.currentTimeMillis();
         GCApiCommands.register();
-        ServerTickEvents.END_SERVER_TICK.register(server -> {
-            for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-                if (((ServerResearchAccessor) player).isResearchDirty()) {
-                    ServerPlayNetworking.send(player, new ResourceLocation(Constant.MOD_ID, "research_update"), ((ServerResearchAccessor) player).writeResearchChanges(new FriendlyByteBuf(Unpooled.buffer())));
-                }
-            }
-        });
         ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "flag_data"), (server, player, handler, buf, responseSender) -> {
             int[] array = buf.readVarIntArray();
             for (int i = 0; i < array.length; i++) {
@@ -84,7 +72,7 @@ public class GalacticraftAPI implements ModInitializer {
         GcApiEntityAttributes.init();
 
         DynamicDimensionLoadCallback.register((minecraftServer, dynamicDimensionLoader) -> {
-            ((SatelliteAccessor) minecraftServer).loadSatellites(dynamicDimensionLoader);
+            ((SatelliteAccessor) minecraftServer).galacticraft$loadSatellites(dynamicDimensionLoader);
         });
         Gases.init();
         Constant.LOGGER.info("Initialization Complete. (Took {}ms).", System.currentTimeMillis() - startInitTime);

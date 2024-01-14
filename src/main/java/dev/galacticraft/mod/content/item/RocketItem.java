@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,19 +24,16 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.impl.rocket.RocketDataImpl;
-import dev.galacticraft.impl.universe.BuiltinObjects;
-import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
-import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -45,7 +42,6 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -58,7 +54,6 @@ import java.util.List;
 public class RocketItem extends Item {
     public RocketItem(Properties properties) {
         super(properties);
-
     }
 
     @Override
@@ -67,8 +62,8 @@ public class RocketItem extends Item {
                 && context.getLevel().getBlockState(context.getClickedPos()).getValue(RocketLaunchPadBlock.PART) != RocketLaunchPadBlock.Part.NONE) {
             BlockPos pos = new BlockPos(context.getClickedPos()).offset(RocketLaunchPadBlock.partToCenterPos(context.getLevel().getBlockState(context.getClickedPos()).getValue(RocketLaunchPadBlock.PART)));
             assert context.getLevel().getBlockState(pos).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD;
-            RocketLaunchPadBlockEntity blockEntity = (RocketLaunchPadBlockEntity) context.getLevel().getBlockEntity(pos);
-            if (blockEntity.hasRocket()) return InteractionResult.FAIL;
+            RocketLaunchPadBlockEntity pad = (RocketLaunchPadBlockEntity) context.getLevel().getBlockEntity(pos);
+            if (pad.hasRocket()) return InteractionResult.FAIL;
 
             if (context.getLevel() instanceof ServerLevel) {
                 RocketEntity rocket = new RocketEntity(GCEntityTypes.ROCKET, context.getLevel());
@@ -84,8 +79,7 @@ public class RocketItem extends Item {
                     stack.shrink(1);
                     context.getPlayer().setItemInHand(context.getHand(), stack);
                 }
-                blockEntity.setRocketEntityUUID(rocket.getUUID());
-                blockEntity.setRocketEntityId(rocket.getId());
+                pad.setLinkedRocket(rocket);
             }
             return InteractionResult.SUCCESS;
         }
@@ -118,12 +112,12 @@ public class RocketItem extends Item {
                 tooltip.add(Component.translatable("tooltip.galacticraft.part_type.cone", Component.translatable("tooltip." + id.getNamespace() + ".cone." + id.getPath() + ".name")).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
                 id = new ResourceLocation(tag.getString("body"));
                 tooltip.add(Component.translatable("tooltip.galacticraft.part_type.body", Component.translatable("tooltip." + id.getNamespace() + ".body." + id.getPath() + ".name")).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
-                id = new ResourceLocation(tag.getString("body"));
+                id = new ResourceLocation(tag.getString("fin"));
                 tooltip.add(Component.translatable("tooltip.galacticraft.part_type.fin", Component.translatable("tooltip." + id.getNamespace() + ".fin." + id.getPath() + ".name")).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
                 id = new ResourceLocation(tag.getString("body"));
                 tooltip.add(Component.translatable("tooltip.galacticraft.part_type.booster", Component.translatable("tooltip." + id.getNamespace() + ".booster." + id.getPath() + ".name")).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
                 id = new ResourceLocation(tag.getString("body"));
-                tooltip.add(Component.translatable("tooltip.galacticraft.part_type.bottom", Component.translatable("tooltip." + id.getNamespace() + ".bottom." + id.getPath() + ".name")).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+                tooltip.add(Component.translatable("tooltip.galacticraft.part_type.engine", Component.translatable("tooltip." + id.getNamespace() + ".engine." + id.getPath() + ".name")).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
                 ListTag list = tag.getList("upgrades", Tag.TAG_STRING);
                 for (int i = 0; i < list.size(); i++) {
                     id = new ResourceLocation(list.getString(i));

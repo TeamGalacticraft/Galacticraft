@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,11 +25,5 @@ package dev.galacticraft.api.accessor;
 import net.minecraft.resources.ResourceLocation;
 
 public interface ResearchAccessor {
-    /**
-     * Returns whether the supplied rocket part is unlocked for the player
-     *
-     * @param id The ID of the rocket part to test for
-     * @return whether the supplied rocket part is unlocked for the player
-     */
-    boolean hasUnlockedResearch(ResourceLocation id);
+    boolean galacticraft$isUnlocked(ResourceLocation id);
 }

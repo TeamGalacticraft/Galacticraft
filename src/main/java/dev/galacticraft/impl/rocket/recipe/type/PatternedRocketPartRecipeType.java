@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,11 +22,14 @@
 
 package dev.galacticraft.impl.rocket.recipe.type;
 
-import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipeSlot;
 import dev.galacticraft.api.rocket.recipe.type.RocketPartRecipeType;
 import dev.galacticraft.impl.rocket.recipe.config.PatternedRocketPartRecipeConfig;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -39,8 +42,8 @@ public class PatternedRocketPartRecipeType extends RocketPartRecipeType<Patterne
     }
 
     @Override
-    public int width(PatternedRocketPartRecipeConfig config) {
-        return config.width();
+    public int slots(PatternedRocketPartRecipeConfig config) {
+        return config.left().size() + config.right().size();
     }
 
     @Override
@@ -49,12 +52,53 @@ public class PatternedRocketPartRecipeType extends RocketPartRecipeType<Patterne
     }
 
     @Override
-    public @NotNull List<RocketPartRecipeSlot> slots(PatternedRocketPartRecipeConfig config) {
-        return config.slots();
+    public void place(@NotNull SlotConsumer consumer, int leftEdge, int rightEdge, int bottomEdge, PatternedRocketPartRecipeConfig config) {
+        List<RocketPartRecipeSlot> slots = config.left();
+        for (int i = 0; i < slots.size(); i++) {
+            RocketPartRecipeSlot slot = slots.get(i);
+            consumer.createSlot(i, leftEdge + slot.x(), bottomEdge - this.height(config) + slot.y(), (item, tag) -> {
+                if (item == null) return true;
+
+                ItemStack stack = new ItemStack(item, 1);
+                stack.setTag(tag);
+                return slot.ingredient().test(stack);
+            });
+        }
+        int size = slots.size();
+        slots = config.right();
+        for (int i = 0; i < slots.size(); i++) {
+            RocketPartRecipeSlot slot = slots.get(i);
+            consumer.createSlot(i + size, rightEdge + slot.x(), bottomEdge - this.height(config) + slot.y(), (item, tag) -> {
+                if (item == null) return true;
+
+                ItemStack stack = new ItemStack(item, 1);
+                stack.setTag(tag);
+                return slot.ingredient().test(stack);
+            });
+        }
     }
 
     @Override
-    public @NotNull ResourceKey<? extends RocketPart<?, ?>> output(PatternedRocketPartRecipeConfig config) {
-        return config.output();
+    public @NotNull NonNullList<Ingredient> ingredients(PatternedRocketPartRecipeConfig config) {
+        return config.ingredients();
+    }
+
+    @Override
+    public boolean matches(Container container, Level level, PatternedRocketPartRecipeConfig config) {
+        List<RocketPartRecipeSlot> left = config.left();
+        for (int i = 0, leftSize = left.size(); i < leftSize; i++) {
+            ItemStack stack = container.getItem(i);
+            if (stack.isEmpty() || !left.get(i).ingredient().test(stack)) {
+                return false;
+            }
+        }
+        List<RocketPartRecipeSlot> right = config.right();
+        for (int i = 0, rightSize = right.size(); i < rightSize; i++) {
+            ItemStack stack = container.getItem(left.size() + i);
+            if (stack.isEmpty() || !left.get(i).ingredient().test(stack)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

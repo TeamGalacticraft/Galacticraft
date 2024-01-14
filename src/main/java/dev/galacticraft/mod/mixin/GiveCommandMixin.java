@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,13 @@
 
 package dev.galacticraft.mod.mixin;
 
+import dev.galacticraft.mod.events.GiveCommandEvents;
+import net.minecraft.server.commands.GiveCommand;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Slice;
-import dev.galacticraft.mod.events.GiveCommandEvents;
-import net.minecraft.server.commands.GiveCommand;
-import net.minecraft.world.item.ItemStack;
 
 @Mixin(GiveCommand.class)
 public class GiveCommandMixin {

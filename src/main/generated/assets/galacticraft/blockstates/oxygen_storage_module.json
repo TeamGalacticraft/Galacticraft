@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft:models/block/oxygen_storage_module"
+      "model": "galacticraft:machine/oxygen_storage_module"
     }
   }
 }

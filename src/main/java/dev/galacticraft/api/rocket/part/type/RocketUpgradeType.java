@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,6 @@ package dev.galacticraft.api.rocket.part.type;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.rocket.part.RocketUpgrade;
 import dev.galacticraft.api.rocket.part.config.RocketUpgradeConfig;
-import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -42,8 +41,6 @@ public non-sealed abstract class RocketUpgradeType<C extends RocketUpgradeConfig
     public @NotNull RocketUpgrade<C, RocketUpgradeType<C>> configure(@NotNull C config) {
         return RocketUpgrade.create(config, this);
     }
-
-    public abstract @NotNull Ingredient upgradeRecipe(@NotNull C config);
 
     @Override
     public @NotNull Codec<RocketUpgrade<C, RocketUpgradeType<C>>> codec() {

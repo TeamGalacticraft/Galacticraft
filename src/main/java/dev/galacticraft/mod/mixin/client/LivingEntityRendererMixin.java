@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -43,6 +44,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class LivingEntityRendererMixin {
     @Shadow protected EntityModel<?> model;
 
+    @Unique
     private static float sleepDirectionToRotationCryo(Direction direction) {
         return switch (direction) {
             default -> 0.0F;
@@ -54,7 +56,7 @@ public abstract class LivingEntityRendererMixin {
 
     @Redirect(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasPose(Lnet/minecraft/world/entity/Pose;)Z"))
     private boolean gc$hasSleepPose(LivingEntity instance, Pose pose) {
-        if (instance instanceof CryogenicAccessor player && player.isInCryoSleep())
+        if (instance instanceof CryogenicAccessor player && player.galacticraft$isInCryoSleep())
             return false;
         return instance.hasPose(pose);
     }
@@ -73,7 +75,7 @@ public abstract class LivingEntityRendererMixin {
 
     @Inject(method = "setupRotations", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getBedOrientation()Lnet/minecraft/core/Direction;"), cancellable = true)
     private void galacticraft$renderCryoChamberPos(LivingEntity livingEntity, PoseStack poseStack, float f, float g, float h, CallbackInfo ci) {
-        if (livingEntity instanceof CryogenicAccessor livingEntityAccessor && livingEntityAccessor.isInCryoSleep()) {
+        if (livingEntity instanceof CryogenicAccessor livingEntityAccessor && livingEntityAccessor.galacticraft$isInCryoSleep()) {
             Direction direction = livingEntity.getBedOrientation();
             float j = direction != null ? sleepDirectionToRotationCryo(direction) : g;
             poseStack.mulPose(Axis.YP.rotationDegrees(j));

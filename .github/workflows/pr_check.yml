@@ -6,17 +6,17 @@ on:
 
 jobs:
   Build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
 
       - name: Setup JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: temurin
@@ -25,13 +25,3 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: checkLicenses build
-
-#      - name: Copy GameTest Results
-#        run: cp run/TEST-gametest.xml build/test-results/test/
-
-      - name: Publish Test Report
-        uses: mikepenz/action-junit-report@v3
-        if: always()
-        with:
-          report_paths: "**/build/test-results/test/TEST-*.xml"
-          token: ${{ secrets.GITHUB_TOKEN }}

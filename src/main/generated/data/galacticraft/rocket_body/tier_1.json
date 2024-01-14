@@ -8,6 +8,71 @@
         "weight": 1
       }
     },
-    "upgrade_capacity": 1
+    "recipe": {
+      "type": "galacticraft:wrap_patterned",
+      "config": {
+        "height": 72,
+        "left": [
+          {
+            "ingredient": {
+              "item": "galacticraft:heavy_plating"
+            },
+            "x": -18,
+            "y": 0
+          },
+          {
+            "ingredient": {
+              "item": "galacticraft:heavy_plating"
+            },
+            "x": -18,
+            "y": 18
+          },
+          {
+            "ingredient": {
+              "item": "galacticraft:heavy_plating"
+            },
+            "x": -18,
+            "y": 36
+          },
+          {
+            "ingredient": {
+              "item": "galacticraft:heavy_plating"
+            },
+            "x": -18,
+            "y": 54
+          }
+        ],
+        "right": [
+          {
+            "ingredient": {
+              "item": "galacticraft:heavy_plating"
+            },
+            "x": 0,
+            "y": 0
+          },
+          {
+            "ingredient": {
+              "item": "galacticraft:heavy_plating"
+            },
+            "x": 0,
+            "y": 18
+          },
+          {
+            "ingredient": {
+              "item": "galacticraft:heavy_plating"
+            },
+            "x": 0,
+            "y": 36
+          },
+          {
+            "ingredient": {
+              "item": "galacticraft:heavy_plating"
+            },
+            "x": 0,
+            "y": 54
+          }
+        ]
+      }
+    }
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,7 @@ public class GalacticraftWailaPlugin implements IWailaPlugin {
             if (Screen.hasShiftDown()) {
                 MachineConfiguration configuration = MachineConfiguration.create();
                 configuration.readTag(accessor.getData().raw().getCompound("config"));
-                tooltip.addLine(Component.translatable("ui.galacticraft.machine.redstone.redstone", configuration.getRedstoneActivation().getName()).setStyle(Constant.Text.Color.RED_STYLE));
+                tooltip.addLine(Component.translatable("ui.galacticraft.machine.redstone.redstone", configuration.getRedstoneMode().getName()).setStyle(Constant.Text.Color.RED_STYLE));
                 if (configuration.getSecurity().getOwner() != null) {
                     String username = configuration.getSecurity().getUsername();
                     tooltip.addLine(Component.translatable("ui.galacticraft.machine.security.owned_by", Component.literal(username != null ? username : "???").setStyle(Constant.Text.Color.WHITE_STYLE)).setStyle(Constant.Text.Color.AQUA_STYLE));
