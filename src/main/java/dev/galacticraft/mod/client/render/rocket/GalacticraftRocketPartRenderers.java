@@ -30,73 +30,20 @@ import dev.galacticraft.mod.content.GCRocketParts;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 public class GalacticraftRocketPartRenderers {
-    private static final ResourceLocation DEFAULT_CONE = new ResourceLocation(Constant.MOD_ID, "misc/rocket_cone_basic");
-    private static final ResourceLocation ADVANCED_CONE = new ResourceLocation(Constant.MOD_ID, "misc/rocket_cone_advanced");
-    private static final ResourceLocation SLOPED_CONE = new ResourceLocation(Constant.MOD_ID, "misc/rocket_cone_sloped");
-    private static final ResourceLocation DEFAULT_BODY = new ResourceLocation(Constant.MOD_ID, "misc/rocket_body");
-    private static final ResourceLocation DEFAULT_FIN = new ResourceLocation(Constant.MOD_ID, "misc/rocket_fins");
-    private static final ResourceLocation DEFAULT_ENGINE = new ResourceLocation(Constant.MOD_ID, "misc/rocket_engine");
-    private static final ResourceLocation BOOSTER_TIER_1 = new ResourceLocation(Constant.MOD_ID, "misc/rocket_thruster_tier_1");
-    private static final ResourceLocation BOOSTER_TIER_2 = new ResourceLocation(Constant.MOD_ID, "misc/rocket_thruster_tier_2");
-
-    private static BakedModel EMPTY_MODEL = new BakedModel() {
-        @Override
-        public List<BakedQuad> getQuads(@Nullable BlockState blockState, @Nullable Direction direction, RandomSource randomSource) {
-            return Collections.emptyList();
-        }
-
-        @Override
-        public boolean useAmbientOcclusion() {
-            return false;
-        }
-
-        @Override
-        public boolean isGui3d() {
-            return false;
-        }
-
-        @Override
-        public boolean usesBlockLight() {
-            return false;
-        }
-
-        @Override
-        public boolean isCustomRenderer() {
-            return false;
-        }
-
-        @Override
-        public TextureAtlasSprite getParticleIcon() {
-            return null;
-        }
-
-        @Override
-        public ItemTransforms getTransforms() {
-            return ItemTransforms.NO_TRANSFORMS;
-        }
-
-        @Override
-        public ItemOverrides getOverrides() {
-            return ItemOverrides.EMPTY;
-        }
-    };
+    private static final ResourceLocation DEFAULT_CONE = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_cone_basic.json");
+    private static final ResourceLocation ADVANCED_CONE = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_cone_advanced.json");
+    private static final ResourceLocation SLOPED_CONE = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_cone_sloped.json");
+    private static final ResourceLocation DEFAULT_BODY = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_body.json");
+    private static final ResourceLocation DEFAULT_FIN = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_fins.json");
+    private static final ResourceLocation DEFAULT_ENGINE = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_engine.json");
+    private static final ResourceLocation BOOSTER_TIER_1 = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_thruster_tier_1.json");
+    private static final ResourceLocation BOOSTER_TIER_2 = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_thruster_tier_2.json");
 
     public static void register() {
         RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().getModel(DEFAULT_CONE))), Sheets::translucentCullBlockSheet));
