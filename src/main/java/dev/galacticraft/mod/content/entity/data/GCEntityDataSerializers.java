@@ -36,21 +36,12 @@ public class GCEntityDataSerializers {
     public static final EntityDataSerializer<ResourceLocation> IDENTIFIER = new EntityDataSerializer<>() {
         @Override
         public void write(FriendlyByteBuf buffer, ResourceLocation value) {
-            if (value == null) {
-                buffer.writeBoolean(false);
-            } else {
-                buffer.writeBoolean(true);
-                buffer.writeResourceLocation(value);
-            }
+            buffer.writeResourceLocation(value);
         }
 
         @Override
         public ResourceLocation read(FriendlyByteBuf buffer) {
-            if (buffer.readBoolean()) {
-                return buffer.readResourceLocation();
-            } else {
-                return null;
-            }
+            return buffer.readResourceLocation();
         }
 
         @Override

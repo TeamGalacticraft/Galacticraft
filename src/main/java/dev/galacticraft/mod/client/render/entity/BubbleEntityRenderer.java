@@ -48,7 +48,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
  */
 @Environment(EnvType.CLIENT)
 public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
-    private static final ResourceLocation MODEL = new ResourceLocation(Constant.MOD_ID, "models/misc/sphere.json");
+    private static final ResourceLocation MODEL = new ResourceLocation(Constant.MOD_ID, "misc/sphere");
     public static BakedModel bubbleModel;
 
     public BubbleEntityRenderer(EntityRendererProvider.Context context) {

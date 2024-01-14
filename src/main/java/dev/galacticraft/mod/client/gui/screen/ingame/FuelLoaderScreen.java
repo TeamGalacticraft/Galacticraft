@@ -22,24 +22,21 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.google.common.collect.Lists;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
+import dev.galacticraft.machinelib.client.api.util.DisplayUtil;
+import dev.galacticraft.machinelib.client.api.util.GraphicsUtil;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.block.entity.machine.FuelLoaderBlockEntity;
-import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.FuelLoaderMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
-import net.minecraft.ChatFormatting;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 
 import java.util.ArrayList;
@@ -56,14 +53,14 @@ public class FuelLoaderScreen extends MachineScreen<FuelLoaderBlockEntity, FuelL
     public static final int RED_X_HEIGHT = 11;
 
     public static final int ROCKET_FACE_U = 176;
-    public static final int ROCKET_FACE_V = 53;
+    public static final int ROCKET_FACE_V = 49;
     public static final int ROCKET_FACE_WIDTH = 14;
-    public static final int ROCKET_FACE_HEIGHT = 35;
+    public static final int ROCKET_FACE_HEIGHT = 34;
 
-    public static final int TANK_OVERLAY_U = 176;
-    public static final int TANK_OVERLAY_V = 0;
+    public static final int TANK_OVERLAY_U = 177;
+    public static final int TANK_OVERLAY_V = 1;
     public static final int TANK_OVERLAY_WIDTH = 38;
-    public static final int TANK_OVERLAY_HEIGHT = 38;
+    public static final int TANK_OVERLAY_HEIGHT = 47;
 
     public FuelLoaderScreen(FuelLoaderMenu handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.FUEL_LOADER_SCREEN);
@@ -75,63 +72,34 @@ public class FuelLoaderScreen extends MachineScreen<FuelLoaderBlockEntity, FuelL
 
         FluidResourceSlot slot = this.menu.fluidStorage.getSlot(FuelLoaderBlockEntity.FUEL_TANK);
         if (!slot.isEmpty()) {
-            graphics.pose().pushPose();
-            TextureAtlasSprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(slot.getResource()).getFluidSprites(null, null, slot.getResource().defaultFluidState())[0];
-            RenderSystem.setShaderTexture(0, sprite.atlasLocation());
-            graphics.blit(this.leftPos + 106, this.topPos + 46, 0, -TANK_OVERLAY_WIDTH, (int) -(((double) TANK_OVERLAY_HEIGHT) * ((float) slot.getAmount() / (float) slot.getCapacity())), sprite);
-            graphics.pose().popPose();
-            graphics.blit(Constant.ScreenTexture.FUEL_LOADER_SCREEN, this.leftPos + 68, this.topPos + 8, TANK_OVERLAY_U, TANK_OVERLAY_V, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT);
+            GraphicsUtil.drawFluid(graphics, this.leftPos + 69, this.topPos + 8, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT, slot.getCapacity(), FluidVariant.of(slot.getResource(), slot.getTag()), slot.getAmount());
+            graphics.blit(Constant.ScreenTexture.FUEL_LOADER_SCREEN, this.leftPos + 69, this.topPos + 8, TANK_OVERLAY_U, TANK_OVERLAY_V, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT);
         }
 
-        if (this.menu.state.getStatus() == GCMachineStatuses.NO_ROCKET) {
-            graphics.blit( Constant.ScreenTexture.FUEL_LOADER_SCREEN, this.leftPos + 116, this.topPos + 53, RED_X_U, RED_X_V, RED_X_WIDTH, RED_X_HEIGHT);
+        if (this.menu.rocketCapacity == 0) {
+            graphics.blit(Constant.ScreenTexture.FUEL_LOADER_SCREEN, this.leftPos + 158, this.topPos + 72, RED_X_U, RED_X_V, RED_X_WIDTH, RED_X_HEIGHT);
         }
 
-        if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 145, this.topPos + 37, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT)) {
-            if (this.menu.fluid != null) {
-                graphics.pose().pushPose();
-                TextureAtlasSprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(menu.fluid).getFluidSprites(null, null, menu.fluid.defaultFluidState())[0];
-                RenderSystem.setShaderTexture(0, sprite.atlasLocation());
-                graphics.blit(this.leftPos + 158, this.topPos + 72, 0, -ROCKET_FACE_WIDTH, (int) -(((double) ROCKET_FACE_HEIGHT) * ((float) menu.fluidAmount / (float) menu.fluidCapacity)), sprite);
-                graphics.pose().popPose();
-            }
-        } else {
-            graphics.blit(Constant.ScreenTexture.FUEL_LOADER_SCREEN, this.leftPos + 145, this.topPos + 37, ROCKET_FACE_U, ROCKET_FACE_V, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT);
+        GraphicsUtil.drawFluid(graphics, this.leftPos + 145, this.topPos + 29, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT, this.menu.rocketCapacity, FluidVariant.of(GCFluids.FUEL), this.menu.rocketAmount);
+
+        if (!DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 145, this.topPos + 37, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT)) {
+            graphics.blit(Constant.ScreenTexture.FUEL_LOADER_SCREEN, this.leftPos + 145, this.topPos + 29, ROCKET_FACE_U, ROCKET_FACE_V, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT);
         }
-        graphics.drawCenteredString(this.minecraft.font, I18n.get("block.galacticraft.fuel_loader"), (this.width / 2), this.topPos - 18, ChatFormatting.DARK_GRAY.getColor());
     }
 
     @Override
     public void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
         super.renderTooltip(graphics, mouseX, mouseY);
-        List<FormattedCharSequence> list = new ArrayList<>();
+        List<Component> list = new ArrayList<>();
         if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 69, this.topPos + 17, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT)) {
-            if (this.menu.fluidStorage.getSlot(FuelLoaderBlockEntity.FUEL_TANK).isEmpty()) {
-                list.add(Component.translatable("tooltip.galacticraft.no_fluid").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)).getVisualOrderText());
-            } else {
-//                FluidAmount fraction = this.machine.fluidInv().getInvFluid(0).getAmount_F().mul(FluidAmount.ONE); //every action forces simplification of the fraction
-//                FluidUtil.createFluidTooltip(list, fraction);
-//                if (Screen.hasControlDown()) {
-//                    list.add(Component.translatable("tooltip.galacticraft.fluid").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)).append(Component.literal(BuiltInRegistries.FLUID.getId(this.machine.fluidInv().getInvFluid(0).getRawFluid()).toString()).setStyle(Style.EMPTY.withColor(Formatting.AQUA))).asOrderedText());
-//                }
-            }
-            graphics.renderTooltip(this.font, list, mouseX, mouseY);
+            FluidResourceSlot slot = this.menu.fluidStorage.getSlot(FuelLoaderBlockEntity.FUEL_TANK);
+            DisplayUtil.createFluidTooltip(list, slot.getResource(), slot.getTag(), slot.getAmount(), slot.getCapacity());
+        } else if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 145, this.topPos + 37, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT)) {
+            DisplayUtil.createFluidTooltip(list, GCFluids.FUEL, null, this.menu.rocketAmount, this.menu.rocketCapacity);
         }
-        list.clear();
 
-        if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 145, this.topPos + 37, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT)) {
-            if (this.menu.fluid != null) {
-//                                FluidAmount fraction = ((RocketEntity) entity).getTank().getInvFluid(0).getAmount_F();
-//                                FluidUtil.createFluidTooltip(list, fraction);
-//                                if (Screen.hasControlDown()) {
-//                                    list.add(Component.translatable("tooltip.galacticraft.fluid").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)).append(Component.literal(BuiltInRegistries.FLUID.getKey(((RocketEntity) entity).getTank().getInvFluid(0).getRawFluid()).toString()).setStyle(Style.EMPTY.withColor(ChatFormatting.AQUA))).getVisualOrderText());
-//                                }
-            } else {
-                list.add(Component.translatable("tooltip.galacticraft.no_fluid").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)).getVisualOrderText());
-            }
-            if (!list.isEmpty()) {
-                graphics.renderTooltip(this.font, list, mouseX, mouseY);
-            }
+        if (!list.isEmpty()) {
+            setTooltipForNextRenderPass(Lists.transform(list, Component::getVisualOrderText));
         }
     }
 }

@@ -34,7 +34,6 @@ import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.CoalGeneratorMenu;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -95,10 +94,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     @Override
     public @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("transaction");
-        try (Transaction transaction = Transaction.openOuter()) {
-            this.energyStorage().insert((long) (Galacticraft.CONFIG_MANAGER.get().coalGeneratorEnergyProductionRate() * this.heat), transaction);
-            transaction.commit();
-        }
+        this.energyStorage().insert((long) (Galacticraft.CONFIG_MANAGER.get().coalGeneratorEnergyProductionRate() * this.heat));
         this.trySpreadEnergy(level, state);
         profiler.popPush("fuel_reset");
         if (this.fuelLength == 0) {

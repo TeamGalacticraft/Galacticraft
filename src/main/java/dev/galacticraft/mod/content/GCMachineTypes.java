@@ -265,7 +265,7 @@ public class GCMachineTypes {
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
                     ItemResourceSlot.builder(InputType.TRANSFER)
                             .pos(80, 62)
-                            .filter(ResourceFilters.canExtractFluid(GCFluids.FUEL)) // fixme: fuel api?,
+                            .filter(ResourceFilters.canExtractFluid(GCFluids.FUEL)) // fixme: fuel tag?,
             ),
             MachineFluidStorage.of(
                     FluidResourceSlot.builder(InputType.INPUT)

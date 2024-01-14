@@ -22,83 +22,81 @@
 
 package dev.galacticraft.mod.content.block.special.rocketlaunchpad;
 
+import dev.galacticraft.api.rocket.entity.Rocket;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.GCEntityTypes;
-import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class RocketLaunchPadBlockEntity extends BlockEntity/* implements BlockEntityClientSerializable*/ {
+public class RocketLaunchPadBlockEntity extends BlockEntity {
 
-    private UUID rocketEntityUUID = null;
-    private int rocketEntityId = Integer.MIN_VALUE;
+    private UUID rocketUUID = null;
+    private @Nullable Rocket rocket;
 
     public RocketLaunchPadBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.LAUNCH_PAD_TYPE, pos, state);
     }
 
-    public void setRocketEntityUUID(UUID rocketEntityUUID) {
-        this.rocketEntityUUID = rocketEntityUUID;
-//        if (!world.isClient) sync();
-    }
-
-    public int getRocketEntityId() {
-        return rocketEntityId;
+    public void setLinkedRocket(@Nullable Rocket rocket) {
+        if (rocket == null) {
+            this.rocketUUID = null;
+            this.rocket = null;
+        } else {
+            this.rocketUUID = rocket.asEntity().getUUID();
+            this.rocket = rocket;
+        }
     }
 
     public boolean hasRocket() {
-        return this.rocketEntityUUID != null && this.rocketEntityId != Integer.MIN_VALUE;
+        if (this.rocketUUID != null) {
+            if (this.rocket == null && this.level instanceof ServerLevel) {
+                this.rocket = (Rocket) ((ServerLevel) this.level).getEntity(this.rocketUUID);
+            }
+        } else {
+            this.rocket = null;
+        }
+
+        return this.rocket != null;
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        if (tag.contains("rocketUuid")) {
-            this.rocketEntityUUID = tag.getUUID("rocketUuid");
-            for (Entity entity : level.getEntities(GCEntityTypes.ROCKET, new AABB(-3, -2, -3, 3, 9, 3), rocketEntity -> true)) {
-                if (entity instanceof RocketEntity) {
-                    if (entity.getUUID() == this.rocketEntityUUID) {
-                        this.rocketEntityId = entity.getId();
-                    }
-                }
+        this.rocketUUID = null;
+        this.rocket = null;
+
+        if (tag.contains(Constant.Nbt.ROCKET_UUID)) {
+            this.rocketUUID = tag.getUUID(Constant.Nbt.ROCKET_UUID);
+            if (this.level instanceof ServerLevel) {
+                this.rocket = (Rocket) ((ServerLevel) this.level).getEntity(this.rocketUUID);
             }
-            if (rocketEntityId == Integer.MIN_VALUE) throw new IllegalStateException("Unable to find linked rocket!");
-        } else {
-            rocketEntityUUID = null;
         }
     }
 
     @Override
     public void saveAdditional(CompoundTag tag) {
-        if (hasRocket()) tag.putUUID("rocketUuid", rocketEntityUUID);
+        if (this.rocketUUID != null) tag.putUUID("RocketUuid", rocketUUID);
         super.saveAdditional(tag);
     }
 
-    public void setRocketEntityId(int entityId) {
-        rocketEntityId = entityId;
-//        if (!level.isClientSide) sync();
+    @Override
+    public CompoundTag getUpdateTag() {
+        CompoundTag tag = super.getUpdateTag();
+        if (this.rocketUUID != null) tag.putUUID("RocketUuid", this.rocketUUID);
+        return tag;
     }
 
-//    @Override
-//    public void fromClientTag(NbtCompound tag) {
-//        if (tag.contains("rocketUuid")) {
-//            this.rocketEntityUUID = tag.getUuid("rocketUuid");
-//        } else {
-//            rocketEntityUUID = null;
-//        }
-//        rocketEntityId = tag.getInt("reid");
-//    }
-//
-//    @Override
-//    public NbtCompound toClientTag(NbtCompound nbtCompound) {
-//        this.writeNbt(nbtCompound);
-//        nbtCompound.putInt("reid", rocketEntityId);
-//        return nbtCompound;
-//    }
+    public Rocket getRocket() {
+        return rocket;
+    }
+
+    public UUID getRocketUUID() {
+        return rocketUUID;
+    }
 }

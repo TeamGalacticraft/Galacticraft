@@ -25,6 +25,8 @@ package dev.galacticraft.api.rocket.entity;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.*;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -80,6 +82,7 @@ public interface Rocket extends RocketData {
     @Nullable Fluid getFuelTankFluid();
     long getFuelTankAmount();
     long getFuelTankCapacity();
+    Storage<FluidVariant> getFuelTank();
 
-    Entity getAsEntity();
+    Entity asEntity();
 }

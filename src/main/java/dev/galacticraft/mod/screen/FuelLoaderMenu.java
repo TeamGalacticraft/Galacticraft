@@ -26,15 +26,10 @@ import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.menu.sync.MenuSyncHandler;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.FuelLoaderBlockEntity;
-import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
-import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.level.material.Fluid;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -42,9 +37,9 @@ import java.util.function.Consumer;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class FuelLoaderMenu extends MachineMenu<FuelLoaderBlockEntity> {
-    public @Nullable Fluid fluid = null;
-    public long fluidAmount = 0;
-    public long fluidCapacity = 0;
+    public long rocketAmount;
+    public long rocketCapacity;
+    public BlockPos connectionPos = BlockPos.ZERO;
 
     public FuelLoaderMenu(int syncId, ServerPlayer player, FuelLoaderBlockEntity machine) {
         super(syncId, player, machine);
@@ -57,57 +52,8 @@ public class FuelLoaderMenu extends MachineMenu<FuelLoaderBlockEntity> {
     @Override
     public void registerSyncHandlers(Consumer<MenuSyncHandler> consumer) {
         super.registerSyncHandlers(consumer);
-        consumer.accept(new MenuSyncHandler() { //fixme actually implement this
-            private @Nullable Fluid fluidP = null;
-            private long fluidAmountP = 0;
-            private long fluidCapacityP = 0;
-
-            @Override
-            public boolean needsSyncing() {
-                BlockPos connectionPos = machine.getConnectionPos();
-                Fluid fluid1 = null;
-                long amount = 0;
-                long capacity = 0;
-                if (connectionPos.closerThan(machine.getBlockPos(), 3.0)) {
-                    if (machine.getLevel().getBlockEntity(connectionPos) instanceof RocketLaunchPadBlockEntity launchPad) {
-                        if (launchPad.hasRocket()) {
-                            if (machine.getLevel().getEntity(launchPad.getRocketEntityId()) instanceof RocketEntity rocket) {
-//                                capacity = ;
-                                if (!rocket.isTankEmpty()) {
-//                                    fluid1 = ;
-//                                    amount = ;
-                                }
-                            }
-                        }
-                    }
-                }
-                return fluid1 != fluidP || amount != fluidAmountP || capacity != fluidCapacityP;
-            }
-
-            @Override
-            public void sync(@NotNull FriendlyByteBuf buf) {
-                BlockPos connectionPos = machine.getConnectionPos();
-                Fluid fluid1 = null;
-                long amount = 0;
-                long capacity = 0;
-                if (connectionPos.closerThan(machine.getBlockPos(), 3.0)) {
-                    if (machine.getLevel().getBlockEntity(connectionPos) instanceof RocketLaunchPadBlockEntity launchPad) {
-                        if (launchPad.hasRocket()) {
-                            if (machine.getLevel().getEntity(launchPad.getRocketEntityId()) instanceof RocketEntity rocket) {
-//                                capacityP = ;
-                                if (!rocket.isTankEmpty()) {
-//                                    fluidAmountP = ;
-//                                    fluidP = ;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void read(@NotNull FriendlyByteBuf buf) {
-            }
-        });
+        consumer.accept(MenuSyncHandler.simple(() -> this.machine.getConnectionPos().asLong(), l -> this.connectionPos = (BlockPos.of(l))));
+        consumer.accept(MenuSyncHandler.simple(() -> this.machine.linkedRocket == null ? 0 : this.machine.linkedRocket.getFuelTankAmount(), l -> this.rocketAmount = l));
+        consumer.accept(MenuSyncHandler.simple(() -> this.machine.linkedRocket == null ? 0 : this.machine.linkedRocket.getFuelTankCapacity(), l -> this.rocketCapacity = l));
     }
 }

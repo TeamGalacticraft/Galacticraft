@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.content.block.special.rocketlaunchpad;
 
-import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
@@ -118,9 +117,8 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
                         if (blockState1.is(this) && blockState1.getValue(PART) != Part.NONE) {
                             if (level.getBlockEntity(center.offset(x, 0, z)) instanceof RocketLaunchPadBlockEntity pad) {
                                 if (pad.hasRocket()) {
-                                    var entity = level.getEntity(pad.getRocketEntityId());
-                                    if (entity instanceof RocketEntity rocket) {
-                                        rocket.onBaseDestroyed();
+                                    if (pad.getRocket() != null) {
+                                        pad.getRocket().onBaseDestroyed();
                                     }
                                 }
                             }
@@ -139,9 +137,9 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
                         if (blockState1.is(this) && blockState1.getValue(PART) != Part.NONE) {
                             if (level.getBlockEntity(center.offset(x, 0, z)) instanceof RocketLaunchPadBlockEntity pad) {
                                 if (pad.hasRocket()) {
-                                    var entity = level.getEntity(pad.getRocketEntityId());
-                                    if (entity instanceof RocketEntity rocket) {
-                                        rocket.onBaseDestroyed();
+                                    var entity = pad.getRocket();
+                                    if (entity != null) {
+                                        entity.onBaseDestroyed();
                                     }
                                 }
                             }
@@ -158,9 +156,9 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
                         if (blockState1.is(this) && blockState1.getValue(PART) != Part.NONE) {
                             if (level.getBlockEntity(blockPos.offset(x, 0, z)) instanceof RocketLaunchPadBlockEntity pad) {
                                 if (pad.hasRocket()) {
-                                    var entity = level.getEntity(pad.getRocketEntityId());
-                                    if (entity instanceof RocketEntity rocket) {
-                                        rocket.onBaseDestroyed();
+                                    var entity = pad.getRocket();
+                                    if (entity != null) {
+                                        entity.onBaseDestroyed();
                                     }
                                 }
                             }

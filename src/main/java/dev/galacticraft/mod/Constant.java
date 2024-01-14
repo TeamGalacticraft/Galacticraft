@@ -859,6 +859,7 @@ public interface Constant {
         String ITEMS = "Items";
         String GASES = "Gases";
         String CRYOGENIC_COOLDOWN = "cryogenic_cooldown";
+        String ROCKET_UUID = "RocketUuid";
     }
 
     interface Chunk {

@@ -45,6 +45,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.SingleFluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
@@ -82,6 +83,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 public class RocketEntity extends Entity implements Rocket {
+    private static final ResourceLocation NULL_ID = new ResourceLocation("null");
     private static final EntityDataAccessor<LaunchStage> STAGE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.LAUNCH_STAGE);
 
     private static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
@@ -213,11 +215,10 @@ public class RocketEntity extends Entity implements Rocket {
     @Override
     public void remove(RemovalReason reason) {
         super.remove(reason);
-        if (this.linkedPad != null) {
+        if (this.linkedPad != null && reason == RemovalReason.KILLED || reason == RemovalReason.DISCARDED) {
             BlockEntity blockEntity = this.level().getBlockEntity(this.linkedPad);
             if (blockEntity instanceof RocketLaunchPadBlockEntity pad){
-                pad.setRocketEntityId(Integer.MIN_VALUE);
-                pad.setRocketEntityUUID(null);
+                pad.setLinkedRocket(null);
             }
 
         }
@@ -281,7 +282,12 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     @Override
-    public Entity getAsEntity() {
+    public Storage<FluidVariant> getFuelTank() {
+        return this.tank;
+    }
+
+    @Override
+    public Entity asEntity() {
         return this;
     }
 
@@ -350,12 +356,12 @@ public class RocketEntity extends Entity implements Rocket {
         this.entityData.define(DAMAGE_WOBBLE_SIDE, 0);
         this.entityData.define(DAMAGE_WOBBLE_STRENGTH, 0.0F);
 
-        this.entityData.define(ROCKET_CONE, null);
-        this.entityData.define(ROCKET_BODY, null);
-        this.entityData.define(ROCKET_FIN, null);
-        this.entityData.define(ROCKET_BOOSTER, null);
-        this.entityData.define(ROCKET_ENGINE, null);
-        this.entityData.define(ROCKET_UPGRADE, null);
+        this.entityData.define(ROCKET_CONE, NULL_ID);
+        this.entityData.define(ROCKET_BODY, NULL_ID);
+        this.entityData.define(ROCKET_FIN, NULL_ID);
+        this.entityData.define(ROCKET_BOOSTER, NULL_ID);
+        this.entityData.define(ROCKET_ENGINE, NULL_ID);
+        this.entityData.define(ROCKET_UPGRADE, NULL_ID);
     }
 
     @Override
@@ -640,32 +646,56 @@ public class RocketEntity extends Entity implements Rocket {
 
     @Override
     public @Nullable ResourceKey<RocketCone<?, ?>> cone() {
-        return ResourceKey.create(RocketRegistries.ROCKET_CONE, this.getEntityData().get(ROCKET_CONE));
+        ResourceLocation location = this.getEntityData().get(ROCKET_CONE);
+        if (location == null || NULL_ID.equals(location)) {
+            return null;
+        }
+        return ResourceKey.create(RocketRegistries.ROCKET_CONE, location);
     }
 
     @Override
     public @Nullable ResourceKey<RocketBody<?, ?>> body() {
-        return ResourceKey.create(RocketRegistries.ROCKET_BODY, this.getEntityData().get(ROCKET_BODY));
+        ResourceLocation location = this.getEntityData().get(ROCKET_BODY);
+        if (location == null || NULL_ID.equals(location)) {
+            return null;
+        }
+        return ResourceKey.create(RocketRegistries.ROCKET_BODY, location);
     }
 
     @Override
     public @Nullable ResourceKey<RocketFin<?, ?>> fin() {
-        return ResourceKey.create(RocketRegistries.ROCKET_FIN, this.getEntityData().get(ROCKET_FIN));
+        ResourceLocation location = this.getEntityData().get(ROCKET_FIN);
+        if (location == null || NULL_ID.equals(location)) {
+            return null;
+        }
+        return ResourceKey.create(RocketRegistries.ROCKET_FIN, location);
     }
 
     @Override
     public @Nullable ResourceKey<RocketBooster<?, ?>> booster() {
-        return ResourceKey.create(RocketRegistries.ROCKET_BOOSTER, this.getEntityData().get(ROCKET_BOOSTER));
+        ResourceLocation location = this.getEntityData().get(ROCKET_BOOSTER);
+        if (location == null || NULL_ID.equals(location)) {
+            return null;
+        }
+        return ResourceKey.create(RocketRegistries.ROCKET_BOOSTER, location);
     }
 
     @Override
     public @Nullable ResourceKey<RocketEngine<?, ?>> engine() {
-        return ResourceKey.create(RocketRegistries.ROCKET_ENGINE, this.getEntityData().get(ROCKET_ENGINE));
+        ResourceLocation location = this.getEntityData().get(ROCKET_ENGINE);
+        if (location == null || NULL_ID.equals(location)) {
+            return null;
+        }
+        return ResourceKey.create(RocketRegistries.ROCKET_ENGINE, location);
     }
 
     @Override
     public @Nullable ResourceKey<RocketUpgrade<?, ?>> upgrade() {
-        return ResourceKey.create(RocketRegistries.ROCKET_UPGRADE, this.getEntityData().get(ROCKET_UPGRADE));
+        ResourceLocation location = this.getEntityData().get(ROCKET_UPGRADE);
+        if (location == null || NULL_ID.equals(location)) {
+            return null;
+        }
+        return ResourceKey.create(RocketRegistries.ROCKET_UPGRADE, location);
     }
 
     public void setData(RocketData data) {

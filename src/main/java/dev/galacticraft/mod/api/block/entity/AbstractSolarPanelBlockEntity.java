@@ -28,7 +28,6 @@ import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.machine.MachineType;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.SolarPanelMenu;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
@@ -87,11 +86,8 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
         if (time > 6000) time = 12000L - time;
 
         profiler.push("transaction");
-        try (Transaction transaction = Transaction.openOuter()) {
-            this.currentEnergyGeneration = calculateEnergyProduction(time, multiplier);
-            this.energyStorage().insert(this.currentEnergyGeneration, transaction);
-            transaction.commit();
-        }
+        this.currentEnergyGeneration = calculateEnergyProduction(time, multiplier);
+        this.energyStorage().insert(this.currentEnergyGeneration);
         profiler.pop();
         return status == null ? GCMachineStatuses.COLLECTING : status;
     }
