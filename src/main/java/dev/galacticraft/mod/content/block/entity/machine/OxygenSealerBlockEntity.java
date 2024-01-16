@@ -73,6 +73,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     private boolean disabled = false;
     private boolean oxygenWorld = false;
     private boolean sealed = false;
+    private boolean oxygenUnloaded = true;
 
     public OxygenSealerBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.OXYGEN_SEALER, pos, state);
@@ -89,8 +90,11 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
+        this.oxygenUnloaded = false;
+        profiler.push("extract_resources");
         this.chargeFromStack(CHARGE_SLOT);
         this.takeFluidFromStack(OXYGEN_INPUT_SLOT, OXYGEN_TANK, Gases.OXYGEN);
+        profiler.pop();
     }
 
     @Override
@@ -206,8 +210,11 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         if (!this.level.isClientSide) {
             ((ServerLevelAccessor) this.level).removeSealer(this);
         }
-        for (BlockPos pos : this.breathablePositions) {
-            this.level.setBreathable(pos, false);
+        if (!this.oxygenUnloaded) {
+            this.oxygenUnloaded = true;
+            for (BlockPos pos : this.breathablePositions) {
+                this.level.setBreathable(pos, false);
+            }
         }
         this.breathablePositions.clear();
         this.watching.clear();

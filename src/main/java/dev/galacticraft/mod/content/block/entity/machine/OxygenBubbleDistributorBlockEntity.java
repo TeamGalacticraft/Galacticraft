@@ -52,6 +52,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
@@ -66,6 +68,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     private int players = 0;
     private int bubbleId = -1;
     private double prevSize;
+    private boolean oxygenUnloaded = true;
 
     public OxygenBubbleDistributorBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.OXYGEN_BUBBLE_DISTRIBUTOR, pos, state);
@@ -74,6 +77,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
+        this.oxygenUnloaded = false;
         profiler.push("extract_resources");
         this.chargeFromStack(CHARGE_SLOT);
         this.takeFluidFromStack(OXYGEN_INPUT_SLOT, OXYGEN_TANK, Gases.OXYGEN);
@@ -154,7 +158,10 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
 
     @Override
     public void setRemoved() {
-        distributeOxygenToArea(this.size, false);
+        if (!this.oxygenUnloaded) {
+            this.oxygenUnloaded = true;
+            distributeOxygenToArea(this.size, false);
+        }
         super.setRemoved();
     }
 

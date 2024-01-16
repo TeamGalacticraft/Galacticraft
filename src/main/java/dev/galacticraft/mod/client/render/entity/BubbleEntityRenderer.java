@@ -72,13 +72,17 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
         }
         double size = machine.getSize();
 
+        if (bubbleModel == null) {
+            return;
+        }
+
         matrices.pushPose();
         matrices.translate(0.5F, 1.0F, 0.5F);
         matrices.scale((float) size, (float) size, (float) size);
         VertexConsumer consumer = vertexConsumers.getBuffer(RenderType.entityTranslucentEmissive(new ResourceLocation(Constant.MOD_ID, "textures/model/sphere.png")));
-        for (BakedQuad quad : bubbleModel.getQuads(null, null, entity.level().random)) {
-            consumer.putBulkData(matrices.last(), quad, 1, 1, 1, Integer.MAX_VALUE, OverlayTexture.NO_OVERLAY);
-        }
+//        for (BakedQuad quad : bubbleModel.getQuads(null, null, entity.level().random)) {
+//            consumer.putBulkData(matrices.last(), quad, 1, 1, 1, Integer.MAX_VALUE, OverlayTexture.NO_OVERLAY);
+//        }
         // TEMP: until files are fixed
         for (Direction direction : Direction.values()) {
             for (BakedQuad quad : bubbleModel.getQuads(null, direction, entity.level().random)) {
