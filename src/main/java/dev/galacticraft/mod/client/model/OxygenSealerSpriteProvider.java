@@ -36,15 +36,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Function;
 
 public class OxygenSealerSpriteProvider implements MachineModelRegistry.SpriteProvider {
-    private final TextureAtlasSprite left;
-    private final TextureAtlasSprite right;
     private final TextureAtlasSprite top;
     private final TextureAtlasSprite machineSide;
     private final TextureAtlasSprite machine;
 
     public OxygenSealerSpriteProvider(JsonObject json, Function<net.minecraft.client.resources.model.Material, TextureAtlasSprite> function) {
-        this.right = function.apply(new net.minecraft.client.resources.model.Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation(GsonHelper.getAsString(json, "right"))));
-        this.left = function.apply(new net.minecraft.client.resources.model.Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation(GsonHelper.getAsString(json, "left"))));
         this.top = function.apply(new net.minecraft.client.resources.model.Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation(GsonHelper.getAsString(json, "top"))));
         this.machine = function.apply(MachineBakedModel.MACHINE);
         this.machineSide = function.apply(MachineBakedModel.MACHINE_SIDE);
@@ -52,8 +48,6 @@ public class OxygenSealerSpriteProvider implements MachineModelRegistry.SpritePr
 
     @Override
     public @NotNull TextureAtlasSprite getSpritesForState(@NotNull MachineRenderData renderData, @NotNull BlockFace face) {
-        if (face == BlockFace.LEFT) return this.left;
-        if (face == BlockFace.RIGHT) return this.right;
         if (face == BlockFace.TOP) return this.top;
         if (face.side()) return this.machineSide;
         return this.machine;
