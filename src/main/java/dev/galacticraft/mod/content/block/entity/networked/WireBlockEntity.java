@@ -65,14 +65,6 @@ public class WireBlockEntity extends BlockEntity implements Wire {
     }
 
     @Override
-    public void setLevel(Level level) {
-        super.setLevel(level);
-        if (level != null && !level.isClientSide()) {
-            this.getOrCreateNetwork();
-        }
-    }
-
-    @Override
     public void setNetwork(@Nullable WireNetwork network) {
         this.network = network;
         for (var insertable : this.getInsertables()) {

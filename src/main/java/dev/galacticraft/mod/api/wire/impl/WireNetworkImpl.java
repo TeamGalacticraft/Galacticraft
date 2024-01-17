@@ -260,21 +260,27 @@ public class WireNetworkImpl implements WireNetwork {
         double finalRatio = ratio;
         nonFullInsertables.forEach((wireNetwork, integer) -> ref.available = wireNetwork.insertInternal(finalAmount, finalRatio, ref.available, transaction));
 
-        return ref.available;
+        return amount - ref.available;
     }
 
     @Override
-    public long insertInternal(long amount, double ratio, long available, TransactionContext transaction) {
+    public long insertInternal(long amount, double ratio, long available, TransactionContext context) {
         if (this.tickId != (this.tickId = world.getServer().getTickCount())) {
             this.transferred = 0;
         }
         long removed = amount - Math.min(amount, this.maxTransferRate - this.transferred);
         amount -= removed;
         for (EnergyStorage storage : this.storages.values()) {
+            if (!storage.supportsInsertion()) continue;
             long consumed = Math.min(Math.min(available, (long) (amount * ratio)), this.getMaxTransferRate() - this.transferred);
             if (consumed == 0) continue;
-            available -= storage.insert(consumed, transaction);
-            this.transferred += consumed;
+            long inserted;
+            try (Transaction transaction = Transaction.openNested(context)){
+                inserted = storage.insert(consumed, transaction);
+                transaction.commit();
+            }
+            available -= inserted;
+            this.transferred += inserted;
         }
         return available + removed;
     }
@@ -292,6 +298,7 @@ public class WireNetworkImpl implements WireNetwork {
                 if (entry.getKey().equals(source)) continue;
                 try (Transaction simulation = Transaction.openNested(transaction)){
                     requested += entry.getValue().insert(amount, simulation);
+                    simulation.abort();
                 }
             }
             for (WireNetwork peerNetwork : this.peerNetworks) {
