@@ -217,7 +217,7 @@ public class WireNetworkImpl implements WireNetwork {
         }
     }
 
-    @Override
+    @Override // FIXME: somethings going on here
     public boolean updateConnection(@NotNull BlockPos adjacentToUpdated, @NotNull BlockPos updatedPos) {
         assert !(world.getBlockEntity(updatedPos) instanceof Wire);
         this.storages.remove(updatedPos);
@@ -233,7 +233,7 @@ public class WireNetworkImpl implements WireNetwork {
 
     @Override
     public long insert(@NotNull BlockPos fromWire, long amount, Direction direction, @NotNull TransactionContext transaction) {
-        BlockPos source = fromWire.relative(direction.getOpposite());
+        BlockPos source = fromWire.relative(direction);
         if (this.tickId != (this.tickId = world.getServer().getTickCount())) {
             this.transferred = 0;
         }
