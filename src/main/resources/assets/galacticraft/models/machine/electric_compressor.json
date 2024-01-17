@@ -1,8 +1,6 @@
 {
-  "machinelib:generate": "machinelib:z_axis",
+  "machinelib:generate": "machinelib:front_face",
   "sprites": {
-    "front": "galacticraft:block/electric_compressor",
-    "back": "galacticraft:block/machine_power_input",
-    "sided": true
+    "sprite": "galacticraft:block/electric_compressor"
   }
 }
