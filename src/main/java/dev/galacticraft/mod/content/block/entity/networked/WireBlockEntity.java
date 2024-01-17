@@ -32,6 +32,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -61,6 +62,14 @@ public class WireBlockEntity extends BlockEntity implements Wire {
 
     public static WireBlockEntity createT2(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state) {
         return new WireBlockEntity(type, pos, state, 480);
+    }
+
+    @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        if (level != null && !level.isClientSide()) {
+            this.getOrCreateNetwork();
+        }
     }
 
     @Override

@@ -33,6 +33,7 @@ import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colored, Connected, Pullable {
@@ -40,6 +41,14 @@ public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colore
 
     public GlassFluidPipeBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.GLASS_FLUID_PIPE, pos, state, FluidConstants.BUCKET / 50); //0.4B/s
+    }
+
+    @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        if (level != null && !level.isClientSide()) {
+            this.getOrCreateNetwork();
+        }
     }
 
     @Override
