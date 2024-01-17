@@ -248,7 +248,7 @@ public class WireNetworkImpl implements WireNetwork {
         while (it.hasNext()) {
             requested += it.nextLong();
         }
-        if (requested == 0) return amount;
+        if (requested == 0) return 0;
         var ref = new Object() {
             private long available = 0;
         };
