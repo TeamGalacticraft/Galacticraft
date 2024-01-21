@@ -37,6 +37,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
+import team.reborn.energy.api.EnergyStorageUtil;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -258,24 +259,26 @@ public class WireNetworkImpl implements WireNetwork {
 
         long finalAmount = amount;
         double finalRatio = ratio;
-        nonFullInsertables.forEach((wireNetwork, integer) -> ref.available = wireNetwork.insertInternal(finalAmount, finalRatio, ref.available, transaction));
+        EnergyStorage energySource = this.storages.get(source);
+        nonFullInsertables.forEach((wireNetwork, integer) -> ref.available = wireNetwork.insertInternal(energySource, finalAmount, finalRatio, ref.available, transaction));
 
         return amount - ref.available;
     }
 
     @Override
-    public long insertInternal(long amount, double ratio, long available, TransactionContext context) {
+    public long insertInternal(EnergyStorage source, long amount, double ratio, long available, TransactionContext context) {
         if (this.tickId != (this.tickId = world.getServer().getTickCount())) {
             this.transferred = 0;
         }
         long removed = amount - Math.min(amount, this.maxTransferRate - this.transferred);
         amount -= removed;
         for (EnergyStorage storage : this.storages.values()) {
-            if (!storage.supportsInsertion()) continue;
+            if (storage.equals(source)) continue;
+//            if (!storage.supportsInsertion()) continue; // why can't I call this?e
             long consumed = Math.min(Math.min(available, (long) (amount * ratio)), this.getMaxTransferRate() - this.transferred);
             if (consumed == 0) continue;
             long inserted;
-            try (Transaction transaction = Transaction.openNested(context)){
+            try (Transaction transaction = Transaction.openNested(context)) {
                 inserted = storage.insert(consumed, transaction);
                 transaction.commit();
             }
