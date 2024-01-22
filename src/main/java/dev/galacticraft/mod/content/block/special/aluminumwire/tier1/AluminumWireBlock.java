@@ -106,14 +106,14 @@ public class AluminumWireBlock extends WireBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos fromPos, boolean notify) {
-        super.neighborChanged(blockState, level, blockPos, block, fromPos, notify);
+    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos neighborPos, boolean notify) {
+        super.neighborChanged(blockState, level, blockPos, block, neighborPos, notify);
 
         if (level.getBlockEntity(blockPos) instanceof WireBlockEntity wire) {
-            var direction = DirectionUtil.fromNormal(fromPos.getX() - blockPos.getX(), fromPos.getY() - blockPos.getY(), fromPos.getZ() - blockPos.getZ());
+            var direction = DirectionUtil.fromNormal(neighborPos.getX() - blockPos.getX(), neighborPos.getY() - blockPos.getY(), neighborPos.getZ() - blockPos.getZ());
 
             if (direction != null) {
-                if (!level.isClientSide && wire.getConnections()[direction.ordinal()] != (wire.getConnections()[direction.ordinal()] = wire.canConnect(direction) && EnergyStorage.SIDED.find(level, fromPos, direction.getOpposite()) != null)) {
+                if (!level.isClientSide && wire.getConnections()[direction.ordinal()] != (wire.getConnections()[direction.ordinal()] = wire.canConnect(direction) && EnergyStorage.SIDED.find(level, neighborPos, direction.getOpposite()) != null)) {
                     level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
                 }
             }

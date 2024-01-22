@@ -218,7 +218,7 @@ public class WireNetworkImpl implements WireNetwork {
         }
     }
 
-    @Override // FIXME: somethings going on here
+    @Override
     public boolean updateConnection(@NotNull BlockPos adjacentToUpdated, @NotNull BlockPos updatedPos) {
         assert !(world.getBlockEntity(updatedPos) instanceof Wire);
         this.storages.remove(updatedPos);

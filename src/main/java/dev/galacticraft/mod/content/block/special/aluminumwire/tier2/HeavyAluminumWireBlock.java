@@ -111,13 +111,13 @@ public class HeavyAluminumWireBlock extends WireBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        super.neighborChanged(state, world, pos, block, fromPos, notify);
-        BlockState neighbor = world.getBlockState(fromPos);
-        Direction dir = DirectionUtil.fromNormal(fromPos.getX() - pos.getX(), fromPos.getY() - pos.getY(), fromPos.getZ() - pos.getZ());
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos neighborPos, boolean notify) {
+        super.neighborChanged(state, world, pos, block, neighborPos, notify);
+        BlockState neighbor = world.getBlockState(neighborPos);
+        Direction dir = DirectionUtil.fromNormal(neighborPos.getX() - pos.getX(), neighborPos.getY() - pos.getY(), neighborPos.getZ() - pos.getZ());
         assert dir != null;
         world.setBlockAndUpdate(pos, state.setValue(ConnectingBlockUtil.getBooleanProperty(dir), !neighbor.isAir() && block instanceof WireBlock
-                || EnergyStorage.SIDED.find(world, fromPos, dir.getOpposite()) != null
+                || EnergyStorage.SIDED.find(world, neighborPos, dir.getOpposite()) != null
         ));
     }
 

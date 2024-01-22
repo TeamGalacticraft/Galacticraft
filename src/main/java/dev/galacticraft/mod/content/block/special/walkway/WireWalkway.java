@@ -130,9 +130,9 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
     }
 
     @Override
-    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos fromPos, boolean notify) {
-        super.neighborChanged(blockState, level, blockPos, block, fromPos, notify);
-        var distance = fromPos.subtract(blockPos);
+    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos neighborPos, boolean notify) {
+        super.neighborChanged(blockState, level, blockPos, block, neighborPos, notify);
+        var distance = neighborPos.subtract(blockPos);
 
         if (Math.abs(distance.getX() + distance.getY() + distance.getZ()) == 1 && level.getBlockEntity(blockPos) instanceof WireWalkwayBlockEntity walkway) {
             var direction = DirectionUtil.fromNormal(distance);
