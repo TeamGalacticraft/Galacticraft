@@ -75,7 +75,7 @@ public interface WireNetwork {
      */
     long insert(@NotNull BlockPos fromWire, long amount, Direction direction, @NotNull TransactionContext transaction);
 
-    long insertInternal(long amount, double ratio, long available, TransactionContext transaction);
+    long insertInternal(EnergyStorage source, long amount, double ratio, long available, TransactionContext transaction);
 
     void getNonFullInsertables(Object2LongMap<WireNetwork> energyRequirement, BlockPos source, long amount, @NotNull TransactionContext transaction);
 
