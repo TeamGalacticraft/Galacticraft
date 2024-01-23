@@ -72,6 +72,8 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     private boolean updateQueued = true;
     private boolean disabled = false;
     private boolean oxygenWorld = false;
+    private boolean sealed = false;
+    private boolean oxygenUnloaded = true;
 
     public OxygenSealerBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.OXYGEN_SEALER, pos, state);
@@ -88,16 +90,19 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
+        this.oxygenUnloaded = false;
+        profiler.push("extract_resources");
         this.chargeFromStack(CHARGE_SLOT);
         this.takeFluidFromStack(OXYGEN_INPUT_SLOT, OXYGEN_TANK, Gases.OXYGEN);
+        profiler.pop();
     }
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         assert level != null;
-        if (this.disabled != (this.disabled = false)) {
-            ((ServerLevelAccessor) level).addSealer(this);
-        }
+        // if (this.disabled != (this.disabled = false)) {
+        //     ((ServerLevelAccessor) level).addSealer(this);
+        // }
 
         if (this.energyStorage().canExtract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate())) {
             if (!this.fluidStorage().getSlot(OXYGEN_TANK).isEmpty()) {
@@ -130,11 +135,12 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                         state1 = level.getBlockState(pos1);
                         if (state1.isAir() || (!Block.isFaceFull(state1.getCollisionShape(level, pos1), pair.getB().getOpposite()))) {
                             this.breathablePositions.add(pos1);
-                            if (this.breathablePositions.size() > 1000) {
+                            if (this.breathablePositions.size() > 1024) {
                                 this.breathablePositions.clear();
                                 this.watching.clear();
                                 this.updateQueued = true;
                                 this.sealCheckTime = SEAL_CHECK_TIME * 5;
+                                this.sealed = false;
                                 profiler.pop();
                                 return GCMachineStatuses.AREA_TOO_LARGE;
                             }
@@ -153,48 +159,67 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                             this.watching.add(pos1);
                         }
                     }
+                    this.sealed = true; // if escaped queue then set sealed
                     for (BlockPos pos2 : this.breathablePositions) {
                         level.setBreathable(pos2, true);
                     }
                     profiler.pop();
                 }
+
+                if (!this.sealed) {
+                    return GCMachineStatuses.AREA_TOO_LARGE;
+                }
+
                 profiler.push("extract");
                 this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate());
                 this.fluidStorage().getSlot(OXYGEN_TANK).extract(Gases.OXYGEN, breathablePositions.size() * 2L);
                 profiler.pop();
                 return GCMachineStatuses.SEALED;
             } else {
-                this.sealCheckTime = 0;
+                this.tryClearSeal(level);
                 return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
             }
         } else {
-            this.sealCheckTime = 0;
+            this.tryClearSeal(level);
             return MachineStatuses.NOT_ENOUGH_ENERGY;
         }
     }
 
+    private void tryClearSeal(@NotNull ServerLevel world) {
+        if (this.sealed) {
+            for (BlockPos pos1 : this.breathablePositions) {
+                world.setBreathable(pos1, false);
+            }
+            this.breathablePositions.clear();
+            this.watching.clear();
+
+            this.sealed = false;
+        }
+        this.updateQueued = true;
+        this.sealCheckTime = 0;
+    }
+
     @Override
     protected void tickDisabled(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        this.disabled = true;
-        ((ServerLevelAccessor) world).removeSealer(this);
-        for (BlockPos pos1 : this.breathablePositions) {
-            world.setBreathable(pos1, false);
-        }
-        this.breathablePositions.clear();
-        this.watching.clear();
+        this.tryClearSeal(world);
+        super.tickDisabled(world, pos, state, profiler);
     }
 
     @Override
     public void setRemoved() {
-        super.setRemoved();
         if (!this.level.isClientSide) {
             ((ServerLevelAccessor) this.level).removeSealer(this);
         }
-        for (BlockPos pos : this.breathablePositions) {
-            this.level.setBreathable(pos, false);
+        if (!this.oxygenUnloaded) {
+            this.oxygenUnloaded = true;
+            for (BlockPos pos : this.breathablePositions) {
+                this.level.setBreathable(pos, false);
+            }
         }
         this.breathablePositions.clear();
         this.watching.clear();
+
+        super.setRemoved();
     }
 
     @Nullable

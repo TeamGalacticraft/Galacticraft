@@ -129,7 +129,7 @@ public class GCServerPacketReceivers {
                 if (player.containerMenu instanceof OxygenBubbleDistributorMenu sHandler) {
                     OxygenBubbleDistributorBlockEntity machine = sHandler.machine;
                     if (machine.getSecurity().hasAccess(player)) {
-                        machine.bubbleVisible = visible;
+                        machine.setBubbleVisible(visible);
                     }
                 }
             });

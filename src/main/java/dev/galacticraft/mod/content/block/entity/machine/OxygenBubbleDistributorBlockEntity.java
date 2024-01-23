@@ -44,28 +44,31 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     public static final int CHARGE_SLOT = 0;
-    public static final int OXYGEN_INPUT_SLOT = 1;
+    public static final int OXYGEN_INPUT_SLOT = 0; // REVIEW: should this be 0 or 1?
     public static final int OXYGEN_TANK = 0;
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
-    public boolean bubbleVisible = true;
+    private boolean bubbleVisible = true;
     private double size = 0;
     private byte targetSize = 1;
     private int players = 0;
     private int bubbleId = -1;
     private double prevSize;
+    private boolean oxygenUnloaded = true;
 
     public OxygenBubbleDistributorBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.OXYGEN_BUBBLE_DISTRIBUTOR, pos, state);
@@ -74,6 +77,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
+        this.oxygenUnloaded = false;
         profiler.push("extract_resources");
         this.chargeFromStack(CHARGE_SLOT);
         this.takeFluidFromStack(OXYGEN_INPUT_SLOT, OXYGEN_TANK, Gases.OXYGEN);
@@ -102,20 +106,18 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
                     for (ServerPlayer player : level.players()) {
                         player.connection.send(entity.getAddEntityPacket());
                     }
+                } else if (!this.bubbleVisible && this.bubbleId != -1) {
+                    level.getEntity(bubbleId).discard();
+                    this.bubbleId = -1;
                 }
                 profiler.pop();
-                if (this.prevSize != this.size || this.players != level.players().size()) {
-                    this.players = level.players().size();
-                    this.prevSize = this.size;
-                    profiler.push("network");
-                    for (ServerPlayer player : level.players()) {
-                        ServerPlayNetworking.send(player, Constant.Packet.BUBBLE_SIZE, new FriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeDouble(this.size)));
-                    }
-                    profiler.pop();
-                }
+
+                this.trySyncSize(level, pos, profiler);
+
                 profiler.push("bubbler_distributor_transfer");
-                long oxygenRequired = ((long) ((4.0 / 3.0) * Math.PI * this.size * this.size * this.size));
-                FluidResourceSlot slot = this.fluidStorage().getSlot(OXYGEN_TANK);
+                long oxygenRequired = Math.max((long) ((4.0 / 3.0) * Math.PI * this.size * this.size * this.size), 1);
+                FluidResourceSlot slot = this.fluidStorage().getSlot(OXYGEN_INPUT_SLOT);
+
                 if (slot.canExtract(oxygenRequired)) {
                     slot.extract(oxygenRequired);
                     this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate());
@@ -137,12 +139,14 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         }
         profiler.push("size");
         if (this.bubbleId != -1 && this.size <= 0) {
-            level.getEntity(bubbleId).remove(Entity.RemovalReason.DISCARDED);
+            level.getEntity(bubbleId).discard();
             this.bubbleId = -1;
         }
 
         if (this.size > 0) {
             this.setSize(this.size - 0.2D);
+            this.trySyncSize(level, pos, profiler);
+            distributeOxygenToArea(this.size, true); // technically this oxygen is being created from thin air
         }
 
         if (this.size < 0) {
@@ -150,6 +154,37 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         }
         profiler.pop();
         return status;
+    }
+
+    @Override
+    public void setRemoved() {
+        if (!this.oxygenUnloaded) {
+            this.oxygenUnloaded = true;
+            distributeOxygenToArea(this.size, false);
+        }
+        super.setRemoved();
+    }
+
+    @Override
+    protected void tickDisabled(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        this.distributeOxygenToArea(this.prevSize, false); // REVIEW: Inefficient?
+        this.size = 0; // I believe this is needed to allow multiple bubbles in a level?
+        this.trySyncSize(level, pos, profiler);
+
+        super.tickDisabled(level, pos, state, profiler);
+    }
+
+    private void trySyncSize(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull ProfilerFiller profiler) {
+        // Could maybe get away with running this 1 in 10 ticks to reduce network traffic
+        if (this.prevSize != this.size || this.players != world.players().size()) {
+            this.players = world.players().size();
+            this.prevSize = this.size;
+            profiler.push("network");
+            for (ServerPlayer player : world.players()) {
+                ServerPlayNetworking.send(player, Constant.Packet.BUBBLE_SIZE, new FriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeDouble(this.size)));
+            }
+            profiler.pop();
+        }
     }
 
     public int getDistanceFromServer(int par1, int par3, int par5) {
@@ -187,23 +222,33 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         super.saveAdditional(tag);
         tag.putByte(Constant.Nbt.MAX_SIZE, this.targetSize);
         tag.putDouble(Constant.Nbt.SIZE, this.size);
+        tag.putBoolean(Constant.Nbt.VISIBLE, this.bubbleVisible);
     }
 
     @Override
     public void load(CompoundTag nbt) {
-        super.load(nbt);
         this.size = nbt.getDouble(Constant.Nbt.SIZE);
         if (this.size < 0) this.size = 0;
         this.targetSize = nbt.getByte(Constant.Nbt.MAX_SIZE);
         if (this.targetSize < 1) this.targetSize = 1;
+        this.bubbleVisible = nbt.getBoolean(Constant.Nbt.VISIBLE);
+
+        super.load(nbt);
     }
 
     public double getSize() {
         return this.size;
     }
-
     public void setSize(double size) {
         this.size = size;
+    }
+
+    public boolean isBubbleVisible() {
+        return this.bubbleVisible;
+    }
+    public void setBubbleVisible(boolean bubbleVisible) {
+        this.bubbleVisible = bubbleVisible;
+        this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
     }
 
     @Nullable
@@ -211,5 +256,15 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) return new OxygenBubbleDistributorMenu(syncId, (ServerPlayer) player, this);
         return null;
+    }
+
+    @Override
+    public @NotNull CompoundTag getUpdateTag() {
+        CompoundTag tag = super.getUpdateTag();
+
+        tag.putInt(Constant.Nbt.MAX_SIZE, this.targetSize); // REVIEW: should we be sending this along? Because we do save it
+        tag.putDouble(Constant.Nbt.SIZE, this.size);
+        tag.putBoolean(Constant.Nbt.VISIBLE, this.bubbleVisible);
+        return tag;
     }
 }
