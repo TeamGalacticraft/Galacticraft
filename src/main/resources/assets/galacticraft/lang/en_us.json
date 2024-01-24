@@ -572,6 +572,7 @@
   "commands.galacticraft.gchouston.confirm": "Er, Houston, we have a problem... (Run this command again to confirm teleport)",
   "commands.galacticraft.gchouston.on_earth_already": "I don't need to be rescued!",
   "commands.galacticraft.gchouston.success": "You have been rescued. Better luck next time...",
+  "commands.galacticraft.require_player": "Command requires player",
   "advancements.galacticraft.travel_moon.title": "To the Moon!",
   "advancements.galacticraft.travel_moon.description": "Take a Tier 1 rocket to the Moon!",
   "config.galacticraft.title": "Galacticraft Config",

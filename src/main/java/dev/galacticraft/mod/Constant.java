@@ -951,4 +951,11 @@ public interface Constant {
     interface Structure {
         ResourceLocation SPACE_STATION = id("space_station");
     }
+
+    interface Command {
+        String HOUSTON = "gchouston";
+        String DIMENSION_TP = "dimensiontp";
+        String DIMENSION_TP_ALIAS = "dimtp";
+        String OPEN_CELESTIAL_SCREEN = "opencelestialscreen";
+    }
 }

@@ -23,11 +23,13 @@
 package dev.galacticraft.mod.command;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.network.GCScreenType;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -61,11 +63,11 @@ public class GCCommands {
         CommandRegistrationCallback.EVENT.register((commandDispatcher, registryAccess, environment) -> {
 
             commandDispatcher.register(
-                    Commands.literal("gchouston")
+                    Commands.literal(Constant.Command.HOUSTON)
                     .executes(GCCommands::teleportToEarth));
 
             LiteralCommandNode<CommandSourceStack> node = commandDispatcher.register(
-                    Commands.literal("dimensiontp")
+                    Commands.literal(Constant.Command.DIMENSION_TP)
                     .requires(stack -> stack.hasPermission(2))
                     .then(Commands.argument("dimension", DimensionArgument.dimension())
                     .executes(GCCommands::teleport)
@@ -73,17 +75,44 @@ public class GCCommands {
                                     .executes(((GCCommands::teleportMultiple))))
                             .then(Commands.argument("pos", BlockPosArgument.blockPos())
                                     .executes(GCCommands::teleportToCoords))));
-            commandDispatcher.register(Commands.literal("dimtp").redirect(node));
+            commandDispatcher.register(Commands.literal(Constant.Command.DIMENSION_TP_ALIAS).redirect(node));
 
             commandDispatcher.register(
-                    Commands.literal("opencelestialscreen")
+                    Commands.literal(Constant.Command.OPEN_CELESTIAL_SCREEN)
                         .requires(stack -> stack.hasPermission(2))
-                        .executes(GCCommands::openCelestialScreen));
+                            .then(Commands.argument("players", EntityArgument.players())
+                                    .executes(context -> openCelestialScreenWithPlayer(context, false))
+                                    .then(Commands.argument("mapMode", BoolArgumentType.bool())
+                                            .executes(context -> openCelestialScreenWithPlayer(context, BoolArgumentType.getBool(context, "mapMode")))
+                                    )
+                            )
+                        .executes(context -> openCelestialScreen(context, false)));
         });
     }
 
-    private static int openCelestialScreen(CommandContext<CommandSourceStack> context) {
-        ServerPlayNetworking.send(context.getSource().getPlayer(), Constant.Packet.OPEN_SCREEN, PacketByteBufs.create().writeUtf("celestial"));
+    private static int openCelestialScreen(CommandContext<CommandSourceStack> context, boolean mapMode) {
+        var player = context.getSource().getPlayer();
+        if (player != null) {
+            var buf = PacketByteBufs.create();
+            buf.writeEnum(GCScreenType.CELESTIAL);
+            buf.writeBoolean(mapMode);
+            player.galacticraft$openCelestialScreen(null);
+            ServerPlayNetworking.send(player, Constant.Packet.OPEN_SCREEN, buf);
+        } else {
+            context.getSource().sendFailure(Component.translatable("commands.galacticraft.require_player"));
+            return 0;
+        }
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private static int openCelestialScreenWithPlayer(CommandContext<CommandSourceStack> context, boolean mapMode) throws CommandSyntaxException {
+        var buf = PacketByteBufs.create();
+        buf.writeEnum(GCScreenType.CELESTIAL);
+        buf.writeBoolean(mapMode);
+        for (ServerPlayer player : EntityArgument.getPlayers(context, "players")) {
+            player.galacticraft$openCelestialScreen(null);
+            ServerPlayNetworking.send(player, Constant.Packet.OPEN_SCREEN, buf);
+        }
         return Command.SINGLE_SUCCESS;
     }
 
