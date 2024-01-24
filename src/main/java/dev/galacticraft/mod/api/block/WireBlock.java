@@ -29,6 +29,8 @@ import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -63,29 +65,34 @@ public abstract class WireBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        super.neighborChanged(state, world, pos, block, fromPos, notify);
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos neighborPos, boolean notify) {
+        super.neighborChanged(state, world, pos, block, neighborPos, notify);
         if (!world.isClientSide()) {
             final BlockEntity blockEntity = world.getBlockEntity(pos);
             Wire wire = (Wire) blockEntity;
             assert wire != null;
-            final BlockEntity blockEntityAdj = world.getBlockEntity(fromPos);
-            BlockPos delta = fromPos.subtract(pos);
+            final BlockEntity blockEntityAdj = world.getBlockEntity(neighborPos);
+            BlockPos delta = neighborPos.subtract(pos);
             if (wire.canConnect(Direction.fromDelta(delta.getX(), delta.getY(), delta.getZ()))) {
                 if (blockEntityAdj instanceof Wire wire1) {
                     if (wire1.canConnect(Direction.fromDelta(delta.getX(), delta.getY(), delta.getZ()).getOpposite())) {
-                        wire.getOrCreateNetwork().addWire(fromPos, wire1);
+                        wire.getOrCreateNetwork().addWire(neighborPos, wire1);
                     }
                 } else {
-
-                    if (EnergyStorage.SIDED.find(world, fromPos, Direction.fromDelta(delta.getX(), delta.getY(), delta.getZ()).getOpposite()) != null) {
-                        wire.getOrCreateNetwork().updateConnection(pos, fromPos);
+                    if (EnergyStorage.SIDED.find(world, neighborPos, Direction.fromDelta(delta.getX(), delta.getY(), delta.getZ()).getOpposite()) != null) {
+                        wire.getOrCreateNetwork().updateConnection(pos, neighborPos);
                     } else if (wire.getNetwork() != null) {
-                        wire.getNetwork().updateConnection(pos, fromPos);
+                        wire.getNetwork().updateConnection(pos, neighborPos);
                     }
                 }
             }
         }
+    }
+
+    @Override
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
+        super.onPlace(state, level, pos, oldState, movedByPiston);
+        ((WireBlockEntity) level.getBlockEntity(pos)).getOrCreateNetwork();
     }
 
     @Nullable

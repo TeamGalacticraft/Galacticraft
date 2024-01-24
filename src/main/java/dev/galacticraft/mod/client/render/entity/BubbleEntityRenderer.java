@@ -39,6 +39,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -66,18 +67,29 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
             ((ClientLevel) entity.level()).removeEntity(entity.getId(), Entity.RemovalReason.DISCARDED);
             return;
         }
-        if (!machine.bubbleVisible) {
+        if (machine.isDisabled()) { // pretty sure we don't need to check if bubbleVisible since we kill entity at the same time
             return;
         }
         double size = machine.getSize();
+
+        if (bubbleModel == null) {
+            return;
+        }
 
         matrices.pushPose();
         matrices.translate(0.5F, 1.0F, 0.5F);
         matrices.scale((float) size, (float) size, (float) size);
         VertexConsumer consumer = vertexConsumers.getBuffer(RenderType.entityTranslucentEmissive(new ResourceLocation(Constant.MOD_ID, "textures/model/sphere.png")));
-        for (BakedQuad quad : bubbleModel.getQuads(null, null, entity.level().random)) {
-            consumer.putBulkData(matrices.last(), quad, 1, 1, 1, Integer.MAX_VALUE, OverlayTexture.NO_OVERLAY);
+//        for (BakedQuad quad : bubbleModel.getQuads(null, null, entity.level().random)) {
+//            consumer.putBulkData(matrices.last(), quad, 1, 1, 1, Integer.MAX_VALUE, OverlayTexture.NO_OVERLAY);
+//        }
+        // TEMP: until files are fixed
+        for (Direction direction : Direction.values()) {
+            for (BakedQuad quad : bubbleModel.getQuads(null, direction, entity.level().random)) {
+                consumer.putBulkData(matrices.last(), quad, 1, 1, 1, Integer.MAX_VALUE, OverlayTexture.NO_OVERLAY);
+            }
         }
+
         matrices.popPose();
     }
 

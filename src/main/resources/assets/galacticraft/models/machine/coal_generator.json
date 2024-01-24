@@ -1,8 +1,6 @@
 {
-  "machinelib:generate": "machinelib:z_axis",
+  "machinelib:generate": "machinelib:front_face",
   "sprites": {
-    "front": "galacticraft:block/coal_generator",
-    "back": "galacticraft:block/machine_power_output",
-    "sided": true
+    "sprite": "galacticraft:block/coal_generator"
   }
 }

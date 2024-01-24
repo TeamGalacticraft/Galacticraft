@@ -840,6 +840,7 @@ public interface Constant {
         String PROGRESS = "Progress";
         String SIZE = "Size";
         String MAX_SIZE = "MaxSize";
+        String VISIBLE = "Visible";
         String FUEL_TIME = "FuelTime";
         String FUEL_LENGTH = "FuelLength";
         String TEAM = "Team";
@@ -931,7 +932,6 @@ public interface Constant {
         ResourceLocation BUBBLE_SIZE = id("bubble_size");
         ResourceLocation BUBBLE_MAX = id("bubble_max");
         ResourceLocation BUBBLE_VISIBLE = id("bubble_visible");
-        ResourceLocation DISABLE_SEAL = id("toggle_seal");
         ResourceLocation OPEN_GC_INVENTORY = id("open_gc_inv");
         ResourceLocation OPEN_GC_ROCKET = id("open_gc_rocket");
         ResourceLocation CREATE_SATELLITE = id("create_satellite");

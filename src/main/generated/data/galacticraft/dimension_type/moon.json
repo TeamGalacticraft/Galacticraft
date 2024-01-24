@@ -1,25 +1,25 @@
 {
-  "ambient_light": 0.1,
-  "bed_works": false,
-  "coordinate_scale": 1.0,
-  "effects": "galacticraft:moon",
-  "has_ceiling": false,
-  "has_raids": false,
-  "has_skylight": true,
-  "height": 384,
-  "infiniburn": "#galacticraft:infiniburn_moon",
-  "logical_height": 384,
-  "min_y": -64,
-  "monster_spawn_block_light_limit": 0,
-  "monster_spawn_light_level": {
-    "type": "minecraft:uniform",
-    "value": {
-      "max_inclusive": 7,
-      "min_inclusive": 0
-    }
-  },
+  "ultrawarm": false,
   "natural": true,
   "piglin_safe": false,
   "respawn_anchor_works": false,
-  "ultrawarm": false
+  "bed_works": false,
+  "has_raids": false,
+  "has_skylight": true,
+  "has_ceiling": false,
+  "coordinate_scale": 1,
+  "ambient_light": 0.1,
+  "logical_height": 256,
+  "effects": "galacticraft:moon",
+  "infiniburn": "#galacticraft:infiniburn_moon",
+  "min_y": -32,
+  "height": 256,
+  "monster_spawn_light_level": {
+    "type": "minecraft:uniform",
+    "value": {
+      "min_inclusive": 0,
+      "max_inclusive": 7
+    }
+  },
+  "monster_spawn_block_light_limit": 0
 }

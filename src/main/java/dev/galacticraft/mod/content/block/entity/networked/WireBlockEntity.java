@@ -27,11 +27,13 @@ import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireNetwork;
 import dev.galacticraft.mod.attribute.energy.WireEnergyStorage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -75,6 +77,7 @@ public class WireBlockEntity extends BlockEntity implements Wire {
     public @NotNull WireNetwork getOrCreateNetwork() {
         if (this.network == null) {
             if (!this.level.isClientSide()) {
+                // Check if there is already a nearby network
                 for (var direction : Constant.Misc.DIRECTIONS) {
                     if (this.canConnect(direction)) {
                         var entity = this.level.getBlockEntity(this.getBlockPos().relative(direction));
@@ -87,9 +90,24 @@ public class WireBlockEntity extends BlockEntity implements Wire {
                         }
                     }
                 }
+                // If wire was not added to a network make a new one
                 if (this.network == null) {
                     this.setNetwork(WireNetwork.create((ServerLevel) this.level, this.getMaxTransferRate()));
                     this.network.addWire(this.getBlockPos(), this);
+                }
+                // Update non-wire connections
+                for (var direction : Constant.Misc.DIRECTIONS) {
+                    if (this.canConnect(direction)) {
+                        var entity = this.level.getBlockEntity(this.getBlockPos().relative(direction));
+                        if (!(entity instanceof Wire)) {
+                            BlockPos neighborPos = this.getBlockPos().relative(direction);
+                            if (EnergyStorage.SIDED.find(this.level, neighborPos, direction.getOpposite()) != null) {
+                                this.getOrCreateNetwork().updateConnection(this.getBlockPos(), neighborPos);
+                            } else if (this.getNetwork() != null) {
+                                this.getNetwork().updateConnection(this.getBlockPos(), neighborPos);
+                            }
+                        }
+                    }
                 }
             }
         }
