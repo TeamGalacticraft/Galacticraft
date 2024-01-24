@@ -20,26 +20,11 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.data.tag;
+package dev.galacticraft.mod.client.render.dimension;
 
-import dev.galacticraft.mod.misc.banner.GCBannerPatterns;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.tags.BannerPatternTags;
-import net.minecraft.world.level.block.entity.BannerPattern;
+// TODO: implement fancy star visuals
+public class StarManager {
+    public void tick() {
 
-import java.util.concurrent.CompletableFuture;
-
-public class GCBannerTagProvider extends FabricTagProvider<BannerPattern> {
-    public GCBannerTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
-        super(output, Registries.BANNER_PATTERN, registriesFuture);
-    }
-
-    @Override
-    protected void addTags(HolderLookup.Provider arg) {
-        this.tag(BannerPatternTags.NO_ITEM_REQUIRED)
-                .add(GCBannerPatterns.ROCKET_KEY);
     }
 }

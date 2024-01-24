@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.data;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.data.recipes.CircuitFabricatorRecipeBuilder;
 import dev.galacticraft.mod.data.recipes.ShapedCompressorRecipeBuilder;
@@ -33,6 +34,8 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,6 +49,52 @@ public class GCRecipeProvider extends FabricRecipeProvider {
 
     @Override
     public void buildRecipes(Consumer<FinishedRecipe> exporter) {
+        // Gear
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_MASK)
+                .define('G', Items.GLASS_PANE)
+                .define('H', Items.IRON_HELMET)
+                .pattern("GGG")
+                .pattern("GHG")
+                .pattern("GGG")
+                .unlockedBy(getHasName(Items.GLASS_PANE), has(Items.GLASS_PANE))
+                .save(exporter);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_GEAR)
+                .define('Y', GCBlocks.GLASS_FLUID_PIPE)
+                .define('X', GCItems.OXYGEN_CONCENTRATOR)
+                .pattern(" Y ")
+                .pattern("YXY")
+                .pattern("Y Y")
+                .unlockedBy(getHasName(GCBlocks.GLASS_FLUID_PIPE), has(GCItems.GLASS_FLUID_PIPE))
+                .save(exporter);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_CONCENTRATOR)
+                .define('Z', GCTags.COMPRESSED_STEEL)
+                .define('W', GCTags.COMPRESSED_TIN)
+                .define('Y', GCItems.TIN_CANISTER)
+                .define('X', GCItems.OXYGEN_VENT)
+                .pattern("ZWZ")
+                .pattern("WYW")
+                .pattern("ZXZ")
+                .unlockedBy(getHasName(GCItems.OXYGEN_VENT), has(GCItems.OXYGEN_VENT))
+                .save(exporter);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.TIN_CANISTER, 2)
+                .define('X', GCTags.TIN_INGOTS)
+                .pattern("X X")
+                .pattern("X X")
+                .pattern("XXX")
+                .unlockedBy(getHasName(GCItems.TIN_INGOT), has(GCItems.TIN_INGOT))
+                .save(exporter);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.COPPER_CANISTER, 2)
+                .define('X', Items.COPPER_INGOT)
+                .pattern("X X")
+                .pattern("X X")
+                .pattern("XXX")
+                .unlockedBy(getHasName(Items.COPPER_INGOT), has(Items.COPPER_INGOT))
+                .save(exporter);
+
         ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.ROCKET_LAUNCH_PAD, 9)
                 .define('C', GCItems.COMPRESSED_IRON)
                 .define('I', Items.IRON_BLOCK)
@@ -63,12 +112,64 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("SRS")
                 .unlockedBy(getHasName(GCItems.BASIC_WAFER), has(GCItems.BASIC_WAFER))
                 .save(exporter);
+
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_VENT)
                 .define('T', GCItems.COMPRESSED_TIN)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .pattern("TT")
                 .pattern("TS")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_TIN), has(GCItems.COMPRESSED_TIN))
+                .save(exporter);
+
+        // Food
+        simpleCookingRecipe(exporter, "smoking", RecipeSerializer.SMOKING_RECIPE, 100, GCItems.GROUND_BEEF, GCItems.BEEF_PATTY, 1.0F);
+        simpleCookingRecipe(exporter, "campfire_cooking", RecipeSerializer.CAMPFIRE_COOKING_RECIPE, 600, GCItems.GROUND_BEEF, GCItems.BEEF_PATTY, 1.0F);
+
+//        SimpleCookingRecipeBuilder.smelting(Ingredient.of(GCBlocks.CHEESE_ORE), RecipeCategory.FOOD, GCItems.CHEESE_CURD, 0.35F, 200)
+//                .unlockedBy(getHasName(GCBlocks.CHEESE_ORE), has(GCBlocks.CHEESE_ORE))
+//                .save(exporter);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.BURGER_BUN, 2)
+                .requires(Items.WHEAT)
+                .requires(Items.WHEAT)
+                .requires(Items.EGG)
+                .requires(Items.MILK_BUCKET)
+                .unlockedBy(getHasName(Items.EGG), has(Items.EGG))
+                .save(exporter);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.GROUND_BEEF, 2)
+                .requires(Items.BEEF)
+                .unlockedBy(getHasName(Items.BEEF), has(Items.BEEF))
+                .save(exporter);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CHEESEBURGER)
+                .requires(GCItems.CHEESE_SLICE)
+                .requires(GCItems.BEEF_PATTY)
+                .requires(GCItems.BURGER_BUN)
+                .unlockedBy(getHasName(GCItems.GROUND_BEEF), has(GCItems.GROUND_BEEF))
+                .save(exporter);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CHEESE_SLICE, 6)
+                .requires(GCItems.MOON_CHEESE_BLOCK)
+                .unlockedBy(getHasName(GCItems.MOON_CHEESE_BLOCK), has(GCItems.MOON_CHEESE_BLOCK))
+                .save(exporter);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.FOOD, GCItems.MOON_CHEESE_BLOCK)
+                .define('Y', GCItems.CHEESE_CURD)
+                .define('X', Items.MILK_BUCKET)
+                .pattern("YYY")
+                .pattern("YXY")
+                .pattern("YYY")
+                .unlockedBy(getHasName(GCItems.CHEESE_CURD), has(GCItems.CHEESE_CURD))
+                .save(exporter);
+
+        // Pipes
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.GLASS_FLUID_PIPE, 6)
+                .define('X', Items.GLASS_PANE)
+                .pattern("XXX")
+                .pattern("   ")
+                .pattern("XXX")
+                .unlockedBy(getHasName(Items.GLASS_PANE), has(Items.GLASS_PANE))
                 .save(exporter);
 
         // Compressing
@@ -187,6 +288,24 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("LWL")
                 .pattern("SRS")
                 .unlockedBy(getHasName(GCItems.ADVANCED_WAFER), has(GCItems.ADVANCED_WAFER))
+                .save(exporter);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.NOSE_CONE)
+                .define('Y', Items.REDSTONE_TORCH)
+                .define('X', GCItems.TIER_1_HEAVY_DUTY_PLATE)
+                .pattern(" Y ")
+                .pattern(" X ")
+                .pattern("X X")
+                .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                .save(exporter);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ROCKET_FINS)
+                .define('Y', GCTags.COMPRESSED_STEEL)
+                .define('X', GCItems.TIER_1_HEAVY_DUTY_PLATE)
+                .pattern(" Y ")
+                .pattern("XYX")
+                .pattern("X X")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .save(exporter);
 
         // Fabricator

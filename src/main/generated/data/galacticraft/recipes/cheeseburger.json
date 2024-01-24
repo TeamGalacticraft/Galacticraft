@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "galacticraft:cheese_slice"
+    },
+    {
+      "item": "galacticraft:beef_patty"
+    },
+    {
+      "item": "galacticraft:burger_bun"
+    }
+  ],
+  "result": {
+    "item": "galacticraft:cheeseburger"
+  }
+}

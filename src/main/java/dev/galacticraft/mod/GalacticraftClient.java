@@ -161,6 +161,7 @@ public class GalacticraftClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.FALLING_CRUDE_OIL, FallingCrudeOilProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.CRYOGENIC_PARTICLE, CryoFreezeParticle.Provider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.LANDER_FLAME_PARTICLE, LanderParticle.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.SPARK_PARTICLE, SparksParticle.Provider::new);
 
         MachineModelRegistry.register(new ResourceLocation(Constant.MOD_ID, "solar_panel"), SolarPanelSpriteProvider::new);
         MachineModelRegistry.register(new ResourceLocation(Constant.MOD_ID, "oxygen_sealer"), OxygenSealerSpriteProvider::new);

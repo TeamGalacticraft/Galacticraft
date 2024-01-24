@@ -416,6 +416,9 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.CANNED_DEHYDRATED_POTATO, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.CANNED_BEEF, ModelTemplates.FLAT_ITEM);
 
+        generator.generateFlatItem(GCItems.NOSE_CONE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.HEAVY_NOSE_CONE, "_joined", ModelTemplates.FLAT_ITEM);
+
         // ROCKET PLATES
         generator.generateFlatItem(GCItems.TIER_1_HEAVY_DUTY_PLATE, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.TIER_2_HEAVY_DUTY_PLATE, ModelTemplates.FLAT_ITEM);

@@ -26,6 +26,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCRocketParts;
+import dev.galacticraft.mod.content.GCRegistry;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -42,23 +43,23 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public class GCItems {
+    public static final GCRegistry<Item> ITEMS = new GCRegistry<>(BuiltInRegistries.ITEM);
     public static final List<ItemLike> HIDDEN_ITEMS = new ArrayList<>(1);
 
     // === START BLOCKS ===
     // TORCHES
-    public static final Item GLOWSTONE_TORCH = new StandingAndWallBlockItem(GCBlocks.GLOWSTONE_TORCH, GCBlocks.GLOWSTONE_WALL_TORCH, new Item.Properties(), Direction.DOWN);
-    public static final Item UNLIT_TORCH = new StandingAndWallBlockItem(GCBlocks.UNLIT_TORCH, GCBlocks.UNLIT_WALL_TORCH, new Item.Properties(), Direction.DOWN);
+    public static final Item GLOWSTONE_TORCH = ITEMS.register(Constant.Block.GLOWSTONE_TORCH, new StandingAndWallBlockItem(GCBlocks.GLOWSTONE_TORCH, GCBlocks.GLOWSTONE_WALL_TORCH, new Item.Properties(), Direction.DOWN));
+    public static final Item UNLIT_TORCH = ITEMS.register(Constant.Block.UNLIT_TORCH, new StandingAndWallBlockItem(GCBlocks.UNLIT_TORCH, GCBlocks.UNLIT_WALL_TORCH, new Item.Properties(), Direction.DOWN));
 
     // LANTERNS
-    public static final Item GLOWSTONE_LANTERN = new BlockItem(GCBlocks.GLOWSTONE_LANTERN, new Item.Properties());
-    public static final Item UNLIT_LANTERN = new BlockItem(GCBlocks.UNLIT_LANTERN, new Item.Properties());
+    public static final Item GLOWSTONE_LANTERN = ITEMS.register(Constant.Block.GLOWSTONE_LANTERN, new BlockItem(GCBlocks.GLOWSTONE_LANTERN, new Item.Properties()));
+    public static final Item UNLIT_LANTERN = ITEMS.register(Constant.Block.UNLIT_LANTERN, new BlockItem(GCBlocks.UNLIT_LANTERN, new Item.Properties()));
 
     // DECORATION BLOCKS
-    public static final Item ALUMINUM_DECORATION = new BlockItem(GCBlocks.ALUMINUM_DECORATION, new Item.Properties());
-    public static final Item ALUMINUM_DECORATION_SLAB = new BlockItem(GCBlocks.ALUMINUM_DECORATION_SLAB, new Item.Properties());
-    public static final Item ALUMINUM_DECORATION_STAIRS = new BlockItem(GCBlocks.ALUMINUM_DECORATION_STAIRS, new Item.Properties());
-    public static final Item ALUMINUM_DECORATION_WALL = new BlockItem(GCBlocks.ALUMINUM_DECORATION_WALL, new Item.Properties());
-    public static final Item DETAILED_ALUMINUM_DECORATION = new BlockItem(GCBlocks.DETAILED_ALUMINUM_DECORATION, new Item.Properties());
+    public static final Item ALUMINUM_DECORATION = ITEMS.register(Constant.Block.ALUMINUM_DECORATION, new BlockItem(GCBlocks.ALUMINUM_DECORATION, new Item.Properties()));
+    public static final Item ALUMINUM_DECORATION_SLAB = ITEMS.register(Constant.Block.ALUMINUM_DECORATION_SLAB, new BlockItem(GCBlocks.ALUMINUM_DECORATION_SLAB, new Item.Properties()));
+    public static final Item ALUMINUM_DECORATION_STAIRS = ITEMS.register(Constant.Block.ALUMINUM_DECORATION_STAIRS, new BlockItem(GCBlocks.ALUMINUM_DECORATION_STAIRS, new Item.Properties()));
+    public static final Item ALUMINUM_DECORATION_WALL = ITEMS.register(Constant.Block.ALUMINUM_DECORATION_WALL, new BlockItem(GCBlocks.ALUMINUM_DECORATION_WALL, new Item.Properties()));
     public static final Item DETAILED_ALUMINUM_DECORATION_SLAB = new BlockItem(GCBlocks.DETAILED_ALUMINUM_DECORATION_SLAB, new Item.Properties());
     public static final Item DETAILED_ALUMINUM_DECORATION_STAIRS = new BlockItem(GCBlocks.DETAILED_ALUMINUM_DECORATION_STAIRS, new Item.Properties());
     public static final Item DETAILED_ALUMINUM_DECORATION_WALL = new BlockItem(GCBlocks.DETAILED_ALUMINUM_DECORATION_WALL, new Item.Properties());
@@ -345,7 +346,7 @@ public class GCItems {
     public static final Item FLUID_MANIPULATOR = new Item(new Item.Properties());
     public static final Item OXYGEN_CONCENTRATOR = new Item(new Item.Properties());
     public static final Item OXYGEN_FAN = new Item(new Item.Properties());
-    public static final Item OXYGEN_VENT = new Item(new Item.Properties());
+    public static final Item OXYGEN_VENT = ITEMS.register(Constant.Item.OXYGEN_VENT, new Item(new Item.Properties()));
     public static final Item SENSOR_LENS = new Item(new Item.Properties());
     public static final Item BLUE_SOLAR_WAFER = new Item(new Item.Properties());
     public static final Item SINGLE_SOLAR_MODULE = new Item(new Item.Properties());
@@ -353,7 +354,7 @@ public class GCItems {
     public static final Item SOLAR_ARRAY_WAFER = new Item(new Item.Properties());
     public static final Item STEEL_POLE = new Item(new Item.Properties());
     public static final Item COPPER_CANISTER = new Item(new Item.Properties());
-    public static final Item TIN_CANISTER = new Item(new Item.Properties());
+    public static final Item TIN_CANISTER = ITEMS.register(Constant.Item.TIN_CANISTER, new Item(new Item.Properties()));
     public static final Item THERMAL_CLOTH = new Item(new Item.Properties());
     public static final Item ISOTHERMAL_FABRIC = new Item(new Item.Properties());
     public static final Item ORION_DRIVE = new Item(new Item.Properties());
@@ -364,11 +365,11 @@ public class GCItems {
     public static final Item MOON_BERRIES = new ItemNameBlockItem(GCBlocks.MOON_BERRY_BUSH, new Item.Properties().food(GCFoodComponent.MOON_BERRIES));
     public static final Item CHEESE_CURD = new Item(new Item.Properties().food(GCFoodComponent.CHEESE_CURD));
     
-    public static final Item CHEESE_SLICE = new Item(new Item.Properties().food(GCFoodComponent.CHEESE_SLICE));
-    public static final Item BURGER_BUN = new Item(new Item.Properties().food(GCFoodComponent.BURGER_BUN));
-    public static final Item GROUND_BEEF = new Item(new Item.Properties().food(GCFoodComponent.GROUND_BEEF));
-    public static final Item BEEF_PATTY = new Item(new Item.Properties().food(GCFoodComponent.BEEF_PATTY));
-    public static final Item CHEESEBURGER = new Item(new Item.Properties().food(GCFoodComponent.CHEESEBURGER));
+    public static final Item CHEESE_SLICE = ITEMS.register(Constant.Item.CHEESE_SLICE, new Item(new Item.Properties().food(GCFoodComponent.CHEESE_SLICE)));
+    public static final Item BURGER_BUN = ITEMS.register(Constant.Item.BURGER_BUN, new Item(new Item.Properties().food(GCFoodComponent.BURGER_BUN)));
+    public static final Item GROUND_BEEF = ITEMS.register(Constant.Item.GROUND_BEEF, new Item(new Item.Properties().food(GCFoodComponent.GROUND_BEEF)));
+    public static final Item BEEF_PATTY = ITEMS.register(Constant.Item.BEEF_PATTY, new Item(new Item.Properties().food(GCFoodComponent.BEEF_PATTY)));
+    public static final Item CHEESEBURGER = ITEMS.register(Constant.Item.CHEESEBURGER, new Item(new Item.Properties().food(GCFoodComponent.CHEESEBURGER)));
     
     public static final Item CANNED_DEHYDRATED_APPLE = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_APPLE));
     public static final Item CANNED_DEHYDRATED_CARROT = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_CARROT));
@@ -377,9 +378,9 @@ public class GCItems {
     public static final Item CANNED_BEEF = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.CANNED_BEEF));
     
     // ROCKET PLATES
-    public static final Item TIER_1_HEAVY_DUTY_PLATE = new Item(new Item.Properties());
-    public static final Item TIER_2_HEAVY_DUTY_PLATE = new Item(new Item.Properties());
-    public static final Item TIER_3_HEAVY_DUTY_PLATE = new Item(new Item.Properties());
+    public static final Item TIER_1_HEAVY_DUTY_PLATE = ITEMS.register(Constant.Item.TIER_1_HEAVY_DUTY_PLATE, new Item(new Item.Properties()));
+    public static final Item TIER_2_HEAVY_DUTY_PLATE = ITEMS.register(Constant.Item.TIER_2_HEAVY_DUTY_PLATE, new Item(new Item.Properties()));
+    public static final Item TIER_3_HEAVY_DUTY_PLATE = ITEMS.register(Constant.Item.TIER_3_HEAVY_DUTY_PLATE, new Item(new Item.Properties()));
 
     // ARMOR
     public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties());
@@ -462,11 +463,13 @@ public class GCItems {
     public static final Item THERMAL_PADDING_LEGGINGS = new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.LEGGINGS);
     public static final Item THERMAL_PADDING_BOOTS = new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.BOOTS);
     // ROCKETS
-    public static final Item ROCKET = new RocketItem(new Item.Properties().stacksTo(1));
+    public static final Item ROCKET = ITEMS.register(Constant.Item.ROCKET, new RocketItem(new Item.Properties().stacksTo(1)));
 
     // ROCKET PIECES
-    public static final Item ROCKET_FINS = new Item(new Item.Properties());
-    public static final Item ROCKET_ENGINE = new Item(new Item.Properties());
+    public static final Item NOSE_CONE = ITEMS.register(Constant.Item.NOSE_CONE, new Item(new Item.Properties()));
+    public static final Item HEAVY_NOSE_CONE = ITEMS.register(Constant.Item.HEAVY_NOSE_CONE, new Item(new Item.Properties()));
+    public static final Item ROCKET_FINS = ITEMS.register(Constant.Item.ROCKET_FINS, new Item(new Item.Properties()));
+    public static final Item ROCKET_ENGINE = ITEMS.register(Constant.Item.ROCKET_ENGINE, new Item(new Item.Properties()));
 
     // SCHEMATICS
     public static final Item BASIC_ROCKET_CONE_SCHEMATIC = new RocketPartSchematic(new Item.Properties().stacksTo(1).rarity(Rarity.RARE), GCRocketParts.TIER_1_CONE);
@@ -482,20 +485,8 @@ public class GCItems {
     
     public static void register() {
         // === START BLOCKS ===
-        // TORCHES
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.GLOWSTONE_TORCH), GLOWSTONE_TORCH);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.UNLIT_TORCH), UNLIT_TORCH);
-
-        // LANTERNS
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.GLOWSTONE_LANTERN), GLOWSTONE_LANTERN);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.UNLIT_LANTERN), UNLIT_LANTERN);
 
         // DECORATION BLOCKS
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ALUMINUM_DECORATION), ALUMINUM_DECORATION);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ALUMINUM_DECORATION_SLAB), ALUMINUM_DECORATION_SLAB);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ALUMINUM_DECORATION_STAIRS), ALUMINUM_DECORATION_STAIRS);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ALUMINUM_DECORATION_WALL), ALUMINUM_DECORATION_WALL);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION), DETAILED_ALUMINUM_DECORATION);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION_SLAB), DETAILED_ALUMINUM_DECORATION_SLAB);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION_STAIRS), DETAILED_ALUMINUM_DECORATION_STAIRS);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION_WALL), DETAILED_ALUMINUM_DECORATION_WALL);
@@ -780,7 +771,6 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.FLUID_MANIPULATOR), FLUID_MANIPULATOR);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.OXYGEN_CONCENTRATOR), OXYGEN_CONCENTRATOR);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.OXYGEN_FAN), OXYGEN_FAN);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.OXYGEN_VENT), OXYGEN_VENT);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.SENSOR_LENS), SENSOR_LENS);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.BLUE_SOLAR_WAFER), BLUE_SOLAR_WAFER);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.SINGLE_SOLAR_MODULE), SINGLE_SOLAR_MODULE);
@@ -788,7 +778,6 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.SOLAR_ARRAY_WAFER), SOLAR_ARRAY_WAFER);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.STEEL_POLE), STEEL_POLE);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.COPPER_CANISTER), COPPER_CANISTER);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.TIN_CANISTER), TIN_CANISTER);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.THERMAL_CLOTH), THERMAL_CLOTH);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.ISOTHERMAL_FABRIC), ISOTHERMAL_FABRIC);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.ORION_DRIVE), ORION_DRIVE);
@@ -799,22 +788,11 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.MOON_BERRIES), MOON_BERRIES);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CHEESE_CURD), CHEESE_CURD);
 
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CHEESE_SLICE), CHEESE_SLICE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.BURGER_BUN), BURGER_BUN);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.GROUND_BEEF), GROUND_BEEF);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.BEEF_PATTY), BEEF_PATTY);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CHEESEBURGER), CHEESEBURGER);
-
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_DEHYDRATED_APPLE), CANNED_DEHYDRATED_APPLE);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_DEHYDRATED_CARROT), CANNED_DEHYDRATED_CARROT);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_DEHYDRATED_MELON), CANNED_DEHYDRATED_MELON);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_DEHYDRATED_POTATO), CANNED_DEHYDRATED_POTATO);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_BEEF), CANNED_BEEF);
-
-        // ROCKET PLATES
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.TIER_1_HEAVY_DUTY_PLATE), TIER_1_HEAVY_DUTY_PLATE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.TIER_2_HEAVY_DUTY_PLATE), TIER_2_HEAVY_DUTY_PLATE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.TIER_3_HEAVY_DUTY_PLATE), TIER_3_HEAVY_DUTY_PLATE);
 
         // ARMOR
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.HEAVY_DUTY_HELMET), HEAVY_DUTY_HELMET);
@@ -896,13 +874,6 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.THERMAL_PADDING_CHESTPIECE), THERMAL_PADDING_CHESTPIECE);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.THERMAL_PADDING_LEGGINGS), THERMAL_PADDING_LEGGINGS);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.THERMAL_PADDING_BOOTS), THERMAL_PADDING_BOOTS);
-
-        // ROCKETS
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.ROCKET), ROCKET);
-
-        // ROCKET PIECES
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.ROCKET_FINS), ROCKET_FINS);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.ROCKET_ENGINE), ROCKET_ENGINE);
 
         // SCHEMATICS
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.BASIC_ROCKET_CONE_SCHEMATIC), BASIC_ROCKET_CONE_SCHEMATIC);

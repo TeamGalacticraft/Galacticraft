@@ -87,9 +87,9 @@ public class GCBlocks {
     // DECORATION BLOCKS
     public static final Block ALUMINUM_DECORATION = new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F));
     public static final Block ALUMINUM_DECORATION_SLAB = new SlabBlock(BlockBehaviour.Properties.copy(ALUMINUM_DECORATION).strength(2.5F, 3.0F));
-    public static final Block ALUMINUM_DECORATION_STAIRS = new StairBlock(ALUMINUM_DECORATION.defaultBlockState(), BlockBehaviour.Properties.copy(ALUMINUM_DECORATION));
+    public static final Block ALUMINUM_DECORATION_STAIRS = BLOCKS.register(Constant.Block.ALUMINUM_DECORATION_STAIRS, new StairBlock(ALUMINUM_DECORATION.defaultBlockState(), BlockBehaviour.Properties.copy(ALUMINUM_DECORATION)));
     public static final Block ALUMINUM_DECORATION_WALL = new WallBlock(BlockBehaviour.Properties.copy(ALUMINUM_DECORATION));
-    public static final Block DETAILED_ALUMINUM_DECORATION = new Block(BlockBehaviour.Properties.copy(ALUMINUM_DECORATION));
+    public static final Block DETAILED_ALUMINUM_DECORATION = BLOCKS.registerWithItem(Constant.Block.DETAILED_ALUMINUM_DECORATION, new Block(BlockBehaviour.Properties.copy(ALUMINUM_DECORATION)));
     public static final Block DETAILED_ALUMINUM_DECORATION_SLAB = new SlabBlock(BlockBehaviour.Properties.copy(DETAILED_ALUMINUM_DECORATION).strength(2.5F, 3.0F));
     public static final Block DETAILED_ALUMINUM_DECORATION_STAIRS = new StairBlock(DETAILED_ALUMINUM_DECORATION.defaultBlockState(), BlockBehaviour.Properties.copy(DETAILED_ALUMINUM_DECORATION));
     public static final Block DETAILED_ALUMINUM_DECORATION_WALL = new WallBlock(BlockBehaviour.Properties.copy(DETAILED_ALUMINUM_DECORATION));
@@ -247,7 +247,7 @@ public class GCBlocks {
     public static final Block ALUMINUM_WIRE = new AluminumWireBlock(BlockBehaviour.Properties.copy(Blocks.WHITE_WOOL));
     public static final Block SEALABLE_ALUMINUM_WIRE = new SealableAluminumWireBlock(BlockBehaviour.Properties.copy(TIN_DECORATION));
     public static final Block HEAVY_SEALABLE_ALUMINUM_WIRE = new HeavySealableAluminumWireBlock(BlockBehaviour.Properties.copy(TIN_DECORATION));
-    public static final Block GLASS_FLUID_PIPE = new GlassFluidPipeBlock(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).sound(SoundType.GLASS));
+    public static final Block GLASS_FLUID_PIPE = BLOCKS.register(Constant.Block.GLASS_FLUID_PIPE, new GlassFluidPipeBlock(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).sound(SoundType.GLASS)));
     public static final Block ROCKET_LAUNCH_PAD = new RocketLaunchPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F));
     public static final Block ROCKET_WORKBENCH = BLOCKS.register(Constant.Block.ROCKET_WORKBENCH, new RocketWorkbench(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F)));
     public static final Block PARACHEST = BLOCKS.registerWithItem(Constant.Block.PARACHEST, new ParaChestBlock(BlockBehaviour.Properties.of()));
@@ -372,9 +372,7 @@ public class GCBlocks {
         // DECORATION BLOCKS
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ALUMINUM_DECORATION), ALUMINUM_DECORATION);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ALUMINUM_DECORATION_SLAB), ALUMINUM_DECORATION_SLAB);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ALUMINUM_DECORATION_STAIRS), ALUMINUM_DECORATION_STAIRS);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ALUMINUM_DECORATION_WALL), ALUMINUM_DECORATION_WALL);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION), DETAILED_ALUMINUM_DECORATION);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION_SLAB), DETAILED_ALUMINUM_DECORATION_SLAB);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION_STAIRS), DETAILED_ALUMINUM_DECORATION_STAIRS);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION_WALL), DETAILED_ALUMINUM_DECORATION_WALL);
@@ -532,7 +530,6 @@ public class GCBlocks {
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ALUMINUM_WIRE), ALUMINUM_WIRE);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.SEALABLE_ALUMINUM_WIRE), SEALABLE_ALUMINUM_WIRE);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE), HEAVY_SEALABLE_ALUMINUM_WIRE);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GLASS_FLUID_PIPE), GLASS_FLUID_PIPE);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ROCKET_LAUNCH_PAD), ROCKET_LAUNCH_PAD);
 
         // LIGHT PANELS

@@ -27,6 +27,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -63,8 +64,11 @@ public class GCTags {
     public static final TagKey<Item> STEEL_INGOTS = commonTag("steel_ingots");
     public static final TagKey<Item> TIN_INGOTS = commonTag("tin_ingots");
     public static final TagKey<Item> RAW_TIN_ORES = commonTag("raw_tin_ores");
+    public static final TagKey<Item> COMPRESSED_STEEL = commonTag("compressed_steel");
+    public static final TagKey<Item> COMPRESSED_TIN = commonTag("compressed_tin");
 
     public static final TagKey<Structure> MOON_RUINS = TagKey.create(Registries.STRUCTURE, Constant.id("moon_ruins"));
+
 
     public static TagKey<Item> commonTag(String path) {
         return TagKey.create(Registries.ITEM, new ResourceLocation(Constant.COMMON_NAMESPACE, path));

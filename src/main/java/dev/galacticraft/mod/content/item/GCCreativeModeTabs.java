@@ -135,6 +135,12 @@ public class GCCreativeModeTabs {
                 output.accept(TIER_2_HEAVY_DUTY_PLATE);
                 output.accept(TIER_3_HEAVY_DUTY_PLATE);
 
+                output.accept(NOSE_CONE);
+                output.accept(HEAVY_NOSE_CONE);
+
+                output.accept(ROCKET_FINS);
+                output.accept(ROCKET_ENGINE);
+
                 // ARMOR
                 output.accept(HEAVY_DUTY_HELMET);
                 output.accept(HEAVY_DUTY_CHESTPLATE);
@@ -259,7 +265,7 @@ public class GCCreativeModeTabs {
                 output.accept(ALUMINUM_DECORATION_SLAB);
                 output.accept(ALUMINUM_DECORATION_STAIRS);
                 output.accept(ALUMINUM_DECORATION_WALL);
-                output.accept(DETAILED_ALUMINUM_DECORATION);
+                output.accept(GCBlocks.DETAILED_ALUMINUM_DECORATION);
                 output.accept(DETAILED_ALUMINUM_DECORATION_SLAB);
                 output.accept(DETAILED_ALUMINUM_DECORATION_STAIRS);
                 output.accept(DETAILED_ALUMINUM_DECORATION_WALL);
