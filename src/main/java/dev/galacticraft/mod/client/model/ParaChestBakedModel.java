@@ -26,13 +26,14 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.special.ParaChestBlock;
 import net.fabricmc.fabric.api.renderer.v1.model.WrapperBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -46,12 +47,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public record ParaChestBakedModel(BakedModel parent, Map<DyeColor, BakedModel> bakedChutes) implements BakedModel, WrapperBakedModel {
+public class ParaChestBakedModel implements BakedModel, WrapperBakedModel {
+    private final ParaChestOverride ITEM_OVERRIDE = new ParaChestOverride();
+    private final BakedModel parent;
+    private final Map<DyeColor, BakedModel> bakedChutes;
+    private final DyeColor defaultColor;
+
+    public ParaChestBakedModel(BakedModel parent, Map<DyeColor, BakedModel> bakedChutes) {
+        this(parent, bakedChutes, DyeColor.WHITE);
+    }
+
+    public ParaChestBakedModel(BakedModel parent, Map<DyeColor, BakedModel> bakedChutes, DyeColor defaultColor) {
+        this.parent = parent;
+        this.bakedChutes = bakedChutes;
+        this.defaultColor = defaultColor;
+    }
+
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState blockState, @Nullable Direction direction, RandomSource randomSource) {
         List<BakedQuad> quads = new ArrayList<>(parent.getQuads(blockState, direction, randomSource));
         if (blockState != null)
             quads.addAll(bakedChutes.get(blockState.getValue(ParaChestBlock.COLOR)).getQuads(blockState, direction, randomSource));
+        else
+            quads.addAll(bakedChutes.get(defaultColor).getQuads(blockState, direction, randomSource));
         return quads;
     }
 
@@ -62,8 +80,6 @@ public record ParaChestBakedModel(BakedModel parent, Map<DyeColor, BakedModel> b
         if (compoundTag != null) {
             CompoundTag blockStateTag = compoundTag.getCompound("BlockStateTag");
             StateDefinition<Block, BlockState> stateDefinition = GCBlocks.PARACHEST.getStateDefinition();
-
-
                 Property<?> property = stateDefinition.getProperty("color");
                 if (property != null) {
                     property.getValue(blockStateTag.getString("color")).ifPresent(color -> {
@@ -112,7 +128,7 @@ public record ParaChestBakedModel(BakedModel parent, Map<DyeColor, BakedModel> b
 
     @Override
     public ItemOverrides getOverrides() {
-        return parent.getOverrides();
+        return ITEM_OVERRIDE;
     }
 
     @Override
@@ -121,9 +137,21 @@ public record ParaChestBakedModel(BakedModel parent, Map<DyeColor, BakedModel> b
     }
 
     public class ParaChestOverride extends ItemOverrides {
-
-        public ParaChestOverride(ModelBaker modelBaker, BlockModel blockModel, List<ItemOverride> list) {
-            super(modelBaker, blockModel, list);
+        @Nullable
+        @Override
+        public BakedModel resolve(BakedModel model, ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed) {
+            CompoundTag compoundTag = stack.getTag();
+            if (compoundTag != null) {
+                CompoundTag blockStateTag = compoundTag.getCompound("BlockStateTag");
+                StateDefinition<Block, BlockState> stateDefinition = GCBlocks.PARACHEST.getStateDefinition();
+                Property<?> property = stateDefinition.getProperty("color");
+                if (property != null) {
+                    var value = property.getValue(blockStateTag.getString("color"));
+                    if (value.isPresent())
+                        return new ParaChestBakedModel(ParaChestBakedModel.this.parent, ParaChestBakedModel.this.bakedChutes, (DyeColor) value.get());
+                }
+            }
+            return ParaChestBakedModel.this.parent.getOverrides().resolve(model, stack, level, entity, seed);
         }
     }
 }

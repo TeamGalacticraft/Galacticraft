@@ -38,84 +38,27 @@ import org.joml.Matrix4f;
 
 import java.util.Random;
 
-public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
-    INSTANCE;
-
+public class MoonSkyRenderer extends SpaceSkyRenderer {
+    public static final MoonSkyRenderer INSTANCE = new MoonSkyRenderer();
     private static final ResourceLocation EARTH_TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/gui/celestialbodies/earth.png");
     private static final ResourceLocation SUN_TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/gui/celestialbodies/sun.png");
 
-    private VertexBuffer starBuffer = null;
-
     @Override
     public void render(WorldRenderContext context) {
-        if (starBuffer == null) { //cannot be done in init as the gl context has not been created yet.
-            starBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
-            final Random random = new Random(27893L);
-            final BufferBuilder buffer = Tesselator.getInstance().getBuilder();
-            RenderSystem.setShader(GameRenderer::getPositionShader);
-            buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-            for (int i = 0; i < 12000; ++i) {
-                double j = random.nextFloat() * 2.0F - 1.0F;
-                double k = random.nextFloat() * 2.0F - 1.0F;
-                double l = random.nextFloat() * 2.0F - 1.0F;
-                double m = 0.15F + random.nextFloat() * 0.1F;
-                double n = j * j + k * k + l * l;
-
-                if (n < 1.0D && n > 0.01D) {
-                    n = 1.0D / Math.sqrt(n);
-                    j *= n;
-                    k *= n;
-                    l *= n;
-                    double o = j * 100.0D;
-                    double p = k * 100.0D;
-                    double q = l * 100.0D;
-                    double r = Math.atan2(j, l);
-                    double s = Math.sin(r);
-                    double t = Math.cos(r);
-                    double u = Math.atan2(Math.sqrt(j * j + l * l), k);
-                    double v = Math.sin(u);
-                    double w = Math.cos(u);
-                    double x = random.nextDouble() * Math.PI * 2.0D;
-                    double y = Math.sin(x);
-                    double z = Math.cos(x);
-
-                    for (int a = 0; a < 4; ++a) {
-                        double b = 0.0D;
-                        double c = ((a & 2) - 1) * m;
-                        double d = ((a + 1 & 2) - 1) * m;
-                        double e = c * z - d * y;
-                        double f = d * z + c * y;
-                        double g = e * v + b * w;
-                        double h = b * v - e * w;
-                        double aa = h * s - f * t;
-                        double ab = f * s + h * t;
-                        buffer.vertex((o + aa) * (i > 6000 ? -1 : 1), (p + g) * (i > 6000 ? -1 : 1), (q + ab) * (i > 6000 ? -1 : 1)).endVertex();
-                    }
-                }
-            }
-            this.starBuffer.bind();
-            this.starBuffer.upload(buffer.end());
-            VertexBuffer.unbind();
-        }
         context.profiler().push("moon_sky_render");
         RenderSystem.disableBlend();
         RenderSystem.depthMask(false);
 
         final PoseStack matrices = context.matrixStack();
         final BufferBuilder buffer = Tesselator.getInstance().getBuilder();
-        float starBrightness = this.getStarBrightness(context.world(), context.tickDelta());
 
         context.profiler().push("stars");
         matrices.pushPose();
         matrices.mulPose(Axis.YP.rotationDegrees(-90.0F));
         matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickDelta()) * 360.0f));
         matrices.mulPose(Axis.YP.rotationDegrees(-19.0F));
-        RenderSystem.setShaderColor(1.0F, 0.95F, 0.9F, starBrightness);
 
-        FogRenderer.setupNoFog();
-        this.starBuffer.bind();
-        this.starBuffer.drawWithShader(matrices.last().pose(), context.projectionMatrix(), GameRenderer.getPositionShader());
-        VertexBuffer.unbind();
+        this.starManager.render(context.matrixStack(), context.projectionMatrix(), context.world(), context.tickDelta());
 
         matrices.popPose();
         context.profiler().pop();
@@ -127,7 +70,7 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
         matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickDelta()) * 360.0f));
 
         Matrix4f matrix = matrices.last().pose();
-                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         float size = 15.0F;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, SUN_TEXTURE);
@@ -166,21 +109,5 @@ public enum MoonSkyRenderer implements DimensionRenderingRegistry.SkyRenderer {
 
         RenderSystem.depthMask(true);
         context.profiler().pop();
-    }
-
-
-    private float getStarBrightness(Level world, float delta) {
-        final float skyAngle = world.getTimeOfDay(delta);
-        float brightness = 1.0F - (Mth.cos((float) (skyAngle * Math.PI * 2.0D) * 2.0F + 0.25F));
-
-        if (brightness < 0.0F) {
-            brightness = 0.0F;
-        }
-
-        if (brightness > 1.0F) {
-            brightness = 1.0F;
-        }
-
-        return brightness * brightness * 0.5F + 0.3F;
     }
 }

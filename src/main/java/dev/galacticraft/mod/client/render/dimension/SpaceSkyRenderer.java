@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.client.render.dimension;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 
@@ -30,6 +32,17 @@ public class SpaceSkyRenderer implements DimensionRenderingRegistry.SkyRenderer 
 
     @Override
     public void render(WorldRenderContext context) {
+        final PoseStack matrices = context.matrixStack();
 
+        context.profiler().push("stars");
+        matrices.pushPose();
+        matrices.mulPose(Axis.YP.rotationDegrees(-90.0F));
+        matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickDelta()) * 360.0f));
+        matrices.mulPose(Axis.YP.rotationDegrees(-19.0F));
+
+        this.starManager.render(context.matrixStack(), context.projectionMatrix(), context.world(), context.tickDelta());
+
+        matrices.popPose();
+        context.profiler().pop();
     }
 }
