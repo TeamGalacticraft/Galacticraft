@@ -204,7 +204,6 @@
   "block.galacticraft.vacuum_glass_strong": "Strong Vacuum Glass",
   "block.galacticraft.coal_generator": "Coal Generator",
   "block.galacticraft.geothermal_generator": "Geothermal Generator",
-
   "block.galacticraft.compressor": "Compressor",
   "block.galacticraft.electric_compressor": "Electric Compressor",
   "block.galacticraft.electric_furnace": "Electric Furnace",
@@ -289,6 +288,11 @@
   "block.galacticraft.treasure_chest_tier_2": "Treasure Chest Tier 2",
   "block.galacticraft.treasure_chest_tier_3": "Treasure Chest Tier 3",
   "block.galacticraft.crashed_probe": "Crashed Probe",
+  "block.galacticraft.detailed_dark_decoration": "Detailed Dark Decoration",
+  "block.galacticraft.detailed_dark_decoration_slab": "Detailed Dark Decoration Slab",
+  "block.galacticraft.detailed_dark_decoration_stairs": "Detailed Dark Decoration Stairs",
+  "block.galacticraft.detailed_dark_decoration_wall": "Detailed Dark Decoration Wall",
+  
   "item.galacticraft.heavy_duty_helmet": "Heavy Duty Helmet",
   "item.galacticraft.heavy_duty_chestplate": "Heavy Duty Chestplate",
   "item.galacticraft.heavy_duty_leggings": "Heavy Duty Leggings",
