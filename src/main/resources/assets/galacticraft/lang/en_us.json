@@ -783,4 +783,12 @@
   "fluid.galacticraft.sulfuric_acid_still": "Sulfuric Acid Still",
   "fluid.galacticraft.oxygen_gas": "Oxygen Gas",
   "fluid.galacticraft.liquid_oxygen": "Liquid Oxygen"
+
+  "particle.galacticraft.dripping_fuel": "Dripping Fuel",
+  "particle.galacticraft.falling_fuel": "Falling Fuel",
+  "particle.galacticraft.dripping_crude_oil": "Dripping Crude Oil",
+  "particle.galacticraft.falling_crude_oil": "Falling Crude Oil",
+  "particle.galacticraft.cryogenic_particle": "Cryogenic Particle",
+  "particle.galacticraft.lander_flame_particle": "Lander Flame Particle",
+  "particle.galacticraft.spark": "Spark"
 }
