@@ -10,7 +10,7 @@
     },
     "celestial_handler": "galacticraft:default",
     "day_temperature": 105,
-    "description": "planet.galacticraft.moon.desc",
+    "description": "planet.galacticraft.moon.description",
     "display": {
       "type": "galacticraft:icon",
       "config": {
