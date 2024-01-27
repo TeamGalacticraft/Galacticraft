@@ -292,7 +292,7 @@
   "block.galacticraft.detailed_dark_decoration_slab": "Detailed Dark Decoration Slab",
   "block.galacticraft.detailed_dark_decoration_stairs": "Detailed Dark Decoration Stairs",
   "block.galacticraft.detailed_dark_decoration_wall": "Detailed Dark Decoration Wall",
-  
+
   "item.galacticraft.heavy_duty_helmet": "Heavy Duty Helmet",
   "item.galacticraft.heavy_duty_chestplate": "Heavy Duty Chestplate",
   "item.galacticraft.heavy_duty_leggings": "Heavy Duty Leggings",
@@ -530,6 +530,9 @@
   "ui.galacticraft.alpha_warning.content1": "Galacticraft is currently in ALPHA.",
   "ui.galacticraft.alpha_warning.content2": "Please report all issues you find.",
   "ui.galacticraft.alpha_warning.content3": "Press [ESC] or click to continue.",
+  "ui.galacticraft.machinestatus.not_enough_fuel": "Not Enough Fuel",
+  "ui.galacticraft.machinestatus.no_rocket": "No rockets are available",
+  "ui.galacticraft.machinestatus.rocket_is_full": "Available rocket is full",
 
   "ui.galacticraft.celestialselection.launch": "Launch",
   "ui.galacticraft.celestialselection.back": "Back",
@@ -787,7 +790,7 @@
   "fluid.galacticraft.sulfuric_acid_flowing": "Sulfuric Acid Flowing",
   "fluid.galacticraft.sulfuric_acid_still": "Sulfuric Acid Still",
   "fluid.galacticraft.oxygen_gas": "Oxygen Gas",
-  "fluid.galacticraft.liquid_oxygen": "Liquid Oxygen"
+  "fluid.galacticraft.liquid_oxygen": "Liquid Oxygen",
 
   "particle.galacticraft.dripping_fuel": "Dripping Fuel",
   "particle.galacticraft.falling_fuel": "Falling Fuel",
