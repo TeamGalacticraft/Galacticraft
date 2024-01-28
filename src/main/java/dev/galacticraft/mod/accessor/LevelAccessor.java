@@ -22,25 +22,10 @@
 
 package dev.galacticraft.mod.accessor;
 
-import dev.galacticraft.api.rocket.RocketData;
-import org.jetbrains.annotations.Nullable;
+import dev.galacticraft.mod.misc.footprint.FootprintManager;
 
-public interface ServerPlayerAccessor {
-    default boolean galacticraft$isCelestialScreenActive() {
-        throw new RuntimeException("This must be overridden!");
+public interface LevelAccessor {
+    default FootprintManager galacticraft$getFootprintManager() {
+        throw new RuntimeException("This should be overridden by mixin!"); // Hopefully this doesn't cause issues with mods with fake worlds
     }
-
-    default void galacticraft$closeCelestialScreen() {
-        throw new RuntimeException("This must be overridden!");
-    }
-
-    default @Nullable RocketData galacticraft$getCelestialScreenState() {
-        throw new RuntimeException("This must be overridden!");
-    }
-
-    default void galacticraft$openCelestialScreen(@Nullable RocketData data) {
-        throw new RuntimeException("This must be overridden!");
-    }
-
-
 }

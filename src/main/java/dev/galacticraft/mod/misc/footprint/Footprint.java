@@ -1,0 +1,139 @@
+/*
+ * Copyright (c) 2019-2024 Team Galacticraft
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package dev.galacticraft.mod.misc.footprint;
+
+import dev.galacticraft.mod.Constant;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3d;
+
+import java.util.UUID;
+
+public class Footprint {
+    public static final short MAX_AGE = 3200;
+    public final ResourceLocation dimension;
+    public final float rotation;
+    public final Vector3d position;
+    public short age;
+    public final UUID owner;
+
+    public Footprint(ResourceLocation dimension, Vector3d position, float rotation, UUID ownerUUID) {
+        this(dimension, position, rotation, (short) 0, ownerUUID);
+    }
+
+    public Footprint(ResourceLocation dimension, Vector3d position, float rotation, short age, UUID ownerUUID) {
+        this.dimension = dimension;
+        this.position = position;
+        this.rotation = rotation;
+        this.age = age;
+        this.owner = ownerUUID;
+    }
+
+    public static Vector3d getFootprintPosition(Level level, float rotation, Vector3d startPosition, Vec3 playerCenter) {
+        Vector3d position = new Vector3d(startPosition);
+        float footprintScale = 0.375F;
+
+        int mainPosX = Mth.floor(position.x());
+        int mainPosY = Mth.floor(position.y());
+        int mainPosZ = Mth.floor(position.z());
+        BlockPos posMain = new BlockPos(mainPosX, mainPosY, mainPosZ);
+
+        // If the footprint is hovering over air...
+        if (level.getBlockState(posMain).isAir()) {
+            position.x += (playerCenter.x - mainPosX);
+            position.z += (playerCenter.z - mainPosZ);
+
+            BlockPos pos1 = new BlockPos(Mth.floor(position.x()), Mth.floor(position.y()), Mth.floor(position.z()));
+            // If the footprint is still over air....
+            BlockState b2 = level.getBlockState(pos1);
+            if (b2.isAir()) {
+                for (Direction direction : Direction.values()) {
+                    BlockPos offsetPos = posMain.relative(direction);
+                    if (direction != Direction.DOWN && direction != Direction.UP) {
+                        if (!level.getBlockState(offsetPos).isAir()) {
+                            position.x += direction.getStepX();
+                            position.z += direction.getStepZ();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        mainPosX = Mth.floor(position.x());
+        mainPosZ = Mth.floor(position.z());
+        ;
+
+        double x0 = (Math.sin((45 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.x;
+        double x1 = (Math.sin((135 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.x;
+        double x2 = (Math.sin((225 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.x;
+        double x3 = (Math.sin((315 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.x;
+        double z0 = (Math.cos((45 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.z;
+        double z1 = (Math.cos((135 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.z;
+        double z2 = (Math.cos((225 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.z;
+        double z3 = (Math.cos((315 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.z;
+
+        double xMin = Math.min(Math.min(x0, x1), Math.min(x2, x3));
+        double xMax = Math.max(Math.max(x0, x1), Math.max(x2, x3));
+        double zMin = Math.min(Math.min(z0, z1), Math.min(z2, z3));
+        double zMax = Math.max(Math.max(z0, z1), Math.max(z2, z3));
+
+        if (xMin < mainPosX) {
+            position.x += mainPosX - xMin;
+        }
+
+        if (xMax > mainPosX + 1) {
+            position.x -= xMax - (mainPosX + 1);
+        }
+
+        if (zMin < mainPosZ) {
+            position.z += mainPosZ - zMin;
+        }
+
+        if (zMax > mainPosZ + 1) {
+            position.z -= zMax - (mainPosZ + 1);
+        }
+
+        return position;
+    }
+
+    public void write(FriendlyByteBuf buf) {
+        buf.writeResourceLocation(dimension);
+        buf.writeDouble(position.x());
+        buf.writeDouble(position.y());
+        buf.writeDouble(position.z());
+        buf.writeFloat(rotation);
+        buf.writeShort(age);
+        buf.writeUUID(owner);
+    }
+
+    public static Footprint read(FriendlyByteBuf buf) {
+        return new Footprint(buf.readResourceLocation(), new Vector3d(buf.readDouble(), buf.readDouble(), buf.readDouble()), buf.readFloat(), buf.readShort(), buf.readUUID());
+    }
+}

@@ -20,27 +20,27 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.accessor;
+package dev.galacticraft.mod.misc.footprint;
 
-import dev.galacticraft.api.rocket.RocketData;
-import org.jetbrains.annotations.Nullable;
+import dev.galacticraft.mod.client.network.FootprintPacket;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 
-public interface ServerPlayerAccessor {
-    default boolean galacticraft$isCelestialScreenActive() {
-        throw new RuntimeException("This must be overridden!");
+import java.util.ArrayList;
+import java.util.List;
+
+public class ServerFootprintManager extends FootprintManager {
+    @Override
+    public void onChange(Level level, long packedPos, List<Footprint> footprints) {
+        if (level.getGameTime() % 100 == 0) {
+            PlayerLookup.tracking((ServerLevel) level, new ChunkPos(packedPos)).forEach(player -> {
+                List<Footprint> toSync = new ArrayList<>(footprints);
+                toSync.removeIf(footprint -> footprint.owner.equals(player.getUUID()));
+                ServerPlayNetworking.send(player, new FootprintPacket(packedPos, toSync));
+            });
+        }
     }
-
-    default void galacticraft$closeCelestialScreen() {
-        throw new RuntimeException("This must be overridden!");
-    }
-
-    default @Nullable RocketData galacticraft$getCelestialScreenState() {
-        throw new RuntimeException("This must be overridden!");
-    }
-
-    default void galacticraft$openCelestialScreen(@Nullable RocketData data) {
-        throw new RuntimeException("This must be overridden!");
-    }
-
-
 }

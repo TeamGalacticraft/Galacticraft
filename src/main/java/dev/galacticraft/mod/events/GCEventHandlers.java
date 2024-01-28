@@ -28,13 +28,19 @@ import dev.galacticraft.api.universe.celestialbody.landable.teleporter.Celestial
 import dev.galacticraft.impl.rocket.RocketDataImpl;
 import dev.galacticraft.impl.universe.celestialbody.config.PlanetConfig;
 import dev.galacticraft.mod.accessor.CryogenicAccessor;
+import dev.galacticraft.mod.client.network.FootprintRemovedPacket;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import dev.galacticraft.mod.content.entity.ParachestEntity;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -46,6 +52,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -59,6 +66,7 @@ public class GCEventHandlers {
         EntitySleepEvents.ALLOW_SLEEP_TIME.register(GCEventHandlers::canCryoSleep);
         EntitySleepEvents.STOP_SLEEPING.register(GCEventHandlers::onWakeFromCryoSleep);
         GiveCommandEvents.MODIFY.register(GCEventHandlers::modifyOnGive);
+        ServerTickEvents.END_WORLD_TICK.register(GCEventHandlers::onWorldTick);
     }
 
     public static InteractionResult allowCryogenicSleep(LivingEntity entity, BlockPos sleepingPos, BlockState state, boolean vanillaResult) {
@@ -131,7 +139,7 @@ public class GCEventHandlers {
                     player.serverLevel().addFreshEntity(chest);
                 }
             }
-            ((CelestialTeleporter)landable.teleporter(body.config()).value()).onEnterAtmosphere(server.getLevel(landable.world(body.config())), player, body, fromBody);
+            ((CelestialTeleporter) landable.teleporter(body.config()).value()).onEnterAtmosphere(server.getLevel(landable.world(body.config())), player, body, fromBody);
         } else {
             player.connection.disconnect(Component.literal("Invalid planet teleport packet received."));
         }
@@ -140,5 +148,22 @@ public class GCEventHandlers {
 
     public static void onPlayerTick(Player player) {
 
+    }
+
+    public static void onWorldTick(ServerLevel world) {
+        FootprintManager footprintManager = world.galacticraft$getFootprintManager();
+        if (!footprintManager.footprintBlockChanges.isEmpty()) {
+            for (GlobalPos targetPoint : footprintManager.footprintBlockChanges) {
+                ;
+                if (world.dimension().location().equals(targetPoint.dimension().location())) {
+                    long packedPos = ChunkPos.asLong(targetPoint.pos());
+                    PlayerLookup.around(world, targetPoint.pos(), 50).forEach(player -> {
+                        ServerPlayNetworking.send(player, new FootprintRemovedPacket(packedPos, targetPoint.pos()));
+                    });
+                }
+            }
+
+            footprintManager.footprintBlockChanges.clear();
+        }
     }
 }

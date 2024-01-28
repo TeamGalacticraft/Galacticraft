@@ -26,8 +26,11 @@ import com.mojang.authlib.GameProfile;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.client.render.FootprintRenderer;
 import dev.galacticraft.mod.content.entity.LanderEntity;
 import dev.galacticraft.mod.content.item.RocketItem;
+import dev.galacticraft.mod.misc.footprint.Footprint;
+import dev.galacticraft.mod.tag.GCTags;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -38,9 +41,16 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3d;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -56,14 +66,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Environment(EnvType.CLIENT)
 @Mixin(LocalPlayer.class)
 public abstract class LocalPlayerMixin extends AbstractClientPlayer {
-    @Shadow @Final protected Minecraft minecraft;
-    @Shadow public Input input;
+    @Shadow
+    @Final
+    protected Minecraft minecraft;
+    @Shadow
+    public Input input;
 
     public LocalPlayerMixin(ClientLevel clientLevel, GameProfile gameProfile) {
         super(clientLevel, gameProfile);
     }
 
-    @Inject(at=@At("RETURN"), method = "aiStep")
+    @Inject(at = @At("RETURN"), method = "aiStep")
     private void gcRocketJumpCheck(CallbackInfo ci) {
         LocalPlayer player = (LocalPlayer) (Object) this;
         if (player.isPassenger()) {
@@ -100,36 +113,36 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer {
                 float turnFactor = 2.0F;
                 float angle = 45;
 
-                    if (this.input.up) {
-                        lander.setXRot(Math.min(Math.max(lander.getXRot() - 0.5F * turnFactor, -angle), angle));
-                        ClientPlayNetworking.send(Constant.Packet.LANDER_PITCH, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(false)));
-                    }
+                if (this.input.up) {
+                    lander.setXRot(Math.min(Math.max(lander.getXRot() - 0.5F * turnFactor, -angle), angle));
+                    ClientPlayNetworking.send(Constant.Packet.LANDER_PITCH, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(false)));
+                }
 
-                    if (this.input.down) {
-                        lander.setXRot(Math.min(Math.max(lander.getXRot() + 0.5F * turnFactor, -angle), angle));
-                        ClientPlayNetworking.send(Constant.Packet.LANDER_PITCH, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(true)));
-                    }
+                if (this.input.down) {
+                    lander.setXRot(Math.min(Math.max(lander.getXRot() + 0.5F * turnFactor, -angle), angle));
+                    ClientPlayNetworking.send(Constant.Packet.LANDER_PITCH, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(true)));
+                }
 
-                    if (this.input.right) {
-                        lander.setYRot(lander.getYRot() - 0.5F * turnFactor);
-                        ClientPlayNetworking.send(Constant.Packet.LANDER_YAW, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(false)));
-                    }
+                if (this.input.right) {
+                    lander.setYRot(lander.getYRot() - 0.5F * turnFactor);
+                    ClientPlayNetworking.send(Constant.Packet.LANDER_YAW, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(false)));
+                }
 
-                    if (this.input.left) {
-                        lander.setYRot(lander.getYRot() + 0.5F * turnFactor);
-                        ClientPlayNetworking.send(Constant.Packet.LANDER_YAW, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(true)));
-                    }
+                if (this.input.left) {
+                    lander.setYRot(lander.getYRot() + 0.5F * turnFactor);
+                    ClientPlayNetworking.send(Constant.Packet.LANDER_YAW, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(true)));
+                }
 
-                    if (this.input.jumping) {
-                        Vec3 deltaMovement = lander.getDeltaMovement();
-                        lander.setDeltaMovement(new Vec3(deltaMovement.x(), Math.min(deltaMovement.y() + 0.03F, lander.getY() < 90 ? -0.15 : -1.0), deltaMovement.z()));
-                        ClientPlayNetworking.send(Constant.Packet.LANDER_ACCERLERATE, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(false)));
-                    }
-                    if (this.input.shiftKeyDown) {
-                        Vec3 deltaMovement = lander.getDeltaMovement();
-                        lander.setDeltaMovement(new Vec3(deltaMovement.x(), Math.min(deltaMovement.y() - 0.022F, -1.0), deltaMovement.z()));
-                        ClientPlayNetworking.send(Constant.Packet.LANDER_ACCERLERATE, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(true)));
-                    }
+                if (this.input.jumping) {
+                    Vec3 deltaMovement = lander.getDeltaMovement();
+                    lander.setDeltaMovement(new Vec3(deltaMovement.x(), Math.min(deltaMovement.y() + 0.03F, lander.getY() < 90 ? -0.15 : -1.0), deltaMovement.z()));
+                    ClientPlayNetworking.send(Constant.Packet.LANDER_ACCERLERATE, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(false)));
+                }
+                if (this.input.shiftKeyDown) {
+                    Vec3 deltaMovement = lander.getDeltaMovement();
+                    lander.setDeltaMovement(new Vec3(deltaMovement.x(), Math.min(deltaMovement.y() - 0.022F, -1.0), deltaMovement.z()));
+                    ClientPlayNetworking.send(Constant.Packet.LANDER_ACCERLERATE, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(true)));
+                }
 
             }
         }
@@ -152,5 +165,10 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer {
     @Unique
     private boolean isHoldingRocket() {
         return this.getVehicle() == null && (this.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof RocketItem || this.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof RocketItem);
+    }
+
+    @Inject(method = "move", at = @At("TAIL"))
+    private void gc$footprints(MoverType type, Vec3 motion, CallbackInfo ci) {
+
     }
 }

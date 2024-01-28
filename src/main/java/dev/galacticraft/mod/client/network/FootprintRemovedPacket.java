@@ -20,27 +20,29 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.accessor;
+package dev.galacticraft.mod.client.network;
 
-import dev.galacticraft.api.rocket.RocketData;
-import org.jetbrains.annotations.Nullable;
+import dev.galacticraft.mod.Constant;
+import net.fabricmc.fabric.api.networking.v1.FabricPacket;
+import net.fabricmc.fabric.api.networking.v1.PacketType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 
-public interface ServerPlayerAccessor {
-    default boolean galacticraft$isCelestialScreenActive() {
-        throw new RuntimeException("This must be overridden!");
+public record FootprintRemovedPacket(long packedPos, BlockPos pos) implements FabricPacket {
+    public static final PacketType<FootprintRemovedPacket> FOOTPRINT_REMOVED_PACKET = PacketType.create(Constant.Packet.FOOTPRINT_REMOVED, FootprintRemovedPacket::new);
+
+    public FootprintRemovedPacket(FriendlyByteBuf buf) {
+        this(buf.readLong(), buf.readBlockPos());
     }
 
-    default void galacticraft$closeCelestialScreen() {
-        throw new RuntimeException("This must be overridden!");
+    @Override
+    public void write(FriendlyByteBuf buf) {
+        buf.writeLong(packedPos);
+        buf.writeBlockPos(pos);
     }
 
-    default @Nullable RocketData galacticraft$getCelestialScreenState() {
-        throw new RuntimeException("This must be overridden!");
+    @Override
+    public PacketType<?> getType() {
+        return FOOTPRINT_REMOVED_PACKET;
     }
-
-    default void galacticraft$openCelestialScreen(@Nullable RocketData data) {
-        throw new RuntimeException("This must be overridden!");
-    }
-
-
 }

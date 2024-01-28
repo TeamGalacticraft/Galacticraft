@@ -20,27 +20,26 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.accessor;
+package dev.galacticraft.mod.data.tag;
 
-import dev.galacticraft.api.rocket.RocketData;
-import org.jetbrains.annotations.Nullable;
+import dev.galacticraft.mod.tag.GCTags;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
+import net.minecraft.world.entity.EntityType;
 
-public interface ServerPlayerAccessor {
-    default boolean galacticraft$isCelestialScreenActive() {
-        throw new RuntimeException("This must be overridden!");
+import java.util.concurrent.CompletableFuture;
+
+public class GCEntityTypeTagProvider extends IntrinsicHolderTagsProvider<EntityType<?>> {
+
+    public GCEntityTypeTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> provider) {
+        super(output, Registries.ENTITY_TYPE, provider, entityType -> entityType.builtInRegistryHolder().key());
     }
 
-    default void galacticraft$closeCelestialScreen() {
-        throw new RuntimeException("This must be overridden!");
+    @Override
+    protected void addTags(HolderLookup.Provider arg) {
+        tag(GCTags.HAS_FOOTPRINTS)
+                .add(EntityType.PLAYER);
     }
-
-    default @Nullable RocketData galacticraft$getCelestialScreenState() {
-        throw new RuntimeException("This must be overridden!");
-    }
-
-    default void galacticraft$openCelestialScreen(@Nullable RocketData data) {
-        throw new RuntimeException("This must be overridden!");
-    }
-
-
 }

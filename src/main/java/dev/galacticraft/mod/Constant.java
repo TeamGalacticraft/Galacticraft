@@ -946,6 +946,8 @@ public interface Constant {
         ResourceLocation LANDER_ACCERLERATE = id("lander_accelerate");
         ResourceLocation ENTITY_UPDATE = id("entity_update");
         ResourceLocation PLANET_TP = id("planet_tp");
+        ResourceLocation FOOTPRINT = id("footprint");
+        ResourceLocation FOOTPRINT_REMOVED = id("footprint_removed");
     }
 
     interface Structure {

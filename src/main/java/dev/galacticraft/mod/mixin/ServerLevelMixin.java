@@ -23,22 +23,32 @@
 package dev.galacticraft.mod.mixin;
 
 import com.google.common.collect.ImmutableList;
+import dev.galacticraft.mod.accessor.LevelAccessor;
 import dev.galacticraft.mod.accessor.ServerLevelAccessor;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
+import dev.galacticraft.mod.misc.footprint.Footprint;
+import dev.galacticraft.mod.misc.footprint.FootprintManager;
+import dev.galacticraft.mod.misc.footprint.ServerFootprintManager;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import dev.galacticraft.mod.world.gen.spawner.EvolvedPillagerSpawner;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.progress.ChunkProgressListener;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.RandomSequences;
 import net.minecraft.world.level.CustomSpawner;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import net.minecraft.world.level.storage.ServerLevelData;
+import net.minecraft.world.level.storage.WritableLevelData;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -50,14 +60,20 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
+import java.util.function.Supplier;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Mixin(ServerLevel.class)
-public abstract class ServerLevelMixin implements ServerLevelAccessor {
+public abstract class ServerLevelMixin extends Level implements LevelAccessor, ServerLevelAccessor {
     @Shadow @Final @Mutable private List<CustomSpawner> customSpawners;
     private final @Unique Set<OxygenSealerBlockEntity> sealers = new HashSet<>();
+    private final @Unique FootprintManager footprintManager = new ServerFootprintManager();
+
+    protected ServerLevelMixin(WritableLevelData levelData, ResourceKey<Level> dimension, RegistryAccess registryAccess, Holder<DimensionType> dimensionTypeRegistration, Supplier<ProfilerFiller> profiler, boolean isClientSide, boolean isDebug, long biomeZoomSeed, int maxChainedNeighborUpdates) {
+        super(levelData, dimension, registryAccess, dimensionTypeRegistration, profiler, isClientSide, isDebug, biomeZoomSeed, maxChainedNeighborUpdates);
+    }
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void setSpawnersGC(MinecraftServer server, Executor workerExecutor, LevelStorageSource.LevelStorageAccess session, ServerLevelData properties, ResourceKey<Level> worldKey, LevelStem dimensionOptions, ChunkProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List spawners, boolean shouldTickTime, @Nullable RandomSequences randomSequences, CallbackInfo ci) {
@@ -87,5 +103,18 @@ public abstract class ServerLevelMixin implements ServerLevelAccessor {
     @Override
     public void removeSealer(OxygenSealerBlockEntity sealer) {
         this.sealers.remove(sealer);
+    }
+
+    @Inject(method = "tickChunk", at = @At("HEAD"))
+    private void tickFootprints(LevelChunk chunk, int randomTickSpeed, CallbackInfo ci) {
+        var profiler = getProfiler();
+        profiler.push("footprints");
+        footprintManager.tick((ServerLevel) (Object) this, chunk.getPos().toLong());
+        profiler.pop();
+    }
+
+    @Override
+    public FootprintManager galacticraft$getFootprintManager() {
+        return footprintManager;
     }
 }

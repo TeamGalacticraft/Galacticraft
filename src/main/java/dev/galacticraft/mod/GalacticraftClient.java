@@ -33,6 +33,7 @@ import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.*;
 import dev.galacticraft.mod.client.network.GCClientPacketReceiver;
 import dev.galacticraft.mod.client.particle.*;
+import dev.galacticraft.mod.client.render.FootprintRenderer;
 import dev.galacticraft.mod.client.render.block.entity.GCBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.dimension.EmptyCloudRenderer;
 import dev.galacticraft.mod.client.render.dimension.EmptyWeatherRenderer;
@@ -51,6 +52,7 @@ import dev.galacticraft.mod.content.entity.RocketEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.events.ClientEventHandler;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
+import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
@@ -70,6 +72,7 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.FriendlyByteBuf;
@@ -206,6 +209,13 @@ public class GalacticraftClient implements ClientModInitializer {
         HudRenderCallback.EVENT.register(LanderOverlay::onRenderHud);
         HudRenderCallback.EVENT.register(CountdownOverlay::renderCountdown);
         ClientTickEvents.END_CLIENT_TICK.register(LanderOverlay::clientTick);
+        ClientTickEvents.END_WORLD_TICK.register(world -> {
+            FootprintManager footprintManager = world.galacticraft$getFootprintManager();
+            footprintManager.getFootprints().forEach((packedPos, footprints) -> {
+                footprintManager.tick(world, packedPos);
+            });
+        });
+        WorldRenderEvents.LAST.register(FootprintRenderer::renderFootprints);
 
         InventoryTabRegistry.INSTANCE.register(GCItems.OXYGEN_MASK.getDefaultInstance(), () -> {
             ClientPlayNetworking.send(Constant.Packet.OPEN_GC_INVENTORY, new FriendlyByteBuf(Unpooled.buffer(0)));

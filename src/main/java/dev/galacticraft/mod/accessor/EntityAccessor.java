@@ -22,25 +22,20 @@
 
 package dev.galacticraft.mod.accessor;
 
-import dev.galacticraft.api.rocket.RocketData;
-import org.jetbrains.annotations.Nullable;
-
-public interface ServerPlayerAccessor {
-    default boolean galacticraft$isCelestialScreenActive() {
-        throw new RuntimeException("This must be overridden!");
+public interface EntityAccessor {
+    default double galacticraft$getDistanceSinceLastStep() {
+        throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default void galacticraft$closeCelestialScreen() {
-        throw new RuntimeException("This must be overridden!");
+    default void galacticraft$setDistanceSinceLastStep(double distanceSinceLastStep) {
+        throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default @Nullable RocketData galacticraft$getCelestialScreenState() {
-        throw new RuntimeException("This must be overridden!");
+    default int galacticraft$getLastStep() {
+        throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default void galacticraft$openCelestialScreen(@Nullable RocketData data) {
-        throw new RuntimeException("This must be overridden!");
+    default void galacticraft$setLastStep(int lastStep) {
+        throw new RuntimeException("This should be overridden by mixin!");
     }
-
-
 }

@@ -20,27 +20,12 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.accessor;
+package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.api.rocket.RocketData;
-import org.jetbrains.annotations.Nullable;
+import dev.galacticraft.mod.accessor.LevelAccessor;
+import net.minecraft.world.level.Level;
+import org.spongepowered.asm.mixin.Mixin;
 
-public interface ServerPlayerAccessor {
-    default boolean galacticraft$isCelestialScreenActive() {
-        throw new RuntimeException("This must be overridden!");
-    }
-
-    default void galacticraft$closeCelestialScreen() {
-        throw new RuntimeException("This must be overridden!");
-    }
-
-    default @Nullable RocketData galacticraft$getCelestialScreenState() {
-        throw new RuntimeException("This must be overridden!");
-    }
-
-    default void galacticraft$openCelestialScreen(@Nullable RocketData data) {
-        throw new RuntimeException("This must be overridden!");
-    }
-
-
+@Mixin(Level.class)
+public class LevelMixin implements LevelAccessor {
 }

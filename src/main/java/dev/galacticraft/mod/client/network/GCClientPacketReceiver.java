@@ -26,13 +26,18 @@ import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
+import dev.galacticraft.mod.client.render.FootprintRenderer;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.misc.footprint.Footprint;
+import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.network.GCScreenType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.event.network.C2SPacketTypeCallback;
+import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -41,6 +46,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -111,5 +118,30 @@ public class GCClientPacketReceiver {
                 Minecraft.getInstance().level.putNonPlayerEntity(entityID, entity);
             });
         }));
+
+        ClientPlayNetworking.registerGlobalReceiver(FootprintPacket.FOOTPRINT_PACKET, (packet, player, responseSender) -> {
+            FootprintRenderer.setFootprints(packet.packedPos(), packet.footprints());
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(FootprintRemovedPacket.FOOTPRINT_REMOVED_PACKET, (packet, player, responseSender) -> {
+            long packedPos = packet.packedPos();
+            BlockPos pos = packet.pos();
+            FootprintManager manager = player.level().galacticraft$getFootprintManager();
+            List<Footprint> footprintList = manager.getFootprints().get(packedPos);
+            List<Footprint> toRemove = new ArrayList<>();
+
+            if (footprintList != null) {
+                for (Footprint footprint : footprintList) {
+                    if (footprint.position.x > pos.getX() && footprint.position.x < pos.getX() + 1 && footprint.position.z > pos.getZ() && footprint.position.z < pos.getZ() + 1) {
+                        toRemove.add(footprint);
+                    }
+                }
+            }
+
+            if (!toRemove.isEmpty()) {
+                footprintList.removeAll(toRemove);
+                manager.getFootprints().put(packedPos, footprintList);
+            }
+        });
     }
 }
