@@ -41,4 +41,6 @@ public interface ServerPlayerAccessor {
     default void galacticraft$openCelestialScreen(@Nullable RocketData data) {
         throw new RuntimeException("This must be overridden!");
     }
+
+
 }

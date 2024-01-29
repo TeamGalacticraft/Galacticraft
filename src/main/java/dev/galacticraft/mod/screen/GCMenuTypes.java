@@ -78,27 +78,27 @@ public class GCMenuTypes {
     public static final MenuType<ParachestMenu> PARACHEST = new ExtendedScreenHandlerType<>(ParachestMenu::new);
 
     public static void register() {
-        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.PLAYER_INVENTORY_MENU), PLAYER_INV_GC);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.PLAYER_INVENTORY_MENU), PLAYER_INV_GC);
 
-        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.COAL_GENERATOR_MENU), COAL_GENERATOR);
-        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.BASIC_SOLAR_PANEL_MENU), BASIC_SOLAR_PANEL);
-        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.ADVANCED_SOLAR_PANEL_MENU), ADVANCED_SOLAR_PANEL);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.COAL_GENERATOR_MENU), COAL_GENERATOR);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.BASIC_SOLAR_PANEL_MENU), BASIC_SOLAR_PANEL);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.ADVANCED_SOLAR_PANEL_MENU), ADVANCED_SOLAR_PANEL);
 
-        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.CIRCUIT_FABRICATOR_MENU), CIRCUIT_FABRICATOR);
-        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.COMPRESSOR_MENU), COMPRESSOR);
-        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.ELECTRIC_COMPRESSOR_MENU), ELECTRIC_COMPRESSOR);
-        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.ELECTRIC_FURNACE_MENU), ELECTRIC_FURNACE);
-        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.ELECTRIC_ARC_FURNACE_MENU), ELECTRIC_ARC_FURNACE);
-        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.REFINERY_MENU), REFINERY);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.CIRCUIT_FABRICATOR_MENU), CIRCUIT_FABRICATOR);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.COMPRESSOR_MENU), COMPRESSOR);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.ELECTRIC_COMPRESSOR_MENU), ELECTRIC_COMPRESSOR);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.ELECTRIC_FURNACE_MENU), ELECTRIC_FURNACE);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.ELECTRIC_ARC_FURNACE_MENU), ELECTRIC_ARC_FURNACE);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.REFINERY_MENU), REFINERY);
 
-        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.OXYGEN_COLLECTOR_MENU), OXYGEN_COLLECTOR);
-        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.OXYGEN_COMPRESSOR_MENU), OXYGEN_COMPRESSOR);
-        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.OXYGEN_DECOMPRESSOR_MENU), OXYGEN_DECOMPRESSOR);
-        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.BUBBLE_DISTRIBUTOR_MENU), OXYGEN_BUBBLE_DISTRIBUTOR);
-        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.OXYGEN_SEALER_MENU), OXYGEN_SEALER);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.OXYGEN_COLLECTOR_MENU), OXYGEN_COLLECTOR);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.OXYGEN_COMPRESSOR_MENU), OXYGEN_COMPRESSOR);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.OXYGEN_DECOMPRESSOR_MENU), OXYGEN_DECOMPRESSOR);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.BUBBLE_DISTRIBUTOR_MENU), OXYGEN_BUBBLE_DISTRIBUTOR);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.OXYGEN_SEALER_MENU), OXYGEN_SEALER);
 
-        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.ENERGY_STORAGE_MODULE_MENU), ENERGY_STORAGE_MODULE);
-        Registry.register(BuiltInRegistries.MENU, new ResourceLocation(Constant.MOD_ID, Constant.Menu.OXYGEN_STORAGE_MODULE_MENU), OXYGEN_STORAGE_MODULE);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.ENERGY_STORAGE_MODULE_MENU), ENERGY_STORAGE_MODULE);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.OXYGEN_STORAGE_MODULE_MENU), OXYGEN_STORAGE_MODULE);
 
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.FUEL_LOADER_MENU), FUEL_LOADER);
 

@@ -22,22 +22,38 @@
 
 package dev.galacticraft.mod.mixin;
 
+import dev.galacticraft.mod.accessor.EntityAccessor;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
+import dev.galacticraft.mod.misc.footprint.Footprint;
+import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.portal.PortalInfo;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3d;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -49,7 +65,9 @@ import java.util.UUID;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Mixin(Entity.class)
-public abstract class EntityMixin {
+public abstract class EntityMixin implements EntityAccessor {
+    private @Unique double distanceSinceLastStep;
+    private @Unique int lastStep;
 
     @Shadow
     public abstract Vec3 getDeltaMovement();
@@ -95,6 +113,37 @@ public abstract class EntityMixin {
     @Shadow
     public abstract boolean hurt(DamageSource source, float amount);
 
+    @Shadow
+    public abstract double getX();
+
+    @Shadow
+    public abstract double getY();
+
+    @Shadow
+    public abstract double getZ();
+
+    @Shadow
+    public abstract Level level();
+
+    @Shadow
+    public abstract @Nullable Entity getVehicle();
+
+    @Shadow
+    public abstract float getYRot();
+
+    @Shadow
+    public abstract UUID getUUID();
+
+    @Shadow
+    @Final
+    protected RandomSource random;
+
+    @Shadow
+    public abstract Vec3 position();
+
+    @Shadow
+    public abstract EntityType<?> getType();
+
     @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At("TAIL"))
     private void checkWaterStateGC(CallbackInfo ci) {
         if (this.updateFluidHeightAndDoFluidPushing(GCTags.OIL, 0.0028d) || this.updateFluidHeightAndDoFluidPushing(GCTags.FUEL, 0.0028d)) {
@@ -105,5 +154,79 @@ public abstract class EntityMixin {
                 }
             }
         }
+    }
+
+    // GC 4 ticks footprints on the client and server, however we will just do it on the server
+    @Inject(method = "move", at = @At("HEAD"))
+    private void tickFootprints(MoverType type, Vec3 motion, CallbackInfo ci) {
+        var level = level();
+        if (!getType().is(GCTags.HAS_FOOTPRINTS))
+            return;
+        double motionSqrd = Mth.lengthSquared(motion.x, motion.z);
+
+        // If the player is on the moon, not airbourne and not riding anything
+        boolean isFlying = false;
+        if ((Object) this instanceof Player player)
+            isFlying = player.getAbilities().flying;
+        if (motionSqrd > 0.001 && level.dimensionTypeRegistration().is(GCTags.FOOTPRINTS_DIMENSIONS) && getVehicle() == null && !isFlying) {
+            int iPosX = Mth.floor(getX());
+            int iPosY = Mth.floor(getY() - 0.05);
+            int iPosZ = Mth.floor(getZ());
+            BlockPos pos1 = new BlockPos(iPosX, iPosY, iPosZ);
+            BlockState state = level.getBlockState(pos1);
+
+            // If the block below is the moon block
+            if (state.is(GCTags.FOOTPRINTS)) {
+                // If it has been long enough since the last step
+                if (galacticraft$getDistanceSinceLastStep() > 0.35) {
+                    Vector3d pos = new Vector3d(getX(), getY(), getZ());
+                    // Set the footprint position to the block below and add
+                    // random number to stop z-fighting
+                    pos.y = Mth.floor(getY()) + random.nextFloat() / 100.0F;
+
+                    // Adjust footprint to left or right depending on step
+                    // count
+                    switch (galacticraft$getLastStep()) {
+                        case 0:
+                            pos.add(new Vector3d(Math.sin(Math.toRadians(-getYRot() + 90)) * 0.25, 0, Math.cos(Math.toRadians(-getYRot() + 90)) * 0.25));
+                            break;
+                        case 1:
+                            pos.add(new Vector3d(Math.sin(Math.toRadians(-getYRot() - 90)) * 0.25, 0, Math.cos(Math.toRadians(-getYRot() - 90)) * 0.25));
+                            break;
+                    }
+
+                    pos = Footprint.getFootprintPosition(level, getYRot() - 180, pos, position());
+
+                    long chunkKey = ChunkPos.asLong(SectionPos.blockToSectionCoord(pos.x), SectionPos.blockToSectionCoord(pos.z));
+                    level.galacticraft$getFootprintManager().addFootprint(chunkKey, new Footprint(level.dimensionTypeId().location(), pos, getYRot(), getUUID()));
+
+                    // Increment and cap step counter at 1
+                    galacticraft$setLastStep((galacticraft$getLastStep() + 1) % 2);
+                    galacticraft$setDistanceSinceLastStep(0);
+                } else {
+                    galacticraft$setDistanceSinceLastStep(galacticraft$getDistanceSinceLastStep() + motionSqrd);
+                }
+            }
+        }
+    }
+
+    @Override
+    public double galacticraft$getDistanceSinceLastStep() {
+        return this.distanceSinceLastStep;
+    }
+
+    @Override
+    public void galacticraft$setDistanceSinceLastStep(double distanceSinceLastStep) {
+        this.distanceSinceLastStep = distanceSinceLastStep;
+    }
+
+    @Override
+    public int galacticraft$getLastStep() {
+        return this.lastStep;
+    }
+
+    @Override
+    public void galacticraft$setLastStep(int lastStep) {
+        this.lastStep = lastStep;
     }
 }

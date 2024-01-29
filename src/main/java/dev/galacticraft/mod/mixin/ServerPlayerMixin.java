@@ -80,4 +80,6 @@ public abstract class ServerPlayerMixin implements ServerPlayerAccessor {
             this.rocketData = RocketData.fromNbt(nbt.getCompound("CelestialState"));
         }
     }
+
+
 }

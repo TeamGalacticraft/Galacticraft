@@ -68,8 +68,10 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(GCBannerTagProvider::new);
         pack.addProvider(GCBiomeTagProvider::new);
         pack.addProvider(GCBlockTagProvider::new);
-        pack.addProvider(GCItemTagProvider::new);
+        pack.addProvider(GCDimensionTagProvider::new);
+        pack.addProvider(GCEntityTypeTagProvider::new);
         pack.addProvider(GCFluidTagProvider::new);
+        pack.addProvider(GCItemTagProvider::new);
         pack.addProvider(GCStructureTagProvider::new);
         pack.addProvider((output, registriesFuture) -> new GCLevelStemProvider(output, registriesFuture,
                 GCLevelStems::bootstrapRegistries)); // level stems are special

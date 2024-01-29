@@ -28,7 +28,12 @@ import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
 
 public class GCStats {
-    public static final ResourceLocation OPEN_PARACHEST = Stats.makeCustomStat(Constant.MOD_ID + ":open_parachest", StatFormatter.DEFAULT);
+    public static final ResourceLocation OPEN_PARACHEST = register("open_parachest", StatFormatter.DEFAULT);
+    public static final ResourceLocation INTERACT_WITH_NASA_WORKBENCH = register("interact_with_nasa_workbench", StatFormatter.DEFAULT);
+
+    public static ResourceLocation register(String id, StatFormatter formatter) {
+        return Stats.makeCustomStat(Constant.MOD_ID + ":" + id, formatter);
+    }
 
     public static void register() {}
 }

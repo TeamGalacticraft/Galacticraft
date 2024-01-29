@@ -550,6 +550,8 @@ public interface Constant {
         String LEGACY_MUSIC_DISC_MIMAS = "legacy_music_disc_mimas";
         String LEGACY_MUSIC_DISC_ORBIT = "legacy_music_disc_orbit";
         String LEGACY_MUSIC_DISC_SPACERACE = "legacy_music_disc_spacerace";
+        String NOSE_CONE = "nose_cone";
+        String HEAVY_NOSE_CONE = "heavy_nose_cone";
         String ROCKET_FINS = "rocket_fins";
         String ROCKET_ENGINE = "rocket_engine";
         String BASIC_ROCKET_CONE_SCHEMATIC = "basic_rocket_cone_schematic";
@@ -565,6 +567,7 @@ public interface Constant {
         String FALLING_CRUDE_OIL = "falling_crude_oil";
         String CRYOGENIC_PARTICLE = "cryogenic_particle";
         String LANDER_FLAME = "lander_flame_particle";
+        String SPARK = "spark";
     }
 
     interface Config {
@@ -751,6 +754,8 @@ public interface Constant {
         String ROCKET_WORKBENCH_MENU = "rocket_workbench_menu";
         String ROCKET = "rocket";
         String PARACHEST = "parachest";
+        String BUGGY_BENCH = "buggy_bench";
+        String TIER_1_ROCKET = "tirer_1_rocket";
     }
 
     interface LootTable {
@@ -941,9 +946,18 @@ public interface Constant {
         ResourceLocation LANDER_ACCERLERATE = id("lander_accelerate");
         ResourceLocation ENTITY_UPDATE = id("entity_update");
         ResourceLocation PLANET_TP = id("planet_tp");
+        ResourceLocation FOOTPRINT = id("footprint");
+        ResourceLocation FOOTPRINT_REMOVED = id("footprint_removed");
     }
 
     interface Structure {
         ResourceLocation SPACE_STATION = id("space_station");
+    }
+
+    interface Command {
+        String HOUSTON = "gchouston";
+        String DIMENSION_TP = "dimensiontp";
+        String DIMENSION_TP_ALIAS = "dimtp";
+        String OPEN_CELESTIAL_SCREEN = "opencelestialscreen";
     }
 }

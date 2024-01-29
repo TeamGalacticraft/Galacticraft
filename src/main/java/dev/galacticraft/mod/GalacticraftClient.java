@@ -33,6 +33,7 @@ import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.*;
 import dev.galacticraft.mod.client.network.GCClientPacketReceiver;
 import dev.galacticraft.mod.client.particle.*;
+import dev.galacticraft.mod.client.render.FootprintRenderer;
 import dev.galacticraft.mod.client.render.block.entity.GCBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.dimension.EmptyCloudRenderer;
 import dev.galacticraft.mod.client.render.dimension.EmptyWeatherRenderer;
@@ -51,6 +52,7 @@ import dev.galacticraft.mod.content.entity.RocketEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.events.ClientEventHandler;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
+import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
@@ -61,8 +63,8 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
@@ -74,7 +76,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.material.Fluids;
 
 /**
@@ -161,36 +162,19 @@ public class GalacticraftClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.FALLING_CRUDE_OIL, FallingCrudeOilProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.CRYOGENIC_PARTICLE, CryoFreezeParticle.Provider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.LANDER_FLAME_PARTICLE, LanderParticle.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.SPARK_PARTICLE, SparksParticle.Provider::new);
 
         MachineModelRegistry.register(new ResourceLocation(Constant.MOD_ID, "solar_panel"), SolarPanelSpriteProvider::new);
         MachineModelRegistry.register(new ResourceLocation(Constant.MOD_ID, "oxygen_sealer"), OxygenSealerSpriteProvider::new);
 
-        ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> {
-            for (var color : DyeColor.values()) {
-                out.accept(Constant.id("block/" + color + "_fluid_pipe_walkway"));
-            }
-        });
-        ModelLoadingRegistry.INSTANCE.registerResourceProvider(resourceManager -> (resourceId, context) -> {
-            if (WireBakedModel.WIRE_MARKER.equals(resourceId)) {
-                return WireUnbakedModel.INSTANCE;
-            } else if (WalkwayBakedModel.WALKWAY_MARKER.equals(resourceId)) {
-                return WalkwayUnbakedModel.INSTANCE;
-            } else if (WireWalkwayBakedModel.WIRE_WALKWAY_MARKER.equals(resourceId)) {
-                return WireWalkwayUnbakedModel.INSTANCE;
-            } else if (FluidPipeWalkwayBakedModel.FLUID_PIPE_WALKWAY_MARKER.equals(resourceId)) {
-                return FluidPipeWalkwayUnbakedModel.INSTANCE;
-            } else if (PipeBakedModel.GLASS_FLUID_PIPE_MARKER.equals(resourceId)) {
-                return PipeUnbakedModel.INSTANCE;
-            }
-            return null;
-        });
-
         ModelLoadingPlugin.register(GCModelLoader.INSTANCE);
 
-        DimensionRenderingRegistry.registerDimensionEffects(GCDimensions.MOON.location(), MoonDimensionEffects.INSTANCE);
-        DimensionRenderingRegistry.registerCloudRenderer(GCDimensions.MOON, EmptyCloudRenderer.INSTANCE);
-        DimensionRenderingRegistry.registerWeatherRenderer(GCDimensions.MOON, EmptyWeatherRenderer.INSTANCE);
-        DimensionRenderingRegistry.registerSkyRenderer(GCDimensions.MOON, MoonSkyRenderer.INSTANCE);
+        ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
+            DimensionRenderingRegistry.registerDimensionEffects(GCDimensions.MOON.location(), MoonDimensionEffects.INSTANCE);
+            DimensionRenderingRegistry.registerCloudRenderer(GCDimensions.MOON, EmptyCloudRenderer.INSTANCE);
+            DimensionRenderingRegistry.registerWeatherRenderer(GCDimensions.MOON, EmptyWeatherRenderer.INSTANCE);
+            DimensionRenderingRegistry.registerSkyRenderer(GCDimensions.MOON, MoonSkyRenderer.INSTANCE);
+        });
 
         FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER); // Workaround for classloading order bug
 
@@ -202,6 +186,13 @@ public class GalacticraftClient implements ClientModInitializer {
         HudRenderCallback.EVENT.register(LanderOverlay::onRenderHud);
         HudRenderCallback.EVENT.register(CountdownOverlay::renderCountdown);
         ClientTickEvents.END_CLIENT_TICK.register(LanderOverlay::clientTick);
+        ClientTickEvents.END_WORLD_TICK.register(world -> {
+            FootprintManager footprintManager = world.galacticraft$getFootprintManager();
+            footprintManager.getFootprints().forEach((packedPos, footprints) -> {
+                footprintManager.tick(world, packedPos);
+            });
+        });
+        WorldRenderEvents.LAST.register(FootprintRenderer::renderFootprints);
 
         InventoryTabRegistry.INSTANCE.register(GCItems.OXYGEN_MASK.getDefaultInstance(), () -> {
             ClientPlayNetworking.send(Constant.Packet.OPEN_GC_INVENTORY, new FriendlyByteBuf(Unpooled.buffer(0)));

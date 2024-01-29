@@ -6,6 +6,7 @@
   "mixins": [
     "AbstractContainerMenuAccessor",
     "AbstractSkeletonEntityAccessor",
+    "BlockBehaviourMixin",
     "BucketItemAccessor",
     "BucketItemMixin",
     "BuiltInLootTablesAccessor",
@@ -15,6 +16,7 @@
     "GiveCommandMixin",
     "ItemStackMixin",
     "LanternBlockMixin",
+    "LevelMixin",
     "ModelProviderMixin",
     "MultiNoiseBiomeSourceParameterListPresetAccessor",
     "PlayerMixin",
