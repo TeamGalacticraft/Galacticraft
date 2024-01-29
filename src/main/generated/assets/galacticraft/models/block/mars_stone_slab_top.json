@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab_top",
-  "textures": {
-    "bottom": "galacticraft:block/mars_stone",
-    "side": "galacticraft:block/mars_stone",
-    "top": "galacticraft:block/mars_stone"
-  }
-}

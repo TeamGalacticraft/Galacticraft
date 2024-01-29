@@ -1,9 +1,0 @@
-{
-  "type": "galacticraft:moon_ruins",
-  "config": {
-    "biomes": "#galacticraft:has_structure/moon_ruins",
-    "spawn_overrides": {},
-    "step": "surface_structures",
-    "terrain_adaptation": "beard_thin"
-  }
-}
