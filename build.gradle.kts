@@ -245,7 +245,6 @@ tasks.processResources {
         expand("version" to project.version)
     }
 
-
     // Minify json resources
     // https://stackoverflow.com/questions/41028030/gradle-minimize-json-resources-in-processresources#41029113
     doLast {
@@ -263,7 +262,15 @@ tasks.processResources {
         }
     }
 
-}
+    // overwrite generated file
+    duplicatesStrategy = DuplicatesStrategy.WARN
+    doLast {
+        copy {
+            from("src/main/resources/data")
+            into("src/main/generated/data")
+        }
+    }
+    }
 
 tasks.javadoc {
     options.encoding = "UTF-8"
