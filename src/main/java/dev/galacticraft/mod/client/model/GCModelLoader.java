@@ -22,14 +22,12 @@
 
 package dev.galacticraft.mod.client.model;
 
+import com.google.common.collect.Maps;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class GCModelLoader implements ModelLoadingPlugin {
     public static final GCModelLoader INSTANCE = new GCModelLoader();
@@ -37,12 +35,32 @@ public class GCModelLoader implements ModelLoadingPlugin {
 
     @Override
     public void onInitializeModelLoader(Context pluginContext) {
+        for (var color : DyeColor.values()) {
+            pluginContext.addModels(Constant.id("block/" + color + "_fluid_pipe_walkway"));
+        }
 
         pluginContext.resolveModel().register(context -> {
-            if (context.id().equals(PARACHEST_ITEM)) {
-                Map<DyeColor, UnbakedModel> chutes = new HashMap<>();
-                for (DyeColor color : DyeColor.values()) {
-                    chutes.put(color, context.getOrLoadModel(Constant.id("block/parachest/" + color.getName() + "_chute")));
+            var resourceId = context.id();
+
+            if (WireBakedModel.WIRE_MARKER.equals(resourceId)) {
+                return WireUnbakedModel.INSTANCE;
+            }
+            else if (WalkwayBakedModel.WALKWAY_MARKER.equals(resourceId)) {
+                return WalkwayUnbakedModel.INSTANCE;
+            }
+            else if (WireWalkwayBakedModel.WIRE_WALKWAY_MARKER.equals(resourceId)) {
+                return WireWalkwayUnbakedModel.INSTANCE;
+            }
+            else if (FluidPipeWalkwayBakedModel.FLUID_PIPE_WALKWAY_MARKER.equals(resourceId)) {
+                return FluidPipeWalkwayUnbakedModel.INSTANCE;
+            }
+            else if (PipeBakedModel.GLASS_FLUID_PIPE_MARKER.equals(resourceId)) {
+                return PipeUnbakedModel.INSTANCE;
+            }
+            else if (PARACHEST_ITEM.equals(resourceId)) {
+                var chutes = Maps.<DyeColor, UnbakedModel>newHashMap();
+                for (var color : DyeColor.values()) {
+                    chutes.put(color, context.getOrLoadModel(Constant.id("block/parachest/" + color + "_chute")));
                 }
                 return new ParachestUnbakedModel(context.getOrLoadModel(Constant.id("block/parachest/parachest")), chutes);
             }
