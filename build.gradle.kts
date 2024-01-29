@@ -245,13 +245,24 @@ tasks.processResources {
         expand("version" to project.version)
     }
 
+
     // Minify json resources
     // https://stackoverflow.com/questions/41028030/gradle-minimize-json-resources-in-processresources#41029113
     doLast {
-        fileTree(mapOf("dir" to outputs.files.asPath, "includes" to listOf("**/*.json", "**/*.mcmeta"))).forEach {
-                file: File -> file.writeText(groovy.json.JsonOutput.toJson(groovy.json.JsonSlurper().parse(file)))
+        // get rid of comments used by density function editor
+        fileTree(mapOf("dir" to outputs.files.asPath, "includes" to listOf("**/*.json", "**/*.mcmeta"))).forEach { file ->
+            var content = file.readText().replace("\\/\\/\\[df-editor\\].*\$".toRegex(), "")
+
+            try {
+                content = groovy.json.JsonOutput.toJson(groovy.json.JsonSlurper().parseText(content))
+                file.writeText(content)
+            } catch (e: Exception) {
+                // Handle the case where the content is not valid JSON after removal
+                logger.warn("Error processing file ${file}: ${e.message}")
+            }
         }
     }
+
 }
 
 tasks.javadoc {

@@ -65,20 +65,17 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.material.Fluids;
 
 /**
@@ -169,26 +166,6 @@ public class GalacticraftClient implements ClientModInitializer {
 
         MachineModelRegistry.register(new ResourceLocation(Constant.MOD_ID, "solar_panel"), SolarPanelSpriteProvider::new);
         MachineModelRegistry.register(new ResourceLocation(Constant.MOD_ID, "oxygen_sealer"), OxygenSealerSpriteProvider::new);
-
-        ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> {
-            for (var color : DyeColor.values()) {
-                out.accept(Constant.id("block/" + color + "_fluid_pipe_walkway"));
-            }
-        });
-        ModelLoadingRegistry.INSTANCE.registerResourceProvider(resourceManager -> (resourceId, context) -> {
-            if (WireBakedModel.WIRE_MARKER.equals(resourceId)) {
-                return WireUnbakedModel.INSTANCE;
-            } else if (WalkwayBakedModel.WALKWAY_MARKER.equals(resourceId)) {
-                return WalkwayUnbakedModel.INSTANCE;
-            } else if (WireWalkwayBakedModel.WIRE_WALKWAY_MARKER.equals(resourceId)) {
-                return WireWalkwayUnbakedModel.INSTANCE;
-            } else if (FluidPipeWalkwayBakedModel.FLUID_PIPE_WALKWAY_MARKER.equals(resourceId)) {
-                return FluidPipeWalkwayUnbakedModel.INSTANCE;
-            } else if (PipeBakedModel.GLASS_FLUID_PIPE_MARKER.equals(resourceId)) {
-                return PipeUnbakedModel.INSTANCE;
-            }
-            return null;
-        });
 
         ModelLoadingPlugin.register(GCModelLoader.INSTANCE);
 
