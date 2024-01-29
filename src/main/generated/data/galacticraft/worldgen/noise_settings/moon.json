@@ -43,7 +43,7 @@
       "shift_z": "minecraft:shift_z"
     },
     "continents": "minecraft:overworld/continents",
-    "erosion": "minecraft:moon/erosion",
+    "erosion": "galacticraft:moon/erosion",
     "depth": "minecraft:overworld/depth",
     "ridges": "minecraft:overworld/ridges",
     "initial_density_without_jaggedness": {
@@ -247,7 +247,7 @@
               "type": "minecraft:condition",
               "if_true": {
                 "type": "minecraft:noise_threshold",
-                "noise": "minecraft:moon/erosion",
+                "noise": "galacticraft:moon/erosion",
                 "min_threshold": 0.035,
                 "max_threshold": 0.0465
               },
@@ -262,7 +262,7 @@
               "type": "minecraft:condition",
               "if_true": {
                 "type": "minecraft:noise_threshold",
-                "noise": "minecraft:moon/erosion",
+                "noise": "galacticraft:moon/erosion",
                 "min_threshold": 0.039,
                 "max_threshold": 0.0545
               },
@@ -277,7 +277,7 @@
               "type": "minecraft:condition",
               "if_true": {
                 "type": "minecraft:noise_threshold",
-                "noise": "minecraft:moon/erosion",
+                "noise": "galacticraft:moon/erosion",
                 "min_threshold": 0.0545,
                 "max_threshold": 0.069
               },

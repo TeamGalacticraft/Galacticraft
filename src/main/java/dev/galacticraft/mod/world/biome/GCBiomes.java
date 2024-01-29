@@ -45,6 +45,7 @@ public final class GCBiomes {
         public static final ResourceKey<Biome> COMET_TUNDRA = key("comet_tundra");
         public static final ResourceKey<Biome> BASALTIC_MARE = key("basaltic_mare");
         public static final ResourceKey<Biome> LUNAR_HIGHLANDS = key("lunar_highlands");
+        public static final ResourceKey<Biome> LUNAR_LOWLANDS = key("lunar_lowlands");
         public static final ResourceKey<Biome> OLIVINE_SPIKES = key("olivine_spikes");
     }
 
@@ -73,6 +74,7 @@ public final class GCBiomes {
         context.register(Moon.COMET_TUNDRA, MoonBiomes.createCometTundra(featureLookup, carverLookup));
         context.register(Moon.BASALTIC_MARE, MoonBiomes.createBasalticMare(featureLookup, carverLookup));
         context.register(Moon.LUNAR_HIGHLANDS, MoonBiomes.createLunarHighlands(featureLookup, carverLookup));
+        context.register(Moon.LUNAR_LOWLANDS, MoonBiomes.createLunarLowlands(featureLookup, carverLookup));
         context.register(Moon.OLIVINE_SPIKES, MoonBiomes.createOlivineSpikes(featureLookup, carverLookup));
     }
 

@@ -41,6 +41,8 @@ import dev.galacticraft.mod.world.biome.GCBiomes;
 import dev.galacticraft.mod.world.biome.source.GCMultiNoiseBiomeSourceParameterLists;
 import dev.galacticraft.mod.world.dimension.GCDimensionTypes;
 import dev.galacticraft.mod.world.dimension.GCLevelStems;
+import dev.galacticraft.mod.world.gen.GCDensityFunctions;
+import dev.galacticraft.mod.world.gen.GCNoiseData;
 import dev.galacticraft.mod.world.gen.GCNoiseGeneratorSettings;
 import dev.galacticraft.mod.world.gen.carver.GCConfiguredCarvers;
 import dev.galacticraft.mod.world.gen.feature.GCConfiguredFeature;
@@ -77,6 +79,8 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
                 GCLevelStems::bootstrapRegistries)); // level stems are special
 
         // content
+        pack.addProvider(BootstrapDataProvider.create("Noise", GCNoiseData::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Density Functions", GCDensityFunctions::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Biomes", GCBiomes::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Celestial Bodies", GCCelestialBodies::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Celestial Teleporters", GCTeleporterTypes::bootstrapRegistries));
@@ -126,6 +130,8 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         registryBuilder.add(AddonRegistries.CELESTIAL_TELEPORTER, Lifecycle.stable(), GCTeleporterTypes::bootstrapRegistries);
         registryBuilder.add(Registries.DIMENSION_TYPE, Lifecycle.stable(), GCDimensionTypes::bootstrapRegistries);
         registryBuilder.add(Registries.LEVEL_STEM, Lifecycle.stable(), GCLevelStems::bootstrapRegistries);
+        registryBuilder.add(Registries.NOISE, Lifecycle.stable(), GCNoiseData::bootstrapRegistries);
+        registryBuilder.add(Registries.DENSITY_FUNCTION, Lifecycle.stable(), GCDensityFunctions::bootstrapRegistries);
         registryBuilder.add(Registries.NOISE_SETTINGS, Lifecycle.stable(), GCNoiseGeneratorSettings::bootstrapRegistries);
         registryBuilder.add(Registries.STRUCTURE, Lifecycle.stable(), GCStructures::bootstrapRegistries);
         registryBuilder.add(Registries.STRUCTURE_SET, Lifecycle.stable(), GCStructureSets::bootstrapRegistries);

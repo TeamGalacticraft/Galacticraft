@@ -8,22 +8,22 @@
         "type": "minecraft:blend_density",
         "argument": {
           "type": "minecraft:range_choice",
-          "input": "minecraft:moon/erosion",
-          "min_inclusive": 0.05,
+          "input": "galacticraft:moon/erosion",
           "max_exclusive": 2.000000000000001,
+          "min_inclusive": 0.05,
           "when_in_range": {
             "type": "minecraft:y_clamped_gradient",
+            "from_value": 1.0,
             "from_y": -64,
-            "to_y": 190,
-            "from_value": 1,
-            "to_value": -1
+            "to_value": -1.0,
+            "to_y": 190
           },
           "when_out_of_range": {
             "type": "minecraft:y_clamped_gradient",
+            "from_value": 1.0,
             "from_y": -64,
-            "to_y": 200,
-            "from_value": 1,
-            "to_value": -1
+            "to_value": -1.0,
+            "to_y": 200
           }
         }
       }
@@ -32,15 +32,15 @@
       "type": "minecraft:add",
       "argument1": {
         "type": "minecraft:noise",
-        "noise": "minecraft:basalt_mare",
-        "xz_scale": 0.00005,
-        "y_scale": 0.0007
+        "noise": "galacticraft:moon/basalt_mare",
+        "xz_scale": 5.0E-5,
+        "y_scale": 7.0E-4
       },
       "argument2": {
         "type": "minecraft:noise",
-        "noise": "minecraft:basalt_mare_height",
-        "xz_scale": 0,
-        "y_scale": 0
+        "noise": "galacticraft:moon/basalt_mare_height",
+        "xz_scale": 0.0,
+        "y_scale": 0.0
       }
     }
   },

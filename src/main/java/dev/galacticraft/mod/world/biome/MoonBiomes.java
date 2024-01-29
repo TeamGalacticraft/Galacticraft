@@ -46,6 +46,10 @@ public class MoonBiomes {
         return MoonBiomes.moon(featureLookup, carverLookup);
     }
 
+    public static Biome createLunarLowlands(HolderGetter<PlacedFeature> featureLookup, HolderGetter<ConfiguredWorldCarver<?>> carverLookup) {
+        return MoonBiomes.moon(featureLookup, carverLookup);
+    }
+
     public static Biome createOlivineSpikes(HolderGetter<PlacedFeature> featureLookup, HolderGetter<ConfiguredWorldCarver<?>> carverLookup) {
         return MoonBiomes.moon(featureLookup, carverLookup);
     }

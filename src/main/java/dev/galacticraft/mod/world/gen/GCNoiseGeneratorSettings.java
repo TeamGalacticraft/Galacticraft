@@ -44,37 +44,99 @@ public class GCNoiseGeneratorSettings {
         HolderGetter<NormalNoise.NoiseParameters> noiseLookup = context.lookup(Registries.NOISE);
 
         context.register(MOON, new NoiseGeneratorSettings(
-                NoiseSettings.create(-64, 384, 1, 2),
+                NoiseSettings.create(-32, 256, 1, 2),
                 GCBlocks.MOON_ROCK.defaultBlockState(),
-                Blocks.WATER.defaultBlockState(),
-                NoiseRouterData.overworld(densityLookup, noiseLookup, false, false),
+                Blocks.AIR.defaultBlockState(),
+                GCNoiseGeneratorSettings.moon(densityLookup, noiseLookup),
                 MoonSurfaceRules.MOON,
                 new OverworldBiomeBuilder().spawnTarget(),
-                63,
+                -32,
                 false,
-                true,
+                false,
                 true,
                 false
         ));
     }
 
     public static NoiseRouter moon(HolderGetter<DensityFunction> densityLookup, HolderGetter<NormalNoise.NoiseParameters> noiseLookup) {
+        DensityFunction shiftX = GCDensityFunctions.getFunction(densityLookup, NoiseRouterData.SHIFT_X);
+        DensityFunction shiftZ = GCDensityFunctions.getFunction(densityLookup, NoiseRouterData.SHIFT_Z);
+        DensityFunction y = GCDensityFunctions.getFunction(densityLookup, NoiseRouterData.Y);
         return new NoiseRouter(
-                DensityFunctions.zero(),
-                DensityFunctions.zero(),
-                DensityFunctions.zero(),
-                DensityFunctions.zero(),
-                DensityFunctions.zero(),
-                DensityFunctions.zero(),
-                DensityFunctions.zero(),
-                DensityFunctions.zero(),
-                DensityFunctions.zero(),
-                DensityFunctions.zero(),
-                DensityFunctions.endIslands(0L),
-                DensityFunctions.noise(noiseLookup.getOrThrow(Noises.AQUIFER_BARRIER)),
-                DensityFunctions.zero(),
-                DensityFunctions.zero(),
-                DensityFunctions.zero()
+                DensityFunctions.constant(1), // barrierNoise
+                DensityFunctions.zero(), // fluidLevelFloodednessNoise
+                DensityFunctions.zero(), // fluidLevelSpreadNoise
+                DensityFunctions.zero(), // lavaNoise
+                DensityFunctions.shiftedNoise2d(
+                        shiftX, shiftZ, 0.25, noiseLookup.getOrThrow(Noises.TEMPERATURE)
+                ), // temperature
+                DensityFunctions.shiftedNoise2d(
+                        shiftX, shiftZ, 0, noiseLookup.getOrThrow(Noises.VEGETATION)
+                ), // vegetation
+                GCDensityFunctions.getFunction(densityLookup, NoiseRouterData.CONTINENTS), // continents
+                GCDensityFunctions.getFunction(densityLookup, GCDensityFunctions.EROSION), // erosion
+                GCDensityFunctions.getFunction(densityLookup, NoiseRouterData.DEPTH), // depth
+                GCDensityFunctions.getFunction(densityLookup, NoiseRouterData.RIDGES), // ridges
+                DensityFunctions.add(
+                        DensityFunctions.constant(0.1171875),
+                        DensityFunctions.mul(
+                                DensityFunctions.yClampedGradient(
+                                        -30, -40, 0, 1
+                                ),
+                                DensityFunctions.add(
+                                        DensityFunctions.constant(-0.1171875),
+                                        DensityFunctions.add(
+                                                DensityFunctions.constant(-0.078125),
+                                                DensityFunctions.mul(
+                                                        DensityFunctions.yClampedGradient(
+                                                                240, 256, 1, 0
+                                                        ),
+                                                        DensityFunctions.add(
+                                                                DensityFunctions.constant(0.078125),
+                                                                DensityFunctions.add(
+                                                                        DensityFunctions.constant(-0.703125),
+                                                                        DensityFunctions.mul(
+                                                                                DensityFunctions.constant(4),
+                                                                                DensityFunctions.mul(
+                                                                                        GCDensityFunctions.getFunction(densityLookup, NoiseRouterData.DEPTH),
+                                                                                        DensityFunctions.cache2d(GCDensityFunctions.getFunction(densityLookup, NoiseRouterData.FACTOR))
+                                                                                ).quarterNegative()
+                                                                        )
+                                                                ).clamp(-30, 64)
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                ), // initialDensityWithoutJaggedness
+                DensityFunctions.blendDensity(GCDensityFunctions.getFunction(densityLookup, GCDensityFunctions.FINAL_DENSITY)), // finalDensity
+                DensityFunctions.interpolated(
+                        DensityFunctions.rangeChoice(
+                                y, -25, 51,
+                                DensityFunctions.noise(noiseLookup.getOrThrow(Noises.ORE_VEININESS), 1.5, 1.5),
+                                DensityFunctions.zero()
+                        )
+                ), // veinToggle
+                DensityFunctions.add(
+                        DensityFunctions.constant(-0.07999999821186066),
+                        DensityFunctions.max(
+                                DensityFunctions.interpolated(
+                                        DensityFunctions.rangeChoice(
+                                                y, -25, 51,
+                                                DensityFunctions.noise(noiseLookup.getOrThrow(Noises.ORE_VEIN_A), 4, 4),
+                                                DensityFunctions.zero()
+                                        )
+                                ).abs(),
+                                DensityFunctions.interpolated(
+                                       DensityFunctions.rangeChoice(
+                                               y, -25, 51,
+                                               DensityFunctions.noise(noiseLookup.getOrThrow(Noises.ORE_VEIN_B), 4, 4),
+                                               DensityFunctions.zero()
+                                           )
+                                ).abs()
+                        )
+                ), // veinRidged
+                DensityFunctions.noise(noiseLookup.getOrThrow(Noises.ORE_GAP)) // veinGap
         );
     }
 
