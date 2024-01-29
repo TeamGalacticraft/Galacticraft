@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:overworld",
+  "type": "galacticraft:moon",
   "generator": {
     "type": "minecraft:noise",
     "settings": "galacticraft:moon",
