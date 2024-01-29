@@ -308,6 +308,16 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .save(exporter);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BEAM_CORE)
+                .define('X', ConventionalItemTags.REDSTONE_DUSTS)
+                .define('Y', GCTags.COMPRESSED_IRON)
+                .define('Z', ConventionalItemTags.GLASS_PANES)
+                .pattern("XYX")
+                .pattern("YZY")
+                .pattern("XYX")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_IRON), has(GCItems.COMPRESSED_IRON))
+                .save(exporter);
+
         // Fabricator
         CircuitFabricatorRecipeBuilder.create(GCItems.BASIC_WAFER, 3)
                 .requires(Items.REDSTONE_TORCH)

@@ -95,6 +95,8 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.RAW_TIN);
         tag(GCTags.COMPRESSED_STEEL)
                 .add(GCItems.COMPRESSED_STEEL);
+        tag(GCTags.COMPRESSED_IRON)
+                .add(GCItems.COMPRESSED_IRON);
         tag(GCTags.COMPRESSED_TIN)
                 .add(GCItems.COMPRESSED_TIN);
         tag(ItemTags.CREEPER_DROP_MUSIC_DISCS); //fixme
