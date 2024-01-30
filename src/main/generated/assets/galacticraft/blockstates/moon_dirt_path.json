@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "galacticraft:block/moon_dirt_path"
+      },
+      {
+        "model": "galacticraft:block/moon_dirt_path",
+        "y": 90
+      },
+      {
+        "model": "galacticraft:block/moon_dirt_path",
+        "y": 180
+      },
+      {
+        "model": "galacticraft:block/moon_dirt_path",
+        "y": 270
+      }
+    ]
+  }
+}

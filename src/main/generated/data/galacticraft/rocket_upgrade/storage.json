@@ -1,0 +1,21 @@
+{
+  "type": "galacticraft:storage",
+  "config": {
+    "chests": 1,
+    "recipe": {
+      "type": "galacticraft:centered_patterned",
+      "config": {
+        "height": 18,
+        "slots": [
+          {
+            "ingredient": {
+              "item": "minecraft:chest"
+            },
+            "x": -9,
+            "y": 0
+          }
+        ]
+      }
+    }
+  }
+}

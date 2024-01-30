@@ -1,0 +1,18 @@
+{
+  "replace": false,
+  "values": [
+    "galacticraft:grating",
+    "galacticraft:walkway",
+    "galacticraft:wire_walkway",
+    "galacticraft:fluid_pipe_walkway",
+    "galacticraft:moon_copper_ore",
+    "galacticraft:lunaslate_copper_ore",
+    "galacticraft:tin_ore",
+    "galacticraft:deepslate_tin_ore",
+    "galacticraft:moon_tin_ore",
+    "galacticraft:lunaslate_tin_ore",
+    "galacticraft:aluminum_ore",
+    "galacticraft:deepslate_aluminum_ore",
+    "galacticraft:galena_ore"
+  ]
+}

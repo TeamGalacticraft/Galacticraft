@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "galacticraft:machine/coal_generator"
+    }
+  }
+}

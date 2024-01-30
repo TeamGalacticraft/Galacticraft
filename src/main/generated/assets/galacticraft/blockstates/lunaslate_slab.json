@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "galacticraft:block/lunaslate_slab"
+    },
+    "type=double": {
+      "model": "galacticraft:block/lunaslate"
+    },
+    "type=top": {
+      "model": "galacticraft:block/lunaslate_slab_top"
+    }
+  }
+}

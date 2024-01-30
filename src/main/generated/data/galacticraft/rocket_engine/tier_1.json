@@ -1,0 +1,27 @@
+{
+  "type": "galacticraft:basic",
+  "config": {
+    "fuel_capacity": 1296000,
+    "predicate": {
+      "type": "galacticraft:access_weight",
+      "config": {
+        "weight": 1
+      }
+    },
+    "recipe": {
+      "type": "galacticraft:centered_patterned",
+      "config": {
+        "height": 18,
+        "slots": [
+          {
+            "ingredient": {
+              "item": "galacticraft:rocket_engine"
+            },
+            "x": -9,
+            "y": 0
+          }
+        ]
+      }
+    }
+  }
+}

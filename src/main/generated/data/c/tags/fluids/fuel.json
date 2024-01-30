@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "galacticraft:fuel_still",
+    "galacticraft:fuel_flowing"
+  ]
+}

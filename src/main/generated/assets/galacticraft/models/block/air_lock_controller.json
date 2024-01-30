@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "galacticraft:block/air_lock_frame",
+    "side": "galacticraft:block/air_lock_controller"
+  }
+}
