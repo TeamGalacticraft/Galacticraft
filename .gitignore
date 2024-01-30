@@ -219,6 +219,3 @@ gradle-app.setting
 run/
 remappedSrc/
 **/.cache/*
-
-# Ignore generated files
-/src/main/generated/
