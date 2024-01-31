@@ -269,7 +269,7 @@ tasks.processResources {
             from("src/main/resources/data")
             into("src/main/generated/data")
         }
-    }
+        }
     }
 
 tasks.javadoc {
