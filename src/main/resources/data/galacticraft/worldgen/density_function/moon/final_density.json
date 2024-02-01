@@ -12,7 +12,7 @@
         //[df-editor]:{"pos":[-230,30],"collapsed":false}
         "type": "add",
         "argument1": {
-          //[df-editor]:{"pos":[-694,-558],"collapsed":false}
+          //[df-editor]:{"pos":[-791,-588],"collapsed":false}
           "type": "minecraft:spline",
           "spline": {
             "coordinate": "galacticraft:moon/erosion", //[df-editor]:{"pos":[-1316,-931],"collapsed":true}
@@ -41,7 +41,7 @@
           }
         },
         "argument2": {
-          //[df-editor]:{"pos":[-503,61],"collapsed":false}
+          //[df-editor]:{"pos":[-127,267],"collapsed":false}
           "type": "range_choice",
           "min_inclusive": 0.05,
           "max_exclusive": 2.000000000000001,
@@ -66,27 +66,70 @@
             }
           },
           "when_out_of_range": {
-            //[df-editor]:{"pos":[-600.4226684570312,628.6982421875],"collapsed":false}
+            //[df-editor]:{"pos":[-489,716],"collapsed":false}
             "type": "add",
             "argument1": {
               //[df-editor]:{"pos":[-852,362],"collapsed":false}
               "type": "clamp",
-              "min": -0.065,
+              "min": -0.62,
               "max": 0.5000000000000001,
               "input": {
                 //[df-editor]:{"pos":[-1073,550],"collapsed":false}
                 "type": "mul",
-                "argument1": 0.05, //[df-editor]:{"pos":[-1478,485],"collapsed":false}
-                "argument2": "minecraft:overworld/sloped_cheese" //[df-editor]:{"pos":[-1472,810],"collapsed":false}
+                "argument1": 0.0475, //[df-editor]:{"pos":[-1385,635],"collapsed":true}
+                "argument2": "galacticraft:moon/sloped_cheese" //[df-editor]:{"pos":[-1355,737],"collapsed":true}
               }
             },
             "argument2": {
-              //[df-editor]:{"pos":[-1037,870],"collapsed":false}
-              "type": "y_clamped_gradient",
-              "from_y": -64,
-              "to_y": 202,
-              "from_value": 1,
-              "to_value": -1
+              //[df-editor]:{"pos":[-770,915],"collapsed":false}
+              "type": "range_choice",
+              "min_inclusive": -1,
+              "max_exclusive": -0.375,
+              "input": "galacticraft:moon/erosion", //[df-editor]:{"pos":[-1076,747],"collapsed":true}
+              "when_in_range": {
+                //[df-editor]:{"pos":[-1275,1020],"collapsed":false}
+                "type": "min",
+                "argument1": {
+                  //[df-editor]:{"pos":[-1650,859],"collapsed":false}
+                  "type": "minecraft:spline",
+                  "spline": {
+                    "coordinate": "galacticraft:moon/erosion", //[df-editor]:{"pos":[-1935,1037],"collapsed":true}
+                    "points": [
+                      {
+                        "location": -1,
+                        "value": -1,
+                        "derivative": 1
+                      },
+                      {
+                        "location": -0.08968972078804771,
+                        "value": 0.29654013248556765,
+                        "derivative": 0
+                      },
+                      {
+                        "location": 0.960642887907603,
+                        "value": 0.09815184043818403,
+                        "derivative": 1
+                      }
+                    ]
+                  }
+                },
+                "argument2": {
+                  //[df-editor]:{"pos":[-1628,1263],"collapsed":false}
+                  "type": "y_clamped_gradient",
+                  "from_y": 0,
+                  "to_y": 212,
+                  "from_value": -1,
+                  "to_value": 1
+                }
+              },
+              "when_out_of_range": {
+                //[df-editor]:{"pos":[-1056,1183],"collapsed":false}
+                "type": "y_clamped_gradient",
+                "from_y": -64,
+                "to_y": 212,
+                "from_value": 1,
+                "to_value": -1
+              }
             }
           }
         }

@@ -1,0 +1,51 @@
+//[df-editor]:{"pos":[900,575],"collapsed":false}
+{
+  //[df-editor]:{"pos":[650,700],"collapsed":false}
+  "type": "add",
+  "argument1": {
+    //[df-editor]:{"pos":[400,625],"collapsed":false}
+    "type": "mul",
+    "argument1": 4, //[df-editor]:{"pos":[150,400],"collapsed":true}
+    "argument2": {
+      //[df-editor]:{"pos":[150,700],"collapsed":false}
+      "type": "quarter_negative",
+      "argument": {
+        //[df-editor]:{"pos":[-100,700],"collapsed":false}
+        "type": "mul",
+        "argument1": {
+          //[df-editor]:{"pos":[-350,625],"collapsed":false}
+          "type": "add",
+          "argument1": "minecraft:overworld/depth", //[df-editor]:{"pos":[-600,550],"collapsed":true}
+          "argument2": {
+            //[df-editor]:{"pos":[-600,700],"collapsed":false}
+            "type": "mul",
+            "argument1": "minecraft:overworld/jaggedness", //[df-editor]:{"pos":[-850,700],"collapsed":true}
+            "argument2": {
+              //[df-editor]:{"pos":[-850,775],"collapsed":false}
+              "type": "half_negative",
+              "argument": {
+                //[df-editor]:{"pos":[-1160,813],"collapsed":false}
+                "type": "noise",
+                "noise": "minecraft:jagged",
+                "xz_scale": 1000,
+                "y_scale": 0
+              }
+            }
+          }
+        },
+        "argument2": "minecraft:overworld/factor" //[df-editor]:{"pos":[-350,850],"collapsed":true}
+      }
+    }
+  },
+  "argument2": {
+    //[df-editor]:{"pos":[288,886],"collapsed":false}
+    "type": "clamp",
+    "min": 0.09999999999999998,
+    "max": 0.05,
+    "input": {
+      //[df-editor]:{"pos":[3,930],"collapsed":false}
+      "type": "squeeze",
+      "argument": "minecraft:overworld/base_3d_noise" //[df-editor]:{"pos":[-263,970],"collapsed":true}
+    }
+  }
+}
