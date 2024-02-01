@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.client.gui.overlay;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
@@ -36,35 +35,34 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.Container;
 
 public class OxygenOverlay {
     public static void onHudRender(GuiGraphics graphics, float tickDelta) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.level != null) {
+        if (mc.level != null && mc.player != null && !mc.player.isSpectator()) {
             CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getByDimension(mc.level).orElse(null);
             if (body != null && !body.atmosphere().breathable()) {
-                graphics.fill(mc.getWindow().getGuiScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH) - 11, 4, mc.getWindow().getGuiScaledWidth() - Constant.TextureCoordinate.OVERLAY_WIDTH - 9, 6 + Constant.TextureCoordinate.OVERLAY_HEIGHT, 0);
-                graphics.fill(mc.getWindow().getGuiScaledWidth() - Constant.TextureCoordinate.OVERLAY_WIDTH - 6, 4, mc.getWindow().getGuiScaledWidth() - 4, 6 + Constant.TextureCoordinate.OVERLAY_HEIGHT, 0);
-
-                RenderSystem.setShader(GameRenderer::getPositionTexShader);
-                RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-                RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OVERLAY);
-                assert mc.player != null;
                 Container inv = mc.player.galacticraft$getOxygenTanks();
+                final int y = 4;
                 for (int i = 0; i < inv.getContainerSize(); i++) {
                     Storage<FluidVariant> storage = ContainerItemContext.withConstant(inv.getItem(i)).find(FluidStorage.ITEM);
-                    if (storage != null) {
-                        long amount = StorageHelper.calculateCapacity(FluidVariant.of(Gases.OXYGEN), storage, null);
-                        long capacity = StorageHelper.calculateCapacity(FluidVariant.of(Gases.OXYGEN), storage, null);
+                    int x = mc.getWindow().getGuiScaledWidth() - ((Constant.TextureCoordinate.OVERLAY_WIDTH + y) * (i + 1));
 
-                        if (capacity > 0) {
-                            DrawableUtil.drawOxygenBuffer(graphics.pose(), mc.getWindow().getGuiScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * (i + 4)), 5, amount, capacity);
-                        }
+                    int outline = 0x99FFFFFF;
+
+                    long amount = 0;
+                    long capacity = 1;
+
+                    if (storage != null) {
+                        amount = StorageHelper.calculateAmount(FluidVariant.of(Gases.OXYGEN), storage, null);
+                        capacity = StorageHelper.calculateCapacity(FluidVariant.of(Gases.OXYGEN), storage, null);
                     } else if (mc.player.isCreative()) {
-                        DrawableUtil.drawOxygenBuffer(graphics.pose(), mc.getWindow().getGuiScaledWidth() - (Constant.TextureCoordinate.OVERLAY_WIDTH * i) - (5 * (i + 4)), 5, 1, 1);
+                        amount = capacity;
                     }
+
+                    graphics.fill(x - 1, y - 1, x + Constant.TextureCoordinate.OVERLAY_WIDTH + 1, y + Constant.TextureCoordinate.OVERLAY_HEIGHT + 1, outline);
+                    DrawableUtil.drawOxygenBuffer(graphics.pose(), x, y, amount, capacity);
                 }
             }
         }

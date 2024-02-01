@@ -22,36 +22,14 @@
 
 package dev.galacticraft.mod.compat.waila;
 
-import dev.galacticraft.machinelib.api.block.MachineBlock;
-import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.machine.configuration.MachineConfiguration;
-import dev.galacticraft.mod.Constant;
-import mcp.mobius.waila.api.*;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
+import mcp.mobius.waila.api.IRegistrar;
+import mcp.mobius.waila.api.IWailaPlugin;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftWailaPlugin implements IWailaPlugin {
-    private static final IBlockComponentProvider COMPONENT_PROVIDER = new IBlockComponentProvider() {
-        @Override
-        public void appendTail(ITooltip tooltip, IBlockAccessor accessor, IPluginConfig config) {
-            if (Screen.hasShiftDown()) {
-                MachineConfiguration configuration = MachineConfiguration.create();
-                configuration.readTag(accessor.getData().raw().getCompound("config"));
-                tooltip.addLine(Component.translatable("ui.galacticraft.machine.redstone.redstone", configuration.getRedstoneMode().getName()).setStyle(Constant.Text.Color.RED_STYLE));
-                if (configuration.getSecurity().getOwner() != null) {
-                    String username = configuration.getSecurity().getUsername();
-                    tooltip.addLine(Component.translatable("ui.galacticraft.machine.security.owned_by", Component.literal(username != null ? username : "???").setStyle(Constant.Text.Color.WHITE_STYLE)).setStyle(Constant.Text.Color.AQUA_STYLE));
-                }
-            }
-        }
-    };
-
     @Override
     public void register(IRegistrar registrar) {
-        registrar.addBlockData((IDataProvider<MachineBlockEntity>) (data, accessor, config) -> data.raw().put("config", accessor.getTarget().getConfiguration().createTag()), MachineBlock.class);
-        registrar.addComponent(COMPONENT_PROVIDER, TooltipPosition.TAIL, MachineBlock.class);
     }
 }
