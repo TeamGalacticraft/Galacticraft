@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "galacticraft:block/moon_berry_bush_stage0"
+    },
+    "age=1": {
+      "model": "galacticraft:block/moon_berry_bush_stage1"
+    },
+    "age=2": {
+      "model": "galacticraft:block/moon_berry_bush_stage2"
+    },
+    "age=3": {
+      "model": "galacticraft:block/moon_berry_bush_stage3"
+    }
+  }
+}

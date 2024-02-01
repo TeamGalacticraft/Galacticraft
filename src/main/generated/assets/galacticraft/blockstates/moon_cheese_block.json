@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "bites=0": {
+      "model": "galacticraft:block/moon_cheese_block"
+    },
+    "bites=1": {
+      "model": "galacticraft:block/moon_cheese_block_slice1"
+    },
+    "bites=2": {
+      "model": "galacticraft:block/moon_cheese_block_slice2"
+    },
+    "bites=3": {
+      "model": "galacticraft:block/moon_cheese_block_slice3"
+    },
+    "bites=4": {
+      "model": "galacticraft:block/moon_cheese_block_slice4"
+    },
+    "bites=5": {
+      "model": "galacticraft:block/moon_cheese_block_slice5"
+    },
+    "bites=6": {
+      "model": "galacticraft:block/moon_cheese_block_slice6"
+    }
+  }
+}

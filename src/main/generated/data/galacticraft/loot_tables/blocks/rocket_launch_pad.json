@@ -1,0 +1,53 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraft:rocket_launch_pad",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "part": "none"
+              }
+            }
+          ],
+          "name": "galacticraft:rocket_launch_pad"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraft:rocket_launch_pad",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "part": "center"
+              }
+            }
+          ],
+          "name": "galacticraft:rocket_launch_pad"
+        }
+      ],
+      "rolls": 9.0
+    }
+  ]
+}

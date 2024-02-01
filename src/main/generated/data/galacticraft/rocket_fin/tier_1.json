@@ -1,0 +1,50 @@
+{
+  "type": "galacticraft:basic",
+  "config": {
+    "can_maneuver": false,
+    "predicate": {
+      "type": "galacticraft:access_weight",
+      "config": {
+        "weight": 1
+      }
+    },
+    "recipe": {
+      "type": "galacticraft:wrap_patterned",
+      "config": {
+        "height": 36,
+        "left": [
+          {
+            "ingredient": {
+              "item": "galacticraft:rocket_fins"
+            },
+            "x": -18,
+            "y": 0
+          },
+          {
+            "ingredient": {
+              "item": "galacticraft:rocket_fins"
+            },
+            "x": -18,
+            "y": 18
+          }
+        ],
+        "right": [
+          {
+            "ingredient": {
+              "item": "galacticraft:rocket_fins"
+            },
+            "x": 0,
+            "y": 0
+          },
+          {
+            "ingredient": {
+              "item": "galacticraft:rocket_fins"
+            },
+            "x": 0,
+            "y": 18
+          }
+        ]
+      }
+    }
+  }
+}
