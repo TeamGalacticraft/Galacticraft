@@ -41,7 +41,7 @@
           }
         },
         "argument2": {
-          //[df-editor]:{"pos":[-570,162],"collapsed":false}
+          //[df-editor]:{"pos":[-503,61],"collapsed":false}
           "type": "range_choice",
           "min_inclusive": 0.05,
           "max_exclusive": 2.000000000000001,
@@ -66,12 +66,28 @@
             }
           },
           "when_out_of_range": {
-            //[df-editor]:{"pos":[-1176,771],"collapsed":false}
-            "type": "y_clamped_gradient",
-            "from_y": -64,
-            "to_y": 202,
-            "from_value": 1,
-            "to_value": -1
+            //[df-editor]:{"pos":[-600.4226684570312,628.6982421875],"collapsed":false}
+            "type": "add",
+            "argument1": {
+              //[df-editor]:{"pos":[-852,362],"collapsed":false}
+              "type": "clamp",
+              "min": -0.065,
+              "max": 0.5000000000000001,
+              "input": {
+                //[df-editor]:{"pos":[-1073,550],"collapsed":false}
+                "type": "mul",
+                "argument1": 0.05, //[df-editor]:{"pos":[-1478,485],"collapsed":false}
+                "argument2": "minecraft:overworld/sloped_cheese" //[df-editor]:{"pos":[-1472,810],"collapsed":false}
+              }
+            },
+            "argument2": {
+              //[df-editor]:{"pos":[-1037,870],"collapsed":false}
+              "type": "y_clamped_gradient",
+              "from_y": -64,
+              "to_y": 202,
+              "from_value": 1,
+              "to_value": -1
+            }
           }
         }
       }
