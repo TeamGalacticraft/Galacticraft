@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_top",
+  "textures": {
+    "side": "galacticraft:block/soft_venus_rock",
+    "top": "galacticraft:block/vapor_spout"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smoking",
+  "category": "food",
+  "cookingtime": 100,
+  "experience": 1.0,
+  "ingredient": {
+    "item": "galacticraft:ground_beef"
+  },
+  "result": "galacticraft:beef_patty"
+}

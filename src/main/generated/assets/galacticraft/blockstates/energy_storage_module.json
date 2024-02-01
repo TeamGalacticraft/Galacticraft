@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "galacticraft:machine/energy_storage_module"
+    }
+  }
+}

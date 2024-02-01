@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "galacticraft:block/moon_dirt",
+    "side": "galacticraft:block/moon_turf_side",
+    "top": "galacticraft:block/moon_turf"
+  }
+}

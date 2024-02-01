@@ -1,0 +1,20 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "exclusion_zone": {
+      "chunk_count": 10,
+      "other_set": "minecraft:villages"
+    },
+    "frequency": 0.1,
+    "frequency_reduction_method": "legacy_type_1",
+    "salt": 5927643,
+    "separation": 8,
+    "spacing": 32
+  },
+  "structures": [
+    {
+      "structure": "galacticraft:moon_pillager_base",
+      "weight": 1
+    }
+  ]
+}

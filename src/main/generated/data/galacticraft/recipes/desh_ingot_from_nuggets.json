@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "desh_ingot",
+  "key": {
+    "#": {
+      "item": "galacticraft:desh_nugget"
+    }
+  },
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "result": {
+    "item": "galacticraft:desh_ingot"
+  },
+  "show_notification": true
+}

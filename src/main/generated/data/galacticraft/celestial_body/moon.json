@@ -1,0 +1,41 @@
+{
+  "type": "galacticraft:planet",
+  "config": {
+    "parent": "galacticraft:earth",
+    "access_weight": 1,
+    "atmosphere": {
+      "composition": {},
+      "pressure": 3.0E-15,
+      "temperature": 23.0
+    },
+    "celestial_handler": "galacticraft:default",
+    "day_temperature": 105,
+    "description": "planet.galacticraft.moon.desc",
+    "display": {
+      "type": "galacticraft:icon",
+      "config": {
+        "height": 8,
+        "scale": 1.0,
+        "texture": "galacticraft:textures/gui/celestialbodies/moon.png",
+        "u": 0,
+        "v": 0,
+        "width": 8
+      }
+    },
+    "galaxy": "galacticraft:milky_way",
+    "gravity": 0.166,
+    "name": "planet.galacticraft.moon.name",
+    "night_temperature": -180,
+    "position": {
+      "type": "galacticraft:orbital",
+      "config": {
+        "distance": 20.0,
+        "orbit_time": 655200.0,
+        "phase_shift": 0.2667,
+        "planet": false
+      }
+    },
+    "teleporter": "galacticraft:lander",
+    "world": "galacticraft:moon"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "type": "galacticraft:planet",
+  "config": {
+    "parent": "galacticraft:sol",
+    "access_weight": 0,
+    "atmosphere": {
+      "composition": {
+        "galacticraft:argon": 9300.0,
+        "galacticraft:carbon_dioxide": 399.0,
+        "galacticraft:carbon_monoxide": 0.1,
+        "galacticraft:helium": 5.42,
+        "galacticraft:hydrogen": 0.55,
+        "galacticraft:iodine": 0.01,
+        "galacticraft:krypton": 1.14,
+        "galacticraft:methane": 1.79,
+        "galacticraft:neon": 18.0,
+        "galacticraft:nitrogen": 780840.0,
+        "galacticraft:nitrous_dioxide": 0.02,
+        "galacticraft:nitrous_oxide": 0.325,
+        "galacticraft:oxygen": 209500.0,
+        "galacticraft:ozone": 0.07,
+        "galacticraft:water_vapor": 25000.0,
+        "galacticraft:xenon": 0.09
+      },
+      "pressure": 1.0,
+      "temperature": 15.0
+    },
+    "celestial_handler": "galacticraft:overworld",
+    "day_temperature": 21,
+    "description": "planet.galacticraft.earth.description",
+    "display": {
+      "type": "galacticraft:icon",
+      "config": {
+        "height": 16,
+        "scale": 1.0,
+        "texture": "galacticraft:textures/body_icons.png",
+        "u": 0,
+        "v": 16,
+        "width": 16
+      }
+    },
+    "galaxy": "galacticraft:milky_way",
+    "gravity": 1.0,
+    "name": "planet.galacticraft.earth.name",
+    "night_temperature": 15,
+    "position": {
+      "type": "galacticraft:orbital",
+      "config": {
+        "distance": 1.0,
+        "orbit_time": 1536000.0,
+        "phase_shift": 0.0,
+        "planet": true
+      }
+    },
+    "satellite_recipe": {
+      "ingredients": {
+        "1": {
+          "item": "galacticraft:advanced_wafer"
+        },
+        "16": {
+          "item": "galacticraft:aluminum_ingot"
+        },
+        "32": {
+          "item": "galacticraft:tin_ingot"
+        },
+        "8": {
+          "item": "minecraft:copper_ingot"
+        }
+      }
+    },
+    "teleporter": "galacticraft:direct",
+    "world": "minecraft:overworld"
+  }
+}

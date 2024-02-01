@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "galacticraft:block/tin_decoration",
+    "side": "galacticraft:block/detailed_tin_decoration_side",
+    "top": "galacticraft:block/detailed_tin_decoration_top"
+  }
+}
