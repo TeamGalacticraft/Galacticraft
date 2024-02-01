@@ -1,8 +1,0 @@
-{
-  "parent": "galacticraft:block/template_detailed_wall_post",
-  "textures": {
-    "bottom": "galacticraft:block/meteoric_iron_decoration",
-    "side": "galacticraft:block/detailed_meteoric_iron_decoration_side",
-    "top": "galacticraft:block/detailed_meteoric_iron_decoration_top"
-  }
-}

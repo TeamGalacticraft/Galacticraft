@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "galacticraft:block/asteroid_rock_block_1"
-  }
-}

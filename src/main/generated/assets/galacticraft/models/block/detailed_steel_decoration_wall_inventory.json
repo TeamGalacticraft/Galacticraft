@@ -1,8 +1,0 @@
-{
-  "parent": "galacticraft:block/detailed_wall_inventory",
-  "textures": {
-    "bottom": "galacticraft:block/steel_decoration",
-    "side": "galacticraft:block/detailed_steel_decoration_side",
-    "top": "galacticraft:block/detailed_steel_decoration_top"
-  }
-}

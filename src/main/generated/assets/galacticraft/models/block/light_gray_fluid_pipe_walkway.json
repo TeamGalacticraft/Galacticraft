@@ -1,6 +1,0 @@
-{
-  "parent": "galacticraft:block/template_fluid_pipe_walkway",
-  "textures": {
-    "color": "galacticraft:block/glass_fluid_pipe/light_gray"
-  }
-}

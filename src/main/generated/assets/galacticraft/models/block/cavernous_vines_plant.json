@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cross",
-  "textures": {
-    "cross": "galacticraft:block/cavernous_vines_plant"
-  }
-}
