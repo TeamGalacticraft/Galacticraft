@@ -892,6 +892,7 @@ public interface Constant {
     @ApiStatus.Internal
     interface Mixin {
         String STRUCTURE_POOL_DEBUG = "StructurePoolGeneratorMixin";
+        String DATAGEN_SKIP_README = "HashCacheMixin";
     }
 
     interface Recipe {

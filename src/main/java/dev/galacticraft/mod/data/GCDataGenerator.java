@@ -32,7 +32,6 @@ import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.GCTeleporterTypes;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.data.content.BootstrapDataProvider;
-import dev.galacticraft.mod.data.content.GCLevelStemProvider;
 import dev.galacticraft.mod.data.model.GCModelProvider;
 import dev.galacticraft.mod.data.tag.*;
 import dev.galacticraft.mod.structure.GCStructureSets;
@@ -75,17 +74,17 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(GCFluidTagProvider::new);
         pack.addProvider(GCItemTagProvider::new);
         pack.addProvider(GCStructureTagProvider::new);
-        pack.addProvider((output, registriesFuture) -> new GCLevelStemProvider(output, registriesFuture,
-                GCLevelStems::bootstrapRegistries)); // level stems are special
+//        pack.addProvider((output, registriesFuture) -> new GCLevelStemProvider(output, registriesFuture,
+//                GCLevelStems::bootstrapRegistries)); // level stems are special
 
         // content
-        pack.addProvider(BootstrapDataProvider.create("Noise", GCNoiseData::bootstrapRegistries));
-        pack.addProvider(BootstrapDataProvider.create("Density Functions", GCDensityFunctions::bootstrapRegistries));
-        pack.addProvider(BootstrapDataProvider.create("Biomes", GCBiomes::bootstrapRegistries));
+//        pack.addProvider(BootstrapDataProvider.create("Noise", GCNoiseData::bootstrapRegistries));
+//        pack.addProvider(BootstrapDataProvider.create("Density Functions", GCDensityFunctions::bootstrapRegistries));
+//        pack.addProvider(BootstrapDataProvider.create("Biomes", GCBiomes::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Celestial Bodies", GCCelestialBodies::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Celestial Teleporters", GCTeleporterTypes::bootstrapRegistries));
-        pack.addProvider(BootstrapDataProvider.create("Dimension Types", GCDimensionTypes::bootstrapRegistries));
-        pack.addProvider(BootstrapDataProvider.create("Noise Generator Settings", GCNoiseGeneratorSettings::bootstrapRegistries));
+//        pack.addProvider(BootstrapDataProvider.create("Dimension Types", GCDimensionTypes::bootstrapRegistries));
+//        pack.addProvider(BootstrapDataProvider.create("Noise Generator Settings", GCNoiseGeneratorSettings::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Structures", GCStructures::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Structure Sets", GCStructureSets::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Structure Template Pools", GCStructureTemplatePools::bootstrapRegistries));

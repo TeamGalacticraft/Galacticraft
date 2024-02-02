@@ -218,4 +218,4 @@ gradle-app.setting
 # FabricMC
 run/
 remappedSrc/
-**/.cache/*
+src/main/generated/.cache/

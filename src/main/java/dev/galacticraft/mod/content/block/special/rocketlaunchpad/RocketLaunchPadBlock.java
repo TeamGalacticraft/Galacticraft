@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.content.block.special.rocketlaunchpad;
 
+import org.jetbrains.annotations.Nullable;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
@@ -39,7 +41,6 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
 
 public class RocketLaunchPadBlock extends BaseEntityBlock {
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
@@ -58,10 +59,10 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
         }
         return switch (part) {
             case NORTH, SOUTH, EAST, WEST ->
-                    new BlockPos(Direction.valueOf(part.getSerializedName().toUpperCase()).getOpposite().getStepX(), 0, Direction.valueOf(part.getSerializedName().toUpperCase()).getOpposite().getStepZ());
-            case NONE, CENTER -> BlockPos.ZERO;
-            default ->
-                    new BlockPos(Direction.valueOf(part.getSerializedName().split("_")[1].toUpperCase()).getOpposite().getStepX(), 0, Direction.valueOf(part.getSerializedName().split("_")[0].toUpperCase()).getOpposite().getStepZ());
+                    new BlockPos(part.getDirection().getFirst().getOpposite().getStepX(), 0, part.getDirection().getFirst().getOpposite().getStepZ());
+            case NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST ->
+                    new BlockPos(part.getDirection().getSecond().getOpposite().getStepX(), 0, part.getDirection().getFirst().getOpposite().getStepZ());
+            default -> BlockPos.ZERO;
         };
     }
 
@@ -86,12 +87,9 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
             var part = blockState.getValue(PART);
             if (part != Part.CENTER) {
                 var blockPos2 = switch (part) {
-                    case NORTH, SOUTH, EAST, WEST ->
-                            blockPos.relative(Direction.valueOf(part.getSerializedName().toUpperCase()).getOpposite());
-                    case NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST -> {
-                        var parts = part.getSerializedName().split("_");
-                        yield blockPos.relative(Direction.valueOf(parts[0].toUpperCase()).getOpposite()).relative(Direction.valueOf(parts[1].toUpperCase()).getOpposite());
-                    }
+                    case NORTH, SOUTH, EAST, WEST -> blockPos.relative(part.getDirection().getFirst().getOpposite());
+                    case NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST ->
+                            blockPos.relative(part.getDirection().getFirst().getOpposite()).relative(part.getDirection().getSecond().getOpposite());
                     case NONE, CENTER -> blockPos;
                 };
                 var blockState2 = level.getBlockState(blockPos2);
@@ -109,7 +107,7 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
         var part = blockState.getValue(PART);
         switch (part) {
             case NORTH, SOUTH, EAST, WEST -> {
-                var center = blockPos.relative(Direction.valueOf(part.getSerializedName().toUpperCase()).getOpposite());
+                var center = blockPos.relative(part.getDirection().getFirst().getOpposite());
                 for (var x = -1; x <= 1; x++) {
                     for (var z = -1; z <= 1; z++) {
                         var blockState1 = level.getBlockState(center.offset(x, 0, z));
@@ -128,8 +126,7 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
                 }
             }
             case NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST -> {
-                var parts = part.getSerializedName().split("_");
-                var center = blockPos.relative(Direction.valueOf(parts[0].toUpperCase()).getOpposite()).relative(Direction.valueOf(parts[1].toUpperCase()).getOpposite());
+                var center = blockPos.relative(part.getDirection().getFirst().getOpposite()).relative(part.getDirection().getSecond().getOpposite());
                 for (var x = -1; x <= 1; x++) {
                     for (var z = -1; z <= 1; z++) {
                         var blockState1 = level.getBlockState(center.offset(x, 0, z));
@@ -188,8 +185,7 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
                         if (!level.getBlockState(blockPos.offset(x, 0, z)).is(this)) {
                             allValid = false;
                             break;
-                        }
-                        else if (level.getBlockState(blockPos.offset(x, 0, z)).getValue(PART) != Part.NONE) {
+                        } else if (level.getBlockState(blockPos.offset(x, 0, z)).getValue(PART) != Part.NONE) {
                             allValid = false;
                             break;
                         }
@@ -202,8 +198,7 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
                         }
                     }
                     return;
-                }
-                else {
+                } else {
                     connections--;
                 }
             }
@@ -220,8 +215,7 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
                                             if (!level.getBlockState(blockPos.relative(dir).offset(x, 0, z)).is(this)) {
                                                 allValid = false;
                                                 break;
-                                            }
-                                            else if (level.getBlockState(blockPos.relative(dir).offset(x, 0, z)).getValue(PART) != Part.NONE) {
+                                            } else if (level.getBlockState(blockPos.relative(dir).offset(x, 0, z)).getValue(PART) != Part.NONE) {
                                                 allValid = false;
                                                 break;
                                             }
@@ -261,8 +255,7 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
                                             if (!level.getBlockState(blockPos.relative(dir).relative(direction).offset(x, 0, z)).is(this)) {
                                                 allValid = false;
                                                 break;
-                                            }
-                                            else if (level.getBlockState(blockPos.relative(dir).relative(direction).offset(x, 0, z)).getValue(PART) != Part.NONE) {
+                                            } else if (level.getBlockState(blockPos.relative(dir).relative(direction).offset(x, 0, z)).getValue(PART) != Part.NONE) {
                                                 allValid = false;
                                                 break;
                                             }
@@ -342,19 +335,33 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
 
     public enum Part implements StringRepresentable {
         NONE,
-        NORTH_WEST,
-        NORTH,
-        NORTH_EAST,
-        WEST,
+        NORTH_WEST(Pair.of(Direction.NORTH, Direction.WEST)),
+        NORTH(Pair.of(Direction.NORTH, null)),
+        NORTH_EAST(Pair.of(Direction.NORTH, Direction.EAST)),
+        WEST(Pair.of(Direction.WEST, null)),
         CENTER,
-        EAST,
-        SOUTH_WEST,
-        SOUTH,
-        SOUTH_EAST;
+        EAST(Pair.of(Direction.EAST, null)),
+        SOUTH_WEST(Pair.of(Direction.SOUTH, Direction.WEST)),
+        SOUTH(Pair.of(Direction.SOUTH, null)),
+        SOUTH_EAST(Pair.of(Direction.SOUTH, Direction.EAST));
+
+        private Pair<Direction, Direction> direction;
+
+        Part() {
+        }
+
+        Part(Pair<Direction, Direction> direction) {
+            this.direction = direction;
+        }
 
         @Override
         public String getSerializedName() {
             return this.name().toLowerCase();
+        }
+
+        @Nullable
+        public Pair<Direction, @Nullable Direction> getDirection() {
+            return this.direction;
         }
     }
 }

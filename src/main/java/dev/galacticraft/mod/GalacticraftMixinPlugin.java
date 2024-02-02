@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod;
 
+import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
@@ -59,6 +60,9 @@ public class GalacticraftMixinPlugin implements IMixinConfigPlugin {
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
             if (Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled()) {
                 optionalMixins.add(Constant.Mixin.STRUCTURE_POOL_DEBUG);
+            }
+            if (FabricDataGenHelper.ENABLED) {
+                optionalMixins.add(Constant.Mixin.DATAGEN_SKIP_README);
             }
         }
         return optionalMixins;
