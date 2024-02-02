@@ -20,6 +20,7 @@
  * SOFTWARE.
  */
 
+import groovy.json.JsonParserType
 import java.time.format.DateTimeFormatter
 
 // Build Info
@@ -248,29 +249,12 @@ tasks.processResources {
     // Minify json resources
     // https://stackoverflow.com/questions/41028030/gradle-minimize-json-resources-in-processresources#41029113
     doLast {
-        // get rid of comments used by density function editor
-        fileTree(mapOf("dir" to outputs.files.asPath, "includes" to listOf("**/*.json", "**/*.mcmeta"))).forEach { file ->
-            var content = file.readText().replace("\\/\\/\\[df-editor\\].*\$".toRegex(), "")
-
-            try {
-                content = groovy.json.JsonOutput.toJson(groovy.json.JsonSlurper().parseText(content))
-                file.writeText(content)
-            } catch (e: Exception) {
-                // Handle the case where the content is not valid JSON after removal
-                logger.warn("Error processing file ${file}: ${e.message}")
-            }
+        val jsonSlurper = groovy.json.JsonSlurper().setType(JsonParserType.LAX)
+        fileTree(mapOf("dir" to outputs.files.asPath, "includes" to listOf("**/*.json", "**/*.mcmeta"))).forEach {
+            groovy.json.JsonOutput.toJson(jsonSlurper.parse(it))
         }
     }
-
-    // overwrite generated file
-    duplicatesStrategy = DuplicatesStrategy.WARN
-    doLast {
-        copy {
-            from("src/main/resources/data")
-            into("src/main/generated/data")
-        }
-        }
-    }
+}
 
 tasks.javadoc {
     options.encoding = "UTF-8"
