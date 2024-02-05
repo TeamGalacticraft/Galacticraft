@@ -34,9 +34,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class FabricationRecipe implements Recipe<Container> {
     private final ResourceLocation id;
     private final String group;

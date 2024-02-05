@@ -28,9 +28,6 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public interface GalacticraftGameTest extends FabricGameTest {
     String SINGLE_BLOCK = "galacticraft-test:single_block";
 

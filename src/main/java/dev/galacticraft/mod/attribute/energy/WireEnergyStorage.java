@@ -30,9 +30,6 @@ import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class WireEnergyStorage implements EnergyStorage {
     private final Direction direction;
     private final int transferRate;

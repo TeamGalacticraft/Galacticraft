@@ -37,9 +37,6 @@ import net.minecraft.world.level.levelgen.blending.BlendingData;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Mixin(ProtoChunk.class)
 public abstract class ProtoChunkMixin extends ChunkAccess implements ChunkOxygenAccessor, ChunkOxygenSyncer {
     private ProtoChunkMixin(ChunkPos pos, UpgradeData upgradeData, LevelHeightAccessor heightLimitView, Registry<Biome> biome, long inhabitedTime, @Nullable LevelChunkSection[] sectionArrayInitializer, @Nullable BlendingData blendingData) {

@@ -34,9 +34,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Environment(EnvType.CLIENT)
 public class OxygenCollectorScreen extends MachineScreen<OxygenCollectorBlockEntity, OxygenCollectorMenu> {
     public OxygenCollectorScreen(OxygenCollectorMenu handler, Inventory inv, Component title) {

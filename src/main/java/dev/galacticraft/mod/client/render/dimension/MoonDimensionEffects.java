@@ -27,9 +27,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.world.phys.Vec3;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Environment(EnvType.CLIENT)
 public class MoonDimensionEffects extends DimensionSpecialEffects {
     private static final float[] FOG_COLOR = {0.0F, 0.0F, 0.0F, 0.0F};

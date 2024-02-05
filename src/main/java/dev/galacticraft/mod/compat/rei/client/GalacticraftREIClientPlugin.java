@@ -50,9 +50,6 @@ import net.minecraft.world.level.ItemLike;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GalacticraftREIClientPlugin implements REIClientPlugin {
     @Override
     public void registerCategories(CategoryRegistry registry) {

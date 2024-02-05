@@ -30,9 +30,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCGases {
     public static final ResourceLocation NITROGEN_OXIDE_ID = new ResourceLocation(Constant.MOD_ID, "nitrogen_oxide");
     public static final Fluid NITROGEN_OXIDE =

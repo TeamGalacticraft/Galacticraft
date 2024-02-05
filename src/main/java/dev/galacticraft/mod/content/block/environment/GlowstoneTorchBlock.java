@@ -36,9 +36,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GlowstoneTorchBlock extends TorchBlock {
     public GlowstoneTorchBlock(Properties settings) {
         super(settings, null);

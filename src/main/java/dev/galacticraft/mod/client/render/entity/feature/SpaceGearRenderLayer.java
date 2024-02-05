@@ -45,9 +45,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> extends RenderLayer<T, M> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/entity/oxygen_gear.png");
     private final @Nullable ModelPart mask;

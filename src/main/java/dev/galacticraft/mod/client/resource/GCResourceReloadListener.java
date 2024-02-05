@@ -41,9 +41,6 @@ import net.minecraft.world.inventory.InventoryMenu;
 import java.util.Arrays;
 import java.util.Collection;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Environment(EnvType.CLIENT)
 public class GCResourceReloadListener implements SimpleSynchronousResourceReloadListener {
     @Override

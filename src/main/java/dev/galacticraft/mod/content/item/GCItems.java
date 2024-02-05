@@ -25,8 +25,8 @@ package dev.galacticraft.mod.content.item;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
-import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.GCRegistry;
+import dev.galacticraft.mod.content.GCRocketParts;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -38,9 +38,6 @@ import net.minecraft.world.level.block.DispenserBlock;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @SuppressWarnings("unused")
 public class GCItems {
     public static final GCRegistry<Item> ITEMS = new GCRegistry<>(BuiltInRegistries.ITEM);

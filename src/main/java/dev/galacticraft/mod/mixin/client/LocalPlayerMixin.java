@@ -26,11 +26,8 @@ import com.mojang.authlib.GameProfile;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.render.FootprintRenderer;
 import dev.galacticraft.mod.content.entity.LanderEntity;
 import dev.galacticraft.mod.content.item.RocketItem;
-import dev.galacticraft.mod.misc.footprint.Footprint;
-import dev.galacticraft.mod.tag.GCTags;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -41,16 +38,10 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.SectionPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3d;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -60,9 +51,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Environment(EnvType.CLIENT)
 @Mixin(LocalPlayer.class)
 public abstract class LocalPlayerMixin extends AbstractClientPlayer {

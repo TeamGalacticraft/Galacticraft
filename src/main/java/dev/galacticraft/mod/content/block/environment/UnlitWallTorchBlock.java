@@ -39,9 +39,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class UnlitWallTorchBlock extends WallTorchBlock {
     public UnlitWallTorchBlock(Properties properties) {
         super(properties, null);

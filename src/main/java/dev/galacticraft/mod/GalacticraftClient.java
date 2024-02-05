@@ -30,7 +30,9 @@ import dev.galacticraft.mod.client.gui.overlay.LanderOverlay;
 import dev.galacticraft.mod.client.gui.overlay.OxygenOverlay;
 import dev.galacticraft.mod.client.gui.overlay.RocketOverlay;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
-import dev.galacticraft.mod.client.model.*;
+import dev.galacticraft.mod.client.model.GCModelLoader;
+import dev.galacticraft.mod.client.model.OxygenSealerSpriteProvider;
+import dev.galacticraft.mod.client.model.SolarPanelSpriteProvider;
 import dev.galacticraft.mod.client.network.GCClientPacketReceiver;
 import dev.galacticraft.mod.client.particle.*;
 import dev.galacticraft.mod.client.render.FootprintRenderer;
@@ -78,9 +80,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.level.material.Fluids;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Environment(EnvType.CLIENT)
 public class GalacticraftClient implements ClientModInitializer {
     @Override

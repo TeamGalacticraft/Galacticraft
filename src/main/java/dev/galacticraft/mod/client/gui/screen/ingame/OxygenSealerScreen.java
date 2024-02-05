@@ -29,17 +29,11 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Environment(EnvType.CLIENT)
 public class OxygenSealerScreen extends MachineScreen<OxygenSealerBlockEntity, MachineMenu<OxygenSealerBlockEntity>> {
     public OxygenSealerScreen(MachineMenu<OxygenSealerBlockEntity> handler, Inventory inv, Component title) {

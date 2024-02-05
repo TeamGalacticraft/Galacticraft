@@ -37,9 +37,6 @@ import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public abstract class BasicFluid extends FlowingFluid {
     private final boolean infinite;
     private final boolean randomTicks;

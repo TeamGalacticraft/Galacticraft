@@ -22,16 +22,14 @@
 
 package dev.galacticraft.mod.client.model;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.function.Function;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
+import java.util.Collection;
+import java.util.Collections;
+import java.util.function.Function;
+
 public class WireUnbakedModel implements UnbakedModel {
     public static final WireUnbakedModel INSTANCE = new WireUnbakedModel();
 

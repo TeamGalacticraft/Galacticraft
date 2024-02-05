@@ -35,9 +35,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCEntityTypes {
     public static final EntityType<EvolvedZombieEntity> EVOLVED_ZOMBIE = FabricEntityTypeBuilder.create(MobCategory.MONSTER, EvolvedZombieEntity::new).dimensions(EntityDimensions.fixed(0.6F, 1.95F)).build();
     public static final EntityType<EvolvedCreeperEntity> EVOLVED_CREEPER =  FabricEntityTypeBuilder.create(MobCategory.MONSTER, EvolvedCreeperEntity::new).dimensions(EntityDimensions.scalable(0.65F, 1.8F)).build();

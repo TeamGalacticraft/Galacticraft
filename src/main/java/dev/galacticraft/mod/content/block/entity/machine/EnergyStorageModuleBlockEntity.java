@@ -38,9 +38,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     public static final int CHARGE_SELF_SLOT = 0;
     public static final int CHARGE_ITEM_SLOT = 1;

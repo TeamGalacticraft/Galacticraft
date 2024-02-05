@@ -59,7 +59,6 @@ import java.util.Objects;
 
 /**
  * Handles server-bound (C2S) packets.
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GCServerPacketReceivers {
     public static void register() {

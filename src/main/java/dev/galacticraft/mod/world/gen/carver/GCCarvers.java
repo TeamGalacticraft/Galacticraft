@@ -30,9 +30,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.carver.CaveCarverConfiguration;
 import net.minecraft.world.level.levelgen.carver.WorldCarver;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCCarvers {
     public static final WorldCarver<CaveCarverConfiguration> LUNAR_CAVE = new LunarCaveCarver(CaveCarverConfiguration.CODEC);
     public static final WorldCarver<CraterCarverConfig> CRATERS = new CraterCarver(CraterCarverConfig.CRATER_CODEC);

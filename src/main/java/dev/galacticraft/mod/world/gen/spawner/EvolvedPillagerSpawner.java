@@ -38,9 +38,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class EvolvedPillagerSpawner implements CustomSpawner {
    private int ticksUntilNextSpawn;
 

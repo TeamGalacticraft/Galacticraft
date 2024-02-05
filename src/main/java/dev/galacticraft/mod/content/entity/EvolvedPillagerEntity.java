@@ -26,9 +26,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Pillager;
 import net.minecraft.world.level.Level;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class EvolvedPillagerEntity extends Pillager {
     public EvolvedPillagerEntity(EntityType<? extends EvolvedPillagerEntity> entityType, Level world) {
         super(entityType, world);

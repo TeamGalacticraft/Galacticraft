@@ -38,9 +38,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @DefaultedMetadata(structure = GalacticraftGameTest.SINGLE_BLOCK)
 public final class ElectricCompressorTestSuite extends RecipeGameTest<Container, CompressingRecipe, ElectricCompressorBlockEntity> {
     public ElectricCompressorTestSuite() {

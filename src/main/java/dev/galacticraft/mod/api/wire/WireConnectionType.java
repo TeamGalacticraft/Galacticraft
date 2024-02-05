@@ -24,9 +24,6 @@ package dev.galacticraft.mod.api.wire;
 
 import net.minecraft.util.StringRepresentable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public enum WireConnectionType implements StringRepresentable {
     /**
      * The wire is not connected to anything.

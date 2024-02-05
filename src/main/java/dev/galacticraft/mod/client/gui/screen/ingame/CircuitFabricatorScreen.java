@@ -37,9 +37,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Environment(EnvType.CLIENT)
 public class CircuitFabricatorScreen extends MachineScreen<CircuitFabricatorBlockEntity, RecipeMachineMenu<Container, FabricationRecipe, CircuitFabricatorBlockEntity>> {
     private static final int PROGRESS_SIZE = 4;

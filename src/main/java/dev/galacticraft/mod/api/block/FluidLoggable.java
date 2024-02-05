@@ -45,9 +45,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
     FluidState EMPTY_STATE = Fluids.EMPTY.defaultFluidState();
     ResourceLocation INVALID = new ResourceLocation("invalid");

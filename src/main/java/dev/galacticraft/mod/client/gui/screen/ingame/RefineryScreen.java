@@ -31,9 +31,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Environment(EnvType.CLIENT)
 public class RefineryScreen extends MachineScreen<RefineryBlockEntity, MachineMenu<RefineryBlockEntity>> {
     public RefineryScreen(MachineMenu<RefineryBlockEntity> handler, Inventory inv, Component title) {

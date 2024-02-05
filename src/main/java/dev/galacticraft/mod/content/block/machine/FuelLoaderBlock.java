@@ -34,9 +34,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
 public class FuelLoaderBlock extends MachineBlock<FuelLoaderBlockEntity> {
     public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
 

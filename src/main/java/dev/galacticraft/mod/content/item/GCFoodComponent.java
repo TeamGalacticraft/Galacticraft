@@ -24,9 +24,6 @@ package dev.galacticraft.mod.content.item;
 
 import net.minecraft.world.food.FoodProperties;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCFoodComponent {
     public static final FoodProperties MOON_BERRIES = new FoodProperties.Builder().nutrition(1).saturationMod(0.0F).build();
     public static final FoodProperties CHEESE_CURD = new FoodProperties.Builder().nutrition(1).saturationMod(0.1F).build();

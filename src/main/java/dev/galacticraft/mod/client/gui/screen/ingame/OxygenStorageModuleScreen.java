@@ -35,9 +35,6 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Environment(EnvType.CLIENT)
 public class OxygenStorageModuleScreen extends MachineScreen<OxygenStorageModuleBlockEntity, MachineMenu<OxygenStorageModuleBlockEntity>> {
     public OxygenStorageModuleScreen(MachineMenu<OxygenStorageModuleBlockEntity> handler, Inventory inv, Component title) {

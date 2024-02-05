@@ -27,9 +27,6 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.config.Config;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class ConfigImpl implements Config {
     @Expose
     private boolean debugLog = false;

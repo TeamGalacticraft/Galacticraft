@@ -44,9 +44,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCPlayerInventoryMenu extends AbstractContainerMenu {
     private static final ResourceLocation[] EMPTY_ARMOR_SLOT_IDS = new ResourceLocation[]{
             new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.THERMAL_BOOTS),

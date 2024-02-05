@@ -28,9 +28,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class PipeTestSuite implements GalacticraftGameTest {
     @GameTest(template = EMPTY_STRUCTURE)
     public void pipeConnectionTest(GameTestHelper context) {

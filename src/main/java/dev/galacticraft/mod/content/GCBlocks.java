@@ -57,9 +57,6 @@ import net.minecraft.world.level.material.PushReaction;
 
 import java.util.function.ToIntFunction;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @SuppressWarnings("unused")
 public class GCBlocks {
     public static final GCBlockRegistry BLOCKS = new GCBlockRegistry();

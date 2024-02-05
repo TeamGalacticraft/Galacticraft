@@ -28,9 +28,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCStructurePieceTypes {
     public static final StructurePieceType MOON_RUINS_PIECE = (StructurePieceType.StructureTemplateType)MoonRuinsGenerator.Piece::new;
 

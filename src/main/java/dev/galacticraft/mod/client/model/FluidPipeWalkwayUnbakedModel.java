@@ -36,9 +36,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class FluidPipeWalkwayUnbakedModel implements UnbakedModel {
     public static final FluidPipeWalkwayUnbakedModel INSTANCE = new FluidPipeWalkwayUnbakedModel();
     private static final List<ResourceLocation> COLORED_FLUID_PIPE_WALKWAY = Util.make(Lists.newArrayList(), list -> list.addAll(Arrays.stream(DyeColor.values()).map(color -> Constant.id("block/" + color + "_fluid_pipe_walkway")).collect(ImmutableList.toImmutableList())));

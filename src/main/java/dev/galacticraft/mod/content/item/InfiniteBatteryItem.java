@@ -35,9 +35,6 @@ import team.reborn.energy.api.EnergyStorage;
 
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class InfiniteBatteryItem extends Item implements EnergyStorage {
     private int ticks = (int) (Math.random() * 1000.0);
 

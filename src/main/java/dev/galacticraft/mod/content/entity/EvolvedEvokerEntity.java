@@ -26,9 +26,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Evoker;
 import net.minecraft.world.level.Level;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class EvolvedEvokerEntity extends Evoker {
     public EvolvedEvokerEntity(EntityType<? extends EvolvedEvokerEntity> entityType, Level world) {
         super(entityType, world);

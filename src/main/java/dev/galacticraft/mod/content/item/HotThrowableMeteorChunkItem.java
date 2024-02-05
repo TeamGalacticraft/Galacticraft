@@ -22,9 +22,6 @@
 
 package dev.galacticraft.mod.content.item;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class HotThrowableMeteorChunkItem extends ThrowableMeteorChunkItem {
     public HotThrowableMeteorChunkItem(Properties settings) {
         super(settings);

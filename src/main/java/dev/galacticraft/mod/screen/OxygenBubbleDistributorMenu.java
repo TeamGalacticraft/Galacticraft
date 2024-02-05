@@ -35,9 +35,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class OxygenBubbleDistributorMenu extends MachineMenu<OxygenBubbleDistributorBlockEntity> {
     public boolean bubbleVisible;
     public byte targetSize;

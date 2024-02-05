@@ -31,9 +31,6 @@ import net.minecraft.world.entity.npc.VillagerType;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class MoonVillagerTypes {
     public static final List<VillagerType> MOON_VILLAGER_TYPE_REGISTRY = new LinkedList<>();
 

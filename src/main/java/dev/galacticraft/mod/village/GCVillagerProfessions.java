@@ -41,9 +41,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCVillagerProfessions {
     public static final VillagerProfession LUNAR_CARTOGRAPHER = register(new ResourceLocation(Constant.MOD_ID, "lunar_cartographer"), GCPointOfInterestTypes.LUNAR_CARTOGRAPHER, SoundEvents.VILLAGER_WORK_CARTOGRAPHER);
 

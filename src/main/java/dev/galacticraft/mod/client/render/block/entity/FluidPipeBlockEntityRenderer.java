@@ -28,9 +28,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class FluidPipeBlockEntityRenderer implements BlockEntityRenderer<GlassFluidPipeBlockEntity> {
     public FluidPipeBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
     }

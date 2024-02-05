@@ -42,9 +42,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.BiFunction;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class PipeNetworkImpl implements PipeNetwork {
     private final @NotNull ServerLevel world;
     private final @NotNull Object2ObjectOpenHashMap<BlockPos, Storage<FluidVariant>> insertable = new Object2ObjectOpenHashMap<>();

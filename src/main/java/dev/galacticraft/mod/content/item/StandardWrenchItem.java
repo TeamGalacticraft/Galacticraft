@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.mod.Constant;
-import java.util.List;
 import net.minecraft.Util;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -43,9 +42,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
+import java.util.List;
+
 public class StandardWrenchItem extends Item {
     public StandardWrenchItem(Properties settings) {
         super(settings);

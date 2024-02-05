@@ -46,9 +46,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class SpaceRaceScreen extends Screen {
     private int backgroundWidth = 0;
     private int backgroundHeight = 0;

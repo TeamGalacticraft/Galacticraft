@@ -33,9 +33,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class CoalGeneratorMenu extends MachineMenu<CoalGeneratorBlockEntity> {
     private int fuelTime;
     private int fuelLength;

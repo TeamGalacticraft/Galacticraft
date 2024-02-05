@@ -29,9 +29,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.resources.ResourceLocation;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCEntityModelLayer {
     public static final ModelLayerLocation GAZER = new ModelLayerLocation(Constant.id("gazer"), "main");
     public static final ModelLayerLocation RUMBLER = new ModelLayerLocation(Constant.id("rumbler"), "main");

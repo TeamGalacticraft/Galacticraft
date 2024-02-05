@@ -26,7 +26,6 @@ import com.google.common.collect.ImmutableList;
 import dev.galacticraft.mod.accessor.LevelAccessor;
 import dev.galacticraft.mod.accessor.ServerLevelAccessor;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
-import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.misc.footprint.ServerFootprintManager;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
@@ -62,9 +61,6 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Mixin(ServerLevel.class)
 public abstract class ServerLevelMixin extends Level implements LevelAccessor, ServerLevelAccessor {
     @Shadow @Final @Mutable private List<CustomSpawner> customSpawners;

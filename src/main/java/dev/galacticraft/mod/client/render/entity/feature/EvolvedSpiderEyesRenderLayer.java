@@ -32,9 +32,6 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.EyesLayer;
 import net.minecraft.resources.ResourceLocation;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Environment(EnvType.CLIENT)
 public class EvolvedSpiderEyesRenderLayer<T extends EvolvedSpiderEntity, M extends SpiderModel<T>> extends EyesLayer<T, M> {
     private static final RenderType LAYER = RenderType.eyes(new ResourceLocation(Constant.MOD_ID, "textures/entity/evolved/spider_eyes.png"));

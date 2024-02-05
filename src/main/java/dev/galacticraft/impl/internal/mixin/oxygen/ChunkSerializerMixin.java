@@ -46,9 +46,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.BitSet;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Mixin(ChunkSerializer.class)
 public abstract class ChunkSerializerMixin {
     @Inject(method = "write", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/chunk/LevelChunkSection;getStates()Lnet/minecraft/world/level/chunk/PalettedContainer;"), locals = LocalCapture.CAPTURE_FAILHARD)

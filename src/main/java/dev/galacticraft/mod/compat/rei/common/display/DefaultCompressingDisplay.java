@@ -36,9 +36,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public interface DefaultCompressingDisplay extends SimpleGridMenuDisplay {
     default @NotNull CategoryIdentifier<?> getCategoryIdentifier() {
         return GalacticraftREIServerPlugin.COMPRESSING;

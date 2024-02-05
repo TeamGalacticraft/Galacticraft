@@ -52,11 +52,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.concurrent.CompletableFuture;
-
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     public static final int CHARGE_SLOT = 0;
     public static final int OXYGEN_INPUT_SLOT = 0; // REVIEW: should this be 0 or 1?

@@ -42,9 +42,6 @@ import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCVillagerTrades {
     public static class BuyForOneEmeraldFactory implements VillagerTrades.ItemListing {
         private final Item buy;

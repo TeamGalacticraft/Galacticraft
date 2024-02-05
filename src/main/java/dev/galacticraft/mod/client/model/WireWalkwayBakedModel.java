@@ -55,9 +55,6 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Environment(EnvType.CLIENT)
 public class WireWalkwayBakedModel implements BakedModel {
     private static WireWalkwayBakedModel instance = null;

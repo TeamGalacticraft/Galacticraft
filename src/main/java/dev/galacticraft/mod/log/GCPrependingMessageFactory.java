@@ -28,9 +28,6 @@ import org.apache.logging.log4j.message.Message;
 import org.apache.logging.log4j.message.ParameterizedMessage;
 import org.apache.logging.log4j.message.SimpleMessage;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public final class GCPrependingMessageFactory extends AbstractMessageFactory {
     public static final GCPrependingMessageFactory INSTANCE = new GCPrependingMessageFactory();
 

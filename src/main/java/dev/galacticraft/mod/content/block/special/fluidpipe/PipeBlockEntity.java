@@ -38,9 +38,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public abstract class PipeBlockEntity extends BlockEntity implements Pipe {
     private @NotNull PipeFluidInsertable @Nullable[] insertables = null;
     private @Nullable PipeNetwork network = null;

@@ -30,9 +30,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.function.Supplier;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public enum GCToolMaterial implements Tier {
     STEEL(Tiers.IRON.getLevel(), 768, Tiers.IRON.getSpeed(), Tiers.IRON.getAttackDamageBonus(), Tiers.IRON.getEnchantmentValue(), () -> Ingredient.of(new ItemStack(GCItems.COMPRESSED_STEEL))),
     DESH(3, 1024, 5.0F, 2.5F, 10, () -> Ingredient.of(new ItemStack(GCItems.DESH_INGOT))),

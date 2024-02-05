@@ -34,9 +34,6 @@ import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.material.Fluid;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCTags {
     public static final TagKey<Fluid> OIL = TagKey.create(Registries.FLUID, new ResourceLocation(Constant.COMMON_NAMESPACE, "oil"));
     public static final TagKey<Fluid> FUEL = TagKey.create(Registries.FLUID, new ResourceLocation(Constant.COMMON_NAMESPACE, "fuel"));

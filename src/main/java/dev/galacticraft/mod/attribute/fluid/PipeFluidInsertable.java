@@ -34,9 +34,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.Iterator;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class PipeFluidInsertable implements Storage<FluidVariant>, StorageView<FluidVariant> {
     private final Direction direction;
     private final long maxTransfer;

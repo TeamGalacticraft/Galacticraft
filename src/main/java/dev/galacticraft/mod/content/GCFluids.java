@@ -36,9 +36,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCFluids {
     public static final FlowingFluid CRUDE_OIL = new CrudeOilFluid.Still();
     public static final FlowingFluid FLOWING_CRUDE_OIL = new CrudeOilFluid.Flowing();

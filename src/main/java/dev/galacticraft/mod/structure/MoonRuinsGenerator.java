@@ -49,9 +49,6 @@ import net.minecraft.world.level.material.FluidState;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class MoonRuinsGenerator {
    private static final ResourceLocation[] PIECES = new ResourceLocation[]{
            //new ResourceLocation(Constant.MOD_ID, "moon_ruins/ruin_1"),

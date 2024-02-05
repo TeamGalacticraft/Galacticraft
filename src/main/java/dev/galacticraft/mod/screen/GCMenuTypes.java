@@ -32,16 +32,12 @@ import dev.galacticraft.mod.recipe.FabricationRecipe;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCMenuTypes {
     public static final MenuType<CoalGeneratorMenu> COAL_GENERATOR = MachineMenu.createType(CoalGeneratorMenu::new);
     public static final MenuType<SolarPanelMenu<BasicSolarPanelBlockEntity>> BASIC_SOLAR_PANEL = MachineMenu.createType(SolarPanelMenu::new, () -> GCMachineTypes.BASIC_SOLAR_PANEL);

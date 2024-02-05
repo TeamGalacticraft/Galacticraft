@@ -37,14 +37,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
-import team.reborn.energy.api.EnergyStorageUtil;
 
 import java.util.*;
 import java.util.function.BiFunction;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class WireNetworkImpl implements WireNetwork {
     private final @NotNull ServerLevel world;
     private final @NotNull Object2ObjectOpenHashMap<BlockPos, EnergyStorage> storages = new Object2ObjectOpenHashMap<>();

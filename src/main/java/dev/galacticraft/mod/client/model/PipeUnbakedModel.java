@@ -31,9 +31,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Function;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class PipeUnbakedModel implements UnbakedModel {
     public static final PipeUnbakedModel INSTANCE = new PipeUnbakedModel();
 

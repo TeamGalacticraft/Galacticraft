@@ -39,9 +39,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     public static final int OXYGEN_TANK = 0;
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(100);

@@ -38,9 +38,6 @@ import net.minecraft.world.level.block.WallTorchBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Mixin(TorchBlock.class)
 public abstract class TorchBlockMixin extends Block {
     public TorchBlockMixin(Properties settings) {

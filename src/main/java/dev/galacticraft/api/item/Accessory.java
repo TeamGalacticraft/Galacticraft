@@ -24,9 +24,6 @@ package dev.galacticraft.api.item;
 
 import net.minecraft.world.entity.LivingEntity;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public interface Accessory {
     default boolean enablesHearing() {
         return false;

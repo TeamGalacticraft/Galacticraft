@@ -38,9 +38,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public interface Constant {
     String MOD_ID = "galacticraft";
     String COMMON_NAMESPACE = "c";

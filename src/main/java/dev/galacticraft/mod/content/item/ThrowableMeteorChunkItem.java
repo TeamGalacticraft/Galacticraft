@@ -24,9 +24,6 @@ package dev.galacticraft.mod.content.item;
 
 import net.minecraft.world.item.Item;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class ThrowableMeteorChunkItem extends Item {
     public ThrowableMeteorChunkItem(Properties settings) {
         super(settings);

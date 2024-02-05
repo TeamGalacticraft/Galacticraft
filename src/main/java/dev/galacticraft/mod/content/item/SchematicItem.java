@@ -32,9 +32,6 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class SchematicItem extends Item implements Schematic {
     public SchematicItem(Properties settings) {
         super(settings);

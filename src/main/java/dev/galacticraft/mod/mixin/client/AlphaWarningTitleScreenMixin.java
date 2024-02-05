@@ -42,9 +42,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Mixin(TitleScreen.class)
 @Environment(EnvType.CLIENT)
 public abstract class AlphaWarningTitleScreenMixin extends Screen {

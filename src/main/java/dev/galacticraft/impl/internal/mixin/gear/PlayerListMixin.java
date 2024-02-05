@@ -39,9 +39,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Collection;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Mixin(PlayerList.class)
 public abstract class PlayerListMixin {
     @Inject(method = "placeNewPlayer", at = @At("RETURN"))

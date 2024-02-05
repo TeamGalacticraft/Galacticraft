@@ -33,9 +33,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Environment(EnvType.CLIENT)
 public class EvolvedSpiderEntityRenderer extends MobRenderer<EvolvedSpiderEntity, SpiderModel<EvolvedSpiderEntity>> {
     public static final ResourceLocation TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/entity/evolved/spider.png");

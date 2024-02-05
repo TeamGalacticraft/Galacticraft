@@ -38,9 +38,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class DefaultFabricationDisplay extends BasicDisplay {
 
     protected DefaultFabricationDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location) {

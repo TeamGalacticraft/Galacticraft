@@ -34,9 +34,6 @@ import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public interface MultiBlockBase {
     default void onPartDestroyed(Level level, Player player, BlockState blockState, BlockPos blockPos, BlockState partState, BlockPos partPos) {
         level.destroyBlock(blockPos, !player.isCreative());

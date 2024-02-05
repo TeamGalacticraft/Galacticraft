@@ -42,9 +42,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCMultiNoiseBiomeSourceParameterLists {
     private static final Parameter FULL_RANGE = Parameter.span(-1.0F, 1.0F);
 

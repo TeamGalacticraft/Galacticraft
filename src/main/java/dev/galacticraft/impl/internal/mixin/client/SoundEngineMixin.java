@@ -39,9 +39,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Mixin(SoundEngine.class)
 @Environment(EnvType.CLIENT)
 public abstract class SoundEngineMixin implements SoundSystemAccessor {

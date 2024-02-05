@@ -28,9 +28,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeType;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCRecipes {
     public static final RecipeType<FabricationRecipe> FABRICATION_TYPE = new GCRecipeType<>();
     public static final RecipeType<CompressingRecipe> COMPRESSING_TYPE = new GCRecipeType<>();

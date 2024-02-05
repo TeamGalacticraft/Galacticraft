@@ -28,9 +28,6 @@ import dev.galacticraft.mod.content.GCMachineTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class AdvancedSolarPanelBlockEntity extends AbstractSolarPanelBlockEntity {
     public AdvancedSolarPanelBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.ADVANCED_SOLAR_PANEL, pos, state);

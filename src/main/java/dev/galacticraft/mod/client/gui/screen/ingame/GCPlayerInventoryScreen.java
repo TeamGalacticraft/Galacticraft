@@ -39,9 +39,6 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInventoryMenu> {
     public GCPlayerInventoryScreen(GCPlayerInventoryMenu handler, Inventory inv, Component title) {
         super(handler, inv, Component.empty());

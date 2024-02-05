@@ -29,9 +29,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class SealableAluminumWireBlock extends WireBlock {
     public SealableAluminumWireBlock(Properties settings) {
         super(settings);

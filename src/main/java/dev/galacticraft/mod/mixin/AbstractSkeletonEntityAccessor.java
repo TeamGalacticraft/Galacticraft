@@ -28,9 +28,6 @@ import net.minecraft.world.entity.monster.AbstractSkeleton;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Mixin(AbstractSkeleton.class)
 public interface AbstractSkeletonEntityAccessor {
     @Accessor("meleeGoal")

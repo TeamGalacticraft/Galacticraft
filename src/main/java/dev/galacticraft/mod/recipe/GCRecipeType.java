@@ -28,9 +28,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCRecipeType<C extends Container, T extends Recipe<C>> implements RecipeType<T> {
     @Override
     public String toString() {

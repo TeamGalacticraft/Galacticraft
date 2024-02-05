@@ -24,9 +24,6 @@ package dev.galacticraft.impl.accessor;
 
 import org.jetbrains.annotations.ApiStatus;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @ApiStatus.Internal
 public interface SoundSystemAccessor {
     void galacticraft$updateAtmosphericVolumeMultiplier(float multiplier);

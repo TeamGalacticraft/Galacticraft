@@ -44,9 +44,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class ShapedCompressingRecipe implements CompressingRecipe {
    private final int width;
    private final int height;

@@ -29,9 +29,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCBannerPatterns {
     public static final ResourceKey<BannerPattern> ROCKET_KEY = Constant.key(Registries.BANNER_PATTERN, "rocket");
     public static final BannerPattern ROCKET = new BannerPattern(ROCKET_KEY.location().toString());

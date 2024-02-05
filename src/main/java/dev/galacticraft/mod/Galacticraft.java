@@ -51,9 +51,6 @@ import dev.galacticraft.mod.world.gen.surfacebuilder.MoonSurfaceRules;
 import dev.galacticraft.mod.world.poi.GCPointOfInterestTypes;
 import net.fabricmc.api.ModInitializer;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class Galacticraft implements ModInitializer {
     public static final ConfigManager CONFIG_MANAGER = new ConfigManagerImpl();
 

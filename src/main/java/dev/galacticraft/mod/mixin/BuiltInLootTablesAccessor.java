@@ -27,9 +27,6 @@ import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Mixin(BuiltInLootTables.class)
 public interface BuiltInLootTablesAccessor {
     @Invoker("register")

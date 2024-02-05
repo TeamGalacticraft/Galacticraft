@@ -45,9 +45,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class CavernousVinesBlock extends GrowingPlantHeadBlock implements BonemealableBlock, CavernousVines, SimpleWaterloggedBlock {
     private static final double growPerTickProbability = 0.1;
 

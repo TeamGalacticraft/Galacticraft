@@ -25,14 +25,12 @@ package dev.galacticraft.mod.mixin;
 import dev.galacticraft.mod.accessor.EntityAccessor;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.misc.footprint.Footprint;
-import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -61,9 +59,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.UUID;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Mixin(Entity.class)
 public abstract class EntityMixin implements EntityAccessor {
     private @Unique double distanceSinceLastStep;

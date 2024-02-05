@@ -44,9 +44,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Environment(EnvType.CLIENT)
 public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
     private static final ResourceLocation MODEL = new ResourceLocation(Constant.MOD_ID, "models/misc/sphere.obj");

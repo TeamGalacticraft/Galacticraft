@@ -37,9 +37,6 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public final class GCBiomes {
     public static final class Moon {
         public static final ResourceKey<Biome> COMET_TUNDRA = key("comet_tundra");

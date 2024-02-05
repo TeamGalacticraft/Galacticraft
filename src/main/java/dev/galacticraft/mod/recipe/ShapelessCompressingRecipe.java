@@ -39,9 +39,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public record ShapelessCompressingRecipe(ResourceLocation id, String group,
                                          ItemStack output,
                                          NonNullList<Ingredient> input, int time) implements CompressingRecipe {

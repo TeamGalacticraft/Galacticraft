@@ -57,9 +57,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class FallenMeteorBlock extends FallingBlock implements SimpleWaterloggedBlock
 {
     private static final VoxelShape SHAPE = box(3, 1, 3, 13, 11, 13);

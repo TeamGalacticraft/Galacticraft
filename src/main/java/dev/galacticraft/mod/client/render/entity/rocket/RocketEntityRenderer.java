@@ -38,9 +38,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.InventoryMenu;
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
 public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
     public RocketEntityRenderer(EntityRendererProvider.Context context) {
         super(context);

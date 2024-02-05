@@ -42,9 +42,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class SolarPanelPartBlock extends BaseEntityBlock {
     private static final VoxelShape POLE_SHAPE = box(6, 0, 6, 10, 16, 10);
     private static final VoxelShape TOP_POLE_SHAPE = box(6, 0, 6, 10, 7, 10);

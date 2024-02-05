@@ -29,9 +29,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageScaling;
 import net.minecraft.world.damagesource.DamageType;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCDamageTypes {
     public static final ResourceKey<DamageType> OIL_BOOM = Constant.key(Registries.DAMAGE_TYPE, "oil_boom");
     public static final ResourceKey<DamageType> VINE_POISON = Constant.key(Registries.DAMAGE_TYPE, "vine_poison");

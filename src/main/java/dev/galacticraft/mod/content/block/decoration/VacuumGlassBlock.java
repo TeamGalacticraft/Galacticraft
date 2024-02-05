@@ -24,9 +24,6 @@ package dev.galacticraft.mod.content.block.decoration;
 
 import dev.galacticraft.mod.api.block.AbstractHorizontalDirectionalBlock;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class VacuumGlassBlock extends AbstractHorizontalDirectionalBlock {
     public VacuumGlassBlock(Properties settings) {
         super(settings);

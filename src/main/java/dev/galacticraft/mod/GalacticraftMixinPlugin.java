@@ -32,9 +32,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GalacticraftMixinPlugin implements IMixinConfigPlugin {
     @Override
     public void onLoad(String mixinPackage) {

@@ -29,9 +29,6 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCDimensions {
     public static final ResourceKey<Level> MOON = key("moon");
 
