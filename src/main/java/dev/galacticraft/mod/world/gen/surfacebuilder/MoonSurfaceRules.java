@@ -22,15 +22,10 @@
 
 package dev.galacticraft.mod.world.gen.surfacebuilder;
 
-import com.mojang.serialization.Codec;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import dev.galacticraft.mod.world.gen.GCNoiseData;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
@@ -112,6 +107,6 @@ public class MoonSurfaceRules {
     }
 
     public static void register() {
-        Registry.register(BuiltInRegistries.MATERIAL_RULE, new ResourceLocation(Constant.MOD_ID, "moon"), Codec.unit(MOON));
+//        Registry.register(BuiltInRegistries.MATERIAL_RULE, new ResourceLocation(Constant.MOD_ID, "moon"), Codec.unit(MOON));
     }
 }

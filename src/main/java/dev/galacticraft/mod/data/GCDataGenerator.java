@@ -80,7 +80,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         // content
 //        pack.addProvider(BootstrapDataProvider.create("Noise", GCNoiseData::bootstrapRegistries));
 //        pack.addProvider(BootstrapDataProvider.create("Density Functions", GCDensityFunctions::bootstrapRegistries));
-//        pack.addProvider(BootstrapDataProvider.create("Biomes", GCBiomes::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Biomes", GCBiomes::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Celestial Bodies", GCCelestialBodies::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Celestial Teleporters", GCTeleporterTypes::bootstrapRegistries));
 //        pack.addProvider(BootstrapDataProvider.create("Dimension Types", GCDimensionTypes::bootstrapRegistries));

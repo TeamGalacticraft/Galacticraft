@@ -29,34 +29,34 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 
-public class CircuitFabricatorRecipeBuilder extends GCRecipeBuilder {
+public class FabricationRecipeBuilder extends GCRecipeBuilder {
 
     private Ingredient ingredient;
     private int time;
 
-    public CircuitFabricatorRecipeBuilder(ItemLike result, int count) {
+    public FabricationRecipeBuilder(ItemLike result, int count) {
         super(GCRecipes.FABRICATION_SERIALIZER, "fabrication", result, count);
     }
 
-    public static CircuitFabricatorRecipeBuilder create(ItemLike itemLike) {
-        return new CircuitFabricatorRecipeBuilder(itemLike, 1);
+    public static FabricationRecipeBuilder create(ItemLike itemLike) {
+        return new FabricationRecipeBuilder(itemLike, 1);
     }
 
-    public static CircuitFabricatorRecipeBuilder create(ItemLike itemLike, int i) {
-        return new CircuitFabricatorRecipeBuilder(itemLike, i);
+    public static FabricationRecipeBuilder create(ItemLike itemLike, int i) {
+        return new FabricationRecipeBuilder(itemLike, i);
     }
 
-    public CircuitFabricatorRecipeBuilder requires(TagKey<Item> tagKey) {
+    public FabricationRecipeBuilder requires(TagKey<Item> tagKey) {
         this.ingredient = Ingredient.of(tagKey);
         return this;
     }
 
-    public CircuitFabricatorRecipeBuilder requires(ItemLike itemLike) {
+    public FabricationRecipeBuilder requires(ItemLike itemLike) {
         this.ingredient = Ingredient.of(itemLike);
         return this;
     }
 
-    public CircuitFabricatorRecipeBuilder time(int time) {
+    public FabricationRecipeBuilder time(int time) {
         this.time = time;
         return this;
     }

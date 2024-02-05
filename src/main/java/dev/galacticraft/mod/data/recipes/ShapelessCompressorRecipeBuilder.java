@@ -104,7 +104,7 @@ public class ShapelessCompressorRecipeBuilder implements RecipeBuilder {
 
     @Override
     public void save(Consumer<FinishedRecipe> consumer, ResourceLocation recipeId) {
-        consumer.accept(new Result(new ResourceLocation(recipeId.getNamespace(), "compressing/" + recipeId.getPath()), this.ingredients, this.result, this.count));
+        consumer.accept(new Result(recipeId.withPrefix("compressing/"), this.ingredients, this.result, this.count));
     }
 
     public static class Result implements FinishedRecipe {
