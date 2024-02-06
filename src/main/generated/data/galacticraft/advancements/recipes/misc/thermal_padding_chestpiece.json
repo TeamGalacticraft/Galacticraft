@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraft:thermal_padding_chestpiece"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_thermal_cloth": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "galacticraft:thermal_cloth"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_thermal_cloth"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraft:thermal_padding_chestpiece"
+    ]
+  }
+}

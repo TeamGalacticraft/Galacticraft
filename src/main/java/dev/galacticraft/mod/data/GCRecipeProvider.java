@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.data;
 
+import com.google.common.collect.ImmutableList;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -32,13 +33,16 @@ import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.*;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Consumer;
+import java.util.List;
 
 public class GCRecipeProvider extends FabricRecipeProvider {
 
@@ -48,6 +52,87 @@ public class GCRecipeProvider extends FabricRecipeProvider {
 
     @Override
     public void buildRecipes(RecipeOutput output) {
+        // Blocks
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCItems.GLOWSTONE_TORCH, 4)
+                .define('G', Items.GLOWSTONE_DUST)
+                .define('S', Items.STICK)
+                .pattern("G")
+                .pattern("S")
+                .unlockedBy(getHasName(Items.GLOWSTONE_DUST), has(Items.GLOWSTONE_DUST))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCItems.GLOWSTONE_LANTERN)
+                .define('G', GCItems.GLOWSTONE_TORCH)
+                .define('I', Items.IRON_NUGGET)
+                .pattern("III")
+                .pattern("IGI")
+                .pattern("III")
+                .unlockedBy(getHasName(GCItems.GLOWSTONE_TORCH), has(GCItems.GLOWSTONE_TORCH))
+                .save(output);
+
+        decorationBlock(output, GCItems.COMPRESSED_TIN, GCBlocks.TIN_DECORATION);
+        stairs(output, GCBlocks.TIN_DECORATION_STAIRS, GCBlocks.TIN_DECORATION);
+        slab(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.TIN_DECORATION_SLAB, GCBlocks.TIN_DECORATION);
+        wall(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.TIN_DECORATION_WALL, GCBlocks.TIN_DECORATION);
+        detailedDecorationBlock(output, GCItems.COMPRESSED_TIN, GCBlocks.DETAILED_TIN_DECORATION);
+        stairs(output, GCBlocks.DETAILED_TIN_DECORATION_STAIRS, GCBlocks.DETAILED_TIN_DECORATION);
+        slab(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.DETAILED_TIN_DECORATION_SLAB, GCBlocks.DETAILED_TIN_DECORATION);
+        wall(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.DETAILED_TIN_DECORATION_WALL, GCBlocks.DETAILED_TIN_DECORATION);
+
+        decorationBlock(output, GCItems.COMPRESSED_COPPER, GCBlocks.COPPER_DECORATION);
+        stairs(output, GCBlocks.COPPER_DECORATION_STAIRS, GCBlocks.COPPER_DECORATION);
+        slab(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.COPPER_DECORATION_SLAB, GCBlocks.COPPER_DECORATION);
+        wall(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.COPPER_DECORATION_WALL, GCBlocks.COPPER_DECORATION);
+        detailedDecorationBlock(output, GCItems.COMPRESSED_COPPER, GCBlocks.DETAILED_COPPER_DECORATION);
+        stairs(output, GCBlocks.DETAILED_COPPER_DECORATION_STAIRS, GCBlocks.DETAILED_COPPER_DECORATION);
+        slab(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.DETAILED_COPPER_DECORATION_SLAB, GCBlocks.DETAILED_COPPER_DECORATION);
+        wall(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.DETAILED_COPPER_DECORATION_WALL, GCBlocks.DETAILED_COPPER_DECORATION);
+
+        decorationBlock(output, GCItems.COMPRESSED_ALUMINUM, GCBlocks.ALUMINUM_DECORATION);
+        stairs(output, GCBlocks.ALUMINUM_DECORATION_STAIRS, GCBlocks.ALUMINUM_DECORATION);
+        slab(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.ALUMINUM_DECORATION_SLAB, GCBlocks.ALUMINUM_DECORATION);
+        wall(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.ALUMINUM_DECORATION_WALL, GCBlocks.ALUMINUM_DECORATION);
+        detailedDecorationBlock(output, GCItems.COMPRESSED_ALUMINUM, GCBlocks.DETAILED_ALUMINUM_DECORATION);
+        stairs(output, GCBlocks.DETAILED_ALUMINUM_DECORATION_STAIRS, GCBlocks.DETAILED_ALUMINUM_DECORATION);
+        slab(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.DETAILED_ALUMINUM_DECORATION_SLAB, GCBlocks.DETAILED_ALUMINUM_DECORATION);
+        wall(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.DETAILED_ALUMINUM_DECORATION_WALL, GCBlocks.DETAILED_ALUMINUM_DECORATION);
+
+        decorationBlock(output, GCItems.COMPRESSED_STEEL, GCBlocks.STEEL_DECORATION);
+        stairs(output, GCBlocks.STEEL_DECORATION_STAIRS, GCBlocks.STEEL_DECORATION);
+        slab(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.STEEL_DECORATION_SLAB, GCBlocks.STEEL_DECORATION);
+        wall(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.STEEL_DECORATION_WALL, GCBlocks.STEEL_DECORATION);
+        detailedDecorationBlock(output, GCItems.COMPRESSED_STEEL, GCBlocks.DETAILED_STEEL_DECORATION);
+        stairs(output, GCBlocks.DETAILED_STEEL_DECORATION_STAIRS, GCBlocks.DETAILED_STEEL_DECORATION);
+        slab(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.DETAILED_STEEL_DECORATION_SLAB, GCBlocks.DETAILED_STEEL_DECORATION);
+        wall(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.DETAILED_STEEL_DECORATION_WALL, GCBlocks.DETAILED_STEEL_DECORATION);
+
+        decorationBlock(output, GCItems.COMPRESSED_BRONZE, GCBlocks.BRONZE_DECORATION);
+        stairs(output, GCBlocks.BRONZE_DECORATION_STAIRS, GCBlocks.BRONZE_DECORATION);
+        slab(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.BRONZE_DECORATION_SLAB, GCBlocks.BRONZE_DECORATION);
+        wall(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.BRONZE_DECORATION_WALL, GCBlocks.BRONZE_DECORATION);
+        detailedDecorationBlock(output, GCItems.COMPRESSED_BRONZE, GCBlocks.DETAILED_BRONZE_DECORATION);
+        stairs(output, GCBlocks.DETAILED_BRONZE_DECORATION_STAIRS, GCBlocks.DETAILED_BRONZE_DECORATION);
+        slab(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.DETAILED_BRONZE_DECORATION_SLAB, GCBlocks.DETAILED_BRONZE_DECORATION);
+        wall(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.DETAILED_BRONZE_DECORATION_WALL, GCBlocks.DETAILED_BRONZE_DECORATION);
+
+        decorationBlock(output, GCItems.COMPRESSED_METEORIC_IRON, GCBlocks.METEORIC_IRON_DECORATION);
+        stairs(output, GCBlocks.METEORIC_IRON_DECORATION_STAIRS, GCBlocks.METEORIC_IRON_DECORATION);
+        slab(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.METEORIC_IRON_DECORATION_SLAB, GCBlocks.METEORIC_IRON_DECORATION);
+        wall(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.METEORIC_IRON_DECORATION_WALL, GCBlocks.METEORIC_IRON_DECORATION);
+        detailedDecorationBlock(output, GCItems.COMPRESSED_METEORIC_IRON, GCBlocks.DETAILED_METEORIC_IRON_DECORATION);
+        stairs(output, GCBlocks.DETAILED_METEORIC_IRON_DECORATION_STAIRS, GCBlocks.DETAILED_METEORIC_IRON_DECORATION);
+        slab(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.DETAILED_METEORIC_IRON_DECORATION_SLAB, GCBlocks.DETAILED_METEORIC_IRON_DECORATION);
+        wall(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.DETAILED_METEORIC_IRON_DECORATION_WALL, GCBlocks.DETAILED_METEORIC_IRON_DECORATION);
+
+        decorationBlock(output, GCItems.COMPRESSED_TITANIUM, GCBlocks.TITANIUM_DECORATION);
+        stairs(output, GCBlocks.TITANIUM_DECORATION_STAIRS, GCBlocks.TITANIUM_DECORATION);
+        slab(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.TITANIUM_DECORATION_SLAB, GCBlocks.TITANIUM_DECORATION);
+        wall(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.TITANIUM_DECORATION_WALL, GCBlocks.TITANIUM_DECORATION);
+        detailedDecorationBlock(output, GCItems.COMPRESSED_TITANIUM, GCBlocks.DETAILED_TITANIUM_DECORATION);
+        stairs(output, GCBlocks.DETAILED_TITANIUM_DECORATION_STAIRS, GCBlocks.DETAILED_TITANIUM_DECORATION);
+        slab(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.DETAILED_TITANIUM_DECORATION_SLAB, GCBlocks.DETAILED_TITANIUM_DECORATION);
+        wall(output, RecipeCategory.BUILDING_BLOCKS, GCBlocks.DETAILED_TITANIUM_DECORATION_WALL, GCBlocks.DETAILED_TITANIUM_DECORATION);
+
         // Gear
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_MASK)
                 .define('G', Items.GLASS_PANE)
@@ -76,6 +161,196 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("WYW")
                 .pattern("ZXZ")
                 .unlockedBy(getHasName(GCItems.OXYGEN_VENT), has(GCItems.OXYGEN_VENT))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.SMALL_OXYGEN_TANK)
+                .define('W', Items.LIME_WOOL)
+                .define('T', GCItems.TIN_CANISTER)
+                .define('C', GCItems.COMPRESSED_COPPER)
+                .pattern("W")
+                .pattern("T")
+                .pattern("C")
+                .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItems.TIN_CANISTER))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.MEDIUM_OXYGEN_TANK)
+                .define('W', Items.ORANGE_WOOL)
+                .define('T', GCItems.TIN_CANISTER)
+                .define('C', GCItems.COMPRESSED_TIN)
+                .pattern("WW")
+                .pattern("TT")
+                .pattern("CC")
+                .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItems.TIN_CANISTER))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.LARGE_OXYGEN_TANK)
+                .define('W', Items.RED_WOOL)
+                .define('T', GCItems.TIN_CANISTER)
+                .define('C', GCItems.COMPRESSED_STEEL)
+                .pattern("WWW")
+                .pattern("TTT")
+                .pattern("CCC")
+                .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItems.TIN_CANISTER))
+                .save(output);
+
+        // Misc crafting materials
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.DESH_STICK, 4)
+                .define('D', GCItems.DESH_INGOT)
+                .pattern("D")
+                .pattern("D")
+                .unlockedBy(getHasName(GCItems.DESH_STICK), has(GCItems.DESH_STICK))
+                .save(output);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, GCItems.CARBON_FRAGMENTS, 3)
+                .requires(ConventionalItemTags.COAL)
+                .unlockedBy("has_coal", has(ConventionalItemTags.COAL))
+                .save(output, BuiltInRegistries.ITEM.getKey(GCItems.CARBON_FRAGMENTS).withSuffix("from_coal"));
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, GCItems.CARBON_FRAGMENTS, 3)
+                .requires(Items.CHARCOAL)
+                .unlockedBy(getHasName(Items.CHARCOAL), has(Items.CHARCOAL))
+                .save(output, BuiltInRegistries.ITEM.getKey(GCItems.CARBON_FRAGMENTS).withSuffix("from_charcoal"));
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.CANVAS)
+                .define('S', Items.STRING)
+                .define('I', Items.STICK)
+                .pattern("SSI")
+                .pattern("SSS")
+                .pattern("ISS")
+                .unlockedBy(getHasName(Items.STRING), has(Items.STRING))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.FLUID_MANIPULATOR)
+                .define('M', GCItems.METEORIC_IRON_INGOT)
+                .define('S', Items.SLIME_BALL)
+                .define('F', GCItems.OXYGEN_FAN)
+                .define('W', GCItems.ADVANCED_WAFER)
+                .pattern("MFM")
+                .pattern("SWS")
+                .pattern("MFM")
+                .unlockedBy(getHasName(GCItems.METEORIC_IRON_INGOT), has(GCItems.METEORIC_IRON_INGOT))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.SENSOR_LENS)
+                .define('R', ConventionalItemTags.REDSTONE_DUSTS)
+                .define('P', ConventionalItemTags.GLASS_PANES)
+                .define('F', GCItems.COMPRESSED_METEORIC_IRON)
+                .pattern("RPR")
+                .pattern("PFP")
+                .pattern("RPR")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_METEORIC_IRON), has(GCItems.COMPRESSED_METEORIC_IRON))
+                .save(output);
+
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.SINGLE_SOLAR_MODULE, 2)
+                .define('G', ConventionalItemTags.GLASS_BLOCKS)
+                .define('S', GCItems.SOLAR_ARRAY_WAFER)
+                .define('W', GCItems.ALUMINUM_WIRE)
+                .pattern("GGG")
+                .pattern("SSS")
+                .pattern("WWW")
+                .unlockedBy(getHasName(GCItems.SOLAR_ARRAY_WAFER), has(GCItems.SOLAR_ARRAY_WAFER))
+                .save(output);
+
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.FULL_SOLAR_PANEL)
+                .define('M', GCItems.SINGLE_SOLAR_MODULE)
+                .define('W', GCItems.ALUMINUM_WIRE)
+                .pattern("MMM")
+                .pattern("WWW")
+                .pattern("MMM")
+                .unlockedBy(getHasName(GCItems.SINGLE_SOLAR_MODULE), has(GCItems.SINGLE_SOLAR_MODULE))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.STEEL_POLE)
+                .define('I', GCItems.COMPRESSED_STEEL)
+                .pattern("I")
+                .pattern("I")
+                .pattern("I")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.THERMAL_CLOTH)
+                .define('R', ConventionalItemTags.REDSTONE_DUSTS)
+                .define('W', ItemTags.WOOL)
+                .pattern(" W ")
+                .pattern("WRW")
+                .pattern(" W ")
+                .unlockedBy("has_wool", has(ItemTags.WOOL))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.PARACHUTE.get(DyeColor.WHITE))
+                .define('S', Items.STRING)
+                .define('C', GCItems.CANVAS)
+                .pattern("CCC")
+                .pattern("S S")
+                .pattern(" S ")
+                .unlockedBy(getHasName(GCItems.CANVAS), has(GCItems.CANVAS))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BATTERY)
+                .define('T', GCItems.COMPRESSED_TIN)
+                .define('R', ConventionalItemTags.REDSTONE_DUSTS)
+                .define('C', ConventionalItemTags.COAL)
+                .pattern(" T ")
+                .pattern("TRT")
+                .pattern("TCT")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_TIN), has(GCItems.COMPRESSED_TIN))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.FREQUENCY_MODULE)
+                .define('A', GCItems.COMPRESSED_ALUMINUM)
+                .define('I', GCItems.COMPRESSED_IRON)
+                .define('R', ConventionalItemTags.REDSTONE_DUSTS)
+                .define('P', Items.REPEATER)
+                .define('W', GCItems.BASIC_WAFER)
+                .pattern(" A ")
+                .pattern("IPI")
+                .pattern("RWR")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_ALUMINUM), has(GCItems.COMPRESSED_ALUMINUM))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.AMBIENT_THERMAL_CONTROLLER)
+                .define('B', GCItems.COMPRESSED_BRONZE)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .define('R', ConventionalItemTags.REDSTONE_DUSTS)
+                .define('W', GCItems.BASIC_WAFER)
+                .define('V', GCItems.OXYGEN_VENT)
+                .pattern("RVR")
+                .pattern("BSB")
+                .pattern("BWB")
+                .unlockedBy(getHasName(GCItems.OXYGEN_VENT), has(GCItems.OXYGEN_VENT))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ATMOSPHERIC_VALVE)
+                .define('D', GCItems.DESH_INGOT)
+                .define('V', GCItems.OXYGEN_VENT)
+                .pattern("DVD")
+                .pattern(" D ")
+                .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ISOTHERMAL_FABRIC)
+                .define('D', GCItems.DESH_INGOT)
+                .define('T', GCItems.THERMAL_CLOTH)
+                .pattern("TDT")
+                .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ORION_DRIVE)
+                .define('D', Items.DIAMOND_ORE)
+                .define('L', Items.LAPIS_ORE)
+                .define('G', Items.GOLD_ORE)
+                .define('C', Items.COAL_ORE)
+                .define('I', GCItems.ILMENITE_ORE)
+                .define('S', GCItems.DESH_ORE)
+                .define('E', GCItems.MOON_CHEESE_BLOCK) //todo: add cheese ore?
+                .define('R', Items.REDSTONE_ORE)
+                .define('B', GCItems.BEAM_CORE)
+                .pattern("DLG")
+                .pattern("RBC")
+                .pattern("ESI")
+                .unlockedBy(getHasName(GCItems.ILMENITE_ORE), has(GCItems.ILMENITE_ORE))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.TIN_CANISTER, 2)
@@ -128,12 +403,11 @@ public class GCRecipeProvider extends FabricRecipeProvider {
         simpleCookingRecipe(output, "blasting", RecipeSerializer.BLASTING_RECIPE, BlastingRecipe::new, 100, GCItems.THROWABLE_METEOR_CHUNK, GCItems.HOT_THROWABLE_METEOR_CHUNK, 0.7F);
 
         // Food
-        simpleCookingRecipe(output, "smoking", RecipeSerializer.SMOKING_RECIPE, SmokingRecipe::new, 100, GCItems.GROUND_BEEF, GCItems.BEEF_PATTY, 1.0F);
-        simpleCookingRecipe(output, "campfire_cooking", RecipeSerializer.CAMPFIRE_COOKING_RECIPE, CampfireCookingRecipe::new, 600, GCItems.GROUND_BEEF, GCItems.BEEF_PATTY, 1.0F);
+        cookingRecipes(output, 100, GCItems.GROUND_BEEF, GCItems.BEEF_PATTY, 1.0F);
 
 //        SimpleCookingRecipeBuilder.smelting(Ingredient.of(GCBlocks.CHEESE_ORE), RecipeCategory.FOOD, GCItems.CHEESE_CURD, 0.35F, 200)
 //                .unlockedBy(getHasName(GCBlocks.CHEESE_ORE), has(GCBlocks.CHEESE_ORE))
-//                .save(exporter);
+//                .save(output);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.BURGER_BUN, 2)
                 .requires(Items.WHEAT)
@@ -167,6 +441,178 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("YXY")
                 .pattern("YYY")
                 .unlockedBy(getHasName(GCItems.CHEESE_CURD), has(GCItems.CHEESE_CURD))
+                .save(output);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CANNED_DEHYDRATED_APPLE)
+                .requires(GCItems.TIN_CANISTER)
+                .requires(Items.APPLE)
+                .requires(Items.APPLE)
+                .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItems.TIN_CANISTER))
+                .save(output);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CANNED_DEHYDRATED_CARROT)
+                .requires(GCItems.TIN_CANISTER)
+                .requires(Items.CARROT)
+                .requires(Items.CARROT)
+                .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItems.TIN_CANISTER))
+                .save(output);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CANNED_DEHYDRATED_MELON)
+                .requires(GCItems.TIN_CANISTER)
+                .requires(Items.MELON_SLICE)
+                .requires(Items.MELON_SLICE)
+                .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItems.TIN_CANISTER))
+                .save(output);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CANNED_BEEF)
+                .requires(GCItems.TIN_CANISTER)
+                .requires(GCItems.GROUND_BEEF)
+                .requires(GCItems.GROUND_BEEF)
+                .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItems.TIN_CANISTER))
+                .save(output);
+
+        // Armor
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_HELMET)
+                .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
+                .pattern("PPP")
+                .pattern("P P")
+                .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_CHESTPLATE)
+                .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
+                .pattern("P P")
+                .pattern("PPP")
+                .pattern("PPP")
+                .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_LEGGINGS)
+                .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
+                .pattern("PPP")
+                .pattern("P P")
+                .pattern("P P")
+                .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_BOOTS)
+                .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
+                .pattern("P P")
+                .pattern("P P")
+                .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.DESH_HELMET)
+                .define('D', GCItems.DESH_INGOT)
+                .pattern("DDD")
+                .pattern("D D")
+                .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.DESH_CHESTPLATE)
+                .define('D', GCItems.DESH_INGOT)
+                .pattern("D D")
+                .pattern("DDD")
+                .pattern("DDD")
+                .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.DESH_LEGGINGS)
+                .define('D', GCItems.DESH_INGOT)
+                .pattern("DDD")
+                .pattern("D D")
+                .pattern("D D")
+                .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.DESH_BOOTS)
+                .define('D', GCItems.DESH_INGOT)
+                .pattern("D D")
+                .pattern("D D")
+                .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.THERMAL_PADDING_HELMET)
+                .define('C', GCItems.THERMAL_CLOTH)
+                .pattern("CCC")
+                .pattern("C C")
+                .unlockedBy(getHasName(GCItems.THERMAL_CLOTH), has(GCItems.THERMAL_CLOTH))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.THERMAL_PADDING_CHESTPIECE)
+                .define('C', GCItems.THERMAL_CLOTH)
+                .pattern("C C")
+                .pattern("CCC")
+                .pattern("CCC")
+                .unlockedBy(getHasName(GCItems.THERMAL_CLOTH), has(GCItems.THERMAL_CLOTH))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.THERMAL_PADDING_LEGGINGS)
+                .define('C', GCItems.THERMAL_CLOTH)
+                .pattern("CCC")
+                .pattern("C C")
+                .pattern("C C")
+                .unlockedBy(getHasName(GCItems.THERMAL_CLOTH), has(GCItems.THERMAL_CLOTH))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.THERMAL_PADDING_BOOTS)
+                .define('C', GCItems.THERMAL_CLOTH)
+                .pattern("C C")
+                .pattern("C C")
+                .unlockedBy(getHasName(GCItems.THERMAL_CLOTH), has(GCItems.THERMAL_CLOTH))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.SENSOR_GLASSES)
+                .define('D', ConventionalItemTags.DIAMONDS)
+                .define('S', Items.STRING)
+                .define('L', GCItems.SENSOR_LENS)
+                .define('M', GCItems.METEORIC_IRON_INGOT)
+                .pattern("SDS")
+                .pattern("S S")
+                .pattern("LML")
+                .unlockedBy(getHasName(GCItems.SENSOR_LENS), has(GCItems.SENSOR_LENS))
+                .save(output);
+
+        // Tools
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_SHOVEL)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .define('W', Items.STICK)
+                .pattern("S")
+                .pattern("W")
+                .pattern("W")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_PICKAXE)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .define('W', Items.STICK)
+                .pattern("SSS")
+                .pattern(" W ")
+                .pattern(" W ")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_AXE)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .define('W', Items.STICK)
+                .pattern("SS")
+                .pattern("SW")
+                .pattern(" W")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_HOE)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .define('W', Items.STICK)
+                .pattern("SS")
+                .pattern(" W")
+                .pattern(" W")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_SWORD)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .define('W', Items.STICK)
+                .pattern("S")
+                .pattern("S")
+                .pattern("W")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.STANDARD_WRENCH)
+                .define('B', GCItems.COMPRESSED_BRONZE)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .pattern("  S")
+                .pattern(" B ")
+                .pattern("B  ")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .save(output);
 
         // Pipes
@@ -347,24 +793,84 @@ public class GCRecipeProvider extends FabricRecipeProvider {
         GCRecipeProvider.nineBlockStorageRecipesWithCustomPacking(output, RecipeCategory.MISC, GCItems.ALUMINUM_NUGGET, RecipeCategory.MISC, GCItems.ALUMINUM_INGOT, "aluminum_ingot_from_nuggets", "aluminum_ingot");
         GCRecipeProvider.nineBlockStorageRecipesWithCustomPacking(output, RecipeCategory.MISC, GCItems.TIN_NUGGET, RecipeCategory.MISC, GCItems.TIN_INGOT, "tin_ingot_from_nuggets", "tin_ingot");
         GCRecipeProvider.nineBlockStorageRecipesWithCustomPacking(output, RecipeCategory.MISC, GCItems.TITANIUM_NUGGET, RecipeCategory.MISC, GCItems.TITANIUM_INGOT, "titanium_ingot_from_nuggets", "titanium_ingot");
+
         // Ingots <-> Blocks
         GCRecipeProvider.nineBlockStorageRecipesRecipesWithCustomUnpacking(output, RecipeCategory.MISC, GCItems.METEORIC_IRON_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.METEORIC_IRON_BLOCK, "meteoric_iron_ingot_from_block", "meteoric_iron_ingot");
         GCRecipeProvider.nineBlockStorageRecipesRecipesWithCustomUnpacking(output, RecipeCategory.MISC, GCItems.DESH_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.DESH_BLOCK, "desh_ingot_from_block", "desh_ingot");
         GCRecipeProvider.nineBlockStorageRecipesRecipesWithCustomUnpacking(output, RecipeCategory.MISC, GCItems.LEAD_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.LEAD_BLOCK, "lead_ingot_from_block", "lead_ingot");
+
         // skips aluminum and tin blocks
         GCRecipeProvider.nineBlockStorageRecipesRecipesWithCustomUnpacking(output, RecipeCategory.MISC, GCItems.TITANIUM_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.TITANIUM_BLOCK, "titanium_ingot_from_block", "titanium_ingot");
+
+        // Ore Smelting
+        oreSmeltingAndBlasting(output, ImmutableList.of(GCItems.ALUMINUM_ORE, GCItems.DEEPSLATE_ALUMINUM_ORE, GCItems.RAW_ALUMINUM), RecipeCategory.MISC, GCItems.ALUMINUM_INGOT, 0.7F, 200, "aluminum_ingot");
+        oreSmeltingAndBlasting(output, ImmutableList.of(GCItems.DESH_ORE, GCItems.RAW_DESH), RecipeCategory.MISC, GCItems.DESH_INGOT, 0.7F, 200, "desh_ingot");
+        oreSmeltingAndBlasting(output, ImmutableList.of(GCItems.GALENA_ORE, GCItems.RAW_LEAD), RecipeCategory.MISC, GCItems.LEAD_INGOT, 0.7F, 200, "lead_ingot");
+        oreSmeltingAndBlasting(output, ImmutableList.of(GCItems.MOON_COPPER_ORE), RecipeCategory.MISC, Items.COPPER_INGOT, 0.7F, 200, "copper_ingot");
+        oreSmeltingAndBlasting(output, ImmutableList.of(GCItems.TIN_ORE, GCItems.DEEPSLATE_TIN_ORE, GCItems.MOON_TIN_ORE, GCItems.RAW_TIN), RecipeCategory.MISC, GCItems.TIN_INGOT, 0.7F, 200, "tin_ingot");
+        oreSmeltingAndBlasting(output, ImmutableList.of(GCItems.ILMENITE_ORE, GCItems.RAW_TITANIUM), RecipeCategory.MISC, GCItems.TITANIUM_INGOT, 0.7F, 200, "titanium_ingot");
+        oreSmeltingAndBlasting(output, ImmutableList.of(GCItems.RAW_METEORIC_IRON), RecipeCategory.MISC, GCItems.METEORIC_IRON_INGOT, 0.7F, 200, "meteoric_iron_ingot");
+        oreSmeltingAndBlasting(output, ImmutableList.of(GCItems.IRON_SHARD), RecipeCategory.MISC, Items.IRON_INGOT, 0.7F, 200, "iron_ingot");
     }
 
     // Code copied from RecipeProvider class with changes to save with GC mod id
     public static void nineBlockStorageRecipesWithCustomPacking(RecipeOutput output, RecipeCategory recipeCategory, ItemLike itemLike, RecipeCategory recipeCategory2, ItemLike itemLike2, String string, String string2) {
         GCRecipeProvider.nineBlockStorageRecipes(output, recipeCategory, itemLike, recipeCategory2, itemLike2, string, string2, RecipeProvider.getSimpleRecipeName(itemLike), null);
     }
+
     public static void nineBlockStorageRecipesRecipesWithCustomUnpacking(RecipeOutput output, RecipeCategory recipeCategory, ItemLike itemLike, RecipeCategory recipeCategory2, ItemLike itemLike2, String string, String string2) {
         GCRecipeProvider.nineBlockStorageRecipes(output, recipeCategory, itemLike, recipeCategory2, itemLike2, RecipeProvider.getSimpleRecipeName(itemLike2), null, string, string2);
     }
+
     public static void nineBlockStorageRecipes(RecipeOutput output, RecipeCategory recipeCategory, ItemLike itemLike, RecipeCategory recipeCategory2, ItemLike itemLike2, String string, @Nullable String string2, String string3, @Nullable String string4) {
         ShapelessRecipeBuilder.shapeless(recipeCategory, itemLike, 9).requires(itemLike2).group(string4).unlockedBy(RecipeProvider.getHasName(itemLike2), RecipeProvider.has(itemLike2)).save(output, Constant.id(string3));
         ShapedRecipeBuilder.shaped(recipeCategory2, itemLike2).define('#', itemLike).pattern("###").pattern("###").pattern("###").group(string2).unlockedBy(RecipeProvider.getHasName(itemLike), RecipeProvider.has(itemLike)).save(output, Constant.id(string));
+    }
+
+    public static void stairs(RecipeOutput output, ItemLike stairs, ItemLike base) {
+        stairBuilder(stairs, Ingredient.of(base))
+                .unlockedBy(getHasName(base), has(base))
+                .save(output);
+    }
+
+    public static void decorationBlock(RecipeOutput output, ItemLike input, ItemLike block) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, block, 1)
+                .define('#', Items.STONE)
+                .define('X', input)
+                .pattern("## ")
+                .pattern("##X")
+                .unlockedBy(getHasName(input), has(input))
+                .save(output);
+    }
+
+    public static void detailedDecorationBlock(RecipeOutput output, ItemLike input, ItemLike block) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, block, 1)
+                .define('#', Items.STONE)
+                .define('X', input)
+                .pattern("##")
+                .pattern("##")
+                .pattern(" X")
+                .unlockedBy(getHasName(input), has(input))
+                .save(output);
+    }
+
+    private static void cookingRecipes(RecipeOutput output, int cookingTime, ItemLike input, ItemLike result, float experience) {
+        simpleCookingRecipe(output, "smoking", RecipeSerializer.SMOKING_RECIPE, SmokingRecipe::new, cookingTime, input, result, experience);
+        simpleCookingRecipe(output, "smelting", RecipeSerializer.SMELTING_RECIPE, SmeltingRecipe::new, cookingTime * 2, input, result, experience);
+        simpleCookingRecipe(output, "campfire_cooking", RecipeSerializer.CAMPFIRE_COOKING_RECIPE, CampfireCookingRecipe::new, cookingTime * 6, input, result, experience);
+    }
+
+    public static void oreSmeltingAndBlasting(
+            RecipeOutput finishedRecipeConsumer,
+            List<ItemLike> ingredients,
+            RecipeCategory category,
+            ItemLike result,
+            float experience,
+            int cookingTime,
+            String group
+    ) {
+        oreSmelting(finishedRecipeConsumer, ingredients, category, result, experience, cookingTime, group);
+        oreBlasting(finishedRecipeConsumer, ingredients, category, result, experience, cookingTime / 2, group);
     }
 
 }

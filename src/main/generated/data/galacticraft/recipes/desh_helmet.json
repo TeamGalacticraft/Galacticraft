@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "item": "galacticraft:desh_ingot"
+    }
+  },
+  "pattern": [
+    "DDD",
+    "D D"
+  ],
+  "result": {
+    "item": "galacticraft:desh_helmet"
+  }
+}

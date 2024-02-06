@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "S": {
+      "item": "galacticraft:compressed_steel"
+    },
+    "W": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "SS",
+    "SW",
+    " W"
+  ],
+  "result": {
+    "item": "galacticraft:heavy_duty_axe"
+  }
+}

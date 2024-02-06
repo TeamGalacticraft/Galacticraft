@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "M": {
+      "item": "galacticraft:single_solar_module"
+    },
+    "W": {
+      "item": "galacticraft:aluminum_wire"
+    }
+  },
+  "pattern": [
+    "MMM",
+    "WWW",
+    "MMM"
+  ],
+  "result": {
+    "item": "galacticraft:full_solar_panel"
+  }
+}

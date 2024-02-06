@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraft:titanium_decoration_slab"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_titanium_decoration": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "galacticraft:titanium_decoration"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_titanium_decoration"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraft:titanium_decoration_slab"
+    ]
+  }
+}

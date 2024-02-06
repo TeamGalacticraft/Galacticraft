@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "minecraft:glowstone_dust"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "G",
+    "S"
+  ],
+  "result": {
+    "count": 4,
+    "item": "galacticraft:glowstone_torch"
+  }
+}

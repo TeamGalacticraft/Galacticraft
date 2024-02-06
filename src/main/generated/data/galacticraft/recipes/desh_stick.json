@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "item": "galacticraft:desh_ingot"
+    }
+  },
+  "pattern": [
+    "D",
+    "D"
+  ],
+  "result": {
+    "count": 4,
+    "item": "galacticraft:desh_stick"
+  }
+}

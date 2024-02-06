@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "galacticraft:compressed_aluminum"
+    },
+    "I": {
+      "item": "galacticraft:compressed_iron"
+    },
+    "P": {
+      "item": "minecraft:repeater"
+    },
+    "R": {
+      "tag": "c:redstone_dusts"
+    },
+    "W": {
+      "item": "galacticraft:basic_wafer"
+    }
+  },
+  "pattern": [
+    " A ",
+    "IPI",
+    "RWR"
+  ],
+  "result": {
+    "item": "galacticraft:frequency_module"
+  }
+}

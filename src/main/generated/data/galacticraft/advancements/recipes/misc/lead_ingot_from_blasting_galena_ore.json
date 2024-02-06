@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_galena_ore": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "galacticraft:galena_ore"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:lead_ingot_from_blasting_galena_ore"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_galena_ore"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:lead_ingot_from_blasting_galena_ore"
+    ]
+  }
+}

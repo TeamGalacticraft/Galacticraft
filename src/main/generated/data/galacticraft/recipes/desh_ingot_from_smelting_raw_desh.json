@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.7,
+  "group": "desh_ingot",
+  "ingredient": {
+    "item": "galacticraft:raw_desh"
+  },
+  "result": "galacticraft:desh_ingot"
+}

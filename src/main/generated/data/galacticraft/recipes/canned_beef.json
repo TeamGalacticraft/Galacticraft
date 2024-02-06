@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "galacticraft:tin_canister"
+    },
+    {
+      "item": "galacticraft:ground_beef"
+    },
+    {
+      "item": "galacticraft:ground_beef"
+    }
+  ],
+  "result": {
+    "item": "galacticraft:canned_beef"
+  }
+}

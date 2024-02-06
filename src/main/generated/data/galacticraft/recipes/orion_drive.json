@@ -1,0 +1,41 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "galacticraft:beam_core"
+    },
+    "C": {
+      "item": "minecraft:coal_ore"
+    },
+    "D": {
+      "item": "minecraft:diamond_ore"
+    },
+    "E": {
+      "item": "galacticraft:moon_cheese_block"
+    },
+    "G": {
+      "item": "minecraft:gold_ore"
+    },
+    "I": {
+      "item": "galacticraft:ilmenite_ore"
+    },
+    "L": {
+      "item": "minecraft:lapis_ore"
+    },
+    "R": {
+      "item": "minecraft:redstone_ore"
+    },
+    "S": {
+      "item": "galacticraft:desh_ore"
+    }
+  },
+  "pattern": [
+    "DLG",
+    "RBC",
+    "ESI"
+  ],
+  "result": {
+    "item": "galacticraft:orion_drive"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "c:coal"
+    }
+  ],
+  "result": {
+    "count": 3,
+    "item": "galacticraft:carbon_fragments"
+  }
+}

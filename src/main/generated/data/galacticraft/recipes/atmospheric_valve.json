@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "item": "galacticraft:desh_ingot"
+    },
+    "V": {
+      "item": "galacticraft:oxygen_vent"
+    }
+  },
+  "pattern": [
+    "DVD",
+    " D "
+  ],
+  "result": {
+    "item": "galacticraft:atmospheric_valve"
+  }
+}

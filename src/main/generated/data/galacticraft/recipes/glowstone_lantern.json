@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "galacticraft:glowstone_torch"
+    },
+    "I": {
+      "item": "minecraft:iron_nugget"
+    }
+  },
+  "pattern": [
+    "III",
+    "IGI",
+    "III"
+  ],
+  "result": {
+    "item": "galacticraft:glowstone_lantern"
+  }
+}

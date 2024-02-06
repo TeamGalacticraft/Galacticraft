@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "R": {
+      "tag": "c:redstone_dusts"
+    },
+    "W": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "pattern": [
+    " W ",
+    "WRW",
+    " W "
+  ],
+  "result": {
+    "item": "galacticraft:thermal_cloth"
+  }
+}

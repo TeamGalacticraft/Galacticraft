@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "galacticraft:thermal_cloth"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "C C",
+    "C C"
+  ],
+  "result": {
+    "item": "galacticraft:thermal_padding_leggings"
+  }
+}

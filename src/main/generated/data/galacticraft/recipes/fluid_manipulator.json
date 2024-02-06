@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": {
+      "item": "galacticraft:oxygen_fan"
+    },
+    "M": {
+      "item": "galacticraft:meteoric_iron_ingot"
+    },
+    "S": {
+      "item": "minecraft:slime_ball"
+    },
+    "W": {
+      "item": "galacticraft:advanced_wafer"
+    }
+  },
+  "pattern": [
+    "MFM",
+    "SWS",
+    "MFM"
+  ],
+  "result": {
+    "item": "galacticraft:fluid_manipulator"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "galacticraft:compressed_steel"
+    }
+  },
+  "pattern": [
+    "I",
+    "I",
+    "I"
+  ],
+  "result": {
+    "item": "galacticraft:steel_pole"
+  }
+}

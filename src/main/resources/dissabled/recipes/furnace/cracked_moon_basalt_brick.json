@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "galacticraft:moon_basalt_brick"
-  },
-  "result": "galacticraft:cracked_moon_basalt_brick",
-  "experience": 0.1,
-  "cookingtime": 200
-}

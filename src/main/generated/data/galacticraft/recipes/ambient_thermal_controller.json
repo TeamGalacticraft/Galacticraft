@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "galacticraft:compressed_bronze"
+    },
+    "R": {
+      "tag": "c:redstone_dusts"
+    },
+    "S": {
+      "item": "galacticraft:compressed_steel"
+    },
+    "V": {
+      "item": "galacticraft:oxygen_vent"
+    },
+    "W": {
+      "item": "galacticraft:basic_wafer"
+    }
+  },
+  "pattern": [
+    "RVR",
+    "BSB",
+    "BWB"
+  ],
+  "result": {
+    "item": "galacticraft:ambient_thermal_controller"
+  }
+}

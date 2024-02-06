@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraft:canned_beef"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_tin_canister": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "galacticraft:tin_canister"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_tin_canister"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraft:canned_beef"
+    ]
+  }
+}

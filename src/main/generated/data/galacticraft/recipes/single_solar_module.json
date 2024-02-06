@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "tag": "c:glass_blocks"
+    },
+    "S": {
+      "item": "galacticraft:solar_array_wafer"
+    },
+    "W": {
+      "item": "galacticraft:aluminum_wire"
+    }
+  },
+  "pattern": [
+    "GGG",
+    "SSS",
+    "WWW"
+  ],
+  "result": {
+    "count": 2,
+    "item": "galacticraft:single_solar_module"
+  }
+}

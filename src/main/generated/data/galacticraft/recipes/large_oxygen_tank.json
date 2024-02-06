@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "galacticraft:compressed_steel"
+    },
+    "T": {
+      "item": "galacticraft:tin_canister"
+    },
+    "W": {
+      "item": "minecraft:red_wool"
+    }
+  },
+  "pattern": [
+    "WWW",
+    "TTT",
+    "CCC"
+  ],
+  "result": {
+    "item": "galacticraft:large_oxygen_tank"
+  }
+}

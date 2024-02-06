@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.7,
+  "group": "lead_ingot",
+  "ingredient": {
+    "item": "galacticraft:galena_ore"
+  },
+  "result": "galacticraft:lead_ingot"
+}

@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:tin_ingot_from_blasting_tin_ore"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_tin_ore": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "galacticraft:tin_ore"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_tin_ore"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:tin_ingot_from_blasting_tin_ore"
+    ]
+  }
+}

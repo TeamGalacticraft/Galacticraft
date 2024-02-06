@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_desh_stick": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "galacticraft:desh_stick"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraft:desh_stick"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_desh_stick"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraft:desh_stick"
+    ]
+  }
+}

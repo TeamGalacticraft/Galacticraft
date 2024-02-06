@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "P": {
+      "item": "galacticraft:heavy_plating"
+    }
+  },
+  "pattern": [
+    "P P",
+    "P P"
+  ],
+  "result": {
+    "item": "galacticraft:heavy_duty_boots"
+  }
+}

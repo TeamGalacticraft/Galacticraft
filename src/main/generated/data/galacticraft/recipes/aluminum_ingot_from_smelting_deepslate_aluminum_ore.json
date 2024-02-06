@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.7,
+  "group": "aluminum_ingot",
+  "ingredient": {
+    "item": "galacticraft:deepslate_aluminum_ore"
+  },
+  "result": "galacticraft:aluminum_ingot"
+}

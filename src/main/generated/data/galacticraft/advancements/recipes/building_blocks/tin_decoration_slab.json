@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraft:tin_decoration_slab"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_tin_decoration": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "galacticraft:tin_decoration"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_tin_decoration"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraft:tin_decoration_slab"
+    ]
+  }
+}

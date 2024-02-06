@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_compressed_bronze": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "galacticraft:compressed_bronze"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraft:bronze_decoration"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_compressed_bronze"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraft:bronze_decoration"
+    ]
+  }
+}

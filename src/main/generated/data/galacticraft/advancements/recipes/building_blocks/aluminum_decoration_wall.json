@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_aluminum_decoration": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "galacticraft:aluminum_decoration"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraft:aluminum_decoration_wall"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_aluminum_decoration"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraft:aluminum_decoration_wall"
+    ]
+  }
+}
