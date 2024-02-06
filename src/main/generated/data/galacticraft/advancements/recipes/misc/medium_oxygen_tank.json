@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraft:medium_oxygen_tank"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_tin_canister": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "galacticraft:tin_canister"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_tin_canister",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraft:medium_oxygen_tank"
+    ]
+  },
+  "sends_telemetry_event": false
+}

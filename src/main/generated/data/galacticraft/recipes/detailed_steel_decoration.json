@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "minecraft:stone"
+    },
+    "X": {
+      "item": "galacticraft:compressed_steel"
+    }
+  },
+  "pattern": [
+    "##",
+    "##",
+    " X"
+  ],
+  "result": {
+    "item": "galacticraft:detailed_steel_decoration"
+  },
+  "show_notification": true
+}

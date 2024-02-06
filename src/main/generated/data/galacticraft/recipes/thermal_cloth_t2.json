@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "item": "galacticraft:desh_ingot"
+    },
+    "T": {
+      "item": "galacticraft:thermal_cloth"
+    }
+  },
+  "pattern": [
+    "TDT"
+  ],
+  "result": {
+    "item": "galacticraft:thermal_cloth_t2"
+  },
+  "show_notification": true
+}
