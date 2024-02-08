@@ -76,12 +76,14 @@ public class GCApiLookupProviders {
 
         FluidStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
             assert blockEntity instanceof PipeBlockEntity;
+            if (direction == null) return null;
             return ((PipeBlockEntity) blockEntity).getInsertables()[direction.ordinal()];
         }, PIPE_TYPES);
 
         EnergyStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
             assert blockEntity instanceof WireBlockEntity;
-            return ((WireBlockEntity) blockEntity).getInsertables()[direction.ordinal()];
+            if (direction == null) return null;
+            return ((WireBlockEntity) blockEntity).getInsertable(direction);
         }, WIRE_TYPES);
 
         FluidStorage.ITEM.registerForItems((itemStack, context) -> {

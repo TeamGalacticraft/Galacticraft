@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.content.block.entity.networked;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.Colored;
 import dev.galacticraft.mod.api.block.entity.Walkway;
 import dev.galacticraft.mod.api.pipe.Pipe;
@@ -76,10 +75,8 @@ public class FluidPipeWalkwayBlockEntity extends PipeBlockEntity implements Walk
     }
 
     @Override
-    public void calculateConnections() {
-        for (var direction : Constant.Misc.DIRECTIONS) {
-            var otherBlockEntity = this.level.getBlockEntity(this.getBlockPos().relative(direction));
-            this.getConnections()[direction.ordinal()] = otherBlockEntity instanceof Pipe pipe && pipe.canConnect(direction.getOpposite()) || FluidUtil.canAccessFluid(this.level, this.getBlockPos().relative(direction), direction);
-        }
+    public void updateConnection(Direction direction) {
+        var otherBlockEntity = this.level.getBlockEntity(this.getBlockPos().relative(direction));
+        this.getConnections()[direction.ordinal()] = otherBlockEntity instanceof Pipe pipe && pipe.canConnect(direction.getOpposite()) || FluidUtil.canAccessFluid(this.level, this.getBlockPos().relative(direction), direction);
     }
 }

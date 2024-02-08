@@ -29,7 +29,7 @@ import net.minecraft.nbt.CompoundTag;
 public interface Connected {
     boolean[/*6*/] getConnections();
 
-    void calculateConnections();
+    void updateConnection(Direction direction);
 
     default void writeConnectionNbt(CompoundTag nbt) {
         for (Direction direction : Constant.Misc.DIRECTIONS) {

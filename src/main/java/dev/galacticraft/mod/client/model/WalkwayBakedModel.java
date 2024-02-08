@@ -139,7 +139,6 @@ public class WalkwayBakedModel implements BakedModel {
             context.pushTransform(Transform.INSTANCE);
             this.platform.emitBlockQuads(getter, blockState, blockPos, randomSupplier, context);
             context.popTransform();
-            walkway.calculateConnections();
 
             if (walkway.getConnections()[0]) {
                 this.down.outputTo(emitter);

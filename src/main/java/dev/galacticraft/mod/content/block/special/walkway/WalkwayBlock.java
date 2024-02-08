@@ -140,6 +140,7 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
         var distance = fromPos.subtract(blockPos);
 
         if (Math.abs(distance.getX() + distance.getY() + distance.getZ()) == 1 && level.getBlockEntity(blockPos) instanceof WalkwayBlockEntity walkway) {
+//            walkway.updateConnection(DirectionUtil.fromNormal(distance));
             var direction = DirectionUtil.fromNormal(distance);
 
             if (level.getBlockEntity(fromPos) instanceof WalkwayBlockEntity walkway2 && walkway2.getDirection() != null) {

@@ -194,7 +194,6 @@ public class WireWalkwayBakedModel implements BakedModel {
             context.pushTransform(WalkwayBakedModel.Transform.INSTANCE);
             this.walkway.emitBlockQuads(getter, blockState, blockPos, randomSupplier, context);
             context.popTransform();
-            wire.calculateConnections();
 
             this.emitBlockQuadsDirection(emitter, connections, this.down, this.smallDown, Direction.DOWN);
             this.emitBlockQuadsDirection(emitter, connections, this.up, this.smallUp, Direction.UP);

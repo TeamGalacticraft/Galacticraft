@@ -134,7 +134,6 @@ public class PipeBakedModel implements BakedModel {
         if (getter.getBlockEntity(blockPos) instanceof GlassFluidPipeBlockEntity pipe) {
             ColorTransform.INSTANCE.setSprite(this.colorSpriteMap.get(pipe.getColor()));
             context.pushTransform(ColorTransform.INSTANCE);
-            pipe.calculateConnections();
             this.emitBlockQuadsDirection(emitter, pipe.getConnections(), this.down, Direction.DOWN);
             this.emitBlockQuadsDirection(emitter, pipe.getConnections(), this.up, Direction.UP);
             this.emitBlockQuadsDirection(emitter, pipe.getConnections(), this.north, Direction.NORTH);

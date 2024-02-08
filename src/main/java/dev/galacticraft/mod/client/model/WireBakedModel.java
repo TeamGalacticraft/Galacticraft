@@ -115,7 +115,6 @@ public class WireBakedModel implements BakedModel {
         var emitter = context.getEmitter();
 
         if (getter.getBlockEntity(blockPos) instanceof WireBlockEntity wire) {
-            wire.calculateConnections();
             this.emitBlockQuadsDirection(emitter, wire.getConnections(), this.down, Direction.DOWN);
             this.emitBlockQuadsDirection(emitter, wire.getConnections(), this.up, Direction.UP);
             this.emitBlockQuadsDirection(emitter, wire.getConnections(), this.north, Direction.NORTH);

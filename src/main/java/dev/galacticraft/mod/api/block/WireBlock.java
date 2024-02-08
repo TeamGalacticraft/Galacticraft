@@ -42,7 +42,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
-import team.reborn.energy.api.EnergyStorage;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -65,34 +64,19 @@ public abstract class WireBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos neighborPos, boolean notify) {
-        super.neighborChanged(state, world, pos, block, neighborPos, notify);
-        if (!world.isClientSide()) {
-            final BlockEntity blockEntity = world.getBlockEntity(pos);
-            Wire wire = (Wire) blockEntity;
-            assert wire != null;
-            final BlockEntity blockEntityAdj = world.getBlockEntity(neighborPos);
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos neighborPos, boolean notify) {
+        super.neighborChanged(state, level, pos, block, neighborPos, notify);
+        if (!level.isClientSide) {
+            var wire = (Wire) level.getBlockEntity(pos);
             BlockPos delta = neighborPos.subtract(pos);
-            if (wire.canConnect(Direction.fromDelta(delta.getX(), delta.getY(), delta.getZ()))) {
-                if (blockEntityAdj instanceof Wire wire1) {
-                    if (wire1.canConnect(Direction.fromDelta(delta.getX(), delta.getY(), delta.getZ()).getOpposite())) {
-                        wire.getOrCreateNetwork().addWire(neighborPos, wire1);
-                    }
-                } else {
-                    if (EnergyStorage.SIDED.find(world, neighborPos, Direction.fromDelta(delta.getX(), delta.getY(), delta.getZ()).getOpposite()) != null) {
-                        wire.getOrCreateNetwork().updateConnection(pos, neighborPos);
-                    } else if (wire.getNetwork() != null) {
-                        wire.getNetwork().updateConnection(pos, neighborPos);
-                    }
-                }
+            Direction direction = Direction.fromDelta(delta.getX(), delta.getY(), delta.getZ());
+            assert wire != null;
+            assert direction != null;
+
+            if (wire.canConnect(direction)) {
+                wire.updateConnection(direction);
             }
         }
-    }
-
-    @Override
-    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
-        super.onPlace(state, level, pos, oldState, movedByPiston);
-        ((WireBlockEntity) level.getBlockEntity(pos)).getOrCreateNetwork();
     }
 
     @Nullable

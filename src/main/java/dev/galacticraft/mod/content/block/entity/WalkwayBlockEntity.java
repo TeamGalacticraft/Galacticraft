@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.content.block.entity;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.Walkway;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import net.minecraft.core.BlockPos;
@@ -66,19 +65,15 @@ public class WalkwayBlockEntity extends BlockEntity implements Walkway {
     }
 
     @Override
-    public void calculateConnections() {
-        var mutable = new BlockPos.MutableBlockPos();
-        for (var direction : Constant.Misc.DIRECTIONS) {
-            if (this.getDirection() != direction) {
-                if (this.level.getBlockEntity(mutable.set(this.getBlockPos()).move(direction)) instanceof WalkwayBlockEntity walkway) {
-                    if (walkway.getDirection() != direction.getOpposite()) {
-                        this.getConnections()[direction.ordinal()] = true;
-                        continue;
-                    }
+    public void updateConnection(Direction direction) {
+        if (this.getDirection() != direction) {
+            if (this.level.getBlockEntity(this.getBlockPos().relative(direction)) instanceof WalkwayBlockEntity walkway) {
+                if (walkway.getDirection() != direction.getOpposite()) {
+                    this.getConnections()[direction.ordinal()] = true;
                 }
             }
-            this.getConnections()[direction.ordinal()] = false;
         }
+        this.getConnections()[direction.ordinal()] = false;
     }
 
     @Override

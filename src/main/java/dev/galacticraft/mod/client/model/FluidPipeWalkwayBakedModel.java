@@ -160,7 +160,6 @@ public class FluidPipeWalkwayBakedModel implements BakedModel {
             context.pushTransform(WalkwayBakedModel.Transform.INSTANCE);
             this.coloredWalkway.get(pipe.getColor()).emitBlockQuads(getter, blockState, blockPos, randomSupplier, context);
             context.popTransform();
-            pipe.calculateConnections();
 
             PipeBakedModel.ColorTransform.INSTANCE.setSprite(this.colorSpriteMap.get(pipe.getColor()));
             context.pushTransform(PipeBakedModel.ColorTransform.INSTANCE);
