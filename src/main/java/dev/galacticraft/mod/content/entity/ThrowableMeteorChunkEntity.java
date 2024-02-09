@@ -24,6 +24,7 @@ package dev.galacticraft.mod.content.entity;
 
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.item.GCItems;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -54,6 +55,21 @@ public class ThrowableMeteorChunkEntity extends ThrowableItemProjectile {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(HOT, false);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+
+        if (compound.contains("Hot")) {
+            this.entityData.set(HOT, compound.getBoolean("Hot"));
+        }
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putBoolean("Hot", this.entityData.get(HOT));
     }
 
     @Override
