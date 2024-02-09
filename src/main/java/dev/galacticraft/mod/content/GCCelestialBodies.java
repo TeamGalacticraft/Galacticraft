@@ -126,7 +126,7 @@ public class GCCelestialBodies {
 
         context.register(MOON, PlanetType.INSTANCE.configure(new PlanetConfig(
                 Component.translatable("planet.galacticraft.moon.name"),
-                Component.translatable("planet.galacticraft.moon.desc"),
+                Component.translatable("planet.galacticraft.moon.description"),
                 BuiltinObjects.MILKY_WAY_KEY,
                 BuiltinObjects.EARTH_KEY,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(655200, 20.0, 0.2667, false)),
