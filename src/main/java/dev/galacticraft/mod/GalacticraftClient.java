@@ -73,6 +73,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -130,6 +131,7 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.register(GCEntityTypes.ROCKET, RocketEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.LANDER, LanderEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.PARACHEST, ParachestRenderer::new);
+        EntityRendererRegistry.register(GCEntityTypes.THROWABLE_METEOR_CHUNK, ThrownItemRenderer::new);
 
         GCBlockEntityRenderer.register();
         GCClientPacketReceiver.register();

@@ -51,6 +51,7 @@ public class GCSounds {
     public static final SoundEvent AMBIENCE_SINGLEDRIP = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "ambience.singledrip"));
     public static final SoundEvent AMBIENCE_SCARYSCAPE = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "ambience.scaryscape"));
     public static final SoundEvent SHUTTLE_SHUTTLE = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "shuttle.shuttle"));
+    public static final SoundEvent METEOR_CHUNK_THROW = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "entity.throwable_meteor_chunk.throw"));
 
     // Legacy Discs
     public static final SoundEvent MUSIC_LEGACY_MARS = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "music.legacy.mars"));
@@ -76,6 +77,7 @@ public class GCSounds {
         Registry.register(BuiltInRegistries.SOUND_EVENT, AMBIENCE_SINGLEDRIP.getLocation(), AMBIENCE_SINGLEDRIP);
         Registry.register(BuiltInRegistries.SOUND_EVENT, AMBIENCE_SCARYSCAPE.getLocation(), AMBIENCE_SCARYSCAPE);
         Registry.register(BuiltInRegistries.SOUND_EVENT, SHUTTLE_SHUTTLE.getLocation(), SHUTTLE_SHUTTLE);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, METEOR_CHUNK_THROW.getLocation(), METEOR_CHUNK_THROW);
 
         // Legacy Discs
         Registry.register(BuiltInRegistries.SOUND_EVENT, MUSIC_LEGACY_MARS.getLocation(), MUSIC_LEGACY_MARS);

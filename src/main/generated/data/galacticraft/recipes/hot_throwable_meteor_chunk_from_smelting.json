@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 1.0,
+  "ingredient": {
+    "item": "galacticraft:throwable_meteor_chunk"
+  },
+  "result": "galacticraft:hot_throwable_meteor_chunk"
+}

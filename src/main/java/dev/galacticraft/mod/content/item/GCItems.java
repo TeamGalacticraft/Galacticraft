@@ -382,6 +382,10 @@ public class GCItems {
     public static final Item TIER_2_HEAVY_DUTY_PLATE = ITEMS.register(Constant.Item.TIER_2_HEAVY_DUTY_PLATE, new Item(new Item.Properties()));
     public static final Item TIER_3_HEAVY_DUTY_PLATE = ITEMS.register(Constant.Item.TIER_3_HEAVY_DUTY_PLATE, new Item(new Item.Properties()));
 
+    // THROWABLE METEOR CHUNKS
+    public static final Item THROWABLE_METEOR_CHUNK = new ThrowableMeteorChunkItem(new Item.Properties().stacksTo(16), false);
+    public static final Item HOT_THROWABLE_METEOR_CHUNK = new ThrowableMeteorChunkItem(new Item.Properties().stacksTo(16), true);
+
     // ARMOR
     public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties());
     public static final Item HEAVY_DUTY_CHESTPLATE = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.CHESTPLATE, new Item.Properties());
@@ -793,6 +797,10 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_DEHYDRATED_MELON), CANNED_DEHYDRATED_MELON);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_DEHYDRATED_POTATO), CANNED_DEHYDRATED_POTATO);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_BEEF), CANNED_BEEF);
+
+        // THROWABLE METEOR CHUNKS
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.THROWABLE_METEOR_CHUNK), THROWABLE_METEOR_CHUNK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.HOT_THROWABLE_METEOR_CHUNK), HOT_THROWABLE_METEOR_CHUNK);
 
         // ARMOR
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.HEAVY_DUTY_HELMET), HEAVY_DUTY_HELMET);
