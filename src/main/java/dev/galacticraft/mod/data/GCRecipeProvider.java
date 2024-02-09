@@ -34,7 +34,6 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;

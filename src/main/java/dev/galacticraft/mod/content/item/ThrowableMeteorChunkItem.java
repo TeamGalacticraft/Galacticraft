@@ -24,7 +24,6 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.content.entity.ThrowableMeteorChunkEntity;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;

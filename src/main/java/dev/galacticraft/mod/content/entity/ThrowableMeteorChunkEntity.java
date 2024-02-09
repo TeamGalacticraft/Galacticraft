@@ -45,10 +45,6 @@ public class ThrowableMeteorChunkEntity extends ThrowableItemProjectile {
         super(entityType, level);
     }
 
-    public ThrowableMeteorChunkEntity(double x, double y, double z, Level level) {
-        super(GCEntityTypes.THROWABLE_METEOR_CHUNK, x, y, z, level);
-    }
-
     public ThrowableMeteorChunkEntity(LivingEntity shooter, Level level, boolean hot) {
         super(GCEntityTypes.THROWABLE_METEOR_CHUNK, shooter, level);
         this.entityData.set(HOT, hot);
