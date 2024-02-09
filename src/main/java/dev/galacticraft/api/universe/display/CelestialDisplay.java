@@ -28,6 +28,7 @@ import com.mojang.serialization.Codec;
 import dev.galacticraft.api.registry.BuiltInAddonRegistries;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.ShaderInstance;
 import org.joml.Vector4f;
 
@@ -38,7 +39,7 @@ public record CelestialDisplay<C extends CelestialDisplayConfig, T extends Celes
     public static final Codec<CelestialDisplay<?, ?>> CODEC = BuiltInAddonRegistries.CELESTIAL_DISPLAY_TYPE.byNameCodec().dispatch(CelestialDisplay::type, CelestialDisplayType::codec);
 
     @Environment(EnvType.CLIENT)
-    public Vector4f render(PoseStack matrices, BufferBuilder buffer, int scale, double mouseX, double mouseY, float delta, Consumer<Supplier<ShaderInstance>> shaderSetter) {
-        return this.type().render(matrices, buffer, scale, mouseX, mouseY, delta, shaderSetter, this.config());
+    public Vector4f render(GuiGraphics graphics, BufferBuilder buffer, int scale, double mouseX, double mouseY, float delta, Consumer<Supplier<ShaderInstance>> shaderSetter) {
+        return this.type().render(graphics, buffer, scale, mouseX, mouseY, delta, shaderSetter, this.config());
     }
 }

@@ -26,6 +26,7 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.api.universe.display.CelestialDisplayType;
 import dev.galacticraft.impl.universe.display.config.EmptyCelestialDisplayConfig;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.ShaderInstance;
 import org.joml.Vector4f;
 
@@ -40,7 +41,7 @@ public class EmptyCelestialDisplayType extends CelestialDisplayType<EmptyCelesti
     }
 
     @Override
-    public Vector4f render(PoseStack matrices, BufferBuilder buffer, int size, double mouseX, double mouseY, float delta, Consumer<Supplier<ShaderInstance>> shaderSetter, EmptyCelestialDisplayConfig config) {
+    public Vector4f render(GuiGraphics graphics, BufferBuilder buffer, int size, double mouseX, double mouseY, float delta, Consumer<Supplier<ShaderInstance>> shaderSetter, EmptyCelestialDisplayConfig config) {
         return NULL_VECTOR;
     }
 }

@@ -132,8 +132,6 @@ public class CelestialSelectionScreen extends Screen {
     protected float translationX = 0.0f;
     protected float translationY = 0.0f;
     protected boolean mouseDragging = false;
-    protected double lastMovePosX = -1;
-    protected double lastMovePosY = -1;
     protected final RegistryAccess manager = Minecraft.getInstance().level.registryAccess();
     protected final CelestialBody<?, ?> fromBody;
     protected final Registry<Galaxy> galaxyRegistry = manager.registryOrThrow(AddonRegistries.GALAXY);
@@ -429,6 +427,9 @@ public class CelestialSelectionScreen extends Screen {
 
     @Override
     public void tick() {
+        this.translationX = 0.0F;
+        this.translationY = 0.0F;
+
         if (!this.renamingSpaceStation && (this.selectedBody == null || !this.isZoomed())) {
             assert this.minecraft != null;
             if (InputConstants.isKeyDown(this.minecraft.getWindow().getWindow(), GLFW.GLFW_KEY_LEFT)) {
@@ -470,26 +471,24 @@ public class CelestialSelectionScreen extends Screen {
     }
 
     @Override
-    public boolean mouseDragged(double x, double y, int activeButton, double relOffsetX, double relOffsetY) {
-        if (mouseDragging && lastMovePosX != -1 && activeButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            float scrollMultiplier = /*-Math.abs(this.zoom)*/ -1;
-//            if (this.zoom == -1.0F) {
-//                scrollMultiplier = -1.5F;
-//            }
-//
-//            if (this.zoom >= -0.25F && this.zoom <= 0.15F) {
-//                scrollMultiplier = -0.2F;
-//            }
-//
-//            if (this.zoom >= 0.15F) {
-//                scrollMultiplier = -0.15F;
-//            }
-            this.translationX = (float) ((relOffsetX - relOffsetY) * scrollMultiplier * 0.2F);
-            this.translationY = (float) ((relOffsetY + relOffsetX) * scrollMultiplier * 0.2F);
+    public boolean mouseDragged(double x, double y, int activeButton, double dragX, double dragY) {
+        if (mouseDragging && activeButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            float scrollMultiplier = -Math.abs(this.zoom);
+            if (this.zoom == -1.0F) {
+                scrollMultiplier = -1.5F;
+            }
+
+            if (this.zoom >= -0.25F && this.zoom <= 0.15F) {
+                scrollMultiplier = -0.2F;
+            }
+
+            if (this.zoom >= 0.15F) {
+                scrollMultiplier = -0.15F;
+            }
+            this.translationX += (float) (dragX * scrollMultiplier * 0.2F);
+            this.translationY += (float) (dragY * scrollMultiplier * 0.2F);
         }
 
-        lastMovePosX = relOffsetX;
-        lastMovePosY = relOffsetY;
         return true;
     }
 
@@ -498,21 +497,11 @@ public class CelestialSelectionScreen extends Screen {
         super.mouseReleased(x, y, button);
 
         mouseDragging = false;
-        lastMovePosX = -1;
-        lastMovePosY = -1;
 
         this.translationX = 0;
         this.translationY = 0;
         return true;
     }
-
-//    @Override
-//    public void handleInput() throws IOException
-//    {
-//        this.translationX = 0.0F;
-//        this.translationY = 0.0F;
-//        super.handleInput();
-//    }
 
     @Override
     public boolean mouseClicked(double x, double y, int button) {
@@ -853,40 +842,6 @@ public class CelestialSelectionScreen extends Screen {
         return true;
     }
 
-//    @Override
-//    protected void mouseClickMove(int x, int y, int lastButtonClicked, long timeSinceMouseClick)
-//    {
-//        super.mouseClickMove(x, y, lastButtonClicked, timeSinceMouseClick);
-//
-//        if (mouseDragging && lastMovePosX != -1 && lastButtonClicked == 0)
-//        {
-//            int deltaX = x - lastMovePosX;
-//            int deltaY = y - lastMovePosY;
-//            float scollMultiplier = -Math.abs(this.zoom);
-//
-//            if (this.zoom == -1.0F)
-//            {
-//                scollMultiplier = -1.5F;
-//            }
-//
-//            if (this.zoom >= -0.25F && this.zoom <= 0.15F)
-//            {
-//                scollMultiplier = -0.2F;
-//            }
-//
-//            if (this.zoom >= 0.15F)
-//            {
-//                scollMultiplier = -0.15F;
-//            }
-//
-//            translationX += (deltaX - deltaY) * scollMultiplier * (ConfigManagerCore.invertMapMouseScroll.get() ? -1.0F : 1.0F) * ConfigManagerCore.mapMouseScrollSensitivity.get() * 0.2F;
-//            translationY += (deltaY + deltaX) * scollMultiplier * (ConfigManagerCore.invertMapMouseScroll.get() ? -1.0F : 1.0F) * ConfigManagerCore.mapMouseScrollSensitivity.get() * 0.2F;
-//        }
-//
-//        lastMovePosX = x;
-//        lastMovePosY = y;
-//    }
-
     protected boolean testClicked(CelestialBody<?, ?> body, int xOffset, int yPos, double x, double y, boolean grandchild) {
         int xPos = CelestialSelectionScreen.BORDER_SIZE + CelestialSelectionScreen.BORDER_EDGE_SIZE + 2 + xOffset;
         if (x >= xPos && x <= xPos + 93 && y >= yPos && y <= yPos + 12) {
@@ -1002,7 +957,7 @@ public class CelestialSelectionScreen extends Screen {
                 this.drawGrid(matrices.last().pose(), gridSize, height / 3f / 3.5F);
                 this.drawCircles(matrices, delta);
 
-                this.drawCelestialBodies(matrices, mouseX, mouseY, delta);
+                this.drawCelestialBodies(graphics, mouseX, mouseY, delta);
 
 //                this.planetPosMap.clear();
 //
@@ -1126,7 +1081,8 @@ public class CelestialSelectionScreen extends Screen {
         return this.mapMode;
     }
 
-    public void drawCelestialBodies(PoseStack matrices, double mouseX, double mouseY, float delta) {
+    public void drawCelestialBodies(GuiGraphics graphics, double mouseX, double mouseY, float delta) {
+        PoseStack matrices = graphics.pose();
         this.planetPosMap.clear();
 
         for (CelestialBody<?, ?> body : this.bodiesToRender) {
@@ -1138,10 +1094,24 @@ public class CelestialSelectionScreen extends Screen {
                 matrices.pushPose();
                 this.setupMatrix(body, matrices, moon ? 0.25F : 1.0F, delta);
                 CelestialDisplay<?, ?> display = body.display();
-                Vector4f vector4f = display.render(matrices, Tesselator.getInstance().getBuilder(), this.getWidthForCelestialBody(body), mouseX, mouseY, delta, s -> resetAlphaShader(alpha, s));
-                matrices.translate(vector4f.x(), vector4f.z(), 0);
-                Matrix4f model = matrices.last().pose();
-                planetPosMap.put(body, new Vec3(model.m03(), model.m13(), vector4f.z() * model.m00()));
+                Vector4f vector4f = display.render(graphics, Tesselator.getInstance().getBuilder(), this.getWidthForCelestialBody(body), mouseX, mouseY, delta, s -> resetAlphaShader(alpha, s));
+//                matrices.translate(vector4f.x(), vector4f.z(), 0);
+                Matrix4f planetMatrix = matrices.last().pose();
+
+                Matrix4f matrix0 = RenderSystem.getProjectionMatrix().mul(planetMatrix, planetMatrix);
+                int x = (int) Math.floor((matrix0.m30() * 0.5 + 0.5) * minecraft.getWindow().getScreenWidth());
+                int y = (int) Math.floor(minecraft.getWindow().getScreenHeight() - (matrix0.m31() * 0.5 + 0.5) * minecraft.getWindow().getScreenHeight());
+                double planetX = (x * (this.minecraft.getWindow().getGuiScaledWidth() / (double) this.minecraft.getWindow().getScreenWidth()));
+                double planetY = (y * (this.minecraft.getWindow().getGuiScaledHeight() / (double) this.minecraft.getWindow().getScreenHeight()));
+
+                Matrix4f scaleVec = new Matrix4f();
+                scaleVec.m00(matrix0.m00());
+                scaleVec.m11(matrix0.m11());
+                scaleVec.m22(matrix0.m22());
+                Vector4f newVec = scaleVec.transform(new Vector4f(2, -2, 0, 0), new Vector4f());
+                float iconSize = (newVec.y * (minecraft.getWindow().getScreenHeight() / 2.0F)) * (body.type() instanceof Star ? 2 : 1) * (body == this.selectedBody ? 1.5F : 1.0F);
+
+                planetPosMap.put(body, new Vec3(planetX, planetY, iconSize)); // Store size on-screen in Z-value for ease
                 matrices.popPose();
             }
         }

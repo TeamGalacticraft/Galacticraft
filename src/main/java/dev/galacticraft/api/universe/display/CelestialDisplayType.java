@@ -27,6 +27,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.Codec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.ShaderInstance;
 import org.joml.Vector4f;
 
@@ -42,7 +43,7 @@ public abstract class CelestialDisplayType<C extends CelestialDisplayConfig> {
     }
 
     @Environment(EnvType.CLIENT)
-    public abstract Vector4f render(PoseStack matrices, BufferBuilder buffer, int size, double mouseX, double mouseY, float delta, Consumer<Supplier<ShaderInstance>> shaderSetter, C config);
+    public abstract Vector4f render(GuiGraphics graphics, BufferBuilder buffer, int size, double mouseX, double mouseY, float delta, Consumer<Supplier<ShaderInstance>> shaderSetter, C config);
 
     public Codec<CelestialDisplay<C, CelestialDisplayType<C>>> codec() {
         return this.codec;

@@ -29,6 +29,7 @@ import com.mojang.serialization.Codec;
 import dev.galacticraft.api.universe.display.CelestialDisplayType;
 import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.texture.AbstractTexture;
@@ -47,9 +48,9 @@ public class IconCelestialDisplayType extends CelestialDisplayType<IconCelestial
     }
 
     @Override
-    public Vector4f render(PoseStack matrices, BufferBuilder buffer, int size, double mouseX, double mouseY, float delta, Consumer<Supplier<ShaderInstance>> shaderSetter, IconCelestialDisplayConfig config) {
+    public Vector4f render(GuiGraphics graphics, BufferBuilder buffer, int size, double mouseX, double mouseY, float delta, Consumer<Supplier<ShaderInstance>> shaderSetter, IconCelestialDisplayConfig config) {
         shaderSetter.accept(GameRenderer::getPositionTexShader);
-        Matrix4f positionMatrix = matrices.last().pose();
+        Matrix4f positionMatrix = graphics.pose().last().pose();
         AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(config.texture());
         RenderSystem.setShaderTexture(0, texture.getId());
         texture.bind();
