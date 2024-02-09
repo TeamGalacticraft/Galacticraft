@@ -46,8 +46,8 @@ import java.util.Objects;
 
 public final class SatelliteConfig implements CelestialBodyConfig {
     public static final Codec<SatelliteConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("parent").xmap(id -> ResourceKey.create(AddonRegistries.CELESTIAL_BODY, id), ResourceKey::location).forGetter(SatelliteConfig::parent),
-            ResourceLocation.CODEC.fieldOf("galaxy").xmap(id -> ResourceKey.create(AddonRegistries.GALAXY, id), ResourceKey::location).forGetter(SatelliteConfig::galaxy),
+            ResourceKey.codec(AddonRegistries.CELESTIAL_BODY).fieldOf("parent").forGetter(SatelliteConfig::parent),
+            ResourceKey.codec(AddonRegistries.GALAXY).fieldOf("galaxy").forGetter(SatelliteConfig::galaxy),
             CelestialPosition.CODEC.fieldOf("position").forGetter(SatelliteConfig::position),
             CelestialDisplay.CODEC.fieldOf("display").forGetter(SatelliteConfig::display),
             SatelliteOwnershipData.CODEC.fieldOf("ownership_data").forGetter(SatelliteConfig::ownershipData),

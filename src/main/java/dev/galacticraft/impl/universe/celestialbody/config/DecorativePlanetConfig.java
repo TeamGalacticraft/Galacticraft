@@ -49,8 +49,8 @@ public record DecorativePlanetConfig(@NotNull MutableComponent name, @NotNull Mu
     public static final Codec<DecorativePlanetConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             MiscCodecs.TRANSLATABLE_COMPONENT.fieldOf("name").forGetter(DecorativePlanetConfig::name),
             MiscCodecs.TRANSLATABLE_COMPONENT.fieldOf("description").forGetter(DecorativePlanetConfig::description),
-            ResourceLocation.CODEC.fieldOf("galaxy").xmap(id -> ResourceKey.create(AddonRegistries.GALAXY, id), ResourceKey::location).forGetter(DecorativePlanetConfig::galaxy),
-            ResourceLocation.CODEC.fieldOf("parent").xmap(id -> ResourceKey.create(AddonRegistries.CELESTIAL_BODY, id), ResourceKey::location).forGetter(DecorativePlanetConfig::parent),
+            ResourceKey.codec(AddonRegistries.GALAXY).fieldOf("galaxy").forGetter(DecorativePlanetConfig::galaxy),
+            ResourceKey.codec(AddonRegistries.CELESTIAL_BODY).fieldOf("parent").forGetter(DecorativePlanetConfig::parent),
             CelestialPosition.CODEC.fieldOf("position").forGetter(DecorativePlanetConfig::position),
             CelestialDisplay.CODEC.fieldOf("display").forGetter(DecorativePlanetConfig::display),
             GasComposition.CODEC.fieldOf("atmosphere").forGetter(DecorativePlanetConfig::atmosphere),

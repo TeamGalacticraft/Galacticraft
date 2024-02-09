@@ -57,7 +57,7 @@ public class StarType extends CelestialBodyType<StarConfig> implements Star<Star
      */
     @Override
     public @Nullable CelestialBody<?, ?> parent(Registry<CelestialBody<?, ?>> registry, StarConfig config) {
-        return null;
+        return config.parent().isPresent() ? registry.get(config.parent().get()) : null;
     }
 
     @Override

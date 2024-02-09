@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public interface GasComposition {
-    MapCodec<ResourceKey<Fluid>, Double, Object2DoubleMap<ResourceKey<Fluid>>> MAP_CODEC = MapCodec.create(Object2DoubleArrayMap::new, ResourceLocation.CODEC.xmap(id -> ResourceKey.create(Registries.FLUID, id), ResourceKey::location), Codec.DOUBLE);
+    MapCodec<ResourceKey<Fluid>, Double, Object2DoubleMap<ResourceKey<Fluid>>> MAP_CODEC = MapCodec.create(Object2DoubleArrayMap::new, ResourceKey.codec(Registries.FLUID), Codec.DOUBLE);
     Codec<GasComposition> CODEC = RecordCodecBuilder.create(atmosphericInfoInstance -> atmosphericInfoInstance.group(
             MAP_CODEC.fieldOf("composition").forGetter(GasComposition::composition),
             Codec.DOUBLE.fieldOf("temperature").forGetter(GasComposition::temperature),

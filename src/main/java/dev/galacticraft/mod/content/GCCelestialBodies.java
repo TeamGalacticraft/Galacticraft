@@ -69,6 +69,7 @@ public class GCCelestialBodies {
                         Component.translatable("star.galacticraft.sol.name"),
                         Component.translatable("star.galacticraft.sol.description"),
                         BuiltinObjects.MILKY_WAY_KEY,
+                        Optional.empty(),
                         StaticCelestialPositionType.INSTANCE.configure(new StaticCelestialPositionConfig(0, 0)),
                         IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(new ResourceLocation(Constant.MOD_ID, "textures/body_icons.png"), 0, 0, 16, 16, 1.5f)),
                         new GasComposition.Builder()
