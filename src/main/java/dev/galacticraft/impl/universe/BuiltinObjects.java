@@ -34,6 +34,10 @@ import dev.galacticraft.impl.universe.celestialbody.type.PlanetType;
 import dev.galacticraft.impl.universe.celestialbody.type.StarType;
 import dev.galacticraft.impl.universe.display.type.EmptyCelestialDisplayType;
 import dev.galacticraft.impl.universe.display.type.IconCelestialDisplayType;
+import dev.galacticraft.impl.universe.display.type.SpinningIconCelestialDisplayType;
+import dev.galacticraft.impl.universe.display.type.ring.AsteroidCelestialRingDisplayType;
+import dev.galacticraft.impl.universe.display.type.ring.DefaultCelestialRingDisplayType;
+import dev.galacticraft.impl.universe.display.type.ring.EmptyCelestialRingDisplayType;
 import dev.galacticraft.impl.universe.position.type.OrbitalCelestialPositionType;
 import dev.galacticraft.impl.universe.position.type.StaticCelestialPositionType;
 import dev.galacticraft.mod.Constant;
@@ -42,22 +46,27 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
 public class BuiltinObjects {
-    public static final ResourceKey<Galaxy> MILKY_WAY_KEY = ResourceKey.create(AddonRegistries.GALAXY, new ResourceLocation(Constant.MOD_ID, "milky_way"));
-    public static final ResourceKey<CelestialBody<?, ?>> SOL_KEY = ResourceKey.create(AddonRegistries.CELESTIAL_BODY, new ResourceLocation(Constant.MOD_ID, "sol"));
-    public static final ResourceKey<CelestialBody<?, ?>> EARTH_KEY = ResourceKey.create(AddonRegistries.CELESTIAL_BODY, new ResourceLocation(Constant.MOD_ID, "earth"));
+    public static final ResourceKey<Galaxy> MILKY_WAY_KEY = ResourceKey.create(AddonRegistries.GALAXY, Constant.id("milky_way"));
+    public static final ResourceKey<CelestialBody<?, ?>> SOL_KEY = ResourceKey.create(AddonRegistries.CELESTIAL_BODY, Constant.id("sol"));
+    public static final ResourceKey<CelestialBody<?, ?>> EARTH_KEY = ResourceKey.create(AddonRegistries.CELESTIAL_BODY, Constant.id("earth"));
 
     public static final ResourceKey<CelestialTeleporter<?, ?>> DIRECT_CELESTIAL_TELEPORTER = ResourceKey.create(AddonRegistries.CELESTIAL_TELEPORTER, Constant.id("direct"));
 
     public static void register() {
-        Registry.register(BuiltInAddonRegistries.CELESTIAL_POSITION_TYPE, new ResourceLocation(Constant.MOD_ID, "static"), StaticCelestialPositionType.INSTANCE);
-        Registry.register(BuiltInAddonRegistries.CELESTIAL_POSITION_TYPE, new ResourceLocation(Constant.MOD_ID, "orbital"), OrbitalCelestialPositionType.INSTANCE);
+        Registry.register(BuiltInAddonRegistries.CELESTIAL_POSITION_TYPE, Constant.id("static"), StaticCelestialPositionType.INSTANCE);
+        Registry.register(BuiltInAddonRegistries.CELESTIAL_POSITION_TYPE, Constant.id("orbital"), OrbitalCelestialPositionType.INSTANCE);
 
-        Registry.register(BuiltInAddonRegistries.CELESTIAL_DISPLAY_TYPE, new ResourceLocation(Constant.MOD_ID, "empty"), EmptyCelestialDisplayType.INSTANCE);
-        Registry.register(BuiltInAddonRegistries.CELESTIAL_DISPLAY_TYPE, new ResourceLocation(Constant.MOD_ID, "icon"), IconCelestialDisplayType.INSTANCE);
+        Registry.register(BuiltInAddonRegistries.CELESTIAL_DISPLAY_TYPE, Constant.id("empty"), EmptyCelestialDisplayType.INSTANCE);
+        Registry.register(BuiltInAddonRegistries.CELESTIAL_DISPLAY_TYPE, Constant.id("icon"), IconCelestialDisplayType.INSTANCE);
+        Registry.register(BuiltInAddonRegistries.CELESTIAL_DISPLAY_TYPE, Constant.id("spinning_icon"), SpinningIconCelestialDisplayType.INSTANCE);
 
-        Registry.register(BuiltInAddonRegistries.CELESTIAL_BODY_TYPE, new ResourceLocation(Constant.MOD_ID, "star"), StarType.INSTANCE);
-        Registry.register(BuiltInAddonRegistries.CELESTIAL_BODY_TYPE, new ResourceLocation(Constant.MOD_ID, "planet"), PlanetType.INSTANCE);
-        Registry.register(BuiltInAddonRegistries.CELESTIAL_BODY_TYPE, new ResourceLocation(Constant.MOD_ID, "decorative_planet"), DecorativePlanet.INSTANCE);
+        Registry.register(BuiltInAddonRegistries.CELESTIAL_RING_DISPLAY_TYPE, Constant.id("empty"), EmptyCelestialRingDisplayType.INSTANCE);
+        Registry.register(BuiltInAddonRegistries.CELESTIAL_RING_DISPLAY_TYPE, Constant.id("default"), DefaultCelestialRingDisplayType.INSTANCE);
+        Registry.register(BuiltInAddonRegistries.CELESTIAL_RING_DISPLAY_TYPE, Constant.id("asteroid"), AsteroidCelestialRingDisplayType.INSTANCE);
+
+        Registry.register(BuiltInAddonRegistries.CELESTIAL_BODY_TYPE, Constant.id("star"), StarType.INSTANCE);
+        Registry.register(BuiltInAddonRegistries.CELESTIAL_BODY_TYPE, Constant.id("planet"), PlanetType.INSTANCE);
+        Registry.register(BuiltInAddonRegistries.CELESTIAL_BODY_TYPE, Constant.id("decorative_planet"), DecorativePlanet.INSTANCE);
 
         Registry.register(BuiltInAddonRegistries.CELESTIAL_TELEPORTER_TYPE, Constant.id("direct"), DirectCelestialTeleporterType.INSTANCE);
         Registry.register(BuiltInAddonRegistries.CELESTIAL_TELEPORTER_TYPE, Constant.id("fixed"), FixedCelestialTeleporterType.INSTANCE);

@@ -35,6 +35,10 @@
         "planet": false
       }
     },
+    "ring": {
+      "type": "galacticraft:default",
+      "config": {}
+    },
     "teleporter": "galacticraft:lander",
     "world": "galacticraft:moon"
   }

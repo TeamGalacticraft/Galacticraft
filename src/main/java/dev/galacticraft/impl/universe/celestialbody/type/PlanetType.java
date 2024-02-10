@@ -30,6 +30,7 @@ import dev.galacticraft.api.universe.celestialbody.Tiered;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.api.universe.celestialbody.satellite.Orbitable;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
+import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.impl.universe.celestialbody.config.PlanetConfig;
@@ -77,6 +78,11 @@ public class PlanetType extends CelestialBodyType<PlanetConfig> implements Tiere
     @Override
     public @NotNull CelestialDisplay<?, ?> display(PlanetConfig config) {
         return config.display();
+    }
+
+    @Override
+    public @NotNull CelestialRingDisplay<?, ?> ring(PlanetConfig config) {
+        return config.ring();
     }
 
     @Override

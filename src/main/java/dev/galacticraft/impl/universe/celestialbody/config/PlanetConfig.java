@@ -32,6 +32,7 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.CelestialHandler;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
+import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.impl.codec.MiscCodecs;
@@ -47,7 +48,7 @@ import java.util.Optional;
 
 public record PlanetConfig(@NotNull MutableComponent name, @NotNull MutableComponent description,
                            @NotNull ResourceKey<Galaxy> galaxy, @NotNull ResourceKey<CelestialBody<?, ?>> parent,
-                           @NotNull CelestialPosition<?, ?> position, @NotNull CelestialDisplay<?, ?> display,
+                           @NotNull CelestialPosition<?, ?> position, @NotNull CelestialDisplay<?, ?> display, @NotNull CelestialRingDisplay<?, ?> ring,
                            @NotNull ResourceKey<Level> world, Holder<CelestialTeleporter<?, ?>> teleporter, @NotNull GasComposition atmosphere, float gravity,
                            CelestialHandler celestialHandler,
                            int accessWeight, int dayTemperature, int nightTemperature,
@@ -59,6 +60,7 @@ public record PlanetConfig(@NotNull MutableComponent name, @NotNull MutableCompo
             ResourceKey.codec(AddonRegistries.CELESTIAL_BODY).fieldOf("parent").forGetter(PlanetConfig::parent),
             CelestialPosition.CODEC.fieldOf("position").forGetter(PlanetConfig::position),
             CelestialDisplay.CODEC.fieldOf("display").forGetter(PlanetConfig::display),
+            CelestialRingDisplay.CODEC.fieldOf("ring").forGetter(PlanetConfig::ring),
             Level.RESOURCE_KEY_CODEC.fieldOf("world").forGetter(PlanetConfig::world),
             RegistryFileCodec.create(AddonRegistries.CELESTIAL_TELEPORTER, CelestialTeleporter.DIRECT_CODEC).fieldOf("teleporter").forGetter(PlanetConfig::teleporter),
             GasComposition.CODEC.fieldOf("atmosphere").forGetter(PlanetConfig::atmosphere),

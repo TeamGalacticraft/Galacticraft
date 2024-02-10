@@ -52,6 +52,10 @@
         "planet": true
       }
     },
+    "ring": {
+      "type": "galacticraft:default",
+      "config": {}
+    },
     "satellite_recipe": {
       "ingredients": {
         "1": {

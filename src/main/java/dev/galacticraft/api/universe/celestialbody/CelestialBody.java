@@ -28,6 +28,7 @@ import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.BuiltInAddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
+import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import net.minecraft.core.*;
@@ -150,6 +151,16 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
      */
     public @NotNull CelestialDisplay<?, ?> display() {
         return this.type().display(this.config());
+    }
+
+    /**
+     * Returns this celestial body's ring display provider
+     *
+     * @return this celestial body's ring display provider
+     * @see CelestialRingDisplay
+     */
+    public @NotNull CelestialRingDisplay<?, ?> ring() {
+        return this.type().ring(this.config());
     }
 
     /**

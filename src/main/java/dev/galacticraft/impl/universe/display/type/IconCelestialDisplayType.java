@@ -28,6 +28,7 @@ import com.mojang.blaze3d.vertex.*;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.universe.display.CelestialDisplayType;
 import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
+import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
@@ -62,6 +63,13 @@ public class IconCelestialDisplayType extends CelestialDisplayType<IconCelestial
         buffer.vertex(positionMatrix, config.scale() * size, config.scale() * size, 0).uv((config.u() + config.width()) / width, (config.v() + config.height()) / height).endVertex();
         buffer.vertex(positionMatrix, config.scale() * size, config.scale() * -size, 0).uv((config.u() + config.width()) / width, config.v() / height).endVertex();
         BufferUploader.drawWithShader(buffer.end());
+
+        config.decoration().ifPresent(decoration -> {
+            RenderSystem.setShaderTexture(0, decoration.texture());
+            float decoSize = size / 3.0F;
+            CelestialSelectionScreen.blit(positionMatrix, decoration.xScale() * decoSize, decoration.yScale() * decoSize, decoration.widthScale() * decoSize, decoration.heightScale() * decoSize, decoration.u(), decoration.v(), decoration.width(), decoration.height(), false, false, 32, 32);
+        });
+
         return new Vector4f(config.scale() * -size, config.scale() * -size, (config.scale() * size) * 2, (config.scale() * size) * 2);
     }
 }

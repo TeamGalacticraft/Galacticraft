@@ -28,6 +28,7 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyType;
 import dev.galacticraft.api.universe.celestialbody.satellite.Orbitable;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
+import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.impl.universe.celestialbody.config.DecorativePlanetConfig;
@@ -72,6 +73,11 @@ public class DecorativePlanet extends CelestialBodyType<DecorativePlanetConfig> 
     @Override
     public @NotNull CelestialDisplay<?, ?> display(DecorativePlanetConfig config) {
         return config.display();
+    }
+
+    @Override
+    public @NotNull CelestialRingDisplay<?, ?> ring(DecorativePlanetConfig config) {
+        return config.ring();
     }
 
     @Override
