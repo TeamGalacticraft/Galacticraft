@@ -151,7 +151,10 @@
         "dev/galacticraft/mod/accessor/ServerPlayerAccessor"
       ],
       "net/minecraft/class_742": ["dev/galacticraft/api/accessor/GearInventoryProvider"],
-      "net/minecraft/class_1309": ["dev/galacticraft/api/accessor/GearInventoryProvider"],
+      "net/minecraft/class_1309": [
+        "dev/galacticraft/api/accessor/GearInventoryProvider",
+        "dev/galacticraft/mod/accessor/CryogenicAccessor"
+      ],
       "net/minecraft/class_1937": [
         "dev/galacticraft/api/accessor/LevelOxygenAccessor",
         "dev/galacticraft/mod/accessor/LevelAccessor"

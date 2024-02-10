@@ -1,23 +1,25 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ *  * Copyright (c) 2019-2023 Team Galacticraft
+ *  *
+ *  * Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  * of this software and associated documentation files (the "Software"), to deal
+ *  * in the Software without restriction, including without limitation the rights
+ *  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  * copies of the Software, and to permit persons to whom the Software is
+ *  * furnished to do so, subject to the following conditions:
+ *  *
+ *  * The above copyright notice and this permission notice shall be included in all
+ *  * copies or substantial portions of the Software.
+ *  *
+ *  * THE SOFTWARE IS PROVIfDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  * SOFTWARE.
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
  */
 
 package dev.galacticraft.mod.events;
@@ -27,7 +29,6 @@ import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.impl.rocket.RocketDataImpl;
 import dev.galacticraft.impl.universe.celestialbody.config.PlanetConfig;
-import dev.galacticraft.mod.accessor.CryogenicAccessor;
 import dev.galacticraft.mod.client.network.FootprintRemovedPacket;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
@@ -70,19 +71,16 @@ public class GCEventHandlers {
     }
 
     public static InteractionResult allowCryogenicSleep(LivingEntity entity, BlockPos sleepingPos, BlockState state, boolean vanillaResult) {
-        if (entity instanceof CryogenicAccessor player) {
-            if (player.galacticraft$isInCryoSleep()) {
-                return InteractionResult.SUCCESS;
-            }
-        }
-        return InteractionResult.PASS;
+        return entity.isInCryoSleep()
+                ? InteractionResult.SUCCESS
+                : InteractionResult.PASS;
     }
 
     public static Direction changeSleepPosition(LivingEntity entity, BlockPos sleepingPos, @Nullable Direction sleepingDirection) {
-        if (entity instanceof CryogenicAccessor player && player.galacticraft$isInCryoSleep()) {
+        if (entity.isInCryoSleep()) {
             BlockState state = entity.level().getBlockState(sleepingPos);
-            if (state.getBlock() instanceof CryogenicChamberBlock)
-                return state.getValue(CryogenicChamberBlock.FACING);
+
+            if (state.getBlock() instanceof CryogenicChamberBlock) return state.getValue(CryogenicChamberBlock.FACING);
         }
 
         return sleepingDirection;
@@ -100,20 +98,14 @@ public class GCEventHandlers {
     }
 
     public static InteractionResult canCryoSleep(Player player, BlockPos sleepingPos, boolean vanillaResult) {
-        if (player.galacticraft$isInCryoSleep())
-            return InteractionResult.SUCCESS;
-        return vanillaResult ? InteractionResult.SUCCESS : InteractionResult.PASS;
+        return player.isInCryoSleep() || vanillaResult
+                ? InteractionResult.SUCCESS
+                : InteractionResult.PASS;
     }
 
     public static void onWakeFromCryoSleep(LivingEntity entity, BlockPos sleepingPos) {
-        Level level = entity.level();
-        if (!level.isClientSide && level instanceof ServerLevel serverLevel && entity instanceof CryogenicAccessor player) {
-            entity.heal(5.0F);
-            player.galacticraft$setCryogenicChamberCooldown(6000);
-
-//            if (serverLevel.areAllPlayersAsleep() && ws.getGameRules().getBoolean("doDaylightCycle")) {
-//                WorldUtil.setNextMorning(ws);
-//            }
+        if (!entity.level().isClientSide() && entity.isInCryoSleep()) {
+            entity.endCyroSleep();
         }
     }
 

@@ -22,19 +22,25 @@
 
 package dev.galacticraft.mod.accessor;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.Nullable;
+public interface CryogenicAccessor {
 
-public interface LivingEntityAccessor {
+    default void beginCyroSleep() {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
 
-    void beginCyroSleep();
+    default void endCyroSleep() {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
 
-    void endCyroSleep();
+    default int getCryogenicChamberCooldown() {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
 
-    int getCryogenicChamberCooldown();
+    default void setCryogenicChamberCooldown(int cryogenicChamberCooldown) {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
 
-    void setCryogenicChamberCooldown(int cryogenicChamberCooldown);
-
-    boolean isInCryoSleep();
+    default boolean isInCryoSleep() {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
 }

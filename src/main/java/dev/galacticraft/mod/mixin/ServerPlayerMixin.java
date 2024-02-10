@@ -25,7 +25,6 @@
 package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.api.rocket.RocketData;
-import dev.galacticraft.mod.accessor.LivingEntityAccessor;
 import dev.galacticraft.mod.accessor.ServerPlayerAccessor;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import net.minecraft.core.BlockPos;
@@ -46,7 +45,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Mixin(ServerPlayer.class)
-public abstract class ServerPlayerMixin extends LivingEntityMixin implements ServerPlayerAccessor, LivingEntityAccessor {
+public abstract class ServerPlayerMixin extends LivingEntityMixin implements ServerPlayerAccessor {
 
     private @Unique @Nullable RocketData rocketData = null;
     private @Unique boolean celestialActive = false;
@@ -97,7 +96,7 @@ public abstract class ServerPlayerMixin extends LivingEntityMixin implements Ser
 
     @Inject(method = "bedBlocked", at = @At(value = "HEAD"), cancellable = true)
     private void checkIfCryoBedBlocked(BlockPos blockPos, Direction direction, CallbackInfoReturnable<Boolean> cir){
-        if(this.level.getBlockState(blockPos).getBlock() instanceof CryogenicChamberBlock){
+        if(this.level().getBlockState(blockPos).getBlock() instanceof CryogenicChamberBlock){
             BlockPos blockPos2 = blockPos.relative(direction);
 
             cir.setReturnValue(!this.gc$freeAt(blockPos2) || !this.gc$freeAt(blockPos2.above()));
@@ -106,6 +105,6 @@ public abstract class ServerPlayerMixin extends LivingEntityMixin implements Ser
 
     @Unique
     private boolean gc$freeAt(BlockPos blockPos){
-        return !this.level.getBlockState(blockPos).isSuffocating(this.level, blockPos);
+        return !this.level().getBlockState(blockPos).isSuffocating(this.level(), blockPos);
     }
 }
