@@ -86,7 +86,7 @@ public class GCCelestialBodies {
                         BuiltinObjects.MILKY_WAY_KEY,
                         Optional.empty(),
                         StaticCelestialPositionType.INSTANCE.configure(new StaticCelestialPositionConfig(0, 0)),
-                        IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/body_icons.png"), 0, 0, 16, 16, 1.5f)),
+                        IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/body_icons.png"), 0, 0, 16, 16, 1.5f, Optional.empty())),
                         DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
                         new GasComposition.Builder()
                                 .pressure(28)
@@ -108,7 +108,7 @@ public class GCCelestialBodies {
                         BuiltinObjects.MILKY_WAY_KEY,
                         BuiltinObjects.SOL_KEY,
                         OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(1.0F, 1.0, 0.0F, true)),
-                        IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/body_icons.png"), 0, 16, 16, 16, 1)),
+                        IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/body_icons.png"), 0, 16, 16, 16)),
                         DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
                         Level.OVERWORLD,
                         lookup.getOrThrow(BuiltinObjects.DIRECT_CELESTIAL_TELEPORTER),
@@ -147,7 +147,7 @@ public class GCCelestialBodies {
                 BuiltinObjects.MILKY_WAY_KEY,
                 BuiltinObjects.EARTH_KEY,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(1 / 0.01F, 20.0, 0.2667, false)),
-                IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/moon.png"), 0, 0, 8, 8, 1)),
+                IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/moon.png"), 0, 0, 8, 8)),
                 DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
                 GCDimensions.MOON,
                 lookup.getOrThrow(GCTeleporterTypes.LANDER_CELESTIAL_TELEPORTER),
@@ -169,7 +169,7 @@ public class GCCelestialBodies {
                 BuiltinObjects.MILKY_WAY_KEY,
                 BuiltinObjects.SOL_KEY,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(0.24096385542168674698795180722892F, 0.5F, 1.45F, true)),
-                IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/mercury.png"), 0, 0, 16, 16, 1)),
+                IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/mercury.png"), 0, 0, 16, 16)),
                 DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
                 new GasComposition.Builder()
                         .temperature(23.0)
@@ -185,7 +185,7 @@ public class GCCelestialBodies {
                 BuiltinObjects.MILKY_WAY_KEY,
                 BuiltinObjects.SOL_KEY,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(0.61527929901423877327491785323111F, 0.75F, 2.0F, true)),
-                IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/venus.png"), 0, 0, 16, 16, 1)),
+                IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/venus.png"), 0, 0, 16, 16)),
                 DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
                 new GasComposition.Builder()
                         .temperature(23.0)
@@ -201,7 +201,7 @@ public class GCCelestialBodies {
                 BuiltinObjects.MILKY_WAY_KEY,
                 BuiltinObjects.SOL_KEY,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(1.8811610076670317634173055859803F, 1.25F, 0.1667F, true)),
-                IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/mars.png"), 0, 0, 16, 16, 1)),
+                IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/mars.png"), 0, 0, 16, 16)),
                 DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
                 new GasComposition.Builder()
                         .temperature(23.0)
@@ -217,7 +217,7 @@ public class GCCelestialBodies {
                 BuiltinObjects.MILKY_WAY_KEY,
                 BuiltinObjects.SOL_KEY,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(45.0F, 1.375F, 0.0F, true)),
-                SpinningIconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/asteroid.png"), 0, 0, 16, 16, 1)),
+                SpinningIconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/asteroid.png"), 0, 0, 16, 16)),
                 AsteroidCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
                 new GasComposition.Builder()
                         .temperature(23.0)
@@ -233,7 +233,7 @@ public class GCCelestialBodies {
                 BuiltinObjects.MILKY_WAY_KEY,
                 BuiltinObjects.SOL_KEY,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(11.861993428258488499452354874042F, 1.5F, Mth.PI, true)),
-                IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/jupiter.png"), 0, 0, 16, 16, 1)),
+                IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/jupiter.png"), 0, 0, 16, 16)),
                 DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
                 new GasComposition.Builder()
                         .temperature(23.0)
@@ -287,7 +287,7 @@ public class GCCelestialBodies {
                 BuiltinObjects.MILKY_WAY_KEY,
                 BuiltinObjects.SOL_KEY,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(164.84118291347207009857612267251F, 2.25F, 1.0F, true)),
-                IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/neptune.png"), 0, 0, 16, 16, 1)),
+                IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/neptune.png"), 0, 0, 16, 16)),
                 DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
                 new GasComposition.Builder()
                         .temperature(23.0)

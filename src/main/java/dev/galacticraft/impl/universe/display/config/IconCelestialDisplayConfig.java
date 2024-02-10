@@ -45,6 +45,10 @@ public record IconCelestialDisplayConfig(ResourceLocation texture, int u, int v,
         this(texture, u, v, width, height, scale, Optional.empty());
     }
 
+    public IconCelestialDisplayConfig(ResourceLocation texture, int u, int v, int width, int height) {
+        this(texture, u, v, width, height, 1);
+    }
+
     public record Decoration(ResourceLocation texture, float xScale, float yScale, float widthScale, float heightScale, int u, int v, int width, int height) {
         public static final Codec<Decoration> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 ResourceLocation.CODEC.fieldOf("texture").forGetter(Decoration::texture),

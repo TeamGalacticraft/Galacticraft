@@ -1100,7 +1100,7 @@ public class CelestialSelectionScreen extends Screen {
                 matrices.pushPose();
                 this.setupMatrix(body, matrices, moon ? 0.25F : 1.0F, delta);
                 CelestialDisplay<?, ?> display = body.display();
-                Vector4f vector4f = display.render(graphics, Tesselator.getInstance().getBuilder(), this.getWidthForCelestialBody(body), mouseX, mouseY, delta, s -> resetAlphaShader(alpha, s));
+                Vector4f vector4f = display.render(graphics, Tesselator.getInstance().getBuilder(), getWidthForCelestialBody(body), mouseX, mouseY, delta, s -> resetAlphaShader(alpha, s));
 //                matrices.translate(vector4f.x(), vector4f.z(), 0);
                 Matrix4f planetMatrix = matrices.last().pose();
 

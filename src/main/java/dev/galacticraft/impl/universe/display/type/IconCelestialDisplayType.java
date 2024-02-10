@@ -58,15 +58,15 @@ public class IconCelestialDisplayType extends CelestialDisplayType<IconCelestial
         float width = GlStateManager._getTexLevelParameter(GL32C.GL_TEXTURE_2D, 0, GL32C.GL_TEXTURE_WIDTH);
         float height = GlStateManager._getTexLevelParameter(GL32C.GL_TEXTURE_2D, 0, GL32C.GL_TEXTURE_HEIGHT);
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.vertex(positionMatrix, config.scale() * -size, config.scale() * -size, 0).uv(config.u() / width, config.v() / height).endVertex();
-        buffer.vertex(positionMatrix, config.scale() * -size, config.scale() * size, 0).uv(config.u() / width, (config.v() + config.height()) / height).endVertex();
-        buffer.vertex(positionMatrix, config.scale() * size, config.scale() * size, 0).uv((config.u() + config.width()) / width, (config.v() + config.height()) / height).endVertex();
-        buffer.vertex(positionMatrix, config.scale() * size, config.scale() * -size, 0).uv((config.u() + config.width()) / width, config.v() / height).endVertex();
+        buffer.vertex(positionMatrix, (config.scale() * -size) / 2, (config.scale() * -size) / 2, 0).uv(config.u() / width, config.v() / height).endVertex();
+        buffer.vertex(positionMatrix, (config.scale() * -size) / 2, (config.scale() * size) / 2, 0).uv(config.u() / width, (config.v() + config.height()) / height).endVertex();
+        buffer.vertex(positionMatrix, (config.scale() * size) / 2, (config.scale() * size) / 2, 0).uv((config.u() + config.width()) / width, (config.v() + config.height()) / height).endVertex();
+        buffer.vertex(positionMatrix, (config.scale() * size) / 2, (config.scale() * -size) / 2, 0).uv((config.u() + config.width()) / width, config.v() / height).endVertex();
         BufferUploader.drawWithShader(buffer.end());
 
         config.decoration().ifPresent(decoration -> {
             RenderSystem.setShaderTexture(0, decoration.texture());
-            float decoSize = size / 3.0F;
+            float decoSize = size / 6.0F;
             CelestialSelectionScreen.blit(positionMatrix, decoration.xScale() * decoSize, decoration.yScale() * decoSize, decoration.widthScale() * decoSize, decoration.heightScale() * decoSize, decoration.u(), decoration.v(), decoration.width(), decoration.height(), false, false, 32, 32);
         });
 

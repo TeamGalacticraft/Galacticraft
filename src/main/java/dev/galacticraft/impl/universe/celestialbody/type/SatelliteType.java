@@ -115,7 +115,7 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
         SatelliteChunkGenerator chunkGenerator = new SatelliteChunkGenerator(server.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(GCBiomes.SPACE), structure);
         SatelliteOwnershipData ownershipData = SatelliteOwnershipData.create(player.getUUID(), player.getScoreboardName(), new LinkedList<>(), false);
         CelestialPosition<?, ?> position = new CelestialPosition<>(OrbitalCelestialPositionType.INSTANCE, new OrbitalCelestialPositionConfig(1550, 10.0f, 0.0F, false));
-        CelestialDisplay<?, ?> display = new CelestialDisplay<>(IconCelestialDisplayType.INSTANCE, new IconCelestialDisplayConfig(Constant.id("satellite"), 0, 0, 16, 16, 1));
+        CelestialDisplay<?, ?> display = new CelestialDisplay<>(IconCelestialDisplayType.INSTANCE, new IconCelestialDisplayConfig(Constant.id("satellite"), 0, 0, 16, 16));
         CelestialRingDisplay<?, ?> ring = new CelestialRingDisplay<>(DefaultCelestialRingDisplayType.INSTANCE, new DefaultCelestialRingDisplayConfig());
         ResourceKey<Level> key = ResourceKey.create(Registries.DIMENSION, id);
         DynamicDimensionRegistry registry = DynamicDimensionRegistry.from(server);
