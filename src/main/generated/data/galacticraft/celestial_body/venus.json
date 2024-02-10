@@ -26,7 +26,7 @@
       "type": "galacticraft:orbital",
       "config": {
         "distance": 0.75,
-        "orbit_time": 655200.0,
+        "orbit_time": 0.6152793169021606,
         "phase_shift": 2.0,
         "planet": true
       }
