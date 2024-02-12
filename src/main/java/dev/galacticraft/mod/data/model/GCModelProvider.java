@@ -466,22 +466,9 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.FUEL_BUCKET, ModelTemplates.FLAT_ITEM);
 
         //GALACTICRAFT INVENTORY
-        generator.generateFlatItem(GCItems.PARACHUTE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.ORANGE_PARACHUTE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.MAGENTA_PARACHUTE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.LIGHT_BLUE_PARACHUTE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.YELLOW_PARACHUTE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.LIME_PARACHUTE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.PINK_PARACHUTE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.GRAY_PARACHUTE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.LIGHT_GRAY_PARACHUTE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.CYAN_PARACHUTE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.PURPLE_PARACHUTE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.BLUE_PARACHUTE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.BROWN_PARACHUTE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.GREEN_PARACHUTE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.RED_PARACHUTE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.BLACK_PARACHUTE, ModelTemplates.FLAT_ITEM);
+        GCItems.PARACHUTE.colorMap().forEach((color, parachute) -> {
+            generator.generateFlatItem(parachute, ModelTemplates.FLAT_ITEM);
+        });
 
         generator.generateFlatItem(GCItems.OXYGEN_MASK, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.OXYGEN_GEAR, ModelTemplates.FLAT_ITEM);

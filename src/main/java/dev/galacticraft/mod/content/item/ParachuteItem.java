@@ -20,32 +20,20 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin;
+package dev.galacticraft.mod.content.item;
 
-import dev.galacticraft.mod.accessor.CryogenicAccessor;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 
-@Mixin(Player.class)
-public abstract class PlayerMixin extends LivingEntity implements CryogenicAccessor {
+public class ParachuteItem extends Item {
+    private final DyeColor color;
 
-    PlayerMixin() {
-        super(null, null);
+    public ParachuteItem(DyeColor color, Properties properties) {
+        super(properties);
+        this.color = color;
     }
 
-    @Shadow public abstract boolean isCreative();
-
-    @Inject(method = "stopSleepInBed", at = @At(value = "HEAD"))
-    private void gc$shouldSetCryoCooldown(boolean bl, boolean bl2, CallbackInfo ci){
-        if(!((Player) (Object) this).level().isClientSide() && !this.isCreative() && this.isInCryoSleep()) {
-            ((Player) (Object) this).heal(5.0F);
-
-            this.setCryogenicChamberCooldown(6000);
-        }
+    public DyeColor getColor() {
+        return color;
     }
 }

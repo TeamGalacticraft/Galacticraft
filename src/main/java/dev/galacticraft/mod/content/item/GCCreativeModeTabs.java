@@ -189,7 +189,7 @@ public class GCCreativeModeTabs {
                 output.accept(FUEL_BUCKET);
 
                 //GALACTICRAFT INVENTORY
-                output.accept(PARACHUTE);
+                PARACHUTE.colorMap().values().forEach(output::accept);
 
                 for (DyeColor color : DyeColor.values()) {
                     ItemStack stack = new ItemStack(GCBlocks.PARACHEST);
@@ -238,6 +238,11 @@ public class GCCreativeModeTabs {
                 output.accept(THERMAL_PADDING_BOOTS);
                 // ROCKETS
                 output.accept(ROCKET.getDefaultInstance());
+
+                var rocket = ROCKET.getDefaultInstance();
+                CompoundTag tag = rocket.getOrCreateTag();
+                tag.putBoolean("creative", true);
+                output.accept(rocket);
 
                 // SCHEMATICS
                 output.accept(TIER_2_ROCKET_SCHEMATIC);

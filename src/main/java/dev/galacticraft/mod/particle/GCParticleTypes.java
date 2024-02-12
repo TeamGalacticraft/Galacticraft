@@ -22,9 +22,11 @@
 
 package dev.galacticraft.mod.particle;
 
+import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.core.Registry;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 
@@ -39,6 +41,9 @@ public class GCParticleTypes {
     public static final SimpleParticleType CRYOGENIC_PARTICLE = FabricParticleTypes.simple();
     public static final SimpleParticleType LANDER_FLAME_PARTICLE = FabricParticleTypes.simple();
     public static final SimpleParticleType SPARK_PARTICLE = FabricParticleTypes.simple();
+    public static final ComplexParticleType<LaunchSmokeParticleOption> LAUNCH_SMOKE_PARTICLE = new ComplexParticleType<>(false, LaunchSmokeParticleOption.DESERIALIZER, LaunchSmokeParticleOption.CODEC); // FabricParticleTypes.complex doesn't support codec ): this was fixed in 1.20.5 snapshots
+    public static final ComplexParticleType<EntityParticleOption> LAUNCH_FLAME = new ComplexParticleType<>(false, EntityParticleOption.DESERIALIZER, EntityParticleOption.CODEC);
+    public static final ComplexParticleType<EntityParticleOption> LAUNCH_FLAME_LAUNCHED = new ComplexParticleType<>(false, EntityParticleOption.DESERIALIZER, EntityParticleOption.CODEC);
 
     public static void register() {
         Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.DRIPPING_CRUDE_OIL), DRIPPING_CRUDE_OIL);
@@ -48,5 +53,8 @@ public class GCParticleTypes {
         Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.CRYOGENIC_PARTICLE), CRYOGENIC_PARTICLE);
         Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.LANDER_FLAME), LANDER_FLAME_PARTICLE);
         Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.SPARK), SPARK_PARTICLE);
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.LAUNCH_SMOKE), LAUNCH_SMOKE_PARTICLE);
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.LAUNCH_FLAME), LAUNCH_FLAME);
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.LAUNCH_FLAME_LAUNCHED), LAUNCH_FLAME_LAUNCHED);
     }
 }

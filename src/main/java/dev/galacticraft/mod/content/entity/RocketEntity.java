@@ -1,25 +1,23 @@
 /*
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
- *  * Copyright (c) 2019-2023 Team Galacticraft
- *  *
- *  * Permission is hereby granted, free of charge, to any person obtaining a copy
- *  * of this software and associated documentation files (the "Software"), to deal
- *  * in the Software without restriction, including without limitation the rights
- *  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  * copies of the Software, and to permit persons to whom the Software is
- *  * furnished to do so, subject to the following conditions:
- *  *
- *  * The above copyright notice and this permission notice shall be included in all
- *  * copies or substantial portions of the Software.
- *  *
- *  * THE SOFTWARE IS PROVIfDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- *  * SOFTWARE.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 package dev.galacticraft.mod.content.entity;
@@ -40,6 +38,8 @@ import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPa
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.events.RocketEvents;
+import dev.galacticraft.mod.particle.EntityParticleOption;
+import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -71,6 +71,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -108,8 +109,10 @@ public class RocketEntity extends Entity implements Rocket {
     private final boolean debugMode = false && FabricLoader.getInstance().isDevelopmentEnvironment();
 
     private BlockPos linkedPad = BlockPos.ZERO;
-    private final SingleFluidStorage tank = SingleFluidStorage.withFixedCapacity(FluidUtil.bucketsToDroplets(100), () -> {});
+    private final SingleFluidStorage tank = SingleFluidStorage.withFixedCapacity(FluidUtil.bucketsToDroplets(100), () -> {
+    });
     private int timeBeforeLaunch;
+    private float timeSinceLaunch;
     private int lerpSteps;
     private double lerpX;
     private double lerpY;
@@ -198,7 +201,7 @@ public class RocketEntity extends Entity implements Rocket {
                 this.entityData.set(DAMAGE_WOBBLE_SIDE, -this.entityData.get(DAMAGE_WOBBLE_SIDE));
                 this.entityData.set(DAMAGE_WOBBLE_TICKS, 10);
                 this.entityData.set(DAMAGE_WOBBLE_STRENGTH, this.entityData.get(DAMAGE_WOBBLE_STRENGTH) + amount * 10.0F);
-                boolean creative = source.getEntity() instanceof Player && ((Player)source.getEntity()).getAbilities().instabuild;
+                boolean creative = source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().instabuild;
                 if (creative || this.entityData.get(DAMAGE_WOBBLE_STRENGTH) > 40.0F) {
                     this.ejectPassengers();
                     if (creative && !this.hasCustomName()) {
@@ -220,7 +223,7 @@ public class RocketEntity extends Entity implements Rocket {
         super.remove(reason);
         if (this.linkedPad != null && reason == RemovalReason.KILLED || reason == RemovalReason.DISCARDED) {
             BlockEntity blockEntity = this.level().getBlockEntity(this.linkedPad);
-            if (blockEntity instanceof RocketLaunchPadBlockEntity pad){
+            if (blockEntity instanceof RocketLaunchPadBlockEntity pad) {
                 pad.setLinkedRocket(null);
             }
 
@@ -248,7 +251,7 @@ public class RocketEntity extends Entity implements Rocket {
             if (this.getFirstPassenger() instanceof ServerPlayer) {
                 if (getLaunchStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
                     if (!isTankEmpty() || debugMode) {
-                        this.timeBeforeLaunch = 400;
+                        this.timeBeforeLaunch = getPreLaunchWait();
                         this.setLaunchStage(this.getLaunchStage().next());
                         if (getLaunchStage() == LaunchStage.WARNING) {
                             ((ServerPlayer) this.getFirstPassenger()).sendSystemMessage(Component.translatable("chat.galacticraft.rocket.warning"), true);
@@ -335,12 +338,12 @@ public class RocketEntity extends Entity implements Rocket {
         }
 
         if (this.lerpSteps > 0) {
-            double d = this.getX() + (this.lerpX - this.getX()) / (double)this.lerpSteps;
-            double e = this.getY() + (this.lerpY - this.getY()) / (double)this.lerpSteps;
-            double f = this.getZ() + (this.lerpZ - this.getZ()) / (double)this.lerpSteps;
-            double g = Mth.wrapDegrees(this.lerpYRot - (double)this.getYRot());
-            this.setYRot(this.getYRot() + (float)g / (float)this.lerpSteps);
-            this.setXRot(this.getXRot() + (float)(this.lerpXRot - (double)this.getXRot()) / (float)this.lerpSteps);
+            double d = this.getX() + (this.lerpX - this.getX()) / (double) this.lerpSteps;
+            double e = this.getY() + (this.lerpY - this.getY()) / (double) this.lerpSteps;
+            double f = this.getZ() + (this.lerpZ - this.getZ()) / (double) this.lerpSteps;
+            double g = Mth.wrapDegrees(this.lerpYRot - (double) this.getYRot());
+            this.setYRot(this.getYRot() + (float) g / (float) this.lerpSteps);
+            this.setXRot(this.getXRot() + (float) (this.lerpXRot - (double) this.getXRot()) / (float) this.lerpSteps);
             --this.lerpSteps;
             this.setPos(d, e, f);
             this.setRot(this.getYRot(), this.getXRot());
@@ -402,7 +405,24 @@ public class RocketEntity extends Entity implements Rocket {
         super.tick();
         tickLerp();
 
+        int particleChance;
+
+        if (this.timeBeforeLaunch >= 100) {
+            particleChance = Math.abs(this.timeBeforeLaunch / 100);
+        } else {
+            particleChance = 1;
+        }
+        if ((this.getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal() || this.getLaunchStage() == LaunchStage.IGNITED && this.random.nextInt(particleChance) == 0)) {
+            this.spawnParticles();
+        }
+
         if (!level().isClientSide()) {
+            if (getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
+                this.timeSinceLaunch++;
+            } else {
+                this.timeSinceLaunch = 0;
+            }
+
             if (this.getPassengers().isEmpty()) {
                 if (getLaunchStage() != LaunchStage.FAILED) {
                     if (getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
@@ -416,7 +436,7 @@ public class RocketEntity extends Entity implements Rocket {
                     this.setLaunchStage(LaunchStage.FAILED);
                 } else {
                     this.setLaunchStage(LaunchStage.IDLE);
-                    this.timeBeforeLaunch = 400;
+                    this.timeBeforeLaunch = getPreLaunchWait();
                 }
 
                 this.removePassenger(this.getFirstPassenger());
@@ -443,7 +463,7 @@ public class RocketEntity extends Entity implements Rocket {
                     this.getTank().extract(FluidVariant.of(GCFluids.FUEL), FluidConstants.NUGGET, t); //todo find balanced values
                     t.commit();
                 }
-                if (getTimeAsState() >= 400) {
+                if (getTimeAsState() >= getPreLaunchWait()) {
                     this.setLaunchStage(LaunchStage.LAUNCHED);
                     if (this.getLinkedPad() != BlockPos.ZERO) {
                         for (int x = -1; x <= 1; x++) {
@@ -465,8 +485,10 @@ public class RocketEntity extends Entity implements Rocket {
                         this.getTank().extract(FluidVariant.of(GCFluids.FUEL), FluidConstants.NUGGET, t); //todo find balanced values
                         t.commit();
                     }
-                    for (int i = 0; i < 4; i++) ((ServerLevel) level()).sendParticles(ParticleTypes.FLAME, this.getX() + (level().random.nextDouble() - 0.5), this.getY() - 7, this.getZ() + (level().random.nextDouble() - 0.5), 0, (level().random.nextDouble() - 0.5), -1, level().random.nextDouble() - 0.5, 0.12000000596046448D);
-                    for (int i = 0; i < 4; i++) ((ServerLevel) level()).sendParticles(ParticleTypes.CLOUD, this.getX() + (level().random.nextDouble() - 0.5), this.getY() - 7, this.getZ() + (level().random.nextDouble() - 0.5), 0, (level().random.nextDouble() - 0.5), -1, level().random.nextDouble() - 0.5, 0.12000000596046448D);
+//                    for (int i = 0; i < 4; i++)
+//                        ((ServerLevel) level()).sendParticles(ParticleTypes.FLAME, this.getX() + (level().random.nextDouble() - 0.5), this.getY() - 7, this.getZ() + (level().random.nextDouble() - 0.5), 0, (level().random.nextDouble() - 0.5), -1, level().random.nextDouble() - 0.5, 0.12000000596046448D);
+//                    for (int i = 0; i < 4; i++)
+//                        ((ServerLevel) level()).sendParticles(ParticleTypes.CLOUD, this.getX() + (level().random.nextDouble() - 0.5), this.getY() - 7, this.getZ() + (level().random.nextDouble() - 0.5), 0, (level().random.nextDouble() - 0.5), -1, level().random.nextDouble() - 0.5, 0.12000000596046448D);
 
                     this.setSpeed(Math.min(0.75f, this.getSpeed() + 0.05f));
 
@@ -480,11 +502,19 @@ public class RocketEntity extends Entity implements Rocket {
                     //
                     // I hope this is right
 
+                    if (this.getYRot() > 90) {
+                        this.setYRot(90);
+                    }
+
+                    if (this.getXRot() < -90) {
+                        this.setXRot(-90);
+                    }
+
                     double velX = -Mth.sin(this.getYRot() / 180.0F * (float) Math.PI) * Mth.cos((this.getXRot() + 90.0F) / 180.0F * (float) Math.PI) * (this.getSpeed() * 0.632D) * 1.58227848D;
                     double velY = Mth.sin((this.getXRot() + 90.0F) / 180.0F * (float) Math.PI) * this.getSpeed();
                     double velZ = Mth.cos(this.getYRot() / 180.0F * (float) Math.PI) * Mth.cos((this.getXRot() + 90.0F) / 180.0F * (float) Math.PI) * (this.getSpeed() * 0.632D) * 1.58227848D;
 
-                    this.setDeltaMovement(velX, velY, velZ);
+                    this.setDeltaMovement(calculateVelocity());
                 }
 
                 if (this.position().y() >= 1200.0F) {
@@ -512,11 +542,7 @@ public class RocketEntity extends Entity implements Rocket {
             } else if (!onGround()) {
                 this.setSpeed(Math.max(-1.5f, this.getSpeed() - 0.05f));
 
-                double velX = -Mth.sin(this.getYRot() / 180.0F * (float) Math.PI) * Mth.cos((this.getXRot() + 90.0F) / 180.0F * (float) Math.PI) * (this.getSpeed() * 0.632D) * 1.58227848D;
-                double velY = Mth.sin((this.getXRot() + 90.0F) / 180.0F * (float) Math.PI) * this.getSpeed();
-                double velZ = Mth.cos(this.getYRot() / 180.0F * (float) Math.PI) * Mth.cos((this.getXRot() + 90.0F) / 180.0F * (float) Math.PI) * (this.getSpeed() * 0.632D) * 1.58227848D;
-
-                this.setDeltaMovement(velX, velY, velZ);
+                this.setDeltaMovement(calculateVelocity());
             }
 
             this.move(MoverType.SELF, this.getDeltaMovement());
@@ -524,16 +550,80 @@ public class RocketEntity extends Entity implements Rocket {
             if (getLaunchStage() == LaunchStage.FAILED) {
                 setRot((this.getYRot() + level().random.nextFloat() - 0.5F * 8.0F) % 360.0F, (this.getXRot() + level().random.nextFloat() - 0.5F * 8.0F) % 360.0F);
 
-                for (int i = 0; i < 4; i++) ((ServerLevel) level()).sendParticles(ParticleTypes.FLAME, this.getX() + (level().random.nextDouble() - 0.5) * 0.12F, this.getY() + 2, this.getZ() + (level().random.nextDouble() - 0.5), 0, level().random.nextDouble() - 0.5, 1, level().random.nextDouble() - 0.5, 0.12000000596046448D);
+                for (int i = 0; i < 4; i++)
+                    ((ServerLevel) level()).sendParticles(ParticleTypes.FLAME, this.getX() + (level().random.nextDouble() - 0.5) * 0.12F, this.getY() + 2, this.getZ() + (level().random.nextDouble() - 0.5), 0, level().random.nextDouble() - 0.5, 1, level().random.nextDouble() - 0.5, 0.12000000596046448D);
 
                 if (this.onGround()) {
-                    for (int i = 0; i < 4; i++) level().explode(this, this.position().x + (level().random.nextDouble() - 0.5 * 4), this.position().y + (level().random.nextDouble() * 3), this.position().z + (level().random.nextDouble() - 0.5 * 4), 10.0F, Level.ExplosionInteraction.TNT);
+                    for (int i = 0; i < 4; i++)
+                        level().explode(this, this.position().x + (level().random.nextDouble() - 0.5 * 4), this.position().y + (level().random.nextDouble() * 3), this.position().z + (level().random.nextDouble() - 0.5 * 4), 10.0F, Level.ExplosionInteraction.TNT);
                     this.remove(RemovalReason.KILLED);
                 }
             }
 
             ticksSinceJump++;
 
+        }
+    }
+
+    public Vec3 calculateVelocity() {
+        double d = this.timeSinceLaunch / 150;
+        double velX = -(50 * Math.cos(this.getYRot() / Mth.RAD_TO_DEG) * Math.sin(this.getXRot() * 0.01 / Constant.RADIANS_TO_DEGREES)) * (this.getSpeed() * 0.632D) * 1.58227848D;
+        double velY = -Math.min(d, 1) * Math.cos((this.getYRot() - 180) / Constant.RADIANS_TO_DEGREES) * this.getSpeed();
+        double velZ = -(50 * Math.sin(this.getYRot() / Mth.RAD_TO_DEG) * Math.sin(this.getXRot() * 0.01 / Constant.RADIANS_TO_DEGREES)) * (this.getSpeed() * 0.632D) * 1.58227848D;
+//        double cosPitch = Mth.cos((this.getXRot() + 90.0F) / 180.0F * (float) Math.PI) * (this.getSpeed() * 0.632D) * 1.58227848D;
+//        double velX = -Mth.sin(this.getYRot() / 180.0F * (float) Math.PI) * cosPitch;
+//        double velY = Mth.sin((this.getXRot() + 90.0F) / 180.0F * (float) Math.PI) * this.getSpeed();
+//        double velZ = Mth.cos(this.getYRot() / 180.0F * (float) Math.PI) * cosPitch;
+        return new Vec3(velX, velY, velZ);
+    }
+
+    protected void spawnParticles() {
+        if (this.isAlive()) {
+            double sinPitch = Math.sin(this.getXRot() / Constant.RADIANS_TO_DEGREES);
+            double x1 = 2 * Math.cos(this.getYRot() / Constant.RADIANS_TO_DEGREES) * sinPitch;
+            double z1 = 2 * Math.sin(this.getYRot() / Constant.RADIANS_TO_DEGREES) * sinPitch;
+            double y1 = 2 * Math.cos((this.getXRot() - 180) / Constant.RADIANS_TO_DEGREES);
+//            double cosPitch = Mth.cos((this.getXRot() + 90.0F) / 180.0F * (float) Math.PI) * (this.getSpeed() * 0.632D) * 1.58227848D;
+//            double x1 = 2 * -Math.sin(this.getYRot() / Constant.RADIANS_TO_DEGREES) * cosPitch;
+//            double z1 = 2 * Math.cos(this.getYRot() / Constant.RADIANS_TO_DEGREES) * cosPitch;
+//            double y1 = 2 * Math.sin((this.getXRot() - 90) / Constant.RADIANS_TO_DEGREES) * this.getSpeed();
+
+            if (this.getLaunchStage() == LaunchStage.FAILED && this.linkedPad != null) {
+                double modifier = this.getY() - this.linkedPad.getY();
+                modifier = Math.min(Math.max(modifier, 120.0), 300.0);
+                x1 *= modifier / 100.0D;
+                y1 *= modifier / 100.0D;
+                z1 *= modifier / 100.0D;
+            }
+
+            double y = this.yo + (this.getY() - this.yo) + y1 - this.getDeltaMovement().y + 1.2D;
+
+            final double x2 = this.getX() + x1 - this.getDeltaMovement().x;
+            final double z2 = this.getZ() + z1 - this.getDeltaMovement().z;
+
+            LivingEntity riddenByEntity = !this.getPassengers().isEmpty() && this.getPassengers().get(0) instanceof LivingEntity ? (LivingEntity) this.getPassengers().get(0) : null;
+
+            if (getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
+//                Vector3 motionVec = new Vector3((float)x1, (float)y1, (float)z1);
+//                Object[] rider = new Object[] { riddenByEntity };
+                EntityParticleOption particleData = new EntityParticleOption(GCParticleTypes.LAUNCH_FLAME_LAUNCHED, riddenByEntity == null ? null : riddenByEntity.getUUID());
+                this.level().addParticle(particleData, x2 + 0.4 - this.random.nextDouble() / 10D, y, z2 + 0.4 - this.random.nextDouble() / 10D, x1, y1, z1);
+                this.level().addParticle(particleData, x2 - 0.4 + this.random.nextDouble() / 10D, y, z2 + 0.4 - this.random.nextDouble() / 10D, x1, y1, z1);
+                this.level().addParticle(particleData, x2 - 0.4 + this.random.nextDouble() / 10D, y, z2 - 0.4 + this.random.nextDouble() / 10D, x1, y1, z1);
+                this.level().addParticle(particleData, x2 + 0.4 - this.random.nextDouble() / 10D, y, z2 - 0.4 + this.random.nextDouble() / 10D, x1, y1, z1);
+                this.level().addParticle(particleData, x2, y, z2, x1, y1, z1);
+                this.level().addParticle(particleData, x2 + 0.4, y, z2, x1, y1, z1);
+                this.level().addParticle(particleData, x2, y, z2 + 0.4D, x1, y1, z1);
+                this.level().addParticle(particleData, x2, y, z2 - 0.4D, x1, y1, z1);
+
+            } else if (this.tickCount % 2 == 0) {
+                y += 0.6D;
+                EntityParticleOption particleData = new EntityParticleOption(GCParticleTypes.LAUNCH_FLAME_LAUNCHED, riddenByEntity == null ? null : riddenByEntity.getUUID());
+                this.level().addParticle(particleData, x2 + 0.4 - this.random.nextDouble() / 10D, y, z2 + 0.4 - this.random.nextDouble() / 10D, this.random.nextDouble() / 2.0 - 0.25, 0.0, this.random.nextDouble() / 2.0 - 0.25);
+                this.level().addParticle(particleData, x2 - 0.4 + this.random.nextDouble() / 10D, y, z2 + 0.4 - this.random.nextDouble() / 10D, this.random.nextDouble() / 2.0 - 0.25, 0.0, this.random.nextDouble() / 2.0 - 0.25);
+                this.level().addParticle(particleData, x2 - 0.4 + this.random.nextDouble() / 10D, y, z2 - 0.4 + this.random.nextDouble() / 10D, this.random.nextDouble() / 2.0 - 0.25, 0.0, this.random.nextDouble() / 2.0 - 0.25);
+                this.level().addParticle(particleData, x2 + 0.4 - this.random.nextDouble() / 10D, y, z2 - 0.4 + this.random.nextDouble() / 10D, this.random.nextDouble() / 2.0 - 0.25, 0.0, this.random.nextDouble() / 2.0 - 0.25);
+            }
         }
     }
 
@@ -640,6 +730,10 @@ public class RocketEntity extends Entity implements Rocket {
 
     public int getTimeBeforeLaunch() {
         return timeBeforeLaunch;
+    }
+
+    public int getPreLaunchWait() {
+        return 400;
     }
 
     @Override

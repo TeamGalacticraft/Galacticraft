@@ -430,22 +430,7 @@ public class GCItems {
     public static final Item FUEL_BUCKET = new BucketItem(GCFluids.FUEL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //GALACTICRAFT INVENTORY
-    public static final Item PARACHUTE = new Item(new Item.Properties().stacksTo(1));
-    public static final Item ORANGE_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
-    public static final Item MAGENTA_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
-    public static final Item LIGHT_BLUE_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
-    public static final Item YELLOW_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
-    public static final Item LIME_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
-    public static final Item PINK_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
-    public static final Item GRAY_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
-    public static final Item LIGHT_GRAY_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
-    public static final Item CYAN_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
-    public static final Item PURPLE_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
-    public static final Item BLUE_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
-    public static final Item BROWN_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
-    public static final Item GREEN_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
-    public static final Item RED_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
-    public static final Item BLACK_PARACHUTE = new Item(new Item.Properties().stacksTo(1));
+    public static final GCRegistry.ColorSet<ParachuteItem> PARACHUTE = ITEMS.registerColored(Constant.Item.PARACHUTE, color -> new ParachuteItem(color, new Item.Properties().stacksTo(1)));
 
     public static final Item OXYGEN_MASK = new OxygenMaskItem(new Item.Properties());
     public static final Item OXYGEN_GEAR = new OxygenGearItem(new Item.Properties());
@@ -842,23 +827,6 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.FUEL_BUCKET), FUEL_BUCKET);
 
         //GALACTICRAFT INVENTORY
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.PARACHUTE), PARACHUTE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.ORANGE_PARACHUTE), ORANGE_PARACHUTE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.MAGENTA_PARACHUTE), MAGENTA_PARACHUTE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.LIGHT_BLUE_PARACHUTE), LIGHT_BLUE_PARACHUTE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.YELLOW_PARACHUTE), YELLOW_PARACHUTE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.LIME_PARACHUTE), LIME_PARACHUTE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.PINK_PARACHUTE), PINK_PARACHUTE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.GRAY_PARACHUTE), GRAY_PARACHUTE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.LIGHT_GRAY_PARACHUTE), LIGHT_GRAY_PARACHUTE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CYAN_PARACHUTE), CYAN_PARACHUTE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.PURPLE_PARACHUTE), PURPLE_PARACHUTE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.BLUE_PARACHUTE), BLUE_PARACHUTE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.BROWN_PARACHUTE), BROWN_PARACHUTE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.GREEN_PARACHUTE), GREEN_PARACHUTE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.RED_PARACHUTE), RED_PARACHUTE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.BLACK_PARACHUTE), BLACK_PARACHUTE);
-
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.OXYGEN_MASK), OXYGEN_MASK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.OXYGEN_GEAR), OXYGEN_GEAR);
 

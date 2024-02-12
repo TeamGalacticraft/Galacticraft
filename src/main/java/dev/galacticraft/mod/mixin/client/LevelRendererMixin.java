@@ -24,6 +24,7 @@ package dev.galacticraft.mod.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.render.dimension.OverworldRenderer;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.minecraft.client.Camera;
@@ -64,9 +65,9 @@ public class LevelRendererMixin {
     @Inject(method = "renderClouds", at = @At("HEAD"), cancellable = true)
     public void gc$preventCloudRendering(PoseStack poseStack, Matrix4f matrix4f, float f, double d, double e, double g, CallbackInfo ci) {
         Player player = Minecraft.getInstance().player;
-        if (player != null && player.getVehicle() instanceof RocketEntity && player.getVehicle().getY() > 200) {
+        if (player != null && player.getVehicle() instanceof RocketEntity && player.getVehicle().getY() > Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) {
             // Have clouds slowly fade out
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, normalize((float) player.getY(), 200, 300, 1, 0F));
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, normalize((float) player.getY(), Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT, Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT + 100, 1, 0F));
             if (player.getVehicle().getY() > 300)
                 ci.cancel();
         }

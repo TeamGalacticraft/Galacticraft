@@ -47,8 +47,8 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
     }
 
     @Override
-    public void render(RocketEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
-        super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
+    public void render(RocketEntity entity, float yaw, float partialTick, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
+        super.render(entity, yaw, partialTick, matrices, vertexConsumers, light);
         matrices.pushPose();
         Minecraft client = Minecraft.getInstance();
         matrices.translate(-0.5D, 1.6, -0.5D);
@@ -56,12 +56,14 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
             matrices.translate((entity.level().random.nextDouble() - 0.5D) * 0.1D, 0, (entity.level().random.nextDouble() - 0.5D) * 0.1D);
         }
         matrices.translate(0.5D, 0, 0.5D);
-        matrices.mulPose(Axis.YN.rotationDegrees(entity.getViewYRot(tickDelta)));
-        matrices.mulPose(Axis.XN.rotationDegrees(entity.getViewXRot(tickDelta)));
+        float yRot = entity.getViewYRot(partialTick);
+        matrices.mulPose(Axis.YP.rotationDegrees(180.0F - yRot));
+        matrices.mulPose(Axis.ZN.rotationDegrees(entity.getViewXRot(partialTick)));
+        matrices.mulPose(Axis.YN.rotationDegrees(yRot));
         matrices.translate(-0.5D, 0, -0.5D);
 
-        float wobbleTicks = (float) entity.getEntityData().get(RocketEntity.DAMAGE_WOBBLE_TICKS) - tickDelta;
-        float wobbleStrength = entity.getEntityData().get(RocketEntity.DAMAGE_WOBBLE_STRENGTH) - tickDelta;
+        float wobbleTicks = (float) entity.getEntityData().get(RocketEntity.DAMAGE_WOBBLE_TICKS) - partialTick;
+        float wobbleStrength = entity.getEntityData().get(RocketEntity.DAMAGE_WOBBLE_STRENGTH) - partialTick;
 
         if (wobbleStrength < 0.0F) {
             wobbleStrength = 0.0F;
@@ -77,7 +79,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         ResourceKey<? extends RocketPart<?, ?>> part = entity.engine();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, partialTick, light);
             matrices.popPose();
         }
 
@@ -86,14 +88,14 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         part = entity.booster();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, partialTick, light);
             matrices.popPose();
         }
 
         part = entity.fin();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, partialTick, light);
             matrices.popPose();
         }
 
@@ -102,7 +104,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         part = entity.body();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, partialTick, light);
             matrices.popPose();
         }
 
@@ -111,7 +113,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         part = entity.cone();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, tickDelta, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, partialTick, light);
             matrices.popPose();
         }
 
