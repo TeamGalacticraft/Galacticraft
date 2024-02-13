@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.special.walkway;
 
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.FluidPipe;
@@ -62,6 +63,7 @@ import java.util.Objects;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class FluidPipeWalkway extends FluidPipe implements FluidLoggable {
+    public static final MapCodec<FluidPipeWalkway> CODEC = simpleCodec(FluidPipeWalkway::new);
     private static final VoxelShape[] SHAPES = new VoxelShape[64];
 
     public FluidPipeWalkway(Properties settings) {
@@ -70,6 +72,11 @@ public class FluidPipeWalkway extends FluidPipe implements FluidLoggable {
                 .setValue(FLUID, INVALID)
                 .setValue(FlowingFluid.LEVEL, 8)
                 .setValue(FlowingFluid.FALLING, false));
+    }
+
+    @Override
+    protected MapCodec<? extends Block> codec() {
+        return CODEC;
     }
 
     private static int getFacingMask(Direction direction) {

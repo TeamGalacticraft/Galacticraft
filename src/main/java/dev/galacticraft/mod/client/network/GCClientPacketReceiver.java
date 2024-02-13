@@ -36,8 +36,6 @@ import dev.galacticraft.mod.network.GCScreenType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.event.network.C2SPacketTypeCallback;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -115,7 +113,7 @@ public class GCClientPacketReceiver {
 
                 entity.setData(data);
 
-                Minecraft.getInstance().level.putNonPlayerEntity(entityID, entity);
+                Minecraft.getInstance().level.addEntity(entity);
             });
         }));
 

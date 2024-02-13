@@ -47,6 +47,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -84,7 +85,7 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
         CompoundTag compound = new CompoundTag();
         compound.put("satellites", nbt);
         try {
-            NbtIo.writeCompressed(compound, new File(path.toFile(), "satellites.dat"));
+            NbtIo.writeCompressed(compound, path.resolve("satellites.dat"));
         } catch (Throwable exception) {
             Constant.LOGGER.fatal("Failed to write satellite data!", exception);
         }
@@ -92,10 +93,10 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
 
     @Inject(method = "runServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;initServer()Z", shift = At.Shift.AFTER))
     private void galacticraft_loadSatellites(CallbackInfo ci) {
-        File worldFile = this.storageSource.getLevelPath(LevelResource.ROOT).toFile();
-        if (new File(worldFile, "satellites.dat").exists()) {
+        Path worldFile = this.storageSource.getLevelPath(LevelResource.ROOT);
+        if (Files.exists(worldFile.resolve("satellites.dat"))) {
             try {
-                ListTag nbt = NbtIo.readCompressed(new File(worldFile, "satellites.dat")).getList("satellites", NbtType.COMPOUND);
+                ListTag nbt = NbtIo.readCompressed(worldFile.resolve("satellites.dat"), NbtAccounter.unlimitedHeap()).getList("satellites", NbtType.COMPOUND);
                 for (Tag compound : nbt) {
                     assert compound instanceof CompoundTag : "Not a compound?!";
                     this.satellites.put(new ResourceLocation(((CompoundTag) compound).getString("id")), new CelestialBody<>(SatelliteType.INSTANCE, SatelliteConfig.CODEC.decode(NbtOps.INSTANCE, compound).get().orThrow().getFirst()));

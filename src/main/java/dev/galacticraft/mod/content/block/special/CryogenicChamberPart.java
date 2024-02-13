@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.special;
 
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.api.block.MultiBlockBase;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.CryogenicChamberPartBlockEntity;
@@ -32,6 +33,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
@@ -46,6 +48,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class CryogenicChamberPart extends BaseEntityBlock {
+    public static final MapCodec<CryogenicChamberPart> CODEC = simpleCodec(CryogenicChamberPart::new);
     public static final BooleanProperty TOP = BooleanProperty.create("top");
 
     public CryogenicChamberPart(Properties properties) {
@@ -54,7 +57,12 @@ public class CryogenicChamberPart extends BaseEntityBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState) {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
         return new ItemStack(GCBlocks.CRYOGENIC_CHAMBER);
     }
 
@@ -75,22 +83,24 @@ public class CryogenicChamberPart extends BaseEntityBlock {
     }
 
     @Override
-    public void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+    public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
         var partBE = level.getBlockEntity(blockPos);
         var be = (CryogenicChamberPartBlockEntity) partBE;
 
-        if (be == null || be.basePos == BlockPos.ZERO) return;
+        if (be == null || be.basePos == BlockPos.ZERO) return blockState;
 
         var basePos = new BlockPos(be.basePos);
         var baseState = level.getBlockState(basePos);
 
         // The base has been destroyed already.
-        if (baseState.isAir()) return;
+        if (baseState.isAir()) return baseState;
 
         var block = (MultiBlockBase) baseState.getBlock();
         block.onPartDestroyed(level, player, baseState, basePos, blockState, blockPos);
 
         super.destroy(level, blockPos, blockState);
+
+        return baseState;
     }
 
     @Override

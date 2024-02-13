@@ -29,6 +29,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Pose;
@@ -92,7 +93,7 @@ public class EvolvedCreeperEntity extends Creeper {
         this.getEntityData().set(BABY, baby);
         if (this.level() != null && !this.level().isClientSide) {
             AttributeInstance entityAttributeInstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
-            entityAttributeInstance.removeModifier(BABY_SPEED_BONUS);
+            entityAttributeInstance.removeModifier(BABY_SPEED_ID);
             if (baby) {
                 entityAttributeInstance.addTransientModifier(BABY_SPEED_BONUS);
             }
@@ -122,7 +123,7 @@ public class EvolvedCreeperEntity extends Creeper {
     }
 
     @Override
-    public double getMyRidingOffset() {
-        return this.isBaby() ? 0.0D : -0.45D;
+    public float getMyRidingOffset(Entity entity) {
+        return this.isBaby() ? 0.0F : -0.45F;
     }
 }

@@ -322,12 +322,12 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     @Override
-    public void lerpTo(double d, double e, double f, float g, float h, int i, boolean bl) {
-        this.lerpX = d;
-        this.lerpY = e;
-        this.lerpZ = f;
-        this.lerpYRot = g;
-        this.lerpXRot = h;
+    public void lerpTo(double x, double y, double z, float yRot, float xRot, int steps) {
+        this.lerpX = x;
+        this.lerpY = y;
+        this.lerpZ = z;
+        this.lerpYRot = yRot;
+        this.lerpXRot = xRot;
         this.lerpSteps = 10;
     }
 
@@ -391,10 +391,8 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     @Override
-    public void positionRider(Entity passenger, Entity.MoveFunction moveFunction) {
-        if (this.hasPassenger(passenger)) {
-            moveFunction.accept(passenger, this.getX(), this.getY() + this.getPassengersRidingOffset() + passenger.getMyRidingOffset() - 2.5, this.getZ());
-        }
+    public float getMyRidingOffset(Entity entity) {
+        return super.getMyRidingOffset(entity) - 2.5F;
     }
 
     @Override
@@ -712,7 +710,7 @@ public class RocketEntity extends Entity implements Rocket {
     }
 
     @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
+    public @NotNull Packet getAddEntityPacket() {
         FriendlyByteBuf buf = PacketByteBufs.create();
         buf.writeVarInt(BuiltInRegistries.ENTITY_TYPE.getId(this.getType()));
         buf.writeVarInt(this.getId());

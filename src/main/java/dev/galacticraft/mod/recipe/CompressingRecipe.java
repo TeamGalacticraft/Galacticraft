@@ -22,14 +22,14 @@
 
 package dev.galacticraft.mod.recipe;
 
-import net.minecraft.world.Container;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public interface CompressingRecipe extends Recipe<Container> {
+public interface CompressingRecipe extends Recipe<CraftingContainer> {
     @Override
     default RecipeType<? extends CompressingRecipe> getType() {
         return GCRecipes.COMPRESSING_TYPE;

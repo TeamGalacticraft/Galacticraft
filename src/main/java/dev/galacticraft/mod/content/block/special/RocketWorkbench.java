@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.special;
 
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -36,8 +37,14 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 public class RocketWorkbench extends BaseEntityBlock {
+    public static final MapCodec<RocketWorkbench> CODEC = simpleCodec(RocketWorkbench::new);
     public RocketWorkbench(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Override

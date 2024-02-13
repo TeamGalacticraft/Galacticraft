@@ -60,7 +60,7 @@ public class RocketOverlay {
     public static void onHudRender(GuiGraphics graphics, float tickDelta) {
         Minecraft mc = Minecraft.getInstance();
         if (playerHead == null) {
-            playerHead = mc.getSkinManager().getInsecureSkinLocation(mc.player.getGameProfile());
+            playerHead = mc.getSkinManager().getInsecureSkin(mc.player.getGameProfile()).texture();
         }
         if (Minecraft.getInstance().player.getVehicle() instanceof RocketEntity rocketEntity) {
             final int height = mc.getWindow().getGuiScaledHeight();

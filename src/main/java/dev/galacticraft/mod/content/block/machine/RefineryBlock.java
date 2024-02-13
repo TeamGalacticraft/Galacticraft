@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.block.machine;
 
 import dev.galacticraft.machinelib.api.block.MachineBlock;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.RefineryBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -35,7 +36,7 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class RefineryBlock extends MachineBlock<RefineryBlockEntity> {
     public RefineryBlock(Properties settings) {
-        super(settings, RefineryBlockEntity::new);
+        super(settings, Constant.id(Constant.Block.REFINERY));
     }
 
     @Override

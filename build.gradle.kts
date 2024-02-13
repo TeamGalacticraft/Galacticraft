@@ -230,7 +230,7 @@ dependencies {
     mappings(if (parchmentVersion.isNotEmpty()) {
         loom.layered {
             officialMojangMappings()
-            parchment("org.parchmentmc.data:parchment-$minecraftVersion:$parchmentVersion@zip")
+            parchment("org.parchmentmc.data:parchment-1.20.2:$parchmentVersion@zip")
         }
     } else {
         loom.officialMojangMappings()

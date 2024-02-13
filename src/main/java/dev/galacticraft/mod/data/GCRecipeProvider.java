@@ -34,8 +34,10 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CampfireCookingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.SmokingRecipe;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,7 +50,7 @@ public class GCRecipeProvider extends FabricRecipeProvider {
     }
 
     @Override
-    public void buildRecipes(Consumer<FinishedRecipe> exporter) {
+    public void buildRecipes(RecipeOutput output) {
         // Gear
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_MASK)
                 .define('G', Items.GLASS_PANE)
@@ -57,7 +59,7 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("GHG")
                 .pattern("GGG")
                 .unlockedBy(getHasName(Items.GLASS_PANE), has(Items.GLASS_PANE))
-                .save(exporter);
+                .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_GEAR)
                 .define('Y', GCBlocks.GLASS_FLUID_PIPE)
@@ -66,7 +68,7 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("YXY")
                 .pattern("Y Y")
                 .unlockedBy(getHasName(GCBlocks.GLASS_FLUID_PIPE), has(GCItems.GLASS_FLUID_PIPE))
-                .save(exporter);
+                .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_CONCENTRATOR)
                 .define('Z', GCTags.COMPRESSED_STEEL)
@@ -77,7 +79,7 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("WYW")
                 .pattern("ZXZ")
                 .unlockedBy(getHasName(GCItems.OXYGEN_VENT), has(GCItems.OXYGEN_VENT))
-                .save(exporter);
+                .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.TIN_CANISTER, 2)
                 .define('X', GCTags.TIN_INGOTS)
@@ -85,7 +87,7 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("X X")
                 .pattern("XXX")
                 .unlockedBy(getHasName(GCItems.TIN_INGOT), has(GCItems.TIN_INGOT))
-                .save(exporter);
+                .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.COPPER_CANISTER, 2)
                 .define('X', Items.COPPER_INGOT)
@@ -93,7 +95,7 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("X X")
                 .pattern("XXX")
                 .unlockedBy(getHasName(Items.COPPER_INGOT), has(Items.COPPER_INGOT))
-                .save(exporter);
+                .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.ROCKET_LAUNCH_PAD, 9)
                 .define('C', GCItems.COMPRESSED_IRON)
@@ -101,7 +103,7 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("CCC")
                 .pattern("III")
                 .unlockedBy(getHasName(Items.IRON_BLOCK), has(Items.IRON_BLOCK))
-                .save(exporter);
+                .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_FAN)
                 .define('S', GCItems.COMPRESSED_STEEL)
@@ -111,7 +113,7 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern(" W ")
                 .pattern("SRS")
                 .unlockedBy(getHasName(GCItems.BASIC_WAFER), has(GCItems.BASIC_WAFER))
-                .save(exporter);
+                .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_VENT)
                 .define('T', GCItems.COMPRESSED_TIN)
@@ -119,11 +121,11 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("TT")
                 .pattern("TS")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_TIN), has(GCItems.COMPRESSED_TIN))
-                .save(exporter);
+                .save(output);
 
         // Food
-        simpleCookingRecipe(exporter, "smoking", RecipeSerializer.SMOKING_RECIPE, 100, GCItems.GROUND_BEEF, GCItems.BEEF_PATTY, 1.0F);
-        simpleCookingRecipe(exporter, "campfire_cooking", RecipeSerializer.CAMPFIRE_COOKING_RECIPE, 600, GCItems.GROUND_BEEF, GCItems.BEEF_PATTY, 1.0F);
+        simpleCookingRecipe(output, "smoking", RecipeSerializer.SMOKING_RECIPE, SmokingRecipe::new, 100, GCItems.GROUND_BEEF, GCItems.BEEF_PATTY, 1.0F);
+        simpleCookingRecipe(output, "campfire_cooking", RecipeSerializer.CAMPFIRE_COOKING_RECIPE, CampfireCookingRecipe::new, 600, GCItems.GROUND_BEEF, GCItems.BEEF_PATTY, 1.0F);
 
 //        SimpleCookingRecipeBuilder.smelting(Ingredient.of(GCBlocks.CHEESE_ORE), RecipeCategory.FOOD, GCItems.CHEESE_CURD, 0.35F, 200)
 //                .unlockedBy(getHasName(GCBlocks.CHEESE_ORE), has(GCBlocks.CHEESE_ORE))
@@ -135,24 +137,24 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .requires(Items.EGG)
                 .requires(Items.MILK_BUCKET)
                 .unlockedBy(getHasName(Items.EGG), has(Items.EGG))
-                .save(exporter);
+                .save(output);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.GROUND_BEEF, 2)
                 .requires(Items.BEEF)
                 .unlockedBy(getHasName(Items.BEEF), has(Items.BEEF))
-                .save(exporter);
+                .save(output);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CHEESEBURGER)
                 .requires(GCItems.CHEESE_SLICE)
                 .requires(GCItems.BEEF_PATTY)
                 .requires(GCItems.BURGER_BUN)
                 .unlockedBy(getHasName(GCItems.GROUND_BEEF), has(GCItems.GROUND_BEEF))
-                .save(exporter);
+                .save(output);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CHEESE_SLICE, 6)
                 .requires(GCItems.MOON_CHEESE_BLOCK)
                 .unlockedBy(getHasName(GCItems.MOON_CHEESE_BLOCK), has(GCItems.MOON_CHEESE_BLOCK))
-                .save(exporter);
+                .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.FOOD, GCItems.MOON_CHEESE_BLOCK)
                 .define('Y', GCItems.CHEESE_CURD)
@@ -161,7 +163,7 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("YXY")
                 .pattern("YYY")
                 .unlockedBy(getHasName(GCItems.CHEESE_CURD), has(GCItems.CHEESE_CURD))
-                .save(exporter);
+                .save(output);
 
         // Pipes
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.GLASS_FLUID_PIPE, 6)
@@ -170,48 +172,48 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("   ")
                 .pattern("XXX")
                 .unlockedBy(getHasName(Items.GLASS_PANE), has(Items.GLASS_PANE))
-                .save(exporter);
+                .save(output);
 
         // Compressing
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_ALUMINUM)
                 .requires(GCTags.ALUMINUM_INGOTS)
                 .requires(GCTags.ALUMINUM_INGOTS)
-                .save(exporter);
+                .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_BRONZE)
                 .requires(GCItems.COMPRESSED_COPPER)
                 .requires(GCItems.COMPRESSED_TIN)
-                .save(exporter);
+                .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_COPPER)
                 .requires(ConventionalItemTags.COPPER_INGOTS)
                 .requires(ConventionalItemTags.COPPER_INGOTS)
-                .save(exporter);
+                .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_DESH)
                 .requires(GCItems.DESH_INGOT)
-                .save(exporter);
+                .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_IRON)
                 .requires(ConventionalItemTags.IRON_INGOTS)
                 .requires(ConventionalItemTags.IRON_INGOTS)
-                .save(exporter);
+                .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_METEORIC_IRON)
                 .requires(GCItems.METEORIC_IRON_INGOT)
-                .save(exporter);
+                .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_STEEL)
                 .requires(ConventionalItemTags.COAL)
                 .requires(GCItems.COMPRESSED_IRON)
                 .requires(ConventionalItemTags.COAL)
-                .save(exporter);
+                .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_STEEL)
                 .requires(GCTags.STEEL_INGOTS)
                 .requires(GCTags.STEEL_INGOTS)
-                .save(exporter, Constant.id("compressed_steel_from_ingots"));
+                .save(output, Constant.id("compressed_steel_from_ingots"));
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_TIN)
                 .requires(GCTags.TIN_INGOTS)
                 .requires(GCTags.TIN_INGOTS)
-                .save(exporter);
+                .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_TITANIUM)
                 .requires(GCItems.TITANIUM_INGOT)
                 .requires(GCItems.TITANIUM_INGOT)
-                .save(exporter);
+                .save(output);
 
         ShapedCompressorRecipeBuilder.create(GCItems.TIER_1_HEAVY_DUTY_PLATE, 2)
                 .define('B', GCItems.COMPRESSED_BRONZE)
@@ -219,7 +221,7 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .pattern("BAS")
                 .pattern("BAS")
-                .save(exporter);
+                .save(output);
 
         // Machines
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.CIRCUIT_FABRICATOR)
@@ -233,7 +235,7 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("BFB")
                 .pattern("WRW")
                 .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItems.ALUMINUM_INGOT))
-                .save(exporter);
+                .save(output);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.COMPRESSOR)
                 .define('I', GCItems.ALUMINUM_INGOT)
                 .define('A', Items.ANVIL)
@@ -243,7 +245,7 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("ICI")
                 .pattern("IWI")
                 .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItems.ALUMINUM_INGOT))
-                .save(exporter);
+                .save(output);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ELECTRIC_COMPRESSOR)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('A', Items.ANVIL)
@@ -254,7 +256,7 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("SBS")
                 .pattern("IWI")
                 .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItems.ALUMINUM_INGOT))
-                .save(exporter);
+                .save(output);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ELECTRIC_COMPRESSOR)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('T', GCItems.COMPRESSED_TIN)
@@ -265,7 +267,7 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("SCS")
                 .pattern("IWI")
                 .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItems.ALUMINUM_INGOT))
-                .save(exporter, Constant.id("electric_compressor_alt"));
+                .save(output, Constant.id("electric_compressor_alt"));
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_BUBBLE_DISTRIBUTOR)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('F', GCItems.OXYGEN_FAN)
@@ -275,7 +277,7 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("VAV")
                 .pattern("SFS")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
-                .save(exporter);
+                .save(output);
 
         // Rockets
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ROCKET_WORKBENCH)
@@ -288,7 +290,7 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("LWL")
                 .pattern("SRS")
                 .unlockedBy(getHasName(GCItems.ADVANCED_WAFER), has(GCItems.ADVANCED_WAFER))
-                .save(exporter);
+                .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.NOSE_CONE)
                 .define('Y', Items.REDSTONE_TORCH)
@@ -297,7 +299,7 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern(" X ")
                 .pattern("X X")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
-                .save(exporter);
+                .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ROCKET_FINS)
                 .define('Y', GCTags.COMPRESSED_STEEL)
@@ -306,7 +308,7 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("XYX")
                 .pattern("X X")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
-                .save(exporter);
+                .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BEAM_CORE)
                 .define('X', ConventionalItemTags.REDSTONE_DUSTS)
@@ -316,48 +318,48 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("YZY")
                 .pattern("XYX")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_IRON), has(GCItems.COMPRESSED_IRON))
-                .save(exporter);
+                .save(output);
 
         // Fabricator
         CircuitFabricatorRecipeBuilder.create(GCItems.BASIC_WAFER, 3)
                 .requires(Items.REDSTONE_TORCH)
-                .save(exporter);
+                .save(output);
         CircuitFabricatorRecipeBuilder.create(GCItems.ADVANCED_WAFER)
                 .requires(Items.REPEATER)
-                .save(exporter);
+                .save(output);
 
         CircuitFabricatorRecipeBuilder.create(GCItems.BLUE_SOLAR_WAFER, 9)
                 .requires(Items.LAPIS_LAZULI)
-                .save(exporter);
+                .save(output);
         CircuitFabricatorRecipeBuilder.create(GCItems.SOLAR_ARRAY_WAFER, 3)
                 .requires(GCItems.SOLAR_DUST)
-                .save(exporter);
+                .save(output);
 
         // Nuggets <-> Ingots
-        GCRecipeProvider.nineBlockStorageRecipesWithCustomPacking(exporter, RecipeCategory.MISC, GCItems.METEORIC_IRON_NUGGET, RecipeCategory.MISC, GCItems.METEORIC_IRON_INGOT, "meteoric_iron_ingot_from_nuggets", "meteoric_iron_ingot");
-        GCRecipeProvider.nineBlockStorageRecipesWithCustomPacking(exporter, RecipeCategory.MISC, GCItems.DESH_NUGGET, RecipeCategory.MISC, GCItems.DESH_INGOT, "desh_ingot_from_nuggets", "desh_ingot");
-        GCRecipeProvider.nineBlockStorageRecipesWithCustomPacking(exporter, RecipeCategory.MISC, GCItems.LEAD_NUGGET, RecipeCategory.MISC, GCItems.LEAD_INGOT, "lead_ingot_from_nuggets", "lead_ingot");
-        GCRecipeProvider.nineBlockStorageRecipesWithCustomPacking(exporter, RecipeCategory.MISC, GCItems.ALUMINUM_NUGGET, RecipeCategory.MISC, GCItems.ALUMINUM_INGOT, "aluminum_ingot_from_nuggets", "aluminum_ingot");
-        GCRecipeProvider.nineBlockStorageRecipesWithCustomPacking(exporter, RecipeCategory.MISC, GCItems.TIN_NUGGET, RecipeCategory.MISC, GCItems.TIN_INGOT, "tin_ingot_from_nuggets", "tin_ingot");
-        GCRecipeProvider.nineBlockStorageRecipesWithCustomPacking(exporter, RecipeCategory.MISC, GCItems.TITANIUM_NUGGET, RecipeCategory.MISC, GCItems.TITANIUM_INGOT, "titanium_ingot_from_nuggets", "titanium_ingot");
+        GCRecipeProvider.nineBlockStorageRecipesWithCustomPacking(output, RecipeCategory.MISC, GCItems.METEORIC_IRON_NUGGET, RecipeCategory.MISC, GCItems.METEORIC_IRON_INGOT, "meteoric_iron_ingot_from_nuggets", "meteoric_iron_ingot");
+        GCRecipeProvider.nineBlockStorageRecipesWithCustomPacking(output, RecipeCategory.MISC, GCItems.DESH_NUGGET, RecipeCategory.MISC, GCItems.DESH_INGOT, "desh_ingot_from_nuggets", "desh_ingot");
+        GCRecipeProvider.nineBlockStorageRecipesWithCustomPacking(output, RecipeCategory.MISC, GCItems.LEAD_NUGGET, RecipeCategory.MISC, GCItems.LEAD_INGOT, "lead_ingot_from_nuggets", "lead_ingot");
+        GCRecipeProvider.nineBlockStorageRecipesWithCustomPacking(output, RecipeCategory.MISC, GCItems.ALUMINUM_NUGGET, RecipeCategory.MISC, GCItems.ALUMINUM_INGOT, "aluminum_ingot_from_nuggets", "aluminum_ingot");
+        GCRecipeProvider.nineBlockStorageRecipesWithCustomPacking(output, RecipeCategory.MISC, GCItems.TIN_NUGGET, RecipeCategory.MISC, GCItems.TIN_INGOT, "tin_ingot_from_nuggets", "tin_ingot");
+        GCRecipeProvider.nineBlockStorageRecipesWithCustomPacking(output, RecipeCategory.MISC, GCItems.TITANIUM_NUGGET, RecipeCategory.MISC, GCItems.TITANIUM_INGOT, "titanium_ingot_from_nuggets", "titanium_ingot");
         // Ingots <-> Blocks
-        GCRecipeProvider.nineBlockStorageRecipesRecipesWithCustomUnpacking(exporter, RecipeCategory.MISC, GCItems.METEORIC_IRON_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.METEORIC_IRON_BLOCK, "meteoric_iron_ingot_from_block", "meteoric_iron_ingot");
-        GCRecipeProvider.nineBlockStorageRecipesRecipesWithCustomUnpacking(exporter, RecipeCategory.MISC, GCItems.DESH_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.DESH_BLOCK, "desh_ingot_from_block", "desh_ingot");
-        GCRecipeProvider.nineBlockStorageRecipesRecipesWithCustomUnpacking(exporter, RecipeCategory.MISC, GCItems.LEAD_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.LEAD_BLOCK, "lead_ingot_from_block", "lead_ingot");
+        GCRecipeProvider.nineBlockStorageRecipesRecipesWithCustomUnpacking(output, RecipeCategory.MISC, GCItems.METEORIC_IRON_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.METEORIC_IRON_BLOCK, "meteoric_iron_ingot_from_block", "meteoric_iron_ingot");
+        GCRecipeProvider.nineBlockStorageRecipesRecipesWithCustomUnpacking(output, RecipeCategory.MISC, GCItems.DESH_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.DESH_BLOCK, "desh_ingot_from_block", "desh_ingot");
+        GCRecipeProvider.nineBlockStorageRecipesRecipesWithCustomUnpacking(output, RecipeCategory.MISC, GCItems.LEAD_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.LEAD_BLOCK, "lead_ingot_from_block", "lead_ingot");
         // skips aluminum and tin blocks
-        GCRecipeProvider.nineBlockStorageRecipesRecipesWithCustomUnpacking(exporter, RecipeCategory.MISC, GCItems.TITANIUM_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.TITANIUM_BLOCK, "titanium_ingot_from_block", "titanium_ingot");
+        GCRecipeProvider.nineBlockStorageRecipesRecipesWithCustomUnpacking(output, RecipeCategory.MISC, GCItems.TITANIUM_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.TITANIUM_BLOCK, "titanium_ingot_from_block", "titanium_ingot");
     }
 
     // Code copied from RecipeProvider class with changes to save with GC mod id
-    public static void nineBlockStorageRecipesWithCustomPacking(Consumer<FinishedRecipe> consumer, RecipeCategory recipeCategory, ItemLike itemLike, RecipeCategory recipeCategory2, ItemLike itemLike2, String string, String string2) {
-        GCRecipeProvider.nineBlockStorageRecipes(consumer, recipeCategory, itemLike, recipeCategory2, itemLike2, string, string2, RecipeProvider.getSimpleRecipeName(itemLike), null);
+    public static void nineBlockStorageRecipesWithCustomPacking(RecipeOutput output, RecipeCategory recipeCategory, ItemLike itemLike, RecipeCategory recipeCategory2, ItemLike itemLike2, String string, String string2) {
+        GCRecipeProvider.nineBlockStorageRecipes(output, recipeCategory, itemLike, recipeCategory2, itemLike2, string, string2, RecipeProvider.getSimpleRecipeName(itemLike), null);
     }
-    public static void nineBlockStorageRecipesRecipesWithCustomUnpacking(Consumer<FinishedRecipe> consumer, RecipeCategory recipeCategory, ItemLike itemLike, RecipeCategory recipeCategory2, ItemLike itemLike2, String string, String string2) {
-        GCRecipeProvider.nineBlockStorageRecipes(consumer, recipeCategory, itemLike, recipeCategory2, itemLike2, RecipeProvider.getSimpleRecipeName(itemLike2), null, string, string2);
+    public static void nineBlockStorageRecipesRecipesWithCustomUnpacking(RecipeOutput output, RecipeCategory recipeCategory, ItemLike itemLike, RecipeCategory recipeCategory2, ItemLike itemLike2, String string, String string2) {
+        GCRecipeProvider.nineBlockStorageRecipes(output, recipeCategory, itemLike, recipeCategory2, itemLike2, RecipeProvider.getSimpleRecipeName(itemLike2), null, string, string2);
     }
-    public static void nineBlockStorageRecipes(Consumer<FinishedRecipe> consumer, RecipeCategory recipeCategory, ItemLike itemLike, RecipeCategory recipeCategory2, ItemLike itemLike2, String string, @Nullable String string2, String string3, @Nullable String string4) {
-        ShapelessRecipeBuilder.shapeless(recipeCategory, itemLike, 9).requires(itemLike2).group(string4).unlockedBy(RecipeProvider.getHasName(itemLike2), RecipeProvider.has(itemLike2)).save(consumer, Constant.id(string3));
-        ShapedRecipeBuilder.shaped(recipeCategory2, itemLike2).define('#', itemLike).pattern("###").pattern("###").pattern("###").group(string2).unlockedBy(RecipeProvider.getHasName(itemLike), RecipeProvider.has(itemLike)).save(consumer, Constant.id(string));
+    public static void nineBlockStorageRecipes(RecipeOutput output, RecipeCategory recipeCategory, ItemLike itemLike, RecipeCategory recipeCategory2, ItemLike itemLike2, String string, @Nullable String string2, String string3, @Nullable String string4) {
+        ShapelessRecipeBuilder.shapeless(recipeCategory, itemLike, 9).requires(itemLike2).group(string4).unlockedBy(RecipeProvider.getHasName(itemLike2), RecipeProvider.has(itemLike2)).save(output, Constant.id(string3));
+        ShapedRecipeBuilder.shaped(recipeCategory2, itemLike2).define('#', itemLike).pattern("###").pattern("###").pattern("###").group(string2).unlockedBy(RecipeProvider.getHasName(itemLike), RecipeProvider.has(itemLike)).save(output, Constant.id(string));
     }
 
 }

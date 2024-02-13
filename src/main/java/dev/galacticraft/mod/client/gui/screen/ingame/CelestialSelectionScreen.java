@@ -896,8 +896,8 @@ public class CelestialSelectionScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        double wheel = amount / (this.selectedBody == null ? 5.0 : 2.5);
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        double wheel = scrollY / (this.selectedBody == null ? 5.0 : 2.5);
 
         if (wheel != 0) {
             if (this.selectedBody == null || (this.viewState == EnumView.PREVIEW && !this.isZoomed())) {

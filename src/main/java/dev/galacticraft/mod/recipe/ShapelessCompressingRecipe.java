@@ -22,34 +22,28 @@
 
 package dev.galacticraft.mod.recipe;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public record ShapelessCompressingRecipe(ResourceLocation id, String group,
+public record ShapelessCompressingRecipe(String group,
                                          ItemStack output,
                                          NonNullList<Ingredient> input, int time) implements CompressingRecipe {
-
-   @Override
-   public ResourceLocation getId() {
-      return this.id;
-   }
 
    @Override
    public RecipeSerializer<?> getSerializer() {
@@ -67,7 +61,7 @@ public record ShapelessCompressingRecipe(ResourceLocation id, String group,
    }
 
    @Override
-   public boolean matches(Container inv, Level world) {
+   public boolean matches(CraftingContainer inv, Level world) {
       StackedContents recipeFinder = new StackedContents();
       int i = 0;
 
@@ -83,7 +77,7 @@ public record ShapelessCompressingRecipe(ResourceLocation id, String group,
    }
 
    @Override
-   public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+   public ItemStack assemble(CraftingContainer container, RegistryAccess registryAccess) {
       return this.getResultItem(registryAccess).copy();
    }
 
@@ -97,39 +91,38 @@ public record ShapelessCompressingRecipe(ResourceLocation id, String group,
       return this.output;
    }
 
-   public enum Serializer implements RecipeSerializer<ShapelessCompressingRecipe> {
-      INSTANCE;
+   public static class Serializer implements RecipeSerializer<ShapelessCompressingRecipe> {
+      public static final Serializer INSTANCE = new Serializer();
+      public static final Codec<ShapelessCompressingRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+              ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(ShapelessCompressingRecipe::group),
+              ItemStack.ITEM_WITH_COUNT_CODEC.fieldOf("result").forGetter(ShapelessCompressingRecipe::output),
+              Ingredient.CODEC_NONEMPTY
+                      .listOf()
+                      .fieldOf("ingredients")
+                      .flatXmap(
+                              list -> {
+                                 Ingredient[] ingredients = (Ingredient[])list.stream().filter(ingredient -> !ingredient.isEmpty()).toArray(i -> new Ingredient[i]);
+                                 if (ingredients.length == 0) {
+                                    return DataResult.error(() -> "No ingredients for shapeless recipe");
+                                 } else {
+                                    return ingredients.length > 9
+                                            ? DataResult.error(() -> "Too many ingredients for shapeless recipe")
+                                            : DataResult.success(NonNullList.<Ingredient>of(Ingredient.EMPTY, ingredients));
+                                 }
+                              },
+                              DataResult::success
+                      )
+                      .forGetter(ShapelessCompressingRecipe::input),
+              ExtraCodecs.strictOptionalField(Codec.INT, "time", 200).forGetter(ShapelessCompressingRecipe::time)
+      ).apply(instance, ShapelessCompressingRecipe::new));
 
       @Override
-      public ShapelessCompressingRecipe fromJson(ResourceLocation identifier, JsonObject jsonObject) {
-         String string = GsonHelper.getAsString(jsonObject, "group", "");
-         int time = GsonHelper.getAsInt(jsonObject, "time", 200);
-         NonNullList<Ingredient> defaultedList = getIngredients(GsonHelper.getAsJsonArray(jsonObject, "ingredients"));
-         if (defaultedList.isEmpty()) {
-            throw new JsonParseException("No ingredients for shapeless recipe");
-         } else if (defaultedList.size() > 9) {
-            throw new JsonParseException("Too many ingredients for shapeless recipe");
-         } else {
-            ItemStack itemStack = new ItemStack(ShapedRecipe.itemFromJson(GsonHelper.getAsJsonObject(jsonObject, "result")));
-            return new ShapelessCompressingRecipe(identifier, string, itemStack, defaultedList, time);
-         }
-      }
-
-      private static NonNullList<Ingredient> getIngredients(JsonArray json) {
-         NonNullList<Ingredient> defaultedList = NonNullList.create();
-
-         for (int i = 0; i < json.size(); ++i) {
-            Ingredient ingredient = Ingredient.fromJson(json.get(i));
-            if (!ingredient.isEmpty()) {
-               defaultedList.add(ingredient);
-            }
-         }
-
-         return defaultedList;
+      public Codec<ShapelessCompressingRecipe> codec() {
+         return CODEC;
       }
 
       @Override
-      public ShapelessCompressingRecipe fromNetwork(ResourceLocation identifier, FriendlyByteBuf buf) {
+      public ShapelessCompressingRecipe fromNetwork(FriendlyByteBuf buf) {
          String group = buf.readUtf(Constant.Misc.MAX_STRING_READ);
          int time = buf.readInt();
          int size = buf.readVarInt();
@@ -140,7 +133,7 @@ public record ShapelessCompressingRecipe(ResourceLocation id, String group,
          }
 
          ItemStack itemStack = buf.readItem();
-         return new ShapelessCompressingRecipe(identifier, group, itemStack, ingredients, time);
+         return new ShapelessCompressingRecipe(group, itemStack, ingredients, time);
       }
 
       @Override
