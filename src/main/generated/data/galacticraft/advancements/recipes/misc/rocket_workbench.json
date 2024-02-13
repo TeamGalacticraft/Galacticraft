@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_advanced_wafer",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_advanced_wafer"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:rocket_workbench"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

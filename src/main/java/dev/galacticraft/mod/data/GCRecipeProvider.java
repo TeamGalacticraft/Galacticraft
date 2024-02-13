@@ -216,6 +216,7 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapedCompressorRecipeBuilder.create(GCItems.TIER_1_HEAVY_DUTY_PLATE, 2)
+                .unlockedBy(getHasName(GCItems.COMPRESSED_BRONZE), has(GCItems.COMPRESSED_BRONZE))
                 .define('B', GCItems.COMPRESSED_BRONZE)
                 .define('A', GCItems.COMPRESSED_ALUMINUM)
                 .define('S', GCItems.COMPRESSED_STEEL)

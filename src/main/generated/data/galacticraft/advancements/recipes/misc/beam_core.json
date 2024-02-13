@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_compressed_iron",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_compressed_iron"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:beam_core"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

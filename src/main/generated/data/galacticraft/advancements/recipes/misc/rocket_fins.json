@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_compressed_steel",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_compressed_steel"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:rocket_fins"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_ground_beef",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_ground_beef"
     ]
   ],
   "rewards": {
     "recipes": [
       "minecraft:beef_patty_from_campfire_cooking"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

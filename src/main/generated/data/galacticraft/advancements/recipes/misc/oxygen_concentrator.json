@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_oxygen_vent",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_oxygen_vent"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:oxygen_concentrator"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

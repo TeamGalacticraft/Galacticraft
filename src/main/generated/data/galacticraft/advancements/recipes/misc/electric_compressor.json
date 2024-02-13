@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_aluminum_ingot",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_aluminum_ingot"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:electric_compressor"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

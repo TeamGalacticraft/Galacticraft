@@ -46,7 +46,7 @@ public class ShapelessCompressorRecipeBuilder implements RecipeBuilder {
     private final Item result;
     private final int count;
     private final NonNullList<Ingredient> ingredients = NonNullList.create();
-    private final Map<String, Criterion<?>> criteria = new LinkedHashMap();
+    private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
     @Nullable
     private String group;
 
@@ -115,6 +115,6 @@ public class ShapelessCompressorRecipeBuilder implements RecipeBuilder {
                 .rewards(AdvancementRewards.Builder.recipe(recipeId))
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(builder::addCriterion);
-        output.accept(new ResourceLocation(recipeId.getNamespace(), "compressing/" + recipeId.getPath()), new ShapelessCompressingRecipe(this.group, new ItemStack(this.result, count), this.ingredients, 200), builder.build(recipeId.withPrefix("recipes/")));
+        output.accept(new ResourceLocation(recipeId.getNamespace(), "compressing/" + recipeId.getPath()), new ShapelessCompressingRecipe(this.group == null ? "" : this.group, new ItemStack(this.result, count), this.ingredients, 200), builder.build(recipeId.withPrefix("recipes/")));
     }
 }

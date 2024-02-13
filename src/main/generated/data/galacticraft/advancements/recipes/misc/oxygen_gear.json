@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_glass_fluid_pipe",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_glass_fluid_pipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:oxygen_gear"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

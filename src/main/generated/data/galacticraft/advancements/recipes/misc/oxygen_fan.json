@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_basic_wafer",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_basic_wafer"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:oxygen_fan"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

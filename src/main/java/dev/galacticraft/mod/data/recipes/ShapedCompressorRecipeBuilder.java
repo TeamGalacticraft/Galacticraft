@@ -25,6 +25,8 @@ package dev.galacticraft.mod.data.recipes;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
+import net.minecraft.advancements.Criterion;
+import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -76,6 +78,11 @@ public class ShapedCompressorRecipeBuilder extends GCRecipeBuilder {
             this.key.put(character, ingredient);
             return this;
         }
+    }
+
+    @Override
+    public ShapedCompressorRecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
+        return (ShapedCompressorRecipeBuilder) super.unlockedBy(name, criterion);
     }
 
     public ShapedCompressorRecipeBuilder pattern(String string) {

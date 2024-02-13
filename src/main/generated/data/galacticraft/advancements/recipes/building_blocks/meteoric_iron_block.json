@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_meteoric_iron_ingot",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_meteoric_iron_ingot"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:meteoric_iron_block"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_desh_nugget",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_desh_nugget"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:desh_ingot_from_nuggets"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }
