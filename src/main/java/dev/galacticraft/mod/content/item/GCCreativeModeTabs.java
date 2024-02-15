@@ -305,6 +305,7 @@ public class GCCreativeModeTabs {
                 output.accept(DETAILED_METEORIC_IRON_DECORATION_SLAB);
                 output.accept(DETAILED_METEORIC_IRON_DECORATION_STAIRS);
                 output.accept(DETAILED_METEORIC_IRON_DECORATION_WALL);
+                output.accept(METEORIC_IRON_BELL);
 
                 output.accept(STEEL_DECORATION);
                 output.accept(STEEL_DECORATION_SLAB);

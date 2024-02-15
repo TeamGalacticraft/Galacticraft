@@ -99,6 +99,7 @@ public class GCItems {
     public static final Item DETAILED_METEORIC_IRON_DECORATION_SLAB = new BlockItem(GCBlocks.DETAILED_METEORIC_IRON_DECORATION_SLAB, new Item.Properties());
     public static final Item DETAILED_METEORIC_IRON_DECORATION_STAIRS = new BlockItem(GCBlocks.DETAILED_METEORIC_IRON_DECORATION_STAIRS, new Item.Properties());
     public static final Item DETAILED_METEORIC_IRON_DECORATION_WALL = new BlockItem(GCBlocks.DETAILED_METEORIC_IRON_DECORATION_WALL, new Item.Properties());
+    public static final Item METEORIC_IRON_BELL = new BlockItem(GCBlocks.METEORIC_IRON_BELL, new Item.Properties());
 
     public static final Item STEEL_DECORATION = new BlockItem(GCBlocks.STEEL_DECORATION, new Item.Properties());
     public static final Item STEEL_DECORATION_SLAB = new BlockItem(GCBlocks.STEEL_DECORATION_SLAB, new Item.Properties());
@@ -526,6 +527,7 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DETAILED_METEORIC_IRON_DECORATION_SLAB), DETAILED_METEORIC_IRON_DECORATION_SLAB);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DETAILED_METEORIC_IRON_DECORATION_STAIRS), DETAILED_METEORIC_IRON_DECORATION_STAIRS);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DETAILED_METEORIC_IRON_DECORATION_WALL), DETAILED_METEORIC_IRON_DECORATION_WALL);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.METEORIC_IRON_BELL), METEORIC_IRON_BELL);
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.STEEL_DECORATION), STEEL_DECORATION);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.STEEL_DECORATION_SLAB), STEEL_DECORATION_SLAB);
