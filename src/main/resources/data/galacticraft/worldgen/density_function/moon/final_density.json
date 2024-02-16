@@ -66,34 +66,30 @@
             }
           },
           "when_out_of_range": {
-            //[df-editor]:{"pos":[-489,716],"collapsed":false}
+            //[df-editor]:{"pos":[-453,534],"collapsed":false}
             "type": "add",
             "argument1": {
-              //[df-editor]:{"pos":[-852,362],"collapsed":false}
-              "type": "clamp",
-              "min": -0.62,
-              "max": 0.5000000000000001,
-              "input": {
-                //[df-editor]:{"pos":[-1073,550],"collapsed":false}
-                "type": "mul",
-                "argument1": 0.0475, //[df-editor]:{"pos":[-1385,635],"collapsed":true}
-                "argument2": "galacticraft:moon/sloped_cheese" //[df-editor]:{"pos":[-1355,737],"collapsed":true}
-              }
+              //[df-editor]:{"pos":[-1038,326],"collapsed":false}
+              "type": "y_clamped_gradient",
+              "from_y": -64,
+              "to_y": 212,
+              "from_value": 1,
+              "to_value": -1
             },
             "argument2": {
-              //[df-editor]:{"pos":[-770,915],"collapsed":false}
+              //[df-editor]:{"pos":[-745,760],"collapsed":false}
               "type": "range_choice",
               "min_inclusive": -1,
               "max_exclusive": -0.375,
-              "input": "galacticraft:moon/erosion", //[df-editor]:{"pos":[-1076,747],"collapsed":true}
+              "input": "galacticraft:moon/erosion", //[df-editor]:{"pos":[-1223,707],"collapsed":true}
               "when_in_range": {
-                //[df-editor]:{"pos":[-1275,1020],"collapsed":false}
-                "type": "min",
+                //[df-editor]:{"pos":[-1211.7349853515625,944.1925048828125],"collapsed":false}
+                "type": "mul",
                 "argument1": {
-                  //[df-editor]:{"pos":[-1650,859],"collapsed":false}
+                  //[df-editor]:{"pos":[-1760,770],"collapsed":false}
                   "type": "minecraft:spline",
                   "spline": {
-                    "coordinate": "galacticraft:moon/erosion", //[df-editor]:{"pos":[-1935,1037],"collapsed":true}
+                    "coordinate": "galacticraft:moon/erosion", //[df-editor]:{"pos":[-1955,711],"collapsed":true}
                     "points": [
                       {
                         "location": -1,
@@ -113,22 +109,19 @@
                     ]
                   }
                 },
-                "argument2": {
-                  //[df-editor]:{"pos":[-1628,1263],"collapsed":false}
-                  "type": "y_clamped_gradient",
-                  "from_y": 0,
-                  "to_y": 212,
-                  "from_value": -1,
-                  "to_value": 1
-                }
+                "argument2": -1 //[df-editor]:{"pos":[-1616,1121],"collapsed":false}
               },
               "when_out_of_range": {
-                //[df-editor]:{"pos":[-1056,1183],"collapsed":false}
-                "type": "y_clamped_gradient",
-                "from_y": -64,
-                "to_y": 212,
-                "from_value": 1,
-                "to_value": -1
+                //[df-editor]:{"pos":[-1155,1207],"collapsed":false}
+                "type": "clamp",
+                "min": -0.62,
+                "max": 0.5000000000000001,
+                "input": {
+                  //[df-editor]:{"pos":[-1497,1352],"collapsed":false}
+                  "type": "mul",
+                  "argument1": 0.0475, //[df-editor]:{"pos":[-1757,1305],"collapsed":true}
+                  "argument2": "galacticraft:moon/sloped_cheese" //[df-editor]:{"pos":[-1818,1486],"collapsed":true}
+                }
               }
             }
           }
