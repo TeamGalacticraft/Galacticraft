@@ -84,7 +84,7 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
         ResourceKey<? extends RocketPart<?, ?>> part = data.engine();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(level, matrices, rocket, vertexConsumers, 0, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(level, matrices, rocket, vertexConsumers, 0, light, overlay);
             matrices.popPose();
         }
 
@@ -93,14 +93,14 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
         part = data.booster();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(level, matrices, rocket, vertexConsumers, 0, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(level, matrices, rocket, vertexConsumers, 0, light, overlay);
             matrices.popPose();
         }
 
         part = data.fin();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(level, matrices, rocket, vertexConsumers, 0, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(level, matrices, rocket, vertexConsumers, 0, light, overlay);
             matrices.popPose();
         }
 
@@ -109,7 +109,7 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
         part = data.body();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(level, matrices, rocket, vertexConsumers, 0, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(level, matrices, rocket, vertexConsumers, 0, light, overlay);
             matrices.popPose();
         }
 
@@ -118,7 +118,7 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
         part = data.cone();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(level, matrices, rocket, vertexConsumers, 0, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(level, matrices, rocket, vertexConsumers, 0, light, overlay);
             matrices.popPose();
         }
 

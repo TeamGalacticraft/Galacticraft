@@ -33,6 +33,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -79,7 +80,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         ResourceKey<? extends RocketPart<?, ?>> part = entity.engine();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, partialTick, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, partialTick, light, OverlayTexture.NO_OVERLAY);
             matrices.popPose();
         }
 
@@ -88,14 +89,14 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         part = entity.booster();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, partialTick, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, partialTick, light, OverlayTexture.NO_OVERLAY);
             matrices.popPose();
         }
 
         part = entity.fin();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, partialTick, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, partialTick, light, OverlayTexture.NO_OVERLAY);
             matrices.popPose();
         }
 
@@ -104,7 +105,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         part = entity.body();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, partialTick, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, partialTick, light, OverlayTexture.NO_OVERLAY);
             matrices.popPose();
         }
 
@@ -113,7 +114,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         part = entity.cone();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, partialTick, light);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(client.level, matrices, entity, vertexConsumers, partialTick, light, OverlayTexture.NO_OVERLAY);
             matrices.popPose();
         }
 
