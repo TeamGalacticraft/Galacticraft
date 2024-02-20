@@ -24,10 +24,7 @@ package dev.galacticraft.mod.content;
 
 import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.block.decoration.GratingBlock;
-import dev.galacticraft.mod.content.block.decoration.LightPanelBlock;
-import dev.galacticraft.mod.content.block.decoration.LunarCartographyTableBlock;
-import dev.galacticraft.mod.content.block.decoration.VacuumGlassBlock;
+import dev.galacticraft.mod.content.block.decoration.*;
 import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.content.block.environment.*;
 import dev.galacticraft.mod.content.block.machine.*;
@@ -54,7 +51,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
-
 import java.util.function.ToIntFunction;
 
 /**
@@ -129,6 +125,7 @@ public class GCBlocks {
     public static final Block DETAILED_METEORIC_IRON_DECORATION_SLAB = new SlabBlock(BlockBehaviour.Properties.copy(DETAILED_METEORIC_IRON_DECORATION).strength(2.5F, 3.0F));
     public static final Block DETAILED_METEORIC_IRON_DECORATION_STAIRS = new StairBlock(DETAILED_METEORIC_IRON_DECORATION.defaultBlockState(), BlockBehaviour.Properties.copy(DETAILED_METEORIC_IRON_DECORATION));
     public static final Block DETAILED_METEORIC_IRON_DECORATION_WALL = new WallBlock(BlockBehaviour.Properties.copy(DETAILED_METEORIC_IRON_DECORATION));
+    public static final Block METEORIC_IRON_BELL = new MeteoricIronBellBlock(BlockBehaviour.Properties.copy(Blocks.BELL)); // Copy from minecraft:bell
 
     public static final Block STEEL_DECORATION = new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F));
     public static final Block STEEL_DECORATION_SLAB = new SlabBlock(BlockBehaviour.Properties.copy(STEEL_DECORATION).strength(2.5F, 3.0F));
@@ -412,6 +409,7 @@ public class GCBlocks {
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_METEORIC_IRON_DECORATION_SLAB), DETAILED_METEORIC_IRON_DECORATION_SLAB);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_METEORIC_IRON_DECORATION_STAIRS), DETAILED_METEORIC_IRON_DECORATION_STAIRS);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_METEORIC_IRON_DECORATION_WALL), DETAILED_METEORIC_IRON_DECORATION_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.METEORIC_IRON_BELL), METEORIC_IRON_BELL);
 
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.STEEL_DECORATION), STEEL_DECORATION);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.STEEL_DECORATION_SLAB), STEEL_DECORATION_SLAB);

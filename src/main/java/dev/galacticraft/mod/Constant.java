@@ -185,6 +185,7 @@ public interface Constant {
         String DETAILED_METEORIC_IRON_DECORATION_SLAB = "detailed_meteoric_iron_decoration_slab";
         String DETAILED_METEORIC_IRON_DECORATION_STAIRS = "detailed_meteoric_iron_decoration_stairs";
         String DETAILED_METEORIC_IRON_DECORATION_WALL = "detailed_meteoric_iron_decoration_wall";
+        String METEORIC_IRON_BELL = "meteoric_iron_bell";
 
         String STEEL_DECORATION = "steel_decoration";
         String STEEL_DECORATION_SLAB = "steel_decoration_slab";
