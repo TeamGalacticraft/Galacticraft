@@ -383,8 +383,8 @@ public class GCItems {
     public static final Item TIER_3_HEAVY_DUTY_PLATE = ITEMS.register(Constant.Item.TIER_3_HEAVY_DUTY_PLATE, new Item(new Item.Properties()));
 
     // THROWABLE METEOR CHUNKS
-    public static final Item THROWABLE_METEOR_CHUNK = new ThrowableMeteorChunkItem(new Item.Properties().stacksTo(16), false);
-    public static final Item HOT_THROWABLE_METEOR_CHUNK = new ThrowableMeteorChunkItem(new Item.Properties().stacksTo(16), true);
+    public static final Item THROWABLE_METEOR_CHUNK = new ThrowableMeteorChunkItem(new Item.Properties().stacksTo(16));
+    public static final Item HOT_THROWABLE_METEOR_CHUNK = new HotThrowableMeteorChunkItem(new Item.Properties().stacksTo(16));
 
     // ARMOR
     public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties());

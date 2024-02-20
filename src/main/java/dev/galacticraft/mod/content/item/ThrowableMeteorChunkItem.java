@@ -39,6 +39,10 @@ import net.minecraft.world.level.Level;
 public class ThrowableMeteorChunkItem extends Item {
     private final boolean hot;
 
+    public ThrowableMeteorChunkItem(Properties settings) {
+        this(settings, false);
+    }
+
     public ThrowableMeteorChunkItem(Properties settings, boolean hot) {
         super(settings);
         this.hot = hot;
