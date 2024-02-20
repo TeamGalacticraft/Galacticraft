@@ -424,6 +424,9 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.TIER_2_HEAVY_DUTY_PLATE, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.TIER_3_HEAVY_DUTY_PLATE, ModelTemplates.FLAT_ITEM);
 
+        generator.generateFlatItem(GCItems.THROWABLE_METEOR_CHUNK, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.HOT_THROWABLE_METEOR_CHUNK, ModelTemplates.FLAT_ITEM);
+
         // ARMOR
         for (var item : BuiltInRegistries.ITEM.asLookup().filterElements(item -> BuiltInRegistries.ITEM.getKey(item).getNamespace().equals(Constant.MOD_ID)).listElements().map(Holder::value).toList()) {
             if (item == GCItems.SENSOR_GLASSES) {
