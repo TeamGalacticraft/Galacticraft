@@ -85,8 +85,8 @@ public class ThrowableMeteorChunkEntity extends ThrowableItemProjectile {
     public void tick() {
         super.tick();
         if (this.isInWater() && this.entityData.get(HOT)) {
-            this.entityData.set(HOT, false);
             this.setItem(new ItemStack(GCItems.THROWABLE_METEOR_CHUNK));
+            this.entityData.set(HOT, false);
             this.playEntityOnFireExtinguishedSound();
         }
     }
@@ -106,7 +106,7 @@ public class ThrowableMeteorChunkEntity extends ThrowableItemProjectile {
     protected void onHitBlock(BlockHitResult result) {
         super.onHitBlock(result);
         if (!this.level().isClientSide)
-            this.level().addFreshEntity(new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), this.getItem()));
+            this.level().addFreshEntity(new ThrowableMeteorChunkItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), this.getItem()));
     }
 
     @Override

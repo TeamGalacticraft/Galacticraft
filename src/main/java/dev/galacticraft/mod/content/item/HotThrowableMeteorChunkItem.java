@@ -22,12 +22,19 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.mod.Constant;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -38,6 +45,18 @@ public class HotThrowableMeteorChunkItem extends ThrowableMeteorChunkItem {
 
     public HotThrowableMeteorChunkItem(Properties settings) {
         super(settings, true);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
+        CompoundTag tag = stack.getTag();
+        if (tag != null) {
+            int ticksUntilCool = tag.getInt(TICKS_UNTIL_COOL);
+            double secondsUntilCool = ticksUntilCool / 20.0;
+            Style style = Constant.Text.Color.getStorageLevelStyle(1.0 - (double)ticksUntilCool/(double)MAX_TICKS);
+            tooltipComponents.add(Component.translatable("tooltip.galacticraft.time_until_cool", String.format("%.1f", secondsUntilCool)).setStyle(style));
+        }
+        super.appendHoverText(stack, level, tooltipComponents, isAdvanced);
     }
 
     @Override
