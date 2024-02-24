@@ -26,10 +26,9 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
-import dev.galacticraft.mod.util.DirectionUtil;
-import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -56,32 +55,23 @@ public abstract class FluidPipe extends Block implements EntityBlock {
         if (!world.isClientSide() && Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof Pipe pipe) {
-                Constant.LOGGER.debug("Network: {}", pipe.getNetwork());
+                Constant.LOGGER.info("Network: {}", pipe.getNetwork());
             }
         }
         return super.use(state, world, pos, player, hand, hit);
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        super.neighborChanged(state, world, pos, block, fromPos, notify);
-        if (!world.isClientSide()) {
-            final BlockEntity blockEntity = world.getBlockEntity(pos);
-            Pipe pipe = (Pipe) blockEntity;
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos neighborPos, boolean notify) {
+        super.neighborChanged(state, level, pos, block, neighborPos, notify);
+        if (!level.isClientSide) {
+            var pipe = (Pipe) level.getBlockEntity(pos);
             assert pipe != null;
-            final BlockEntity blockEntityAdj = world.getBlockEntity(fromPos);
-            if (pipe.canConnect(DirectionUtil.fromNormal(fromPos.subtract(pos)))) {
-                if (blockEntityAdj instanceof Pipe pipe1) {
-                    if (pipe1.canConnect(DirectionUtil.fromNormal(fromPos.subtract(pos)).getOpposite())) {
-                        pipe.getOrCreateNetwork().addPipe(fromPos, pipe1);
-                    }
-                } else {
-                    if (FluidUtil.canAccessFluid(world, fromPos, DirectionUtil.fromNormal(fromPos.subtract(pos)))) {
-                        pipe.getOrCreateNetwork().updateConnection(pos, fromPos);
-                    } else if (pipe.getNetwork() != null) {
-                        pipe.getNetwork().updateConnection(pos, fromPos);
-                    }
-                }
+            Direction direction = Direction.fromDelta(neighborPos.getX() - pos.getX(), neighborPos.getY() - pos.getY(), neighborPos.getZ() - pos.getZ());
+            assert direction != null;
+
+            if (pipe.canConnect(direction)) {
+                pipe.updateConnection(state, pos, neighborPos, direction);
             }
         }
     }

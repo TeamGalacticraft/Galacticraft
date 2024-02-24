@@ -23,13 +23,15 @@
 package dev.galacticraft.mod.api.block.entity;
 
 import dev.galacticraft.mod.Constant;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.BlockState;
 
 public interface Connected {
     boolean[/*6*/] getConnections();
 
-    void updateConnection(Direction direction);
+    void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction);
 
     default void writeConnectionNbt(CompoundTag nbt) {
         for (Direction direction : Constant.Misc.DIRECTIONS) {

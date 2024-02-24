@@ -65,7 +65,7 @@ public class WalkwayBlockEntity extends BlockEntity implements Walkway {
     }
 
     @Override
-    public void updateConnection(Direction direction) {
+    public void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction) {
         if (this.getDirection() != direction) {
             if (this.level.getBlockEntity(this.getBlockPos().relative(direction)) instanceof WalkwayBlockEntity walkway) {
                 if (walkway.getDirection() != direction.getOpposite()) {

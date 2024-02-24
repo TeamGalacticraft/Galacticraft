@@ -25,13 +25,10 @@ package dev.galacticraft.mod.content.block.entity.networked;
 import dev.galacticraft.mod.api.block.entity.Colored;
 import dev.galacticraft.mod.api.block.entity.Connected;
 import dev.galacticraft.mod.api.block.entity.Pullable;
-import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
-import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -62,11 +59,5 @@ public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colore
     @Override
     public void setPull(boolean pull) {
         this.pull = pull;
-    }
-
-    @Override
-    public void updateConnection(Direction direction) {
-        var otherBlockEntity = this.level.getBlockEntity(this.getBlockPos().relative(direction));
-        this.getConnections()[direction.ordinal()] = otherBlockEntity instanceof Pipe pipe && pipe.canConnect(direction.getOpposite()) || FluidUtil.canAccessFluid(this.level, this.getBlockPos().relative(direction), direction);
     }
 }

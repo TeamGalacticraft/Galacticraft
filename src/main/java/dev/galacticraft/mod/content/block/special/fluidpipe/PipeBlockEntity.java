@@ -22,10 +22,14 @@
 
 package dev.galacticraft.mod.content.block.special.fluidpipe;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
-import dev.galacticraft.mod.attribute.fluid.PipeFluidInsertable;
+import dev.galacticraft.mod.api.pipe.impl.PipeNetworkImpl;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -35,56 +39,43 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.api.EnergyStorage;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public abstract class PipeBlockEntity extends BlockEntity implements Pipe {
-    private @NotNull PipeFluidInsertable @Nullable[] insertables = null;
+import java.util.Collections;
+import java.util.Iterator;
+
+public abstract class PipeBlockEntity extends BlockEntity implements Pipe, Storage<FluidVariant> {
     private @Nullable PipeNetwork network = null;
     private DyeColor color = DyeColor.WHITE;
     private final long maxTransferRate; // 1 bucket per second
     private final boolean[] connections = new boolean[6];
 
-
     public PipeBlockEntity(BlockEntityType<? extends PipeBlockEntity> type, BlockPos pos, BlockState state, long maxTransferRate) {
         super(type, pos, state);
         this.maxTransferRate = maxTransferRate;
     }
-    
+
     @Override
-    public void setNetwork(@Nullable PipeNetwork network) {
-        this.network = network;
-        for (PipeFluidInsertable insertable : this.getInsertables()) {
-            insertable.setNetwork(network);
+    public void forceCreateNetwork() {
+        this.createNetwork();
+    }
+
+    private void createNetwork() {
+        assert this.network == null || this.network.markedForRemoval();
+        if (!this.level.isClientSide) {
+            this.network = new PipeNetworkImpl((ServerLevel) this.level, this.maxTransferRate, this.getBlockPos());
         }
     }
 
     @Override
-    public @NotNull PipeNetwork getOrCreateNetwork() {
-        if (this.network == null) {
-            if (!this.level.isClientSide()) {
-                for (Direction direction : Constant.Misc.DIRECTIONS) {
-                    if (this.canConnect(direction)) {
-                        BlockEntity entity = this.level.getBlockEntity(this.worldPosition.relative(direction));
-                        if (entity instanceof Pipe pipe && pipe.getNetwork() != null) {
-                            if (pipe.canConnect(direction.getOpposite())) {
-                                if (pipe.getOrCreateNetwork().isCompatibleWith(this)) {
-                                    pipe.getNetwork().addPipe(this.worldPosition, this);
-                                }
-                            }
-                        }
-                    }
-                }
-                if (this.network == null) {
-                    this.setNetwork(PipeNetwork.create((ServerLevel) this.level, this.getMaxTransferRate()));
-                    this.network.addPipe(this.worldPosition, this);
-                }
-            }
+    public void setNetwork(@Nullable PipeNetwork network) {
+        if ((this.network == null || this.network.markedForRemoval()) && (network != null && !network.markedForRemoval())) {
+            this.network = network;
+            this.level.updateNeighborsAt(this.getBlockPos(), this.getBlockState().getBlock());
+        } else {
+            this.network = network;
         }
-        return this.network;
     }
 
     @Override
@@ -92,14 +83,12 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe {
         return this.network;
     }
 
-    public @NotNull PipeFluidInsertable[] getInsertables() {
-        if (this.insertables == null) {
-            this.insertables = new PipeFluidInsertable[6];
-            for (Direction direction : Constant.Misc.DIRECTIONS) {
-                this.insertables[direction.ordinal()] = new PipeFluidInsertable(direction, this.getMaxTransferRate(), this.worldPosition);
-            }
+    @Override
+    public Storage<FluidVariant> getInsertable() {
+        if (this.network == null || this.network.markedForRemoval()) {
+            this.createNetwork();
         }
-        return this.insertables;
+        return this;
     }
 
     @Override
@@ -110,6 +99,51 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe {
     @Override
     public boolean[] getConnections() {
         return this.connections;
+    }
+
+    @Override
+    public void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction) {
+        boolean connected = this.canConnect(direction) && EnergyStorage.SIDED.find(this.level, neighborPos, direction.getOpposite()) != null;
+        if (this.connections[direction.get3DDataValue()] != connected) {
+            this.connections[direction.get3DDataValue()] = connected;
+            this.level.sendBlockUpdated(pos, state, state, 0);
+            this.level.updateNeighborsAt(pos, state.getBlock());
+        }
+
+        if (this.network == null || this.network.markedForRemoval()) {
+            this.createNetwork();
+        }
+        this.network.updateConnection(pos, neighborPos, direction);
+    }
+
+    @Override
+    public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {
+        StoragePreconditions.notNegative(maxAmount);
+        if (this.network != null) {
+            return this.network.insert(resource, Math.min(this.maxTransferRate, maxAmount), transaction);
+        }
+
+        return 0;
+    }
+
+    @Override
+    public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
+        return 0;
+    }
+
+    @Override
+    public boolean supportsExtraction() {
+        return true;
+    }
+
+    @Override
+    public boolean supportsInsertion() {
+        return true;
+    }
+
+    @Override
+    public Iterator<StorageView<FluidVariant>> iterator() {
+        return Collections.emptyIterator();
     }
 
     @Override
@@ -134,14 +168,6 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe {
         super.saveAdditional(nbt);
         this.writeColorNbt(nbt);
         this.writeConnectionNbt(nbt);
-    }
-
-    @Override
-    public void setRemoved() {
-        super.setRemoved();
-        if (this.getNetwork() != null) {
-            this.getNetwork().removePipe(this, this.worldPosition);
-        }
     }
 
     @Override

@@ -24,9 +24,10 @@ package dev.galacticraft.mod.api.pipe;
 
 import dev.galacticraft.mod.api.block.entity.Colored;
 import dev.galacticraft.mod.api.block.entity.Connected;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -38,12 +39,6 @@ public interface Pipe extends Connected, Colored {
      * @param network The network to associate with
      */
     void setNetwork(@Nullable PipeNetwork network);
-
-    /**
-     * Returns the associated {@link PipeNetwork}
-     * @return The associated {@link PipeNetwork}
-     */
-    @NotNull PipeNetwork getOrCreateNetwork();
 
     /**
      * Returns the associated {@link PipeNetwork}
@@ -61,9 +56,13 @@ public interface Pipe extends Connected, Colored {
         return true;
     }
 
+    Storage<FluidVariant> getInsertable();
+
     /**
      * Returns the maximum amount of fluid allowed to be transferred through this pipe.
      * @return the maximum amount of fluid allowed to be transferred through this pipe.
      */
     long getMaxTransferRate();
+
+    void forceCreateNetwork();
 }

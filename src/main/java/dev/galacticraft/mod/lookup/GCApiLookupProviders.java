@@ -25,10 +25,10 @@ package dev.galacticraft.mod.lookup;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.pipe.Pipe;
+import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
-import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.item.OxygenTankItem;
 import dev.galacticraft.mod.storage.SingleTypeStorage;
@@ -75,15 +75,13 @@ public class GCApiLookupProviders {
         MachineBlockEntity.registerComponents(MACHINE_BLOCKS);
 
         FluidStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
-            assert blockEntity instanceof PipeBlockEntity;
-            if (direction == null) return null;
-            return ((PipeBlockEntity) blockEntity).getInsertables()[direction.ordinal()];
+            if (direction == null || !((Pipe) blockEntity).canConnect(direction)) return null;
+            return ((Pipe) blockEntity).getInsertable();
         }, PIPE_TYPES);
 
         EnergyStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
-            assert blockEntity instanceof WireBlockEntity;
-            if (direction == null) return null;
-            return ((WireBlockEntity) blockEntity).getInsertable(direction);
+            if (direction == null || !((Wire) blockEntity).canConnect(direction)) return null;
+            return ((Wire) blockEntity).getInsertable();
         }, WIRE_TYPES);
 
         FluidStorage.ITEM.registerForItems((itemStack, context) -> {

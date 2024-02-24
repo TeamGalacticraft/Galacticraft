@@ -110,8 +110,7 @@ public class GlassFluidPipeBlock extends FluidPipe {
                 else {
                     return InteractionResult.PASS;
                 }
-            }
-            else if (itemStack.getItem() instanceof StandardWrenchItem) {
+            } else if (itemStack.getItem() instanceof StandardWrenchItem) {
                 var stack = itemStack.copy();
 
                 if (!player.getAbilities().instabuild) {

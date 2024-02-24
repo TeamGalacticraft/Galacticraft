@@ -24,9 +24,10 @@ package dev.galacticraft.mod.api.wire;
 
 import dev.galacticraft.mod.api.block.entity.Connected;
 import net.minecraft.core.Direction;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.api.EnergyStorage;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -37,12 +38,6 @@ public interface Wire extends Connected {
      * @param network The network to associate with
      */
     void setNetwork(@Nullable WireNetwork network);
-
-    /**
-     * Returns the associated {@link WireNetwork}, or creates one if it is not a part of one yet
-     * @return The associated {@link WireNetwork}
-     */
-    @NotNull WireNetwork getOrCreateNetwork();
 
     /**
      * Returns the associated {@link WireNetwork}
@@ -60,9 +55,14 @@ public interface Wire extends Connected {
         return true; // CALLERS: ((Wire)world.getBlockEntity(pos.offset(direction)).canConnect(direction.getOpposite());
     }
 
+    EnergyStorage getInsertable();
+
     /**
      * Returns the maximum amount of energy (in gJ) allowed to be transferred through this wire.
      * @return the maximum amount of energy (in gJ) allowed to be transferred through this wire.
      */
     int getMaxTransferRate();
+
+    @ApiStatus.Internal
+    void forceCreateNetwork();
 }

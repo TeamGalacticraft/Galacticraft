@@ -68,13 +68,12 @@ public abstract class WireBlock extends Block implements EntityBlock {
         super.neighborChanged(state, level, pos, block, neighborPos, notify);
         if (!level.isClientSide) {
             var wire = (Wire) level.getBlockEntity(pos);
-            BlockPos delta = neighborPos.subtract(pos);
-            Direction direction = Direction.fromDelta(delta.getX(), delta.getY(), delta.getZ());
             assert wire != null;
+            Direction direction = Direction.fromDelta(neighborPos.getX() - pos.getX(), neighborPos.getY() - pos.getY(), neighborPos.getZ() - pos.getZ());
             assert direction != null;
 
             if (wire.canConnect(direction)) {
-                wire.updateConnection(direction);
+                wire.updateConnection(state, pos, neighborPos, direction);
             }
         }
     }

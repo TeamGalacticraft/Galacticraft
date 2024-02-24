@@ -25,13 +25,15 @@ package dev.galacticraft.mod.api.pipe.impl;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
-import dev.galacticraft.mod.util.DirectionUtil;
-import it.unimi.dsi.fastutil.objects.*;
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -39,318 +41,202 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.function.BiFunction;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
-public class PipeNetworkImpl implements PipeNetwork {
-    private final @NotNull ServerLevel world;
-    private final @NotNull Object2ObjectOpenHashMap<BlockPos, Storage<FluidVariant>> insertable = new Object2ObjectOpenHashMap<>();
-    private final @NotNull Object2ObjectOpenHashMap<BlockPos, Pipe> pipes = new Object2ObjectOpenHashMap<>(1);
-    private final @NotNull ObjectSet<PipeNetwork> peerNetworks = new ObjectLinkedOpenHashSet<>(0);
-    private boolean markedForRemoval = false;
+public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSnapshot> implements PipeNetwork {
+    private final @NotNull ServerLevel level;
+    private final @NotNull Object2ObjectOpenHashMap<BlockPos, Storage<FluidVariant> @Nullable []> pipes = new Object2ObjectOpenHashMap<>(1);
     private final long maxTransferRate;
+    private boolean activeTransaction = false;
+    private boolean markedForRemoval = false;
     private int tickId;
     private long transferred = 0;
-    private @Nullable FluidVariant fluidTransferred = null; //can transfer <maxTransferRate> amount of fluid of 1 type per tick
+    private @Nullable FluidVariant currentVariant = null; //can transfer <maxTransferRate> amount of fluid of 1 type per tick
 
-    public PipeNetworkImpl(@NotNull ServerLevel world, long maxTransferRate) {
-        this.world = world;
+    public PipeNetworkImpl(@NotNull ServerLevel level, long maxTransferRate, @NotNull BlockPos pos) {
+        this.level = level;
         this.maxTransferRate = maxTransferRate;
-        this.tickId = world.getServer().getTickCount();
+        this.tickId = level.getServer().getTickCount();
+        this.addPipe(pos, null);
     }
 
-    @Override
-    public boolean addPipe(@NotNull BlockPos pos, @Nullable Pipe pipe) {
-        assert !this.markedForRemoval();
+    private void addPipe(@NotNull BlockPos pos, @Nullable Pipe pipe) {
+        assert !this.markedForRemoval;
         if (pipe == null) {
-            pipe = (Pipe) world.getBlockEntity(pos);
+            pipe = (Pipe) this.level.getBlockEntity(pos);
         }
         assert pipe != null : "Attempted to add pipe that does not exist!";
         assert pos.equals(((BlockEntity) pipe).getBlockPos());
-        if (this.isCompatibleWith(pipe)) {
-            pipe.setNetwork(this);
-            this.pipes.put(pos, pipe);
-            for (Direction direction : Constant.Misc.DIRECTIONS) {
-                if (pipe.canConnect(direction)) {
-                    BlockEntity blockEntity = world.getBlockEntity(pos.relative(direction));
-                    if (blockEntity != null && !blockEntity.isRemoved()) {
-                        if (blockEntity instanceof Pipe adjacentPipe) {
-                            if (adjacentPipe.canConnect(direction.getOpposite())) {
-                                if (this.isCompatibleWith(adjacentPipe)) {
-                                    if (adjacentPipe.getNetwork() == null || adjacentPipe.getNetwork().markedForRemoval()) {
-                                        this.addPipe(pos.relative(direction), adjacentPipe);
-                                    } else {
-                                        assert adjacentPipe.getNetwork().getMaxTransferRate() == this.getMaxTransferRate();
-                                        if (adjacentPipe.getNetwork() != this) {
-                                            this.takeAll(adjacentPipe.getNetwork());
-                                        }
-                                    }
-                                } else {
-                                    this.peerNetworks.add(adjacentPipe.getOrCreateNetwork());
-                                }
+        assert this.isCompatibleWith(pipe);
+
+        if (pipe.getNetwork() != null) {
+            if (pipe.getNetwork() != this && !pipe.getNetwork().markedForRemoval()) {
+                pipe.getNetwork().markForRemoval();
+                this.pipes.putAll(((PipeNetworkImpl) pipe.getNetwork()).pipes);
+            }
+        }
+        pipe.setNetwork(this);
+        this.pipes.put(pos, null);
+
+        for (Direction direction : Constant.Misc.DIRECTIONS) {
+            if (pipe.canConnect(direction)) {
+                BlockPos adjacentPos = pos.relative(direction);
+                BlockEntity blockEntity = level.getBlockEntity(adjacentPos);
+                if (blockEntity != null && !blockEntity.isRemoved()) {
+                    if (blockEntity instanceof Pipe adjacent) {
+                        if (!pipe.isColorCompatible(adjacent)) continue;
+                        if (this.isCompatibleWith(adjacent)) {
+                            if (adjacent.getNetwork() != this && adjacent.canConnect(direction.getOpposite())) {
+                                this.addPipe(adjacentPos, adjacent);
                             }
                             continue;
                         }
                     }
-                    Storage<FluidVariant> insertable = FluidStorage.SIDED.find(world, pos.relative(direction), direction.getOpposite());
-                    if (insertable != null) {
-                        this.insertable.put(pos.relative(direction), insertable);
-                    }
+                }
+
+                Storage<FluidVariant> storage = FluidStorage.SIDED.find(this.level, adjacentPos, direction.getOpposite());
+                if (storage != null && storage.supportsInsertion()) {
+                    //noinspection Java8MapApi
+                    if (this.pipes.get(pos) == null) this.pipes.put(pos, new Storage[6]);
+                    Objects.requireNonNull(this.pipes.get(pos))[direction.get3DDataValue()] = storage;
                 }
             }
-        } else {
-            this.peerNetworks.add(pipe.getOrCreateNetwork());
         }
-        return true;
     }
-
-    public void takeAll(@NotNull PipeNetwork network) {
-        for (BlockPos pos : network.getAllPipes()) {
-            BlockEntity entity = this.world.getBlockEntity(pos);
-            if (entity instanceof Pipe pipe && !entity.isRemoved()) {
-                pipe.setNetwork(this);
-                this.pipes.put(pos, pipe);
-            }
-        }
-
-        this.insertable.putAll(network.getInsertable());
-        network.markForRemoval();
-    }
-
-    @Override
-    public void removePipe(Pipe pipe, @NotNull BlockPos removedPos) {
-        if (!this.world.isLoaded(removedPos)) {
+    
+    public void removePipe(@NotNull BlockPos removedPos) {
+        if (!this.level.isLoaded(removedPos)) {
             Constant.LOGGER.debug("Removing pipe from unloaded chunk, removing entire network");
-            this.pipes.values().forEach(p -> p.setNetwork(null));
             this.markForRemoval();
             return;
         }
 
-        if (this.markedForRemoval()) {
-            this.pipes.clear();
-            Constant.LOGGER.warn("Tried to remove pipe from removed network!");
-            return;
-        }
+        assert !this.markedForRemoval;
         assert this.pipes.containsKey(removedPos) : "Tried to remove pipe that does not exist!";
+
         this.pipes.remove(removedPos);
         if (this.pipes.isEmpty()) {
             this.markForRemoval();
             return;
         }
 
-        List<BlockPos> adjacent = new LinkedList<>();
-        this.reattachAdjacent(removedPos, this.insertable, (blockPos, direction) -> {
-            Storage<FluidVariant> storage = FluidStorage.SIDED.find(this.world, blockPos, direction.getOpposite());
-            return storage != null && storage.supportsInsertion() ? storage :  null;
-        }, adjacent);
-        adjacent.clear();
+        List<Pipe> adjacent = new ArrayList<>(6);
 
         for (Direction direction : Constant.Misc.DIRECTIONS) {
-            if (pipe.canConnect(direction)) {
-                BlockPos adjacentPipePos = removedPos.relative(direction);
-                if (this.pipes.containsKey(adjacentPipePos)) {
-                    if (((Pipe) Objects.requireNonNull(this.world.getBlockEntity(adjacentPipePos))).canConnect(direction.getOpposite())) {
-                        adjacent.add(adjacentPipePos); // Don't bother testing if it was unable to connect
-                    }
+            BlockPos adjacentPipePos = removedPos.relative(direction);
+            if (this.pipes.containsKey(adjacentPipePos)) {
+                Pipe pipe1 = (Pipe) Objects.requireNonNull(this.level.getBlockEntity(adjacentPipePos));
+                if (pipe1.canConnect(direction.getOpposite())) {
+                    adjacent.add(pipe1); // Don't bother testing if it was unable to connect
                 }
             }
         }
-        List<List<BlockPos>> mappedPipes = new LinkedList<>();
 
-        for (BlockPos blockPos : adjacent) {
-            boolean handled = false;
-            for (List<BlockPos> mapped : mappedPipes) {
-                handled = mapped.contains(blockPos);
-                if (handled) break;
-            }
-            if (handled) continue;
-            List<BlockPos> list1 = new LinkedList<>();
-            list1.add(blockPos);
-            this.traverse(list1, blockPos, null);
-            mappedPipes.add(list1);
+        assert !adjacent.isEmpty() : "Pipe was removed but no adjacent pipes were found";
+        if (adjacent.size() == 1) {
+            return;
         }
 
-        assert mappedPipes.size() > 0 : "A pipe was added that should never have been accepted";
-        if (mappedPipes.size() == 1) return;
         this.markForRemoval();
-        for (List<BlockPos> positions : mappedPipes) {
-            PipeNetwork network = PipeNetwork.create(this.world, this.getMaxTransferRate());
-            network.addPipe(positions.get(0), null);
-            assert network.getAllPipes().containsAll(positions);
-        }
-    }
 
-    private void traverse(List<BlockPos> list, BlockPos pos, @Nullable Direction ignore) {
-        BlockPos pos1;
-        for (Direction direction : Constant.Misc.DIRECTIONS) {
-            if (direction.getOpposite() == ignore) continue;
-            Pipe pipe = (Pipe) world.getBlockEntity(pos);
-            if (pipe.canConnect(direction)) {
-                pos1 = pos.relative(direction);
-                if (this.pipes.containsKey(pos1)) {
-                    if (world.getBlockEntity(pos1) instanceof Pipe pipe1 && pipe1.canConnect(direction.getOpposite())) {
-                        if (!list.contains(pos1)) {
-                            list.add(pos1);
-                            this.traverse(list, pos1, direction);
-                        }
-                    }
-                }
+        for (Pipe pipe1 : adjacent) {
+            if (pipe1.getNetwork() == this) {
+                pipe1.setNetwork(null);
+                pipe1.forceCreateNetwork();
             }
         }
     }
 
-    private <T> void reattachAdjacent(BlockPos pos, Object2ObjectOpenHashMap<BlockPos, T> map, BiFunction<BlockPos, Direction, T> function, List<BlockPos> optionalList) {
-        for (Direction direction : Constant.Misc.DIRECTIONS) {
-            BlockPos adjacentPos = pos.relative(direction);
-            if (map.remove(adjacentPos) != null) {
-                for (Direction direction1 : Constant.Misc.DIRECTIONS) {
-                    if (direction1 == direction.getOpposite()) continue;
-                    if (this.pipes.containsKey(adjacentPos.relative(direction1))) {
-                        if (((Pipe) world.getBlockEntity(adjacentPos.relative(direction1))).canConnect(direction1.getOpposite())) {
-                            T value = function.apply(adjacentPos, direction1);
-                            if (value != null) {
-                                optionalList.add(adjacentPos);
-                                map.put(adjacentPos, value);
-                                break;
+    @Override
+    public void updateConnection(@NotNull BlockPos pipePos, @NotNull BlockPos adjacentPos, @NotNull Direction direction) {
+        assert this.pipes.containsKey(pipePos);
+        assert !this.markedForRemoval;
+
+        if (this.level.getBlockEntity(adjacentPos) instanceof Pipe pipe && this.isCompatibleWith(pipe)) {
+            if (!this.pipes.containsKey(adjacentPos)) {
+                this.addPipe(adjacentPos, pipe);
+            }
+        } else {
+            if (this.pipes.containsKey(adjacentPos)) {
+                this.removePipe(adjacentPos);
+            }
+
+            Storage<FluidVariant> storage = FluidStorage.SIDED.find(this.level, adjacentPos, direction.getOpposite());
+            if (storage != null && storage.supportsInsertion()) {
+                //noinspection Java8MapApi
+                if (this.pipes.get(pipePos) == null) this.pipes.put(pipePos, new Storage[6]);
+                Objects.requireNonNull(this.pipes.get(pipePos))[direction.get3DDataValue()] = storage;
+            } else if (this.pipes.get(pipePos) != null) {
+                Objects.requireNonNull(this.pipes.get(pipePos))[direction.get3DDataValue()] = null;
+            }
+        }
+    }
+
+    @Override
+    public long insert(@NotNull FluidVariant resource, long amount, @NotNull TransactionContext transaction) {
+        if (this.activeTransaction) return 0;
+        this.activeTransaction = true;
+
+        if (this.tickId != level.getServer().getTickCount()) {
+            this.tickId = level.getServer().getTickCount();
+            this.transferred = 0;
+            this.currentVariant = null;
+        }
+
+        amount = Math.min(amount, this.maxTransferRate - this.transferred);
+        if (amount == 0 || (this.currentVariant != null && !this.currentVariant.equals(resource))) {
+            this.activeTransaction = false;
+            return 0;
+        }
+
+        long totalRequested = 0;
+        Object2LongMap<Storage<FluidVariant>> requests = new Object2LongOpenHashMap<>();
+
+        for (Storage<FluidVariant>[] storages : this.pipes.values()) {
+            if (storages != null) {
+                for (Storage<FluidVariant> storage : storages) {
+                    if (storage != null) {
+                        try (Transaction simulation = Transaction.openNested(transaction)) {
+                            long inserted = storage.insert(resource, amount, simulation);
+                            if (inserted > 0) {
+                                totalRequested += inserted;
+                                requests.put(storage, inserted);
                             }
+                            simulation.abort();
                         }
                     }
                 }
             }
         }
-    }
 
-    @Override
-    public boolean updateConnection(@NotNull BlockPos adjacentToUpdated, @NotNull BlockPos updatedPos) {
-        assert !(world.getBlockEntity(updatedPos) instanceof Pipe);
-        this.insertable.remove(updatedPos);
-        BlockPos vector = updatedPos.subtract(adjacentToUpdated);
-        Direction direction = DirectionUtil.fromNormal(vector.getX(), vector.getY(), vector.getZ());
-        Storage<FluidVariant> insertable = FluidStorage.SIDED.find(world, updatedPos, direction.getOpposite());
-        if (insertable != null) {
-            this.insertable.put(updatedPos, insertable);
-            return true;
+        if (totalRequested == 0) {
+            this.activeTransaction = false;
+            return 0;
         }
-        return false;
-    }
 
-    @Override
-    public long insert(@NotNull BlockPos fromPipe, FluidStack stack, Direction direction, @NotNull TransactionContext context) {
-        BlockPos source = fromPipe.relative(direction.getOpposite());
-        if (this.tickId != (this.tickId = world.getServer().getTickCount())) {
-            this.transferred = 0;
-            this.fluidTransferred = null;
-        } else {
-            if (this.fluidTransferred != null && !stack.variant().equals(this.fluidTransferred) || this.transferred >= this.maxTransferRate) {
-                return stack.amount();
+        double ratio = Math.min(1.0, (double)amount / (double)totalRequested);
+        final long baseTransferred = this.transferred;
+
+        this.updateSnapshots(transaction);
+
+        this.currentVariant = resource;
+        requests.forEach((storage, requested) -> {
+            long insert = (long) (requested * ratio);
+            if (insert > 0) {
+                insert = storage.insert(resource, insert, transaction);
+                this.transferred += insert;
             }
-        }
-        long skipped = stack.amount() - Math.min(this.getMaxTransferRate() - this.transferred, stack.amount());
-        stack.setAmount(stack.amount() - skipped);
-        if (stack.isEmpty()) return stack.amount() + skipped;
+        });
 
-        Object2LongArrayMap<PipeNetwork> nonFullInsertables = new Object2LongArrayMap<>(1 + this.peerNetworks.size());
-        this.getNonFullInsertables(nonFullInsertables, source, stack, context);
-        long requested = 0;
-        for (long fluidAmount : nonFullInsertables.values()) {
-            requested = requested + fluidAmount;
-        }
-        if (requested <= 0) {
-            return stack.amount() + skipped;
-        }
-        var ref = new Object() {
-            FluidStack available = FluidStack.EMPTY;
-        };
-        ref.available = stack;
-        double ratio = Math.min((double)stack.amount() / (double)requested, 1.0);
-
-        nonFullInsertables.forEach((pipeNetwork, integer) -> ref.available = pipeNetwork.insertInternal(stack, ratio, ref.available, context));
-        return ref.available.amount() + skipped;
-    }
-
-    @Override
-    public FluidStack insertInternal(FluidStack amount, double ratio, FluidStack available, TransactionContext context) {
-        if (this.tickId != (this.tickId = world.getServer().getTickCount())) {
-            this.transferred = 0;
-            this.fluidTransferred = null;
-        } else {
-            if (this.fluidTransferred != null && amount.fluid() != this.fluidTransferred.getFluid()) {
-                return amount;
-            }
-        }
-        final long min = Math.min(amount.amount(), this.maxTransferRate - this.transferred);
-        long removed = amount.amount() - min;
-        amount.setAmount(min);
-        for (Storage<FluidVariant> insertable : this.insertable.values()) {
-            long consumed = Math.min((long)Math.min(available.amount(), amount.amount() * ratio), this.getMaxTransferRate() - this.transferred);
-            long skipped = (long) (available.amount() * ratio) - consumed;
-            if (consumed <= 0) continue;
-            consumed = insertable.insert(available.variant(), consumed, context);
-             available.setAmount(available.amount() - consumed + skipped);
-            this.transferred = this.transferred + consumed;
-        }
-        available.setAmount(available.amount() + removed);
-        return available;
-    }
-
-    @Override
-    public void getNonFullInsertables(Object2LongMap<PipeNetwork> fluidRequirement, BlockPos source, FluidStack stack, TransactionContext context) {
-        if (this.tickId != (this.tickId = world.getServer().getTickCount())) {
-            this.transferred = 0;
-            this.fluidTransferred = null;
-        } else {
-            if (this.fluidTransferred != null && !stack.variant().equals(this.fluidTransferred)) {
-                fluidRequirement.putIfAbsent(this, 0);
-                return;
-            }
-        }
-        final long min = Math.min(stack.amount(), this.maxTransferRate - this.transferred);
-        long removed = stack.amount() - min;
-        stack.setAmount(min);
-        boolean b = fluidRequirement.containsKey(this);
-        fluidRequirement.putIfAbsent(this, 0);
-        if (!b) {
-            long requested = 0;
-            for (ObjectIterator<Object2ObjectMap.Entry<BlockPos, Storage<FluidVariant>>> it = this.getInsertable().object2ObjectEntrySet().fastIterator(); it.hasNext(); ) {
-                Map.Entry<BlockPos, Storage<FluidVariant>> entry = it.next();
-                if (entry.getKey().equals(source)) continue;
-                long success;
-                try (Transaction transaction = Transaction.openNested(context)) {
-                    success = entry.getValue().insert(stack.variant(), stack.amount(), transaction);
-                }
-                if (success > 0) {
-                    requested = requested + success;
-                    if (requested >= this.maxTransferRate - this.transferred) {
-                        requested = this.maxTransferRate - this.transferred;
-                        break;
-                    }
-                }
-            }
-            for (PipeNetwork peerNetwork : this.peerNetworks) {
-                if (!fluidRequirement.containsKey(peerNetwork)) {
-                    peerNetwork.getNonFullInsertables(fluidRequirement, source, stack, context);
-                }
-            }
-            fluidRequirement.put(this, requested);
-        }
+        this.activeTransaction = false;
+        return this.transferred - baseTransferred;
     }
 
     @Override
     public long getMaxTransferRate() {
         return this.maxTransferRate;
-    }
-
-    @Override
-    public Collection<BlockPos> getAllPipes() {
-        return this.pipes.keySet();
-    }
-
-    @Override
-    public @NotNull Object2ObjectOpenHashMap<BlockPos, Storage<FluidVariant>> getInsertable() {
-        return this.insertable;
     }
 
     @Override
@@ -364,20 +250,33 @@ public class PipeNetworkImpl implements PipeNetwork {
     }
 
     @Override
-    public boolean isCompatibleWith(Pipe pipe) {
+    public boolean isCompatibleWith(@NotNull Pipe pipe) {
         return this.getMaxTransferRate() == pipe.getMaxTransferRate();
     }
 
     @Override
     public String toString() {
         return "PipeNetworkImpl{" +
-                "world=" + world.dimension().location() +
-                ", insertable=" + insertable +
-                ", pipes=" + pipes.keySet() +
+                "level=" + level.dimension().location() +
+                ", pipes=" + pipes +
                 ", markedForRemoval=" + markedForRemoval +
                 ", maxTransferRate=" + maxTransferRate +
                 ", tickId=" + tickId +
                 ", transferred=" + transferred +
+                ", currentVariant=" + currentVariant +
                 '}';
     }
+
+    @Override
+    protected PipeSnapshot createSnapshot() {
+        return new PipeSnapshot(this.currentVariant, this.transferred);
+    }
+
+    @Override
+    protected void readSnapshot(PipeSnapshot snapshot) {
+        this.currentVariant = snapshot.variant;
+        this.transferred = snapshot.transferred;
+    }
+
+    public record PipeSnapshot(FluidVariant variant, long transferred) {}
 }

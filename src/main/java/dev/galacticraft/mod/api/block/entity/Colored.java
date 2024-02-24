@@ -33,6 +33,10 @@ public interface Colored {
 
     void setColor(DyeColor color);
 
+    default boolean isColorCompatible(Colored colored) {
+        return this.getColor() == colored.getColor() || this.getColor() == DyeColor.WHITE || colored.getColor() == DyeColor.WHITE;
+    }
+
     default void writeColorNbt(CompoundTag nbt) {
         nbt.putByte(Constant.Nbt.COLOR, (byte) Objects.requireNonNullElse(this.getColor(), DyeColor.WHITE).ordinal());
     }

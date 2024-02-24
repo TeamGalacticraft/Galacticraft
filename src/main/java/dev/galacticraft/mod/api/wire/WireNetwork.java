@@ -22,40 +22,23 @@
 
 package dev.galacticraft.mod.api.wire;
 
-import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * The basic 'Wire Network' spec
  */
 public interface WireNetwork {
     /**
-     * Adds a wire to the network
-     * @param pos The position of the wire being added
-     * @param wire The data container of the wire being connected (can be null)
-     * @return
-     */
-    void addWire(@NotNull BlockPos pos, @Nullable Wire wire);
-
-    /**
-     * Removes a wire from the network
-     * @param removedPos The position of the wire being removed
-     */
-    void removeWire(@NotNull BlockPos removedPos);
-
-    /**
      * Updates the wire's connection to the updated block
      *
      * @param adjacentToUpdated The wire that is adjacent to the updated pos
      * @param updatedPos        The position of the block that was updated
-     * @param direction
-     * @return
+     * @param direction         The direction of the updated block
      */
-    boolean updateConnection(@NotNull BlockPos adjacentToUpdated, @NotNull BlockPos updatedPos, Direction direction);
+    void updateConnection(@NotNull BlockPos adjacentToUpdated, @NotNull BlockPos updatedPos, @NotNull Direction direction);
 
     /**
      * Inserts energy into the network
@@ -64,10 +47,6 @@ public interface WireNetwork {
      * @return the amount of energy that failed to insert
      */
     long insert(long amount, @NotNull TransactionContext transaction);
-
-    long insertInternal(long amount, double ratio, long available, TransactionContext transaction);
-
-    void getNonFullInsertables(Object2LongMap<WireNetwork> energyRequirement, long amount, @NotNull TransactionContext transaction);
 
     /**
      * Returns the maximum amount of energy allowed to pass through this network per tick
@@ -79,5 +58,5 @@ public interface WireNetwork {
 
     void markForRemoval();
 
-    boolean isCompatibleWith(Wire wire);
+    boolean isCompatibleWith(@NotNull Wire wire);
 }

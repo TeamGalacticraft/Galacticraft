@@ -417,6 +417,7 @@ public class GCMachineTypes {
             MachineFluidStorage.of(
                     FluidResourceSlot.builder(InputType.STORAGE)
                             .pos(31, 8)
+                            .hidden()
                             .capacity(OxygenStorageModuleBlockEntity.MAX_OXYGEN)
                             .filter(ResourceFilters.ofResource(Gases.OXYGEN))
             )
