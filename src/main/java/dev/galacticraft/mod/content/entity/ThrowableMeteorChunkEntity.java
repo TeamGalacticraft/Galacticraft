@@ -106,7 +106,7 @@ public class ThrowableMeteorChunkEntity extends ThrowableItemProjectile {
     protected void onHitBlock(BlockHitResult result) {
         super.onHitBlock(result);
         if (!this.level().isClientSide)
-            this.level().addFreshEntity(new ThrowableMeteorChunkItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), this.getItem()));
+            this.level().addFreshEntity(new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), this.getItem()));
     }
 
     @Override
