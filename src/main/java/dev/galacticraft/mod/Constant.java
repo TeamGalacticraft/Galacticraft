@@ -557,6 +557,7 @@ public interface Constant {
         String LAUNCH_SMOKE = "launch_smoke";
         String LAUNCH_FLAME = "launch_flame";
         String LAUNCH_FLAME_LAUNCHED = "launch_flame_launched";
+        String ACID_VAPOR_PARTICLE = "acid_vapor";
     }
 
     interface Config {

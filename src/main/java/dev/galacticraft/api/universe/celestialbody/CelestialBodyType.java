@@ -135,6 +135,13 @@ public abstract class CelestialBodyType<C extends CelestialBodyConfig> {
     public abstract float gravity(C config);
 
     /**
+     * The length of day in this dimension <p> Vanilla: 24000
+     */
+    public long dayLength(C config) {
+        return 24000;
+    }
+
+    /**
      * Returns a codec that will (de)serialize a fully-configured celestial body of this type.
      *
      * @return a codec that will (de)serialize a fully-configured celestial body of this type.

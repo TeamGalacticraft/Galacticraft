@@ -107,7 +107,7 @@ loom {
             it.property("mixin.debug.export", "true")
         }
         register("datagen") {
-            server()
+            client()
             name("Data Generation")
             runDir("build/datagen")
             property("fabric-api.datagen")

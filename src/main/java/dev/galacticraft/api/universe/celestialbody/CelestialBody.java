@@ -173,6 +173,15 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
     }
 
     /**
+     * Returns this celestial body's length of a single day on this celestial body
+     *
+     * @return this celestial body's length of a single day on this celestial body
+     */
+    public long dayLength() {
+        return type().dayLength(this.config);
+    }
+
+    /**
      * Returns this celestial body's gravity
      *
      * @return this celestial body's gravity

@@ -36,6 +36,7 @@ import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.impl.codec.MiscCodecs;
+import dev.galacticraft.impl.codec.MoreProducts;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.RegistryFileCodec;
@@ -51,9 +52,9 @@ public record PlanetConfig(@NotNull MutableComponent name, @NotNull MutableCompo
                            @NotNull CelestialPosition<?, ?> position, @NotNull CelestialDisplay<?, ?> display, @NotNull CelestialRingDisplay<?, ?> ring,
                            @NotNull ResourceKey<Level> world, Holder<CelestialTeleporter<?, ?>> teleporter, @NotNull GasComposition atmosphere, float gravity,
                            CelestialHandler celestialHandler,
-                           int accessWeight, int dayTemperature, int nightTemperature,
+                           int accessWeight, int dayTemperature, int nightTemperature, long dayLength,
                            @NotNull Optional<SatelliteRecipe> satelliteRecipe) implements CelestialBodyConfig {
-    public static final Codec<PlanetConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<PlanetConfig> CODEC = RecordCodecBuilder.create(instance -> new MoreProducts.P17<>(
             MiscCodecs.TRANSLATABLE_COMPONENT.fieldOf("name").forGetter(PlanetConfig::name),
             MiscCodecs.TRANSLATABLE_COMPONENT.fieldOf("description").forGetter(PlanetConfig::description),
             ResourceKey.codec(AddonRegistries.GALAXY).fieldOf("galaxy").forGetter(PlanetConfig::galaxy),
@@ -69,6 +70,7 @@ public record PlanetConfig(@NotNull MutableComponent name, @NotNull MutableCompo
             Codec.INT.fieldOf("access_weight").forGetter(PlanetConfig::accessWeight),
             Codec.INT.fieldOf("day_temperature").forGetter(PlanetConfig::dayTemperature),
             Codec.INT.fieldOf("night_temperature").forGetter(PlanetConfig::nightTemperature),
+            Codec.LONG.fieldOf("day_length").forGetter(PlanetConfig::dayLength),
             SatelliteRecipe.CODEC.optionalFieldOf("satellite_recipe").forGetter(PlanetConfig::satelliteRecipe)
     ).apply(instance, PlanetConfig::new));
 }

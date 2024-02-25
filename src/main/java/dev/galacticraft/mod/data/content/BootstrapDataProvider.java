@@ -22,10 +22,10 @@
 
 package dev.galacticraft.mod.data.content;
 
+import dev.galacticraft.impl.data.GCDynamicRegistryProvider;
 import dev.galacticraft.impl.data.GeneratingBootstrapContext;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.worldgen.BootstapContext;
 import org.jetbrains.annotations.Contract;
@@ -34,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public class BootstrapDataProvider<T> extends FabricDynamicRegistryProvider {
+public class BootstrapDataProvider<T> extends GCDynamicRegistryProvider {
     private final String name;
     private final Consumer<BootstapContext<T>> consumer;
 
