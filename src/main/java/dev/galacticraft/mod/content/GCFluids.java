@@ -23,10 +23,7 @@
 package dev.galacticraft.mod.content;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.fluid.CrudeOilFluid;
-import dev.galacticraft.mod.content.fluid.FuelFluid;
-import dev.galacticraft.mod.content.fluid.GCFluidAttribute;
-import dev.galacticraft.mod.content.fluid.OxygenFluid;
+import dev.galacticraft.mod.content.fluid.*;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.minecraft.core.Registry;
@@ -44,6 +41,9 @@ public class GCFluids {
     public static final FlowingFluid FLOWING_CRUDE_OIL = new CrudeOilFluid.Flowing();
     public static final FlowingFluid FUEL = new FuelFluid.Still();
     public static final FlowingFluid FLOWING_FUEL = new FuelFluid.Flowing();
+    public static final FlowingFluid SULFURIC_ACID = new SulfuricAcidFluid.Still();
+    public static final FlowingFluid FLOWING_SULFURIC_ACID = new SulfuricAcidFluid.Flowing();
+
     public static final Fluid LIQUID_OXYGEN = new OxygenFluid();
 
     public static void register() {
@@ -51,6 +51,8 @@ public class GCFluids {
         register(Constant.Fluid.CRUDE_OIL_FLOWING, FLOWING_CRUDE_OIL);
         register(Constant.Fluid.FUEL_STILL, FUEL);
         register(Constant.Fluid.FUEL_FLOWING, FLOWING_FUEL);
+        register(Constant.Fluid.SULFURIC_ACID_STILL, SULFURIC_ACID);
+        register(Constant.Fluid.SULFURIC_ACID_FLOWING, FLOWING_SULFURIC_ACID);
         register(Constant.Fluid.LIQUID_OXYGEN, LIQUID_OXYGEN);
     }
 
@@ -65,6 +67,12 @@ public class GCFluids {
                 Component.translatable(GCBlocks.FUEL.getDescriptionId())
                         .setStyle(Constant.Text.Color.YELLOW_STYLE),
                 2000,
+                false
+        ));
+        FluidVariantAttributes.register(SULFURIC_ACID, new GCFluidAttribute(
+                Component.translatable(GCBlocks.SULFURIC_ACID.getDescriptionId())
+                        .setStyle(Constant.Text.Color.YELLOW_STYLE),
+                FluidConstants.LAVA_VISCOSITY,
                 false
         ));
         FluidVariantAttributes.register(LIQUID_OXYGEN, new GCFluidAttribute(
