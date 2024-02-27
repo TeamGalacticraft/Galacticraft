@@ -66,12 +66,18 @@ public class GCResourceReloadListener implements SimpleSynchronousResourceReload
         FluidPipeWalkwayBakedModel.invalidate();
         FluidRenderHandler oil = (view, pos, state) -> new TextureAtlasSprite[]{atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/crude_oil_still")), atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/crude_oil_flowing"))};
         FluidRenderHandler fuel = (view, pos, state) -> new TextureAtlasSprite[]{atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/fuel_still")), atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/fuel_flowing"))};
+        FluidRenderHandler sulfuricAcid = (view, pos, state) -> new TextureAtlasSprite[]{
+                atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/fluid/sulfuric_acid_still")),
+                atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/fluid/sulfuric_acid_flowing"))
+        };
         FluidRenderHandler oxygen = (view, pos, state) -> new TextureAtlasSprite[]{atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/oxygen")), atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/oxygen"))};
 
         FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.CRUDE_OIL, oil);
         FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FLOWING_CRUDE_OIL, oil);
         FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FUEL, fuel);
         FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FLOWING_FUEL, fuel);
+        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.SULFURIC_ACID, sulfuricAcid);
+        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FLOWING_SULFURIC_ACID, sulfuricAcid);
         FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.LIQUID_OXYGEN, oxygen);
         BubbleEntityRenderer.bubbleModel = null;
     }

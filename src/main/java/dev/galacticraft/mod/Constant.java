@@ -282,6 +282,7 @@ public interface Constant {
         // Liquids
         String FUEL = "fuel";
         String CRUDE_OIL = "crude_oil";
+        String SULFURIC_ACID = "sulfuric_acid";
 
         // Machines
         String CIRCUIT_FABRICATOR = "circuit_fabricator";
@@ -490,6 +491,7 @@ public interface Constant {
         //Fluid buckets
         String CRUDE_OIL_BUCKET = "crude_oil_bucket";
         String FUEL_BUCKET = "fuel_bucket";
+        String SULFURIC_ACID_BUCKET = "sulfuric_acid_bucket";
 
         //GC INVENTORY
         String PARACHUTE = "parachute";
@@ -568,6 +570,8 @@ public interface Constant {
         String CRYOGENIC_PARTICLE = "cryogenic_particle";
         String LANDER_FLAME = "lander_flame_particle";
         String SPARK = "spark";
+        String DRIPPING_SULFURIC_ACID = "dripping_sulfuric_acid";
+        String FALLING_SULFURIC_ACID = "falling_sulfuric_acid";
     }
 
     interface Config {
