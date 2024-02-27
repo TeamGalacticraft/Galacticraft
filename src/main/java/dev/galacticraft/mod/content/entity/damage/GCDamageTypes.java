@@ -36,10 +36,12 @@ public class GCDamageTypes {
     public static final ResourceKey<DamageType> OIL_BOOM = Constant.key(Registries.DAMAGE_TYPE, "oil_boom");
     public static final ResourceKey<DamageType> VINE_POISON = Constant.key(Registries.DAMAGE_TYPE, "vine_poison");
     public static final ResourceKey<DamageType> SUFFOCATION = Constant.key(Registries.DAMAGE_TYPE, "suffocation");
+    public static final ResourceKey<DamageType> SULFURIC_ACID = Constant.key(Registries.DAMAGE_TYPE, "sulfuric_acid");
 
     public static void bootstrapRegistries(BootstapContext<DamageType> context) {
         context.register(OIL_BOOM, new DamageType("oil_boom", DamageScaling.ALWAYS, 0.1f));
         context.register(VINE_POISON, new DamageType("vine_poison", 0.0f));
         context.register(SUFFOCATION, new DamageType("suffocation", 0.0f));
+        context.register(SULFURIC_ACID, new DamageType("sulfuric_acid", 0.0f));
     }
 }

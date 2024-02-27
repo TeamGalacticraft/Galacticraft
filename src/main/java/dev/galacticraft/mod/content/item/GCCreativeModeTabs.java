@@ -187,6 +187,7 @@ public class GCCreativeModeTabs {
                 //FLUID BUCKETS
                 output.accept(CRUDE_OIL_BUCKET);
                 output.accept(FUEL_BUCKET);
+                output.accept(SULFURIC_ACID_BUCKET);
 
                 //GALACTICRAFT INVENTORY
                 output.accept(PARACHUTE);

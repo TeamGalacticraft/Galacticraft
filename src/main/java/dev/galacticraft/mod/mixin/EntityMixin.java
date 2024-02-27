@@ -155,6 +155,12 @@ public abstract class EntityMixin implements EntityAccessor {
                     this.hurt(new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.OIL_BOOM)), 20.0f);
                 }
             }
+        } else if (this.updateFluidHeightAndDoFluidPushing(GCTags.SULFURIC_ACID, 0.0028d)) {
+            // The entity enter an acid fluid, this entity need to take damage
+            if ((this.isAlwaysTicking() && !level.getPlayerByUUID(uuid).isCreative()) || !this.isInvulnerable()) {
+                this.hurt(new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE)
+                        .getHolderOrThrow(GCDamageTypes.SULFURIC_ACID)), 2.0f);
+            }
         }
     }
 

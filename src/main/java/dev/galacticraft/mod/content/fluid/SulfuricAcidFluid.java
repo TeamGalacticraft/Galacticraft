@@ -13,11 +13,6 @@ import net.minecraft.world.level.material.Fluid;
 
 import java.util.Optional;
 
-// TODO Add entity interaction
-//  Add fluid max length (level) to 3
-//  Add damage feature
-//  Add water sound ?
-
 /**
  * Sulfuric acid fluid
  */
@@ -26,7 +21,7 @@ public abstract class SulfuricAcidFluid extends BasicFluid {
      * Sulfuric acid fluid
      */
     public SulfuricAcidFluid() {
-        super(false, true, 3, 1, 10, 100);
+        super(false, true, 3, 2, 10, 100);
     }
 
     @Override

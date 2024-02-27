@@ -403,6 +403,7 @@
   "death.attack.galacticraft.oil_boom": "%s tried to put out fire with a very flammable material",
   "death.attack.galacticraft.suffocation": "%s died from lack of oxygen",
   "death.attack.galacticraft.vine_poison": "%s succumbed to the poison of some vines",
+  "death.attack.galacticraft.sulfuric_acid": "%s succumbed to sulfuric acid",
 
   "ui.galacticraft.status.collecting": "Collecting",
   "ui.galacticraft.status.partially_blocked": "Partially Blocked",
