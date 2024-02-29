@@ -76,13 +76,20 @@ public class GCBlocks {
     public static final Block UNLIT_LANTERN = new UnlitLanternBlock(BlockBehaviour.Properties.copy(Blocks.LANTERN).lightLevel(state -> 0));
 
     // FLUIDS
-    public static final LiquidBlock CRUDE_OIL = BLOCKS.register(Constant.Block.CRUDE_OIL, new CrudeOilBlock(GCFluids.CRUDE_OIL, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK)
-            .noCollission().pushReaction(PushReaction.DESTROY).ignitedByLava().replaceable().liquid()
-            .strength(100.0F, 1000.0F).noLootTable()));
+    public static final LiquidBlock CRUDE_OIL = BLOCKS.register(Constant.Block.CRUDE_OIL,
+            new CrudeOilBlock(GCFluids.CRUDE_OIL, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK)
+                .noCollission().pushReaction(PushReaction.DESTROY).ignitedByLava().replaceable().liquid()
+                .strength(100.0F, 1000.0F).noLootTable()));
 
-    public static final LiquidBlock FUEL = BLOCKS.register(Constant.Block.FUEL, new LiquidBlock(GCFluids.FUEL, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW)
-            .noCollission().pushReaction(PushReaction.DESTROY).ignitedByLava().replaceable().liquid()
-            .strength(50.0F, 50.0F).noLootTable()));
+    public static final LiquidBlock FUEL = BLOCKS.register(Constant.Block.FUEL,
+            new LiquidBlock(GCFluids.FUEL, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW)
+                .noCollission().pushReaction(PushReaction.DESTROY).ignitedByLava().replaceable().liquid()
+                .strength(50.0F, 50.0F).noLootTable()));
+
+    public static final LiquidBlock SULFURIC_ACID = BLOCKS.register(Constant.Block.SULFURIC_ACID,
+            new LiquidBlock(GCFluids.SULFURIC_ACID, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN)
+                    .noCollission().pushReaction(PushReaction.DESTROY).replaceable().liquid()
+                    .strength(50.0F, 50.0F).noLootTable()));
 
     // DECORATION BLOCKS
     public static final Block ALUMINUM_DECORATION = new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F));

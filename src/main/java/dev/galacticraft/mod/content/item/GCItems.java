@@ -428,6 +428,7 @@ public class GCItems {
     //FLUID BUCKETS
     public static final Item CRUDE_OIL_BUCKET = new BucketItem(GCFluids.CRUDE_OIL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
     public static final Item FUEL_BUCKET = new BucketItem(GCFluids.FUEL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
+    public static final Item SULFURIC_ACID_BUCKET = new BucketItem(GCFluids.SULFURIC_ACID, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //GALACTICRAFT INVENTORY
     public static final Item PARACHUTE = new Item(new Item.Properties().stacksTo(1));
@@ -840,6 +841,7 @@ public class GCItems {
         //FLUID BUCKETS
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CRUDE_OIL_BUCKET), CRUDE_OIL_BUCKET);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.FUEL_BUCKET), FUEL_BUCKET);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.SULFURIC_ACID_BUCKET), SULFURIC_ACID_BUCKET);
 
         //GALACTICRAFT INVENTORY
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.PARACHUTE), PARACHUTE);

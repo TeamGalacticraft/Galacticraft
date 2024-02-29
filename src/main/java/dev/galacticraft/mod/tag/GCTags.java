@@ -40,6 +40,7 @@ import net.minecraft.world.level.material.Fluid;
 public class GCTags {
     public static final TagKey<Fluid> OIL = TagKey.create(Registries.FLUID, new ResourceLocation(Constant.COMMON_NAMESPACE, "oil"));
     public static final TagKey<Fluid> FUEL = TagKey.create(Registries.FLUID, new ResourceLocation(Constant.COMMON_NAMESPACE, "fuel"));
+    public static final TagKey<Fluid> SULFURIC_ACID = TagKey.create(Registries.FLUID, new ResourceLocation(Constant.COMMON_NAMESPACE, "sulfuric_acid"));
     public static final TagKey<Fluid> LIQUID_OXYGEN = TagKey.create(Registries.FLUID, new ResourceLocation(Constant.COMMON_NAMESPACE, "oxygen"));
     public static final TagKey<Fluid> OXYGEN = TagKey.create(Registries.FLUID, Constant.id("oxygen"));
 

@@ -239,6 +239,7 @@ public class GCModelProvider extends FabricModelProvider {
 
         generator.createNonTemplateModelBlock(GCBlocks.CRUDE_OIL);
         generator.createNonTemplateModelBlock(GCBlocks.FUEL);
+        generator.createNonTemplateModelBlock(GCBlocks.SULFURIC_ACID);
 
         generator.createTrivialCube(GCBlocks.AIR_LOCK_FRAME);
         this.createAirLockController(generator);

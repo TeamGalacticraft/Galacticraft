@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "galacticraft:item/sulfuric_acid_bucket"
+  }
+}
