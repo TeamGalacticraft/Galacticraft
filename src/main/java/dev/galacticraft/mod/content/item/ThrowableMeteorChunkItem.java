@@ -37,15 +37,8 @@ import net.minecraft.world.level.Level;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class ThrowableMeteorChunkItem extends Item {
-    private final boolean hot;
-
     public ThrowableMeteorChunkItem(Properties settings) {
-        this(settings, false);
-    }
-
-    public ThrowableMeteorChunkItem(Properties settings, boolean hot) {
         super(settings);
-        this.hot = hot;
     }
 
     @Override
@@ -62,7 +55,7 @@ public class ThrowableMeteorChunkItem extends Item {
                 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F)
         );
         if (!level.isClientSide) {
-            ThrowableMeteorChunkEntity projectile = new ThrowableMeteorChunkEntity(player, level, this.hot);
+            ThrowableMeteorChunkEntity projectile = new ThrowableMeteorChunkEntity(player, level, itemStack.is(GCItems.HOT_THROWABLE_METEOR_CHUNK));
             projectile.setItem(itemStack);
             projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
             level.addFreshEntity(projectile);

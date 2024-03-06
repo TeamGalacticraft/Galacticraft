@@ -44,7 +44,7 @@ public class HotThrowableMeteorChunkItem extends ThrowableMeteorChunkItem {
     public static int MAX_TICKS = 45 * 20;
 
     public HotThrowableMeteorChunkItem(Properties settings) {
-        super(settings, true);
+        super(settings);
     }
 
     @Override
@@ -61,6 +61,9 @@ public class HotThrowableMeteorChunkItem extends ThrowableMeteorChunkItem {
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        if (level.isClientSide())
+            return;
+
         CompoundTag stackTag = stack.getOrCreateTag();
 
         if (!stackTag.contains(TICKS_UNTIL_COOL, 3))

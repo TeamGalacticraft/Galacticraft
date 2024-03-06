@@ -124,7 +124,8 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .requires(GCItems.RAW_METEORIC_IRON)
                 .unlockedBy(getHasName(GCItems.RAW_METEORIC_IRON), has(GCItems.RAW_METEORIC_IRON))
                 .save(exporter);
-        simpleCookingRecipe(exporter, "smelting", RecipeSerializer.SMELTING_RECIPE, 100, GCItems.THROWABLE_METEOR_CHUNK, GCItems.HOT_THROWABLE_METEOR_CHUNK, 1.0F);
+        simpleCookingRecipe(exporter, "smelting", RecipeSerializer.SMELTING_RECIPE, 200, GCItems.THROWABLE_METEOR_CHUNK, GCItems.HOT_THROWABLE_METEOR_CHUNK, 0.7F);
+        simpleCookingRecipe(exporter, "blasting", RecipeSerializer.BLASTING_RECIPE, 100, GCItems.THROWABLE_METEOR_CHUNK, GCItems.HOT_THROWABLE_METEOR_CHUNK, 0.7F);
 
         // Food
         simpleCookingRecipe(exporter, "smoking", RecipeSerializer.SMOKING_RECIPE, 100, GCItems.GROUND_BEEF, GCItems.BEEF_PATTY, 1.0F);
