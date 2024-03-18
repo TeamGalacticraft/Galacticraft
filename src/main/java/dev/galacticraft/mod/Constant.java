@@ -556,12 +556,12 @@ public interface Constant {
         String CRYOGENIC_PARTICLE = "cryogenic_particle";
         String LANDER_FLAME = "lander_flame_particle";
         String SPARK = "spark";
+        String DRIPPING_SULFURIC_ACID = "dripping_sulfuric_acid";
+        String FALLING_SULFURIC_ACID = "falling_sulfuric_acid";
         String LAUNCH_SMOKE = "launch_smoke";
         String LAUNCH_FLAME = "launch_flame";
         String LAUNCH_FLAME_LAUNCHED = "launch_flame_launched";
         String ACID_VAPOR_PARTICLE = "acid_vapor";
-        String DRIPPING_SULFURIC_ACID = "dripping_sulfuric_acid";
-        String FALLING_SULFURIC_ACID = "falling_sulfuric_acid";
     }
 
     interface Config {
