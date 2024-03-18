@@ -111,8 +111,13 @@ public class PlanetType extends CelestialBodyType<PlanetConfig> implements Tiere
     }
 
     @Override
+    public long dayLength(PlanetConfig config) {
+        return config.dayLength();
+    }
+
+    @Override
     public int temperature(RegistryAccess access, long time, PlanetConfig config) {
-        return time % 24000 < 12000 ? config.dayTemperature() : config.nightTemperature(); //todo: temperature providers?
+        return time % config.dayLength() < 12000 ? config.dayTemperature() : config.nightTemperature(); //todo: temperature providers?
     }
 
     @Override

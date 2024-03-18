@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_compressed_steel",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_compressed_steel"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:oxygen_bubble_distributor"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

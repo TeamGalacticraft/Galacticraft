@@ -23,9 +23,11 @@
 package dev.galacticraft.mod.client.sounds;
 
 import dev.galacticraft.api.rocket.LaunchStage;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundSource;
 
 public class RocketSound extends AbstractTickableSoundInstance {
@@ -35,51 +37,57 @@ public class RocketSound extends AbstractTickableSoundInstance {
     public RocketSound(RocketEntity rocket) {
         super(GCSounds.SHUTTLE_SHUTTLE, SoundSource.NEUTRAL, rocket.level().getRandom());
         this.rocket = rocket;
-        this.x = rocket.getX();
-        this.y = rocket.getY();
-        this.z = rocket.getZ();
+        this.attenuation = SoundInstance.Attenuation.NONE;
+        this.volume = 0.00001F;  //If it's zero it won't start playing
+        this.pitch = 0.0F;  //pitch
+        this.looping = true;
+        this.delay = 0;  //repeat delay
+        setSoundLocation(rocket.getX(), rocket.getY(), rocket.getZ());
     }
 
     @Override
     public void tick() {
-        if (this.rocket.getLaunchStage() == LaunchStage.IGNITED) {
-            if (!ignition) {
-                this.pitch = 0.0F;
-                ignition = true;
-            }
-            if (this.rocket.getTimeBeforeLaunch() < 400)
-            {
-                if (this.pitch < 1.0F)
-                {
-                    this.pitch += 0.0025F;
+        if (this.rocket.isAlive()) {
+            if (this.rocket.getLaunchStage() == LaunchStage.IGNITED) {
+                if (!ignition) {
+                    this.pitch = 0.0F;
+                    ignition = true;
                 }
+                if (this.rocket.getTimeBeforeLaunch() < this.rocket.getPreLaunchWait()) {
+                    if (this.pitch < 1.0F) {
+                        this.pitch += 0.0025F;
+                    }
 
-                if (this.pitch > 1.0F)
-                {
-                    this.pitch = 1.0F;
+                    if (this.pitch > 1.0F) {
+                        this.pitch = 1.0F;
+                    }
+                }
+            } else {
+                this.pitch = 1.0F;
+            }
+
+            if (this.rocket.getLaunchStage().ordinal() >= LaunchStage.IGNITED.ordinal()) {
+                if (this.rocket.getY() > 1000) {
+                    this.volume = 0F;
+                    if (this.rocket.getLaunchStage() != LaunchStage.FAILED) {
+                        stop();
+                    }
+                } else if (this.rocket.getY() > Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) {
+                    this.volume = 1.0F - (float) ((this.rocket.getY() - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) / (1000.0 - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT));
+                } else {
+                    this.volume = 1.0F;
                 }
             }
-        } else
-        {
-            this.pitch = 1.0F;
-        }
 
-        if (this.rocket.getLaunchStage().ordinal() >= LaunchStage.IGNITED.ordinal())
-        {
-            if (this.rocket.getY() > 1000)
-            {
-                this.volume = 0F;
-            } else if (this.rocket.getY() > 200)
-            {
-                this.volume = 1.0F - (float) ((this.rocket.getY() - 200) / (1000.0 - 200));
-            } else
-            {
-                this.volume = 1.0F;
-            }
+            this.setSoundLocation(rocket.getX(), rocket.getY(), rocket.getZ());
+        } else {
+            stop();
         }
+    }
 
-        this.x = rocket.getX();
-        this.y = rocket.getY();
-        this.z = rocket.getZ();
+    public void setSoundLocation(double x, double y, double z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 }

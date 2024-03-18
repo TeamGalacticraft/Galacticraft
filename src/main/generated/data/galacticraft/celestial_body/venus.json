@@ -1,12 +1,16 @@
 {
-  "type": "galacticraft:decorative_planet",
+  "type": "galacticraft:planet",
   "config": {
     "parent": "galacticraft:sol",
+    "access_weight": 1,
     "atmosphere": {
       "composition": {},
       "pressure": 3.0E-15,
       "temperature": 23.0
     },
+    "celestial_handler": "galacticraft:default",
+    "day_length": 720000,
+    "day_temperature": 105,
     "description": "planet.galacticraft.venus.desc",
     "display": {
       "type": "galacticraft:icon",
@@ -20,8 +24,9 @@
       }
     },
     "galaxy": "galacticraft:milky_way",
-    "gravity": 0.166,
+    "gravity": 0.0375,
     "name": "planet.galacticraft.venus.name",
+    "night_temperature": -180,
     "position": {
       "type": "galacticraft:orbital",
       "config": {
@@ -34,6 +39,8 @@
     "ring": {
       "type": "galacticraft:default",
       "config": {}
-    }
+    },
+    "teleporter": "galacticraft:lander",
+    "world": "galacticraft:venus"
   }
 }

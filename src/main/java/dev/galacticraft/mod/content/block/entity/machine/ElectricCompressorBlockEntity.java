@@ -37,10 +37,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,7 +49,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity<Container, CompressingRecipe> {
+public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity<CraftingContainer, CompressingRecipe> {
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOTS = 1;
     public static final int INPUT_LENGTH = 9;
@@ -67,7 +68,7 @@ public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity
 
     @Override
     public @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        CompressingRecipe recipe = this.getActiveRecipe();
+        RecipeHolder<CompressingRecipe> recipe = this.getActiveRecipe();
         if (recipe != null && this.getState().isActive()) {
             int maxProgress = this.getProcessingTime(recipe);
             if (this.getProgress() % (maxProgress / 5) == 0 && this.getProgress() > maxProgress / 2) {
@@ -78,7 +79,7 @@ public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity
     }
 
     @Override
-    protected @NotNull MachineStatus workingStatus(CompressingRecipe recipe) {
+    protected @NotNull MachineStatus workingStatus(RecipeHolder<CompressingRecipe> recipe) {
         return GCMachineStatuses.COMPRESSING;
     }
 
@@ -93,8 +94,8 @@ public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity
     }
 
     @Override
-    public int getProcessingTime(@NotNull CompressingRecipe recipe) {
-        return recipe.getTime();
+    public int getProcessingTime(@NotNull RecipeHolder<CompressingRecipe> recipe) {
+        return recipe.value().getTime();
     }
 
     @Nullable

@@ -22,11 +22,7 @@
 
 package dev.galacticraft.api.rocket.recipe;
 
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.DynamicOps;
-import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.impl.rocket.recipe.RocketPartRecipeSlotImpl;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -37,17 +33,7 @@ public interface RocketPartRecipeSlot {
     Codec<RocketPartRecipeSlot> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("x").forGetter(RocketPartRecipeSlot::x),
             Codec.INT.fieldOf("y").forGetter(RocketPartRecipeSlot::y),
-            new Codec<Ingredient>() {
-                @Override
-                public <T> DataResult<T> encode(Ingredient input, DynamicOps<T> ops, T prefix) {
-                    return DataResult.success(JsonOps.INSTANCE.convertTo(ops, input.toJson()));
-                }
-
-                @Override
-                public <T> DataResult<Pair<Ingredient, T>> decode(DynamicOps<T> ops, T input) {
-                    return DataResult.success(new Pair<>(Ingredient.fromJson(ops.convertTo(JsonOps.INSTANCE, input)), input));
-                }
-            }.fieldOf("ingredient").forGetter(RocketPartRecipeSlot::ingredient)).apply(instance, RocketPartRecipeSlot::create));
+            Ingredient.CODEC.fieldOf("ingredient").forGetter(RocketPartRecipeSlot::ingredient)).apply(instance, RocketPartRecipeSlot::create));
     @Contract("_, _, _ -> new")
     static @NotNull RocketPartRecipeSlot create(int x, int y, @NotNull Ingredient ingredient) {
         return new RocketPartRecipeSlotImpl(x, y, ingredient);

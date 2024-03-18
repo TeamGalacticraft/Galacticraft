@@ -22,56 +22,41 @@
 
 package dev.galacticraft.mod.data.recipes;
 
-import com.google.gson.JsonObject;
-import net.minecraft.advancements.CriterionTriggerInstance;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementRequirements;
+import net.minecraft.advancements.AdvancementRewards;
+import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Consumer;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-public abstract class GCRecipeBuilder implements RecipeBuilder, FinishedRecipe {
-
-    private final RecipeSerializer<?> type;
+public abstract class GCRecipeBuilder implements RecipeBuilder {
     private final String subPath;
 
     protected final Item result;
     protected final int count;
-    private String group = "";
+    protected final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
+    @Nullable
+    protected String group = "";
 
-    protected GCRecipeBuilder(RecipeSerializer<?> type, String subPath, ItemLike result, int count) {
-        this.type = type;
+    protected GCRecipeBuilder(String subPath, ItemLike result, int count) {
         this.subPath = subPath;
         this.result = result.asItem();
         this.count = count;
     }
 
-    private ResourceLocation recipeId;
-
     @Override
-    public ResourceLocation getId() {
-        return this.recipeId;
-    }
-
-    @Nullable
-    @Override
-    public JsonObject serializeAdvancement() {
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public ResourceLocation getAdvancementId() {
-        return null;
-    }
-
-    @Override
-    public RecipeBuilder unlockedBy(String string, CriterionTriggerInstance criterionTriggerInstance) {
+    public RecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
+        this.criteria.put(name, criterion);
         return this;
     }
 
@@ -87,32 +72,14 @@ public abstract class GCRecipeBuilder implements RecipeBuilder, FinishedRecipe {
     }
 
     @Override
-    public void save(Consumer<FinishedRecipe> consumer, ResourceLocation resourceLocation) {
-        this.recipeId = new ResourceLocation(resourceLocation.getNamespace(), this.subPath + '/' + resourceLocation.getPath());
-        consumer.accept(this);
+    public void save(RecipeOutput output, ResourceLocation id) {
+        Advancement.Builder builder = output.advancement()
+                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
+                .rewards(AdvancementRewards.Builder.recipe(id))
+                .requirements(AdvancementRequirements.Strategy.OR);
+        this.criteria.forEach(builder::addCriterion);
+        output.accept(new ResourceLocation(id.getNamespace(), this.subPath + '/' + id.getPath()), createRecipe(id), builder.build(id.withPrefix("recipes/")));
     }
 
-    @Override
-    public JsonObject serializeRecipe() {
-        var jsonRecipe = FinishedRecipe.super.serializeRecipe();
-        if (!this.group.isEmpty()) {
-            jsonRecipe.addProperty("group", this.group);
-        }
-        return jsonRecipe;
-    }
-
-    @Override
-    public RecipeSerializer<?> getType() {
-        return this.type;
-    }
-
-    protected void createResult(JsonObject jsonRecipe) {
-        var itemJson = new JsonObject();
-        itemJson.addProperty("item", BuiltInRegistries.ITEM.getKey(this.getResult()).toString());
-        if (this.count > 1) {
-            itemJson.addProperty("count", this.count);
-        }
-
-        jsonRecipe.add("result", itemJson);
-    }
+    public abstract Recipe<?> createRecipe(ResourceLocation id);
 }

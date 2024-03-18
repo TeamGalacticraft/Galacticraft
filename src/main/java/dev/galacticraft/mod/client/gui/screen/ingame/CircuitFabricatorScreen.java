@@ -86,8 +86,8 @@ public class CircuitFabricatorScreen extends MachineScreen<CircuitFabricatorBloc
     }
 
     @Override
-    protected void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        super.renderBackground(graphics, mouseX, mouseY, delta);
+    protected void renderMachineBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.renderMachineBackground(graphics, mouseX, mouseY, delta);
         this.drawProgressBar(graphics.pose());
     }
 

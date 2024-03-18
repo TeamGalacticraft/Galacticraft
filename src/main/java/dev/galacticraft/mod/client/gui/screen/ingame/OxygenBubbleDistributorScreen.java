@@ -77,7 +77,7 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
 
     @SuppressWarnings("DataFlowIssue")
     @Override
-    protected void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    protected void renderMachineBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         if (!this.menu.bubbleVisible) {
             if (!DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 156, this.topPos + 16, 13, 13)) {
                 graphics.blit(Constant.ScreenTexture.OVERLAY, this.leftPos + 156, this.topPos + 16, Constant.TextureCoordinate.BUTTON_RED_X, Constant.TextureCoordinate.BUTTON_RED_Y, Constant.TextureCoordinate.BUTTON_WIDTH, Constant.TextureCoordinate.BUTTON_HEIGHT);

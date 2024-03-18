@@ -49,8 +49,8 @@ public class ElectricFurnaceScreen extends MachineScreen<ElectricFurnaceBlockEnt
     }
 
     @Override
-    protected void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        super.renderBackground(graphics, mouseX, mouseY, delta);
+    protected void renderMachineBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.renderMachineBackground(graphics, mouseX, mouseY, delta);
         if (this.menu.getMaxProgress() > 0 && this.menu.getProgress() != 0) {
             double scale = ((double)menu.getProgress()) / ((double)menu.getMaxProgress());
 

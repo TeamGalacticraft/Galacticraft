@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_egg",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_egg"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:burger_bun"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

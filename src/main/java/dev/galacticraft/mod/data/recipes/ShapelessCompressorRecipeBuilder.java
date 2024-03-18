@@ -22,29 +22,33 @@
 
 package dev.galacticraft.mod.data.recipes;
 
-import com.google.common.collect.Lists;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import dev.galacticraft.mod.recipe.GCRecipes;
-import net.minecraft.advancements.CriterionTriggerInstance;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.recipes.FinishedRecipe;
+import dev.galacticraft.mod.recipe.ShapelessCompressingRecipe;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementRequirements;
+import net.minecraft.advancements.AdvancementRewards;
+import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.core.NonNullList;
 import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.function.Consumer;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ShapelessCompressorRecipeBuilder implements RecipeBuilder {
     private final Item result;
     private final int count;
-    private final List<Ingredient> ingredients = Lists.<Ingredient>newArrayList();
+    private final NonNullList<Ingredient> ingredients = NonNullList.create();
+    private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
+    @Nullable
+    private String group;
 
     public ShapelessCompressorRecipeBuilder(ItemLike itemLike, int i) {
         this.result = itemLike.asItem();
@@ -88,12 +92,14 @@ public class ShapelessCompressorRecipeBuilder implements RecipeBuilder {
     }
 
     @Override
-    public ShapelessCompressorRecipeBuilder unlockedBy(String string, CriterionTriggerInstance criterionTriggerInstance) {
+    public ShapelessCompressorRecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
+        this.criteria.put(name, criterion);
         return this;
     }
 
     @Override
-    public ShapelessCompressorRecipeBuilder group(@Nullable String string) {
+    public ShapelessCompressorRecipeBuilder group(@Nullable String groupName) {
+        this.group = groupName;
         return this;
     }
 
@@ -103,63 +109,12 @@ public class ShapelessCompressorRecipeBuilder implements RecipeBuilder {
     }
 
     @Override
-    public void save(Consumer<FinishedRecipe> consumer, ResourceLocation recipeId) {
-        consumer.accept(new Result(new ResourceLocation(recipeId.getNamespace(), "compressing/" + recipeId.getPath()), this.ingredients, this.result, this.count));
-    }
-
-    public static class Result implements FinishedRecipe {
-
-        private final ResourceLocation recipeId;
-        private final List<Ingredient> ingredients;
-        private final Item result;
-        private final int count;
-
-        public Result(ResourceLocation recipeId, List<Ingredient> ingredients, Item result, int count) {
-            this.ingredients = ingredients;
-            this.recipeId = recipeId;
-            this.result = result;
-            this.count = count;
-        }
-
-        @Override
-        public void serializeRecipeData(JsonObject jsonRecipe) {
-            var jsonIngredients = new JsonArray();
-
-            for(var ingredient : this.ingredients) {
-                jsonIngredients.add(ingredient.toJson());
-            }
-
-            jsonRecipe.add("ingredients", jsonIngredients);
-
-            var itemJson = new JsonObject();
-            itemJson.addProperty("item", BuiltInRegistries.ITEM.getKey(this.result).toString());
-            if (this.count > 1) {
-                itemJson.addProperty("count", this.count);
-            }
-
-            jsonRecipe.add("result", itemJson);
-        }
-
-        @Override
-        public ResourceLocation getId() {
-            return this.recipeId;
-        }
-
-        @Override
-        public RecipeSerializer<?> getType() {
-            return GCRecipes.SHAPELESS_COMPRESSING_SERIALIZER;
-        }
-
-        @Nullable
-        @Override
-        public JsonObject serializeAdvancement() {
-            return null;
-        }
-
-        @Nullable
-        @Override
-        public ResourceLocation getAdvancementId() {
-            return null;
-        }
+    public void save(RecipeOutput output, ResourceLocation recipeId) {
+        Advancement.Builder builder = output.advancement()
+                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(recipeId))
+                .rewards(AdvancementRewards.Builder.recipe(recipeId))
+                .requirements(AdvancementRequirements.Strategy.OR);
+        this.criteria.forEach(builder::addCriterion);
+        output.accept(new ResourceLocation(recipeId.getNamespace(), "compressing/" + recipeId.getPath()), new ShapelessCompressingRecipe(this.group == null ? "" : this.group, new ItemStack(this.result, count), this.ingredients, 200), builder.build(recipeId.withPrefix("recipes/")));
     }
 }

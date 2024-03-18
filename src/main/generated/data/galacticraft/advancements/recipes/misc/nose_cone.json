@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_heavy_plating",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_heavy_plating"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:nose_cone"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

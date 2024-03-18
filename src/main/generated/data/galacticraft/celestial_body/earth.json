@@ -26,6 +26,7 @@
       "temperature": 15.0
     },
     "celestial_handler": "galacticraft:overworld",
+    "day_length": 24000,
     "day_temperature": 21,
     "description": "planet.galacticraft.earth.description",
     "display": {

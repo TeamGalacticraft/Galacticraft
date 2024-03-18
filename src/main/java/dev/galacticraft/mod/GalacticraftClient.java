@@ -35,10 +35,7 @@ import dev.galacticraft.mod.client.network.GCClientPacketReceiver;
 import dev.galacticraft.mod.client.particle.*;
 import dev.galacticraft.mod.client.render.FootprintRenderer;
 import dev.galacticraft.mod.client.render.block.entity.GCBlockEntityRenderer;
-import dev.galacticraft.mod.client.render.dimension.EmptyCloudRenderer;
-import dev.galacticraft.mod.client.render.dimension.EmptyWeatherRenderer;
-import dev.galacticraft.mod.client.render.dimension.MoonDimensionEffects;
-import dev.galacticraft.mod.client.render.dimension.MoonSkyRenderer;
+import dev.galacticraft.mod.client.render.dimension.*;
 import dev.galacticraft.mod.client.render.entity.*;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import dev.galacticraft.mod.client.render.entity.rocket.RocketEntityRenderer;
@@ -57,7 +54,6 @@ import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
 import dev.galacticraft.mod.screen.RocketMenu;
-import dev.galacticraft.mod.world.dimension.GCDimensions;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -163,6 +159,10 @@ public class GalacticraftClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.CRYOGENIC_PARTICLE, CryoFreezeParticle.Provider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.LANDER_FLAME_PARTICLE, LanderParticle.Provider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.SPARK_PARTICLE, SparksParticle.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.LAUNCH_SMOKE_PARTICLE, LaunchSmokeParticle.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.LAUNCH_FLAME, LaunchFlameParticle.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.LAUNCH_FLAME_LAUNCHED, LaunchFlameParticle.LaunchedProvider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.ACID_VAPOR_PARTICLE, AcidVaporParticle.Provider::new);
 
         MachineModelRegistry.register(new ResourceLocation(Constant.MOD_ID, "solar_panel"), SolarPanelSpriteProvider::new);
         MachineModelRegistry.register(new ResourceLocation(Constant.MOD_ID, "oxygen_sealer"), OxygenSealerSpriteProvider::new);
@@ -170,10 +170,7 @@ public class GalacticraftClient implements ClientModInitializer {
         ModelLoadingPlugin.register(GCModelLoader.INSTANCE);
 
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
-            DimensionRenderingRegistry.registerDimensionEffects(GCDimensions.MOON.location(), MoonDimensionEffects.INSTANCE);
-            DimensionRenderingRegistry.registerCloudRenderer(GCDimensions.MOON, EmptyCloudRenderer.INSTANCE);
-            DimensionRenderingRegistry.registerWeatherRenderer(GCDimensions.MOON, EmptyWeatherRenderer.INSTANCE);
-            DimensionRenderingRegistry.registerSkyRenderer(GCDimensions.MOON, MoonSkyRenderer.INSTANCE);
+            GCDimensionEffects.register();
         });
 
         FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER); // Workaround for classloading order bug

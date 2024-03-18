@@ -4,7 +4,7 @@
     "item": "minecraft:redstone_torch"
   },
   "result": {
-    "count": 3,
-    "item": "galacticraft:basic_wafer"
+    "Count": 3,
+    "id": "galacticraft:basic_wafer"
   }
 }

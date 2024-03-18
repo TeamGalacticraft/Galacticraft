@@ -60,14 +60,17 @@ public abstract class LivingEntityRendererMixin {
         return instance.hasPose(pose);
     }
 
-    @Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;getAttackAnim(Lnet/minecraft/world/entity/LivingEntity;F)F"))
-    private void rotateToMatchRocket(LivingEntity entity, float f, float tickDelta, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
+    @Inject(method = "setupRotations", at = @At("HEAD"))
+    private void rotateToMatchRocket(LivingEntity entity, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks, CallbackInfo ci) {
         if (entity.isPassenger()) {
-            if (entity.getVehicle() instanceof RocketEntity) {
-                poseStack.mulPose(Axis.YN.rotationDegrees(entity.getVehicle().getViewYRot(tickDelta)));
-                poseStack.translate(0, 0.5D, 0);
-                poseStack.mulPose(Axis.XN.rotationDegrees(entity.getVehicle().getViewXRot(tickDelta)));
-                poseStack.translate(0, -0.5D, 0);
+            if (entity.getVehicle() instanceof RocketEntity rocket) {
+                double rotationOffset = -0.5F;
+                poseStack.translate(0, -rotationOffset, 0);
+                float anglePitch = rocket.xRotO;
+                float angleYaw = rocket.yRotO;
+                poseStack.mulPose(Axis.YN.rotationDegrees(angleYaw));
+                poseStack.mulPose(Axis.ZP.rotationDegrees(anglePitch));
+                poseStack.translate(0, rotationOffset, 0);
             }
         }
     }

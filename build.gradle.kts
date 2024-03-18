@@ -108,7 +108,7 @@ loom {
             it.property("mixin.debug.export", "true")
         }
         register("datagen") {
-            server()
+            client()
             name("Data Generation")
             runDir("build/datagen")
             property("fabric-api.datagen")
@@ -192,7 +192,7 @@ dependencies {
     mappings(if (!isCi && parchmentVersion.isNotEmpty()) {
         loom.layered {
             officialMojangMappings()
-            parchment("org.parchmentmc.data:parchment-$minecraftVersion:$parchmentVersion@zip")
+            parchment("org.parchmentmc.data:parchment-1.20.2:$parchmentVersion@zip")
         }
     } else {
         loom.officialMojangMappings()

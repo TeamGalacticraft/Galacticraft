@@ -22,11 +22,13 @@
 
 package dev.galacticraft.mod.data.recipes;
 
-import com.google.gson.JsonObject;
-import dev.galacticraft.mod.recipe.GCRecipes;
+import dev.galacticraft.mod.recipe.FabricationRecipe;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 
 public class CircuitFabricatorRecipeBuilder extends GCRecipeBuilder {
@@ -35,7 +37,7 @@ public class CircuitFabricatorRecipeBuilder extends GCRecipeBuilder {
     private int time;
 
     public CircuitFabricatorRecipeBuilder(ItemLike result, int count) {
-        super(GCRecipes.FABRICATION_SERIALIZER, "fabrication", result, count);
+        super("fabrication", result, count);
     }
 
     public static CircuitFabricatorRecipeBuilder create(ItemLike itemLike) {
@@ -62,11 +64,7 @@ public class CircuitFabricatorRecipeBuilder extends GCRecipeBuilder {
     }
 
     @Override
-    public void serializeRecipeData(JsonObject recipeJson) {
-        recipeJson.add("ingredient", this.ingredient.toJson());
-        if (this.time > 1) {
-            recipeJson.addProperty("time", this.time);
-        }
-        this.createResult(recipeJson);
+    public Recipe<?> createRecipe(ResourceLocation id) {
+        return new FabricationRecipe(this.group, this.ingredient, new ItemStack(this.result, this.count), this.time > 1 ? this.time : 300);
     }
 }

@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_titanium_ingot",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_titanium_ingot"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:titanium_block"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

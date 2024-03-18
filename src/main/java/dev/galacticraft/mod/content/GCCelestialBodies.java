@@ -137,6 +137,7 @@ public class GCCelestialBodies {
                         0,
                         21, //todo
                         15, //todo
+                        24000,
                         Optional.of(SatelliteRecipe.create(EARTH_SATELLITE_RECIPE))
                 )
         ));
@@ -160,6 +161,7 @@ public class GCCelestialBodies {
                 1,
                 105,
                 -180,
+                192000L,
                 Optional.empty()
         )));
 
@@ -179,7 +181,7 @@ public class GCCelestialBodies {
                 Optional.empty()
         )));
 
-        context.register(VENUS, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
+        context.register(VENUS, PlanetType.INSTANCE.configure(new PlanetConfig(
                 Component.translatable("planet.galacticraft.venus.name"),
                 Component.translatable("planet.galacticraft.venus.desc"),
                 BuiltinObjects.MILKY_WAY_KEY,
@@ -187,11 +189,18 @@ public class GCCelestialBodies {
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(0.61527929901423877327491785323111F, 0.75F, 2.0F, true)),
                 IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/venus.png"), 0, 0, 16, 16)),
                 DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
+                GCDimensions.VENUS,
+                lookup.getOrThrow(GCTeleporterTypes.LANDER_CELESTIAL_TELEPORTER),
                 new GasComposition.Builder()
                         .temperature(23.0)
                         .pressure(3.0E-15F)
                         .build(),
-                0.166F,
+                0.0375F,
+                GCCelestialHandlers.DEFAULT,
+                1,
+                105,
+                -180,
+                720000L, // 30 times longer than earth
                 Optional.empty()
         )));
 

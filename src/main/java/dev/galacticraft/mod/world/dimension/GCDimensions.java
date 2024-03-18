@@ -24,8 +24,10 @@ package dev.galacticraft.mod.world.dimension;
 
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.DimensionType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class GCDimensions {
     public static final ResourceKey<Level> MOON = key("moon");
+    public static final ResourceKey<Level> VENUS = key("venus");
 
     @Contract(pure = true)
     private static @NotNull ResourceKey<Level> key(@NotNull String id) {

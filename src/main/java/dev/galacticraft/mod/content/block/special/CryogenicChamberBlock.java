@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.special;
 
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.api.block.MultiBlockBase;
 import dev.galacticraft.mod.api.block.MultiBlockPart;
 import dev.galacticraft.mod.content.GCBlocks;
@@ -56,12 +57,18 @@ import org.jetbrains.annotations.Unmodifiable;
 import java.util.List;
 
 public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlockBase {
+    public static final MapCodec<CryogenicChamberBlock> CODEC = simpleCodec(CryogenicChamberBlock::new);
     private static final List<BlockPos> PARTS = List.of(new BlockPos(0, 1, 0), new BlockPos(0, 2, 0));
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public CryogenicChamberBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Override
@@ -119,12 +126,13 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
     }
 
     @Override
-    public void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
-        super.playerWillDestroy(level, blockPos, blockState, player);
+    public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+        BlockState state = super.playerWillDestroy(level, blockPos, blockState, player);
         for (var otherPart : this.getOtherParts(blockState)) {
             otherPart = otherPart.immutable().offset(blockPos);
             level.destroyBlock(otherPart, false);
         }
+        return state;
     }
 
     @Override

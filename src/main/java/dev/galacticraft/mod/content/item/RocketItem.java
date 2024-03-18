@@ -26,11 +26,14 @@ import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.impl.rocket.RocketDataImpl;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
+import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -67,11 +70,18 @@ public class RocketItem extends Item {
 
             if (context.getLevel() instanceof ServerLevel) {
                 RocketEntity rocket = new RocketEntity(GCEntityTypes.ROCKET, context.getLevel());
-                RocketData data = RocketData.fromNbt(context.getItemInHand().getTag());
+                CompoundTag tag = context.getItemInHand().getTag();
+                RocketData data = RocketData.fromNbt(tag);
                 rocket.setData(data);
                 rocket.setLinkedPad(pos);
                 rocket.setOldPosAndRot();
                 rocket.absMoveTo(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
+                if (tag.contains("creative")) {
+                    try (Transaction tx = Transaction.openOuter()) {
+                        rocket.getTank().insert(FluidVariant.of(GCFluids.FUEL), Long.MAX_VALUE, tx);
+                        tx.commit();
+                    }
+                }
                 context.getLevel().addFreshEntity(rocket);
 
                 if (!context.getPlayer().isCreative()) {
@@ -89,7 +99,7 @@ public class RocketItem extends Item {
     @Override
     public ItemStack getDefaultInstance() {
         var itemStack = super.getDefaultInstance();
-        itemStack.setTag(RocketDataImpl.DEFAULT_ROCKET);
+        itemStack.setTag(RocketDataImpl.DEFAULT_ROCKET.copy());
         return itemStack;
     }
 
@@ -99,6 +109,8 @@ public class RocketItem extends Item {
         super.appendHoverText(stack, world, tooltip, context);
 
         CompoundTag tag = stack.getOrCreateTag();
+        if (tag.contains("creative"))
+            tooltip.add(Component.literal("Creative Only").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
         if (Screen.hasShiftDown()) {
             if (tag.contains("color") && tag.contains("cone")) {
 //                tooltip.add(Component.translatable("tooltip.galacticraft.tier", tag.getInt("tier")).setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GRAY)));

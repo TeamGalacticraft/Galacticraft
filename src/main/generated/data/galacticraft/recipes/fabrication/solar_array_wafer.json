@@ -4,7 +4,7 @@
     "item": "galacticraft:solar_dust"
   },
   "result": {
-    "count": 3,
-    "item": "galacticraft:solar_array_wafer"
+    "Count": 3,
+    "id": "galacticraft:solar_array_wafer"
   }
 }

@@ -23,12 +23,14 @@
 package dev.galacticraft.mod.content.entity;
 
 import com.mojang.datafixers.util.Pair;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -41,6 +43,9 @@ import net.minecraft.world.phys.Vec3;
 public class LanderEntity extends Entity {
 
     protected long ticks = 0;
+    private double lastDeltaY;
+    protected boolean lastOnGround;
+
     public LanderEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
@@ -61,10 +66,10 @@ public class LanderEntity extends Entity {
     }
 
     public Pair<Vec3, Vec3> getParticlePosition() {
-        double sinPitch = Math.sin(this.getXRot() / 180D / Math.PI);
-        final double x1 = 4 * Math.cos(this.getYRot() / 180D / Math.PI) * sinPitch;
-        final double z1 = 4 * Math.sin(this.getYRot() / 180D / Math.PI) * sinPitch;
-        final double y1 = -4 * Math.abs(Math.cos(this.getXRot() / 180D / Math.PI));
+        double sinPitch = Math.sin(this.getXRot() / Constant.RADIANS_TO_DEGREES);
+        final double x1 = 4 * Math.cos(this.getYRot() / Constant.RADIANS_TO_DEGREES) * sinPitch;
+        final double z1 = 4 * Math.sin(this.getYRot() / Constant.RADIANS_TO_DEGREES) * sinPitch;
+        final double y1 = -4 * Math.abs(Math.cos(this.getXRot() / Constant.RADIANS_TO_DEGREES));
 
         double motionY = getDeltaMovement().y();
         return new Pair<>(new Vec3(this.getX(), this.getY() + 1D + motionY / 2, this.getZ()), new Vec3(x1, y1 + motionY / 2, z1));
@@ -76,31 +81,10 @@ public class LanderEntity extends Entity {
         this.ticks++;
         this.move(MoverType.SELF, getDeltaMovement());
 
-
-
-        if (this.level().isClientSide()) {
-            if (!this.onGround()) {
-                this.addDeltaMovement(new Vec3(0, -0.008D, 0));
-            }
-
-            double motY = -1 * Math.sin(this.getXRot() / 180D / Math.PI);
-            double motX = Math.cos(this.getYRot() / 180D / Math.PI) * motY;
-            double motZ = Math.sin(this.getYRot() / 180D / Math.PI) * motY;
-
-            setDeltaMovement(new Vec3(motX / 2.0F, getDeltaMovement().y(), motZ / 2.0F));
-
-            FriendlyByteBuf buf = PacketByteBufs.create();
-            buf.writeInt(getId());
-            buf.writeDouble(getX());
-            buf.writeDouble(getY());
-            buf.writeDouble(getZ());
-            buf.writeFloat(getYRot());
-            buf.writeFloat(getXRot());
-            Vec3 deltaMovement = getDeltaMovement();
-            buf.writeDouble(deltaMovement.x());
-            buf.writeDouble(deltaMovement.y());
-            buf.writeDouble(deltaMovement.z());
-            ClientPlayNetworking.send(Constant.Packet.ENTITY_UPDATE, buf);
+        if (onGround()) {
+            tickOnGround();
+        } else {
+            tickInAir();
         }
 
         this.xo = getX();
@@ -112,6 +96,64 @@ public class LanderEntity extends Entity {
             final Vec3 posVec = particlePos.getFirst();
             final Vec3 motionVec = particlePos.getSecond();
             level().addParticle(GCParticleTypes.LANDER_FLAME_PARTICLE, posVec.x(), posVec.y(), posVec.z(), motionVec.x(), motionVec.y(), motionVec.z());
+        }
+
+        FriendlyByteBuf buf = PacketByteBufs.create();
+        buf.writeInt(getId());
+        buf.writeDouble(getX());
+        buf.writeDouble(getY());
+        buf.writeDouble(getZ());
+        buf.writeFloat(getYRot());
+        buf.writeFloat(getXRot());
+        Vec3 deltaMovement = getDeltaMovement();
+        buf.writeDouble(deltaMovement.x());
+        buf.writeDouble(deltaMovement.y());
+        buf.writeDouble(deltaMovement.z());
+        ClientPlayNetworking.send(Constant.Packet.ENTITY_UPDATE, buf);
+
+        if (onGround() && !this.lastOnGround) {
+            this.onGroundHit();
+        }
+
+        this.lastOnGround = onGround();
+        this.lastDeltaY = getDeltaMovement().y();
+    }
+
+    public void onGroundHit() {
+        if (!level().isClientSide) {
+            if (Math.abs(this.lastDeltaY) > 2.0D) {
+                for (Entity entity : this.getPassengers()) {
+                    entity.removeVehicle();
+                    if (entity instanceof ServerPlayer) {
+//                        GalacticraftCore.packetPipeline.sendTo(new PacketSimple(EnumSimplePacket.C_RESET_THIRD_PERSON, GCCoreUtil.getDimensionID(this.world), new Object[]
+//                                {}), (EntityPlayerMP) entity);
+                    }
+                    entity.setDeltaMovement(Vec3.ZERO);
+                    entity.setPos(entity.getX(), this.getY() + 2.25, entity.getZ());
+//                    this.world.updateEntityWithOptionalForce(entity, false);
+                }
+                this.level().explode(this, this.getX(), this.getY(), this.getZ(), 12, true, Level.ExplosionInteraction.MOB);
+
+                discard();
+            }
+        }
+    }
+
+    public void tickOnGround() {
+        setXRot(0.0000001F);
+    }
+
+    public void tickInAir() {
+        if (this.level().isClientSide()) {
+            if (!this.onGround()) {
+                this.addDeltaMovement(new Vec3(0, CelestialBody.getByDimension(level()).map(CelestialBody::gravity).orElse(1F) * -0.008D, 0));
+            }
+
+            double motY = -1 * Math.sin(getXRot() / Constant.RADIANS_TO_DEGREES);
+            double motX = Math.cos(getYRot() / Constant.RADIANS_TO_DEGREES) * motY;
+            double motZ = Math.sin(getYRot() / Constant.RADIANS_TO_DEGREES) * motY;
+
+            setDeltaMovement(new Vec3(motX / 2.0F, getDeltaMovement().y(), motZ / 2.0F));
         }
     }
 

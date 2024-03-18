@@ -47,18 +47,18 @@ public abstract class AdvancementRewardsMixin implements AdvancementRewardsAcces
     @NotNull
     private ResourceLocation @Nullable [] rocketPartRecipes = null;
 
-    @Inject(method = "deserialize", at = @At("RETURN"))
-    private static void galacticraft_parseRocketPartReward(JsonObject json, CallbackInfoReturnable<AdvancementRewards> cir) {
-        if (json.has("rocket_parts")) {
-            AdvancementRewards rewards = cir.getReturnValue();
-            JsonArray array = json.get("rocket_parts").getAsJsonArray();
-            ResourceLocation[] ids = new ResourceLocation[array.size()];
-            for (int i = 0; i < array.size(); i++) {
-                ids[i] = new ResourceLocation(array.get(i).getAsString());
-            }
-            ((AdvancementRewardsAccessor) rewards).setRocketPartRecipeRewards(ids);
-        }
-    }
+//    @Inject(method = "deserialize", at = @At("RETURN")) TODO: Port (are we even using this?)
+//    private static void parseRocketPartReward(JsonObject json, CallbackInfoReturnable<AdvancementRewards> cir) {
+//        if (json.has("rocket_parts")) {
+//            AdvancementRewards rewards = cir.getReturnValue();
+//            JsonArray array = json.get("rocket_parts").getAsJsonArray();
+//            ResourceLocation[] ids = new ResourceLocation[array.size()];
+//            for (int i = 0; i < array.size(); i++) {
+//                ids[i] = new ResourceLocation(array.get(i).getAsString());
+//            }
+//            ((AdvancementRewardsAccessor) rewards).setRocketPartRecipeRewards(ids);
+//        }
+//    }
 
     @Inject(method = "grant", at = @At("RETURN"))
     private void galacticraft_applyRocketPartsToPlayer(ServerPlayer player, CallbackInfo ci) {
@@ -67,18 +67,18 @@ public abstract class AdvancementRewardsMixin implements AdvancementRewardsAcces
         }
     }
 
-    @Inject(method = "serializeToJson", at = @At("RETURN"), cancellable = true)
-    private void galacticraft_writeRocketPartRewardsToJson(CallbackInfoReturnable<JsonElement> cir) {
-        if (this.rocketPartRecipes != null) {
-            JsonObject object = cir.getReturnValue().getAsJsonObject();
-            JsonArray array = new JsonArray();
-            for (ResourceLocation id : this.rocketPartRecipes) {
-                array.add(id.toString());
-            }
-            object.add("rocket_parts", array);
-            cir.setReturnValue(object);
-        }
-    }
+//    @Inject(method = "serializeToJson", at = @At("RETURN"), cancellable = true)
+//    private void galacticraft_writeRocketPartRewardsToJson(CallbackInfoReturnable<JsonElement> cir) {
+//        if (this.rocketPartRecipes != null) {
+//            JsonObject object = cir.getReturnValue().getAsJsonObject();
+//            JsonArray array = new JsonArray();
+//            for (ResourceLocation id : this.rocketPartRecipes) {
+//                array.add(id.toString());
+//            }
+//            object.add("rocket_parts", array);
+//            cir.setReturnValue(object);
+//        }
+//    }
 
     @Inject(method = "toString", at = @At("RETURN"), cancellable = true)
     private void galacticraft_appendRocketPartsToString(CallbackInfoReturnable<String> cir) {

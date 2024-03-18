@@ -9,6 +9,7 @@
       "temperature": 23.0
     },
     "celestial_handler": "galacticraft:default",
+    "day_length": 192000,
     "day_temperature": 105,
     "description": "planet.galacticraft.moon.desc",
     "display": {

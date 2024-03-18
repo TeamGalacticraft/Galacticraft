@@ -43,6 +43,8 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -50,7 +52,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Container, CompressingRecipe> {
+public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<CraftingContainer, CompressingRecipe> {
     public static final int FUEL_SLOT = 0;
     public static final int INPUT_SLOTS = 1;
     public static final int INPUT_LENGTH = 9;
@@ -67,7 +69,7 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Contain
     }
 
     @Override
-    protected @NotNull MachineStatus workingStatus(CompressingRecipe recipe) {
+    protected @NotNull MachineStatus workingStatus(RecipeHolder<CompressingRecipe> recipe) {
         return GCMachineStatuses.COMPRESSING;
     }
 
@@ -116,7 +118,7 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Contain
 
     @Override
     public @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        CompressingRecipe recipe = this.getActiveRecipe();
+        RecipeHolder<CompressingRecipe> recipe = this.getActiveRecipe();
         if (recipe != null && this.getState().isActive()) {
             int maxProgress = this.getProcessingTime(recipe);
             if (this.getProgress() % (maxProgress / 8) == 0 && this.getProgress() > maxProgress / 2) {
@@ -127,8 +129,8 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Contain
     }
 
     @Override
-    public int getProcessingTime(@NotNull CompressingRecipe recipe) {
-        return recipe.getTime();
+    public int getProcessingTime(@NotNull RecipeHolder<CompressingRecipe> recipe) {
+        return recipe.value().getTime();
     }
 
     public int getFuelTime() {

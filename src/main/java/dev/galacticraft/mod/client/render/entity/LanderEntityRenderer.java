@@ -52,7 +52,7 @@ public class LanderEntityRenderer extends EntityRenderer<LanderEntity> {
         poseStack.pushPose();
         poseStack.mulPose(Axis.ZP.rotationDegrees(180));
         poseStack.translate(0, -1.5, 0);
-        final float pitch = lander.xRotO + (lander.getXRot() - lander.xRotO) * partialTicks;
+        final float pitch = lander.getViewXRot(partialTicks);
         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - entityYaw));
         poseStack.mulPose(Axis.ZN.rotationDegrees(pitch));
         this.model.renderToBuffer(poseStack, multiBufferSource.getBuffer(this.model.renderType(getTextureLocation(lander))), light, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);

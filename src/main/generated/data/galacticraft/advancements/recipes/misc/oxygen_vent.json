@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_compressed_tin",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_compressed_tin"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:oxygen_vent"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

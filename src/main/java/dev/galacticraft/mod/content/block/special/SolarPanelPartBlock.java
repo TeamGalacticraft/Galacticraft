@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.special;
 
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.api.block.MultiBlockBase;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.SolarPanelPartBlockEntity;
@@ -32,6 +33,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -46,6 +48,7 @@ import org.jetbrains.annotations.NotNull;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class SolarPanelPartBlock extends BaseEntityBlock {
+    public static final MapCodec<SolarPanelPartBlock> CODEC = simpleCodec(SolarPanelPartBlock::new);
     private static final VoxelShape POLE_SHAPE = box(6, 0, 6, 10, 16, 10);
     private static final VoxelShape TOP_POLE_SHAPE = box(6, 0, 6, 10, 7, 10);
     private static final VoxelShape TOP_SHAPE = box(0, 7, 0, 16, 10, 16);
@@ -53,6 +56,11 @@ public class SolarPanelPartBlock extends BaseEntityBlock {
 
     public SolarPanelPartBlock(Properties settings) {
         super(settings.pushReaction(PushReaction.BLOCK));
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Override
@@ -68,29 +76,30 @@ public class SolarPanelPartBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void playerWillDestroy(Level world, BlockPos partPos, BlockState partState, Player player) {
+    public BlockState playerWillDestroy(Level world, BlockPos partPos, BlockState partState, Player player) {
         BlockEntity partBE = world.getBlockEntity(partPos);
         SolarPanelPartBlockEntity be = (SolarPanelPartBlockEntity) partBE;
 
         if (be == null || be.basePos == BlockPos.ZERO) {
-            return;
+            return partState;
         }
         BlockPos basePos = new BlockPos(be.basePos);
         BlockState baseState = world.getBlockState(basePos);
 
         if (baseState.isAir()) {
             // The base has been destroyed already.
-            return;
+            return partState;
         }
 
         MultiBlockBase block = (MultiBlockBase) baseState.getBlock();
         block.onPartDestroyed(world, player, baseState, basePos, partState, partPos);
 
         super.destroy(world, partPos, partState);
+        return partState;
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter blockView, BlockPos pos, BlockState state) {
+    public ItemStack getCloneItemStack(LevelReader levelReader, BlockPos pos, BlockState state) {
         return new ItemStack(GCBlocks.BASIC_SOLAR_PANEL);
     }
 

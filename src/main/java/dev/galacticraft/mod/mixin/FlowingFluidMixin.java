@@ -51,7 +51,7 @@ public abstract class FlowingFluidMixin {
     private boolean onScheduledTickDrain_gc(Level level, BlockPos blockPos, BlockState blockState, int flags) {
         var blockState1 = level.getBlockState(blockPos);
         if (blockState1.getBlock() instanceof FluidLoggable drainable) {
-            drainable.pickupBlock(level, blockPos, blockState1);
+            drainable.pickupBlock(null, level, blockPos, blockState1);
             level.setBlock(blockPos, blockState1.setValue(FluidLoggable.FLUID, Constant.Misc.EMPTY).setValue(FlowingFluid.LEVEL, 1).setValue(FlowingFluid.FALLING, false), 3);
             return true;
         }

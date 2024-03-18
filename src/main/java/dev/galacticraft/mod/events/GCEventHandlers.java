@@ -32,6 +32,7 @@ import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import dev.galacticraft.mod.content.entity.ParachestEntity;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.content.item.ParachuteItem;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -45,6 +46,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -124,7 +126,16 @@ public class GCEventHandlers {
                     ParachestEntity chest = new ParachestEntity(GCEntityTypes.PARACHEST, player.serverLevel(), NonNullList.of(new ItemStack(Items.DIAMOND)), 81000);
 
                     chest.setPos(chestSpawn);
-                    chest.color = DyeColor.RED;//player.getGearInv().getParachuteInSlot().isEmpty() ? EnumDyeColor.WHITE : ItemParaChute.getDyeEnumFromParachuteDamage(stats.getParachuteInSlot().getItemDamage());
+
+                    Container gearInv = player.galacticraft$getGearInv();
+                    DyeColor color = DyeColor.WHITE;
+                    for (int slot = 0; slot < gearInv.getContainerSize(); slot++) {
+                        if (player.galacticraft$getGearInv().getItem(slot).getItem() instanceof ParachuteItem parachute) {
+                            color = parachute.getColor();
+                            break;
+                        }
+                    }
+                    chest.color = color;
 
                     player.serverLevel().addFreshEntity(chest);
                 }

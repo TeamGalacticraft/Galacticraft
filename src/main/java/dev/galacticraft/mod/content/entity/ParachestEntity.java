@@ -56,7 +56,7 @@ public class ParachestEntity extends Entity {
     private boolean placedChest;
     public DyeColor color = DyeColor.WHITE;
 
-    public ParachestEntity(EntityType<?> entityType, Level level, NonNullList<ItemStack> cargo, int fuelLevel) {
+    public ParachestEntity(EntityType<?> entityType, Level level, NonNullList<ItemStack> cargo, long fuelLevel) {
         this(entityType, level);
         this.cargo = NonNullList.withSize(cargo.size(), ItemStack.EMPTY);
         Collections.copy(this.cargo, cargo);

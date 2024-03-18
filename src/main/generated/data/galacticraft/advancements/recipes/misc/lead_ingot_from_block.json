@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_lead_block",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_lead_block"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:lead_ingot_from_block"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

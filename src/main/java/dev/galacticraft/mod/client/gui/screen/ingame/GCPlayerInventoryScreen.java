@@ -81,7 +81,7 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        this.renderBackground(graphics);
+        this.renderBackground(graphics, mouseX, mouseY, delta);
         super.render(graphics, mouseX, mouseY, delta);
         this.renderTooltip(graphics, mouseX, mouseY);
     }
@@ -122,7 +122,7 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
             }
         }
 
-        InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, this.leftPos + 51, this.topPos + 75, 30, (float) (this.leftPos + 51) - mouseX, (float) (this.topPos + 75 - 50) - mouseY, this.minecraft.player);
+        InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, this.leftPos + 26, this.topPos + 8, this.leftPos + 75, this.topPos + 78, 30, 0.0625F, mouseX, mouseY, this.minecraft.player);
     }
 
     @Override

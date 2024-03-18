@@ -77,7 +77,7 @@ public class ParaChestBlock extends GCBlock implements EntityBlock {
     }
 
     @Override
-    public void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+    public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
         if (!level.isClientSide) {
             CompoundTag stateTag = new CompoundTag();
             stateTag.putString(COLOR_TAG, blockState.getValue(COLOR).getName());
@@ -87,7 +87,7 @@ public class ParaChestBlock extends GCBlock implements EntityBlock {
             itemEntity.setDefaultPickUpDelay();
             level.addFreshEntity(itemEntity);
         }
-        super.playerWillDestroy(level, blockPos, blockState, player);
+        return super.playerWillDestroy(level, blockPos, blockState, player);
     }
 
     @Override

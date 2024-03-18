@@ -43,9 +43,9 @@ public class RocketInventoryScreen extends AbstractContainerScreen<RocketMenu> {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float tickDelta) {
-        renderBackground(graphics);
-        super.render(graphics, mouseX, mouseY, tickDelta);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        renderBackground(graphics, mouseX, mouseY, partialTick);
+        super.render(graphics, mouseX, mouseY, partialTick);
         renderTooltip(graphics, mouseX, mouseY);
 
         graphics.drawString(this.font, Component.translatable("ui.galacticraft.rocket.fuel"), this.leftPos + 125, this.topPos + 15 + 3, 4210752, false);

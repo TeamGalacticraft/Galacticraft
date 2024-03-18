@@ -22,9 +22,15 @@
 
 package dev.galacticraft.mod.content;
 
+import com.google.common.collect.ImmutableMap;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.world.item.DyeColor;
+
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Helper class to make registering things cleaner
@@ -42,5 +48,20 @@ public class GCRegistry<T> {
 
     public <V extends T> Holder.Reference<V> registerForHolder(String id, V object) {
         return (Holder.Reference<V>) Registry.registerForHolder(registry, Constant.id(id), object);
+    }
+
+    public <V extends T> ColorSet<V> registerColored(String id, Function<DyeColor, V> consumer) {
+        ImmutableMap.Builder<DyeColor, V> colorMap = new ImmutableMap.Builder<>();
+        for (DyeColor color : DyeColor.values()) {
+            colorMap.put(color, Registry.register(registry, Constant.id(color.getName() + '_' + id), consumer.apply(color)));
+        }
+
+        return new ColorSet<>(colorMap.build());
+    }
+
+    public record ColorSet<T>(Map<DyeColor, T> colorMap) {
+        public T get(DyeColor color) {
+            return colorMap.get(color);
+        }
     }
 }

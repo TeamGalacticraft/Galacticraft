@@ -22,6 +22,9 @@
 
 package dev.galacticraft.mod.content.block.special;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.block.entity.AirlockControllerBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -39,6 +42,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 public class AirlockBlock extends BaseEntityBlock {
+    public static final MapCodec<AirlockBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Codec.BOOL.fieldOf("controller").forGetter(airlockBlock -> airlockBlock.controller),
+            propertiesCodec()
+    ).apply(instance, AirlockBlock::new));
     private final boolean controller;
 
     public AirlockBlock(boolean controller, Properties properties) {
@@ -69,6 +76,11 @@ public class AirlockBlock extends BaseEntityBlock {
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
         return createTickerHelper(blockEntityType, GCBlockEntityTypes.AIRLOCK_CONTROLLER, AirlockControllerBlockEntity::tick);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Override

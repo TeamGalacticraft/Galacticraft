@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.block.machine;
 
 import dev.galacticraft.machinelib.api.block.MachineBlock;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.FuelLoaderBlockEntity;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import net.minecraft.core.BlockPos;
@@ -41,7 +42,7 @@ public class FuelLoaderBlock extends MachineBlock<FuelLoaderBlockEntity> {
     public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
 
     public FuelLoaderBlock(Properties settings) {
-        super(settings, FuelLoaderBlockEntity::new);
+        super(settings, Constant.id(Constant.Block.FUEL_LOADER));
         registerDefaultState(getStateDefinition().any().setValue(CONNECTED, false));
     }
 

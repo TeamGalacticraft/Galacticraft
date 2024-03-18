@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_glass_pane",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_glass_pane"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:glass_fluid_pipe"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

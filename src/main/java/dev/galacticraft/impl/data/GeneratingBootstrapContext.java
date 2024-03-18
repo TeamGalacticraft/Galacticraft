@@ -32,7 +32,7 @@ import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.NotNull;
 
-public record GeneratingBootstrapContext<T>(HolderLookup.Provider registries, FabricDynamicRegistryProvider.Entries entries) implements BootstapContext<T> {
+public record GeneratingBootstrapContext<T>(HolderLookup.Provider registries, GCDynamicRegistryProvider.Entries entries) implements BootstapContext<T> {
     @Override
     public Holder.Reference<T> register(ResourceKey<T> resourceKey, T object, Lifecycle lifecycle) {
         return (Holder.Reference<T>) this.entries.add(resourceKey, object);
