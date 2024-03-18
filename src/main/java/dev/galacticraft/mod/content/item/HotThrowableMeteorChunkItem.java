@@ -66,7 +66,7 @@ public class HotThrowableMeteorChunkItem extends ThrowableMeteorChunkItem {
 
         CompoundTag stackTag = stack.getOrCreateTag();
 
-        if (!stackTag.contains(TICKS_UNTIL_COOL, 3))
+        if (!stackTag.contains(TICKS_UNTIL_COOL, CompoundTag.TAG_INT))
             stackTag.putInt(TICKS_UNTIL_COOL, MAX_TICKS);
 
         int ticksUntilCool = stackTag.getInt(TICKS_UNTIL_COOL);
