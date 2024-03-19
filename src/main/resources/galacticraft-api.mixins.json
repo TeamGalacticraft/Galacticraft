@@ -5,7 +5,6 @@
   "mixins": [
     "LevelTimeAccessMixin",
     "MinecraftServerMixin",
-    "client.ClientLevelMixin",
     "gear.LivingEntityMixin",
     "gear.PlayerListMixin",
     "gear.ServerPlayerMixin",
@@ -27,6 +26,7 @@
   "client": [
     "client.AbstractClientPlayerEntityMixin",
     "client.AbstractContainerScreenMixin",
+    "client.ClientLevelMixin",
     "client.ClientPlayNetworkHandlerMixin",
     "client.FogRendererMixin",
     "client.LevelRendererMixin",
