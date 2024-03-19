@@ -26,12 +26,16 @@ import dev.galacticraft.mod.api.block.MultiBlockPart;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 public class CryogenicChamberPartBlockEntity extends BlockEntity implements MultiBlockPart {
-    public BlockPos basePos = BlockPos.ZERO;
 
+    public BlockPos basePos = BlockPos.ZERO;
 
     public CryogenicChamberPartBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(GCBlockEntityTypes.CRYOGENIC_CHAMBER_PART, blockPos, blockState);
@@ -51,6 +55,17 @@ public class CryogenicChamberPartBlockEntity extends BlockEntity implements Mult
         if (tag.contains("Base")) {
             this.basePos = BlockPos.of(tag.getLong("Base"));
         }
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        return this.saveWithoutMetadata();
     }
 
     @Override

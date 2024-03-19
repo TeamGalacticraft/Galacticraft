@@ -35,6 +35,7 @@ import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
 import net.minecraft.world.Container;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,7 +45,7 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @DefaultedMetadata(structure = GalacticraftGameTest.SINGLE_BLOCK)
-public final class CompressorTestSuite extends RecipeGameTest<Container, CompressingRecipe, CompressorBlockEntity> {
+public final class CompressorTestSuite extends RecipeGameTest<CraftingContainer, CompressingRecipe, CompressorBlockEntity> {
     public CompressorTestSuite() {
         super(GCMachineTypes.COMPRESSOR, CompressorBlockEntity.INPUT_SLOTS, CompressorBlockEntity.INPUT_LENGTH, CompressorBlockEntity.OUTPUT_SLOT);
     }

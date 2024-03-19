@@ -27,14 +27,39 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.universe.display.CelestialDisplayConfig;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Optional;
+
 public record IconCelestialDisplayConfig(ResourceLocation texture, int u, int v, int width, int height,
-                                         float scale) implements CelestialDisplayConfig {
+                                         float scale, Optional<Decoration> decoration) implements CelestialDisplayConfig {
     public static final Codec<IconCelestialDisplayConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("texture").forGetter(IconCelestialDisplayConfig::texture),
             Codec.INT.fieldOf("u").forGetter(IconCelestialDisplayConfig::u),
             Codec.INT.fieldOf("v").forGetter(IconCelestialDisplayConfig::v),
             Codec.INT.fieldOf("width").forGetter(IconCelestialDisplayConfig::width),
             Codec.INT.fieldOf("height").forGetter(IconCelestialDisplayConfig::height),
-            Codec.FLOAT.fieldOf("scale").forGetter(IconCelestialDisplayConfig::scale)
+            Codec.FLOAT.fieldOf("scale").forGetter(IconCelestialDisplayConfig::scale),
+            Decoration.CODEC.optionalFieldOf("decoration").forGetter(IconCelestialDisplayConfig::decoration)
     ).apply(instance, IconCelestialDisplayConfig::new));
+
+    public IconCelestialDisplayConfig(ResourceLocation texture, int u, int v, int width, int height, float scale) {
+        this(texture, u, v, width, height, scale, Optional.empty());
+    }
+
+    public IconCelestialDisplayConfig(ResourceLocation texture, int u, int v, int width, int height) {
+        this(texture, u, v, width, height, 1);
+    }
+
+    public record Decoration(ResourceLocation texture, float xScale, float yScale, float widthScale, float heightScale, int u, int v, int width, int height) {
+        public static final Codec<Decoration> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                ResourceLocation.CODEC.fieldOf("texture").forGetter(Decoration::texture),
+                Codec.FLOAT.fieldOf("xScale").forGetter(Decoration::xScale),
+                Codec.FLOAT.fieldOf("yScale").forGetter(Decoration::yScale),
+                Codec.FLOAT.fieldOf("widthScale").forGetter(Decoration::widthScale),
+                Codec.FLOAT.fieldOf("heightScale").forGetter(Decoration::heightScale),
+                Codec.INT.fieldOf("u").forGetter(Decoration::u),
+                Codec.INT.fieldOf("v").forGetter(Decoration::v),
+                Codec.INT.fieldOf("width").forGetter(Decoration::width),
+                Codec.INT.fieldOf("height").forGetter(Decoration::height)
+        ).apply(instance, Decoration::new));
+    }
 }

@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_cheese_curd",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_cheese_curd"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:moon_cheese_block"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

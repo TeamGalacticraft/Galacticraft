@@ -83,8 +83,8 @@ public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S exten
     }
 
     @Override
-    protected void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        super.renderBackground(graphics, mouseX, mouseY, delta);
+    protected void renderMachineBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.renderMachineBackground(graphics, mouseX, mouseY, delta);
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 switch (this.menu.getSource()) {

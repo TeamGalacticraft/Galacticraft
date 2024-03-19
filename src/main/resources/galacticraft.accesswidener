@@ -39,6 +39,7 @@ accessible method net/minecraft/stats/Stats                             makeCust
 accessible field net/minecraft/client/resources/model/ModelManager bakedRegistry Ljava/util/Map;
 accessible field net/minecraft/data/worldgen/ProcessorLists EMPTY Lnet/minecraft/resources/ResourceKey;
 accessible field net/minecraft/world/level/block/DispenserBlock DISPENSER_REGISTRY Ljava/util/Map;
+accessible field net/minecraft/client/renderer/LevelRenderer ticks I
 
 # private final fields
 accessible field net/minecraft/data/models/BlockModelGenerators texturedModels Ljava/util/Map;
@@ -51,6 +52,10 @@ accessible field net/minecraft/client/renderer/block/model/BlockModel textureMap
 accessible field net/minecraft/world/level/levelgen/NoiseRouterData Y Lnet/minecraft/resources/ResourceKey;
 accessible field net/minecraft/world/level/levelgen/NoiseRouterData SHIFT_X Lnet/minecraft/resources/ResourceKey;
 accessible field net/minecraft/world/level/levelgen/NoiseRouterData SHIFT_Z Lnet/minecraft/resources/ResourceKey;
+accessible field net/minecraft/client/gui/screens/inventory/SmithingScreen ARMOR_STAND_ANGLE Lorg/joml/Quaternionf;
+accessible field net/minecraft/client/particle/Particle MAXIMUM_COLLISION_VELOCITY_SQUARED D
+accessible field net/minecraft/client/renderer/LevelRenderer RAIN_RADIUS I
+accessible field net/minecraft/client/renderer/LevelRenderer RAIN_DIAMETER I
 
 # private methods
 extendable method net/minecraft/world/entity/LivingEntity setPosToBed (Lnet/minecraft/core/BlockPos;)V

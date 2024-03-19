@@ -28,6 +28,7 @@ import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.BuiltInAddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
+import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import net.minecraft.core.*;
@@ -153,12 +154,31 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
     }
 
     /**
+     * Returns this celestial body's ring display provider
+     *
+     * @return this celestial body's ring display provider
+     * @see CelestialRingDisplay
+     */
+    public @NotNull CelestialRingDisplay<?, ?> ring() {
+        return this.type().ring(this.config());
+    }
+
+    /**
      * Returns this celestial body's atmospheric composition
      *
      * @return this celestial body's atmospheric composition
      */
     public @NotNull GasComposition atmosphere() {
         return this.type().atmosphere(this.config());
+    }
+
+    /**
+     * Returns this celestial body's length of a single day on this celestial body
+     *
+     * @return this celestial body's length of a single day on this celestial body
+     */
+    public long dayLength() {
+        return type().dayLength(this.config);
     }
 
     /**

@@ -27,6 +27,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Decoder;
+import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipeSlot;
 import dev.galacticraft.api.rocket.recipe.config.RocketPartRecipeConfig;
@@ -75,7 +76,7 @@ public record PatternedRocketPartRecipeConfig(int height, @NotNull List<RocketPa
             if (element.isJsonPrimitive()) {
                 spacing.put(key, element.getAsInt());
             } else {
-                ingredients.put(key, Ingredient.fromJson(element));
+                Ingredient.CODEC.decode(JsonOps.INSTANCE, element).get().ifLeft(pair -> ingredients.put(key, pair.getFirst()));
             }
         });
 

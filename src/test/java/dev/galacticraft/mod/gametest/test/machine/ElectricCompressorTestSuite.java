@@ -33,6 +33,7 @@ import dev.galacticraft.mod.recipe.CompressingRecipe;
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
 import net.minecraft.world.Container;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,7 +43,7 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @DefaultedMetadata(structure = GalacticraftGameTest.SINGLE_BLOCK)
-public final class ElectricCompressorTestSuite extends RecipeGameTest<Container, CompressingRecipe, ElectricCompressorBlockEntity> {
+public final class ElectricCompressorTestSuite extends RecipeGameTest<CraftingContainer, CompressingRecipe, ElectricCompressorBlockEntity> {
     public ElectricCompressorTestSuite() {
         super(GCMachineTypes.ELECTRIC_COMPRESSOR, ElectricCompressorBlockEntity.INPUT_SLOTS, ElectricCompressorBlockEntity.INPUT_LENGTH, ElectricCompressorBlockEntity.OUTPUT_SLOTS, ElectricCompressorBlockEntity.OUTPUT_LENGTH);
     }

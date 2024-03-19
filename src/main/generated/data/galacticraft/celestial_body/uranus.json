@@ -1,0 +1,50 @@
+{
+  "type": "galacticraft:decorative_planet",
+  "config": {
+    "parent": "galacticraft:sol",
+    "atmosphere": {
+      "composition": {},
+      "pressure": 3.0E-15,
+      "temperature": 23.0
+    },
+    "description": "planet.galacticraft.uranus.desc",
+    "display": {
+      "type": "galacticraft:icon",
+      "config": {
+        "decoration": {
+          "height": 28,
+          "heightScale": 14.0,
+          "texture": "galacticraft:textures/gui/celestialbodies/uranus_rings.png",
+          "u": 0,
+          "v": 0,
+          "width": 7,
+          "widthScale": 3.5,
+          "xScale": -1.75,
+          "yScale": -7.0
+        },
+        "height": 16,
+        "scale": 1.0,
+        "texture": "galacticraft:textures/gui/celestialbodies/uranus.png",
+        "u": 0,
+        "v": 0,
+        "width": 16
+      }
+    },
+    "galaxy": "galacticraft:milky_way",
+    "gravity": 0.166,
+    "name": "planet.galacticraft.uranus.name",
+    "position": {
+      "type": "galacticraft:orbital",
+      "config": {
+        "distance": 2.0,
+        "orbit_time": 84.06352996826172,
+        "phase_shift": 1.3799999952316284,
+        "planet": true
+      }
+    },
+    "ring": {
+      "type": "galacticraft:default",
+      "config": {}
+    }
+  }
+}

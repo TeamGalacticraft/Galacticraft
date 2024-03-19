@@ -57,14 +57,14 @@ public class BakedModelItemRocketPartRenderer implements RocketPartRenderer {
     }
 
     @Override
-    public void render(ClientLevel world, PoseStack matrices, Rocket rocket, MultiBufferSource vertices, float delta, int light) {
+    public void render(ClientLevel world, PoseStack matrices, Rocket rocket, MultiBufferSource vertices, float partialTick, int light, int overlay) {
         if (this.model != null) {
             PoseStack.Pose entry = matrices.last();
             VertexConsumer consumer = vertices.getBuffer(layer);
             Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(entry, consumer, null, model, (rocket.red() / 255f) * (rocket.alpha() / 255f),
                     (rocket.green() / 255f) * (rocket.alpha() / 255f),
                     (rocket.blue() / 255f) * (rocket.alpha() / 255f),
-                    light, OverlayTexture.NO_OVERLAY);
+                    light, overlay);
         }
     }
 }

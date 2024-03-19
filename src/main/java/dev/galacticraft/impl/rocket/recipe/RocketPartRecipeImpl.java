@@ -78,11 +78,6 @@ public record RocketPartRecipeImpl<C extends RocketPartRecipeConfig, T extends R
     }
 
     @Override
-    public @NotNull ResourceLocation getId() {
-        throw new AssertionError();
-    }
-
-    @Override
     public @NotNull RecipeSerializer<?> getSerializer() {
         throw new AssertionError();
     }

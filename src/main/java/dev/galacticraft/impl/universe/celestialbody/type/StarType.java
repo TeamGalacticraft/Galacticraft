@@ -27,9 +27,11 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyType;
 import dev.galacticraft.api.universe.celestialbody.star.Star;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
+import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.impl.universe.celestialbody.config.StarConfig;
+import dev.galacticraft.impl.universe.display.type.ring.DefaultCelestialRingDisplayType;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -78,6 +80,11 @@ public class StarType extends CelestialBodyType<StarConfig> implements Star<Star
     @Override
     public @NotNull CelestialDisplay<?, ?> display(StarConfig config) {
         return config.display();
+    }
+
+    @Override
+    public @NotNull CelestialRingDisplay<?, ?> ring(StarConfig config) {
+        return config.ring();
     }
 
     /**

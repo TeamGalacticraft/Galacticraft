@@ -24,31 +24,41 @@ package dev.galacticraft.mod.data.recipes;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import dev.galacticraft.mod.recipe.GCRecipes;
+import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
+import net.minecraft.advancements.Criterion;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.ItemLike;
 
 import java.util.List;
 import java.util.Map;
 
 public class ShapedCompressorRecipeBuilder extends GCRecipeBuilder {
-    private final List<String> pattern = Lists.newArrayList();
+    private final List<String> rows = Lists.newArrayList();
     private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
+    private int time = 200;
 
     protected ShapedCompressorRecipeBuilder(ItemLike result, int count) {
-        super(GCRecipes.SHAPED_COMPRESSING_SERIALIZER, "compressing", result, count);
+        super("compressing", result, count);
     }
 
     public static ShapedCompressorRecipeBuilder create(ItemLike itemLike) {
         return new ShapedCompressorRecipeBuilder(itemLike, 1);
     }
 
-    public static ShapedCompressorRecipeBuilder create(ItemLike itemLike, int i) {
-        return new ShapedCompressorRecipeBuilder(itemLike, i);
+    public static ShapedCompressorRecipeBuilder create(ItemLike itemLike, int count) {
+        return new ShapedCompressorRecipeBuilder(itemLike, count);
+    }
+
+    public ShapedCompressorRecipeBuilder time(int time) {
+        this.time = time;
+        return this;
     }
 
     public ShapedCompressorRecipeBuilder define(Character character, TagKey<Item> tagKey) {
@@ -70,31 +80,30 @@ public class ShapedCompressorRecipeBuilder extends GCRecipeBuilder {
         }
     }
 
+    @Override
+    public ShapedCompressorRecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
+        return (ShapedCompressorRecipeBuilder) super.unlockedBy(name, criterion);
+    }
+
     public ShapedCompressorRecipeBuilder pattern(String string) {
-        if (!this.pattern.isEmpty() && string.length() != this.pattern.get(0).length()) {
+        if (!this.rows.isEmpty() && string.length() != this.rows.get(0).length()) {
             throw new IllegalArgumentException("Pattern must be the same width on every line!");
         } else {
-            this.pattern.add(string);
+            this.rows.add(string);
             return this;
         }
     }
 
     @Override
-    public void serializeRecipeData(JsonObject jsonRecipe) {
-        var patternJson = new JsonArray();
+    public Recipe<?> createRecipe(ResourceLocation id) {
+        return new ShapedCompressingRecipe(this.group, ensureValid(id), new ItemStack(this.result, this.count), this.time);
+    }
 
-        for(var string : this.pattern) {
-            patternJson.add(string);
+    private ShapedRecipePattern ensureValid(ResourceLocation resourceLocation) {
+        if (this.criteria.isEmpty()) {
+            throw new IllegalStateException("No way of obtaining recipe " + resourceLocation);
+        } else {
+            return ShapedRecipePattern.of(this.key, this.rows);
         }
-
-        jsonRecipe.add("pattern", patternJson);
-        var keyJson = new JsonObject();
-
-        for(var entry : this.key.entrySet()) {
-            keyJson.add(String.valueOf(entry.getKey()), entry.getValue().toJson());
-        }
-
-        jsonRecipe.add("key", keyJson);
-        this.createResult(jsonRecipe);
     }
 }

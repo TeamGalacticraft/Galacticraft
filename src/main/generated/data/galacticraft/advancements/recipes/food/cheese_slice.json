@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_moon_cheese_block",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_moon_cheese_block"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:cheese_slice"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

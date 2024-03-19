@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.environment;
 
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.core.BlockPos;
@@ -49,6 +50,7 @@ import net.minecraft.world.level.material.Fluids;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CavernousVinesBlock extends GrowingPlantHeadBlock implements BonemealableBlock, CavernousVines, SimpleWaterloggedBlock {
+    public static final MapCodec<CavernousVinesBlock> CODEC = simpleCodec(CavernousVinesBlock::new);
     private static final double growPerTickProbability = 0.1;
 
     public CavernousVinesBlock(BlockBehaviour.Properties properties) {
@@ -59,6 +61,11 @@ public class CavernousVinesBlock extends GrowingPlantHeadBlock implements Boneme
     @Override
     protected int getBlocksToGrowWhenBonemealed(RandomSource randomSource) {
         return 1;
+    }
+
+    @Override
+    protected MapCodec<? extends GrowingPlantHeadBlock> codec() {
+        return CODEC;
     }
 
     @Override
@@ -109,7 +116,7 @@ public class CavernousVinesBlock extends GrowingPlantHeadBlock implements Boneme
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState) {
+    public ItemStack getCloneItemStack(LevelReader blockGetter, BlockPos blockPos, BlockState blockState) {
         return new ItemStack(GCItems.CAVERNOUS_VINES);
     }
 
@@ -136,7 +143,7 @@ public class CavernousVinesBlock extends GrowingPlantHeadBlock implements Boneme
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState, boolean isClient) {
+    public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
         return !blockState.getValue(POISONOUS);
     }
 

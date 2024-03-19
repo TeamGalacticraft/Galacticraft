@@ -25,6 +25,7 @@ package dev.galacticraft.api.universe.celestialbody;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.gas.GasComposition;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
+import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import net.minecraft.core.Registry;
@@ -96,6 +97,15 @@ public abstract class CelestialBodyType<C extends CelestialBodyConfig> {
     public abstract @NotNull CelestialDisplay<?, ?> display(C config);
 
     /**
+     * Returns the celestial body's ring display provider
+     *
+     * @param config the celestial body configuration to be queried
+     * @return the celestial body's ring display provider
+     * @see CelestialRingDisplay
+     */
+    public abstract @NotNull CelestialRingDisplay<?, ?> ring(C config);
+
+    /**
      * Returns the celestial body's parent, or {@code null} if it does not have one
      *
      * @param manager the dynamic registry manager to supply the registry
@@ -123,6 +133,13 @@ public abstract class CelestialBodyType<C extends CelestialBodyConfig> {
      * @return the gravity of this celestial body
      */
     public abstract float gravity(C config);
+
+    /**
+     * The length of day in this dimension <p> Vanilla: 24000
+     */
+    public long dayLength(C config) {
+        return 24000;
+    }
 
     /**
      * Returns a codec that will (de)serialize a fully-configured celestial body of this type.

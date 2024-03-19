@@ -30,6 +30,7 @@ import dev.galacticraft.api.universe.celestialbody.Tiered;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.api.universe.celestialbody.satellite.Orbitable;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
+import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.impl.universe.celestialbody.config.PlanetConfig;
@@ -80,6 +81,11 @@ public class PlanetType extends CelestialBodyType<PlanetConfig> implements Tiere
     }
 
     @Override
+    public @NotNull CelestialRingDisplay<?, ?> ring(PlanetConfig config) {
+        return config.ring();
+    }
+
+    @Override
     public @NotNull ResourceKey<Level> world(PlanetConfig config) {
         return config.world();
     }
@@ -105,8 +111,13 @@ public class PlanetType extends CelestialBodyType<PlanetConfig> implements Tiere
     }
 
     @Override
+    public long dayLength(PlanetConfig config) {
+        return config.dayLength();
+    }
+
+    @Override
     public int temperature(RegistryAccess access, long time, PlanetConfig config) {
-        return time % 24000 < 12000 ? config.dayTemperature() : config.nightTemperature(); //todo: temperature providers?
+        return time % config.dayLength() < 12000 ? config.dayTemperature() : config.nightTemperature(); //todo: temperature providers?
     }
 
     @Override

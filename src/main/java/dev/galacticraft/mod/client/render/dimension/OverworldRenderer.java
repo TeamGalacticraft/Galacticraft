@@ -26,7 +26,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
-import dev.galacticraft.mod.Constant;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -44,9 +43,7 @@ import org.joml.Matrix4f;
 
 // TODO: Allow support for more planets
 public class OverworldRenderer {
-    public static final ResourceLocation EARTH_LOCATION = Constant.id("textures/gui/celestialbodies/earth.png");
     public static final ResourceLocation MOON_LOCATION = new ResourceLocation("textures/environment/moon_phases.png");
-    public static final ResourceLocation SUN_LOCATION = new ResourceLocation("textures/environment/sun.png");
     @Nullable
     private VertexBuffer starBuffer;
     @Nullable
@@ -191,7 +188,7 @@ public class OverworldRenderer {
         );
         r = 30.0F;
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, SUN_LOCATION);
+        RenderSystem.setShaderTexture(0, CelestialBodyTextures.SUN);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         Matrix4f matrix4f1 = poseStack.last().pose();
         worldRenderer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
@@ -236,7 +233,7 @@ public class OverworldRenderer {
             poseStack.scale(scale, 1.0F, scale);
             poseStack.translate(0.0F, -(float) player.getY(), 0.0F);
 
-            RenderSystem.setShaderTexture(0, EARTH_LOCATION);
+            RenderSystem.setShaderTexture(0, CelestialBodyTextures.EARTH);
 
             size = 1.0F;
 

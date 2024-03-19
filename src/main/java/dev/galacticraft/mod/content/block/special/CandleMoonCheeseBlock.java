@@ -24,6 +24,8 @@ package dev.galacticraft.mod.content.block.special;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -54,6 +56,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.Map;
 
 public class CandleMoonCheeseBlock extends AbstractCandleBlock {
+    public static final MapCodec<CandleMoonCheeseBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Block.CODEC.fieldOf("candle").forGetter(candleMoonCheeseBlock -> candleMoonCheeseBlock.candle),
+            propertiesCodec()
+    ).apply(instance, CandleMoonCheeseBlock::new));
     public static final BooleanProperty LIT = AbstractCandleBlock.LIT;
     protected static final VoxelShape CAKE_SHAPE = Block.box(1.0, 0.0, 1.0, 15.0, 8.0, 15.0);
     protected static final VoxelShape CANDLE_SHAPE = Block.box(7.0, 8.0, 7.0, 9.0, 14.0, 9.0);
@@ -61,10 +67,18 @@ public class CandleMoonCheeseBlock extends AbstractCandleBlock {
     private static final Map<Block, CandleMoonCheeseBlock> BY_CANDLE = Maps.newHashMap();
     private static final Iterable<Vec3> PARTICLE_OFFSETS = ImmutableList.of(new Vec3(0.5, 1.0, 0.5));
 
+    private final Block candle;
+
     public CandleMoonCheeseBlock(Block block, BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(LIT, false));
+        this.candle = block;
         BY_CANDLE.put(block, this);
+    }
+
+    @Override
+    protected MapCodec<? extends AbstractCandleBlock> codec() {
+        return CODEC;
     }
 
     @Override
@@ -108,7 +122,7 @@ public class CandleMoonCheeseBlock extends AbstractCandleBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState) {
+    public ItemStack getCloneItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
         return new ItemStack(GCBlocks.MOON_CHEESE_BLOCK);
     }
 

@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.environment;
 
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -40,8 +41,9 @@ import java.util.List;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GlowstoneTorchBlock extends TorchBlock {
+    public static final MapCodec<GlowstoneTorchBlock> CODEC = simpleCodec(GlowstoneTorchBlock::new);
     public GlowstoneTorchBlock(Properties settings) {
-        super(settings, null);
+        super(null, settings);
     }
 
     @Override
@@ -56,5 +58,10 @@ public class GlowstoneTorchBlock extends TorchBlock {
         } else {
             list.add(Component.translatable("tooltip.galacticraft.press_shift").setStyle(Constant.Text.Color.GRAY_STYLE));
         }
+    }
+
+    @Override
+    public MapCodec<? extends GlowstoneTorchBlock> codec() {
+        return CODEC;
     }
 }

@@ -46,7 +46,7 @@ public enum EmptyRocketPartRenderer implements RocketPartRenderer {
     }
 
     @Override
-    public void render(ClientLevel world, PoseStack matrices, Rocket rocket, MultiBufferSource vertices, float delta, int light) {
+    public void render(ClientLevel world, PoseStack matrices, Rocket rocket, MultiBufferSource vertices, float partialTick, int light, int overlay) {
         if (!hasWarned) {
             hasWarned = true;
             Constant.LOGGER.warn("EmptyRocketPartRenderer renderer is in use! RocketPartRenderer wasn't registered?");

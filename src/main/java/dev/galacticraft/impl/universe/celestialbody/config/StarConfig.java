@@ -29,6 +29,7 @@ import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
+import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.impl.codec.MiscCodecs;
@@ -40,8 +41,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public record StarConfig(@NotNull MutableComponent name, @NotNull MutableComponent description,
-                         @NotNull ResourceKey<Galaxy> galaxy, Optional<ResourceKey<CelestialBody<?, ?>>> parent, @NotNull CelestialPosition<?, ?> position,
-                         @NotNull CelestialDisplay<?, ?> display, GasComposition photosphericComposition, float gravity,
+                         @NotNull ResourceKey<Galaxy> galaxy, @NotNull Optional<ResourceKey<CelestialBody<?, ?>>> parent, @NotNull CelestialPosition<?, ?> position,
+                         @NotNull CelestialDisplay<?, ?> display, @NotNull CelestialRingDisplay<?, ?> ring, GasComposition photosphericComposition, float gravity,
                          double luminance, int surfaceTemperature) implements CelestialBodyConfig {
     public static final Codec<StarConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             MiscCodecs.TRANSLATABLE_COMPONENT.fieldOf("name").forGetter(StarConfig::name),
@@ -50,6 +51,7 @@ public record StarConfig(@NotNull MutableComponent name, @NotNull MutableCompone
             ResourceKey.codec(AddonRegistries.CELESTIAL_BODY).optionalFieldOf("parent").forGetter(StarConfig::parent),
             CelestialPosition.CODEC.fieldOf("position").forGetter(StarConfig::position),
             CelestialDisplay.CODEC.fieldOf("display").forGetter(StarConfig::display),
+            CelestialRingDisplay.CODEC.fieldOf("ring").forGetter(StarConfig::ring),
             GasComposition.CODEC.fieldOf("photospheric_composition").forGetter(StarConfig::photosphericComposition),
             Codec.FLOAT.fieldOf("gravity").forGetter(StarConfig::gravity),
             Codec.DOUBLE.fieldOf("luminance").forGetter(StarConfig::luminance),

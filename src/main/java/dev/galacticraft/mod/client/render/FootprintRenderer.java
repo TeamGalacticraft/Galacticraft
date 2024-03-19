@@ -111,16 +111,16 @@ public class FootprintRenderer {
             float footprintScale = 0.5F;
             Matrix4f last = poseStack.last().pose();
             worldRenderer
-                    .vertex(last, Mth.sin((45 - footprint.rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale, 0, Mth.cos((45 - footprint.rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale)
+                    .vertex(last, Mth.sin((45 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale, 0, Mth.cos((45 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale)
                     .uv(f7, f9).endVertex();
             worldRenderer
-                    .vertex(last, Mth.sin((135 - footprint.rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale, 0, Mth.cos((135 - footprint.rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale)
+                    .vertex(last, Mth.sin((135 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale, 0, Mth.cos((135 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale)
                     .uv(f7, f8).endVertex();
             worldRenderer
-                    .vertex(last, Mth.sin((225 - footprint.rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale, 0, Mth.cos((225 - footprint.rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale)
+                    .vertex(last, Mth.sin((225 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale, 0, Mth.cos((225 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale)
                     .uv(f6, f8).endVertex();
             worldRenderer
-                    .vertex(last, Mth.sin((315 - footprint.rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale, 0, Mth.cos((315 - footprint.rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale)
+                    .vertex(last, Mth.sin((315 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale, 0, Mth.cos((315 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale)
                     .uv(f6, f9).endVertex();
 
             tessellator.end();

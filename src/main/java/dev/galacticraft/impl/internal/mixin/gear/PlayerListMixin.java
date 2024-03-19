@@ -30,6 +30,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.Container;
 import org.spongepowered.asm.mixin.Mixin;
@@ -45,7 +46,7 @@ import java.util.Collection;
 @Mixin(PlayerList.class)
 public abstract class PlayerListMixin {
     @Inject(method = "placeNewPlayer", at = @At("RETURN"))
-    private void galacticraft_syncGearInventory(Connection connection, ServerPlayer player, CallbackInfo ci) {
+    private void syncGearInventory(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci) {
         FriendlyByteBuf buf = PacketByteBufs.create();
         Container inventory = player.galacticraft$getGearInv();
         buf.writeInt(player.getId());

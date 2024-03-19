@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.environment;
 
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.core.BlockPos;
@@ -31,7 +32,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
@@ -45,6 +45,7 @@ import net.minecraft.world.level.material.Fluids;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class CavernousVinesPlantBlock extends GrowingPlantBodyBlock implements BonemealableBlock, CavernousVines, SimpleWaterloggedBlock {
+    public static final MapCodec<CavernousVinesPlantBlock> CODEC = simpleCodec(CavernousVinesPlantBlock::new);
     public CavernousVinesPlantBlock(BlockBehaviour.Properties properties) {
         super(properties, Direction.DOWN, SHAPE, true);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(POISONOUS, false));
@@ -56,12 +57,17 @@ public class CavernousVinesPlantBlock extends GrowingPlantBodyBlock implements B
     }
 
     @Override
+    protected MapCodec<? extends GrowingPlantBodyBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
     protected BlockState updateHeadAfterConvertedFromBody(BlockState blockState, BlockState blockState2) {
         return blockState2.setValue(POISONOUS, blockState.getValue(POISONOUS)).setValue(WATERLOGGED, blockState.getValue(WATERLOGGED));
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState) {
+    public ItemStack getCloneItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
         return new ItemStack(GCItems.CAVERNOUS_VINES);
     }
 
@@ -76,7 +82,7 @@ public class CavernousVinesPlantBlock extends GrowingPlantBodyBlock implements B
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState, boolean isClient) {
+    public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
         return !blockState.getValue(POISONOUS);
     }
 

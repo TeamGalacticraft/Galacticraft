@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_throwable_meteor_chunk",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_throwable_meteor_chunk"
     ]
   ],
   "rewards": {
     "recipes": [
       "minecraft:hot_throwable_meteor_chunk_from_smelting"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

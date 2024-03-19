@@ -124,7 +124,7 @@ public class SpaceRaceScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics graphics) {
+    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         // 5% of width
         int maxWidth = (int) (this.width - (getXMargins() * 1.5D));
         if (backgroundWidth < maxWidth) {
@@ -255,7 +255,7 @@ public class SpaceRaceScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int x, int y, float delta) {
-        this.renderBackground(graphics);
+        this.renderBackground(graphics, x, y, delta);
 
         if (this.isAnimationComplete()) {
             this.renderForeground(graphics, x, y);

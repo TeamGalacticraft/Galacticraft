@@ -4,6 +4,7 @@
     "item": "minecraft:repeater"
   },
   "result": {
-    "item": "galacticraft:advanced_wafer"
+    "Count": 1,
+    "id": "galacticraft:advanced_wafer"
   }
 }

@@ -132,8 +132,6 @@ public class CelestialSelectionScreen extends Screen {
     protected float translationX = 0.0f;
     protected float translationY = 0.0f;
     protected boolean mouseDragging = false;
-    protected double lastMovePosX = -1;
-    protected double lastMovePosY = -1;
     protected final RegistryAccess manager = Minecraft.getInstance().level.registryAccess();
     protected final CelestialBody<?, ?> fromBody;
     protected final Registry<Galaxy> galaxyRegistry = manager.registryOrThrow(AddonRegistries.GALAXY);
@@ -146,6 +144,8 @@ public class CelestialSelectionScreen extends Screen {
         } else {
             this.bodiesToRender.add(satellite);
         }
+
+        bodiesToRender.sort((o1, o2) -> Float.compare(o1.position().lineScale(), o2.position().lineScale()));
     };
 
     public CelestialSelectionScreen(boolean mapMode, RocketData data, boolean canCreateStations, CelestialBody<?, ?> fromBody) {
@@ -172,6 +172,7 @@ public class CelestialSelectionScreen extends Screen {
         this.bodiesToRender.addAll(celestialBodyRegistry.stream().collect(Collectors.toList()));
         assert this.minecraft != null;
         this.bodiesToRender.addAll(((ClientSatelliteAccessor) Objects.requireNonNull(this.minecraft.getConnection())).galacticraft$getSatellites().values());
+        bodiesToRender.sort((o1, o2) -> Float.compare(o1.position().lineScale(), o2.position().lineScale()));
         ((ClientSatelliteAccessor) Objects.requireNonNull(this.minecraft.getConnection())).addListener(this.listener);
     }
 
@@ -235,6 +236,8 @@ public class CelestialSelectionScreen extends Screen {
                 bodyList.add(planet);
             }
         }
+
+        bodyList.sort((o1, o2) -> Float.compare(o1.position().lineScale(), o2.position().lineScale()));
         return bodyList;
     }
 
@@ -242,6 +245,7 @@ public class CelestialSelectionScreen extends Screen {
         if (celestialBody != null) {
             List<CelestialBody<?, ?>> list = celestialBodyRegistry.stream().filter(celestialBodyType -> celestialBodyType.parent(manager) == celestialBody).collect(Collectors.toList());
             list.addAll(getVisibleSatellitesForCelestialBody(celestialBody));
+            list.sort((o1, o2) -> Float.compare(o1.position().lineScale(), o2.position().lineScale()));
             return list;
         }
         return Collections.emptyList();
@@ -429,6 +433,9 @@ public class CelestialSelectionScreen extends Screen {
 
     @Override
     public void tick() {
+        this.translationX = 0.0F;
+        this.translationY = 0.0F;
+
         if (!this.renamingSpaceStation && (this.selectedBody == null || !this.isZoomed())) {
             assert this.minecraft != null;
             if (InputConstants.isKeyDown(this.minecraft.getWindow().getWindow(), GLFW.GLFW_KEY_LEFT)) {
@@ -470,26 +477,24 @@ public class CelestialSelectionScreen extends Screen {
     }
 
     @Override
-    public boolean mouseDragged(double x, double y, int activeButton, double relOffsetX, double relOffsetY) {
-        if (mouseDragging && lastMovePosX != -1 && activeButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            float scrollMultiplier = /*-Math.abs(this.zoom)*/ -1;
-//            if (this.zoom == -1.0F) {
-//                scrollMultiplier = -1.5F;
-//            }
-//
-//            if (this.zoom >= -0.25F && this.zoom <= 0.15F) {
-//                scrollMultiplier = -0.2F;
-//            }
-//
-//            if (this.zoom >= 0.15F) {
-//                scrollMultiplier = -0.15F;
-//            }
-            this.translationX = (float) ((relOffsetX - relOffsetY) * scrollMultiplier * 0.2F);
-            this.translationY = (float) ((relOffsetY + relOffsetX) * scrollMultiplier * 0.2F);
+    public boolean mouseDragged(double x, double y, int activeButton, double dragX, double dragY) {
+        if (mouseDragging && activeButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            float scrollMultiplier = -Math.abs(this.zoom);
+            if (this.zoom == -1.0F) {
+                scrollMultiplier = -1.5F;
+            }
+
+            if (this.zoom >= -0.25F && this.zoom <= 0.15F) {
+                scrollMultiplier = -0.2F;
+            }
+
+            if (this.zoom >= 0.15F) {
+                scrollMultiplier = -0.15F;
+            }
+            this.translationX += (float) (dragX * scrollMultiplier * 0.2F);
+            this.translationY += (float) (dragY * scrollMultiplier * 0.2F);
         }
 
-        lastMovePosX = relOffsetX;
-        lastMovePosY = relOffsetY;
         return true;
     }
 
@@ -498,21 +503,11 @@ public class CelestialSelectionScreen extends Screen {
         super.mouseReleased(x, y, button);
 
         mouseDragging = false;
-        lastMovePosX = -1;
-        lastMovePosY = -1;
 
         this.translationX = 0;
         this.translationY = 0;
         return true;
     }
-
-//    @Override
-//    public void handleInput() throws IOException
-//    {
-//        this.translationX = 0.0F;
-//        this.translationY = 0.0F;
-//        super.handleInput();
-//    }
 
     @Override
     public boolean mouseClicked(double x, double y, int button) {
@@ -853,40 +848,6 @@ public class CelestialSelectionScreen extends Screen {
         return true;
     }
 
-//    @Override
-//    protected void mouseClickMove(int x, int y, int lastButtonClicked, long timeSinceMouseClick)
-//    {
-//        super.mouseClickMove(x, y, lastButtonClicked, timeSinceMouseClick);
-//
-//        if (mouseDragging && lastMovePosX != -1 && lastButtonClicked == 0)
-//        {
-//            int deltaX = x - lastMovePosX;
-//            int deltaY = y - lastMovePosY;
-//            float scollMultiplier = -Math.abs(this.zoom);
-//
-//            if (this.zoom == -1.0F)
-//            {
-//                scollMultiplier = -1.5F;
-//            }
-//
-//            if (this.zoom >= -0.25F && this.zoom <= 0.15F)
-//            {
-//                scollMultiplier = -0.2F;
-//            }
-//
-//            if (this.zoom >= 0.15F)
-//            {
-//                scollMultiplier = -0.15F;
-//            }
-//
-//            translationX += (deltaX - deltaY) * scollMultiplier * (ConfigManagerCore.invertMapMouseScroll.get() ? -1.0F : 1.0F) * ConfigManagerCore.mapMouseScrollSensitivity.get() * 0.2F;
-//            translationY += (deltaY + deltaX) * scollMultiplier * (ConfigManagerCore.invertMapMouseScroll.get() ? -1.0F : 1.0F) * ConfigManagerCore.mapMouseScrollSensitivity.get() * 0.2F;
-//        }
-//
-//        lastMovePosX = x;
-//        lastMovePosY = y;
-//    }
-
     protected boolean testClicked(CelestialBody<?, ?> body, int xOffset, int yPos, double x, double y, boolean grandchild) {
         int xPos = CelestialSelectionScreen.BORDER_SIZE + CelestialSelectionScreen.BORDER_EDGE_SIZE + 2 + xOffset;
         if (x >= xPos && x <= xPos + 93 && y >= yPos && y <= yPos + 12) {
@@ -935,8 +896,8 @@ public class CelestialSelectionScreen extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        double wheel = amount / (this.selectedBody == null ? 5.0 : 2.5);
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        double wheel = scrollY / (this.selectedBody == null ? 5.0 : 2.5);
 
         if (wheel != 0) {
             if (this.selectedBody == null || (this.viewState == EnumView.PREVIEW && !this.isZoomed())) {
@@ -1000,9 +961,9 @@ public class CelestialSelectionScreen extends Screen {
                 float gridSize = 7000F; //194.4F;
                 //TODO: Add dynamic map sizing, to allow the map to be small by default and expand when more distant solar systems are added.
                 this.drawGrid(matrices.last().pose(), gridSize, height / 3f / 3.5F);
-                this.drawCircles(matrices, delta);
+                this.drawCircles(graphics, mouseX, mouseY, delta);
 
-                this.drawCelestialBodies(matrices, mouseX, mouseY, delta);
+                this.drawCelestialBodies(graphics, mouseX, mouseY, delta);
 
 //                this.planetPosMap.clear();
 //
@@ -1080,7 +1041,7 @@ public class CelestialSelectionScreen extends Screen {
         this.blit(model, x, y, width, height, u, v, uWidth, vHeight, invertX, invertY, 512, 512);
     }
 
-    public void blit(Matrix4f model, float x, float y, float width, float height, float u, float v, float uWidth, float vHeight, boolean invertX, boolean invertY, float texSizeX, float texSizeY) {
+    public static void blit(Matrix4f model, float x, float y, float width, float height, float u, float v, float uWidth, float vHeight, boolean invertX, boolean invertY, float texSizeX, float texSizeY) {
         resetShader(GameRenderer::getPositionTexColorShader);
         float texModX = 1F / texSizeX;
         float texModY = 1F / texSizeY;
@@ -1126,7 +1087,8 @@ public class CelestialSelectionScreen extends Screen {
         return this.mapMode;
     }
 
-    public void drawCelestialBodies(PoseStack matrices, double mouseX, double mouseY, float delta) {
+    public void drawCelestialBodies(GuiGraphics graphics, double mouseX, double mouseY, float delta) {
+        PoseStack matrices = graphics.pose();
         this.planetPosMap.clear();
 
         for (CelestialBody<?, ?> body : this.bodiesToRender) {
@@ -1138,10 +1100,24 @@ public class CelestialSelectionScreen extends Screen {
                 matrices.pushPose();
                 this.setupMatrix(body, matrices, moon ? 0.25F : 1.0F, delta);
                 CelestialDisplay<?, ?> display = body.display();
-                Vector4f vector4f = display.render(matrices, Tesselator.getInstance().getBuilder(), this.getWidthForCelestialBody(body), mouseX, mouseY, delta, s -> resetAlphaShader(alpha, s));
-                matrices.translate(vector4f.x(), vector4f.z(), 0);
-                Matrix4f model = matrices.last().pose();
-                planetPosMap.put(body, new Vec3(model.m03(), model.m13(), vector4f.z() * model.m00()));
+                Vector4f vector4f = display.render(graphics, Tesselator.getInstance().getBuilder(), getWidthForCelestialBody(body), mouseX, mouseY, delta, s -> resetAlphaShader(alpha, s));
+//                matrices.translate(vector4f.x(), vector4f.z(), 0);
+                Matrix4f planetMatrix = matrices.last().pose();
+
+                Matrix4f matrix0 = RenderSystem.getProjectionMatrix().mul(planetMatrix, planetMatrix);
+                int x = (int) Math.floor((matrix0.m30() * 0.5 + 0.5) * minecraft.getWindow().getScreenWidth());
+                int y = (int) Math.floor(minecraft.getWindow().getScreenHeight() - (matrix0.m31() * 0.5 + 0.5) * minecraft.getWindow().getScreenHeight());
+                double planetX = (x * (this.minecraft.getWindow().getGuiScaledWidth() / (double) this.minecraft.getWindow().getScreenWidth()));
+                double planetY = (y * (this.minecraft.getWindow().getGuiScaledHeight() / (double) this.minecraft.getWindow().getScreenHeight()));
+
+                Matrix4f scaleVec = new Matrix4f();
+                scaleVec.m00(matrix0.m00());
+                scaleVec.m11(matrix0.m11());
+                scaleVec.m22(matrix0.m22());
+                Vector4f newVec = scaleVec.transform(new Vector4f(2, -2, 0, 0), new Vector4f());
+                float iconSize = (newVec.y * (minecraft.getWindow().getScreenHeight() / 2.0F)) * (body.type() instanceof Star ? 2 : 1) * (body == this.selectedBody ? 1.5F : 1.0F);
+
+                planetPosMap.put(body, new Vec3(planetX, planetY, iconSize)); // Store size on-screen in Z-value for ease
                 matrices.popPose();
             }
         }
@@ -1787,7 +1763,7 @@ public class CelestialSelectionScreen extends Screen {
         this.blit(x, y, width, height, u, v, uWidth, vHeight, invertX, invertY, 512, 512);
     }
 
-    public void blit(float x, float y, float width, float height, float u, float v, float uWidth, float vHeight, boolean invertX, boolean invertY, float texSizeX, float texSizeY) {
+    public static void blit(float x, float y, float width, float height, float u, float v, float uWidth, float vHeight, boolean invertX, boolean invertY, float texSizeX, float texSizeY) {
         resetShader(GameRenderer::getPositionTexColorShader);
         float texModX = 1F / texSizeX;
         float texModY = 1F / texSizeY;
@@ -1866,87 +1842,18 @@ public class CelestialSelectionScreen extends Screen {
     /**
      * Draw orbit circles on gui
      */
-    public void drawCircles(PoseStack matrices, float delta) {
-        resetShader(GameRenderer::getRendertypeLinesShader);
+    public void drawCircles(GuiGraphics graphics, double mouseX, double mouseY, float delta) {
         RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.lineWidth(4);
         int count = 0;
 
-        final float theta = (float) (2f * Math.PI / 90f);
-        final float cos = Mth.cos(theta);
-        final float sin = Mth.sin(theta);
-        final float theta2 = (float) (2f * Math.PI / -90f);
-        final float cos2 = Mth.cos(theta2);
-        final float sin2 = Mth.sin(theta2);
-
         for (CelestialBody<?, ?> body : this.bodiesToRender) {
             Vector3f systemOffset = new Vector3f();
             if (body.parent(manager) != null) {
-                systemOffset = this.getCelestialBodyPosition(body.parent(manager), delta);
+                systemOffset = getCelestialBodyPosition(body.parent(manager), delta);
             }
-
-            float x = this.lineScale(body);
-            if (Float.isNaN(x)) continue;
-            float y = 0;
-
-            float alpha = getAlpha(body);
-
-            if (alpha > 0.0F) {
-                matrices.pushPose();
-                matrices.mulPose(Axis.ZP.rotationDegrees(45));
-                matrices.translate(systemOffset.x(), systemOffset.y(), systemOffset.z());
-//                matrices.multiply(Vector3f.NEGATIVE_X.getDegreesQuaternion(55));
-                float[] color = switch (count % 2) {
-                    case 0 -> new float[]{0.0F / 1.4F, 0.6F / 1.4F, 1.0F / 1.4F, alpha / 1.4F};
-                    case 1 -> new float[]{0.3F / 1.4F, 0.8F / 1.4F, 1.0F / 1.4F, alpha / 1.4F};
-                    default -> throw new IllegalStateException("Unexpected value: " + count % 2);
-                };
-
-                BufferBuilder buffer = Tesselator.getInstance().getBuilder();
-                buffer.begin(VertexFormat.Mode.LINE_STRIP, DefaultVertexFormat.POSITION_COLOR_NORMAL);
-
-                float temp;
-                float x1 = x;
-                float y1 = y;
-                Matrix4f model = matrices.last().pose();
-                for (int i = 0; i < 180; i++) {
-                    buffer.vertex(model, x, y, 0).color(color[0], color[1], color[2], color[3]);
-                    if (i < 90) {
-                        buffer.normal(1, 1, 1);
-                    } else {
-                        buffer.normal(1, -1, -1);
-                    }
-
-                    buffer.endVertex();
-
-                    temp = x;
-                    x = cos * x - sin * y;
-                    y = sin * temp + cos * y;
-                }
-                buffer.vertex(model, x1, y1, 0).color(color[0], color[1], color[2], color[3]).normal(1, 1, 1).endVertex(); //LINE_LOOP is gone
-                x = x1;
-                y = y1;
-                for (int i = 0; i < 180; i++) {
-                    buffer.vertex(model, x, y, 0).color(color[0], color[1], color[2], color[3]);
-                    if (i < 90) {
-                        buffer.normal(1, 1, 1);
-                    } else {
-                        buffer.normal(1, -1, -1);
-                    }
-
-                    buffer.endVertex();
-
-                    temp = x;
-                    x = cos2 * x - sin2 * y;
-                    y = sin2 * temp + cos2 * y;
-                }
-                buffer.vertex(model, x1, y1, 0).color(color[0], color[1], color[2], color[3]).normal(1, 1, 1).endVertex(); //LINE_LOOP is gone
-
-                BufferUploader.drawWithShader(buffer.end());
+            if (body.ring().render(body, graphics, count, systemOffset, getAlpha(body), lineScale(body), mouseX, mouseY, delta, CelestialSelectionScreen::resetShader))
                 count++;
-                matrices.popPose();
-            }
-
         }
         RenderSystem.lineWidth(1);
     }

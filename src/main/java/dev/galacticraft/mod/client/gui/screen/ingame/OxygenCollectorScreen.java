@@ -51,8 +51,8 @@ public class OxygenCollectorScreen extends MachineScreen<OxygenCollectorBlockEnt
     }
 
     @Override
-    protected void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        super.renderBackground(graphics, mouseX, mouseY, delta);
+    protected void renderMachineBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.renderMachineBackground(graphics, mouseX, mouseY, delta);
         graphics.drawString(this.font, Component.translatable("ui.galacticraft.machine.collecting", this.menu.collectionAmount).getString(), this.leftPos + 55, this.topPos + 56, ChatFormatting.DARK_GRAY.getColor(), false);
         MachineStatus status = this.menu.state.getStatus();
         graphics.drawString(this.font, Component.translatable("ui.galacticraft.machine.status").append(status != null ? status.getText() : Component.empty()), this.leftPos + 32, this.topPos + 66, ChatFormatting.DARK_GRAY.getColor(), false);

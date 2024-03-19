@@ -69,9 +69,9 @@ public class ParachestScreen extends AbstractContainerScreen<ParachestMenu> {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int i, int j, float f) {
-        renderBackground(guiGraphics);
-        super.render(guiGraphics, i, j, f);
-        renderTooltip(guiGraphics, i, j);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        renderTooltip(guiGraphics, mouseX, mouseY);
     }
 }

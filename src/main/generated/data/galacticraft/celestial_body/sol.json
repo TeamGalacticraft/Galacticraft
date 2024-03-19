@@ -35,6 +35,10 @@
         "y": 0.0
       }
     },
+    "ring": {
+      "type": "galacticraft:default",
+      "config": {}
+    },
     "surface_temperature": 5772
   }
 }

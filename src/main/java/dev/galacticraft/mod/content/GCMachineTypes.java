@@ -43,6 +43,7 @@ import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.world.Container;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
@@ -180,7 +181,7 @@ public class GCMachineTypes {
             )
     );
 
-    public static final MachineType<ElectricCompressorBlockEntity, RecipeMachineMenu<Container, CompressingRecipe, ElectricCompressorBlockEntity>> ELECTRIC_COMPRESSOR = MachineType.create(
+    public static final MachineType<ElectricCompressorBlockEntity, RecipeMachineMenu<CraftingContainer, CompressingRecipe, ElectricCompressorBlockEntity>> ELECTRIC_COMPRESSOR = MachineType.create(
             GCBlocks.ELECTRIC_COMPRESSOR,
             GCBlockEntityTypes.ELECTRIC_COMPRESSOR,
             GCMenuTypes.ELECTRIC_COMPRESSOR,

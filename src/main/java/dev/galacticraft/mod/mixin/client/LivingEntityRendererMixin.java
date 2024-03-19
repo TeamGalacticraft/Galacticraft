@@ -24,7 +24,6 @@ package dev.galacticraft.mod.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import dev.galacticraft.mod.accessor.CryogenicAccessor;
 import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -56,26 +55,29 @@ public abstract class LivingEntityRendererMixin {
 
     @Redirect(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasPose(Lnet/minecraft/world/entity/Pose;)Z"))
     private boolean gc$hasSleepPose(LivingEntity instance, Pose pose) {
-        if (instance instanceof CryogenicAccessor player && player.galacticraft$isInCryoSleep())
+        if (instance.isInCryoSleep())
             return false;
         return instance.hasPose(pose);
     }
 
-    @Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;getAttackAnim(Lnet/minecraft/world/entity/LivingEntity;F)F"))
-    private void rotateToMatchRocket(LivingEntity entity, float f, float tickDelta, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, CallbackInfo ci) {
+    @Inject(method = "setupRotations", at = @At("HEAD"))
+    private void rotateToMatchRocket(LivingEntity entity, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks, CallbackInfo ci) {
         if (entity.isPassenger()) {
-            if (entity.getVehicle() instanceof RocketEntity) {
-                poseStack.mulPose(Axis.YN.rotationDegrees(entity.getVehicle().getViewYRot(tickDelta)));
-                poseStack.translate(0, 0.5D, 0);
-                poseStack.mulPose(Axis.XN.rotationDegrees(entity.getVehicle().getViewXRot(tickDelta)));
-                poseStack.translate(0, -0.5D, 0);
+            if (entity.getVehicle() instanceof RocketEntity rocket) {
+                double rotationOffset = -0.5F;
+                poseStack.translate(0, -rotationOffset, 0);
+                float anglePitch = rocket.xRotO;
+                float angleYaw = rocket.yRotO;
+                poseStack.mulPose(Axis.YN.rotationDegrees(angleYaw));
+                poseStack.mulPose(Axis.ZP.rotationDegrees(anglePitch));
+                poseStack.translate(0, rotationOffset, 0);
             }
         }
     }
 
     @Inject(method = "setupRotations", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getBedOrientation()Lnet/minecraft/core/Direction;"), cancellable = true)
     private void galacticraft$renderCryoChamberPos(LivingEntity livingEntity, PoseStack poseStack, float f, float g, float h, CallbackInfo ci) {
-        if (livingEntity instanceof CryogenicAccessor livingEntityAccessor && livingEntityAccessor.galacticraft$isInCryoSleep()) {
+        if (livingEntity.isInCryoSleep()) {
             Direction direction = livingEntity.getBedOrientation();
             float j = direction != null ? sleepDirectionToRotationCryo(direction) : g;
             poseStack.mulPose(Axis.YP.rotationDegrees(j));

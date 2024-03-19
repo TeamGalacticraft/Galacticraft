@@ -25,6 +25,7 @@ package dev.galacticraft.mod.api.block;
 import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -39,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public abstract class MultiBlockMachineBlock<T extends MachineBlockEntity> extends MachineBlock<T> implements MultiBlockBase {
-    protected MultiBlockMachineBlock(Properties settings, MachineBlockEntityFactory<T> factory) {
+    protected MultiBlockMachineBlock(Properties settings, ResourceLocation factory) {
         super(settings, factory);
     }
 
@@ -50,12 +51,14 @@ public abstract class MultiBlockMachineBlock<T extends MachineBlockEntity> exten
     }
 
     @Override
-    public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
-        super.playerWillDestroy(world, pos, state, player);
+    public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+        BlockState returnState = super.playerWillDestroy(world, pos, state, player);
         for (BlockPos otherPart : this.getOtherParts(state)) {
             otherPart = otherPart.immutable().offset(pos);
             world.setBlock(otherPart, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
         }
+
+        return returnState;
     }
 
     @Override

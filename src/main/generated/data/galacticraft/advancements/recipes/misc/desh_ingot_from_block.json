@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_desh_block",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_desh_block"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:desh_ingot_from_block"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -37,6 +37,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.crafting.BlastingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -62,7 +63,7 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
     }
 
     @Override
-    protected @NotNull MachineStatus workingStatus(BlastingRecipe recipe) {
+    protected @NotNull MachineStatus workingStatus(RecipeHolder<BlastingRecipe> recipe) {
         return MachineStatuses.ACTIVE;
     }
 
@@ -77,8 +78,8 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
     }
 
     @Override
-    public int getProcessingTime(@NotNull BlastingRecipe recipe) {
-        return (int) (recipe.getCookingTime() * 0.9);
+    public int getProcessingTime(@NotNull RecipeHolder<BlastingRecipe> recipe) {
+        return (int) (recipe.value().getCookingTime() * 0.9);
     }
 
     @Nullable

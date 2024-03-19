@@ -25,14 +25,12 @@ package dev.galacticraft.mod.mixin;
 import dev.galacticraft.mod.accessor.EntityAccessor;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.misc.footprint.Footprint;
-import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -152,6 +150,12 @@ public abstract class EntityMixin implements EntityAccessor {
                 if ((this.isAlwaysTicking() && !level.getPlayerByUUID(uuid).isCreative()) || !this.isInvulnerable()) {
                     this.hurt(new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.OIL_BOOM)), 20.0f);
                 }
+            }
+        } else if (this.updateFluidHeightAndDoFluidPushing(GCTags.SULFURIC_ACID, 0.0028d)) {
+            // The entity enter an acid fluid, this entity need to take damage
+            if ((this.isAlwaysTicking() && !level.getPlayerByUUID(uuid).isCreative()) || !this.isInvulnerable()) {
+                this.hurt(new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE)
+                        .getHolderOrThrow(GCDamageTypes.SULFURIC_ACID)), 2.0f);
             }
         }
     }

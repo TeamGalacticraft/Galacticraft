@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_meteoric_iron_nugget",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_meteoric_iron_nugget"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:meteoric_iron_ingot_from_nuggets"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

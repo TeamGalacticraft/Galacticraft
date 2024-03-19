@@ -22,9 +22,10 @@
 
 package dev.galacticraft.mod.particle;
 
-import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Constant.Particle;
+import dev.galacticraft.mod.content.GCRegistry;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
-import net.minecraft.core.Registry;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 
@@ -32,21 +33,20 @@ import net.minecraft.core.registries.BuiltInRegistries;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GCParticleTypes {
-    public static final SimpleParticleType DRIPPING_FUEL = FabricParticleTypes.simple();
-    public static final SimpleParticleType FALLING_FUEL = FabricParticleTypes.simple();
-    public static final SimpleParticleType DRIPPING_CRUDE_OIL = FabricParticleTypes.simple();
-    public static final SimpleParticleType FALLING_CRUDE_OIL = FabricParticleTypes.simple();
-    public static final SimpleParticleType CRYOGENIC_PARTICLE = FabricParticleTypes.simple();
-    public static final SimpleParticleType LANDER_FLAME_PARTICLE = FabricParticleTypes.simple();
-    public static final SimpleParticleType SPARK_PARTICLE = FabricParticleTypes.simple();
+    public static final GCRegistry<ParticleType<?>> PARTICLES = new GCRegistry<>(BuiltInRegistries.PARTICLE_TYPE);
+    public static final SimpleParticleType DRIPPING_FUEL = PARTICLES.register(Particle.DRIPPING_FUEL, FabricParticleTypes.simple());
+    public static final SimpleParticleType FALLING_FUEL = PARTICLES.register(Particle.FALLING_FUEL, FabricParticleTypes.simple());
+    public static final SimpleParticleType DRIPPING_CRUDE_OIL = PARTICLES.register(Particle.DRIPPING_CRUDE_OIL, FabricParticleTypes.simple());
+    public static final SimpleParticleType FALLING_CRUDE_OIL = PARTICLES.register(Particle.FALLING_CRUDE_OIL, FabricParticleTypes.simple());
+    public static final SimpleParticleType CRYOGENIC_PARTICLE = PARTICLES.register(Particle.CRYOGENIC_PARTICLE, FabricParticleTypes.simple());
+    public static final SimpleParticleType LANDER_FLAME_PARTICLE = PARTICLES.register(Particle.LANDER_FLAME, FabricParticleTypes.simple());
+    public static final SimpleParticleType SPARK_PARTICLE = PARTICLES.register(Particle.SPARK, FabricParticleTypes.simple());
+    public static final SimpleParticleType DRIPPING_SULFURIC_ACID = PARTICLES.register(Particle.DRIPPING_SULFURIC_ACID, FabricParticleTypes.simple());
+    public static final SimpleParticleType FALLING_SULFURIC_ACID = PARTICLES.register(Particle.FALLING_SULFURIC_ACID, FabricParticleTypes.simple()); // Why does this exist?
+    public static final ComplexParticleType<LaunchSmokeParticleOption> LAUNCH_SMOKE_PARTICLE = PARTICLES.register(Particle.LAUNCH_SMOKE, new ComplexParticleType<>(false, LaunchSmokeParticleOption.DESERIALIZER, LaunchSmokeParticleOption.CODEC)); // FabricParticleTypes.complex doesn't support codec ): this was fixed in 1.20.5 snapshots
+    public static final ComplexParticleType<EntityParticleOption> LAUNCH_FLAME = PARTICLES.register(Particle.LAUNCH_FLAME, new ComplexParticleType<>(false, EntityParticleOption.DESERIALIZER, EntityParticleOption.CODEC));
+    public static final ComplexParticleType<EntityParticleOption> LAUNCH_FLAME_LAUNCHED = PARTICLES.register(Particle.LAUNCH_FLAME_LAUNCHED, new ComplexParticleType<>(false, EntityParticleOption.DESERIALIZER, EntityParticleOption.CODEC));
+    public static final ComplexParticleType<ScaleParticleType> ACID_VAPOR_PARTICLE = PARTICLES.register(Particle.ACID_VAPOR_PARTICLE, new ComplexParticleType<>(false, ScaleParticleType.DESERIALIZER, ScaleParticleType.CODEC));
 
-    public static void register() {
-        Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.DRIPPING_CRUDE_OIL), DRIPPING_CRUDE_OIL);
-        Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.FALLING_CRUDE_OIL), FALLING_CRUDE_OIL);
-        Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.DRIPPING_FUEL), DRIPPING_FUEL);
-        Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.FALLING_FUEL), FALLING_FUEL);
-        Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.CRYOGENIC_PARTICLE), CRYOGENIC_PARTICLE);
-        Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.LANDER_FLAME), LANDER_FLAME_PARTICLE);
-        Registry.register(BuiltInRegistries.PARTICLE_TYPE, Constant.id(Constant.Particle.SPARK), SPARK_PARTICLE);
-    }
+    public static void register() {}
 }

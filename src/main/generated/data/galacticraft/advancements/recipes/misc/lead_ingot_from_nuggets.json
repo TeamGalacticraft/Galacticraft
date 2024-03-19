@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_lead_nugget",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_lead_nugget"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:lead_ingot_from_nuggets"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

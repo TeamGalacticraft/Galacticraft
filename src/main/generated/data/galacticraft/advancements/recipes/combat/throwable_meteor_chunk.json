@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_raw_meteoric_iron",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_raw_meteoric_iron"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:throwable_meteor_chunk"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -94,7 +94,7 @@ public abstract class BucketItemMixin extends Item {
     private boolean checkIfFluidLoggable_gc(boolean defaultValue, @Nullable Player player, Level level, BlockPos blockPos, @Nullable BlockHitResult blockHitResult) {
         var blockState = level.getBlockState(blockPos);
         var block = blockState.getBlock();
-        return defaultValue || block instanceof FluidLoggable && ((FluidLoggable) block).canPlaceLiquid(level, blockPos, blockState, this.content);
+        return defaultValue || block instanceof FluidLoggable && ((FluidLoggable) block).canPlaceLiquid(player, level, blockPos, blockState, this.content);
     }
 
     @ModifyVariable(method = "use", at = @At("STORE"),

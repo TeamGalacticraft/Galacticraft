@@ -22,30 +22,31 @@
 
 package dev.galacticraft.mod.recipe;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class FabricationRecipe implements Recipe<Container> {
-    private final ResourceLocation id;
     private final String group;
     private final ItemStack output;
     private final NonNullList<Ingredient> input = NonNullList.withSize(1, Ingredient.EMPTY);
     private final int time;
 
-    public FabricationRecipe(ResourceLocation id, String group, Ingredient input, ItemStack output, int time) {
-        this.id = id;
+    public FabricationRecipe(String group, Ingredient input, ItemStack output, int time) {
         this.group = group;
         this.input.set(0, input);
         this.output = output;
@@ -83,11 +84,6 @@ public class FabricationRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ResourceLocation getId() {
-        return this.id;
-    }
-
-    @Override
     public RecipeSerializer<?> getSerializer() {
         return GCRecipes.FABRICATION_SERIALIZER;
     }
@@ -101,21 +97,23 @@ public class FabricationRecipe implements Recipe<Container> {
         return this.time;
     }
 
-    public enum Serializer implements RecipeSerializer<FabricationRecipe> {
-        INSTANCE;
+    public static class Serializer implements RecipeSerializer<FabricationRecipe> {
+        public static final Serializer INSTANCE = new Serializer();
+        public static final Codec<FabricationRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(recipe -> recipe.group),
+                Ingredient.CODEC.fieldOf("ingredient").forGetter(recipe -> recipe.input.get(0)),
+                ItemStack.CODEC.fieldOf("result").forGetter(recipe -> recipe.output),
+                ExtraCodecs.strictOptionalField(Codec.INT, "time", 300).forGetter(recipe -> recipe.time)
+        ).apply(instance, FabricationRecipe::new));
 
         @Override
-        public FabricationRecipe fromJson(ResourceLocation id, JsonObject json) {
-            String group = GsonHelper.getAsString(json, "group", "");
-            int time = GsonHelper.getAsInt(json, "time", 300);
-            Ingredient ingredient = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "ingredient"));
-            ItemStack result = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
-            return new FabricationRecipe(id, group, ingredient, result, time);
+        public Codec<FabricationRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public FabricationRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
-            return new FabricationRecipe(id, buf.readUtf(Constant.Misc.MAX_STRING_READ), Ingredient.fromNetwork(buf), buf.readItem(), buf.readInt());
+        public FabricationRecipe fromNetwork(FriendlyByteBuf buf) {
+            return new FabricationRecipe(buf.readUtf(Constant.Misc.MAX_STRING_READ), Ingredient.fromNetwork(buf), buf.readItem(), buf.readInt());
         }
 
         @Override

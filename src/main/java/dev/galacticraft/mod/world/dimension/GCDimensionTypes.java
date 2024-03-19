@@ -36,6 +36,7 @@ import java.util.OptionalLong;
 
 public class GCDimensionTypes {
     public static final ResourceKey<DimensionType> MOON = key("moon");
+    public static final ResourceKey<DimensionType> VENUS = key("venus");
 
     public static void bootstrapRegistries(BootstapContext<DimensionType> context) {
         context.register(MOON, new DimensionType(
@@ -51,8 +52,25 @@ public class GCDimensionTypes {
                 384,
                 384,
                 GCTags.INFINIBURN_MOON,
-                GCDimensions.MOON.location(),
+                Constant.id("moon"), // fixme: GCDimensionEffects somehow seems to load client classes
                 0.1f,
+                new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)
+        ));
+        context.register(VENUS, new DimensionType(
+                OptionalLong.empty(), // fixedTime
+                true, // hasSkyLight
+                false, // hasCeiling
+                false, // ultraWarm
+                false, // natural
+                1.0,  // coordinateScale
+                false, // bedWorks
+                false, // respawnAnchorWorks
+                -64, // minY
+                384, // height
+                384, // logicalHeight
+                GCTags.INFINIBURN_VENUS, // infiniburn
+                Constant.id("venus"), // effectsLocation // fixme
+                0.1F, // ambientLight
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)
         ));
     }

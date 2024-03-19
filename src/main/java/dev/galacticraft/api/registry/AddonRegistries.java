@@ -28,6 +28,7 @@ import dev.galacticraft.api.universe.celestialbody.CelestialHandler;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.type.CelestialTeleporterType;
 import dev.galacticraft.api.universe.display.CelestialDisplayType;
+import dev.galacticraft.api.universe.display.ring.CelestialRingDisplayType;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPositionType;
 import dev.galacticraft.mod.Constant;
@@ -38,13 +39,14 @@ import net.minecraft.resources.ResourceLocation;
 public final class AddonRegistries {
     private AddonRegistries() {}
 
-    public static final ResourceKey<Registry<CelestialPositionType<?>>> CELESTIAL_POSITION_TYPE = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "celestial_position_type"));
-    public static final ResourceKey<Registry<CelestialDisplayType<?>>> CELESTIAL_DISPLAY_TYPE = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "celestial_display_type"));
-    public static final ResourceKey<Registry<CelestialBodyType<?>>> CELESTIAL_BODY_TYPE = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "celestial_body_type"));
-    public static final ResourceKey<Registry<CelestialTeleporterType<?>>> CELESTIAL_TELEPORTER_TYPE = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "celestial_teleporter_type"));
+    public static final ResourceKey<Registry<CelestialPositionType<?>>> CELESTIAL_POSITION_TYPE = ResourceKey.createRegistryKey(Constant.id("celestial_position_type"));
+    public static final ResourceKey<Registry<CelestialDisplayType<?>>> CELESTIAL_DISPLAY_TYPE = ResourceKey.createRegistryKey(Constant.id("celestial_display_type"));
+    public static final ResourceKey<Registry<CelestialRingDisplayType<?>>> CELESTIAL_RING_DISPLAY_TYPE = ResourceKey.createRegistryKey(Constant.id("celestial_ring_display_type"));
+    public static final ResourceKey<Registry<CelestialBodyType<?>>> CELESTIAL_BODY_TYPE = ResourceKey.createRegistryKey(Constant.id("celestial_body_type"));
+    public static final ResourceKey<Registry<CelestialTeleporterType<?>>> CELESTIAL_TELEPORTER_TYPE = ResourceKey.createRegistryKey(Constant.id("celestial_teleporter_type"));
 
-    public static final ResourceKey<Registry<Galaxy>> GALAXY = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "galaxy"));
-    public static final ResourceKey<Registry<CelestialBody<?, ?>>> CELESTIAL_BODY = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "celestial_body"));
-    public static final ResourceKey<Registry<CelestialTeleporter<?, ?>>> CELESTIAL_TELEPORTER = ResourceKey.createRegistryKey(new ResourceLocation(Constant.MOD_ID, "celestial_teleporter"));
+    public static final ResourceKey<Registry<Galaxy>> GALAXY = ResourceKey.createRegistryKey(Constant.id("galaxy"));
+    public static final ResourceKey<Registry<CelestialBody<?, ?>>> CELESTIAL_BODY = ResourceKey.createRegistryKey(Constant.id("celestial_body"));
+    public static final ResourceKey<Registry<CelestialTeleporter<?, ?>>> CELESTIAL_TELEPORTER = ResourceKey.createRegistryKey(Constant.id("celestial_teleporter"));
     public static final ResourceKey<Registry<CelestialHandler>> CELESTIAL_HANDLER = ResourceKey.createRegistryKey(Constant.id("celestial_handler"));
 }

@@ -1,0 +1,46 @@
+{
+  "type": "galacticraft:planet",
+  "config": {
+    "parent": "galacticraft:sol",
+    "access_weight": 1,
+    "atmosphere": {
+      "composition": {},
+      "pressure": 3.0E-15,
+      "temperature": 23.0
+    },
+    "celestial_handler": "galacticraft:default",
+    "day_length": 720000,
+    "day_temperature": 105,
+    "description": "planet.galacticraft.venus.desc",
+    "display": {
+      "type": "galacticraft:icon",
+      "config": {
+        "height": 16,
+        "scale": 1.0,
+        "texture": "galacticraft:textures/gui/celestialbodies/venus.png",
+        "u": 0,
+        "v": 0,
+        "width": 16
+      }
+    },
+    "galaxy": "galacticraft:milky_way",
+    "gravity": 0.0375,
+    "name": "planet.galacticraft.venus.name",
+    "night_temperature": -180,
+    "position": {
+      "type": "galacticraft:orbital",
+      "config": {
+        "distance": 0.75,
+        "orbit_time": 0.6152793169021606,
+        "phase_shift": 2.0,
+        "planet": true
+      }
+    },
+    "ring": {
+      "type": "galacticraft:default",
+      "config": {}
+    },
+    "teleporter": "galacticraft:lander",
+    "world": "galacticraft:venus"
+  }
+}

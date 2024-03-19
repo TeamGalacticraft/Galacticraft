@@ -20,25 +20,30 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin.client;
+package dev.galacticraft.impl.internal.mixin.client;
 
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
+import dev.galacticraft.mod.api.dimension.GalacticDimensionEffects;
+import net.minecraft.client.Camera;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.LevelRenderer;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(ClientPacketListener.class)
-public class ClientPacketListenerMixin {
-    @Inject(method = "handleAnimate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;stopSleepInBed(ZZ)V"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-    private void gc$handleCryoStop(ClientboundAnimatePacket clientboundAnimatePacket, CallbackInfo ci, Entity entity, Player player) {
-        if (player.galacticraft$isInCryoSleep()) {
-            player.galacticraft$stopCryogenicSleep(false, false);
-            ci.cancel();
+@Mixin(LevelRenderer.class)
+public class LevelRendererMixin {
+    @Shadow private @Nullable ClientLevel level;
+
+    @Shadow public int ticks;
+
+    @Inject(method = "tickRain", at = @At("HEAD"), cancellable = true)
+    private void tickPlanetRain(Camera camera, CallbackInfo ci) {
+        if (level.effects() instanceof GalacticDimensionEffects gcEffects) {
+            if (gcEffects.tickRain(level, camera, ticks))
+                ci.cancel();
         }
     }
 }

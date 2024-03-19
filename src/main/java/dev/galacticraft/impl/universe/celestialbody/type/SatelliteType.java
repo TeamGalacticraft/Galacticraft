@@ -33,12 +33,15 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBodyType;
 import dev.galacticraft.api.universe.celestialbody.Tiered;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
+import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.dynamicdimensions.api.DynamicDimensionRegistry;
 import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
+import dev.galacticraft.impl.universe.display.config.ring.DefaultCelestialRingDisplayConfig;
 import dev.galacticraft.impl.universe.display.type.IconCelestialDisplayType;
+import dev.galacticraft.impl.universe.display.type.ring.DefaultCelestialRingDisplayType;
 import dev.galacticraft.impl.universe.position.config.OrbitalCelestialPositionConfig;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.impl.universe.position.type.OrbitalCelestialPositionType;
@@ -112,16 +115,17 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
         SatelliteChunkGenerator chunkGenerator = new SatelliteChunkGenerator(server.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(GCBiomes.SPACE), structure);
         SatelliteOwnershipData ownershipData = SatelliteOwnershipData.create(player.getUUID(), player.getScoreboardName(), new LinkedList<>(), false);
         CelestialPosition<?, ?> position = new CelestialPosition<>(OrbitalCelestialPositionType.INSTANCE, new OrbitalCelestialPositionConfig(1550, 10.0f, 0.0F, false));
-        CelestialDisplay<?, ?> display = new CelestialDisplay<>(IconCelestialDisplayType.INSTANCE, new IconCelestialDisplayConfig(new ResourceLocation(Constant.MOD_ID, "satellite"), 0, 0, 16, 16, 1));
+        CelestialDisplay<?, ?> display = new CelestialDisplay<>(IconCelestialDisplayType.INSTANCE, new IconCelestialDisplayConfig(Constant.id("satellite"), 0, 0, 16, 16));
+        CelestialRingDisplay<?, ?> ring = new CelestialRingDisplay<>(DefaultCelestialRingDisplayType.INSTANCE, new DefaultCelestialRingDisplayConfig());
         ResourceKey<Level> key = ResourceKey.create(Registries.DIMENSION, id);
         DynamicDimensionRegistry registry = DynamicDimensionRegistry.from(server);
         assert server.getLevel(key) == null : "World already registered?!";
         assert registry.anyDimensionExists(id) : "Dimension Type already registered?!";
-        return create(id, server, parent, position, display, chunkGenerator, type, ownershipData, player.getGameProfile().getName() + "'s Space Station");
+        return create(id, server, parent, position, display, ring, chunkGenerator, type, ownershipData, player.getGameProfile().getName() + "'s Space Station");
     }
 
     @ApiStatus.Internal
-    public static CelestialBody<SatelliteConfig, SatelliteType> create(ResourceLocation id, MinecraftServer server, CelestialBody<?, ?> parent, CelestialPosition<?, ?> position, CelestialDisplay<?, ?> display,
+    public static CelestialBody<SatelliteConfig, SatelliteType> create(ResourceLocation id, MinecraftServer server, CelestialBody<?, ?> parent, CelestialPosition<?, ?> position, CelestialDisplay<?, ?> display, CelestialRingDisplay<?, ?> ring,
                                                                        ChunkGenerator generator, DimensionType type, SatelliteOwnershipData ownershipData, String name) {
         Constant.LOGGER.debug("Attempting to create a world dynamically ({})", id);
 
@@ -129,7 +133,7 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
 
         Holder<CelestialTeleporter<?, ?>> direct = server.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_TELEPORTER).getHolderOrThrow(BuiltinObjects.DIRECT_CELESTIAL_TELEPORTER);
 
-        SatelliteConfig config = new SatelliteConfig(ResourceKey.create(AddonRegistries.CELESTIAL_BODY, server.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).getKey(parent)), parent.galaxy(), position, display, ownershipData, ResourceKey.create(Registries.DIMENSION, id), direct, EMPTY_GAS_COMPOSITION, 0.0f, parent.type() instanceof Tiered<?> ? ((Tiered) parent.type()).accessWeight(parent.config()) : 1, new LevelStem(Holder.direct(type), generator));
+        SatelliteConfig config = new SatelliteConfig(ResourceKey.create(AddonRegistries.CELESTIAL_BODY, server.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).getKey(parent)), parent.galaxy(), position, display, ring, ownershipData, ResourceKey.create(Registries.DIMENSION, id), direct, EMPTY_GAS_COMPOSITION, 0.0f, parent.type() instanceof Tiered<?> ? ((Tiered) parent.type()).accessWeight(parent.config()) : 1, new LevelStem(Holder.direct(type), generator));
         config.customName(Component.translatable(name));
         CelestialBody<SatelliteConfig, SatelliteType> satellite = INSTANCE.configure(config);
         ((SatelliteAccessor) server).galacticraft$addSatellite(id, satellite);
@@ -169,6 +173,11 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
     @Override
     public @NotNull CelestialDisplay<?, ?> display(SatelliteConfig config) {
         return config.display();
+    }
+
+    @Override
+    public @NotNull CelestialRingDisplay<?, ?> ring(SatelliteConfig config) {
+        return config.ring();
     }
 
     @Override

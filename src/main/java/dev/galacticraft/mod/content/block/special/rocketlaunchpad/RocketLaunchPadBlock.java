@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.special.rocketlaunchpad;
 
+import com.mojang.serialization.MapCodec;
 import org.jetbrains.annotations.Nullable;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
@@ -43,6 +44,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class RocketLaunchPadBlock extends BaseEntityBlock {
+    public static final MapCodec<RocketLaunchPadBlock> CODEC = simpleCodec(RocketLaunchPadBlock::new);
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
     private static final Direction[] CARDINAL = {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
     private static final VoxelShape CENTER_SHAPE = Shapes.create(0.0D, 0.0D, 0.0D, 1.0D, 0.1875D, 1.0D);
@@ -51,6 +53,11 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
     public RocketLaunchPadBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(PART, Part.NONE));
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     public static BlockPos partToCenterPos(Part part) {
@@ -82,7 +89,7 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+    public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
         if (!level.isClientSide() && player.isCreative()) {
             var part = blockState.getValue(PART);
             if (part != Part.CENTER) {
@@ -98,7 +105,7 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
                 }
             }
         }
-        super.playerWillDestroy(level, blockPos, blockState, player);
+        return super.playerWillDestroy(level, blockPos, blockState, player);
     }
 
     @Override

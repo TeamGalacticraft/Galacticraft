@@ -45,6 +45,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -89,8 +90,8 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
     }
 
     @Override
-    protected boolean canOutputStacks(@NotNull FabricationRecipe recipe) {
-        ItemStack output = recipe.getResultItem(this.level.registryAccess());
+    protected boolean canOutputStacks(@NotNull RecipeHolder<FabricationRecipe> recipe) {
+        ItemStack output = recipe.value().getResultItem(this.level.registryAccess());
         return this.itemStorage().getSlot(OUTPUT_SLOT).canInsert(output.getItem(), output.getTag(), output.getCount());
     }
 
@@ -100,14 +101,14 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
     }
 
     @Override
-    protected void outputStacks(@NotNull FabricationRecipe recipe) {
-        ItemStack output = recipe.getResultItem(this.level.registryAccess());
+    protected void outputStacks(@NotNull RecipeHolder<FabricationRecipe> recipe) {
+        ItemStack output = recipe.value().getResultItem(this.level.registryAccess());
         this.itemStorage().getSlot(OUTPUT_SLOT).insert(output.getItem(), output.getTag(), output.getCount());
     }
 
     @Override
-    protected void extractCraftingMaterials(@NotNull FabricationRecipe recipe) {
-        NonNullList<ItemStack> remainder = recipe.getRemainingItems(this.craftingInv);
+    protected void extractCraftingMaterials(@NotNull RecipeHolder<FabricationRecipe> recipe) {
+        NonNullList<ItemStack> remainder = recipe.value().getRemainingItems(this.craftingInv);
         this.itemStorage().getSlot(DIAMOND_SLOT).extractOne();
         this.itemStorage().getSlot(SILICON_SLOT_1).extractOne();
         this.itemStorage().getSlot(SILICON_SLOT_2).extractOne();
@@ -125,12 +126,12 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
     }
 
     @Override
-    protected @NotNull MachineStatus workingStatus(FabricationRecipe recipe) {
+    protected @NotNull MachineStatus workingStatus(RecipeHolder<FabricationRecipe> recipe) {
         return GCMachineStatuses.FABRICATING;
     }
 
     @Override
-    protected @Nullable FabricationRecipe findValidRecipe(@NotNull Level world) {
+    protected @Nullable RecipeHolder<FabricationRecipe> findValidRecipe(@NotNull Level world) {
             if (this.itemStorage().getSlot(DIAMOND_SLOT).contains(Items.DIAMOND)
                     && this.itemStorage().getSlot(SILICON_SLOT_1).contains(GCItems.RAW_SILICON)
                     && this.itemStorage().getSlot(SILICON_SLOT_2).contains(GCItems.RAW_SILICON)
@@ -142,8 +143,8 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
     }
 
     @Override
-    public int getProcessingTime(@NotNull FabricationRecipe recipe) {
-        return recipe.getProcessingTime();
+    public int getProcessingTime(@NotNull RecipeHolder<FabricationRecipe> recipe) {
+        return recipe.value().getProcessingTime();
     }
 
     @Nullable

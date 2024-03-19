@@ -42,5 +42,8 @@ public class GCDimensionTagProvider extends FabricTagProvider<DimensionType> {
     protected void addTags(HolderLookup.Provider arg) {
         tag(GCTags.FOOTPRINTS_DIMENSIONS)
                 .add(GCDimensionTypes.MOON);
+        tag(GCTags.SPACE)
+                .add(GCDimensionTypes.MOON)
+                .add(GCDimensionTypes.VENUS);
     }
 }

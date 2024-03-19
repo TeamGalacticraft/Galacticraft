@@ -22,19 +22,25 @@
 
 package dev.galacticraft.mod.accessor;
 
-import com.mojang.datafixers.util.Either;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.Unit;
-import net.minecraft.world.entity.player.Player;
-
 public interface CryogenicAccessor {
-    Either<Player.BedSleepingProblem, Unit> galacticraft$startCryogenicSleep(BlockPos blockPos);
 
-    void galacticraft$stopCryogenicSleep(boolean resetSleepCounter, boolean sync);
+    default void beginCyroSleep() {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
 
-    int galacticraft$getCryogenicChamberCooldown();
+    default void endCyroSleep() {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
 
-    void galacticraft$setCryogenicChamberCooldown(int cryogenicChamberCooldown);
+    default int getCryogenicChamberCooldown() {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
 
-    boolean galacticraft$isInCryoSleep();
+    default void setCryogenicChamberCooldown(int cryogenicChamberCooldown) {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
+
+    default boolean isInCryoSleep() {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
 }

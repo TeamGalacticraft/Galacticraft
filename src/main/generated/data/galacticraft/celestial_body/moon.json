@@ -9,6 +9,7 @@
       "temperature": 23.0
     },
     "celestial_handler": "galacticraft:default",
+    "day_length": 192000,
     "day_temperature": 105,
     "description": "planet.galacticraft.moon.desc",
     "display": {
@@ -30,10 +31,14 @@
       "type": "galacticraft:orbital",
       "config": {
         "distance": 20.0,
-        "orbit_time": 655200.0,
+        "orbit_time": 100.0,
         "phase_shift": 0.2667,
         "planet": false
       }
+    },
+    "ring": {
+      "type": "galacticraft:default",
+      "config": {}
     },
     "teleporter": "galacticraft:lander",
     "world": "galacticraft:moon"

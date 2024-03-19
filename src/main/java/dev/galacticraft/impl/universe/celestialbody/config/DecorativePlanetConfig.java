@@ -30,6 +30,7 @@ import dev.galacticraft.api.satellite.SatelliteRecipe;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
+import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.impl.codec.MiscCodecs;
@@ -43,7 +44,7 @@ import java.util.Optional;
 public record DecorativePlanetConfig(@NotNull MutableComponent name, @NotNull MutableComponent description,
                                      @NotNull ResourceKey<Galaxy> galaxy,
                                      @NotNull ResourceKey<CelestialBody<?, ?>> parent,
-                                     @NotNull CelestialPosition<?, ?> position, @NotNull CelestialDisplay<?, ?> display,
+                                     @NotNull CelestialPosition<?, ?> position, @NotNull CelestialDisplay<?, ?> display, @NotNull CelestialRingDisplay<?, ?> ring,
                                      GasComposition atmosphere, float gravity,
                                      @NotNull Optional<SatelliteRecipe> satelliteRecipe) implements CelestialBodyConfig {
     public static final Codec<DecorativePlanetConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -53,6 +54,7 @@ public record DecorativePlanetConfig(@NotNull MutableComponent name, @NotNull Mu
             ResourceKey.codec(AddonRegistries.CELESTIAL_BODY).fieldOf("parent").forGetter(DecorativePlanetConfig::parent),
             CelestialPosition.CODEC.fieldOf("position").forGetter(DecorativePlanetConfig::position),
             CelestialDisplay.CODEC.fieldOf("display").forGetter(DecorativePlanetConfig::display),
+            CelestialRingDisplay.CODEC.fieldOf("ring").forGetter(DecorativePlanetConfig::ring),
             GasComposition.CODEC.fieldOf("atmosphere").forGetter(DecorativePlanetConfig::atmosphere),
             Codec.FLOAT.fieldOf("gravity").forGetter(DecorativePlanetConfig::gravity),
             SatelliteRecipe.CODEC.optionalFieldOf("satellite_recipe").forGetter(DecorativePlanetConfig::satelliteRecipe)

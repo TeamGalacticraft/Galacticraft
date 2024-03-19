@@ -26,6 +26,7 @@
       "temperature": 15.0
     },
     "celestial_handler": "galacticraft:overworld",
+    "day_length": 24000,
     "day_temperature": 21,
     "description": "planet.galacticraft.earth.description",
     "display": {
@@ -47,10 +48,14 @@
       "type": "galacticraft:orbital",
       "config": {
         "distance": 1.0,
-        "orbit_time": 1536000.0,
+        "orbit_time": 1.0,
         "phase_shift": 0.0,
         "planet": true
       }
+    },
+    "ring": {
+      "type": "galacticraft:default",
+      "config": {}
     },
     "satellite_recipe": {
       "ingredients": {

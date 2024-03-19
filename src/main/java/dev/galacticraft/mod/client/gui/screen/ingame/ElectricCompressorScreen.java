@@ -35,12 +35,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.CraftingContainer;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 @Environment(EnvType.CLIENT)
-public class ElectricCompressorScreen extends MachineScreen<ElectricCompressorBlockEntity, RecipeMachineMenu<Container, CompressingRecipe, ElectricCompressorBlockEntity>> {
+public class ElectricCompressorScreen extends MachineScreen<ElectricCompressorBlockEntity, RecipeMachineMenu<CraftingContainer, CompressingRecipe, ElectricCompressorBlockEntity>> {
     private static final int PROGRESS_U = 177;
     private static final int PROGRESS_V = 0;
     private static final int PROGRESS_X = 87;
@@ -48,13 +49,13 @@ public class ElectricCompressorScreen extends MachineScreen<ElectricCompressorBl
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
 
-    public ElectricCompressorScreen(RecipeMachineMenu<Container, CompressingRecipe, ElectricCompressorBlockEntity> handler, Inventory inv, Component title) {
+    public ElectricCompressorScreen(RecipeMachineMenu<CraftingContainer, CompressingRecipe, ElectricCompressorBlockEntity> handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
     }
 
     @Override
-    protected void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        super.renderBackground(graphics, mouseX, mouseY, delta);
+    protected void renderMachineBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.renderMachineBackground(graphics, mouseX, mouseY, delta);
         this.drawCraftProgressBar(graphics);
     }
 

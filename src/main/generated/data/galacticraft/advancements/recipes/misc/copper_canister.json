@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_copper_ingot",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_copper_ingot"
     ]
   ],
   "rewards": {
     "recipes": [
       "galacticraft:copper_canister"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

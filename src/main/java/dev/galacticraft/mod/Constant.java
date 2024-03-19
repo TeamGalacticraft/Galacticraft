@@ -46,7 +46,8 @@ public interface Constant {
     String COMMON_NAMESPACE = "c";
     Logger LOGGER = LogManager.getLogger("Galacticraft");
 
-    float RADIANS_TO_DEGREES = 180F / 3.1415927F;
+    double RADIANS_TO_DEGREES = 180D / Math.PI;
+    int OVERWORLD_SKYPROVIDER_STARTHEIGHT = 200;
 
     @Contract(value = "_ -> new", pure = true)
     static @NotNull ResourceLocation id(String id) {
@@ -282,6 +283,7 @@ public interface Constant {
         // Liquids
         String FUEL = "fuel";
         String CRUDE_OIL = "crude_oil";
+        String SULFURIC_ACID = "sulfuric_acid";
 
         // Machines
         String CIRCUIT_FABRICATOR = "circuit_fabricator";
@@ -490,24 +492,10 @@ public interface Constant {
         //Fluid buckets
         String CRUDE_OIL_BUCKET = "crude_oil_bucket";
         String FUEL_BUCKET = "fuel_bucket";
+        String SULFURIC_ACID_BUCKET = "sulfuric_acid_bucket";
 
         //GC INVENTORY
         String PARACHUTE = "parachute";
-        String ORANGE_PARACHUTE = "orange_parachute";
-        String MAGENTA_PARACHUTE = "magenta_parachute";
-        String LIGHT_BLUE_PARACHUTE = "light_blue_parachute";
-        String YELLOW_PARACHUTE = "yellow_parachute";
-        String LIME_PARACHUTE = "lime_parachute";
-        String PINK_PARACHUTE = "pink_parachute";
-        String GRAY_PARACHUTE = "gray_parachute";
-        String LIGHT_GRAY_PARACHUTE = "light_gray_parachute";
-        String CYAN_PARACHUTE = "cyan_parachute";
-        String PURPLE_PARACHUTE = "purple_parachute";
-        String BLUE_PARACHUTE = "blue_parachute";
-        String BROWN_PARACHUTE = "brown_parachute";
-        String GREEN_PARACHUTE = "green_parachute";
-        String RED_PARACHUTE = "red_parachute";
-        String BLACK_PARACHUTE = "black_parachute";
 
         String OXYGEN_MASK = "oxygen_mask";
         String OXYGEN_GEAR = "oxygen_gear";
@@ -568,6 +556,12 @@ public interface Constant {
         String CRYOGENIC_PARTICLE = "cryogenic_particle";
         String LANDER_FLAME = "lander_flame_particle";
         String SPARK = "spark";
+        String DRIPPING_SULFURIC_ACID = "dripping_sulfuric_acid";
+        String FALLING_SULFURIC_ACID = "falling_sulfuric_acid";
+        String LAUNCH_SMOKE = "launch_smoke";
+        String LAUNCH_FLAME = "launch_flame";
+        String LAUNCH_FLAME_LAUNCHED = "launch_flame_launched";
+        String ACID_VAPOR_PARTICLE = "acid_vapor";
     }
 
     interface Config {

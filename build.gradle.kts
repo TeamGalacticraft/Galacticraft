@@ -27,6 +27,7 @@ import java.time.format.DateTimeFormatter
 val buildNumber = System.getenv("BUILD_NUMBER") ?: ""
 val commitHash = System.getenv("GITHUB_SHA") ?: project.getCommitHash()
 val prerelease = (System.getenv("PRE_RELEASE") ?: "false") == "true"
+val isCi = (System.getenv("CI") ?: "false") == "true"
 
 // Minecraft, Mappings, Loader Versions
 val minecraftVersion         = project.property("minecraft.version").toString()
@@ -56,7 +57,7 @@ plugins {
     `maven-publish`
     id("fabric-loom") version("1.5-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
-    id("org.ajoberstar.grgit") version("5.2.1")
+    id("org.ajoberstar.grgit") version("5.2.2")
 }
 
 java {
@@ -107,7 +108,7 @@ loom {
             it.property("mixin.debug.export", "true")
         }
         register("datagen") {
-            server()
+            client()
             name("Data Generation")
             runDir("build/datagen")
             property("fabric-api.datagen")
@@ -115,6 +116,7 @@ loom {
             property("fabric-api.datagen.output-dir", project.file("src/main/generated").toString())
             property("fabric-api.datagen.strict-validation", "false")
         }
+
         register("gametest") {
             server()
             name("Game Test")
@@ -187,10 +189,10 @@ repositories {
 dependencies {
     // Minecraft, Mappings, Loader
     minecraft("com.mojang:minecraft:$minecraftVersion")
-    mappings(if (parchmentVersion.isNotEmpty()) {
+    mappings(if (!isCi && parchmentVersion.isNotEmpty()) {
         loom.layered {
             officialMojangMappings()
-            parchment("org.parchmentmc.data:parchment-$minecraftVersion:$parchmentVersion@zip")
+            parchment("org.parchmentmc.data:parchment-1.20.2:$parchmentVersion@zip")
         }
     } else {
         loom.officialMojangMappings()

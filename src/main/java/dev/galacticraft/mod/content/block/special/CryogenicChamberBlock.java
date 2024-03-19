@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.special;
 
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.api.block.MultiBlockBase;
 import dev.galacticraft.mod.api.block.MultiBlockPart;
 import dev.galacticraft.mod.content.GCBlocks;
@@ -29,6 +30,7 @@ import dev.galacticraft.mod.content.block.entity.CryogenicChamberBlockEntity;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -55,12 +57,18 @@ import org.jetbrains.annotations.Unmodifiable;
 import java.util.List;
 
 public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlockBase {
+    public static final MapCodec<CryogenicChamberBlock> CODEC = simpleCodec(CryogenicChamberBlock::new);
     private static final List<BlockPos> PARTS = List.of(new BlockPos(0, 1, 0), new BlockPos(0, 2, 0));
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public CryogenicChamberBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Override
@@ -97,15 +105,17 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
     @Override
     public void onMultiBlockPlaced(Level level, BlockPos blockPos, BlockState blockState) {
         var isTop = false;
-        for (var otherPart : this.getOtherParts(blockState)) {
-            otherPart = otherPart.immutable().offset(blockPos);
-            level.setBlockAndUpdate(otherPart, GCBlocks.CRYOGENIC_CHAMBER_PART.defaultBlockState().setValue(FACING, blockState.getValue(FACING)).setValue(CryogenicChamberPart.TOP, isTop));
-            isTop = true;
+        if (!level.isClientSide) {
+            for (var otherPart : this.getOtherParts(blockState)) {
+                otherPart = otherPart.immutable().offset(blockPos);
+                level.setBlockAndUpdate(otherPart, GCBlocks.CRYOGENIC_CHAMBER_PART.defaultBlockState().setValue(FACING, blockState.getValue(FACING)).setValue(CryogenicChamberPart.TOP, isTop));
+                isTop = true;
 
-            var part = level.getBlockEntity(otherPart);
-            assert part != null; // This will never be null because level.setBlockState will put a blockentity there.
-            ((MultiBlockPart) part).setBasePos(blockPos);
-            part.setChanged();
+                var part = level.getBlockEntity(otherPart);
+                assert part != null; // This will never be null because level.setBlockState will put a blockentity there.
+                ((MultiBlockPart) part).setBasePos(blockPos);
+                part.setChanged();
+            }
         }
     }
 
@@ -116,12 +126,13 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
     }
 
     @Override
-    public void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
-        super.playerWillDestroy(level, blockPos, blockState, player);
+    public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+        BlockState state = super.playerWillDestroy(level, blockPos, blockState, player);
         for (var otherPart : this.getOtherParts(blockState)) {
             otherPart = otherPart.immutable().offset(blockPos);
             level.destroyBlock(otherPart, false);
         }
+        return state;
     }
 
     @Override
@@ -159,14 +170,20 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
 
     @Override
     public InteractionResult onMultiBlockUse(BlockState blockState, Level level, BlockPos basePos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        if (level.isClientSide()) {
-            return InteractionResult.CONSUME;
+        if (level.isClientSide()) return InteractionResult.CONSUME;
+
+        if(player.getCryogenicChamberCooldown() == 0) {
+            player.beginCyroSleep();
+
+            player.startSleepInBed(basePos).ifLeft(problem -> {
+                if (problem.getMessage() != null) player.displayClientMessage(problem.getMessage(), true);
+
+                player.endCyroSleep();
+            });
+        } else {
+            player.displayClientMessage(Component.literal("The chamber is way to hot right now! It needs " + player.getCryogenicChamberCooldown() + " seconds to cool down before I sleep again."), false);
         }
-        player.galacticraft$startCryogenicSleep(basePos).ifLeft(bedSleepingProblem -> {
-            if (bedSleepingProblem.getMessage() != null) {
-                player.displayClientMessage(bedSleepingProblem.getMessage(), true);
-            }
-        });
+
         return InteractionResult.SUCCESS;
     }
 

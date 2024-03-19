@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.environment;
 
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.core.BlockPos;
@@ -37,6 +38,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BushBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -53,6 +55,7 @@ import org.joml.Vector3f;
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class MoonBerryBushBlock extends BushBlock {
+    public static final MapCodec<MoonBerryBushBlock> CODEC = simpleCodec(MoonBerryBushBlock::new);
     public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
     private static final VoxelShape SMALL_SHAPE = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 8.0D, 13.0D);
     private static final VoxelShape LARGE_SHAPE = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 16.0D, 15.0D);
@@ -63,7 +66,12 @@ public class MoonBerryBushBlock extends BushBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter view, BlockPos pos, BlockState state) {
+    protected MapCodec<? extends BushBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(LevelReader levelReader, BlockPos pos, BlockState state) {
         return new ItemStack(GCItems.MOON_BERRIES);
     }
 

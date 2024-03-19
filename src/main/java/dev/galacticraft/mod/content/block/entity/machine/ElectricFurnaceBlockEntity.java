@@ -36,6 +36,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.block.state.BlockState;
@@ -61,7 +62,7 @@ public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<Co
     }
 
     @Override
-    protected @NotNull MachineStatus workingStatus(SmeltingRecipe recipe) {
+    protected @NotNull MachineStatus workingStatus(RecipeHolder<SmeltingRecipe> recipe) {
         return MachineStatuses.ACTIVE;
     }
 
@@ -76,8 +77,8 @@ public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<Co
     }
 
     @Override
-    public int getProcessingTime(@NotNull SmeltingRecipe recipe) {
-        return recipe.getCookingTime();
+    public int getProcessingTime(@NotNull RecipeHolder<SmeltingRecipe> recipe) {
+        return recipe.value().getCookingTime();
     }
 
     @Nullable

@@ -46,5 +46,5 @@ public interface RocketPartRenderer {
     default void renderGUI(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float delta) {
     }
 
-    void render(ClientLevel world, PoseStack matrices, Rocket rocket, MultiBufferSource vertices, float delta, int light);
+    void render(ClientLevel world, PoseStack matrices, Rocket rocket, MultiBufferSource vertices, float partialTick, int light, int overlay);
 }

@@ -3,6 +3,7 @@
   "package": "dev.galacticraft.impl.internal.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "LevelTimeAccessMixin",
     "MinecraftServerMixin",
     "gear.LivingEntityMixin",
     "gear.PlayerListMixin",
@@ -25,7 +26,10 @@
   "client": [
     "client.AbstractClientPlayerEntityMixin",
     "client.AbstractContainerScreenMixin",
+    "client.ClientLevelMixin",
     "client.ClientPlayNetworkHandlerMixin",
+    "client.FogRendererMixin",
+    "client.LevelRendererMixin",
     "client.MinecraftClientMixin",
     "client.ParticleAccessor",
     "client.ParticleManagerMixin",
