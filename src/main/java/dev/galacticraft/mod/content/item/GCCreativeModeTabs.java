@@ -180,6 +180,9 @@ public class GCCreativeModeTabs {
 
                 output.accept(STANDARD_WRENCH);
 
+                output.accept(THROWABLE_METEOR_CHUNK);
+                output.accept(HOT_THROWABLE_METEOR_CHUNK);
+
                 // BATTERIES
                 output.accept(BATTERY);
                 output.accept(INFINITE_BATTERY);

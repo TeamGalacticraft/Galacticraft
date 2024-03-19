@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:hot_throwable_meteor_chunk_from_smelting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_throwable_meteor_chunk": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "galacticraft:throwable_meteor_chunk"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_throwable_meteor_chunk"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:hot_throwable_meteor_chunk_from_smelting"
+    ]
+  }
+}

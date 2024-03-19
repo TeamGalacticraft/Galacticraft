@@ -34,10 +34,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.CampfireCookingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.SmokingRecipe;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 
@@ -122,6 +119,13 @@ public class GCRecipeProvider extends FabricRecipeProvider {
                 .pattern("TS")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_TIN), has(GCItems.COMPRESSED_TIN))
                 .save(output);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.COMBAT, GCItems.THROWABLE_METEOR_CHUNK, 3)
+                .requires(GCItems.RAW_METEORIC_IRON)
+                .unlockedBy(getHasName(GCItems.RAW_METEORIC_IRON), has(GCItems.RAW_METEORIC_IRON))
+                .save(output);
+        simpleCookingRecipe(output, "smelting", RecipeSerializer.SMELTING_RECIPE, SmeltingRecipe::new, 200, GCItems.THROWABLE_METEOR_CHUNK, GCItems.HOT_THROWABLE_METEOR_CHUNK, 0.7F);
+        simpleCookingRecipe(output, "blasting", RecipeSerializer.BLASTING_RECIPE, BlastingRecipe::new, 100, GCItems.THROWABLE_METEOR_CHUNK, GCItems.HOT_THROWABLE_METEOR_CHUNK, 0.7F);
 
         // Food
         simpleCookingRecipe(output, "smoking", RecipeSerializer.SMOKING_RECIPE, SmokingRecipe::new, 100, GCItems.GROUND_BEEF, GCItems.BEEF_PATTY, 1.0F);

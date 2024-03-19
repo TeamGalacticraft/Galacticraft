@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "galacticraft:raw_meteoric_iron"
+    }
+  ],
+  "result": {
+    "count": 3,
+    "item": "galacticraft:throwable_meteor_chunk"
+  }
+}
