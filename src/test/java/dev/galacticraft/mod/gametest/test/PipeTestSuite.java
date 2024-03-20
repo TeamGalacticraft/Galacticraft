@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.gametest.test;
 
 import dev.galacticraft.mod.api.pipe.Pipe;
+import dev.galacticraft.mod.api.pipe.impl.PipeNetworkImpl;
 import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
@@ -62,15 +63,15 @@ public class PipeTestSuite implements GalacticraftGameTest {
                 } else if (pipe1.getNetwork() != pipe2.getNetwork()) {
                     context.fail(String.format("Expected pipe networks at %s and %s to be the same!", pos1, pos2));
                 } else {
-                    if (pipe0.getNetwork().getAllPipes().size() != 3) {
+                    if (((PipeNetworkImpl) pipe0.getNetwork()).getPipes().size() != 3) {
                         context.fail("Not all pipes are registered in the network!");
                     } else {
                         context.succeedWhen(() -> {
                             context.destroyBlock(pos1);
-                            if (pipe0.getNetwork().getAllPipes().size() != 1) {
-                                context.fail(String.format("Expected pipe network with 1 pipe but found %s pipes!", pipe0.getNetwork().getAllPipes().size()), pos0);
-                            } else if (pipe2.getNetwork().getAllPipes().size() != 1) {
-                                context.fail(String.format("Expected pipe network with 1 pipe but found %s pipes!", pipe2.getNetwork().getAllPipes().size()), pos2);
+                            if (((PipeNetworkImpl) pipe0.getNetwork()).getPipes().size() != 1) {
+                                context.fail(String.format("Expected pipe network with 1 pipe but found %s pipes!", ((PipeNetworkImpl) pipe0.getNetwork()).getPipes().size()), pos0);
+                            } else if (((PipeNetworkImpl) pipe2.getNetwork()).getPipes().size() != 1) {
+                                context.fail(String.format("Expected pipe network with 1 pipe but found %s pipes!", ((PipeNetworkImpl) pipe2.getNetwork()).getPipes().size()), pos2);
                             } else if (!pipe1.getNetwork().markedForRemoval()) {
                                 if (!be1.isRemoved()) {
                                     context.fail("Expected pipe to be removed!", pos1);

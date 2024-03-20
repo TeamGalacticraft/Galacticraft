@@ -38,8 +38,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.VisibleForTesting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -276,6 +278,12 @@ public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSna
     protected void readSnapshot(PipeSnapshot snapshot) {
         this.currentVariant = snapshot.variant;
         this.transferred = snapshot.transferred;
+    }
+
+    @ApiStatus.Internal
+    @VisibleForTesting
+    public @NotNull Object2ObjectOpenHashMap<BlockPos, Storage<FluidVariant>[]> getPipes() {
+        return pipes;
     }
 
     public record PipeSnapshot(FluidVariant variant, long transferred) {}

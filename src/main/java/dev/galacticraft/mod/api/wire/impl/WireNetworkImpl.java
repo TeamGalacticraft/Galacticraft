@@ -36,8 +36,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.VisibleForTesting;
 import team.reborn.energy.api.EnergyStorage;
 
 import java.util.ArrayList;
@@ -255,6 +257,12 @@ public class WireNetworkImpl extends SnapshotParticipant<Long> implements WireNe
                 ", tickId=" + tickId +
                 ", transferred=" + transferred +
                 '}';
+    }
+
+    @VisibleForTesting
+    @ApiStatus.Internal
+    public @NotNull Object2ObjectOpenHashMap<BlockPos, EnergyStorage[]> getWires() {
+        return wires;
     }
 
     @Override

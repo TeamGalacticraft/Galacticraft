@@ -122,6 +122,7 @@ loom {
             name("Game Test")
             source(sourceSets.test.get())
             property("fabric-api.gametest")
+            property("fabric-api.gametest.report-file", "${project.layout.buildDirectory}/junit.xml")
         }
         register("gametestClient") {
             client()

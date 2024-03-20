@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.gametest.test;
 
 import dev.galacticraft.mod.api.wire.Wire;
+import dev.galacticraft.mod.api.wire.impl.WireNetworkImpl;
 import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
@@ -62,15 +63,15 @@ public class WireTestSuite implements GalacticraftGameTest {
                 } else if (wire1.getNetwork() != wire2.getNetwork()) {
                     context.fail(String.format("Expected wire networks at %s and %s to be the same!", pos1, pos2));
                 } else {
-                    if (wire0.getNetwork().getAllWires().size() != 3) {
+                    if (((WireNetworkImpl) wire0.getNetwork()).getWires().size() != 3) {
                         context.fail("Not all wires are registered in the network!");
                     } else {
                         context.succeedWhen(() -> {
                             context.destroyBlock(pos1);
-                            if (wire0.getNetwork().getAllWires().size() != 1) {
-                                context.fail(String.format("Expected wire network with 1 wire but found %s wires!", wire0.getNetwork().getAllWires().size()), pos0);
-                            } else if (wire2.getNetwork().getAllWires().size() != 1) {
-                                context.fail(String.format("Expected wire network with 1 wire but found %s wires!", wire2.getNetwork().getAllWires().size()), pos2);
+                            if (((WireNetworkImpl) wire0.getNetwork()).getWires().size() != 1) {
+                                context.fail(String.format("Expected wire network with 1 wire but found %s wires!", ((WireNetworkImpl) wire0.getNetwork()).getWires().size()), pos0);
+                            } else if (((WireNetworkImpl) wire2.getNetwork()).getWires().size() != 1) {
+                                context.fail(String.format("Expected wire network with 1 wire but found %s wires!", ((WireNetworkImpl) wire2.getNetwork()).getWires().size()), pos2);
                             } else if (!wire1.getNetwork().markedForRemoval()) {
                                 if (!be1.isRemoved()) {
                                     context.fail("Expected wire to be removed!", pos1);
