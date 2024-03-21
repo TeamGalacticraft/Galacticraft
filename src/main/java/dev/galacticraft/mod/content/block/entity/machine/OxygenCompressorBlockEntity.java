@@ -81,10 +81,10 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
         if (!tank.supportsInsertion() || space == 0) return GCMachineStatuses.OXYGEN_TANK_FULL;
 
         profiler.push("transaction");
-        if (this.energyStorage().canExtract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate())) {
+        if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCompressorEnergyConsumptionRate())) {
             long available = oxygenStorage.extract(Gases.OXYGEN, space);
             if (available > 0) {
-                this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate());
+                this.energyStorage().extract(Galacticraft.CONFIG.oxygenCompressorEnergyConsumptionRate());
                 try (Transaction transaction = Transaction.openOuter()) {
                     tank.insert(FluidVariant.of(Gases.OXYGEN), available, transaction);
                     transaction.commit();

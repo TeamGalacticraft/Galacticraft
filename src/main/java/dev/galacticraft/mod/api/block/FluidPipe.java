@@ -52,7 +52,7 @@ public abstract class FluidPipe extends Block implements EntityBlock {
     @Override
     @Deprecated
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!world.isClientSide() && Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
+        if (!world.isClientSide() && Galacticraft.CONFIG.isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof Pipe pipe) {
                 Constant.LOGGER.info("Network: {}", pipe.getNetwork());

@@ -27,46 +27,32 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
             .gradle
-          key: ${{ runner.os }}-gradle-${{ hashFiles('gradle/gradle-wrapper.properties', 'settings.gradle.kts', 'build.gradle.kts', 'gradle.properties') }}-${{github.ref_name}}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('gradle/gradle-wrapper.properties', 'settings.gradle.kts', 'build.gradle.kts', 'gradle.properties') }}
           restore-keys: |
-            ${{ runner.os }}-gradle-${{ hashFiles('gradle/gradle-wrapper.properties', 'settings.gradle.kts', 'build.gradle.kts', 'gradle.properties') }}
             ${{ runner.os }}-gradle-
 
       - name: Initialize build environment
         run: ./gradlew
-        env:
-          BUILD_NUMBER: ${{ github.run_number }}
-          SNAPSHOT: true
 
       - name: Check license headers
         run: ./gradlew checkLicenses
-        env:
-          BUILD_NUMBER: ${{ github.run_number }}
-          SNAPSHOT: true
 
       - name: Build
         id: build
         if: ${{ !cancelled() }}
         run: ./gradlew assemble testClasses -x checkLicenses
-        env:
-          BUILD_NUMBER: ${{ github.run_number }}
-          SNAPSHOT: true
 
       - name: Test
         if: ${{ steps.build.outcome == 'success' && !cancelled() }}
         run: ./gradlew test -x checkLicenses
-        env:
-          BUILD_NUMBER: ${{ github.run_number }}
-          SNAPSHOT: true
 
-      - name: Publish
-        if: ${{ github.repository == 'TeamGalacticraft/MachineLib' && success() }}
-        run: ./gradlew publish
-        env:
-          BUILD_NUMBER: ${{ github.run_number }}
-          SNAPSHOT: true
-          ORG_GRADLE_PROJECT_mavenUsername: ${{ secrets.NEXUS_USER }}
-          ORG_GRADLE_PROJECT_mavenPassword: ${{ secrets.NEXUS_PASSWORD }}
+#      - name: Publish
+#        if: ${{ github.repository == 'TeamGalacticraft/Galacticraft' && success() }}
+#        run: ./gradlew publish
+#        env:
+#          NEXUS_REPOSITORY_URL: ${{ secrets.NEXUS_RELEASE_URL }}
+#          NEXUS_USER: ${{ secrets.NEXUS_USER }}
+#          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
 
       - name: Capture build artifacts
         uses: actions/upload-artifact@v4

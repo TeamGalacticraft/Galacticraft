@@ -20,21 +20,16 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.compat.modmenu;
+package dev.galacticraft.mod.compat;
 
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import com.terraformersmc.modmenu.api.ModMenuApi;
-import dev.galacticraft.mod.api.config.ConfigManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import mcp.mobius.waila.api.IRegistrar;
+import mcp.mobius.waila.api.IWailaPlugin;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@Environment(EnvType.CLIENT)
-public class ModMenuApiImpl implements ModMenuApi {
+public class GalacticraftWailaPlugin implements IWailaPlugin {
     @Override
-    public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return parent -> ConfigManager.getInstance().getScreen(parent);
+    public void register(IRegistrar registrar) {
     }
 }

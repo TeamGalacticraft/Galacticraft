@@ -109,7 +109,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
                 Storage<FluidVariant> storage = ContainerItemContext.ofSingleSlot(tankInv.getSlot(i)).find(FluidStorage.ITEM);
                 if (storage != null) {
                     try (Transaction transaction = Transaction.openOuter()) {
-                        if (storage.extract(FluidVariant.of(Gases.OXYGEN), Galacticraft.CONFIG_MANAGER.get().playerOxygenConsuptionRate(), transaction) > 0) {
+                        if (storage.extract(FluidVariant.of(Gases.OXYGEN), Galacticraft.CONFIG.playerOxygenConsuptionRate(), transaction) > 0) {
                             transaction.commit();
                             ci.setReturnValue(this.increaseAirSupply(air));
                             return;

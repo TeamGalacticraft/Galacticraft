@@ -68,7 +68,7 @@ public abstract class AlphaWarningTitleScreenMixin extends Screen {
 
     @Inject(method = "init()V", at = @At("TAIL"))
     protected void init(CallbackInfo ci) {
-        if (Galacticraft.CONFIG_MANAGER.get().isAlphaWarningHidden()) {
+        if (Galacticraft.CONFIG.isAlphaWarningHidden()) {
             warningHidden = true;
         }
     }

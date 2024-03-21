@@ -85,12 +85,12 @@ public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity
 
     @Override
     protected @Nullable MachineStatus hasResourcesToWork() {
-        return this.energyStorage().canExtract(Galacticraft.CONFIG_MANAGER.get().electricCompressorEnergyConsumptionRate()) ? null : MachineStatuses.NOT_ENOUGH_ENERGY;
+        return this.energyStorage().canExtract(Galacticraft.CONFIG.electricCompressorEnergyConsumptionRate()) ? null : MachineStatuses.NOT_ENOUGH_ENERGY;
     }
 
     @Override
     protected void extractResourcesToWork() {
-        this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().electricCompressorEnergyConsumptionRate());
+        this.energyStorage().extract(Galacticraft.CONFIG.electricCompressorEnergyConsumptionRate());
     }
 
     @Override

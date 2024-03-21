@@ -79,10 +79,10 @@ public class RefineryBlockEntity extends MachineBlockEntity { //fixme
         if (fuelTank.isFull()) return GCMachineStatuses.FUEL_TANK_FULL;
         profiler.push("transaction");
         try {
-            if (this.energyStorage().canExtract(Galacticraft.CONFIG_MANAGER.get().refineryEnergyConsumptionRate())) {
+            if (this.energyStorage().canExtract(Galacticraft.CONFIG.refineryEnergyConsumptionRate())) {
                 long space = fuelTank.tryInsert(GCFluids.FUEL, FluidConstants.BUCKET / 20 / 5);
                 if (space > 0) {
-                    this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().refineryEnergyConsumptionRate());
+                    this.energyStorage().extract(Galacticraft.CONFIG.refineryEnergyConsumptionRate());
                     fuelTank.insert(GCFluids.FUEL, oilTank.extract(GCFluids.CRUDE_OIL, space));
                 }
                 return MachineStatuses.ACTIVE;

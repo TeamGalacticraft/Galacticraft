@@ -58,7 +58,7 @@ public class GalacticraftMixinPlugin implements IMixinConfigPlugin {
     public List<String> getMixins() {
         List<String> optionalMixins = new LinkedList<>();
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-            if (Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled()) {
+            if (Galacticraft.CONFIG.isDebugLogEnabled()) {
                 optionalMixins.add(Constant.Mixin.STRUCTURE_POOL_DEBUG);
             }
             if (FabricDataGenHelper.ENABLED) {

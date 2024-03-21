@@ -69,12 +69,12 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
 
     @Override
     protected @Nullable MachineStatus hasResourcesToWork() {
-        return this.energyStorage().canExtract(Galacticraft.CONFIG_MANAGER.get().electricArcFurnaceEnergyConsumptionRate()) ? null : MachineStatuses.NOT_ENOUGH_ENERGY;
+        return this.energyStorage().canExtract(Galacticraft.CONFIG.electricArcFurnaceEnergyConsumptionRate()) ? null : MachineStatuses.NOT_ENOUGH_ENERGY;
     }
 
     @Override
     protected void extractResourcesToWork() {
-        this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().electricArcFurnaceEnergyConsumptionRate());
+        this.energyStorage().extract(Galacticraft.CONFIG.electricArcFurnaceEnergyConsumptionRate());
     }
 
     @Override

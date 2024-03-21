@@ -128,7 +128,9 @@
     "fabric-datagen": [
       "dev.galacticraft.mod.data.GCDataGenerator"
     ],
-    "modmenu": [ "dev.galacticraft.mod.compat.modmenu.ModMenuApiImpl" ],
+    "modmenu": [
+      "dev.galacticraft.mod.compat.ModMenuApiImpl"
+    ],
     "rei_client": [
       "dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin"
     ],

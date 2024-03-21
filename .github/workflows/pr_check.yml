@@ -27,11 +27,10 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
             .gradle
-          key: ${{ runner.os }}-gradle-PR${{github.event.number}}-${{ hashFiles('gradle/gradle-wrapper.properties', 'settings.gradle.kts', '**/build.gradle.kts', '**/gradle.properties') }}-${{github.ref_name}}
+          key: ${{ runner.os }}-gradle-PR${{github.event.number}}-${{ hashFiles('gradle/gradle-wrapper.properties', 'settings.gradle.kts', '**/build.gradle.kts', '**/gradle.properties') }}
           restore-keys: |
-            ${{ runner.os }}-gradle-PR${{github.event.number}}-${{ hashFiles('gradle/gradle-wrapper.properties', 'settings.gradle.kts', '**/build.gradle.kts', '**/gradle.properties') }}
-            ${{ runner.os }}-gradle-PR${{github.event.number}}-
             ${{ runner.os }}-gradle-${{ hashFiles('gradle/gradle-wrapper.properties', 'settings.gradle.kts', '**/build.gradle.kts', '**/gradle.properties') }}
+            ${{ runner.os }}-gradle-PR${{github.event.number}}-
             ${{ runner.os }}-gradle-
 
       - name: Initialize build environment

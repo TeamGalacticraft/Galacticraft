@@ -81,12 +81,12 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
 
     @Override
     protected @Nullable MachineStatus hasResourcesToWork() {
-        return this.energyStorage().canExtract(Galacticraft.CONFIG_MANAGER.get().circuitFabricatorEnergyConsumptionRate()) ? null : MachineStatuses.NOT_ENOUGH_ENERGY;
+        return this.energyStorage().canExtract(Galacticraft.CONFIG.circuitFabricatorEnergyConsumptionRate()) ? null : MachineStatuses.NOT_ENOUGH_ENERGY;
     }
 
     @Override
     protected void extractResourcesToWork() {
-        this.energyStorage().extractExact(Galacticraft.CONFIG_MANAGER.get().circuitFabricatorEnergyConsumptionRate());
+        this.energyStorage().extractExact(Galacticraft.CONFIG.circuitFabricatorEnergyConsumptionRate());
     }
 
     @Override

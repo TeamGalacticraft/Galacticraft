@@ -31,7 +31,7 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
             .gradle
-          key: ${{ runner.os }}-gradle-${{ hashFiles('gradle/gradle-wrapper.properties', 'settings.gradle.kts', 'build.gradle.kts', 'gradle.properties') }}-${{github.ref_name}}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('gradle/gradle-wrapper.properties', 'settings.gradle.kts', 'build.gradle.kts', 'gradle.properties') }}
 
       - name: Initialize build environment
         run: ./gradlew

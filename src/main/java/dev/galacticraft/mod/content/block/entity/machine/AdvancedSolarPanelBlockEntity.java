@@ -51,8 +51,8 @@ public class AdvancedSolarPanelBlockEntity extends AbstractSolarPanelBlockEntity
         double cos = Math.cos(this.level.getSunAngle(1.0f));
         if (cos <= 0) return 0;
         if (cos <= 0.26761643317033024) {
-            return (long) (Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate() * (cos / 0.26761643317033024) * multiplier);
+            return (long) (Galacticraft.CONFIG.solarPanelEnergyProductionRate() * (cos / 0.26761643317033024) * multiplier);
         }
-        return (long) (Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate() * multiplier);
+        return (long) (Galacticraft.CONFIG.solarPanelEnergyProductionRate() * multiplier);
     }
 }

@@ -20,28 +20,22 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.api.config;
+package dev.galacticraft.mod.compat;
 
-import dev.galacticraft.mod.Galacticraft;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screens.Screen;
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+import com.terraformersmc.modmenu.api.ModMenuApi;
+import dev.galacticraft.mod.config.ConfigImpl;
+import net.fabricmc.loader.api.FabricLoader;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-public interface ConfigManager {
-
-    static ConfigManager getInstance() {
-        return Galacticraft.CONFIG_MANAGER;
+public class ModMenuApiImpl implements ModMenuApi {
+    @Override
+    public ConfigScreenFactory<?> getModConfigScreenFactory() {
+        if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
+            return ConfigImpl.ConfigScreen.INSTANCE;
+        }
+        return null;
     }
-
-    void save();
-
-    void load();
-
-    Config get();
-
-    @Environment(EnvType.CLIENT)
-    Screen getScreen(Screen parent);
 }

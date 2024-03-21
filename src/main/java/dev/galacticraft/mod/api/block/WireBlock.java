@@ -29,8 +29,6 @@ import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -54,7 +52,7 @@ public abstract class WireBlock extends Block implements EntityBlock {
     @Override
     @Deprecated
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (!world.isClientSide() && Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
+        if (!world.isClientSide() && Galacticraft.CONFIG.isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof Wire wire) {
                 Constant.LOGGER.info("Network: {}", wire.getNetwork());

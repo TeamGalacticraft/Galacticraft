@@ -94,7 +94,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     @Override
     public @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("transaction");
-        this.energyStorage().insert((long) (Galacticraft.CONFIG_MANAGER.get().coalGeneratorEnergyProductionRate() * this.heat));
+        this.energyStorage().insert((long) (Galacticraft.CONFIG.coalGeneratorEnergyProductionRate() * this.heat));
         this.trySpreadEnergy(level, state);
         profiler.popPush("fuel_reset");
         if (this.fuelLength == 0) {

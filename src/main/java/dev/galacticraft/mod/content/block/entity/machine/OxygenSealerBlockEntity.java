@@ -104,7 +104,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         //     ((ServerLevelAccessor) level).addSealer(this);
         // }
 
-        if (this.energyStorage().canExtract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate())) {
+        if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCompressorEnergyConsumptionRate())) {
             if (!this.fluidStorage().getSlot(OXYGEN_TANK).isEmpty()) {
                 if (this.sealCheckTime > 0) this.sealCheckTime--;
                 if (this.updateQueued && this.sealCheckTime == 0) {
@@ -171,7 +171,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                 }
 
                 profiler.push("extract");
-                this.energyStorage().extract(Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate());
+                this.energyStorage().extract(Galacticraft.CONFIG.oxygenCompressorEnergyConsumptionRate());
                 this.fluidStorage().getSlot(OXYGEN_TANK).extract(Gases.OXYGEN, breathablePositions.size() * 2L);
                 profiler.pop();
                 return GCMachineStatuses.SEALED;
