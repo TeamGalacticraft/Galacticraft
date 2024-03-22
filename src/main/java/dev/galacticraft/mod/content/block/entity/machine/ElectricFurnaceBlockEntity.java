@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
+import dev.galacticraft.machinelib.api.compat.vanilla.RecipeTestContainer;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
@@ -92,5 +93,10 @@ public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<Co
             );
         }
         return null;
+    }
+
+    @Override
+    protected Container createCraftingInv() {
+        return RecipeTestContainer.create(this.itemStorage(), this.inputSlots, this.inputSlotsLen);
     }
 }

@@ -20,10 +20,11 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.gametest.test.machine;
+package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.MachineGameTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.InstantTest;
+import dev.galacticraft.machinelib.api.gametest.annotation.MachineTest;
+import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.mod.content.GCFluids;
@@ -42,6 +43,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
+@TestSuite("refinery")
 public final class RefineryTestSuite extends MachineGameTest<RefineryBlockEntity> {
     public RefineryTestSuite() {
         super(GCMachineTypes.REFINERY);
@@ -49,13 +51,13 @@ public final class RefineryTestSuite extends MachineGameTest<RefineryBlockEntity
 
     @Override
     @GameTestGenerator
-    public @NotNull List<TestFunction> generateTests() {
-        List<TestFunction> functions = super.generateTests();
-        functions.add(this.createChargeFromEnergyItemTest(RefineryBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
-        return functions;
+    public @NotNull List<TestFunction> registerTests() {
+        List<TestFunction> tests = super.registerTests();
+        tests.add(this.createChargeFromEnergyItemTest(RefineryBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
+        return tests;
     }
 
-    @InstantTest
+    @MachineTest(workTime = 1)
     public Runnable oilItemExtraction(RefineryBlockEntity machine) {
         ItemResourceSlot slot = machine.itemStorage().getSlot(RefineryBlockEntity.OIL_INPUT_SLOT);
         slot.set(GCItems.CRUDE_OIL_BUCKET, 1);
@@ -66,7 +68,7 @@ public final class RefineryTestSuite extends MachineGameTest<RefineryBlockEntity
         };
     }
 
-    @InstantTest
+    @MachineTest(workTime = 1)
     public Runnable oilItemRemainder(RefineryBlockEntity machine) {
         ItemResourceSlot slot = machine.itemStorage().getSlot(RefineryBlockEntity.OIL_INPUT_SLOT);
         slot.set(GCItems.CRUDE_OIL_BUCKET, 1);
@@ -77,7 +79,7 @@ public final class RefineryTestSuite extends MachineGameTest<RefineryBlockEntity
         };
     }
 
-    @InstantTest
+    @MachineTest(workTime = 1)
     public Runnable fuelItemInsertion(RefineryBlockEntity machine) {
         FluidResourceSlot fluidSlot = machine.fluidStorage().getSlot(RefineryBlockEntity.FUEL_TANK);
         fluidSlot.set(GCFluids.FUEL, FluidConstants.BUCKET);
@@ -90,7 +92,7 @@ public final class RefineryTestSuite extends MachineGameTest<RefineryBlockEntity
         };
     }
 
-    @InstantTest
+    @MachineTest(workTime = 1)
     public Runnable fuelItemOutput(RefineryBlockEntity machine) {
         FluidResourceSlot fluidSlot = machine.fluidStorage().getSlot(RefineryBlockEntity.FUEL_TANK);
         fluidSlot.set(GCFluids.FUEL, FluidConstants.BUCKET);
@@ -103,7 +105,7 @@ public final class RefineryTestSuite extends MachineGameTest<RefineryBlockEntity
         };
     }
 
-    @InstantTest
+    @MachineTest(workTime = 1)
     public Runnable crafting(RefineryBlockEntity machine) {
         FluidResourceSlot fuel = machine.fluidStorage().getSlot(RefineryBlockEntity.FUEL_TANK);
         FluidResourceSlot oil = machine.fluidStorage().getSlot(RefineryBlockEntity.OIL_TANK);
@@ -116,7 +118,7 @@ public final class RefineryTestSuite extends MachineGameTest<RefineryBlockEntity
         };
     }
 
-    @InstantTest
+    @MachineTest(workTime = 1)
     public Runnable craftingFailFull(RefineryBlockEntity machine) {
         FluidResourceSlot fuel = machine.fluidStorage().getSlot(RefineryBlockEntity.FUEL_TANK);
         FluidResourceSlot oil = machine.fluidStorage().getSlot(RefineryBlockEntity.OIL_TANK);

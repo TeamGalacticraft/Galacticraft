@@ -20,15 +20,14 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.gametest.test.machine;
+package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.container.DefaultedMetadata;
+import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.CircuitFabricatorBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
@@ -41,7 +40,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@DefaultedMetadata(structure = GalacticraftGameTest.SINGLE_BLOCK)
+@TestSuite("circuit_fabricator")
 public final class CircuitFabricatorTestSuite extends RecipeGameTest<Container, FabricationRecipe, CircuitFabricatorBlockEntity> {
     public CircuitFabricatorTestSuite() {
         super(GCMachineTypes.CIRCUIT_FABRICATOR, CircuitFabricatorBlockEntity.INPUT_SLOT, CircuitFabricatorBlockEntity.OUTPUT_SLOT);
@@ -49,10 +48,10 @@ public final class CircuitFabricatorTestSuite extends RecipeGameTest<Container, 
 
     @Override
     @GameTestGenerator
-    public @NotNull List<TestFunction> generateTests() {
-        List<TestFunction> functions = super.generateTests();
-        functions.add(this.createChargeFromEnergyItemTest(CircuitFabricatorBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
-        return functions;
+    public @NotNull List<TestFunction> registerTests() {
+        List<TestFunction> tests = super.registerTests();
+        tests.add(this.createChargeFromEnergyItemTest(CircuitFabricatorBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
+        return tests;
     }
 
     @Override

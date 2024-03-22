@@ -20,15 +20,14 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.gametest.test.machine;
+package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.container.DefaultedMetadata;
+import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricFurnaceBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
 import net.minecraft.world.Container;
@@ -41,7 +40,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@DefaultedMetadata(structure = GalacticraftGameTest.SINGLE_BLOCK)
+@TestSuite("electric_furnace")
 public final class ElectricFurnaceTestSuite extends RecipeGameTest<Container, SmeltingRecipe, ElectricFurnaceBlockEntity> {
     public ElectricFurnaceTestSuite() {
         super(GCMachineTypes.ELECTRIC_FURNACE, ElectricFurnaceBlockEntity.INPUT_SLOT, ElectricFurnaceBlockEntity.OUTPUT_SLOT);
@@ -49,8 +48,8 @@ public final class ElectricFurnaceTestSuite extends RecipeGameTest<Container, Sm
 
     @Override
     @GameTestGenerator
-    public @NotNull List<TestFunction> generateTests() {
-        List<TestFunction> functions = super.generateTests();
+    public @NotNull List<TestFunction> registerTests() {
+        List<TestFunction> functions = super.registerTests();
         functions.add(this.createChargeFromEnergyItemTest(ElectricFurnaceBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
         return functions;
     }

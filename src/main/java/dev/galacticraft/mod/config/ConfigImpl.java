@@ -22,9 +22,7 @@
 
 package dev.galacticraft.mod.config;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.InstanceCreator;
+import com.google.gson.*;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
@@ -66,12 +64,13 @@ public class ConfigImpl implements Config {
     private long oxygenCompressorEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long oxygenDecompressorEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long playerOxygenConsumptionRate = FluidConstants.DROPLET;
-    private boolean hide_alpha_warning = false;
+    private boolean hideAlphaWarning = false;
 
     public ConfigImpl(File file) {
         this.gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .disableHtmlEscaping()
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .registerTypeAdapter(ConfigImpl.class, (InstanceCreator<ConfigImpl>) type -> this)
                 .create();
         this.file = file;
@@ -80,11 +79,11 @@ public class ConfigImpl implements Config {
 
     @Override
     public boolean isAlphaWarningHidden() {
-        return this.hide_alpha_warning;
+        return this.hideAlphaWarning;
     }
 
     public void setAlphaWarningHidden(boolean flag) {
-        this.hide_alpha_warning = flag;
+        this.hideAlphaWarning = flag;
     }
 
     @Override
@@ -240,7 +239,8 @@ public class ConfigImpl implements Config {
 
         try (FileReader reader = new FileReader(file, StandardCharsets.UTF_8)) {
             this.gson.fromJson(reader, ConfigImpl.class);
-        } catch (IOException e) {
+            this.save();
+        } catch (IOException | JsonSyntaxException e) {
             Constant.LOGGER.error("Failed to load config.", e);
         }
     }

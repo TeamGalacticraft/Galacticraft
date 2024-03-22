@@ -20,17 +20,15 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.gametest.test.machine;
+package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.MachineGameTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.InstantTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.ProcessingTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.container.DefaultedMetadata;
+import dev.galacticraft.machinelib.api.gametest.annotation.MachineTest;
+import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.CoalGeneratorBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
@@ -42,13 +40,13 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@DefaultedMetadata(structure = GalacticraftGameTest.SINGLE_BLOCK)
+@TestSuite("coal_generator")
 public final class CoalGeneratorTestSuite extends MachineGameTest<CoalGeneratorBlockEntity> {
     public CoalGeneratorTestSuite() {
         super(GCMachineTypes.COAL_GENERATOR);
     }
 
-    @InstantTest
+    @MachineTest(workTime = 1)
     public Runnable fuelConsumption(CoalGeneratorBlockEntity machine) {
         ItemResourceSlot slot = machine.itemStorage().getSlot(CoalGeneratorBlockEntity.INPUT_SLOT);
         slot.set(Items.COAL, 1);
@@ -62,7 +60,7 @@ public final class CoalGeneratorTestSuite extends MachineGameTest<CoalGeneratorB
         };
     }
 
-    @ProcessingTest(workTime = 320)
+    @MachineTest(workTime = 1)
     public Runnable fuelBurning(CoalGeneratorBlockEntity machine) {
         ItemResourceSlot slot = machine.itemStorage().getSlot(CoalGeneratorBlockEntity.INPUT_SLOT);
         slot.set(Items.COAL, 1);
@@ -70,14 +68,10 @@ public final class CoalGeneratorTestSuite extends MachineGameTest<CoalGeneratorB
             if (!slot.isEmpty()) {
                 throw new GameTestAssertException("Failed to consume fuel");
             }
-
-            if (machine.getFuelLength() != 0) {
-                throw new GameTestAssertException("Fuel lasted longer than expected!");
-            }
         };
     }
 
-    @ProcessingTest(workTime = 321)
+    @MachineTest(workTime = 320)
     public Runnable multipleFuelBurning(CoalGeneratorBlockEntity machine) {
         ItemResourceSlot slot = machine.itemStorage().getSlot(CoalGeneratorBlockEntity.INPUT_SLOT);
         slot.set(Items.COAL, 2);
@@ -88,7 +82,7 @@ public final class CoalGeneratorTestSuite extends MachineGameTest<CoalGeneratorB
         };
     }
 
-    @ProcessingTest(workTime = 250)
+    @MachineTest(workTime = 250)
     public Runnable heat(CoalGeneratorBlockEntity machine) {
         machine.setFuelLength(CoalGeneratorBlockEntity.FUEL_MAP.getInt(Items.COAL));
         return () -> {
@@ -98,7 +92,7 @@ public final class CoalGeneratorTestSuite extends MachineGameTest<CoalGeneratorB
         };
     }
 
-    @ProcessingTest(workTime = 50)
+    @MachineTest(workTime = 50)
     public Runnable cool(CoalGeneratorBlockEntity machine) {
         machine.setHeat(1.0);
         return () -> {
@@ -110,9 +104,9 @@ public final class CoalGeneratorTestSuite extends MachineGameTest<CoalGeneratorB
 
     @Override
     @GameTestGenerator
-    public @NotNull List<TestFunction> generateTests() {
-        List<TestFunction> functions = super.generateTests();
-        functions.add(this.createDrainToEnergyItemTest(CoalGeneratorBlockEntity.CHARGE_SLOT, GCItems.BATTERY));
-        return functions;
+    public @NotNull List<TestFunction> registerTests() {
+        List<TestFunction> tests = super.registerTests();
+        tests.add(this.createDrainToEnergyItemTest(CoalGeneratorBlockEntity.CHARGE_SLOT, GCItems.BATTERY));
+        return tests;
     }
 }

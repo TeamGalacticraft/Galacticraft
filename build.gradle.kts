@@ -130,7 +130,7 @@ loom {
             name("Game Test")
             source(sourceSets.test.get())
             property("fabric-api.gametest")
-            property("fabric-api.gametest.report-file", "${project.layout.buildDirectory}/junit.xml")
+            property("fabric-api.gametest.report-file", "${project.layout.buildDirectory.get()}/junit.xml")
         }
 
         afterEvaluate {
@@ -252,6 +252,8 @@ dependencies {
             version = jeiVersion) {
         exclude(group = "net.fabricmc.fabric-api")
     }
+
+    testImplementation("net.fabricmc:fabric-loader-junit:$loaderVersion")
 }
 
 tasks.processResources {
@@ -267,6 +269,13 @@ tasks.processResources {
         fileTree(mapOf("dir" to outputs.files.asPath, "includes" to listOf("**/*.json", "**/*.mcmeta"))).forEach {
             groovy.json.JsonOutput.toJson(jsonSlurper.parse(it))
         }
+    }
+}
+tasks.processTestResources {
+    inputs.property("version", project.version)
+
+    filesMatching("fabric.mod.json") {
+        expand("version" to project.version)
     }
 }
 
@@ -296,6 +305,12 @@ tasks.jar {
             "Maven-Artifact" to "${project.group}:${modName}:${project.version}",
         )
     }
+}
+
+tasks.test {
+    useJUnitPlatform()
+    workingDir = project.file("run")
+    dependsOn(tasks.getByName("runGametest"))
 }
 
 license {

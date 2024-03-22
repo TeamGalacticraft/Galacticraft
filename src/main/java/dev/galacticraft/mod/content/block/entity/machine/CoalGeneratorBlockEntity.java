@@ -107,7 +107,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
             }
         }
         profiler.popPush("fuel_tick");
-        if (this.fuelTime++ >= this.fuelLength) {
+        if (++this.fuelTime >= this.fuelLength) {
             this.consumeFuel();
         }
         this.setHeat(Math.min(1, this.heat + 0.004));

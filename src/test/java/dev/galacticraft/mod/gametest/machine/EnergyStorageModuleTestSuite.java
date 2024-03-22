@@ -20,14 +20,13 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.gametest.test.machine;
+package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.MachineGameTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.container.DefaultedMetadata;
+import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.EnergyStorageModuleBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +36,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@DefaultedMetadata(structure = GalacticraftGameTest.SINGLE_BLOCK)
+@TestSuite("energy_storage_module")
 public final class EnergyStorageModuleTestSuite extends MachineGameTest<EnergyStorageModuleBlockEntity> {
     public EnergyStorageModuleTestSuite() {
         super(GCMachineTypes.ENERGY_STORAGE_MODULE);
@@ -45,10 +44,10 @@ public final class EnergyStorageModuleTestSuite extends MachineGameTest<EnergySt
 
     @Override
     @GameTestGenerator
-    public @NotNull List<TestFunction> generateTests() {
-        List<TestFunction> functions = super.generateTests();
-        functions.add(this.createChargeFromEnergyItemTest(EnergyStorageModuleBlockEntity.CHARGE_SELF_SLOT, GCItems.INFINITE_BATTERY));
-        functions.add(this.createDrainToEnergyItemTest(EnergyStorageModuleBlockEntity.CHARGE_ITEM_SLOT, GCItems.BATTERY));
-        return functions;
+    public @NotNull List<TestFunction> registerTests() {
+        List<TestFunction> tests = super.registerTests();
+        tests.add(this.createChargeFromEnergyItemTest(EnergyStorageModuleBlockEntity.CHARGE_SELF_SLOT, GCItems.INFINITE_BATTERY));
+        tests.add(this.createDrainToEnergyItemTest(EnergyStorageModuleBlockEntity.CHARGE_ITEM_SLOT, GCItems.BATTERY));
+        return tests;
     }
 }

@@ -20,21 +20,19 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.gametest.test.machine;
+package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.InstantTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.container.DefaultedMetadata;
+import dev.galacticraft.machinelib.api.gametest.annotation.MachineTest;
+import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.CompressorBlockEntity;
-import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
-import net.minecraft.world.Container;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
@@ -44,19 +42,13 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@DefaultedMetadata(structure = GalacticraftGameTest.SINGLE_BLOCK)
+@TestSuite("compressor")
 public final class CompressorTestSuite extends RecipeGameTest<CraftingContainer, CompressingRecipe, CompressorBlockEntity> {
     public CompressorTestSuite() {
         super(GCMachineTypes.COMPRESSOR, CompressorBlockEntity.INPUT_SLOTS, CompressorBlockEntity.INPUT_LENGTH, CompressorBlockEntity.OUTPUT_SLOT);
     }
 
-    @Override
-    @GameTestGenerator
-    public @NotNull List<TestFunction> generateTests() {
-        return super.generateTests();
-    }
-
-    @InstantTest
+    @MachineTest(workTime = 1)
     public Runnable fuelConsumption(CompressorBlockEntity machine) {
         ItemResourceSlot slot = machine.itemStorage().getSlot(CompressorBlockEntity.FUEL_SLOT);
         slot.set(Items.COAL, 1);
@@ -85,5 +77,11 @@ public final class CompressorTestSuite extends RecipeGameTest<CraftingContainer,
     protected void createValidRecipe(@NotNull MachineItemStorage storage) {
         storage.getSlot(CompressorBlockEntity.INPUT_SLOTS).set(Items.IRON_INGOT, 1);
         storage.getSlot(CompressorBlockEntity.INPUT_SLOTS + 1).set(Items.IRON_INGOT, 1);
+    }
+
+    @Override
+    @GameTestGenerator
+    public @NotNull List<TestFunction> registerTests() {
+        return super.registerTests();
     }
 }

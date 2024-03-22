@@ -25,20 +25,20 @@
   "environment": "*",
   "entrypoints": {
     "fabric-gametest": [
-      "dev.galacticraft.mod.gametest.test.GratingTestSuite",
-      "dev.galacticraft.mod.gametest.test.machine.CircuitFabricatorTestSuite",
-      "dev.galacticraft.mod.gametest.test.machine.CoalGeneratorTestSuite",
-      "dev.galacticraft.mod.gametest.test.machine.CompressorTestSuite",
-      "dev.galacticraft.mod.gametest.test.machine.ElectricArcFurnaceTestSuite",
-      "dev.galacticraft.mod.gametest.test.machine.ElectricCompressorTestSuite",
-      "dev.galacticraft.mod.gametest.test.machine.ElectricFurnaceTestSuite",
-      "dev.galacticraft.mod.gametest.test.machine.EnergyStorageModuleTestSuite",
-      "dev.galacticraft.mod.gametest.test.machine.RefineryTestSuite",
-      "dev.galacticraft.mod.gametest.test.PipeTestSuite",
-      "dev.galacticraft.mod.gametest.test.WireTestSuite"
+      "dev.galacticraft.mod.gametest.GratingTestSuite",
+      "dev.galacticraft.mod.gametest.machine.CircuitFabricatorTestSuite",
+      "dev.galacticraft.mod.gametest.machine.CoalGeneratorTestSuite",
+      "dev.galacticraft.mod.gametest.machine.CompressorTestSuite",
+      "dev.galacticraft.mod.gametest.machine.ElectricArcFurnaceTestSuite",
+      "dev.galacticraft.mod.gametest.machine.ElectricCompressorTestSuite",
+      "dev.galacticraft.mod.gametest.machine.ElectricFurnaceTestSuite",
+      "dev.galacticraft.mod.gametest.machine.EnergyStorageModuleTestSuite",
+      "dev.galacticraft.mod.gametest.machine.RefineryTestSuite",
+      "dev.galacticraft.mod.gametest.PipeTestSuite",
+      "dev.galacticraft.mod.gametest.WireTestSuite"
     ]
   },
-  "mixins": ["galacticraft-test.mixins.json"],
+  "mixins": [],
   "depends": {
     "galacticraft": "*"
   }

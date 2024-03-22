@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.gametest.test;
+package dev.galacticraft.mod.gametest;
 
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.api.pipe.impl.PipeNetworkImpl;
@@ -35,9 +35,9 @@ import net.minecraft.gametest.framework.GameTestHelper;
 public class PipeTestSuite implements GalacticraftGameTest {
     @GameTest(template = EMPTY_STRUCTURE)
     public void pipeConnectionTest(GameTestHelper context) {
-        final var pos0 = new BlockPos(0, 0, 0);
-        final var pos1 = new BlockPos(0, 1, 0);
-        final var pos2 = new BlockPos(0, 2, 0);
+        final var pos0 = new BlockPos(0, 1, 0);
+        final var pos1 = new BlockPos(0, 2, 0);
+        final var pos2 = new BlockPos(0, 3, 0);
         context.setBlock(pos0, GCBlocks.GLASS_FLUID_PIPE);
         context.setBlock(pos1, GCBlocks.GLASS_FLUID_PIPE);
         context.setBlock(pos2, GCBlocks.GLASS_FLUID_PIPE);

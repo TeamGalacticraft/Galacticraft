@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
+import dev.galacticraft.machinelib.api.compat.vanilla.CraftingRecipeTestContainer;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.mod.Constant;
@@ -39,7 +40,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -160,5 +160,10 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
     public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) return new CompressorMenu(syncId, (ServerPlayer) player, this);
         return null;
+    }
+
+    @Override
+    protected CraftingContainer createCraftingInv() {
+        return CraftingRecipeTestContainer.create(3, 3, this.itemStorage(), this.inputSlots, this.inputSlotsLen);
     }
 }

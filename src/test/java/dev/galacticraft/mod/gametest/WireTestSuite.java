@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.gametest.test;
+package dev.galacticraft.mod.gametest;
 
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.impl.WireNetworkImpl;
@@ -35,9 +35,9 @@ import net.minecraft.gametest.framework.GameTestHelper;
 public class WireTestSuite implements GalacticraftGameTest {
     @GameTest(template = EMPTY_STRUCTURE)
     public void wireConnectionTest(GameTestHelper context) {
-        final var pos0 = new BlockPos(0, 0, 0);
-        final var pos1 = new BlockPos(0, 1, 0);
-        final var pos2 = new BlockPos(0, 2, 0);
+        final var pos0 = new BlockPos(0, 1, 0);
+        final var pos1 = new BlockPos(0, 2, 0);
+        final var pos2 = new BlockPos(0, 3, 0);
         context.setBlock(pos0, GCBlocks.ALUMINUM_WIRE);
         context.setBlock(pos1, GCBlocks.ALUMINUM_WIRE);
         context.setBlock(pos2, GCBlocks.ALUMINUM_WIRE);

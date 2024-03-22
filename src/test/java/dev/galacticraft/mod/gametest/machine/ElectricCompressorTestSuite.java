@@ -20,19 +20,19 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.gametest.test.machine;
+package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.container.DefaultedMetadata;
+import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.content.block.entity.machine.ElectricArcFurnaceBlockEntity;
+import dev.galacticraft.mod.content.block.entity.machine.ElectricCompressorBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.gametest.test.GalacticraftGameTest;
+import dev.galacticraft.mod.recipe.CompressingRecipe;
+import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
-import net.minecraft.world.Container;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.BlastingRecipe;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -40,31 +40,33 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@DefaultedMetadata(structure = GalacticraftGameTest.SINGLE_BLOCK)
-public final class ElectricArcFurnaceTestSuite extends RecipeGameTest<Container, BlastingRecipe, ElectricArcFurnaceBlockEntity> {
-    public ElectricArcFurnaceTestSuite() {
-        super(GCMachineTypes.ELECTRIC_ARC_FURNACE, ElectricArcFurnaceBlockEntity.INPUT_SLOT, 1, ElectricArcFurnaceBlockEntity.OUTPUT_SLOTS, ElectricArcFurnaceBlockEntity.OUTPUT_LENGTH);
+@TestSuite("electric_compressor")
+public final class ElectricCompressorTestSuite extends RecipeGameTest<CraftingContainer, CompressingRecipe, ElectricCompressorBlockEntity> {
+    public ElectricCompressorTestSuite() {
+        super(GCMachineTypes.ELECTRIC_COMPRESSOR, ElectricCompressorBlockEntity.INPUT_SLOTS, ElectricCompressorBlockEntity.INPUT_LENGTH, ElectricCompressorBlockEntity.OUTPUT_SLOTS, ElectricCompressorBlockEntity.OUTPUT_LENGTH);
     }
 
     @Override
-    public @NotNull List<TestFunction> generateTests() {
-        List<TestFunction> functions = super.generateTests();
-        functions.add(this.createChargeFromEnergyItemTest(ElectricArcFurnaceBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
-        return functions;
+    @GameTestGenerator
+    public @NotNull List<TestFunction> registerTests() {
+        List<TestFunction> tests = super.registerTests();
+        tests.add(this.createChargeFromEnergyItemTest(ElectricCompressorBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
+        return tests;
     }
 
     @Override
-    protected void fulfillRunRequirements(@NotNull ElectricArcFurnaceBlockEntity machine) {
+    protected void fulfillRunRequirements(@NotNull ElectricCompressorBlockEntity machine) {
         machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
     }
 
     @Override
     protected int getRecipeRuntime() {
-        return 100;
+        return 200;
     }
 
     @Override
     protected void createValidRecipe(@NotNull MachineItemStorage storage) {
-        storage.getSlot(ElectricArcFurnaceBlockEntity.INPUT_SLOT).set(Items.RAW_IRON, 1);
+        storage.getSlot(ElectricCompressorBlockEntity.INPUT_SLOTS).set(Items.IRON_INGOT, 1);
+        storage.getSlot(ElectricCompressorBlockEntity.INPUT_SLOTS + 1).set(Items.IRON_INGOT, 1);
     }
 }

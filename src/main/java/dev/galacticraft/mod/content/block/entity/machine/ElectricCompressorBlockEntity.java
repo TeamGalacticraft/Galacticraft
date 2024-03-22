@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
+import dev.galacticraft.machinelib.api.compat.vanilla.CraftingRecipeTestContainer;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
@@ -109,5 +110,10 @@ public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity
             );
         }
         return null;
+    }
+
+    @Override
+    protected CraftingContainer createCraftingInv() {
+        return CraftingRecipeTestContainer.create(3, 3, this.itemStorage(), this.inputSlots, this.inputSlotsLen);
     }
 }

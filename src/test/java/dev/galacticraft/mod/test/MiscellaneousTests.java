@@ -20,28 +20,21 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.gametest.mixin;
+package dev.galacticraft.mod.test;
 
-import dev.galacticraft.mod.gametest.JUnit5XMLTestCompletionListener;
-import net.minecraft.gametest.framework.GameTestServer;
-import net.minecraft.gametest.framework.GlobalTestReporter;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.junit.jupiter.api.BeforeAll;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-
-@Mixin(GameTestServer.class)
-public class TestServerMixin {
-
-    @Inject(method = "initServer", at = @At("HEAD"))
-    private void setupServer(CallbackInfoReturnable<Boolean> cir) {
-        try {
-            GlobalTestReporter.replaceWith(new JUnit5XMLTestCompletionListener(new File("TEST-gametest.xml")));
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
+public class MiscellaneousTests {
+    @BeforeAll
+    public static void setup() {
+        TestSetup.setup();
     }
+
+//    @Test //fixme: apparently mods are not loaded in the test environment
+//    public void gratingHasAllFluids() {
+//        Set<ResourceLocation> fluids = FluidLoggable.FLUID.getAllValues().map(Property.Value::value).collect(Collectors.toSet());
+//        for (ResourceLocation resourceLocation : BuiltInRegistries.FLUID.keySet()) {
+//            assertTrue(fluids.contains(resourceLocation));
+//        }
+//    }
 }
