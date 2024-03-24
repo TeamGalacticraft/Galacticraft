@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "galacticraft:compressed_aluminum"
+    },
+    "C": {
+      "item": "galacticraft:oxygen_concentrator"
+    },
+    "F": {
+      "item": "galacticraft:oxygen_fan"
+    },
+    "R": {
+      "item": "minecraft:redstone_torch"
+    },
+    "S": {
+      "item": "galacticraft:compressed_steel"
+    }
+  },
+  "pattern": [
+    "SFS",
+    "ACA",
+    "SRS"
+  ],
+  "result": {
+    "item": "galacticraft:oxygen_decompressor"
+  }
+}

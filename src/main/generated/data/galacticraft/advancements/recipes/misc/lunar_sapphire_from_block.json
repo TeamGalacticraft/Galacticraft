@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_lunar_sapphire_block": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "galacticraft:lunar_sapphire_block"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraft:lunar_sapphire_from_block"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_lunar_sapphire_block"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraft:lunar_sapphire_from_block"
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraft:fluid_pipe_walkway"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_walkway": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "galacticraft:walkway"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_walkway"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraft:fluid_pipe_walkway"
+    ]
+  }
+}

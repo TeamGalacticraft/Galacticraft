@@ -33,6 +33,7 @@ import dev.galacticraft.mod.content.GCTeleporterTypes;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.data.content.BootstrapDataProvider;
 import dev.galacticraft.mod.data.model.GCModelProvider;
+import dev.galacticraft.mod.data.recipes.*;
 import dev.galacticraft.mod.data.tag.*;
 import dev.galacticraft.mod.structure.GCStructureSets;
 import dev.galacticraft.mod.structure.GCStructureTemplatePools;
@@ -60,10 +61,15 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
     public void onInitializeDataGenerator(@NotNull FabricDataGenerator generator) {
         var pack = generator.createPack();
 
-        pack.addProvider(BootstrapDataProvider.create("Galaxies", GalaxyImpl::bootstrapRegistries));
-
         pack.addProvider(GCBlockLootTableProvider::new);
-        pack.addProvider(GCRecipeProvider::new);
+
+        // recipes
+        pack.addProvider(GCDecorationRecipeProvider::new);
+        pack.addProvider(GCGearRecipeProvider::new);
+        pack.addProvider(GCMachineRecipes::new);
+        pack.addProvider(GCMiscRecipeProvider::new);
+        pack.addProvider(GCOreRecipeProvider::new);
+        pack.addProvider(GCRocketRecipes::new);
 
         // tags
         pack.addProvider(GCBannerTagProvider::new);
@@ -74,27 +80,32 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(GCFluidTagProvider::new);
         pack.addProvider(GCItemTagProvider::new);
         pack.addProvider(GCStructureTagProvider::new);
-//        pack.addProvider((output, registriesFuture) -> new GCLevelStemProvider(output, registriesFuture,
-//                GCLevelStems::bootstrapRegistries)); // level stems are special
 
-        // content
+        // world generation
 //        pack.addProvider(BootstrapDataProvider.create("Noise", GCNoiseData::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Density Functions", GCDensityFunctions::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Biomes", GCBiomes::bootstrapRegistries));
-        pack.addProvider(BootstrapDataProvider.create("Celestial Bodies", GCCelestialBodies::bootstrapRegistries));
-        pack.addProvider(BootstrapDataProvider.create("Celestial Teleporters", GCTeleporterTypes::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Dimension Types", GCDimensionTypes::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Level Stems", GCLevelStems::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Noise Generator Settings", GCNoiseGeneratorSettings::bootstrapRegistries));
-        pack.addProvider(BootstrapDataProvider.create("Structures", GCStructures::bootstrapRegistries));
-        pack.addProvider(BootstrapDataProvider.create("Structure Sets", GCStructureSets::bootstrapRegistries));
-        pack.addProvider(BootstrapDataProvider.create("Structure Template Pools", GCStructureTemplatePools::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Configured Carvers", GCConfiguredCarvers::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Configured Features", GCConfiguredFeature::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Ore Configured Features", GCOreConfiguredFeature::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Ore Placed Features", GCOrePlacedFeatures::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Placed Features", GCPlacedFeatures::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Multi Noise Biome Source Parameter Lists", GCMultiNoiseBiomeSourceParameterLists::bootstrapRegistries));
+
+        // structures
+        pack.addProvider(BootstrapDataProvider.create("Structures", GCStructures::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Structure Sets", GCStructureSets::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Structure Template Pools", GCStructureTemplatePools::bootstrapRegistries));
+
+        // universe
+        pack.addProvider(BootstrapDataProvider.create("Galaxies", GalaxyImpl::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Celestial Bodies", GCCelestialBodies::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Celestial Teleporters", GCTeleporterTypes::bootstrapRegistries));
+
+        // misc
         pack.addProvider(BootstrapDataProvider.create("Damage Types", GCDamageTypes::bootstrapRegistries));
 
         // rocket parts
@@ -110,37 +121,46 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
     }
 
     @Override
-    public String getEffectiveModId() {
-        return Constant.MOD_ID;
+    public void buildRegistry(RegistrySetBuilder builder) {
+
+        // world generation
+        builder.add(Registries.BIOME, Lifecycle.stable(), GCBiomes::bootstrapRegistries);
+        builder.add(Registries.DIMENSION_TYPE, Lifecycle.stable(), GCDimensionTypes::bootstrapRegistries);
+        builder.add(Registries.LEVEL_STEM, Lifecycle.stable(), GCLevelStems::bootstrapRegistries);
+        builder.add(Registries.NOISE, Lifecycle.stable(), GCNoiseData::bootstrapRegistries);
+        builder.add(Registries.DENSITY_FUNCTION, Lifecycle.stable(), GCDensityFunctions::bootstrapRegistries);
+        builder.add(Registries.NOISE_SETTINGS, Lifecycle.stable(), GCNoiseGeneratorSettings::bootstrapRegistries);
+        builder.add(Registries.CONFIGURED_CARVER, Lifecycle.stable(), GCConfiguredCarvers::bootstrapRegistries);
+        builder.add(Registries.CONFIGURED_FEATURE, Lifecycle.stable(), GCConfiguredFeature::bootstrapRegistries);
+        builder.add(Registries.CONFIGURED_FEATURE, Lifecycle.stable(), GCOreConfiguredFeature::bootstrapRegistries);
+        builder.add(Registries.PLACED_FEATURE, Lifecycle.stable(), GCOrePlacedFeatures::bootstrapRegistries);
+        builder.add(Registries.PLACED_FEATURE, Lifecycle.stable(), GCPlacedFeatures::bootstrapRegistries);
+        builder.add(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, Lifecycle.stable(), GCMultiNoiseBiomeSourceParameterLists::bootstrapRegistries);
+
+        // structures
+        builder.add(Registries.STRUCTURE, Lifecycle.stable(), GCStructures::bootstrapRegistries);
+        builder.add(Registries.STRUCTURE_SET, Lifecycle.stable(), GCStructureSets::bootstrapRegistries);
+        builder.add(Registries.TEMPLATE_POOL, Lifecycle.stable(), GCStructureTemplatePools::bootstrapRegistries);
+
+        // universe
+        builder.add(AddonRegistries.GALAXY, GalaxyImpl::bootstrapRegistries);
+        builder.add(AddonRegistries.CELESTIAL_BODY, Lifecycle.stable(), GCCelestialBodies::bootstrapRegistries);
+        builder.add(AddonRegistries.CELESTIAL_TELEPORTER, Lifecycle.stable(), GCTeleporterTypes::bootstrapRegistries);
+
+        // misc
+        builder.add(Registries.DAMAGE_TYPE, Lifecycle.stable(), GCDamageTypes::bootstrapRegistries);
+
+        // rocket parts
+        builder.add(RocketRegistries.ROCKET_CONE, GCRocketParts::bootstrapCone);
+        builder.add(RocketRegistries.ROCKET_BODY, GCRocketParts::bootstrapBody);
+        builder.add(RocketRegistries.ROCKET_FIN, GCRocketParts::bootstrapFin);
+        builder.add(RocketRegistries.ROCKET_BOOSTER, GCRocketParts::bootstrapBooster);
+        builder.add(RocketRegistries.ROCKET_ENGINE, GCRocketParts::bootstrapEngine);
+        builder.add(RocketRegistries.ROCKET_UPGRADE, GCRocketParts::bootstrapUpgrade);
     }
 
     @Override
-    public void buildRegistry(RegistrySetBuilder registryBuilder) {
-        registryBuilder.add(AddonRegistries.GALAXY, GalaxyImpl::bootstrapRegistries);
-        registryBuilder.add(RocketRegistries.ROCKET_CONE, GCRocketParts::bootstrapCone);
-        registryBuilder.add(RocketRegistries.ROCKET_BODY, GCRocketParts::bootstrapBody);
-        registryBuilder.add(RocketRegistries.ROCKET_FIN, GCRocketParts::bootstrapFin);
-        registryBuilder.add(RocketRegistries.ROCKET_BOOSTER, GCRocketParts::bootstrapBooster);
-        registryBuilder.add(RocketRegistries.ROCKET_ENGINE, GCRocketParts::bootstrapEngine);
-        registryBuilder.add(RocketRegistries.ROCKET_UPGRADE, GCRocketParts::bootstrapUpgrade);
-
-        registryBuilder.add(Registries.BIOME, Lifecycle.stable(), GCBiomes::bootstrapRegistries);
-        registryBuilder.add(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, Lifecycle.stable(), GCMultiNoiseBiomeSourceParameterLists::bootstrapRegistries);
-        registryBuilder.add(AddonRegistries.CELESTIAL_BODY, Lifecycle.stable(), GCCelestialBodies::bootstrapRegistries);
-        registryBuilder.add(AddonRegistries.CELESTIAL_TELEPORTER, Lifecycle.stable(), GCTeleporterTypes::bootstrapRegistries);
-        registryBuilder.add(Registries.DIMENSION_TYPE, Lifecycle.stable(), GCDimensionTypes::bootstrapRegistries);
-        registryBuilder.add(Registries.LEVEL_STEM, Lifecycle.stable(), GCLevelStems::bootstrapRegistries);
-        registryBuilder.add(Registries.NOISE, Lifecycle.stable(), GCNoiseData::bootstrapRegistries);
-        registryBuilder.add(Registries.DENSITY_FUNCTION, Lifecycle.stable(), GCDensityFunctions::bootstrapRegistries);
-        registryBuilder.add(Registries.NOISE_SETTINGS, Lifecycle.stable(), GCNoiseGeneratorSettings::bootstrapRegistries);
-        registryBuilder.add(Registries.STRUCTURE, Lifecycle.stable(), GCStructures::bootstrapRegistries);
-        registryBuilder.add(Registries.STRUCTURE_SET, Lifecycle.stable(), GCStructureSets::bootstrapRegistries);
-        registryBuilder.add(Registries.TEMPLATE_POOL, Lifecycle.stable(), GCStructureTemplatePools::bootstrapRegistries);
-        registryBuilder.add(Registries.CONFIGURED_CARVER, Lifecycle.stable(), GCConfiguredCarvers::bootstrapRegistries);
-        registryBuilder.add(Registries.CONFIGURED_FEATURE, Lifecycle.stable(), GCConfiguredFeature::bootstrapRegistries);
-        registryBuilder.add(Registries.CONFIGURED_FEATURE, Lifecycle.stable(), GCOreConfiguredFeature::bootstrapRegistries);
-        registryBuilder.add(Registries.PLACED_FEATURE, Lifecycle.stable(), GCOrePlacedFeatures::bootstrapRegistries);
-        registryBuilder.add(Registries.PLACED_FEATURE, Lifecycle.stable(), GCPlacedFeatures::bootstrapRegistries);
-        registryBuilder.add(Registries.DAMAGE_TYPE, Lifecycle.stable(), GCDamageTypes::bootstrapRegistries);
+    public String getEffectiveModId() {
+        return Constant.MOD_ID;
     }
 }

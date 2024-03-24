@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_compressed_steel": {
+    "has_heavy_plating": {
       "conditions": {
         "items": [
           {
             "items": [
-              "galacticraft:compressed_steel"
+              "galacticraft:heavy_plating"
             ]
           }
         ]
@@ -23,7 +23,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_compressed_steel"
+      "has_heavy_plating"
     ]
   ],
   "rewards": {

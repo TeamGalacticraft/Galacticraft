@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "T": {
+      "item": "galacticraft:compressed_titanium"
+    },
+    "W": {
+      "item": "galacticraft:aluminum_wire"
+    }
+  },
+  "pattern": [
+    "TTT",
+    "WTW",
+    "WWW"
+  ],
+  "result": {
+    "count": 5,
+    "item": "galacticraft:wire_walkway"
+  }
+}

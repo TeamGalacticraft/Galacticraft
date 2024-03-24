@@ -6,11 +6,24 @@
         "recipe": "galacticraft:compressed_titanium"
       },
       "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_titanium_ingot": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "galacticraft:titanium_ingot"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
     }
   },
   "requirements": [
     [
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_titanium_ingot"
     ]
   ],
   "rewards": {

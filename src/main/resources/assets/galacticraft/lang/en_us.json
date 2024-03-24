@@ -633,6 +633,12 @@
   "config.galacticraft.energy.machines.energy_storage_module_storage_size": "Energy Storage Module Energy Storage Size",
   "config.galacticraft.energy.machines.energy_storage_size": "Default Machine Energy Storage Size",
 
+  "smithing_template.galacticraft.titanium_upgrade.additions_slot_description": "Add Compressed Titanium",
+  "smithing_template.galacticraft.titanium_upgrade.applies_to": "Desh Equipment",
+  "smithing_template.galacticraft.titanium_upgrade.base_slot_description": "Add desh armor, weapon, or tool",
+  "smithing_template.galacticraft.titanium_upgrade.ingredients": "Compressed Titanium",
+  "smithing_template.galacticraft.titanium_upgrade.description": "Titanium Upgrade",
+
   "item.galacticraft.legacy_music_disc_mars": "Music Disc",
   "item.galacticraft.legacy_music_disc_mimas": "Music Disc",
   "item.galacticraft.legacy_music_disc_orbit": "Music Disc",

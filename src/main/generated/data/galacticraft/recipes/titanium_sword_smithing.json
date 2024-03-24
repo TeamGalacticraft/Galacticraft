@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "galacticraft:compressed_titanium"
+  },
+  "base": {
+    "item": "galacticraft:desh_sword"
+  },
+  "result": {
+    "item": "galacticraft:titanium_sword"
+  },
+  "template": {
+    "item": "galacticraft:titanium_upgrade_smithing_template"
+  }
+}

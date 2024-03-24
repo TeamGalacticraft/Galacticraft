@@ -334,23 +334,23 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         // Cheese Candle Tags
         this.tag(BlockTags.CANDLE_CAKES)
                 .add(
-                        GCBlocks.CANDLE_MOON_CHEESE_BLOCK,
-                        GCBlocks.WHITE_CANDLE_MOON_CHEESE_BLOCK,
-                        GCBlocks.ORANGE_CANDLE_MOON_CHEESE_BLOCK,
-                        GCBlocks.MAGENTA_CANDLE_MOON_CHEESE_BLOCK,
-                        GCBlocks.LIGHT_BLUE_CANDLE_MOON_CHEESE_BLOCK,
-                        GCBlocks.YELLOW_CANDLE_MOON_CHEESE_BLOCK,
-                        GCBlocks.LIME_CANDLE_MOON_CHEESE_BLOCK,
-                        GCBlocks.PINK_CANDLE_MOON_CHEESE_BLOCK,
-                        GCBlocks.GRAY_CANDLE_MOON_CHEESE_BLOCK,
-                        GCBlocks.LIGHT_GRAY_CANDLE_MOON_CHEESE_BLOCK,
-                        GCBlocks.CYAN_CANDLE_MOON_CHEESE_BLOCK,
-                        GCBlocks.PURPLE_CANDLE_MOON_CHEESE_BLOCK,
-                        GCBlocks.BLUE_CANDLE_MOON_CHEESE_BLOCK,
-                        GCBlocks.BROWN_CANDLE_MOON_CHEESE_BLOCK,
-                        GCBlocks.GREEN_CANDLE_MOON_CHEESE_BLOCK,
-                        GCBlocks.RED_CANDLE_MOON_CHEESE_BLOCK,
-                        GCBlocks.BLACK_CANDLE_MOON_CHEESE_BLOCK
+                        GCBlocks.CANDLE_MOON_CHEESE_WHEEL,
+                        GCBlocks.WHITE_CANDLE_MOON_CHEESE_WHEEL,
+                        GCBlocks.ORANGE_CANDLE_MOON_CHEESE_WHEEL,
+                        GCBlocks.MAGENTA_CANDLE_MOON_CHEESE_WHEEL,
+                        GCBlocks.LIGHT_BLUE_CANDLE_MOON_CHEESE_WHEEL,
+                        GCBlocks.YELLOW_CANDLE_MOON_CHEESE_WHEEL,
+                        GCBlocks.LIME_CANDLE_MOON_CHEESE_WHEEL,
+                        GCBlocks.PINK_CANDLE_MOON_CHEESE_WHEEL,
+                        GCBlocks.GRAY_CANDLE_MOON_CHEESE_WHEEL,
+                        GCBlocks.LIGHT_GRAY_CANDLE_MOON_CHEESE_WHEEL,
+                        GCBlocks.CYAN_CANDLE_MOON_CHEESE_WHEEL,
+                        GCBlocks.PURPLE_CANDLE_MOON_CHEESE_WHEEL,
+                        GCBlocks.BLUE_CANDLE_MOON_CHEESE_WHEEL,
+                        GCBlocks.BROWN_CANDLE_MOON_CHEESE_WHEEL,
+                        GCBlocks.GREEN_CANDLE_MOON_CHEESE_WHEEL,
+                        GCBlocks.RED_CANDLE_MOON_CHEESE_WHEEL,
+                        GCBlocks.BLACK_CANDLE_MOON_CHEESE_WHEEL
                 );
 
         var replaceableTagAppender = this.tag(BlockTags.REPLACEABLE);

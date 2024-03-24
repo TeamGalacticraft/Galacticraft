@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "galacticraft:compressed_aluminum"
+    },
+    "B": {
+      "item": "galacticraft:compressed_bronze"
+    },
+    "C": {
+      "item": "galacticraft:oxygen_concentrator"
+    },
+    "S": {
+      "item": "galacticraft:compressed_steel"
+    }
+  },
+  "pattern": [
+    "SAS",
+    "ACA",
+    "SBS"
+  ],
+  "result": {
+    "item": "galacticraft:oxygen_compressor"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "galacticraft:aluminum_ingot"
+    },
+    "W": {
+      "item": "minecraft:white_wool"
+    }
+  },
+  "pattern": [
+    "WWW",
+    "AAA",
+    "WWW"
+  ],
+  "result": {
+    "count": 6,
+    "item": "galacticraft:aluminum_wire"
+  }
+}

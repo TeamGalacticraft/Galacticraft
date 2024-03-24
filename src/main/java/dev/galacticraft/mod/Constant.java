@@ -51,7 +51,7 @@ public interface Constant {
 
     @Contract(value = "_ -> new", pure = true)
     static @NotNull ResourceLocation id(String id) {
-        return new ResourceLocation(MOD_ID, id);  
+        return new ResourceLocation(MOD_ID, id);
     }
 
     @Contract(value = "_, _ -> new", pure = true)
@@ -261,24 +261,24 @@ public interface Constant {
         String CRASHED_PROBE_BLOCK = "crashed_probe";
 
         // Moon Cheese
-        String MOON_CHEESE_BLOCK = "moon_cheese_block";
-        String CANDLE_MOON_CHEESE_BLOCK = "candle_moon_cheese_block";
-        String WHITE_CANDLE_MOON_CHEESE_BLOCK = "white_candle_moon_cheese_block";
-        String ORANGE_CANDLE_MOON_CHEESE_BLOCK = "orange_candle_moon_cheese_block";
-        String MAGENTA_CANDLE_MOON_CHEESE_BLOCK = "magenta_candle_moon_cheese_block";
-        String LIGHT_BLUE_CANDLE_MOON_CHEESE_BLOCK = "light_blue_candle_moon_cheese_block";
-        String YELLOW_CANDLE_MOON_CHEESE_BLOCK = "yellow_candle_moon_cheese_block";
-        String LIME_CANDLE_MOON_CHEESE_BLOCK = "lime_candle_moon_cheese_block";
-        String PINK_CANDLE_MOON_CHEESE_BLOCK = "pink_candle_moon_cheese_block";
-        String GRAY_CANDLE_MOON_CHEESE_BLOCK = "gray_candle_moon_cheese_block";
-        String LIGHT_GRAY_CANDLE_MOON_CHEESE_BLOCK = "light_gray_candle_moon_cheese_block";
-        String CYAN_CANDLE_MOON_CHEESE_BLOCK = "cyan_candle_moon_cheese_block";
-        String PURPLE_CANDLE_MOON_CHEESE_BLOCK = "purple_candle_moon_cheese_block";
-        String BLUE_CANDLE_MOON_CHEESE_BLOCK = "blue_candle_moon_cheese_block";
-        String BROWN_CANDLE_MOON_CHEESE_BLOCK = "brown_candle_moon_cheese_block";
-        String GREEN_CANDLE_MOON_CHEESE_BLOCK = "green_candle_moon_cheese_block";
-        String RED_CANDLE_MOON_CHEESE_BLOCK = "red_candle_moon_cheese_block";
-        String BLACK_CANDLE_MOON_CHEESE_BLOCK = "black_candle_moon_cheese_block";
+        String MOON_CHEESE_WHEEL = "moon_cheese_block";
+        String CANDLE_MOON_CHEESE_WHEEL = "candle_moon_cheese_block";
+        String WHITE_CANDLE_MOON_CHEESE_WHEEL = "white_candle_moon_cheese_block";
+        String ORANGE_CANDLE_MOON_CHEESE_WHEEL = "orange_candle_moon_cheese_block";
+        String MAGENTA_CANDLE_MOON_CHEESE_WHEEL = "magenta_candle_moon_cheese_block";
+        String LIGHT_BLUE_CANDLE_MOON_CHEESE_WHEEL = "light_blue_candle_moon_cheese_block";
+        String YELLOW_CANDLE_MOON_CHEESE_WHEEL = "yellow_candle_moon_cheese_block";
+        String LIME_CANDLE_MOON_CHEESE_WHEEL = "lime_candle_moon_cheese_block";
+        String PINK_CANDLE_MOON_CHEESE_WHEEL = "pink_candle_moon_cheese_block";
+        String GRAY_CANDLE_MOON_CHEESE_WHEEL = "gray_candle_moon_cheese_block";
+        String LIGHT_GRAY_CANDLE_MOON_CHEESE_WHEEL = "light_gray_candle_moon_cheese_block";
+        String CYAN_CANDLE_MOON_CHEESE_WHEEL = "cyan_candle_moon_cheese_block";
+        String PURPLE_CANDLE_MOON_CHEESE_WHEEL = "purple_candle_moon_cheese_block";
+        String BLUE_CANDLE_MOON_CHEESE_WHEEL = "blue_candle_moon_cheese_block";
+        String BROWN_CANDLE_MOON_CHEESE_WHEEL = "brown_candle_moon_cheese_block";
+        String GREEN_CANDLE_MOON_CHEESE_WHEEL = "green_candle_moon_cheese_block";
+        String RED_CANDLE_MOON_CHEESE_WHEEL = "red_candle_moon_cheese_block";
+        String BLACK_CANDLE_MOON_CHEESE_WHEEL = "black_candle_moon_cheese_block";
 
         // Liquids
         String FUEL = "fuel";
@@ -486,6 +486,7 @@ public interface Constant {
         String TITANIUM_HOE = "titanium_hoe";
 
         String STANDARD_WRENCH = "standard_wrench";
+        String TITANTIUM_UPGRADE_SMITHING_TEMPLATE = "titanium_upgrade_smithing_template";
         String BATTERY = "battery";
         String INFINITE_BATTERY = "infinite_battery";
 
@@ -772,7 +773,7 @@ public interface Constant {
             Style DARK_BLUE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_BLUE);
 
             static int getStorageLevelColor(double scale) {
-                return ((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8);
+                return ((int) (255 * scale) << 16) + (((int) (255 * (1.0 - scale))) << 8);
             }
 
             static Style getStorageLevelStyle(double scale) {
@@ -783,43 +784,48 @@ public interface Constant {
                 return Style.EMPTY.withColor(TextColor.fromRgb(Mth.hsvToRgb(ticks / 1000.0f, 1, 1)));
             }
         }
-        
+
         interface TranslationKey {
-              String HYDROGEN = "gas.galacticraft.hydrogen";
-              String NITROGEN = "gas.galacticraft.nitrogen";
-              String OXYGEN = "gas.galacticraft.oxygen";
-              String CARBON_DIOXIDE = "gas.galacticraft.carbon_dioxide";
-              String CARBON_MONOXIDE = "gas.galacticraft.carbon_monoxide";
-              String WATER_VAPOR = "gas.galacticraft.water_vapor";
-              String METHANE = "gas.galacticraft.methane";
-              String HELIUM = "gas.galacticraft.helium";
-              String ARGON = "gas.galacticraft.argon";
-              String NITROUS_OXIDE = "gas.galacticraft.nitrous_oxide";
-              String NEON = "gas.galacticraft.neon";
-              String KRYPTON = "gas.galacticraft.krypton";
-              String XENON = "gas.galacticraft.xenon";
-              String OZONE = "gas.galacticraft.ozone";
-              String NITROUS_DIOXIDE = "gas.galacticraft.nitrous_dioxide";
-              String IODINE = "gas.galacticraft.iodine";
-              String NOT_ENOUGH_LEAVES = "ui.galacticraft.machine.status.not_enough_leaves";
-              String ACTIVE = "ui.galacticraft.machine.status.active";
-              String IDLE = "ui.galacticraft.machine.status.idle";
-              String WARMING = "ui.galacticraft.machine.status.warming";
-              String INACTIVE = "ui.galacticraft.machine.status.inactive";
-              String NOT_ENOUGH_ENERGY = "ui.galacticraft.machine.status.not_enough_energy";
-              String OFF = "ui.galacticraft.machine.status.off";
-              String PROCESSING = "ui.galacticraft.machine.status.processing";
-              String COLLECTING = "ui.galacticraft.machine.status.collecting";
-              String COMPRESSING = "ui.galacticraft.machine.status.compressing";
-              String DECOMPRESSING = "ui.galacticraft.machine.status.decompressing";
-              String PARTIALLY_BLOCKED = "ui.galacticraft.machine.status.partially_blocked";
-              String NIGHT = "ui.galacticraft.machine.status.night";
-              String FULL = "ui.galacticraft.machine.status.full";
-              String EMPTY_CANISTER = "ui.galacticraft.machine.status.empty_canister";
-              String BLOCKED = "ui.galacticraft.machine.status.blocked";
-              String DISTRIBUTING = "ui.galacticraft.machine.status.distributing";
-              String NOT_ENOUGH_OXYGEN = "ui.galacticraft.machine.status.not_enough_oxygen";
-              String NOT_ENOUGH_ITEMS = "ui.galacticraft.machine.status.not_enough_items";
+            String HYDROGEN = "gas.galacticraft.hydrogen";
+            String NITROGEN = "gas.galacticraft.nitrogen";
+            String OXYGEN = "gas.galacticraft.oxygen";
+            String CARBON_DIOXIDE = "gas.galacticraft.carbon_dioxide";
+            String CARBON_MONOXIDE = "gas.galacticraft.carbon_monoxide";
+            String WATER_VAPOR = "gas.galacticraft.water_vapor";
+            String METHANE = "gas.galacticraft.methane";
+            String HELIUM = "gas.galacticraft.helium";
+            String ARGON = "gas.galacticraft.argon";
+            String NITROUS_OXIDE = "gas.galacticraft.nitrous_oxide";
+            String NEON = "gas.galacticraft.neon";
+            String KRYPTON = "gas.galacticraft.krypton";
+            String XENON = "gas.galacticraft.xenon";
+            String OZONE = "gas.galacticraft.ozone";
+            String NITROUS_DIOXIDE = "gas.galacticraft.nitrous_dioxide";
+            String IODINE = "gas.galacticraft.iodine";
+            String NOT_ENOUGH_LEAVES = "ui.galacticraft.machine.status.not_enough_leaves";
+            String ACTIVE = "ui.galacticraft.machine.status.active";
+            String IDLE = "ui.galacticraft.machine.status.idle";
+            String WARMING = "ui.galacticraft.machine.status.warming";
+            String INACTIVE = "ui.galacticraft.machine.status.inactive";
+            String NOT_ENOUGH_ENERGY = "ui.galacticraft.machine.status.not_enough_energy";
+            String OFF = "ui.galacticraft.machine.status.off";
+            String PROCESSING = "ui.galacticraft.machine.status.processing";
+            String COLLECTING = "ui.galacticraft.machine.status.collecting";
+            String COMPRESSING = "ui.galacticraft.machine.status.compressing";
+            String DECOMPRESSING = "ui.galacticraft.machine.status.decompressing";
+            String PARTIALLY_BLOCKED = "ui.galacticraft.machine.status.partially_blocked";
+            String NIGHT = "ui.galacticraft.machine.status.night";
+            String FULL = "ui.galacticraft.machine.status.full";
+            String EMPTY_CANISTER = "ui.galacticraft.machine.status.empty_canister";
+            String BLOCKED = "ui.galacticraft.machine.status.blocked";
+            String DISTRIBUTING = "ui.galacticraft.machine.status.distributing";
+            String NOT_ENOUGH_OXYGEN = "ui.galacticraft.machine.status.not_enough_oxygen";
+            String NOT_ENOUGH_ITEMS = "ui.galacticraft.machine.status.not_enough_items";
+            String UPGRADE_TITANIUM_APPLIES_TO = "smithing_template.galacticraft.titanium_upgrade.applies_to";
+            String UPGRADE_TITANIUM_INGREDIENTS = "smithing_template.galacticraft.titanium_upgrade.ingredients";
+            String UPGRADE_TITANIUM_DESCRIPTION = "smithing_template.galacticraft.titanium_upgrade.description";
+            String UPGRADE_TITANIUM_BASE_SLOT_DESCRIPTION = "smithing_template.galacticraft.titanium_upgrade.base_slot_description";
+            String UPGRADE_TITANIUM_ADDITIONS_SLOT_DESCRIPTON = "smithing_template.galacticraft.titanium_upgrade.additions_slot_description";
         }
     }
 
@@ -892,6 +898,7 @@ public interface Constant {
     interface Recipe {
         String FABRICATION = "fabrication";
         String COMPRESSING = "compressing";
+
         interface Serializer {
             String FABRICATION = "fabrication";
             String COMPRESSING_SHAPELESS = "compressing_shapeless";

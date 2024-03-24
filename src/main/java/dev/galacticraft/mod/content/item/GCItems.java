@@ -31,6 +31,8 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -60,6 +62,7 @@ public class GCItems {
     public static final Item ALUMINUM_DECORATION_SLAB = ITEMS.register(Constant.Block.ALUMINUM_DECORATION_SLAB, new BlockItem(GCBlocks.ALUMINUM_DECORATION_SLAB, new Item.Properties()));
     public static final Item ALUMINUM_DECORATION_STAIRS = ITEMS.register(Constant.Block.ALUMINUM_DECORATION_STAIRS, new BlockItem(GCBlocks.ALUMINUM_DECORATION_STAIRS, new Item.Properties()));
     public static final Item ALUMINUM_DECORATION_WALL = ITEMS.register(Constant.Block.ALUMINUM_DECORATION_WALL, new BlockItem(GCBlocks.ALUMINUM_DECORATION_WALL, new Item.Properties()));
+    public static final Item DETAILED_ALUMINUM_DECORATION = new BlockItem(GCBlocks.DETAILED_ALUMINUM_DECORATION, new Item.Properties());
     public static final Item DETAILED_ALUMINUM_DECORATION_SLAB = new BlockItem(GCBlocks.DETAILED_ALUMINUM_DECORATION_SLAB, new Item.Properties());
     public static final Item DETAILED_ALUMINUM_DECORATION_STAIRS = new BlockItem(GCBlocks.DETAILED_ALUMINUM_DECORATION_STAIRS, new Item.Properties());
     public static final Item DETAILED_ALUMINUM_DECORATION_WALL = new BlockItem(GCBlocks.DETAILED_ALUMINUM_DECORATION_WALL, new Item.Properties());
@@ -252,7 +255,7 @@ public class GCItems {
     public static final Item GALENA_ORE = new BlockItem(GCBlocks.GALENA_ORE, new Item.Properties());
 
     // CHEESE BLOCK
-    public static final Item MOON_CHEESE_BLOCK = new BlockItem(GCBlocks.MOON_CHEESE_BLOCK, new Item.Properties());
+    public static final Item MOON_CHEESE_WHEEL = new BlockItem(GCBlocks.MOON_CHEESE_WHEEL, new Item.Properties());
 
     // COMPACT MINERAL BLOCKS
     public static final Item SILICON_BLOCK = new BlockItem(GCBlocks.SILICON_BLOCK, new Item.Properties());
@@ -271,9 +274,9 @@ public class GCItems {
     // MISC MACHINES
     public static final Item CRYOGENIC_CHAMBER = new BlockItem(GCBlocks.CRYOGENIC_CHAMBER, new Item.Properties());
     public static final Item PLAYER_TRANSPORT_TUBE = new BlockItem(GCBlocks.PLAYER_TRANSPORT_TUBE, new Item.Properties());
-    public static final BlockItem AIR_LOCK_FRAME = new BlockItem(GCBlocks.AIR_LOCK_FRAME, new FabricItemSettings());
-    public static final BlockItem AIR_LOCK_CONTROLLER = new BlockItem(GCBlocks.AIR_LOCK_CONTROLLER, new FabricItemSettings());
-    public static final BlockItem AIR_LOCK_SEAL = new BlockItem(GCBlocks.AIR_LOCK_SEAL, new FabricItemSettings());
+    public static final Item AIR_LOCK_FRAME = new BlockItem(GCBlocks.AIR_LOCK_FRAME, new FabricItemSettings());
+    public static final Item AIR_LOCK_CONTROLLER = new BlockItem(GCBlocks.AIR_LOCK_CONTROLLER, new FabricItemSettings());
+    public static final Item AIR_LOCK_SEAL = new BlockItem(GCBlocks.AIR_LOCK_SEAL, new FabricItemSettings());
 
     // MACHINES
     public static final Item CIRCUIT_FABRICATOR = new BlockItem(GCBlocks.CIRCUIT_FABRICATOR, new Item.Properties());
@@ -425,6 +428,30 @@ public class GCItems {
 
     public static final Item STANDARD_WRENCH = new StandardWrenchItem(new Item.Properties().durability(256));
 
+    // SMITHING TEMPLATES
+    public static final Item TITANTIUM_UPGRADE_SMITHING_TEMPLATE = new SmithingTemplateItem(
+            Component.translatable(Constant.Text.TranslationKey.UPGRADE_TITANIUM_APPLIES_TO),
+            Component.translatable(Constant.Text.TranslationKey.UPGRADE_TITANIUM_INGREDIENTS),
+            Component.translatable(Constant.Text.TranslationKey.UPGRADE_TITANIUM_DESCRIPTION),
+            Component.translatable(Constant.Text.TranslationKey.UPGRADE_TITANIUM_BASE_SLOT_DESCRIPTION),
+            Component.translatable(Constant.Text.TranslationKey.UPGRADE_TITANIUM_ADDITIONS_SLOT_DESCRIPTON),
+            List.of(new ResourceLocation("item/empty_armor_slot_helmet"),
+                    new ResourceLocation("item/empty_armor_slot_chestplate"),
+                    new ResourceLocation("item/empty_armor_slot_leggings"),
+                    new ResourceLocation("item/empty_armor_slot_boots"),
+                    new ResourceLocation("item/empty_slot_hoe"),
+                    new ResourceLocation("item/empty_slot_axe"),
+                    new ResourceLocation("item/empty_slot_sword"),
+                    new ResourceLocation("item/empty_slot_shovel"),
+                    new ResourceLocation("item/empty_slot_pickaxe")),
+            List.of(new ResourceLocation("item/empty_slot_ingot"))
+    );
+    // 		this.appliesTo = component;
+    //		this.ingredients = component2;
+    //		this.upgradeDescription = component3;
+    //		this.baseSlotDescription = component4;
+    //		this.additionsSlotDescription = component5;
+
     // BATTERIES
     public static final Item BATTERY = new BatteryItem(new Item.Properties(), 15000, 500);
     public static final Item INFINITE_BATTERY = new InfiniteBatteryItem(new Item.Properties().rarity(Rarity.EPIC));
@@ -477,6 +504,7 @@ public class GCItems {
         // === START BLOCKS ===
 
         // DECORATION BLOCKS
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION), DETAILED_ALUMINUM_DECORATION);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION_SLAB), DETAILED_ALUMINUM_DECORATION_SLAB);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION_STAIRS), DETAILED_ALUMINUM_DECORATION_STAIRS);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION_WALL), DETAILED_ALUMINUM_DECORATION_WALL);
@@ -669,7 +697,7 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.GALENA_ORE), GALENA_ORE);
 
         // CHEESE BLOCK
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_CHEESE_BLOCK), MOON_CHEESE_BLOCK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_CHEESE_WHEEL), MOON_CHEESE_WHEEL);
 
         // COMPACT MINERAL BLOCKS
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.SILICON_BLOCK), SILICON_BLOCK);
@@ -826,6 +854,9 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.TITANIUM_HOE), TITANIUM_HOE);
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.STANDARD_WRENCH), STANDARD_WRENCH);
+
+        // SMITHING TEMPLATES
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.TITANTIUM_UPGRADE_SMITHING_TEMPLATE), TITANTIUM_UPGRADE_SMITHING_TEMPLATE);
 
         // BATTERIES
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.BATTERY), BATTERY);

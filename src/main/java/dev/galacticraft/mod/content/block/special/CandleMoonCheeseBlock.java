@@ -103,7 +103,7 @@ public class CandleMoonCheeseBlock extends AbstractCandleBlock {
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
         else {
-            var interactionResult = MoonCheeseBlock.eat(level, blockPos, GCBlocks.MOON_CHEESE_BLOCK.defaultBlockState(), player);
+            var interactionResult = MoonCheeseBlock.eat(level, blockPos, GCBlocks.MOON_CHEESE_WHEEL.defaultBlockState(), player);
 
             if (interactionResult.consumesAction()) {
                 dropResources(blockState, level, blockPos);
@@ -123,7 +123,7 @@ public class CandleMoonCheeseBlock extends AbstractCandleBlock {
 
     @Override
     public ItemStack getCloneItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
-        return new ItemStack(GCBlocks.MOON_CHEESE_BLOCK);
+        return new ItemStack(GCBlocks.MOON_CHEESE_WHEEL);
     }
 
     @Override

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "T": {
+      "item": "galacticraft:tin_ingot"
+    }
+  },
+  "pattern": [
+    "T T",
+    "TTT",
+    "T T"
+  ],
+  "result": {
+    "count": 6,
+    "item": "galacticraft:tin_ladder"
+  }
+}

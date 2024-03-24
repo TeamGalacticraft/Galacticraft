@@ -28,7 +28,6 @@ import dev.galacticraft.mod.content.block.decoration.GratingBlock;
 import dev.galacticraft.mod.content.block.decoration.LightPanelBlock;
 import dev.galacticraft.mod.content.block.decoration.LunarCartographyTableBlock;
 import dev.galacticraft.mod.content.block.decoration.VacuumGlassBlock;
-import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.content.block.environment.*;
 import dev.galacticraft.mod.content.block.machine.*;
 import dev.galacticraft.mod.content.block.special.*;
@@ -97,7 +96,7 @@ public class GCBlocks {
     public static final Block ALUMINUM_DECORATION_SLAB = new SlabBlock(BlockBehaviour.Properties.ofFullCopy(ALUMINUM_DECORATION).strength(2.5F, 3.0F));
     public static final Block ALUMINUM_DECORATION_STAIRS = BLOCKS.register(Constant.Block.ALUMINUM_DECORATION_STAIRS, new StairBlock(ALUMINUM_DECORATION.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(ALUMINUM_DECORATION)));
     public static final Block ALUMINUM_DECORATION_WALL = new WallBlock(BlockBehaviour.Properties.ofFullCopy(ALUMINUM_DECORATION));
-    public static final Block DETAILED_ALUMINUM_DECORATION = BLOCKS.registerWithItem(Constant.Block.DETAILED_ALUMINUM_DECORATION, new Block(BlockBehaviour.Properties.ofFullCopy(ALUMINUM_DECORATION)));
+    public static final Block DETAILED_ALUMINUM_DECORATION = new Block(BlockBehaviour.Properties.ofFullCopy(ALUMINUM_DECORATION));
     public static final Block DETAILED_ALUMINUM_DECORATION_SLAB = new SlabBlock(BlockBehaviour.Properties.ofFullCopy(DETAILED_ALUMINUM_DECORATION).strength(2.5F, 3.0F));
     public static final Block DETAILED_ALUMINUM_DECORATION_STAIRS = new StairBlock(DETAILED_ALUMINUM_DECORATION.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(DETAILED_ALUMINUM_DECORATION));
     public static final Block DETAILED_ALUMINUM_DECORATION_WALL = new WallBlock(BlockBehaviour.Properties.ofFullCopy(DETAILED_ALUMINUM_DECORATION));
@@ -294,24 +293,24 @@ public class GCBlocks {
     public static final Block GALENA_ORE = new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 5.0F, false));
 
     // CHEESE BLOCK
-    public static final Block MOON_CHEESE_BLOCK = new MoonCheeseBlock(BlockBehaviour.Properties.of().forceSolidOn().strength(0.5F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
-    public static final Block CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.CANDLE, BlockBehaviour.Properties.ofFullCopy(MOON_CHEESE_BLOCK).lightLevel(litBlockEmission(3)));
-    public static final Block WHITE_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.WHITE_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_BLOCK));
-    public static final Block ORANGE_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.ORANGE_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_BLOCK));
-    public static final Block MAGENTA_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.MAGENTA_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_BLOCK));
-    public static final Block LIGHT_BLUE_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.LIGHT_BLUE_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_BLOCK));
-    public static final Block YELLOW_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.YELLOW_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_BLOCK));
-    public static final Block LIME_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.LIME_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_BLOCK));
-    public static final Block PINK_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.PINK_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_BLOCK));
-    public static final Block GRAY_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.GRAY_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_BLOCK));
-    public static final Block LIGHT_GRAY_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.LIGHT_GRAY_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_BLOCK));
-    public static final Block CYAN_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.CYAN_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_BLOCK));
-    public static final Block PURPLE_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.PURPLE_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_BLOCK));
-    public static final Block BLUE_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.BLUE_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_BLOCK));
-    public static final Block BROWN_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.BROWN_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_BLOCK));
-    public static final Block GREEN_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.GREEN_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_BLOCK));
-    public static final Block RED_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.RED_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_BLOCK));
-    public static final Block BLACK_CANDLE_MOON_CHEESE_BLOCK = new CandleMoonCheeseBlock(Blocks.BLACK_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_BLOCK));
+    public static final Block MOON_CHEESE_WHEEL = new MoonCheeseBlock(BlockBehaviour.Properties.of().forceSolidOn().strength(0.5F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY));
+    public static final Block CANDLE_MOON_CHEESE_WHEEL = new CandleMoonCheeseBlock(Blocks.CANDLE, BlockBehaviour.Properties.ofFullCopy(MOON_CHEESE_WHEEL).lightLevel(litBlockEmission(3)));
+    public static final Block WHITE_CANDLE_MOON_CHEESE_WHEEL = new CandleMoonCheeseBlock(Blocks.WHITE_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL));
+    public static final Block ORANGE_CANDLE_MOON_CHEESE_WHEEL = new CandleMoonCheeseBlock(Blocks.ORANGE_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL));
+    public static final Block MAGENTA_CANDLE_MOON_CHEESE_WHEEL = new CandleMoonCheeseBlock(Blocks.MAGENTA_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL));
+    public static final Block LIGHT_BLUE_CANDLE_MOON_CHEESE_WHEEL = new CandleMoonCheeseBlock(Blocks.LIGHT_BLUE_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL));
+    public static final Block YELLOW_CANDLE_MOON_CHEESE_WHEEL = new CandleMoonCheeseBlock(Blocks.YELLOW_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL));
+    public static final Block LIME_CANDLE_MOON_CHEESE_WHEEL = new CandleMoonCheeseBlock(Blocks.LIME_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL));
+    public static final Block PINK_CANDLE_MOON_CHEESE_WHEEL = new CandleMoonCheeseBlock(Blocks.PINK_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL));
+    public static final Block GRAY_CANDLE_MOON_CHEESE_WHEEL = new CandleMoonCheeseBlock(Blocks.GRAY_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL));
+    public static final Block LIGHT_GRAY_CANDLE_MOON_CHEESE_WHEEL = new CandleMoonCheeseBlock(Blocks.LIGHT_GRAY_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL));
+    public static final Block CYAN_CANDLE_MOON_CHEESE_WHEEL = new CandleMoonCheeseBlock(Blocks.CYAN_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL));
+    public static final Block PURPLE_CANDLE_MOON_CHEESE_WHEEL = new CandleMoonCheeseBlock(Blocks.PURPLE_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL));
+    public static final Block BLUE_CANDLE_MOON_CHEESE_WHEEL = new CandleMoonCheeseBlock(Blocks.BLUE_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL));
+    public static final Block BROWN_CANDLE_MOON_CHEESE_WHEEL = new CandleMoonCheeseBlock(Blocks.BROWN_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL));
+    public static final Block GREEN_CANDLE_MOON_CHEESE_WHEEL = new CandleMoonCheeseBlock(Blocks.GREEN_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL));
+    public static final Block RED_CANDLE_MOON_CHEESE_WHEEL = new CandleMoonCheeseBlock(Blocks.RED_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL));
+    public static final Block BLACK_CANDLE_MOON_CHEESE_WHEEL = new CandleMoonCheeseBlock(Blocks.BLACK_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL));
 
     // COMPACT MINERAL BLOCKS
     public static final Block SILICON_BLOCK = new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL));
@@ -381,6 +380,7 @@ public class GCBlocks {
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ALUMINUM_DECORATION), ALUMINUM_DECORATION);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ALUMINUM_DECORATION_SLAB), ALUMINUM_DECORATION_SLAB);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ALUMINUM_DECORATION_WALL), ALUMINUM_DECORATION_WALL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION), DETAILED_ALUMINUM_DECORATION);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION_SLAB), DETAILED_ALUMINUM_DECORATION_SLAB);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION_STAIRS), DETAILED_ALUMINUM_DECORATION_STAIRS);
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.DETAILED_ALUMINUM_DECORATION_WALL), DETAILED_ALUMINUM_DECORATION_WALL);
@@ -574,24 +574,24 @@ public class GCBlocks {
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GALENA_ORE), GALENA_ORE);
 
         // CHEESE BLOCK
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_CHEESE_BLOCK), MOON_CHEESE_BLOCK);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.CANDLE_MOON_CHEESE_BLOCK), CANDLE_MOON_CHEESE_BLOCK);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.WHITE_CANDLE_MOON_CHEESE_BLOCK), WHITE_CANDLE_MOON_CHEESE_BLOCK);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ORANGE_CANDLE_MOON_CHEESE_BLOCK), ORANGE_CANDLE_MOON_CHEESE_BLOCK);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MAGENTA_CANDLE_MOON_CHEESE_BLOCK), MAGENTA_CANDLE_MOON_CHEESE_BLOCK);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.LIGHT_BLUE_CANDLE_MOON_CHEESE_BLOCK), LIGHT_BLUE_CANDLE_MOON_CHEESE_BLOCK);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.YELLOW_CANDLE_MOON_CHEESE_BLOCK), YELLOW_CANDLE_MOON_CHEESE_BLOCK);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.LIME_CANDLE_MOON_CHEESE_BLOCK), LIME_CANDLE_MOON_CHEESE_BLOCK);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.PINK_CANDLE_MOON_CHEESE_BLOCK), PINK_CANDLE_MOON_CHEESE_BLOCK);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GRAY_CANDLE_MOON_CHEESE_BLOCK), GRAY_CANDLE_MOON_CHEESE_BLOCK);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.LIGHT_GRAY_CANDLE_MOON_CHEESE_BLOCK), LIGHT_GRAY_CANDLE_MOON_CHEESE_BLOCK);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.CYAN_CANDLE_MOON_CHEESE_BLOCK), CYAN_CANDLE_MOON_CHEESE_BLOCK);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.PURPLE_CANDLE_MOON_CHEESE_BLOCK), PURPLE_CANDLE_MOON_CHEESE_BLOCK);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.BLUE_CANDLE_MOON_CHEESE_BLOCK), BLUE_CANDLE_MOON_CHEESE_BLOCK);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.BROWN_CANDLE_MOON_CHEESE_BLOCK), BROWN_CANDLE_MOON_CHEESE_BLOCK);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GREEN_CANDLE_MOON_CHEESE_BLOCK), GREEN_CANDLE_MOON_CHEESE_BLOCK);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.RED_CANDLE_MOON_CHEESE_BLOCK), RED_CANDLE_MOON_CHEESE_BLOCK);
-        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.BLACK_CANDLE_MOON_CHEESE_BLOCK), BLACK_CANDLE_MOON_CHEESE_BLOCK);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MOON_CHEESE_WHEEL), MOON_CHEESE_WHEEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.CANDLE_MOON_CHEESE_WHEEL), CANDLE_MOON_CHEESE_WHEEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.WHITE_CANDLE_MOON_CHEESE_WHEEL), WHITE_CANDLE_MOON_CHEESE_WHEEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.ORANGE_CANDLE_MOON_CHEESE_WHEEL), ORANGE_CANDLE_MOON_CHEESE_WHEEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.MAGENTA_CANDLE_MOON_CHEESE_WHEEL), MAGENTA_CANDLE_MOON_CHEESE_WHEEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.LIGHT_BLUE_CANDLE_MOON_CHEESE_WHEEL), LIGHT_BLUE_CANDLE_MOON_CHEESE_WHEEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.YELLOW_CANDLE_MOON_CHEESE_WHEEL), YELLOW_CANDLE_MOON_CHEESE_WHEEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.LIME_CANDLE_MOON_CHEESE_WHEEL), LIME_CANDLE_MOON_CHEESE_WHEEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.PINK_CANDLE_MOON_CHEESE_WHEEL), PINK_CANDLE_MOON_CHEESE_WHEEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GRAY_CANDLE_MOON_CHEESE_WHEEL), GRAY_CANDLE_MOON_CHEESE_WHEEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.LIGHT_GRAY_CANDLE_MOON_CHEESE_WHEEL), LIGHT_GRAY_CANDLE_MOON_CHEESE_WHEEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.CYAN_CANDLE_MOON_CHEESE_WHEEL), CYAN_CANDLE_MOON_CHEESE_WHEEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.PURPLE_CANDLE_MOON_CHEESE_WHEEL), PURPLE_CANDLE_MOON_CHEESE_WHEEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.BLUE_CANDLE_MOON_CHEESE_WHEEL), BLUE_CANDLE_MOON_CHEESE_WHEEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.BROWN_CANDLE_MOON_CHEESE_WHEEL), BROWN_CANDLE_MOON_CHEESE_WHEEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.GREEN_CANDLE_MOON_CHEESE_WHEEL), GREEN_CANDLE_MOON_CHEESE_WHEEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.RED_CANDLE_MOON_CHEESE_WHEEL), RED_CANDLE_MOON_CHEESE_WHEEL);
+        Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.BLACK_CANDLE_MOON_CHEESE_WHEEL), BLACK_CANDLE_MOON_CHEESE_WHEEL);
 
         // COMPACT MINERAL BLOCKS
         Registry.register(BuiltInRegistries.BLOCK, Constant.id(Constant.Block.SILICON_BLOCK), SILICON_BLOCK);

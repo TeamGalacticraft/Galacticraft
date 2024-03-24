@@ -179,6 +179,7 @@ public class GCCreativeModeTabs {
                 output.accept(TITANIUM_HOE);
 
                 output.accept(STANDARD_WRENCH);
+                output.accept(TITANTIUM_UPGRADE_SMITHING_TEMPLATE);
 
                 output.accept(THROWABLE_METEOR_CHUNK);
                 output.accept(HOT_THROWABLE_METEOR_CHUNK);
@@ -274,7 +275,7 @@ public class GCCreativeModeTabs {
                 output.accept(ALUMINUM_DECORATION_SLAB);
                 output.accept(ALUMINUM_DECORATION_STAIRS);
                 output.accept(ALUMINUM_DECORATION_WALL);
-                output.accept(GCBlocks.DETAILED_ALUMINUM_DECORATION);
+                output.accept(DETAILED_ALUMINUM_DECORATION);
                 output.accept(DETAILED_ALUMINUM_DECORATION_SLAB);
                 output.accept(DETAILED_ALUMINUM_DECORATION_STAIRS);
                 output.accept(DETAILED_ALUMINUM_DECORATION_WALL);
@@ -462,7 +463,7 @@ public class GCCreativeModeTabs {
                 output.accept(GALENA_ORE);
 
                 // COMPACT MINERAL BLOCKS
-                output.accept(MOON_CHEESE_BLOCK);
+                output.accept(MOON_CHEESE_WHEEL);
                 output.accept(SILICON_BLOCK);
                 output.accept(METEORIC_IRON_BLOCK);
                 output.accept(DESH_BLOCK);

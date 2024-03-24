@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "D": {
+      "item": "galacticraft:desh_ingot"
+    },
+    "S": {
+      "item": "galacticraft:desh_stick"
+    }
+  },
+  "pattern": [
+    "DDD",
+    " S ",
+    " S "
+  ],
+  "result": {
+    "item": "galacticraft:desh_pickaxe"
+  }
+}

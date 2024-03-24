@@ -2,20 +2,20 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "X": {
-      "tag": "c:redstone_dusts"
+    "G": {
+      "tag": "c:glass_panes"
     },
-    "Y": {
+    "I": {
       "tag": "c:compressed_iron"
     },
-    "Z": {
-      "tag": "c:glass_panes"
+    "R": {
+      "tag": "c:redstone_dusts"
     }
   },
   "pattern": [
-    "XYX",
-    "YZY",
-    "XYX"
+    "RIR",
+    "IGI",
+    "RIR"
   ],
   "result": {
     "item": "galacticraft:beam_core"

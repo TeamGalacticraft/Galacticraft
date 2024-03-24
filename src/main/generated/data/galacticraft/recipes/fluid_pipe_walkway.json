@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "item": "galacticraft:glass_fluid_pipe"
+    },
+    "T": {
+      "item": "galacticraft:compressed_titanium"
+    }
+  },
+  "pattern": [
+    "TTT",
+    "PTP",
+    "PPP"
+  ],
+  "result": {
+    "count": 5,
+    "item": "galacticraft:fluid_pipe_walkway"
+  }
+}

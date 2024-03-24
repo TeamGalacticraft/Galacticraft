@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:stone_button"
+    },
+    "F": {
+      "item": "minecraft:flint_and_steel"
+    },
+    "P": {
+      "item": "galacticraft:heavy_plating"
+    },
+    "T": {
+      "item": "galacticraft:tin_canister"
+    },
+    "V": {
+      "item": "galacticraft:oxygen_vent"
+    }
+  },
+  "pattern": [
+    " FB",
+    "PTP",
+    "PVP"
+  ],
+  "result": {
+    "item": "galacticraft:rocket_engine"
+  }
+}

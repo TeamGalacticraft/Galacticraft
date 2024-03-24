@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "E": {
+      "item": "galacticraft:electric_furnace"
+    },
+    "H": {
+      "item": "galacticraft:heavy_plating"
+    },
+    "M": {
+      "item": "galacticraft:meteoric_iron_ingot"
+    },
+    "W": {
+      "item": "galacticraft:advanced_wafer"
+    }
+  },
+  "pattern": [
+    "HHH",
+    "HEH",
+    "MWM"
+  ],
+  "result": {
+    "item": "galacticraft:electric_arc_furnace"
+  }
+}

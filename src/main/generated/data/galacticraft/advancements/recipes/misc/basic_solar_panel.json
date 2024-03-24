@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_basic_wafer": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "galacticraft:basic_wafer"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraft:basic_solar_panel"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_basic_wafer"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraft:basic_solar_panel"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "galacticraft:aluminum_ingot"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    }
+  },
+  "pattern": [
+    "AGA",
+    "GGG",
+    "AGA"
+  ],
+  "result": {
+    "item": "galacticraft:vacuum_glass_clear"
+  }
+}

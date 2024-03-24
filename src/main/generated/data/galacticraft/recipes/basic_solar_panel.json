@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "galacticraft:basic_wafer"
+    },
+    "F": {
+      "item": "galacticraft:full_solar_panel"
+    },
+    "P": {
+      "item": "galacticraft:steel_pole"
+    },
+    "S": {
+      "item": "galacticraft:compressed_steel"
+    },
+    "W": {
+      "item": "galacticraft:aluminum_wire"
+    }
+  },
+  "pattern": [
+    "SFS",
+    "SPS",
+    "WBW"
+  ],
+  "result": {
+    "item": "galacticraft:basic_solar_panel"
+  }
+}

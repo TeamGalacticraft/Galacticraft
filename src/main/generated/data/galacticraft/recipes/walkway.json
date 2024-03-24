@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "T": {
+      "item": "galacticraft:compressed_titanium"
+    }
+  },
+  "pattern": [
+    "TTT",
+    " T "
+  ],
+  "result": {
+    "count": 5,
+    "item": "galacticraft:walkway"
+  }
+}

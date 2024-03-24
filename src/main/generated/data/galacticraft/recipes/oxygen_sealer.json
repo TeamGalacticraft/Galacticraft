@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "galacticraft:compressed_aluminum"
+    },
+    "F": {
+      "item": "galacticraft:oxygen_fan"
+    },
+    "S": {
+      "item": "galacticraft:compressed_steel"
+    },
+    "V": {
+      "item": "galacticraft:oxygen_vent"
+    }
+  },
+  "pattern": [
+    "ASA",
+    "VFV",
+    "ASA"
+  ],
+  "result": {
+    "item": "galacticraft:oxygen_sealer"
+  }
+}

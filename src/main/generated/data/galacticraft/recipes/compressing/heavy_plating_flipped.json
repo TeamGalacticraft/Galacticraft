@@ -1,0 +1,22 @@
+{
+  "type": "galacticraft:compressing_shaped",
+  "key": {
+    "A": {
+      "item": "galacticraft:compressed_aluminum"
+    },
+    "B": {
+      "item": "galacticraft:compressed_bronze"
+    },
+    "S": {
+      "item": "galacticraft:compressed_steel"
+    }
+  },
+  "pattern": [
+    "SAB",
+    "SAB"
+  ],
+  "result": {
+    "Count": 2,
+    "id": "galacticraft:heavy_plating"
+  }
+}

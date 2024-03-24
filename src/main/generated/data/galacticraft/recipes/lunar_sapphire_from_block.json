@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "lunar_sapphire",
+  "ingredients": [
+    {
+      "item": "galacticraft:lunar_sapphire_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "galacticraft:lunar_sapphire"
+  }
+}

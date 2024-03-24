@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "galacticraft:copper_canister"
+    },
+    "F": {
+      "item": "minecraft:blast_furnace"
+    },
+    "S": {
+      "item": "galacticraft:compressed_steel"
+    }
+  },
+  "pattern": [
+    "SCS",
+    "SCS",
+    "SFS"
+  ],
+  "result": {
+    "item": "galacticraft:refinery"
+  }
+}

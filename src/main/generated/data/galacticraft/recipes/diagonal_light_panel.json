@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "galacticraft:glowstone_torch"
+    },
+    "S": {
+      "item": "minecraft:glass_pane"
+    },
+    "T": {
+      "item": "galacticraft:compressed_steel"
+    }
+  },
+  "pattern": [
+    " S",
+    "SG",
+    " T"
+  ],
+  "result": {
+    "item": "galacticraft:diagonal_light_panel"
+  }
+}

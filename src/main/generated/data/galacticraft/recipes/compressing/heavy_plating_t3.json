@@ -1,0 +1,14 @@
+{
+  "type": "galacticraft:compressing_shapeless",
+  "ingredients": [
+    {
+      "item": "galacticraft:heavy_plating_t2"
+    },
+    {
+      "item": "galacticraft:compressed_desh"
+    }
+  ],
+  "result": {
+    "item": "galacticraft:heavy_plating_t3"
+  }
+}
