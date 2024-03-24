@@ -42,51 +42,90 @@ import net.minecraft.world.item.ItemStack;
 
 import static dev.galacticraft.mod.content.item.GCItems.*;
 
-@SuppressWarnings("unused") // groups are registered in the build() call
 public class GCCreativeModeTabs {
     public static final CreativeModeTab ITEMS_GROUP = FabricItemGroup
             .builder()
             .icon(() -> new ItemStack(GCItems.CANVAS))
             .title(Component.translatable("itemGroup.galacticraft.items"))
             .displayItems((parameters, output) -> { // todo: add rockets here
+                // GEAR
+                output.accept(OXYGEN_MASK);
+                output.accept(OXYGEN_GEAR);
+
+                try (Transaction t = Transaction.openOuter()) {
+                    PlaceholderItemStorage itemStorage = new PlaceholderItemStorage();
+                    ContainerItemContext context = ContainerItemContext.ofSingleSlot(itemStorage);
+
+                    output.accept(SMALL_OXYGEN_TANK);
+                    itemStorage.setItem(SMALL_OXYGEN_TANK);
+                    context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
+                    output.accept(itemStorage.variant.toStack());
+
+                    output.accept(MEDIUM_OXYGEN_TANK);
+                    itemStorage.setItem(MEDIUM_OXYGEN_TANK);
+                    context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
+                    output.accept(itemStorage.variant.toStack());
+
+                    output.accept(LARGE_OXYGEN_TANK);
+                    itemStorage.setItem(LARGE_OXYGEN_TANK);
+                    context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
+                    output.accept(itemStorage.variant.toStack());
+                }
+
+                output.accept(INFINITE_OXYGEN_TANK);
+                output.accept(SENSOR_GLASSES);
+                output.accept(FREQUENCY_MODULE);
+                PARACHUTE.colorMap().values().forEach(output::accept);
+
+//                output.accept(SPACE_EMERGENCY_KIT);
+                output.accept(SHIELD_CONTROLLER);
+
+                // ROCKETS
+                output.accept(ROCKET.getDefaultInstance());
+
+                var rocket = ROCKET.getDefaultInstance();
+                CompoundTag tag = rocket.getOrCreateTag();
+                tag.putBoolean("creative", true);
+                output.accept(rocket);
+
                 // MATERIALS
-                output.accept(RAW_SILICON);
-
-                output.accept(RAW_METEORIC_IRON);
-                output.accept(METEORIC_IRON_INGOT);
-                output.accept(METEORIC_IRON_NUGGET);
-                output.accept(COMPRESSED_METEORIC_IRON);
-
-                output.accept(RAW_DESH);
-                output.accept(DESH_INGOT);
-                output.accept(DESH_NUGGET);
-                output.accept(COMPRESSED_DESH);
-
-                output.accept(RAW_LEAD);
-                output.accept(LEAD_INGOT);
-                output.accept(LEAD_NUGGET);
-
-                output.accept(RAW_ALUMINUM);
-                output.accept(ALUMINUM_INGOT);
+                output.accept(TIN_NUGGET);
                 output.accept(ALUMINUM_NUGGET);
-                output.accept(COMPRESSED_ALUMINUM);
+                output.accept(METEORIC_IRON_NUGGET);
+                output.accept(DESH_NUGGET);
+                output.accept(LEAD_NUGGET);
+                output.accept(TITANIUM_NUGGET);
 
                 output.accept(RAW_TIN);
-                output.accept(TIN_INGOT);
-                output.accept(TIN_NUGGET);
-                output.accept(COMPRESSED_TIN);
-
+                output.accept(RAW_ALUMINUM);
+                output.accept(RAW_METEORIC_IRON);
+                output.accept(RAW_DESH);
+                output.accept(RAW_LEAD);
                 output.accept(RAW_TITANIUM);
+                output.accept(RAW_SILICON);
+                output.accept(LUNAR_SAPPHIRE);
+
+                output.accept(METEORIC_IRON_INGOT);
+                output.accept(DESH_INGOT);
+                output.accept(LEAD_INGOT);
+                output.accept(ALUMINUM_INGOT);
+                output.accept(TIN_INGOT);
                 output.accept(TITANIUM_INGOT);
-                output.accept(TITANIUM_NUGGET);
+
+                output.accept(COMPRESSED_COPPER);
+                output.accept(COMPRESSED_TIN);
+                output.accept(COMPRESSED_ALUMINUM);
+                output.accept(COMPRESSED_STEEL);
+                output.accept(COMPRESSED_BRONZE);
+                output.accept(COMPRESSED_IRON);
+                output.accept(COMPRESSED_METEORIC_IRON);
+                output.accept(COMPRESSED_DESH);
                 output.accept(COMPRESSED_TITANIUM);
 
-                output.accept(COMPRESSED_BRONZE);
-                output.accept(COMPRESSED_COPPER);
-                output.accept(COMPRESSED_IRON);
-                output.accept(COMPRESSED_STEEL);
+                output.accept(TIER_1_HEAVY_DUTY_PLATE);
+                output.accept(TIER_2_HEAVY_DUTY_PLATE);
+                output.accept(TIER_3_HEAVY_DUTY_PLATE);
 
-                output.accept(LUNAR_SAPPHIRE);
                 output.accept(DESH_STICK);
                 output.accept(CARBON_FRAGMENTS);
                 output.accept(IRON_SHARD);
@@ -129,17 +168,34 @@ public class GCCreativeModeTabs {
                 output.accept(CANNED_DEHYDRATED_MELON);
                 output.accept(CANNED_DEHYDRATED_POTATO);
                 output.accept(CANNED_BEEF);
+                output.accept(THROWABLE_METEOR_CHUNK);
+                output.accept(HOT_THROWABLE_METEOR_CHUNK);
 
-                // ROCKET PLATES
-                output.accept(TIER_1_HEAVY_DUTY_PLATE);
-                output.accept(TIER_2_HEAVY_DUTY_PLATE);
-                output.accept(TIER_3_HEAVY_DUTY_PLATE);
+                // BATTERIES
+                output.accept(BATTERY);
+                output.accept(INFINITE_BATTERY);
 
+                //FLUID BUCKETS
+                output.accept(CRUDE_OIL_BUCKET);
+                output.accept(FUEL_BUCKET);
+                output.accept(SULFURIC_ACID_BUCKET);
+
+                // ROCKET PARTS
                 output.accept(NOSE_CONE);
                 output.accept(HEAVY_NOSE_CONE);
 
                 output.accept(ROCKET_FINS);
                 output.accept(ROCKET_ENGINE);
+
+                // SCHEMATICS
+                output.accept(TIER_2_ROCKET_SCHEMATIC);
+                output.accept(CARGO_ROCKET_SCHEMATIC);
+                output.accept(MOON_BUGGY_SCHEMATIC);
+                output.accept(TIER_3_ROCKET_SCHEMATIC);
+                output.accept(ASTRO_MINER_SCHEMATIC);
+
+                // SMITHING TEMPLATES
+                output.accept(TITANTIUM_UPGRADE_SMITHING_TEMPLATE);
 
                 // ARMOR
                 output.accept(HEAVY_DUTY_HELMET);
@@ -157,7 +213,11 @@ public class GCCreativeModeTabs {
                 output.accept(TITANIUM_LEGGINGS);
                 output.accept(TITANIUM_BOOTS);
 
-                output.accept(SENSOR_GLASSES);
+                // THERMAL PADDING
+                output.accept(THERMAL_PADDING_HELMET);
+                output.accept(THERMAL_PADDING_CHESTPIECE);
+                output.accept(THERMAL_PADDING_LEGGINGS);
+                output.accept(THERMAL_PADDING_BOOTS);
 
                 // TOOLS + WEAPONS
                 output.accept(HEAVY_DUTY_SWORD);
@@ -179,97 +239,14 @@ public class GCCreativeModeTabs {
                 output.accept(TITANIUM_HOE);
 
                 output.accept(STANDARD_WRENCH);
-                output.accept(TITANTIUM_UPGRADE_SMITHING_TEMPLATE);
-
-                output.accept(THROWABLE_METEOR_CHUNK);
-                output.accept(HOT_THROWABLE_METEOR_CHUNK);
-
-                // BATTERIES
-                output.accept(BATTERY);
-                output.accept(INFINITE_BATTERY);
-
-                //FLUID BUCKETS
-                output.accept(CRUDE_OIL_BUCKET);
-                output.accept(FUEL_BUCKET);
-                output.accept(SULFURIC_ACID_BUCKET);
-
-                //GALACTICRAFT INVENTORY
-                PARACHUTE.colorMap().values().forEach(output::accept);
-
-                for (DyeColor color : DyeColor.values()) {
-                    ItemStack stack = new ItemStack(GCBlocks.PARACHEST);
-                    CompoundTag itemTag = new CompoundTag();
-                    CompoundTag blockStateTag;
-
-                    blockStateTag = new CompoundTag();
-                    itemTag.put("BlockStateTag", blockStateTag);
-                    blockStateTag.putString("color", color.getName());
-
-                    stack.setTag(itemTag);
-                    output.accept(stack);
-                }
-
-                output.accept(OXYGEN_MASK);
-                output.accept(OXYGEN_GEAR);
-
-                try (Transaction t = Transaction.openOuter()) {
-                    PlaceholderItemStorage itemStorage = new PlaceholderItemStorage();
-                    ContainerItemContext context = ContainerItemContext.ofSingleSlot(itemStorage);
-
-                    output.accept(SMALL_OXYGEN_TANK);
-                    itemStorage.setItem(SMALL_OXYGEN_TANK);
-                    context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
-                    output.accept(itemStorage.variant.toStack());
-
-                    output.accept(MEDIUM_OXYGEN_TANK);
-                    itemStorage.setItem(MEDIUM_OXYGEN_TANK);
-                    context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
-                    output.accept(itemStorage.variant.toStack());
-
-                    output.accept(LARGE_OXYGEN_TANK);
-                    itemStorage.setItem(LARGE_OXYGEN_TANK);
-                    context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
-                    output.accept(itemStorage.variant.toStack());
-                }
-
-                output.accept(INFINITE_OXYGEN_TANK);
-
-                output.accept(SHIELD_CONTROLLER);
-                output.accept(FREQUENCY_MODULE);
-
-                output.accept(THERMAL_PADDING_HELMET);
-                output.accept(THERMAL_PADDING_CHESTPIECE);
-                output.accept(THERMAL_PADDING_LEGGINGS);
-                output.accept(THERMAL_PADDING_BOOTS);
-                // ROCKETS
-                output.accept(ROCKET.getDefaultInstance());
-
-                var rocket = ROCKET.getDefaultInstance();
-                CompoundTag tag = rocket.getOrCreateTag();
-                tag.putBoolean("creative", true);
-                output.accept(rocket);
-
-                // SCHEMATICS
-                output.accept(TIER_2_ROCKET_SCHEMATIC);
-                output.accept(CARGO_ROCKET_SCHEMATIC);
-                output.accept(MOON_BUGGY_SCHEMATIC);
-                output.accept(TIER_3_ROCKET_SCHEMATIC);
-                output.accept(ASTRO_MINER_SCHEMATIC);
             })
             .build();
 
     public static final CreativeModeTab BLOCKS_GROUP = FabricItemGroup
             .builder()
-            .icon(() -> new ItemStack(GCBlocks.MOON_TURF))
+            .icon(() -> new ItemStack(GCItems.MOON_TURF))
             .title(Component.translatable("itemGroup.galacticraft.blocks"))
             .displayItems((parameters, output) -> {
-                output.accept(GLOWSTONE_TORCH);
-                output.accept(UNLIT_TORCH);
-
-                // LANTERNS
-                output.accept(GLOWSTONE_LANTERN);
-                output.accept(UNLIT_LANTERN);
-
                 // DECORATION BLOCKS
                 output.accept(ALUMINUM_DECORATION);
                 output.accept(ALUMINUM_DECORATION_SLAB);
@@ -352,6 +329,14 @@ public class GCCreativeModeTabs {
                 output.accept(DETAILED_DARK_DECORATION_STAIRS);
                 output.accept(DETAILED_DARK_DECORATION_WALL);
 
+                // TORCHES
+                output.accept(GLOWSTONE_TORCH);
+                output.accept(UNLIT_TORCH);
+
+                // LANTERNS
+                output.accept(GLOWSTONE_LANTERN);
+                output.accept(UNLIT_LANTERN);
+
                 // MOON NATURAL
                 output.accept(MOON_TURF);
                 output.accept(MOON_DIRT);
@@ -429,6 +414,17 @@ public class GCCreativeModeTabs {
                 output.accept(GLASS_FLUID_PIPE);
                 output.accept(ROCKET_LAUNCH_PAD);
 
+                for (DyeColor color : DyeColor.values()) {
+                    ItemStack stack = new ItemStack(GCBlocks.PARACHEST);
+                    CompoundTag itemTag = new CompoundTag();
+                    CompoundTag blockStateTag = new CompoundTag();
+                    itemTag.put("BlockStateTag", blockStateTag);
+                    blockStateTag.putString("color", color.getName());
+
+                    stack.setTag(itemTag);
+                    output.accept(stack);
+                }
+
                 // LIGHT PANELS
                 output.accept(SQUARE_LIGHT_PANEL);
                 output.accept(SPOTLIGHT_LIGHT_PANEL);
@@ -486,7 +482,7 @@ public class GCCreativeModeTabs {
 
     public static final CreativeModeTab MACHINES_GROUP = FabricItemGroup
             .builder()
-            .icon(() -> new ItemStack(GCBlocks.COAL_GENERATOR))
+            .icon(() -> new ItemStack(GCItems.COAL_GENERATOR))
             .title(Component.translatable("itemGroup.galacticraft.machines"))
             .displayItems((parameters, output) -> {
                 output.accept(CIRCUIT_FABRICATOR);
