@@ -24,9 +24,11 @@ package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.CryogenicAccessor;
-import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,6 +42,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
+    @Unique
+    @SuppressWarnings("WrongEntityDataParameterClass")
+    private static final EntityDataAccessor<Boolean> IS_IN_CRYO_SLEEP_ID = SynchedEntityData.defineId(
+            LivingEntity.class, EntityDataSerializers.BOOLEAN
+    );
 
     @Shadow public abstract void setYHeadRot(float f);
 
@@ -51,17 +58,17 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
 
     @Override
     public void beginCyroSleep() {
-        this.entityData.set(GCEntityDataSerializers.IS_IN_CRYO_SLEEP_ID, true);
+        this.entityData.set(IS_IN_CRYO_SLEEP_ID, true);
     }
 
     @Override
     public void endCyroSleep() {
-        this.entityData.set(GCEntityDataSerializers.IS_IN_CRYO_SLEEP_ID, false);
+        this.entityData.set(IS_IN_CRYO_SLEEP_ID, false);
     }
 
     @Override
     public boolean isInCryoSleep() {
-        return this.entityData.get(GCEntityDataSerializers.IS_IN_CRYO_SLEEP_ID);
+        return this.entityData.get(IS_IN_CRYO_SLEEP_ID);
     }
 
     @Override
@@ -93,7 +100,7 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
 
     @Inject(method = "defineSynchedData", at = @At("TAIL"))
     private void gc$sleepData(CallbackInfo ci) {
-        this.entityData.define(GCEntityDataSerializers.IS_IN_CRYO_SLEEP_ID, false);
+        this.entityData.define(IS_IN_CRYO_SLEEP_ID, false);
     }
 
     @Inject(method = "setPosToBed", at = @At("HEAD"), cancellable = true)
