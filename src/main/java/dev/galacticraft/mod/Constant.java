@@ -884,6 +884,8 @@ public interface Constant {
         ResourceLocation INVALID = new ResourceLocation(Constant.MOD_ID, "invalid");
         ResourceLocation EMPTY = new ResourceLocation("empty");
         Direction[] DIRECTIONS = Direction.values();
+        Direction[] HORIZONTALS = {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
+        Direction[] VERTICALS = {Direction.UP, Direction.DOWN};
         String LOGGER_PREFIX = "[Galacticraft] ";
         boolean DEBUG = false;
         int MAX_STRING_READ = 32767;

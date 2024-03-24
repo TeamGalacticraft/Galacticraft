@@ -57,6 +57,9 @@ public class GCModelLoader implements ModelLoadingPlugin {
             else if (PipeBakedModel.GLASS_FLUID_PIPE_MARKER.equals(resourceId)) {
                 return PipeUnbakedModel.INSTANCE;
             }
+            else if (VacuumGlassBakedModel.VACUUM_GLASS_MODEL.equals(resourceId)) {
+                return VacuumGlassUnbakedModel.INSTANCE;
+            }
             else if (PARACHEST_ITEM.equals(resourceId)) {
                 var chutes = Maps.<DyeColor, UnbakedModel>newHashMap();
                 for (var color : DyeColor.values()) {

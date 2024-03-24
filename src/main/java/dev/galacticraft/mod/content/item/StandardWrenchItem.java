@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.mod.Constant;
-import java.util.List;
 import net.minecraft.Util;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -42,6 +41,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
@@ -73,12 +74,15 @@ public class StandardWrenchItem extends Item {
 
     private void use(Player player, BlockState state, LevelAccessor world, BlockPos pos, ItemStack stack) {
         Block block = state.getBlock();
-        Property<?> property = block.getStateDefinition().getProperty("facing");
-        if (property instanceof EnumProperty && property.getPossibleValues().contains(Direction.NORTH)) {
+        if (block.getStateDefinition().getProperty("facing") instanceof EnumProperty property && property.getPossibleValues().contains(Direction.NORTH)) {
             BlockState newState = cycle(state, property, player.isShiftKeyDown());
             world.setBlock(pos, newState, 18);
             stack.hurtAndBreak(2, player, (entity) -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
-        }
+        }/* else if (block.getStateDefinition().getProperty("axis") instanceof EnumProperty property && property.getPossibleValues().contains(Direction.Axis.X)) {
+            BlockState newState = cycle(state, property, player.isShiftKeyDown());
+            world.setBlock(pos, newState, 18);
+            stack.hurtAndBreak(2, player, (entity) -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        }*/
     }
 
     @Override

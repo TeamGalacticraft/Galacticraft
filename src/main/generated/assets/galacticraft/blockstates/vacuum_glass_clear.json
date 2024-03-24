@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft:block/vacuum_glass_clear"
+      "model": "galacticraft:vacuum_glass"
     }
   }
 }
