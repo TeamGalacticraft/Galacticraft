@@ -47,6 +47,6 @@ public class VacuumGlassUnbakedModel implements UnbakedModel {
     @Nullable
     @Override
     public BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer, ResourceLocation modelId) {
-        return VacuumGlassBakedModel.INSTANCE;
+        return new VacuumGlassBakedModel(textureGetter);
     }
 }

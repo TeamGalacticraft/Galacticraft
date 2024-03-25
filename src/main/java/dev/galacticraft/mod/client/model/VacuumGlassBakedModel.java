@@ -26,13 +26,13 @@ import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -45,11 +45,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class VacuumGlassBakedModel implements BakedModel {
     public static final ResourceLocation VACUUM_GLASS_MODEL = Constant.id("vacuum_glass");
-    public static final VacuumGlassBakedModel INSTANCE = new VacuumGlassBakedModel();
 
     private static final float PANE_INSET = 6.0f / 16.0f;
     private static final float INNER_FRAME_INSET = 5.0f / 16.0f;
@@ -57,7 +57,12 @@ public class VacuumGlassBakedModel implements BakedModel {
     private static final float FRAME_INSET = 4.0f / 16.0f;
     private static final float FRAME_THICKNESS = 2.0f / 16.0f;
 
-    public VacuumGlassBakedModel() {
+    private final TextureAtlasSprite glass;
+    private final TextureAtlasSprite frame;
+
+    public VacuumGlassBakedModel(Function<Material, TextureAtlasSprite> textureGetter) {
+        this.glass = textureGetter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, Constant.id("block/vacuum_glass_vanilla")));
+        this.frame = textureGetter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, Constant.id("block/aluminum_decoration")));
     }
 
     @Override
@@ -87,7 +92,7 @@ public class VacuumGlassBakedModel implements BakedModel {
 
     @Override
     public TextureAtlasSprite getParticleIcon() {
-        return Minecraft.getInstance().getPaintingTextures().getBackSprite();//todo
+        return this.glass;
     }
 
     @Override
@@ -115,13 +120,11 @@ public class VacuumGlassBakedModel implements BakedModel {
         boolean south = state.getValue(BlockStateProperties.SOUTH);
         boolean west = state.getValue(BlockStateProperties.WEST);
         int horizontal = (north ? 1 : 0) + (east ? 1 : 0) + (south ? 1 : 0) + (west ? 1 : 0);
-        TextureAtlasSprite glass = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation("block/glass"));
-        TextureAtlasSprite aluminum = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(Constant.id("block/aluminum_decoration"));
         RenderContext.QuadTransform glassTransform = quad -> {
-            quad.spriteBake(glass, MutableQuadView.BAKE_LOCK_UV); //todo glass UVs
+            quad.spriteBake(this.glass, MutableQuadView.BAKE_LOCK_UV); //todo glass UVs
             return true;
         };RenderContext.QuadTransform aluminumTransform = quad -> {
-            quad.spriteBake(aluminum, MutableQuadView.BAKE_LOCK_UV);
+            quad.spriteBake(this.frame, MutableQuadView.BAKE_LOCK_UV);
             return true;
         };
         context.pushTransform(quad -> {
@@ -193,10 +196,16 @@ public class VacuumGlassBakedModel implements BakedModel {
                     emitBasePlate(emitter, Direction.EAST, down, up);
                     context.popTransform();
                 } else {
-                    context.pushTransform(glassTransform);
+                    context.pushTransform(quad -> {
+                        quad.spriteBake(this.glass, MutableQuadView.BAKE_ROTATE_NONE);
+                        return true;
+                    });
                     emitCornerPane(emitter, east, down, north, up);
                     context.popTransform();
-                    context.pushTransform(aluminumTransform);
+                    context.pushTransform(quad -> {
+                        quad.spriteBake(this.frame, MutableQuadView.BAKE_LOCK_UV);
+                        return true;
+                    });
                     emitCornerBasePlate(emitter, east, north, down, up);
                     context.popTransform();
                 }
@@ -322,17 +331,28 @@ public class VacuumGlassBakedModel implements BakedModel {
     }
 
     private static void emitCornerPane(QuadEmitter emitter, boolean east, boolean down, boolean north, boolean up) {
+        // A D <- quad order
+        // B C
+
         emitter
                 .pos(0, east ? PANE_INSET : 1.0f - PANE_INSET, down ? 0.0f : INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
                 .pos(1, east ? 1.0f : 0.0f, down ? 0.0f : INNER_FRAME_THICKNESS, north ? 1.0f - PANE_INSET : PANE_INSET)
                 .pos(2, east ? 1.0f : 0.0f, up ? 1.0f : 1.0f - INNER_FRAME_THICKNESS, north ? 1.0f - PANE_INSET : PANE_INSET)
                 .pos(3, east ? PANE_INSET : 1.0f - PANE_INSET, up ? 1.0f : 1.0f - INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
+                .uv(0, 0, down ? 0 : 3)
+                .uv(1, 13, down ? 0 : 3)
+                .uv(2, 13, 13 + (up ? 3 : 0))
+                .uv(3, 0, 13 + (up ? 3 : 0))
                 .emit();
         emitter
                 .pos(0, east ? 1.0f - PANE_INSET : PANE_INSET, down ? 0.0f : INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
                 .pos(1, east ? 1.0f : 0.0f, down ? 0.0f : INNER_FRAME_THICKNESS, north ? PANE_INSET : 1.0f - PANE_INSET)
                 .pos(2, east ? 1.0f : 0.0f, up ? 1.0f : 1.0f - INNER_FRAME_THICKNESS, north ? PANE_INSET : 1.0f - PANE_INSET)
                 .pos(3, east ? 1.0f - PANE_INSET : PANE_INSET, up ? 1.0f : 1.0f - INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
+                .uv(0, 0, down ? 0 : 3)
+                .uv(1, 8, down ? 0 : 3)
+                .uv(2, 8, 13 + (up ? 3 : 0))
+                .uv(3, 0, 13 + (up ? 3 : 0))
                 .emit();
 
         emitter
@@ -340,12 +360,20 @@ public class VacuumGlassBakedModel implements BakedModel {
                 .pos(2, east ? 1.0f : 0.0f, down ? 0.0f : INNER_FRAME_THICKNESS, north ? 1.0f - PANE_INSET : PANE_INSET)
                 .pos(1, east ? 1.0f : 0.0f, up ? 1.0f : 1.0f - INNER_FRAME_THICKNESS, north ? 1.0f - PANE_INSET : PANE_INSET)
                 .pos(0, east ? PANE_INSET : 1.0f - PANE_INSET, up ? 1.0f : 1.0f - INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
+                .uv(0, 0, down ? 0 : 3)
+                .uv(1, 13, down ? 0 : 3)
+                .uv(2, 13, 13 + (up ? 3 : 0))
+                .uv(3, 0, 13 + (up ? 3 : 0))
                 .emit();
         emitter
                 .pos(3, east ? 1.0f - PANE_INSET : PANE_INSET, down ? 0.0f : INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
                 .pos(2, east ? 1.0f : 0.0f, down ? 0.0f : INNER_FRAME_THICKNESS, north ? PANE_INSET : 1.0f - PANE_INSET)
                 .pos(1, east ? 1.0f : 0.0f, up ? 1.0f : 1.0f - INNER_FRAME_THICKNESS, north ? PANE_INSET : 1.0f - PANE_INSET)
                 .pos(0, east ? 1.0f - PANE_INSET : PANE_INSET, up ? 1.0f : 1.0f - INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
+                .uv(0, 0, down ? 0 : 3)
+                .uv(1, 8, down ? 0 : 3)
+                .uv(2, 8, 13 + (up ? 3 : 0))
+                .uv(3, 0, 13 + (up ? 3 : 0))
                 .emit();
     }
 
@@ -366,6 +394,10 @@ public class VacuumGlassBakedModel implements BakedModel {
                     .pos(1, north ? 1.0f - FRAME_INSET : FRAME_INSET, 1.0f - FRAME_THICKNESS, north ? 0.0f : 1.0f)
                     .pos(2, north ? 1.0f - FRAME_INSET : FRAME_INSET, 1.0f, north ? 0.0f : 1.0f)
                     .pos(3, east ? 1.0f : 0.0f, 1.0f, east ? FRAME_INSET : 1.0f - FRAME_INSET)
+                    .uv(0, 4, 14)
+                    .uv(1, 9, 14)
+                    .uv(2, 9, 16)
+                    .uv(3, 4, 16)
                     .emit();
 
             // OUTER FRAME IN
@@ -374,6 +406,7 @@ public class VacuumGlassBakedModel implements BakedModel {
                     .pos(1, east ? 1.0f : 0.0f, 1.0f - FRAME_THICKNESS, east ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET)
                     .pos(2, north ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET, 1.0f - FRAME_THICKNESS, north ? 0.0f : 1.0f)
                     .pos(3, north ? 1.0f - FRAME_INSET : FRAME_INSET, 1.0f - FRAME_THICKNESS, north ? 0.0f : 1.0f)
+                    .nominalFace(Direction.DOWN)
                     .emit();
 
             // INNER FRAME CONNECTOR
@@ -382,6 +415,10 @@ public class VacuumGlassBakedModel implements BakedModel {
                     .pos(1, east ? 1.0f : 0.0f, 1.0f - INNER_FRAME_THICKNESS, east ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET)
                     .pos(2, north ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET, 1.0f - INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
                     .pos(3, north ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET, 1.0f - FRAME_THICKNESS, north ? 0.0f : 1.0f)
+                    .uv(0, 4, 13)
+                    .uv(1, 4 + 5.65f, 14) //sqrt(32)
+                    .uv(2, 4 + 5.65f, 14)
+                    .uv(3, 4, 13)
                     .emit();
 
             // INNER FRAME
@@ -390,6 +427,11 @@ public class VacuumGlassBakedModel implements BakedModel {
                     .pos(1, east ? 1.0f : 0.0f, 1.0f - INNER_FRAME_THICKNESS, east ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET)
                     .pos(2, north ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET, 1.0f - INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
                     .pos(3, north ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET, 1.0f - INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
+                    .uv(0, 7, 13)
+                    .uv(1, 7 + 7.07f, 14) //sqrt(50)
+                    .uv(2, 7 + 7.07f, 14)
+                    .uv(3, 7, 13)
+                    .nominalFace(Direction.DOWN)
                     .emit();
 
             // OUTER FRAME SIDE (REV)
@@ -398,6 +440,10 @@ public class VacuumGlassBakedModel implements BakedModel {
                     .pos(2, north ? FRAME_INSET : 1.0f - FRAME_INSET, 1.0f - FRAME_THICKNESS, north ? 0.0f : 1.0f)
                     .pos(1, north ? FRAME_INSET : 1.0f - FRAME_INSET, 1.0f, north ? 0.0f : 1.0f)
                     .pos(0, east ? 1.0f : 0.0f, 1.0f, east ? 1.0f - FRAME_INSET : FRAME_INSET)
+                    .uv(0, 4, 16)
+                    .uv(1, 9, 16)
+                    .uv(2, 9, 14)
+                    .uv(3, 4, 14)
                     .emit();
 
             // OUTER FRAME IN (REV)
@@ -406,6 +452,7 @@ public class VacuumGlassBakedModel implements BakedModel {
                     .pos(2, east ? 1.0f : 0.0f, 1.0f - FRAME_THICKNESS, east ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET)
                     .pos(1, north ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET, 1.0f - FRAME_THICKNESS, north ? 0.0f : 1.0f)
                     .pos(0, north ? FRAME_INSET : 1.0f - FRAME_INSET, 1.0f - FRAME_THICKNESS, north ? 0.0f : 1.0f)
+                    .nominalFace(Direction.DOWN)
                     .emit();
 
             // INNER FRAME CONNECTOR (REV)
@@ -414,6 +461,10 @@ public class VacuumGlassBakedModel implements BakedModel {
                     .pos(2, east ? 1.0f : 0.0f, 1.0f - INNER_FRAME_THICKNESS, east ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET)
                     .pos(1, north ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET, 1.0f - INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
                     .pos(0, north ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET, 1.0f - FRAME_THICKNESS, north ? 0.0f : 1.0f)
+                    .uv(0, 4, 13)
+                    .uv(1, 4 + 5.65f, 14) //sqrt(32)
+                    .uv(2, 4 + 5.65f, 14)
+                    .uv(3, 4, 13)
                     .emit();
         }
         if (!down) {
@@ -432,6 +483,10 @@ public class VacuumGlassBakedModel implements BakedModel {
                     .pos(2, north ? 1.0f - FRAME_INSET : FRAME_INSET, FRAME_THICKNESS, north ? 0.0f : 1.0f)
                     .pos(1, north ? 1.0f - FRAME_INSET : FRAME_INSET, 0.0f, north ? 0.0f : 1.0f)
                     .pos(0, east ? 1.0f : 0.0f, 0.0f, east ? FRAME_INSET : 1.0f - FRAME_INSET)
+                    .uv(0, 4, 0)
+                    .uv(1, 9, 0)
+                    .uv(2, 9, 2)
+                    .uv(3, 4, 2)
                     .emit();
 
             // OUTER FRAME IN
@@ -440,6 +495,7 @@ public class VacuumGlassBakedModel implements BakedModel {
                     .pos(2, east ? 1.0f : 0.0f, FRAME_THICKNESS, east ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET)
                     .pos(1, north ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET, FRAME_THICKNESS, north ? 0.0f : 1.0f)
                     .pos(0, north ? 1.0f - FRAME_INSET : FRAME_INSET, FRAME_THICKNESS, north ? 0.0f : 1.0f)
+                    .nominalFace(Direction.UP)
                     .emit();
 
             // INNER FRAME CONNECTOR
@@ -448,6 +504,10 @@ public class VacuumGlassBakedModel implements BakedModel {
                     .pos(2, east ? 1.0f : 0.0f, INNER_FRAME_THICKNESS, east ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET)
                     .pos(1, north ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET, INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
                     .pos(0, north ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET, FRAME_THICKNESS, north ? 0.0f : 1.0f)
+                    .uv(0, 4, 2)
+                    .uv(1, 10, 2)
+                    .uv(2, 10, 3)
+                    .uv(3, 4, 3)
                     .emit();
 
             // INNER FRAME
@@ -456,6 +516,7 @@ public class VacuumGlassBakedModel implements BakedModel {
                     .pos(2, east ? 1.0f : 0.0f, INNER_FRAME_THICKNESS, east ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET)
                     .pos(1, north ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET, INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
                     .pos(0, north ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET, INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
+                    .nominalFace(Direction.UP)
                     .emit();
 
             // OUTER FRAME SIDE (REV)
@@ -464,6 +525,10 @@ public class VacuumGlassBakedModel implements BakedModel {
                     .pos(1, north ? FRAME_INSET : 1.0f - FRAME_INSET, FRAME_THICKNESS, north ? 0.0f : 1.0f)
                     .pos(2, north ? FRAME_INSET : 1.0f - FRAME_INSET, 0.0f, north ? 0.0f : 1.0f)
                     .pos(3, east ? 1.0f : 0.0f, 0.0f, east ? 1.0f - FRAME_INSET : FRAME_INSET)
+                    .uv(0, 4, 2)
+                    .uv(1, 9, 2)
+                    .uv(2, 9, 0)
+                    .uv(3, 4, 0)
                     .emit();
 
             // OUTER FRAME IN (REV)
@@ -472,6 +537,7 @@ public class VacuumGlassBakedModel implements BakedModel {
                     .pos(1, east ? 1.0f : 0.0f, FRAME_THICKNESS, east ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET)
                     .pos(2, north ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET, FRAME_THICKNESS, north ? 0.0f : 1.0f)
                     .pos(3, north ? FRAME_INSET : 1.0f - FRAME_INSET, FRAME_THICKNESS, north ? 0.0f : 1.0f)
+                    .nominalFace(Direction.UP)
                     .emit();
 
             // INNER FRAME CONNECTOR (REV)
@@ -480,6 +546,10 @@ public class VacuumGlassBakedModel implements BakedModel {
                     .pos(1, east ? 1.0f : 0.0f, INNER_FRAME_THICKNESS, east ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET)
                     .pos(2, north ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET, INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
                     .pos(3, north ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET, FRAME_THICKNESS, north ? 0.0f : 1.0f)
+                    .uv(0, 4, 2)
+                    .uv(1, 10, 2)
+                    .uv(2, 10, 3)
+                    .uv(3, 4, 3)
                     .emit();
         }
     }
