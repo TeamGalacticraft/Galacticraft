@@ -26,12 +26,15 @@ import dev.galacticraft.mod.Constant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,12 +68,35 @@ public class VacuumGlassBlock extends Block {
         assert direction != null;
         boolean connect = neighbor.getBlock() == this;
         if (connect && direction.getAxis().isVertical()) {
-            connect = neighbor.getValue(BlockStateProperties.NORTH) == state.getValue(BlockStateProperties.NORTH)
+            connect = (neighbor.getValue(BlockStateProperties.NORTH) == state.getValue(BlockStateProperties.NORTH)
                     && neighbor.getValue(BlockStateProperties.EAST) == state.getValue(BlockStateProperties.EAST)
                     && neighbor.getValue(BlockStateProperties.SOUTH) == state.getValue(BlockStateProperties.SOUTH)
-                    && neighbor.getValue(BlockStateProperties.WEST) == state.getValue(BlockStateProperties.WEST);
+                    && neighbor.getValue(BlockStateProperties.WEST) == state.getValue(BlockStateProperties.WEST)) || (calculateAxis(state) != null && calculateAxis(state) == calculateAxis(neighbor));
         }
-        level.setBlockAndUpdate(pos, state.setValue(propertyFromDirection(direction), connect));
+
+        BlockState state1 = state.setValue(propertyFromDirection(direction), connect);
+        Direction.Axis axis = calculateAxis(state);
+        if (axis != null) state1 = state1.setValue(BlockStateProperties.HORIZONTAL_AXIS, axis);
+
+        level.setBlockAndUpdate(pos, state1);
+    }
+
+    private static @Nullable Direction.Axis calculateAxis(BlockState neighbor) {
+        if (neighbor.getValue(BlockStateProperties.NORTH) || neighbor.getValue(BlockStateProperties.SOUTH)) {
+            if (!(neighbor.getValue(BlockStateProperties.EAST) || neighbor.getValue(BlockStateProperties.WEST))) {
+                return Direction.Axis.Z;
+            }
+        } else if (neighbor.getValue(BlockStateProperties.EAST) || neighbor.getValue(BlockStateProperties.WEST)) {
+            return Direction.Axis.X;
+        } else {
+            return neighbor.getValue(BlockStateProperties.HORIZONTAL_AXIS);
+        }
+        return null;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return super.getShape(state, world, pos, context);
     }
 
     @Nullable

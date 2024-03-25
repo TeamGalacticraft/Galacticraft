@@ -267,9 +267,9 @@ public class GCBlocks {
     public static final Block DIAGONAL_LIGHT_PANEL = new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL), 1.0f);
 
     // VACUUM GLASS
-    public static final Block VACUUM_GLASS = new VacuumGlassBlock(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).sound(SoundType.GLASS));
-    public static final Block CLEAR_VACUUM_GLASS = new VacuumGlassBlock(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).sound(SoundType.GLASS));
-    public static final Block STRONG_VACUUM_GLASS = new VacuumGlassBlock(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).sound(SoundType.GLASS));
+    public static final Block VACUUM_GLASS = new VacuumGlassBlock(BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.GLASS));
+    public static final Block CLEAR_VACUUM_GLASS = new VacuumGlassBlock(BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.GLASS));
+    public static final Block STRONG_VACUUM_GLASS = new VacuumGlassBlock(BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.GLASS));
 
     // ORES
     public static final Block SILICON_ORE = new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 3.0F, false));

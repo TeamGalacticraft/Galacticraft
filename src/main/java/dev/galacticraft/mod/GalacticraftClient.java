@@ -30,12 +30,14 @@ import dev.galacticraft.mod.client.gui.overlay.LanderOverlay;
 import dev.galacticraft.mod.client.gui.overlay.OxygenOverlay;
 import dev.galacticraft.mod.client.gui.overlay.RocketOverlay;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
-import dev.galacticraft.mod.client.model.*;
+import dev.galacticraft.mod.client.model.GCModelLoader;
+import dev.galacticraft.mod.client.model.OxygenSealerSpriteProvider;
+import dev.galacticraft.mod.client.model.SolarPanelSpriteProvider;
 import dev.galacticraft.mod.client.network.GCClientPacketReceiver;
 import dev.galacticraft.mod.client.particle.*;
 import dev.galacticraft.mod.client.render.FootprintRenderer;
 import dev.galacticraft.mod.client.render.block.entity.GCBlockEntityRenderer;
-import dev.galacticraft.mod.client.render.dimension.*;
+import dev.galacticraft.mod.client.render.dimension.GCDimensionEffects;
 import dev.galacticraft.mod.client.render.entity.*;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import dev.galacticraft.mod.client.render.entity.rocket.RocketEntityRenderer;
@@ -150,6 +152,9 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.UNLIT_LANTERN, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.CAVERNOUS_VINES, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.CAVERNOUS_VINES_PLANT, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.VACUUM_GLASS, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.STRONG_VACUUM_GLASS, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.CLEAR_VACUUM_GLASS, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), GCBlocks.CRYOGENIC_CHAMBER, GCBlocks.CRYOGENIC_CHAMBER_PART, GCBlocks.PLAYER_TRANSPORT_TUBE);
 
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new GCResourceReloadListener());
