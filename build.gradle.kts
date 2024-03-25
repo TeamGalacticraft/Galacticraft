@@ -49,7 +49,7 @@ val reiVersion               = project.property("rei.version").toString()
 val jeiVersion               = project.property("jei.version").toString()
 val badpacketsVersion        = project.property("badpackets.version").toString()
 val wthitVersion             = project.property("wthit.version").toString()
-val portingLibVersion        = project.property("porting.lib.version").toString()
+val objVersion               = project.property("obj.version").toString()
 val runtimeOptional          = project.property("optional_dependencies.enabled").toString().toBoolean() && System.getenv("CI") == null
 
 plugins {
@@ -203,13 +203,7 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
 
     // Mandatory Dependencies (Included with Jar-In-Jar)
-    listOf(
-        "obj_loader",
-        "model_loader",
-        "core"
-    ).forEach {
-        includedRuntimeDependency("io.github.fabricators_of_create.Porting-Lib:$it:${portingLibVersion}") { isTransitive = false }
-    }
+    include(implementation("de.javagl:obj:$objVersion")) {}
     includedDependency("me.shedaniel.cloth:cloth-config-fabric:$clothConfigVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")

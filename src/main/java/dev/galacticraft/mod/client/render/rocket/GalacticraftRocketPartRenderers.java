@@ -26,6 +26,7 @@ import com.google.common.base.Suppliers;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.impl.client.rocket.render.BakedModelRocketPartRenderer;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.client.model.GCModelLoader;
 import dev.galacticraft.mod.content.GCRocketParts;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.minecraft.client.Minecraft;
@@ -46,15 +47,15 @@ public class GalacticraftRocketPartRenderers {
     private static final ResourceLocation BOOSTER_TIER_2 = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_thruster_tier_2.json");
 
     public static void register() {
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().getModel(DEFAULT_CONE))), Sheets::translucentCullBlockSheet));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.ADVANCED_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().getModel(ADVANCED_CONE))), Sheets::translucentCullBlockSheet));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.SLOPED_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().getModel(SLOPED_CONE))), Sheets::translucentCullBlockSheet));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_BODY, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().getModel(DEFAULT_BODY))), Sheets::translucentCullBlockSheet));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_FIN, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().getModel(DEFAULT_FIN))), Sheets::translucentCullBlockSheet));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_ENGINE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().getModel(DEFAULT_ENGINE))), Sheets::translucentCullBlockSheet));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(DEFAULT_CONE))), Sheets::translucentCullBlockSheet));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.ADVANCED_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(ADVANCED_CONE))), Sheets::translucentCullBlockSheet));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.SLOPED_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(SLOPED_CONE))), Sheets::translucentCullBlockSheet));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_BODY, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(DEFAULT_BODY))), Sheets::translucentCullBlockSheet));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_FIN, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(DEFAULT_FIN))), Sheets::translucentCullBlockSheet));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_ENGINE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(DEFAULT_ENGINE))), Sheets::translucentCullBlockSheet));
         RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.STORAGE_UPGRADE, new BakedModelItemRocketPartRenderer(Items.CHEST.getDefaultInstance(), null));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_BOOSTER, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().getModel(BOOSTER_TIER_1))), Sheets::translucentCullBlockSheet));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_2_BOOSTER, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().getModel(BOOSTER_TIER_2))), Sheets::translucentCullBlockSheet));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_BOOSTER, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(BOOSTER_TIER_1))), Sheets::translucentCullBlockSheet));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_2_BOOSTER, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(BOOSTER_TIER_2))), Sheets::translucentCullBlockSheet));
     }
 
     public static void registerModelLoader() {

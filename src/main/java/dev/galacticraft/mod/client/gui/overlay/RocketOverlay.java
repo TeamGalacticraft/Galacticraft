@@ -30,6 +30,7 @@ import dev.galacticraft.mod.content.entity.RocketEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -117,7 +118,7 @@ public class RocketOverlay {
 
             try {
                 MultiBufferSource.BufferSource source = Minecraft.getInstance().renderBuffers().bufferSource();
-                spaceshipRender.render(rocketEntity, rocketEntity.getYRot(), tickDelta, graphics.pose(), source, 15728880);
+                spaceshipRender.render(rocketEntity, rocketEntity.getYRot(), tickDelta, graphics.pose(), source, LightTexture.FULL_BRIGHT);
                 source.endBatch();
             } catch (Exception e) {
                 e.printStackTrace();

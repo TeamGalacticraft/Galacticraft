@@ -31,6 +31,7 @@ import dev.galacticraft.mod.client.gui.overlay.OxygenOverlay;
 import dev.galacticraft.mod.client.gui.overlay.RocketOverlay;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.*;
+import dev.galacticraft.mod.client.model.types.ObjModel;
 import dev.galacticraft.mod.client.network.GCClientPacketReceiver;
 import dev.galacticraft.mod.client.particle.*;
 import dev.galacticraft.mod.client.render.FootprintRenderer;
@@ -41,7 +42,8 @@ import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import dev.galacticraft.mod.client.render.entity.rocket.RocketEntityRenderer;
 import dev.galacticraft.mod.client.render.item.RocketItemRenderer;
 import dev.galacticraft.mod.client.render.rocket.GalacticraftRocketPartRenderers;
-import dev.galacticraft.mod.client.resource.GCResourceReloadListener;
+import dev.galacticraft.mod.client.resources.GCResourceReloadListener;
+import dev.galacticraft.mod.client.resources.RocketTextureManager;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.block.environment.FallenMeteorBlock;
@@ -150,8 +152,6 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.CAVERNOUS_VINES_PLANT, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), GCBlocks.CRYOGENIC_CHAMBER, GCBlocks.CRYOGENIC_CHAMBER_PART, GCBlocks.PLAYER_TRANSPORT_TUBE);
 
-        ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new GCResourceReloadListener());
-
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_FUEL, DrippingFuelProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.FALLING_FUEL, FallingFuelProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_CRUDE_OIL, DrippingOilProvider::new);
@@ -166,12 +166,6 @@ public class GalacticraftClient implements ClientModInitializer {
 
         MachineModelRegistry.register(new ResourceLocation(Constant.MOD_ID, "solar_panel"), SolarPanelSpriteProvider::new);
         MachineModelRegistry.register(new ResourceLocation(Constant.MOD_ID, "oxygen_sealer"), OxygenSealerSpriteProvider::new);
-
-        ModelLoadingPlugin.register(GCModelLoader.INSTANCE);
-
-        ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
-            GCDimensionEffects.register();
-        });
 
         FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER); // Workaround for classloading order bug
 
@@ -203,5 +197,22 @@ public class GalacticraftClient implements ClientModInitializer {
         });
 
         Constant.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
+    }
+
+    /**
+     * Called after GL render context has been created
+     * should be safe to do general initialization here.
+     */
+    public static void init() {
+//        ModelLoadingPlugin.register(GCModelLoader.INSTANCE);
+
+        var helper = ResourceManagerHelper.get(PackType.CLIENT_RESOURCES);
+        helper.registerReloadListener(RocketTextureManager.INSTANCE);
+        helper.registerReloadListener(GCModelLoader.INSTANCE);
+        helper.registerReloadListener(GCResourceReloadListener.INSTANCE);
+
+        GCModelLoader.registerModelType(ObjModel.TYPE);
+
+        GCDimensionEffects.register();
     }
 }

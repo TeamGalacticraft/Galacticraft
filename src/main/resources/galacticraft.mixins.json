@@ -36,6 +36,7 @@
     "client.LevelRendererMixin",
     "client.LivingEntityRendererMixin",
     "client.LocalPlayerMixin",
+    "client.MinecraftMixin",
     "client.PauseMenuScreenMixin",
     "client.VillagerModelMixin",
     "client.VillagerRendererMixin"
