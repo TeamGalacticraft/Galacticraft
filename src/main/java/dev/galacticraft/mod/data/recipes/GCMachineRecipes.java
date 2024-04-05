@@ -25,6 +25,7 @@ package dev.galacticraft.mod.data.recipes;
 import dev.galacticraft.mod.api.data.recipe.CircuitFabricatorRecipeBuilder;
 import dev.galacticraft.mod.api.data.recipe.ShapedCompressorRecipeBuilder;
 import dev.galacticraft.mod.api.data.recipe.ShapelessCompressorRecipeBuilder;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -254,7 +255,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.SEALABLE_ALUMINUM_WIRE, 6)
-                .define('T', GCItems.TIN_DECORATION)
+                .define('T', GCBlocks.TIN_DECORATION)
                 .define('W', GCItems.ALUMINUM_WIRE)
                 .pattern("TWT")
                 .unlockedBy(getHasName(GCItems.ALUMINUM_WIRE), has(GCItems.ALUMINUM_WIRE))

@@ -25,10 +25,19 @@ package dev.galacticraft.mod.content;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GCBlockRegistry extends GCRegistry<Block> {
     private final GCRegistry<Item> ITEMS = new GCRegistry<>(BuiltInRegistries.ITEM);
+    private final List<DecorationSet> decorations = new ArrayList<>();
 
     public GCBlockRegistry() {
         super(BuiltInRegistries.BLOCK);
@@ -38,5 +47,46 @@ public class GCBlockRegistry extends GCRegistry<Block> {
         register(id, val);
         ITEMS.register(id, new BlockItem(val, new Item.Properties()));
         return val;
+    }
+
+    public DecorationSet registerDecoration(String id, BlockBehaviour.Properties properties, float slabHardness, float slabResistance) {
+        Block decoration = register(id, new Block(properties));
+        BlockBehaviour.Properties slabProperties = BlockBehaviour.Properties.ofFullCopy(decoration).strength(slabHardness, slabResistance);
+        SlabBlock decorationSlab = register(id + "_slab", new SlabBlock(slabProperties));
+        StairBlock decorationStairs = register(id + "_stairs", new StairBlock(decoration.defaultBlockState(), properties));
+        WallBlock decorationWall = register(id + "_wall", new WallBlock(properties));
+        Block detailedDecoration = register("detailed_" + id, new Block(properties));
+        SlabBlock detailedDecorationSlab = register("detailed_" + id + "_slab", new SlabBlock(slabProperties));
+        StairBlock detailedDecorationStairs = register("detailed_" + id + "_stairs", new StairBlock(detailedDecoration.defaultBlockState(), properties));
+        WallBlock detailedDecorationWall = register("detailed_" + id + "_wall", new WallBlock(properties));
+        Item.Properties itemProperties = new Item.Properties();
+        BlockItem decorationItem = ITEMS.register(id, new BlockItem(decoration, itemProperties));
+        BlockItem decorationSlabItem = ITEMS.register(id + "_slab", new BlockItem(decorationStairs, itemProperties));
+        BlockItem decorationStairsItem = ITEMS.register(id + "_stairs", new BlockItem(decorationStairs, itemProperties));
+        BlockItem decorationWallItem = ITEMS.register(id + "_wall", new BlockItem(decorationWall, itemProperties));
+        BlockItem detailedDecorationItem = ITEMS.register("detailed_" + id, new BlockItem(detailedDecoration, itemProperties));
+        BlockItem detailedDecorationSlabItem = ITEMS.register("detailed_" + id + "_slab", new BlockItem(detailedDecorationSlab, itemProperties));
+        BlockItem detailedDecorationStairsItem = ITEMS.register("detailed_" + id + "_stairs", new BlockItem(detailedDecorationStairs, itemProperties));
+        BlockItem detailedDecorationWallItem = ITEMS.register("detailed_" + id + "_wall", new BlockItem(detailedDecorationWall, itemProperties));
+        DecorationSet decorationSet = new DecorationSet(
+                decoration, decorationSlab, decorationStairs, decorationWall, detailedDecoration, detailedDecorationSlab, detailedDecorationStairs, detailedDecorationWall,
+                decorationItem, decorationSlabItem, decorationStairsItem, decorationWallItem, detailedDecorationItem, detailedDecorationSlabItem, detailedDecorationStairsItem, detailedDecorationWallItem
+        );
+        this.decorations.add(decorationSet);
+        return decorationSet;
+    }
+
+    public List<DecorationSet> getDecorations() {
+        return this.decorations;
+    }
+
+    public record DecorationSet(
+            Block block, SlabBlock slab, StairBlock stairs, WallBlock wall, Block detailedBlock, SlabBlock detailedSlab, StairBlock detailedStairs, WallBlock detailedWall,
+            BlockItem item, BlockItem slabItem, BlockItem stairsItem, BlockItem wallItem, BlockItem detailedItem, BlockItem detailedSlabItem, BlockItem detailedStairsItem, BlockItem detailedWallItem
+    ) implements ItemLike {
+        @Override
+        public Item asItem() {
+            return item;
+        }
     }
 }

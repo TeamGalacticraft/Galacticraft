@@ -25,6 +25,7 @@ package dev.galacticraft.mod.data.model;
 import com.google.common.collect.Maps;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.*;
+import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.decoration.GratingBlock;
 import dev.galacticraft.mod.content.block.environment.CavernousVines;
@@ -49,6 +50,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Contract;
 
+import java.util.List;
+
 public class GCModelProvider extends FabricModelProvider {
     private static final TexturedModel.Provider DETAILED_DECORATION = TexturedModel.createDefault(GCModelProvider::detailedTexture, ModelTemplates.CUBE_BOTTOM_TOP);
 
@@ -64,15 +67,11 @@ public class GCModelProvider extends FabricModelProvider {
 
         generator.fullBlockModelCustomGenerators.put(GCBlocks.LUNASLATE, BlockModelGenerators::createMirroredColumnGenerator);
 
-        putDetailedTextured(generator, GCBlocks.DETAILED_ALUMINUM_DECORATION);
-        putDetailedTextured(generator, GCBlocks.DETAILED_BRONZE_DECORATION);
-        putDetailedTextured(generator, GCBlocks.DETAILED_COPPER_DECORATION);
-        putDetailedTextured(generator, GCBlocks.DETAILED_IRON_DECORATION);
-        putDetailedTextured(generator, GCBlocks.DETAILED_METEORIC_IRON_DECORATION);
-        putDetailedTextured(generator, GCBlocks.DETAILED_STEEL_DECORATION);
-        putDetailedTextured(generator, GCBlocks.DETAILED_TIN_DECORATION);
-        putDetailedTextured(generator, GCBlocks.DETAILED_TITANIUM_DECORATION);
-        putDetailedTextured(generator, GCBlocks.DETAILED_DARK_DECORATION);
+        List<GCBlockRegistry.DecorationSet> decorations = GCBlocks.BLOCKS.getDecorations();
+
+        decorations.forEach(decorationSet -> {
+            putDetailedTextured(generator, decorationSet.detailedBlock());
+        });
         generator.texturedModels.put(GCBlocks.LUNASLATE, TexturedModel.COLUMN_WITH_WALL.get(GCBlocks.LUNASLATE));
 
         GCBlockFamilies.getAllFamilies()
@@ -80,15 +79,9 @@ public class GCModelProvider extends FabricModelProvider {
                 .forEach(blockFamily -> generator.family(blockFamily.getBaseBlock()).generateFor(blockFamily));
 
         // DETAILED WALL - Special case!
-        this.detailedWall(generator, GCBlocks.DETAILED_ALUMINUM_DECORATION, GCBlocks.DETAILED_ALUMINUM_DECORATION_WALL);
-        this.detailedWall(generator, GCBlocks.DETAILED_BRONZE_DECORATION, GCBlocks.DETAILED_BRONZE_DECORATION_WALL);
-        this.detailedWall(generator, GCBlocks.DETAILED_COPPER_DECORATION, GCBlocks.DETAILED_COPPER_DECORATION_WALL);
-        this.detailedWall(generator, GCBlocks.DETAILED_IRON_DECORATION, GCBlocks.DETAILED_IRON_DECORATION_WALL);
-        this.detailedWall(generator, GCBlocks.DETAILED_METEORIC_IRON_DECORATION, GCBlocks.DETAILED_METEORIC_IRON_DECORATION_WALL);
-        this.detailedWall(generator, GCBlocks.DETAILED_STEEL_DECORATION, GCBlocks.DETAILED_STEEL_DECORATION_WALL);
-        this.detailedWall(generator, GCBlocks.DETAILED_TIN_DECORATION, GCBlocks.DETAILED_TIN_DECORATION_WALL);
-        this.detailedWall(generator, GCBlocks.DETAILED_TITANIUM_DECORATION, GCBlocks.DETAILED_TITANIUM_DECORATION_WALL);
-        this.detailedWall(generator, GCBlocks.DETAILED_DARK_DECORATION, GCBlocks.DETAILED_DARK_DECORATION_WALL);
+        for (GCBlockRegistry.DecorationSet decorationSet : decorations) {
+            this.detailedWall(generator, decorationSet.detailedBlock(), decorationSet.detailedWall());
+        }
 
         // TORCHES
         generator.createNormalTorch(GCBlocks.GLOWSTONE_TORCH, GCBlocks.GLOWSTONE_WALL_TORCH);

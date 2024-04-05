@@ -143,85 +143,14 @@ public interface Constant {
 
         // Decorative BLocks
         String ALUMINUM_DECORATION = "aluminum_decoration";
-        String ALUMINUM_DECORATION_SLAB = "aluminum_decoration_slab";
-        String ALUMINUM_DECORATION_STAIRS = "aluminum_decoration_stairs";
-        String ALUMINUM_DECORATION_WALL = "aluminum_decoration_wall";
-        String DETAILED_ALUMINUM_DECORATION = "detailed_aluminum_decoration";
-        String DETAILED_ALUMINUM_DECORATION_SLAB = "detailed_aluminum_decoration_slab";
-        String DETAILED_ALUMINUM_DECORATION_STAIRS = "detailed_aluminum_decoration_stairs";
-        String DETAILED_ALUMINUM_DECORATION_WALL = "detailed_aluminum_decoration_wall";
-
         String BRONZE_DECORATION = "bronze_decoration";
-        String BRONZE_DECORATION_SLAB = "bronze_decoration_slab";
-        String BRONZE_DECORATION_STAIRS = "bronze_decoration_stairs";
-        String BRONZE_DECORATION_WALL = "bronze_decoration_wall";
-        String DETAILED_BRONZE_DECORATION = "detailed_bronze_decoration";
-        String DETAILED_BRONZE_DECORATION_SLAB = "detailed_bronze_decoration_slab";
-        String DETAILED_BRONZE_DECORATION_STAIRS = "detailed_bronze_decoration_stairs";
-        String DETAILED_BRONZE_DECORATION_WALL = "detailed_bronze_decoration_wall";
-
         String COPPER_DECORATION = "copper_decoration";
-        String COPPER_DECORATION_SLAB = "copper_decoration_slab";
-        String COPPER_DECORATION_STAIRS = "copper_decoration_stairs";
-        String COPPER_DECORATION_WALL = "copper_decoration_wall";
-        String DETAILED_COPPER_DECORATION = "detailed_copper_decoration";
-        String DETAILED_COPPER_DECORATION_SLAB = "detailed_copper_decoration_slab";
-        String DETAILED_COPPER_DECORATION_STAIRS = "detailed_copper_decoration_stairs";
-        String DETAILED_COPPER_DECORATION_WALL = "detailed_copper_decoration_wall";
-
         String IRON_DECORATION = "iron_decoration";
-        String IRON_DECORATION_SLAB = "iron_decoration_slab";
-        String IRON_DECORATION_STAIRS = "iron_decoration_stairs";
-        String IRON_DECORATION_WALL = "iron_decoration_wall";
-        String DETAILED_IRON_DECORATION = "detailed_iron_decoration";
-        String DETAILED_IRON_DECORATION_SLAB = "detailed_iron_decoration_slab";
-        String DETAILED_IRON_DECORATION_STAIRS = "detailed_iron_decoration_stairs";
-        String DETAILED_IRON_DECORATION_WALL = "detailed_iron_decoration_wall";
-
         String METEORIC_IRON_DECORATION = "meteoric_iron_decoration";
-        String METEORIC_IRON_DECORATION_SLAB = "meteoric_iron_decoration_slab";
-        String METEORIC_IRON_DECORATION_STAIRS = "meteoric_iron_decoration_stairs";
-        String METEORIC_IRON_DECORATION_WALL = "meteoric_iron_decoration_wall";
-        String DETAILED_METEORIC_IRON_DECORATION = "detailed_meteoric_iron_decoration";
-        String DETAILED_METEORIC_IRON_DECORATION_SLAB = "detailed_meteoric_iron_decoration_slab";
-        String DETAILED_METEORIC_IRON_DECORATION_STAIRS = "detailed_meteoric_iron_decoration_stairs";
-        String DETAILED_METEORIC_IRON_DECORATION_WALL = "detailed_meteoric_iron_decoration_wall";
-
         String STEEL_DECORATION = "steel_decoration";
-        String STEEL_DECORATION_SLAB = "steel_decoration_slab";
-        String STEEL_DECORATION_STAIRS = "steel_decoration_stairs";
-        String STEEL_DECORATION_WALL = "steel_decoration_wall";
-        String DETAILED_STEEL_DECORATION = "detailed_steel_decoration";
-        String DETAILED_STEEL_DECORATION_SLAB = "detailed_steel_decoration_slab";
-        String DETAILED_STEEL_DECORATION_STAIRS = "detailed_steel_decoration_stairs";
-        String DETAILED_STEEL_DECORATION_WALL = "detailed_steel_decoration_wall";
-
         String TIN_DECORATION = "tin_decoration";
-        String TIN_DECORATION_SLAB = "tin_decoration_slab";
-        String TIN_DECORATION_STAIRS = "tin_decoration_stairs";
-        String TIN_DECORATION_WALL = "tin_decoration_wall";
-        String DETAILED_TIN_DECORATION = "detailed_tin_decoration";
-        String DETAILED_TIN_DECORATION_SLAB = "detailed_tin_decoration_slab";
-        String DETAILED_TIN_DECORATION_STAIRS = "detailed_tin_decoration_stairs";
-        String DETAILED_TIN_DECORATION_WALL = "detailed_tin_decoration_wall";
-
         String TITANIUM_DECORATION = "titanium_decoration";
-        String TITANIUM_DECORATION_SLAB = "titanium_decoration_slab";
-        String TITANIUM_DECORATION_STAIRS = "titanium_decoration_stairs";
-        String TITANIUM_DECORATION_WALL = "titanium_decoration_wall";
-        String DETAILED_TITANIUM_DECORATION = "detailed_titanium_decoration";
-        String DETAILED_TITANIUM_DECORATION_SLAB = "detailed_titanium_decoration_slab";
-        String DETAILED_TITANIUM_DECORATION_STAIRS = "detailed_titanium_decoration_stairs";
-        String DETAILED_TITANIUM_DECORATION_WALL = "detailed_titanium_decoration_wall";
-
         String DARK_DECORATION = "dark_decoration";
-        String DARK_DECORATION_SLAB = "dark_decoration_slab";
-        String DARK_DECORATION_STAIRS = "dark_decoration_stairs";
-        String DARK_DECORATION_WALL = "dark_decoration_wall";
-        String DETAILED_DARK_DECORATION = "detailed_dark_decoration";
-        String DETAILED_DARK_DECORATION_SLAB = "detailed_dark_decoration_slab";
-        String DETAILED_DARK_DECORATION_STAIRS = "detailed_dark_decoration_stairs";
-        String DETAILED_DARK_DECORATION_WALL = "detailed_dark_decoration_wall";
 
         String GRATING = "grating";
         String TIN_LADDER = "tin_ladder";

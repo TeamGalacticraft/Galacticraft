@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.data;
 
+import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -62,86 +63,16 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.GLOWSTONE_LANTERN);
         this.dropSelf(GCBlocks.UNLIT_LANTERN);
 
-        this.dropSelf(GCBlocks.ALUMINUM_DECORATION);
-        this.dropSelf(GCBlocks.ALUMINUM_DECORATION_SLAB);
-        this.dropSelf(GCBlocks.ALUMINUM_DECORATION_STAIRS);
-        this.dropSelf(GCBlocks.ALUMINUM_DECORATION_WALL);
-        this.dropSelf(GCBlocks.DETAILED_ALUMINUM_DECORATION);
-        this.dropSelf(GCBlocks.DETAILED_ALUMINUM_DECORATION_SLAB);
-        this.dropSelf(GCBlocks.DETAILED_ALUMINUM_DECORATION_STAIRS);
-        this.dropSelf(GCBlocks.DETAILED_ALUMINUM_DECORATION_WALL);
-
-        this.dropSelf(GCBlocks.BRONZE_DECORATION);
-        this.dropSelf(GCBlocks.BRONZE_DECORATION_SLAB);
-        this.dropSelf(GCBlocks.BRONZE_DECORATION_STAIRS);
-        this.dropSelf(GCBlocks.BRONZE_DECORATION_WALL);
-        this.dropSelf(GCBlocks.DETAILED_BRONZE_DECORATION);
-        this.dropSelf(GCBlocks.DETAILED_BRONZE_DECORATION_SLAB);
-        this.dropSelf(GCBlocks.DETAILED_BRONZE_DECORATION_STAIRS);
-        this.dropSelf(GCBlocks.DETAILED_BRONZE_DECORATION_WALL);
-
-        this.dropSelf(GCBlocks.COPPER_DECORATION);
-        this.dropSelf(GCBlocks.COPPER_DECORATION_SLAB);
-        this.dropSelf(GCBlocks.COPPER_DECORATION_STAIRS);
-        this.dropSelf(GCBlocks.COPPER_DECORATION_WALL);
-        this.dropSelf(GCBlocks.DETAILED_COPPER_DECORATION);
-        this.dropSelf(GCBlocks.DETAILED_COPPER_DECORATION_SLAB);
-        this.dropSelf(GCBlocks.DETAILED_COPPER_DECORATION_STAIRS);
-        this.dropSelf(GCBlocks.DETAILED_COPPER_DECORATION_WALL);
-
-        this.dropSelf(GCBlocks.IRON_DECORATION);
-        this.dropSelf(GCBlocks.IRON_DECORATION_SLAB);
-        this.dropSelf(GCBlocks.IRON_DECORATION_STAIRS);
-        this.dropSelf(GCBlocks.IRON_DECORATION_WALL);
-        this.dropSelf(GCBlocks.DETAILED_IRON_DECORATION);
-        this.dropSelf(GCBlocks.DETAILED_IRON_DECORATION_SLAB);
-        this.dropSelf(GCBlocks.DETAILED_IRON_DECORATION_STAIRS);
-        this.dropSelf(GCBlocks.DETAILED_IRON_DECORATION_WALL);
-
-        this.dropSelf(GCBlocks.METEORIC_IRON_DECORATION);
-        this.dropSelf(GCBlocks.METEORIC_IRON_DECORATION_SLAB);
-        this.dropSelf(GCBlocks.METEORIC_IRON_DECORATION_STAIRS);
-        this.dropSelf(GCBlocks.METEORIC_IRON_DECORATION_WALL);
-        this.dropSelf(GCBlocks.DETAILED_METEORIC_IRON_DECORATION);
-        this.dropSelf(GCBlocks.DETAILED_METEORIC_IRON_DECORATION_SLAB);
-        this.dropSelf(GCBlocks.DETAILED_METEORIC_IRON_DECORATION_STAIRS);
-        this.dropSelf(GCBlocks.DETAILED_METEORIC_IRON_DECORATION_WALL);
-
-        this.dropSelf(GCBlocks.STEEL_DECORATION);
-        this.dropSelf(GCBlocks.STEEL_DECORATION_SLAB);
-        this.dropSelf(GCBlocks.STEEL_DECORATION_STAIRS);
-        this.dropSelf(GCBlocks.STEEL_DECORATION_WALL);
-        this.dropSelf(GCBlocks.DETAILED_STEEL_DECORATION);
-        this.dropSelf(GCBlocks.DETAILED_STEEL_DECORATION_SLAB);
-        this.dropSelf(GCBlocks.DETAILED_STEEL_DECORATION_STAIRS);
-        this.dropSelf(GCBlocks.DETAILED_STEEL_DECORATION_WALL);
-
-        this.dropSelf(GCBlocks.TIN_DECORATION);
-        this.dropSelf(GCBlocks.TIN_DECORATION_SLAB);
-        this.dropSelf(GCBlocks.TIN_DECORATION_STAIRS);
-        this.dropSelf(GCBlocks.TIN_DECORATION_WALL);
-        this.dropSelf(GCBlocks.DETAILED_TIN_DECORATION);
-        this.dropSelf(GCBlocks.DETAILED_TIN_DECORATION_SLAB);
-        this.dropSelf(GCBlocks.DETAILED_TIN_DECORATION_STAIRS);
-        this.dropSelf(GCBlocks.DETAILED_TIN_DECORATION_WALL);
-
-        this.dropSelf(GCBlocks.TITANIUM_DECORATION);
-        this.dropSelf(GCBlocks.TITANIUM_DECORATION_SLAB);
-        this.dropSelf(GCBlocks.TITANIUM_DECORATION_STAIRS);
-        this.dropSelf(GCBlocks.TITANIUM_DECORATION_WALL);
-        this.dropSelf(GCBlocks.DETAILED_TITANIUM_DECORATION);
-        this.dropSelf(GCBlocks.DETAILED_TITANIUM_DECORATION_SLAB);
-        this.dropSelf(GCBlocks.DETAILED_TITANIUM_DECORATION_STAIRS);
-        this.dropSelf(GCBlocks.DETAILED_TITANIUM_DECORATION_WALL);
-
-        this.dropSelf(GCBlocks.DARK_DECORATION);
-        this.dropSelf(GCBlocks.DARK_DECORATION_SLAB);
-        this.dropSelf(GCBlocks.DARK_DECORATION_STAIRS);
-        this.dropSelf(GCBlocks.DARK_DECORATION_WALL);
-        this.dropSelf(GCBlocks.DETAILED_DARK_DECORATION);
-        this.dropSelf(GCBlocks.DETAILED_DARK_DECORATION_SLAB);
-        this.dropSelf(GCBlocks.DETAILED_DARK_DECORATION_STAIRS);
-        this.dropSelf(GCBlocks.DETAILED_DARK_DECORATION_WALL);
+        for (DecorationSet decorationSet : GCBlocks.BLOCKS.getDecorations()) {
+            this.dropSelf(decorationSet.block());
+            this.dropSelf(decorationSet.slab());
+            this.dropSelf(decorationSet.stairs());
+            this.dropSelf(decorationSet.wall());
+            this.dropSelf(decorationSet.detailedBlock());
+            this.dropSelf(decorationSet.detailedSlab());
+            this.dropSelf(decorationSet.detailedStairs());
+            this.dropSelf(decorationSet.detailedBlock());
+        }
 
         this.dropSelf(GCBlocks.MOON_TURF);
         this.dropSelf(GCBlocks.MOON_DIRT);

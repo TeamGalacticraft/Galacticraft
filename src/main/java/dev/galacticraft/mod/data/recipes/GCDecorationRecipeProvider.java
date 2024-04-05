@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.data.recipes;
 
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
@@ -166,118 +167,118 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
 
         // Metal decoration blocks
         decorationBlock(output, GCItems.COMPRESSED_TIN,
-                GCItems.TIN_DECORATION,
-                GCItems.TIN_DECORATION_SLAB,
-                GCItems.TIN_DECORATION_STAIRS,
-                GCItems.TIN_DECORATION_WALL
+                GCBlocks.TIN_DECORATION.item(),
+                GCBlocks.TIN_DECORATION.slabItem(),
+                GCBlocks.TIN_DECORATION.stairsItem(),
+                GCBlocks.TIN_DECORATION.wallItem()
         );
         detailedDecorationBlock(output, GCItems.COMPRESSED_TIN,
-                GCItems.DETAILED_TIN_DECORATION,
-                GCItems.DETAILED_TIN_DECORATION_SLAB,
-                GCItems.DETAILED_TIN_DECORATION_STAIRS,
-                GCItems.DETAILED_TIN_DECORATION_WALL
+                GCBlocks.TIN_DECORATION.detailedItem(),
+                GCBlocks.TIN_DECORATION.detailedSlabItem(),
+                GCBlocks.TIN_DECORATION.detailedStairsItem(),
+                GCBlocks.TIN_DECORATION.detailedWallItem()
         );
 
         decorationBlock(output, GCItems.COMPRESSED_COPPER,
-                GCItems.COPPER_DECORATION,
-                GCItems.COPPER_DECORATION_SLAB,
-                GCItems.COPPER_DECORATION_STAIRS,
-                GCItems.COPPER_DECORATION_WALL
+                GCBlocks.COPPER_DECORATION.item(),
+                GCBlocks.COPPER_DECORATION.slabItem(),
+                GCBlocks.COPPER_DECORATION.stairsItem(),
+                GCBlocks.COPPER_DECORATION.wallItem()
         );
         detailedDecorationBlock(output, GCItems.COMPRESSED_COPPER,
-                GCItems.DETAILED_COPPER_DECORATION,
-                GCItems.DETAILED_COPPER_DECORATION_SLAB,
-                GCItems.DETAILED_COPPER_DECORATION_STAIRS,
-                GCItems.DETAILED_COPPER_DECORATION_WALL
+                GCBlocks.COPPER_DECORATION.detailedItem(),
+                GCBlocks.COPPER_DECORATION.detailedSlabItem(),
+                GCBlocks.COPPER_DECORATION.detailedStairsItem(),
+                GCBlocks.COPPER_DECORATION.detailedWallItem()
         );
 
         decorationBlock(output, GCItems.COMPRESSED_IRON,
-                GCItems.IRON_DECORATION,
-                GCItems.IRON_DECORATION_SLAB,
-                GCItems.IRON_DECORATION_STAIRS,
-                GCItems.IRON_DECORATION_WALL
+                GCBlocks.IRON_DECORATION.item(),
+                GCBlocks.IRON_DECORATION.slabItem(),
+                GCBlocks.IRON_DECORATION.stairsItem(),
+                GCBlocks.IRON_DECORATION.wallItem()
         );
         detailedDecorationBlock(output, GCItems.COMPRESSED_IRON,
-                GCItems.DETAILED_IRON_DECORATION,
-                GCItems.DETAILED_IRON_DECORATION_SLAB,
-                GCItems.DETAILED_IRON_DECORATION_STAIRS,
-                GCItems.DETAILED_IRON_DECORATION_WALL
+                GCBlocks.IRON_DECORATION.detailedItem(),
+                GCBlocks.IRON_DECORATION.detailedSlabItem(),
+                GCBlocks.IRON_DECORATION.detailedStairsItem(),
+                GCBlocks.IRON_DECORATION.detailedWallItem()
         );
 
         decorationBlock(output, GCItems.COMPRESSED_ALUMINUM,
-                GCItems.ALUMINUM_DECORATION,
-                GCItems.ALUMINUM_DECORATION_SLAB,
-                GCItems.ALUMINUM_DECORATION_STAIRS,
-                GCItems.ALUMINUM_DECORATION_WALL
+                GCBlocks.ALUMINUM_DECORATION.item(),
+                GCBlocks.ALUMINUM_DECORATION.slabItem(),
+                GCBlocks.ALUMINUM_DECORATION.stairsItem(),
+                GCBlocks.ALUMINUM_DECORATION.wallItem()
         );
         detailedDecorationBlock(output, GCItems.COMPRESSED_ALUMINUM,
-                GCItems.DETAILED_ALUMINUM_DECORATION,
-                GCItems.DETAILED_ALUMINUM_DECORATION_SLAB,
-                GCItems.DETAILED_ALUMINUM_DECORATION_STAIRS,
-                GCItems.DETAILED_ALUMINUM_DECORATION_WALL
+                GCBlocks.ALUMINUM_DECORATION.detailedItem(),
+                GCBlocks.ALUMINUM_DECORATION.detailedSlabItem(),
+                GCBlocks.ALUMINUM_DECORATION.detailedStairsItem(),
+                GCBlocks.ALUMINUM_DECORATION.detailedWallItem()
         );
 
         decorationBlock(output, GCItems.COMPRESSED_STEEL,
-                GCItems.STEEL_DECORATION,
-                GCItems.STEEL_DECORATION_SLAB,
-                GCItems.STEEL_DECORATION_STAIRS,
-                GCItems.STEEL_DECORATION_WALL
+                GCBlocks.STEEL_DECORATION.item(),
+                GCBlocks.STEEL_DECORATION.slabItem(),
+                GCBlocks.STEEL_DECORATION.stairsItem(),
+                GCBlocks.STEEL_DECORATION.wallItem()
         );
         detailedDecorationBlock(output, GCItems.COMPRESSED_STEEL,
-                GCItems.DETAILED_STEEL_DECORATION,
-                GCItems.DETAILED_STEEL_DECORATION_SLAB,
-                GCItems.DETAILED_STEEL_DECORATION_STAIRS,
-                GCItems.DETAILED_STEEL_DECORATION_WALL
+                GCBlocks.STEEL_DECORATION.detailedItem(),
+                GCBlocks.STEEL_DECORATION.detailedSlabItem(),
+                GCBlocks.STEEL_DECORATION.detailedStairsItem(),
+                GCBlocks.STEEL_DECORATION.detailedWallItem()
         );
 
         decorationBlock(output, GCItems.COMPRESSED_BRONZE,
-                GCItems.BRONZE_DECORATION,
-                GCItems.BRONZE_DECORATION_SLAB,
-                GCItems.BRONZE_DECORATION_STAIRS,
-                GCItems.BRONZE_DECORATION_WALL
+                GCBlocks.BRONZE_DECORATION.item(),
+                GCBlocks.BRONZE_DECORATION.slabItem(),
+                GCBlocks.BRONZE_DECORATION.stairsItem(),
+                GCBlocks.BRONZE_DECORATION.wallItem()
         );
         detailedDecorationBlock(output, GCItems.COMPRESSED_BRONZE,
-                GCItems.DETAILED_BRONZE_DECORATION,
-                GCItems.DETAILED_BRONZE_DECORATION_SLAB,
-                GCItems.DETAILED_BRONZE_DECORATION_STAIRS,
-                GCItems.DETAILED_BRONZE_DECORATION_WALL
+                GCBlocks.BRONZE_DECORATION.detailedItem(),
+                GCBlocks.BRONZE_DECORATION.detailedSlabItem(),
+                GCBlocks.BRONZE_DECORATION.detailedStairsItem(),
+                GCBlocks.BRONZE_DECORATION.detailedWallItem()
         );
 
         decorationBlock(output, GCItems.COMPRESSED_METEORIC_IRON,
-                GCItems.METEORIC_IRON_DECORATION,
-                GCItems.METEORIC_IRON_DECORATION_SLAB,
-                GCItems.METEORIC_IRON_DECORATION_STAIRS,
-                GCItems.METEORIC_IRON_DECORATION_WALL
+                GCBlocks.METEORIC_IRON_DECORATION.item(),
+                GCBlocks.METEORIC_IRON_DECORATION.slabItem(),
+                GCBlocks.METEORIC_IRON_DECORATION.stairsItem(),
+                GCBlocks.METEORIC_IRON_DECORATION.wallItem()
         );
         detailedDecorationBlock(output, GCItems.COMPRESSED_METEORIC_IRON,
-                GCItems.DETAILED_METEORIC_IRON_DECORATION,
-                GCItems.DETAILED_METEORIC_IRON_DECORATION_SLAB,
-                GCItems.DETAILED_METEORIC_IRON_DECORATION_STAIRS,
-                GCItems.DETAILED_METEORIC_IRON_DECORATION_WALL
+                GCBlocks.METEORIC_IRON_DECORATION.detailedItem(),
+                GCBlocks.METEORIC_IRON_DECORATION.detailedSlabItem(),
+                GCBlocks.METEORIC_IRON_DECORATION.detailedStairsItem(),
+                GCBlocks.METEORIC_IRON_DECORATION.detailedWallItem()
         );
 
         decorationBlock(output, GCItems.COMPRESSED_TITANIUM,
-                GCItems.TITANIUM_DECORATION,
-                GCItems.TITANIUM_DECORATION_SLAB,
-                GCItems.TITANIUM_DECORATION_STAIRS,
-                GCItems.TITANIUM_DECORATION_WALL
+                GCBlocks.TITANIUM_DECORATION.item(),
+                GCBlocks.TITANIUM_DECORATION.slabItem(),
+                GCBlocks.TITANIUM_DECORATION.stairsItem(),
+                GCBlocks.TITANIUM_DECORATION.detailedWallItem()
         );
         detailedDecorationBlock(output, GCItems.COMPRESSED_TITANIUM,
-                GCItems.DETAILED_TITANIUM_DECORATION,
-                GCItems.DETAILED_TITANIUM_DECORATION_SLAB,
-                GCItems.DETAILED_TITANIUM_DECORATION_STAIRS,
-                GCItems.DETAILED_TITANIUM_DECORATION_WALL
+                GCBlocks.TITANIUM_DECORATION.detailedItem(),
+                GCBlocks.TITANIUM_DECORATION.detailedSlabItem(),
+                GCBlocks.TITANIUM_DECORATION.detailedStairsItem(),
+                GCBlocks.TITANIUM_DECORATION.detailedStairsItem()
         );
 
-        decorationBlockVariants(output, GCItems.DARK_DECORATION,
-                GCItems.DARK_DECORATION_SLAB,
-                GCItems.DARK_DECORATION_STAIRS,
-                GCItems.DARK_DECORATION_WALL
+        decorationBlockVariants(output, GCBlocks.DARK_DECORATION.item(),
+                GCBlocks.DARK_DECORATION.slabItem(),
+                GCBlocks.DARK_DECORATION.stairsItem(),
+                GCBlocks.DARK_DECORATION.wallItem()
         );
-        decorationBlockVariants(output, GCItems.DETAILED_DARK_DECORATION,
-                GCItems.DETAILED_DARK_DECORATION_SLAB,
-                GCItems.DETAILED_DARK_DECORATION_STAIRS,
-                GCItems.DETAILED_DARK_DECORATION_WALL
+        decorationBlockVariants(output, GCBlocks.DARK_DECORATION.detailedItem(),
+                GCBlocks.DARK_DECORATION.detailedSlabItem(),
+                GCBlocks.DARK_DECORATION.detailedStairsItem(),
+                GCBlocks.DARK_DECORATION.detailedWallItem()
         );
 
         // Rock decoration blocks

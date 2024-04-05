@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.data.model;
 
 import com.google.common.collect.Maps;
+import dev.galacticraft.mod.content.GCBlockRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.world.level.block.Block;
@@ -38,95 +39,15 @@ public class GCBlockFamilies {
     private static final Map<Block, BlockFamily> MAP = Maps.newHashMap();
 
     // DECORATIONS
-    public static final BlockFamily ALUMINUM_DECORATIONS = builder(ALUMINUM_DECORATION)
-            .slab(ALUMINUM_DECORATION_SLAB)
-            .stairs(ALUMINUM_DECORATION_STAIRS)
-            .wall(ALUMINUM_DECORATION_WALL)
-            .getFamily();
-    public static final BlockFamily DETAILED_ALUMINUM_DECORATIONS = builder(DETAILED_ALUMINUM_DECORATION)
-            .slab(DETAILED_ALUMINUM_DECORATION_SLAB)
-            .stairs(DETAILED_ALUMINUM_DECORATION_STAIRS)
-            .getFamily();
-
-    public static final BlockFamily BRONZE_DECORATIONS = builder(BRONZE_DECORATION)
-            .slab(BRONZE_DECORATION_SLAB)
-            .stairs(BRONZE_DECORATION_STAIRS)
-            .wall(BRONZE_DECORATION_WALL)
-            .getFamily();
-    public static final BlockFamily DETAILED_BRONZE_DECORATIONS = builder(DETAILED_BRONZE_DECORATION)
-            .slab(DETAILED_BRONZE_DECORATION_SLAB)
-            .stairs(DETAILED_BRONZE_DECORATION_STAIRS)
-            .getFamily();
-
-    public static final BlockFamily COPPER_DECORATIONS = builder(COPPER_DECORATION)
-            .slab(COPPER_DECORATION_SLAB)
-            .stairs(COPPER_DECORATION_STAIRS)
-            .wall(COPPER_DECORATION_WALL)
-            .getFamily();
-    public static final BlockFamily DETAILED_COPPER_DECORATIONS = builder(DETAILED_COPPER_DECORATION)
-            .slab(DETAILED_COPPER_DECORATION_SLAB)
-            .stairs(DETAILED_COPPER_DECORATION_STAIRS)
-            .getFamily();
-
-    public static final BlockFamily IRON_DECORATIONS = builder(IRON_DECORATION)
-            .slab(IRON_DECORATION_SLAB)
-            .stairs(IRON_DECORATION_STAIRS)
-            .wall(IRON_DECORATION_WALL)
-            .getFamily();
-    public static final BlockFamily DETAILED_IRON_DECORATIONS = builder(DETAILED_IRON_DECORATION)
-            .slab(DETAILED_IRON_DECORATION_SLAB)
-            .stairs(DETAILED_IRON_DECORATION_STAIRS)
-            .getFamily();
-
-    public static final BlockFamily METEORIC_IRON_DECORATIONS = builder(METEORIC_IRON_DECORATION)
-            .slab(METEORIC_IRON_DECORATION_SLAB)
-            .stairs(METEORIC_IRON_DECORATION_STAIRS)
-            .wall(METEORIC_IRON_DECORATION_WALL)
-            .getFamily();
-    public static final BlockFamily DETAILED_METEORIC_IRON_DECORATIONS = builder(DETAILED_METEORIC_IRON_DECORATION)
-            .slab(DETAILED_METEORIC_IRON_DECORATION_SLAB)
-            .stairs(DETAILED_METEORIC_IRON_DECORATION_STAIRS)
-            .getFamily();
-
-    public static final BlockFamily STEEL_DECORATIONS = builder(STEEL_DECORATION)
-            .slab(STEEL_DECORATION_SLAB)
-            .stairs(STEEL_DECORATION_STAIRS)
-            .wall(STEEL_DECORATION_WALL)
-            .getFamily();
-    public static final BlockFamily DETAILED_STEEL_DECORATIONS = builder(DETAILED_STEEL_DECORATION)
-            .slab(DETAILED_STEEL_DECORATION_SLAB)
-            .stairs(DETAILED_STEEL_DECORATION_STAIRS)
-            .getFamily();
-
-    public static final BlockFamily TIN_DECORATIONS = builder(TIN_DECORATION)
-            .slab(TIN_DECORATION_SLAB)
-            .stairs(TIN_DECORATION_STAIRS)
-            .wall(TIN_DECORATION_WALL)
-            .getFamily();
-    public static final BlockFamily DETAILED_TIN_DECORATIONS = builder(DETAILED_TIN_DECORATION)
-            .slab(DETAILED_TIN_DECORATION_SLAB)
-            .stairs(DETAILED_TIN_DECORATION_STAIRS)
-            .getFamily();
-
-    public static final BlockFamily TITANIUM_DECORATIONS = builder(TITANIUM_DECORATION)
-            .slab(TITANIUM_DECORATION_SLAB)
-            .stairs(TITANIUM_DECORATION_STAIRS)
-            .wall(TITANIUM_DECORATION_WALL)
-            .getFamily();
-    public static final BlockFamily DETAILED_TITANIUM_DECORATIONS = builder(DETAILED_TITANIUM_DECORATION)
-            .slab(DETAILED_TITANIUM_DECORATION_SLAB)
-            .stairs(DETAILED_TITANIUM_DECORATION_STAIRS)
-            .getFamily();
-
-    public static final BlockFamily DARK_DECORATIONS = builder(DARK_DECORATION)
-            .slab(DARK_DECORATION_SLAB)
-            .stairs(DARK_DECORATION_STAIRS)
-            .wall(DARK_DECORATION_WALL)
-            .getFamily();
-    public static final BlockFamily DETAILED_DARK_DECORATIONS = builder(DETAILED_DARK_DECORATION)
-            .slab(DETAILED_DARK_DECORATION_SLAB)
-            .stairs(DETAILED_DARK_DECORATION_STAIRS)
-            .getFamily();
+    public static final DecorationFamily ALUMINUM_DECORATIONS = decoration(ALUMINUM_DECORATION);
+    public static final DecorationFamily BRONZE_DECORATIONS = decoration(BRONZE_DECORATION);
+    public static final DecorationFamily COPPER_DECORATIONS = decoration(COPPER_DECORATION);
+    public static final DecorationFamily IRON_DECORATIONS = decoration(IRON_DECORATION);
+    public static final DecorationFamily METEORIC_IRON_DECORATIONS = decoration(METEORIC_IRON_DECORATION);
+    public static final DecorationFamily STEEL_DECORATIONS = decoration(STEEL_DECORATION);
+    public static final DecorationFamily TIN_DECORATIONS = decoration(TIN_DECORATION);
+    public static final DecorationFamily TITANIUM_DECORATIONS = decoration(TITANIUM_DECORATION);
+    public static final DecorationFamily DARK_DECORATIONS = decoration(DARK_DECORATION);
 
     // STONES
     public static final BlockFamily MOON_ROCKS = builder(MOON_ROCK)
@@ -189,7 +110,23 @@ public class GCBlockFamilies {
         }
     }
 
+    private static DecorationFamily decoration(GCBlockRegistry.DecorationSet decorationSet) {
+        BlockFamily original = builder(decorationSet.block())
+                .slab(decorationSet.slab())
+                .stairs(decorationSet.stairs())
+                .wall(decorationSet.wall())
+                .getFamily();
+        BlockFamily detailed = builder(decorationSet.detailedBlock())
+                .slab(decorationSet.detailedSlab())
+                .stairs(decorationSet.detailedStairs())
+                .wall(decorationSet.detailedWall())
+                .getFamily();
+        return new DecorationFamily(original, detailed);
+    }
+
     public static Stream<BlockFamily> getAllFamilies() {
         return MAP.values().stream();
     }
+
+    public record DecorationFamily(BlockFamily original, BlockFamily detailed) {}
 }

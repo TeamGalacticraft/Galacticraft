@@ -24,6 +24,7 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.storage.PlaceholderItemStorage;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
@@ -248,86 +249,16 @@ public class GCCreativeModeTabs {
             .title(Component.translatable("itemGroup.galacticraft.blocks"))
             .displayItems((parameters, output) -> {
                 // DECORATION BLOCKS
-                output.accept(ALUMINUM_DECORATION);
-                output.accept(ALUMINUM_DECORATION_SLAB);
-                output.accept(ALUMINUM_DECORATION_STAIRS);
-                output.accept(ALUMINUM_DECORATION_WALL);
-                output.accept(DETAILED_ALUMINUM_DECORATION);
-                output.accept(DETAILED_ALUMINUM_DECORATION_SLAB);
-                output.accept(DETAILED_ALUMINUM_DECORATION_STAIRS);
-                output.accept(DETAILED_ALUMINUM_DECORATION_WALL);
-
-                output.accept(BRONZE_DECORATION);
-                output.accept(BRONZE_DECORATION_SLAB);
-                output.accept(BRONZE_DECORATION_STAIRS);
-                output.accept(BRONZE_DECORATION_WALL);
-                output.accept(DETAILED_BRONZE_DECORATION);
-                output.accept(DETAILED_BRONZE_DECORATION_SLAB);
-                output.accept(DETAILED_BRONZE_DECORATION_STAIRS);
-                output.accept(DETAILED_BRONZE_DECORATION_WALL);
-
-                output.accept(COPPER_DECORATION);
-                output.accept(COPPER_DECORATION_SLAB);
-                output.accept(COPPER_DECORATION_STAIRS);
-                output.accept(COPPER_DECORATION_WALL);
-                output.accept(DETAILED_COPPER_DECORATION);
-                output.accept(DETAILED_COPPER_DECORATION_SLAB);
-                output.accept(DETAILED_COPPER_DECORATION_STAIRS);
-                output.accept(DETAILED_COPPER_DECORATION_WALL);
-
-                output.accept(IRON_DECORATION);
-                output.accept(IRON_DECORATION_SLAB);
-                output.accept(IRON_DECORATION_STAIRS);
-                output.accept(IRON_DECORATION_WALL);
-                output.accept(DETAILED_IRON_DECORATION);
-                output.accept(DETAILED_IRON_DECORATION_SLAB);
-                output.accept(DETAILED_IRON_DECORATION_STAIRS);
-                output.accept(DETAILED_IRON_DECORATION_WALL);
-
-                output.accept(METEORIC_IRON_DECORATION);
-                output.accept(METEORIC_IRON_DECORATION_SLAB);
-                output.accept(METEORIC_IRON_DECORATION_STAIRS);
-                output.accept(METEORIC_IRON_DECORATION_WALL);
-                output.accept(DETAILED_METEORIC_IRON_DECORATION);
-                output.accept(DETAILED_METEORIC_IRON_DECORATION_SLAB);
-                output.accept(DETAILED_METEORIC_IRON_DECORATION_STAIRS);
-                output.accept(DETAILED_METEORIC_IRON_DECORATION_WALL);
-
-                output.accept(STEEL_DECORATION);
-                output.accept(STEEL_DECORATION_SLAB);
-                output.accept(STEEL_DECORATION_STAIRS);
-                output.accept(STEEL_DECORATION_WALL);
-                output.accept(DETAILED_STEEL_DECORATION);
-                output.accept(DETAILED_STEEL_DECORATION_SLAB);
-                output.accept(DETAILED_STEEL_DECORATION_STAIRS);
-                output.accept(DETAILED_STEEL_DECORATION_WALL);
-
-                output.accept(TIN_DECORATION);
-                output.accept(TIN_DECORATION_SLAB);
-                output.accept(TIN_DECORATION_STAIRS);
-                output.accept(TIN_DECORATION_WALL);
-                output.accept(DETAILED_TIN_DECORATION);
-                output.accept(DETAILED_TIN_DECORATION_SLAB);
-                output.accept(DETAILED_TIN_DECORATION_STAIRS);
-                output.accept(DETAILED_TIN_DECORATION_WALL);
-
-                output.accept(TITANIUM_DECORATION);
-                output.accept(TITANIUM_DECORATION_SLAB);
-                output.accept(TITANIUM_DECORATION_STAIRS);
-                output.accept(TITANIUM_DECORATION_WALL);
-                output.accept(DETAILED_TITANIUM_DECORATION);
-                output.accept(DETAILED_TITANIUM_DECORATION_SLAB);
-                output.accept(DETAILED_TITANIUM_DECORATION_STAIRS);
-                output.accept(DETAILED_TITANIUM_DECORATION_WALL);
-
-                output.accept(DARK_DECORATION);
-                output.accept(DARK_DECORATION_SLAB);
-                output.accept(DARK_DECORATION_STAIRS);
-                output.accept(DARK_DECORATION_WALL);
-                output.accept(DETAILED_DARK_DECORATION);
-                output.accept(DETAILED_DARK_DECORATION_SLAB);
-                output.accept(DETAILED_DARK_DECORATION_STAIRS);
-                output.accept(DETAILED_DARK_DECORATION_WALL);
+                for (GCBlockRegistry.DecorationSet decorationSet : GCBlocks.BLOCKS.getDecorations()) {
+                    output.accept(decorationSet.item());
+                    output.accept(decorationSet.slabItem());
+                    output.accept(decorationSet.stairsItem());
+                    output.accept(decorationSet.wallItem());
+                    output.accept(decorationSet.detailedItem());
+                    output.accept(decorationSet.detailedSlabItem());
+                    output.accept(decorationSet.detailedStairsItem());
+                    output.accept(decorationSet.detailedWallItem());
+                }
 
                 // TORCHES
                 output.accept(GLOWSTONE_TORCH);
