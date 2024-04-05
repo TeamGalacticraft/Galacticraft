@@ -29,7 +29,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 
 public class GCStructureTypes {
-    public static final StructureType<MoonRuinsStructure> MOON_RUINS = Registry.register(BuiltInRegistries.STRUCTURE_TYPE, new ResourceLocation(Constant.MOD_ID, "moon_ruins"), () -> MoonRuinsStructure.CODEC);
+    public static final StructureType<MoonRuinsStructure> MOON_RUINS = Registry.register(BuiltInRegistries.STRUCTURE_TYPE, Constant.id("moon_ruins"), () -> MoonRuinsStructure.CODEC);
 
     public static void register() {
     }

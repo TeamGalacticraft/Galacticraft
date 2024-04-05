@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft:titanium_decoration_slab"
+          "name": "minecraft:air"
         }
       ],
       "rolls": 1.0

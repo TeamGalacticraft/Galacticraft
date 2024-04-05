@@ -119,7 +119,6 @@ public class GCBlockFamilies {
         BlockFamily detailed = builder(decorationSet.detailedBlock())
                 .slab(decorationSet.detailedSlab())
                 .stairs(decorationSet.detailedStairs())
-                .wall(decorationSet.detailedWall())
                 .getFamily();
         return new DecorationFamily(original, detailed);
     }

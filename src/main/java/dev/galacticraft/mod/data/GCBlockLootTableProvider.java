@@ -71,7 +71,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
             this.dropSelf(decorationSet.detailedBlock());
             this.dropSelf(decorationSet.detailedSlab());
             this.dropSelf(decorationSet.detailedStairs());
-            this.dropSelf(decorationSet.detailedBlock());
+            this.dropSelf(decorationSet.detailedWall());
         }
 
         this.dropSelf(GCBlocks.MOON_TURF);

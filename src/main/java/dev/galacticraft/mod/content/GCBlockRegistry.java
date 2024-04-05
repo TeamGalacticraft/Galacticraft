@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.content;
 
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -72,6 +74,17 @@ public class GCBlockRegistry extends GCRegistry<Block> {
                 decoration, decorationSlab, decorationStairs, decorationWall, detailedDecoration, detailedDecorationSlab, detailedDecorationStairs, detailedDecorationWall,
                 decorationItem, decorationSlabItem, decorationStairsItem, decorationWallItem, detailedDecorationItem, detailedDecorationSlabItem, detailedDecorationStairsItem, detailedDecorationWallItem
         );
+        // Fabric registry sync issue?
+        if (FabricDataGenHelper.ENABLED) {
+            Item.BY_BLOCK.put(decoration, decorationItem);
+            Item.BY_BLOCK.put(decorationSlab, decorationSlabItem);
+            Item.BY_BLOCK.put(decorationStairs, decorationStairsItem);
+            Item.BY_BLOCK.put(decorationWall, decorationWallItem);
+            Item.BY_BLOCK.put(detailedDecoration, detailedDecorationItem);
+            Item.BY_BLOCK.put(detailedDecorationSlab, detailedDecorationSlabItem);
+            Item.BY_BLOCK.put(detailedDecorationStairs, detailedDecorationStairsItem);
+            Item.BY_BLOCK.put(detailedDecorationWall, detailedDecorationWallItem);
+        }
         this.decorations.add(decorationSet);
         return decorationSet;
     }

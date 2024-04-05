@@ -261,13 +261,13 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 GCBlocks.TITANIUM_DECORATION.item(),
                 GCBlocks.TITANIUM_DECORATION.slabItem(),
                 GCBlocks.TITANIUM_DECORATION.stairsItem(),
-                GCBlocks.TITANIUM_DECORATION.detailedWallItem()
+                GCBlocks.TITANIUM_DECORATION.wallItem()
         );
         detailedDecorationBlock(output, GCItems.COMPRESSED_TITANIUM,
                 GCBlocks.TITANIUM_DECORATION.detailedItem(),
                 GCBlocks.TITANIUM_DECORATION.detailedSlabItem(),
                 GCBlocks.TITANIUM_DECORATION.detailedStairsItem(),
-                GCBlocks.TITANIUM_DECORATION.detailedStairsItem()
+                GCBlocks.TITANIUM_DECORATION.detailedWallItem()
         );
 
         decorationBlockVariants(output, GCBlocks.DARK_DECORATION.item(),
