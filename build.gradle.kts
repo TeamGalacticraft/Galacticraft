@@ -106,6 +106,8 @@ loom {
         runConfigs.forEach {
             it.property("mixin.hotSwap", "true")
             it.property("mixin.debug.export", "true")
+            it.vmArg("-XX:+AllowEnhancedClassRedefinition")
+            it.environmentVariable("LD_PRELOAD", "/home/alpha/Documents/renderdoc_1.31/lib/librenderdoc.so")
         }
         register("datagen") {
             client()

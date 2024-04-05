@@ -81,7 +81,7 @@ public record BakedModelRocketPartRenderer(Supplier<GCBakedModel> model,
 //        MultiBufferSource.BufferSource entityVertexConsumers = Minecraft.getInstance().renderBuffers().bufferSource();
 //        VertexConsumer itemGlintConsumer = entityVertexConsumers.getBuffer(Sheets.cutoutBlockSheet());
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
-        this.model.get().render(pose);
+//        this.model.get().render(pose);
 //        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(entry, itemGlintConsumer, null, this.model.get(), 1, 1, 1, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
 //        entityVertexConsumers.endBatch();
 
@@ -94,10 +94,11 @@ public record BakedModelRocketPartRenderer(Supplier<GCBakedModel> model,
     @Override
     public void render(ClientLevel world, PoseStack matrices, Rocket rocket, MultiBufferSource vertices, float partialTick, int light, int overlay) {
         RenderSystem.setShaderColor(rocket.red() / 255.0f, rocket.green() / 255.0f, rocket.blue() / 255.0f, rocket.alpha() / 255.0f);
-        matrices.translate(0.5D, 0.5D, 0.5D);
-        PoseStack.Pose entry = matrices.last();
+//        matrices.translate(0.5D, 0.5D, 0.5D);
+//        PoseStack.Pose entry = matrices.last();
 //        VertexConsumer vertexConsumer = vertices.getBuffer(layer.get());
-        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
+//        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
+        ;
         this.model.get().render(matrices);
 //        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(entry, vertexConsumer, null, this.model.get(), 1, 1, 1, light, overlay);
     }

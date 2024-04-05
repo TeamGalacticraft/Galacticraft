@@ -22,12 +22,17 @@
 
 package dev.galacticraft.mod.client.model;
 
+import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import de.javagl.obj.Obj;
 import de.javagl.obj.ObjData;
+import de.javagl.obj.ObjUtils;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.client.gl.MeshBuffer;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 
 /**
  * A Model rendered via a VBO.
@@ -35,27 +40,64 @@ import net.minecraft.client.renderer.GameRenderer;
 public class VertexBufferModel implements GCBakedModel {
     private final Obj obj;
     private boolean compiled = false;
-    private VertexBuffer buffer;
+    private MeshBuffer buffer;
 
     public VertexBufferModel(Obj obj) {
-        this.obj = obj;
+        this.obj = ObjUtils.convertToRenderable(obj);
     }
 
     public void compile() {
-        VertexBuffer vbo = new VertexBuffer(VertexBuffer.Usage.STATIC);
-        Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder buffer = tesselator.getBuilder();
+        MeshBuffer buffer = new MeshBuffer(DefaultVertexFormat.NEW_ENTITY);
+//        Tesselator tes = Tesselator.getInstance();
+//        BufferBuilder buffer = tes.getBuilder();
+//        VertexBuffer vbo = new VertexBuffer(VertexBuffer.Usage.STATIC);
+//        int[] indices = ObjData.getFaceVertexIndicesArray(obj);
+//        float[] vertices = ObjData.getVerticesArray(obj);
+//        float[] texCoords = ObjData.getTexCoordsArray(obj, 2);
+//        float[] normals = ObjData.getNormalsArray(obj);
+
+
         int[] indices = ObjData.getFaceVertexIndicesArray(obj);
         float[] vertices = ObjData.getVerticesArray(obj);
-        float[] texCoords = ObjData.getTexCoordsArray(obj, 2);
+        float[] texCoords = ObjData.getTexCoordsArray(obj, 2, true);
         float[] normals = ObjData.getNormalsArray(obj);
+//        buffer.buffer.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.NEW_ENTITY);
+//        for (int vtx = 0; vtx < vertices.length / 3; vtx++) {
+//            buffer.vertex(vertices[vtx * 3], vertices[vtx * 3 + 1], vertices[vtx * 3 + 2]);
+//            buffer.color(1, 1, 1, 1);
+//            buffer.uv(texCoords[vtx * 2], texCoords[vtx * 2 + 1]);
+//
+//            buffer.overlayCoords(OverlayTexture.NO_OVERLAY);
+//            buffer.uv2(LightTexture.FULL_BRIGHT);
+//
+//            buffer.normal(normals[vtx * 3], normals[vtx * 3 + 1], normals[vtx * 3 + 2]);
+//            buffer.endVertex();
+//        }
 
-        buffer.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_TEX_COLOR);
-        for (int vtx = 0; vtx < vertices.length; vtx += 3) {
-            buffer.vertex(vertices[vtx], vertices[vtx + 1], vertices[vtx + 2]).uv(texCoords[vtx / 3], texCoords[vtx / 3 + 1]).color(1.0F, 1.0F, 1.0F, 1.0F)/*.normal(normals[vtx * 3], normals[vtx * 3 + 1], normals[vtx * 3 + 2])*/.endVertex();
+//        buffer.buffer.defaultColor(1, 1, 1, 1);
+        for (int vtx = 0; vtx < vertices.length / 3; vtx++) {
+            buffer.buffer.vertex(vertices[vtx * 3], vertices[vtx * 3 + 1], vertices[vtx * 3 + 2]);
+            buffer.buffer.color(1, 1, 1, 1);
+            buffer.buffer.uv(texCoords[vtx * 2], texCoords[vtx * 2 + 1]);
+
+            buffer.buffer.overlayCoords(OverlayTexture.NO_OVERLAY);
+            buffer.buffer.uv2(LightTexture.FULL_BRIGHT);
+            buffer.buffer.normal(normals[vtx * 3], normals[vtx * 3 + 1], normals[vtx * 3 + 2]);
+            buffer.buffer.endVertex();
         }
-        vbo.upload(buffer.end());
-        this.buffer = vbo;
+
+        var indexBuffer = buffer.indicesBuffer;
+        for (int idx = 0; idx < indices.length / 3; idx++) {
+            indexBuffer.int3(
+                    indices[idx * 3],
+                    indices[idx * 3 + 1],
+                    indices[idx * 3 + 2]
+            );
+        }
+        buffer.upload(false);
+        this.buffer = buffer;
+        VertexBuffer.unbind();
+//        this.buffer = buffer;
         this.compiled = true;
     }
 
@@ -63,14 +105,20 @@ public class VertexBufferModel implements GCBakedModel {
     public void render(PoseStack modelStack) {
         if (!compiled)
             compile();
+        RenderSystem.enableDepthTest();
         RenderSystem.setShaderTexture(0, Constant.id("textures/rocket/rocket.png"));
-        this.buffer.bind();
-        this.buffer.drawWithShader(modelStack.last().pose(), RenderSystem.getProjectionMatrix(), GameRenderer.getPositionTexColorShader());
+        this.buffer.draw(modelStack, GameRenderer.getRendertypeSolidShader());
+//        this.buffer.bind();
+//        this.buffer.drawWithShader(modelStack.last().pose(), RenderSystem.getProjectionMatrix(), GameRenderer.getRendertypeEntitySolidShader());
         VertexBuffer.unbind();
+        RenderSystem.disableDepthTest();
+//        this.buffer.drawWithShader(modelStack.last().pose(), RenderSystem.getProjectionMatrix(), GameRenderer.getPositionTexColorNormalShader());
+//        VertexBuffer.unbind();
     }
 
     @Override
     public void close() {
-        buffer.close();
+        if (buffer != null)
+            buffer.delete();
     }
 }

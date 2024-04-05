@@ -30,6 +30,7 @@ import dev.galacticraft.mod.client.model.GCModelLoader;
 import dev.galacticraft.mod.content.GCRocketParts;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
@@ -50,7 +51,7 @@ public class GalacticraftRocketPartRenderers {
         RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(DEFAULT_CONE))), Sheets::translucentCullBlockSheet));
         RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.ADVANCED_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(ADVANCED_CONE))), Sheets::translucentCullBlockSheet));
         RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.SLOPED_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(SLOPED_CONE))), Sheets::translucentCullBlockSheet));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_BODY, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(DEFAULT_BODY))), Sheets::translucentCullBlockSheet));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_BODY, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(DEFAULT_BODY))), () -> RenderType.entitySolid(Constant.id("textures/rocket/rocket.png"))));
         RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_FIN, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(DEFAULT_FIN))), Sheets::translucentCullBlockSheet));
         RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_ENGINE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(DEFAULT_ENGINE))), Sheets::translucentCullBlockSheet));
         RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.STORAGE_UPGRADE, new BakedModelItemRocketPartRenderer(Items.CHEST.getDefaultInstance(), null));
