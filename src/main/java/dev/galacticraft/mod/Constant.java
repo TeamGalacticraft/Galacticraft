@@ -868,15 +868,13 @@ public interface Constant {
         ResourceLocation OPEN_GC_INVENTORY = id("open_gc_inv");
         ResourceLocation OPEN_GC_ROCKET = id("open_gc_rocket");
         ResourceLocation CREATE_SATELLITE = id("create_satellite");
-        ResourceLocation ROCKET_JUMP = id("rocket_jump");
-        ResourceLocation ROCKET_PITCH = id("rocket_pitch");
-        ResourceLocation ROCKET_YAW = id("rocket_yaw");
         ResourceLocation OPEN_SCREEN = id("open_screen");
+        ResourceLocation PLANET_MENU_PACKET = id("planet_menu_open");
         ResourceLocation SELECT_PART = id("select_part");
 
         ResourceLocation CONTROLLABLE_ENTITY = id("controllable_entity");
-        ResourceLocation ENTITY_UPDATE = id("entity_update");
         ResourceLocation PLANET_TP = id("planet_tp");
+        ResourceLocation ROCKET_SPAWN = id("rocket_spawn");
         ResourceLocation FOOTPRINT = id("footprint");
         ResourceLocation FOOTPRINT_REMOVED = id("footprint_removed");
         ResourceLocation RESET_THIRD_PERSON = id("reset_camera_type");

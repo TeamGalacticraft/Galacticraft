@@ -24,37 +24,25 @@ package dev.galacticraft.mod.network;
 
 import dev.galacticraft.api.accessor.SatelliteAccessor;
 import dev.galacticraft.api.registry.AddonRegistries;
-import dev.galacticraft.api.rocket.LaunchStage;
-import dev.galacticraft.api.rocket.entity.Rocket;
-import dev.galacticraft.api.rocket.part.RocketPart;
-import dev.galacticraft.api.rocket.part.RocketPartTypes;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
-import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.events.GCEventHandlers;
-import dev.galacticraft.mod.network.packets.ControlEntityPacket;
+import dev.galacticraft.mod.network.packets.*;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
-import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
 import dev.galacticraft.mod.screen.RocketMenu;
-import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
+import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.Objects;
 
@@ -94,106 +82,10 @@ public class GCServerPacketReceivers {
             }
         })));
 
-        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.BUBBLE_MAX, (server, player, handler, buf, responseSender) -> {
-            byte max = buf.readByte();
-            server.execute(() -> {
-                if (player.containerMenu instanceof OxygenBubbleDistributorMenu sHandler) {
-                    OxygenBubbleDistributorBlockEntity machine = sHandler.machine;
-                    if (machine.getSecurity().hasAccess(player)) {
-                        if (max > 0) {
-                            machine.setTargetSize(max);
-                        }
-                    }
-                }
-            });
-        });
-
-        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.SELECT_PART, (server, player, handler, buf, responseSender) -> {
-            RocketPartTypes value = RocketPartTypes.values()[buf.readByte()];
-            ResourceKey<RocketPart<?, ?>> key;
-            if (buf.readBoolean()) {
-                key = ResourceKey.create(((ResourceKey<? extends Registry<RocketPart<?, ?>>>) value.key), buf.readResourceLocation());
-            } else {
-                key = null;
-            }
-            server.execute(() -> {
-                if (player.containerMenu instanceof RocketWorkbenchMenu menu) {
-                    menu.getSelection(value).setSelection(key == null ? null : (Holder.Reference) server.registryAccess().registryOrThrow(value.key).getHolderOrThrow(key));
-                    menu.workbench.setChanged();
-                }
-            });
-        });
-
-        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.BUBBLE_VISIBLE, (server, player, handler, buf, responseSender) -> {
-            boolean visible = buf.readBoolean();
-            server.execute(() -> {
-                if (player.containerMenu instanceof OxygenBubbleDistributorMenu sHandler) {
-                    OxygenBubbleDistributorBlockEntity machine = sHandler.machine;
-                    if (machine.getSecurity().hasAccess(player)) {
-                        machine.setBubbleVisible(visible);
-                    }
-                }
-            });
-        });
-
-        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.ROCKET_JUMP, (server, player, handler, buf, responseSender) -> {
-            server.execute(() -> {
-                if (player.isPassenger()) {
-                    if (player.getVehicle() instanceof Rocket rocket && rocket.getLaunchStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
-                        rocket.onJump();
-                    }
-                }
-            });
-        });
-
-        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.ROCKET_PITCH, (server, player, handler, buf, responseSender) -> {
-            boolean input = buf.readBoolean();
-            server.execute(() -> {
-                if (player.isPassenger()) {
-                    if (player.getVehicle() instanceof Rocket rocket && rocket.getLaunchStage() == LaunchStage.LAUNCHED) {
-                        if (input) {
-                            player.getVehicle().setXRot((player.getVehicle().getXRot() + 2.0F) % 360.0f);
-                        } else {
-                            player.getVehicle().setXRot((player.getVehicle().getXRot() - 2.0F) % 360.0f);
-                        }
-                    }
-                }
-            });
-        });
-
-        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.ROCKET_YAW, (server, player, handler, buf, responseSender) -> {
-            boolean input = buf.readBoolean();
-            server.execute(() -> {
-                if (player.isPassenger()) {
-                    if (player.getVehicle() instanceof Rocket rocket && rocket.getLaunchStage() == LaunchStage.LAUNCHED) {
-                        if (input) {
-                            player.getVehicle().setYRot((player.getVehicle().getYRot() + 2.0F) % 360.0f);
-                        } else {
-                            player.getVehicle().setYRot((player.getVehicle().getYRot() - 2.0F) % 360.0f);
-                        }
-                    }
-                }
-            });
-        });
-
-        ServerPlayNetworking.registerGlobalReceiver(ControlEntityPacket.TYPE, (packet, player, responseSender) -> {
-            if (player.isPassenger())
-                if (player.getVehicle() instanceof ControllableEntity controllable)
-                    controllable.inputTick(packet.leftImpulse(), packet.forwardImpulse(), packet.up(), packet.down(), packet.left(), packet.right(), packet.jumping(), packet.shiftKeyDown());
-        });
-
-        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.ENTITY_UPDATE, (server, player, handler, buffer, responseSender) -> {
-            int entityID = buffer.readInt();
-            Vec3 position = new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
-            float rotationYaw = buffer.readFloat();
-            float rotationPitch = buffer.readFloat();
-            Vec3 motion = new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
-            Entity entity = player.level().getEntity(entityID);
-            entity.setPos(position);
-            entity.setXRot(rotationPitch);
-            entity.setYRot(rotationYaw);
-            entity.setDeltaMovement(motion);
-        });
+        registerPacket(BubbleMaxPacket.TYPE);
+        registerPacket(SelectPartPacket.TYPE);
+        registerPacket(ToggleBubbleVisibilityPacket.TYPE);
+        registerPacket(ControlEntityPacket.TYPE);
 
         ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.PLANET_TP, ((server, player, handler, buf, responseSender) -> {
             FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
@@ -213,5 +105,9 @@ public class GCServerPacketReceivers {
         ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.CREATE_SATELLITE, (server, player, handler, buf, responseSender) -> {
             SatelliteType.registerSatellite(server, player, Objects.requireNonNull(server.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).get(buf.readResourceLocation())), server.getStructureManager().get(Constant.Structure.SPACE_STATION).orElseThrow());
         });
+    }
+
+    public static <Packet extends GCPacket> void registerPacket(PacketType<Packet> type) {
+        ServerPlayNetworking.registerGlobalReceiver(type, GCPacket::handle);
     }
 }

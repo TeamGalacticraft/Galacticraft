@@ -37,6 +37,7 @@ import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
+import dev.galacticraft.mod.network.packets.SelectPartPacket;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -217,15 +218,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
                         if (i < this.recipes.size()) {
                             if (button == GLFW.GLFW_MOUSE_BUTTON_1) {
                                 this.getSelection().setSelection(this.recipes.get(i));
-                                FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-                                buf.writeByte(this.openTab.type.ordinal());
-                                if (this.recipes.get(i) != null) {
-                                    buf.writeBoolean(true);
-                                    buf.writeResourceLocation(this.recipes.get(i).key().location());
-                                } else {
-                                    buf.writeBoolean(false);
-                                }
-                                ClientPlayNetworking.send(Constant.Packet.SELECT_PART, buf);
+                                ClientPlayNetworking.send(new SelectPartPacket(this.openTab.type, this.recipes.get(i) != null ? this.recipes.get(i).key() : null));
                                 return true;
                             } else if (button == GLFW.GLFW_MOUSE_BUTTON_2) {
                                 //todo

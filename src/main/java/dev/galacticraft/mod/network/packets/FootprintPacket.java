@@ -22,30 +22,40 @@
 
 package dev.galacticraft.mod.network.packets;
 
-import dev.galacticraft.mod.Constant.Packet;
-import dev.galacticraft.mod.content.entity.ControllableEntity;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.client.render.FootprintRenderer;
+import dev.galacticraft.mod.misc.footprint.Footprint;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 
-public record ControlEntityPacket(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown) implements GCPacket {
-    public static final PacketType<ControlEntityPacket> TYPE = PacketType.create(Packet.CONTROLLABLE_ENTITY, ControlEntityPacket::new);
+import java.util.ArrayList;
+import java.util.List;
 
-    public ControlEntityPacket(FriendlyByteBuf buf) {
-        this(buf.readFloat(), buf.readFloat(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean());
+public record FootprintPacket(long packedPos, List<Footprint> footprints) implements GCPacket {
+    public static final PacketType<FootprintPacket> TYPE = PacketType.create(Constant.Packet.FOOTPRINT, FootprintPacket::new);
+
+    public FootprintPacket(FriendlyByteBuf buf) {
+        this(buf.readLong(), readFootprints(buf));
     }
 
     @Override
     public void write(FriendlyByteBuf buf) {
-        buf.writeFloat(leftImpulse);
-        buf.writeFloat(forwardImpulse);
-        buf.writeBoolean(up);
-        buf.writeBoolean(down);
-        buf.writeBoolean(left);
-        buf.writeBoolean(right);
-        buf.writeBoolean(jumping);
-        buf.writeBoolean(shiftKeyDown);
+        buf.writeLong(packedPos);
+        buf.writeInt(footprints.size());
+        for (Footprint footprint : footprints) {
+            footprint.write(buf);
+        }
+    }
+
+    public static List<Footprint> readFootprints(FriendlyByteBuf buf) {
+        int length = buf.readInt();
+        List<Footprint> footprints = new ArrayList<>(length);
+        for (int i = 0; i < length; i++) {
+            footprints.add(Footprint.read(buf));
+        }
+        return footprints;
     }
 
     @Override
@@ -55,8 +65,6 @@ public record ControlEntityPacket(float leftImpulse, float forwardImpulse, boole
 
     @Override
     public void handle(Player player, PacketSender responseSender) {
-        if (player.isPassenger())
-            if (player.getVehicle() instanceof ControllableEntity controllable)
-                controllable.inputTick(leftImpulse(), forwardImpulse(), up(), down(), left(), right(), jumping(), shiftKeyDown());
+        FootprintRenderer.setFootprints(packedPos(), footprints());
     }
 }

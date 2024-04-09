@@ -66,7 +66,7 @@ public class VariableSizedContainer implements Container {
             this.targetSize = size;
             this.stacks.ensureCapacity(size);
             if (this.stacks.size() > this.targetSize) {
-//                for (int i = this.stacks.size() - 1; i >= this.targetSize; i--) {
+//                for (int i = this.stacks.size() - 1; i >= this.max; i--) {
 //                    if (this.stacks.get(i).isEmpty()) {
 //                        this.stacks.remove(i);
 //                    } else {

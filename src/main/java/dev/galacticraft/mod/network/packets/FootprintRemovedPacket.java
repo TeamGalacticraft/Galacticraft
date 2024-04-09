@@ -20,16 +20,22 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.network.packets;
+package dev.galacticraft.mod.network.packets;
 
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
+import dev.galacticraft.mod.misc.footprint.Footprint;
+import dev.galacticraft.mod.misc.footprint.FootprintManager;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
 
-public record FootprintRemovedPacket(long packedPos, BlockPos pos) implements FabricPacket {
-    public static final PacketType<FootprintRemovedPacket> FOOTPRINT_REMOVED_PACKET = PacketType.create(Constant.Packet.FOOTPRINT_REMOVED, FootprintRemovedPacket::new);
+import java.util.ArrayList;
+import java.util.List;
+
+public record FootprintRemovedPacket(long packedPos, BlockPos pos) implements GCPacket {
+    public static final PacketType<FootprintRemovedPacket> TYPE = PacketType.create(Constant.Packet.FOOTPRINT_REMOVED, FootprintRemovedPacket::new);
 
     public FootprintRemovedPacket(FriendlyByteBuf buf) {
         this(buf.readLong(), buf.readBlockPos());
@@ -42,7 +48,29 @@ public record FootprintRemovedPacket(long packedPos, BlockPos pos) implements Fa
     }
 
     @Override
+    public void handle(Player player, PacketSender responseSender) {
+        long packedPos = packedPos();
+        BlockPos pos = pos();
+        FootprintManager manager = player.level().galacticraft$getFootprintManager();
+        List<Footprint> footprintList = manager.getFootprints().get(packedPos);
+        List<Footprint> toRemove = new ArrayList<>();
+
+        if (footprintList != null) {
+            for (Footprint footprint : footprintList) {
+                if (footprint.position.x > pos.getX() && footprint.position.x < pos.getX() + 1 && footprint.position.z > pos.getZ() && footprint.position.z < pos.getZ() + 1) {
+                    toRemove.add(footprint);
+                }
+            }
+        }
+
+        if (!toRemove.isEmpty()) {
+            footprintList.removeAll(toRemove);
+            manager.getFootprints().put(packedPos, footprintList);
+        }
+    }
+
+    @Override
     public PacketType<?> getType() {
-        return FOOTPRINT_REMOVED_PACKET;
+        return TYPE;
     }
 }

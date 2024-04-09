@@ -20,22 +20,31 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.network.packets;
+package dev.galacticraft.mod.network.packets;
 
-import dev.galacticraft.mod.Constant.Packet;
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
+import dev.galacticraft.mod.Constant;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 
-public record ResetThirdPersonPacket() implements FabricPacket {
-    public static final PacketType<ResetThirdPersonPacket> TYPE = PacketType.create(Packet.RESET_THIRD_PERSON, ResetThirdPersonPacket::new);
+public record PlanetTpPacket(ResourceLocation body) implements GCPacket {
+    public static final PacketType<PlanetTpPacket> TYPE = PacketType.create(Constant.Packet.PLANET_TP, PlanetTpPacket::new);
 
-    public ResetThirdPersonPacket(FriendlyByteBuf buf) {
-        this();
+    public PlanetTpPacket(FriendlyByteBuf buf) {
+        this(buf.readResourceLocation());
     }
 
     @Override
-    public void write(FriendlyByteBuf buf) {}
+    public void handle(Player player, PacketSender responseSender) {
+
+    }
+
+    @Override
+    public void write(FriendlyByteBuf buf) {
+        buf.writeResourceLocation(body);
+    }
 
     @Override
     public PacketType<?> getType() {

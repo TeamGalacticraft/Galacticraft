@@ -20,44 +20,42 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.network.packets;
+package dev.galacticraft.mod.network.packets;
 
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.misc.footprint.Footprint;
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
+import dev.galacticraft.mod.Constant.Packet;
+import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
+import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
 
-import java.util.ArrayList;
-import java.util.List;
+public record BubbleMaxPacket(byte max) implements GCPacket {
+    public static final PacketType<BubbleMaxPacket> TYPE = PacketType.create(Packet.BUBBLE_MAX, BubbleMaxPacket::new);
 
-public record FootprintPacket(long packedPos, List<Footprint> footprints) implements FabricPacket {
-    public static final PacketType<FootprintPacket> FOOTPRINT_PACKET = PacketType.create(Constant.Packet.FOOTPRINT, FootprintPacket::new);
+    public BubbleMaxPacket(FriendlyByteBuf buf) {
+        this(buf.readByte());
+    }
 
-    public FootprintPacket(FriendlyByteBuf buf) {
-        this(buf.readLong(), readFootprints(buf));
+    @Override
+    public void handle(Player player, PacketSender responseSender) {
+        if (player.containerMenu instanceof OxygenBubbleDistributorMenu sHandler) {
+            OxygenBubbleDistributorBlockEntity machine = sHandler.machine;
+            if (machine.getSecurity().hasAccess(player)) {
+                if (max > 0) {
+                    machine.setTargetSize(max);
+                }
+            }
+        }
     }
 
     @Override
     public void write(FriendlyByteBuf buf) {
-        buf.writeLong(packedPos);
-        buf.writeInt(footprints.size());
-        for (Footprint footprint : footprints) {
-            footprint.write(buf);
-        }
-    }
-
-    public static List<Footprint> readFootprints(FriendlyByteBuf buf) {
-        int length = buf.readInt();
-        List<Footprint> footprints = new ArrayList<>(length);
-        for (int i = 0; i < length; i++) {
-            footprints.add(Footprint.read(buf));
-        }
-        return footprints;
+        buf.writeByte(max);
     }
 
     @Override
     public PacketType<?> getType() {
-        return FOOTPRINT_PACKET;
+        return TYPE;
     }
 }

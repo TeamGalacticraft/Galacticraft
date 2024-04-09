@@ -26,33 +26,20 @@ import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Constant.Packet;
-import dev.galacticraft.mod.attachments.GCClientPlayer;
 import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
-import dev.galacticraft.mod.client.network.packets.FootprintPacket;
-import dev.galacticraft.mod.client.network.packets.FootprintRemovedPacket;
-import dev.galacticraft.mod.client.network.packets.ResetThirdPersonPacket;
-import dev.galacticraft.mod.client.render.FootprintRenderer;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
-import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.misc.footprint.Footprint;
-import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.network.GCScreenType;
+import dev.galacticraft.mod.network.packets.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.Minecraft;
+import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * Handles client-bound (S2C) packets
@@ -85,70 +72,19 @@ public class GCClientPacketReceiver {
             }
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "planet_menu_open"), (minecraftClient, clientPlayNetworkHandler, buf, packetSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(Packet.PLANET_MENU_PACKET, (minecraftClient, clientPlayNetworkHandler, buf, packetSender) -> {
             RocketData rocketData = RocketData.fromNbt(Objects.requireNonNull(buf.readNbt()));
             int cBody = buf.readInt();
             minecraftClient.execute(() -> minecraftClient.setScreen(new CelestialSelectionScreen(false, rocketData, true, cBody == -1 ? null : clientPlayNetworkHandler.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).getHolder(cBody).orElseThrow().value())));
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "rocket_spawn"), ((client, handler, buf, responseSender) -> {
-            EntityType<? extends RocketEntity> type = (EntityType<? extends RocketEntity>) BuiltInRegistries.ENTITY_TYPE.byId(buf.readVarInt());
+        registerPacket(RocketSpawnPacket.TYPE);
+        registerPacket(FootprintPacket.TYPE);
+        registerPacket(FootprintRemovedPacket.TYPE);
+        registerPacket(ResetThirdPersonPacket.TYPE);
+    }
 
-            int entityID = buf.readVarInt();
-            UUID entityUUID = buf.readUUID();
-
-            double x = buf.readDouble();
-            double y = buf.readDouble();
-            double z = buf.readDouble();
-
-            float pitch = (buf.readByte() * 360) / 256.0F;
-            float yaw = (buf.readByte() * 360) / 256.0F;
-
-            RocketData data = RocketData.fromNbt(buf.readNbt());
-
-            client.execute(() -> {
-                RocketEntity entity = type.create(client.level);
-                assert entity != null;
-                entity.syncPacketPositionCodec(x, y, z);
-                entity.setPos(x, y, z);
-                entity.setXRot(pitch);
-                entity.setYRot(yaw);
-                entity.setId(entityID);
-                entity.setUUID(entityUUID);
-
-                entity.setData(data);
-
-                Minecraft.getInstance().level.addEntity(entity);
-            });
-        }));
-
-        ClientPlayNetworking.registerGlobalReceiver(FootprintPacket.FOOTPRINT_PACKET, (packet, player, responseSender) -> {
-            FootprintRenderer.setFootprints(packet.packedPos(), packet.footprints());
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(FootprintRemovedPacket.FOOTPRINT_REMOVED_PACKET, (packet, player, responseSender) -> {
-            long packedPos = packet.packedPos();
-            BlockPos pos = packet.pos();
-            FootprintManager manager = player.level().galacticraft$getFootprintManager();
-            List<Footprint> footprintList = manager.getFootprints().get(packedPos);
-            List<Footprint> toRemove = new ArrayList<>();
-
-            if (footprintList != null) {
-                for (Footprint footprint : footprintList) {
-                    if (footprint.position.x > pos.getX() && footprint.position.x < pos.getX() + 1 && footprint.position.z > pos.getZ() && footprint.position.z < pos.getZ() + 1) {
-                        toRemove.add(footprint);
-                    }
-                }
-            }
-
-            if (!toRemove.isEmpty()) {
-                footprintList.removeAll(toRemove);
-                manager.getFootprints().put(packedPos, footprintList);
-            }
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(ResetThirdPersonPacket.TYPE, (packet, player, responseSender) -> {
-            Minecraft.getInstance().options.setCameraType(GCClientPlayer.get(player).getCameraType());
-        });
+    public static <Packet extends GCPacket> void registerPacket(PacketType<Packet> type) {
+        ClientPlayNetworking.registerGlobalReceiver(type, GCPacket::handle);
     }
 }

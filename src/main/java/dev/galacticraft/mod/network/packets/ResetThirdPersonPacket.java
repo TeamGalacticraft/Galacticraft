@@ -23,30 +23,24 @@
 package dev.galacticraft.mod.network.packets;
 
 import dev.galacticraft.mod.Constant.Packet;
-import dev.galacticraft.mod.content.entity.ControllableEntity;
+import dev.galacticraft.mod.attachments.GCClientPlayer;
+import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 
-public record ControlEntityPacket(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown) implements GCPacket {
-    public static final PacketType<ControlEntityPacket> TYPE = PacketType.create(Packet.CONTROLLABLE_ENTITY, ControlEntityPacket::new);
+public record ResetThirdPersonPacket() implements GCPacket {
+    public static final PacketType<ResetThirdPersonPacket> TYPE = PacketType.create(Packet.RESET_THIRD_PERSON, ResetThirdPersonPacket::new);
 
-    public ControlEntityPacket(FriendlyByteBuf buf) {
-        this(buf.readFloat(), buf.readFloat(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean());
+    public ResetThirdPersonPacket(FriendlyByteBuf buf) {
+        this();
     }
 
     @Override
-    public void write(FriendlyByteBuf buf) {
-        buf.writeFloat(leftImpulse);
-        buf.writeFloat(forwardImpulse);
-        buf.writeBoolean(up);
-        buf.writeBoolean(down);
-        buf.writeBoolean(left);
-        buf.writeBoolean(right);
-        buf.writeBoolean(jumping);
-        buf.writeBoolean(shiftKeyDown);
-    }
+    public void write(FriendlyByteBuf buf) {}
 
     @Override
     public PacketType<?> getType() {
@@ -55,8 +49,6 @@ public record ControlEntityPacket(float leftImpulse, float forwardImpulse, boole
 
     @Override
     public void handle(Player player, PacketSender responseSender) {
-        if (player.isPassenger())
-            if (player.getVehicle() instanceof ControllableEntity controllable)
-                controllable.inputTick(leftImpulse(), forwardImpulse(), up(), down(), left(), right(), jumping(), shiftKeyDown());
+        Minecraft.getInstance().options.setCameraType(GCClientPlayer.get((LocalPlayer) player).getCameraType());
     }
 }

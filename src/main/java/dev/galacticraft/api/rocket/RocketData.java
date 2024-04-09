@@ -29,6 +29,7 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.rocket.RocketDataImpl;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.FastColor;
 import org.jetbrains.annotations.Contract;
@@ -47,6 +48,11 @@ public interface RocketData {
     @Unmodifiable
     static RocketData fromNbt(@Nullable CompoundTag nbt) {
         return RocketDataImpl.fromNbt(nbt == null ? RocketDataImpl.DEFAULT_ROCKET : nbt);
+    }
+
+    @Unmodifiable
+    static RocketData fromNetwork(FriendlyByteBuf buf) {
+        return RocketDataImpl.fromNetwork(buf);
     }
 
     int color();
@@ -87,6 +93,22 @@ public interface RocketData {
         if (this.booster() != null) nbt.putString("Booster", this.booster().location().toString());
         if (this.engine() != null) nbt.putString("Engine", this.engine().location().toString());
         if (this.upgrade() != null) nbt.putString("Upgrade", this.upgrade().location().toString());
+    }
+
+    default void toNetwork(FriendlyByteBuf buf) {
+        buf.writeVarInt(this.color());
+        buf.writeBoolean(this.cone() != null);
+        buf.writeBoolean(this.body() != null);
+        buf.writeBoolean(this.fin() != null);
+        buf.writeBoolean(this.booster() != null);
+        buf.writeBoolean(this.engine() != null);
+        buf.writeBoolean(this.upgrade() != null);
+        if (this.cone() != null) buf.writeResourceLocation(this.cone().location());
+        if (this.body() != null) buf.writeResourceLocation(this.body().location());
+        if (this.fin() != null) buf.writeResourceLocation(this.fin().location());
+        if (this.booster() != null) buf.writeResourceLocation(this.booster().location());
+        if (this.engine() != null) buf.writeResourceLocation(this.engine().location());
+        if (this.upgrade() != null) buf.writeResourceLocation(this.upgrade().location());
     }
 
     default boolean isValid() {

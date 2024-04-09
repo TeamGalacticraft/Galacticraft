@@ -20,10 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.network.packets;
+package dev.galacticraft.mod.network.packets;
 
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-
-public interface GCPacket<Packet> extends FabricPacket {
-    void handle(Packet packet);
+public class OpenScreenPacket {
 }

@@ -62,12 +62,6 @@ public class ClientEventHandler {
 
     public static void clientTick(Minecraft client) {
         LanderOverlay.clientTick();
-        LocalPlayer player = client.player;
-        if (player != null && player.getVehicle() instanceof ControllableEntity controllable) {
-            Input input = player.input;
-            controllable.inputTick(input.leftImpulse, input.forwardImpulse, input.up, input.down, input.left, input.right, input.jumping, input.shiftKeyDown);
-            ClientPlayNetworking.send(new ControlEntityPacket(input.leftImpulse, input.forwardImpulse, input.up, input.down, input.left, input.right, input.jumping, input.shiftKeyDown));
-        }
     }
 
     public static void tickFootprints(ClientLevel level) {

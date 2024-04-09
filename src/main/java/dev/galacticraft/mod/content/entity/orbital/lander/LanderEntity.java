@@ -26,7 +26,7 @@ import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.attachments.GCServerPlayer;
-import dev.galacticraft.mod.client.network.packets.ResetThirdPersonPacket;
+import dev.galacticraft.mod.network.packets.ResetThirdPersonPacket;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.entity.ControllableEntity;

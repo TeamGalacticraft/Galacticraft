@@ -23,23 +23,17 @@
 package dev.galacticraft.mod.mixin.client;
 
 import com.mojang.authlib.GameProfile;
-import dev.galacticraft.api.rocket.LaunchStage;
-import dev.galacticraft.api.rocket.entity.Rocket;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.content.item.RocketItem;
 import dev.galacticraft.mod.network.packets.ControlEntityPacket;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.phys.Vec3;
@@ -72,33 +66,9 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer {
     private void gcRocketJumpCheck(CallbackInfo ci) {
         LocalPlayer player = (LocalPlayer) (Object) this;
         if (player.isPassenger()) {
-            if (player.getVehicle() instanceof Rocket rocket) {
-
-                if (this.input.jumping && rocket.getLaunchStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
-                    rocket.onJump();
-                    ClientPlayNetworking.send(Constant.Packet.ROCKET_JUMP, PacketByteBufs.create());
-                }
-
-                float turnFactor = 2.0F;
-                float angle = 45;
-
-                if (rocket.getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
-                    if (this.input.up) {
-                        player.getVehicle().setXRot(Math.min(Math.max(player.getVehicle().getXRot() - 0.5F * turnFactor, -angle), angle));
-                        ClientPlayNetworking.send(Constant.Packet.ROCKET_PITCH, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(false)));
-                    } else if (this.input.down) {
-                        player.getVehicle().setXRot((player.getVehicle().getXRot() + 2.0F) % 360.0f);
-                        ClientPlayNetworking.send(Constant.Packet.ROCKET_PITCH, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(true)));
-                    }
-
-                    if (this.input.left) {
-                        player.getVehicle().setYRot((player.getVehicle().getYRot() - 2.0F) % 360.0f);
-                        ClientPlayNetworking.send(Constant.Packet.ROCKET_YAW, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(false)));
-                    } else if (this.input.right) {
-                        player.getVehicle().setYRot((player.getVehicle().getYRot() + 2.0F) % 360.0f);
-                        ClientPlayNetworking.send(Constant.Packet.ROCKET_YAW, new FriendlyByteBuf(Unpooled.buffer().writeBoolean(true)));
-                    }
-                }
+            if (player.getVehicle() instanceof ControllableEntity controllable) {
+                controllable.inputTick(input.leftImpulse, input.forwardImpulse, input.up, input.down, input.left, input.right, input.jumping, input.shiftKeyDown);
+                ClientPlayNetworking.send(new ControlEntityPacket(input.leftImpulse, input.forwardImpulse, input.up, input.down, input.left, input.right, input.jumping, input.shiftKeyDown));
             }
         }
     }

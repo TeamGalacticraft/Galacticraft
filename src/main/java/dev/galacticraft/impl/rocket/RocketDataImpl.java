@@ -28,6 +28,7 @@ import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.mod.content.GCRocketParts;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
@@ -62,6 +63,26 @@ public record RocketDataImpl(int color, @Nullable ResourceKey<RocketCone<?, ?>> 
                 nbt.contains("Booster") ? ResourceKey.create(RocketRegistries.ROCKET_BOOSTER, new ResourceLocation(nbt.getString("Booster"))) : null,
                 nbt.contains("Engine") ? ResourceKey.create(RocketRegistries.ROCKET_ENGINE, new ResourceLocation(nbt.getString("Engine"))) : null,
                 nbt.contains("Upgrade") ? ResourceKey.create(RocketRegistries.ROCKET_UPGRADE, new ResourceLocation(nbt.getString("Upgrade"))) : null
+        );
+    }
+
+    @Contract("_ -> new")
+    public static @NotNull RocketDataImpl fromNetwork(FriendlyByteBuf buf) {
+        int color = buf.readVarInt();
+        boolean hasCone = buf.readBoolean();
+        boolean hasBody = buf.readBoolean();
+        boolean hasFin = buf.readBoolean();
+        boolean hasBooster = buf.readBoolean();
+        boolean hasEngine = buf.readBoolean();
+        boolean hasUpgrade = buf.readBoolean();
+        return new RocketDataImpl(
+                color,
+                hasCone ? ResourceKey.create(RocketRegistries.ROCKET_CONE, buf.readResourceLocation()) : null,
+                hasBody ? ResourceKey.create(RocketRegistries.ROCKET_BODY, buf.readResourceLocation()) : null,
+                hasFin ? ResourceKey.create(RocketRegistries.ROCKET_FIN, buf.readResourceLocation()) : null,
+                hasBooster ? ResourceKey.create(RocketRegistries.ROCKET_BOOSTER, buf.readResourceLocation()) : null,
+                hasEngine ? ResourceKey.create(RocketRegistries.ROCKET_ENGINE, buf.readResourceLocation()) : null,
+                hasUpgrade ? ResourceKey.create(RocketRegistries.ROCKET_UPGRADE, buf.readResourceLocation()) : null
         );
     }
 }

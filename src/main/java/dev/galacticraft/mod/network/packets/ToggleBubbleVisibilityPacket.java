@@ -23,40 +23,37 @@
 package dev.galacticraft.mod.network.packets;
 
 import dev.galacticraft.mod.Constant.Packet;
-import dev.galacticraft.mod.content.entity.ControllableEntity;
+import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
+import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 
-public record ControlEntityPacket(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown) implements GCPacket {
-    public static final PacketType<ControlEntityPacket> TYPE = PacketType.create(Packet.CONTROLLABLE_ENTITY, ControlEntityPacket::new);
+public record ToggleBubbleVisibilityPacket(boolean visible) implements GCPacket {
+    public static final PacketType<ToggleBubbleVisibilityPacket> TYPE = PacketType.create(Packet.BUBBLE_VISIBLE, ToggleBubbleVisibilityPacket::new);
 
-    public ControlEntityPacket(FriendlyByteBuf buf) {
-        this(buf.readFloat(), buf.readFloat(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean());
+    public ToggleBubbleVisibilityPacket(FriendlyByteBuf buf) {
+        this(buf.readBoolean());
+    }
+
+    @Override
+    public void handle(Player player, PacketSender responseSender) {
+        if (player.containerMenu instanceof OxygenBubbleDistributorMenu sHandler) {
+            OxygenBubbleDistributorBlockEntity machine = sHandler.machine;
+            if (machine.getSecurity().hasAccess(player)) {
+                machine.setBubbleVisible(visible);
+            }
+        }
     }
 
     @Override
     public void write(FriendlyByteBuf buf) {
-        buf.writeFloat(leftImpulse);
-        buf.writeFloat(forwardImpulse);
-        buf.writeBoolean(up);
-        buf.writeBoolean(down);
-        buf.writeBoolean(left);
-        buf.writeBoolean(right);
-        buf.writeBoolean(jumping);
-        buf.writeBoolean(shiftKeyDown);
+        buf.writeBoolean(visible);
     }
 
     @Override
     public PacketType<?> getType() {
         return TYPE;
-    }
-
-    @Override
-    public void handle(Player player, PacketSender responseSender) {
-        if (player.isPassenger())
-            if (player.getVehicle() instanceof ControllableEntity controllable)
-                controllable.inputTick(leftImpulse(), forwardImpulse(), up(), down(), left(), right(), jumping(), shiftKeyDown());
     }
 }

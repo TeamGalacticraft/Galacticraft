@@ -37,9 +37,11 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
+import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.events.RocketEvents;
+import dev.galacticraft.mod.network.packets.RocketSpawnPacket;
 import dev.galacticraft.mod.particle.EntityParticleOption;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.tag.GCTags;
@@ -56,7 +58,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -89,7 +90,7 @@ import org.joml.Vector3f;
 import java.util.Objects;
 
 @SuppressWarnings("UnstableApiUsage")
-public class RocketEntity extends Entity implements Rocket {
+public class RocketEntity extends Entity implements Rocket, ControllableEntity {
     private static final ResourceLocation NULL_ID = new ResourceLocation("null");
     private static final EntityDataAccessor<LaunchStage> STAGE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.LAUNCH_STAGE);
 
@@ -578,7 +579,7 @@ public class RocketEntity extends Entity implements Rocket {
                             data.toNbt(nbt);
                             FriendlyByteBuf buf = PacketByteBufs.create().writeNbt(nbt);
                             buf.writeInt(id);
-                            ServerPlayNetworking.send(serverPlayer, new ResourceLocation(Constant.MOD_ID, "planet_menu_open"), buf);
+                            ServerPlayNetworking.send(serverPlayer, Constant.Packet.PLANET_MENU_PACKET, buf);
                             remove(RemovalReason.UNLOADED_WITH_PLAYER);
                             break;
                         }
@@ -758,19 +759,7 @@ public class RocketEntity extends Entity implements Rocket {
 
     @Override
     public @NotNull Packet getAddEntityPacket() {
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        buf.writeVarInt(BuiltInRegistries.ENTITY_TYPE.getId(this.getType()));
-        buf.writeVarInt(this.getId());
-        buf.writeUUID(this.uuid);
-        buf.writeDouble(getX());
-        buf.writeDouble(getY());
-        buf.writeDouble(getZ());
-        buf.writeByte((int) (this.getXRot() / 360F * 256F));
-        buf.writeByte((int) (this.getYRot() / 360F * 256F));
-        CompoundTag nbt = new CompoundTag();
-        RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.engine(), this.upgrade()).toNbt(nbt);
-        buf.writeNbt(nbt);
-        return ServerPlayNetworking.createS2CPacket(Constant.id("rocket_spawn"), buf);
+        return ServerPlayNetworking.createS2CPacket(new RocketSpawnPacket(getType(), getId(), this.uuid, getX(), getY(), getZ(), getXRot(), getYRot(), this));
     }
 
     public int getTimeBeforeLaunch() {
@@ -849,5 +838,30 @@ public class RocketEntity extends Entity implements Rocket {
         this.setBooster(data.booster() != null ? data.booster().location() : null);
         this.setEngine(data.engine() != null ? data.engine().location() : null);
         this.setUpgrade(data.upgrade() != null ? data.upgrade().location() : null);
+    }
+
+    @Override
+    public void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown) {
+        float turnFactor = 2.0F;
+        float angle = 45;
+
+        LaunchStage stage = getLaunchStage();
+
+        if (jumping && stage.ordinal() < LaunchStage.IGNITED.ordinal())
+            onJump();
+
+        if (stage.ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
+            if (up) {
+                setXRot(Math.min(Math.max(getXRot() - 0.5F * turnFactor, -angle), angle));
+            } else if (down) {
+                setXRot((getXRot() + 2.0F) % 360.0f);
+            }
+
+            if (left) {
+                setYRot((getYRot() - 2.0F) % 360.0f);
+            } else if (right) {
+                setYRot((getYRot() + 2.0F) % 360.0f);
+            }
+        }
     }
 }
