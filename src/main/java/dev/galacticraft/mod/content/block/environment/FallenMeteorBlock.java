@@ -32,6 +32,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -166,11 +167,11 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
 
     public static int colorMultiplier(BlockState state, BlockAndTintGetter blockView, BlockPos pos) {
         return blockView != null && pos != null ? switch (state.getValue(HEAT)) {
-            case 1 -> ColorUtil.rgb(255, 255, 218);
-            case 2 -> ColorUtil.rgb(255, 228, 178);
-            case 3 -> ColorUtil.rgb(255, 187, 137);
-            case 4 -> ColorUtil.rgb(238, 148, 98);
-            case 5 -> ColorUtil.rgb(198, 108, 58);
+            case 1 -> FastColor.ARGB32.color(255, 255, 255, 218);
+            case 2 -> FastColor.ARGB32.color(255, 255, 228, 178);
+            case 3 -> FastColor.ARGB32.color(255, 255, 187, 137);
+            case 4 -> FastColor.ARGB32.color(255, 238, 148, 98);
+            case 5 -> FastColor.ARGB32.color(255, 198, 108, 58);
             default -> 16777215;
         } : 16777215;
     }

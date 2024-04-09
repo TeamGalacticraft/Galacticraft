@@ -22,27 +22,27 @@
 
 package dev.galacticraft.mod.content.teleporters;
 
+import com.mojang.serialization.Codec;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.api.universe.celestialbody.landable.teleporter.config.CelestialTeleporterConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.type.CelestialTeleporterType;
 import dev.galacticraft.impl.universe.celestialbody.landable.teleporter.config.DefaultCelestialTeleporterConfig;
-import dev.galacticraft.mod.content.GCEntityTypes;
-import dev.galacticraft.mod.content.entity.LanderEntity;
+import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
-public class LanderCelestialTeleporterType extends CelestialTeleporterType<DefaultCelestialTeleporterConfig> {
-    public static final LanderCelestialTeleporterType INSTANCE = new LanderCelestialTeleporterType();
+public class LanderCelestialTeleporterType<Config extends CelestialTeleporterConfig> extends CelestialTeleporterType<Config> {
+    public static final LanderCelestialTeleporterType<DefaultCelestialTeleporterConfig> INSTANCE = new LanderCelestialTeleporterType<>(DefaultCelestialTeleporterConfig.CODEC);
 
-    public LanderCelestialTeleporterType() {
-        super(DefaultCelestialTeleporterConfig.CODEC);
+    public LanderCelestialTeleporterType(Codec<Config> codec) {
+        super(codec);
     }
 
     @Override
-    public void onEnterAtmosphere(ServerLevel level, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody, DefaultCelestialTeleporterConfig config) {
-        LanderEntity lander = GCEntityTypes.LANDER.create(level);
+    public void onEnterAtmosphere(ServerLevel level, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody, Config config) {
+        LanderEntity lander = new LanderEntity(player);
         level.addFreshEntity(lander);
         lander.setPos(player.getX(), 1100, player.getZ());
         player.teleportTo(level, player.getX(), 1100, player.getZ(), player.getYRot(), player.getXRot());
-        player.startRiding(lander);
     }
 }

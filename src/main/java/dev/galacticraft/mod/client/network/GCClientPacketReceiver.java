@@ -25,10 +25,15 @@ package dev.galacticraft.mod.client.network;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Constant.Packet;
+import dev.galacticraft.mod.attachments.GCClientPlayer;
 import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
+import dev.galacticraft.mod.client.network.packets.FootprintPacket;
+import dev.galacticraft.mod.client.network.packets.FootprintRemovedPacket;
+import dev.galacticraft.mod.client.network.packets.ResetThirdPersonPacket;
 import dev.galacticraft.mod.client.render.FootprintRenderer;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
-import dev.galacticraft.mod.content.entity.RocketEntity;
+import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
@@ -56,7 +61,7 @@ import java.util.UUID;
 @Environment(EnvType.CLIENT)
 public class GCClientPacketReceiver {
     public static void register() {
-        ClientPlayNetworking.registerGlobalReceiver(Constant.Packet.BUBBLE_SIZE, (client, handler, buf, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(Packet.BUBBLE_SIZE, (client, handler, buf, responseSender) -> {
             FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
             client.execute(() -> {
                 BlockPos pos = buffer.readBlockPos();
@@ -69,7 +74,7 @@ public class GCClientPacketReceiver {
             });
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(Constant.Packet.OPEN_SCREEN, (client, handler, buf, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(Packet.OPEN_SCREEN, (client, handler, buf, responseSender) -> {
             var screen = buf.readEnum(GCScreenType.class);
             switch (screen) {
                 case CELESTIAL -> {
@@ -140,6 +145,10 @@ public class GCClientPacketReceiver {
                 footprintList.removeAll(toRemove);
                 manager.getFootprints().put(packedPos, footprintList);
             }
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(ResetThirdPersonPacket.TYPE, (packet, player, responseSender) -> {
+            Minecraft.getInstance().options.setCameraType(GCClientPlayer.get(player).getCameraType());
         });
     }
 }

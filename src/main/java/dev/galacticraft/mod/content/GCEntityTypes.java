@@ -25,6 +25,8 @@ package dev.galacticraft.mod.content;
 import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.*;
+import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
+import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.core.Registry;
@@ -54,7 +56,7 @@ public class GCEntityTypes {
     public static final EntityType<ArchGreyEntity> ARCH_GREY = FabricEntityTypeBuilder.create(MobCategory.CREATURE, ArchGreyEntity::new).dimensions(EntityDimensions.fixed(0.6F, 1.55F)).build();
     public static final EntityType<BubbleEntity> BUBBLE = FabricEntityTypeBuilder.create(MobCategory.MISC, BubbleEntity::new).fireImmune().dimensions(EntityDimensions.fixed(0, 0)).disableSaving().disableSummon().build();
     public static final EntityType<RocketEntity> ROCKET = FabricEntityTypeBuilder.create(MobCategory.MISC, RocketEntity::new).trackRangeBlocks(32).trackedUpdateRate(2).forceTrackedVelocityUpdates(false).dimensions(EntityDimensions.fixed(2.3F, 5.25F)).build(); //PLAYER VALUES
-    public static final EntityType<LanderEntity> LANDER = FabricEntityTypeBuilder.create(MobCategory.MISC, LanderEntity::new).trackRangeBlocks(32).dimensions(EntityDimensions.fixed(2.5F, 4F)).fireImmune().build();
+    public static final EntityType<LanderEntity> LANDER = FabricEntityTypeBuilder.<LanderEntity>create(MobCategory.MISC, LanderEntity::new).trackRangeBlocks(32).dimensions(EntityDimensions.fixed(2.5F, 4F)).fireImmune().disableSummon().build();
     public static final EntityType<ParachestEntity> PARACHEST = FabricEntityTypeBuilder.<ParachestEntity>create(MobCategory.MISC, ParachestEntity::new).trackRangeBlocks(150).trackedUpdateRate(5).dimensions(EntityDimensions.fixed(1.0F, 1.0F)).build();
     public static final EntityType<ThrowableMeteorChunkEntity> THROWABLE_METEOR_CHUNK = FabricEntityTypeBuilder.<ThrowableMeteorChunkEntity>create(MobCategory.MISC, ThrowableMeteorChunkEntity::new).dimensions(EntityDimensions.fixed(0.25F, 0.25F)).build();
 

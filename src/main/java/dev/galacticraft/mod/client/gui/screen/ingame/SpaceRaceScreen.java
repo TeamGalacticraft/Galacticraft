@@ -255,8 +255,6 @@ public class SpaceRaceScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int x, int y, float delta) {
-        this.renderBackground(graphics, x, y, delta);
-
         if (this.isAnimationComplete()) {
             this.renderForeground(graphics, x, y);
             this.drawMouseoverTooltip(graphics, x, y);

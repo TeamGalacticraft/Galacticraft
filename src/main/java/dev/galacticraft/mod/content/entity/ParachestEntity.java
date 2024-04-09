@@ -46,6 +46,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Collections;
 
@@ -141,7 +142,7 @@ public class ParachestEntity extends Entity {
                 this.placedChest = true;
                 this.discard();
             } else {
-//                this.setDeltaMovement(new Vec3(0, -0.35, 0));
+                this.setDeltaMovement(new Vec3(0, -0.35, 0));
             }
 
             this.move(MoverType.SELF, getDeltaMovement());

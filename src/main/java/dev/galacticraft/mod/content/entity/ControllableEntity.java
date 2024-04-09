@@ -20,25 +20,8 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.screen;
+package dev.galacticraft.mod.content.entity;
 
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-
-public class AirlockControllerMenu extends AbstractContainerMenu {
-    public AirlockControllerMenu(int syncId, Inventory inventory) {
-        super(GCMenuTypes.AIRLOCK_CONTROLLER_MENU, syncId);
-    }
-
-    @Override
-    public ItemStack quickMoveStack(Player player, int i) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public boolean stillValid(Player player) {
-        return true;
-    }
+public interface ControllableEntity {
+    void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown);
 }

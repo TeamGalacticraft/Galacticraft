@@ -24,6 +24,7 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.entity.ScalableFuelLevel;
 import dev.galacticraft.mod.screen.ParachestMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -44,7 +45,7 @@ public class ParachestScreen extends AbstractContainerScreen<ParachestMenu> {
 
     public ParachestScreen(ParachestMenu abstractContainerMenu, Inventory inventory, Component component) {
         super(abstractContainerMenu, inventory, component);
-        this.inventorySlots = abstractContainerMenu.getBlockEntity().getContainerSize();
+        this.inventorySlots = abstractContainerMenu.getContainer().getContainerSize();
         this.imageHeight = 146 + this.inventorySlots * 2;
         this.titleLabelX = 8;
         this.titleLabelY = 6;
@@ -60,17 +61,16 @@ public class ParachestScreen extends AbstractContainerScreen<ParachestMenu> {
         int l = (this.height - this.imageHeight) / 2;
         guiGraphics.blit(texture, k, l, 0, 0, this.imageWidth, this.imageHeight);
 
-        var tank = getMenu().getBlockEntity().tank;
+        var container = getMenu().getContainer();
 
-        final double amount = tank.getAmount();
-
-        int fuelLevel = (int) (amount * 28 / tank.getCapacity());
-        guiGraphics.blit(texture, k + 17, l + (this.inventorySlots == 3 ? 40 : 42) - fuelLevel + this.inventorySlots * 2, 176, 28 - fuelLevel, 34, fuelLevel);
+        if (container instanceof ScalableFuelLevel scalable) {
+            int fuelLevel = scalable.getScaledFuelLevel(28);
+            guiGraphics.blit(texture, k + 17, l + (this.inventorySlots == 3 ? 40 : 42) - fuelLevel + this.inventorySlots * 2, 176, 28 - fuelLevel, 34, fuelLevel);
+        }
     }
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         renderTooltip(guiGraphics, mouseX, mouseY);
     }

@@ -27,7 +27,8 @@ import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.impl.rocket.RocketDataImpl;
 import dev.galacticraft.impl.universe.celestialbody.config.PlanetConfig;
-import dev.galacticraft.mod.client.network.FootprintRemovedPacket;
+import dev.galacticraft.mod.attachments.GCServerPlayer;
+import dev.galacticraft.mod.client.network.packets.FootprintRemovedPacket;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import dev.galacticraft.mod.content.entity.ParachestEntity;
@@ -41,7 +42,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -52,7 +52,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BedBlock;
@@ -120,26 +119,6 @@ public class GCEventHandlers {
     public static void onPlayerChangePlanets(MinecraftServer server, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody) {
         if (body.type() instanceof Landable landable && player.galacticraft$isCelestialScreenActive() && (player.galacticraft$getCelestialScreenState() == null || player.galacticraft$getCelestialScreenState().canTravel(server.registryAccess(), fromBody, body))) {
             player.galacticraft$closeCelestialScreen();
-            if (body.config() instanceof PlanetConfig planetConfig) {
-                var chestSpawn = planetConfig.celestialHandler().getParaChestSpawnLocation(player.serverLevel(), player, player.getRandom());
-                if (chestSpawn != null) {
-                    ParachestEntity chest = new ParachestEntity(GCEntityTypes.PARACHEST, player.serverLevel(), NonNullList.of(new ItemStack(Items.DIAMOND)), 81000);
-
-                    chest.setPos(chestSpawn);
-
-                    Container gearInv = player.galacticraft$getGearInv();
-                    DyeColor color = DyeColor.WHITE;
-                    for (int slot = 0; slot < gearInv.getContainerSize(); slot++) {
-                        if (player.galacticraft$getGearInv().getItem(slot).getItem() instanceof ParachuteItem parachute) {
-                            color = parachute.getColor();
-                            break;
-                        }
-                    }
-                    chest.color = color;
-
-                    player.serverLevel().addFreshEntity(chest);
-                }
-            }
             ((CelestialTeleporter) landable.teleporter(body.config()).value()).onEnterAtmosphere(server.getLevel(landable.world(body.config())), player, body, fromBody);
         } else {
             player.connection.disconnect(Component.literal("Invalid planet teleport packet received."));

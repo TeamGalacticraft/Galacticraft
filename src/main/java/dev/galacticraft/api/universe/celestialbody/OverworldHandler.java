@@ -34,7 +34,7 @@ public class OverworldHandler implements CelestialHandler {
         final double x = (rand.nextDouble() * 2 - 1.0D) * 5.0D;
         final double z = (rand.nextDouble() * 2 - 1.0D) * 5.0D;
 
-        return new Vec3(player.getX() + x, 230.0D, player.getZ() + z);
+        return new Vec3(player.getX() + x, world.getMaxBuildHeight() + 30.0, player.getZ() + z);
     }
 
     @Override

@@ -111,7 +111,7 @@ public class GCCelestialBodies {
                         IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/body_icons.png"), 0, 16, 16, 16)),
                         DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
                         Level.OVERWORLD,
-                        lookup.getOrThrow(BuiltinObjects.DIRECT_CELESTIAL_TELEPORTER),
+                        lookup.getOrThrow(GCTeleporterTypes.OVERWORLD_TELEPORTER),
                         new GasComposition.Builder()
                                 .pressure(1.0f)
                                 .temperature(15.0f)

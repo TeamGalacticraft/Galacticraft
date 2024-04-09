@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.mixin.client;
 
 import dev.galacticraft.mod.client.render.dimension.OverworldRenderer;
-import dev.galacticraft.mod.content.entity.RocketEntity;
+import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;

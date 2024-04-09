@@ -24,17 +24,56 @@ package dev.galacticraft.mod.events;
 
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.entity.Rocket;
+import dev.galacticraft.mod.client.gui.overlay.CountdownOverlay;
+import dev.galacticraft.mod.client.gui.overlay.LanderOverlay;
+import dev.galacticraft.mod.client.gui.overlay.OxygenOverlay;
+import dev.galacticraft.mod.client.gui.overlay.RocketOverlay;
+import dev.galacticraft.mod.client.render.FootprintRenderer;
 import dev.galacticraft.mod.client.sounds.RocketSound;
-import dev.galacticraft.mod.content.entity.RocketEntity;
+import dev.galacticraft.mod.content.entity.ControllableEntity;
+import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import dev.galacticraft.mod.misc.footprint.FootprintManager;
+import dev.galacticraft.mod.network.packets.ControlEntityPacket;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.Input;
+import net.minecraft.client.player.LocalPlayer;
 
 public class ClientEventHandler {
     public static void init() {
         RocketEvents.STAGE_CHANGED.register(ClientEventHandler::rocketLaunchSound);
+        ClientTickEvents.END_CLIENT_TICK.register(ClientEventHandler::clientTick);
+        WorldRenderEvents.LAST.register(FootprintRenderer::renderFootprints);
+        ClientTickEvents.END_WORLD_TICK.register(ClientEventHandler::tickFootprints);
+        HudRenderCallback.EVENT.register(OxygenOverlay::onHudRender);
+        HudRenderCallback.EVENT.register(RocketOverlay::onHudRender);
+        HudRenderCallback.EVENT.register(LanderOverlay::onRenderHud);
+        HudRenderCallback.EVENT.register(CountdownOverlay::renderCountdown);
     }
 
     public static void rocketLaunchSound(Rocket rocket, LaunchStage oldStage) {
         if (rocket instanceof RocketEntity rocketEntity && rocket.getLaunchStage() == LaunchStage.IGNITED)
             Minecraft.getInstance().getSoundManager().play(new RocketSound(rocketEntity));
+    }
+
+    public static void clientTick(Minecraft client) {
+        LanderOverlay.clientTick();
+        LocalPlayer player = client.player;
+        if (player != null && player.getVehicle() instanceof ControllableEntity controllable) {
+            Input input = player.input;
+            controllable.inputTick(input.leftImpulse, input.forwardImpulse, input.up, input.down, input.left, input.right, input.jumping, input.shiftKeyDown);
+            ClientPlayNetworking.send(new ControlEntityPacket(input.leftImpulse, input.forwardImpulse, input.up, input.down, input.left, input.right, input.jumping, input.shiftKeyDown));
+        }
+    }
+
+    public static void tickFootprints(ClientLevel level) {
+        FootprintManager footprintManager = level.galacticraft$getFootprintManager();
+        footprintManager.getFootprints().forEach((packedPos, footprints) -> {
+            footprintManager.tick(level, packedPos);
+        });
     }
 }

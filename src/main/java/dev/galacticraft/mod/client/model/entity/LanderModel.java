@@ -24,7 +24,7 @@ package dev.galacticraft.mod.client.model.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import dev.galacticraft.mod.content.entity.LanderEntity;
+import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;

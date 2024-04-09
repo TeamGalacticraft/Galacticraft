@@ -20,25 +20,29 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.screen;
+package dev.galacticraft.mod.client.network.packets;
 
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
+import dev.galacticraft.mod.Constant;
+import net.fabricmc.fabric.api.networking.v1.FabricPacket;
+import net.fabricmc.fabric.api.networking.v1.PacketType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 
-public class AirlockControllerMenu extends AbstractContainerMenu {
-    public AirlockControllerMenu(int syncId, Inventory inventory) {
-        super(GCMenuTypes.AIRLOCK_CONTROLLER_MENU, syncId);
+public record FootprintRemovedPacket(long packedPos, BlockPos pos) implements FabricPacket {
+    public static final PacketType<FootprintRemovedPacket> FOOTPRINT_REMOVED_PACKET = PacketType.create(Constant.Packet.FOOTPRINT_REMOVED, FootprintRemovedPacket::new);
+
+    public FootprintRemovedPacket(FriendlyByteBuf buf) {
+        this(buf.readLong(), buf.readBlockPos());
     }
 
     @Override
-    public ItemStack quickMoveStack(Player player, int i) {
-        return ItemStack.EMPTY;
+    public void write(FriendlyByteBuf buf) {
+        buf.writeLong(packedPos);
+        buf.writeBlockPos(pos);
     }
 
     @Override
-    public boolean stillValid(Player player) {
-        return true;
+    public PacketType<?> getType() {
+        return FOOTPRINT_REMOVED_PACKET;
     }
 }

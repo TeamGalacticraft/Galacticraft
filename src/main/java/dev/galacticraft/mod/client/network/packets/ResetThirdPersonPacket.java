@@ -20,44 +20,25 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.network;
+package dev.galacticraft.mod.client.network.packets;
 
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.misc.footprint.Footprint;
+import dev.galacticraft.mod.Constant.Packet;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.FriendlyByteBuf;
 
-import java.util.ArrayList;
-import java.util.List;
+public record ResetThirdPersonPacket() implements FabricPacket {
+    public static final PacketType<ResetThirdPersonPacket> TYPE = PacketType.create(Packet.RESET_THIRD_PERSON, ResetThirdPersonPacket::new);
 
-public record FootprintPacket(long packedPos, List<Footprint> footprints) implements FabricPacket {
-    public static final PacketType<FootprintPacket> FOOTPRINT_PACKET = PacketType.create(Constant.Packet.FOOTPRINT, FootprintPacket::new);
-
-    public FootprintPacket(FriendlyByteBuf buf) {
-        this(buf.readLong(), readFootprints(buf));
+    public ResetThirdPersonPacket(FriendlyByteBuf buf) {
+        this();
     }
 
     @Override
-    public void write(FriendlyByteBuf buf) {
-        buf.writeLong(packedPos);
-        buf.writeInt(footprints.size());
-        for (Footprint footprint : footprints) {
-            footprint.write(buf);
-        }
-    }
-
-    public static List<Footprint> readFootprints(FriendlyByteBuf buf) {
-        int length = buf.readInt();
-        List<Footprint> footprints = new ArrayList<>(length);
-        for (int i = 0; i < length; i++) {
-            footprints.add(Footprint.read(buf));
-        }
-        return footprints;
-    }
+    public void write(FriendlyByteBuf buf) {}
 
     @Override
     public PacketType<?> getType() {
-        return FOOTPRINT_PACKET;
+        return TYPE;
     }
 }

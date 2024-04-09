@@ -20,25 +20,20 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.screen;
+package dev.galacticraft.mod.attachments;
 
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Constant.Attachments;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 
-public class AirlockControllerMenu extends AbstractContainerMenu {
-    public AirlockControllerMenu(int syncId, Inventory inventory) {
-        super(GCMenuTypes.AIRLOCK_CONTROLLER_MENU, syncId);
-    }
+@SuppressWarnings("UnstableApiUsage")
+public final class GCAttachments {
+    public static final AttachmentType<GCServerPlayer> SERVER_PLAYER = AttachmentRegistry.<GCServerPlayer>builder()
+            .persistent(GCServerPlayer.CODEC)
+            .copyOnDeath()
+            .buildAndRegister(Constant.id(Attachments.SERVER_PLAYER));
 
-    @Override
-    public ItemStack quickMoveStack(Player player, int i) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public boolean stillValid(Player player) {
-        return true;
-    }
+    public static final AttachmentType<GCClientPlayer> CLIENT_PLAYER = AttachmentRegistry.<GCClientPlayer>builder()
+            .buildAndRegister(Constant.id(Attachments.CLIENT_PLAYER));
 }

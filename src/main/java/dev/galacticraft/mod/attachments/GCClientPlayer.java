@@ -20,25 +20,23 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.screen;
+package dev.galacticraft.mod.attachments;
 
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.CameraType;
+import net.minecraft.client.player.LocalPlayer;
 
-public class AirlockControllerMenu extends AbstractContainerMenu {
-    public AirlockControllerMenu(int syncId, Inventory inventory) {
-        super(GCMenuTypes.AIRLOCK_CONTROLLER_MENU, syncId);
+public class GCClientPlayer {
+    private CameraType cameraType = CameraType.FIRST_PERSON;
+
+    public static GCClientPlayer get(LocalPlayer player) {
+        return player.getAttachedOrCreate(GCAttachments.CLIENT_PLAYER, GCClientPlayer::new);
     }
 
-    @Override
-    public ItemStack quickMoveStack(Player player, int i) {
-        return ItemStack.EMPTY;
+    public CameraType getCameraType() {
+        return cameraType;
     }
 
-    @Override
-    public boolean stillValid(Player player) {
-        return true;
+    public void setCameraType(CameraType cameraType) {
+        this.cameraType = cameraType;
     }
 }

@@ -27,18 +27,20 @@ import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.LanderModel;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
-import dev.galacticraft.mod.content.entity.LanderEntity;
+import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 public class LanderEntityRenderer extends EntityRenderer<LanderEntity> {
     protected final LanderModel model;
 
     public LanderEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
+        this.shadowRadius = 2F;
         this.model = new LanderModel(context.bakeLayer(GCEntityModelLayer.LANDER));
     }
 
@@ -53,7 +55,19 @@ public class LanderEntityRenderer extends EntityRenderer<LanderEntity> {
         poseStack.mulPose(Axis.ZP.rotationDegrees(180));
         poseStack.translate(0, -1.5, 0);
         final float pitch = lander.getViewXRot(partialTicks);
-        poseStack.mulPose(Axis.YP.rotationDegrees(180.0F - entityYaw));
+
+        float hurtTime = lander.getHurtTime() - partialTicks;
+        float damage = lander.getDamage() - partialTicks;
+
+        if (damage < 0.0F) {
+            damage = 0.0F;
+        }
+
+        if (hurtTime > 0.0F) {
+            poseStack.mulPose(Axis.XP.rotationDegrees((float) Math.sin(hurtTime) * 0.2F * hurtTime * damage / 25.0F));
+        }
+
+        poseStack.mulPose(Axis.YN.rotationDegrees(180.0F - entityYaw));
         poseStack.mulPose(Axis.ZN.rotationDegrees(pitch));
         this.model.renderToBuffer(poseStack, multiBufferSource.getBuffer(this.model.renderType(getTextureLocation(lander))), light, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
         poseStack.popPose();

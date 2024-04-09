@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.special;
 
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.block.GCBlock;
 import net.minecraft.core.BlockPos;
@@ -40,6 +41,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
@@ -47,6 +50,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
 public class ParaChestBlock extends GCBlock implements EntityBlock {
     public static final String COLOR_TAG = "color";
@@ -121,5 +125,13 @@ public class ParaChestBlock extends GCBlock implements EntityBlock {
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
         return new ParaChestBlockEntity(blockPos, blockState);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return level.isClientSide ? null : type == GCBlockEntityTypes.PARACHEST ? (level1, blockPos, blockState, blockEntity) -> {
+            ((ParaChestBlockEntity) blockEntity).tick();
+        } : null;
     }
 }

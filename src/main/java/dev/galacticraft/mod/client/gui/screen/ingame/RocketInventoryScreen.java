@@ -22,8 +22,11 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import dev.galacticraft.machinelib.client.api.util.GraphicsUtil;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.screen.RocketMenu;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -44,20 +47,25 @@ public class RocketInventoryScreen extends AbstractContainerScreen<RocketMenu> {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(graphics, mouseX, mouseY, partialTick);
         super.render(graphics, mouseX, mouseY, partialTick);
         renderTooltip(graphics, mouseX, mouseY);
+    }
 
-        graphics.drawString(this.font, Component.translatable("ui.galacticraft.rocket.fuel"), this.leftPos + 125, this.topPos + 15 + 3, 4210752, false);
+    @Override
+    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
+        graphics.drawString(this.font, Component.translatable("ui.galacticraft.rocket.fuel"), 125, 15 + 3, 4210752, false);
 
-        final double percentage = this.menu.rocket.getFuelTankAmount() * 100D / this.menu.rocket.getFuelTankCapacity();
+        final double percentage = this.menu.rocket.getScaledFuelLevel(100);
         final ChatFormatting color = percentage > 80.0D ? ChatFormatting.GREEN : percentage > 40.0D ? ChatFormatting.GOLD : ChatFormatting.RED;
         final String str = percentage + Language.getInstance().getOrDefault("ui.galacticraft.rocket.full");
-        graphics.drawString(this.font, Component.literal(str).withStyle(color), this.leftPos + 117 - str.length() / 2, this.topPos + 20 + 8, 4210752, false);
+        graphics.drawString(this.font, Component.literal(str).withStyle(color), 117 - str.length() / 2, 20 + 8, 4210752, false);
     }
 
     @Override
     protected void renderBg(GuiGraphics graphics, float v, int mouseX, int mouseY) {
         graphics.blit(Constant.ScreenTexture.ROCKET_INVENTORY, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+
+        final int fuelLevel = this.menu.rocket.getScaledFuelLevel(38);
+        graphics.blit(Constant.ScreenTexture.ROCKET_INVENTORY, this.leftPos + 71, this.topPos + 45 - fuelLevel, 176, 38 - fuelLevel, 42, fuelLevel);
     }
 }

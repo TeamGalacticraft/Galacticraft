@@ -25,23 +25,35 @@ package dev.galacticraft.mod.screen;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.block.special.ParaChestBlockEntity;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class ParachestMenu extends AbstractContainerMenu {
-    private final ParaChestBlockEntity blockEntity;
+    private final Container container;
 
     public ParachestMenu(int syncId, Inventory playerInventory, FriendlyByteBuf buf) {
-        this(syncId, playerInventory, GCBlockEntityTypes.PARACHEST.getBlockEntity(playerInventory.player.level(), buf.readBlockPos()));
+        this(syncId, playerInventory, getContainer(playerInventory.player.level(), buf));
     }
 
-    public ParachestMenu(int syncId, Inventory playerInventory, ParaChestBlockEntity blockEntity) {
+    public static Container getContainer(Level level, FriendlyByteBuf buf) {
+        boolean isBe = buf.readBoolean();
+        if (isBe)
+            return GCBlockEntityTypes.PARACHEST.getBlockEntity(level, buf.readBlockPos());
+        else
+            return new SimpleContainer(buf.readVarInt());
+    }
+
+    public ParachestMenu(int syncId, Inventory playerInventory, Container container) {
         super(GCMenuTypes.PARACHEST, syncId);
-        this.blockEntity = blockEntity;
-        int numRows = (blockEntity.getContainerSize() - 3) / 9;
+        this.container = container;
+        int numRows = (container.getContainerSize() - 3) / 9;
+        this.container.startOpen(playerInventory.player);
         int i = (numRows - 4) * 18 + 19;
         // Player main inv
         for (int slotY = 0; slotY < 3; ++slotY) {
@@ -57,26 +69,55 @@ public class ParachestMenu extends AbstractContainerMenu {
 
         for (int colum = 0; colum < numRows; ++colum) {
             for (int row = 0; row < 9; ++row) {
-                this.addSlot(new Slot(this.blockEntity, row + colum * 9, 8 + row * 18, 18 + colum * 18));
+                this.addSlot(new Slot(this.container, row + colum * 9, 8 + row * 18, 18 + colum * 18));
             }
         }
 
-        this.addSlot(new Slot(this.blockEntity, this.blockEntity.getContainerSize() - 3, 125, (numRows == 0 ? 24 : 26) + numRows * 18));
-        this.addSlot(new Slot(this.blockEntity, this.blockEntity.getContainerSize() - 2, 125 + 18, (numRows == 0 ? 24 : 26) + numRows * 18));
-        this.addSlot(new Slot(this.blockEntity, this.blockEntity.getContainerSize() - 1, 75, (numRows == 0 ? 24 : 26) + numRows * 18));
+        this.addSlot(new Slot(this.container, this.container.getContainerSize() - 3, 125, (numRows == 0 ? 24 : 26) + numRows * 18));
+        this.addSlot(new Slot(this.container, this.container.getContainerSize() - 2, 125 + 18, (numRows == 0 ? 24 : 26) + numRows * 18));
+        this.addSlot(new Slot(this.container, this.container.getContainerSize() - 1, 75, (numRows == 0 ? 24 : 26) + numRows * 18));
     }
 
     @Override
-    public ItemStack quickMoveStack(Player player, int i) {
-        return null;
+    public ItemStack quickMoveStack(Player player, int slotIndex) {
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = this.slots.get(slotIndex);
+        final int size = this.slots.size();
+
+        if (slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
+            itemstack = itemstack1.copy();
+
+            if (slotIndex < this.container.getContainerSize()) {
+                if (!this.moveItemStackTo(itemstack1, size - 36, size, true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.moveItemStackTo(itemstack1, 0, this.container.getContainerSize(), false)) {
+                return ItemStack.EMPTY;
+            }
+
+            if (itemstack1.getCount() == 0) {
+                slot.set(ItemStack.EMPTY);
+            } else {
+                slot.setChanged();
+            }
+        }
+
+        return itemstack;
+    }
+
+    @Override
+    public void removed(Player player) {
+        super.removed(player);
+        this.container.stopOpen(player);
     }
 
     @Override
     public boolean stillValid(Player player) {
-        return true;
+        return this.container.stillValid(player);
     }
 
-    public ParaChestBlockEntity getBlockEntity() {
-        return this.blockEntity;
+    public Container getContainer() {
+        return this.container;
     }
 }

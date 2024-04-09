@@ -32,9 +32,10 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
-import dev.galacticraft.mod.content.entity.LanderEntity;
-import dev.galacticraft.mod.content.entity.RocketEntity;
+import dev.galacticraft.mod.content.entity.ControllableEntity;
+import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.events.GCEventHandlers;
+import dev.galacticraft.mod.network.packets.ControlEntityPacket;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
 import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
 import dev.galacticraft.mod.screen.RocketMenu;
@@ -175,51 +176,10 @@ public class GCServerPacketReceivers {
             });
         });
 
-        float turnFactor = 2.0F;
-        float angle = 45;
-        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.LANDER_PITCH, (server, player, handler, buf, responseSender) -> {
-            boolean input = buf.readBoolean();
-            server.execute(() -> {
-                if (player.isPassenger()) {
-                    if (player.getVehicle() instanceof LanderEntity lander) {
-                        if (input) {
-                            player.getVehicle().setXRot(Math.min(Math.max(lander.getXRot() + 0.5F * turnFactor, -angle), angle));
-                        } else {
-                            player.getVehicle().setXRot(Math.min(Math.max(lander.getXRot() - 0.5F * turnFactor, -angle), angle));
-                        }
-                    }
-                }
-            });
-        });
-        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.LANDER_YAW, (server, player, handler, buf, responseSender) -> {
-            boolean input = buf.readBoolean();
-            server.execute(() -> {
-                if (player.isPassenger()) {
-                    if (player.getVehicle() instanceof LanderEntity lander) {
-                        if (input) {
-                            player.getVehicle().setYRot(lander.getYRot() + 0.5F * turnFactor);
-                        } else {
-                            player.getVehicle().setYRot(lander.getYRot() - 0.5F * turnFactor);
-                        }
-                    }
-                }
-            });
-        });
-        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.LANDER_ACCERLERATE, (server, player, handler, buf, responseSender) -> {
-            boolean input = buf.readBoolean();
-            server.execute(() -> {
-                if (player.isPassenger()) {
-                    if (player.getVehicle() instanceof LanderEntity lander) {
-                        if (input) {
-                            Vec3 deltaMovement = lander.getDeltaMovement();
-                            lander.setDeltaMovement(new Vec3(deltaMovement.x(), Math.min(deltaMovement.y() - 0.022F, -1.0), deltaMovement.z()));
-                        } else {
-                            Vec3 deltaMovement = lander.getDeltaMovement();
-                            lander.setDeltaMovement(new Vec3(deltaMovement.x(), Math.min(deltaMovement.y() + 0.03F, lander.getY() < 90 ? -0.15 : -1.0), deltaMovement.z()));
-                        }
-                    }
-                }
-            });
+        ServerPlayNetworking.registerGlobalReceiver(ControlEntityPacket.TYPE, (packet, player, responseSender) -> {
+            if (player.isPassenger())
+                if (player.getVehicle() instanceof ControllableEntity controllable)
+                    controllable.inputTick(packet.leftImpulse(), packet.forwardImpulse(), packet.up(), packet.down(), packet.left(), packet.right(), packet.jumping(), packet.shiftKeyDown());
         });
 
         ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.ENTITY_UPDATE, (server, player, handler, buffer, responseSender) -> {

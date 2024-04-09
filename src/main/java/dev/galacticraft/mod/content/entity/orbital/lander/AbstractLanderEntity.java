@@ -20,29 +20,18 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.network;
+package dev.galacticraft.mod.content.entity.orbital.lander;
 
-import dev.galacticraft.mod.Constant;
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import dev.galacticraft.mod.content.entity.GCVehicle;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 
-public record FootprintRemovedPacket(long packedPos, BlockPos pos) implements FabricPacket {
-    public static final PacketType<FootprintRemovedPacket> FOOTPRINT_REMOVED_PACKET = PacketType.create(Constant.Packet.FOOTPRINT_REMOVED, FootprintRemovedPacket::new);
-
-    public FootprintRemovedPacket(FriendlyByteBuf buf) {
-        this(buf.readLong(), buf.readBlockPos());
+public abstract class AbstractLanderEntity extends GCVehicle {
+    public AbstractLanderEntity(EntityType<?> entityType, Level level) {
+        super(entityType, level);
     }
 
-    @Override
-    public void write(FriendlyByteBuf buf) {
-        buf.writeLong(packedPos);
-        buf.writeBlockPos(pos);
-    }
+    public abstract boolean shouldMove();
 
-    @Override
-    public PacketType<?> getType() {
-        return FOOTPRINT_REMOVED_PACKET;
-    }
+    public abstract boolean shouldSpawnParticles();
 }

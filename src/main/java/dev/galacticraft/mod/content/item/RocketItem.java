@@ -29,7 +29,7 @@ import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
-import dev.galacticraft.mod.content.entity.RocketEntity;
+import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -77,10 +77,7 @@ public class RocketItem extends Item {
                 rocket.setOldPosAndRot();
                 rocket.absMoveTo(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
                 if (tag.contains("creative")) {
-                    try (Transaction tx = Transaction.openOuter()) {
-                        rocket.getTank().insert(FluidVariant.of(GCFluids.FUEL), Long.MAX_VALUE, tx);
-                        tx.commit();
-                    }
+                    rocket.setFuel(Long.MAX_VALUE);
                 }
                 context.getLevel().addFreshEntity(rocket);
 

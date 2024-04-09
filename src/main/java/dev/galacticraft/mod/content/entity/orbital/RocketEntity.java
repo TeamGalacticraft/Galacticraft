@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity;
+package dev.galacticraft.mod.content.entity.orbital;
 
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.RocketRegistries;
@@ -32,11 +32,13 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyType;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.attachments.GCServerPlayer;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
+import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.events.RocketEvents;
 import dev.galacticraft.mod.particle.EntityParticleOption;
 import dev.galacticraft.mod.particle.GCParticleTypes;
@@ -48,16 +50,17 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.SingleFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -71,7 +74,9 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
@@ -104,10 +109,13 @@ public class RocketEntity extends Entity implements Rocket {
     public static final EntityDataAccessor<ResourceLocation> ROCKET_BOOSTER = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
     public static final EntityDataAccessor<ResourceLocation> ROCKET_ENGINE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
     public static final EntityDataAccessor<ResourceLocation> ROCKET_UPGRADE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
+
+    public static final EntityDataAccessor<Long> FUEL = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.LONG);
     private final boolean debugMode = false && FabricLoader.getInstance().isDevelopmentEnvironment();
 
     private BlockPos linkedPad = BlockPos.ZERO;
     private final SingleFluidStorage tank = SingleFluidStorage.withFixedCapacity(FluidUtil.bucketsToDroplets(100), () -> {
+        this.entityData.set(FUEL, getTank().getAmount());
     });
     private int timeBeforeLaunch;
     private float timeSinceLaunch;
@@ -260,6 +268,23 @@ public class RocketEntity extends Entity implements Rocket {
         }
     }
 
+    public void setFuel(long fuel) {
+        try (Transaction tx = Transaction.openOuter()) {
+            StorageUtil.extractAny(this.tank, Long.MAX_VALUE, tx);
+            this.tank.insert(FluidVariant.of(GCFluids.FUEL), fuel, tx);
+            tx.commit();
+            ;
+        }
+    }
+
+    public void setCreative(boolean creative) {
+
+    }
+
+    public long getFuel() {
+        return this.entityData.get(FUEL);
+    }
+
     @Override
     public void onBaseDestroyed() {
 
@@ -283,6 +308,14 @@ public class RocketEntity extends Entity implements Rocket {
     @Override
     public long getFuelTankCapacity() {
         return this.tank.getCapacity();
+    }
+
+    public int getScaledFuelLevel(int scale) {
+        if (this.getFuelTankCapacity() <= 0) {
+            return 0;
+        }
+
+        return (int) (this.getFuel() * scale / this.getFuelTankCapacity());
     }
 
     @Override
@@ -366,6 +399,8 @@ public class RocketEntity extends Entity implements Rocket {
         this.entityData.define(ROCKET_BOOSTER, NULL_ID);
         this.entityData.define(ROCKET_ENGINE, NULL_ID);
         this.entityData.define(ROCKET_UPGRADE, NULL_ID);
+
+        this.entityData.define(FUEL, 0L);
     }
 
     @Override
@@ -445,13 +480,14 @@ public class RocketEntity extends Entity implements Rocket {
                 level().explode(this, this.position().x + (level().random.nextDouble() - 0.5 * 4), this.position().y + (level().random.nextDouble() * 3), this.position().z + (level().random.nextDouble() - 0.5 * 4), 10.0F, Level.ExplosionInteraction.TNT);
                 this.remove(RemovalReason.KILLED);
             }
-
+            Entity passenger = getFirstPassenger();
             if (getLaunchStage() == LaunchStage.IGNITED) {
                 timeBeforeLaunch--;
                 if (isTankEmpty() && !debugMode) {
                     this.setLaunchStage(LaunchStage.IDLE);
-                    if (this.getPassengers().get(0) instanceof ServerPlayer) {
-                        ((ServerPlayer) this.getPassengers().get(0)).sendSystemMessage(Component.translatable("chat.galacticraft.rocket.no_fuel"), false);
+
+                    if (passenger instanceof ServerPlayer player) {
+                        player.sendSystemMessage(Component.translatable("chat.galacticraft.rocket.no_fuel"), false);
                     }
                     return;
                 }
@@ -462,11 +498,16 @@ public class RocketEntity extends Entity implements Rocket {
                 if (getTimeAsState() >= getPreLaunchWait()) {
                     this.setLaunchStage(LaunchStage.LAUNCHED);
                     if (this.getLinkedPad() != BlockPos.ZERO) {
+                        if (passenger instanceof ServerPlayer player) {
+                            GCServerPlayer gcPlayer = GCServerPlayer.get(player);
+                            gcPlayer.setRocketData(this);
+                            gcPlayer.setLaunchpadStack(new ItemStack(GCBlocks.ROCKET_LAUNCH_PAD, 9));
+                        }
                         for (int x = -1; x <= 1; x++) {
                             for (int z = -1; z <= 1; z++) {
                                 if (level().getBlockState(getLinkedPad().offset(x, 0, z)).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD
                                         && level().getBlockState(getLinkedPad().offset(x, 0, z)).getValue(RocketLaunchPadBlock.PART) != RocketLaunchPadBlock.Part.NONE) {
-                                    level().setBlock(getLinkedPad().offset(x, 0, z), Blocks.AIR.defaultBlockState(), 4);
+                                    level().setBlock(getLinkedPad().offset(x, 0, z), Blocks.AIR.defaultBlockState(), Block.UPDATE_NONE);
                                 }
                             }
                         }
@@ -523,7 +564,15 @@ public class RocketEntity extends Entity implements Rocket {
                     }
                     for (Entity entity : getPassengers()) {
                         if (entity instanceof ServerPlayer serverPlayer) {
+                            GCServerPlayer gcPlayer = GCServerPlayer.get(serverPlayer);
+                            gcPlayer.setRocketStacks(NonNullList.withSize(2, ItemStack.EMPTY)); // TODO un-hardcode this
                             RocketData data = RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.engine(), this.upgrade());
+                            gcPlayer.setFuel(this.tank.getAmount());
+                            CompoundTag tag = new CompoundTag();
+                            data.toNbt(tag);
+                            var rocket = new ItemStack(GCItems.ROCKET);
+                            rocket.setTag(tag);
+                            gcPlayer.setRocketItem(rocket);
                             serverPlayer.galacticraft$openCelestialScreen(data);
                             CompoundTag nbt = new CompoundTag();
                             data.toNbt(nbt);

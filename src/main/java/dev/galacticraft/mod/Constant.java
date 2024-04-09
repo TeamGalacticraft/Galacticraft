@@ -874,13 +874,12 @@ public interface Constant {
         ResourceLocation OPEN_SCREEN = id("open_screen");
         ResourceLocation SELECT_PART = id("select_part");
 
-        ResourceLocation LANDER_PITCH = id("lander_pitch");
-        ResourceLocation LANDER_YAW = id("lander_yaw");
-        ResourceLocation LANDER_ACCERLERATE = id("lander_accelerate");
+        ResourceLocation CONTROLLABLE_ENTITY = id("controllable_entity");
         ResourceLocation ENTITY_UPDATE = id("entity_update");
         ResourceLocation PLANET_TP = id("planet_tp");
         ResourceLocation FOOTPRINT = id("footprint");
         ResourceLocation FOOTPRINT_REMOVED = id("footprint_removed");
+        ResourceLocation RESET_THIRD_PERSON = id("reset_camera_type");
     }
 
     interface Structure {
@@ -892,5 +891,15 @@ public interface Constant {
         String DIMENSION_TP = "dimensiontp";
         String DIMENSION_TP_ALIAS = "dimtp";
         String OPEN_CELESTIAL_SCREEN = "opencelestialscreen";
+    }
+
+    interface Attachments {
+        String SERVER_PLAYER = "server_player";
+        String CLIENT_PLAYER = "client_player";
+    }
+
+    interface Teleporters {
+        String LANDER = "lander";
+        String OVERWORLD = "overworld";
     }
 }
