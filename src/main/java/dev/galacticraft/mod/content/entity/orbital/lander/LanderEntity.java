@@ -100,8 +100,6 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
         }
 
         moveTo(player.getX(), player.getY(), player.getZ(), 0, 0);
-
-        player.startRiding(this, true);
     }
 
     @Override

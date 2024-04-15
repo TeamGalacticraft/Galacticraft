@@ -44,5 +44,6 @@ public class LanderCelestialTeleporterType<Config extends CelestialTeleporterCon
         level.addFreshEntity(lander);
         lander.setPos(player.getX(), 1100, player.getZ());
         player.teleportTo(level, player.getX(), 1100, player.getZ(), player.getYRot(), player.getXRot());
+        player.startRiding(lander, true);
     }
 }

@@ -51,7 +51,7 @@ public class OverworldCelestialTeleporterType<Config extends CelestialTeleporter
             if (chestSpawn != null) {
                 var gcPlayer = GCServerPlayer.get(player);
                 var rocketInv = gcPlayer.getRocketStacks();
-                ParachestEntity chest = new ParachestEntity(GCEntityTypes.PARACHEST, player.serverLevel(), rocketInv, gcPlayer.getFuel());
+                ParachestEntity chest = new ParachestEntity(GCEntityTypes.PARACHEST, level, rocketInv, gcPlayer.getFuel());
                 rocketInv.clear();
 
                 chest.setPos(chestSpawn);
@@ -66,7 +66,7 @@ public class OverworldCelestialTeleporterType<Config extends CelestialTeleporter
                 }
                 chest.color = color;
 
-                player.serverLevel().addFreshEntity(chest);
+                level.addFreshEntity(chest);
             }
         }
         player.teleportTo(level, player.getX(), level.getMaxBuildHeight() + 20.0, player.getZ(), player.getYRot(), player.getXRot());
