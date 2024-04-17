@@ -24,7 +24,6 @@ package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
-import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricArcFurnaceBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -43,7 +42,10 @@ import java.util.List;
 @TestSuite("electric_arc_furnace")
 public final class ElectricArcFurnaceTestSuite extends RecipeGameTest<Container, BlastingRecipe, ElectricArcFurnaceBlockEntity> {
     public ElectricArcFurnaceTestSuite() {
-        super(GCMachineTypes.ELECTRIC_ARC_FURNACE, ElectricArcFurnaceBlockEntity.INPUT_SLOT, 1, ElectricArcFurnaceBlockEntity.OUTPUT_SLOTS, ElectricArcFurnaceBlockEntity.OUTPUT_LENGTH);
+        super(GCMachineTypes.ELECTRIC_ARC_FURNACE, List.of(
+                machine -> machine.energyStorage().setEnergy(Long.MAX_VALUE / 2),
+                machine -> machine.itemStorage().getSlot(ElectricArcFurnaceBlockEntity.INPUT_SLOT).set(Items.RAW_IRON, 1)
+        ), ElectricArcFurnaceBlockEntity.OUTPUT_SLOTS, ElectricArcFurnaceBlockEntity.OUTPUT_LENGTH, 100);
     }
 
     @Override
@@ -52,20 +54,5 @@ public final class ElectricArcFurnaceTestSuite extends RecipeGameTest<Container,
         List<TestFunction> tests = super.registerTests();
         tests.add(this.createChargeFromEnergyItemTest(ElectricArcFurnaceBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
         return tests;
-    }
-
-    @Override
-    protected void fulfillRunRequirements(@NotNull ElectricArcFurnaceBlockEntity machine) {
-        machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
-    }
-
-    @Override
-    protected int getRecipeRuntime() {
-        return 100;
-    }
-
-    @Override
-    protected void createValidRecipe(@NotNull MachineItemStorage storage) {
-        storage.getSlot(ElectricArcFurnaceBlockEntity.INPUT_SLOT).set(Items.RAW_IRON, 1);
     }
 }

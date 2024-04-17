@@ -24,7 +24,6 @@ package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
-import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricCompressorBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -43,7 +42,11 @@ import java.util.List;
 @TestSuite("electric_compressor")
 public final class ElectricCompressorTestSuite extends RecipeGameTest<CraftingContainer, CompressingRecipe, ElectricCompressorBlockEntity> {
     public ElectricCompressorTestSuite() {
-        super(GCMachineTypes.ELECTRIC_COMPRESSOR, ElectricCompressorBlockEntity.INPUT_SLOTS, ElectricCompressorBlockEntity.INPUT_LENGTH, ElectricCompressorBlockEntity.OUTPUT_SLOTS, ElectricCompressorBlockEntity.OUTPUT_LENGTH);
+        super(GCMachineTypes.ELECTRIC_COMPRESSOR, List.of(
+                machine -> machine.energyStorage().setEnergy(Long.MAX_VALUE / 2),
+                machine -> machine.itemStorage().getSlot(ElectricCompressorBlockEntity.INPUT_SLOTS).set(Items.IRON_INGOT, 1),
+                machine -> machine.itemStorage().getSlot(ElectricCompressorBlockEntity.INPUT_SLOTS + 1).set(Items.IRON_INGOT, 1)
+        ), ElectricCompressorBlockEntity.OUTPUT_SLOTS, ElectricCompressorBlockEntity.OUTPUT_LENGTH, 200);
     }
 
     @Override
@@ -52,21 +55,5 @@ public final class ElectricCompressorTestSuite extends RecipeGameTest<CraftingCo
         List<TestFunction> tests = super.registerTests();
         tests.add(this.createChargeFromEnergyItemTest(ElectricCompressorBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
         return tests;
-    }
-
-    @Override
-    protected void fulfillRunRequirements(@NotNull ElectricCompressorBlockEntity machine) {
-        machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
-    }
-
-    @Override
-    protected int getRecipeRuntime() {
-        return 200;
-    }
-
-    @Override
-    protected void createValidRecipe(@NotNull MachineItemStorage storage) {
-        storage.getSlot(ElectricCompressorBlockEntity.INPUT_SLOTS).set(Items.IRON_INGOT, 1);
-        storage.getSlot(ElectricCompressorBlockEntity.INPUT_SLOTS + 1).set(Items.IRON_INGOT, 1);
     }
 }

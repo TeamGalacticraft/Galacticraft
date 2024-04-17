@@ -52,10 +52,10 @@ val portingLibVersion        = project.property("porting.lib.version").toString(
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("1.5-SNAPSHOT")
+    id("fabric-loom") version("1.6-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
     id("org.ajoberstar.grgit") version("5.2.2")
-    id("dev.galacticraft.mojarn") version("0.1.1")
+    id("dev.galacticraft.mojarn") version("0.1.2")
 }
 
 java {
@@ -203,7 +203,7 @@ configurations {
     }
 
     include {
-        extendsFrom(compat)
+        extendsFrom(core)
     }
 }
 

@@ -29,11 +29,11 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.CoalGeneratorBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
-import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 
@@ -46,60 +46,39 @@ public final class CoalGeneratorTestSuite extends MachineGameTest<CoalGeneratorB
         super(GCMachineTypes.COAL_GENERATOR);
     }
 
-    @MachineTest(workTime = 1)
-    public Runnable fuelConsumption(CoalGeneratorBlockEntity machine) {
-        ItemResourceSlot slot = machine.itemStorage().getSlot(CoalGeneratorBlockEntity.INPUT_SLOT);
-        slot.set(Items.COAL, 1);
-        return () -> {
-            if (!slot.isEmpty()) {
-                throw new GameTestAssertException("Failed to consume fuel");
-            }
-            if (machine.getFuelLength() == 0) {
-                throw new GameTestAssertException("Failed to burn fuel");
-            }
-        };
-    }
-
-    @MachineTest(workTime = 1)
+    @MachineTest
     public Runnable fuelBurning(CoalGeneratorBlockEntity machine) {
         ItemResourceSlot slot = machine.itemStorage().getSlot(CoalGeneratorBlockEntity.INPUT_SLOT);
         slot.set(Items.COAL, 1);
-        return () -> {
-            if (!slot.isEmpty()) {
-                throw new GameTestAssertException("Failed to consume fuel");
-            }
-        };
+        return () -> Assertions.assertTrue(slot.isEmpty(), "Failed to consume fuel");
+    }
+
+    @MachineTest
+    public Runnable fuelConsumption(CoalGeneratorBlockEntity machine) {
+        ItemResourceSlot slot = machine.itemStorage().getSlot(CoalGeneratorBlockEntity.INPUT_SLOT);
+
+        slot.set(Items.COAL, 1);
+        return () -> Assertions.assertNotEquals(0, machine.getFuelLength(), "Failed to burn fuel");
     }
 
     @MachineTest(workTime = 320)
     public Runnable multipleFuelBurning(CoalGeneratorBlockEntity machine) {
         ItemResourceSlot slot = machine.itemStorage().getSlot(CoalGeneratorBlockEntity.INPUT_SLOT);
+
         slot.set(Items.COAL, 2);
-        return () -> {
-            if (!slot.isEmpty()) {
-                throw new GameTestAssertException("Failed to consume two coals!");
-            }
-        };
+        return () -> Assertions.assertTrue(slot.isEmpty(), "Failed to consume two coals!");
     }
 
     @MachineTest(workTime = 250)
     public Runnable heat(CoalGeneratorBlockEntity machine) {
         machine.setFuelLength(CoalGeneratorBlockEntity.FUEL_MAP.getInt(Items.COAL));
-        return () -> {
-            if (machine.getHeat() != 1.0) {
-                throw new GameTestAssertException("Coal generator did not heat up!");
-            }
-        };
+        return () -> Assertions.assertEquals(1, machine.getHeat(), "Coal generator did not heat up!");
     }
 
     @MachineTest(workTime = 50)
     public Runnable cool(CoalGeneratorBlockEntity machine) {
         machine.setHeat(1.0);
-        return () -> {
-            if (machine.getHeat() != 0.0) {
-                throw new GameTestAssertException("Coal generator did not cool down!");
-            }
-        };
+        return () -> Assertions.assertEquals(0.0, machine.getHeat(), "Coal generator did not cool down!");
     }
 
     @Override

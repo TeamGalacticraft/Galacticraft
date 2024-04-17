@@ -26,6 +26,8 @@
   "entrypoints": {
     "fabric-gametest": [
       "dev.galacticraft.mod.gametest.GratingTestSuite",
+      "dev.galacticraft.mod.gametest.machine.AdvancedSolarPanelTestSuite",
+      "dev.galacticraft.mod.gametest.machine.BasicSolarPanelTestSuite",
       "dev.galacticraft.mod.gametest.machine.CircuitFabricatorTestSuite",
       "dev.galacticraft.mod.gametest.machine.CoalGeneratorTestSuite",
       "dev.galacticraft.mod.gametest.machine.CompressorTestSuite",
@@ -33,6 +35,7 @@
       "dev.galacticraft.mod.gametest.machine.ElectricCompressorTestSuite",
       "dev.galacticraft.mod.gametest.machine.ElectricFurnaceTestSuite",
       "dev.galacticraft.mod.gametest.machine.EnergyStorageModuleTestSuite",
+      "dev.galacticraft.mod.gametest.machine.FuelLoaderTestSuite",
       "dev.galacticraft.mod.gametest.machine.RefineryTestSuite",
       "dev.galacticraft.mod.gametest.PipeTestSuite",
       "dev.galacticraft.mod.gametest.WireTestSuite"

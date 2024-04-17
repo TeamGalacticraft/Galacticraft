@@ -44,6 +44,7 @@ import org.jetbrains.annotations.Nullable;
 public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     public static final int CHARGE_SELF_SLOT = 0;
     public static final int CHARGE_ITEM_SLOT = 1;
+
     public EnergyStorageModuleBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.ENERGY_STORAGE_MODULE, pos, state);
     }

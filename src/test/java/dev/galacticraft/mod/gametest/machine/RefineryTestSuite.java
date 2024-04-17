@@ -26,17 +26,15 @@ import dev.galacticraft.machinelib.api.gametest.MachineGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.MachineTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
-import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.RefineryBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
-import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
-import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 
@@ -54,81 +52,32 @@ public final class RefineryTestSuite extends MachineGameTest<RefineryBlockEntity
     public @NotNull List<TestFunction> registerTests() {
         List<TestFunction> tests = super.registerTests();
         tests.add(this.createChargeFromEnergyItemTest(RefineryBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
+        tests.add(this.createTakeFromFluidItemTest(RefineryBlockEntity.OIL_INPUT_SLOT, GCItems.CRUDE_OIL_BUCKET, RefineryBlockEntity.OIL_TANK));
+        tests.add(this.createDrainFluidIntoItemTest(RefineryBlockEntity.FUEL_OUTPUT_SLOT, GCFluids.FUEL, RefineryBlockEntity.FUEL_TANK));
         return tests;
     }
 
-    @MachineTest(workTime = 1)
-    public Runnable oilItemExtraction(RefineryBlockEntity machine) {
-        ItemResourceSlot slot = machine.itemStorage().getSlot(RefineryBlockEntity.OIL_INPUT_SLOT);
-        slot.set(GCItems.CRUDE_OIL_BUCKET, 1);
-        return () -> {
-            if (machine.fluidStorage().getSlot(RefineryBlockEntity.OIL_TANK).getAmount() != FluidConstants.BUCKET) {
-                throw new GameTestAssertException("Expected refinery to take 1 bucket of oil from the input slot.");
-            }
-        };
-    }
-
-    @MachineTest(workTime = 1)
-    public Runnable oilItemRemainder(RefineryBlockEntity machine) {
-        ItemResourceSlot slot = machine.itemStorage().getSlot(RefineryBlockEntity.OIL_INPUT_SLOT);
-        slot.set(GCItems.CRUDE_OIL_BUCKET, 1);
-        return () -> {
-            if (slot.getResource() != Items.BUCKET) {
-                throw new GameTestAssertException("Expected refinery to leave 1 empty bucket in the input slot.");
-            }
-        };
-    }
-
-    @MachineTest(workTime = 1)
-    public Runnable fuelItemInsertion(RefineryBlockEntity machine) {
-        FluidResourceSlot fluidSlot = machine.fluidStorage().getSlot(RefineryBlockEntity.FUEL_TANK);
-        fluidSlot.set(GCFluids.FUEL, FluidConstants.BUCKET);
-        ItemResourceSlot slot = machine.itemStorage().getSlot(RefineryBlockEntity.FUEL_OUTPUT_SLOT);
-        slot.set(Items.BUCKET, 1);
-        return () -> {
-            if (fluidSlot.getAmount() != 0) {
-                throw new GameTestAssertException("Expected refinery to extract 1 bucket of fuel from the tank!");
-            }
-        };
-    }
-
-    @MachineTest(workTime = 1)
-    public Runnable fuelItemOutput(RefineryBlockEntity machine) {
-        FluidResourceSlot fluidSlot = machine.fluidStorage().getSlot(RefineryBlockEntity.FUEL_TANK);
-        fluidSlot.set(GCFluids.FUEL, FluidConstants.BUCKET);
-        ItemResourceSlot slot = machine.itemStorage().getSlot(RefineryBlockEntity.FUEL_OUTPUT_SLOT);
-        slot.set(Items.BUCKET, 1);
-        return () -> {
-            if (slot.getResource() != GCItems.FUEL_BUCKET) {
-                throw new GameTestAssertException("Expected refinery to create a fuel bucket in the output slot.");
-            }
-        };
-    }
-
-    @MachineTest(workTime = 1)
+    @MachineTest
     public Runnable crafting(RefineryBlockEntity machine) {
         FluidResourceSlot fuel = machine.fluidStorage().getSlot(RefineryBlockEntity.FUEL_TANK);
         FluidResourceSlot oil = machine.fluidStorage().getSlot(RefineryBlockEntity.OIL_TANK);
+
         oil.set(GCFluids.CRUDE_OIL, FluidConstants.BUCKET);
         machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
         return () -> {
-            if (fuel.isEmpty() || oil.getAmount() >= FluidConstants.BUCKET) {
-                throw new GameTestAssertException("Expected refinery to refine oil!");
-            }
+            Assertions.assertNotEquals(FluidConstants.BUCKET, oil.getAmount(), "Expected refinery to consume oil!");
+            Assertions.assertFalse(fuel.isEmpty(), "Expected refinery to refine oil into fuel!");
         };
     }
 
-    @MachineTest(workTime = 1)
+    @MachineTest
     public Runnable craftingFailFull(RefineryBlockEntity machine) {
         FluidResourceSlot fuel = machine.fluidStorage().getSlot(RefineryBlockEntity.FUEL_TANK);
         FluidResourceSlot oil = machine.fluidStorage().getSlot(RefineryBlockEntity.OIL_TANK);
+
         machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
         fuel.set(GCFluids.FUEL, fuel.getCapacity());
         oil.set(GCFluids.CRUDE_OIL, FluidConstants.BUCKET);
-        return () -> {
-            if (oil.getAmount() < FluidConstants.BUCKET) {
-                throw new GameTestAssertException("Expected refinery to not refine oil!");
-            }
-        };
+        return () -> Assertions.assertEquals(FluidConstants.BUCKET, oil.getAmount(), "Expected refinery to not consume oil!");
     }
 }

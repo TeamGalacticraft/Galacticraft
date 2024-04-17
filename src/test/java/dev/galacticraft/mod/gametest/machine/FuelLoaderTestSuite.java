@@ -22,16 +22,14 @@
 
 package dev.galacticraft.mod.gametest.machine;
 
-import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
+import dev.galacticraft.machinelib.api.gametest.MachineGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
 import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.content.block.entity.machine.CircuitFabricatorBlockEntity;
+import dev.galacticraft.mod.content.block.entity.machine.FuelLoaderBlockEntity;
+import dev.galacticraft.mod.content.block.entity.machine.RefineryBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.recipe.FabricationRecipe;
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
-import net.minecraft.world.Container;
-import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -39,24 +37,18 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
-@TestSuite("circuit_fabricator")
-public final class CircuitFabricatorTestSuite extends RecipeGameTest<Container, FabricationRecipe, CircuitFabricatorBlockEntity> {
-    public CircuitFabricatorTestSuite() {
-        super(GCMachineTypes.CIRCUIT_FABRICATOR, List.of(
-                machine -> machine.energyStorage().setEnergy(Long.MAX_VALUE / 2),
-                machine -> machine.itemStorage().getSlot(CircuitFabricatorBlockEntity.DIAMOND_SLOT).set(Items.DIAMOND, 1),
-                machine -> machine.itemStorage().getSlot(CircuitFabricatorBlockEntity.REDSTONE_SLOT).set(Items.REDSTONE, 1),
-                machine -> machine.itemStorage().getSlot(CircuitFabricatorBlockEntity.SILICON_SLOT_1).set(GCItems.RAW_SILICON, 1),
-                machine -> machine.itemStorage().getSlot(CircuitFabricatorBlockEntity.SILICON_SLOT_2).set(GCItems.RAW_SILICON, 1),
-                machine -> machine.itemStorage().getSlot(CircuitFabricatorBlockEntity.INPUT_SLOT).set(Items.REDSTONE_TORCH, 1)
-        ), CircuitFabricatorBlockEntity.OUTPUT_SLOT, 300);
+@TestSuite("fuel_loader")
+public final class FuelLoaderTestSuite extends MachineGameTest<FuelLoaderBlockEntity> {
+    public FuelLoaderTestSuite() {
+        super(GCMachineTypes.FUEL_LOADER);
     }
 
     @Override
     @GameTestGenerator
     public @NotNull List<TestFunction> registerTests() {
         List<TestFunction> tests = super.registerTests();
-        tests.add(this.createChargeFromEnergyItemTest(CircuitFabricatorBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
+        tests.add(this.createChargeFromEnergyItemTest(RefineryBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
+        tests.add(this.createTakeFromFluidItemTest(FuelLoaderBlockEntity.FUEL_INPUT_SLOT, GCItems.FUEL_BUCKET, FuelLoaderBlockEntity.FUEL_TANK));
         return tests;
     }
 }

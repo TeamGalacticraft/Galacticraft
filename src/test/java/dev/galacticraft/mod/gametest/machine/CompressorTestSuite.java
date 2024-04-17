@@ -25,17 +25,16 @@ package dev.galacticraft.mod.gametest.machine;
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.MachineTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
-import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.CompressorBlockEntity;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
-import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 
@@ -45,38 +44,23 @@ import java.util.List;
 @TestSuite("compressor")
 public final class CompressorTestSuite extends RecipeGameTest<CraftingContainer, CompressingRecipe, CompressorBlockEntity> {
     public CompressorTestSuite() {
-        super(GCMachineTypes.COMPRESSOR, CompressorBlockEntity.INPUT_SLOTS, CompressorBlockEntity.INPUT_LENGTH, CompressorBlockEntity.OUTPUT_SLOT);
+        super(GCMachineTypes.COMPRESSOR, List.of(
+                machine -> machine.fuelLength = machine.fuelTime = 5000,
+                machine -> machine.itemStorage().getSlot(CompressorBlockEntity.INPUT_SLOTS).set(Items.IRON_INGOT, 1),
+                machine -> machine.itemStorage().getSlot(CompressorBlockEntity.INPUT_SLOTS + 1).set(Items.IRON_INGOT, 1)
+        ), CompressorBlockEntity.OUTPUT_SLOT, 200);
     }
 
-    @MachineTest(workTime = 1)
+    @MachineTest
     public Runnable fuelConsumption(CompressorBlockEntity machine) {
         ItemResourceSlot slot = machine.itemStorage().getSlot(CompressorBlockEntity.FUEL_SLOT);
         slot.set(Items.COAL, 1);
-        this.createValidRecipe(machine.itemStorage());
+        machine.itemStorage().getSlot(CompressorBlockEntity.INPUT_SLOTS).set(Items.IRON_INGOT, 1);
+        machine.itemStorage().getSlot(CompressorBlockEntity.INPUT_SLOTS + 1).set(Items.IRON_INGOT, 1);
         return () -> {
-            if (!slot.isEmpty()) {
-                throw new GameTestAssertException("Failed to consume fuel");
-            }
-            if (machine.getFuelLength() == 0) {
-                throw new GameTestAssertException("Failed to burn fuel");
-            }
+            Assertions.assertTrue(slot.isEmpty(), "Failed to consume fuel");
+            Assertions.assertNotEquals(0, machine.getFuelLength(), "Failed to burn fuel");
         };
-    }
-
-    @Override
-    protected void fulfillRunRequirements(@NotNull CompressorBlockEntity machine) {
-        machine.fuelLength = machine.fuelTime = 5000;
-    }
-
-    @Override
-    protected int getRecipeRuntime() {
-        return 200;
-    }
-
-    @Override
-    protected void createValidRecipe(@NotNull MachineItemStorage storage) {
-        storage.getSlot(CompressorBlockEntity.INPUT_SLOTS).set(Items.IRON_INGOT, 1);
-        storage.getSlot(CompressorBlockEntity.INPUT_SLOTS + 1).set(Items.IRON_INGOT, 1);
     }
 
     @Override

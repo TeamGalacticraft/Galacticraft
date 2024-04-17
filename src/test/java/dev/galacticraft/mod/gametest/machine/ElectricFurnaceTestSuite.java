@@ -24,7 +24,6 @@ package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
-import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricFurnaceBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -43,7 +42,10 @@ import java.util.List;
 @TestSuite("electric_furnace")
 public final class ElectricFurnaceTestSuite extends RecipeGameTest<Container, SmeltingRecipe, ElectricFurnaceBlockEntity> {
     public ElectricFurnaceTestSuite() {
-        super(GCMachineTypes.ELECTRIC_FURNACE, ElectricFurnaceBlockEntity.INPUT_SLOT, ElectricFurnaceBlockEntity.OUTPUT_SLOT);
+        super(GCMachineTypes.ELECTRIC_FURNACE, List.of(
+                machine -> machine.energyStorage().setEnergy(Long.MAX_VALUE / 2),
+                machine -> machine.itemStorage().getSlot(ElectricFurnaceBlockEntity.INPUT_SLOT).set(Items.PORKCHOP, 1)
+        ), ElectricFurnaceBlockEntity.OUTPUT_SLOT, 200);
     }
 
     @Override
@@ -52,20 +54,5 @@ public final class ElectricFurnaceTestSuite extends RecipeGameTest<Container, Sm
         List<TestFunction> functions = super.registerTests();
         functions.add(this.createChargeFromEnergyItemTest(ElectricFurnaceBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
         return functions;
-    }
-
-    @Override
-    protected void fulfillRunRequirements(@NotNull ElectricFurnaceBlockEntity machine) {
-        machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
-    }
-
-    @Override
-    protected int getRecipeRuntime() {
-        return 200;
-    }
-
-    @Override
-    protected void createValidRecipe(@NotNull MachineItemStorage storage) {
-        storage.getSlot(ElectricFurnaceBlockEntity.INPUT_SLOT).set(Items.PORKCHOP, 1);
     }
 }

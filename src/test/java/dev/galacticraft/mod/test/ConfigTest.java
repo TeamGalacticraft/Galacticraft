@@ -40,12 +40,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ConfigTest {
     private static final File CONFIG_FILE = Path.of(".", ".test_config.json").toFile();
 
-    private static final String TEST_CONFIG = """
-            {
-                "debug_log": true
-            }
-            """;
-
     @BeforeEach
     public void setup() {
         TestSetup.setup();

@@ -132,12 +132,12 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Conta
 
     @Override
     protected @Nullable RecipeHolder<FabricationRecipe> findValidRecipe(@NotNull Level world) {
-            if (this.itemStorage().getSlot(DIAMOND_SLOT).contains(Items.DIAMOND)
-                    && this.itemStorage().getSlot(SILICON_SLOT_1).contains(GCItems.RAW_SILICON)
-                    && this.itemStorage().getSlot(SILICON_SLOT_2).contains(GCItems.RAW_SILICON)
-                    && this.itemStorage().getSlot(REDSTONE_SLOT).contains(Items.REDSTONE)) {
-                return super.findValidRecipe(world);
-            }
+        if (this.itemStorage().getSlot(DIAMOND_SLOT).contains(Items.DIAMOND)
+                && this.itemStorage().getSlot(SILICON_SLOT_1).contains(GCItems.RAW_SILICON)
+                && this.itemStorage().getSlot(SILICON_SLOT_2).contains(GCItems.RAW_SILICON)
+                && this.itemStorage().getSlot(REDSTONE_SLOT).contains(Items.REDSTONE)) {
+            return super.findValidRecipe(world);
+        }
 
         return null;
     }
