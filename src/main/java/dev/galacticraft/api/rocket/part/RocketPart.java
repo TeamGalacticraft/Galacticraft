@@ -27,10 +27,16 @@ import dev.galacticraft.api.rocket.part.config.RocketPartConfig;
 import dev.galacticraft.api.rocket.part.type.RocketPartType;
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public sealed interface RocketPart<C extends RocketPartConfig, T extends RocketPartType<C>> permits RocketBody, RocketBooster, RocketEngine, RocketCone, RocketFin, RocketUpgrade {
+    static <C extends RocketPartConfig, T extends RocketPartType<? extends C>, P extends RocketPart<? extends C, ? extends T>> Component getName(ResourceKey<? extends P> key) {
+        return Component.translatable(key.registry().getPath() + '.' + key.location().getNamespace() + '.' + key.location().getPath());
+    }
+
     @NotNull C config();
 
     @NotNull T type();

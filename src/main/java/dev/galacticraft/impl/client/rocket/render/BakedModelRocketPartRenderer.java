@@ -58,7 +58,7 @@ public record BakedModelRocketPartRenderer(Supplier<BakedModel> model,
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
         PoseStack pose = graphics.pose();
         pose.pushPose();
-        pose.translate(x, y, 10);
+        pose.translate(x, y-5, 10); //todo: add GUI model transforms to models
         pose.translate(8, 16, 8);
         model.get().getTransforms().getTransform(ItemDisplayContext.GUI).apply(false, pose);
         pose.mulPose(Axis.XN.rotationDegrees(35));

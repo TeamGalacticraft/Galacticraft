@@ -210,6 +210,7 @@
   "block.galacticraft.oxygen": "Oxygen",
   "block.galacticraft.fallen_meteor": "Fallen Meteor",
   "block.galacticraft.rocket_launch_pad": "Rocket Launch Pad",
+  "block.galacticraft.rocket_workbench": "Rocket Workbench",
   "item.galacticraft.heavy_duty_helmet": "Heavy Duty Helmet",
   "item.galacticraft.heavy_duty_chestplate": "Heavy Duty Chestplate",
   "item.galacticraft.heavy_duty_leggings": "Heavy Duty Leggings",
@@ -680,6 +681,14 @@
   "ui.galacticraft.engine": "Engine",
   "ui.galacticraft.upgrade": "Upgrade",
   "ui.galacticraft.color": "Color",
+
+  "rocket_cone.galacticraft.advanced_cone": "Advanced Cone",
+  "rocket_cone.galacticraft.sloped_cone": "Sloped Cone",
+  "rocket_cone.galacticraft.tier_1": "Basic Cone",
+  "rocket_body.galacticraft.tier_1": "Basic Body",
+  "rocket_fins.galacticraft.tier_1": "Basic Fins",
+  "rocket_engine.galacticraft.tier_1": "Basic Engine",
+  "rocket_upgrade.galacticraft.storage": "Storage Upgrade",
 
   "command.galacticraft.debug.registry.dump": "Dumped: %s",
   "command.galacticraft.debug.registry.id": "%s - %s: %s"

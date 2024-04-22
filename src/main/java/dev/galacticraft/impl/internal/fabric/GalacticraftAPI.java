@@ -75,6 +75,6 @@ public class GalacticraftAPI implements ModInitializer {
             ((SatelliteAccessor) minecraftServer).galacticraft$loadSatellites(dynamicDimensionLoader);
         });
         Gases.init();
-        Constant.LOGGER.info("Initialization Complete. (Took {}ms).", System.currentTimeMillis() - startInitTime);
+        Constant.LOGGER.info("API Initialization Complete. (Took {}ms).", System.currentTimeMillis() - startInitTime);
     }
 }

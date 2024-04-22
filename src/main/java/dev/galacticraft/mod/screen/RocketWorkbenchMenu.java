@@ -57,6 +57,8 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
     public static final int SCREEN_CENTER_BASE_X = 88;
     public static final int SCREEN_CENTER_BASE_Y = 158;
 
+    public static final int BASE_HEIGHT = 140;
+
     public final RecipeSelection<RocketCone<?, ?>> cone;
     public final RecipeSelection<RocketBody<?, ?>> body;
     public final RecipeSelection<RocketFin<?, ?>> fins;
@@ -132,12 +134,12 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
     }
 
     public static int calculateAdditionalHeight(RocketPartRecipe<?, ?> cone, RocketPartRecipe<?, ?> body, RocketPartRecipe<?, ?> fins, RocketPartRecipe<?, ?> booster, RocketPartRecipe<?, ?> engine, RocketPartRecipe<?, ?> upgrade) {
-        int rocketHeight = Math.max(140, Math.max(Math.max(
+        int rocketHeight = Math.max(BASE_HEIGHT, Math.max(Math.max(
                         (engine != null ? engine.height() + SPACING : 0) + (body != null ? body.height() + SPACING : 0) + (cone != null ? cone.height() + SPACING : 0),
                         (booster != null ? booster.height() + SPACING : 0) + (fins != null ? fins.height() + SPACING : 0)),
                 35 + (upgrade != null ? SPACING : 0) + ((int)Math.ceil(1 / 2.0)) * 19));
 
-        return rocketHeight - 140;
+        return rocketHeight - BASE_HEIGHT;
     }
 
     @Override
@@ -282,7 +284,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
             );
         }
 
-        this.addSlot(new RocketResultSlot(this, this.workbench.output, 0, 194, 136 + this.additionalHeight));
+        this.addSlot(new RocketResultSlot(this, this.workbench.output, 0, 203, 136 + this.additionalHeight));
 
         for (int row = 0; row < 3; ++row) {
             for (int column = 0; column < 9; ++column) {

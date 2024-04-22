@@ -39,7 +39,6 @@ import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import dev.galacticraft.mod.network.packets.SelectPartPacket;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -47,14 +46,11 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.SmithingScreen;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.Holder;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -97,6 +93,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
     private static final int TAB_HEIGHT = 26;
     private static final int TAB_WIDTH = 30;
     private static final int TAB_SELECTED_WIDTH = 35;
+    private static final int TAB_ICON_OFFSET = 8;
 
     private static final int RECIPE_CRAFTABLE_U = 204;
     private static final int RECIPE_UNCRAFTABLE_U = 231;
@@ -105,11 +102,28 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
     private static final int RECIPE_WIDTH = 25;
     private static final int RECIPE_HEIGHT = 25;
 
-    private static final int BASE_UI_WIDTH = 234;
+    private static final int BASE_UI_WIDTH = 248;
     private static final int MAIN_UI_WIDTH = 177;
     private static final int BASE_UI_HEIGHT = 245;
     private static final int CAP_HEIGHT = 4;
-    private static final int HEIGHT_EXT_U = 234;
+    private static final int HEIGHT_EXT_U = BASE_UI_WIDTH;
+
+    private static final int ROCKET_PREVIEW_X = 209;
+    private static final int ROCKET_PREVIEW_Y = 106;
+
+    private static final int RECIPES_PER_PAGE = 35;
+
+    private static final int RED_BAR_U = 456;
+    private static final int GREEN_BAR_U = RED_BAR_U + 5;
+    private static final int BLUE_BAR_U = GREEN_BAR_U + 5;
+    private static final int ALPHA_BAR_U = BLUE_BAR_U + 5;
+    private static final int COLOR_BAR_V = 74;
+    private static final int COLOR_BAR_WIDTH = 56;
+    private static final int COLOR_BAR_HEIGHT = 5;
+    private static final int COLOR_BAR_OUTLINE_U = 454;
+    private static final int COLOR_BAR_OUTLINE_V = 94;
+    private static final int COLOR_BAR_OUTLINE_WIDTH = 58;
+    private static final int COLOR_BAR_OUTLINE_HEIGHT = 7;
 
     private Tab openTab;
 
@@ -160,6 +174,9 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
         this.entity.setBooster(this.menu.booster.selection != null ? this.menu.booster.selection.key().location() : null);
         this.entity.setEngine(this.menu.engine.selection != null ? this.menu.engine.selection.key().location() : null);
         this.entity.setUpgrade(this.menu.upgrade.selection != null ? this.menu.upgrade.selection.key().location() : null);
+
+        this.entity.setXRot(0.0f);
+        this.entity.setYRot(90.0f - 20.0f);
     }
 
     @Override
@@ -184,7 +201,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
             }
         }
 
-        renderEntityInInventory(graphics, this.leftPos + 204.5, this.topPos + 110, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, this.entity);
+        renderEntityInInventory(graphics, this.leftPos + ROCKET_PREVIEW_X, this.topPos + ROCKET_PREVIEW_Y, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, this.entity);
     }
 
     @Override
@@ -199,6 +216,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
         {
             int y = 4;
             for (Tab tab : Tab.values()) {
+                if (tab == Tab.COLOR) continue;
                 if (tab != this.openTab) {
                     if (mouseIn(mouseX, mouseY, -TAB_WIDTH, y, TAB_WIDTH, TAB_HEIGHT)) {
                         this.setOpenTab(tab);
@@ -236,7 +254,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
     }
 
 
-    public void setOpenTab(Tab openTab) {
+    private void setOpenTab(Tab openTab) {
         this.openTab = openTab;
         this.page = 0;
 
@@ -245,7 +263,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
             List<Holder.Reference<? extends RocketPart<?, ?>>> joined = new ArrayList<>(recipes.getCraftable().size() + recipes.getUncraftable().size() + 1);
             joined.add(null);
             joined.addAll(recipes.getCraftable());
-            joined.addAll(recipes.getUncraftable()); //fixme
+            joined.addAll(recipes.getUncraftable());
             this.recipes = joined;
         } else {
             this.recipes = null;
@@ -266,6 +284,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
             {
                 int y = 4;
                 for (Tab tab : Tab.values()) {
+                    if (tab == Tab.COLOR) continue;
                     if (tab == this.openTab) {
                         render.blit(-(TAB_SELECTED_WIDTH - 3), y, TAB_SELECTED_U, TAB_SELECTED_V, TAB_SELECTED_WIDTH, TAB_HEIGHT);
                     } else {
@@ -277,7 +296,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
 
             if (this.openTab != Tab.COLOR) {
                 assert this.recipes != null;
-                final int pages = Math.floorDiv(size, 35) + size % 35 == 0 ? 0 : 1;
+                final int pages = Math.floorDiv(size, RECIPES_PER_PAGE) + size % RECIPES_PER_PAGE == 0 ? 0 : 1;
 
                 if (this.page >= pages) {
                     this.page = 0;
@@ -290,7 +309,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
                         int vOffset = this.getSelection().selection == part ? RECIPE_SELECTED_V : RECIPE_V;
                         render.blit(11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, uOffset, vOffset, RECIPE_WIDTH, RECIPE_HEIGHT);
                         if (part != null && mouseIn(mouseX, mouseY, 11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, RECIPE_WIDTH, RECIPE_HEIGHT)) {
-                            setTooltipForNextRenderPass(Component.literal(part.key().location().toString())); //todo
+                            setTooltipForNextRenderPass(RocketPart.getName(part.key()));
                         }
                         i++;
                     }
@@ -304,9 +323,10 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
             int y = 8;
             for (Tab tab : Tab.values()) {
                 if (tab == Tab.COLOR) {
-                    graphics.renderFakeItem(new ItemStack(Items.RED_DYE), -TAB_WIDTH + 8, y);
+                    continue;
+//                    graphics.renderFakeItem(new ItemStack(Items.RED_DYE), -TAB_WIDTH + TAB_ICON_OFFSET, y);
                 } else {
-                    RocketPartRendererRegistry.INSTANCE.getRenderer(tab.part).renderGUI(graphics, -TAB_WIDTH + 8, y, mouseX, mouseY, delta);
+                    RocketPartRendererRegistry.INSTANCE.getRenderer(tab.part).renderGUI(graphics, -TAB_WIDTH + TAB_ICON_OFFSET, y, mouseX, mouseY, delta);
                 }
                 y += TAB_SPACING + TAB_HEIGHT;
             }
@@ -320,7 +340,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
                     Holder.Reference<? extends RocketPart<?, ?>> recipe = this.recipes.get(i);
                     if (recipe != null) {
                         RocketPartRenderer renderer = RocketPartRendererRegistry.INSTANCE.getRenderer(recipe.key());
-                        renderer.renderGUI(graphics, 11 + x * RECIPE_WIDTH + 4, 29 + y * RECIPE_HEIGHT + 4, mouseX, mouseY, delta);
+                        renderer.renderGUI(graphics, 15 + x * RECIPE_WIDTH, 33 + y * RECIPE_HEIGHT, mouseX, mouseY, delta);
                     }
                     i++;
                 }
