@@ -30,7 +30,6 @@ import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -48,7 +47,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory {
+public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, VariableSizedContainer.Listener {
     public final SimpleContainer output = new SimpleContainer(1) {
         @Override
         public boolean canPlaceItem(int index, ItemStack stack) {
@@ -104,6 +103,19 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
     @Override
     public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
         buf.writeBlockPos(this.getBlockPos());
+
+        buf.writeBoolean(this.cone.selection != null);
+        if (this.cone.selection != null) buf.writeResourceLocation(this.cone.selection);
+        buf.writeBoolean(this.body.selection != null);
+        if (this.body.selection != null) buf.writeResourceLocation(this.body.selection);
+        buf.writeBoolean(this.fins.selection != null);
+        if (this.fins.selection != null) buf.writeResourceLocation(this.fins.selection);
+        buf.writeBoolean(this.booster.selection != null);
+        if (this.booster.selection != null) buf.writeResourceLocation(this.booster.selection);
+        buf.writeBoolean(this.engine.selection != null);
+        if (this.engine.selection != null) buf.writeResourceLocation(this.engine.selection);
+        buf.writeBoolean(this.upgrade.selection != null);
+        if (this.upgrade.selection != null) buf.writeResourceLocation(this.upgrade.selection);
     }
 
     @Override
@@ -117,41 +129,62 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
         return new RocketWorkbenchMenu(i, this, inventory);
     }
 
+    @Override
+    public void onSizeChanged() {
+        this.setChanged();
+    }
+
+    @Override
+    public void onItemChanged() {
+        this.setChanged();
+    }
+
     public class RecipeSelection<P extends RocketPart<?, ?>> {
         private final ResourceKey<Registry<P>> key;
         public final VariableSizedContainer inventory;
         @Nullable
-        public Holder.Reference<P> selection = null;
+        public ResourceLocation selection = null;
 
         public RecipeSelection(ResourceKey<Registry<P>> key, VariableSizedContainer inventory) {
             this.key = key;
             this.inventory = inventory;
+
+            this.inventory.addListener(RocketWorkbenchBlockEntity.this);
         }
 
-        public void setSelection(@Nullable Holder.Reference<P> selection) {
+        public void setSelection(@Nullable ResourceLocation selection) {
             if (this.selection != selection) {
+                RocketWorkbenchBlockEntity.this.setChanged();
                 this.selection = selection;
-                if (selection != null) {
-                    assert selection.value().getRecipe() != null;
-                    this.inventory.resize(selection.value().getRecipe().slots());
-                } else {
-                    this.inventory.resize(0);
-                }
+
+                updateSize();
+            }
+        }
+
+        private void updateSize() {
+            if (this.selection != null) {
+                P value = this.getSelection();
+                assert value.getRecipe() != null;
+                this.inventory.resize(value.getRecipe().slots());
+            } else {
+                this.inventory.resize(0);
             }
         }
 
         public @Nullable P getSelection() {
-            return this.selection != null ? this.selection.value() : null;
+            return this.selection != null ? RocketWorkbenchBlockEntity.this.level.registryAccess().registryOrThrow(this.key).get(this.selection) : null;
         }
 
         public @Nullable RocketPartRecipe<?, ?> getRecipe() {
-            return this.selection != null ? this.selection.value().getRecipe() != null ? this.selection.value().getRecipe() : null : null;
+            P value = this.getSelection();
+            return value != null ? value.getRecipe() : null;
         }
 
         public CompoundTag toTag() {
             CompoundTag nbt = this.inventory.toTag();
             if (this.selection != null) {
-                nbt.putString("selection", this.selection.key().location().toString());
+                nbt.putString("selection", this.selection.toString());
+//                nbt.putInt("size", this.inventory.getContainerSize());
             }
             return nbt;
         }
@@ -160,12 +193,13 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
             this.inventory.readTag(nbt);
             String selLoc = nbt.getString("selection");
             if (!selLoc.isEmpty()) {
-                this.setSelection(RocketWorkbenchBlockEntity.this.level.registryAccess().registryOrThrow(this.key).getHolderOrThrow(ResourceKey.create(this.key, new ResourceLocation(selLoc))));
+                this.selection = new ResourceLocation(selLoc);
+//                this.inventory.resize(nbt.getInt("size"));
             }
         }
 
         public @Nullable ResourceKey<P> getSelectionKey() {
-            return this.selection == null ? null : this.selection.key();
+            return this.selection == null ? null : ResourceKey.create(this.key, this.selection);
         }
     }
 }

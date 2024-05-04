@@ -58,6 +58,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkbenchMenu> {
     private static final int RED_SLOT_U = 472;
@@ -168,12 +169,12 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
             this.menu.upgradeRecipes.calculateCraftable(contents);
         }
 
-        this.entity.setCone(this.menu.cone.selection != null ? this.menu.cone.selection.key().location() : null);
-        this.entity.setBody(this.menu.body.selection != null ? this.menu.body.selection.key().location() : null);
-        this.entity.setFin(this.menu.fins.selection != null ? this.menu.fins.selection.key().location() : null);
-        this.entity.setBooster(this.menu.booster.selection != null ? this.menu.booster.selection.key().location() : null);
-        this.entity.setEngine(this.menu.engine.selection != null ? this.menu.engine.selection.key().location() : null);
-        this.entity.setUpgrade(this.menu.upgrade.selection != null ? this.menu.upgrade.selection.key().location() : null);
+        this.entity.setCone(this.menu.cone.selection != null ? this.menu.cone.selection : null);
+        this.entity.setBody(this.menu.body.selection != null ? this.menu.body.selection : null);
+        this.entity.setFin(this.menu.fins.selection != null ? this.menu.fins.selection : null);
+        this.entity.setBooster(this.menu.booster.selection != null ? this.menu.booster.selection : null);
+        this.entity.setEngine(this.menu.engine.selection != null ? this.menu.engine.selection : null);
+        this.entity.setUpgrade(this.menu.upgrade.selection != null ? this.menu.upgrade.selection : null);
 
         this.entity.setXRot(0.0f);
         this.entity.setYRot(90.0f - 20.0f);
@@ -202,6 +203,12 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
         }
 
         renderEntityInInventory(graphics, this.leftPos + ROCKET_PREVIEW_X, this.topPos + ROCKET_PREVIEW_Y, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, this.entity);
+    }
+
+    @Override
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
+        this.renderTooltip(context, mouseX, mouseY);
     }
 
     @Override
@@ -235,8 +242,9 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
                     if (mouseIn(mouseX, mouseY, 11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, RECIPE_WIDTH, RECIPE_HEIGHT)) {
                         if (i < this.recipes.size()) {
                             if (button == GLFW.GLFW_MOUSE_BUTTON_1) {
-                                this.getSelection().setSelection(this.recipes.get(i));
-                                ClientPlayNetworking.send(new SelectPartPacket(this.openTab.type, this.recipes.get(i) != null ? this.recipes.get(i).key() : null));
+                                Holder.Reference<? extends RocketPart<?, ?>> ref = this.recipes.get(i);
+                                this.getSelection().setSelection(ref != null ? ref.key().location() : null);
+                                ClientPlayNetworking.send(new SelectPartPacket(this.openTab.type, ref != null ? ref.key() : null));
                                 return true;
                             } else if (button == GLFW.GLFW_MOUSE_BUTTON_2) {
                                 //todo
@@ -306,7 +314,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
                     for (int x = 0; x < 5 && i < size; x++) {
                         Holder.Reference<? extends RocketPart<?, ?>> part = this.recipes.get(i);
                         int uOffset = isCraftable(part) ? RECIPE_CRAFTABLE_U : RECIPE_UNCRAFTABLE_U;
-                        int vOffset = this.getSelection().selection == part ? RECIPE_SELECTED_V : RECIPE_V;
+                        int vOffset = Objects.equals(this.getSelection().selection, part == null ? null : part.key().location()) ? RECIPE_SELECTED_V : RECIPE_V;
                         render.blit(11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, uOffset, vOffset, RECIPE_WIDTH, RECIPE_HEIGHT);
                         if (part != null && mouseIn(mouseX, mouseY, 11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, RECIPE_WIDTH, RECIPE_HEIGHT)) {
                             setTooltipForNextRenderPass(RocketPart.getName(part.key()));

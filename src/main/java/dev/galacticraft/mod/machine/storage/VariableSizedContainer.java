@@ -191,6 +191,9 @@ public class VariableSizedContainer implements Container {
         for (int i = 0; i < items.size(); i++) {
             this.stacks.add(ItemStack.of(items.getCompound(i)));
         }
+        while (this.stacks.size() < this.targetSize-1) {
+            this.stacks.add(ItemStack.EMPTY);
+        }
     }
     public interface Listener {
         void onSizeChanged();

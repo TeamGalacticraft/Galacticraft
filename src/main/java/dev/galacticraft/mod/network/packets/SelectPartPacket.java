@@ -28,7 +28,6 @@ import dev.galacticraft.mod.Constant.Packet;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
-import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
@@ -55,7 +54,7 @@ public class SelectPartPacket implements GCPacket {
     @Override
     public void handle(Player player, PacketSender responseSender) {
         if (player.containerMenu instanceof RocketWorkbenchMenu menu) {
-            menu.getSelection(type).setSelection(key == null ? null : (Holder.Reference) player.level().registryAccess().registryOrThrow(type.key).getHolderOrThrow(key));
+            menu.getSelection(type).setSelection(key == null ? null : key.location());
             menu.workbench.setChanged();
         }
     }

@@ -131,6 +131,13 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
 
     public RocketWorkbenchMenu(int syncId, Inventory playerInventory, FriendlyByteBuf buf) {
         this(syncId, (RocketWorkbenchBlockEntity) playerInventory.player.level().getBlockEntity(buf.readBlockPos()), playerInventory);
+
+        if (buf.readBoolean()) this.cone.setSelection(buf.readResourceLocation());
+        if (buf.readBoolean()) this.body.setSelection(buf.readResourceLocation());
+        if (buf.readBoolean()) this.fins.setSelection(buf.readResourceLocation());
+        if (buf.readBoolean()) this.booster.setSelection(buf.readResourceLocation());
+        if (buf.readBoolean()) this.engine.setSelection(buf.readResourceLocation());
+        if (buf.readBoolean()) this.upgrade.setSelection(buf.readResourceLocation());
     }
 
     public static int calculateAdditionalHeight(RocketPartRecipe<?, ?> cone, RocketPartRecipe<?, ?> body, RocketPartRecipe<?, ?> fins, RocketPartRecipe<?, ?> booster, RocketPartRecipe<?, ?> engine, RocketPartRecipe<?, ?> upgrade) {
@@ -371,6 +378,11 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         @Override
         public boolean mayPlace(ItemStack stack) {
             return stack.isEmpty() || this.filter.test(stack.getItem(), stack.getTag());
+        }
+
+        @Override
+        public int getMaxStackSize() {
+            return 1;
         }
     }
 }
