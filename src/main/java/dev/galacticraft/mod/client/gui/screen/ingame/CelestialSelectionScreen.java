@@ -332,6 +332,8 @@ public class CelestialSelectionScreen extends Screen {
         if (key == GLFW.GLFW_KEY_ESCAPE) {
             if (this.selectedBody != null) {
                 this.unselectCelestialBody();
+            } else if (this.shouldCloseOnEsc()) {
+                this.onClose();
             }
 
             return true;
