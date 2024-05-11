@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         
       - name: Crowdin Sync
-        uses: crowdin/github-action@1.19.0
+        uses: crowdin/github-action@v1
         with:
           upload_sources: true
           upload_translations: false
