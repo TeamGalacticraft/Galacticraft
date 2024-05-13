@@ -129,7 +129,7 @@ public class GCRocketParts {
                                 ),
                                 false,
                                 RocketPartRecipeBuilder.create()
-                                        .define('F', Ingredient.of(GCItems.ROCKET_FINS))
+                                        .define('F', Ingredient.of(GCItems.ROCKET_FIN))
                                         .left("F")
                                         .left("F")
                                         .right("F")

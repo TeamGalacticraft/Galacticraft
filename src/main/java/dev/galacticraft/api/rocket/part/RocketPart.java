@@ -34,7 +34,11 @@ import org.jetbrains.annotations.Nullable;
 
 public sealed interface RocketPart<C extends RocketPartConfig, T extends RocketPartType<C>> permits RocketBody, RocketBooster, RocketEngine, RocketCone, RocketFin, RocketUpgrade {
     static <C extends RocketPartConfig, T extends RocketPartType<? extends C>, P extends RocketPart<? extends C, ? extends T>> Component getName(ResourceKey<? extends P> key) {
-        return Component.translatable(key.registry().getPath() + '.' + key.location().getNamespace() + '.' + key.location().getPath());
+        return Component.translatable(getKey(key));
+    }
+
+    static <C extends RocketPartConfig, T extends RocketPartType<? extends C>, P extends RocketPart<? extends C, ? extends T>> @NotNull String getKey(ResourceKey<? extends P> key) {
+        return key.registry().getPath() + '.' + key.location().getNamespace() + '.' + key.location().getPath();
     }
 
     @NotNull C config();

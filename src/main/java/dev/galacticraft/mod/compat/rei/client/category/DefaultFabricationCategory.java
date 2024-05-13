@@ -26,6 +26,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.util.Translations;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
@@ -59,7 +60,7 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
 
     @Override
     public Component getTitle() {
-        return Component.translatable("category.recipe_viewer.circuit_fabricator");
+        return Component.translatable(Translations.RecipeCategory.CIRCUIT_FABRICATOR);
     }
 
     @Override

@@ -23,6 +23,7 @@
 package dev.galacticraft.api.gas;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -44,7 +45,7 @@ public final class Gases {
      * Hydrogen gas.
      */
     public static final Fluid HYDROGEN = GasFluid.create(
-            Component.translatable(Constant.Text.TranslationKey.HYDROGEN),
+            Component.translatable(Translations.Gas.HYDROGEN),
             Constant.id("gas/hydrogen"), "H2"
     );
     public static final ResourceLocation NITROGEN_ID = Constant.id("nitrogen");
@@ -52,7 +53,7 @@ public final class Gases {
      * Nitrogen gas.
      */
     public static final Fluid NITROGEN = GasFluid.create(
-            Component.translatable(Constant.Text.TranslationKey.NITROGEN),
+            Component.translatable(Translations.Gas.NITROGEN),
             Constant.id("gas/nitrogen"), "N2"
     );
     public static final ResourceLocation OXYGEN_ID = Constant.id("oxygen");
@@ -60,7 +61,7 @@ public final class Gases {
      * Oxygen gas.
      */
     public static final Fluid OXYGEN = GasFluid.create(
-            Component.translatable(Constant.Text.TranslationKey.OXYGEN),
+            Component.translatable(Translations.Gas.OXYGEN),
             Constant.id("gas/oxygen"), "O2"
     );
     public static final ResourceLocation CARBON_DIOXIDE_ID = Constant.id("carbon_dioxide");
@@ -68,7 +69,7 @@ public final class Gases {
      * Carbon dioxide.
      */
     public static final Fluid CARBON_DIOXIDE = GasFluid.create(
-            Component.translatable(Constant.Text.TranslationKey.CARBON_DIOXIDE),
+            Component.translatable(Translations.Gas.CARBON_DIOXIDE),
             Constant.id("gas/carbon_dioxide"), "CO2"
     );
     public static final ResourceLocation WATER_VAPOR_ID = Constant.id("water_vapor");
@@ -76,7 +77,7 @@ public final class Gases {
      * Water vapor.
      */
     public static final Fluid WATER_VAPOR = GasFluid.create(
-            Component.translatable(Constant.Text.TranslationKey.WATER_VAPOR),
+            Component.translatable(Translations.Gas.WATER_VAPOR),
             Constant.id("gas/water_vapor"), "H2O"
     );
     public static final ResourceLocation METHANE_ID = Constant.id("methane");
@@ -84,7 +85,7 @@ public final class Gases {
      * Methane.
      */
     public static final Fluid METHANE = GasFluid.create(
-            Component.translatable(Constant.Text.TranslationKey.METHANE),
+            Component.translatable(Translations.Gas.METHANE),
             Constant.id("gas/methane"), "CH4"
     );
     public static final ResourceLocation HELIUM_ID = Constant.id("helium");
@@ -92,7 +93,7 @@ public final class Gases {
      * Helium.
      */
     public static final Fluid HELIUM = GasFluid.create(
-            Component.translatable(Constant.Text.TranslationKey.HELIUM),
+            Component.translatable(Translations.Gas.HELIUM),
             Constant.id("gas/helium"), "He"
     );
     public static final ResourceLocation ARGON_ID = Constant.id("argon");
@@ -100,7 +101,7 @@ public final class Gases {
      * Argon.
      */
     public static final Fluid ARGON = GasFluid.create(
-            Component.translatable(Constant.Text.TranslationKey.ARGON),
+            Component.translatable(Translations.Gas.ARGON),
             Constant.id("gas/argon"), "Ar"
     );
     public static final ResourceLocation NEON_ID = Constant.id("neon");
@@ -108,7 +109,7 @@ public final class Gases {
      * Neon.
      */
     public static final Fluid NEON = GasFluid.create(
-            Component.translatable(Constant.Text.TranslationKey.NEON),
+            Component.translatable(Translations.Gas.NEON),
             Constant.id("gas/neon"), "Ne"
     );
     public static final ResourceLocation KRYPTON_ID = Constant.id("krypton");
@@ -116,7 +117,7 @@ public final class Gases {
      * Krypton.
      */
     public static final Fluid KRYPTON = GasFluid.create(
-            Component.translatable(Constant.Text.TranslationKey.KRYPTON),
+            Component.translatable(Translations.Gas.KRYPTON),
             Constant.id("gas/krypton"), "Kr"
     );
     public static final ResourceLocation NITROUS_OXIDE_ID = Constant.id("nitrous_oxide");
@@ -124,7 +125,7 @@ public final class Gases {
      * Nitrous oxide.
      */
     public static final Fluid NITROUS_OXIDE = GasFluid.create(
-            Component.translatable(Constant.Text.TranslationKey.NITROUS_OXIDE),
+            Component.translatable(Translations.Gas.NITROUS_OXIDE),
             Constant.id("gas/nitrous_oxide"), "N2O"
     );
     public static final ResourceLocation CARBON_MONOXIDE_ID = Constant.id("carbon_monoxide");
@@ -132,7 +133,7 @@ public final class Gases {
      * Carbon monoxide.
      */
     public static final Fluid CARBON_MONOXIDE = GasFluid.create(
-            Component.translatable(Constant.Text.TranslationKey.CARBON_MONOXIDE),
+            Component.translatable(Translations.Gas.CARBON_MONOXIDE),
             Constant.id("gas/carbon_monoxide"), "CO"
     );
     public static final ResourceLocation XENON_ID = Constant.id("xenon");
@@ -140,7 +141,7 @@ public final class Gases {
      * Xenon.
      */
     public static final Fluid XENON = GasFluid.create(
-            Component.translatable(Constant.Text.TranslationKey.XENON),
+            Component.translatable(Translations.Gas.XENON),
             Constant.id("gas/xenon"), "Xe"
     );
     public static final ResourceLocation OZONE_ID = Constant.id("ozone");
@@ -148,7 +149,7 @@ public final class Gases {
      * Ozone.
      */
     public static final Fluid OZONE = GasFluid.create(
-            Component.translatable(Constant.Text.TranslationKey.OZONE),
+            Component.translatable(Translations.Gas.OZONE),
             Constant.id("gas/ozone"), "O3"
     );
     public static final ResourceLocation NITROUS_DIOXIDE_ID = Constant.id("nitrous_dioxide");
@@ -156,7 +157,7 @@ public final class Gases {
      * Nitrous dioxide.
      */
     public static final Fluid NITROUS_DIOXIDE = GasFluid.create(
-            Component.translatable(Constant.Text.TranslationKey.NITROUS_DIOXIDE),
+            Component.translatable(Translations.Gas.NITROUS_DIOXIDE),
             Constant.id("gas/nitrous_dioxide"), "NO2"
     );
     public static final ResourceLocation IODINE_ID = Constant.id("iodine");
@@ -164,7 +165,7 @@ public final class Gases {
      * Iodine.
      */
     public static final Fluid IODINE = GasFluid.create(
-            Component.translatable(Constant.Text.TranslationKey.IODINE),
+            Component.translatable(Translations.Gas.IODINE),
             Constant.id("gas/iodine"), "I2"
     );
 

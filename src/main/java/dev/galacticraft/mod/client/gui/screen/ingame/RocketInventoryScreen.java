@@ -22,15 +22,13 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.machinelib.client.api.util.GraphicsUtil;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.screen.RocketMenu;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import dev.galacticraft.mod.util.Translations;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.locale.Language;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -53,11 +51,11 @@ public class RocketInventoryScreen extends AbstractContainerScreen<RocketMenu> {
 
     @Override
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
-        graphics.drawString(this.font, Component.translatable("ui.galacticraft.rocket.fuel"), 125, 15 + 3, 4210752, false);
+        graphics.drawString(this.font, Component.translatable(Translations.Ui.ROCKET_FUEL), 125, 15 + 3, 4210752, false);
 
         final double percentage = this.menu.rocket.getScaledFuelLevel(100);
         final ChatFormatting color = percentage > 80.0D ? ChatFormatting.GREEN : percentage > 40.0D ? ChatFormatting.GOLD : ChatFormatting.RED;
-        final String str = percentage + Language.getInstance().getOrDefault("ui.galacticraft.rocket.full");
+        final String str = percentage + I18n.get(Translations.Ui.ROCKET_FULL);
         graphics.drawString(this.font, Component.literal(str).withStyle(color), 117 - str.length() / 2, 20 + 8, 4210752, false);
     }
 

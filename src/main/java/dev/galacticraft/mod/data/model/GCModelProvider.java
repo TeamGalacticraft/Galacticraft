@@ -491,7 +491,7 @@ public class GCModelProvider extends FabricModelProvider {
 
         // ROCKETS
         generator.generateFlatItem(GCItems.ROCKET_ENGINE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.ROCKET_FINS, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.ROCKET_FIN, ModelTemplates.FLAT_ITEM);
 
         // SCHEMATICS
         generator.generateFlatItem(GCItems.BASIC_ROCKET_BODY_SCHEMATIC, ModelTemplates.FLAT_ITEM);

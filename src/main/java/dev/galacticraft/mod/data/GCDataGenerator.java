@@ -61,6 +61,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
     public void onInitializeDataGenerator(@NotNull FabricDataGenerator generator) {
         var pack = generator.createPack();
 
+        pack.addProvider(GCTranslationProvider::new);
         pack.addProvider(GCBlockLootTableProvider::new);
 
         // recipes

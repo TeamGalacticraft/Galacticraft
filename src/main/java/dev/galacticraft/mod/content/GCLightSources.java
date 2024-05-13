@@ -26,16 +26,17 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.solarpanel.LightSource;
 import dev.galacticraft.mod.api.solarpanel.SolarPanelRegistry;
 import dev.galacticraft.mod.api.solarpanel.WorldLightSources;
+import dev.galacticraft.mod.util.Translations;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import net.minecraft.network.chat.Component;
 
 public class GCLightSources {
     private static final WorldLightSources MOON = new WorldLightSources(
             Constant.ScreenTexture.MOON_LIGHT_SOURCES,
-            new LightSource(Component.translatable("ui.galacticraft.machine.solar_panel.source.sun").setStyle(Constant.Text.Color.YELLOW_STYLE), 1.0, 1.0),
-            new LightSource(Component.translatable("ui.galacticraft.machine.solar_panel.source.earth").setStyle(Constant.Text.Color.GREEN_STYLE), 0.07, 1.0),
-            new LightSource(Component.translatable("ui.galacticraft.machine.solar_panel.source.invalid").setStyle(Constant.Text.Color.BLUE_STYLE), 0.0, 1.0),
-            new LightSource(Component.translatable("ui.galacticraft.machine.solar_panel.source.unknown").setStyle(Constant.Text.Color.WHITE_STYLE), 0.0, 1.0));
+            new LightSource(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_SUN).setStyle(Constant.Text.Color.YELLOW_STYLE), 1.0, 1.0),
+            new LightSource(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_EARTH).setStyle(Constant.Text.Color.GREEN_STYLE), 0.07, 1.0),
+            new LightSource(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_NONE).setStyle(Constant.Text.Color.BLUE_STYLE), 0.0, 1.0),
+            new LightSource(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_NONE).setStyle(Constant.Text.Color.WHITE_STYLE), 0.0, 1.0));
 
     public static void register() {
         SolarPanelRegistry.registerLightSources(GCDimensions.MOON, MOON);

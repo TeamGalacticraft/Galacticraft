@@ -23,8 +23,12 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.util.Translations;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -38,11 +42,11 @@ import net.minecraft.world.level.Level;
 public class SpaceTravelScreen extends Screen {
     private static final ResourceLocation TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/block/tin_decoration.png");
     private static final String[] POSSIBLE_TEXTS = new String[]{
-            I18n.get("ui.galacticraft.small_step"),
-            I18n.get("ui.galacticraft.giant_leap"),
-            I18n.get("ui.galacticraft.prepare_for_entry")
+            Translations.Ui.SMALL_STEP,
+            Translations.Ui.GIANT_LEAP,
+            Translations.Ui.PREPARE_FOR_ENTRY
     };
-    private static final Component TRAVELLING_TO = Component.translatable("ui.galacticraft.travelling_to");
+    private static final Component TRAVELLING_TO = Component.translatable(Translations.Ui.TRAVELLING_TO);
     private final int text;
     private String dots = ".";
     private final String planet;
@@ -81,7 +85,7 @@ public class SpaceTravelScreen extends Screen {
             }
         }
         graphics.drawCenteredString(this.font, TRAVELLING_TO.plainCopy().append(this.planet), this.width / 2, this.height / 2 - 40, 16777215);
-        graphics.drawCenteredString(this.font, Component.literal(POSSIBLE_TEXTS[this.text] + dots), this.width / 2, this.height / 2 - 50, 16777215);
+        graphics.drawCenteredString(this.font, Component.translatable(POSSIBLE_TEXTS[this.text]).append(this.dots), this.width / 2, this.height / 2 - 50, 16777215);
         super.render(graphics, mouseX, mouseY, delta);
         if (minecraft.level.dimension().equals(this.target)) this.minecraft.setScreen(null);
     }

@@ -27,6 +27,7 @@ import dev.galacticraft.mod.compat.jei.GCJEIRecipeTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
+import dev.galacticraft.mod.util.Translations;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -54,7 +55,7 @@ public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe
 
     @Override
     public Component getTitle() {
-        return Component.translatable("category.recipe_viewer.circuit_fabricator");
+        return Component.translatable(Translations.RecipeCategory.CIRCUIT_FABRICATOR);
     }
 
     @Override

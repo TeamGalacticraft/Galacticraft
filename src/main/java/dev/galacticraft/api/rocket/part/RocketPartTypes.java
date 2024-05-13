@@ -26,17 +26,18 @@ import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.part.config.*;
 import dev.galacticraft.api.rocket.part.type.*;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 
 public enum RocketPartTypes {
-    CONE(RocketRegistries.ROCKET_CONE, RocketConeConfig.class, RocketConeType.class, RocketCone.class, Component.translatable("ui.galacticraft.cone")),
-    BODY(RocketRegistries.ROCKET_BODY, RocketBodyConfig.class, RocketBodyType.class, RocketBody.class, Component.translatable("ui.galacticraft.body")),
-    FIN(RocketRegistries.ROCKET_FIN, RocketFinConfig.class, RocketFinType.class, RocketFin.class, Component.translatable("ui.galacticraft.fins")),
-    BOOSTER(RocketRegistries.ROCKET_BOOSTER, RocketBoosterConfig.class, RocketBoosterType.class, RocketBooster.class, Component.translatable("ui.galacticraft.booster")),
-    ENGINE(RocketRegistries.ROCKET_ENGINE, RocketEngineConfig.class, RocketEngineType.class, RocketEngine.class, Component.translatable("ui.galacticraft.engine")),
-    UPGRADE(RocketRegistries.ROCKET_UPGRADE, RocketUpgradeConfig.class, RocketUpgradeType.class, RocketUpgrade.class, Component.translatable("ui.galacticraft.upgrade"));
+    CONE(RocketRegistries.ROCKET_CONE, RocketConeConfig.class, RocketConeType.class, RocketCone.class, Component.translatable(Translations.Ui.CONE)),
+    BODY(RocketRegistries.ROCKET_BODY, RocketBodyConfig.class, RocketBodyType.class, RocketBody.class, Component.translatable(Translations.Ui.BODY)),
+    FIN(RocketRegistries.ROCKET_FIN, RocketFinConfig.class, RocketFinType.class, RocketFin.class, Component.translatable(Translations.Ui.FINS)),
+    BOOSTER(RocketRegistries.ROCKET_BOOSTER, RocketBoosterConfig.class, RocketBoosterType.class, RocketBooster.class, Component.translatable(Translations.Ui.BOOSTER)),
+    ENGINE(RocketRegistries.ROCKET_ENGINE, RocketEngineConfig.class, RocketEngineType.class, RocketEngine.class, Component.translatable(Translations.Ui.ENGINE)),
+    UPGRADE(RocketRegistries.ROCKET_UPGRADE, RocketUpgradeConfig.class, RocketUpgradeType.class, RocketUpgrade.class, Component.translatable(Translations.Ui.UPGRADE));
 
     public final ResourceKey<? extends Registry<? extends RocketPart<?, ?>>> key;
     private final Class<? extends RocketPartConfig> config;

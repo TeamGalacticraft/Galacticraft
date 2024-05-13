@@ -46,7 +46,7 @@ public interface Constant {
     String COMMON_NAMESPACE = "c";
     Logger LOGGER = LogManager.getLogger("Galacticraft");
 
-    double RADIANS_TO_DEGREES = 180D / Math.PI;
+    double RADIANS_TO_DEGREES = 180.0 / Math.PI;
     int OVERWORLD_SKYPROVIDER_STARTHEIGHT = 200;
 
     @Contract(value = "_ -> new", pure = true)
@@ -355,7 +355,7 @@ public interface Constant {
         String COPPER_CANISTER = "copper_canister";
         String TIN_CANISTER = "tin_canister";
         String THERMAL_CLOTH = "thermal_cloth";
-        String ISOTHERMAL_FABRIC = "thermal_cloth_t2";
+        String ISOTHERMAL_FABRIC = "isothermal_fabric";
         String ORION_DRIVE = "orion_drive";
         String ATMOSPHERIC_VALVE = "atmospheric_valve";
         String AMBIENT_THERMAL_CONTROLLER = "ambient_thermal_controller";
@@ -470,7 +470,7 @@ public interface Constant {
         String LEGACY_MUSIC_DISC_SPACERACE = "legacy_music_disc_spacerace";
         String NOSE_CONE = "nose_cone";
         String HEAVY_NOSE_CONE = "heavy_nose_cone";
-        String ROCKET_FINS = "rocket_fins";
+        String ROCKET_FIN = "rocket_fin";
         String ROCKET_ENGINE = "rocket_engine";
         String BASIC_ROCKET_CONE_SCHEMATIC = "basic_rocket_cone_schematic";
         String BASIC_ROCKET_BODY_SCHEMATIC = "basic_rocket_body_schematic";
@@ -492,42 +492,6 @@ public interface Constant {
         String LAUNCH_FLAME = "launch_flame";
         String LAUNCH_FLAME_LAUNCHED = "launch_flame_launched";
         String ACID_VAPOR_PARTICLE = "acid_vapor";
-    }
-
-    interface Config {
-        String TITLE = "config.galacticraft.title";
-        String RESET = "config.galacticraft.reset";
-
-        String DEBUG = "config.galacticraft.debug";
-        String DEBUG_LOGGING = "config.galacticraft.debug.logging";
-        String HIDE_ALPHA_WARNING = "config.galacticraft.debug.hide_alpha_warning";
-
-        String ENERGY = "config.galacticraft.energy";
-
-        String WIRES = "config.galacticraft.energy.wires";
-        String WIRE_ENERGY_TRANSFER_LIMIT = "config.galacticraft.energy.wires.transfer_limit";
-        String HEAVY_WIRE_ENERGY_TRANSFER_LIMIT = "config.galacticraft.energy.wires.heavy_transfer_limit";
-
-        String MACHINES = "config.galacticraft.energy.machines";
-        String COAL_GENERATOR_ENERGY_PRODUCTION_RATE = "config.galacticraft.energy.machines.coal_generator_energy_production_rate";
-        String SOLAR_PANEL_ENERGY_PRODUCTION_RATE = "config.galacticraft.energy.machines.solar_panel_energy_production_rate";
-        String CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.circuit_fabricator_energy_consumption_rate";
-        String ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.electric_compressor_energy_consumption_rate";
-        String OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_collector_energy_consumption_rate";
-        String REFINERY_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.refinery_energy_consumption_rate";
-        String ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.electric_furnace_energy_consumption_rate";
-        String ENERGY_STORAGE_MODULE_STORAGE_SIZE = "config.galacticraft.energy.machines.energy_storage_module_storage_size";
-        String ENERGY_STORAGE_SIZE = "config.galacticraft.energy.machines.energy_storage_size";
-        String OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_compressor_energy_consumption_rate";
-        String OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_decompressor_energy_consumption_rate";
-
-        String CLIENT = "config.galacticraft.client";
-
-        String PLAYER = "config.galacticraft.player";
-        String PLAYER_LIFE_SUPPORT = "config.galacticraft.lifesupport";
-        String PLAYER_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.player.lifesupport.oxygen_consumption_rate";
-        String SKYBOX = "config.galacticraft.client.skybox";
-        String MULTICOLOR_STARS = "config.galacticraft.client.skybox.multicolor_stars";
     }
 
     interface ScreenTexture {
@@ -712,49 +676,6 @@ public interface Constant {
             static Style getRainbow(int ticks) {
                 return Style.EMPTY.withColor(TextColor.fromRgb(Mth.hsvToRgb(ticks / 1000.0f, 1, 1)));
             }
-        }
-
-        interface TranslationKey {
-            String HYDROGEN = "gas.galacticraft.hydrogen";
-            String NITROGEN = "gas.galacticraft.nitrogen";
-            String OXYGEN = "gas.galacticraft.oxygen";
-            String CARBON_DIOXIDE = "gas.galacticraft.carbon_dioxide";
-            String CARBON_MONOXIDE = "gas.galacticraft.carbon_monoxide";
-            String WATER_VAPOR = "gas.galacticraft.water_vapor";
-            String METHANE = "gas.galacticraft.methane";
-            String HELIUM = "gas.galacticraft.helium";
-            String ARGON = "gas.galacticraft.argon";
-            String NITROUS_OXIDE = "gas.galacticraft.nitrous_oxide";
-            String NEON = "gas.galacticraft.neon";
-            String KRYPTON = "gas.galacticraft.krypton";
-            String XENON = "gas.galacticraft.xenon";
-            String OZONE = "gas.galacticraft.ozone";
-            String NITROUS_DIOXIDE = "gas.galacticraft.nitrous_dioxide";
-            String IODINE = "gas.galacticraft.iodine";
-            String NOT_ENOUGH_LEAVES = "ui.galacticraft.machine.status.not_enough_leaves";
-            String ACTIVE = "ui.galacticraft.machine.status.active";
-            String IDLE = "ui.galacticraft.machine.status.idle";
-            String WARMING = "ui.galacticraft.machine.status.warming";
-            String INACTIVE = "ui.galacticraft.machine.status.inactive";
-            String NOT_ENOUGH_ENERGY = "ui.galacticraft.machine.status.not_enough_energy";
-            String OFF = "ui.galacticraft.machine.status.off";
-            String PROCESSING = "ui.galacticraft.machine.status.processing";
-            String COLLECTING = "ui.galacticraft.machine.status.collecting";
-            String COMPRESSING = "ui.galacticraft.machine.status.compressing";
-            String DECOMPRESSING = "ui.galacticraft.machine.status.decompressing";
-            String PARTIALLY_BLOCKED = "ui.galacticraft.machine.status.partially_blocked";
-            String NIGHT = "ui.galacticraft.machine.status.night";
-            String FULL = "ui.galacticraft.machine.status.full";
-            String EMPTY_CANISTER = "ui.galacticraft.machine.status.empty_canister";
-            String BLOCKED = "ui.galacticraft.machine.status.blocked";
-            String DISTRIBUTING = "ui.galacticraft.machine.status.distributing";
-            String NOT_ENOUGH_OXYGEN = "ui.galacticraft.machine.status.not_enough_oxygen";
-            String NOT_ENOUGH_ITEMS = "ui.galacticraft.machine.status.not_enough_items";
-            String UPGRADE_TITANIUM_APPLIES_TO = "smithing_template.galacticraft.titanium_upgrade.applies_to";
-            String UPGRADE_TITANIUM_INGREDIENTS = "smithing_template.galacticraft.titanium_upgrade.ingredients";
-            String UPGRADE_TITANIUM_DESCRIPTION = "smithing_template.galacticraft.titanium_upgrade.description";
-            String UPGRADE_TITANIUM_BASE_SLOT_DESCRIPTION = "smithing_template.galacticraft.titanium_upgrade.base_slot_description";
-            String UPGRADE_TITANIUM_ADDITIONS_SLOT_DESCRIPTON = "smithing_template.galacticraft.titanium_upgrade.additions_slot_description";
         }
     }
 

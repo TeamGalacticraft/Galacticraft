@@ -24,6 +24,7 @@ package dev.galacticraft.mod.world.dimension;
 
 import dev.galacticraft.api.gas.GasFluid;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -37,7 +38,7 @@ public class GCGases {
     public static final ResourceLocation NITROGEN_OXIDE_ID = new ResourceLocation(Constant.MOD_ID, "nitrogen_oxide");
     public static final Fluid NITROGEN_OXIDE =
             GasFluid.create(
-                    Component.translatable("ui.galacticraft.nitrogen_oxide"),
+                    Component.translatable(Translations.Gas.NITROUS_OXIDE),
                     new ResourceLocation(Constant.MOD_ID, "gas/nitrogen_oxide"),
                     "NO"
             );
@@ -45,7 +46,7 @@ public class GCGases {
     public static final ResourceLocation HYDROGEN_DEUTERIUM_OXYGEN_ID = new ResourceLocation(Constant.MOD_ID, "hydrogen_deuterium_oxygen");
     public static final Fluid HYDROGEN_DEUTERIUM_OXYGEN =
             GasFluid.create(
-                    Component.translatable("ui.galacticraft.hydrogen_deuterium_oxygen"),
+                    Component.translatable(Translations.Gas.HYDROGEN_DEUTERIUM_OXYGEN),
                     new ResourceLocation(Constant.MOD_ID, "gas/hydrogen_deuterium_oxygen"),
                     "HDO"
             );

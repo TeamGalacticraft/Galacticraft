@@ -47,6 +47,7 @@ import dev.galacticraft.impl.universe.position.type.OrbitalCelestialPositionType
 import dev.galacticraft.impl.universe.position.type.StaticCelestialPositionType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.util.Translations;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -54,7 +55,6 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -81,8 +81,8 @@ public class GCCelestialBodies {
         HolderGetter<CelestialTeleporter<?, ?>> lookup = context.lookup(AddonRegistries.CELESTIAL_TELEPORTER);
         context.register(BuiltinObjects.SOL_KEY, StarType.INSTANCE.configure(
                 new StarConfig(
-                        Component.translatable("star.galacticraft.sol.name"),
-                        Component.translatable("star.galacticraft.sol.description"),
+                        Component.translatable(Translations.CelestialBody.SOL),
+                        Component.translatable(Translations.CelestialBody.SOL_DESC),
                         BuiltinObjects.MILKY_WAY_KEY,
                         Optional.empty(),
                         StaticCelestialPositionType.INSTANCE.configure(new StaticCelestialPositionConfig(0, 0)),
@@ -103,8 +103,8 @@ public class GCCelestialBodies {
         ));
         context.register(EARTH, PlanetType.INSTANCE.configure(
                 new PlanetConfig(
-                        Component.translatable("planet.galacticraft.earth.name"),
-                        Component.translatable("planet.galacticraft.earth.description"),
+                        Component.translatable(Translations.CelestialBody.EARTH),
+                        Component.translatable(Translations.CelestialBody.EARTH_DESC),
                         BuiltinObjects.MILKY_WAY_KEY,
                         BuiltinObjects.SOL_KEY,
                         OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(1.0F, 1.0, 0.0F, true)),
@@ -143,8 +143,8 @@ public class GCCelestialBodies {
         ));
 
         context.register(MOON, PlanetType.INSTANCE.configure(new PlanetConfig(
-                Component.translatable("planet.galacticraft.moon.name"),
-                Component.translatable("planet.galacticraft.moon.desc"),
+                Component.translatable(Translations.CelestialBody.MOON),
+                Component.translatable(Translations.CelestialBody.MOON_DESC),
                 BuiltinObjects.MILKY_WAY_KEY,
                 BuiltinObjects.EARTH_KEY,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(1 / 0.01F, 20.0, 0.2667, false)),
@@ -166,8 +166,8 @@ public class GCCelestialBodies {
         )));
 
         context.register(MERCURY, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
-                Component.translatable("planet.galacticraft.mercury.name"),
-                Component.translatable("planet.galacticraft.mercury.desc"),
+                Component.translatable(Translations.CelestialBody.MERCURY),
+                Component.translatable(Translations.CelestialBody.MERCURY_DESC),
                 BuiltinObjects.MILKY_WAY_KEY,
                 BuiltinObjects.SOL_KEY,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(0.24096385542168674698795180722892F, 0.5F, 1.45F, true)),
@@ -182,8 +182,8 @@ public class GCCelestialBodies {
         )));
 
         context.register(VENUS, PlanetType.INSTANCE.configure(new PlanetConfig(
-                Component.translatable("planet.galacticraft.venus.name"),
-                Component.translatable("planet.galacticraft.venus.desc"),
+                Component.translatable(Translations.CelestialBody.VENUS),
+                Component.translatable(Translations.CelestialBody.VENUS_DESC),
                 BuiltinObjects.MILKY_WAY_KEY,
                 BuiltinObjects.SOL_KEY,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(0.61527929901423877327491785323111F, 0.75F, 2.0F, true)),
@@ -205,8 +205,8 @@ public class GCCelestialBodies {
         )));
 
         context.register(MARS, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
-                Component.translatable("planet.galacticraft.mars.name"),
-                Component.translatable("planet.galacticraft.mars.desc"),
+                Component.translatable(Translations.CelestialBody.MARS),
+                Component.translatable(Translations.CelestialBody.MARS_DESC),
                 BuiltinObjects.MILKY_WAY_KEY,
                 BuiltinObjects.SOL_KEY,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(1.8811610076670317634173055859803F, 1.25F, 0.1667F, true)),
@@ -221,8 +221,8 @@ public class GCCelestialBodies {
         )));
 
         context.register(ASTEROIDS, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
-                Component.translatable("planet.galacticraft.asteroids.name"),
-                Component.translatable("planet.galacticraft.asteroids.desc"),
+                Component.translatable(Translations.CelestialBody.ASTEROIDS),
+                Component.translatable(Translations.CelestialBody.ASTEROIDS_DESC),
                 BuiltinObjects.MILKY_WAY_KEY,
                 BuiltinObjects.SOL_KEY,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(45.0F, 1.375F, 0.0F, true)),
@@ -237,8 +237,8 @@ public class GCCelestialBodies {
         )));
 
         context.register(JUPITER, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
-                Component.translatable("planet.galacticraft.jupiter.name"),
-                Component.translatable("planet.galacticraft.jupiter.desc"),
+                Component.translatable(Translations.CelestialBody.JUPITER),
+                Component.translatable(Translations.CelestialBody.JUPITER_DESC),
                 BuiltinObjects.MILKY_WAY_KEY,
                 BuiltinObjects.SOL_KEY,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(11.861993428258488499452354874042F, 1.5F, Mth.PI, true)),
@@ -253,8 +253,8 @@ public class GCCelestialBodies {
         )));
 
         context.register(SATURN, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
-                Component.translatable("planet.galacticraft.saturn.name"),
-                Component.translatable("planet.galacticraft.saturn.desc"),
+                Component.translatable(Translations.CelestialBody.SATURN),
+                Component.translatable(Translations.CelestialBody.SATURN_DESC),
                 BuiltinObjects.MILKY_WAY_KEY,
                 BuiltinObjects.SOL_KEY,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(29.463307776560788608981380065717F, 1.75F, 5.45F, true)),
@@ -272,8 +272,8 @@ public class GCCelestialBodies {
         )));
 
         context.register(URANUS, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
-                Component.translatable("planet.galacticraft.uranus.name"),
-                Component.translatable("planet.galacticraft.uranus.desc"),
+                Component.translatable(Translations.CelestialBody.URANUS),
+                Component.translatable(Translations.CelestialBody.URANUS_DESC),
                 BuiltinObjects.MILKY_WAY_KEY,
                 BuiltinObjects.SOL_KEY,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(84.063526834611171960569550930997F, 2.0F, 1.38F, true)),
@@ -291,8 +291,8 @@ public class GCCelestialBodies {
         )));
 
         context.register(NEPTUNE, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
-                Component.translatable("planet.galacticraft.neptune.name"),
-                Component.translatable("planet.galacticraft.neptune.desc"),
+                Component.translatable(Translations.CelestialBody.NEPTUNE),
+                Component.translatable(Translations.CelestialBody.NEPTUNE_DESC),
                 BuiltinObjects.MILKY_WAY_KEY,
                 BuiltinObjects.SOL_KEY,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(164.84118291347207009857612267251F, 2.25F, 1.0F, true)),

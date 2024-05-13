@@ -16,7 +16,7 @@
     "galaxy": "galacticraft:milky_way",
     "gravity": 28.0,
     "luminance": 1.0,
-    "name": "star.galacticraft.sol.name",
+    "name": "star.galacticraft.sol",
     "photospheric_composition": {
       "composition": {
         "galacticraft:helium": 248500.0,

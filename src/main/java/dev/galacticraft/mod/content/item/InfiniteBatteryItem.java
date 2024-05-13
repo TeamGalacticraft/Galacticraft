@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -54,8 +55,8 @@ public class InfiniteBatteryItem extends Item implements EnergyStorage {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
-        tooltip.add(Component.translatable("tooltip.galacticraft.energy_remaining", Component.translatable("tooltip.galacticraft.infinite").setStyle(Constant.Text.Color.getRainbow(ticks))));
-        tooltip.add(Component.translatable("tooltip.galacticraft.creative_only").setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
+        tooltip.add(Component.translatable(Translations.Tooltip.ENERGY_REMAINING, Component.translatable(Translations.Tooltip.INFINITE).setStyle(Constant.Text.Color.getRainbow(ticks))));
+        tooltip.add(Component.translatable(Translations.Tooltip.CREATIVE_ONLY).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
         super.appendHoverText(stack, world, tooltip, context);
     }
 

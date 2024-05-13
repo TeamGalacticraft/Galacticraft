@@ -22,18 +22,19 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.RocketData;
+import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.api.rocket.part.RocketPartTypes;
 import dev.galacticraft.impl.rocket.RocketDataImpl;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
-import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -42,6 +43,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
@@ -111,30 +113,25 @@ public class RocketItem extends Item {
         if (Screen.hasShiftDown()) {
             if (tag.contains("color") && tag.contains("cone")) {
 //                tooltip.add(Component.translatable("tooltip.galacticraft.tier", tag.getInt("tier")).setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GRAY)));
-                tooltip.add(Component.translatable("tooltip.galacticraft.color"));
-                tooltip.add(Component.translatable("tooltip.galacticraft.red", tag.getInt("color") >> 16 & 0xFF).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
-                tooltip.add(Component.translatable("tooltip.galacticraft.green", tag.getInt("color") >> 8 & 0xFF).setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)));
-                tooltip.add(Component.translatable("tooltip.galacticraft.blue", tag.getInt("color") & 0xFF).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
-                tooltip.add(Component.translatable("tooltip.galacticraft.alpha", tag.getInt("color") >> 24 & 0xFF).setStyle(Style.EMPTY.withColor(ChatFormatting.WHITE)));
-                tooltip.add(Component.literal("-----").setStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)));
+                tooltip.add(Component.translatable(Translations.Ui.COLOR).append(": #" + Integer.toHexString(tag.getInt("color"))));
                 ResourceLocation id = new ResourceLocation(tag.getString("cone"));
-                tooltip.add(Component.translatable("tooltip.galacticraft.part_type.cone", Component.translatable("tooltip." + id.getNamespace() + ".cone." + id.getPath() + ".name")).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+                tooltip.add(RocketPartTypes.CONE.name.copy().append(" ").append(RocketPart.getName(ResourceKey.create(RocketRegistries.ROCKET_CONE, id))).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
                 id = new ResourceLocation(tag.getString("body"));
-                tooltip.add(Component.translatable("tooltip.galacticraft.part_type.body", Component.translatable("tooltip." + id.getNamespace() + ".body." + id.getPath() + ".name")).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+                tooltip.add(RocketPartTypes.BODY.name.copy().append(" ").append(RocketPart.getName(ResourceKey.create(RocketRegistries.ROCKET_BODY, id))).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
                 id = new ResourceLocation(tag.getString("fin"));
-                tooltip.add(Component.translatable("tooltip.galacticraft.part_type.fin", Component.translatable("tooltip." + id.getNamespace() + ".fin." + id.getPath() + ".name")).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
-                id = new ResourceLocation(tag.getString("body"));
-                tooltip.add(Component.translatable("tooltip.galacticraft.part_type.booster", Component.translatable("tooltip." + id.getNamespace() + ".booster." + id.getPath() + ".name")).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
-                id = new ResourceLocation(tag.getString("body"));
-                tooltip.add(Component.translatable("tooltip.galacticraft.part_type.engine", Component.translatable("tooltip." + id.getNamespace() + ".engine." + id.getPath() + ".name")).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+                tooltip.add(RocketPartTypes.FIN.name.copy().append(" ").append(RocketPart.getName(ResourceKey.create(RocketRegistries.ROCKET_FIN, id))).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+                id = new ResourceLocation(tag.getString("booster"));
+                tooltip.add(RocketPartTypes.BOOSTER.name.copy().append(" ").append(RocketPart.getName(ResourceKey.create(RocketRegistries.ROCKET_BOOSTER, id))).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+                id = new ResourceLocation(tag.getString("engine"));
+                tooltip.add(RocketPartTypes.ENGINE.name.copy().append(" ").append(RocketPart.getName(ResourceKey.create(RocketRegistries.ROCKET_ENGINE, id))).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
                 ListTag list = tag.getList("upgrades", Tag.TAG_STRING);
                 for (int i = 0; i < list.size(); i++) {
                     id = new ResourceLocation(list.getString(i));
-                    tooltip.add(Component.translatable("tooltip.galacticraft.part_type.upgrade", Component.translatable("tooltip." + id.getNamespace() + ".upgrade." + id.getPath() + ".name")).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+                    tooltip.add(RocketPartTypes.CONE.name.copy().append(" ").append(RocketPart.getName(ResourceKey.create(RocketRegistries.ROCKET_UPGRADE, id))).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
                 }
             }
         } else {
-            tooltip.add(Component.translatable("tooltip.galacticraft.press_shift").setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+            tooltip.add(Component.translatable(Translations.Tooltip.PRESS_SHIFT).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         }
     }
 }

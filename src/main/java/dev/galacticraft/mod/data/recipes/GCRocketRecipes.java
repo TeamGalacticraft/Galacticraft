@@ -60,7 +60,7 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ROCKET_FINS)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ROCKET_FIN)
                 .define('S', GCTags.COMPRESSED_STEEL)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
                 .pattern(" S ")

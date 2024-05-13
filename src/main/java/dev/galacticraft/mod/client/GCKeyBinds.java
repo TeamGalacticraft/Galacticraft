@@ -22,12 +22,13 @@
 
 package dev.galacticraft.mod.client;
 
+import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 
 public class GCKeyBinds {
-    public static final KeyMapping OPEN_ROCKET_INVENTORY = KeyBindingHelper.registerKeyBinding(new KeyMapping("key.galacticraft.rocket.inventory", GLFW.GLFW_KEY_F, "key.categories.inventory"));
+    public static final KeyMapping OPEN_ROCKET_INVENTORY = KeyBindingHelper.registerKeyBinding(new KeyMapping(Translations.Keybindings.ROCKET_INVENTORY, GLFW.GLFW_KEY_F, "key.categories.inventory"));
 
     public static void register() {
     }

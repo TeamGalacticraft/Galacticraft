@@ -47,6 +47,7 @@ import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.impl.universe.position.type.OrbitalCelestialPositionType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.data.gen.SatelliteChunkGenerator;
+import dev.galacticraft.mod.util.Translations;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -101,8 +102,8 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
         }
     };
     private static final GasComposition EMPTY_GAS_COMPOSITION = new GasComposition.Builder().build();
-    private static final Component NAME = Component.translatable("ui.galacticraft.satellite.name");
-    private static final Component DESCRIPTION = Component.translatable("ui.galacticraft.satellite.description");
+    private static final Component NAME = Component.translatable(Translations.CelestialBody.SATELLITE);
+    private static final Component DESCRIPTION = Component.translatable(Translations.CelestialBody.SATELLITE_DESC);
 
     protected SatelliteType(Codec<SatelliteConfig> codec) {
         super(codec);

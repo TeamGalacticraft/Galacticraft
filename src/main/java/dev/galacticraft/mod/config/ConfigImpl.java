@@ -27,6 +27,7 @@ import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.config.Config;
+import dev.galacticraft.mod.util.Translations;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder;
@@ -266,14 +267,14 @@ public class ConfigImpl implements Config {
 
             ConfigBuilder b = ConfigBuilder.create()
                     .setParentScreen(parent)
-                    .setTitle(Component.translatable(Constant.Config.TITLE))
+                    .setTitle(Component.translatable(Translations.Config.TITLE))
                     .setSavingRunnable(config::save);
 
-            SubCategoryBuilder dB = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Constant.Config.DEBUG));
+            SubCategoryBuilder dB = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.DEBUG));
 
             dB.add(new BooleanToggleBuilder(
-                    Component.translatable(Constant.Config.RESET),
-                    Component.translatable(Constant.Config.DEBUG_LOGGING),
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.DEBUG_LOGGING),
                     config.isDebugLogEnabled())
                     .setSaveConsumer(config::setDebugLog)
                     .setDefaultValue(false)
@@ -281,19 +282,19 @@ public class ConfigImpl implements Config {
             );
 
             dB.add(new BooleanToggleBuilder(
-                    Component.translatable(Constant.Config.RESET),
-                    Component.translatable(Constant.Config.HIDE_ALPHA_WARNING),
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.HIDE_ALPHA_WARNING),
                     config.isAlphaWarningHidden())
                     .setSaveConsumer(config::setAlphaWarningHidden)
                     .setDefaultValue(false)
                     .build()
             );
 
-            SubCategoryBuilder wires = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Constant.Config.WIRES));
+            SubCategoryBuilder wires = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.WIRES));
 
             wires.add(new LongFieldBuilder(
-                    Component.translatable(Constant.Config.RESET),
-                    Component.translatable(Constant.Config.WIRE_ENERGY_TRANSFER_LIMIT),
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.WIRE_ENERGY_TRANSFER_LIMIT),
                     config.wireTransferLimit())
                     .setSaveConsumer(config::setWireTransferLimit)
                     .setDefaultValue(480)
@@ -301,19 +302,19 @@ public class ConfigImpl implements Config {
             );
 
             wires.add(new LongFieldBuilder(
-                    Component.translatable(Constant.Config.RESET),
-                    Component.translatable(Constant.Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT),
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT),
                     config.heavyWireTransferLimit())
                     .setSaveConsumer(config::setHeavyWireTransferLimit)
                     .setDefaultValue(1440)
                     .build()
             );
 
-            SubCategoryBuilder machines = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Constant.Config.MACHINES));
+            SubCategoryBuilder machines = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.MACHINES));
 
             machines.add(new LongFieldBuilder(
-                    Component.translatable(Constant.Config.RESET),
-                    Component.translatable(Constant.Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE),
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE),
                     config.coalGeneratorEnergyProductionRate())
                     .setSaveConsumer(config::setCoalGeneratorEnergyProductionRate)
                     .setDefaultValue(120)
@@ -321,8 +322,8 @@ public class ConfigImpl implements Config {
             );
 
             machines.add(new LongFieldBuilder(
-                    Component.translatable(Constant.Config.RESET),
-                    Component.translatable(Constant.Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE),
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE),
                     config.solarPanelEnergyProductionRate())
                     .setSaveConsumer(config::setSolarPanelEnergyProductionRate)
                     .setDefaultValue(44)
@@ -330,8 +331,8 @@ public class ConfigImpl implements Config {
             );
 
             machines.add(new LongFieldBuilder(
-                    Component.translatable(Constant.Config.RESET),
-                    Component.translatable(Constant.Config.CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE),
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE),
                     config.circuitFabricatorEnergyConsumptionRate())
                     .setSaveConsumer(config::setCircuitFabricatorEnergyConsumptionRate)
                     .setDefaultValue(20)
@@ -339,8 +340,8 @@ public class ConfigImpl implements Config {
             );
 
             machines.add(new LongFieldBuilder(
-                    Component.translatable(Constant.Config.RESET),
-                    Component.translatable(Constant.Config.ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
                     config.electricCompressorEnergyConsumptionRate())
                     .setSaveConsumer(config::setElectricCompressorEnergyConsumptionRate)
                     .setDefaultValue(75)
@@ -348,8 +349,8 @@ public class ConfigImpl implements Config {
             );
 
             machines.add(new LongFieldBuilder(
-                    Component.translatable(Constant.Config.RESET),
-                    Component.translatable(Constant.Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE),
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE),
                     config.oxygenCollectorEnergyConsumptionRate())
                     .setSaveConsumer(config::setOxygenCollectorEnergyConsumptionRate)
                     .setDefaultValue(10)
@@ -357,8 +358,8 @@ public class ConfigImpl implements Config {
             );
 
             machines.add(new LongFieldBuilder(
-                    Component.translatable(Constant.Config.RESET),
-                    Component.translatable(Constant.Config.REFINERY_ENERGY_CONSUMPTION_RATE),
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.REFINERY_ENERGY_CONSUMPTION_RATE),
                     config.refineryEnergyConsumptionRate())
                     .setSaveConsumer(config::setRefineryEnergyConsumptionRate)
                     .setDefaultValue(60)
@@ -366,8 +367,8 @@ public class ConfigImpl implements Config {
             );
 
             machines.add(new LongFieldBuilder(
-                    Component.translatable(Constant.Config.RESET),
-                    Component.translatable(Constant.Config.ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE),
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE),
                     config.electricFurnaceEnergyConsumptionRate())
                     .setSaveConsumer(config::setElectricFurnaceEnergyConsumptionRate)
                     .setDefaultValue(20)
@@ -375,8 +376,8 @@ public class ConfigImpl implements Config {
             );
 
             machines.add(new LongFieldBuilder(
-                    Component.translatable(Constant.Config.RESET),
-                    Component.translatable(Constant.Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE),
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE),
                     config.energyStorageModuleStorageSize())
                     .setSaveConsumer(config::setEnergyStorageModuleStorageSize)
                     .setDefaultValue(500_000)
@@ -384,8 +385,8 @@ public class ConfigImpl implements Config {
             );
 
             machines.add(new LongFieldBuilder(
-                    Component.translatable(Constant.Config.RESET),
-                    Component.translatable(Constant.Config.ENERGY_STORAGE_SIZE),
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.ENERGY_STORAGE_SIZE),
                     config.machineEnergyStorageSize())
                     .setSaveConsumer(config::setMachineEnergyStorageSize)
                     .setDefaultValue(30_000)
@@ -394,8 +395,8 @@ public class ConfigImpl implements Config {
             );
 
             machines.add(new LongFieldBuilder(
-                    Component.translatable(Constant.Config.RESET),
-                    Component.translatable(Constant.Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
                     config.oxygenCompressorEnergyConsumptionRate())
                     .setSaveConsumer(config::setOxygenCompressorEnergyConsumptionRate)
                     .setDefaultValue(15)
@@ -404,8 +405,8 @@ public class ConfigImpl implements Config {
             );
 
             machines.add(new LongFieldBuilder(
-                    Component.translatable(Constant.Config.RESET),
-                    Component.translatable(Constant.Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE),
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE),
                     config.oxygenDecompressorEnergyConsumptionRate())
                     .setSaveConsumer(config::setOxygenDecompressorEnergyConsumptionRate)
                     .setDefaultValue(15)
@@ -413,14 +414,14 @@ public class ConfigImpl implements Config {
                     .build()
             );
 
-            SubCategoryBuilder skybox = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Constant.Config.SKYBOX));
+            SubCategoryBuilder skybox = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.SKYBOX));
 
-            SubCategoryBuilder lifeSupport = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Constant.Config.PLAYER_LIFE_SUPPORT));
+            SubCategoryBuilder lifeSupport = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.PLAYER_LIFE_SUPPORT));
 
             // TODO: If set to 0, disable the player oxygen system
             lifeSupport.add(new LongFieldBuilder(
-                    Component.translatable(Constant.Config.RESET),
-                    Component.translatable(Constant.Config.PLAYER_OXYGEN_CONSUMPTION_RATE),
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.PLAYER_OXYGEN_CONSUMPTION_RATE),
                     config.playerOxygenConsuptionRate())
                     .setSaveConsumer(config::setPlayerOxygenConsumptionRate)
                     .setDefaultValue(1)
@@ -429,10 +430,10 @@ public class ConfigImpl implements Config {
                     .build()
             );
 
-            b.getOrCreateCategory(Component.translatable(Constant.Config.DEBUG)).addEntry(dB.build());
-            b.getOrCreateCategory(Component.translatable(Constant.Config.ENERGY)).addEntry(wires.build()).addEntry(machines.build());
-            b.getOrCreateCategory(Component.translatable(Constant.Config.CLIENT)).addEntry(skybox.build());
-            b.getOrCreateCategory(Component.translatable(Constant.Config.PLAYER)).addEntry(lifeSupport.build());
+            b.getOrCreateCategory(Component.translatable(Translations.Config.DEBUG)).addEntry(dB.build());
+            b.getOrCreateCategory(Component.translatable(Translations.Config.ENERGY)).addEntry(wires.build()).addEntry(machines.build());
+            b.getOrCreateCategory(Component.translatable(Translations.Config.CLIENT)).addEntry(skybox.build());
+            b.getOrCreateCategory(Component.translatable(Translations.Config.PLAYER)).addEntry(lifeSupport.build());
 
             return b.build();
         }

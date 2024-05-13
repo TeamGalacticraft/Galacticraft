@@ -39,6 +39,7 @@ import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import dev.galacticraft.mod.network.packets.SelectPartPacket;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
+import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -413,13 +414,13 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
     }
 
     private enum Tab {
-        CONE(RocketPartTypes.CONE, GCRocketParts.TIER_1_CONE, Component.translatable("ui.galacticraft.cone")),
-        BODY(RocketPartTypes.BODY, GCRocketParts.TIER_1_BODY, Component.translatable("ui.galacticraft.body")),
-        FINS(RocketPartTypes.FIN, GCRocketParts.TIER_1_FIN, Component.translatable("ui.galacticraft.fins")),
-        BOOSTER(RocketPartTypes.BOOSTER, GCRocketParts.TIER_1_BOOSTER, Component.translatable("ui.galacticraft.booster")),
-        ENGINE(RocketPartTypes.ENGINE, GCRocketParts.TIER_1_ENGINE, Component.translatable("ui.galacticraft.engine")),
-        UPGRADE(RocketPartTypes.UPGRADE, GCRocketParts.STORAGE_UPGRADE, Component.translatable("ui.galacticraft.upgrade")),
-        COLOR(null, null, Component.translatable("ui.galacticraft.color"));
+        CONE(RocketPartTypes.CONE, GCRocketParts.TIER_1_CONE, Component.translatable(Translations.Ui.CONE)),
+        BODY(RocketPartTypes.BODY, GCRocketParts.TIER_1_BODY, Component.translatable(Translations.Ui.BODY)),
+        FINS(RocketPartTypes.FIN, GCRocketParts.TIER_1_FIN, Component.translatable(Translations.Ui.FINS)),
+        BOOSTER(RocketPartTypes.BOOSTER, GCRocketParts.TIER_1_BOOSTER, Component.translatable(Translations.Ui.BOOSTER)),
+        ENGINE(RocketPartTypes.ENGINE, GCRocketParts.TIER_1_ENGINE, Component.translatable(Translations.Ui.ENGINE)),
+        UPGRADE(RocketPartTypes.UPGRADE, GCRocketParts.STORAGE_UPGRADE, Component.translatable(Translations.Ui.UPGRADE)),
+        COLOR(null, null, Component.translatable(Translations.Ui.COLOR));
 
         private final RocketPartTypes type;
         private final ResourceKey<? extends RocketPart<?, ?>> part;

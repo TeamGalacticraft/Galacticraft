@@ -46,6 +46,7 @@ import dev.galacticraft.mod.particle.EntityParticleOption;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.util.FluidUtil;
+import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
@@ -261,7 +262,7 @@ public class RocketEntity extends Entity implements Rocket, ControllableEntity {
                         this.timeBeforeLaunch = getPreLaunchWait();
                         this.setLaunchStage(this.getLaunchStage().next());
                         if (getLaunchStage() == LaunchStage.WARNING) {
-                            ((ServerPlayer) this.getFirstPassenger()).sendSystemMessage(Component.translatable("chat.galacticraft.rocket.warning"), true);
+                            ((ServerPlayer) this.getFirstPassenger()).sendSystemMessage(Component.translatable(Translations.Chat.ROCKET_WARNING), true);
                         }
                     }
                 }
@@ -274,7 +275,6 @@ public class RocketEntity extends Entity implements Rocket, ControllableEntity {
             StorageUtil.extractAny(this.tank, Long.MAX_VALUE, tx);
             this.tank.insert(FluidVariant.of(GCFluids.FUEL), fuel, tx);
             tx.commit();
-            ;
         }
     }
 
@@ -488,7 +488,7 @@ public class RocketEntity extends Entity implements Rocket, ControllableEntity {
                     this.setLaunchStage(LaunchStage.IDLE);
 
                     if (passenger instanceof ServerPlayer player) {
-                        player.sendSystemMessage(Component.translatable("chat.galacticraft.rocket.no_fuel"), false);
+                        player.sendSystemMessage(Component.translatable(Translations.Ui.ROCKET_NO_FUEL), false);
                     }
                     return;
                 }

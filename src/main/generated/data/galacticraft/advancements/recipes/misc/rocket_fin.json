@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "galacticraft:rocket_fins"
+        "recipe": "galacticraft:rocket_fin"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "galacticraft:rocket_fins"
+      "galacticraft:rocket_fin"
     ]
   }
 }

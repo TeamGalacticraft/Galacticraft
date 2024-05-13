@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -93,7 +94,7 @@ public class OxygenTankItem extends Item {
     public void appendHoverText(ItemStack stack, Level world, List<Component> lines, TooltipFlag context) {
         StorageView<FluidVariant> storage = (StorageView<FluidVariant>) ContainerItemContext.withConstant(stack).find(FluidStorage.ITEM);
         assert storage != null;
-        lines.add(Component.translatable("tooltip.galacticraft.oxygen_remaining", storage.getAmount() + "/" + storage.getCapacity()).setStyle(Constant.Text.Color.getStorageLevelStyle(1.0 - ((double) storage.getAmount() / (double) storage.getCapacity()))));
+        lines.add(Component.translatable(Translations.Tooltip.OXYGEN_REMAINING, storage.getAmount() + "/" + storage.getCapacity()).setStyle(Constant.Text.Color.getStorageLevelStyle(1.0 - ((double) storage.getAmount() / (double) storage.getCapacity()))));
         super.appendHoverText(stack, world, lines, context);
     }
 

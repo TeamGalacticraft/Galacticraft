@@ -26,10 +26,11 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.impl.rocket.RocketDataImpl;
-import dev.galacticraft.mod.network.packets.FootprintRemovedPacket;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
+import dev.galacticraft.mod.network.packets.FootprintRemovedPacket;
+import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -82,7 +83,7 @@ public class GCEventHandlers {
         Level level = player.level();
         CelestialBody body = CelestialBody.getByDimension(level).orElse(null);
         if (body != null && level.getBlockState(sleepingPos).getBlock() instanceof BedBlock && !body.atmosphere().breathable()) {
-            player.sendSystemMessage(Component.translatable("chat.galacticraft.bed_fail"));
+            player.sendSystemMessage(Component.translatable(Translations.Chat.BED_FAIL));
             return Player.BedSleepingProblem.NOT_POSSIBLE_HERE;
         }
 

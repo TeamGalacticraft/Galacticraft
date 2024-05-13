@@ -25,6 +25,7 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.gui.widget.CheckboxButton;
 import dev.galacticraft.mod.screen.AirlockControllerMenu;
+import dev.galacticraft.mod.util.Translations;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -51,7 +52,7 @@ public class AirlockControllerScreen extends AbstractContainerScreen<AirlockCont
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
         graphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 0, 256, 256);
-        graphics.drawString(this.font, Component.translatable("ui.galacticraft.airlock.redstone_signal"), this.leftPos + 25, this.topPos + 23, ChatFormatting.DARK_GRAY.getColor(), false);
+        graphics.drawString(this.font, Component.translatable(Translations.Ui.AIRLOCK_REDSTONE_SIGNAL), this.leftPos + 25, this.topPos + 23, ChatFormatting.DARK_GRAY.getColor(), false);
     }
 
     @Override

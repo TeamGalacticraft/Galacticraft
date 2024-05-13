@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block;
 
+import dev.galacticraft.mod.util.Translations;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -41,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class GCBlock extends Block {
-    private static final Component PRESS_SHIFT = Component.translatable("tooltip.galacticraft.press_shift").withStyle(ChatFormatting.GRAY);
+    private static final Component PRESS_SHIFT = Component.translatable(Translations.Tooltip.PRESS_SHIFT).withStyle(ChatFormatting.GRAY);
 
     public GCBlock(Properties properties) {
         super(properties);

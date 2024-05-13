@@ -7,7 +7,7 @@
       "pressure": 3.0E-15,
       "temperature": 23.0
     },
-    "description": "planet.galacticraft.asteroids.desc",
+    "description": "planet.galacticraft.asteroids.description",
     "display": {
       "type": "galacticraft:spinning_icon",
       "config": {
@@ -21,7 +21,7 @@
     },
     "galaxy": "galacticraft:milky_way",
     "gravity": 0.166,
-    "name": "planet.galacticraft.asteroids.name",
+    "name": "planet.galacticraft.asteroids",
     "position": {
       "type": "galacticraft:orbital",
       "config": {

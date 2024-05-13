@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.util.Translations;
 import net.minecraft.Util;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -88,9 +89,9 @@ public class StandardWrenchItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> lines, TooltipFlag context) {
         if (Screen.hasShiftDown()) {
-            lines.add(Component.translatable("tooltip.galacticraft.standard_wrench").setStyle(Constant.Text.Color.GRAY_STYLE));
+            lines.add(Component.translatable(Translations.Tooltip.STANDARD_WRENCH).setStyle(Constant.Text.Color.GRAY_STYLE));
         } else {
-            lines.add(Component.translatable("tooltip.galacticraft.press_shift").setStyle(Constant.Text.Color.GRAY_STYLE));
+            lines.add(Component.translatable(Translations.Tooltip.PRESS_SHIFT).setStyle(Constant.Text.Color.GRAY_STYLE));
         }
     }
 }

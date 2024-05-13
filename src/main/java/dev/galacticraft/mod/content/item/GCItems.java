@@ -27,6 +27,7 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCRegistry;
 import dev.galacticraft.mod.content.GCRocketParts;
+import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -348,11 +349,11 @@ public class GCItems {
 
     // SMITHING TEMPLATES
     public static final Item TITANTIUM_UPGRADE_SMITHING_TEMPLATE = new SmithingTemplateItem(
-            Component.translatable(Constant.Text.TranslationKey.UPGRADE_TITANIUM_APPLIES_TO),
-            Component.translatable(Constant.Text.TranslationKey.UPGRADE_TITANIUM_INGREDIENTS),
-            Component.translatable(Constant.Text.TranslationKey.UPGRADE_TITANIUM_DESCRIPTION),
-            Component.translatable(Constant.Text.TranslationKey.UPGRADE_TITANIUM_BASE_SLOT_DESCRIPTION),
-            Component.translatable(Constant.Text.TranslationKey.UPGRADE_TITANIUM_ADDITIONS_SLOT_DESCRIPTON),
+            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_APPLIES_TO),
+            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_INGREDIENTS),
+            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_DESCRIPTION),
+            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_BASE_SLOT_DESCRIPTION),
+            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_ADDITIONS_SLOT_DESCRIPTON),
             List.of(new ResourceLocation("item/empty_armor_slot_helmet"),
                     new ResourceLocation("item/empty_armor_slot_chestplate"),
                     new ResourceLocation("item/empty_armor_slot_leggings"),
@@ -403,7 +404,7 @@ public class GCItems {
     // ROCKET PIECES
     public static final Item NOSE_CONE = ITEMS.register(Constant.Item.NOSE_CONE, new Item(new Item.Properties()));
     public static final Item HEAVY_NOSE_CONE = ITEMS.register(Constant.Item.HEAVY_NOSE_CONE, new Item(new Item.Properties()));
-    public static final Item ROCKET_FINS = ITEMS.register(Constant.Item.ROCKET_FINS, new Item(new Item.Properties()));
+    public static final Item ROCKET_FIN = ITEMS.register(Constant.Item.ROCKET_FIN, new Item(new Item.Properties()));
     public static final Item ROCKET_ENGINE = ITEMS.register(Constant.Item.ROCKET_ENGINE, new Item(new Item.Properties()));
 
     // SCHEMATICS

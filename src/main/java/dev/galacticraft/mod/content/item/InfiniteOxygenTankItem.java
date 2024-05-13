@@ -25,6 +25,7 @@ package dev.galacticraft.mod.content.item;
 import com.google.common.collect.Iterators;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
@@ -65,8 +66,8 @@ public class InfiniteOxygenTankItem extends Item implements Storage<FluidVariant
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
         super.appendHoverText(stack, world, tooltip, context);
-        tooltip.add(Component.translatable("tooltip.galacticraft.oxygen_remaining", Component.translatable("tooltip.galacticraft.infinite").setStyle(Constant.Text.Color.getRainbow(this.ticks))));
-        tooltip.add(Component.translatable("tooltip.galacticraft.creative_only").setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
+        tooltip.add(Component.translatable(Translations.Tooltip.OXYGEN_REMAINING, Component.translatable(Translations.Tooltip.INFINITE).setStyle(Constant.Text.Color.getRainbow(this.ticks))));
+        tooltip.add(Component.translatable(Translations.Tooltip.CREATIVE_ONLY).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
     }
 
     @Override

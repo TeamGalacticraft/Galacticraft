@@ -15,14 +15,14 @@
         "left": [
           {
             "ingredient": {
-              "item": "galacticraft:rocket_fins"
+              "item": "galacticraft:rocket_fin"
             },
             "x": -18,
             "y": 0
           },
           {
             "ingredient": {
-              "item": "galacticraft:rocket_fins"
+              "item": "galacticraft:rocket_fin"
             },
             "x": -18,
             "y": 18
@@ -31,14 +31,14 @@
         "right": [
           {
             "ingredient": {
-              "item": "galacticraft:rocket_fins"
+              "item": "galacticraft:rocket_fin"
             },
             "x": 0,
             "y": 0
           },
           {
             "ingredient": {
-              "item": "galacticraft:rocket_fins"
+              "item": "galacticraft:rocket_fin"
             },
             "x": 0,
             "y": 18

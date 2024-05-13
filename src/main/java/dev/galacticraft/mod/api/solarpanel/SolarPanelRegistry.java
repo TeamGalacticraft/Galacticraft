@@ -24,6 +24,7 @@ package dev.galacticraft.mod.api.solarpanel;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
+import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -40,10 +41,10 @@ import java.util.Objects;
 public class SolarPanelRegistry {
     private static final WorldLightSources DEFAULT_LIGHT_SOURCE = new WorldLightSources(
             Constant.ScreenTexture.DEFAULT_LIGHT_SOURCES,
-            new LightSource(Component.translatable("ui.galacticraft.machine.solar_panel.source.sun").setStyle(Constant.Text.Color.YELLOW_STYLE), 1.0, 1.0),
-            new LightSource(Component.translatable("ui.galacticraft.machine.solar_panel.source.moon").setStyle(Constant.Text.Color.GRAY_STYLE), 0.07, 1.0),
-            new LightSource(Component.translatable("ui.galacticraft.machine.solar_panel.source.rain").setStyle(Constant.Text.Color.BLUE_STYLE), 1.0, 2.0),
-            new LightSource(Component.translatable("ui.galacticraft.machine.solar_panel.source.unknown").setStyle(Constant.Text.Color.WHITE_STYLE), 0.0, 1.0));
+            new LightSource(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_SUN).setStyle(Constant.Text.Color.YELLOW_STYLE), 1.0, 1.0),
+            new LightSource(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_MOON).setStyle(Constant.Text.Color.GRAY_STYLE), 0.07, 1.0),
+            new LightSource(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_RAIN).setStyle(Constant.Text.Color.BLUE_STYLE), 1.0, 2.0),
+            new LightSource(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_NONE).setStyle(Constant.Text.Color.WHITE_STYLE), 0.0, 1.0));
     private static final Map<ResourceKey<Level>, WorldLightSources> LIGHT_SOURCES = new HashMap<>();
     private static final Map<BlockEntityType<? extends SolarPanel>, ResourceLocation> SOLAR_PANEL_TEXTURES = new HashMap<>();
 

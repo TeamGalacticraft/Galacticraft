@@ -27,6 +27,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.storage.PlaceholderItemStorage;
+import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -47,7 +48,7 @@ public class GCCreativeModeTabs {
     public static final CreativeModeTab ITEMS_GROUP = FabricItemGroup
             .builder()
             .icon(() -> new ItemStack(GCItems.CANVAS))
-            .title(Component.translatable("itemGroup.galacticraft.items"))
+            .title(Component.translatable(Translations.ItemGroup.ITEMS))
             .displayItems((parameters, output) -> { // todo: add rockets here
                 // GEAR
                 output.accept(OXYGEN_MASK);
@@ -185,7 +186,7 @@ public class GCCreativeModeTabs {
                 output.accept(NOSE_CONE);
                 output.accept(HEAVY_NOSE_CONE);
 
-                output.accept(ROCKET_FINS);
+                output.accept(ROCKET_FIN);
                 output.accept(ROCKET_ENGINE);
 
                 // SCHEMATICS
@@ -246,7 +247,7 @@ public class GCCreativeModeTabs {
     public static final CreativeModeTab BLOCKS_GROUP = FabricItemGroup
             .builder()
             .icon(() -> new ItemStack(GCItems.MOON_TURF))
-            .title(Component.translatable("itemGroup.galacticraft.blocks"))
+            .title(Component.translatable(Translations.ItemGroup.BLOCKS))
             .displayItems((parameters, output) -> {
                 // DECORATION BLOCKS
                 for (GCBlockRegistry.DecorationSet decorationSet : GCBlocks.BLOCKS.getDecorations()) {
@@ -414,7 +415,7 @@ public class GCCreativeModeTabs {
     public static final CreativeModeTab MACHINES_GROUP = FabricItemGroup
             .builder()
             .icon(() -> new ItemStack(GCItems.COAL_GENERATOR))
-            .title(Component.translatable("itemGroup.galacticraft.machines"))
+            .title(Component.translatable(Translations.ItemGroup.MACHINES))
             .displayItems((parameters, output) -> {
                 output.accept(CIRCUIT_FABRICATOR);
                 output.accept(COMPRESSOR);

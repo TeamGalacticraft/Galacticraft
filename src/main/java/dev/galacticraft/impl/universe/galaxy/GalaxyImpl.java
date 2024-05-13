@@ -30,6 +30,7 @@ import dev.galacticraft.impl.universe.display.config.EmptyCelestialDisplayConfig
 import dev.galacticraft.impl.universe.display.type.EmptyCelestialDisplayType;
 import dev.galacticraft.impl.universe.position.config.StaticCelestialPositionConfig;
 import dev.galacticraft.impl.universe.position.type.StaticCelestialPositionType;
+import dev.galacticraft.mod.util.Translations;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -50,8 +51,8 @@ public record GalaxyImpl(@NotNull MutableComponent name,
     @Contract(" -> new")
     public static @NotNull Galaxy createMilkyWay() {
         return Galaxy.create(
-                Component.translatable("galaxy.galacticraft.milky_way.name"),
-                Component.translatable("galaxy.galacticraft.milky_way.description"),
+                Component.translatable(Translations.Galaxy.MILKY_WAY),
+                Component.translatable(Translations.Galaxy.MILKY_WAY_DESCRIPTION),
                 StaticCelestialPositionType.INSTANCE.configure(new StaticCelestialPositionConfig(0, 0)),
                 EmptyCelestialDisplayType.INSTANCE.configure(EmptyCelestialDisplayConfig.INSTANCE)
         );

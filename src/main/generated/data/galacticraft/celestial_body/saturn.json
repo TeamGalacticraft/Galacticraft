@@ -7,7 +7,7 @@
       "pressure": 3.0E-15,
       "temperature": 23.0
     },
-    "description": "planet.galacticraft.saturn.desc",
+    "description": "planet.galacticraft.saturn.description",
     "display": {
       "type": "galacticraft:icon",
       "config": {
@@ -32,7 +32,7 @@
     },
     "galaxy": "galacticraft:milky_way",
     "gravity": 0.166,
-    "name": "planet.galacticraft.saturn.name",
+    "name": "planet.galacticraft.saturn",
     "position": {
       "type": "galacticraft:orbital",
       "config": {

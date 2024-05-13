@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "galacticraft:thermal_cloth_t2"
+        "recipe": "galacticraft:isothermal_fabric"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "galacticraft:thermal_cloth_t2"
+      "galacticraft:isothermal_fabric"
     ]
   }
 }

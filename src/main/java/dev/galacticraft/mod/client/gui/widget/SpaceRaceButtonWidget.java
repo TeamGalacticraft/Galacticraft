@@ -23,11 +23,11 @@
 package dev.galacticraft.mod.client.gui.widget;
 
 import dev.galacticraft.mod.client.gui.screen.ingame.SpaceRaceScreen;
+import dev.galacticraft.mod.util.Translations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
 import java.util.function.Supplier;
@@ -64,7 +64,7 @@ public class SpaceRaceButtonWidget extends Button {
         graphics.hLine(x, screenWidth, y, 0xFF000000);
         graphics.vLine(x, screenHeight, y, 0xFF000000);
 
-        graphics.drawCenteredString(textRenderer, I18n.get("ui.galacticraft.space_race_manager.button"), x + buttonWidth / 2, y + textYOffset, 0xFFFFFFFF);
-        graphics.drawCenteredString(textRenderer, I18n.get("ui.galacticraft.space_race_manager.button_2"), x + buttonWidth / 2, y + textYOffset + lineHeight + spaceBetweenLines, 0xFFFFFFFF);
+        graphics.drawCenteredString(textRenderer, Component.translatable(Translations.SpaceRace.BUTTON), x + buttonWidth / 2, y + textYOffset, 0xFFFFFFFF);
+        graphics.drawCenteredString(textRenderer, Component.translatable(Translations.SpaceRace.BUTTON_2), x + buttonWidth / 2, y + textYOffset + lineHeight + spaceBetweenLines, 0xFFFFFFFF);
     }
 }
