@@ -28,9 +28,6 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public interface Schematic {
     @Nullable ResourceKey<? extends RocketPart<?, ?>> getPart(@NotNull ItemStack stack);
 }

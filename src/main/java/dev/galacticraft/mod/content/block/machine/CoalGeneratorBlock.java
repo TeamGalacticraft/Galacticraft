@@ -35,9 +35,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class CoalGeneratorBlock extends MachineBlock<CoalGeneratorBlockEntity> {
     public CoalGeneratorBlock(Properties settings) {
         super(settings, Constant.id(Constant.Block.COAL_GENERATOR));

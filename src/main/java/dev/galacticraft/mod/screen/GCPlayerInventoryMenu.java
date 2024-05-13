@@ -44,15 +44,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCPlayerInventoryMenu extends AbstractContainerMenu {
     private static final ResourceLocation[] EMPTY_ARMOR_SLOT_IDS = new ResourceLocation[]{
-            new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.THERMAL_BOOTS),
-            new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.THERMAL_PANTS),
-            new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.THERMAL_CHEST),
-            new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.THERMAL_HEAD)
+            Constant.id(Constant.SlotSprite.THERMAL_BOOTS),
+            Constant.id(Constant.SlotSprite.THERMAL_PANTS),
+            Constant.id(Constant.SlotSprite.THERMAL_CHEST),
+            Constant.id(Constant.SlotSprite.THERMAL_HEAD)
     };
     private static final EquipmentSlot[] EQUIPMENT_SLOT_ORDER = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     public static final int OXYGEN_TANK_1_SLOT = 4;
@@ -154,7 +151,7 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
         @Nullable
         @Override
         public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-            return Pair.of(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Constant.MOD_ID, Constant.SlotSprite.OXYGEN_TANK));
+            return Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.id(Constant.SlotSprite.OXYGEN_TANK));
         }
     }
 

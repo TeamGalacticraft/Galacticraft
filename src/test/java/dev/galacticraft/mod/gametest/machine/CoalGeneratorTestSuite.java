@@ -37,9 +37,6 @@ import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @TestSuite("coal_generator")
 public final class CoalGeneratorTestSuite extends MachineGameTest<CoalGeneratorBlockEntity> {
     public CoalGeneratorTestSuite() {

@@ -34,9 +34,6 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class CrudeOilBlock extends LiquidBlock {
     public CrudeOilBlock(FlowingFluid fluid, Properties settings) {
         super(fluid, settings);

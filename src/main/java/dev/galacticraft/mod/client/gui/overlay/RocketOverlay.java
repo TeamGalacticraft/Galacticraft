@@ -39,7 +39,7 @@ import net.minecraft.world.entity.player.Player;
  * Displays the rocket's progress to the left of the screen
  */
 public class RocketOverlay {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/gui/overworld_rocket_gui.png");
+    private static final ResourceLocation TEXTURE = Constant.id("textures/gui/overworld_rocket_gui.png");
     private static ResourceLocation playerHead;
 
     /**

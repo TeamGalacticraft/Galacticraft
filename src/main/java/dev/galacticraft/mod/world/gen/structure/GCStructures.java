@@ -53,9 +53,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.Map;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCStructures {
     public static final class Moon {
         public static final ResourceKey<Structure> RUINS = key("moon_ruins");

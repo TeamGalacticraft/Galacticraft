@@ -46,9 +46,6 @@ import team.reborn.energy.api.EnergyStorage;
 
 import java.util.ArrayList;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class HeavyAluminumWireBlock extends WireBlock {
     // If we start at 8,8,8 and subtract/add to/from 8, we do operations starting from the center.
     private static final int OFFSET = 2;

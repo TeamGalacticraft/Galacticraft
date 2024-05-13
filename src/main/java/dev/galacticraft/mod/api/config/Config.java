@@ -22,9 +22,6 @@
 
 package dev.galacticraft.mod.api.config;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public interface Config {
     boolean isAlphaWarningHidden();
 

@@ -30,14 +30,10 @@ import net.minecraft.client.model.SpiderModel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.EyesLayer;
-import net.minecraft.resources.ResourceLocation;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Environment(EnvType.CLIENT)
 public class EvolvedSpiderEyesRenderLayer<T extends EvolvedSpiderEntity, M extends SpiderModel<T>> extends EyesLayer<T, M> {
-    private static final RenderType LAYER = RenderType.eyes(new ResourceLocation(Constant.MOD_ID, "textures/entity/evolved/spider_eyes.png"));
+    private static final RenderType LAYER = RenderType.eyes(Constant.id("textures/entity/evolved/spider_eyes.png"));
 
     public EvolvedSpiderEyesRenderLayer(RenderLayerParent<T, M> featureRendererContext) {
         super(featureRendererContext);

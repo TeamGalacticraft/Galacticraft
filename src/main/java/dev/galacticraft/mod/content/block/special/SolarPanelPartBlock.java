@@ -44,9 +44,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class SolarPanelPartBlock extends BaseEntityBlock {
     public static final MapCodec<SolarPanelPartBlock> CODEC = simpleCodec(SolarPanelPartBlock::new);
     private static final VoxelShape POLE_SHAPE = box(6, 0, 6, 10, 16, 10);

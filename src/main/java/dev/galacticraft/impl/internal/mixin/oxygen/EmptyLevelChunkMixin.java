@@ -27,9 +27,6 @@ import dev.galacticraft.impl.internal.accessor.ChunkOxygenSyncer;
 import net.minecraft.world.level.chunk.EmptyLevelChunk;
 import org.spongepowered.asm.mixin.Mixin;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Mixin(EmptyLevelChunk.class)
 public abstract class EmptyLevelChunkMixin implements ChunkOxygenSyncer, ChunkOxygenAccessor {
     @Override

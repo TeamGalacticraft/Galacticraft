@@ -27,9 +27,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.level.Level;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class EvolvedZombieEntity extends Zombie {
     public EvolvedZombieEntity(EntityType<? extends EvolvedZombieEntity> entityType, Level world) {
         super(entityType, world);

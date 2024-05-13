@@ -25,9 +25,6 @@ package dev.galacticraft.api.accessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.chunk.LevelChunk;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public interface LevelOxygenAccessor {
     /**
      * Returns whether the supplied position in this world is breathable for entities

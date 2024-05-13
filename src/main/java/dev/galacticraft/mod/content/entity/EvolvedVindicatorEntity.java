@@ -26,9 +26,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Vindicator;
 import net.minecraft.world.level.Level;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class EvolvedVindicatorEntity extends Vindicator {
     public EvolvedVindicatorEntity(EntityType<? extends EvolvedVindicatorEntity> entityType, Level world) {
         super(entityType, world);

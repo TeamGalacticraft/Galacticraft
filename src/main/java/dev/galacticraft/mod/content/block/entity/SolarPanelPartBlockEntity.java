@@ -29,9 +29,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class SolarPanelPartBlockEntity extends BlockEntity implements MultiBlockPart {
     public BlockPos basePos = BlockPos.ZERO;
 

@@ -47,9 +47,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class LunarCaveCarver extends CaveWorldCarver {
     public LunarCaveCarver(Codec<CaveCarverConfiguration> codec) {
         super(codec);

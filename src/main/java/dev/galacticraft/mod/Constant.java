@@ -38,9 +38,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public interface Constant {
     String MOD_ID = "galacticraft";
     String COMMON_NAMESPACE = "c";
@@ -298,7 +295,7 @@ public interface Constant {
         String LIQUID_OXYGEN = "liquid_oxygen";
 
         static ResourceLocation getId(String s) {
-            return new ResourceLocation(Constant.MOD_ID, "block/" + s);
+            return Constant.id("block/" + s);
         }
     }
 
@@ -731,7 +728,7 @@ public interface Constant {
 
     @ApiStatus.Internal
     interface Misc {
-        ResourceLocation INVALID = new ResourceLocation(Constant.MOD_ID, "invalid");
+        ResourceLocation INVALID = Constant.id("invalid");
         ResourceLocation EMPTY = new ResourceLocation("empty");
         Direction[] DIRECTIONS = Direction.values();
         Direction[] HORIZONTALS = {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
@@ -743,7 +740,6 @@ public interface Constant {
 
     @ApiStatus.Internal
     interface Mixin {
-        String STRUCTURE_POOL_DEBUG = "StructurePoolGeneratorMixin";
         String DATAGEN_SKIP_README = "HashCacheMixin";
     }
 

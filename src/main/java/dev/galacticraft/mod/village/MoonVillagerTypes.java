@@ -25,20 +25,16 @@ package dev.galacticraft.mod.village;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.fabricmc.fabric.api.object.builder.v1.villager.VillagerTypeHelper;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.npc.VillagerType;
 
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class MoonVillagerTypes {
     public static final List<VillagerType> MOON_VILLAGER_TYPE_REGISTRY = new LinkedList<>();
 
-    public static final VillagerType MOON_HIGHLANDS = VillagerTypeHelper.register(new ResourceLocation(Constant.MOD_ID, "moon_highlands"));
-//    public static final VillagerType MOON_HIGHLANDS_ROCKS = VillagerTypeHelper.register(new ResourceLocation(Constant.MOD_ID, "moon_highlands_edge"));
+    public static final VillagerType MOON_HIGHLANDS = VillagerTypeHelper.register(Constant.id("moon_highlands"));
+//    public static final VillagerType MOON_HIGHLANDS_ROCKS = VillagerTypeHelper.register(Constant.id("moon_highlands_edge"));
 
     public static void register() {
         VillagerType.BY_BIOME.put(GCBiomes.Moon.LUNAR_HIGHLANDS, MOON_HIGHLANDS);

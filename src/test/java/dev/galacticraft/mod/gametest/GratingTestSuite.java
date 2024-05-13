@@ -39,8 +39,6 @@ import net.minecraft.world.level.material.Fluids;
 /**
  * Grating tests.
  * FIXME: Currently custom fluids are broken (blocks are loaded before all fluids are registered)
- *
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
  */
 public class GratingTestSuite implements GalacticraftGameTest {
     @GameTest(template = EMPTY_STRUCTURE)

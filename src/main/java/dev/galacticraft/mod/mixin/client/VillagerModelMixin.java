@@ -45,9 +45,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.NoSuchElementException;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Mixin(VillagerModel.class)
 @Environment(EnvType.CLIENT)
 public abstract class VillagerModelMixin<T extends Entity> {

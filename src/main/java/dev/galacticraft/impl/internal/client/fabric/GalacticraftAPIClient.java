@@ -48,7 +48,7 @@ public class GalacticraftAPIClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         Constant.LOGGER.info("Loaded client module");
-        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "research_update"), (client, networkHandler, buffer, sender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(Constant.id("research_update"), (client, networkHandler, buffer, sender) -> {
             int len = buffer.readVarInt();
             boolean add = buffer.readBoolean();
             ResourceLocation[] ids = new ResourceLocation[len];
@@ -57,18 +57,18 @@ public class GalacticraftAPIClient implements ClientModInitializer {
             }
             client.execute(() -> ((ClientResearchAccessor) Objects.requireNonNull(client.player)).galacticraft$updateResearch(add, ids));
         });
-        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "add_satellite"), (client, networkHandler, buffer, sender) -> ((SatelliteAccessor) networkHandler).galacticraft$addSatellite(buffer.readResourceLocation(), new CelestialBody<>(SatelliteType.INSTANCE, SatelliteConfig.CODEC.decode(NbtOps.INSTANCE, buffer.readNbt()).get().orThrow().getFirst())));
-        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "remove_satellite"), (client, networkHandler, buffer, sender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(Constant.id("add_satellite"), (client, networkHandler, buffer, sender) -> ((SatelliteAccessor) networkHandler).galacticraft$addSatellite(buffer.readResourceLocation(), new CelestialBody<>(SatelliteType.INSTANCE, SatelliteConfig.CODEC.decode(NbtOps.INSTANCE, buffer.readNbt()).get().orThrow().getFirst())));
+        ClientPlayNetworking.registerGlobalReceiver(Constant.id("remove_satellite"), (client, networkHandler, buffer, sender) -> {
             FriendlyByteBuf buf = new FriendlyByteBuf(buffer.copy());
             ((SatelliteAccessor) networkHandler).galacticraft$removeSatellite(buf.readResourceLocation());
         });
-        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "oxygen_update"), (client, handler, buf, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(Constant.id("oxygen_update"), (client, handler, buf, responseSender) -> {
             int x = buf.readInt();
             int y = buf.readInt();
             ((ChunkOxygenSyncer) handler.getLevel().getChunk(x, y)).galacticraft$readOxygenUpdate(buf);
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "gear_inv_sync"), (client, handler, buf, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(Constant.id("gear_inv_sync"), (client, handler, buf, responseSender) -> {
             int entity = buf.readInt();
             ItemStack[] stacks = new ItemStack[buf.readInt()];
             for (int i = 0; i < stacks.length; i++) {

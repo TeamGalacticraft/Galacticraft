@@ -36,14 +36,14 @@ import net.minecraft.world.item.Items;
 import java.util.Objects;
 
 public class GalacticraftRocketPartRenderers {
-    private static final ResourceLocation DEFAULT_CONE = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_cone_basic.json");
-    private static final ResourceLocation ADVANCED_CONE = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_cone_advanced.json");
-    private static final ResourceLocation SLOPED_CONE = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_cone_sloped.json");
-    private static final ResourceLocation DEFAULT_BODY = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_body.json");
-    private static final ResourceLocation DEFAULT_FIN = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_fins.json");
-    private static final ResourceLocation DEFAULT_ENGINE = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_engine.json");
-    private static final ResourceLocation BOOSTER_TIER_1 = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_thruster_tier_1.json");
-    private static final ResourceLocation BOOSTER_TIER_2 = new ResourceLocation(Constant.MOD_ID, "models/misc/rocket_thruster_tier_2.json");
+    private static final ResourceLocation DEFAULT_CONE = Constant.id("models/misc/rocket_cone_basic.json");
+    private static final ResourceLocation ADVANCED_CONE = Constant.id("models/misc/rocket_cone_advanced.json");
+    private static final ResourceLocation SLOPED_CONE = Constant.id("models/misc/rocket_cone_sloped.json");
+    private static final ResourceLocation DEFAULT_BODY = Constant.id("models/misc/rocket_body.json");
+    private static final ResourceLocation DEFAULT_FIN = Constant.id("models/misc/rocket_fins.json");
+    private static final ResourceLocation DEFAULT_ENGINE = Constant.id("models/misc/rocket_engine.json");
+    private static final ResourceLocation BOOSTER_TIER_1 = Constant.id("models/misc/rocket_thruster_tier_1.json");
+    private static final ResourceLocation BOOSTER_TIER_2 = Constant.id("models/misc/rocket_thruster_tier_2.json");
 
     public static void register() {
         RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(Minecraft.getInstance().getModelManager().getModel(DEFAULT_CONE))), Sheets::translucentCullBlockSheet));

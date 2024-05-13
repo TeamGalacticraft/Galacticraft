@@ -28,7 +28,6 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.players.PlayerList;
@@ -40,9 +39,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Collection;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Mixin(PlayerList.class)
 public abstract class PlayerListMixin {
     @Inject(method = "placeNewPlayer", at = @At("RETURN"))
@@ -57,10 +53,10 @@ public abstract class PlayerListMixin {
 
         Collection<ServerPlayer> tracking = PlayerLookup.tracking(player);
         if (!tracking.contains(player)) {
-            ServerPlayNetworking.send(player, new ResourceLocation(Constant.MOD_ID, "gear_inv_sync"), buf);
+            ServerPlayNetworking.send(player, Constant.id("gear_inv_sync"), buf);
         }
         for (ServerPlayer pl : tracking) {
-            ServerPlayNetworking.send(pl, new ResourceLocation(Constant.MOD_ID, "gear_inv_sync"), PacketByteBufs.copy(buf));
+            ServerPlayNetworking.send(pl, Constant.id("gear_inv_sync"), PacketByteBufs.copy(buf));
         }
     }
 }

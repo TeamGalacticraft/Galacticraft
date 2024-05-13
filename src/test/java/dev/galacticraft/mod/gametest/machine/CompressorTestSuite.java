@@ -38,9 +38,6 @@ import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @TestSuite("compressor")
 public final class CompressorTestSuite extends RecipeGameTest<CraftingContainer, CompressingRecipe, CompressorBlockEntity> {
     public CompressorTestSuite() {

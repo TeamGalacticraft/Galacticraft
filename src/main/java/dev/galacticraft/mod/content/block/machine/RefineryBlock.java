@@ -31,9 +31,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class RefineryBlock extends MachineBlock<RefineryBlockEntity> {
     public RefineryBlock(Properties settings) {
         super(settings, Constant.id(Constant.Block.REFINERY));

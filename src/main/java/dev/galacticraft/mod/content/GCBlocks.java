@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.content;
 
 import dev.galacticraft.machinelib.api.block.MachineBlock;
-import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.block.decoration.GratingBlock;
 import dev.galacticraft.mod.content.block.decoration.LightPanelBlock;
 import dev.galacticraft.mod.content.block.decoration.LunarCartographyTableBlock;
@@ -58,9 +58,6 @@ import net.minecraft.world.level.material.PushReaction;
 
 import java.util.function.ToIntFunction;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @SuppressWarnings("unused")
 public class GCBlocks {
     public static final GCBlockRegistry BLOCKS = new GCBlockRegistry();

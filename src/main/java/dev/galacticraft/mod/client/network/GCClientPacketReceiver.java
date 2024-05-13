@@ -43,8 +43,7 @@ import java.util.Objects;
 
 /**
  * Handles client-bound (S2C) packets
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
+= */
 @Environment(EnvType.CLIENT)
 public class GCClientPacketReceiver {
     public static void register() {

@@ -38,9 +38,6 @@ import team.reborn.energy.api.base.SimpleEnergyItem;
 
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class BatteryItem extends Item implements SimpleEnergyItem {
     private final long capacity;
     private final long transfer;

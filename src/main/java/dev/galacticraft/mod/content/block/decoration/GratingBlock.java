@@ -46,9 +46,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GratingBlock extends Block implements FluidLoggable {
     @VisibleForTesting
     public static final EnumProperty<State> STATE = EnumProperty.create("state", State.class);

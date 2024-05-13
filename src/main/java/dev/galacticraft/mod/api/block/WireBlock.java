@@ -41,9 +41,6 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public abstract class WireBlock extends Block implements EntityBlock {
     public WireBlock(Properties settings) {
         super(settings.pushReaction(PushReaction.BLOCK));

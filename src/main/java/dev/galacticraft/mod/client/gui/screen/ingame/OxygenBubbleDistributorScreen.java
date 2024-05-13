@@ -41,9 +41,6 @@ import net.minecraft.world.entity.player.Inventory;
 
 import java.text.DecimalFormat;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDistributorBlockEntity, OxygenBubbleDistributorMenu> {
     private static final DecimalFormat FORMAT = new DecimalFormat();
     private final EditBox textField;

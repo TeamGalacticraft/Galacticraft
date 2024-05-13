@@ -35,9 +35,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Environment(EnvType.CLIENT)
 public class CompressorScreen extends MachineScreen<CompressorBlockEntity, CompressorMenu> {
     private static final int PROGRESS_U = 204;

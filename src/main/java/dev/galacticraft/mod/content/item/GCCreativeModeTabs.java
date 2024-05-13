@@ -37,7 +37,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -437,8 +436,8 @@ public class GCCreativeModeTabs {
             }).build();
 
     public static void register() {
-        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, new ResourceLocation(Constant.MOD_ID, Constant.Item.ITEM_GROUP), ITEMS_GROUP);
-        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, new ResourceLocation(Constant.MOD_ID, Constant.Block.ITEM_GROUP_BLOCKS), BLOCKS_GROUP);
-        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, new ResourceLocation(Constant.MOD_ID, Constant.Block.ITEM_GROUP_MACHINES), MACHINES_GROUP);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Item.ITEM_GROUP), ITEMS_GROUP);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Block.ITEM_GROUP_BLOCKS), BLOCKS_GROUP);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Block.ITEM_GROUP_MACHINES), MACHINES_GROUP);
     }
 }

@@ -37,9 +37,6 @@ import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Mixin(LanternBlock.class)
 public abstract class LanternBlockMixin extends Block {
     public LanternBlockMixin(Properties settings) {

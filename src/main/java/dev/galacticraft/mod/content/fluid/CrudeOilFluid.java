@@ -31,9 +31,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.material.Fluid;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public abstract class CrudeOilFluid extends BasicFluid {
     protected CrudeOilFluid() {
         super(false, true, 2, 1, 30, 100);

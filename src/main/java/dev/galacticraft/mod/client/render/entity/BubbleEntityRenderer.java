@@ -44,12 +44,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Environment(EnvType.CLIENT)
 public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
-    private static final ResourceLocation MODEL = new ResourceLocation(Constant.MOD_ID, "models/misc/sphere.obj");
+    private static final ResourceLocation MODEL = Constant.id("models/misc/sphere.obj");
     public static BakedModel bubbleModel;
 
     public BubbleEntityRenderer(EntityRendererProvider.Context context) {
@@ -79,7 +76,7 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
         matrices.pushPose();
         matrices.translate(0.5F, 1.0F, 0.5F);
         matrices.scale((float) size, (float) size, (float) size);
-        VertexConsumer consumer = vertexConsumers.getBuffer(RenderType.entityTranslucentEmissive(new ResourceLocation(Constant.MOD_ID, "textures/model/sphere.png")));
+        VertexConsumer consumer = vertexConsumers.getBuffer(RenderType.entityTranslucentEmissive(Constant.id("textures/model/sphere.png")));
 //        for (BakedQuad quad : bubbleModel.getQuads(null, null, entity.level().random)) {
 //            consumer.putBulkData(matrices.last(), quad, 1, 1, 1, Integer.MAX_VALUE, OverlayTexture.NO_OVERLAY);
 //        }

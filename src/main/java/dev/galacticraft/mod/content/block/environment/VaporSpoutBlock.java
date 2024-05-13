@@ -29,9 +29,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class VaporSpoutBlock extends Block {
     public VaporSpoutBlock(Properties settings) {
         super(settings);

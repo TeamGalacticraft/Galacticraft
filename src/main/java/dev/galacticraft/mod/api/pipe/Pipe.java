@@ -30,9 +30,6 @@ import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public interface Pipe extends Connected, Colored {
     /**
      * Sets the {@link PipeNetwork} associated with this pipe

@@ -38,9 +38,6 @@ import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @TestSuite("refinery")
 public final class RefineryTestSuite extends MachineGameTest<RefineryBlockEntity> {
     public RefineryTestSuite() {

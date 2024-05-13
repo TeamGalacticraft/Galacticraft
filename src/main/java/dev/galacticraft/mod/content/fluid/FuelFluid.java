@@ -31,9 +31,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.material.Fluid;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public abstract class FuelFluid extends BasicFluid {
     public FuelFluid() {
         super(false, true, 3, 1, 10, 100);

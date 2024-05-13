@@ -33,9 +33,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class ThrowableMeteorChunkItem extends Item {
     public ThrowableMeteorChunkItem(Properties settings) {
         super(settings);

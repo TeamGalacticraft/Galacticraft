@@ -32,7 +32,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.Container;
@@ -67,10 +66,10 @@ public abstract class ServerPlayerMixin implements GearInventoryProvider {
                 Collection<ServerPlayer> tracking = PlayerLookup.tracking(((ServerPlayer) (Object) this));
                 //noinspection SuspiciousMethodCalls
                 if (!tracking.contains(this)) {
-                    ServerPlayNetworking.send(((ServerPlayer) (Object) this), new ResourceLocation(Constant.MOD_ID, "gear_inv_sync"), buf);
+                    ServerPlayNetworking.send(((ServerPlayer) (Object) this), Constant.id("gear_inv_sync"), buf);
                 }
                 for (ServerPlayer player : tracking) {
-                    ServerPlayNetworking.send(player, new ResourceLocation(Constant.MOD_ID, "gear_inv_sync"), PacketByteBufs.copy(buf));
+                    ServerPlayNetworking.send(player, Constant.id("gear_inv_sync"), PacketByteBufs.copy(buf));
                 }
             }
         });

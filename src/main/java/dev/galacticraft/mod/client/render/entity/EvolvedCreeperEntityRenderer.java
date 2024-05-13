@@ -26,9 +26,6 @@ import dev.galacticraft.mod.client.render.entity.feature.SpaceGearRenderLayer;
 import net.minecraft.client.renderer.entity.CreeperRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class EvolvedCreeperEntityRenderer extends CreeperRenderer {
     public EvolvedCreeperEntityRenderer(EntityRendererProvider.Context context) {
         super(context);

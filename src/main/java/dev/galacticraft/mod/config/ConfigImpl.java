@@ -43,9 +43,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class ConfigImpl implements Config {
     private transient final Gson gson;
     private transient final File file;

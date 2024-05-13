@@ -34,9 +34,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @TestSuite("fuel_loader")
 public final class FuelLoaderTestSuite extends MachineGameTest<FuelLoaderBlockEntity> {
     public FuelLoaderTestSuite() {

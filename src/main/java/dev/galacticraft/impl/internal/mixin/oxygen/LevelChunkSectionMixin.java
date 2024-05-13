@@ -37,9 +37,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.BitSet;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Mixin(LevelChunkSection.class)
 public abstract class LevelChunkSectionMixin implements ChunkSectionOxygenAccessor {
     private @Unique @Nullable BitSet inversionBits = null;

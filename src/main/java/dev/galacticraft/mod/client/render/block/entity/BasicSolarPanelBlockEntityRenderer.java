@@ -42,12 +42,9 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Environment(EnvType.CLIENT)
 public class BasicSolarPanelBlockEntityRenderer implements BlockEntityRenderer<BasicSolarPanelBlockEntity> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/model/solar_panel.png");
+    private static final ResourceLocation TEXTURE = Constant.id("textures/model/solar_panel.png");
     private final ModelPart panel;
     private final ModelPart pole;
 

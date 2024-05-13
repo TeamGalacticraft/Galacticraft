@@ -35,7 +35,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.SimpleContainer;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -47,7 +46,7 @@ public class GalacticraftAPI implements ModInitializer {
     public void onInitialize() {
         long startInitTime = System.currentTimeMillis();
         GCApiCommands.register();
-        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "flag_data"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(Constant.id("flag_data"), (server, player, handler, buf, responseSender) -> {
             int[] array = buf.readVarIntArray();
             for (int i = 0; i < array.length; i++) {
                 array[i] &= 0x00FFFFFF;
@@ -58,7 +57,7 @@ public class GalacticraftAPI implements ModInitializer {
                 //todo: teams
             });
         });
-        ServerPlayNetworking.registerGlobalReceiver(new ResourceLocation(Constant.MOD_ID, "team_name"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(Constant.id("team_name"), (server, player, handler, buf, responseSender) -> {
             String s = buf.readUtf();
 
             server.execute(() -> {
@@ -66,7 +65,7 @@ public class GalacticraftAPI implements ModInitializer {
             });
         });
 
-        Registry.register(BuiltInRegistries.CHUNK_GENERATOR, new ResourceLocation(Constant.MOD_ID, "satellite"), SatelliteChunkGenerator.CODEC);
+        Registry.register(BuiltInRegistries.CHUNK_GENERATOR, Constant.id("satellite"), SatelliteChunkGenerator.CODEC);
         BuiltinObjects.register();
         BuiltInRocketRegistries.initialize();
         GcApiEntityAttributes.init();

@@ -33,9 +33,6 @@ import net.minecraft.world.entity.player.Inventory;
 
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Environment(EnvType.CLIENT)
 public class AdvancedSolarPanelScreen extends SolarPanelScreen<AdvancedSolarPanelBlockEntity, SolarPanelMenu<AdvancedSolarPanelBlockEntity>> {
     public AdvancedSolarPanelScreen(SolarPanelMenu<AdvancedSolarPanelBlockEntity> handler, Inventory inv, Component title) {

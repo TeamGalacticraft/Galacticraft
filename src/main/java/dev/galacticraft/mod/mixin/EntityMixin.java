@@ -59,9 +59,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.UUID;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Mixin(Entity.class)
 public abstract class EntityMixin implements EntityAccessor {
     private @Unique double distanceSinceLastStep;

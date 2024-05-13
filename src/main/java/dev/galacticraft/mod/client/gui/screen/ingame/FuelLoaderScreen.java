@@ -42,9 +42,6 @@ import net.minecraft.world.entity.player.Inventory;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
 @Environment(EnvType.CLIENT)
 public class FuelLoaderScreen extends MachineScreen<FuelLoaderBlockEntity, FuelLoaderMenu> {
     public static final int RED_X_U = 176;

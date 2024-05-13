@@ -100,8 +100,8 @@ public class CelestialSelectionScreen extends Screen {
     protected static final int RED = ColorUtil.to32BitColor(255, 255, 0, 0);
     protected static final int RED3 = ColorUtil.to32BitColor(255, 255, 100, 100);
     protected static final int CYAN = ColorUtil.to32BitColor(255, 150, 200, 255);
-    protected static final ResourceLocation TEXTURE_0 = new ResourceLocation(Constant.MOD_ID, "textures/gui/celestial_selection_0.png");
-    protected static final ResourceLocation TEXTURE_1 = new ResourceLocation(Constant.MOD_ID, "textures/gui/celestial_selection_1.png");
+    protected static final ResourceLocation TEXTURE_0 = Constant.id("textures/gui/celestial_selection_0.png");
+    protected static final ResourceLocation TEXTURE_1 = Constant.id("textures/gui/celestial_selection_1.png");
     protected static int BORDER_SIZE = 0;
     protected static int BORDER_EDGE_SIZE = 0;
     protected final boolean mapMode;

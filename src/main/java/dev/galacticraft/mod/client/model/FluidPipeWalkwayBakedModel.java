@@ -58,9 +58,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Environment(EnvType.CLIENT)
 public class FluidPipeWalkwayBakedModel implements BakedModel {
     private static FluidPipeWalkwayBakedModel instance = null;

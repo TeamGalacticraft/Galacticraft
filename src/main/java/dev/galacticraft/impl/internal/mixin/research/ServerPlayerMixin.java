@@ -70,7 +70,7 @@ public abstract class ServerPlayerMixin implements ServerResearchAccessor {
             buf.writeUtf(id.toString());
         }
         ServerPlayNetworking.send((ServerPlayer) (Object)this,
-                new ResourceLocation(Constant.MOD_ID, "research_update"),
+                Constant.id("research_update"),
                 buf);
     }
 
@@ -87,7 +87,7 @@ public abstract class ServerPlayerMixin implements ServerResearchAccessor {
             buf.writeUtf(id.toString());
         }
         ServerPlayNetworking.send((ServerPlayer) (Object)this,
-                new ResourceLocation(Constant.MOD_ID, "research_update"),
+                Constant.id("research_update"),
                 buf);
     }
 

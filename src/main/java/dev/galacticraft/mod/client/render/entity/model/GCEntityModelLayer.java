@@ -27,11 +27,7 @@ import dev.galacticraft.mod.client.model.entity.*;
 import dev.galacticraft.mod.client.render.block.entity.BasicSolarPanelBlockEntityRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.resources.ResourceLocation;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCEntityModelLayer {
     public static final ModelLayerLocation GAZER = new ModelLayerLocation(Constant.id("gazer"), "main");
     public static final ModelLayerLocation RUMBLER = new ModelLayerLocation(Constant.id("rumbler"), "main");
@@ -39,8 +35,8 @@ public class GCEntityModelLayer {
     public static final ModelLayerLocation OLI_GRUB = new ModelLayerLocation(Constant.id("oli_grub"), "main");
     public static final ModelLayerLocation GREY = new ModelLayerLocation(Constant.id("grey"), "main");
     public static final ModelLayerLocation ARCH_GREY = new ModelLayerLocation(Constant.id("arch_grey"), "main");
-    public static final ModelLayerLocation SOLAR_PANEL = new ModelLayerLocation(new ResourceLocation(Constant.MOD_ID, "solar_panel"), "main");
-    public static final ModelLayerLocation LANDER = new ModelLayerLocation(new ResourceLocation(Constant.MOD_ID, "lander"), "main");
+    public static final ModelLayerLocation SOLAR_PANEL = new ModelLayerLocation(Constant.id("solar_panel"), "main");
+    public static final ModelLayerLocation LANDER = new ModelLayerLocation(Constant.id("lander"), "main");
     public static final ModelLayerLocation PARACHEST = new ModelLayerLocation(Constant.id("parachest"), "main");
 
     public static void register() {

@@ -37,9 +37,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class EvolvedSkeletonEntity extends Skeleton {
     public EvolvedSkeletonEntity(EntityType<? extends Skeleton> entityType, Level world) {
         super(entityType, world);

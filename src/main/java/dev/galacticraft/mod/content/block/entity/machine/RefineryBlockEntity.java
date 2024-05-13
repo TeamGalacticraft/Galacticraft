@@ -45,9 +45,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class RefineryBlockEntity extends MachineBlockEntity { //fixme
     public static final int CHARGE_SLOT = 0;
     public static final int OIL_INPUT_SLOT = 1;

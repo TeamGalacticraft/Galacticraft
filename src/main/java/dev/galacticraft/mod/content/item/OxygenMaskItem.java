@@ -24,9 +24,6 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.item.OxygenMask;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class OxygenMaskItem extends AccessoryItem implements OxygenMask {
     public OxygenMaskItem(Properties settings) {
         super(settings);

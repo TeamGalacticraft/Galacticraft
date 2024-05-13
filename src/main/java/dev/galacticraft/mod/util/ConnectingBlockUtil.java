@@ -34,9 +34,6 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class ConnectingBlockUtil {
     public static final VoxelShape WALKWAY_TOP = Block.box(6.0D, 6.0D, 6.0D, 10.0D, 10.0D, 10.0D);
     private ConnectingBlockUtil() {}

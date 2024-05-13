@@ -26,9 +26,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.level.Level;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class EvolvedSpiderEntity extends Spider {
     public EvolvedSpiderEntity(EntityType<? extends Spider> entityType, Level world) {
         super(entityType, world);

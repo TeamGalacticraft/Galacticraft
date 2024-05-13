@@ -25,14 +25,13 @@ package dev.galacticraft.api.entity.attribute;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 
 public final class GcApiEntityAttributes {
-    public static final Attribute CAN_BREATHE_IN_SPACE = Registry.register(BuiltInRegistries.ATTRIBUTE, new ResourceLocation(Constant.MOD_ID, "can_breathe_in_space"), (new RangedAttribute("galacticraft.attribute.name.generic.can_breathe_in_space", 0.0D, 0.0D, 1.0D)).setSyncable(true));
+    public static final Attribute CAN_BREATHE_IN_SPACE = Registry.register(BuiltInRegistries.ATTRIBUTE, Constant.id("can_breathe_in_space"), (new RangedAttribute("galacticraft.attribute.name.generic.can_breathe_in_space", 0.0D, 0.0D, 1.0D)).setSyncable(true));
 
-    public static final Attribute LOCAL_GRAVITY_LEVEL = Registry.register(BuiltInRegistries.ATTRIBUTE, new ResourceLocation(Constant.MOD_ID, "local_gravity_level"), (new RangedAttribute("galacticraft.attribute.name.generic.local_gravity_level", 0.0D, 0.0D, 1.0D)).setSyncable(true));
+    public static final Attribute LOCAL_GRAVITY_LEVEL = Registry.register(BuiltInRegistries.ATTRIBUTE, Constant.id("local_gravity_level"), (new RangedAttribute("galacticraft.attribute.name.generic.local_gravity_level", 0.0D, 0.0D, 1.0D)).setSyncable(true));
 
     private GcApiEntityAttributes() {}
 

@@ -26,38 +26,34 @@ import dev.galacticraft.mod.Constant;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCSounds {
     private static final GCRegistry<SoundEvent> SOUNDS = new GCRegistry<>(BuiltInRegistries.SOUND_EVENT);
     public static final Holder.Reference<SoundEvent> MUSIC_MOON = register("music.music_moon");
     public static final Holder.Reference<SoundEvent> MUSIC_CREDITS = register("music.music_credits");
     public static final Holder.Reference<SoundEvent> MUSIC_ORBIT = register("music.music_orbit");
     public static final Holder.Reference<SoundEvent> MUSIC_MARS = register("music.music_mars");
-    public static final SoundEvent PLAYER_UNLOCKCHEST = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "player.unlockchest"));
-    public static final SoundEvent PLAYER_PARACHUTE = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "player.parachute"));
-    public static final SoundEvent PLAYER_OPENAIRLOCK = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "player.openairlock"));
-    public static final SoundEvent PLAYER_CLOSEAIRLOCK = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "player.closeairlock"));
-    public static final SoundEvent ENTITY_SLIME_DEATH = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "entity.slime_death"));
-    public static final SoundEvent ENTITY_OOH = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "entity.ooh"));
-    public static final SoundEvent ENTITY_OUCH = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "entity.ouch"));
-    public static final SoundEvent ENTITY_BOSSLAUGH = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "entity.bosslaugh"));
-    public static final SoundEvent ENTITY_BOSSDEATH = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "entity.bossdeath"));
-    public static final SoundEvent ENTITY_ASTROMINER = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "entity.astrominer"));
-    public static final SoundEvent AMBIENCE_SINGLEDRIP = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "ambience.singledrip"));
-    public static final SoundEvent AMBIENCE_SCARYSCAPE = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "ambience.scaryscape"));
-    public static final SoundEvent SHUTTLE_SHUTTLE = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "shuttle.shuttle"));
-    public static final SoundEvent METEOR_CHUNK_THROW = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "entity.throwable_meteor_chunk.throw"));
+    public static final SoundEvent PLAYER_UNLOCKCHEST = SoundEvent.createVariableRangeEvent(Constant.id("player.unlockchest"));
+    public static final SoundEvent PLAYER_PARACHUTE = SoundEvent.createVariableRangeEvent(Constant.id("player.parachute"));
+    public static final SoundEvent PLAYER_OPENAIRLOCK = SoundEvent.createVariableRangeEvent(Constant.id("player.openairlock"));
+    public static final SoundEvent PLAYER_CLOSEAIRLOCK = SoundEvent.createVariableRangeEvent(Constant.id("player.closeairlock"));
+    public static final SoundEvent ENTITY_SLIME_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.slime_death"));
+    public static final SoundEvent ENTITY_OOH = SoundEvent.createVariableRangeEvent(Constant.id("entity.ooh"));
+    public static final SoundEvent ENTITY_OUCH = SoundEvent.createVariableRangeEvent(Constant.id("entity.ouch"));
+    public static final SoundEvent ENTITY_BOSSLAUGH = SoundEvent.createVariableRangeEvent(Constant.id("entity.bosslaugh"));
+    public static final SoundEvent ENTITY_BOSSDEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.bossdeath"));
+    public static final SoundEvent ENTITY_ASTROMINER = SoundEvent.createVariableRangeEvent(Constant.id("entity.astrominer"));
+    public static final SoundEvent AMBIENCE_SINGLEDRIP = SoundEvent.createVariableRangeEvent(Constant.id("ambience.singledrip"));
+    public static final SoundEvent AMBIENCE_SCARYSCAPE = SoundEvent.createVariableRangeEvent(Constant.id("ambience.scaryscape"));
+    public static final SoundEvent SHUTTLE_SHUTTLE = SoundEvent.createVariableRangeEvent(Constant.id("shuttle.shuttle"));
+    public static final SoundEvent METEOR_CHUNK_THROW = SoundEvent.createVariableRangeEvent(Constant.id("entity.throwable_meteor_chunk.throw"));
 
     // Legacy Discs
-    public static final SoundEvent MUSIC_LEGACY_MARS = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "music.legacy.mars"));
-    public static final SoundEvent MUSIC_LEGACY_MIMAS = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "music.legacy.mimas"));
-    public static final SoundEvent MUSIC_LEGACY_ORBIT = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "music.legacy.orbit"));
-    public static final SoundEvent MUSIC_LEGACY_SPACERACE = SoundEvent.createVariableRangeEvent(new ResourceLocation(Constant.MOD_ID, "music.legacy.spacerace"));
+    public static final SoundEvent MUSIC_LEGACY_MARS = SoundEvent.createVariableRangeEvent(Constant.id("music.legacy.mars"));
+    public static final SoundEvent MUSIC_LEGACY_MIMAS = SoundEvent.createVariableRangeEvent(Constant.id("music.legacy.mimas"));
+    public static final SoundEvent MUSIC_LEGACY_ORBIT = SoundEvent.createVariableRangeEvent(Constant.id("music.legacy.orbit"));
+    public static final SoundEvent MUSIC_LEGACY_SPACERACE = SoundEvent.createVariableRangeEvent(Constant.id("music.legacy.spacerace"));
 
     public static Holder.Reference<SoundEvent> register(String id) {
         return SOUNDS.registerForHolder(id, SoundEvent.createVariableRangeEvent(Constant.id(id)));

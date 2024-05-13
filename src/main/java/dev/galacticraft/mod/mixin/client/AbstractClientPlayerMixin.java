@@ -30,15 +30,11 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.resources.PlayerSkin;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Mixin(AbstractClientPlayer.class)
 @Environment(EnvType.CLIENT)
 public abstract class AbstractClientPlayerMixin {
@@ -47,7 +43,7 @@ public abstract class AbstractClientPlayerMixin {
     @ModifyReturnValue(method = "getSkin", at = @At("RETURN"))
     private PlayerSkin getCapeTexture_gc(PlayerSkin original) {
         if (CapesLoader.UUID_CAPE_MAP != null && this.getPlayerInfo() != null && CapesLoader.UUID_CAPE_MAP.containsKey(this.getPlayerInfo().getProfile().getId().toString())) {
-            return new PlayerSkin(original.texture(), original.textureUrl(), new ResourceLocation(Constant.MOD_ID, "textures/cape/cape_" + CapesLoader.UUID_CAPE_MAP.get(this.getPlayerInfo().getProfile().getId().toString()) + ".png"), original.elytraTexture(), original.model(), original.secure());
+            return new PlayerSkin(original.texture(), original.textureUrl(), Constant.id("textures/cape/cape_" + CapesLoader.UUID_CAPE_MAP.get(this.getPlayerInfo().getProfile().getId().toString()) + ".png"), original.elytraTexture(), original.model(), original.secure());
         }
         return original;
     }

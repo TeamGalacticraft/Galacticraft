@@ -53,9 +53,6 @@ import team.reborn.energy.api.EnergyStorage;
 
 import java.util.Objects;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class WireWalkway extends WireBlock implements FluidLoggable {
     private static final VoxelShape[] SHAPES = new VoxelShape[64];
 

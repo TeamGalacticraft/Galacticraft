@@ -43,9 +43,6 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class OxygenTankItem extends Item {
     public final long capacity;
 

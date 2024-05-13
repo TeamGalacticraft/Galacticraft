@@ -33,9 +33,6 @@ import net.minecraft.world.entity.player.Inventory;
 
 import java.util.function.Consumer;
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
 public class FuelLoaderMenu extends MachineMenu<FuelLoaderBlockEntity> {
     public long rocketAmount;
     public long rocketCapacity;

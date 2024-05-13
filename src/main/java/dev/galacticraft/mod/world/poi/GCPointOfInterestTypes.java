@@ -32,11 +32,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.level.block.state.BlockState;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCPointOfInterestTypes {
-    public static final ResourceKey<PoiType> LUNAR_CARTOGRAPHER = register(new ResourceLocation(Constant.MOD_ID, "lunar_cartographer"), 1, 1, ImmutableSet.copyOf(GCBlocks.LUNAR_CARTOGRAPHY_TABLE.getStateDefinition().getPossibleStates()));
+    public static final ResourceKey<PoiType> LUNAR_CARTOGRAPHER = register(Constant.id("lunar_cartographer"), 1, 1, ImmutableSet.copyOf(GCBlocks.LUNAR_CARTOGRAPHY_TABLE.getStateDefinition().getPossibleStates()));
 
     public static void register() {
     }

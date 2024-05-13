@@ -25,9 +25,6 @@ package dev.galacticraft.mod.compat;
 import mcp.mobius.waila.api.IRegistrar;
 import mcp.mobius.waila.api.IWailaPlugin;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GalacticraftWailaPlugin implements IWailaPlugin {
     @Override
     public void register(IRegistrar registrar) {

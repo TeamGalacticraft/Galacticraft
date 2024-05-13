@@ -33,9 +33,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class DefaultShapedCompressingDisplay implements DefaultCompressingDisplay {
     protected List<EntryIngredient> input;
     protected List<EntryIngredient> output;

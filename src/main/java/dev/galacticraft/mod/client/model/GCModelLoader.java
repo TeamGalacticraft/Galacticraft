@@ -31,7 +31,7 @@ import net.minecraft.world.item.DyeColor;
 
 public class GCModelLoader implements ModelLoadingPlugin {
     public static final GCModelLoader INSTANCE = new GCModelLoader();
-    private static final ResourceLocation PARACHEST_ITEM = new ResourceLocation(Constant.MOD_ID, "item/parachest");
+    private static final ResourceLocation PARACHEST_ITEM = Constant.id("item/parachest");
 
     @Override
     public void onInitializeModelLoader(Context pluginContext) {

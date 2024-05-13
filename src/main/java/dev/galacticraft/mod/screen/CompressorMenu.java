@@ -34,9 +34,6 @@ import net.minecraft.world.inventory.CraftingContainer;
 
 import java.util.function.Consumer;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class CompressorMenu extends RecipeMachineMenu<CraftingContainer, CompressingRecipe, CompressorBlockEntity> {
     private int fuelTime = 0;
     private int fuelLength = 0;

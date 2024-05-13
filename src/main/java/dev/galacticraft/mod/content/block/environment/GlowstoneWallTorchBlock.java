@@ -38,9 +38,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GlowstoneWallTorchBlock extends WallTorchBlock {
     public static final MapCodec<GlowstoneWallTorchBlock> CODEC = simpleCodec(GlowstoneWallTorchBlock::new);
     public GlowstoneWallTorchBlock(Properties settings) {

@@ -34,9 +34,6 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilde
 
 import java.util.Optional;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class MoonRuinsStructure extends Structure {
    public static final Codec<MoonRuinsStructure> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
            StructureSettings.CODEC.fieldOf("config").forGetter((moonRuinsStructure) -> moonRuinsStructure.settings)

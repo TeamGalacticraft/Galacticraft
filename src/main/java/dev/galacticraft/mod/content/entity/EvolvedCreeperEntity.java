@@ -41,9 +41,6 @@ import net.minecraft.world.level.Level;
 
 import java.util.UUID;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class EvolvedCreeperEntity extends Creeper {
     private static final EntityDataAccessor<Boolean> BABY = SynchedEntityData.defineId(EvolvedCreeperEntity.class, EntityDataSerializers.BOOLEAN);
     private static final UUID BABY_SPEED_ID = UUID.fromString("B9766B59-9566-4402-BC1F-2EE2A276D836");

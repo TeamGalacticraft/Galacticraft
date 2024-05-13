@@ -24,9 +24,6 @@ package dev.galacticraft.mod.client.render.block.entity;
 
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCBlockEntityRenderer {
     public static void register() {
         BlockEntityRendererRegistry.register(GCBlockEntityTypes.BASIC_SOLAR_PANEL, BasicSolarPanelBlockEntityRenderer::new);

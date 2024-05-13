@@ -33,9 +33,6 @@ import net.minecraft.world.level.block.LanternBlock;
 
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GlowstoneLanternBlock extends LanternBlock {
     public GlowstoneLanternBlock(Properties settings) {
         super(settings);

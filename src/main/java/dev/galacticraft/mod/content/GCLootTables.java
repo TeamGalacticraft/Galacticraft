@@ -26,11 +26,8 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.mixin.BuiltInLootTablesAccessor;
 import net.minecraft.resources.ResourceLocation;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCLootTables {
-    public static final ResourceLocation BASIC_MOON_RUINS_CHEST = new ResourceLocation(Constant.MOD_ID, Constant.LootTable.BASIC_MOON_RUINS_CHEST);
+    public static final ResourceLocation BASIC_MOON_RUINS_CHEST = Constant.id(Constant.LootTable.BASIC_MOON_RUINS_CHEST);
 
     public static void register() {
         BuiltInLootTablesAccessor.callRegisterLootTable(BASIC_MOON_RUINS_CHEST);

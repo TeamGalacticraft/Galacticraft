@@ -33,9 +33,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class LunarCartographyTableBlock extends CartographyTableBlock {
     public LunarCartographyTableBlock(Properties settings) {
         super(settings);

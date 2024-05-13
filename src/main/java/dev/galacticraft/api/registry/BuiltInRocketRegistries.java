@@ -36,7 +36,6 @@ import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
-import net.minecraft.resources.ResourceLocation;
 
 public final class BuiltInRocketRegistries {
     public static final WritableRegistry<TravelPredicateType<?>> TRAVEL_PREDICATE_TYPE = FabricRegistryBuilder.from(
@@ -78,18 +77,18 @@ public final class BuiltInRocketRegistries {
     }
 
     static {
-        Registry.register(TRAVEL_PREDICATE_TYPE, new ResourceLocation(Constant.MOD_ID, "default"), DefaultTravelPredicateType.INSTANCE);
-        Registry.register(TRAVEL_PREDICATE_TYPE, new ResourceLocation(Constant.MOD_ID, "access_weight"), AccessWeightTravelPredicateType.INSTANCE);
-        Registry.register(TRAVEL_PREDICATE_TYPE, new ResourceLocation(Constant.MOD_ID, "constant"), ConstantTravelPredicateType.INSTANCE);
-        Registry.register(TRAVEL_PREDICATE_TYPE, new ResourceLocation(Constant.MOD_ID, "and"), AndTravelPredicateType.INSTANCE);
-        Registry.register(TRAVEL_PREDICATE_TYPE, new ResourceLocation(Constant.MOD_ID, "or"), OrTravelPredicateType.INSTANCE);
+        Registry.register(TRAVEL_PREDICATE_TYPE, Constant.id("default"), DefaultTravelPredicateType.INSTANCE);
+        Registry.register(TRAVEL_PREDICATE_TYPE, Constant.id("access_weight"), AccessWeightTravelPredicateType.INSTANCE);
+        Registry.register(TRAVEL_PREDICATE_TYPE, Constant.id("constant"), ConstantTravelPredicateType.INSTANCE);
+        Registry.register(TRAVEL_PREDICATE_TYPE, Constant.id("and"), AndTravelPredicateType.INSTANCE);
+        Registry.register(TRAVEL_PREDICATE_TYPE, Constant.id("or"), OrTravelPredicateType.INSTANCE);
 
-        Registry.register(ROCKET_CONE_TYPE, new ResourceLocation(Constant.MOD_ID, "basic"), BasicRocketConeType.INSTANCE);
-        Registry.register(ROCKET_BODY_TYPE, new ResourceLocation(Constant.MOD_ID, "basic"), BasicRocketBodyType.INSTANCE);
-        Registry.register(ROCKET_FIN_TYPE, new ResourceLocation(Constant.MOD_ID, "basic"), BasicRocketFinType.INSTANCE);
-        Registry.register(ROCKET_BOOSTER_TYPE, new ResourceLocation(Constant.MOD_ID, "basic"), BasicRocketBoosterType.INSTANCE);
-        Registry.register(ROCKET_ENGINE_TYPE, new ResourceLocation(Constant.MOD_ID, "basic"), BasicRocketEngineType.INSTANCE);
-        Registry.register(ROCKET_UPGRADE_TYPE, new ResourceLocation(Constant.MOD_ID, "storage"), StorageUpgradeType.INSTANCE);
+        Registry.register(ROCKET_CONE_TYPE, Constant.id("basic"), BasicRocketConeType.INSTANCE);
+        Registry.register(ROCKET_BODY_TYPE, Constant.id("basic"), BasicRocketBodyType.INSTANCE);
+        Registry.register(ROCKET_FIN_TYPE, Constant.id("basic"), BasicRocketFinType.INSTANCE);
+        Registry.register(ROCKET_BOOSTER_TYPE, Constant.id("basic"), BasicRocketBoosterType.INSTANCE);
+        Registry.register(ROCKET_ENGINE_TYPE, Constant.id("basic"), BasicRocketEngineType.INSTANCE);
+        Registry.register(ROCKET_UPGRADE_TYPE, Constant.id("storage"), StorageUpgradeType.INSTANCE);
 
         Registry.register(ROCKET_PART_RECIPE_TYPE, Constant.id("wrap_patterned"), PatternedRocketPartRecipeType.INSTANCE);
         Registry.register(ROCKET_PART_RECIPE_TYPE, Constant.id("centered_patterned"), CenteredPatternedRocketPartRecipeType.INSTANCE);

@@ -48,9 +48,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
 public class FuelLoaderBlockEntity extends MachineBlockEntity {
     public static final long TRANSFER_RATE = 500;
     public static final int CHARGE_SLOT = 0;

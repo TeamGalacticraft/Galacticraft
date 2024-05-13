@@ -29,13 +29,9 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCFluids {
     public static final FlowingFluid CRUDE_OIL = new CrudeOilFluid.Still();
     public static final FlowingFluid FLOWING_CRUDE_OIL = new CrudeOilFluid.Flowing();
@@ -84,6 +80,6 @@ public class GCFluids {
     }
 
     private static void register(String id, Fluid fluid) {
-        Registry.register(BuiltInRegistries.FLUID, new ResourceLocation(Constant.MOD_ID, id), fluid);
+        Registry.register(BuiltInRegistries.FLUID, Constant.id(id), fluid);
     }
 }

@@ -33,9 +33,6 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Environment(EnvType.CLIENT)
 public record FallingCrudeOilProvider(SpriteSet spriteProvider) implements ParticleProvider<SimpleParticleType> {
     @Override

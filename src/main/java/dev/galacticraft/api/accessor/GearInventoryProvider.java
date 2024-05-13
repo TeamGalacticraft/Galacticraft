@@ -25,9 +25,6 @@ package dev.galacticraft.api.accessor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public interface GearInventoryProvider {
     default Container galacticraft$getGearInv() {
         throw new RuntimeException("This should be overridden by mixin!");

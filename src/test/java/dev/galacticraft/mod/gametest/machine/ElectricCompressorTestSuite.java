@@ -36,9 +36,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @TestSuite("electric_compressor")
 public final class ElectricCompressorTestSuite extends RecipeGameTest<CraftingContainer, CompressingRecipe, ElectricCompressorBlockEntity> {
     public ElectricCompressorTestSuite() {

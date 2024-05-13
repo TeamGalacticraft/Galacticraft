@@ -59,9 +59,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class FluidPipeWalkway extends FluidPipe implements FluidLoggable {
     public static final MapCodec<FluidPipeWalkway> CODEC = simpleCodec(FluidPipeWalkway::new);
     private static final VoxelShape[] SHAPES = new VoxelShape[64];

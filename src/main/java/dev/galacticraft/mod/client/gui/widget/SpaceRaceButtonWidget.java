@@ -32,9 +32,6 @@ import net.minecraft.network.chat.Component;
 
 import java.util.function.Supplier;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class SpaceRaceButtonWidget extends Button {
     private final Font textRenderer;
     private final int screenWidth;

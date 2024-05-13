@@ -51,9 +51,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.joml.Vector3f;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class MoonBerryBushBlock extends BushBlock {
     public static final MapCodec<MoonBerryBushBlock> CODEC = simpleCodec(MoonBerryBushBlock::new);
     public static final IntegerProperty AGE = BlockStateProperties.AGE_3;

@@ -27,9 +27,6 @@ import com.terraformersmc.modmenu.api.ModMenuApi;
 import dev.galacticraft.mod.config.ConfigImpl;
 import net.fabricmc.loader.api.FabricLoader;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class ModMenuApiImpl implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {

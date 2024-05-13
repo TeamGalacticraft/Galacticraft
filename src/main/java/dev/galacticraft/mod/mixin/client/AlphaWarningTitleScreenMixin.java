@@ -43,9 +43,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Mixin(TitleScreen.class)
 @Environment(EnvType.CLIENT)
 public abstract class AlphaWarningTitleScreenMixin extends Screen {
@@ -53,7 +50,7 @@ public abstract class AlphaWarningTitleScreenMixin extends Screen {
     @Unique
     private static boolean warningHidden = false;
     @Unique
-    private static final ResourceLocation ALPHA_WARNING_GC_TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/gui/alpha_warning.png");
+    private static final ResourceLocation ALPHA_WARNING_GC_TEXTURE = Constant.id("textures/gui/alpha_warning.png");
     @Unique
     private static final Component ALPHA_WARNING_GC_HEADER = Component.translatable(Translations.Ui.ALPHA_WARNING_HEADER);
     @Unique

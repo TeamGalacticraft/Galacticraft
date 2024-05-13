@@ -36,9 +36,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @TestSuite("circuit_fabricator")
 public final class CircuitFabricatorTestSuite extends RecipeGameTest<Container, FabricationRecipe, CircuitFabricatorBlockEntity> {
     public CircuitFabricatorTestSuite() {

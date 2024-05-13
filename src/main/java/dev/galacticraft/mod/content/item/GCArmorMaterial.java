@@ -31,9 +31,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.function.Supplier;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public enum GCArmorMaterial implements ArmorMaterial {
     SENSOR_GLASSES("sensor_glasses",
             0,

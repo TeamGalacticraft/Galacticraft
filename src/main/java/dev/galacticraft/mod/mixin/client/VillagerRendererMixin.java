@@ -35,13 +35,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Mixin(VillagerRenderer.class)
 @Environment(EnvType.CLIENT)
 public abstract class VillagerRendererMixin {
-    private static final @Unique ResourceLocation MOON_TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/entity/villager/moon_villager.png");
+    private static final @Unique ResourceLocation MOON_TEXTURE = Constant.id("textures/entity/villager/moon_villager.png");
 
     @Inject(method = "getTextureLocation(Lnet/minecraft/world/entity/npc/Villager;)Lnet/minecraft/resources/ResourceLocation;", at = @At("HEAD"), cancellable = true)
     private void getMoonTexture_gc(Villager villagerEntity, CallbackInfoReturnable<ResourceLocation> cir) {

@@ -41,14 +41,11 @@ import net.minecraft.world.inventory.InventoryMenu;
 import java.util.Arrays;
 import java.util.Collection;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @Environment(EnvType.CLIENT)
 public class GCResourceReloadListener implements SimpleSynchronousResourceReloadListener {
     @Override
     public ResourceLocation getFabricId() {
-        return new ResourceLocation(Constant.MOD_ID, "resource_reload_listener");
+        return Constant.id("resource_reload_listener");
     }
 
     @Override
@@ -64,13 +61,13 @@ public class GCResourceReloadListener implements SimpleSynchronousResourceReload
         WireWalkwayBakedModel.invalidate();
         PipeBakedModel.invalidate();
         FluidPipeWalkwayBakedModel.invalidate();
-        FluidRenderHandler oil = (view, pos, state) -> new TextureAtlasSprite[]{atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/crude_oil_still")), atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/crude_oil_flowing"))};
-        FluidRenderHandler fuel = (view, pos, state) -> new TextureAtlasSprite[]{atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/fuel_still")), atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/fuel_flowing"))};
+        FluidRenderHandler oil = (view, pos, state) -> new TextureAtlasSprite[]{atlas.apply(Constant.id("block/crude_oil_still")), atlas.apply(Constant.id("block/crude_oil_flowing"))};
+        FluidRenderHandler fuel = (view, pos, state) -> new TextureAtlasSprite[]{atlas.apply(Constant.id("block/fuel_still")), atlas.apply(Constant.id("block/fuel_flowing"))};
         FluidRenderHandler sulfuricAcid = (view, pos, state) -> new TextureAtlasSprite[]{
-                atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/fluid/sulfuric_acid_still")),
-                atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/fluid/sulfuric_acid_flowing"))
+                atlas.apply(Constant.id("block/fluid/sulfuric_acid_still")),
+                atlas.apply(Constant.id("block/fluid/sulfuric_acid_flowing"))
         };
-        FluidRenderHandler oxygen = (view, pos, state) -> new TextureAtlasSprite[]{atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/oxygen")), atlas.apply(new ResourceLocation(Constant.MOD_ID, "block/oxygen"))};
+        FluidRenderHandler oxygen = (view, pos, state) -> new TextureAtlasSprite[]{atlas.apply(Constant.id("block/oxygen")), atlas.apply(Constant.id("block/oxygen"))};
 
         FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.CRUDE_OIL, oil);
         FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FLOWING_CRUDE_OIL, oil);

@@ -48,9 +48,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GlassFluidPipeBlock extends FluidPipe {
     public static final VoxelShape NORTH = box(6, 6, 0, 10, 10, 10);
     public static final VoxelShape EAST = box(6, 6, 6, 16, 10, 10);

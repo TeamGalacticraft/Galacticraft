@@ -41,9 +41,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class CavernousVinesPlantBlock extends GrowingPlantBodyBlock implements BonemealableBlock, CavernousVines, SimpleWaterloggedBlock {
     public static final MapCodec<CavernousVinesPlantBlock> CODEC = simpleCodec(CavernousVinesPlantBlock::new);
     public CavernousVinesPlantBlock(BlockBehaviour.Properties properties) {

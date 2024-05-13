@@ -25,21 +25,17 @@ package dev.galacticraft.mod.content;
 import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.*;
-import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCEntityTypes {
     public static final EntityType<EvolvedZombieEntity> EVOLVED_ZOMBIE = FabricEntityTypeBuilder.create(MobCategory.MONSTER, EvolvedZombieEntity::new).dimensions(EntityDimensions.fixed(0.6F, 1.95F)).build();
     public static final EntityType<EvolvedCreeperEntity> EVOLVED_CREEPER =  FabricEntityTypeBuilder.create(MobCategory.MONSTER, EvolvedCreeperEntity::new).dimensions(EntityDimensions.scalable(0.65F, 1.8F)).build();
@@ -75,8 +71,8 @@ public class GCEntityTypes {
         Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.GREY), GREY);
         Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.ARCH_GREY), ARCH_GREY);
 
-        Registry.register(BuiltInRegistries.ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Entity.BUBBLE), BUBBLE);
-        Registry.register(BuiltInRegistries.ENTITY_TYPE, new ResourceLocation(Constant.MOD_ID, Constant.Entity.ROCKET), ROCKET);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.BUBBLE), BUBBLE);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.ROCKET), ROCKET);
         Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.LANDER), LANDER);
         Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.PARACHEST), PARACHEST);
 

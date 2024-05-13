@@ -26,22 +26,16 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import net.minecraft.world.level.Level;
 import org.joml.Matrix4f;
-
-import java.util.Random;
 
 public class MoonSkyRenderer extends SpaceSkyRenderer {
     public static final MoonSkyRenderer INSTANCE = new MoonSkyRenderer();
-    private static final ResourceLocation EARTH_TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/gui/celestialbodies/earth.png");
-    private static final ResourceLocation SUN_TEXTURE = new ResourceLocation(Constant.MOD_ID, "textures/gui/celestialbodies/sun.png");
+    private static final ResourceLocation EARTH_TEXTURE = Constant.id("textures/gui/celestialbodies/earth.png");
+    private static final ResourceLocation SUN_TEXTURE = Constant.id("textures/gui/celestialbodies/sun.png");
 
     @Override
     public void render(WorldRenderContext context) {

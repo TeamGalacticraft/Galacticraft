@@ -29,9 +29,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.BitSet;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 @ApiStatus.Internal
 public interface ChunkSectionOxygenAccessor {
     boolean galacticraft$isInverted(int x, int y, int z);

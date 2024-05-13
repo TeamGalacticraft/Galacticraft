@@ -52,9 +52,6 @@ import dev.galacticraft.mod.world.poi.GCPointOfInterestTypes;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class Galacticraft implements ModInitializer {
     public static final Config CONFIG = new ConfigImpl(FabricLoader.getInstance().getConfigDir().resolve("galacticraft.json").toFile());
 

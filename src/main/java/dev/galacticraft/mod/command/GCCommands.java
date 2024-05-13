@@ -52,9 +52,6 @@ import net.minecraft.world.level.block.Block;
 import java.util.Collection;
 import java.util.UUID;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class GCCommands {
     private static final Object2IntMap<UUID> GC_HOUSTON_TIMERS = new Object2IntArrayMap<>();
     private static final int GC_HOUSTON_TIMER_LENGTH = 12 * 20; // seconds * tps

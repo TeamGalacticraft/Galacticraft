@@ -37,7 +37,6 @@ import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
 import java.io.File;
@@ -46,9 +45,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class SpaceRaceScreen extends Screen {
     private int backgroundWidth = 0;
     private int backgroundHeight = 0;
@@ -80,7 +76,7 @@ public class SpaceRaceScreen extends Screen {
                     if (focused) {
                         this.prevText = this.getValue();
                     } else if (this.prevText == null || !this.prevText.equals(this.getValue())) {
-                        ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "team_name"), PacketByteBufs.create().writeUtf(this.getValue()));
+                        ClientPlayNetworking.send(Constant.id("team_name"), PacketByteBufs.create().writeUtf(this.getValue()));
                     }
                 }
                 super.setFocused(focused);
@@ -390,7 +386,7 @@ public class SpaceRaceScreen extends Screen {
                                     array[y * 48 + x] = (finalImage.getPixelRGBA(x, y) /*& 0x00FFFFFF will be done on server (don't trust clients, so why do extra work?)*/); //ignore alpha channel
                                 }
                             }
-                            ClientPlayNetworking.send(new ResourceLocation(Constant.MOD_ID, "flag_data"), PacketByteBufs.create().writeVarIntArray(array));
+                            ClientPlayNetworking.send(Constant.id("flag_data"), PacketByteBufs.create().writeVarIntArray(array));
                         } else {
                             finalImage.close();
                         }

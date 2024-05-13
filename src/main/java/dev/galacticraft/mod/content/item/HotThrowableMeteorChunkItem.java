@@ -37,9 +37,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
- */
 public class HotThrowableMeteorChunkItem extends ThrowableMeteorChunkItem {
     public static String TICKS_UNTIL_COOL = "TicksUntilCool";
     public static int MAX_TICKS = 45 * 20;
