@@ -33,7 +33,6 @@ import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.core.DefaultedMappedRegistry;
 import net.minecraft.core.WritableRegistry;
-import net.minecraft.resources.ResourceLocation;
 
 public final class BuiltInAddonRegistries {
     private BuiltInAddonRegistries() {}
@@ -51,7 +50,7 @@ public final class BuiltInAddonRegistries {
                     AddonRegistries.CELESTIAL_RING_DISPLAY_TYPE, Lifecycle.experimental(), false)).buildAndRegister();
 
     public static final WritableRegistry<CelestialBodyType<?>> CELESTIAL_BODY_TYPE = FabricRegistryBuilder.from(
-            new DefaultedMappedRegistry<>(Constant.id( "star").toString(),
+            new DefaultedMappedRegistry<>(Constant.id("star").toString(),
                     AddonRegistries.CELESTIAL_BODY_TYPE, Lifecycle.experimental(), false)).buildAndRegister();
 
     public static final WritableRegistry<CelestialTeleporterType<?>> CELESTIAL_TELEPORTER_TYPE = FabricRegistryBuilder.createDefaulted(

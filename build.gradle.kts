@@ -271,6 +271,7 @@ tasks.processResources {
         }
     }
 }
+
 tasks.processTestResources {
     inputs.property("version", project.version)
 
@@ -308,7 +309,6 @@ tasks.jar {
 }
 
 tasks.test {
-    useJUnitPlatform()
     workingDir = project.file("run")
     dependsOn(tasks.getByName("runGametest"))
 }

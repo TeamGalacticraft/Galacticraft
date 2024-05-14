@@ -25,6 +25,7 @@
   "environment": "*",
   "entrypoints": {
     "fabric-gametest": [
+      "dev.galacticraft.mod.gametest.ConfigTestSuite",
       "dev.galacticraft.mod.gametest.GratingTestSuite",
       "dev.galacticraft.mod.gametest.machine.AdvancedSolarPanelTestSuite",
       "dev.galacticraft.mod.gametest.machine.BasicSolarPanelTestSuite",
