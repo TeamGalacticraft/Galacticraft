@@ -22,6 +22,7 @@ jobs:
           download_translations: false
 
           source: 'src/main/generated/assets/galacticraft/lang/en_us.json'
+          translation: 'src/main/resources/assets/galacticraft/lang/%locale_with_underscore%.json'
           project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
           token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
         env:
