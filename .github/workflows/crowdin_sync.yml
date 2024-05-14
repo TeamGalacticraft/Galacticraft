@@ -1,11 +1,12 @@
 name: Crowdin Translation Sync
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 0 * * *'
 
 jobs:
-  Sync:
+  crowdin_sync:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repository
@@ -14,7 +15,7 @@ jobs:
       - name: Crowdin Sync
         uses: crowdin/github-action@v1
         with:
-          upload_sources: true
+          upload_sources: false
           upload_translations: false
           download_translations: true
 
@@ -22,12 +23,12 @@ jobs:
 
           create_pull_request: true
           pull_request_title: 'feat: updated translations from crowdin'
-          pull_request_labels: 'priority: medium, status: ready for review, type: translation'
+          pull_request_labels: 'priority: low, status: ready for review, type: translation'
           pull_request_base_branch_name: 'main'
 
           source: 'src/main/generated/assets/galacticraft/lang/en_us.json'
           translation: 'src/main/resources/assets/galacticraft/lang/%locale_with_underscore%.json'
+          project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
+          token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
-          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
