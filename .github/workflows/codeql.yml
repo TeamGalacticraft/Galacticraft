@@ -23,7 +23,7 @@ jobs:
           java-version: 17
           distribution: temurin
 
-      - name: Cache gradle dependencies
+      - name: Restore Gradle cache
         uses: actions/cache/restore@v4
         with:
           fail-on-cache-miss: true
@@ -32,9 +32,6 @@ jobs:
             ~/.gradle/wrapper
             .gradle
           key: ${{ runner.os }}-gradle-${{ hashFiles('gradle/gradle-wrapper.properties', 'settings.gradle.kts', 'build.gradle.kts', 'gradle.properties') }}
-
-      - name: Initialize build environment
-        run: ./gradlew
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
