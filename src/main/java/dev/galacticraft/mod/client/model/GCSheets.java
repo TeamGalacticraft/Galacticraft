@@ -22,9 +22,22 @@
 
 package dev.galacticraft.mod.client.model;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import dev.galacticraft.mod.Constant;
+import net.minecraft.client.renderer.RenderStateShard;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
 
-public interface GCBakedModel extends AutoCloseable {
-    void render(PoseStack modelStack, MultiBufferSource bufferSource, int light, int overlay);
+public class GCSheets {
+    public static final ResourceLocation ROCKET_ATLAS = Constant.id("textures/atlas/rockets.png");
+
+    public static final RenderType ROCKET = RenderType.create("rocket", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RenderType.TRANSIENT_BUFFER_SIZE, true, false, RenderType.CompositeState.builder()
+            .setShaderState(RenderType.RENDERTYPE_ENTITY_CUTOUT_SHADER)
+            .setTextureState(new RenderStateShard.TextureStateShard(/*ROCKET_ATLAS*/Constant.id("textures/rocket/rocket.png"), false, false))
+            .setTransparencyState(RenderType.NO_TRANSPARENCY)
+            .setCullState(RenderType.NO_CULL)
+            .setLightmapState(RenderType.LIGHTMAP)
+            .setOverlayState(RenderType.OVERLAY)
+            .createCompositeState(true));
 }

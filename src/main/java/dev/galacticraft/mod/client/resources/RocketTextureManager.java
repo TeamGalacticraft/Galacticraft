@@ -30,6 +30,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class RocketTextureManager extends TextureAtlasHolder implements IdentifiableResourceReloadListener {
     public static final RocketTextureManager INSTANCE = new RocketTextureManager();
+
     public static final ResourceLocation ID = Constant.id("rockets");
 
     public RocketTextureManager() {

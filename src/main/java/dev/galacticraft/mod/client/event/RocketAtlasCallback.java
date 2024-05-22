@@ -20,11 +20,20 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.model;
+package dev.galacticraft.mod.client.event;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.fabricmc.fabric.api.event.Event;
+import net.fabricmc.fabric.api.event.EventFactory;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.resources.ResourceLocation;
 
-public interface GCBakedModel extends AutoCloseable {
-    void render(PoseStack modelStack, MultiBufferSource bufferSource, int light, int overlay);
+import java.util.Map;
+
+public interface RocketAtlasCallback {
+    Event<RocketAtlasCallback> EVENT = EventFactory.createArrayBacked(RocketAtlasCallback.class, callbacks -> (atlasMap, textureManager) -> {
+        for (RocketAtlasCallback c : callbacks)
+            c.collectAtlases(atlasMap, textureManager);
+    });
+
+    void collectAtlases(Map<ResourceLocation, ResourceLocation> atlasMap, TextureManager textureManager);
 }

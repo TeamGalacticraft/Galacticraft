@@ -22,14 +22,21 @@
 
 package dev.galacticraft.mod.client.render.entity.rocket;
 
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.client.resources.RocketTextureManager;
 import dev.galacticraft.mod.content.entity.RocketEntity;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderStateShard;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -39,6 +46,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.InventoryMenu;
 
+import java.util.function.Function;
+
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
@@ -46,6 +55,8 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
     public RocketEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
+
+
 
     @Override
     public void render(RocketEntity entity, float yaw, float partialTick, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
@@ -61,7 +72,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         matrices.mulPose(Axis.YP.rotationDegrees(180.0F - yRot));
         matrices.mulPose(Axis.ZN.rotationDegrees(entity.getViewXRot(partialTick)));
         matrices.mulPose(Axis.YN.rotationDegrees(yRot));
-        matrices.translate(-0.5D, 0, -0.5D);
+        matrices.translate(0, 0.25D, 0);
 
         float wobbleTicks = (float) entity.getEntityData().get(RocketEntity.DAMAGE_WOBBLE_TICKS) - partialTick;
         float wobbleStrength = entity.getEntityData().get(RocketEntity.DAMAGE_WOBBLE_STRENGTH) - partialTick;

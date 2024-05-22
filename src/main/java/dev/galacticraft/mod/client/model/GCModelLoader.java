@@ -33,13 +33,17 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.client.event.RocketAtlasCallback;
 import dev.galacticraft.mod.client.resources.RocketTextureManager;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.model.AtlasSet;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.FileToIdConverter;
@@ -77,9 +81,11 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
     private static final ResourceLocation PARACHEST_ITEM = Constant.id("item/parachest");
 
     private Map<ResourceLocation, GCBakedModel> models = ImmutableMap.of();
+    private AtlasSet atlases;
 
     @Override
     public void onInitializeModelLoader(Context pluginContext) {
+
         for (var color : DyeColor.values()) {
             pluginContext.addModels(Constant.id("block/" + color + "_fluid_pipe_walkway"));
         }
@@ -120,6 +126,12 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
     @Override
     public CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, ProfilerFiller preparationsProfiler, ProfilerFiller reloadProfiler, Executor backgroundExecutor, Executor gameExecutor) {
         preparationsProfiler.startTick();
+        Map<ResourceLocation, ResourceLocation> atlasMap = new HashMap<>();
+        atlasMap.put(GCSheets.ROCKET_ATLAS, new ResourceLocation("rockets"));
+        TextureManager textureManager = Minecraft.getInstance().getTextureManager();
+        RocketAtlasCallback.EVENT.invoker().collectAtlases(atlasMap, textureManager);
+        this.atlases = new AtlasSet(atlasMap, textureManager);
+        Map<ResourceLocation, CompletableFuture<AtlasSet.StitchResult>> result = this.atlases.scheduleLoad(resourceManager, Minecraft.getInstance().options.mipmapLevels().get(), backgroundExecutor);
         preparationsProfiler.popPush("close_models");
         this.models.values().forEach(gcBakedModel -> {
             try {
