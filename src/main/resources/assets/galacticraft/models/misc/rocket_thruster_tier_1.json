@@ -1,4 +1,4 @@
 {
-  "porting_lib:obj_marker": true,
+  "galacticraft:type": "galacticraft:obj",
   "model": "galacticraft:models/misc/rocket_thruster_tier_1.obj"
 }

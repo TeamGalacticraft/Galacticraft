@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.resource;
+package dev.galacticraft.mod.client.resources;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.*;
@@ -43,9 +43,12 @@ import java.util.Collection;
 
 @Environment(EnvType.CLIENT)
 public class GCResourceReloadListener implements SimpleSynchronousResourceReloadListener {
+    public static final GCResourceReloadListener INSTANCE = new GCResourceReloadListener();
+    public static final ResourceLocation ID = Constant.id("resource_reload_listener");
+
     @Override
     public ResourceLocation getFabricId() {
-        return Constant.id("resource_reload_listener");
+        return ID;
     }
 
     @Override

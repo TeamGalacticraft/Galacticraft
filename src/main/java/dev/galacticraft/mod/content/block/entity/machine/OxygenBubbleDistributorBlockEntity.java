@@ -54,7 +54,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     public static final int CHARGE_SLOT = 0;
-    public static final int OXYGEN_INPUT_SLOT = 0; // REVIEW: should this be 0 or 1?
+    public static final int OXYGEN_INPUT_SLOT = 1; // REVIEW: should this be 0 or 1?
     public static final int OXYGEN_TANK = 0;
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
     private boolean bubbleVisible = true;
@@ -111,7 +111,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
 
                 profiler.push("bubbler_distributor_transfer");
                 long oxygenRequired = Math.max((long) ((4.0 / 3.0) * Math.PI * this.size * this.size * this.size), 1);
-                FluidResourceSlot slot = this.fluidStorage().getSlot(OXYGEN_INPUT_SLOT);
+                FluidResourceSlot slot = this.fluidStorage().getSlot(OXYGEN_TANK);
 
                 if (slot.canExtract(oxygenRequired)) {
                     slot.extract(oxygenRequired);

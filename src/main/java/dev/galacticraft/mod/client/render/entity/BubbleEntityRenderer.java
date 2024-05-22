@@ -25,6 +25,9 @@ package dev.galacticraft.mod.client.render.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.client.model.GCBakedModel;
+import dev.galacticraft.mod.client.model.GCModelLoader;
+import dev.galacticraft.mod.client.model.GCSheets;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.content.entity.BubbleEntity;
 import net.fabricmc.api.EnvType;
@@ -46,8 +49,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 @Environment(EnvType.CLIENT)
 public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
-    private static final ResourceLocation MODEL = Constant.id("models/misc/sphere.obj");
-    public static BakedModel bubbleModel;
+    private static final ResourceLocation MODEL = Constant.id("models/misc/sphere.json");
+    public static final ResourceLocation TEXTURE = Constant.id("textures/model/sphere.png");
+    public static GCBakedModel bubbleModel;
 
     public BubbleEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
@@ -56,7 +60,7 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
     @Override
     public void render(BubbleEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
         if (bubbleModel == null) {
-            bubbleModel = Minecraft.getInstance().getModelManager().bakedRegistry.get(MODEL);
+            bubbleModel = GCModelLoader.INSTANCE.getModel(MODEL);
             assert bubbleModel != null;
         }
         BlockEntity blockEntity = entity.level().getBlockEntity(entity.blockPosition());
@@ -76,16 +80,12 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
         matrices.pushPose();
         matrices.translate(0.5F, 1.0F, 0.5F);
         matrices.scale((float) size, (float) size, (float) size);
-        VertexConsumer consumer = vertexConsumers.getBuffer(RenderType.entityTranslucentEmissive(Constant.id("textures/model/sphere.png")));
+        VertexConsumer consumer = vertexConsumers.getBuffer(GCSheets.entityTranslucentEmissive(TEXTURE));
 //        for (BakedQuad quad : bubbleModel.getQuads(null, null, entity.level().random)) {
 //            consumer.putBulkData(matrices.last(), quad, 1, 1, 1, Integer.MAX_VALUE, OverlayTexture.NO_OVERLAY);
 //        }
         // TEMP: until files are fixed
-        for (Direction direction : Direction.values()) {
-            for (BakedQuad quad : bubbleModel.getQuads(null, direction, entity.level().random)) {
-                consumer.putBulkData(matrices.last(), quad, 1, 1, 1, Integer.MAX_VALUE, OverlayTexture.NO_OVERLAY);
-            }
-        }
+        bubbleModel.render(matrices, consumer, light, OverlayTexture.NO_OVERLAY);
 
         matrices.popPose();
     }
@@ -97,6 +97,6 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(BubbleEntity entity) {
-        return bubbleModel.getParticleIcon().atlasLocation();
+        return TEXTURE;
     }
 }
