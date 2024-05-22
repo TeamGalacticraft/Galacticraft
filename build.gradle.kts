@@ -46,8 +46,8 @@ val reiVersion               = project.property("rei.version").toString()
 val jeiVersion               = project.property("jei.version").toString()
 val badpacketsVersion        = project.property("badpackets.version").toString()
 val wthitVersion             = project.property("wthit.version").toString()
+val architecturyVersion      = project.property("architectury.version").toString()
 val objVersion               = project.property("obj.version").toString()
-val runtimeOptional          = project.property("optional_dependencies.enabled").toString().toBoolean() && System.getenv("CI") == null
 
 plugins {
     java
@@ -108,8 +108,8 @@ loom {
         getByName("client") {
             name("Minecraft Client")
             source(sourceSets.test.get())
-            it.vmArg("-XX:+AllowEnhancedClassRedefinition")
-            it.environmentVariable("LD_PRELOAD", "/home/alpha/Documents/renderdoc_1.31/lib/librenderdoc.so")
+            vmArg("-XX:+AllowEnhancedClassRedefinition")
+            environmentVariable("LD_PRELOAD", "/home/alpha/Documents/renderdoc_1.31/lib/librenderdoc.so")
         }
 
         getByName("server") {
