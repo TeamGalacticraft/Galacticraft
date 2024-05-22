@@ -162,6 +162,9 @@ public class GCItems {
     public static final Item LUNASLATE_TIN_ORE = new BlockItem(GCBlocks.LUNASLATE_TIN_ORE, new Item.Properties());
 
     public static final Item ALUMINUM_ORE = new BlockItem(GCBlocks.ALUMINUM_ORE, new Item.Properties());
+    public static final Item MARS_TIN_ORE = new BlockItem(GCBlocks.MARS_TIN_ORE, new Item.Properties());
+    public static final Item MARS_IRON_ORE = new BlockItem(GCBlocks.MARS_IRON_ORE, new Item.Properties());
+    public static final Item MARS_COPPER_ORE = new BlockItem(GCBlocks.MARS_COPPER_ORE, new Item.Properties());
     public static final Item DEEPSLATE_ALUMINUM_ORE = new BlockItem(GCBlocks.DEEPSLATE_ALUMINUM_ORE, new Item.Properties());
 
     public static final Item DESH_ORE = new BlockItem(GCBlocks.DESH_ORE, new Item.Properties());
@@ -528,6 +531,9 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ALUMINUM_ORE), ALUMINUM_ORE);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DEEPSLATE_ALUMINUM_ORE), DEEPSLATE_ALUMINUM_ORE);
 
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MARS_IRON_ORE), MARS_IRON_ORE);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MARS_TIN_ORE), MARS_TIN_ORE);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MARS_COPPER_ORE), MARS_COPPER_ORE);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DESH_ORE), DESH_ORE);
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ILMENITE_ORE), ILMENITE_ORE);

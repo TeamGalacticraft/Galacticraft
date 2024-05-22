@@ -116,6 +116,9 @@ public interface Constant {
         String VAPOR_SPOUT = "vapor_spout";
 
         // Ore
+        String MARS_IRON_ORE = "mars_iron_ore";
+        String MARS_TIN_ORE = "mars_tin_ore";
+        String MARS_COPPER_ORE = "mars_copper_ore";
         String MOON_COPPER_ORE = "moon_copper_ore";
         String LUNASLATE_COPPER_ORE = "lunaslate_copper_ore";
         String DESH_ORE = "desh_ore";

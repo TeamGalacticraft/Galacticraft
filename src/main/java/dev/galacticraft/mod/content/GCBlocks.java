@@ -215,6 +215,10 @@ public class GCBlocks {
 
     public static final Block DESH_ORE = BLOCKS.register(Constant.Block.DESH_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 5.0F, false)));
 
+    public static final Block MARS_IRON_ORE = BLOCKS.register(Constant.Block.MARS_IRON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 3.0F, false)));
+    public static final Block MARS_TIN_ORE = BLOCKS.register(Constant.Block.MARS_TIN_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 3.0F, false)));
+    public static final Block MARS_COPPER_ORE = BLOCKS.register(Constant.Block.MARS_COPPER_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 3.0F, false)));
+
     public static final Block ILMENITE_ORE = BLOCKS.register(Constant.Block.ILMENITE_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 5.0F, false)));
 
     public static final Block GALENA_ORE = BLOCKS.register(Constant.Block.GALENA_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 5.0F, false)));
@@ -284,7 +288,7 @@ public class GCBlocks {
 
     public static final AirlockBlock AIR_LOCK_FRAME = BLOCKS.register(Constant.Block.AIR_LOCK_FRAME, new AirlockBlock(false, BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)));
     public static final AirlockBlock AIR_LOCK_CONTROLLER = BLOCKS.register(Constant.Block.AIR_LOCK_CONTROLLER, new AirlockBlock(true, BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)));
-    public static final Block AIR_LOCK_SEAL = BLOCKS.register(Constant.Block.AIR_LOCK_SEAL, new Block(BlockBehaviour.Properties.ofFullCopy(AIR_LOCK_FRAME)));
+    public static final Block AIR_LOCK_SEAL = BLOCKS.register(Constant.Block.AIR_LOCK_SEAL, new AirlockSealBlock(BlockBehaviour.Properties.ofFullCopy(AIR_LOCK_FRAME)));
 
     public static Block register(String id, Block block) {
         return Registry.register(BuiltInRegistries.BLOCK, Constant.id(id), block);
