@@ -23,12 +23,12 @@
 package dev.galacticraft.mod.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 
 public class GCMissingModel implements GCBakedModel {
 
     @Override
-    public void render(PoseStack modelStack, MultiBufferSource bufferSource, int light, int overlay) {
+    public void render(PoseStack modelStack, VertexConsumer vertexConsumer, int light, int overlay) {
 
     }
 

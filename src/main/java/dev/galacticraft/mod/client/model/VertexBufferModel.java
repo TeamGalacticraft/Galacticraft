@@ -49,9 +49,8 @@ public class VertexBufferModel implements GCBakedModel {
         this.obj = ObjUtils.convertToRenderable(obj);
     }
 
-    public void compile(PoseStack modelStack, MultiBufferSource bufferSource, int light, int overlay) {
+    public void compile(PoseStack modelStack, VertexConsumer consumer, int light, int overlay) {
 //        MeshBuffer buffer = new MeshBuffer(DefaultVertexFormat.NEW_ENTITY);
-        VertexConsumer buffer = bufferSource.getBuffer(GCSheets.ROCKET);
 //        Tesselator tes = Tesselator.getInstance();
 //        BufferBuilder buffer = tes.getBuilder();
 //        VertexBuffer vbo = new VertexBuffer(VertexBuffer.Usage.STATIC);
@@ -65,16 +64,16 @@ public class VertexBufferModel implements GCBakedModel {
             ObjFace face = obj.getFace(index);
             for (int vtx = 0; vtx < face.getNumVertices(); vtx++) {
                 FloatTuple pos = obj.getVertex(face.getVertexIndex(vtx));
-                buffer.vertex(last, pos.getX(), pos.getY(), pos.getZ());
-                buffer.color(255, 255, 255, 255);
+                consumer.vertex(last, pos.getX(), pos.getY(), pos.getZ());
+                consumer.color(255, 255, 255, 255);
                 FloatTuple uv = obj.getTexCoord(face.getTexCoordIndex(vtx));
-                buffer.uv(uv.getX(), 1 - uv.getY());
+                consumer.uv(uv.getX(), 1 - uv.getY());
 
-                buffer.overlayCoords(overlay);
-                buffer.uv2(light);
+                consumer.overlayCoords(overlay);
+                consumer.uv2(light);
                 FloatTuple normals = obj.getNormal(face.getNormalIndex(vtx));
-                buffer.normal(normals.getX(), normals.getY(), normals.getZ());
-                buffer.endVertex();
+                consumer.normal(normals.getX(), normals.getY(), normals.getZ());
+                consumer.endVertex();
             }
         }
 //        int[] indices = ObjData.getFaceVertexIndicesArray(obj);
@@ -123,9 +122,9 @@ public class VertexBufferModel implements GCBakedModel {
     }
 
     @Override
-    public void render(PoseStack modelStack, MultiBufferSource bufferSource, int light, int overlay) {
+    public void render(PoseStack modelStack, VertexConsumer vertexConsumer, int light, int overlay) {
 //        if (!compiled)
-            compile(modelStack, bufferSource, light, overlay);
+            compile(modelStack, vertexConsumer, light, overlay);
 //        RenderSystem.enableDepthTest();
 //        this.buffer.draw(modelStack, GameRenderer.getRendertypeSolidShader());
 //        this.buffer.bind();

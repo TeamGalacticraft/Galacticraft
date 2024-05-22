@@ -25,9 +25,12 @@ package dev.galacticraft.mod.client.model;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import dev.galacticraft.mod.Constant;
+import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+
+import java.util.function.BiFunction;
 
 public class GCSheets {
     public static final ResourceLocation ROCKET_ATLAS = Constant.id("textures/atlas/rockets.png");
@@ -40,4 +43,26 @@ public class GCSheets {
             .setLightmapState(RenderType.LIGHTMAP)
             .setOverlayState(RenderType.OVERLAY)
             .createCompositeState(true));
+
+    private static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE = Util.memoize(
+            ((resourceLocation, boolean_) -> {
+                RenderType.CompositeState compositeState = RenderType.CompositeState.builder()
+                        .setShaderState(RenderType.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
+                        .setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false, false))
+                        .setTransparencyState(RenderType.TRANSLUCENT_TRANSPARENCY)
+                        .setCullState(RenderType.NO_CULL)
+                        .setWriteMaskState(RenderType.COLOR_WRITE)
+                        .setOverlayState(RenderType.OVERLAY)
+                        .createCompositeState(boolean_);
+                return RenderType.create("entity_translucent_emissive", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RenderType.TRANSIENT_BUFFER_SIZE, true, true, compositeState);
+            })
+    );
+
+    public static RenderType entityTranslucentEmissive(ResourceLocation location, boolean outline) {
+        return ENTITY_TRANSLUCENT_EMISSIVE.apply(location, outline);
+    }
+
+    public static RenderType entityTranslucentEmissive(ResourceLocation location) {
+        return entityTranslucentEmissive(location, true);
+    }
 }

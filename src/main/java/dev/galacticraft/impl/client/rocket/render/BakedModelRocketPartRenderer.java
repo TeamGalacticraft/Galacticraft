@@ -30,6 +30,7 @@ import com.mojang.math.Axis;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRenderer;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.mod.client.model.GCBakedModel;
+import dev.galacticraft.mod.client.model.GCSheets;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -98,8 +99,9 @@ public record BakedModelRocketPartRenderer(Supplier<GCBakedModel> model,
 //        PoseStack.Pose entry = matrices.last();
 //        VertexConsumer vertexConsumer = vertices.getBuffer(layer.get());
 //        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
-        ;
-        this.model.get().render(matrices, vertices, light, overlay);
+
+        VertexConsumer consumer = vertices.getBuffer(GCSheets.ROCKET);
+        this.model.get().render(matrices, consumer, light, overlay);
 //        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(entry, vertexConsumer, null, this.model.get(), 1, 1, 1, light, overlay);
     }
 }
