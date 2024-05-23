@@ -1,0 +1,11 @@
+{
+  "type": "galacticraft:asteroid",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:multi_noise",
+      "preset": "galacticraft:asteroid"
+    },
+    "settings": "galacticraft:asteroid"
+  }
+}

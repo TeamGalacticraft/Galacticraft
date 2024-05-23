@@ -122,8 +122,8 @@ public interface Translations {
         String SOL_DESC = "star.galacticraft.sol.description";
         String SOL = "star.galacticraft.sol";
 
-        String ASTEROIDS_DESC = "planet.galacticraft.asteroids.description";
-        String ASTEROIDS = "planet.galacticraft.asteroids";
+        String ASTEROID_DESC = "planet.galacticraft.asteroid.description";
+        String ASTEROID = "planet.galacticraft.asteroid";
         String EARTH_DESC = "planet.galacticraft.earth.description";
         String EARTH = "planet.galacticraft.earth";
         String JUPITER_DESC = "planet.galacticraft.jupiter.description";

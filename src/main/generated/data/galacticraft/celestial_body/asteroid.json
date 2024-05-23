@@ -1,32 +1,32 @@
-  {
+{
   "type": "galacticraft:planet",
   "config": {
     "parent": "galacticraft:sol",
-    "access_weight": 1,
+    "access_weight": 2,
     "atmosphere": {
       "composition": {},
-      "pressure": 3.0E-15,
-      "temperature": 23.0
+      "pressure": 0,
+      "temperature": -1.5
     },
     "celestial_handler": "galacticraft:default",
-    "day_length": 720000,
-    "day_temperature": 105,
-    "description": "planet.galacticraft.venus.description",
+    "day_length": 99999999,
+    "day_temperature": -1.5,
+    "description": "planet.galacticraft.asteroid.description",
     "display": {
       "type": "galacticraft:icon",
       "config": {
         "height": 16,
         "scale": 1.0,
-        "texture": "galacticraft:textures/gui/celestialbodies/venus.png",
+        "texture": "galacticraft:textures/gui/celestialbodies/asteroid.png",
         "u": 0,
         "v": 0,
         "width": 16
       }
     },
     "galaxy": "galacticraft:milky_way",
-    "gravity": 0.9,
-    "name": "planet.galacticraft.venus",
-    "night_temperature": -180,
+    "gravity": 0.1,
+    "name": "planet.galacticraft.asteroid",
+    "night_temperature": -1.5,
     "position": {
       "type": "galacticraft:orbital",
       "config": {
@@ -41,6 +41,6 @@
       "config": {}
     },
     "teleporter": "galacticraft:lander",
-    "world": "galacticraft:venus"
+    "world": "galacticraft:asteroid"
   }
 }
