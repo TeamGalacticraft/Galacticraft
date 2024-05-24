@@ -30,8 +30,6 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 
-import java.util.Random;
-
 public abstract class DungeonPiece extends StructurePiece {
     protected DungeonConfiguration configuration;
 
