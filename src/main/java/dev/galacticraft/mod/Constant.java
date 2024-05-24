@@ -549,6 +549,7 @@ public interface Constant {
         String EVOLVED_PILLAGER = "evolved_pillager";
         String EVOLVED_EVOKER = "evolved_evoker";
         String EVOLVED_VINDICATOR = "evolved_vindicator";
+        String EVOLVED_SKELETON_BOSS = "evolved_skeleton_boss";
         String GREY = "grey";
         String ARCH_GREY = "arch_grey";
         String RUMBLER = "rumbler";

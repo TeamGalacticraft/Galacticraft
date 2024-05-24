@@ -98,6 +98,10 @@ public abstract class GCEntityLootSubProvider extends EntityLootSubProvider {
         }
     }
 
+    public LootTable.Builder noDrops() {
+        return LootTable.lootTable();
+    }
+
     protected abstract GCRegistry<EntityType<?>> getRegistry();
 
     protected boolean canHaveLootTable(EntityType<?> entityType) {
