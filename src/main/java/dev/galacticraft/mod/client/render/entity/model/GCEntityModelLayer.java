@@ -38,6 +38,8 @@ public class GCEntityModelLayer {
     public static final ModelLayerLocation SOLAR_PANEL = new ModelLayerLocation(Constant.id("solar_panel"), "main");
     public static final ModelLayerLocation LANDER = new ModelLayerLocation(Constant.id("lander"), "main");
     public static final ModelLayerLocation PARACHEST = new ModelLayerLocation(Constant.id("parachest"), "main");
+    // Bosses
+    public static final ModelLayerLocation SKELETON_BOSS = new ModelLayerLocation(Constant.id("skeleton_boss"), "main");
 
     public static void register() {
         EntityModelLayerRegistry.registerModelLayer(GAZER, GazerEntityModel::createBodyLayer);
@@ -48,6 +50,8 @@ public class GCEntityModelLayer {
         EntityModelLayerRegistry.registerModelLayer(ARCH_GREY, ArchGreyEntityModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(LANDER, LanderModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(PARACHEST, ParachestModel::createParachuteLayer);
+
+        EntityModelLayerRegistry.registerModelLayer(SKELETON_BOSS, EvolvedSkeletonBossModel::createBodyLayer);
 
         EntityModelLayerRegistry.registerModelLayer(SOLAR_PANEL, BasicSolarPanelBlockEntityRenderer::getTexturedModelData);
     }

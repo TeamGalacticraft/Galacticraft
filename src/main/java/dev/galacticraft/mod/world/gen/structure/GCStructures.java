@@ -23,8 +23,12 @@
 package dev.galacticraft.mod.world.gen.structure;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
+import dev.galacticraft.mod.structure.GCStructurePieceTypes;
 import dev.galacticraft.mod.structure.GCStructureTemplatePools;
+import dev.galacticraft.mod.structure.dungeon.DungeonConfiguration;
+import dev.galacticraft.mod.structure.dungeon.DungeonStructure;
 import dev.galacticraft.mod.tag.GCTags;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderOwner;
@@ -58,6 +62,7 @@ public class GCStructures {
         public static final ResourceKey<Structure> RUINS = key("moon_ruins");
         public static final ResourceKey<Structure> PILLAGER_BASE = key("moon_pillager_base");
         public static final ResourceKey<Structure> VILLAGE = key("moon_village");
+        public static final ResourceKey<Structure> BOSS = key("moon_boss");
     }
 
     private static ResourceKey<Structure> key(String id) {
@@ -91,6 +96,8 @@ public class GCStructures {
                 true,
                 Heightmap.Types.WORLD_SURFACE_WG
         ));
+        context.register(Moon.BOSS, new DungeonStructure(Structures.structure(biomeLookup.get(GCTags.MOON_BOSS_HAS_STRUCTURE).orElseGet(() -> createEmptyTag(GCTags.MOON_BOSS_HAS_STRUCTURE)), TerrainAdjustment.NONE), new DungeonConfiguration(GCBlocks.MOON_DUNGEON_BRICK.defaultBlockState(), 25, 8, 16,
+                5, 6, GCStructurePieceTypes.ROOM_BOSS, GCStructurePieceTypes.ROOM_TREASURE)));
     }
 
     @Contract("_ -> new")

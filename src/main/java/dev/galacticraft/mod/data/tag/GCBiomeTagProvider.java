@@ -39,23 +39,25 @@ public class GCBiomeTagProvider extends FabricTagProvider<Biome> {
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
-        this.tag(GCTags.MOON)
+        tag(GCTags.MOON)
                 .add(GCBiomes.Moon.COMET_TUNDRA)
                 .add(GCBiomes.Moon.BASALTIC_MARE)
                 .add(GCBiomes.Moon.LUNAR_HIGHLANDS)
                 .add(GCBiomes.Moon.LUNAR_LOWLANDS)
                 .add(GCBiomes.Moon.OLIVINE_SPIKES);
 
-        this.tag(GCTags.VENUS)
+        tag(GCTags.VENUS)
                 .add(GCBiomes.Venus.VENUS_VALLEY)
                 .add(GCBiomes.Venus.VENUS_FLAT)
                 .add(GCBiomes.Venus.VENUS_MOUNTAIN);
 
-        this.tag(GCTags.MOON_PILLAGER_BASE_HAS_STRUCTURE)
+        tag(GCTags.MOON_PILLAGER_BASE_HAS_STRUCTURE)
                 .add(GCBiomes.Moon.BASALTIC_MARE);
-        this.tag(GCTags.MOON_VILLAGE_HIGHLANDS_HAS_STRUCTURE)
+        tag(GCTags.MOON_VILLAGE_HIGHLANDS_HAS_STRUCTURE)
                 .add(GCBiomes.Moon.LUNAR_HIGHLANDS);
-        this.tag(GCTags.MOON_RUINS_HAS_STRUCTURE)
+        tag(GCTags.MOON_RUINS_HAS_STRUCTURE)
                 .add(GCBiomes.Moon.BASALTIC_MARE);
+        tag(GCTags.MOON_BOSS_HAS_STRUCTURE)
+                .addTag(GCTags.MOON);
     }
 }

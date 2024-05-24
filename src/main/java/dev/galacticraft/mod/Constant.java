@@ -63,6 +63,7 @@ public interface Constant {
         // Natural
         String MOON_TURF = "moon_turf";
         String MOON_SURFACE_ROCK = "moon_surface_rock";
+        String MOON_DUNGEON_BRICK = "moon_dungeon_brick";
         String MOON_ROCK = "moon_rock";
         String MOON_ROCK_SLAB = "moon_rock_slab";
         String MOON_ROCK_STAIRS = "moon_rock_stairs";
@@ -185,6 +186,7 @@ public interface Constant {
         String TREASURE_CHEST_TIER_2 = "treasure_chest_tier_2";
         String TREASURE_CHEST_TIER_3 = "treasure_chest_tier_3";
         String CRASHED_PROBE_BLOCK = "crashed_probe";
+        String BOSS_SPAWNER = "boss_spawner";
 
         // Moon Cheese
         String MOON_CHEESE_WHEEL = "moon_cheese_block";
@@ -563,6 +565,7 @@ public interface Constant {
         String COMET_CUBE = "textures/entity/comet_cube.png";
         String GAZER = "textures/entity/gazer.png";
         String LANDER = "textures/entity/lander.png";
+        String SKELETON_BOSS = "textures/entity/skeletonboss.png";
     }
 
     interface TextureCoordinate {

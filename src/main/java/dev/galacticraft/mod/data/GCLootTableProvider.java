@@ -20,21 +20,24 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.gen.structure;
+package dev.galacticraft.mod.data;
 
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.GCRegistry;
-import dev.galacticraft.mod.structure.dungeon.DungeonStructure;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.levelgen.structure.StructureType;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
-public class GCStructureTypes {
-    public static final GCRegistry<StructureType<?>> STRUCTURES = new GCRegistry<>(BuiltInRegistries.STRUCTURE_TYPE);
-    public static final StructureType<MoonRuinsStructure> MOON_RUINS = STRUCTURES.register("moon_ruins", () -> MoonRuinsStructure.CODEC);
-    public static final StructureType<DungeonStructure> MOON_DUNGEON = STRUCTURES.register("moon_dungeon", () -> DungeonStructure.CODEC);
+import java.util.List;
+import java.util.Set;
 
-    public static void register() {
+public class GCLootTableProvider {
+    public static LootTableProvider create(FabricDataOutput output) {
+        return new LootTableProvider(
+                output,
+                Set.of(),
+                List.of(
+                        new LootTableProvider.SubProviderEntry(GCEntityLoot::new, LootContextParamSets.ENTITY)
+                )
+        );
     }
 }

@@ -24,7 +24,8 @@
     "PlayerMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
-    "TorchBlockMixin"
+    "TorchBlockMixin",
+    "client.ClientPacketListenerMixin"
   ],
   "client": [
     "client.AbstractClientPlayerMixin",

@@ -106,6 +106,8 @@ public interface Translations {
         String PLAYER = "config.galacticraft.player";
         String PLAYER_LIFE_SUPPORT = "config.galacticraft.lifesupport";
         String PLAYER_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.player.lifesupport.oxygen_consumption_rate";
+        String BOSS_HEALTH_MODIFIER = "config.galacticraft.difficulty.dungeon_boss_health_multiplier";
+        String BOSS_HEALTH_MODIFIER_DESC = "config.galacticraft.difficulty.dungeon_boss_health_multiplier.desc";
         String SKYBOX = "config.galacticraft.client.skybox";
     }
 

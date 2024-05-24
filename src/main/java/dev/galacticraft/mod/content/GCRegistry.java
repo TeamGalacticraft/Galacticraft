@@ -26,8 +26,11 @@ import com.google.common.collect.ImmutableMap;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -36,26 +39,38 @@ import java.util.function.Function;
  */
 public class GCRegistry<T> {
     private final Registry<T> registry;
+    private final List<Holder.Reference<T>> entries = new ArrayList<>();
 
     public GCRegistry(Registry<T> registry) {
         this.registry = registry;
     }
 
+    protected ResourceLocation getId(String id) {
+        return Constant.id(id);
+    }
+
     public <V extends T> V register(String id, V object) {
-        return Registry.register(registry, Constant.id(id), object);
+        entries.add(Registry.registerForHolder(registry, getId(id), object));
+        return object;
     }
 
     public <V extends T> Holder.Reference<V> registerForHolder(String id, V object) {
-        return (Holder.Reference<V>) Registry.registerForHolder(registry, Constant.id(id), object);
+        var holder = Registry.registerForHolder(registry, getId(id), object);
+        entries.add(holder);
+        return (Holder.Reference<V>) holder;
     }
 
     public <V extends T> ColorSet<V> registerColored(String id, Function<DyeColor, V> consumer) {
         ImmutableMap.Builder<DyeColor, V> colorMap = new ImmutableMap.Builder<>();
         for (DyeColor color : DyeColor.values()) {
-            colorMap.put(color, Registry.register(registry, Constant.id(color.getName() + '_' + id), consumer.apply(color)));
+            colorMap.put(color, register(color.getName() + '_' + id, consumer.apply(color)));
         }
 
         return new ColorSet<>(colorMap.build());
+    }
+
+    public List<Holder.Reference<T>> getEntries() {
+        return entries;
     }
 
     public record ColorSet<T>(Map<DyeColor, T> colorMap) {

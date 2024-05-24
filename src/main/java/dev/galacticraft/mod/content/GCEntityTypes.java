@@ -25,6 +25,7 @@ package dev.galacticraft.mod.content;
 import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.*;
+import dev.galacticraft.mod.content.entity.boss.SkeletonBoss;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -37,6 +38,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
 public class GCEntityTypes {
+    public static final GCRegistry<EntityType<?>> ENTITIES = new GCRegistry<>(BuiltInRegistries.ENTITY_TYPE);
     public static final EntityType<EvolvedZombieEntity> EVOLVED_ZOMBIE = FabricEntityTypeBuilder.create(MobCategory.MONSTER, EvolvedZombieEntity::new).dimensions(EntityDimensions.fixed(0.6F, 1.95F)).build();
     public static final EntityType<EvolvedCreeperEntity> EVOLVED_CREEPER =  FabricEntityTypeBuilder.create(MobCategory.MONSTER, EvolvedCreeperEntity::new).dimensions(EntityDimensions.scalable(0.65F, 1.8F)).build();
     public static final EntityType<EvolvedSkeletonEntity> EVOLVED_SKELETON = FabricEntityTypeBuilder.create(MobCategory.MONSTER, EvolvedSkeletonEntity::new).dimensions(EntityDimensions.fixed(0.6F, 1.99F)).build();
@@ -55,6 +57,14 @@ public class GCEntityTypes {
     public static final EntityType<LanderEntity> LANDER = FabricEntityTypeBuilder.<LanderEntity>create(MobCategory.MISC, LanderEntity::new).trackRangeBlocks(32).dimensions(EntityDimensions.fixed(2.5F, 4F)).fireImmune().disableSummon().build();
     public static final EntityType<ParachestEntity> PARACHEST = FabricEntityTypeBuilder.<ParachestEntity>create(MobCategory.MISC, ParachestEntity::new).trackRangeBlocks(150).trackedUpdateRate(5).dimensions(EntityDimensions.fixed(1.0F, 1.0F)).build();
     public static final EntityType<ThrowableMeteorChunkEntity> THROWABLE_METEOR_CHUNK = FabricEntityTypeBuilder.<ThrowableMeteorChunkEntity>create(MobCategory.MISC, ThrowableMeteorChunkEntity::new).dimensions(EntityDimensions.fixed(0.25F, 0.25F)).build();
+    // Bosses
+    public static final EntityType<SkeletonBoss> SKELETON_BOSS = ENTITIES.register("evolved_skeleton_boss", FabricEntityTypeBuilder.create(MobCategory.MONSTER, SkeletonBoss::new)
+            .dimensions(EntityDimensions.fixed(1.5F, 4.0F))
+            .fireImmune()
+            .trackRangeBlocks(80)
+            .trackedUpdateRate(3)
+            .forceTrackedVelocityUpdates(true)
+            .build());
 
     public static void register() {
         Registry.register(BuiltInRegistries.ENTITY_TYPE, Constant.id(Constant.Entity.EVOLVED_ZOMBIE), EVOLVED_ZOMBIE);
@@ -91,5 +101,6 @@ public class GCEntityTypes {
         FabricDefaultAttributeRegistry.register(OLI_GRUB, OliGrubEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(GREY, GreyEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(ARCH_GREY, ArchGreyEntity.createAttributes());
+        FabricDefaultAttributeRegistry.register(SKELETON_BOSS, SkeletonBoss.createAttributes().add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D));
     }
 }

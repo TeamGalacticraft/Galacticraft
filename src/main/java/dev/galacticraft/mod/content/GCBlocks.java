@@ -25,6 +25,7 @@ package dev.galacticraft.mod.content;
 import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
+import dev.galacticraft.mod.content.block.boss.BossSpawner;
 import dev.galacticraft.mod.content.block.decoration.GratingBlock;
 import dev.galacticraft.mod.content.block.decoration.LightPanelBlock;
 import dev.galacticraft.mod.content.block.decoration.LunarCartographyTableBlock;
@@ -105,6 +106,7 @@ public class GCBlocks {
     public static final Block MOON_DIRT = BLOCKS.register(Constant.Block.MOON_DIRT, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).strength(0.5F, 0.5F).sound(SoundType.GRAVEL)));
     public static final Block MOON_DIRT_PATH = BLOCKS.register(Constant.Block.MOON_DIRT_PATH, new MoonDirtPathBlock(BlockBehaviour.Properties.ofFullCopy(MOON_DIRT).strength(0.5F, 0.5F)));
     public static final Block MOON_SURFACE_ROCK = BLOCKS.register(Constant.Block.MOON_SURFACE_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F)));
+    public static final Block MOON_DUNGEON_BRICK = BLOCKS.registerWithItem(Constant.Block.MOON_DUNGEON_BRICK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 2.5F)));
 
     public static final Block MOON_ROCK = BLOCKS.register(Constant.Block.MOON_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F)));
     public static final Block MOON_ROCK_SLAB = BLOCKS.register(Constant.Block.MOON_ROCK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(MOON_ROCK).strength(2.5F, 6.0F)));
@@ -254,6 +256,7 @@ public class GCBlocks {
     public static final Block CAVERNOUS_VINES = register(Constant.Block.CAVERNOUS_VINES, new CavernousVinesBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).randomTicks().noCollission().lightLevel(CavernousVines.emission(8)).instabreak().sound(SoundType.CAVE_VINES).pushReaction(PushReaction.DESTROY)));
     public static final Block CAVERNOUS_VINES_PLANT = BLOCKS.register(Constant.Block.CAVERNOUS_VINES_PLANT, new CavernousVinesPlantBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).noCollission().lightLevel(CavernousVines.emission(8)).instabreak().sound(SoundType.CAVE_VINES).pushReaction(PushReaction.DESTROY).dropsLike(CAVERNOUS_VINES)));
     public static final Block MOON_BERRY_BUSH = BLOCKS.register(Constant.Block.MOON_BERRY_BUSH, new MoonBerryBushBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).pushReaction(PushReaction.DESTROY).noLootTable().noCollission().lightLevel(blockstate -> 3).sound(SoundType.SWEET_BERRY_BUSH).randomTicks()));
+    public static final Block BOSS_SPAWNER = BLOCKS.register(Constant.Block.BOSS_SPAWNER, new BossSpawner(BlockBehaviour.Properties.ofFullCopy(Blocks.SPAWNER).noLootTable().noCollission()));
 
     // DUMMY
     public static final BaseEntityBlock SOLAR_PANEL_PART = BLOCKS.register(Constant.Block.SOLAR_PANEL_PART, new SolarPanelPartBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(-1.0F, 5.0F).noLootTable().sound(SoundType.METAL)));

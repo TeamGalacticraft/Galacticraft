@@ -57,6 +57,8 @@ public interface Config {
 
     long playerOxygenConsuptionRate();
 
+    double bossHealthMultiplier();
+
     void load();
 
     void save();

@@ -96,6 +96,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.MOON_DIRT);
         createRotatedDelegate(generator, GCBlocks.MOON_DIRT_PATH);
         generator.createTrivialCube(GCBlocks.MOON_SURFACE_ROCK);
+        generator.createTrivialCube(GCBlocks.MOON_DUNGEON_BRICK);
 
         // MARS NATURAL
         generator.createTrivialCube(GCBlocks.MARS_SURFACE_ROCK);

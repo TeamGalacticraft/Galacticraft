@@ -20,21 +20,34 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.gen.structure;
+package dev.galacticraft.mod.data;
 
-import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCRegistry;
-import dev.galacticraft.mod.structure.dungeon.DungeonStructure;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.levelgen.structure.StructureType;
+import dev.galacticraft.mod.data.loot.GCEntityLootSubProvider;
+import net.minecraft.data.loot.EntityLootSubProvider;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
 
-public class GCStructureTypes {
-    public static final GCRegistry<StructureType<?>> STRUCTURES = new GCRegistry<>(BuiltInRegistries.STRUCTURE_TYPE);
-    public static final StructureType<MoonRuinsStructure> MOON_RUINS = STRUCTURES.register("moon_ruins", () -> MoonRuinsStructure.CODEC);
-    public static final StructureType<DungeonStructure> MOON_DUNGEON = STRUCTURES.register("moon_dungeon", () -> DungeonStructure.CODEC);
+public class GCEntityLoot extends GCEntityLootSubProvider {
+    protected GCEntityLoot() {
+        super(FeatureFlags.REGISTRY.allFlags());
+    }
 
-    public static void register() {
+    @Override
+    public void generate() {
+        add(GCEntityTypes.SKELETON_BOSS, LootTable.lootTable()
+                .pool(LootPool.lootPool()
+                        .add(LootItem.lootTableItem(Items.ARROW))
+                        .build()));
+    }
+
+    @Override
+    protected GCRegistry<EntityType<?>> getRegistry() {
+        return GCEntityTypes.ENTITIES;
     }
 }

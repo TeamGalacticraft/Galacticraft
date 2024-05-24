@@ -37,6 +37,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class GCBlockEntityTypes {
+    public static final GCRegistry<BlockEntityType<?>> BLOCK_ENTITIES = new GCRegistry<>(BuiltInRegistries.BLOCK_ENTITY_TYPE);
     // POWER GENERATION
     public static final BlockEntityType<CoalGeneratorBlockEntity> COAL_GENERATOR = FabricBlockEntityTypeBuilder.create(CoalGeneratorBlockEntity::new, GCBlocks.COAL_GENERATOR).build();
     public static final BlockEntityType<BasicSolarPanelBlockEntity> BASIC_SOLAR_PANEL = FabricBlockEntityTypeBuilder.create(BasicSolarPanelBlockEntity::new, GCBlocks.BASIC_SOLAR_PANEL).build();
@@ -78,6 +79,7 @@ public class GCBlockEntityTypes {
     public static final BlockEntityType<SolarPanelPartBlockEntity> SOLAR_PANEL_PART = FabricBlockEntityTypeBuilder.create(SolarPanelPartBlockEntity::new, GCBlocks.SOLAR_PANEL_PART).build();
     public static final BlockEntityType<CryogenicChamberBlockEntity> CRYOGENIC_CHAMBER = FabricBlockEntityTypeBuilder.create(CryogenicChamberBlockEntity::new, GCBlocks.CRYOGENIC_CHAMBER).build();
     public static final BlockEntityType<CryogenicChamberPartBlockEntity> CRYOGENIC_CHAMBER_PART = FabricBlockEntityTypeBuilder.create(CryogenicChamberPartBlockEntity::new, GCBlocks.CRYOGENIC_CHAMBER_PART).build();
+    public static final BlockEntityType<DungeonSpawnerBlockEntity> DUNGEON_BOSS_SPAWNER = BLOCK_ENTITIES.register(Constant.Block.BOSS_SPAWNER, FabricBlockEntityTypeBuilder.create(DungeonSpawnerBlockEntity::new, GCBlocks.BOSS_SPAWNER).build());
 
     public static final BlockEntityType<AirlockControllerBlockEntity> AIRLOCK_CONTROLLER = FabricBlockEntityTypeBuilder.create(AirlockControllerBlockEntity::new, GCBlocks.AIR_LOCK_CONTROLLER).build();
     public static final BlockEntityType<RocketWorkbenchBlockEntity> ROCKET_WORKBENCH = FabricBlockEntityTypeBuilder.create(RocketWorkbenchBlockEntity::new, GCBlocks.ROCKET_WORKBENCH).build();

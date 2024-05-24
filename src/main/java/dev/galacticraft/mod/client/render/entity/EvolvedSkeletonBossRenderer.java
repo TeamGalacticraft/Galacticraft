@@ -20,21 +20,28 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.gen.structure;
+package dev.galacticraft.mod.client.render.entity;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.GCRegistry;
-import dev.galacticraft.mod.structure.dungeon.DungeonStructure;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
+import dev.galacticraft.mod.Constant.EntityTexture;
+import dev.galacticraft.mod.client.model.entity.EvolvedSkeletonBossModel;
+import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
+import dev.galacticraft.mod.content.entity.boss.SkeletonBoss;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.levelgen.structure.StructureType;
 
-public class GCStructureTypes {
-    public static final GCRegistry<StructureType<?>> STRUCTURES = new GCRegistry<>(BuiltInRegistries.STRUCTURE_TYPE);
-    public static final StructureType<MoonRuinsStructure> MOON_RUINS = STRUCTURES.register("moon_ruins", () -> MoonRuinsStructure.CODEC);
-    public static final StructureType<DungeonStructure> MOON_DUNGEON = STRUCTURES.register("moon_dungeon", () -> DungeonStructure.CODEC);
+public class EvolvedSkeletonBossRenderer extends MobRenderer<SkeletonBoss, EvolvedSkeletonBossModel> {
+    public static final ResourceLocation BOSS_TEXTURE = Constant.id(EntityTexture.SKELETON_BOSS);
 
-    public static void register() {
+    public EvolvedSkeletonBossRenderer(EntityRendererProvider.Context context) {
+        super(context, new EvolvedSkeletonBossModel(context.bakeLayer(GCEntityModelLayer.SKELETON_BOSS)), 0.9F);
+        addLayer(new ItemInHandLayer<>(this, context.getItemInHandRenderer()));
+    }
+
+    @Override
+    public ResourceLocation getTextureLocation(SkeletonBoss entity) {
+        return BOSS_TEXTURE;
     }
 }

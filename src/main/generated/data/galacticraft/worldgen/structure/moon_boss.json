@@ -1,0 +1,20 @@
+{
+  "type": "galacticraft:moon_dungeon",
+  "config": {
+    "biomes": "#galacticraft:has_structure/moon_boss",
+    "spawn_overrides": {},
+    "step": "surface_structures"
+  },
+  "dungeon_configuration": {
+    "bossRoom": "galacticraft:moondungeonbossroom",
+    "brickBlock": {
+      "Name": "galacticraft:moon_dungeon_brick"
+    },
+    "hallwayHeight": 5,
+    "hallwayLengthMax": 16,
+    "hallwayLengthMin": 8,
+    "roomHeight": 6,
+    "treasureRoom": "galacticraft:moondungeontreasureroom",
+    "yPosition": 25
+  }
+}
