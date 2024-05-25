@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.entity.orbital;
 
+import dev.galacticraft.api.entity.IgnoreShift;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.LaunchStage;
@@ -35,6 +36,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.attachments.GCServerPlayer;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
+import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import dev.galacticraft.mod.content.entity.ControllableEntity;
@@ -91,7 +93,7 @@ import org.joml.Vector3f;
 import java.util.Objects;
 
 @SuppressWarnings("UnstableApiUsage")
-public class RocketEntity extends Entity implements Rocket, ControllableEntity {
+public class RocketEntity extends Entity implements Rocket, IgnoreShift, ControllableEntity {
     private static final ResourceLocation NULL_ID = new ResourceLocation("null");
     private static final EntityDataAccessor<LaunchStage> STAGE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.LAUNCH_STAGE);
 
@@ -609,6 +611,16 @@ public class RocketEntity extends Entity implements Rocket, ControllableEntity {
             ticksSinceJump++;
 
         }
+
+        if (getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
+            if (getPassengers().size() >= 1) { // When the screen changes to the
+                // map, the player is not riding
+                // the rocket anymore.
+                if (getPassengers().get(0) instanceof ServerPlayer player) {
+                    GCTriggers.LAUNCH_ROCKET.trigger(player);
+                }
+            }
+        }
     }
 
     public Vec3 calculateVelocity() {
@@ -863,5 +875,10 @@ public class RocketEntity extends Entity implements Rocket, ControllableEntity {
                 setYRot((getYRot() + 2.0F) % 360.0f);
             }
         }
+    }
+
+    @Override
+    public boolean shouldIgnoreShiftExit() {
+        return getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal();
     }
 }

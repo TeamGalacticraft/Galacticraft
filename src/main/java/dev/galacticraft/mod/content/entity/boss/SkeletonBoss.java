@@ -26,6 +26,7 @@ import dev.galacticraft.api.entity.IgnoreShift;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCSounds;
+import dev.galacticraft.mod.content.advancements.GCTriggers;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -36,9 +37,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -73,8 +72,8 @@ public class SkeletonBoss extends AbstractBossEntity implements RangedAttackMob,
 
     @Override
     protected void registerGoals() {
-//        this.goalSelector.addGoal(1, new EntityAISwimming(this));
-//        this.goalSelector.addGoal(2, new EntityAIArrowAttack(this, 1.0D, 25, 10.0F));
+        this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.goalSelector.addGoal(2, new RangedAttackGoal(this, 1.0D, 25, 10.0F));
         this.goalSelector.addGoal(2, new RandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
@@ -184,21 +183,20 @@ public class SkeletonBoss extends AbstractBossEntity implements RangedAttackMob,
 
         for (Player player : level().players()) { // EntityGetter#hasNearbyAlivePlayer
 
-            if (EntitySelector.NO_SPECTATORS.test(player) && EntitySelector.LIVING_ENTITY_STILL_ALIVE.test(player) && player instanceof ServerPlayer) {
-                double d0 = player.distanceToSqr(this.getX(), this.getY(), this.getZ());
+            if (EntitySelector.NO_SPECTATORS.test(player) && EntitySelector.LIVING_ENTITY_STILL_ALIVE.test(player) && player instanceof ServerPlayer serverPlayer) {
+                double distance = player.distanceToSqr(getX(), getY(), getZ());
 
-                if (d0 < 20 * 20) {
-//                    GCTriggers.FIND_MOON_BOSS.trigger(((EntityPlayerMP) player));
-
+                if (distance < 20 * 20) {
+                    GCTriggers.FIND_MOON_BOSS.trigger(serverPlayer);
                 }
             }
         }
 
-        if (!this.level().isClientSide && this.getHealth() <= 150.0F * Galacticraft.CONFIG.bossHealthMultiplier() / 2) {
+        if (!level().isClientSide && this.getHealth() <= 150.0F * Galacticraft.CONFIG.bossHealthMultiplier() / 2) {
             this.getAttribute(Attributes.MOVEMENT_SPEED);
         }
 
-        final Player player = this.level().getNearestPlayer(this.getX(), this.getY(), this.getZ(), 20.0, false);
+        final Player player = level().getNearestPlayer(getX(), getY(), getZ(), 20.0, false);
 
         if (player != null && !player.equals(this.targetEntity)) {
             if (this.distanceToSqr(player) < 400.0D) {

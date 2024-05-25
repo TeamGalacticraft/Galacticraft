@@ -821,4 +821,10 @@ public interface Constant {
         String LANDER = "lander";
         String OVERWORLD = "overworld";
     }
+
+    interface Triggers {
+        String ROCKET_LAUNCH = "launch_rocket";
+        String FIND_MOON_BOSS = "boss_moon";
+        String CREATE_SPACE_STATION = "create_space_station";
+    }
 }
