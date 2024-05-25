@@ -83,7 +83,7 @@ public class GCCommands {
                                             .executes(context -> openCelestialScreenWithPlayer(context, BoolArgumentType.getBool(context, "mapMode")))
                                     )
                             )
-                        .executes(context -> openCelestialScreen(context, false)));
+                        .executes(context -> openCelestialScreen(context, true)));
         });
     }
 
