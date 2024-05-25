@@ -104,7 +104,7 @@ public class CelestialSelectionScreen extends Screen {
     protected static final ResourceLocation TEXTURE_1 = Constant.id("textures/gui/celestial_selection_1.png");
     protected static int BORDER_SIZE = 0;
     protected static int BORDER_EDGE_SIZE = 0;
-    protected final boolean mapMode;
+    public final boolean mapMode;
     private final @Nullable RocketData data;
     public final boolean canCreateStations;
     protected float zoom = 0.0F;

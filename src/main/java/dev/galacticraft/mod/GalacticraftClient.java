@@ -57,7 +57,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
@@ -181,6 +180,8 @@ public class GalacticraftClient implements ClientModInitializer {
 
         });
 
+        ModelLoadingPlugin.register(GCModelLoader.INSTANCE);
+
         Constant.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 
@@ -189,8 +190,6 @@ public class GalacticraftClient implements ClientModInitializer {
      * should be safe to do general initialization here.
      */
     public static void init() {
-//        ModelLoadingPlugin.register(GCModelLoader.INSTANCE);
-
         var helper = ResourceManagerHelper.get(PackType.CLIENT_RESOURCES);
         helper.registerReloadListener(RocketTextureManager.INSTANCE);
         helper.registerReloadListener(GCModelLoader.INSTANCE);

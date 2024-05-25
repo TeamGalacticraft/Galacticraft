@@ -67,7 +67,7 @@ public class GCClientPacketReceiver {
                     boolean mapMode = buf.readBoolean();
                     client.execute(() -> client.setScreen(new CelestialSelectionScreen(mapMode, RocketData.fromNbt(GCItems.ROCKET.getDefaultInstance().getTag()), true, null)));
                 }
-                default -> Constant.LOGGER.error("No screen found!");
+                default -> Constant.LOGGER.error("No screen found with id '{}'!", screen);
             }
         });
 

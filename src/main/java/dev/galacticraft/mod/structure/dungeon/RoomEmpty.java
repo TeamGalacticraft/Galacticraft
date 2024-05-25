@@ -58,39 +58,39 @@ public class RoomEmpty extends SizedPiece {
 
     @Override
     public void postProcess(WorldGenLevel worldIn, StructureManager structureManager, ChunkGenerator generator, RandomSource random, BoundingBox boundingBox, ChunkPos pos, BlockPos pivot) {
-        for (int i = 0; i <= this.sizeX; i++) {
-            for (int j = 0; j <= this.sizeY; j++) {
-                for (int k = 0; k <= this.sizeZ; k++) {
-                    if (i == 0 || i == this.sizeX || j == 0 || j == this.sizeY || k == 0 || k == this.sizeZ) {
+        for (int x = 0; x <= this.sizeX; x++) {
+            for (int y = 0; y <= this.sizeY; y++) {
+                for (int z = 0; z <= this.sizeZ; z++) {
+                    if (x == 0 || x == this.sizeX || y == 0 || y == this.sizeY || z == 0 || z == this.sizeZ) {
                         boolean placeBlock = true;
                         if (getDirection().getAxis() == Direction.Axis.Z) {
                             int start = (this.boundingBox.maxX() - this.boundingBox.minX()) / 2 - 1;
                             int end = (this.boundingBox.maxX() - this.boundingBox.minX()) / 2 + 1;
-                            if (i > start && i <= end && j < this.configuration.getHallwayHeight() && j > 0) {
-                                if (getDirection() == Direction.SOUTH && k == 0) {
+                            if (x > start && x <= end && y < this.configuration.getHallwayHeight() && y > 0) {
+                                if (getDirection() == Direction.SOUTH && z == 0) {
                                     placeBlock = false;
-                                } else if (getDirection() == Direction.NORTH && k == this.sizeZ) {
+                                } else if (getDirection() == Direction.NORTH && z == this.sizeZ) {
                                     placeBlock = false;
                                 }
                             }
                         } else {
                             int start = (this.boundingBox.maxZ() - this.boundingBox.minZ()) / 2 - 1;
                             int end = (this.boundingBox.maxZ() - this.boundingBox.minZ()) / 2 + 1;
-                            if (k > start && k <= end && j < this.configuration.getHallwayHeight() && j > 0) {
-                                if (getDirection() == Direction.EAST && i == 0) {
+                            if (z > start && z <= end && y < this.configuration.getHallwayHeight() && y > 0) {
+                                if (getDirection() == Direction.EAST && x == 0) {
                                     placeBlock = false;
-                                } else if (getDirection() == Direction.WEST && i == this.sizeX) {
+                                } else if (getDirection() == Direction.WEST && x == this.sizeX) {
                                     placeBlock = false;
                                 }
                             }
                         }
                         if (placeBlock) {
-                            this.placeBlock(worldIn, this.configuration.getBrickBlock(), i, j, k, boundingBox);
+                            this.placeBlock(worldIn, this.configuration.getBrickBlock(), x, y, z, boundingBox);
                         } else {
-                            this.placeBlock(worldIn, Blocks.AIR.defaultBlockState(), i, j, k, boundingBox);
+                            this.placeBlock(worldIn, Blocks.AIR.defaultBlockState(), x, y, z, boundingBox);
                         }
                     } else {
-                        this.placeBlock(worldIn, Blocks.AIR.defaultBlockState(), i, j, k, boundingBox);
+                        this.placeBlock(worldIn, Blocks.AIR.defaultBlockState(), x, y, z, boundingBox);
                     }
                 }
             }
