@@ -108,8 +108,6 @@ loom {
         getByName("client") {
             name("Minecraft Client")
             source(sourceSets.test.get())
-            vmArg("-XX:+AllowEnhancedClassRedefinition")
-            environmentVariable("LD_PRELOAD", "/home/alpha/Documents/renderdoc_1.31/lib/librenderdoc.so")
         }
 
         getByName("server") {
