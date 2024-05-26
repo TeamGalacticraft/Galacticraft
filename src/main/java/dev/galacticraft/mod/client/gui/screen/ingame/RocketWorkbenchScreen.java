@@ -25,7 +25,6 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRenderer;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.part.RocketPart;
@@ -188,7 +187,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
 
         drawSelection(graphics, mouseX, mouseY, delta);
 
-        try (BatchedRenderer render = new BatchedRenderer(Tesselator.getInstance().getBuilder(), graphics.pose(), Constant.ScreenTexture.ROCKET_WORKBENCH_SCREEN, 512, 256)) {
+        try (BatchedRenderer render = new BatchedRenderer(graphics, Constant.ScreenTexture.ROCKET_WORKBENCH_SCREEN, 512, 256)) {
             render.blit(this.leftPos, this.topPos + this.menu.additionalHeight + CAP_HEIGHT, 0, 0, BASE_UI_WIDTH, BASE_UI_HEIGHT);
 
             if (this.menu.additionalHeight > 0) {
@@ -288,7 +287,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
         mouseY -= this.topPos;
 
         int size = this.recipes != null ? this.recipes.size() : 0;
-        try (BatchedRenderer render = new BatchedRenderer(Tesselator.getInstance().getBuilder(), pose, Constant.ScreenTexture.ROCKET_SELECTION, 256, 256)) {
+        try (BatchedRenderer render = new BatchedRenderer(graphics, Constant.ScreenTexture.ROCKET_SELECTION, 256, 256)) {
             render.blit(0, 0, 0, 0, SELECTION_SCREEN_WIDTH, SELECTION_SCREEN_HEIGHT);
 
             {

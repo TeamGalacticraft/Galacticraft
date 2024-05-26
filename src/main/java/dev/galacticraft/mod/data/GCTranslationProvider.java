@@ -328,6 +328,10 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(CelestialSelection.SURFACE_COMPOSITION, "Surface Composition");
         this.add(CelestialSelection.ATMOSPHERE, "Atmosphere");
         this.add(CelestialSelection.MEAN_SURFACE_TEMP, "Mean Surface Temp.");
+        this.add(CelestialSelection.CLICK_AGAIN, "Click again to zoom");
+        this.add(CelestialSelection.CLICK_AGAIN_MOONS, "Click again to zoom (view moons)");
+        this.add(CelestialSelection.CLICK_AGAIN_SATELLITES, "Click again to zoom (view satellites)");
+        this.add(CelestialSelection.CLICK_AGAIN_MOONS_AND_SATELLITES, "Click again to zoom (view moons & satellites)");
 
         this.add(Ui.CONE, "Cone");
         this.add(Ui.BODY, "Body");
