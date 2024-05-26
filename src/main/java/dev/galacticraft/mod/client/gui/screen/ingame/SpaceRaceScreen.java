@@ -23,26 +23,22 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import org.joml.Matrix4f;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SpaceRaceScreen extends Screen {
@@ -50,6 +46,8 @@ public class SpaceRaceScreen extends Screen {
     private int backgroundHeight = 0;
     private Menu menu = Menu.MAIN;
     private EditBox teamNameInput;
+    private final List<SpaceRaceButton> buttons = new ArrayList<>();
+    private boolean animationCompleted = false;
 
     public SpaceRaceScreen() {
         super(Component.translatable(Translations.SpaceRace.SPACE_RACE_MANAGER));
@@ -60,13 +58,21 @@ public class SpaceRaceScreen extends Screen {
         return false;
     }
 
-    protected static boolean check(double mouseX, double mouseY, int x, int y, int width, int height) {
-        return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
-    }
-
     @Override
     protected void init() {
         super.init();
+
+        addButton(Menu.MAIN, Component.translatable(Translations.SpaceRace.EXIT), this.getLeft() + 5, this.getTop() + 5, 40, 14, button -> this.onClose());
+        addButton(Menu.MAIN, Component.translatable(Translations.SpaceRace.ADD_PLAYERS), this.getLeft() + 10, this.getBottom() - 85, 100, 30, button -> setMenu(Menu.ADD_PLAYERS));
+        addButton(Menu.MAIN, Component.translatable(Translations.SpaceRace.REMOVE_PLAYERS), this.getLeft() + 10, this.getBottom() - 45, 100, 30, button -> setMenu(Menu.REMOVE_PLAYERS));
+        addComingSoonButton(Menu.MAIN, Component.translatable(Translations.SpaceRace.SERVER_STATS), this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30);
+        addComingSoonButton(Menu.MAIN, Component.translatable(Translations.SpaceRace.GLOBAL_STATS), this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
+
+        addBackButton(Menu.ADD_PLAYERS);
+        addBackButton(Menu.REMOVE_PLAYERS);
+        addBackButton(Menu.TEAM_COLOR);
+        addBackButton(Menu.TEAM_FLAG);
+
         this.addRenderableWidget(this.teamNameInput = new EditBox(this.font, this.getLeft() + (this.backgroundWidth / 2) - 64, this.getTop() + 65, 128, 15, this.teamNameInput, Component.empty()) {
             private String prevText;
 
@@ -82,6 +88,7 @@ public class SpaceRaceScreen extends Screen {
                 super.setFocused(focused);
             }
         });
+
         this.teamNameInput.setVisible(menu == Menu.MAIN);
     }
 
@@ -92,31 +99,16 @@ public class SpaceRaceScreen extends Screen {
         super.resize(client, width, height);
     }
 
-    private static void fillSolid(Matrix4f matrix, int x1, int y1, int x2, int y2, int color) {
-        int j;
-        if (x1 < x2) {
-            j = x1;
-            x1 = x2;
-            x2 = j;
-        }
+    private void addButton(Menu menu, Component text, int x, int y, int width, int height, Button.OnPress onPress) {
+        this.buttons.add(this.addRenderableWidget(new SpaceRaceButton(menu, text, x, y, width, height, onPress)));
+    }
 
-        if (y1 < y2) {
-            j = y1;
-            y1 = y2;
-            y2 = j;
-        }
+    private void addComingSoonButton(Menu menu, Component text, int x, int y, int width, int height) {
+        this.buttons.add(this.addRenderableWidget(new ComingSoonButton(menu, text, x, y, width, height)));
+    }
 
-        float a = (float) (color >> 24 & 255) / 255.0F;
-        float r = (float) (color >> 16 & 255) / 255.0F;
-        float g = (float) (color >> 8 & 255) / 255.0F;
-        float b = (float) (color & 255) / 255.0F;
-        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        bufferBuilder.vertex(matrix, (float) x1, (float) y2, 0.0F).color(r, g, b, a).endVertex();
-        bufferBuilder.vertex(matrix, (float) x2, (float) y2, 0.0F).color(r, g, b, a).endVertex();
-        bufferBuilder.vertex(matrix, (float) x2, (float) y1, 0.0F).color(r, g, b, a).endVertex();
-        bufferBuilder.vertex(matrix, (float) x1, (float) y1, 0.0F).color(r, g, b, a).endVertex();
-        BufferUploader.draw(bufferBuilder.end());
+    private void addBackButton(Menu menu) {
+        addButton(menu, Component.translatable(Translations.SpaceRace.BACK), this.getLeft() + 5, this.getTop() + 5, 40, 14, button -> setMenu(Menu.MAIN));
     }
 
     @Override
@@ -132,103 +124,26 @@ public class SpaceRaceScreen extends Screen {
             backgroundHeight += (int) Math.min(40*delta, maxHeight - backgroundHeight);
         }
 
+        if (!this.animationCompleted && this.isAnimationComplete()) {
+            this.repositionElements();
+            this.animationCompleted = true;
+        }
+
         graphics.fill(getLeft(), getTop(), getLeft() + backgroundWidth, getTop() + backgroundHeight, 0x80000000);
     }
 
     private void renderForeground(GuiGraphics graphics, int mouseX, int mouseY) {
         graphics.drawCenteredString(this.font, Component.translatable(Translations.SpaceRace.SPACE_RACE_MANAGER), this.width / 2, getTop() - 20, 0xFFFFFF);
-
-        if (menu == Menu.MAIN) {
-            boolean exitHovered = check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14);
-            renderButton(exitHovered, graphics, font, Component.translatable(Translations.SpaceRace.EXIT), this.getLeft() + 5, this.getTop() + 5, 40, 14);
-
-            boolean addPlayersHovered = check(mouseX, mouseY, this.getLeft() + 10, this.getBottom() - 85, 100, 30);
-            renderButton(addPlayersHovered, graphics, font, Component.translatable(Translations.SpaceRace.ADD_PLAYERS), this.getLeft() + 10, this.getBottom() - 85, 100, 30);
-
-            boolean removePlayersHovered = check(mouseX, mouseY, this.getLeft() + 10, this.getBottom() - 45, 100, 30);
-            renderButton(removePlayersHovered, graphics, font, Component.translatable(Translations.SpaceRace.REMOVE_PLAYERS), this.getLeft() + 10, this.getBottom() - 45, 100, 30);
-
-            boolean serverStatsHovered = check(mouseX, mouseY, this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30);
-            renderComingSoonButton(serverStatsHovered, graphics, font, Component.translatable(Translations.SpaceRace.SERVER_STATS), this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30);
-
-            boolean globalStatsHovered = check(mouseX, mouseY, this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
-            renderComingSoonButton(globalStatsHovered, graphics, font, Component.translatable(Translations.SpaceRace.GLOBAL_STATS), this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
-
-        } else if (menu == Menu.ADD_PLAYERS) {
-            boolean backHovered = check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14);
-            renderButton(backHovered, graphics, font, Component.translatable(Translations.SpaceRace.BACK), this.getLeft() + 5, this.getTop() + 5, 40, 14);
-
-        } else if (menu == Menu.REMOVE_PLAYERS) {
-            boolean backHovered = check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14);
-            renderButton(backHovered, graphics, font, Component.translatable(Translations.SpaceRace.BACK), this.getLeft() + 5, this.getTop() + 5, 40, 14);
-
-        } else if (menu == Menu.TEAM_COLOR) {
-            boolean backHovered = check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14);
-            renderButton(backHovered, graphics, font, Component.translatable(Translations.SpaceRace.BACK), this.getLeft() + 5, this.getTop() + 5, 40, 14);
-
-        } else if (menu == Menu.TEAM_FLAG) {
-            boolean backHovered = check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14);
-            renderButton(backHovered, graphics, font, Component.translatable(Translations.SpaceRace.BACK), this.getLeft() + 5, this.getTop() + 5, 40, 14);
-        }
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        super.mouseClicked(mouseX, mouseY, button);
-        if (menu == Menu.MAIN) {
-            if (check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                this.onClose();
-            }
-
-            if (check(mouseX, mouseY, this.getLeft() + 10, this.getBottom() - 85, 100, 30)) {
-                setMenu(Menu.ADD_PLAYERS);
-                return true;
-            }
-
-            if (check(mouseX, mouseY, this.getLeft() + 10, this.getBottom() - 45, 100, 30)) {
-                setMenu(Menu.REMOVE_PLAYERS);
-                return true;
-            }
-
-            if (check(mouseX, mouseY, this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30)) {
-                // server stats
-            }
-
-            if (check(mouseX, mouseY, this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30)) {
-                //global stats
-            }
-
-        } else if (menu == Menu.ADD_PLAYERS) {
-            if (check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                setMenu(Menu.MAIN);
-            }
-
-        } else if (menu == Menu.REMOVE_PLAYERS) {
-            if (check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                setMenu(Menu.MAIN);
-            }
-
-        } else if (menu == Menu.TEAM_COLOR) {
-            if (check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                setMenu(Menu.MAIN);
-            }
-
-        } else if (menu == Menu.TEAM_FLAG) {
-            if (check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                setMenu(Menu.MAIN);
-            }
-
-        }
-        return false;
     }
 
     @Override
     public void render(GuiGraphics graphics, int x, int y, float delta) {
-        super.render(graphics, x, y, delta);
-
-        if (this.isAnimationComplete()) {
+        if (this.animationCompleted) {
+            super.render(graphics, x, y, delta);
             this.renderForeground(graphics, x, y);
             this.drawMouseoverTooltip(graphics, x, y);
+        } else {
+            this.renderBackground(graphics, x, y, delta);
         }
 
 //        this.mouseX = (float) x;
@@ -266,6 +181,9 @@ public class SpaceRaceScreen extends Screen {
     private void setMenu(Menu menu) {
         this.menu = menu;
         this.teamNameInput.setVisible(menu == Menu.MAIN);
+        for (SpaceRaceButton button : this.buttons) {
+            button.visible = button.menu == menu;
+        }
     }
 
     private boolean isAnimationComplete() {
@@ -273,22 +191,6 @@ public class SpaceRaceScreen extends Screen {
         int maxHeight = (int) (this.height - (getYMargins() * 1.5D));
 
         return backgroundWidth >= maxWidth && backgroundHeight >= maxHeight;
-    }
-
-    private void renderComingSoonButton(boolean hovered, GuiGraphics graphics, Font textRenderer, Component text, int x, int y, int width, int height) {
-        Component actualText = hovered ? Component.translatable(Translations.SpaceRace.COMING_SOON) : text;
-        renderButton(hovered, graphics, textRenderer, actualText, x, y, width, height);
-    }
-
-    private void renderButton(boolean hovered, GuiGraphics graphics, Font textRenderer, Component text, int x, int y, int width, int height) {
-        int backgroundColor = hovered ? 0xAA1e1e1e : 0xAA000000;
-        int lineColor = hovered ? 0xFF3c3c3c : 0xFF2d2d2d;
-        graphics.fill(x, y, x + width, y + height, backgroundColor);
-        graphics.hLine(x, x + width, y, lineColor);
-        graphics.vLine(x + width, y, y + height, lineColor);
-        graphics.hLine(x, x + width, y + height, lineColor);
-        graphics.vLine(x, y, y + height, lineColor);
-        graphics.drawString(textRenderer, text.getVisualOrderText(), x + (width / 2) - (textRenderer.width(text) / 2), y + (height / 2) - 4, 0xffffff, false);
     }
 
     private int getYMargins() {
@@ -341,5 +243,43 @@ public class SpaceRaceScreen extends Screen {
         REMOVE_PLAYERS,
         TEAM_COLOR,
         TEAM_FLAG
+    }
+
+    private class SpaceRaceButton extends Button {
+        public final Menu menu;
+
+        public SpaceRaceButton(Menu menu, Component component, int x, int y, int width, int height, OnPress onPress) {
+            super(x, y, width, height, component, onPress, DEFAULT_NARRATION);
+            this.menu = menu;
+            this.visible = menu == SpaceRaceScreen.this.menu;
+        }
+
+        @Override
+        protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+            int x = this.getX(), y = this.getY();
+            int backgroundColor = this.isHoveredOrFocused() ? 0xAA1e1e1e : 0xAA000000;
+            int lineColor = this.isHoveredOrFocused() ? 0xFF3c3c3c : 0xFF2d2d2d;
+            graphics.fill(x, y, x + width, y + height, backgroundColor);
+            graphics.hLine(x, x + width, y, lineColor);
+            graphics.vLine(x + width, y, y + height, lineColor);
+            graphics.hLine(x, x + width, y + height, lineColor);
+            graphics.vLine(x, y, y + height, lineColor);
+            this.renderString(graphics, Minecraft.getInstance().font, 0xFFFFFFFF);
+        }
+    }
+
+    private class ComingSoonButton extends SpaceRaceButton {
+        private final Component originalMessage;
+
+        public ComingSoonButton(Menu menu, Component component, int x, int y, int width, int height) {
+            super(menu, component, x, y, width, height, button -> {});
+            this.originalMessage = component;
+        }
+
+        @Override
+        protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+            this.setMessage(this.isHoveredOrFocused() ? Component.translatable(Translations.SpaceRace.COMING_SOON) : this.originalMessage);
+            super.renderWidget(graphics, mouseX, mouseY, delta);
+        }
     }
 }
