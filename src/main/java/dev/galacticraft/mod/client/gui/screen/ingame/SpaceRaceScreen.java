@@ -250,12 +250,12 @@ public class SpaceRaceScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int x, int y, float delta) {
+        super.render(graphics, x, y, delta);
+
         if (this.isAnimationComplete()) {
             this.renderForeground(graphics, x, y);
             this.drawMouseoverTooltip(graphics, x, y);
         }
-
-        super.render(graphics, x, y, delta);
 
 //        this.mouseX = (float) x;
 //        this.mouseY = (float)/*y*/ minecraft.window.getScaledHeight() / 2;
