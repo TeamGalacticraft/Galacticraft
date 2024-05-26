@@ -22,25 +22,14 @@
 
 package dev.galacticraft.mod.client.model;
 
-import com.mojang.serialization.Codec;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
+public class GCModelState {
+    private final String name;
 
-import java.util.function.Function;
+    public GCModelState(String name) {
+        this.name = name;
+    }
 
-/**
- * A unbaked model that's designed to not be attached to a block, useful for entity rendering.
- */
-public interface GCModel {
-    GCModelType getType();
-
-    GCBakedModel bake(ResourceManager resourceManager, Function<Material, TextureAtlasSprite> spriteGetter);
-
-    interface GCModelType {
-        Codec<? extends GCModel> codec();
-
-        ResourceLocation getId();
+    public String getName() {
+        return name;
     }
 }

@@ -22,21 +22,14 @@
 
 package dev.galacticraft.mod.client.render.entity.rocket;
 
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.part.RocketPart;
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.resources.RocketTextureManager;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderStateShard;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -50,8 +43,6 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
     public RocketEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
-
-
 
     @Override
     public void render(RocketEntity entity, float yaw, float partialTick, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {

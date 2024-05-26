@@ -1,4 +1,5 @@
 {
   "galacticraft:type": "galacticraft:obj",
-  "model": "galacticraft:models/misc/rocket_thruster_tier_2.obj"
+  "model": "galacticraft:models/misc/rocket_thruster_tier_2.obj",
+  "mtl": "galacticraft:models/misc/rocket_thruster_tier_2.mtl"
 }

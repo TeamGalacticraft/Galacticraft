@@ -2,8 +2,8 @@
   "sources": [
     {
       "type": "directory",
-      "source": "rocket",
-      "prefix": "rocket/"
+      "source": "obj",
+      "prefix": "obj/"
     }
   ]
 }

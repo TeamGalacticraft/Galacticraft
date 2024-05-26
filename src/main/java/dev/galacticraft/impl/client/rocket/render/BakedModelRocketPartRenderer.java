@@ -37,10 +37,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.world.item.ItemDisplayContext;
 
 import java.util.function.Supplier;
 
@@ -100,8 +97,8 @@ public record BakedModelRocketPartRenderer(Supplier<GCBakedModel> model,
 //        VertexConsumer vertexConsumer = vertices.getBuffer(layer.get());
 //        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
 
-        VertexConsumer consumer = vertices.getBuffer(GCSheets.ROCKET);
-        this.model.get().render(matrices, consumer, light, overlay);
+        VertexConsumer consumer = vertices.getBuffer(GCSheets.obj(GCSheets.OBJ_ATLAS));
+        this.model.get().render(matrices, null, consumer, light, overlay);
 //        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(entry, vertexConsumer, null, this.model.get(), 1, 1, 1, light, overlay);
     }
 }

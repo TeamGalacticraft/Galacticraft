@@ -22,12 +22,13 @@
 
 package dev.galacticraft.mod.client.model;
 
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
@@ -36,27 +37,21 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.event.RocketAtlasCallback;
 import dev.galacticraft.mod.client.resources.RocketTextureManager;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
-import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.model.AtlasSet;
-import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.util.Unit;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeType;
 
 import java.io.Reader;
 import java.util.*;
@@ -64,12 +59,14 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceReloadListener {
     public static final GCModelLoader INSTANCE = new GCModelLoader();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     public static final FileToIdConverter MODEL_LISTER = FileToIdConverter.json("models/misc");
     public static final ResourceLocation MODEL_LOADER_ID = Constant.id("model_loader");
+    public static final ResourceLocation WHITE_SPRITE = Constant.id("obj/white");
     static final Map<ResourceLocation, GCModel.GCModelType> REGISTERED_TYPES = new ConcurrentHashMap<>();
     public static final ResourceLocation TYPE_KEY = Constant.id("type");
     public static final Codec<GCModel.GCModelType> MODEL_TYPE_CODEC = ResourceLocation.CODEC.flatXmap(id ->
@@ -103,11 +100,9 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
                 return FluidPipeWalkwayUnbakedModel.INSTANCE;
             } else if (PipeBakedModel.GLASS_FLUID_PIPE_MARKER.equals(resourceId)) {
                 return PipeUnbakedModel.INSTANCE;
-            }
-            else if (VacuumGlassBakedModel.VACUUM_GLASS_MODEL.equals(resourceId)) {
+            } else if (VacuumGlassBakedModel.VACUUM_GLASS_MODEL.equals(resourceId)) {
                 return VacuumGlassUnbakedModel.INSTANCE;
-            }
-            else if (PARACHEST_ITEM.equals(resourceId)) {
+            } else if (PARACHEST_ITEM.equals(resourceId)) {
                 var chutes = Maps.<DyeColor, UnbakedModel>newHashMap();
                 for (var color : DyeColor.values()) {
                     chutes.put(color, context.getOrLoadModel(Constant.id("block/parachest/" + color + "_chute")));
@@ -128,14 +123,15 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
     }
 
     @Override
-    public CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, ProfilerFiller preparationsProfiler, ProfilerFiller reloadProfiler, Executor backgroundExecutor, Executor gameExecutor) {
+    public CompletableFuture<Void> reload(PreparationBarrier synchronizer, ResourceManager resourceManager, ProfilerFiller preparationsProfiler, ProfilerFiller reloadProfiler, Executor backgroundExecutor, Executor gameExecutor) {
         preparationsProfiler.startTick();
         Map<ResourceLocation, ResourceLocation> atlasMap = new HashMap<>();
-        atlasMap.put(GCSheets.ROCKET_ATLAS, new ResourceLocation("rockets"));
+        atlasMap.put(GCSheets.OBJ_ATLAS, Constant.id("obj"));
         TextureManager textureManager = Minecraft.getInstance().getTextureManager();
         RocketAtlasCallback.EVENT.invoker().collectAtlases(atlasMap, textureManager);
         this.atlases = new AtlasSet(atlasMap, textureManager);
-        Map<ResourceLocation, CompletableFuture<AtlasSet.StitchResult>> result = this.atlases.scheduleLoad(resourceManager, Minecraft.getInstance().options.mipmapLevels().get(), backgroundExecutor);
+        CompletableFuture<Map<ResourceLocation, GCModel>> modelsFuture = loadModels(resourceManager, backgroundExecutor);
+        Map<ResourceLocation, CompletableFuture<AtlasSet.StitchResult>> stitchResult = this.atlases.scheduleLoad(resourceManager, Minecraft.getInstance().options.mipmapLevels().get(), backgroundExecutor);
         preparationsProfiler.popPush("close_models");
         this.models.values().forEach(gcBakedModel -> {
             try {
@@ -146,21 +142,63 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
         });
         preparationsProfiler.pop();
 
-        return loadModels(resourceManager, backgroundExecutor).thenCompose(preparationBarrier::wait).thenApplyAsync(models -> {
-            Map<ResourceLocation, GCBakedModel> bakedModels = new HashMap<>();
-            preparationsProfiler.push("baking");
-            models.forEach((resourceLocation, gcModel) -> {
-                bakedModels.put(resourceLocation, gcModel.bake(resourceManager));
-            });
-            preparationsProfiler.pop();
-            this.models = bakedModels;
-            preparationsProfiler.endTick();
-            return bakedModels;
-        }, backgroundExecutor).thenAcceptAsync(bakedModels -> {
-            reloadProfiler.startTick();
-            models = bakedModels;
-            reloadProfiler.endTick();
-        }, gameExecutor);
+        return CompletableFuture.allOf(
+                        Stream.concat(stitchResult.values().stream(), Stream.of(modelsFuture)).toArray(CompletableFuture[]::new)
+                ).thenApplyAsync(models -> {
+                    return bakeModels(
+                            preparationsProfiler,
+                            stitchResult.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().join())),
+                            modelsFuture.join(),
+                            resourceManager
+                    );
+                }, backgroundExecutor)
+                .thenCompose(result -> result.readyForUpload.thenApply(void_ -> result))
+                .thenCompose(synchronizer::wait)
+                .thenAcceptAsync(bakingResult -> {
+                    reloadProfiler.startTick();
+                    reloadProfiler.push("upload");
+                    bakingResult.atlasPreparations.values().forEach(AtlasSet.StitchResult::upload);
+                    reloadProfiler.pop();
+                    models = bakingResult.bakedModels();
+                    reloadProfiler.endTick();
+                }, gameExecutor);
+    }
+
+    private ReloadState bakeModels(ProfilerFiller profiler, Map<ResourceLocation, AtlasSet.StitchResult> preparations, Map<ResourceLocation, GCModel> models, ResourceManager resourceManager) {
+        Map<ResourceLocation, GCBakedModel> bakedModels = new HashMap<>();
+        profiler.push("baking");
+        Multimap<ResourceLocation, Material> missingTextures = HashMultimap.create();
+        models.forEach((modelId, gcModel) -> {
+            bakedModels.put(modelId, gcModel.bake(resourceManager, material -> {
+                AtlasSet.StitchResult stitchResult = preparations.get(material.atlasLocation());
+                TextureAtlasSprite textureAtlasSprite = stitchResult.getSprite(material.texture());
+                if (textureAtlasSprite != null) {
+                    return textureAtlasSprite;
+                } else {
+                    missingTextures.put(modelId, material);
+                    return stitchResult.missing();
+                }
+            }));
+        });
+
+        missingTextures.asMap().forEach(
+                (modelId, spriteIds) -> Constant.LOGGER.warn(
+                        "Missing textures in model {}:\n{}",
+                        modelId,
+                        spriteIds.stream()
+                                .sorted(Material.COMPARATOR)
+                                .map(material -> "    " + material.atlasLocation() + ":" + material.texture())
+                                .collect(Collectors.joining("\n"))
+                )
+        );
+        CompletableFuture<Void> readyForUpload = CompletableFuture.allOf(
+                preparations.values().stream().map(AtlasSet.StitchResult::readyForUpload).toArray(CompletableFuture[]::new)
+        );
+
+        profiler.pop();
+        this.models = bakedModels;
+        profiler.endTick();
+        return new ReloadState(bakedModels, preparations, readyForUpload);
     }
 
     private static CompletableFuture<Map<ResourceLocation, GCModel>> loadModels(ResourceManager resourceManager, Executor executor) {
@@ -222,5 +260,20 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
 
     public GCBakedModel getModel(ResourceLocation id) {
         return this.models.getOrDefault(id, new GCMissingModel());
+    }
+
+    public AtlasSet getAtlases() {
+        return atlases;
+    }
+
+    public TextureAtlasSprite getDefaultSprite() {
+        return this.atlases.getAtlas(GCSheets.OBJ_ATLAS).getSprite(WHITE_SPRITE);
+    }
+
+    public record ReloadState(
+            Map<ResourceLocation, GCBakedModel> bakedModels,
+            Map<ResourceLocation, AtlasSet.StitchResult> atlasPreparations,
+            CompletableFuture<Void> readyForUpload
+    ) {
     }
 }

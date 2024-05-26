@@ -56,9 +56,7 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
             matrices.translate(1.5, 2, 2);
             matrices.mulPose(Axis.ZP.rotationDegrees(55));
             matrices.mulPose(Axis.XP.rotationDegrees(45));
-            matrices.translate(0.5D, 0, 0.5D);
             matrices.mulPose(Axis.YP.rotation((float) (level.getGameTime() * 66.666666666666 / 1000.0F)));
-            matrices.translate(-0.5D, 0, -0.5D);
         } else if (mode == ItemDisplayContext.FIRST_PERSON_LEFT_HAND || mode == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND) {
             matrices.mulPose(Axis.YP.rotationDegrees(45));
             matrices.scale(2F, 2F, 2F);

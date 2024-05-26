@@ -542,6 +542,7 @@ public interface Constant {
         String T1_ROCKET = "t1_rocket";
         String ROCKET = "rocket";
         String LANDER = "lander";
+        String BUGGY = "buggy";
         String PARACHEST = "parachest";
         String BUBBLE = "bubble";
         String EVOLVED_SKELETON = "evolved_skeleton";

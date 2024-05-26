@@ -22,29 +22,39 @@
 
 package dev.galacticraft.mod.client.model.types;
 
-import com.mojang.blaze3d.vertex.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.javagl.obj.Mtl;
+import de.javagl.obj.MtlReader;
 import de.javagl.obj.Obj;
-import de.javagl.obj.ObjData;
 import de.javagl.obj.ObjReader;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.client.model.BakedObjModel;
 import dev.galacticraft.mod.client.model.GCBakedModel;
 import dev.galacticraft.mod.client.model.GCModel;
-import dev.galacticraft.mod.client.model.VertexBufferModel;
+import dev.galacticraft.mod.client.model.GCSheets;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 public class ObjModel implements GCModel {
     public static final ObjType TYPE = new ObjType();
 
     private final ResourceLocation model;
+    private final ResourceLocation material;
+    private final Optional<ResourceLocation> atlas;
 
-    public ObjModel(ResourceLocation model) {
+    public ObjModel(ResourceLocation model, ResourceLocation material, Optional<ResourceLocation> atlas) {
         this.model = model;
+        this.material = material;
+        this.atlas = atlas;
     }
 
     @Override
@@ -53,39 +63,30 @@ public class ObjModel implements GCModel {
     }
 
     @Override
-    public GCBakedModel bake(ResourceManager resourceManager) {
+    public GCBakedModel bake(ResourceManager resourceManager, Function<Material, TextureAtlasSprite> spriteGetter) {
         try {
-//            VertexBuffer vbo = new VertexBuffer(VertexBuffer.Usage.STATIC);
-//            Tesselator tesselator = Tesselator.getInstance();
-//            BufferBuilder buffer = tesselator.getBuilder();
-
             Obj obj = ObjReader.read(resourceManager.getResourceOrThrow(model).open());
-//            int[] indices = ObjData.getFaceVertexIndicesArray(obj);
-//            float[] vertices = ObjData.getVerticesArray(obj);
-//            float[] texCoords = ObjData.getTexCoordsArray(obj, 2);
-//            float[] normals = ObjData.getNormalsArray(obj);
-//
-//            buffer.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_TEX_COLOR);
-//            for (int vtx = 0; vtx < vertices.length; vtx += 3) {
-//                buffer.vertex(vertices[vtx], vertices[vtx + 1], vertices[vtx + 2]).uv(texCoords[vtx / 3], texCoords[vtx / 3 + 1]).color(1.0F, 1.0F, 1.0F, 1.0F)/*.normal(normals[vtx * 3], normals[vtx * 3 + 1], normals[vtx * 3 + 2])*/.endVertex();
-//            }
-//            vbo.upload(buffer.end());
-//
-//            BufferWriter in = mesh.getIndicesBuffer();
-//
-//            for (int i = 0; i < indices.length; i += 3) {
-//                in.int3(indices[i], indices[i + 1], indices[i + 2]);
-//            }
-            return new VertexBufferModel(obj);
+            List<Mtl> materials = MtlReader.read(resourceManager.getResourceOrThrow(material).open());
+            List<BakedMaterial> bakedMaterials = new ArrayList<>();
+            for (Mtl material : materials) {
+                if (material.getMapKdOptions() != null && material.getMapKdOptions().getFileName() != null)
+                    bakedMaterials.add(new BakedMaterial(material, spriteGetter.apply(new Material(atlas.orElse(GCSheets.OBJ_ATLAS), new ResourceLocation(material.getMapKdOptions().getFileName())))));
+            }
+
+            return new BakedObjModel(obj, bakedMaterials);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    public record BakedMaterial(Mtl material, TextureAtlasSprite sprite) {}
+
     public static class ObjType implements GCModelType {
         public static final ResourceLocation ID = Constant.id("obj");
         public static final Codec<ObjModel> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                ResourceLocation.CODEC.fieldOf("model").forGetter(o -> o.model)
+                ResourceLocation.CODEC.fieldOf("model").forGetter(o -> o.model),
+                ResourceLocation.CODEC.fieldOf("mtl").forGetter(o -> o.material),
+                ResourceLocation.CODEC.optionalFieldOf("atlas").forGetter(o -> o.atlas)
         ).apply(instance, ObjModel::new));
 
         @Override

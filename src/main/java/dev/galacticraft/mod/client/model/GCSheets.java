@@ -33,36 +33,48 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.function.BiFunction;
 
 public class GCSheets {
-    public static final ResourceLocation ROCKET_ATLAS = Constant.id("textures/atlas/rockets.png");
+    public static final ResourceLocation OBJ_ATLAS = Constant.id("textures/atlas/obj.png");
 
-    public static final RenderType ROCKET = RenderType.create("rocket", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RenderType.TRANSIENT_BUFFER_SIZE, true, false, RenderType.CompositeState.builder()
-            .setShaderState(RenderType.RENDERTYPE_ENTITY_CUTOUT_SHADER)
-            .setTextureState(new RenderStateShard.TextureStateShard(/*ROCKET_ATLAS*/Constant.id("textures/rocket/rocket.png"), false, false))
-            .setTransparencyState(RenderType.NO_TRANSPARENCY)
-            .setCullState(RenderType.NO_CULL)
-            .setLightmapState(RenderType.LIGHTMAP)
-            .setOverlayState(RenderType.OVERLAY)
-            .createCompositeState(true));
+    public static final BiFunction<ResourceLocation, Boolean, RenderType> OBJ = Util.memoize(
+            (texture, composite) -> {
+                return RenderType.create("rocket", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RenderType.TRANSIENT_BUFFER_SIZE, true, false, RenderType.CompositeState.builder()
+                        .setShaderState(RenderType.RENDERTYPE_ENTITY_CUTOUT_SHADER)
+                        .setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
+                        .setTransparencyState(RenderType.NO_TRANSPARENCY)
+                        .setCullState(RenderType.NO_CULL)
+                        .setLightmapState(RenderType.LIGHTMAP)
+                        .setOverlayState(RenderType.OVERLAY)
+                        .createCompositeState(true));
+            }
+    );
 
     private static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE = Util.memoize(
-            ((resourceLocation, boolean_) -> {
+            ((texture, composite) -> {
                 RenderType.CompositeState compositeState = RenderType.CompositeState.builder()
                         .setShaderState(RenderType.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
-                        .setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false, false))
+                        .setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
                         .setTransparencyState(RenderType.TRANSLUCENT_TRANSPARENCY)
                         .setCullState(RenderType.NO_CULL)
                         .setWriteMaskState(RenderType.COLOR_WRITE)
                         .setOverlayState(RenderType.OVERLAY)
-                        .createCompositeState(boolean_);
+                        .createCompositeState(composite);
                 return RenderType.create("entity_translucent_emissive", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RenderType.TRANSIENT_BUFFER_SIZE, true, true, compositeState);
             })
     );
 
-    public static RenderType entityTranslucentEmissive(ResourceLocation location, boolean outline) {
-        return ENTITY_TRANSLUCENT_EMISSIVE.apply(location, outline);
+    public static RenderType obj(ResourceLocation texture) {
+        return obj(texture, true);
     }
 
-    public static RenderType entityTranslucentEmissive(ResourceLocation location) {
-        return entityTranslucentEmissive(location, true);
+    public static RenderType obj(ResourceLocation texture, boolean outline) {
+        return OBJ.apply(texture, outline);
+    }
+
+    public static RenderType entityTranslucentEmissive(ResourceLocation texture, boolean outline) {
+        return ENTITY_TRANSLUCENT_EMISSIVE.apply(texture, outline);
+    }
+
+    public static RenderType entityTranslucentEmissive(ResourceLocation texture) {
+        return entityTranslucentEmissive(texture, true);
     }
 }

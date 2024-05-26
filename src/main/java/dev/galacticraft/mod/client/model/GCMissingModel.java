@@ -28,7 +28,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 public class GCMissingModel implements GCBakedModel {
 
     @Override
-    public void render(PoseStack modelStack, VertexConsumer vertexConsumer, int light, int overlay) {
+    public void render(PoseStack modelStack, GCModelState state, VertexConsumer vertexConsumer, int light, int overlay) {
 
     }
 

@@ -80,12 +80,12 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
         matrices.pushPose();
         matrices.translate(0.5F, 1.0F, 0.5F);
         matrices.scale((float) size, (float) size, (float) size);
-        VertexConsumer consumer = vertexConsumers.getBuffer(GCSheets.entityTranslucentEmissive(TEXTURE));
+        VertexConsumer consumer = vertexConsumers.getBuffer(GCSheets.entityTranslucentEmissive(GCSheets.OBJ_ATLAS));
 //        for (BakedQuad quad : bubbleModel.getQuads(null, null, entity.level().random)) {
 //            consumer.putBulkData(matrices.last(), quad, 1, 1, 1, Integer.MAX_VALUE, OverlayTexture.NO_OVERLAY);
 //        }
         // TEMP: until files are fixed
-        bubbleModel.render(matrices, consumer, light, OverlayTexture.NO_OVERLAY);
+        bubbleModel.render(matrices, null, consumer, light, OverlayTexture.NO_OVERLAY);
 
         matrices.popPose();
     }
@@ -97,6 +97,6 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(BubbleEntity entity) {
-        return TEXTURE;
+        return /*TEXTURE*/null;
     }
 }

@@ -97,6 +97,13 @@ public class GCEntityTypes {
             .fireImmune()
             .disableSummon()
             .build());
+    public static final EntityType<Buggy> BUGGY = ENTITIES.register(Entity.BUGGY, FabricEntityTypeBuilder.create(MobCategory.MISC, Buggy::new)
+            .trackRangeBlocks(150)
+            .trackedUpdateRate(5)
+            .forceTrackedVelocityUpdates(true)
+            .dimensions(EntityDimensions.scalable(1.4F, 0.6F))
+            .fireImmune()
+            .build());
     public static final EntityType<ParachestEntity> PARACHEST = ENTITIES.register(Entity.PARACHEST, FabricEntityTypeBuilder.<ParachestEntity>create(MobCategory.MISC, ParachestEntity::new)
             .trackRangeBlocks(150)
             .trackedUpdateRate(5)

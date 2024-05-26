@@ -1,4 +1,5 @@
 {
   "galacticraft:type": "galacticraft:obj",
-  "model": "galacticraft:models/misc/rocket_engine.obj"
+  "model": "galacticraft:models/misc/rocket_engine.obj",
+  "mtl": "galacticraft:models/misc/rocket_engine.mtl"
 }
