@@ -314,7 +314,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(CelestialSelection.CATALOG, "Catalog");
         this.add(CelestialSelection.LAUNCH, "Launch");
         this.add(CelestialSelection.RENAME, "Rename");
-        this.add(CelestialSelection.TIER, "Tier");
+        this.add(CelestialSelection.TIER, "Tier %s");
         this.add(CelestialSelection.ASSIGN_NAME, "Assign Name");
         this.add(CelestialSelection.APPLY, "Apply");
         this.add(CelestialSelection.EXIT, "Exit");

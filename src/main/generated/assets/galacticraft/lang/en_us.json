@@ -551,7 +551,7 @@
   "ui.galacticraft.celestialselection.ss_owner": "Space Station Owner",
   "ui.galacticraft.celestialselection.surface_composition": "Surface Composition",
   "ui.galacticraft.celestialselection.surface_gravity": "Surface Gravity",
-  "ui.galacticraft.celestialselection.tier": "Tier",
+  "ui.galacticraft.celestialselection.tier": "Tier %s",
   "ui.galacticraft.color": "Color",
   "ui.galacticraft.cone": "Cone",
   "ui.galacticraft.engine": "Engine",
