@@ -243,26 +243,6 @@ public class SpaceRaceScreen extends Screen {
 
     }
 
-    protected void drawHorizontalLineSolid(PoseStack matrices, int x1, int x2, int y, int color) {
-        if (x2 < x1) {
-            int i = x1;
-            x1 = x2;
-            x2 = i;
-        }
-
-        fillSolid(matrices.last().pose(), x1, y, x2 + 1, y + 1, color);
-    }
-
-    protected void drawVerticalLineSolid(PoseStack matrices, int x, int y1, int y2, int color) {
-        if (y2 < y1) {
-            int i = y1;
-            y1 = y2;
-            y2 = i;
-        }
-
-        fillSolid(matrices.last().pose(), x, y1 + 1, x + 1, y2, color);
-    }
-
     private int getBottom() {
         return this.getTop() + this.backgroundHeight;
     }
@@ -303,18 +283,11 @@ public class SpaceRaceScreen extends Screen {
     private void renderButton(boolean hovered, GuiGraphics graphics, Font textRenderer, Component text, int x, int y, int width, int height) {
         int backgroundColor = hovered ? 0xAA1e1e1e : 0xAA000000;
         int lineColor = hovered ? 0xFF3c3c3c : 0xFF2d2d2d;
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.enableBlend();
-        graphics.pose().pushPose();
-        fillSolid(graphics.pose().last().pose(), x, y, x + width, y + height, backgroundColor);
-        RenderSystem.setShader(GameRenderer::getRendertypeLinesShader);
-        RenderSystem.setShaderColor(1, 1, 1, 1);
-        drawHorizontalLineSolid(graphics.pose(), x, x + width, y, lineColor);
-        drawVerticalLineSolid(graphics.pose(), x + width, y, y + height, lineColor);
-        drawHorizontalLineSolid(graphics.pose(), x + width, x, y + height, lineColor);
-        drawVerticalLineSolid(graphics.pose(), x, y, y + height, lineColor);
-        graphics.pose().popPose();
+        graphics.fill(x, y, x + width, y + height, backgroundColor);
+        graphics.hLine(x, x + width, y, lineColor);
+        graphics.vLine(x + width, y, y + height, lineColor);
+        graphics.hLine(x, x + width, y + height, lineColor);
+        graphics.vLine(x, y, y + height, lineColor);
         graphics.drawString(textRenderer, text.getVisualOrderText(), x + (width / 2) - (textRenderer.width(text) / 2), y + (height / 2) - 4, 0xffffff, false);
     }
 
@@ -324,22 +297,6 @@ public class SpaceRaceScreen extends Screen {
 
     private int getXMargins() {
         return (int) (this.width * this.getMarginPercent());
-    }
-
-    private void renderButton(GuiGraphics graphics, Font textRenderer, Component text, int x, int y, int width, int height) {
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.enableBlend();
-        graphics.pose().pushPose();
-        fillSolid(graphics.pose().last().pose(), x, y, x + width, y + height, 0xAA000000);
-        RenderSystem.setShader(GameRenderer::getRendertypeLinesShader);
-        RenderSystem.setShaderColor(1, 1, 1, 1);
-        drawHorizontalLineSolid(graphics.pose(), x, x + width, y, 0xFF2d2d2d);
-        drawVerticalLineSolid(graphics.pose(), x + width, y, y + height, 0xFF2d2d2d);
-        drawHorizontalLineSolid(graphics.pose(), x + width, x, y + height, 0xFF2d2d2d);
-        drawVerticalLineSolid(graphics.pose(), x, y, y + height, 0xFF2d2d2d);
-        graphics.pose().popPose();
-        graphics.drawString(textRenderer, text.getVisualOrderText(), x + (width / 2) - (textRenderer.width(text) / 2), y + (height / 2) - 4, 0xffffff, false);
     }
 
     @Override
