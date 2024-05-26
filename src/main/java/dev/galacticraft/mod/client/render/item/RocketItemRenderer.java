@@ -66,10 +66,11 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
         } else if (mode == ItemDisplayContext.THIRD_PERSON_LEFT_HAND || mode == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND) {
             matrices.mulPose(Axis.ZN.rotation(Mth.HALF_PI));
             matrices.mulPose(Axis.YP.rotation(Mth.HALF_PI));
-            matrices.mulPose(Axis.XP.rotation(0.2F));
+            matrices.translate(0F, 0F, .2F);
+            matrices.mulPose(Axis.XN.rotation(0.2F));
             matrices.mulPose(Axis.ZP.rotation(0.3F));
             matrices.mulPose(Axis.ZN.rotation(0.65F));
-            matrices.translate(-.5, -.8F, -.8F);
+            matrices.translate(-.0, -.8F, -.8F);
         } else if (mode == ItemDisplayContext.GROUND) {
             matrices.scale(0.2f, 0.2f, 0.2f);
             matrices.translate(2, 3, 2);
