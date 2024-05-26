@@ -45,28 +45,28 @@ public class BakedObjModel implements GCBakedModel {
 
     @Override
     public void render(PoseStack modelStack, @Nullable GCModelState state, VertexConsumer consumer, int light, int overlay) {
-        Matrix4f last = modelStack.last().pose();
         ObjModel.BakedMaterial lastMaterial = null;
         if (state == null) {
             for (int index = 0; index < obj.getNumFaces(); index++) {
                 ObjFace face = obj.getFace(index);
-                lastMaterial = renderFace(lastMaterial, face, consumer, last, light, overlay);
+                lastMaterial = renderFace(lastMaterial, face, consumer, modelStack, light, overlay);
             }
         } else {
             ObjGroup group = obj.getGroup(state.getName());
             for (int index = 0; index < group.getNumFaces(); index++) {
                 ObjFace face = group.getFace(index);
-                lastMaterial = renderFace(lastMaterial, face, consumer, last, light, overlay);
+                lastMaterial = renderFace(lastMaterial, face, consumer, modelStack, light, overlay);
             }
         }
     }
 
-    protected ObjModel.BakedMaterial renderFace(ObjModel.BakedMaterial lastMaterial, ObjFace face, VertexConsumer consumer, Matrix4f last, int light, int overlay) {
+    protected ObjModel.BakedMaterial renderFace(ObjModel.BakedMaterial lastMaterial, ObjFace face, VertexConsumer consumer, PoseStack matrices, int light, int overlay) {
         ObjModel.BakedMaterial material = findMaterial(this.obj.getActivatedMaterialGroupName(face), lastMaterial);
         consumer = (material != null ? material.sprite() : GCModelLoader.INSTANCE.getDefaultSprite()).wrap(consumer);
+        PoseStack.Pose last = matrices.last();
         for (int vtx = 0; vtx < face.getNumVertices(); vtx++) {
             FloatTuple pos = obj.getVertex(face.getVertexIndex(vtx));
-            consumer.vertex(last, pos.getX(), pos.getY(), pos.getZ());
+            consumer.vertex(last.pose(), pos.getX(), pos.getY(), pos.getZ());
             consumer.color(255, 255, 255, 255);
             FloatTuple uv = obj.getTexCoord(face.getTexCoordIndex(vtx));
             consumer.uv(uv.getX(), 1 - uv.getY());
@@ -74,7 +74,7 @@ public class BakedObjModel implements GCBakedModel {
             consumer.overlayCoords(overlay);
             consumer.uv2(light);
             FloatTuple normals = obj.getNormal(face.getNormalIndex(vtx));
-            consumer.normal(normals.getX(), normals.getY(), normals.getZ());
+            consumer.normal(last.normal(), normals.getX(), normals.getY(), normals.getZ());
             consumer.endVertex();
         }
 

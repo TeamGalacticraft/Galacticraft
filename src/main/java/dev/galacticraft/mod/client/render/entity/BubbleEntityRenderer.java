@@ -97,6 +97,6 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(BubbleEntity entity) {
-        return /*TEXTURE*/null;
+        return TEXTURE;
     }
 }
