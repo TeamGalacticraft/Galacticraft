@@ -257,6 +257,11 @@ public interface Translations {
         String SURFACE_COMPOSITION = "ui.galacticraft.celestialselection.surface_composition";
         String ATMOSPHERE = "ui.galacticraft.celestialselection.atmosphere";
         String MEAN_SURFACE_TEMP = "ui.galacticraft.celestialselection.mean_surface_temp";
+
+        String CLICK_AGAIN = "ui.galacticraft.celestialselection.click_again";
+        String CLICK_AGAIN_MOONS = "ui.galacticraft.celestialselection.click_again.moons";
+        String CLICK_AGAIN_SATELLITES = "ui.galacticraft.celestialselection.click_again.satellites";
+        String CLICK_AGAIN_MOONS_AND_SATELLITES = "ui.galacticraft.celestialselection.click_again.moons_and_satellites";
     }
 
     interface Ui {

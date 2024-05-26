@@ -24,6 +24,7 @@ package dev.galacticraft.mod.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
@@ -45,6 +46,10 @@ public class BatchedRenderer implements AutoCloseable {
         RenderSystem.setShaderTexture(0, texture);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+    }
+
+    public BatchedRenderer(GuiGraphics graphics, ResourceLocation texture, int textureWidth, int textureHeight) {
+        this(Tesselator.getInstance().getBuilder(), graphics.pose(), texture, textureWidth, textureHeight);
     }
 
     public void blit(int x, int y, int width, int height, float uOffset, float vOffset, int uWidth, int vHeight) {

@@ -613,7 +613,7 @@ public class CelestialSelectionScreen extends Screen {
                     clickHandled = true;
                 }
             } else {
-                this.blit(width / 2 - 47, LHS, 94, 11, 0, 414, 188, 22, false, false);
+//                this.blit(width / 2 - 47, LHS, 94, 11, 0, 414, 188, 22); //fixme - why are we blitting in mouse click??
 
                 if (x >= width / 2f - 47 && x <= width / 2f - 47 + 94 && y >= LHS && y <= LHS + 11) {
                     if (this.selectedStationOwner.length() != 0) {
@@ -1000,9 +1000,8 @@ public class CelestialSelectionScreen extends Screen {
                     resetShader(GameRenderer::getPositionTexColorShader);
                     RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_0);
                     float colMod = this.getZoomAdvanced() < 4.9F ? (float) (Math.sin(this.ticksSinceSelectionF / 2.0F) * 0.5F + 0.5F) : 1.0F;
-                    RenderSystem.setShaderColor(1.0F, 1.0F, 0.0F, 1 * colMod);
                     int width = (int) Math.floor((getWidthForCelestialBody(this.selectedBody) / 2.0) * (isGrandchildBody(this.selectedBody) ? 9.0 : 30.0));
-                    this.blit(matrices.last().pose(), -width, -width, width * 2, width * 2, 266, 29, 100, 100, false, false);
+                    this.blit(matrices.last().pose(), -width, -width, width * 2, width * 2, 266, 29, 100, 100, 255, 255, 0, (int) (255 * colMod));
                 }
                 case ZOOMED -> {
                     float div = (this.zoom + 1.0F - this.planetZoom);
@@ -1011,34 +1010,12 @@ public class CelestialSelectionScreen extends Screen {
                     resetShader(GameRenderer::getPositionTexColorShader);
                     RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_0);
                     float colMod = this.getZoomAdvanced() < 4.9F ? (float) (Math.sin(this.ticksSinceSelectionF / 2.0f) * 0.5F + 0.5F) : 1.0F;
-                    RenderSystem.setShaderColor(0.4F, 0.8F, 1.0F, 1 * colMod);
                     int width = getWidthForCelestialBody(this.selectedBody) * 13;
-                    this.blit(matrices.last().pose(), -width, -width, width * 2, width * 2, 266, 29, 100, 100, false, false);
+                    this.blit(matrices.last().pose(), -width, -width, width * 2, width * 2, 266, 29, 100, 100, 102, 204, 255, (int) (255 * colMod));
                 }
             }
         }
         matrices.popPose();
-    }
-
-    private void blit(Matrix4f model, int x, int y, int width, int height, int u, int v, int uWidth, int vHeight, boolean invertX, boolean invertY) {
-        blit(model, x, y, width, height, u, v, uWidth, vHeight, invertX, invertY, 512, 512);
-    }
-
-    public static void blit(Matrix4f model, float x, float y, float width, float height, float u, float v, float uWidth, float vHeight, boolean invertX, boolean invertY, float texSizeX, float texSizeY) {
-        resetShader(GameRenderer::getPositionTexColorShader);
-        float texModX = 1F / texSizeX;
-        float texModY = 1F / texSizeY;
-        float height0 = invertY ? 0 : vHeight;
-        float height1 = invertY ? vHeight : 0;
-        float width0 = invertX ? uWidth : 0;
-        float width1 = invertX ? 0 : uWidth;
-        BufferBuilder buffer = Tesselator.getInstance().getBuilder();
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        buffer.vertex(model, x, y + height, 0).uv((u + width0) * texModX, (v + height0) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
-        buffer.vertex(model, x + width, y + height, 0).uv((u + width1) * texModX, (v + height0) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
-        buffer.vertex(model, x + width, y, 0).uv((u + width1) * texModX, (v + height1) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
-        buffer.vertex(model, x, y, 0).uv((u + width0) * texModX, (v + height1) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
-        BufferUploader.drawWithShader(buffer.end());
     }
 
     protected Vector3f getCelestialBodyPosition(CelestialBody<?, ?> cBody, float delta) {
@@ -1084,6 +1061,7 @@ public class CelestialSelectionScreen extends Screen {
                 this.setupMatrix(body, matrices, moon ? 0.25F : 1.0F, delta);
                 CelestialDisplay<?, ?> display = body.display();
                 Vector4f vector4f = display.render(graphics, Tesselator.getInstance().getBuilder(), getWidthForCelestialBody(body), mouseX, mouseY, delta, s -> resetAlphaShader(alpha, s));
+                RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 //                matrices.translate(vector4f.x(), vector4f.z(), 0);
                 Matrix4f planetMatrix = matrices.last().pose();
 
@@ -1116,7 +1094,8 @@ public class CelestialSelectionScreen extends Screen {
      */
     public void drawBorder(GuiGraphics graphics) {
         resetShader(GameRenderer::getPositionColorShader);
-//        RenderSystem.colorMask(true, false, false, false);
+//        RenderSystem.colorMask(true, false);
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f , 1.0f);
         RenderSystem.disableBlend();
         graphics.fill(0, 0, this.borderSize, height, GREY2);
         graphics.fill(width - this.borderSize, 0, width, height, GREY2);
@@ -1136,8 +1115,7 @@ public class CelestialSelectionScreen extends Screen {
         if (this.viewState == EnumView.PROFILE) {
             resetShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_0);
-            RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
-            this.blit(width / 2 - 43, LHS, 86, 15, 266, 0, 172, 29, false, false);
+            this.blit(width / 2 - 43, LHS, 86, 15, 266, 0, 172, 29, 0, 153, 255, 255);
             String str = I18n.get(Translations.CelestialSelection.CATALOG).toUpperCase();
             graphics.drawString(this.font, str, width / 2 - this.font.width(str) / 2, LHS + this.font.lineHeight / 2, WHITE, false);
 
@@ -1146,33 +1124,29 @@ public class CelestialSelectionScreen extends Screen {
                 RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_0);
 
                 if (mouseX > LHS && mouseX < LHS + 88 && mouseY > LHS && mouseY < LHS + 13) {
-                    RenderSystem.setShaderColor(3.0F, 0.0F, 0.0F, 1.0F);
+                    this.blit(LHS, LHS, 88, 13, 0, 392, 148, 22, 765, 0, 0, 255);
                 } else {
-                    RenderSystem.setShaderColor(0.9F, 0.2F, 0.2F, 1.0F);
+                    this.blit(LHS, LHS, 88, 13, 0, 392, 148, 22, 229, 51, 51, 255);
                 }
 
-                this.blit(LHS, LHS, 88, 13, 0, 392, 148, 22, false, false);
                 str = I18n.get(Translations.CelestialSelection.BACK).toUpperCase();
                 graphics.drawString(this.font, str, LHS + 45 - this.font.width(str) / 2, LHS + this.font.lineHeight / 2 - 2, WHITE, false);
 
                 resetShader(GameRenderer::getPositionTexColorShader);
                 RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_0);
                 if (mouseX > RHS - 88 && mouseX < RHS && mouseY > LHS && mouseY < LHS + 13) {
-                    RenderSystem.setShaderColor(0.0F, 3.0F, 0.0F, 1.0F);
+                    this.blit(RHS - 88, LHS, 88, 13, 0, 392, 148, 22, 0, 765, 0, 255, true, false);
                 } else {
-                    RenderSystem.setShaderColor(0.2F, 0.9F, 0.2F, 1.0F);
+                    this.blit(RHS - 88, LHS, 88, 13, 0, 392, 148, 22, 51, 229, 51, 255, true, false);
                 }
 
-                this.blit(RHS - 88, LHS, 88, 13, 0, 392, 148, 22, true, false);
-
-                RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
-                this.blit(LHS, BOT - 13, 88, 13, 0, 392, 148, 22, false, true);
-                this.blit(RHS - 88, BOT - 13, 88, 13, 0, 392, 148, 22, true, true);
+                this.blit(LHS, BOT - 13, 88, 13, 0, 392, 148, 22, 0, 153, 255, 255, false, true);
+                this.blit(RHS - 88, BOT - 13, 88, 13, 0, 392, 148, 22, 0, 153, 255, 255, true, true);
                 int menuTopLeft = LHS - 115 + height / 2 - 4;
                 int posX = LHS + Math.min((int) this.ticksSinceSelectionF * 10, 133) - 134;
                 int posX2 = (int) (LHS + Math.min(this.ticksSinceSelectionF * 1.25F, 15) - 15);
                 int textRendererPosY = menuTopLeft + this.borderEdgeSize + this.font.lineHeight / 2 - 2;
-                this.blit(posX, menuTopLeft + 12, 133, 196, 0, 0, 266, 392, false, false);
+                this.blit(posX, menuTopLeft + 12, 133, 196, 0, 0, 266, 392, 0, 153, 255, 255);
 
 //			str = this.selectedBody.getLocalizedName();
 //			this.font.draw(matrices, str, posX + 20, textRendererPosY, GCCoreUtil.to32BitColor(255, 255, 255, 255));
@@ -1224,8 +1198,7 @@ public class CelestialSelectionScreen extends Screen {
 
                 resetShader(GameRenderer::getPositionTexColorShader);
                 RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_0);
-                RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
-                this.blit(posX2, menuTopLeft + 12, 17, 199, 439, 0, 32, 399, false, false);
+                this.blit(posX2, menuTopLeft + 12, 17, 199, 439, 0, 32, 399, 0, 153, 255, 255);
 //			this.drawRectD(posX2 + 16.5, menuTopLeft + 13, posX + 131, menuTopLeft + 14, GCCoreUtil.to32BitColor(120, 0, (int) (0.6F * 255), 255));
             }
         } else {
@@ -1233,10 +1206,8 @@ public class CelestialSelectionScreen extends Screen {
             // Catalog:
             resetShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_0);
-            RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
-            this.blit(LHS, LHS, 74, 11, 0, 392, 148, 22, false, false);
+            this.blit(LHS, LHS, 74, 11, 0, 392, 148, 22, 0, 153, 255, 255);
             str = I18n.get(Translations.CelestialSelection.CATALOG).toUpperCase();
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             graphics.drawString(this.font, str, LHS + 40 - font.width(str) / 2, LHS + 1, WHITE, false);
 
             int scale = (int) Math.min(95, this.ticksSinceMenuOpenF * 12.0F);
@@ -1244,34 +1215,28 @@ public class CelestialSelectionScreen extends Screen {
 
             // Parent frame:
             resetShader(GameRenderer::getPositionTexColorShader);
-            RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
 
             RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_0);
-            this.blit(LHS - 95 + scale, LHS + 12, 95, 41, 0, 436, 95, 41, false, false);
+            this.blit(LHS - 95 + scale, LHS + 12, 95, 41, 0, 436, 95, 41, 0, 153, 255, 255);
             str = planetZoomedNotMoon ? I18n.get(((TranslatableContents)this.selectedBody.name().getContents()).getKey()) : this.parentName();
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             graphics.drawString(this.font, str, LHS + 9 - 95 + scale, LHS + 34, WHITE, false);
             resetShader(GameRenderer::getPositionTexColorShader);
-            RenderSystem.setShaderColor(1.0f, 1.0f, 0.0f, 1.0f);
             RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_0);
 
             // Grandparent frame:
-            this.blit(LHS + 2 - 95 + scale, LHS + 14, 93, 17, 95, 436, 93, 17, false, false);
+            this.blit(LHS + 2 - 95 + scale, LHS + 14, 93, 17, 95, 436, 93, 17, 255, 255, 0, 255);
             str = planetZoomedNotMoon ? this.parentName() : this.getGrandparentName();
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             graphics.drawString(this.font, str, LHS + 7 - 95 + scale, LHS + 16, GREY3, false);
-            RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
 
+//            RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
             List<CelestialBody<?, ?>> children = this.getChildren(/*planetZoomedNotMoon*/this.isZoomed() ? this.selectedBody : celestialBodies.get(Constant.id("sol")));
             this.drawChildButtons(graphics, children, 0, 0, true);
 
             if (this.mapMode) {
                 resetShader(GameRenderer::getPositionTexColorShader);
                 RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_0);
-                RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1);
-                this.blit(RHS - 74, LHS, 74, 11, 0, 392, 148, 22, true, false);
+                this.blit(RHS - 74, LHS, 74, 11, 0, 392, 148, 22, 255, 0, 0, 255, true, false);
                 str = I18n.get(Translations.CelestialSelection.EXIT).toUpperCase();
-                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                 graphics.drawString(this.font, str, RHS - 40 - font.width(str) / 2, LHS + 1, WHITE, false);
             }
 
@@ -1283,8 +1248,7 @@ public class CelestialSelectionScreen extends Screen {
                 } else {
                     resetShader(GameRenderer::getPositionTexColorShader);
                     RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_1);
-                    RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
-                    this.blit(RHS - 96, LHS, 96, 139, 63, 0, 96, 139, false, false);
+                    this.blit(RHS - 96, LHS, 96, 139, 63, 0, 96, 139, 0, 153, 255, 255);
                 }
 
                 this.drawSpaceStationCreationPrompt(graphics, mouseX, mouseY);
@@ -1292,34 +1256,34 @@ public class CelestialSelectionScreen extends Screen {
                 // Catalog overlay
                 resetShader(GameRenderer::getPositionTexColorShader);
                 RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_0);
-                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.3F - Math.min(0.3F, this.ticksSinceSelectionF / 50.0F));
-                this.blit(LHS, LHS, 74, 11, 0, 392, 148, 22, false, false);
+                this.blit(LHS, LHS, 74, 11, 0, 392, 148, 22, 0, 153, 255, (int) (0.3F - Math.min(0.3F, this.ticksSinceSelectionF / 50.0F) * 255));
                 str = I18n.get(Translations.CelestialSelection.CATALOG).toUpperCase();
                 graphics.drawString(this.font, str, LHS + 40 - font.width(str) / 2, LHS + 1, WHITE, false);
 
                 // Top bar title:
                 resetShader(GameRenderer::getPositionTexColorShader);
                 RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_0);
-                RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
+                int color = FastColor.ARGB32.color(255, 0, 153, 255);
                 if (isSatellite(this.selectedBody)) {
                     if (this.selectedStationOwner.isEmpty() || !this.selectedStationOwner.equalsIgnoreCase(this.minecraft.player.getName().getString())) {
-                        RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1.0F);
+                        color = FastColor.ARGB32.color(255, 255, 0, 0);
                     } else {
-                        RenderSystem.setShaderColor(0.0F, 1.0F, 0.0F, 1.0F);
+                        color = FastColor.ARGB32.color(255, 0, 255, 0);
                     }
                 }
-                this.blit(width / 2 - 47, LHS, 94, 11, 0, 414, 188, 22, false, false);
+                this.blit(width / 2 - 47, LHS, 94, 11, 0, 414, 188, 22, color);
+
                 if (this.selectedBody.type() instanceof Tiered tiered && tiered.accessWeight(this.selectedBody.config()) >= 0 && (!(isSatellite(this.selectedBody)))) {
                     boolean canReach;
                     if (this.data != null && !this.data.canTravel(manager, this.fromBody, this.selectedBody)) {
                         canReach = false;
-                        RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1.0F);
+                        color = FastColor.ARGB32.color(255, 255, 0, 0);
                     } else {
                         canReach = true;
-                        RenderSystem.setShaderColor(0.0F, 1.0F, 0.0F, 1.0F);
+                        color = FastColor.ARGB32.color(255, 0, 255, 0);
                     }
-                    this.blit(width / 2 - 30, LHS + 11, 30, 11, 0, 414, 60, 22, false, false);
-                    this.blit(width / 2, LHS + 11, 30, 11, 128, 414, 60, 22, false, false);
+                    this.blit(width / 2 - 30, LHS + 11, 30, 11, 0, 414, 60, 22, color);
+                    this.blit(width / 2, LHS + 11, 30, 11, 128, 414, 60, 22, color);
                     str = I18n.get(Translations.CelestialSelection.TIER, tiered.accessWeight(this.selectedBody.config()) == -1 ? "?" : tiered.accessWeight(this.selectedBody.config()));
                     graphics.drawString(this.font, str, width / 2 - this.font.width(str) / 2, LHS + 13, canReach ? GREY4 : RED3, false);
                 }
@@ -1335,22 +1299,20 @@ public class CelestialSelectionScreen extends Screen {
                 // Catalog wedge:
                 resetShader(GameRenderer::getPositionTexColorShader);
                 RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_0);
-                RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
-                this.blit(LHS + 4, LHS, 83, 12, 0, 477, 83, 12, false, false);
+                this.blit(LHS + 4, LHS, 83, 12, 0, 477, 83, 12, 0, 153, 255, 255);
 
                 if (!this.mapMode) {
                     resetShader(GameRenderer::getPositionTexColorShader);
                     if (this.data != null && !this.data.canTravel(manager, this.fromBody, this.selectedBody) || !(this.selectedBody.type() instanceof Landable) || isSatellite(this.selectedBody) && !((Satellite) this.selectedBody.type()).ownershipData(this.selectedBody.config()).canAccess(this.minecraft.player))
                     {
-                        RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1);
+                        color = FastColor.ARGB32.color(255, 255, 0, 0);
                     } else {
-                        RenderSystem.setShaderColor(0.0F, 1.0F, 0.0F, 1);
+                        color = FastColor.ARGB32.color(255, 0, 255, 0);
                     }
 
                     RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_0);
-                    this.blit(RHS - 74, LHS, 74, 11, 0, 392, 148, 22, true, false);
+                    this.blit(RHS - 74, LHS, 74, 11, 0, 392, 148, 22, color, true, false);
                     str = I18n.get(Translations.CelestialSelection.LAUNCH).toUpperCase();
-                    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                     graphics.drawString(this.font, str, RHS - 40 - font.width(str) / 2, LHS + 2, WHITE, false);
                 }
 
@@ -1364,33 +1326,31 @@ public class CelestialSelectionScreen extends Screen {
                     }
 
                     resetShader(GameRenderer::getPositionTexColorShader);
-                    RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
                     RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_0);
-                    this.blit(RHS - 182, height - this.borderSize - this.borderEdgeSize - sliderPos, 83, 38, 512 - 166, 512 - 76, 166, 76, true, false);
+                    this.blit(RHS - 182, height - this.borderSize - this.borderEdgeSize - sliderPos, 83, 38, 512 - 166, 512 - 76, 166, 76, 0, 153, 255, 255, true, false);
 
-                    boolean flag0 = getVisibleSatellitesForCelestialBody(this.selectedBody).size() > 0;
-                    boolean flag1 = isPlanet(this.selectedBody) && getChildren(this.selectedBody).size() > 0;
+                    boolean flag0 = !getVisibleSatellitesForCelestialBody(this.selectedBody).isEmpty();
+                    boolean flag1 = isPlanet(this.selectedBody) && !getChildren(this.selectedBody).isEmpty();
                     if (flag0 && flag1) {
-                        this.drawSplitString(graphics, I18n.get("ui.galacticraft.celestialselection.click_again.0"), RHS - 182 + 41, height - this.borderSize - this.borderEdgeSize + 2 - sliderPos, 79, GREY5, false, false);
+                        this.drawSplitString(graphics, I18n.get(Translations.CelestialSelection.CLICK_AGAIN_MOONS_AND_SATELLITES), RHS - 182 + 41, height - this.borderSize - this.borderEdgeSize + 2 - sliderPos, 79, GREY5, false, false);
                     } else if (!flag0 && flag1) {
-                        this.drawSplitString(graphics, I18n.get("ui.galacticraft.celestialselection.click_again.1"), RHS - 182 + 41, height - this.borderSize - this.borderEdgeSize + 6 - sliderPos, 79, GREY5, false, false);
+                        this.drawSplitString(graphics, I18n.get(Translations.CelestialSelection.CLICK_AGAIN_MOONS), RHS - 182 + 41, height - this.borderSize - this.borderEdgeSize + 6 - sliderPos, 79, GREY5, false, false);
                     } else if (flag0) {
-                        this.drawSplitString(graphics, I18n.get("ui.galacticraft.celestialselection.click_again.2"), RHS - 182 + 41, height - this.borderSize - this.borderEdgeSize + 6 - sliderPos, 79, GREY5, false, false);
+                        this.drawSplitString(graphics, I18n.get(Translations.CelestialSelection.CLICK_AGAIN_SATELLITES), RHS - 182 + 41, height - this.borderSize - this.borderEdgeSize + 6 - sliderPos, 79, GREY5, false, false);
                     } else {
-                        this.drawSplitString(graphics, I18n.get("ui.galacticraft.celestialselection.click_again.3"), RHS - 182 + 41, height - this.borderSize - this.borderEdgeSize + 11 - sliderPos, 79, GREY5, false, false);
+                        this.drawSplitString(graphics, I18n.get(Translations.CelestialSelection.CLICK_AGAIN), RHS - 182 + 41, height - this.borderSize - this.borderEdgeSize + 11 - sliderPos, 79, GREY5, false, false);
                     }
                 }
 
                 if (isSatellite(this.selectedBody) && renamingSpaceStation) {
 //                    this.renderBackground(matrices);
                     resetShader(GameRenderer::getPositionTexColorShader);
-                    RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
                     RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_1);
-                    this.blit(width / 2 - 90, this.height / 2 - 38, 179, 67, 159, 0, 179, 67, false, false);
-                    this.blit(width / 2 - 90 + 4, this.height / 2 - 38 + 2, 171, 10, 159, 92, 171, 10, false, false);
-                    this.blit(width / 2 - 90 + 8, this.height / 2 - 38 + 18, 161, 13, 159, 67, 161, 13, false, false);
-                    this.blit(width / 2 - 90 + 17, this.height / 2 - 38 + 59, 72, 12, 159, 80, 72, 12, true, false);
-                    this.blit(width / 2, this.height / 2 - 38 + 59, 72, 12, 159, 80, 72, 12, false, false);
+                    this.blit(width / 2 - 90, this.height / 2 - 38, 179, 67, 159, 0, 179, 67, 0, 153, 255, 255);
+                    this.blit(width / 2 - 90 + 4, this.height / 2 - 38 + 2, 171, 10, 159, 92, 171, 10, 0, 153, 255, 255);
+                    this.blit(width / 2 - 90 + 8, this.height / 2 - 38 + 18, 161, 13, 159, 67, 161, 13, 0, 153, 255, 255);
+                    this.blit(width / 2 - 90 + 17, this.height / 2 - 38 + 59, 72, 12, 159, 80, 72, 12, 0, 153, 255, 255, true, false);
+                    this.blit(width / 2, this.height / 2 - 38 + 59, 72, 12, 159, 80, 72, 12, 0, 153, 255, 255);
                     str = I18n.get(Translations.CelestialSelection.ASSIGN_NAME);
                     graphics.drawString(this.font, str, width / 2 - this.font.width(str) / 2, this.height / 2 - 35, WHITE, false);
                     str = I18n.get(Translations.CelestialSelection.APPLY);
@@ -1435,25 +1395,27 @@ public class CelestialSelectionScreen extends Screen {
         String str;
         resetShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_1);
-        RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
         CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody;
         int stationListSize = (int) ((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().values().stream().filter(s -> s.parent(manager) == this.selectedBody.parent(manager)).count();
 
         int max = Math.min((this.height / 2) / 14, stationListSize);
-        this.blit(RHS - 95, LHS, 95, 53, this.selectedStationOwner.length() == 0 ? 95 : 0, 186, 95, 53, false, false);
+        this.blit(RHS - 95, LHS, 95, 53, this.selectedStationOwner.length() == 0 ? 95 : 0, 186, 95, 53, 0, 153, 255, 255);
+
+        int color;
         if (this.spaceStationListOffset <= 0) {
-            RenderSystem.setShaderColor(0.65F, 0.65F, 0.65F, 1);
+            color = FastColor.ARGB32.color(255, 165, 165, 165);
         } else {
-            RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
+            color = FastColor.ARGB32.color(255, 0, 153, 255);
         }
-        this.blit(RHS - 85, LHS + 45, 61, 4, 0, 239, 61, 4, false, false);
+        this.blit(RHS - 85, LHS + 45, 61, 4, 0, 239, 61, 4, color);
         if (max + spaceStationListOffset >= stationListSize) {
-            RenderSystem.setShaderColor(0.65F, 0.65F, 0.65F, 1);
+            color = FastColor.ARGB32.color(255, 165, 165, 165);
         } else {
-            RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
+            color = FastColor.ARGB32.color(255, 0, 153, 255);
         }
-        this.blit(RHS - 85, LHS + 49 + max * 14, 61, 4, 0, 239, 61, 4, false, true);
-        RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
+        this.blit(RHS - 85, LHS + 49 + max * 14, 61, 4, 0, 239, 61, 4, color, false, true);
+
+//        RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
 
         if (((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().values().stream().noneMatch(s -> s.parent(manager) == this.selectedBody.parent(manager) && s.type().ownershipData(s.config()).canAccess(this.minecraft.player))) {
             str = I18n.get(Translations.CelestialSelection.SELECT_SS);
@@ -1474,14 +1436,13 @@ public class CelestialSelectionScreen extends Screen {
             if (j >= this.spaceStationListOffset) {
                 resetShader(GameRenderer::getPositionTexColorShader);
                 RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_0);
-                RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
                 int xOffset = 0;
 
                 if (e.type().ownershipData(e.config()).username().equalsIgnoreCase(this.selectedStationOwner)) {
                     xOffset -= 5;
                 }
 
-                this.blit(RHS - 95 + xOffset, LHS + 50 + i * 14, 93, 12, 95, 464, 93, 12, true, false);
+                this.blit(RHS - 95 + xOffset, LHS + 50 + i * 14, 93, 12, 95, 464, 93, 12, 0, 153, 255, 255, true, false);
                 str = "";
                 String str0 = I18n.get(((TranslatableContents)e.name().getContents()).getKey());
                 int point = 0;
@@ -1503,24 +1464,22 @@ public class CelestialSelectionScreen extends Screen {
     private void drawSpaceStationCreationPrompt(GuiGraphics graphics, int mousePosX, int mousePosY) {
         String str;
         if (this.canCreateSpaceStation(this.selectedBody) && (!(isSatellite(this.selectedBody)))) {
-            RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
             int canCreateLength = Math.max(0, this.drawSplitString(graphics, I18n.get(Translations.CelestialSelection.CAN_CREATE_SPACE_STATION), 0, 0, 91, 0, true, true) - 2);
             canCreateOffset = canCreateLength * this.font.lineHeight;
             resetShader(GameRenderer::getPositionTexColorShader);
             RenderSystem.setShaderTexture(0, TEXTURE_1);
-            RenderSystem.setShaderColor(0.0F, 0.6F, 1.0F, 1);
 
-            this.blit(RHS - 95, LHS + 134, 93, 4, 159, 102, 93, 4, false, false);
+            this.blit(RHS - 95, LHS + 134, 93, 4, 159, 102, 93, 4, 0, 153, 255, 255);
             for (int barY = 0; barY < canCreateLength; ++barY) {
-                this.blit(RHS - 95, LHS + 138 + barY * this.font.lineHeight, 93, this.font.lineHeight, 159, 106, 93, this.font.lineHeight, false, false);
+                this.blit(RHS - 95, LHS + 138 + barY * this.font.lineHeight, 93, this.font.lineHeight, 159, 106, 93, this.font.lineHeight, 0, 153, 255, 255);
             }
-            this.blit(RHS - 95, LHS + 138 + canCreateOffset, 93, 43, 159, 106, 93, 43, false, false);
-            this.blit(RHS - 79, LHS + 129, 61, 4, 0, 170, 61, 4, false, false);
+            this.blit(RHS - 95, LHS + 138 + canCreateOffset, 93, 43, 159, 106, 93, 43, 0, 153, 255, 255);
+            this.blit(RHS - 79, LHS + 129, 61, 4, 0, 170, 61, 4, 0, 153, 255, 255);
 
 
             SatelliteRecipe recipe = ((Orbitable) this.selectedBody.type()).satelliteRecipe(this.selectedBody.config());
             if (recipe != null) {
-                RenderSystem.setShaderColor(0.0F, 1.0F, 0.1F, 1);
+//                RenderSystem.setShaderColor(0.0F, 1.0F, 0.1F, 1);
                 boolean validInputMaterials = true;
 
                 int i = 0;
@@ -1586,23 +1545,24 @@ public class CelestialSelectionScreen extends Screen {
                 }
 
                 resetShader(GameRenderer::getPositionTexColorShader);
+                int color;
                 if (validInputMaterials || this.minecraft.player.getAbilities().instabuild) {
-                    RenderSystem.setShaderColor(0.0F, 1.0F, 0.1F, 1);
+                    color = FastColor.ARGB32.color(255, 0, 255, 25);
                 } else {
-                    RenderSystem.setShaderColor(1.0F, 0.0F, 0.0F, 1);
+                    color = FastColor.ARGB32.color(255, 255, 0, 0);
                 }
 
                 RenderSystem.setShaderTexture(0, TEXTURE_1);
 
                 if (!this.mapMode) {
                     if (mousePosX >= RHS - 95 && mousePosX <= RHS && mousePosY >= LHS + 182 + canCreateOffset && mousePosY <= LHS + 182 + 12 + canCreateOffset) {
-                        this.blit(RHS - 95, LHS + 182 + canCreateOffset, 93, 12, 0, 174, 93, 12, false, false);
+                        this.blit(RHS - 95, LHS + 182 + canCreateOffset, 93, 12, 0, 174, 93, 12, color);
                     }
                 }
 
-                this.blit(RHS - 95, LHS + 182 + canCreateOffset, 93, 12, 0, 174, 93, 12, false, false);
+                this.blit(RHS - 95, LHS + 182 + canCreateOffset, 93, 12, 0, 174, 93, 12, color);
 
-                int color = (int) ((Math.sin(this.ticksSinceMenuOpenF / 5.0) * 0.5 + 0.5) * 255);
+                color = (int) ((Math.sin(this.ticksSinceMenuOpenF / 5.0) * 0.5 + 0.5) * 255);
                 this.drawSplitString(graphics, I18n.get(Translations.CelestialSelection.CAN_CREATE_SPACE_STATION), RHS - 48, LHS + 137, 91, FastColor.ARGB32.color(255, color, 255, color), true, false);
 
                 if (!mapMode) {
@@ -1645,20 +1605,18 @@ public class CelestialSelectionScreen extends Screen {
             RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_0);
             RenderSystem.enableBlend();
             float brightness = child.equals(this.selectedBody) ? 0.2F : 0.0F;
+            int color;
             if (child.type() instanceof Landable<?> && (this.data == null || this.fromBody == null || this.data.canTravel(manager, this.fromBody, child))) {
-                RenderSystem.setShaderColor(0.0F, 0.6F + brightness, 0.0F, scale / 95.0F);
+                color = FastColor.ARGB32.color((int) (scale / 95.0F) * 255, 0, (int) ((0.6F + brightness) * 255), 0);
             } else {
-                RenderSystem.setShaderColor(0.6F + brightness, 0.0F, 0.0F, scale / 95.0F);
+                color = FastColor.ARGB32.color((int) (scale / 95.0F) * 255, (int) ((0.6F + brightness) * 255), 0, 0);
             }
-            this.blit(3 + xOffset, yOffsetBase + yOffset + 1, 86, 10, 0, 489, 86, 10, false, false);
+            this.blit(3 + xOffset, yOffsetBase + yOffset + 1, 86, 10, 0, 489, 86, 10, color);
             RenderSystem.disableBlend();
-//            RenderSystem.setShaderColor(5 * brightness, 0.6F + 2 * brightness, 1.0F - 4 * brightness, scale / 95.0F);
-            RenderSystem.setShaderColor(3 * brightness, 0.6F + 2 * brightness, 1.0F, scale / 95.0F);
-            this.blit(2 + xOffset, yOffsetBase + yOffset, 93, 12, 95, 464, 93, 12, false, false);
+            this.blit(2 + xOffset, yOffsetBase + yOffset, 93, 12, 95, 464, 93, 12, (int) ((3 * brightness) * 255), (int) ((0.6F + 2 * brightness) * 255), 255, (int) ((scale / 95.0F) * 255));
 
             if (scale > 0) {
-                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-                int color = 14737632;
+                color = 0xe0e0e0;
                 graphics.drawString(this.font, I18n.get(((TranslatableContents)child.name().getContents()).getKey()), 7 + xOffset, yOffsetBase + yOffset + 2, color, false);
             }
 
@@ -1735,11 +1693,15 @@ public class CelestialSelectionScreen extends Screen {
         }
     }
 
-    public void blit(int x, int y, int width, int height, int u, int v, int uWidth, int vHeight, boolean invertX, boolean invertY) {
-        blit(x, y, width, height, u, v, uWidth, vHeight, invertX, invertY, 512, 512);
+    private void blit(Matrix4f model, int x, int y, int width, int height, int u, int v, int uWidth, int vHeight, int red, int green, int blue, int alpha) {
+        blit(model, x, y, width, height, u, v, uWidth, vHeight, 512, 512, red, green, blue, alpha, false, false);
     }
 
-    public static void blit(float x, float y, float width, float height, float u, float v, float uWidth, float vHeight, boolean invertX, boolean invertY, float texSizeX, float texSizeY) {
+    private void blit(Matrix4f model, int x, int y, int width, int height, int u, int v, int uWidth, int vHeight, int red, int green, int blue, int alpha, boolean invertX, boolean invertY) {
+        blit(model, x, y, width, height, u, v, uWidth, vHeight, 512, 512, red, green, blue, alpha, invertX, invertY);
+    }
+
+    public static void blit(Matrix4f model, float x, float y, float width, float height, float u, float v, float uWidth, float vHeight, float texSizeX, float texSizeY, int red, int green, int blue, int alpha, boolean invertX, boolean invertY) {
         resetShader(GameRenderer::getPositionTexColorShader);
         float texModX = 1F / texSizeX;
         float texModY = 1F / texSizeY;
@@ -1749,10 +1711,61 @@ public class CelestialSelectionScreen extends Screen {
         float width1 = invertX ? 0 : uWidth;
         BufferBuilder buffer = Tesselator.getInstance().getBuilder();
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        buffer.vertex(x, y + height, 0).uv((u + width0) * texModX, (v + height0) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
-        buffer.vertex(x + width, y + height, 0).uv((u + width1) * texModX, (v + height0) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
-        buffer.vertex(x + width, y, 0).uv((u + width1) * texModX, (v + height1) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
-        buffer.vertex(x, y, 0).uv((u + width0) * texModX, (v + height1) * texModY).color(RenderSystem.getShaderColor()[0], RenderSystem.getShaderColor()[1], RenderSystem.getShaderColor()[2], RenderSystem.getShaderColor()[3]).endVertex();
+        buffer.vertex(model, x, y + height, 0).uv((u + width0) * texModX, (v + height0) * texModY).color(red, green, blue, alpha).endVertex();
+        buffer.vertex(model, x + width, y + height, 0).uv((u + width1) * texModX, (v + height0) * texModY).color(red, green, blue, alpha).endVertex();
+        buffer.vertex(model, x + width, y, 0).uv((u + width1) * texModX, (v + height1) * texModY).color(red, green, blue, alpha).endVertex();
+        buffer.vertex(model, x, y, 0).uv((u + width0) * texModX, (v + height1) * texModY).color(red, green, blue, alpha).endVertex();
+        BufferUploader.drawWithShader(buffer.end());
+    }
+
+    public void blit(int x, int y, int width, int height, int u, int v, int uWidth, int vHeight, int red, int green, int blue, int alpha) {
+        blit(x, y, width, height, u, v, uWidth, vHeight, 512, 512, red, green, blue, alpha, false, false);
+    }
+
+
+    public void blit(int x, int y, int width, int height, int u, int v, int uWidth, int vHeight, int red, int green, int blue, int alpha, boolean invertX, boolean invertY) {
+        blit(x, y, width, height, u, v, uWidth, vHeight, 512, 512, red, green, blue, alpha, invertX, invertY);
+    }
+
+    public static void blit(float x, float y, float width, float height, float u, float v, float uWidth, float vHeight, float texSizeX, float texSizeY, int red, int green, int blue, int alpha, boolean invertX, boolean invertY) {
+        resetShader(GameRenderer::getPositionTexColorShader);
+        float texModX = 1F / texSizeX;
+        float texModY = 1F / texSizeY;
+        float height0 = invertY ? 0 : vHeight;
+        float height1 = invertY ? vHeight : 0;
+        float width0 = invertX ? uWidth : 0;
+        float width1 = invertX ? 0 : uWidth;
+        BufferBuilder buffer = Tesselator.getInstance().getBuilder();
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        buffer.vertex(x, y + height, 0).uv((u + width0) * texModX, (v + height0) * texModY).color(red, green, blue, alpha).endVertex();
+        buffer.vertex(x + width, y + height, 0).uv((u + width1) * texModX, (v + height0) * texModY).color(red, green, blue, alpha).endVertex();
+        buffer.vertex(x + width, y, 0).uv((u + width1) * texModX, (v + height1) * texModY).color(red, green, blue, alpha).endVertex();
+        buffer.vertex(x, y, 0).uv((u + width0) * texModX, (v + height1) * texModY).color(red, green, blue, alpha).endVertex();
+        BufferUploader.drawWithShader(buffer.end());
+    }
+
+    public void blit(int x, int y, int width, int height, int u, int v, int uWidth, int vHeight, int color) {
+        blit(x, y, width, height, u, v, uWidth, vHeight, 512, 512, color, false, false);
+    }
+
+    public void blit(int x, int y, int width, int height, int u, int v, int uWidth, int vHeight, int color, boolean invertX, boolean invertY) {
+        blit(x, y, width, height, u, v, uWidth, vHeight, 512, 512, color, invertX, invertY);
+    }
+
+    public static void blit(float x, float y, float width, float height, float u, float v, float uWidth, float vHeight, float texSizeX, float texSizeY, int color, boolean invertX, boolean invertY) {
+        resetShader(GameRenderer::getPositionTexColorShader);
+        float texModX = 1F / texSizeX;
+        float texModY = 1F / texSizeY;
+        float height0 = invertY ? 0 : vHeight;
+        float height1 = invertY ? vHeight : 0;
+        float width0 = invertX ? uWidth : 0;
+        float width1 = invertX ? 0 : uWidth;
+        BufferBuilder buffer = Tesselator.getInstance().getBuilder();
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        buffer.vertex(x, y + height, 0).uv((u + width0) * texModX, (v + height0) * texModY).color(color).endVertex();
+        buffer.vertex(x + width, y + height, 0).uv((u + width1) * texModX, (v + height0) * texModY).color(color).endVertex();
+        buffer.vertex(x + width, y, 0).uv((u + width1) * texModX, (v + height1) * texModY).color(color).endVertex();
+        buffer.vertex(x, y, 0).uv((u + width0) * texModX, (v + height1) * texModY).color(color).endVertex();
         BufferUploader.drawWithShader(buffer.end());
     }
 
@@ -1763,7 +1776,6 @@ public class CelestialSelectionScreen extends Screen {
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuilder();
         resetShader(GameRenderer::getPositionColorShader);
-        RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 1.0F);
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         buffer.vertex(0.0D, this.height, -90.0D).color(0, 0, 0, 255).endVertex();
         buffer.vertex(this.width, this.height, -90.0D).color(0, 0, 0, 255).endVertex();
@@ -1797,7 +1809,6 @@ public class CelestialSelectionScreen extends Screen {
      */
     public void drawGrid(Matrix4f model, float gridSize, float gridScale) {
         resetShader(GameRenderer::getRendertypeLinesShader);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.lineWidth(2);
         BufferBuilder buffer = Tesselator.getInstance().getBuilder();
         buffer.begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR_NORMAL);
@@ -1818,7 +1829,6 @@ public class CelestialSelectionScreen extends Screen {
      * Draw orbit circles on gui
      */
     public void drawOrbitRings(GuiGraphics graphics, double mouseX, double mouseY, float delta) {
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.lineWidth(4);
         int count = 0;
 
