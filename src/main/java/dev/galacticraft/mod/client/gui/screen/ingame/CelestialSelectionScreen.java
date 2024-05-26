@@ -500,17 +500,13 @@ public class CelestialSelectionScreen extends Screen {
             float scrollMultiplier = -Math.abs(this.zoom);
             if (this.zoom == -1.0F) {
                 scrollMultiplier = -1.5F;
-            }
-
-            if (this.zoom >= -0.25F && this.zoom <= 0.15F) {
+            } else if (-0.25F <= this.zoom && this.zoom <= 0.15F) {
                 scrollMultiplier = -0.2F;
-            }
-
-            if (this.zoom >= 0.15F) {
+            } else if (this.zoom >= 0.15F) {
                 scrollMultiplier = -0.15F;
             }
-            this.translationX += (float) (dragX * scrollMultiplier * 0.2F);
-            this.translationY += (float) (dragY * scrollMultiplier * 0.2F);
+            this.translationX += (float) ((dragX - dragY) * scrollMultiplier * 0.2F);
+            this.translationY += (float) ((dragY + dragX) * scrollMultiplier * 0.2F);
         }
 
         return true;
@@ -964,16 +960,15 @@ public class CelestialSelectionScreen extends Screen {
         this.setBlackBackground();
 
         matrices.pushPose();
-        {
-            this.setIsometric(delta, matrices);
-            float gridSize = 7000F; //194.4F;
-            //TODO: Add dynamic map sizing, to allow the map to be small by default and expand when more distant solar systems are added.
-            this.drawGrid(matrices.last().pose(), gridSize, this.height / 10.5F);
-            this.drawOrbitRings(graphics, mouseX, mouseY, delta);
 
-            this.drawCelestialBodies(graphics, mouseX, mouseY, delta);
-            this.drawSelectionCursor(matrices, delta);
-        }
+        this.setIsometric(delta, matrices);
+        float gridSize = 7000F; //194.4F;
+        //TODO: Add dynamic map sizing, to allow the map to be small by default and expand when more distant solar systems are added.
+        this.drawGrid(matrices.last().pose(), gridSize, this.height / 10.5F);
+        this.drawOrbitRings(graphics, mouseX, mouseY, delta);
+        this.drawCelestialBodies(graphics, mouseX, mouseY, delta);
+        this.drawSelectionCursor(matrices, delta);
+
         matrices.popPose();
 
         try {
@@ -1015,7 +1010,7 @@ public class CelestialSelectionScreen extends Screen {
                     this.setupMatrix(this.selectedBody, matrices, scale, delta);
                     resetShader(GameRenderer::getPositionTexColorShader);
                     RenderSystem.setShaderTexture(0, CelestialSelectionScreen.TEXTURE_0);
-                    float colMod = this.getZoomAdvanced() < 4.9F ? (float) (Math.sin(this.ticksSinceSelectionF) * 0.5F + 0.5F) : 1.0F;
+                    float colMod = this.getZoomAdvanced() < 4.9F ? (float) (Math.sin(this.ticksSinceSelectionF / 2.0f) * 0.5F + 0.5F) : 1.0F;
                     RenderSystem.setShaderColor(0.4F, 0.8F, 1.0F, 1 * colMod);
                     int width = getWidthForCelestialBody(this.selectedBody) * 13;
                     this.blit(matrices.last().pose(), -width, -width, width * 2, width * 2, 266, 29, 100, 100, false, false);
@@ -1741,7 +1736,7 @@ public class CelestialSelectionScreen extends Screen {
     }
 
     public void blit(int x, int y, int width, int height, int u, int v, int uWidth, int vHeight, boolean invertX, boolean invertY) {
-        this.blit(x, y, width, height, u, v, uWidth, vHeight, invertX, invertY, 512, 512);
+        blit(x, y, width, height, u, v, uWidth, vHeight, invertX, invertY, 512, 512);
     }
 
     public static void blit(float x, float y, float width, float height, float u, float v, float uWidth, float vHeight, boolean invertX, boolean invertY, float texSizeX, float texSizeY) {
@@ -1787,15 +1782,14 @@ public class CelestialSelectionScreen extends Screen {
      */
     public void setIsometric(float delta, PoseStack matrices) {
         matrices.setIdentity();
-        matrices.translate(width / 2.0F, height / 2f, 0);
-        Vec2 cBodyPos = this.getTranslationAdvanced(delta);
-        this.position = cBodyPos;
-        float zoomLocal = this.getZoomAdvanced();
-        this.zoom = zoomLocal;
-        matrices.scale(1.1f + zoomLocal, 1.1F + zoomLocal, 1.1F + zoomLocal);
+        matrices.translate(width / 2.0f, height / 2.0f, 0);
         matrices.mulPose(Axis.XP.rotationDegrees(55));
-        matrices.translate(-cBodyPos.x, -cBodyPos.y, 0);
         matrices.mulPose(Axis.ZN.rotationDegrees(45));
+
+        this.position = this.getTranslationAdvanced(delta);
+        this.zoom = this.getZoomAdvanced();
+        matrices.scale(1.1f + this.zoom, 1.1F + this.zoom, 1.1F + this.zoom);
+        matrices.translate(-this.position.x, -this.position.y, 0);
     }
 
     /**
@@ -1888,8 +1882,8 @@ public class CelestialSelectionScreen extends Screen {
 
     protected void setupMatrix(CelestialBody<?, ?> body, PoseStack matrices, float scaleXZ, float delta) {
         Vector3f celestialBodyPosition = this.getCelestialBodyPosition(body, delta);
-        matrices.mulPose(Axis.ZP.rotationDegrees(45));
         matrices.translate(celestialBodyPosition.x(), celestialBodyPosition.y(), celestialBodyPosition.z());
+        matrices.mulPose(Axis.ZP.rotationDegrees(45));
         matrices.mulPose(Axis.XN.rotationDegrees(55));
         if (scaleXZ != 1.0F) {
             matrices.scale(scaleXZ, scaleXZ, 1.0F);
