@@ -124,12 +124,12 @@ public class SpaceRaceScreen extends Screen {
         // 5% of width
         int maxWidth = (int) (this.width - (getXMargins() * 1.5D));
         if (backgroundWidth < maxWidth) {
-            backgroundWidth += Math.min(3, maxWidth - backgroundWidth);
+            backgroundWidth += (int) Math.min(60*delta, maxWidth - backgroundWidth);
         }
 
         int maxHeight = (int) (this.height - (getYMargins() * 1.5D));
         if (backgroundHeight < maxHeight) {
-            backgroundHeight += Math.min(2, maxHeight - backgroundHeight);
+            backgroundHeight += (int) Math.min(40*delta, maxHeight - backgroundHeight);
         }
 
         graphics.fill(getLeft(), getTop(), getLeft() + backgroundWidth, getTop() + backgroundHeight, 0x80000000);
