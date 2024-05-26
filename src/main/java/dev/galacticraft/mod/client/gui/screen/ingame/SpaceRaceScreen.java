@@ -28,9 +28,13 @@ import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -38,7 +42,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
 public class SpaceRaceScreen extends Screen {
@@ -46,7 +49,6 @@ public class SpaceRaceScreen extends Screen {
     private int backgroundHeight = 0;
     private Menu menu = Menu.MAIN;
     private EditBox teamNameInput;
-    private final List<SpaceRaceButton> buttons = new ArrayList<>();
     private boolean animationCompleted = false;
 
     public SpaceRaceScreen() {
@@ -58,20 +60,12 @@ public class SpaceRaceScreen extends Screen {
         return false;
     }
 
-    @Override
-    protected void init() {
-        super.init();
-
-        addButton(Menu.MAIN, Component.translatable(Translations.SpaceRace.EXIT), this.getLeft() + 5, this.getTop() + 5, 40, 14, button -> this.onClose());
-        addButton(Menu.MAIN, Component.translatable(Translations.SpaceRace.ADD_PLAYERS), this.getLeft() + 10, this.getBottom() - 85, 100, 30, button -> setMenu(Menu.ADD_PLAYERS));
-        addButton(Menu.MAIN, Component.translatable(Translations.SpaceRace.REMOVE_PLAYERS), this.getLeft() + 10, this.getBottom() - 45, 100, 30, button -> setMenu(Menu.REMOVE_PLAYERS));
-        addComingSoonButton(Menu.MAIN, Component.translatable(Translations.SpaceRace.SERVER_STATS), this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30);
-        addComingSoonButton(Menu.MAIN, Component.translatable(Translations.SpaceRace.GLOBAL_STATS), this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
-
-        addBackButton(Menu.ADD_PLAYERS);
-        addBackButton(Menu.REMOVE_PLAYERS);
-        addBackButton(Menu.TEAM_COLOR);
-        addBackButton(Menu.TEAM_FLAG);
+    protected void mainMenu() {
+        addButton(Component.translatable(Translations.SpaceRace.EXIT), this.getLeft() + 5, this.getTop() + 5, 40, 14, button -> this.onClose());
+        addButton(Component.translatable(Translations.SpaceRace.ADD_PLAYERS), this.getLeft() + 10, this.getBottom() - 85, 100, 30, button -> setMenu(Menu.ADD_PLAYERS));
+        addButton(Component.translatable(Translations.SpaceRace.REMOVE_PLAYERS), this.getLeft() + 10, this.getBottom() - 45, 100, 30, button -> setMenu(Menu.REMOVE_PLAYERS));
+        addComingSoonButton(Component.translatable(Translations.SpaceRace.SERVER_STATS), this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30);
+        addComingSoonButton(Component.translatable(Translations.SpaceRace.GLOBAL_STATS), this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
 
         this.addRenderableWidget(this.teamNameInput = new EditBox(this.font, this.getLeft() + (this.backgroundWidth / 2) - 64, this.getTop() + 65, 128, 15, this.teamNameInput, Component.empty()) {
             private String prevText;
@@ -88,8 +82,28 @@ public class SpaceRaceScreen extends Screen {
                 super.setFocused(focused);
             }
         });
+    }
 
-        this.teamNameInput.setVisible(menu == Menu.MAIN);
+    protected void addPlayersMenu() {
+        addBackButton();
+    }
+
+    protected void removePlayersMenu() {
+        addBackButton();
+    }
+
+    protected void teamColorMenu() {
+        addBackButton();
+    }
+
+    protected void teamFlagMenu() {
+        addBackButton();
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        mainMenu();
     }
 
     @Override
@@ -99,16 +113,16 @@ public class SpaceRaceScreen extends Screen {
         super.resize(client, width, height);
     }
 
-    private void addButton(Menu menu, Component text, int x, int y, int width, int height, Button.OnPress onPress) {
-        this.buttons.add(this.addRenderableWidget(new SpaceRaceButton(menu, text, x, y, width, height, onPress)));
+    private void addButton(Component text, int x, int y, int width, int height, Button.OnPress onPress) {
+        this.addRenderableWidget(new SpaceRaceButton(text, x, y, width, height, onPress));
     }
 
-    private void addComingSoonButton(Menu menu, Component text, int x, int y, int width, int height) {
-        this.buttons.add(this.addRenderableWidget(new ComingSoonButton(menu, text, x, y, width, height)));
+    private void addComingSoonButton(Component text, int x, int y, int width, int height) {
+        this.addRenderableWidget(new ComingSoonButton(text, x, y, width, height));
     }
 
-    private void addBackButton(Menu menu) {
-        addButton(menu, Component.translatable(Translations.SpaceRace.BACK), this.getLeft() + 5, this.getTop() + 5, 40, 14, button -> setMenu(Menu.MAIN));
+    private void addBackButton() {
+        addButton(Component.translatable(Translations.SpaceRace.BACK), this.getLeft() + 5, this.getTop() + 5, 40, 14, button -> setMenu(Menu.MAIN));
     }
 
     @Override
@@ -180,9 +194,14 @@ public class SpaceRaceScreen extends Screen {
 
     private void setMenu(Menu menu) {
         this.menu = menu;
-        this.teamNameInput.setVisible(menu == Menu.MAIN);
-        for (SpaceRaceButton button : this.buttons) {
-            button.visible = button.menu == menu;
+        this.clearWidgets();
+        this.clearFocus();
+        switch (menu) {
+            case MAIN -> mainMenu();
+            case ADD_PLAYERS -> addPlayersMenu();
+            case REMOVE_PLAYERS -> removePlayersMenu();
+            case TEAM_FLAG -> teamFlagMenu();
+            case TEAM_COLOR -> teamColorMenu();
         }
     }
 
@@ -245,13 +264,10 @@ public class SpaceRaceScreen extends Screen {
         TEAM_FLAG
     }
 
-    private class SpaceRaceButton extends Button {
-        public final Menu menu;
+    private static class SpaceRaceButton extends Button {
 
-        public SpaceRaceButton(Menu menu, Component component, int x, int y, int width, int height, OnPress onPress) {
+        public SpaceRaceButton(Component component, int x, int y, int width, int height, OnPress onPress) {
             super(x, y, width, height, component, onPress, DEFAULT_NARRATION);
-            this.menu = menu;
-            this.visible = menu == SpaceRaceScreen.this.menu;
         }
 
         @Override
@@ -260,19 +276,16 @@ public class SpaceRaceScreen extends Screen {
             int backgroundColor = this.isHoveredOrFocused() ? 0xAA1e1e1e : 0xAA000000;
             int lineColor = this.isHoveredOrFocused() ? 0xFF3c3c3c : 0xFF2d2d2d;
             graphics.fill(x, y, x + width, y + height, backgroundColor);
-            graphics.hLine(x, x + width, y, lineColor);
-            graphics.vLine(x + width, y, y + height, lineColor);
-            graphics.hLine(x, x + width, y + height, lineColor);
-            graphics.vLine(x, y, y + height, lineColor);
+            graphics.renderOutline(x, y, width, height, lineColor);
             this.renderString(graphics, Minecraft.getInstance().font, 0xFFFFFFFF);
         }
     }
 
-    private class ComingSoonButton extends SpaceRaceButton {
+    private static class ComingSoonButton extends SpaceRaceButton {
         private final Component originalMessage;
 
-        public ComingSoonButton(Menu menu, Component component, int x, int y, int width, int height) {
-            super(menu, component, x, y, width, height, button -> {});
+        public ComingSoonButton(Component component, int x, int y, int width, int height) {
+            super(component, x, y, width, height, button -> {});
             this.originalMessage = component;
         }
 
