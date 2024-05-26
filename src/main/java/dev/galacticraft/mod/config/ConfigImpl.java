@@ -65,6 +65,7 @@ public class ConfigImpl implements Config {
     private long playerOxygenConsumptionRate = FluidConstants.DROPLET;
     private double bossHealthMultiplier = 1.0;
     private boolean hideAlphaWarning = false;
+    private boolean enableGcHouston = true;
 
     public ConfigImpl(File file) {
         this.gson = new GsonBuilder()
@@ -237,6 +238,15 @@ public class ConfigImpl implements Config {
 
     public void setBossHealthMultiplier(double bossHealthMultiplier) {
         this.bossHealthMultiplier = bossHealthMultiplier;
+    }
+
+    @Override
+    public boolean enableGcHouston() {
+        return this.enableGcHouston;
+    }
+
+    public void setEnableGcHouston(boolean enableGcHouston) {
+        this.enableGcHouston = enableGcHouston;
     }
 
     public void load() {
@@ -450,8 +460,18 @@ public class ConfigImpl implements Config {
 
             b.getOrCreateCategory(Component.translatable(Translations.Config.DEBUG)).addEntry(dB.build());
             b.getOrCreateCategory(Component.translatable(Translations.Config.ENERGY)).addEntry(wires.build()).addEntry(machines.build());
-            b.getOrCreateCategory(Component.translatable(Translations.Config.CLIENT)).addEntry(skybox.build());
             b.getOrCreateCategory(Component.translatable(Translations.Config.PLAYER)).addEntry(lifeSupport.build());
+
+            SubCategoryBuilder commands = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.COMMANDS));
+
+            commands.add(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.ENABLE_GC_HOUSTON),
+                    config.enableGcHouston())
+                    .setSaveConsumer(config::setEnableGcHouston)
+                    .setDefaultValue(true)
+                    .build()
+            );
 
             return b.build();
         }

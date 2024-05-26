@@ -137,27 +137,26 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(SetOxygen.FULL_OXYGEN, "Area is filled with oxygen");
         this.add(SetOxygen.PARTIAL_OXYGEN, "Area partially contains oxygen");
         this.add(SetOxygen.EMPTY_OXYGEN, "Area contains no oxygen");
-        this.add(OpenCelestialScreen.REQUIRES_PLAYER, "Requires Player");
 
-        this.add(DimensionTp.ALREADY_IN_DIMENSION, "Already inside dimension %s");
-        this.add(DimensionTp.UNKNOWN_ENTITY, "Invalid entity");
         this.add(DimensionTp.SUCCESS_MULTIPLE, "Teleported %s entities to %s");
-        this.add(DimensionTp.SUCCESS_POSITION, "Teleported to %s at (%d, %d, %d)");
         this.add(DimensionTp.SUCCESS_SINGLE, "Teleported to %s");
 
+        this.add(GcHouston.IN_OTHER_DIMENSION, "We cannot locate your signal! Are you sure you're in space?");
         this.add(GcHouston.CONFIRMATION, "Er, Houston, we have a problem... (Run this command again to confirm teleport)");
         this.add(GcHouston.IN_OVERWORLD, "I don't need to be rescued!");
         this.add(GcHouston.SUCCESS, "You have been rescued. Better luck next time...");
-        this.add(GcHouston.MISSING_PLAYER, "Command requires player");
 
         this.add(Config.CLIENT, "Client");
         this.add(Config.SKYBOX, "Skybox");
+        this.add(Config.COMMANDS, "Commands");
+        this.add(Config.ENABLE_GC_HOUSTON, "Enable /gchouston");
         this.add(Config.DEBUG, "Debug");
         this.add(Config.HIDE_ALPHA_WARNING, "Hide Alpha Warning");
         this.add(Config.DEBUG_LOGGING, "Debug Logging");
         this.add(Config.ENERGY, "Energy");
         this.add(Config.MACHINES, "Machines");
         this.add(Config.CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE, "Circuit Fabricator Energy Consumption Rate/t");
+        this.add(Config.ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE, "Electric Compressor Energy Consumption Rate/t");
         this.add(Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE, "Coal Generator Energy Production Rate/t");
         this.add(Config.ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE, "Electric Compressor Energy Consumption Rate/t");
         this.add(Config.ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE, "Electric Furnace Energy Consumption Rate/t");
@@ -186,6 +185,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Galaxy.MILKY_WAY, "Milky Way");
 
         this.add(Keybindings.ROCKET_INVENTORY, "Open Rocket Inventory");
+        this.add(Keybindings.OPEN_CELESTIAL_SCREEN, "Open Celestial Map");
 
         this.add(CelestialBody.SOL_DESC, "");
         this.add(CelestialBody.SOL, "Sol");
@@ -314,7 +314,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(CelestialSelection.CATALOG, "Catalog");
         this.add(CelestialSelection.LAUNCH, "Launch");
         this.add(CelestialSelection.RENAME, "Rename");
-        this.add(CelestialSelection.TIER, "Tier");
+        this.add(CelestialSelection.TIER, "Tier %s");
         this.add(CelestialSelection.ASSIGN_NAME, "Assign Name");
         this.add(CelestialSelection.APPLY, "Apply");
         this.add(CelestialSelection.EXIT, "Exit");

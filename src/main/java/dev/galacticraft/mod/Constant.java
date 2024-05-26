@@ -809,7 +809,7 @@ public interface Constant {
     interface Command {
         String HOUSTON = "gchouston";
         String DIMENSION_TP = "dimensiontp";
-        String DIMENSION_TP_ALIAS = "dimtp";
+        String DIMTP = "dimtp";
         String OPEN_CELESTIAL_SCREEN = "opencelestialscreen";
     }
 

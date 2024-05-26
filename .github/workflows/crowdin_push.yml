@@ -25,5 +25,6 @@ jobs:
           translation: 'src/main/resources/assets/galacticraft/lang/%locale_with_underscore%.json'
           project_id: ${{ secrets.CROWDIN_PROJECT_ID }}
           token: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+          base_url: ${{ secrets.CROWDIN_BASE_URL }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

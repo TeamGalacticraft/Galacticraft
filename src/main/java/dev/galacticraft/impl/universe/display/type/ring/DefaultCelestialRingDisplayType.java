@@ -23,7 +23,6 @@
 package dev.galacticraft.impl.universe.display.type.ring;
 
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Axis;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.display.ring.CelestialRingDisplayType;
@@ -65,7 +64,6 @@ public class DefaultCelestialRingDisplayType extends CelestialRingDisplayType<De
 
         if (alpha > 0.0F) {
             matrices.pushPose();
-            matrices.mulPose(Axis.ZP.rotationDegrees(45));
             matrices.translate(systemOffset.x(), systemOffset.y(), systemOffset.z());
 //                matrices.multiply(Vector3f.NEGATIVE_X.getDegreesQuaternion(55));
             float[] color = switch (count % 2) {

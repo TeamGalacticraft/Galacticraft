@@ -50,13 +50,13 @@ public class RoomEntrance extends SizedPiece {
 
     @Override
     public void postProcess(WorldGenLevel worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomIn, BoundingBox structureBoundingBoxIn, ChunkPos pos, BlockPos pivot) {
-        for (int i = 0; i <= this.sizeX; i++) {
-            for (int j = 0; j <= this.sizeY; j++) {
-                for (int k = 0; k <= this.sizeZ; k++) {
-                    if (i == 0 || i == this.sizeX || j == 0 /*|| j == this.sizeY*/ || k == 0 || k == this.sizeZ) {
-                        this.placeBlock(worldIn, this.configuration.getBrickBlock(), i, j, k, boundingBox);
+        for (int x = 0; x <= this.sizeX; x++) {
+            for (int y = 0; y <= this.sizeY; y++) {
+                for (int z = 0; z <= this.sizeZ; z++) {
+                    if (x == 0 || x == this.sizeX || y == 0 /*|| j == this.sizeY*/ || z == 0 || z == this.sizeZ) {
+                        this.placeBlock(worldIn, this.configuration.getBrickBlock(), x, y, z, boundingBox);
                     } else {
-                        this.placeBlock(worldIn, Blocks.AIR.defaultBlockState(), i, j, k, boundingBox);
+                        this.placeBlock(worldIn, Blocks.AIR.defaultBlockState(), x, y, z, boundingBox);
                     }
                 }
             }

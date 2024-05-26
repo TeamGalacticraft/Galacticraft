@@ -37,8 +37,6 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 
-import java.lang.reflect.Constructor;
-
 public class Corridor extends SizedPiece {
 
     public Corridor(CompoundTag tag) {
@@ -52,28 +50,28 @@ public class Corridor extends SizedPiece {
 
     @Override
     public void postProcess(WorldGenLevel worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource randomIn, BoundingBox structureBoundingBoxIn, ChunkPos pos, BlockPos pivot) {
-        for (int i = 0; i < this.boundingBox.getXSpan(); i++) {
-            for (int j = 0; j < this.boundingBox.getYSpan(); j++) {
-                for (int k = 0; k < this.boundingBox.getZSpan(); k++) {
-                    if ((this.getDirection().getAxis() == Direction.Axis.Z && (i == 0 || i == this.boundingBox.getXSpan() - 1)) || j == 0 || j == this.boundingBox.getYSpan() - 1
-                            || (this.getDirection().getAxis() == Direction.Axis.X && (k == 0 || k == this.boundingBox.getZSpan() - 1))) {
-                        this.placeBlock(worldIn, this.configuration.getBrickBlock(), i, j, k, this.boundingBox);
+        for (int x = 0; x < this.boundingBox.getXSpan(); x++) {
+            for (int y = 0; y < this.boundingBox.getYSpan(); y++) {
+                for (int z = 0; z < this.boundingBox.getZSpan(); z++) {
+                    if ((this.getDirection().getAxis() == Direction.Axis.Z && (x == 0 || x == this.boundingBox.getXSpan() - 1)) || y == 0 || y == this.boundingBox.getYSpan() - 1
+                            || (this.getDirection().getAxis() == Direction.Axis.X && (z == 0 || z == this.boundingBox.getZSpan() - 1))) {
+                        this.placeBlock(worldIn, this.configuration.getBrickBlock(), x, y, z, this.boundingBox);
                     } else {
-                        if (j == this.boundingBox.getYSpan() - 2) {
-                            if (this.getDirection().getAxis() == Direction.Axis.Z && (k + 1) % 4 == 0 && (i == 1 || i == this.boundingBox.getXSpan() - 2)) {
+                        if (y == this.boundingBox.getYSpan() - 2) {
+                            if (this.getDirection().getAxis() == Direction.Axis.Z && (z + 1) % 4 == 0 && (x == 1 || x == this.boundingBox.getXSpan() - 2)) {
                                 this.placeBlock(worldIn,
-                                        GCBlocks.UNLIT_WALL_TORCH.defaultBlockState().setValue(WallTorchBlock.FACING, i == 1 ? Direction.WEST.getOpposite() : Direction.EAST.getOpposite()), i, j, k,
+                                        GCBlocks.UNLIT_WALL_TORCH.defaultBlockState().setValue(WallTorchBlock.FACING, x == 1 ? Direction.WEST.getOpposite() : Direction.EAST.getOpposite()), x, y, z,
                                         this.boundingBox);
                                 continue;
-                            } else if (this.getDirection().getAxis() == Direction.Axis.X && (i + 1) % 4 == 0 && (k == 1 || k == this.boundingBox.getZSpan() - 2)) {
+                            } else if (this.getDirection().getAxis() == Direction.Axis.X && (x + 1) % 4 == 0 && (z == 1 || z == this.boundingBox.getZSpan() - 2)) {
                                 this.placeBlock(worldIn,
-                                        GCBlocks.UNLIT_WALL_TORCH.defaultBlockState().setValue(WallTorchBlock.FACING, k == 1 ? Direction.NORTH.getOpposite() : Direction.SOUTH.getOpposite()), i, j, k,
+                                        GCBlocks.UNLIT_WALL_TORCH.defaultBlockState().setValue(WallTorchBlock.FACING, z == 1 ? Direction.NORTH.getOpposite() : Direction.SOUTH.getOpposite()), x, y, z,
                                         this.boundingBox);
                                 continue;
                             }
                         }
 
-                        this.placeBlock(worldIn, Blocks.AIR.defaultBlockState(), i, j, k, this.boundingBox);
+                        this.placeBlock(worldIn, Blocks.AIR.defaultBlockState(), x, y, z, this.boundingBox);
                     }
                 }
             }

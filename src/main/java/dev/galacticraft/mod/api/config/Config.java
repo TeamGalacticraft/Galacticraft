@@ -59,6 +59,8 @@ public interface Config {
 
     double bossHealthMultiplier();
 
+    boolean enableGcHouston();
+
     void load();
 
     void save();
