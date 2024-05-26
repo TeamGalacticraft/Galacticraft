@@ -139,62 +139,36 @@ public class SpaceRaceScreen extends Screen {
         graphics.drawCenteredString(this.font, Component.translatable(Translations.SpaceRace.SPACE_RACE_MANAGER), this.width / 2, getTop() - 20, 0xFFFFFF);
 
         if (menu == Menu.MAIN) {
-            if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                renderButton(graphics, font, Component.translatable(Translations.SpaceRace.EXIT), this.getLeft() + 5, this.getTop() + 5, 40, 14);
-            } else {
-                renderHoveredButton(graphics, font, Component.translatable(Translations.SpaceRace.EXIT), this.getLeft() + 5, this.getTop() + 5, 40, 14);
-            }
+            boolean exitHovered = check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14);
+            renderButton(exitHovered, graphics, font, Component.translatable(Translations.SpaceRace.EXIT), this.getLeft() + 5, this.getTop() + 5, 40, 14);
 
-            if (!check(mouseX, mouseY, this.getLeft() + 10, this.getBottom() - 85, 100, 30)) {
-                renderButton(graphics, font, Component.translatable(Translations.SpaceRace.ADD_PLAYERS), this.getLeft() + 10, this.getBottom() - 85, 100, 30);
-            } else {
-                renderHoveredButton(graphics, font, Component.translatable(Translations.SpaceRace.ADD_PLAYERS), this.getLeft() + 10, this.getBottom() - 85, 100, 30);
-            }
+            boolean addPlayersHovered = check(mouseX, mouseY, this.getLeft() + 10, this.getBottom() - 85, 100, 30);
+            renderButton(addPlayersHovered, graphics, font, Component.translatable(Translations.SpaceRace.ADD_PLAYERS), this.getLeft() + 10, this.getBottom() - 85, 100, 30);
 
-            if (!check(mouseX, mouseY, this.getLeft() + 10, this.getBottom() - 45, 100, 30)) {
-                renderButton(graphics, font, Component.translatable(Translations.SpaceRace.REMOVE_PLAYERS), this.getLeft() + 10, this.getBottom() - 45, 100, 30);
-            } else {
-                renderHoveredButton(graphics, font, Component.translatable(Translations.SpaceRace.REMOVE_PLAYERS), this.getLeft() + 10, this.getBottom() - 45, 100, 30);
-            }
+            boolean removePlayersHovered = check(mouseX, mouseY, this.getLeft() + 10, this.getBottom() - 45, 100, 30);
+            renderButton(removePlayersHovered, graphics, font, Component.translatable(Translations.SpaceRace.REMOVE_PLAYERS), this.getLeft() + 10, this.getBottom() - 45, 100, 30);
 
-            if (!check(mouseX, mouseY, this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30)) {
-                renderButton(graphics, font, Component.translatable(Translations.SpaceRace.SERVER_STATS), this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30);
-            } else {
-                renderHoveredButton(graphics, font, Component.translatable(Translations.SpaceRace.COMING_SOON), this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30);
-            }
+            boolean serverStatsHovered = check(mouseX, mouseY, this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30);
+            renderComingSoonButton(serverStatsHovered, graphics, font, Component.translatable(Translations.SpaceRace.SERVER_STATS), this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30);
 
-            if (!check(mouseX, mouseY, this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30)) {
-                renderButton(graphics, font, Component.translatable(Translations.SpaceRace.GLOBAL_STATS), this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
-            } else {
-                renderHoveredButton(graphics, font, Component.translatable(Translations.SpaceRace.COMING_SOON), this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
-            }
+            boolean globalStatsHovered = check(mouseX, mouseY, this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
+            renderComingSoonButton(globalStatsHovered, graphics, font, Component.translatable(Translations.SpaceRace.GLOBAL_STATS), this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
+
         } else if (menu == Menu.ADD_PLAYERS) {
-            if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                renderButton(graphics, font, Component.translatable(Translations.SpaceRace.BACK), this.getLeft() + 5, this.getTop() + 5, 40, 14);
-            } else {
-                renderHoveredButton(graphics, font, Component.translatable(Translations.SpaceRace.BACK), this.getLeft() + 5, this.getTop() + 5, 40, 14);
-            }
+            boolean backHovered = check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14);
+            renderButton(backHovered, graphics, font, Component.translatable(Translations.SpaceRace.BACK), this.getLeft() + 5, this.getTop() + 5, 40, 14);
 
         } else if (menu == Menu.REMOVE_PLAYERS) {
-            if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                renderButton(graphics, font, Component.translatable(Translations.SpaceRace.BACK), this.getLeft() + 5, this.getTop() + 5, 40, 14);
-            } else {
-                renderHoveredButton(graphics, font, Component.translatable(Translations.SpaceRace.BACK), this.getLeft() + 5, this.getTop() + 5, 40, 14);
-            }
+            boolean backHovered = check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14);
+            renderButton(backHovered, graphics, font, Component.translatable(Translations.SpaceRace.BACK), this.getLeft() + 5, this.getTop() + 5, 40, 14);
 
         } else if (menu == Menu.TEAM_COLOR) {
-            if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                renderButton(graphics, font, Component.translatable(Translations.SpaceRace.BACK), this.getLeft() + 5, this.getTop() + 5, 40, 14);
-            } else {
-                renderHoveredButton(graphics, font, Component.translatable(Translations.SpaceRace.BACK), this.getLeft() + 5, this.getTop() + 5, 40, 14);
-            }
+            boolean backHovered = check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14);
+            renderButton(backHovered, graphics, font, Component.translatable(Translations.SpaceRace.BACK), this.getLeft() + 5, this.getTop() + 5, 40, 14);
 
         } else if (menu == Menu.TEAM_FLAG) {
-            if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                renderButton(graphics, font, Component.translatable(Translations.SpaceRace.BACK), this.getLeft() + 5, this.getTop() + 5, 40, 14);
-            } else {
-                renderHoveredButton(graphics, font, Component.translatable(Translations.SpaceRace.BACK), this.getLeft() + 5, this.getTop() + 5, 40, 14);
-            }
+            boolean backHovered = check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14);
+            renderButton(backHovered, graphics, font, Component.translatable(Translations.SpaceRace.BACK), this.getLeft() + 5, this.getTop() + 5, 40, 14);
         }
     }
 
@@ -321,18 +295,25 @@ public class SpaceRaceScreen extends Screen {
         return backgroundWidth >= maxWidth && backgroundHeight >= maxHeight;
     }
 
-    private void renderHoveredButton(GuiGraphics graphics, Font textRenderer, Component text, int x, int y, int width, int height) {
+    private void renderComingSoonButton(boolean hovered, GuiGraphics graphics, Font textRenderer, Component text, int x, int y, int width, int height) {
+        Component actualText = hovered ? Component.translatable(Translations.SpaceRace.COMING_SOON) : text;
+        renderButton(hovered, graphics, textRenderer, actualText, x, y, width, height);
+    }
+
+    private void renderButton(boolean hovered, GuiGraphics graphics, Font textRenderer, Component text, int x, int y, int width, int height) {
+        int backgroundColor = hovered ? 0xAA1e1e1e : 0xAA000000;
+        int lineColor = hovered ? 0xFF3c3c3c : 0xFF2d2d2d;
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.enableBlend();
         graphics.pose().pushPose();
-        fillSolid(graphics.pose().last().pose(), x, y, x + width, y + height, 0xAA1e1e1e);
+        fillSolid(graphics.pose().last().pose(), x, y, x + width, y + height, backgroundColor);
         RenderSystem.setShader(GameRenderer::getRendertypeLinesShader);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        drawHorizontalLineSolid(graphics.pose(), x, x + width, y, 0xFF3c3c3c);
-        drawVerticalLineSolid(graphics.pose(), x + width, y, y + height, 0xFF3c3c3c);
-        drawHorizontalLineSolid(graphics.pose(), x + width, x, y + height, 0xFF3c3c3c);
-        drawVerticalLineSolid(graphics.pose(), x, y, y + height, 0xFF3c3c3c);
+        drawHorizontalLineSolid(graphics.pose(), x, x + width, y, lineColor);
+        drawVerticalLineSolid(graphics.pose(), x + width, y, y + height, lineColor);
+        drawHorizontalLineSolid(graphics.pose(), x + width, x, y + height, lineColor);
+        drawVerticalLineSolid(graphics.pose(), x, y, y + height, lineColor);
         graphics.pose().popPose();
         graphics.drawString(textRenderer, text.getVisualOrderText(), x + (width / 2) - (textRenderer.width(text) / 2), y + (height / 2) - 4, 0xffffff, false);
     }
