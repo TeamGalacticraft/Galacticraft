@@ -38,6 +38,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.FastColor;
 
 import java.io.File;
@@ -108,15 +109,15 @@ public class SpaceRaceScreen extends Screen {
             graphics.fill(this.width/2 - 50, this.getTop() + 10, this.width/2 + 50, this.getTop() + 10 + 100, this.teamColor);
         });
 
-        int sliderWidth = 100;
+        int sliderWidth = 200;
         int sliderX = this.width/2 - sliderWidth/2;
-        this.addRenderableWidget(new ColorSlider(sliderX, this.getBottom() - 80, sliderWidth, 20, Component.literal("Red"), FastColor.ARGB32.red(this.teamColor), value -> {
+        this.addRenderableWidget(new ColorSlider(sliderX, this.getBottom() - 80, sliderWidth, 20, Component.translatable(Translations.SpaceRace.RED), FastColor.ARGB32.red(this.teamColor), value -> {
             this.teamColor = (this.teamColor & 0xFF00FFFF) + (value << 16);
         }));
-        this.addRenderableWidget(new ColorSlider(sliderX, this.getBottom() - 55, sliderWidth, 20, Component.literal("Green"), FastColor.ARGB32.green(this.teamColor), value -> {
+        this.addRenderableWidget(new ColorSlider(sliderX, this.getBottom() - 55, sliderWidth, 20, Component.translatable(Translations.SpaceRace.GREEN), FastColor.ARGB32.green(this.teamColor), value -> {
             this.teamColor = (this.teamColor & 0xFFFF00FF) + (value << 8);
         }));
-        this.addRenderableWidget(new ColorSlider(sliderX, this.getBottom() - 30, sliderWidth, 20, Component.literal("Blue"), FastColor.ARGB32.blue(this.teamColor), value -> {
+        this.addRenderableWidget(new ColorSlider(sliderX, this.getBottom() - 30, sliderWidth, 20, Component.translatable(Translations.SpaceRace.BLUE), FastColor.ARGB32.blue(this.teamColor), value -> {
             this.teamColor = (this.teamColor & 0xFFFFFF00) + value;
         }));
     }
@@ -329,7 +330,7 @@ public class SpaceRaceScreen extends Screen {
         private final Runnable onPress;
 
         public CustomizeFlagButton(int x, int y, int width, int height, Runnable onPress) {
-            super(x, y, width, height, Component.literal("Customize Flag"));
+            super(x, y, width, height, Component.translatable(Translations.SpaceRace.CUSTOMIZE_FLAG));
             this.onPress = onPress;
         }
 
@@ -345,12 +346,12 @@ public class SpaceRaceScreen extends Screen {
     }
 
     private class TeamColorButton extends AbstractButton {
-        private static final Component line1 = Component.literal("Change");
-        private static final Component line2 = Component.literal("Team");
-        private static final Component line3 = Component.literal("Color");
+        private static final MutableComponent line1 = Component.translatable(Translations.SpaceRace.TEAM_COLOR_1);
+        private static final MutableComponent line2 = Component.translatable(Translations.SpaceRace.TEAM_COLOR_2);
+        private static final MutableComponent line3 = Component.translatable(Translations.SpaceRace.TEAM_COLOR_3);
 
         public TeamColorButton(int x, int y, int width, int height) {
-            super(x, y, width, height, Component.literal("Change Team Color"));
+            super(x, y, width, height, line1.copy().append(line2).append(line3));
         }
 
         @Override
@@ -379,15 +380,17 @@ public class SpaceRaceScreen extends Screen {
 
     private static class ColorSlider extends AbstractSliderButton {
         private final Consumer<Integer> consumer;
+        private final Component colorName;
 
-        public ColorSlider(int x, int y, int width, int height, Component component, int value, Consumer<Integer> consumer) {
-            super(x, y, width, height, component, value/255.0);
+        public ColorSlider(int x, int y, int width, int height, Component colorName, int value, Consumer<Integer> consumer) {
+            super(x, y, width, height, Component.translatable("options.percent_value", colorName, (int)(value/255.0 * 100.0)), value/255.0);
             this.consumer = consumer;
+            this.colorName = colorName;
         }
 
         @Override
         protected void updateMessage() {
-
+            this.setMessage(Component.translatable("options.percent_value", this.colorName, (int)(this.value * 100.0)));
         }
 
         @Override

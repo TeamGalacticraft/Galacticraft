@@ -266,6 +266,13 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(SpaceRace.SERVER_STATS, "Server Statistics");
         this.add(SpaceRace.FLAG_CONFIRM, "Confirm Flag");
         this.add(SpaceRace.FLAG_CONFIRM_MESSAGE, "");
+        this.add(SpaceRace.CUSTOMIZE_FLAG, "Customize Flag");
+        this.add(SpaceRace.TEAM_COLOR_1, "Change");
+        this.add(SpaceRace.TEAM_COLOR_2, "Team");
+        this.add(SpaceRace.TEAM_COLOR_3, "Color");
+        this.add(SpaceRace.RED, "Red");
+        this.add(SpaceRace.GREEN, "Green");
+        this.add(SpaceRace.BLUE, "Blue");
 
         this.add(SolarPanel.ATMOSPHERIC_INTERFERENCE, "Atmospheric Interference: %s");
         this.add(SolarPanel.BLOCKED, "Blocked");
