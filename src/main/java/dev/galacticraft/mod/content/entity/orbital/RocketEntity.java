@@ -434,6 +434,11 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
     }
 
     @Override
+    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+        return new Vec3(getX(), getY(), getZ() + 1f);
+    }
+
+    @Override
     public void tick() {
         this.noPhysics = false;
         setTimeAsState(getTimeAsState() + 1);
