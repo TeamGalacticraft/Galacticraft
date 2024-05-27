@@ -31,18 +31,21 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.FastColor;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class SpaceRaceScreen extends Screen {
     private int backgroundWidth = 0;
@@ -50,6 +53,7 @@ public class SpaceRaceScreen extends Screen {
     private Menu menu = Menu.MAIN;
     private EditBox teamNameInput;
     private boolean animationCompleted = false;
+    private int teamColor = 0xFF000000;
 
     public SpaceRaceScreen() {
         super(Component.translatable(Translations.SpaceRace.SPACE_RACE_MANAGER));
@@ -67,7 +71,12 @@ public class SpaceRaceScreen extends Screen {
         addComingSoonButton(Component.translatable(Translations.SpaceRace.SERVER_STATS), this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30);
         addComingSoonButton(Component.translatable(Translations.SpaceRace.GLOBAL_STATS), this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
 
-        this.addRenderableWidget(this.teamNameInput = new EditBox(this.font, this.getLeft() + (this.backgroundWidth / 2) - 64, this.getTop() + 65, 128, 15, this.teamNameInput, Component.empty()) {
+        int flagButtonWidth = 81;
+        int flagButtonHeight = 58;
+        int flagButtonX = this.width/2 - flagButtonWidth/2, flagButtonY = this.getTop() + 10;
+        this.addRenderableWidget(new CustomizeFlagButton(flagButtonX, flagButtonY, flagButtonWidth, flagButtonHeight, () -> setMenu(Menu.TEAM_FLAG)));
+        this.addRenderableWidget(new TeamColorButton(flagButtonX + flagButtonWidth + 10, flagButtonY + flagButtonHeight/2 - 45/2, 45, 45));
+        this.addRenderableWidget(this.teamNameInput = new EditBox(this.font, this.getLeft() + (this.backgroundWidth / 2) - 64, flagButtonY + 65, 128, 15, this.teamNameInput, Component.empty()) {
             private String prevText;
 
             @Override
@@ -94,6 +103,22 @@ public class SpaceRaceScreen extends Screen {
 
     protected void teamColorMenu() {
         addBackButton();
+
+        this.addRenderableOnly((graphics, mouseX, mouseY, delta) -> {
+            graphics.fill(this.width/2 - 50, this.getTop() + 10, this.width/2 + 50, this.getTop() + 10 + 100, this.teamColor);
+        });
+
+        int sliderWidth = 100;
+        int sliderX = this.width/2 - sliderWidth/2;
+        this.addRenderableWidget(new ColorSlider(sliderX, this.getBottom() - 80, sliderWidth, 20, Component.literal("Red"), FastColor.ARGB32.red(this.teamColor), value -> {
+            this.teamColor = (this.teamColor & 0xFF00FFFF) + (value << 16);
+        }));
+        this.addRenderableWidget(new ColorSlider(sliderX, this.getBottom() - 55, sliderWidth, 20, Component.literal("Green"), FastColor.ARGB32.green(this.teamColor), value -> {
+            this.teamColor = (this.teamColor & 0xFFFF00FF) + (value << 8);
+        }));
+        this.addRenderableWidget(new ColorSlider(sliderX, this.getBottom() - 30, sliderWidth, 20, Component.literal("Blue"), FastColor.ARGB32.blue(this.teamColor), value -> {
+            this.teamColor = (this.teamColor & 0xFFFFFF00) + value;
+        }));
     }
 
     protected void teamFlagMenu() {
@@ -103,7 +128,7 @@ public class SpaceRaceScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        mainMenu();
+        createMenu(this.menu);
     }
 
     @Override
@@ -194,6 +219,10 @@ public class SpaceRaceScreen extends Screen {
 
     private void setMenu(Menu menu) {
         this.menu = menu;
+        createMenu(menu);
+    }
+
+    private void createMenu(Menu menu) {
         this.clearWidgets();
         this.clearFocus();
         switch (menu) {
@@ -293,6 +322,77 @@ public class SpaceRaceScreen extends Screen {
         protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
             this.setMessage(this.isHoveredOrFocused() ? Component.translatable(Translations.SpaceRace.COMING_SOON) : this.originalMessage);
             super.renderWidget(graphics, mouseX, mouseY, delta);
+        }
+    }
+
+    private static class CustomizeFlagButton extends AbstractButton {
+        private final Runnable onPress;
+
+        public CustomizeFlagButton(int x, int y, int width, int height, Runnable onPress) {
+            super(x, y, width, height, Component.literal("Customize Flag"));
+            this.onPress = onPress;
+        }
+
+        @Override
+        public void onPress() {
+            this.onPress.run();
+        }
+
+        @Override
+        protected void updateWidgetNarration(NarrationElementOutput builder) {
+            this.defaultButtonNarrationText(builder);
+        }
+    }
+
+    private class TeamColorButton extends AbstractButton {
+        private static final Component line1 = Component.literal("Change");
+        private static final Component line2 = Component.literal("Team");
+        private static final Component line3 = Component.literal("Color");
+
+        public TeamColorButton(int x, int y, int width, int height) {
+            super(x, y, width, height, Component.literal("Change Team Color"));
+        }
+
+        @Override
+        public void onPress() {
+            setMenu(Menu.TEAM_COLOR);
+        }
+
+        @Override
+        protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+            Font font = Minecraft.getInstance().font;
+            graphics.fill(this.getX(), this.getY(), this.getX() + this.getWidth(), this.getY() + this.getHeight(), teamColor);
+            int centerX = this.getX() + this.getWidth()/2;
+            int centerY = this.getY() + this.getHeight()/2 - font.lineHeight/2;
+            graphics.drawCenteredString(font, line1, centerX, centerY - font.lineHeight, 0xFFFFFFFF);
+            graphics.drawCenteredString(font, line2, centerX, centerY, 0xFFFFFFFF);
+            graphics.drawCenteredString(font, line3, centerX, centerY + font.lineHeight, 0xFFFFFFFF);
+
+            graphics.renderOutline(this.getX(), this.getY(), this.getWidth(), this.getHeight(), this.isHoveredOrFocused() ? 0xFF3c3c3c : 0xFF2d2d2d);
+        }
+
+        @Override
+        protected void updateWidgetNarration(NarrationElementOutput builder) {
+            this.defaultButtonNarrationText(builder);
+        }
+    }
+
+    private static class ColorSlider extends AbstractSliderButton {
+        private final Consumer<Integer> consumer;
+
+        public ColorSlider(int x, int y, int width, int height, Component component, int value, Consumer<Integer> consumer) {
+            super(x, y, width, height, component, value/255.0);
+            this.consumer = consumer;
+        }
+
+        @Override
+        protected void updateMessage() {
+
+        }
+
+        @Override
+        protected void applyValue() {
+            this.consumer.accept((int) (this.value * 255.0));
         }
     }
 }
