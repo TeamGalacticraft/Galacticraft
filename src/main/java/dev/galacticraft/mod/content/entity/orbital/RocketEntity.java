@@ -33,6 +33,7 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyType;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.attachments.GCServerPlayer;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
@@ -295,6 +296,7 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
 
     @Override
     public void dropItems(DamageSource damageSource, boolean b) {
+        this.spawnAtLocation(GCItems.ROCKET.getDefaultInstance());
         this.remove(RemovalReason.KILLED);
     }
 
