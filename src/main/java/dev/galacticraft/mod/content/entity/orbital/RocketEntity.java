@@ -295,7 +295,7 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
 
     @Override
     public void dropItems(DamageSource damageSource, boolean b) {
-
+        this.remove(RemovalReason.KILLED);
     }
 
     @Override
