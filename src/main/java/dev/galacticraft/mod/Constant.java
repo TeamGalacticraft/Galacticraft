@@ -40,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 
 public interface Constant {
     String MOD_ID = "galacticraft";
+    public static final String GCDATAFOLDER = "../galacticraft/";
     String COMMON_NAMESPACE = "c";
     Logger LOGGER = LogManager.getLogger("Galacticraft");
 

@@ -60,6 +60,7 @@ public class Galacticraft implements ModInitializer {
     public void onInitialize() {
         long startInitTime = System.currentTimeMillis();
         Constant.LOGGER.info("Starting initialization.");
+        GCChunkGenerator.register();
         GCTags.register();
         GCFluids.register();
         GCBlocks.register();
