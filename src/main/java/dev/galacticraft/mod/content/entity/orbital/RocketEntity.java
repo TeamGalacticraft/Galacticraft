@@ -291,7 +291,8 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
 
     @Override
     public void onBaseDestroyed() {
-
+        this.spawnAtLocation(GCItems.ROCKET.getDefaultInstance());
+        this.remove(RemovalReason.DISCARDED);
     }
 
     @Override

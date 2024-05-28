@@ -110,66 +110,23 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
 
     @Override
     public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState newState, boolean moved) {
+        // do nothing if it's not part of a multiblock
+        if (blockState.getValue(PART) == Part.NONE) {
+            return;
+        }
+        // figure out where the center block is and remove the rocket
+        BlockPos center = blockPos.offset(RocketLaunchPadBlock.partToCenterPos(blockState.getValue(PART)));
+        if (level.getBlockEntity(center) instanceof RocketLaunchPadBlockEntity pad) {
+            if (pad.hasRocket() && pad.getRocket() != null) {
+                pad.getRocket().onBaseDestroyed();
+            }
+        }
+        // calling this removes the block entity
         super.onRemove(blockState, level, blockPos, newState, moved);
-        var part = blockState.getValue(PART);
-        switch (part) {
-            case NORTH, SOUTH, EAST, WEST -> {
-                var center = blockPos.relative(part.getDirection().getFirst().getOpposite());
-                for (var x = -1; x <= 1; x++) {
-                    for (var z = -1; z <= 1; z++) {
-                        var blockState1 = level.getBlockState(center.offset(x, 0, z));
-
-                        if (blockState1.is(this) && blockState1.getValue(PART) != Part.NONE) {
-                            if (level.getBlockEntity(center.offset(x, 0, z)) instanceof RocketLaunchPadBlockEntity pad) {
-                                if (pad.hasRocket()) {
-                                    if (pad.getRocket() != null) {
-                                        pad.getRocket().onBaseDestroyed();
-                                    }
-                                }
-                            }
-                            level.destroyBlock(center.offset(x, 0, z), true);
-                        }
-                    }
-                }
-            }
-            case NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST -> {
-                var center = blockPos.relative(part.getDirection().getFirst().getOpposite()).relative(part.getDirection().getSecond().getOpposite());
-                for (var x = -1; x <= 1; x++) {
-                    for (var z = -1; z <= 1; z++) {
-                        var blockState1 = level.getBlockState(center.offset(x, 0, z));
-
-                        if (blockState1.is(this) && blockState1.getValue(PART) != Part.NONE) {
-                            if (level.getBlockEntity(center.offset(x, 0, z)) instanceof RocketLaunchPadBlockEntity pad) {
-                                if (pad.hasRocket()) {
-                                    var entity = pad.getRocket();
-                                    if (entity != null) {
-                                        entity.onBaseDestroyed();
-                                    }
-                                }
-                            }
-                            level.destroyBlock(center.offset(x, 0, z), true);
-                        }
-                    }
-                }
-            }
-            case CENTER -> {
-                for (var x = -1; x <= 1; x++) {
-                    for (var z = -1; z <= 1; z++) {
-                        var blockState1 = level.getBlockState(blockPos.offset(x, 0, z));
-
-                        if (blockState1.is(this) && blockState1.getValue(PART) != Part.NONE) {
-                            if (level.getBlockEntity(blockPos.offset(x, 0, z)) instanceof RocketLaunchPadBlockEntity pad) {
-                                if (pad.hasRocket()) {
-                                    var entity = pad.getRocket();
-                                    if (entity != null) {
-                                        entity.onBaseDestroyed();
-                                    }
-                                }
-                            }
-                            level.destroyBlock(blockPos.offset(x, 0, z), false);
-                        }
-                    }
-                }
+        // remove the launch pad blocks
+        for (var x = -1; x <= 1; x++) {
+            for (var z = -1; z <= 1; z++) {
+                level.destroyBlock(center.offset(x, 0, z), true);
             }
         }
     }
