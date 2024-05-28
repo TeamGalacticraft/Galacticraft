@@ -54,15 +54,8 @@ public interface Translations {
         String EMPTY_OXYGEN = "commands.galacticraft.oxygen.get.area.none";
     }
 
-    interface OpenCelestialScreen {
-        String REQUIRES_PLAYER = "commands.galacticraft.opencelestialscreen.requires_player";
-    }
-
     interface DimensionTp {
-        String ALREADY_IN_DIMENSION = "commands.galacticraft.dimensiontp.failure.already_in_dimension";
-        String UNKNOWN_ENTITY = "commands.galacticraft.dimensiontp.failure.entity";
         String SUCCESS_MULTIPLE = "commands.galacticraft.dimensiontp.success.multiple";
-        String SUCCESS_POSITION = "commands.galacticraft.dimensiontp.success.pos";
         String SUCCESS_SINGLE = "commands.galacticraft.dimensiontp.success.single";
     }
 
@@ -71,7 +64,6 @@ public interface Translations {
         String CONFIRMATION = "commands.galacticraft.gchouston.confirm";
         String IN_OVERWORLD = "commands.galacticraft.gchouston.on_earth_already";
         String SUCCESS = "commands.galacticraft.gchouston.success";
-        String MISSING_PLAYER = "commands.galacticraft.require_player";
     }
 
     interface Config {
@@ -106,7 +98,12 @@ public interface Translations {
         String PLAYER = "config.galacticraft.player";
         String PLAYER_LIFE_SUPPORT = "config.galacticraft.lifesupport";
         String PLAYER_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.player.lifesupport.oxygen_consumption_rate";
+        String BOSS_HEALTH_MODIFIER = "config.galacticraft.difficulty.dungeon_boss_health_multiplier";
+        String BOSS_HEALTH_MODIFIER_DESC = "config.galacticraft.difficulty.dungeon_boss_health_multiplier.desc";
         String SKYBOX = "config.galacticraft.client.skybox";
+
+        String COMMANDS = "config.galacticraft.commands";
+        String ENABLE_GC_HOUSTON = "config.galacticraft.commands.enable_gc_houston";
     }
 
     interface Galaxy {
@@ -116,6 +113,7 @@ public interface Translations {
 
     interface Keybindings {
         String ROCKET_INVENTORY = "key.galacticraft.rocket.inventory";
+        String OPEN_CELESTIAL_SCREEN = "key.galacticraft.open_celestial_screen";
     }
 
     interface CelestialBody {
@@ -259,6 +257,11 @@ public interface Translations {
         String SURFACE_COMPOSITION = "ui.galacticraft.celestialselection.surface_composition";
         String ATMOSPHERE = "ui.galacticraft.celestialselection.atmosphere";
         String MEAN_SURFACE_TEMP = "ui.galacticraft.celestialselection.mean_surface_temp";
+
+        String CLICK_AGAIN = "ui.galacticraft.celestialselection.click_again";
+        String CLICK_AGAIN_MOONS = "ui.galacticraft.celestialselection.click_again.moons";
+        String CLICK_AGAIN_SATELLITES = "ui.galacticraft.celestialselection.click_again.satellites";
+        String CLICK_AGAIN_MOONS_AND_SATELLITES = "ui.galacticraft.celestialselection.click_again.moons_and_satellites";
     }
 
     interface Ui {

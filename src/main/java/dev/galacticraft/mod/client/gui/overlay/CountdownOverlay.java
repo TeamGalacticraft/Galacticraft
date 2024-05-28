@@ -24,9 +24,9 @@ package dev.galacticraft.mod.client.gui.overlay;
 
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
-import dev.galacticraft.mod.util.ColorUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.util.FastColor;
 
 public class CountdownOverlay {
     public static void renderCountdown(GuiGraphics graphics, float tickDelta) {
@@ -43,10 +43,10 @@ public class CountdownOverlay {
 
             if (count <= 10) {
                 graphics.pose().scale(4.0F, 4.0F, 0.0F);
-                graphics.drawString(mc.font, String.valueOf(count), width / 8 - mc.font.width(String.valueOf(count)) / 2, height / 20, ColorUtil.to32BitColor(255, 255, 0, 0), false);
+                graphics.drawString(mc.font, String.valueOf(count), width / 8 - mc.font.width(String.valueOf(count)) / 2, height / 20, FastColor.ARGB32.color(255, 255, 0, 0), false);
             } else {
                 graphics.pose().scale(2.0F, 2.0F, 0.0F);
-                graphics.drawString(mc.font, String.valueOf(count), width / 4 - mc.font.width(String.valueOf(count)) / 2, height / 8, ColorUtil.to32BitColor(255, 255, 0, 0), false);
+                graphics.drawString(mc.font, String.valueOf(count), width / 4 - mc.font.width(String.valueOf(count)) / 2, height / 8, FastColor.ARGB32.color(255, 255, 0, 0), false);
             }
 
             graphics.pose().popPose();

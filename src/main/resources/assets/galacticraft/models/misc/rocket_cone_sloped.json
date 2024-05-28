@@ -1,4 +1,5 @@
 {
-  "porting_lib:obj_marker": true,
-  "model": "galacticraft:models/misc/rocket_cone_sloped.obj"
+  "galacticraft:type": "galacticraft:obj",
+  "model": "galacticraft:models/misc/rocket_cone_sloped.obj",
+  "mtl": "galacticraft:models/misc/rocket_cone_sloped.mtl"
 }

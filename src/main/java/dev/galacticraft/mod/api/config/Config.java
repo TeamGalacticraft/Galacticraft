@@ -57,6 +57,10 @@ public interface Config {
 
     long playerOxygenConsuptionRate();
 
+    double bossHealthMultiplier();
+
+    boolean enableGcHouston();
+
     void load();
 
     void save();

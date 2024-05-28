@@ -172,8 +172,8 @@ public abstract class GCVehicle extends Entity {
         this.lerpX = x;
         this.lerpY = y;
         this.lerpZ = z;
-        this.lerpYRot = (double)yaw;
-        this.lerpXRot = (double)pitch;
+        this.lerpYRot = yaw;
+        this.lerpXRot = pitch;
         this.lerpSteps = 10;
     }
 

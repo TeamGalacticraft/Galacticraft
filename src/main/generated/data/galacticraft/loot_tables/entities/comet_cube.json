@@ -1,0 +1,4 @@
+{
+  "type": "minecraft:entity",
+  "random_sequence": "galacticraft:entities/comet_cube"
+}

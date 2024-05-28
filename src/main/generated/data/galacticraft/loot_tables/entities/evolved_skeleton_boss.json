@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:arrow"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "galacticraft:entities/evolved_skeleton_boss"
+}

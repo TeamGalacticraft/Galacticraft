@@ -20,22 +20,27 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.util;
+package dev.galacticraft.mod.client.model;
 
-public class ColorUtil {
-    private ColorUtil() {}
+import com.mojang.serialization.Codec;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
 
-    public static final int WHITE = 0xffffff;
+import java.util.function.Function;
 
-    public static int rgb(int red, int green, int blue) {
-        return (red << 16) + (green << 8) + blue;
-    }
+/**
+ * A unbaked model that's designed to not be attached to a block, useful for entity rendering.
+ */
+public interface GCModel {
+    GCModelType getType();
 
-    public static int to32BitColor(int a, int r, int g, int b) {
-        r = r << 24;
-        g = g << 16;
-        b = b << 8;
+    GCBakedModel bake(ResourceManager resourceManager, Function<Material, TextureAtlasSprite> spriteGetter);
 
-        return  r | g | b | a;
+    interface GCModelType {
+        Codec<? extends GCModel> codec();
+
+        ResourceLocation getId();
     }
 }

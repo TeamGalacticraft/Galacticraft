@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "galacticraft:block/moon_dungeon_brick"
+  }
+}

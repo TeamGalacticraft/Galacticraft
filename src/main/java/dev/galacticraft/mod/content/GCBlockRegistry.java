@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.content;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BlockItem;

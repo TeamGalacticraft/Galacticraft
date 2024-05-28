@@ -24,24 +24,20 @@ package dev.galacticraft.mod.events;
 
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.entity.Rocket;
+import dev.galacticraft.mod.client.GCKeyBinds;
 import dev.galacticraft.mod.client.gui.overlay.CountdownOverlay;
 import dev.galacticraft.mod.client.gui.overlay.LanderOverlay;
 import dev.galacticraft.mod.client.gui.overlay.OxygenOverlay;
 import dev.galacticraft.mod.client.gui.overlay.RocketOverlay;
 import dev.galacticraft.mod.client.render.FootprintRenderer;
 import dev.galacticraft.mod.client.sounds.RocketSound;
-import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
-import dev.galacticraft.mod.network.packets.ControlEntityPacket;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.Input;
-import net.minecraft.client.player.LocalPlayer;
 
 public class ClientEventHandler {
     public static void init() {
@@ -62,6 +58,7 @@ public class ClientEventHandler {
 
     public static void clientTick(Minecraft client) {
         LanderOverlay.clientTick();
+        GCKeyBinds.handleKeybinds(client);
     }
 
     public static void tickFootprints(ClientLevel level) {

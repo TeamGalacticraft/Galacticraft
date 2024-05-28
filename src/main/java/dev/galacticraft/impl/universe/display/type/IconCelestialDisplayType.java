@@ -24,7 +24,10 @@ package dev.galacticraft.impl.universe.display.type;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.universe.display.CelestialDisplayType;
 import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
@@ -67,7 +70,7 @@ public class IconCelestialDisplayType extends CelestialDisplayType<IconCelestial
         config.decoration().ifPresent(decoration -> {
             RenderSystem.setShaderTexture(0, decoration.texture());
             float decoSize = size / 6.0F;
-            CelestialSelectionScreen.blit(positionMatrix, decoration.xScale() * decoSize, decoration.yScale() * decoSize, decoration.widthScale() * decoSize, decoration.heightScale() * decoSize, decoration.u(), decoration.v(), decoration.width(), decoration.height(), false, false, 32, 32);
+            CelestialSelectionScreen.blit(positionMatrix, decoration.xScale() * decoSize, decoration.yScale() * decoSize, decoration.widthScale() * decoSize, decoration.heightScale() * decoSize, decoration.u(), decoration.v(), decoration.width(), decoration.height(), 32, 32, 255, 255, 255, 255, false, false);
         });
 
         return new Vector4f(config.scale() * -size, config.scale() * -size, (config.scale() * size) * 2, (config.scale() * size) * 2);

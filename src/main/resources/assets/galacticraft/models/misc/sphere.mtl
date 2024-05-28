@@ -2,10 +2,10 @@ newmtl sprite
 Ka 0.000000 0.000000 0.000000
 Kd 0.8 0.8 0.8
 d 1
-texture galacticraft:model/sphere
+map_Kd galacticraft:obj/sphere
 
 newmtl bubble
 Ka 0.000000 0.000000 0.000000
 Kd 0.8 0.8 0.8
 d 1
-texture galacticraft:model/sphere
+map_Kd galacticraft:obj/sphere

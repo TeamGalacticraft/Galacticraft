@@ -29,28 +29,24 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRenderer;
 import dev.galacticraft.api.rocket.entity.Rocket;
+import dev.galacticraft.mod.client.model.GCBakedModel;
+import dev.galacticraft.mod.client.model.GCSheets;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.world.item.ItemDisplayContext;
 
 import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
-public record BakedModelRocketPartRenderer(Supplier<BakedModel> model,
+public record BakedModelRocketPartRenderer(Supplier<GCBakedModel> model,
                                            Supplier<RenderType> layer) implements RocketPartRenderer {
 
-    public BakedModelRocketPartRenderer(Supplier<BakedModel> model) {
-        this(model, () -> RenderType.entityCutoutNoCull(model.get().getParticleIcon().contents().name(), true));
+    public BakedModelRocketPartRenderer(Supplier<GCBakedModel> model) {
+        this(model, () -> /*RenderType.entityCutoutNoCull(model.get().getParticleIcon().contents().name(), true)*/null);
     }
 
     @Override
@@ -60,7 +56,7 @@ public record BakedModelRocketPartRenderer(Supplier<BakedModel> model,
         pose.pushPose();
         pose.translate(x, y-5, 10); //todo: add GUI model transforms to models
         pose.translate(8, 16, 8);
-        model.get().getTransforms().getTransform(ItemDisplayContext.GUI).apply(false, pose);
+//        model.get().getTransforms().getTransform(ItemDisplayContext.GUI).apply(false, pose);
         pose.mulPose(Axis.XN.rotationDegrees(35));
         pose.mulPose(Axis.YP.rotationDegrees(225));
         pose.mulPose(Axis.ZP.rotationDegrees(180));
@@ -69,34 +65,40 @@ public record BakedModelRocketPartRenderer(Supplier<BakedModel> model,
         PoseStack.Pose entry = pose.last();
         Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
         RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
-        RenderSystem.setShaderTexture(0, this.model.get().getParticleIcon().atlasLocation());
+//        RenderSystem.setShaderTexture(0, this.model.get().getParticleIcon().atlasLocation());
         RenderSystem.disableBlend();
         RenderSystem.disableDepthTest();
         RenderSystem.disableCull();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        if (model.get().usesBlockLight()) {
+//        if (model.get().usesBlockLight()) {
             Lighting.setupFor3DItems();
-        } else {
-            Lighting.setupFor3DItems();
-        }
+//        } else {
+//            Lighting.setupFor3DItems();
+//        }
 
-        MultiBufferSource.BufferSource entityVertexConsumers = Minecraft.getInstance().renderBuffers().bufferSource();
-        VertexConsumer itemGlintConsumer = entityVertexConsumers.getBuffer(Sheets.cutoutBlockSheet());
-        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(entry, itemGlintConsumer, null, this.model.get(), 1, 1, 1, 15728880, OverlayTexture.NO_OVERLAY);
-        entityVertexConsumers.endBatch();
+//        MultiBufferSource.BufferSource entityVertexConsumers = Minecraft.getInstance().renderBuffers().bufferSource();
+//        VertexConsumer itemGlintConsumer = entityVertexConsumers.getBuffer(Sheets.cutoutBlockSheet());
+//        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
+//        this.model.get().render(pose);
+//        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(entry, itemGlintConsumer, null, this.model.get(), 1, 1, 1, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+//        entityVertexConsumers.endBatch();
 
-        if (model.get().usesBlockLight()) {
+//        if (model.get().usesBlockLight()) {
             Lighting.setupFor3DItems();
-        }
+//        }
         pose.popPose();
     }
 
     @Override
     public void render(ClientLevel world, PoseStack matrices, Rocket rocket, MultiBufferSource vertices, float partialTick, int light, int overlay) {
         RenderSystem.setShaderColor(rocket.red() / 255.0f, rocket.green() / 255.0f, rocket.blue() / 255.0f, rocket.alpha() / 255.0f);
-        matrices.translate(0.5D, 0.5D, 0.5D);
-        PoseStack.Pose entry = matrices.last();
-        VertexConsumer vertexConsumer = vertices.getBuffer(layer.get());
-        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(entry, vertexConsumer, null, this.model.get(), 1, 1, 1, light, overlay);
+//        matrices.translate(0.5D, 0.5D, 0.5D);
+//        PoseStack.Pose entry = matrices.last();
+//        VertexConsumer vertexConsumer = vertices.getBuffer(layer.get());
+//        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
+
+        VertexConsumer consumer = vertices.getBuffer(GCSheets.obj(GCSheets.OBJ_ATLAS));
+        this.model.get().render(matrices, null, consumer, light, overlay);
+//        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(entry, vertexConsumer, null, this.model.get(), 1, 1, 1, light, overlay);
     }
 }

@@ -63,6 +63,7 @@ public interface Constant {
         // Natural
         String MOON_TURF = "moon_turf";
         String MOON_SURFACE_ROCK = "moon_surface_rock";
+        String MOON_DUNGEON_BRICK = "moon_dungeon_brick";
         String MOON_ROCK = "moon_rock";
         String MOON_ROCK_SLAB = "moon_rock_slab";
         String MOON_ROCK_STAIRS = "moon_rock_stairs";
@@ -188,6 +189,7 @@ public interface Constant {
         String TREASURE_CHEST_TIER_2 = "treasure_chest_tier_2";
         String TREASURE_CHEST_TIER_3 = "treasure_chest_tier_3";
         String CRASHED_PROBE_BLOCK = "crashed_probe";
+        String BOSS_SPAWNER = "boss_spawner";
 
         // Moon Cheese
         String MOON_CHEESE_WHEEL = "moon_cheese_block";
@@ -543,6 +545,7 @@ public interface Constant {
         String T1_ROCKET = "t1_rocket";
         String ROCKET = "rocket";
         String LANDER = "lander";
+        String BUGGY = "buggy";
         String PARACHEST = "parachest";
         String BUBBLE = "bubble";
         String EVOLVED_SKELETON = "evolved_skeleton";
@@ -550,6 +553,7 @@ public interface Constant {
         String EVOLVED_PILLAGER = "evolved_pillager";
         String EVOLVED_EVOKER = "evolved_evoker";
         String EVOLVED_VINDICATOR = "evolved_vindicator";
+        String EVOLVED_SKELETON_BOSS = "evolved_skeleton_boss";
         String GREY = "grey";
         String ARCH_GREY = "arch_grey";
         String RUMBLER = "rumbler";
@@ -566,6 +570,7 @@ public interface Constant {
         String COMET_CUBE = "textures/entity/comet_cube.png";
         String GAZER = "textures/entity/gazer.png";
         String LANDER = "textures/entity/lander.png";
+        String SKELETON_BOSS = "textures/entity/skeletonboss.png";
     }
 
     interface TextureCoordinate {
@@ -807,7 +812,7 @@ public interface Constant {
     interface Command {
         String HOUSTON = "gchouston";
         String DIMENSION_TP = "dimensiontp";
-        String DIMENSION_TP_ALIAS = "dimtp";
+        String DIMTP = "dimtp";
         String OPEN_CELESTIAL_SCREEN = "opencelestialscreen";
     }
 
@@ -819,5 +824,11 @@ public interface Constant {
     interface Teleporters {
         String LANDER = "lander";
         String OVERWORLD = "overworld";
+    }
+
+    interface Triggers {
+        String ROCKET_LAUNCH = "launch_rocket";
+        String FIND_MOON_BOSS = "boss_moon";
+        String CREATE_SPACE_STATION = "create_space_station";
     }
 }

@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.mixin;
 
+import dev.galacticraft.api.entity.IgnoreShift;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.accessor.ServerPlayerAccessor;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
@@ -29,6 +30,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -44,6 +46,7 @@ public abstract class ServerPlayerMixin extends LivingEntityMixin implements Ser
 
     private @Unique @Nullable RocketData rocketData = null;
     private @Unique boolean celestialActive = false;
+    private @Unique boolean isRideTick = false;
 
     @Override
     public boolean galacticraft$isCelestialScreenActive() {
@@ -87,6 +90,23 @@ public abstract class ServerPlayerMixin extends LivingEntityMixin implements Ser
         if (nbt.contains("CelestialState")) {
             this.rocketData = RocketData.fromNbt(nbt.getCompound("CelestialState"));
         }
+    }
+
+    @Inject(method = "rideTick", at = @At("HEAD"))
+    private void rideTickStart(CallbackInfo ci) {
+        this.isRideTick = true;
+    }
+
+    @Inject(method = "rideTick", at = @At("TAIL"))
+    private void rideTickEnd(CallbackInfo ci) {
+        this.isRideTick = false;
+    }
+
+    @Inject(method = "stopRiding", at = @At("HEAD"), cancellable = true)
+    private void canStopRiding(CallbackInfo ci) {
+        Entity vehicle = getVehicle();
+        if (isRideTick && vehicle instanceof IgnoreShift ignoreShift && ignoreShift.shouldIgnoreShiftExit())
+            ci.cancel();
     }
 
     @Inject(method = "bedBlocked", at = @At(value = "HEAD"), cancellable = true)

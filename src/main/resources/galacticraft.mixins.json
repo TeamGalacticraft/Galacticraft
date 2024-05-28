@@ -24,7 +24,8 @@
     "PlayerMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
-    "TorchBlockMixin"
+    "TorchBlockMixin",
+    "client.ClientPacketListenerMixin"
   ],
   "client": [
     "client.AbstractClientPlayerMixin",
@@ -37,6 +38,7 @@
     "client.LevelRendererMixin",
     "client.LivingEntityRendererMixin",
     "client.LocalPlayerMixin",
+    "client.MinecraftMixin",
     "client.PauseMenuScreenMixin",
     "client.VillagerModelMixin",
     "client.VillagerRendererMixin"

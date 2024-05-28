@@ -47,7 +47,7 @@ val jeiVersion               = project.property("jei.version").toString()
 val badpacketsVersion        = project.property("badpackets.version").toString()
 val wthitVersion             = project.property("wthit.version").toString()
 val architecturyVersion      = project.property("architectury.version").toString()
-val portingLibVersion        = project.property("porting.lib.version").toString()
+val objVersion               = project.property("obj.version").toString()
 
 plugins {
     java
@@ -137,7 +137,7 @@ loom {
             val mixinJarFile = configurations.compileClasspath.get().files { it.group == "net.fabricmc" && it.name == "sponge-mixin" }.first()
             configureEach {
                 vmArg("-javaagent:$mixinJarFile")
-                
+
                 property("mixin.hotSwap", "true")
                 property("mixin.debug.export", "true")
             }
@@ -219,13 +219,7 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
 
     // Mandatory Dependencies (Included with Jar-In-Jar)
-    listOf(
-        "obj_loader",
-        "model_loader",
-        "core"
-    ).forEach {
-        "core"("io.github.fabricators_of_create.Porting-Lib:$it:${portingLibVersion}") { isTransitive = false }
-    }
+    include(implementation("de.javagl:obj:$objVersion")) {}
 
     "core"("dev.galacticraft:dynamicdimensions-fabric:$dynamicdimensionsVersion")
     "core"("dev.galacticraft:MachineLib:$machineLibVersion")

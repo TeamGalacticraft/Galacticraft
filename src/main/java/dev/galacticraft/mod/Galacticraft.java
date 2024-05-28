@@ -26,6 +26,7 @@ import dev.galacticraft.mod.api.config.Config;
 import dev.galacticraft.mod.command.GCCommands;
 import dev.galacticraft.mod.config.ConfigImpl;
 import dev.galacticraft.mod.content.*;
+import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCCreativeModeTabs;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -65,6 +66,7 @@ public class Galacticraft implements ModInitializer {
         GCFluids.registerFluidVariantAttributes(); // Must be called after GCBlocks.register() so that grates can work
         GCBlockEntityTypes.register();
         GCItems.register();
+        GCTriggers.register();
         GCCreativeModeTabs.register();
         GCApiLookupProviders.register();
         GCRecipes.register();

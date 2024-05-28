@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.entity.orbital.lander;
 
 import com.mojang.datafixers.util.Pair;
+import dev.galacticraft.api.entity.IgnoreShift;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.attachments.GCServerPlayer;
@@ -66,7 +67,7 @@ import org.joml.Vector3f;
 
 import java.util.List;
 
-public class LanderEntity extends AbstractLanderEntity implements Container, ScalableFuelLevel, ControllableEntity, HasCustomInventoryScreen, ExtendedScreenHandlerFactory {
+public class LanderEntity extends AbstractLanderEntity implements Container, ScalableFuelLevel, ControllableEntity, HasCustomInventoryScreen, IgnoreShift, ExtendedScreenHandlerFactory {
     public static final float NO_PARTICLES = 0.0000001F;
     protected NonNullList<ItemStack> inventory;
     protected InventoryStorage storage;
@@ -441,5 +442,10 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
                 setDeltaMovement(deltaM.x(), Math.min(deltaM.y() - 0.022F, -1.0), deltaM.z());
             }
         }
+    }
+
+    @Override
+    public boolean shouldIgnoreShiftExit() {
+        return !onGround();
     }
 }
