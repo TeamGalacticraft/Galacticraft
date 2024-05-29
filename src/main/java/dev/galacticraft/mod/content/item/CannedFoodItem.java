@@ -35,7 +35,19 @@ public class CannedFoodItem extends Item {
 
     @Override
     public ItemStack finishUsingItem(ItemStack itemStack, Level level, LivingEntity livingEntity) {
-        var itemStack2 = super.finishUsingItem(itemStack, level, livingEntity);
-        return livingEntity instanceof Player player && player.getAbilities().instabuild ? itemStack2 : new ItemStack(GCItems.TIN_CANISTER);
+        super.finishUsingItem(itemStack, level, livingEntity);
+        if (itemStack.isEmpty()) {
+            return new ItemStack(GCItems.TIN_CANISTER);
+        }
+
+        if (livingEntity instanceof Player player) {
+            if (!player.getAbilities().instabuild) {
+                ItemStack canStack = new ItemStack(GCItems.TIN_CANISTER);
+                if (!player.getInventory().add(canStack)) {
+                    player.drop(canStack, false);
+                }
+            }
+        }
+        return itemStack;
     }
 }
