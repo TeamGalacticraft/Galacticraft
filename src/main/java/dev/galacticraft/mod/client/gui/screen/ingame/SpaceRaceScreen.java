@@ -35,7 +35,6 @@ import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -55,6 +54,7 @@ public class SpaceRaceScreen extends Screen {
     private EditBox teamNameInput;
     private boolean animationCompleted = false;
     private int teamColor = 0xFF000000;
+    private NativeImage flagImage;
 
     public SpaceRaceScreen() {
         super(Component.translatable(Translations.SpaceRace.SPACE_RACE_MANAGER));
@@ -252,37 +252,38 @@ public class SpaceRaceScreen extends Screen {
 
     @Override
     public void onFilesDrop(List<Path> paths) {
-        super.onFilesDrop(paths);
-        if (this.menu == Menu.TEAM_FLAG) {
-            if (paths.size() > 0) {
-                File file = paths.get(0).toFile();
-                NativeImage image;
-                assert file.exists();
-                try (FileInputStream fileInputStream = new FileInputStream(file)) {
-                    image = NativeImage.read(fileInputStream); //ABGR ONLY
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return;
-                }
+        if (this.menu != Menu.TEAM_FLAG) {
+            return;
+        }
+        if (paths.isEmpty()) {
+            return;
+        }
+        File file = paths.get(0).toFile();
+        NativeImage image;
+        assert file.exists();
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            image = NativeImage.read(fileInputStream); //ABGR ONLY
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
 
-                if (image.getWidth() == 48 && image.getHeight() == 32) {
-                    final NativeImage finalImage = image;
-                    this.minecraft.setScreen(new ConfirmScreen(yes -> {
-                        if (yes) {
-                            int[] array = new int[48 * 32];
-                            for (int y = 0; y < 32; y++) {
-                                for (int x = 0; x < 48; x++) {
-                                    array[y * 48 + x] = (finalImage.getPixelRGBA(x, y) /*& 0x00FFFFFF will be done on server (don't trust clients, so why do extra work?)*/); //ignore alpha channel
-                                }
-                            }
-                            ClientPlayNetworking.send(Constant.id("flag_data"), PacketByteBufs.create().writeVarIntArray(array));
-                        } else {
-                            finalImage.close();
+        if (image.getWidth() == 48 && image.getHeight() == 32) {
+            final NativeImage finalImage = image;
+            this.minecraft.setScreen(new ConfirmFlagScreen(yes -> {
+                if (yes) {
+                    int[] array = new int[48 * 32];
+                    for (int y = 0; y < 32; y++) {
+                        for (int x = 0; x < 48; x++) {
+                            array[y * 48 + x] = (finalImage.getPixelRGBA(x, y) /*& 0x00FFFFFF will be done on server (don't trust clients, so why do extra work?)*/); //ignore alpha channel
                         }
-                        this.minecraft.setScreen(SpaceRaceScreen.this);
-                    }, Component.translatable(Translations.SpaceRace.FLAG_CONFIRM), Component.translatable(Translations.SpaceRace.FLAG_CONFIRM_MESSAGE)));
+                    }
+                    ClientPlayNetworking.send(Constant.id("flag_data"), PacketByteBufs.create().writeVarIntArray(array));
+                } else {
+                    finalImage.close();
                 }
-            }
+                this.minecraft.setScreen(SpaceRaceScreen.this);
+            }, image, Component.translatable(Translations.SpaceRace.FLAG_CONFIRM), Component.translatable(Translations.SpaceRace.FLAG_CONFIRM_MESSAGE)));
         }
     }
 
