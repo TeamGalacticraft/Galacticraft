@@ -90,17 +90,17 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
         pluginContext.resolveModel().register(context -> {
             var resourceId = context.id();
 
-            if (WireBakedModel.WIRE_MARKER.equals(resourceId)) {
+            if (Constant.BakedModel.WIRE_MARKER.equals(resourceId)) {
                 return WireUnbakedModel.INSTANCE;
-            } else if (WalkwayBakedModel.WALKWAY_MARKER.equals(resourceId)) {
+            } else if (Constant.BakedModel.WALKWAY_MARKER.equals(resourceId)) {
                 return WalkwayUnbakedModel.INSTANCE;
-            } else if (WireWalkwayBakedModel.WIRE_WALKWAY_MARKER.equals(resourceId)) {
+            } else if (Constant.BakedModel.WIRE_WALKWAY_MARKER.equals(resourceId)) {
                 return WireWalkwayUnbakedModel.INSTANCE;
-            } else if (FluidPipeWalkwayBakedModel.FLUID_PIPE_WALKWAY_MARKER.equals(resourceId)) {
+            } else if (Constant.BakedModel.FLUID_PIPE_WALKWAY_MARKER.equals(resourceId)) {
                 return FluidPipeWalkwayUnbakedModel.INSTANCE;
-            } else if (PipeBakedModel.GLASS_FLUID_PIPE_MARKER.equals(resourceId)) {
+            } else if (Constant.BakedModel.GLASS_FLUID_PIPE_MARKER.equals(resourceId)) {
                 return PipeUnbakedModel.INSTANCE;
-            } else if (VacuumGlassBakedModel.VACUUM_GLASS_MODEL.equals(resourceId)) {
+            } else if (Constant.BakedModel.VACUUM_GLASS_MODEL.equals(resourceId)) {
                 return VacuumGlassUnbakedModel.INSTANCE;
             } else if (PARACHEST_ITEM.equals(resourceId)) {
                 var chutes = Maps.<DyeColor, UnbakedModel>newHashMap();
