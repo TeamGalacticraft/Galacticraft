@@ -932,6 +932,19 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
 
         if (this.datafile == null)
         {
+            if (!Files.exists(dataFile))
+            {
+                try {
+                    Files.createDirectories(dataPath);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                try {
+                    Files.createFile(dataFile);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
             this.datafile = new AsteroidSaveData("");
             this.writeToNBT(this.datafile.datacompound);
             this.setData(dataFile, this.datafile);
