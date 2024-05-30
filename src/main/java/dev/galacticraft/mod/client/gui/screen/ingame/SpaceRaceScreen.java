@@ -36,8 +36,10 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 
 import java.io.File;
@@ -54,7 +56,7 @@ public class SpaceRaceScreen extends Screen {
     private EditBox teamNameInput;
     private boolean animationCompleted = false;
     private int teamColor = 0xFF000000;
-    private NativeImage flagImage;
+    private final ResourceLocation teamFlag = Constant.id("team_name/id_here");
 
     public SpaceRaceScreen() {
         super(Component.translatable(Translations.SpaceRace.SPACE_RACE_MANAGER));
@@ -72,12 +74,12 @@ public class SpaceRaceScreen extends Screen {
         addComingSoonButton(Component.translatable(Translations.SpaceRace.SERVER_STATS), this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30);
         addComingSoonButton(Component.translatable(Translations.SpaceRace.GLOBAL_STATS), this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
 
-        int flagButtonWidth = 81;
-        int flagButtonHeight = 58;
+        int flagButtonWidth = 96;
+        int flagButtonHeight = 64;
         int flagButtonX = this.width/2 - flagButtonWidth/2, flagButtonY = this.getTop() + 10;
-        this.addRenderableWidget(new CustomizeFlagButton(flagButtonX, flagButtonY, flagButtonWidth, flagButtonHeight, () -> setMenu(Menu.TEAM_FLAG)));
+        this.addRenderableWidget(new CustomizeFlagButton(flagButtonX, flagButtonY, flagButtonWidth, flagButtonHeight, this.teamFlag, () -> setMenu(Menu.TEAM_FLAG)));
         this.addRenderableWidget(new TeamColorButton(flagButtonX + flagButtonWidth + 10, flagButtonY + flagButtonHeight/2 - 45/2, 45, 45));
-        this.addRenderableWidget(this.teamNameInput = new EditBox(this.font, this.getLeft() + (this.backgroundWidth / 2) - 64, flagButtonY + 65, 128, 15, this.teamNameInput, Component.empty()) {
+        this.addRenderableWidget(this.teamNameInput = new EditBox(this.font, this.getLeft() + (this.backgroundWidth / 2) - 64, flagButtonY + 75, 128, 15, this.teamNameInput, Component.empty()) {
             private String prevText;
 
             @Override
@@ -124,6 +126,10 @@ public class SpaceRaceScreen extends Screen {
 
     protected void teamFlagMenu() {
         addBackButton();
+
+        this.addRenderableOnly((graphics, mouseX, mouseY, delta) -> {
+            graphics.drawCenteredString(this.minecraft.font, Component.translatable(Translations.SpaceRace.DRAG_AND_DROP_FLAG), this.width / 2, this.height / 2 - this.minecraft.font.lineHeight / 2, 0xFFFFFFFF);
+        });
     }
 
     @Override
@@ -185,13 +191,6 @@ public class SpaceRaceScreen extends Screen {
         } else {
             this.renderBackground(graphics, x, y, delta);
         }
-
-//        this.mouseX = (float) x;
-//        this.mouseY = (float)/*y*/ minecraft.window.getScaledHeight() / 2;
-//
-//        DiffuseLighting.enableForItems();
-//        this.itemRenderer.renderGuiItem(Items.GRASS_BLOCK.getDefaultStack(), this.x + 6, this.y - 20);
-//        this.itemRenderer.renderGuiItem(GCItems.OXYGEN_FAN.getDefaultStack(), this.x + 35, this.y - 20);
     }
 
     private void drawMouseoverTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
@@ -270,6 +269,9 @@ public class SpaceRaceScreen extends Screen {
 
         if (image.getWidth() == 48 && image.getHeight() == 32) {
             final NativeImage finalImage = image;
+            final DynamicTexture texture = new DynamicTexture(finalImage);
+            ResourceLocation location = Constant.id("temp_flag");
+            this.minecraft.getTextureManager().register(location, texture);
             this.minecraft.setScreen(new ConfirmFlagScreen(yes -> {
                 if (yes) {
                     int[] array = new int[48 * 32];
@@ -279,11 +281,12 @@ public class SpaceRaceScreen extends Screen {
                         }
                     }
                     ClientPlayNetworking.send(Constant.id("flag_data"), PacketByteBufs.create().writeVarIntArray(array));
+                    this.minecraft.getTextureManager().register(this.teamFlag, texture);
                 } else {
                     finalImage.close();
                 }
                 this.minecraft.setScreen(SpaceRaceScreen.this);
-            }, image, Component.translatable(Translations.SpaceRace.FLAG_CONFIRM), Component.translatable(Translations.SpaceRace.FLAG_CONFIRM_MESSAGE)));
+            }, location, Component.translatable(Translations.SpaceRace.FLAG_CONFIRM), Component.translatable(Translations.SpaceRace.FLAG_CONFIRM_MESSAGE)));
         }
     }
 
@@ -329,15 +332,31 @@ public class SpaceRaceScreen extends Screen {
 
     private static class CustomizeFlagButton extends AbstractButton {
         private final Runnable onPress;
+        private final ResourceLocation imageLocation;
 
-        public CustomizeFlagButton(int x, int y, int width, int height, Runnable onPress) {
+        public CustomizeFlagButton(int x, int y, int width, int height, ResourceLocation imageLocation, Runnable onPress) {
             super(x, y, width, height, Component.translatable(Translations.SpaceRace.CUSTOMIZE_FLAG));
             this.onPress = onPress;
+            this.imageLocation = imageLocation;
         }
 
         @Override
         public void onPress() {
             this.onPress.run();
+        }
+
+        @Override
+        protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+            graphics.pose().pushPose();
+            graphics.pose().translate(this.getX(), this.getY(), 0.0f);
+            graphics.pose().scale(2.0f, 2.0f, 2.0f);
+            graphics.blit(this.imageLocation, 0, 0, 0, 0, 0, 48, 32, 48, 32);
+            graphics.pose().popPose();
+
+            graphics.renderOutline(this.getX(), this.getY(), this.width, this.height, this.isHoveredOrFocused() ? 0xFF3c3c3c : 0xFF2d2d2d);
+
+            Font font = Minecraft.getInstance().font;
+            graphics.drawCenteredString(font, Component.translatable(Translations.SpaceRace.CUSTOMIZE_FLAG), this.getX() + this.width/2, this.getY() + this.height/2 - font.lineHeight/2, 0xFFFFFFFF);
         }
 
         @Override

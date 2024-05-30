@@ -22,35 +22,36 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import com.mojang.blaze3d.platform.NativeImage;
-import dev.galacticraft.mod.Constant;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.ConfirmScreen;
-import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 public class ConfirmFlagScreen extends ConfirmScreen {
-    protected final NativeImage image;
-    protected ResourceLocation imageLocation;
-    public ConfirmFlagScreen(BooleanConsumer booleanConsumer, NativeImage image, Component component, Component component2) {
+    protected final ResourceLocation imageLocation;
+    public ConfirmFlagScreen(BooleanConsumer booleanConsumer, ResourceLocation flagImage, Component component, Component component2) {
         super(booleanConsumer, component, component2);
-        this.image = image;
+        this.imageLocation = flagImage;
+    }
+
+    private int titleTop() {
+        int i = this.height/2;
+        return Mth.clamp(i - 20 - this.font.lineHeight, 10, 80);
+    }
+
+    private int flagTop() {
+        return this.titleTop() + 20;
     }
 
     @Override
-    protected void init() {
-        super.init();
-        DynamicTexture texture = new DynamicTexture(this.image);
-        texture.upload();
-        this.imageLocation = Constant.id("test_flag");
-        this.minecraft.getTextureManager().register(this.imageLocation, texture);
-    }
-
-    @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
-        super.render(context, mouseX, mouseY, delta);
-        context.blit(this.imageLocation, 0, 0, 0, 0, 48, 32);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.render(graphics, mouseX, mouseY, delta);
+        graphics.pose().pushPose();
+        graphics.pose().translate((double) this.width/2 - 24, this.flagTop(), 0.0);
+        //graphics.pose().scale(1.5f, 1.5f, 1.5f);
+        graphics.blit(this.imageLocation, 0, 0, 0, 0, 0, 48, 32, 48, 32);
+        graphics.pose().popPose();
     }
 }
