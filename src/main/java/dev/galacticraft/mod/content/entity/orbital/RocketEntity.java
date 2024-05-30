@@ -33,6 +33,7 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyType;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.attachments.GCServerPlayer;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
@@ -290,12 +291,26 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
 
     @Override
     public void onBaseDestroyed() {
-
+        RocketData data = RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.engine(), this.upgrade());
+        CompoundTag tag = new CompoundTag();
+        data.toNbt(tag);
+        var rocket = new ItemStack(GCItems.ROCKET);
+        rocket.setTag(tag);
+        this.spawnAtLocation(rocket);
+        this.remove(RemovalReason.DISCARDED);
     }
 
     @Override
-    public void dropItems(DamageSource damageSource, boolean b) {
-
+    public void dropItems(DamageSource damageSource, boolean exploded) {
+        if (!exploded) {
+            RocketData data = RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.engine(), this.upgrade());
+            CompoundTag tag = new CompoundTag();
+            data.toNbt(tag);
+            var rocket = new ItemStack(GCItems.ROCKET);
+            rocket.setTag(tag);
+            this.spawnAtLocation(rocket);
+        }
+        this.remove(RemovalReason.KILLED);
     }
 
     @Override
@@ -429,6 +444,11 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
     @Override
     protected Vector3f getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float scale) {
         return new Vector3f(0F, 1.5F, 0F);
+    }
+
+    @Override
+    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+        return new Vec3(getX(), getY(), getZ() + 1f);
     }
 
     @Override
