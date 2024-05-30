@@ -35,7 +35,6 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -49,7 +48,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class VacuumGlassBakedModel implements BakedModel {
-    public static final ResourceLocation VACUUM_GLASS_MODEL = Constant.id("vacuum_glass");
 
     private static final float PANE_INSET = 6.0f / 16.0f;
     private static final float INNER_FRAME_INSET = 5.0f / 16.0f;

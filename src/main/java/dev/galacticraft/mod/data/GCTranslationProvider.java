@@ -320,9 +320,9 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(CelestialSelection.EXIT, "Exit");
         this.add(CelestialSelection.SELECT_SS, "Select Space Station");
         this.add(CelestialSelection.SS_OWNER, "Space Station Owner");
-        this.add(CelestialSelection.CAN_CREATE_SPACE_STATION, "Can Create Space Station");
+        this.add(CelestialSelection.CAN_CREATE_SPACE_STATION, "A Space Station can be created here!");
         this.add(CelestialSelection.CANNOT_CREATE_SPACE_STATION, "Cannot Create Space Station");
-        this.add(CelestialSelection.CREATE_SPACE_STATION, "Create Space Station");
+        this.add(CelestialSelection.CREATE_SPACE_STATION, "Create");
         this.add(CelestialSelection.DAY_NIGHT_CYCLE, "Day/Night Cycle");
         this.add(CelestialSelection.SURFACE_GRAVITY, "Surface Gravity");
         this.add(CelestialSelection.SURFACE_COMPOSITION, "Surface Composition");
