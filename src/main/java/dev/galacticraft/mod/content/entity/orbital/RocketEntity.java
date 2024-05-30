@@ -291,13 +291,25 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
 
     @Override
     public void onBaseDestroyed() {
-        this.spawnAtLocation(GCItems.ROCKET.getDefaultInstance());
+        RocketData data = RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.engine(), this.upgrade());
+        CompoundTag tag = new CompoundTag();
+        data.toNbt(tag);
+        var rocket = new ItemStack(GCItems.ROCKET);
+        rocket.setTag(tag);
+        this.spawnAtLocation(rocket);
         this.remove(RemovalReason.DISCARDED);
     }
 
     @Override
-    public void dropItems(DamageSource damageSource, boolean b) {
-        this.spawnAtLocation(GCItems.ROCKET.getDefaultInstance());
+    public void dropItems(DamageSource damageSource, boolean exploded) {
+        if (!exploded) {
+            RocketData data = RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.engine(), this.upgrade());
+            CompoundTag tag = new CompoundTag();
+            data.toNbt(tag);
+            var rocket = new ItemStack(GCItems.ROCKET);
+            rocket.setTag(tag);
+            this.spawnAtLocation(rocket);
+        }
         this.remove(RemovalReason.KILLED);
     }
 
