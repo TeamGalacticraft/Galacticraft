@@ -48,10 +48,6 @@ public class ConfirmFlagScreen extends ConfirmScreen {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.render(graphics, mouseX, mouseY, delta);
-        graphics.pose().pushPose();
-        graphics.pose().translate((double) this.width/2 - 24, this.flagTop(), 0.0);
-        //graphics.pose().scale(1.5f, 1.5f, 1.5f);
-        graphics.blit(this.imageLocation, 0, 0, 0, 0, 0, 48, 32, 48, 32);
-        graphics.pose().popPose();
+        graphics.blit(this.imageLocation, this.width/2 - 24, this.flagTop(), 0, 0, 0, 48, 32, 48, 32);
     }
 }
