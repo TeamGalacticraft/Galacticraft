@@ -8,6 +8,7 @@
     "gear.LivingEntityMixin",
     "gear.PlayerListMixin",
     "gear.ServerPlayerMixin",
+    "gravity.ArrowGravityMixin",
     "gravity.EntityGravityMixin",
     "gravity.LivingEntityMixin",
     "oxygen.ChunkHolderMixin",
