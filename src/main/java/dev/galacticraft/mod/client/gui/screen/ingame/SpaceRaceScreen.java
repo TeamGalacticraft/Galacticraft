@@ -347,11 +347,7 @@ public class SpaceRaceScreen extends Screen {
 
         @Override
         protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-            graphics.pose().pushPose();
-            graphics.pose().translate(this.getX(), this.getY(), 0.0f);
-            graphics.pose().scale(2.0f, 2.0f, 2.0f);
-            graphics.blit(this.imageLocation, 0, 0, 0, 0, 0, 48, 32, 48, 32);
-            graphics.pose().popPose();
+            graphics.blit(this.imageLocation, this.getX(), this.getY(), this.width, this.height, 0, 0, 48, 32, 48, 32);
 
             graphics.renderOutline(this.getX(), this.getY(), this.width, this.height, this.isHoveredOrFocused() ? 0xFF3c3c3c : 0xFF2d2d2d);
 
