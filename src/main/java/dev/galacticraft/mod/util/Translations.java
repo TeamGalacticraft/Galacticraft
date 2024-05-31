@@ -189,6 +189,14 @@ public interface Translations {
         String SERVER_STATS = "ui.galacticraft.space_race_manager.server_stats";
         String FLAG_CONFIRM = "ui.galacticraft.space_race_manager.flag.confirm";
         String FLAG_CONFIRM_MESSAGE = "ui.galacticraft.space_race_manager.flag.confirm.message";
+        String CUSTOMIZE_FLAG = "ui.galacticraft.space_race_manager.customize_flag";
+        String DRAG_AND_DROP_FLAG = "ui.galacticraft.space_race_manager.drap_and_drop_flag";
+        String TEAM_COLOR_1 = "ui.galacticraft.space_race_manager.team_color_1";
+        String TEAM_COLOR_2 = "ui.galacticraft.space_race_manager.team_color_2";
+        String TEAM_COLOR_3 = "ui.galacticraft.space_race_manager.team_color_3";
+        String RED = "ui.galacticraft.space_race_manager.color.red";
+        String GREEN = "ui.galacticraft.space_race_manager.color.green";
+        String BLUE = "ui.galacticraft.space_race_manager.color.blue";
     }
 
     interface SolarPanel {
