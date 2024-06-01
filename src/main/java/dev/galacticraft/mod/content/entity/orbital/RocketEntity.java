@@ -73,12 +73,15 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -203,30 +206,49 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
         this.linkedPad = blockPos;
     }
 
+    private boolean projectileDoesDamage (DamageSource source) {
+        Entity sourceEntity = source.getDirectEntity();
+        if (sourceEntity instanceof AbstractHurtingProjectile) {
+            return true;
+        }
+        if (sourceEntity instanceof AbstractArrow arrow) {
+            Arrow newArrow = new Arrow((EntityType<? extends Arrow>) arrow.getType(), level());
+            CompoundTag arrowNbt = new CompoundTag();
+            arrow.addAdditionalSaveData(arrowNbt);
+            newArrow.readAdditionalSaveData(arrowNbt);
+            newArrow.setPos(arrow.position());
+            Vec3 arrowVel = arrow.getDeltaMovement();
+            float bounceFactor = 0.025f;
+            newArrow.setDeltaMovement(-arrowVel.x * bounceFactor, -arrowVel.y * bounceFactor, -arrowVel.z * bounceFactor);
+            level().addFreshEntity(newArrow);
+            arrow.remove(RemovalReason.DISCARDED);
+            this.playSound(SoundEvents.ANVIL_PLACE, 1.0f, 0.7f);
+        }
+        return false;
+    }
+
     @Override
     public boolean hurt(DamageSource source, float amount) {
         if (!this.level().isClientSide && !this.isRemoved()) {
             if (this.isInvulnerableTo(source)) {
                 return false;
-            } else {
-                this.entityData.set(DAMAGE_WOBBLE_SIDE, -this.entityData.get(DAMAGE_WOBBLE_SIDE));
-                this.entityData.set(DAMAGE_WOBBLE_TICKS, 10);
-                this.entityData.set(DAMAGE_WOBBLE_STRENGTH, this.entityData.get(DAMAGE_WOBBLE_STRENGTH) + amount * 10.0F);
-                boolean creative = source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().instabuild;
-                if (creative || this.entityData.get(DAMAGE_WOBBLE_STRENGTH) > 40.0F) {
-                    this.ejectPassengers();
-                    if (creative && !this.hasCustomName()) {
-                        this.remove(RemovalReason.DISCARDED);
-                    } else {
-                        this.dropItems(source, false);
-                    }
-                }
-
-                return true;
+            } else if (source.is(DamageTypeTags.IS_PROJECTILE) && !projectileDoesDamage(source)) {
+                return false;
             }
-        } else {
-            return true;
+            this.entityData.set(DAMAGE_WOBBLE_SIDE, -this.entityData.get(DAMAGE_WOBBLE_SIDE));
+            this.entityData.set(DAMAGE_WOBBLE_TICKS, 10);
+            this.entityData.set(DAMAGE_WOBBLE_STRENGTH, this.entityData.get(DAMAGE_WOBBLE_STRENGTH) + amount * 10.0F);
+            boolean creative = source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().instabuild;
+            if (creative || this.entityData.get(DAMAGE_WOBBLE_STRENGTH) > 40.0F) {
+                this.ejectPassengers();
+                if (creative && !this.hasCustomName()) {
+                    this.remove(RemovalReason.DISCARDED);
+                } else {
+                    this.dropItems(source, false);
+                }
+            }
         }
+        return true;
     }
 
     @Override
