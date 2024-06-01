@@ -313,13 +313,15 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
 
     @Override
     public void onBaseDestroyed() {
-        RocketData data = RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.engine(), this.upgrade());
-        CompoundTag tag = new CompoundTag();
-        data.toNbt(tag);
-        var rocket = new ItemStack(GCItems.ROCKET);
-        rocket.setTag(tag);
-        this.spawnAtLocation(rocket);
-        this.remove(RemovalReason.DISCARDED);
+        if (getLaunchStage() != LaunchStage.LAUNCHED) {
+            RocketData data = RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.engine(), this.upgrade());
+            CompoundTag tag = new CompoundTag();
+            data.toNbt(tag);
+            var rocket = new ItemStack(GCItems.ROCKET);
+            rocket.setTag(tag);
+            this.spawnAtLocation(rocket);
+            this.remove(RemovalReason.DISCARDED);
+        }
     }
 
     @Override
@@ -499,24 +501,24 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
                 this.timeSinceLaunch = 0;
             }
 
-            if (this.getPassengers().isEmpty()) {
-                if (getLaunchStage() != LaunchStage.FAILED) {
-                    if (getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
-                        this.setLaunchStage(LaunchStage.FAILED);
-                    } else {
-                        this.setLaunchStage(LaunchStage.IDLE);
-                    }
-                }
-            } else if (!(this.getFirstPassenger() instanceof Player) && this.getLaunchStage() != LaunchStage.FAILED) {
-                if (getLaunchStage() == LaunchStage.LAUNCHED) {
-                    this.setLaunchStage(LaunchStage.FAILED);
-                } else {
-                    this.setLaunchStage(LaunchStage.IDLE);
-                    this.timeBeforeLaunch = getPreLaunchWait();
-                }
-
-                this.removePassenger(this.getFirstPassenger());
-            }
+//            if (this.getPassengers().isEmpty()) {
+//                if (getLaunchStage() != LaunchStage.FAILED && getLaunchStage() != LaunchStage.IGNITED) {
+//                    if (getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
+//                        this.setLaunchStage(LaunchStage.FAILED);
+//                    } else {
+//                        this.setLaunchStage(LaunchStage.IDLE);
+//                    }
+//                }
+//            } else if (!(this.getFirstPassenger() instanceof Player) && this.getLaunchStage() != LaunchStage.FAILED) {
+//                if (getLaunchStage() == LaunchStage.LAUNCHED) {
+//                    this.setLaunchStage(LaunchStage.FAILED);
+//                } else {
+//                    this.setLaunchStage(LaunchStage.IDLE);
+//                    this.timeBeforeLaunch = getPreLaunchWait();
+//                }
+//
+//                this.removePassenger(this.getFirstPassenger());
+//            }
 
             if (isOnFire() && !level().isClientSide) {
                 level().explode(this, this.position().x + (level().random.nextDouble() - 0.5 * 4), this.position().y + (level().random.nextDouble() * 3), this.position().z + (level().random.nextDouble() - 0.5 * 4), 10.0F, Level.ExplosionInteraction.TNT);
@@ -548,13 +550,18 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
                             gcPlayer.setRocketData(this);
                             gcPlayer.setLaunchpadStack(new ItemStack(GCBlocks.ROCKET_LAUNCH_PAD, 9));
                         }
-                        for (int x = -1; x <= 1; x++) {
-                            for (int z = -1; z <= 1; z++) {
-                                if (level().getBlockState(getLinkedPad().offset(x, 0, z)).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD
-                                        && level().getBlockState(getLinkedPad().offset(x, 0, z)).getValue(RocketLaunchPadBlock.PART) != RocketLaunchPadBlock.Part.NONE) {
-                                    level().setBlock(getLinkedPad().offset(x, 0, z), Blocks.AIR.defaultBlockState(), Block.UPDATE_NONE);
-                                }
-                            }
+//                        for (int x = -1; x <= 1; x++) {
+//                            for (int z = -1; z <= 1; z++) {
+//                                if (level().getBlockState(getLinkedPad().offset(x, 0, z)).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD
+//                                        && level().getBlockState(getLinkedPad().offset(x, 0, z)).getValue(RocketLaunchPadBlock.PART) != RocketLaunchPadBlock.Part.NONE) {
+//                                    level().setBlock(getLinkedPad().offset(x, 0, z), Blocks.AIR.defaultBlockState(), Block.UPDATE_NONE);
+//                                }
+//                            }
+//                        }
+                        if (level().getBlockState(getLinkedPad()).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD
+                                && level().getBlockState(getLinkedPad()).getValue(RocketLaunchPadBlock.PART) != RocketLaunchPadBlock.Part.NONE) {
+                            //level().setBlock(getLinkedPad(), Blocks.AIR.defaultBlockState(), Block.UPDATE_NEIGHBORS);
+                            level().destroyBlock(getLinkedPad(), false);
                         }
                     }
                     this.setSpeed(0.0f);
@@ -600,6 +607,10 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
                 }
 
                 if (this.position().y() >= 1200.0F) {
+                    // will need to change is for rockets that are launched via launch controllers
+                    if (this.getPassengers().isEmpty()) {
+                        this.remove(RemovalReason.DISCARDED);
+                    }
                     CelestialBody<CelestialBodyConfig, ? extends CelestialBodyType<CelestialBodyConfig>> body = CelestialBody.getByDimension(this.level()).orElse(null);
                     int id;
                     if (body != null) {
