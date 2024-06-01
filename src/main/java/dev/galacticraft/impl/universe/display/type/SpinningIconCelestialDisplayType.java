@@ -28,11 +28,7 @@ import com.mojang.serialization.Codec;
 import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.ShaderInstance;
 import org.joml.Vector4f;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class SpinningIconCelestialDisplayType extends IconCelestialDisplayType {
     public static final SpinningIconCelestialDisplayType INSTANCE = new SpinningIconCelestialDisplayType(IconCelestialDisplayConfig.CODEC);
@@ -41,8 +37,11 @@ public class SpinningIconCelestialDisplayType extends IconCelestialDisplayType {
     }
 
     @Override
-    public Vector4f render(GuiGraphics graphics, BufferBuilder buffer, int size, double mouseX, double mouseY, float delta, Consumer<Supplier<ShaderInstance>> shaderSetter, IconCelestialDisplayConfig config) {
-        graphics.pose().mulPose(Axis.ZP.rotationDegrees(Minecraft.getInstance().level.getGameTime() * 66.666666666666F / 10.0F % 360));
-        return super.render(graphics, buffer, size, mouseX, mouseY, delta, shaderSetter, config);
+    public Vector4f render(GuiGraphics graphics, BufferBuilder buffer, int size, double mouseX, double mouseY, float delta, IconCelestialDisplayConfig config) {
+        float degrees = Minecraft.getInstance().level.getGameTime() * 66.666666666666F / 10.0F % 360.0f;
+        graphics.pose().mulPose(Axis.ZP.rotationDegrees(degrees));
+        Vector4f render = super.render(graphics, buffer, size, mouseX, mouseY, delta, config);
+        graphics.pose().mulPose(Axis.ZN.rotationDegrees(degrees)); // revert changes to the pose for position tracking
+        return render;
     }
 }

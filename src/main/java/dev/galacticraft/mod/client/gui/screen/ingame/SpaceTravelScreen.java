@@ -52,7 +52,7 @@ public class SpaceTravelScreen extends Screen {
     private final String planet;
     private final ResourceKey<Level> target;
 
-    protected SpaceTravelScreen(String planetKey, ResourceKey<Level> target) {
+    public SpaceTravelScreen(String planetKey, ResourceKey<Level> target) {
         super(GameNarrator.NO_TITLE);
         this.planet = I18n.get(planetKey);
         this.target = target;

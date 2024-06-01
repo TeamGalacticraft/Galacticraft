@@ -106,6 +106,7 @@ public class DimensionTpCommand {
     private static int openCelestialScreen(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var player = context.getSource().getPlayerOrException();
 
+        player.galacticraft$openCelestialScreen(null);
         var buf = PacketByteBufs.create();
         buf.writeEnum(GCScreenType.CELESTIAL);
         buf.writeBoolean(false);
