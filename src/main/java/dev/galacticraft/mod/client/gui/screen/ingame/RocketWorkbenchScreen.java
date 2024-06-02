@@ -34,7 +34,7 @@ import dev.galacticraft.mod.client.gui.BatchedRenderer;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
-import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import dev.galacticraft.mod.network.packets.SelectPartPacket;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;

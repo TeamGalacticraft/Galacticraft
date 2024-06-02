@@ -24,7 +24,7 @@ package dev.galacticraft.mod.network.packets;
 
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.Constant.Packet;
-import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.client.Minecraft;

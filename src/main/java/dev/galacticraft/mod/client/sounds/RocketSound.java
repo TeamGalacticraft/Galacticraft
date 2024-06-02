@@ -25,7 +25,7 @@ package dev.galacticraft.mod.client.sounds;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCSounds;
-import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundSource;

@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.gui.overlay;
 
 import com.mojang.blaze3d.platform.Window;
-import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
+import dev.galacticraft.mod.content.entity.vehicle.LanderEntity;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
