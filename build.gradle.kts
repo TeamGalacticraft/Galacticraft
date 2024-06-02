@@ -130,7 +130,7 @@ loom {
             name("Game Test")
             source(sourceSets.test.get())
             property("fabric-api.gametest")
-            property("fabric-api.gametest.report-file", "${project.layout.buildDirectory.get()}/junit.xml")
+            property("fabric-api.gametest.report-file", "${project.layout.buildDirectory.get().file("junit.xml")}")
         }
 
         afterEvaluate {

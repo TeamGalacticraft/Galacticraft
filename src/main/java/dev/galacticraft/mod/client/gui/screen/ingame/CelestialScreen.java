@@ -24,12 +24,10 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexSorting;
 import com.mojang.math.Axis;
 import dev.galacticraft.api.client.accessor.ClientSatelliteAccessor;
 import dev.galacticraft.api.registry.AddonRegistries;
@@ -69,7 +67,7 @@ import java.util.*;
 @SuppressWarnings({"SpellCheckingInspection", "DataFlowIssue"})
 @Environment(EnvType.CLIENT)
 public class CelestialScreen extends Screen implements ClientSatelliteAccessor.SatelliteListener {
-    protected static final int BORDER_Z = 500;
+    protected static final int BORDER_Z = 9900;
 
     // String colours
     protected static final int BLACK = FastColor.ARGB32.color(255, 0, 0, 0);
@@ -431,9 +429,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
 
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        PoseStack modelViewStack = RenderSystem.getModelViewStack();
-
+    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         this.ticksSinceMenuOpenF += delta;
         this.ticksTotalF += delta;
 
@@ -446,23 +442,11 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
         }
 
         PoseStack matrices = graphics.pose();
+
         matrices.pushPose();
-        Window window = this.minecraft.getWindow();
-        RenderSystem.backupProjectionMatrix();
-        Matrix4f projectionMatrix = new Matrix4f();
-        projectionMatrix.setOrtho(0, (float) ((double) window.getWidth() / window.getGuiScale()), (float) ((double) window.getHeight() / window.getGuiScale()), 0, 1000, 9000.0F);
-        RenderSystem.setProjectionMatrix(projectionMatrix, VertexSorting.ORTHOGRAPHIC_Z);
-        modelViewStack.pushPose();
-
-        modelViewStack.setIdentity();
-        modelViewStack.translate(0.0F, 0.0F, -8000.0F);
-        RenderSystem.applyModelViewMatrix();
-
         RenderSystem.disableBlend();
 
         this.setBlackBackground(graphics);
-
-        matrices.pushPose();
 
         this.setIsometric(delta, matrices);
         float gridSize = 7000F; //194.4F;
@@ -477,13 +461,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
         this.drawSelectionCursor(matrices, delta);
 
         matrices.popPose();
-
         this.drawBorder(graphics);
-
-        matrices.popPose();
-        RenderSystem.restoreProjectionMatrix();
-        modelViewStack.popPose();
-        RenderSystem.applyModelViewMatrix();
     }
 
     protected void drawSelectionCursor(PoseStack matrices, float delta) {
@@ -552,6 +530,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
                 matrices.pushPose();
                 this.setupMatrix(body, matrices, moon ? 0.25F : 1.0F, delta);
                 CelestialDisplay<?, ?> display = body.display();
+                RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
                 Vector4f vector4f = display.render(graphics, Tesselator.getInstance().getBuilder(), getWidthForCelestialBody(body), mouseX, mouseY, delta);
                 Matrix4f planetMatrix = matrices.last().pose();
 
@@ -572,6 +551,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
                 matrices.popPose();
             }
         }
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
     /**
@@ -617,6 +597,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
      * Draw background grid
      */
     public void drawGrid(GuiGraphics graphics, float gridSize, float gridScale) {
+        RenderSystem.depthMask(false);
         VertexConsumer vertexConsumer = graphics.bufferSource().getBuffer(RenderType.LINES);
         Matrix4f model = graphics.pose().last().pose();
 
@@ -632,6 +613,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
         }
 
         graphics.bufferSource().endBatch();
+        RenderSystem.depthMask(true);
     }
 
     /**

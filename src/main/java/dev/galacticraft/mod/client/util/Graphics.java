@@ -25,11 +25,15 @@ package dev.galacticraft.mod.client.util;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
 import org.joml.Matrix4f;
 
 import java.util.ArrayList;
@@ -39,23 +43,19 @@ public class Graphics implements AutoCloseable {
     private final PoseStack pose;
     private final BufferBuilder buffer;
     private final MultiBufferSource.BufferSource bufferSource;
+    private final Font font;
     private final List<BatchedDrawable> renderers = new ArrayList<>(1);
 
-    private Graphics(PoseStack pose, MultiBufferSource.BufferSource bufferSource) {
+    private Graphics(PoseStack pose, MultiBufferSource.BufferSource bufferSource, Font font) {
         this.pose = pose;
         this.bufferSource = bufferSource;
+        this.font = font;
         this.buffer = Tesselator.getInstance().getBuilder();
         if (this.buffer.building()) throw new IllegalStateException();
     }
 
-    public static Graphics managed(GuiGraphics graphics) {
-        return new Graphics(graphics.pose(), graphics.bufferSource());
-    }
-
-    public static Graphics texOnly(Matrix4f matrix4f) {
-        PoseStack poseStack = new PoseStack();
-        poseStack.last().pose().set(matrix4f);
-        return new Graphics(poseStack, null);
+    public static Graphics managed(GuiGraphics graphics, Font font) {
+        return new Graphics(graphics.pose(), graphics.bufferSource(), font);
     }
 
     public TextureColor textureColor(ResourceLocation texture) {
@@ -86,6 +86,10 @@ public class Graphics implements AutoCloseable {
         return this.fill(RenderType.gui());
     }
 
+    public Text text() {
+        return new Text();
+    }
+
     public Fill fill(RenderType type) {
         return new Fill(type);
     }
@@ -104,11 +108,10 @@ public class Graphics implements AutoCloseable {
     public class Lines implements AutoCloseable, BatchedDrawable {
         private final RenderType type;
         private VertexConsumer consumer;
-        private boolean open = true;
+        private boolean open = false;
 
         private Lines(RenderType type) {
             this.type = type;
-            this.consumer = Graphics.this.bufferSource.getBuffer(this.type);
             Graphics.this.renderers.add(this);
         }
 
@@ -150,11 +153,10 @@ public class Graphics implements AutoCloseable {
     public class Fill implements AutoCloseable, BatchedDrawable {
         private final RenderType type;
         private VertexConsumer consumer;
-        private boolean open = true;
+        private boolean open = false;
 
         private Fill(RenderType type) {
             this.type = type;
-            this.consumer = Graphics.this.bufferSource.getBuffer(this.type);
             Graphics.this.renderers.add(this);
         }
 
@@ -172,6 +174,10 @@ public class Graphics implements AutoCloseable {
 
         public void fillGradient(float x, float y, float width, float height, float z, int colorA, int colorB) {
             this.fillGradientRaw(x, y, x + width, y + height, z, colorA, colorB);
+        }
+
+        public void fillGradientRaw(float x1, float y1, float x2, float y2, int colorA, int colorB) {
+            this.fillGradientRaw(x1, y1, x2, y2, 0.0f, colorA, colorB);
         }
 
         public void fillGradientRaw(float x1, float y1, float x2, float y2, float z, int colorA, int colorB) {
@@ -207,17 +213,16 @@ public class Graphics implements AutoCloseable {
         }
     }
 
-    public class TextureColor implements AutoCloseable, BatchedDrawable {
+    public class TextureColor extends Text implements AutoCloseable, BatchedDrawable {
         private final int texture;
         private final int textureWidth;
         private final int textureHeight;
-        private boolean open = true;
+        private boolean open = false;
 
         private TextureColor(int texture, int textureWidth, int textureHeight) {
             this.texture = texture;
             this.textureWidth = textureWidth;
             this.textureHeight = textureHeight;
-            Graphics.this.renderers.add(this);
         }
 
         public void blit(int x, int y, int width, int height, int z, int u, int v, int color) {
@@ -226,6 +231,10 @@ public class Graphics implements AutoCloseable {
 
         public void blit(int x, int y, int width, int height, int z, int u, int v, int uWidth, int vHeight, int color) {
             this.blitRaw(x, y, x + width, y + height, z, (float) u / this.textureWidth, (float) v / this.textureHeight, (float) (u + uWidth) / this.textureWidth, (float) (v + vHeight) / this.textureHeight, color);
+        }
+
+        public void blit(float x, float y, float width, float height, float z, float u, float v, int color) {
+            this.blit(x, y, width, height, z, u, v, width, height, color);
         }
 
         public void blit(float x, float y, float width, float height, float z, float u, float v, float uWidth, float vHeight, int color) {
@@ -242,6 +251,22 @@ public class Graphics implements AutoCloseable {
             Graphics.this.buffer.vertex(matrix, x2, y1, z).uv(u2, v1).color(color).endVertex();
         }
 
+        public void blit(int x, int y, int width, int height, int u, int v, int color) {
+            this.blit(x, y, width, height, 0, u, v, width, height, color);
+        }
+
+        public void blit(int x, int y, int width, int height, int u, int v, int uWidth, int vHeight, int color) {
+            this.blit(x, y, width, height, 0, u, v, uWidth, vHeight, color);
+        }
+
+        public void blit(float x, float y, float width, float height, float u, float v, int color) {
+            this.blit(x, y, width, height, 0.0f, u, v, width, height, color);
+        }
+
+        public void blit(float x, float y, float width, float height, float u, float v, float uWidth, float vHeight, int color) {
+            this.blit(x, y, width, height, 0.0f, u, v, uWidth, vHeight, color);
+        }
+
         private void ensureOpen() {
             if (!this.open) {
                 Graphics.this.cleanupState();
@@ -253,6 +278,7 @@ public class Graphics implements AutoCloseable {
         @Override
         public void close() {
             this.draw();
+            super.close();
             Graphics.this.renderers.remove(this);
         }
 
@@ -263,16 +289,17 @@ public class Graphics implements AutoCloseable {
                 RenderSystem.setShaderTexture(0, this.texture);
                 RenderSystem.enableBlend();
                 BufferUploader.drawWithShader(Graphics.this.buffer.end());
+                RenderSystem.disableBlend();
                 this.open = false;
             }
         }
     }
 
-    public class Texture implements AutoCloseable, BatchedDrawable {
+    public class Texture extends Text implements AutoCloseable, BatchedDrawable {
         private final int texture;
         private final int textureWidth;
         private final int textureHeight;
-        private boolean open = true;
+        private boolean open;
 
         private Texture(int texture, int textureWidth, int textureHeight) {
             this.texture = texture;
@@ -303,6 +330,22 @@ public class Graphics implements AutoCloseable {
             Graphics.this.buffer.vertex(matrix, x2, y1, z).uv(u2, v1).endVertex();
         }
 
+        public void blit(int x, int y, int width, int height, int u, int v) {
+            this.blit(x, y, width, height, 0, u, v, width, height);
+        }
+
+        public void blit(int x, int y, int width, int height, int u, int v, int uWidth, int vHeight) {
+            this.blit(x, y, width, height, 0, u, v, uWidth, vHeight);
+        }
+
+        public void blit(float x, float y, float width, float height, float u, float v) {
+            this.blit(x, y, width, height, 0.0f, u, v, width, height);
+        }
+
+        public void blit(float x, float y, float width, float height, float u, float v, float uWidth, float vHeight) {
+            this.blit(x, y, width, height, 0.0f, u, v, uWidth, vHeight);
+        }
+
         private void ensureOpen() {
             if (!this.open) {
                 Graphics.this.cleanupState();
@@ -314,18 +357,131 @@ public class Graphics implements AutoCloseable {
         @Override
         public void close() {
             this.draw();
+            super.close();
             Graphics.this.renderers.remove(this);
         }
 
         @Override
         public void draw() {
             if (this.open) {
-                RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+                RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, this.texture);
                 RenderSystem.enableBlend();
                 BufferUploader.drawWithShader(Graphics.this.buffer.end());
+                RenderSystem.disableBlend();
                 this.open = false;
             }
+        }
+    }
+
+    public class Text implements AutoCloseable{
+        private boolean textDirty = false;
+
+        public int getSplitStringLines(String text, int width) {
+            return this.getSplitStringLines(Component.literal(text), width);
+        }
+
+        public int getSplitStringLines(FormattedText text, int width) {
+            return Graphics.this.font.split(text, width).size();
+        }
+
+        public int drawSplitText(String string, int x, int y, int width, int color) {
+            return this.renderSplitString(string, x, y, width, color);
+        }
+
+        protected int renderSplitString(String str, int x, int y, int width, int color) {
+            List<FormattedCharSequence> list = Graphics.this.font.split(Component.translatable(str), width);
+
+            for (FormattedCharSequence line : list) {
+                this.drawCenteredText(line, x, y, color);
+                y += Graphics.this.font.lineHeight;
+            }
+
+            return list.size();
+        }
+
+        public int drawCenteredText(String text, int centerX, int y, int color) {
+            return this.drawCenteredText(text, centerX, y, color, false);
+        }
+
+        public int drawCenteredText(String text, int centerX, int y, int color, boolean shadow) {
+            return this.drawText(text, centerX - Graphics.this.font.width(text) / 2.0f, (float)y, color, shadow);
+        }
+
+        public int drawCenteredText(Component text, int centerX, int y, int color) {
+            return this.drawCenteredText(text, centerX, y, color, false);
+        }
+
+        public int drawCenteredText(Component text, int centerX, int y, int color, boolean shadow) {
+            return this.drawText(text, centerX - Graphics.this.font.width(text) / 2.0f, (float)y, color, shadow);
+        }
+
+        public int drawCenteredText(FormattedCharSequence text, int centerX, int y, int color) {
+            return this.drawCenteredText(text, centerX, y, color, false);
+        }
+
+        public int drawCenteredText(FormattedCharSequence text, int centerX, int y, int color, boolean shadow) {
+            return this.drawText(text, centerX - Graphics.this.font.width(text) / 2.0f, (float)y, color, shadow);
+        }
+
+        public int drawText(String text, int x, int y, int color) {
+            return this.drawText(text, x, y, color, false);
+        }
+
+        public int drawText(String text, float x, float y, int color) {
+            return this.drawText(text, x, y, color, false);
+        }
+
+        public int drawText(String text, float x, float y, int color, boolean shadow) {
+            if (text == null) return 0;
+            this.textDirty = true;
+            return Graphics.this.font.drawInBatch(
+                    text, x, y, color, shadow, Graphics.this.pose.last().pose(), Graphics.this.bufferSource, Font.DisplayMode.NORMAL, 0, 0xF000F0, Graphics.this.font.isBidirectional()
+            );
+        }
+
+        public int drawText(Component text, int x, int y, int color) {
+            return this.drawText(text, x, y, color, false);
+        }
+
+        public int drawText(Component text, float x, float y, int color) {
+            return this.drawText(text, x, y, color, false);
+        }
+
+        public int drawText(Component text, float x, float y, int color, boolean shadow) {
+            if (text == null) return 0;
+            this.textDirty = true;
+            return Graphics.this.font.drawInBatch(
+                    text, x, y, color, shadow, Graphics.this.pose.last().pose(), Graphics.this.bufferSource, Font.DisplayMode.NORMAL, 0, 0xF000F0
+            );
+        }
+
+        public int drawText(FormattedCharSequence text, int x, int y, int color) {
+            return this.drawText(text, x, y, color, false);
+        }
+
+        public int drawText(FormattedCharSequence text, float x, float y, int color) {
+            return this.drawText(text, x, y, color, false);
+        }
+
+        public int drawText(FormattedCharSequence text, float x, float y, int color, boolean shadow) {
+            if (text == null) return 0;
+            this.textDirty = true;
+            return Graphics.this.font.drawInBatch(
+                    text, x, y, color, shadow, Graphics.this.pose.last().pose(), Graphics.this.bufferSource, Font.DisplayMode.NORMAL, 0, 0xF000F0
+            );
+        }
+
+        public void flushText() {
+            if (this.textDirty) {
+                Graphics.this.bufferSource.endBatch();
+                this.textDirty = false;
+            }
+        }
+
+        @Override
+        public void close() {
+            this.flushText();
         }
     }
 
