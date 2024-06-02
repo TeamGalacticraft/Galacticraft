@@ -23,26 +23,16 @@
 package dev.galacticraft.impl.universe.display.type;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.universe.display.CelestialDisplayType;
 import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
-import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
+import dev.galacticraft.mod.client.util.Graphics;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.texture.AbstractTexture;
-import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL32C;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class IconCelestialDisplayType extends CelestialDisplayType<IconCelestialDisplayConfig> {
     public static final IconCelestialDisplayType INSTANCE = new IconCelestialDisplayType(IconCelestialDisplayConfig.CODEC);
@@ -52,25 +42,19 @@ public class IconCelestialDisplayType extends CelestialDisplayType<IconCelestial
     }
 
     @Override
-    public Vector4f render(GuiGraphics graphics, BufferBuilder buffer, int size, double mouseX, double mouseY, float delta, Consumer<Supplier<ShaderInstance>> shaderSetter, IconCelestialDisplayConfig config) {
-        shaderSetter.accept(GameRenderer::getPositionTexShader);
-        Matrix4f positionMatrix = graphics.pose().last().pose();
+    public Vector4f render(GuiGraphics graphics, BufferBuilder buffer, int size, double mouseX, double mouseY, float delta, IconCelestialDisplayConfig config) {
+        float realSize = config.scale() * size;
         AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(config.texture());
-        RenderSystem.setShaderTexture(0, texture.getId());
         texture.bind();
-        float width = GlStateManager._getTexLevelParameter(GL32C.GL_TEXTURE_2D, 0, GL32C.GL_TEXTURE_WIDTH);
-        float height = GlStateManager._getTexLevelParameter(GL32C.GL_TEXTURE_2D, 0, GL32C.GL_TEXTURE_HEIGHT);
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.vertex(positionMatrix, (config.scale() * -size) / 2, (config.scale() * -size) / 2, 0).uv(config.u() / width, config.v() / height).endVertex();
-        buffer.vertex(positionMatrix, (config.scale() * -size) / 2, (config.scale() * size) / 2, 0).uv(config.u() / width, (config.v() + config.height()) / height).endVertex();
-        buffer.vertex(positionMatrix, (config.scale() * size) / 2, (config.scale() * size) / 2, 0).uv((config.u() + config.width()) / width, (config.v() + config.height()) / height).endVertex();
-        buffer.vertex(positionMatrix, (config.scale() * size) / 2, (config.scale() * -size) / 2, 0).uv((config.u() + config.width()) / width, config.v() / height).endVertex();
-        BufferUploader.drawWithShader(buffer.end());
+        int width = GlStateManager._getTexLevelParameter(GL32C.GL_TEXTURE_2D, 0, GL32C.GL_TEXTURE_WIDTH);
+        int height = GlStateManager._getTexLevelParameter(GL32C.GL_TEXTURE_2D, 0, GL32C.GL_TEXTURE_HEIGHT);
+        Graphics.blitCentered(graphics.pose().last().pose(), 0.0f, 0.0f, realSize, realSize, 0.0f, config.u(), config.v(), config.width(), config.height(), width, height, config.texture());
 
         config.decoration().ifPresent(decoration -> {
-            RenderSystem.setShaderTexture(0, decoration.texture());
-            float decoSize = size / 6.0F;
-            CelestialSelectionScreen.blit(positionMatrix, decoration.xScale() * decoSize, decoration.yScale() * decoSize, decoration.widthScale() * decoSize, decoration.heightScale() * decoSize, decoration.u(), decoration.v(), decoration.width(), decoration.height(), 32, 32, 255, 255, 255, 255, false, false);
+            float decoSize = realSize / 3.0F;
+            float decoW = decoration.xScale() * decoSize;
+            float decoH = decoration.yScale() * decoSize;
+            Graphics.blitCentered(graphics.pose().last().pose(), 0.0f, 0.0f, decoW, decoH, 0.0f, decoration.u(), decoration.v(), decoration.width(), decoration.height(), 32, 32, decoration.texture());
         });
 
         return new Vector4f(config.scale() * -size, config.scale() * -size, (config.scale() * size) * 2, (config.scale() * size) * 2);

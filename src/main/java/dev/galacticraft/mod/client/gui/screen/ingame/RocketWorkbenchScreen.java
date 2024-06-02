@@ -30,7 +30,7 @@ import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartTypes;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.gui.BatchedRenderer;
+import dev.galacticraft.mod.client.util.BatchedRenderer;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;

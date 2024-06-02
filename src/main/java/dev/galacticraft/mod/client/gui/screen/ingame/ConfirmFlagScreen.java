@@ -20,23 +20,34 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.universe.display.type;
+package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import dev.galacticraft.api.universe.display.CelestialDisplayType;
-import dev.galacticraft.impl.universe.display.config.EmptyCelestialDisplayConfig;
+import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import net.minecraft.client.gui.GuiGraphics;
-import org.joml.Vector4f;
+import net.minecraft.client.gui.screens.ConfirmScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
-public class EmptyCelestialDisplayType extends CelestialDisplayType<EmptyCelestialDisplayConfig> {
-    public static final EmptyCelestialDisplayType INSTANCE = new EmptyCelestialDisplayType();
+public class ConfirmFlagScreen extends ConfirmScreen {
+    protected final ResourceLocation imageLocation;
+    public ConfirmFlagScreen(BooleanConsumer booleanConsumer, ResourceLocation flagImage, Component component, Component component2) {
+        super(booleanConsumer, component, component2);
+        this.imageLocation = flagImage;
+    }
 
-    private EmptyCelestialDisplayType() {
-        super(EmptyCelestialDisplayConfig.CODEC);
+    private int titleTop() {
+        int i = this.height/2;
+        return Mth.clamp(i - 20 - this.font.lineHeight, 10, 80);
+    }
+
+    private int flagTop() {
+        return this.titleTop() + 20;
     }
 
     @Override
-    public Vector4f render(GuiGraphics graphics, BufferBuilder buffer, int size, double mouseX, double mouseY, float delta, EmptyCelestialDisplayConfig config) {
-        return NULL_VECTOR;
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.render(graphics, mouseX, mouseY, delta);
+        graphics.blit(this.imageLocation, this.width/2 - 24, this.flagTop(), 0, 0, 0, 48, 32, 48, 32);
     }
 }

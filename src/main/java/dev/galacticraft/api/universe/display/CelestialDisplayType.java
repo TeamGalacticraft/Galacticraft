@@ -23,16 +23,11 @@
 package dev.galacticraft.api.universe.display;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.Codec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.ShaderInstance;
 import org.joml.Vector4f;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public abstract class CelestialDisplayType<C extends CelestialDisplayConfig> {
     public static final Vector4f NULL_VECTOR = new Vector4f(0, 0, 0, 0);
@@ -43,7 +38,7 @@ public abstract class CelestialDisplayType<C extends CelestialDisplayConfig> {
     }
 
     @Environment(EnvType.CLIENT)
-    public abstract Vector4f render(GuiGraphics graphics, BufferBuilder buffer, int size, double mouseX, double mouseY, float delta, Consumer<Supplier<ShaderInstance>> shaderSetter, C config);
+    public abstract Vector4f render(GuiGraphics graphics, BufferBuilder buffer, int size, double mouseX, double mouseY, float delta, C config);
 
     public Codec<CelestialDisplay<C, CelestialDisplayType<C>>> codec() {
         return this.codec;

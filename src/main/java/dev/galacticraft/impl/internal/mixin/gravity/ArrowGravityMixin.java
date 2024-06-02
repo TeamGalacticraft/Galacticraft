@@ -20,23 +20,19 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.universe.display.type;
+package dev.galacticraft.impl.internal.mixin.gravity;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import dev.galacticraft.api.universe.display.CelestialDisplayType;
-import dev.galacticraft.impl.universe.display.config.EmptyCelestialDisplayConfig;
-import net.minecraft.client.gui.GuiGraphics;
-import org.joml.Vector4f;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-public class EmptyCelestialDisplayType extends CelestialDisplayType<EmptyCelestialDisplayConfig> {
-    public static final EmptyCelestialDisplayType INSTANCE = new EmptyCelestialDisplayType();
-
-    private EmptyCelestialDisplayType() {
-        super(EmptyCelestialDisplayConfig.CODEC);
-    }
-
-    @Override
-    public Vector4f render(GuiGraphics graphics, BufferBuilder buffer, int size, double mouseX, double mouseY, float delta, EmptyCelestialDisplayConfig config) {
-        return NULL_VECTOR;
+@Mixin(AbstractArrow.class)
+public class ArrowGravityMixin {
+    @ModifyConstant(method = "tick", constant = @Constant(doubleValue = 0.05000000074505806)) // that's what it is in the bytecode
+    private double galacticraft_changeArrowGravity(double defaultValue) {
+        return CelestialBody.getByDimension(((Entity) (Object) this).level()).map(celestialBody -> celestialBody.gravity() * defaultValue).orElse(defaultValue);
     }
 }

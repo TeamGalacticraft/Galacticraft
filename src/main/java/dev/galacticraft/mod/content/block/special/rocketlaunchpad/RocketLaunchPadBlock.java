@@ -110,66 +110,23 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
 
     @Override
     public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState newState, boolean moved) {
+        // do nothing if it's not part of a multiblock
+        if (blockState.getValue(PART) == Part.NONE) {
+            return;
+        }
+        // figure out where the center block is and remove the rocket
+        BlockPos center = blockPos.offset(RocketLaunchPadBlock.partToCenterPos(blockState.getValue(PART)));
+        if (level.getBlockEntity(center) instanceof RocketLaunchPadBlockEntity pad) {
+            if (pad.hasRocket() && pad.getRocket() != null) {
+                pad.getRocket().onBaseDestroyed();
+            }
+        }
+        // calling this removes the block entity
         super.onRemove(blockState, level, blockPos, newState, moved);
-        var part = blockState.getValue(PART);
-        switch (part) {
-            case NORTH, SOUTH, EAST, WEST -> {
-                var center = blockPos.relative(part.getDirection().getFirst().getOpposite());
-                for (var x = -1; x <= 1; x++) {
-                    for (var z = -1; z <= 1; z++) {
-                        var blockState1 = level.getBlockState(center.offset(x, 0, z));
-
-                        if (blockState1.is(this) && blockState1.getValue(PART) != Part.NONE) {
-                            if (level.getBlockEntity(center.offset(x, 0, z)) instanceof RocketLaunchPadBlockEntity pad) {
-                                if (pad.hasRocket()) {
-                                    if (pad.getRocket() != null) {
-                                        pad.getRocket().onBaseDestroyed();
-                                    }
-                                }
-                            }
-                            level.destroyBlock(center.offset(x, 0, z), true);
-                        }
-                    }
-                }
-            }
-            case NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST -> {
-                var center = blockPos.relative(part.getDirection().getFirst().getOpposite()).relative(part.getDirection().getSecond().getOpposite());
-                for (var x = -1; x <= 1; x++) {
-                    for (var z = -1; z <= 1; z++) {
-                        var blockState1 = level.getBlockState(center.offset(x, 0, z));
-
-                        if (blockState1.is(this) && blockState1.getValue(PART) != Part.NONE) {
-                            if (level.getBlockEntity(center.offset(x, 0, z)) instanceof RocketLaunchPadBlockEntity pad) {
-                                if (pad.hasRocket()) {
-                                    var entity = pad.getRocket();
-                                    if (entity != null) {
-                                        entity.onBaseDestroyed();
-                                    }
-                                }
-                            }
-                            level.destroyBlock(center.offset(x, 0, z), true);
-                        }
-                    }
-                }
-            }
-            case CENTER -> {
-                for (var x = -1; x <= 1; x++) {
-                    for (var z = -1; z <= 1; z++) {
-                        var blockState1 = level.getBlockState(blockPos.offset(x, 0, z));
-
-                        if (blockState1.is(this) && blockState1.getValue(PART) != Part.NONE) {
-                            if (level.getBlockEntity(blockPos.offset(x, 0, z)) instanceof RocketLaunchPadBlockEntity pad) {
-                                if (pad.hasRocket()) {
-                                    var entity = pad.getRocket();
-                                    if (entity != null) {
-                                        entity.onBaseDestroyed();
-                                    }
-                                }
-                            }
-                            level.destroyBlock(blockPos.offset(x, 0, z), false);
-                        }
-                    }
-                }
+        // remove the launch pad blocks
+        for (var x = -1; x <= 1; x++) {
+            for (var z = -1; z <= 1; z++) {
+                level.destroyBlock(center.offset(x, 0, z), true);
             }
         }
     }
@@ -177,111 +134,53 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
     @Override
     public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState oldState, boolean moved) {
         super.onPlace(blockState, level, blockPos, oldState, moved);
-        if (blockState.getValue(PART) == Part.NONE) {
-            var connections = 0;
-            for (var direction : CARDINAL) {
-                if (level.getBlockState(blockPos.relative(direction)).is(this)) {
-                    connections++;
-                }
+        // the block should not already be assigned to a part of the launch pad
+        if (blockState.getValue(PART) != Part.NONE) {
+            return;
+        }
+        // valid connections represent connections to other launch pad block that are not already part of a launch pad
+        // options are either 2 (corner), 3 (center edge), or 4 (middle)
+        byte validConnections = 0;
+        for (Direction direction : CARDINAL) {
+            if (isValidSingleLaunchPad(level.getBlockState(blockPos.relative(direction)))) {
+                validConnections++;
             }
-
-            if (connections == 4) {
-                var allValid = true;
-                for (var x = -1; x <= 1; x++) {
-                    for (var z = -1; z <= 1; z++) {
-                        if (!level.getBlockState(blockPos.offset(x, 0, z)).is(this)) {
-                            allValid = false;
-                            break;
-                        } else if (level.getBlockState(blockPos.offset(x, 0, z)).getValue(PART) != Part.NONE) {
-                            allValid = false;
-                            break;
-                        }
-                    }
-                }
-                if (allValid) {
-                    for (var x = -1; x <= 1; x++) {
-                        for (var z = -1; z <= 1; z++) {
-                            level.setBlockAndUpdate(blockPos.offset(x, 0, z), level.getBlockState(blockPos.offset(x, 0, z)).setValue(PART, this.getPartForOffset(x, z)));
-                        }
-                    }
+        }
+        // now looks to find where the center block is and if it is part of a valid 3x3 grid
+        for (byte c = validConnections; c >= 2; c--) {
+            if (c == 4) {
+                if (isValid3x3(level, blockPos)) {
+                    updateMultiBlock(level, blockPos);
                     return;
-                } else {
-                    connections--;
                 }
             }
-
-            if (connections == 3) {
-                for (var direction : CARDINAL) {
-                    if (level.getBlockState(blockPos.relative(direction)).is(this)) {
-                        if (level.getBlockState(blockPos.relative(direction.getOpposite())).is(this)) {
-                            for (var dir : CARDINAL) {
-                                if (dir.getAxis() != direction.getAxis()) {
-                                    var allValid = true;
-                                    for (var x = -1; x <= 1; x++) {
-                                        for (var z = -1; z <= 1; z++) {
-                                            if (!level.getBlockState(blockPos.relative(dir).offset(x, 0, z)).is(this)) {
-                                                allValid = false;
-                                                break;
-                                            } else if (level.getBlockState(blockPos.relative(dir).offset(x, 0, z)).getValue(PART) != Part.NONE) {
-                                                allValid = false;
-                                                break;
-                                            }
-                                        }
-                                    }
-
-                                    if (allValid) {
-                                        for (var x = -1; x <= 1; x++) {
-                                            for (var z = -1; z <= 1; z++) {
-                                                level.setBlockAndUpdate(blockPos.relative(dir).offset(x, 0, z), level.getBlockState(blockPos.relative(dir).offset(x, 0, z)).setValue(PART, this.getPartForOffset(x, z)));
-                                            }
-                                        }
-                                        return;
-                                    }
+            else if (c == 3) {
+                for (Direction primaryDir : CARDINAL) {
+                    if (level.getBlockState(blockPos.relative(primaryDir)).is(this) && level.getBlockState(blockPos.relative(primaryDir.getOpposite())).is(this)) {
+                        for (Direction secondaryDir : CARDINAL) {
+                            if (secondaryDir.getAxis() != primaryDir.getAxis() && isValidSingleLaunchPad(level.getBlockState(blockPos.relative(secondaryDir)))) {
+                                if (isValid3x3(level, blockPos.relative(secondaryDir))) {
+                                    updateMultiBlock(level, blockPos.relative(secondaryDir));
+                                    return;
                                 }
                             }
                         }
                     }
                 }
-                connections--;
             }
-
-            if (connections == 2) {
-                for (var direction : CARDINAL) {
-                    if (level.getBlockState(blockPos.relative(direction)).is(this)) {
-                        var dirs = new Direction[] {Direction.NORTH, Direction.SOUTH};
-                        if (direction.getAxis() == Direction.Axis.Z) {
-                            dirs = new Direction[] {Direction.EAST, Direction.WEST};
-                        }
-
-                        for (var dir : dirs) {
-                            if (level.getBlockState(blockPos.relative(dir)).is(this)) {
-                                if (level.getBlockState(blockPos.relative(dir).relative(direction)).is(this)) {
-                                    var allValid = true;
-                                    for (var x = -1; x <= 1; x++) {
-                                        for (var z = -1; z <= 1; z++) {
-                                            if (!level.getBlockState(blockPos.relative(dir).relative(direction).offset(x, 0, z)).is(this)) {
-                                                allValid = false;
-                                                break;
-                                            } else if (level.getBlockState(blockPos.relative(dir).relative(direction).offset(x, 0, z)).getValue(PART) != Part.NONE) {
-                                                allValid = false;
-                                                break;
-                                            }
-                                        }
-                                    }
-
-                                    if (allValid) {
-                                        for (var x = -1; x <= 1; x++) {
-                                            for (var z = -1; z <= 1; z++) {
-                                                level.setBlockAndUpdate(blockPos.relative(dir).relative(direction).offset(x, 0, z), level.getBlockState(blockPos.relative(dir).relative(direction).offset(x, 0, z)).setValue(PART, this.getPartForOffset(x, z)));
-                                            }
-                                        }
-                                        return;
-                                    }
+            else if (c == 2) {
+                for (Direction primaryDir : CARDINAL) {
+                    if (level.getBlockState(blockPos.relative(primaryDir)).is(this)) {
+                        Direction[] secondaryDirs = primaryDir.getAxis() == Direction.Axis.Z ? new Direction[]{Direction.EAST, Direction.WEST} : new Direction[]{Direction.NORTH, Direction.SOUTH};
+                        for (Direction secondaryDir : secondaryDirs) {
+                            if (isValidSingleLaunchPad(level.getBlockState(blockPos.relative(secondaryDir).relative(primaryDir)))) {
+                                if (isValid3x3(level, blockPos.relative(secondaryDir).relative(primaryDir))) {
+                                    updateMultiBlock(level, blockPos.relative(secondaryDir).relative(primaryDir));
+                                    return;
                                 }
                             }
                         }
                     }
-
                 }
             }
         }
@@ -369,6 +268,37 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
         @Nullable
         public Pair<Direction, @Nullable Direction> getDirection() {
             return this.direction;
+        }
+    }
+
+    // helper functions for onPlace()
+
+    // returns true if the block being considered is a LaunchPadBlock and is not part of another launch pad
+    private boolean isValidSingleLaunchPad(BlockState blockState) {
+        return blockState.is(this) && blockState.getValue(PART) == Part.NONE;
+    }
+
+    // returns true if the given block is the center of a valid 3x3 launchpad
+    private boolean isValid3x3 (Level level, BlockPos centerBlockPos) {
+        // check if any blocks in 3x3 grid are not valid
+        for (var x = -1; x <= 1; x++) {
+            for (var z = -1; z <= 1; z++) {
+                // if one of the surrounding blocks is not a launch pad or is already part of another launch pad
+                var block = level.getBlockState(centerBlockPos.offset(x, 0, z));
+                if (!block.is(this) || block.getValue(PART) != Part.NONE) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    // updates the launchpad multiblock with directional part names
+    private void updateMultiBlock(Level level, BlockPos centerBlockPos) {
+        for (var x = -1; x <= 1; x++) {
+            for (var z = -1; z <= 1; z++) {
+                level.setBlockAndUpdate(centerBlockPos.offset(x, 0, z), level.getBlockState(centerBlockPos.offset(x, 0, z)).setValue(PART, this.getPartForOffset(x, z)));
+            }
         }
     }
 }
