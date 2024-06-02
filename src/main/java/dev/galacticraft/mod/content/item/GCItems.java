@@ -27,24 +27,34 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCRegistry;
 import dev.galacticraft.mod.content.GCRocketParts;
+import dev.galacticraft.mod.util.TextureUtils;
 import dev.galacticraft.mod.util.Translations;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.DispenserBlock;
+import org.intellij.lang.annotations.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static dev.galacticraft.mod.Constant.MOD_ID;
 
 @SuppressWarnings("unused")
 public class GCItems {
     public static final GCRegistry<Item> ITEMS = new GCRegistry<>(BuiltInRegistries.ITEM);
     public static final List<ItemLike> HIDDEN_ITEMS = new ArrayList<>(1);
+
+    public static final List<CannedFoodItem> CANNED_FOOD_ITEMS = new ArrayList<>();
 
     // === START BLOCKS ===
     // TORCHES
@@ -277,6 +287,7 @@ public class GCItems {
     public static final Item STEEL_POLE = new Item(new Item.Properties());
     public static final Item COPPER_CANISTER = new Item(new Item.Properties());
     public static final Item TIN_CANISTER = ITEMS.register(Constant.Item.TIN_CANISTER, new Item(new Item.Properties()));
+    public static final Item EMPTY_FOOD_CAN = ITEMS.register(Constant.Item.EMPTY_FOOD_CAN, new Item(new Item.Properties()));
     public static final Item THERMAL_CLOTH = new Item(new Item.Properties());
     public static final Item ISOTHERMAL_FABRIC = new Item(new Item.Properties());
     public static final Item ORION_DRIVE = new Item(new Item.Properties());
@@ -292,13 +303,7 @@ public class GCItems {
     public static final Item GROUND_BEEF = ITEMS.register(Constant.Item.GROUND_BEEF, new Item(new Item.Properties().food(GCFoodComponent.GROUND_BEEF)));
     public static final Item BEEF_PATTY = ITEMS.register(Constant.Item.BEEF_PATTY, new Item(new Item.Properties().food(GCFoodComponent.BEEF_PATTY)));
     public static final Item CHEESEBURGER = ITEMS.register(Constant.Item.CHEESEBURGER, new Item(new Item.Properties().food(GCFoodComponent.CHEESEBURGER)));
-    
-    public static final Item CANNED_DEHYDRATED_APPLE = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_APPLE));
-    public static final Item CANNED_DEHYDRATED_CARROT = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_CARROT));
-    public static final Item CANNED_DEHYDRATED_MELON = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_MELON));
-    public static final Item CANNED_DEHYDRATED_POTATO = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_POTATO));
-    public static final Item CANNED_BEEF = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.CANNED_BEEF));
-    
+
     // ROCKET PLATES
     public static final Item TIER_1_HEAVY_DUTY_PLATE = ITEMS.register(Constant.Item.TIER_1_HEAVY_DUTY_PLATE, new Item(new Item.Properties()));
     public static final Item TIER_2_HEAVY_DUTY_PLATE = ITEMS.register(Constant.Item.TIER_2_HEAVY_DUTY_PLATE, new Item(new Item.Properties()));
@@ -418,9 +423,35 @@ public class GCItems {
     public static final Item MOON_BUGGY_SCHEMATIC = new SchematicItem(new Item.Properties());
     public static final Item TIER_3_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties());
     public static final Item ASTRO_MINER_SCHEMATIC = new SchematicItem(new Item.Properties());
+
     
     public static void register() {
         // === START BLOCKS ===
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.APPLE,"canned_dehydrated_apple", "Canned Dehydrated Apple"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.CARROT,"canned_dehydrated_carrot", "Canned Dehydrated Carrot"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.MELON_SLICE, "canned_dehydrated_melon", "Canned Dehydrated Melon"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.POTATO, "canned_dehydrated_potato", "Canned Dehydrated Potato"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan( GCItems.GROUND_BEEF,"canned_beef", "Canned Beef"));
+        //filler items for testing purposes
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.GOLDEN_APPLE,"canned_golden_apple", "Canned Golden Apple"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.ENCHANTED_GOLDEN_APPLE,"canned_enchanted_golden_apple", "Canned Enchanted Golden Apple"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.SPIDER_EYE,"canned_spider_eye", "Canned Spider Eye"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.PUFFERFISH,"canned_pufferfish", "Canned Pufferfish"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.CHORUS_FRUIT,"canned_chorus_fruit", "Canned Chorus Fruit"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.SWEET_BERRIES,"canned_sweet_berries", "Canned Sweet Berries"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.GLOW_BERRIES,"canned_glow_berries", "Canned Glow Berries"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.GOLDEN_CARROT,"canned_golden_carrot", "Canned Golden Carrot"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.BAKED_POTATO,"canned_baked_potato", "Canned Baked Potato"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.POISONOUS_POTATO,"canned_poisonous_potato", "Canned Poisonous Potato"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.DRIED_KELP,"canned_kelp", "Canned Kelp"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.COD,"canned_cod", "Canned Cod"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.SALMON,"canned_salmon", "Canned Salmon"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.TROPICAL_FISH,"canned_tropical_fish", "Canned Tropical Fish"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.BREAD,"canned_bread", "Canned Bread"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.COOKIE,"canned_cookie", "Canned Cookie"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.PUMPKIN_PIE,"canned_pumpkin_pie", "Canned Pumpkin Pie"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.BEETROOT,"canned_beetroot", "Canned Beetroot"));
+        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(GCItems.CHEESE_SLICE,"canned_cheese", "Canned Cheese"));
 
         // MOON NATURAL
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_TURF), MOON_TURF);
@@ -649,12 +680,6 @@ public class GCItems {
         // FOOD
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.MOON_BERRIES), MOON_BERRIES);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CHEESE_CURD), CHEESE_CURD);
-
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_DEHYDRATED_APPLE), CANNED_DEHYDRATED_APPLE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_DEHYDRATED_CARROT), CANNED_DEHYDRATED_CARROT);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_DEHYDRATED_MELON), CANNED_DEHYDRATED_MELON);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_DEHYDRATED_POTATO), CANNED_DEHYDRATED_POTATO);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_BEEF), CANNED_BEEF);
 
         // THROWABLE METEOR CHUNKS
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.THROWABLE_METEOR_CHUNK), THROWABLE_METEOR_CHUNK);

@@ -307,6 +307,7 @@ public interface Constant {
 
     interface Item {
         String ITEM_GROUP = "items";
+        String ITEM_GROUP_CANS = "cans";
         String RAW_SILICON = "raw_silicon";
         String RAW_METEORIC_IRON = "raw_meteoric_iron";
         String METEORIC_IRON_INGOT = "meteoric_iron_ingot";
@@ -357,6 +358,7 @@ public interface Constant {
         String STEEL_POLE = "steel_pole";
         String COPPER_CANISTER = "copper_canister";
         String TIN_CANISTER = "tin_canister";
+        String EMPTY_FOOD_CAN = "empty_food_can";
         String THERMAL_CLOTH = "thermal_cloth";
         String ISOTHERMAL_FABRIC = "isothermal_fabric";
         String ORION_DRIVE = "orion_drive";
@@ -371,12 +373,6 @@ public interface Constant {
         String GROUND_BEEF = "ground_beef";
         String BEEF_PATTY = "beef_patty";
         String CHEESEBURGER = "cheeseburger";
-        //CANNED FOOD
-        String CANNED_DEHYDRATED_APPLE = "canned_dehydrated_apple";
-        String CANNED_DEHYDRATED_CARROT = "canned_dehydrated_carrot";
-        String CANNED_DEHYDRATED_MELON = "canned_dehydrated_melon";
-        String CANNED_DEHYDRATED_POTATO = "canned_dehydrated_potato";
-        String CANNED_BEEF = "canned_beef";
         //ROCKET PARTS
         String TIER_1_HEAVY_DUTY_PLATE = "heavy_plating";
         String TIER_2_HEAVY_DUTY_PLATE = "heavy_plating_t2";

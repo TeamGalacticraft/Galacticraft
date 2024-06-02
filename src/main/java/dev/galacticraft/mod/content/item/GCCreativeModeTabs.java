@@ -164,11 +164,7 @@ public class GCCreativeModeTabs {
                 output.accept(BEEF_PATTY);
                 output.accept(CHEESEBURGER);
 
-                output.accept(CANNED_DEHYDRATED_APPLE);
-                output.accept(CANNED_DEHYDRATED_CARROT);
-                output.accept(CANNED_DEHYDRATED_MELON);
-                output.accept(CANNED_DEHYDRATED_POTATO);
-                output.accept(CANNED_BEEF);
+
                 output.accept(THROWABLE_METEOR_CHUNK);
                 output.accept(HOT_THROWABLE_METEOR_CHUNK);
 
@@ -412,6 +408,15 @@ public class GCCreativeModeTabs {
                 // MACHINES
             }).build();
 
+    //Todo: fix up my bad programming to be translatable
+    public static final CreativeModeTab CANNED_FOOD_GROUP = FabricItemGroup
+            .builder()
+            .icon(() -> new ItemStack(EMPTY_FOOD_CAN))
+            .title(Component.literal("Galacticraft Cans"))
+            .displayItems((parameters, output) -> {
+                output.accept(EMPTY_FOOD_CAN);
+            }).build();
+
     public static final CreativeModeTab MACHINES_GROUP = FabricItemGroup
             .builder()
             .icon(() -> new ItemStack(GCItems.COAL_GENERATOR))
@@ -440,5 +445,6 @@ public class GCCreativeModeTabs {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Item.ITEM_GROUP), ITEMS_GROUP);
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Block.ITEM_GROUP_BLOCKS), BLOCKS_GROUP);
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Block.ITEM_GROUP_MACHINES), MACHINES_GROUP);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Item.ITEM_GROUP_CANS), CANNED_FOOD_GROUP);
     }
 }

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "galacticraft:item/canned_beef"
+    "layer0": "galacticraft:item/canned_food_template"
   }
 }

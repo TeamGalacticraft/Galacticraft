@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod;
 
+import com.sun.jna.platform.win32.DdemlUtil;
 import dev.galacticraft.api.client.tabs.InventoryTabRegistry;
 import dev.galacticraft.machinelib.client.api.model.MachineModelRegistry;
 import dev.galacticraft.mod.client.GCKeyBinds;
@@ -45,6 +46,7 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.block.environment.FallenMeteorBlock;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.events.ClientEventHandler;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
@@ -52,11 +54,13 @@ import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
 import dev.galacticraft.mod.screen.RocketMenu;
+import dev.galacticraft.mod.util.TextureUtils;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
@@ -65,16 +69,49 @@ import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
+import net.fabricmc.fabric.api.event.Event;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.impl.client.rendering.ColorProviderRegistryImpl;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentContents;
+import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
+
+import javax.imageio.ImageIO;
+import javax.swing.event.EventListenerList;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static dev.galacticraft.mod.content.item.GCItems.CANNED_FOOD_ITEMS;
+import static dev.galacticraft.mod.util.TextureUtils.getAverageColor;
 
 @Environment(EnvType.CLIENT)
 public class GalacticraftClient implements ClientModInitializer {
+
+    private boolean colorsInitialized = false;
+
     @Override
     public void onInitializeClient() {
         long startInitTime = System.currentTimeMillis();
@@ -180,8 +217,39 @@ public class GalacticraftClient implements ClientModInitializer {
         LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
 
         });
-
+        //couldn't be bothered finding a better way to get the texture of the items so overrides exists now
+        List<String[]> nameOverride = new ArrayList<>();
+        nameOverride.add(new String[]{"enchanted_golden_apple", "golden_apple"});
         ModelLoadingPlugin.register(GCModelLoader.INSTANCE);
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (!colorsInitialized)
+            {
+                if (client.player != null && client.level != null)
+                {
+                    CANNED_FOOD_ITEMS.forEach(cannedFoodItem -> {
+                        Item cannedItem = cannedFoodItem.getCannedItem();
+                        String nameComponent = cannedItem.toString();
+                        String itemName = extractInsideBrackets(nameComponent);
+                        assert itemName != null;
+                        String[] parts = itemName.split(":");
+                        String namespace = parts[0];
+                        String item = parts[1];
+                        for (String[] element: nameOverride)
+                        {
+                            if (parts[1].equals(element[0]))
+                            {
+                                item = element[1];
+                            }
+                        }
+                        ResourceLocation textureLocation = new ResourceLocation(namespace, "textures/item/" + item + ".png");
+                        int avgColor = getAverageColor(textureLocation);
+                        cannedFoodItem.setColor(avgColor);
+                    });
+                    colorsInitialized = true;
+                }
+            }
+        });
+
 
         Constant.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
@@ -199,5 +267,14 @@ public class GalacticraftClient implements ClientModInitializer {
         GCModelLoader.registerModelType(ObjModel.TYPE);
 
         GCDimensionEffects.register();
+    }
+
+    public static String extractInsideBrackets(String input) {
+        int startIndex = input.indexOf('{');
+        int endIndex = input.indexOf('}');
+        if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+            return input.substring(startIndex + 1, endIndex);
+        }
+        return null;
     }
 }
