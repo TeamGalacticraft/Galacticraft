@@ -11,7 +11,9 @@
     "celestial_handler": "galacticraft:default",
     "day_length": 720000,
     "day_temperature": 105,
-    "description": "planet.galacticraft.venus.description",
+    "description": {
+      "translate": "planet.galacticraft.venus.description"
+    },
     "display": {
       "type": "galacticraft:icon",
       "config": {
@@ -23,9 +25,10 @@
         "width": 16
       }
     },
-    "galaxy": "galacticraft:milky_way",
     "gravity": 0.0375,
-    "name": "planet.galacticraft.venus",
+    "name": {
+      "translate": "planet.galacticraft.venus"
+    },
     "night_temperature": -180,
     "position": {
       "type": "galacticraft:orbital",

@@ -35,7 +35,6 @@ import dev.galacticraft.api.satellite.Satellite;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.star.Star;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
-import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.mod.Constant;
@@ -46,6 +45,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
@@ -84,8 +84,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
     protected int borderEdgeSize = 0;
 
     protected final RegistryAccess manager = Minecraft.getInstance().level.registryAccess();
-    protected final Registry<Galaxy> galaxies = manager.registryOrThrow(AddonRegistries.GALAXY);
-    protected final Registry<CelestialBody<?, ?>> celestialBodies = manager.registryOrThrow(AddonRegistries.CELESTIAL_BODY);
+    protected final Registry<CelestialBody<?, ?>> celestialBodies = this.manager.registryOrThrow(AddonRegistries.CELESTIAL_BODY);
     protected final List<CelestialBody<?, ?>> bodiesToRender = new ArrayList<>();
 
     protected float zoom = 0.0F;
@@ -139,11 +138,11 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
     }
 
     protected boolean isGrandchildBody(@Nullable CelestialBody<?, ?> type) {
-        return type != null && (type.parent(manager) != null && type.parent(manager).parent(manager) != null);
+        return type != null && (type.parent() != null && type.parent().value().parent() != null);
     }
 
     protected boolean isPlanet(@Nullable CelestialBody<?, ?> type) {
-        return type != null && type.parent(manager) != null && type.parent(manager).type() instanceof Star;
+        return type != null && type.parent() != null && type.parent().value().type() instanceof Star;
     }
 
     protected boolean isStar(CelestialBody<?, ?> type) {
@@ -159,11 +158,11 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
         if (celestialBody == null) return Collections.emptyList();
         List<CelestialBody<?, ?>> bodyList = Lists.newArrayList();
 
-        CelestialBody<?, ?> parent = celestialBody.parent(manager);
+        Holder<CelestialBody<?, ?>> parent = celestialBody.parent();
         if (parent == null) return Collections.emptyList();
 
         for (CelestialBody<?, ?> planet : celestialBodies) {
-            if (planet.parent(manager) != null && planet.parent(manager).equals(parent)) {
+            if (planet.parent() != null && planet.parent().equals(parent)) {
                 bodyList.add(planet);
             }
         }
@@ -223,7 +222,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
 
         if (!this.isZoomed()) {
             if (isGrandchildBody(this.selectedBody)) {
-                Vector3f posVec = this.getCelestialBodyPosition(this.selectedBody.parent(manager), delta);
+                Vector3f posVec = this.getCelestialBodyPosition(this.selectedBody.parent().value(), delta);
                 return new Vec2(posVec.x(), posVec.y());
             }
 
@@ -340,7 +339,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
         CelestialBody<?, ?> selectedParent = this.selectedParent;
 
         if (this.selectedBody != null) {
-            selectedParent = this.selectedBody.parent(manager);
+            selectedParent = this.selectedBody.parent().value();
         }
         if (this.selectedBody == null) {
             selectedParent = celestialBodies.get(Constant.id("sol"));
@@ -373,7 +372,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
                     if (bodyClicked != this.selectedBody) {
                         this.lastSelectedBody = this.selectedBody;
                         this.animateGrandchildren = 0;
-                        if (!(isGrandchildBody(this.selectedBody)) || this.selectedBody.parent(manager) != bodyClicked) {
+                        if (!(isGrandchildBody(this.selectedBody)) || this.selectedBody.parent().value() != bodyClicked) {
                             // Only unzoom if the new selected body is not the child of the previously selected body
                             this.selectionState = EnumSelection.UNSELECTED;
                         }
@@ -502,10 +501,10 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
         long time = this.minecraft.level.getGameTime();
         Vector3f cBodyPos = new Vector3f((float)cBody.position().x(time, delta), (float)cBody.position().y(time, delta), 0);
 
-        if (cBody.parent(manager) != null) {
-            cBodyPos.add(this.getCelestialBodyPosition(cBody.parent(manager), delta));
+        if (cBody.parent() != null) {
+            cBodyPos.add(this.getCelestialBodyPosition(cBody.parent().value(), delta));
         } else {
-            cBodyPos.add((float)this.galaxies.get(cBody.galaxy()).position().x(time, delta), (float)this.galaxies.get(cBody.galaxy()).position().y(time, delta), 0);
+            cBodyPos.add((float)cBody.galaxy().value().position().x(time, delta), (float)cBody.galaxy().value().position().y(time, delta), 0);
         }
         return cBodyPos;
     }
@@ -625,8 +624,8 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
 
         for (CelestialBody<?, ?> body : this.bodiesToRender) {
             Vector3f systemOffset = new Vector3f();
-            if (body.parent(manager) != null) {
-                systemOffset = getCelestialBodyPosition(body.parent(manager), delta);
+            if (body.parent() != null) {
+                systemOffset = getCelestialBodyPosition(body.parent().value(), delta);
             }
             if (body.ring().render(body, graphics, count, systemOffset, getAlpha(body), lineScale(body), mouseX, mouseY, delta, RenderSystem::setShader))
                 count++;
@@ -643,7 +642,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
         float alpha = 1.0F;
 
         if (isGrandchildBody(body)) {
-            boolean selected = body == this.selectedBody || (body.parent(manager) == this.selectedBody && this.selectionState != EnumSelection.SELECTED);
+            boolean selected = body == this.selectedBody || (body.parent().value() == this.selectedBody && this.selectionState != EnumSelection.SELECTED);
             boolean ready = this.lastSelectedBody != null || this.ticksSinceSelectionF > 35;
             boolean isSibling = getSiblings(this.selectedBody).contains(body);
             boolean isPossible = (!isSatellite(body) || ((Satellite) body.type()).ownershipData(body.config()).canAccess(Objects.requireNonNull(this.minecraft).player))/* || (this.possibleBodies != null && this.possibleBodies.contains(body))*/;
@@ -655,7 +654,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
         } else {
             boolean isSelected = this.selectedBody == body;
             boolean isChildSelected = isGrandchildBody(this.selectedBody);
-            boolean isOwnChildSelected = isChildSelected && this.selectedBody.parent(manager) == body;
+            boolean isOwnChildSelected = isChildSelected && this.selectedBody.parent().value() == body;
 
             if (!isSelected && !isOwnChildSelected && (this.isZoomed() || isChildSelected)) {
                 if (this.lastSelectedBody != null || isChildSelected) {

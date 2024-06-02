@@ -1,7 +1,9 @@
 {
   "type": "galacticraft:star",
   "config": {
-    "description": "star.galacticraft.sol.description",
+    "description": {
+      "translate": "star.galacticraft.sol.description"
+    },
     "display": {
       "type": "galacticraft:icon",
       "config": {
@@ -16,7 +18,9 @@
     "galaxy": "galacticraft:milky_way",
     "gravity": 28.0,
     "luminance": 1.0,
-    "name": "star.galacticraft.sol",
+    "name": {
+      "translate": "star.galacticraft.sol"
+    },
     "photospheric_composition": {
       "composition": {
         "galacticraft:helium": 248500.0,

@@ -25,30 +25,24 @@ package dev.galacticraft.impl.universe.celestialbody.config;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.gas.GasComposition;
-import dev.galacticraft.api.registry.AddonRegistries;
-import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
 import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
-import dev.galacticraft.impl.codec.MiscCodecs;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
-
-public record StarConfig(@NotNull MutableComponent name, @NotNull MutableComponent description,
-                         @NotNull ResourceKey<Galaxy> galaxy, @NotNull Optional<ResourceKey<CelestialBody<?, ?>>> parent, @NotNull CelestialPosition<?, ?> position,
+public record StarConfig(@NotNull Component name, @NotNull Component description,
+                         @NotNull Holder<Galaxy> galaxy, @NotNull CelestialPosition<?, ?> position,
                          @NotNull CelestialDisplay<?, ?> display, @NotNull CelestialRingDisplay<?, ?> ring, GasComposition photosphericComposition, float gravity,
                          double luminance, int surfaceTemperature) implements CelestialBodyConfig {
     public static final Codec<StarConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            MiscCodecs.TRANSLATABLE_COMPONENT.fieldOf("name").forGetter(StarConfig::name),
-            MiscCodecs.TRANSLATABLE_COMPONENT.fieldOf("description").forGetter(StarConfig::description),
-            ResourceKey.codec(AddonRegistries.GALAXY).fieldOf("galaxy").forGetter(StarConfig::galaxy),
-            ResourceKey.codec(AddonRegistries.CELESTIAL_BODY).optionalFieldOf("parent").forGetter(StarConfig::parent),
+            ComponentSerialization.CODEC.fieldOf("name").forGetter(StarConfig::name),
+            ComponentSerialization.CODEC.fieldOf("description").forGetter(StarConfig::description),
+            Galaxy.CODEC.fieldOf("galaxy").forGetter(StarConfig::galaxy),
             CelestialPosition.CODEC.fieldOf("position").forGetter(StarConfig::position),
             CelestialDisplay.CODEC.fieldOf("display").forGetter(StarConfig::display),
             CelestialRingDisplay.CODEC.fieldOf("ring").forGetter(StarConfig::ring),

@@ -39,7 +39,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.LevelStem;
 
@@ -47,8 +46,8 @@ import java.util.Objects;
 
 public final class SatelliteConfig implements CelestialBodyConfig {
     public static final Codec<SatelliteConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ResourceKey.codec(AddonRegistries.CELESTIAL_BODY).fieldOf("parent").forGetter(SatelliteConfig::parent),
-            ResourceKey.codec(AddonRegistries.GALAXY).fieldOf("galaxy").forGetter(SatelliteConfig::galaxy),
+            CelestialBody.CODEC.fieldOf("parent").forGetter(SatelliteConfig::parent),
+            Galaxy.CODEC.fieldOf("galaxy").forGetter(SatelliteConfig::galaxy),
             CelestialPosition.CODEC.fieldOf("position").forGetter(SatelliteConfig::position),
             CelestialDisplay.CODEC.fieldOf("display").forGetter(SatelliteConfig::display),
             CelestialRingDisplay.CODEC.fieldOf("ring").forGetter(SatelliteConfig::ring),
@@ -61,8 +60,8 @@ public final class SatelliteConfig implements CelestialBodyConfig {
             LevelStem.CODEC.fieldOf("dimension_options").forGetter(SatelliteConfig::dimensionOptions)
     ).apply(instance, SatelliteConfig::new));
 
-    private final ResourceKey<CelestialBody<?, ?>> parent;
-    private final ResourceKey<Galaxy> galaxy;
+    private final Holder<CelestialBody<?, ?>> parent;
+    private final Holder<Galaxy> galaxy;
     private final CelestialPosition<?, ?> position;
     private final CelestialDisplay<?, ?> display;
     private final CelestialRingDisplay<?, ?> ring;
@@ -75,7 +74,7 @@ public final class SatelliteConfig implements CelestialBodyConfig {
     private final LevelStem options;
     private Component customName = Component.empty();
 
-    public SatelliteConfig(ResourceKey<CelestialBody<?, ?>> parent, ResourceKey<Galaxy> galaxy, CelestialPosition<?, ?> position, CelestialDisplay<?, ?> display, CelestialRingDisplay<?, ?> ring, SatelliteOwnershipData ownershipData, ResourceKey<Level> world, Holder<CelestialTeleporter<?, ?>> teleporter, GasComposition atmosphere, float gravity, int accessWeight, LevelStem options) {
+    public SatelliteConfig(Holder<CelestialBody<?, ?>> parent, Holder<Galaxy> galaxy, CelestialPosition<?, ?> position, CelestialDisplay<?, ?> display, CelestialRingDisplay<?, ?> ring, SatelliteOwnershipData ownershipData, ResourceKey<Level> world, Holder<CelestialTeleporter<?, ?>> teleporter, GasComposition atmosphere, float gravity, int accessWeight, LevelStem options) {
         this.parent = parent;
         this.galaxy = galaxy;
         this.position = position;
@@ -90,9 +89,9 @@ public final class SatelliteConfig implements CelestialBodyConfig {
         this.options = options;
     }
 
-    public ResourceKey<CelestialBody<?, ?>> parent() {return parent;}
+    public Holder<CelestialBody<?, ?>> parent() {return parent;}
 
-    public ResourceKey<Galaxy> galaxy() {return galaxy;}
+    public Holder<Galaxy> galaxy() {return galaxy;}
 
     public CelestialPosition<?, ?> position() {return position;}
 

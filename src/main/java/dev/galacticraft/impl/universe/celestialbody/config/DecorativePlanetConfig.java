@@ -25,38 +25,38 @@ package dev.galacticraft.impl.universe.celestialbody.config;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.gas.GasComposition;
-import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.satellite.SatelliteRecipe;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
 import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
-import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
-import dev.galacticraft.impl.codec.MiscCodecs;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public record DecorativePlanetConfig(@NotNull MutableComponent name, @NotNull MutableComponent description,
-                                     @NotNull ResourceKey<Galaxy> galaxy,
-                                     @NotNull ResourceKey<CelestialBody<?, ?>> parent,
+public record DecorativePlanetConfig(@NotNull Component name, @NotNull Component description,
+                                     @NotNull Holder<CelestialBody<?, ?>> parent,
                                      @NotNull CelestialPosition<?, ?> position, @NotNull CelestialDisplay<?, ?> display, @NotNull CelestialRingDisplay<?, ?> ring,
                                      GasComposition atmosphere, float gravity,
-                                     @NotNull Optional<SatelliteRecipe> satelliteRecipe) implements CelestialBodyConfig {
+                                     @Nullable SatelliteRecipe satelliteRecipe) implements CelestialBodyConfig {
     public static final Codec<DecorativePlanetConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            MiscCodecs.TRANSLATABLE_COMPONENT.fieldOf("name").forGetter(DecorativePlanetConfig::name),
-            MiscCodecs.TRANSLATABLE_COMPONENT.fieldOf("description").forGetter(DecorativePlanetConfig::description),
-            ResourceKey.codec(AddonRegistries.GALAXY).fieldOf("galaxy").forGetter(DecorativePlanetConfig::galaxy),
-            ResourceKey.codec(AddonRegistries.CELESTIAL_BODY).fieldOf("parent").forGetter(DecorativePlanetConfig::parent),
+            ComponentSerialization.CODEC.fieldOf("name").forGetter(DecorativePlanetConfig::name),
+            ComponentSerialization.CODEC.fieldOf("description").forGetter(DecorativePlanetConfig::description),
+            CelestialBody.CODEC.fieldOf("parent").forGetter(DecorativePlanetConfig::parent),
             CelestialPosition.CODEC.fieldOf("position").forGetter(DecorativePlanetConfig::position),
             CelestialDisplay.CODEC.fieldOf("display").forGetter(DecorativePlanetConfig::display),
             CelestialRingDisplay.CODEC.fieldOf("ring").forGetter(DecorativePlanetConfig::ring),
             GasComposition.CODEC.fieldOf("atmosphere").forGetter(DecorativePlanetConfig::atmosphere),
             Codec.FLOAT.fieldOf("gravity").forGetter(DecorativePlanetConfig::gravity),
-            SatelliteRecipe.CODEC.optionalFieldOf("satellite_recipe").forGetter(DecorativePlanetConfig::satelliteRecipe)
+            SatelliteRecipe.CODEC.optionalFieldOf("satellite_recipe").forGetter(c -> Optional.ofNullable(c.satelliteRecipe))
     ).apply(instance, DecorativePlanetConfig::new));
+
+    private DecorativePlanetConfig(@NotNull Component name, @NotNull Component description, @NotNull Holder<CelestialBody<?, ?>> parent, @NotNull CelestialPosition<?, ?> position, @NotNull CelestialDisplay<?, ?> display, @NotNull CelestialRingDisplay<?, ?> ring, GasComposition atmosphere, float gravity, @Nullable Optional<SatelliteRecipe> satelliteRecipe) {
+        this(name, description, parent, position, display, ring, atmosphere, gravity, satelliteRecipe.orElse(null));
+    }
 }

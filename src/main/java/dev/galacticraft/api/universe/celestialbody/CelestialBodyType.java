@@ -28,10 +28,8 @@ import dev.galacticraft.api.universe.display.CelestialDisplay;
 import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,11 +62,10 @@ public abstract class CelestialBodyType<C extends CelestialBodyConfig> {
     /**
      * Returns the celestial body's parent, or {@code null} if it does not have one
      *
-     * @param registry the registry to query for the parent
-     * @param config   the celestial body configuration to be queried
+     * @param config the celestial body configuration to be queried
      * @return the celestial body's parent
      */
-    public abstract @Nullable CelestialBody<?, ?> parent(Registry<CelestialBody<?, ?>> registry, C config);
+    public abstract @Nullable Holder<CelestialBody<?, ?>> parent(C config);
 
     /**
      * Returns the celestial body's parent galaxy's id
@@ -76,7 +73,7 @@ public abstract class CelestialBodyType<C extends CelestialBodyConfig> {
      * @param config the celestial body configuration to be queried
      * @return the celestial body's parent galaxy's id
      */
-    public abstract @NotNull ResourceKey<Galaxy> galaxy(C config);
+    public abstract @NotNull Holder<Galaxy> galaxy(C config);
 
     /**
      * Returns the celestial body's position provider
@@ -104,18 +101,6 @@ public abstract class CelestialBodyType<C extends CelestialBodyConfig> {
      * @see CelestialRingDisplay
      */
     public abstract @NotNull CelestialRingDisplay<?, ?> ring(C config);
-
-    /**
-     * Returns the celestial body's parent, or {@code null} if it does not have one
-     *
-     * @param manager the dynamic registry manager to supply the registry
-     * @param config  the celestial body configuration to be queried
-     * @return the celestial body's parent
-     * @see #parent(Registry, CelestialBodyConfig)
-     */
-    public @Nullable CelestialBody<?, ?> parent(RegistryAccess manager, C config) {
-        return this.parent(CelestialBody.getRegistry(manager), config);
-    }
 
     /**
      * Returns the {@link GasComposition atmospheric information} of this celestial body

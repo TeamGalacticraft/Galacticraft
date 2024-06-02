@@ -7,7 +7,9 @@
       "pressure": 3.0E-15,
       "temperature": 23.0
     },
-    "description": "planet.galacticraft.mars.description",
+    "description": {
+      "translate": "planet.galacticraft.mars.description"
+    },
     "display": {
       "type": "galacticraft:icon",
       "config": {
@@ -19,9 +21,10 @@
         "width": 16
       }
     },
-    "galaxy": "galacticraft:milky_way",
     "gravity": 0.166,
-    "name": "planet.galacticraft.mars",
+    "name": {
+      "translate": "planet.galacticraft.mars"
+    },
     "position": {
       "type": "galacticraft:orbital",
       "config": {

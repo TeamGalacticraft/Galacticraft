@@ -52,7 +52,6 @@ import dev.galacticraft.mod.world.biome.GCBiomes;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -79,7 +78,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.OptionalLong;
 
 public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements Satellite<SatelliteConfig>, Tiered<SatelliteConfig> {
@@ -110,8 +108,8 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
     }
 
     @ApiStatus.Internal
-    public static CelestialBody<SatelliteConfig, SatelliteType> registerSatellite(@NotNull MinecraftServer server, @NotNull ServerPlayer player, @NotNull CelestialBody<?, ?> parent, StructureTemplate structure) {
-        ResourceLocation id = new ResourceLocation(Objects.requireNonNull(server.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).getKey(parent)) + "_" + player.getScoreboardName().toLowerCase(Locale.ROOT));
+    public static CelestialBody<SatelliteConfig, SatelliteType> registerSatellite(@NotNull MinecraftServer server, @NotNull ServerPlayer player, Holder.Reference<CelestialBody<?, ?>> parent, StructureTemplate structure) {
+        ResourceLocation id = new ResourceLocation(parent.key().location() + "_" + player.getScoreboardName().toLowerCase(Locale.ROOT));
         DimensionType type = new DimensionType(OptionalLong.empty(), true, false, false, true, 1, false, false, 0, 256, 256, TagKey.create(Registries.BLOCK, Constant.id("infiniburn_space")), Constant.id("space_sky"), 0, new DimensionType.MonsterSettings(false, true, UniformInt.of(0, 7), 0));
         SatelliteChunkGenerator chunkGenerator = new SatelliteChunkGenerator(server.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(GCBiomes.SPACE), structure);
         SatelliteOwnershipData ownershipData = SatelliteOwnershipData.create(player.getUUID(), player.getScoreboardName(), new LinkedList<>(), false);
@@ -126,7 +124,7 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
     }
 
     @ApiStatus.Internal
-    public static CelestialBody<SatelliteConfig, SatelliteType> create(ResourceLocation id, MinecraftServer server, CelestialBody<?, ?> parent, CelestialPosition<?, ?> position, CelestialDisplay<?, ?> display, CelestialRingDisplay<?, ?> ring,
+    public static CelestialBody<SatelliteConfig, SatelliteType> create(ResourceLocation id, MinecraftServer server, Holder.Reference<CelestialBody<?, ?>> parent, CelestialPosition<?, ?> position, CelestialDisplay<?, ?> display, CelestialRingDisplay<?, ?> ring,
                                                                        ChunkGenerator generator, DimensionType type, SatelliteOwnershipData ownershipData, String name) {
         Constant.LOGGER.debug("Attempting to create a world dynamically ({})", id);
 
@@ -134,7 +132,7 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
 
         Holder<CelestialTeleporter<?, ?>> direct = server.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_TELEPORTER).getHolderOrThrow(BuiltinObjects.DIRECT_CELESTIAL_TELEPORTER);
 
-        SatelliteConfig config = new SatelliteConfig(ResourceKey.create(AddonRegistries.CELESTIAL_BODY, server.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).getKey(parent)), parent.galaxy(), position, display, ring, ownershipData, ResourceKey.create(Registries.DIMENSION, id), direct, EMPTY_GAS_COMPOSITION, 0.0f, parent.type() instanceof Tiered<?> ? ((Tiered) parent.type()).accessWeight(parent.config()) : 1, new LevelStem(Holder.direct(type), generator));
+        SatelliteConfig config = new SatelliteConfig(parent, parent.value().galaxy(), position, display, ring, ownershipData, ResourceKey.create(Registries.DIMENSION, id), direct, EMPTY_GAS_COMPOSITION, 0.0f, parent.value().type() instanceof Tiered<?> ? ((Tiered) parent.value().type()).accessWeight(parent.value().config()) : 1, new LevelStem(Holder.direct(type), generator));
         config.customName(Component.translatable(name));
         CelestialBody<SatelliteConfig, SatelliteType> satellite = INSTANCE.configure(config);
         ((SatelliteAccessor) server).galacticraft$addSatellite(id, satellite);
@@ -152,12 +150,12 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
     }
 
     @Override
-    public @Nullable CelestialBody<?, ?> parent(Registry<CelestialBody<?, ?>> registry, SatelliteConfig config) {
-        return registry.get(config.parent());
+    public @Nullable Holder<CelestialBody<?, ?>> parent(SatelliteConfig config) {
+        return config.parent();
     }
 
     @Override
-    public @NotNull ResourceKey<Galaxy> galaxy(SatelliteConfig config) {
+    public @NotNull Holder<Galaxy> galaxy(SatelliteConfig config) {
         return config.galaxy();
     }
 

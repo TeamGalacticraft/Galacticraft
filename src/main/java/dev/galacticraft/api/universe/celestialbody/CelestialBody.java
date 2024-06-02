@@ -106,22 +106,10 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
     /**
      * Returns this celestial body's parent, or {@code null} if it does not have one
      *
-     * @param registry the registry to query for the parent
      * @return this celestial body's parent
      */
-    public @Nullable CelestialBody<?, ?> parent(Registry<CelestialBody<?, ?>> registry) {
-        return this.type().parent(registry, this.config());
-    }
-
-    /**
-     * Returns this celestial body's parent, or {@code null} if it does not have one
-     *
-     * @param manager the dynamic registry manager to supply the registry
-     * @return this celestial body's parent
-     * @see #parent(Registry)
-     */
-    public @Nullable CelestialBody<?, ?> parent(RegistryAccess manager) {
-        return this.type().parent(manager, this.config());
+    public @Nullable Holder<CelestialBody<?, ?>> parent() {
+        return this.type().parent(this.config());
     }
 
     /**
@@ -129,7 +117,7 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
      *
      * @return this celestial body's parent galaxy's id
      */
-    public @NotNull ResourceKey<Galaxy> galaxy() {
+    public @NotNull Holder<Galaxy> galaxy() {
         return this.type().galaxy(this.config());
     }
 

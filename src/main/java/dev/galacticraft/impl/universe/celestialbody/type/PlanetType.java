@@ -35,7 +35,6 @@ import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.impl.universe.celestialbody.config.PlanetConfig;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -56,13 +55,13 @@ public class PlanetType extends CelestialBodyType<PlanetConfig> implements Tiere
     }
 
     @Override
-    public @Nullable CelestialBody<?, ?> parent(Registry<CelestialBody<?, ?>> registry, PlanetConfig config) {
-        return registry.get(config.parent());
+    public @Nullable Holder<CelestialBody<?, ?>> parent(PlanetConfig config) {
+        return config.parent();
     }
 
     @Override
-    public @NotNull ResourceKey<Galaxy> galaxy(PlanetConfig config) {
-        return config.galaxy();
+    public @NotNull Holder<Galaxy> galaxy(PlanetConfig config) {
+        return config.parent().value().galaxy();
     }
 
     @Override
@@ -122,6 +121,6 @@ public class PlanetType extends CelestialBodyType<PlanetConfig> implements Tiere
 
     @Override
     public @Nullable SatelliteRecipe satelliteRecipe(PlanetConfig config) {
-        return config.satelliteRecipe().orElse(null);
+        return config.satelliteRecipe();
     }
 }
