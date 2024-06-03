@@ -29,13 +29,15 @@ import net.minecraft.world.Container;
 import net.minecraft.world.ContainerListener;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.VariantHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class Buggy extends GCVehicle implements ContainerListener, ControllableEntity, VariantHolder<Buggy.BuggyType> {
+public class Buggy extends GCVehicleEntity implements ContainerListener, ControllableEntity, VariantHolder<Buggy.BuggyType> {
     public double speed;
     public float wheelRotationZ;
     public float wheelRotationX;
@@ -63,6 +65,13 @@ public class Buggy extends GCVehicle implements ContainerListener, ControllableE
     public void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown) {
 
     }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        amount++;
+        return true;
+    }
+
 
     @Override
     public boolean canBeCollidedWith() {
@@ -100,5 +109,9 @@ public class Buggy extends GCVehicle implements ContainerListener, ControllableE
 
     public enum BuggyType {
 
+    }
+
+    public Item getDropItem() {
+        return ItemStack.EMPTY.getItem();
     }
 }

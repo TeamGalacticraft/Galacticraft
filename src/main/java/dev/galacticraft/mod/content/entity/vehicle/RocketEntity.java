@@ -72,15 +72,13 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.*;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -94,7 +92,7 @@ import org.joml.Vector3f;
 import java.util.Objects;
 
 @SuppressWarnings("UnstableApiUsage")
-public class RocketEntity extends Entity implements Rocket, IgnoreShift, ControllableEntity {
+public class RocketEntity extends GCVehicleEntity implements Rocket, IgnoreShift, ControllableEntity {
     private static final ResourceLocation NULL_ID = new ResourceLocation("null");
     private static final EntityDataAccessor<LaunchStage> STAGE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.LAUNCH_STAGE);
 
@@ -203,33 +201,10 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
         this.linkedPad = blockPos;
     }
 
-    private boolean projectileDoesDamage (DamageSource source) {
-        Entity sourceEntity = source.getDirectEntity();
-        if (sourceEntity instanceof AbstractHurtingProjectile) {
-            return true;
-        }
-        if (sourceEntity instanceof AbstractArrow arrow) {
-            Arrow newArrow = new Arrow((EntityType<? extends Arrow>) arrow.getType(), level());
-            CompoundTag arrowNbt = new CompoundTag();
-            arrow.addAdditionalSaveData(arrowNbt);
-            newArrow.readAdditionalSaveData(arrowNbt);
-            newArrow.setPos(arrow.position());
-            Vec3 arrowVel = arrow.getDeltaMovement();
-            float bounceFactor = 0.025f;
-            newArrow.setDeltaMovement(-arrowVel.x * bounceFactor, -arrowVel.y * bounceFactor, -arrowVel.z * bounceFactor);
-            level().addFreshEntity(newArrow);
-            arrow.remove(RemovalReason.DISCARDED);
-            this.playSound(SoundEvents.ANVIL_PLACE, 1.0f, 0.7f);
-        }
-        return false;
-    }
-
     @Override
     public boolean hurt(DamageSource source, float amount) {
         if (!this.level().isClientSide && !this.isRemoved()) {
             if (this.isInvulnerableTo(source)) {
-                return false;
-            } else if (source.is(DamageTypeTags.IS_PROJECTILE) && !projectileDoesDamage(source)) {
                 return false;
             }
             this.entityData.set(DAMAGE_WOBBLE_SIDE, -this.entityData.get(DAMAGE_WOBBLE_SIDE));
@@ -327,11 +302,16 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
             RocketData data = RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.engine(), this.upgrade());
             CompoundTag tag = new CompoundTag();
             data.toNbt(tag);
-            var rocket = new ItemStack(GCItems.ROCKET);
+            var rocket = new ItemStack(this.getDropItem());
             rocket.setTag(tag);
             this.spawnAtLocation(rocket);
         }
         this.remove(RemovalReason.KILLED);
+    }
+
+    @Override
+    public Item getDropItem() {
+        return GCItems.ROCKET;
     }
 
     @Override
@@ -362,6 +342,7 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
         return this.tank;
     }
 
+    // why does this exist?
     @Override
     public Entity asEntity() {
         return this;
@@ -385,43 +366,44 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
         this.getPassengers().forEach(this::positionRider);
     }
 
-    @Override
-    protected void reapplyPosition() {
-        super.reapplyPosition();
-        this.getPassengers().forEach(this::positionRider);
-    }
+//    @Override
+//    protected void reapplyPosition() {
+//        super.reapplyPosition();
+//        this.getPassengers().forEach(this::positionRider);
+//    }
 
-    @Override
-    public void lerpTo(double x, double y, double z, float yRot, float xRot, int steps) {
-        this.lerpX = x;
-        this.lerpY = y;
-        this.lerpZ = z;
-        this.lerpYRot = yRot;
-        this.lerpXRot = xRot;
-        this.lerpSteps = 10;
-    }
+//    @Override
+//    public void lerpTo(double x, double y, double z, float yRot, float xRot, int steps) {
+//        this.lerpX = x;
+//        this.lerpY = y;
+//        this.lerpZ = z;
+//        this.lerpYRot = yRot;
+//        this.lerpXRot = xRot;
+//        this.lerpSteps = 10;
+//    }
 
-    private void tickLerp() { // Stolen from the boat class to fix the rocket from bugging out
-        if (this.isControlledByLocalInstance()) {
-            this.lerpSteps = 0;
-            this.syncPacketPositionCodec(this.getX(), this.getY(), this.getZ());
-        }
-
-        if (this.lerpSteps > 0) {
-            double d = this.getX() + (this.lerpX - this.getX()) / (double) this.lerpSteps;
-            double e = this.getY() + (this.lerpY - this.getY()) / (double) this.lerpSteps;
-            double f = this.getZ() + (this.lerpZ - this.getZ()) / (double) this.lerpSteps;
-            double g = Mth.wrapDegrees(this.lerpYRot - (double) this.getYRot());
-            this.setYRot(this.getYRot() + (float) g / (float) this.lerpSteps);
-            this.setXRot(this.getXRot() + (float) (this.lerpXRot - (double) this.getXRot()) / (float) this.lerpSteps);
-            --this.lerpSteps;
-            this.setPos(d, e, f);
-            this.setRot(this.getYRot(), this.getXRot());
-        }
-    }
+//    private void tickLerp() { // Stolen from the boat class to fix the rocket from bugging out
+//        if (this.isControlledByLocalInstance()) {
+//            this.lerpSteps = 0;
+//            this.syncPacketPositionCodec(this.getX(), this.getY(), this.getZ());
+//        }
+//
+//        if (this.lerpSteps > 0) {
+//            double d = this.getX() + (this.lerpX - this.getX()) / (double) this.lerpSteps;
+//            double e = this.getY() + (this.lerpY - this.getY()) / (double) this.lerpSteps;
+//            double f = this.getZ() + (this.lerpZ - this.getZ()) / (double) this.lerpSteps;
+//            double g = Mth.wrapDegrees(this.lerpYRot - (double) this.getYRot());
+//            this.setYRot(this.getYRot() + (float) g / (float) this.lerpSteps);
+//            this.setXRot(this.getXRot() + (float) (this.lerpXRot - (double) this.getXRot()) / (float) this.lerpSteps);
+//            --this.lerpSteps;
+//            this.setPos(d, e, f);
+//            this.setRot(this.getYRot(), this.getXRot());
+//        }
+//    }
 
     @Override
     protected void defineSynchedData() {
+        super.defineSynchedData();
         this.entityData.define(STAGE, LaunchStage.IDLE);
         this.entityData.define(SPEED, 0.0f);
 
@@ -478,7 +460,7 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
         setTimeAsState(getTimeAsState() + 1);
 
         super.tick();
-        tickLerp();
+        //tickLerp();
 
         int particleChance;
 

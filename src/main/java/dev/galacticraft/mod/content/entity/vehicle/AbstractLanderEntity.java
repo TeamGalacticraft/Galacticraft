@@ -23,9 +23,11 @@
 package dev.galacticraft.mod.content.entity.vehicle;
 
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public abstract class AbstractLanderEntity extends GCVehicle {
+public abstract class AbstractLanderEntity extends GCVehicleEntity {
     public AbstractLanderEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
@@ -33,4 +35,8 @@ public abstract class AbstractLanderEntity extends GCVehicle {
     public abstract boolean shouldMove();
 
     public abstract boolean shouldSpawnParticles();
+
+    public Item getDropItem() {
+        return ItemStack.EMPTY.getItem();
+    }
 }
