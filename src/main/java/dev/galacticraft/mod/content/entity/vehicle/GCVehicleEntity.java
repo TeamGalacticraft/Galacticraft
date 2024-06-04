@@ -59,7 +59,6 @@ import org.jetbrains.annotations.NotNull;
  * Note: actually, it turns out that VehicleEntity contains a package-protected (i.e. no modifier) abstract method
  * getDropItem() that a galacticraft vehicle would not be able to implement. That being said, I'm still copying all the
  * methods from VehicleEntity
- *
  * Should contain code common to all GC vehicles (e.g. rockets, cargo rockets, buggies, landers, and astrominers)
  */
 public abstract class GCVehicleEntity extends Entity implements Container, ScalableFuelLevel, HasCustomInventoryScreen, ExtendedScreenHandlerFactory {
@@ -100,7 +99,7 @@ public abstract class GCVehicleEntity extends Entity implements Container, Scala
     protected void defineSynchedData() {
         this.entityData.define(DATA_ID_HURT, 0);
         this.entityData.define(DATA_ID_HURTDIR, 1);
-        this.entityData.define(DATA_ID_DAMAGE, Float.valueOf(0.0f));
+        this.entityData.define(DATA_ID_DAMAGE, 0.0f);
     }
 
     public int getHurtTime() {
@@ -120,11 +119,11 @@ public abstract class GCVehicleEntity extends Entity implements Container, Scala
     }
 
     public float getDamage() {
-        return this.entityData.get(DATA_ID_DAMAGE).floatValue();
+        return this.entityData.get(DATA_ID_DAMAGE);
     }
 
     public void setDamage(float damageWobbleStrength) {
-        this.entityData.set(DATA_ID_DAMAGE, Float.valueOf(damageWobbleStrength));
+        this.entityData.set(DATA_ID_DAMAGE, damageWobbleStrength);
     }
 
     public abstract Item getDropItem();
