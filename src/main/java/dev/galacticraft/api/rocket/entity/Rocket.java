@@ -25,16 +25,13 @@ package dev.galacticraft.api.rocket.entity;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.*;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface Rocket extends RocketData {
+public interface Rocket extends RocketData, RequiresFuel {
     /**
      * Returns the launch stage of this rocket.
      * @return the launch stage of this rocket.
@@ -78,11 +75,6 @@ public interface Rocket extends RocketData {
      * @param exploded whether the damage is self-inflicted (the rocket failed)
      */
     void dropItems(DamageSource source, boolean exploded);
-
-    @Nullable Fluid getFuelTankFluid();
-    long getFuelTankAmount();
-    long getFuelTankCapacity();
-    Storage<FluidVariant> getFuelTank();
 
     Entity asEntity();
 }
