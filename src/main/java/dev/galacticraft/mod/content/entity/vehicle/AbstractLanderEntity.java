@@ -27,7 +27,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public abstract class AbstractLanderEntity extends GCVehicleEntity {
+public abstract class AbstractLanderEntity extends GCPlayerRideableVehicleEntity {
     public AbstractLanderEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
