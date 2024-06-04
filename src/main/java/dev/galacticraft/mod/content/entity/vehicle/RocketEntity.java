@@ -72,7 +72,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -397,7 +399,7 @@ public class RocketEntity extends GCPlayerRideableVehicleEntity implements Rocke
 
     // **************************************** TICK ****************************************
 
-    // TODO: cleanup
+    // TODO: cleanup (the function is 200 lines long)
     @Override
     public void tick() {
         this.noPhysics = false;
@@ -833,5 +835,13 @@ public class RocketEntity extends GCPlayerRideableVehicleEntity implements Rocke
     @Override
     public Entity asEntity() {
         return this;
+    }
+
+    // **************************************** INVENTORY ****************************************
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+        return null;
     }
 }

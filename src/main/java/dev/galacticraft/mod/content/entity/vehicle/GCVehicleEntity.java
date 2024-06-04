@@ -27,14 +27,17 @@ import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -49,6 +52,7 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * More customizable version of {@link net.minecraft.world.entity.vehicle.VehicleEntity}
@@ -270,5 +274,56 @@ public abstract class GCVehicleEntity extends Entity implements Container, Scala
             setPos(lerpedX, lerpedY, lerpedZ);
             setRot(getYRot(), getXRot());
         }
+    }
+
+    // **************************************** INVENTORY ****************************************
+
+    @Override
+    public int getContainerSize() {
+        return this.inventory.size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return this.inventory.isEmpty();
+    }
+
+    @Override
+    public @NotNull ItemStack getItem(int slot) {
+        return this.inventory.get(slot);
+    }
+
+    @Override
+    public @NotNull ItemStack removeItem(int slot, int amount) {
+        return ContainerHelper.removeItem(this.inventory, slot, amount);
+    }
+
+    @Override
+    public @NotNull ItemStack removeItemNoUpdate(int slot) {
+        return ContainerHelper.takeItem(this.inventory, slot);
+    }
+
+    @Override
+    public void clearContent() {
+        this.inventory.clear();
+    }
+
+    @Override
+    public void setItem(int slot, ItemStack stack) {
+        this.inventory.set(slot, stack);
+    }
+
+    @Override
+    public void setChanged() {}
+
+    @Override
+    public void openCustomInventoryScreen(Player player) {
+        player.openMenu(this);
+    }
+
+    @Override
+    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
+        buf.writeBoolean(false);
+        buf.writeVarInt(this.inventory.size());
     }
 }
