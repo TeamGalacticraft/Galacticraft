@@ -22,22 +22,32 @@
 
 package dev.galacticraft.mod.content.entity.vehicle;
 
-import dev.galacticraft.mod.content.entity.ControllableEntity;
+import dev.galacticraft.api.entity.IgnoreShift;
+import dev.galacticraft.api.rocket.entity.PlayerRideable;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerListener;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.HasCustomInventoryScreen;
 import net.minecraft.world.entity.VariantHolder;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
-public class Buggy extends GCVehicleEntity implements ContainerListener, ControllableEntity, VariantHolder<Buggy.BuggyType> {
+public class Buggy extends GCFueledVehicleEntity implements IgnoreShift, PlayerRideable, HasCustomInventoryScreen, ExtendedScreenHandlerFactory, ContainerListener, VariantHolder<Buggy.BuggyType> {
+
+    // **************************************** FIELDS ****************************************
+
     public double speed;
     public float wheelRotationZ;
     public float wheelRotationX;
@@ -47,8 +57,26 @@ public class Buggy extends GCVehicleEntity implements ContainerListener, Control
 
     private NonNullList<ItemStack> stacks = NonNullList.withSize(60, ItemStack.EMPTY);
 
+    // **************************************** CONSTRUCTOR ****************************************
+
     public Buggy(EntityType<?> entityType, Level level) {
         super(entityType, level);
+    }
+
+    // **************************************** DATA ****************************************
+
+    @Override
+    public BuggyType getVariant() {
+        return null;
+    }
+
+    @Override
+    public void setVariant(BuggyType variant) {
+
+    }
+
+    public Item getDropItem() {
+        return ItemStack.EMPTY.getItem();
     }
 
     @Override
@@ -62,16 +90,18 @@ public class Buggy extends GCVehicleEntity implements ContainerListener, Control
     }
 
     @Override
-    public void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown) {
-
+    public boolean shouldIgnoreShiftExit() {
+        return false;
     }
+
+    // **************************************** FUEL ****************************************
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
-        amount++;
-        return true;
+    public int getFuelTankCapacity() {
+        return 100;
     }
 
+    // **************************************** INTERACTION ****************************************
 
     @Override
     public boolean canBeCollidedWith() {
@@ -87,31 +117,44 @@ public class Buggy extends GCVehicleEntity implements ContainerListener, Control
         }
     }
 
+    // **************************************** TICK ****************************************
+
     @Override
     public void tick() {
         super.tick();
     }
 
     @Override
+    public void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown) {
+
+    }
+
+    // **************************************** INVENTORY ****************************************
+
+    @Override
     public void containerChanged(Container sender) {
 
     }
 
-    @Override
-    public void setVariant(BuggyType variant) {
-
-    }
-
-    @Override
-    public BuggyType getVariant() {
+    @Nullable
+    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
         return null;
     }
+
+    @Override
+    public void openCustomInventoryScreen(Player player) {
+
+    }
+
+    @Override
+    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
+
+    }
+
+    // **************************************** MISC ****************************************
 
     public enum BuggyType {
 
     }
 
-    public Item getDropItem() {
-        return ItemStack.EMPTY.getItem();
-    }
 }
