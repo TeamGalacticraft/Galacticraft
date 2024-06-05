@@ -11,9 +11,9 @@ public interface RequiresFuel extends ScalableFuelLevel {
     @Nullable
     Fluid getFuelTankFluid();
 
-    int getFuelTankAmount();
+    long getFuelTankAmount();
 
-    int getFuelTankCapacity();
+    long getFuelTankCapacity();
 
     boolean isTankEmpty();
 

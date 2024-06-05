@@ -17,7 +17,7 @@ public abstract class GCFueledVehicleEntity extends GCVehicleEntity implements R
 
     protected static final EntityDataAccessor<Long> FUEL = SynchedEntityData.defineId(GCVehicleEntity.class, EntityDataSerializers.LONG);
 
-    protected final SingleFluidStorage tank = SingleFluidStorage.withFixedCapacity(FluidUtil.bucketsToDroplets(this.getFuelTankCapacity()), () -> {
+    protected final SingleFluidStorage tank = SingleFluidStorage.withFixedCapacity(FluidUtil.bucketsToDroplets((int) this.getFuelTankCapacity()), () -> {
         this.entityData.set(FUEL, this.getFuelTank().getAmount());
     });
 
@@ -35,8 +35,8 @@ public abstract class GCFueledVehicleEntity extends GCVehicleEntity implements R
     }
 
     @Override
-    public int getFuelTankAmount() {
-        return this.entityData.get(FUEL).intValue();
+    public long getFuelTankAmount() {
+        return this.entityData.get(FUEL);
     }
 
     public boolean isTankEmpty() {

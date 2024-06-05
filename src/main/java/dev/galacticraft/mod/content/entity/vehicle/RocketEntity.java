@@ -279,8 +279,8 @@ public class RocketEntity extends GCFueledVehicleEntity implements Rocket, Ignor
     }
 
     @Override
-    public int getFuelTankCapacity() {
-        return 100;
+    public long getFuelTankCapacity() {
+        return 100L;
     }
 
     // **************************************** INTERACTION ****************************************

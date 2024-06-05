@@ -70,8 +70,8 @@ public abstract class AbstractLanderEntity extends GCFueledVehicleEntity impleme
     // **************************************** FUEL ****************************************
 
     @Override
-    public int getFuelTankCapacity() {
-        return 100;
+    public long getFuelTankCapacity() {
+        return 100L;
     }
 
     // **************************************** INTERACTION ****************************************

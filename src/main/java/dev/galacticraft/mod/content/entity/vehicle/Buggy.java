@@ -97,8 +97,8 @@ public class Buggy extends GCFueledVehicleEntity implements IgnoreShift, PlayerR
     // **************************************** FUEL ****************************************
 
     @Override
-    public int getFuelTankCapacity() {
-        return 100;
+    public long getFuelTankCapacity() {
+        return 100L;
     }
 
     // **************************************** INTERACTION ****************************************
