@@ -23,61 +23,48 @@
 package dev.galacticraft.mod.content.entity.vehicle;
 
 import com.mojang.datafixers.util.Pair;
-import dev.galacticraft.api.entity.IgnoreShift;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.attachments.GCServerPlayer;
 import dev.galacticraft.mod.network.packets.ResetThirdPersonPacket;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
-import dev.galacticraft.mod.content.entity.ControllableEntity;
-import dev.galacticraft.mod.content.entity.ScalableFuelLevel;
 import dev.galacticraft.mod.particle.GCParticleTypes;
-import dev.galacticraft.mod.screen.ParachestMenu;
-import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.fluid.base.SingleFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
-import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.List;
 
-public class LanderEntity extends AbstractLanderEntity implements Container, ScalableFuelLevel, ControllableEntity, HasCustomInventoryScreen, IgnoreShift, ExtendedScreenHandlerFactory {
+public class LanderEntity extends AbstractLanderEntity {
+
+    // **************************************** FIELDS ****************************************
+
     public static final float NO_PARTICLES = 0.0000001F;
-    protected NonNullList<ItemStack> inventory;
-    protected InventoryStorage storage;
-    private final SingleFluidStorage tank = SingleFluidStorage.withFixedCapacity(FluidUtil.bucketsToDroplets(100), () -> {
-    });
     private final float turnFactor = 2.0F;
     private final float angle = 45;
     protected long ticks = 0;
     private double lastDeltaY;
     protected boolean lastOnGround;
+
+    // **************************************** CONSTRUCTOR ****************************************
 
     public LanderEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -88,7 +75,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
 
         GCServerPlayer gcPlayer = GCServerPlayer.get(player);
         this.inventory = NonNullList.withSize(gcPlayer.getRocketStacks().size() + 1, ItemStack.EMPTY);
-        this.storage = InventoryStorage.of(this, null);
+        //this.storage = InventoryStorage.of(this, null);
         this.tank.variant = FluidVariant.of(GCFluids.FUEL);
         this.tank.amount = gcPlayer.getFuel();
 
@@ -100,14 +87,54 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
             }
         }
 
-        moveTo(player.getX(), player.getY(), player.getZ(), 0, 0);
+        this.moveTo(player.getX(), player.getY(), player.getZ(), 0, 0);
+    }
+
+    // **************************************** DATA ****************************************
+
+    @Override
+    public boolean shouldSpawnParticles() {
+        return this.ticks > 40 && getXRot() != NO_PARTICLES;
+    }
+
+    @Override
+    protected Vector3f getPassengerAttachmentPoint(Entity passenger, EntityDimensions dimensions, float scaleFactor) {
+        return new Vector3f(0, 1.5F, 0);
+    }
+
+    @Override
+    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+        return new Vec3(getX(), getY(), getZ());
+    }
+
+
+    public Vec3 getLanderDeltaMovement() {
+        if (this.onGround()) {
+            return Vec3.ZERO;
+        }
+
+        if (this.ticks >= 40 && this.ticks < 45) {
+            this.setDeltaMovement(0, -2.5D, 0);
+        }
+
+        Vec3 delta = getDeltaMovement();
+        return new Vec3(delta.x(), this.ticks < 40 ? 0 : delta.y(), delta.z());
+    }
+
+    @Override
+    public boolean shouldMove() {
+        if (this.ticks < 40) {
+            return false;
+        }
+
+        return !this.onGround();
     }
 
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
-        tank.readNbt(tag);
+        this.tank.readNbt(tag);
         this.inventory = NonNullList.withSize(tag.getInt("size"), ItemStack.EMPTY);
-        this.storage = InventoryStorage.of(this, null);
+        //this.storage = InventoryStorage.of(this, null);
         ContainerHelper.loadAllItems(tag, this.inventory);
 
         this.lastDeltaY = this.getDeltaMovement().y;
@@ -115,7 +142,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
 
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
-        tank.writeNbt(tag);
+        this.tank.writeNbt(tag);
 
         tag.putInt("size", this.inventory.size());
         ContainerHelper.saveAllItems(tag, this.inventory);
@@ -131,22 +158,28 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
         return new Pair<>(new Vec3(this.getX(), this.getY() + 1D + motionY / 2, this.getZ()), new Vec3(x1, y1 + motionY / 2, z1));
     }
 
+    // **************************************** FUEL ****************************************
+
+    // **************************************** INTERACTION ****************************************
+
+    // **************************************** TICK ****************************************
+
     @Override
     public void tick() {
         super.tick();
         this.ticks++;
 
         if (onGround()) {
-            tickOnGround();
+            this.tickOnGround();
         } else {
-            tickInAir();
+            this.tickInAir();
         }
 
-        Level level = level();
+        Level level = this.level();
 
-        setDeltaMovement(getLanderDeltaMovement());
+        this.setDeltaMovement(getLanderDeltaMovement());
 
-        if (shouldSpawnParticles()) {
+        if (this.shouldSpawnParticles()) {
             if (level.isClientSide) {
                 var particlePos = getParticlePosition();
                 final Vec3 posVec = particlePos.getFirst();
@@ -155,10 +188,10 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
             }
         }
 
-        move(MoverType.SELF, getDeltaMovement());
+        this.move(MoverType.SELF, this.getDeltaMovement());
 
-        if (onGround() && !this.lastOnGround) {
-            onGroundHit();
+        if (this.onGround() && !this.lastOnGround) {
+            this.onGroundHit();
         }
 
         if (this.ticks < 40 && this.getY() > 150) {
@@ -182,7 +215,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
             }
         }
 
-        pushEntities();
+        this.pushEntities();
 
         this.xo = getX();
         this.yo = getY();
@@ -199,7 +232,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
         if (!entities.isEmpty()) {
             for (Entity entity : entities) {
                 if (!this.getPassengers().contains(entity)) {
-                    push(entity);
+                    this.push(entity);
                 }
             }
         }
@@ -243,7 +276,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
                 }
                 this.level().explode(this, this.getX(), this.getY(), this.getZ(), 12, true, Level.ExplosionInteraction.MOB);
 
-                discard();
+                this.discard();
             }
         }
     }
@@ -264,162 +297,6 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
         setDeltaMovement(new Vec3(motX / 2.0F, getDeltaMovement().y(), motZ / 2.0F));
     }
 
-    public Vec3 getLanderDeltaMovement() {
-        if (this.onGround()) {
-            return Vec3.ZERO;
-        }
-
-        if (this.ticks >= 40 && this.ticks < 45) {
-            setDeltaMovement(0, -2.5D, 0);
-        }
-
-        Vec3 delta = getDeltaMovement();
-        return new Vec3(delta.x(), this.ticks < 40 ? 0 : delta.y(), delta.z());
-    }
-
-    @Override
-    public boolean isPickable() {
-        return true;
-    }
-
-    @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
-        if (this.level().isClientSide) {
-            if (!this.onGround()) {
-                return InteractionResult.FAIL;
-            }
-
-            if (!this.getPassengers().isEmpty()) {
-                this.ejectPassengers();
-            }
-
-            return InteractionResult.SUCCESS;
-        }
-
-        if (this.getPassengers().isEmpty()) {
-            openCustomInventoryScreen(player);
-            return InteractionResult.SUCCESS;
-        } else if (player instanceof ServerPlayer) {
-            if (!this.onGround()) {
-                return InteractionResult.FAIL;
-            }
-
-            this.ejectPassengers();
-            return InteractionResult.SUCCESS;
-        } else {
-            return InteractionResult.SUCCESS;
-        }
-    }
-
-    @Override
-    public int getScaledFuelLevel(int scale) {
-        final double fuelLevel = this.tank.getResource().isBlank() ? 0 : this.tank.getAmount();
-
-        return (int) (fuelLevel * scale / tank.getCapacity());
-    }
-
-    @Override
-    public void openCustomInventoryScreen(Player player) {
-        player.openMenu(this);
-    }
-
-    @Override
-    public int getContainerSize() {
-        return this.inventory.size();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return this.inventory.isEmpty();
-    }
-
-    @Override
-    public ItemStack getItem(int slot) {
-        return this.inventory.get(slot);
-    }
-
-    @Override
-    public ItemStack removeItem(int slot, int amount) {
-        return ContainerHelper.removeItem(this.inventory, slot, amount);
-    }
-
-    @Override
-    public ItemStack removeItemNoUpdate(int slot) {
-        return ContainerHelper.takeItem(this.inventory, slot);
-    }
-
-    @Override
-    public void setItem(int slot, ItemStack stack) {
-        this.inventory.set(slot, stack);
-    }
-
-    @Override
-    public void setChanged() {
-
-    }
-
-    @Override
-    public boolean stillValid(Player player) {
-        return this.position().closerThan(player.position(), 8.0);
-    }
-
-    @Override
-    public void clearContent() {
-        this.inventory.clear();
-    }
-
-    @Override
-    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
-        buf.writeBoolean(false);
-        buf.writeVarInt(this.inventory.size());
-    }
-
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new ParachestMenu(containerId, inventory, this);
-    }
-
-    @Override
-    public float getDamageMultiplier() {
-        return 5;
-    }
-
-    @Override
-    public float getMaxDamage() {
-        return 100;
-    }
-
-    @Override
-    public void move(MoverType movementType, Vec3 movement) {
-        if (shouldMove())
-            super.move(movementType, movement);
-    }
-
-    @Override
-    public boolean shouldMove() {
-        if (this.ticks < 40) {
-            return false;
-        }
-
-        return !this.onGround();
-    }
-
-    @Override
-    public boolean shouldSpawnParticles() {
-        return this.ticks > 40 && getXRot() != NO_PARTICLES;
-    }
-
-    @Override
-    protected Vector3f getPassengerAttachmentPoint(Entity passenger, EntityDimensions dimensions, float scaleFactor) {
-        return new Vector3f(0, 1.5F, 0);
-    }
-
-    @Override
-    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
-        return new Vec3(getX(), getY(), getZ());
-    }
-
     @Override
     public void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown) {
         if (!onGround()) {
@@ -433,7 +310,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
                 setYRot(getYRot() + 0.5F * turnFactor);
 
             if (jumping) {
-                var deltaM = getDeltaMovement();;
+                var deltaM = getDeltaMovement();
                 setDeltaMovement(deltaM.x(), Math.min(deltaM.y() + 0.03F, getY() < level().getHeight(Heightmap.Types.WORLD_SURFACE, getBlockX(), getBlockZ()) + 35 ? -0.15 : -1.0), deltaM.z());
             }
 
@@ -444,8 +321,4 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
         }
     }
 
-    @Override
-    public boolean shouldIgnoreShiftExit() {
-        return !onGround();
-    }
 }
