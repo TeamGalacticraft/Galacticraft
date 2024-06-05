@@ -22,10 +22,12 @@
 
 package dev.galacticraft.mod.content.entity.vehicle;
 
+import dev.galacticraft.api.entity.IgnoreShift;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
+import dev.galacticraft.api.rocket.entity.PlayerRideable;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
@@ -89,7 +91,7 @@ import org.joml.Vector3f;
 import java.util.Objects;
 
 @SuppressWarnings("UnstableApiUsage")
-public class RocketEntity extends GCPlayerRideableVehicleEntity implements Rocket {
+public class RocketEntity extends GCFueledVehicleEntity implements Rocket, IgnoreShift, PlayerRideable {
 
     // **************************************** FIELDS ****************************************
 
@@ -276,21 +278,17 @@ public class RocketEntity extends GCPlayerRideableVehicleEntity implements Rocke
         }
     }
 
-    public boolean isTankEmpty() {
-        return this.getFuelTank().getAmount() <= 0 || this.getFuelTank().getResource().isBlank();
-    }
-
-    @Override
-    public @Nullable Fluid getFuelTankFluid() {
-        return this.tank.isResourceBlank() ? null : this.tank.variant.getFluid();
-    }
-
     @Override
     public int getFuelTankCapacity() {
         return 100;
     }
 
     // **************************************** INTERACTION ****************************************
+
+//    @Override
+//    public boolean isPickable(){
+//        return true;
+//    }
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
@@ -843,5 +841,16 @@ public class RocketEntity extends GCPlayerRideableVehicleEntity implements Rocke
     @Override
     public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
         return null;
+    }
+
+    @Override
+    public void openCustomInventoryScreen(Player player) {
+        player.openMenu(this);
+    }
+
+    @Override
+    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
+        buf.writeBoolean(false);
+        buf.writeVarInt(this.inventory.size());
     }
 }
