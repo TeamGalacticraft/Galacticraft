@@ -25,13 +25,15 @@ package dev.galacticraft.api.rocket.entity;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.*;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.HasCustomInventoryScreen;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface Rocket extends RocketData, RequiresFuel {
+public interface Rocket extends RocketData, RequiresFuel, HasCustomInventoryScreen, ExtendedScreenHandlerFactory {
     /**
      * Returns the launch stage of this rocket.
      * @return the launch stage of this rocket.
