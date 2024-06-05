@@ -22,17 +22,13 @@
 
 package dev.galacticraft.mod.content.entity.vehicle;
 
-import dev.galacticraft.mod.content.entity.ScalableFuelLevel;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
@@ -41,7 +37,6 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.HasCustomInventoryScreen;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
@@ -61,7 +56,7 @@ import org.jetbrains.annotations.NotNull;
  * methods from VehicleEntity
  * Should contain code common to all GC vehicles (e.g. rockets, cargo rockets, buggies, landers, and astrominers)
  */
-public abstract class GCVehicleEntity extends Entity implements Container, ScalableFuelLevel, HasCustomInventoryScreen, ExtendedScreenHandlerFactory {
+public abstract class GCVehicleEntity extends Entity implements Container {
 
     // **************************************** FIELDS ****************************************
 
@@ -80,7 +75,7 @@ public abstract class GCVehicleEntity extends Entity implements Container, Scala
     private double lerpXRot;
 
     protected NonNullList<ItemStack> inventory;
-    protected InventoryStorage storage;
+    //protected InventoryStorage storage;
 
     // **************************************** CONSTRUCTOR ****************************************
 
@@ -139,11 +134,6 @@ public abstract class GCVehicleEntity extends Entity implements Container, Scala
     // consider deleting
     boolean shouldSourceDestroy(DamageSource source) {
         return false;
-    }
-
-    @Override
-    public boolean stillValid(Player player) {
-        return this.position().closerThan(player.position(), 8.0);
     }
 
     public float getSpeed() {
@@ -275,7 +265,7 @@ public abstract class GCVehicleEntity extends Entity implements Container, Scala
         }
     }
 
-    // **************************************** INVENTORY ****************************************
+    // **************************************** CONTAINER ****************************************
 
     @Override
     public int getContainerSize() {
@@ -290,6 +280,11 @@ public abstract class GCVehicleEntity extends Entity implements Container, Scala
     @Override
     public @NotNull ItemStack getItem(int slot) {
         return this.inventory.get(slot);
+    }
+
+    @Override
+    public void setItem(int slot, ItemStack stack) {
+        this.inventory.set(slot, stack);
     }
 
     @Override
@@ -308,21 +303,11 @@ public abstract class GCVehicleEntity extends Entity implements Container, Scala
     }
 
     @Override
-    public void setItem(int slot, ItemStack stack) {
-        this.inventory.set(slot, stack);
-    }
-
-    @Override
     public void setChanged() {}
 
     @Override
-    public void openCustomInventoryScreen(Player player) {
-        player.openMenu(this);
+    public boolean stillValid(Player player) {
+        return this.position().closerThan(player.position(), 8.0);
     }
 
-    @Override
-    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
-        buf.writeBoolean(false);
-        buf.writeVarInt(this.inventory.size());
-    }
 }
