@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.content.entity.vehicle;
 
 import dev.galacticraft.api.entity.IgnoreShift;
-import dev.galacticraft.api.rocket.entity.PlayerRideable;
+import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.screen.ParachestMenu;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.network.FriendlyByteBuf;
@@ -42,7 +42,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class AbstractLanderEntity extends GCFueledVehicleEntity implements IgnoreShift, PlayerRideable, HasCustomInventoryScreen, ExtendedScreenHandlerFactory {
+public abstract class AbstractLanderEntity extends GCFueledVehicleEntity implements IgnoreShift, ControllableEntity, HasCustomInventoryScreen, ExtendedScreenHandlerFactory {
 
     // **************************************** FIELDS ****************************************
 

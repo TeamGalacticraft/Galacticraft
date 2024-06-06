@@ -27,7 +27,6 @@ import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
-import dev.galacticraft.api.rocket.entity.PlayerRideable;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
@@ -40,6 +39,7 @@ import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
+import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.events.RocketEvents;
@@ -91,7 +91,7 @@ import org.joml.Vector3f;
 import java.util.Objects;
 
 @SuppressWarnings("UnstableApiUsage")
-public class RocketEntity extends GCFueledVehicleEntity implements Rocket, IgnoreShift, PlayerRideable {
+public class RocketEntity extends GCFueledVehicleEntity implements Rocket, IgnoreShift, ControllableEntity {
 
     // **************************************** FIELDS ****************************************
 

@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.content.entity.vehicle;
 
 import dev.galacticraft.api.entity.IgnoreShift;
-import dev.galacticraft.api.rocket.entity.PlayerRideable;
+import dev.galacticraft.mod.content.entity.ControllableEntity;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -44,7 +44,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public class Buggy extends GCFueledVehicleEntity implements IgnoreShift, PlayerRideable, HasCustomInventoryScreen, ExtendedScreenHandlerFactory, ContainerListener, VariantHolder<Buggy.BuggyType> {
+public class Buggy extends GCFueledVehicleEntity implements IgnoreShift, ControllableEntity, HasCustomInventoryScreen, ExtendedScreenHandlerFactory, ContainerListener, VariantHolder<Buggy.BuggyType> {
 
     // **************************************** FIELDS ****************************************
 
