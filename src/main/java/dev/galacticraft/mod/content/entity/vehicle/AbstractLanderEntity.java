@@ -58,6 +58,16 @@ public abstract class AbstractLanderEntity extends GCFueledVehicleEntity impleme
         return ItemStack.EMPTY.getItem();
     }
 
+    @Override
+    public float getDamageMultiplier() {
+        return 5;
+    }
+
+    @Override
+    public float getMaxDamage() {
+        return 100;
+    }
+
     public abstract boolean shouldMove();
 
     public abstract boolean shouldSpawnParticles();
@@ -77,13 +87,8 @@ public abstract class AbstractLanderEntity extends GCFueledVehicleEntity impleme
     // **************************************** INTERACTION ****************************************
 
     @Override
-    public float getDamageMultiplier() {
-        return 5;
-    }
-
-    @Override
-    public float getMaxDamage() {
-        return 100;
+    public boolean isPickable() { // Required to interact with the entity
+        return true;
     }
 
     @Override
