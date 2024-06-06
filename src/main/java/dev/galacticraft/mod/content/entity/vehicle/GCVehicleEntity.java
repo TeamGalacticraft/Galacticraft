@@ -31,7 +31,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.damagesource.DamageSource;
@@ -66,13 +65,6 @@ public abstract class GCVehicleEntity extends Entity implements Container {
     protected static final EntityDataAccessor<Integer> DATA_ID_HURT = SynchedEntityData.defineId(GCVehicleEntity.class, EntityDataSerializers.INT);
     protected static final EntityDataAccessor<Integer> DATA_ID_HURTDIR = SynchedEntityData.defineId(GCVehicleEntity.class, EntityDataSerializers.INT);
     protected static final EntityDataAccessor<Float> DATA_ID_DAMAGE = SynchedEntityData.defineId(GCVehicleEntity.class, EntityDataSerializers.FLOAT);
-
-    private int lerpSteps;
-    private double lerpX;
-    private double lerpY;
-    private double lerpZ;
-    private double lerpYRot;
-    private double lerpXRot;
 
     protected NonNullList<ItemStack> inventory;
     //protected InventoryStorage storage;
@@ -219,8 +211,6 @@ public abstract class GCVehicleEntity extends Entity implements Container {
     public void tick() {
         super.tick();
 
-        tickLerp();
-
         if (getHurtTime() > 0) {
             setHurtTime(getHurtTime() - 1);
         }
@@ -234,35 +224,6 @@ public abstract class GCVehicleEntity extends Entity implements Container {
     protected void reapplyPosition() {
         super.reapplyPosition();
         this.getPassengers().forEach(this::positionRider);
-    }
-
-    @Override
-    public void lerpTo(double x, double y, double z, float yaw, float pitch, int interpolationSteps) {
-        this.lerpX = x;
-        this.lerpY = y;
-        this.lerpZ = z;
-        this.lerpYRot = yaw;
-        this.lerpXRot = pitch;
-        this.lerpSteps = 10;
-    }
-
-    private void tickLerp() { // Stolen from the boat class to fix the rocket from bugging out
-        if (this.isControlledByLocalInstance()) {
-            this.lerpSteps = 0;
-            this.syncPacketPositionCodec(this.getX(), this.getY(), this.getZ());
-        }
-
-        if (this.lerpSteps > 0) {
-            double lerpedX = this.getX() + (this.lerpX - getX()) / (double) this.lerpSteps;
-            double lerpedY = this.getY() + (this.lerpY - getY()) / (double) this.lerpSteps;
-            double lerpedZ = this.getZ() + (this.lerpZ - getZ()) / (double) this.lerpSteps;
-            double g = Mth.wrapDegrees(this.lerpYRot - (double) this.getYRot());
-            setYRot(getYRot() + (float) g / (float) this.lerpSteps);
-            setXRot(getXRot() + (float) (this.lerpXRot - (double) getXRot()) / (float) this.lerpSteps);
-            --this.lerpSteps;
-            setPos(lerpedX, lerpedY, lerpedZ);
-            setRot(getYRot(), getXRot());
-        }
     }
 
     // **************************************** CONTAINER ****************************************

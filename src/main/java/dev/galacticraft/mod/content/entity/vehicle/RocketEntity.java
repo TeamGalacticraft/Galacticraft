@@ -118,6 +118,13 @@ public class RocketEntity extends GCFueledVehicleEntity implements Rocket, Ignor
     private float timeSinceLaunch;
     private long ticksSinceJump = 0;
 
+    private int lerpSteps;
+    private double lerpX;
+    private double lerpY;
+    private double lerpZ;
+    private double lerpYRot;
+    private double lerpXRot;
+
     // **************************************** CONSTRUCTOR ****************************************
 
     public RocketEntity(EntityType<?> entityType, Level level) {
@@ -404,6 +411,7 @@ public class RocketEntity extends GCFueledVehicleEntity implements Rocket, Ignor
         setTimeAsState(getTimeAsState() + 1);
 
         super.tick();
+        tickLerp();
 
         int particleChance;
 
@@ -595,6 +603,35 @@ public class RocketEntity extends GCFueledVehicleEntity implements Rocket, Ignor
                     GCTriggers.LAUNCH_ROCKET.trigger(player);
                 }
             }
+        }
+    }
+
+    @Override
+    public void lerpTo(double x, double y, double z, float yaw, float pitch, int interpolationSteps) {
+        this.lerpX = x;
+        this.lerpY = y;
+        this.lerpZ = z;
+        this.lerpYRot = yaw;
+        this.lerpXRot = pitch;
+        this.lerpSteps = 10;
+    }
+
+    private void tickLerp() { // Stolen from the boat class to fix the rocket from bugging out
+        if (this.isControlledByLocalInstance()) {
+            this.lerpSteps = 0;
+            this.syncPacketPositionCodec(this.getX(), this.getY(), this.getZ());
+        }
+
+        if (this.lerpSteps > 0) {
+            double lerpedX = this.getX() + (this.lerpX - getX()) / (double) this.lerpSteps;
+            double lerpedY = this.getY() + (this.lerpY - getY()) / (double) this.lerpSteps;
+            double lerpedZ = this.getZ() + (this.lerpZ - getZ()) / (double) this.lerpSteps;
+            double g = Mth.wrapDegrees(this.lerpYRot - (double) this.getYRot());
+            setYRot(getYRot() + (float) g / (float) this.lerpSteps);
+            setXRot(getXRot() + (float) (this.lerpXRot - (double) getXRot()) / (float) this.lerpSteps);
+            --this.lerpSteps;
+            setPos(lerpedX, lerpedY, lerpedZ);
+            setRot(getYRot(), getXRot());
         }
     }
 
