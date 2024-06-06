@@ -66,7 +66,7 @@ public abstract class GCVehicleEntity extends Entity implements Container {
     protected static final EntityDataAccessor<Integer> DATA_ID_HURTDIR = SynchedEntityData.defineId(GCVehicleEntity.class, EntityDataSerializers.INT);
     protected static final EntityDataAccessor<Float> DATA_ID_DAMAGE = SynchedEntityData.defineId(GCVehicleEntity.class, EntityDataSerializers.FLOAT);
 
-    protected NonNullList<ItemStack> inventory;
+    protected NonNullList<ItemStack> inventory = NonNullList.withSize(0, ItemStack.EMPTY);;
     //protected InventoryStorage storage;
 
     // **************************************** CONSTRUCTOR ****************************************
