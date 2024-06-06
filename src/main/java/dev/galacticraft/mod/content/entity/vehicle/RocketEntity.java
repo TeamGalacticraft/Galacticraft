@@ -81,7 +81,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -292,10 +291,10 @@ public class RocketEntity extends GCFueledVehicleEntity implements Rocket, Ignor
 
     // **************************************** INTERACTION ****************************************
 
-//    @Override
-//    public boolean isPickable(){
-//        return true;
-//    }
+    @Override
+    public boolean isPickable() { // Required to interact with the entity
+        return true;
+    }
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
