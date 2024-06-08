@@ -344,6 +344,7 @@ public class GCCreativeModeTabs {
                 output.accept(SEALABLE_ALUMINUM_WIRE);
                 output.accept(HEAVY_SEALABLE_ALUMINUM_WIRE);
                 output.accept(GLASS_FLUID_PIPE);
+                output.accept(FUELING_PAD);
                 output.accept(ROCKET_LAUNCH_PAD);
 
                 for (DyeColor color : DyeColor.values()) {

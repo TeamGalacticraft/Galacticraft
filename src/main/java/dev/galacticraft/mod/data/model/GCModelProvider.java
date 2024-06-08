@@ -29,7 +29,7 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.decoration.GratingBlock;
 import dev.galacticraft.mod.content.block.environment.CavernousVines;
 import dev.galacticraft.mod.content.block.special.ParaChestBlock;
-import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
+import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
@@ -131,7 +131,8 @@ public class GCModelProvider extends FabricModelProvider {
         this.createGlassFluidPipeAndWalkway(generator);
         generator.createTrivialCube(GCBlocks.SEALABLE_ALUMINUM_WIRE);
         generator.createTrivialCube(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE);
-        this.createRocketLaunchPadBlock(generator);
+        createLaunchPadBlock(GCBlocks.FUELING_PAD, generator);
+        createLaunchPadBlock(GCBlocks.ROCKET_LAUNCH_PAD, generator);
         generator.createNonTemplateModelBlock(GCBlocks.ROCKET_WORKBENCH);
         generator.createNonTemplateModelBlock(GCBlocks.FALLEN_METEOR);
 
@@ -534,26 +535,25 @@ public class GCModelProvider extends FabricModelProvider {
         generators.blockStateOutput.accept(MultiVariantGenerator.multiVariant(cheese).with(BlockModelGenerators.createBooleanModelDispatch(BlockStateProperties.LIT, litCheeseCake, cheeseCake)));
     }
 
-    private void createRocketLaunchPadBlock(BlockModelGenerators generator) {
-        var block = GCBlocks.ROCKET_LAUNCH_PAD;
-        var centerModel = ModelLocationUtils.getModelLocation(block, "_center");
-        var corner = GCModelTemplates.ROCKET_LAUNCH_PAD_PART.createWithSuffix(block, "_corner", rocketLaunchPadPart(block, "_corner"), generator.modelOutput);
-        var side = GCModelTemplates.ROCKET_LAUNCH_PAD_PART.createWithSuffix(block, "_side", rocketLaunchPadPart(block, "_side"), generator.modelOutput);
+    private void createLaunchPadBlock(Block pad, BlockModelGenerators generator) {
+        var centerModel = ModelLocationUtils.getModelLocation(pad, "_center");
+        var corner = GCModelTemplates.ROCKET_LAUNCH_PAD_PART.createWithSuffix(pad, "_corner", rocketLaunchPadPart(pad, "_corner"), generator.modelOutput);
+        var side = GCModelTemplates.ROCKET_LAUNCH_PAD_PART.createWithSuffix(pad, "_side", rocketLaunchPadPart(pad, "_side"), generator.modelOutput);
         var defaultModel = Variant.variant().with(VariantProperties.MODEL, centerModel);
 
-        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(RocketLaunchPadBlock.PART)
-                .select(RocketLaunchPadBlock.Part.NONE, defaultModel)
-                .select(RocketLaunchPadBlock.Part.CENTER, defaultModel)
-                .select(RocketLaunchPadBlock.Part.NORTH_WEST, Variant.variant().with(VariantProperties.MODEL, corner))
-                .select(RocketLaunchPadBlock.Part.NORTH_EAST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90).with(VariantProperties.MODEL, corner))
-                .select(RocketLaunchPadBlock.Part.SOUTH_WEST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270).with(VariantProperties.MODEL, corner))
-                .select(RocketLaunchPadBlock.Part.SOUTH_EAST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180).with(VariantProperties.MODEL, corner))
-                .select(RocketLaunchPadBlock.Part.NORTH, Variant.variant().with(VariantProperties.MODEL, side))
-                .select(RocketLaunchPadBlock.Part.WEST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270).with(VariantProperties.MODEL, side))
-                .select(RocketLaunchPadBlock.Part.SOUTH, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180).with(VariantProperties.MODEL, side))
-                .select(RocketLaunchPadBlock.Part.EAST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90).with(VariantProperties.MODEL, side))
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(pad).with(PropertyDispatch.property(AbstractLaunchPad.PART)
+                .select(AbstractLaunchPad.Part.NONE, defaultModel)
+                .select(AbstractLaunchPad.Part.CENTER, defaultModel)
+                .select(AbstractLaunchPad.Part.NORTH_WEST, Variant.variant().with(VariantProperties.MODEL, corner))
+                .select(AbstractLaunchPad.Part.NORTH_EAST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90).with(VariantProperties.MODEL, corner))
+                .select(AbstractLaunchPad.Part.SOUTH_WEST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270).with(VariantProperties.MODEL, corner))
+                .select(AbstractLaunchPad.Part.SOUTH_EAST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180).with(VariantProperties.MODEL, corner))
+                .select(AbstractLaunchPad.Part.NORTH, Variant.variant().with(VariantProperties.MODEL, side))
+                .select(AbstractLaunchPad.Part.WEST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270).with(VariantProperties.MODEL, side))
+                .select(AbstractLaunchPad.Part.SOUTH, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180).with(VariantProperties.MODEL, side))
+                .select(AbstractLaunchPad.Part.EAST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90).with(VariantProperties.MODEL, side))
         ));
-        generator.delegateItemModel(block, centerModel);
+        generator.delegateItemModel(pad, centerModel);
     }
 
     private void createCavernousVines(BlockModelGenerators generator) {

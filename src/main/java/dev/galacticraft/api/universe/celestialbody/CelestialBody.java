@@ -23,6 +23,7 @@
 package dev.galacticraft.api.universe.celestialbody;
 
 import com.mojang.serialization.Codec;
+import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import dev.galacticraft.api.gas.GasComposition;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.BuiltInAddonRegistries;
@@ -36,6 +37,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -81,6 +85,15 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
                 return Optional.of((CelestialBody<C, T>) body);
         }
         return Optional.empty();
+    }
+
+    public static double getGravity(Entity entity) {
+        if (entity instanceof LivingEntity living) {
+            AttributeInstance attribute = living.getAttribute(GcApiEntityAttributes.LOCAL_GRAVITY_LEVEL);
+            if (attribute != null && attribute.getValue() > 0)
+                return attribute.getValue() * 0.08d;
+        }
+        return CelestialBody.getByDimension(entity.level()).map(celestialBodyType -> celestialBodyType.gravity() * 0.08d).orElse(0.08);
     }
 
     /**

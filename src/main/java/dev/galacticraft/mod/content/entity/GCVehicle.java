@@ -184,15 +184,8 @@ public abstract class GCVehicle extends Entity {
         }
 
         if (this.lerpSteps > 0) {
-            double lerpedX = getX() + (this.lerpX - getX()) / (double) this.lerpSteps;
-            double lerpedY = getY() + (this.lerpY - getY()) / (double) this.lerpSteps;
-            double lerpedZ = getZ() + (this.lerpZ - getZ()) / (double) this.lerpSteps;
-            double g = Mth.wrapDegrees(this.lerpYRot - (double) this.getYRot());
-            setYRot(getYRot() + (float) g / (float) this.lerpSteps);
-            setXRot(getXRot() + (float) (this.lerpXRot - (double) getXRot()) / (float) this.lerpSteps);
+            lerpPositionAndRotationStep(this.lerpSteps, this.lerpX, this.lerpY, this.lerpZ, this.lerpYRot, this.lerpXRot);
             --this.lerpSteps;
-            setPos(lerpedX, lerpedY, lerpedZ);
-            setRot(getYRot(), getXRot());
         }
     }
 

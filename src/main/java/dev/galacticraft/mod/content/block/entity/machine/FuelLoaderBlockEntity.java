@@ -22,15 +22,15 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
-import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
+import dev.galacticraft.mod.api.entity.Dockable;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
-import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
+import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
+import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlockEntity;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.FuelLoaderMenu;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -54,7 +54,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     public static final int FUEL_INPUT_SLOT = 1;
     public static final int FUEL_TANK = 0;
     private BlockPos connectionPos = BlockPos.ZERO;
-    public Rocket linkedRocket = null;
+    public Dockable linkedRocket = null;
     private Direction check = null;
 
     public FuelLoaderBlockEntity(BlockPos pos, BlockState state) {
@@ -92,18 +92,18 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
         if (this.check != null) {
             BlockPos launchPad = this.worldPosition.relative(this.check);
             if (this.level.getBlockState(launchPad).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD) {
-                launchPad = launchPad.offset(RocketLaunchPadBlock.partToCenterPos(level.getBlockState(launchPad).getValue(RocketLaunchPadBlock.PART)));
-                if (this.level.getBlockState(launchPad).getBlock() instanceof RocketLaunchPadBlock
-                        && this.level.getBlockState(launchPad).getValue(RocketLaunchPadBlock.PART) == RocketLaunchPadBlock.Part.CENTER
-                        && this.level.getBlockEntity(launchPad) instanceof RocketLaunchPadBlockEntity) {
+                launchPad = launchPad.offset(AbstractLaunchPad.partToCenterPos(level.getBlockState(launchPad).getValue(AbstractLaunchPad.PART)));
+                if (this.level.getBlockState(launchPad).getBlock() instanceof AbstractLaunchPad
+                        && this.level.getBlockState(launchPad).getValue(AbstractLaunchPad.PART) == AbstractLaunchPad.Part.CENTER
+                        && this.level.getBlockEntity(launchPad) instanceof LaunchPadBlockEntity) {
                     this.connectionPos = launchPad;
                 }
             }
             this.check = null;
         }
 
-        if (this.level.isLoaded(this.connectionPos) && this.level.getBlockEntity(this.connectionPos) instanceof RocketLaunchPadBlockEntity launchPad) {
-            this.linkedRocket = launchPad.getRocket();
+        if (this.level.isLoaded(this.connectionPos) && this.level.getBlockEntity(this.connectionPos) instanceof LaunchPadBlockEntity launchPad) {
+            this.linkedRocket = launchPad.getDockedEntity();
         } else {
             this.linkedRocket = null;
         }

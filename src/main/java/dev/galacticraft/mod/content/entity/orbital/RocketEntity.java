@@ -33,13 +33,13 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyType;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.api.block.entity.FuelDock;
 import dev.galacticraft.mod.attachments.GCServerPlayer;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
-import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
-import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
+import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
+import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlockEntity;
 import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -118,7 +118,7 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
     public static final EntityDataAccessor<Long> FUEL = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.LONG);
     private final boolean debugMode = false && FabricLoader.getInstance().isDevelopmentEnvironment();
 
-    private BlockPos linkedPad = BlockPos.ZERO;
+    private FuelDock linkedPad = null;
     private final SingleFluidStorage tank = SingleFluidStorage.withFixedCapacity(FluidUtil.bucketsToDroplets(100), () -> {
         this.entityData.set(FUEL, getTank().getAmount());
     });
@@ -146,6 +146,13 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
     @Override
     protected boolean canAddPassenger(Entity passenger) {
         return this.getPassengers().isEmpty();
+    }
+
+    @Override
+    public LivingEntity getControllingPassenger() {
+        if (getLaunchStage() == LaunchStage.LAUNCHED)
+            return getFirstPassenger() instanceof LivingEntity livingEntity ? livingEntity : super.getControllingPassenger();
+        return null;
     }
 
     @Override
@@ -195,12 +202,7 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
 
     @Override
     public @NotNull BlockPos getLinkedPad() {
-        return linkedPad;
-    }
-
-    @Override
-    public void setLinkedPad(@NotNull BlockPos blockPos) {
-        this.linkedPad = blockPos;
+        return linkedPad.getDockPos();
     }
 
     @Override
@@ -232,12 +234,8 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
     @Override
     public void remove(RemovalReason reason) {
         super.remove(reason);
-        if (this.linkedPad != null && reason == RemovalReason.KILLED || reason == RemovalReason.DISCARDED) {
-            BlockEntity blockEntity = this.level().getBlockEntity(this.linkedPad);
-            if (blockEntity instanceof RocketLaunchPadBlockEntity pad) {
-                pad.setLinkedRocket(null);
-            }
-
+        if (this.linkedPad != null && (reason == RemovalReason.KILLED || reason == RemovalReason.DISCARDED)) {
+            this.linkedPad.setDockedEntity(null);
         }
     }
 
@@ -290,7 +288,17 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
     }
 
     @Override
-    public void onBaseDestroyed() {
+    public void setPad(FuelDock pad) {
+        this.linkedPad = pad;
+    }
+
+    @Override
+    public FuelDock getLandingPad() {
+        return this.linkedPad;
+    }
+
+    @Override
+    public void onPadDestroyed() {
         RocketData data = RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.engine(), this.upgrade());
         CompoundTag tag = new CompoundTag();
         data.toNbt(tag);
@@ -298,6 +306,16 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
         rocket.setTag(tag);
         this.spawnAtLocation(rocket);
         this.remove(RemovalReason.DISCARDED);
+    }
+
+    @Override
+    public boolean isDockValid(FuelDock dock) {
+        return false;
+    }
+
+    @Override
+    public boolean inFlight() {
+        return false;
     }
 
     @Override
@@ -529,7 +547,7 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
                         for (int x = -1; x <= 1; x++) {
                             for (int z = -1; z <= 1; z++) {
                                 if (level().getBlockState(getLinkedPad().offset(x, 0, z)).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD
-                                        && level().getBlockState(getLinkedPad().offset(x, 0, z)).getValue(RocketLaunchPadBlock.PART) != RocketLaunchPadBlock.Part.NONE) {
+                                        && level().getBlockState(getLinkedPad().offset(x, 0, z)).getValue(AbstractLaunchPad.PART) != AbstractLaunchPad.Part.NONE) {
                                     level().setBlock(getLinkedPad().offset(x, 0, z), Blocks.AIR.defaultBlockState(), Block.UPDATE_NONE);
                                 }
                             }
@@ -667,7 +685,7 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
 //            double y1 = 2 * Math.sin((this.getXRot() - 90) / Constant.RADIANS_TO_DEGREES) * this.getSpeed();
 
             if (this.getLaunchStage() == LaunchStage.FAILED && this.linkedPad != null) {
-                double modifier = this.getY() - this.linkedPad.getY();
+                double modifier = this.getY() - this.linkedPad.getDockPos().getY();
                 modifier = Math.min(Math.max(modifier, 120.0), 300.0);
                 x1 *= modifier / 100.0D;
                 y1 *= modifier / 100.0D;
@@ -758,7 +776,9 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
             setSpeed(tag.getFloat("Speed"));
         }
 
-        this.linkedPad = new BlockPos(tag.getInt("lX"), tag.getInt("lY"), tag.getInt("lZ"));
+        BlockEntity be = this.level().getBlockEntity(new BlockPos(tag.getInt("lX"), tag.getInt("lY"), tag.getInt("lZ")));
+        if (be instanceof FuelDock pad)
+            this.linkedPad = pad;
     }
 
     @Override
@@ -784,9 +804,9 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
         tag.putDouble("Speed", this.getSpeed());
         tag.putInt("Color", this.color());
 
-        tag.putInt("lX", linkedPad.getX());
-        tag.putInt("lY", linkedPad.getY());
-        tag.putInt("lZ", linkedPad.getZ());
+        tag.putInt("lX", linkedPad.getDockPos().getX());
+        tag.putInt("lY", linkedPad.getDockPos().getY());
+        tag.putInt("lZ", linkedPad.getDockPos().getZ());
     }
 
     @Override

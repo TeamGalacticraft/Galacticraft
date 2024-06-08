@@ -297,6 +297,14 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(Items.IRON_BLOCK), has(Items.IRON_BLOCK))
                 .save(output);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.FUELING_PAD, 9)
+                .define('C', GCItems.COMPRESSED_STEEL)
+                .define('I', Items.IRON_BLOCK)
+                .pattern("CCC")
+                .pattern("III")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
+                .save(output);
+
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_FAN)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('W', GCItems.BASIC_WAFER)

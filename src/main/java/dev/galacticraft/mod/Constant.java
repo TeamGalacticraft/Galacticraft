@@ -235,7 +235,7 @@ public interface Constant {
         String GAS_LIQUEFIER = "gas_liquefier";
 
         // Pad Blocks
-        String BUGGY_FUELING_PAD = "buggy_fueling";
+        String FUELING_PAD = "fueling_pad";
         String ROCKET_LAUNCH_PAD = "rocket_launch_pad";
         String FUEL_LOADER = "fuel_loader";
         String CARGO_LOADER = "cargo_loader";
@@ -447,6 +447,7 @@ public interface Constant {
         String ISOTHERMAL_PADDING_LEGGINGS = "isothermal_padding_leggings";
         String ISOTHERMAL_PADDING_BOOTS = "isothermal_padding_boots";
 
+        String BUGGY = "buggy";
         String ROCKET = "rocket";
 
         String TIER_2_ROCKET_SCHEMATIC = "tier_2_rocket_schematic";

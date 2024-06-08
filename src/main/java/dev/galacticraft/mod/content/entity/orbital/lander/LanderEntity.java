@@ -27,11 +27,11 @@ import dev.galacticraft.api.entity.IgnoreShift;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.attachments.GCServerPlayer;
-import dev.galacticraft.mod.network.packets.ResetThirdPersonPacket;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.content.entity.ScalableFuelLevel;
+import dev.galacticraft.mod.network.packets.ResetThirdPersonPacket;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.screen.ParachestMenu;
 import dev.galacticraft.mod.util.FluidUtil;
@@ -280,6 +280,13 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
     @Override
     public boolean isPickable() {
         return true;
+    }
+
+    @Override
+    public LivingEntity getControllingPassenger() {
+        if (!onGround())
+            return getFirstPassenger() instanceof LivingEntity livingEntity ? livingEntity : super.getControllingPassenger();
+        return null;
     }
 
     @Override
