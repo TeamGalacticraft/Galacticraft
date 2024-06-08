@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.client;
 
 import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
+import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
@@ -43,6 +44,10 @@ public class GCKeyBinds {
             if (client.screen == null) {
                 while (OPEN_CELESTIAL_SCREEN.consumeClick()) {
                     client.setScreen(new CelestialSelectionScreen(true, null, false, null));
+                }
+            } else if (client.player.getVehicle() instanceof RocketEntity rocket) {
+                while (OPEN_ROCKET_INVENTORY.consumeClick()) {
+                    rocket.openCustomInventoryScreen(client.player);
                 }
             }
         }

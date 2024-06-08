@@ -46,6 +46,8 @@ import dev.galacticraft.mod.events.RocketEvents;
 import dev.galacticraft.mod.network.packets.RocketSpawnPacket;
 import dev.galacticraft.mod.particle.EntityParticleOption;
 import dev.galacticraft.mod.particle.GCParticleTypes;
+import dev.galacticraft.mod.screen.ParachestMenu;
+import dev.galacticraft.mod.screen.RocketMenu;
 import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -128,6 +130,7 @@ public class RocketEntity extends GCFueledVehicleEntity implements Rocket, Ignor
 
     public RocketEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
+        this.inventory = NonNullList.withSize(54, ItemStack.EMPTY);
     }
 
     // **************************************** DATA ****************************************
@@ -875,8 +878,9 @@ public class RocketEntity extends GCFueledVehicleEntity implements Rocket, Ignor
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-        return null;
+    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        //return new RocketMenu(containerId, inventory, player, this);
+        return new ParachestMenu(containerId, inventory, this);
     }
 
     @Override
