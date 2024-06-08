@@ -475,6 +475,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                             gcPlayer.setRocketData(this);
                             gcPlayer.setLaunchpadStack(new ItemStack(GCBlocks.ROCKET_LAUNCH_PAD, 9));
                         }
+                        this.linkedPad.setDockedEntity(null);
                         for (int x = -1; x <= 1; x++) {
                             for (int z = -1; z <= 1; z++) {
                                 if (level().getBlockState(getLinkedPad().offset(x, 0, z)).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD

@@ -94,7 +94,7 @@ public abstract class GCVehicle extends Entity {
         return 40.0F;
     }
 
-    boolean shouldSourceDestroy(DamageSource source) {
+    protected boolean shouldSourceDestroy(DamageSource source) {
         return false;
     }
 
