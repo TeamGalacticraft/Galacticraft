@@ -177,7 +177,7 @@ public abstract class GCVehicle extends Entity {
         this.lerpSteps = 10;
     }
 
-    private void tickLerp() { // Stolen from the boat class to fix the rocket from bugging out
+    protected void tickLerp() { // Stolen from the boat class to fix the rocket from bugging out
         if (this.isControlledByLocalInstance()) {
             this.lerpSteps = 0;
             this.syncPacketPositionCodec(getX(), getY(), getZ());

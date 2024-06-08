@@ -20,18 +20,25 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity.orbital.lander;
+package dev.galacticraft.mod.content.entity.orbital;
 
-import dev.galacticraft.mod.content.entity.orbital.AdvancedVehicle;
+import dev.galacticraft.mod.content.entity.GCVehicle;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import org.joml.Quaternionf;
 
-public abstract class AbstractLanderEntity extends AdvancedVehicle {
-    public AbstractLanderEntity(EntityType<?> entityType, Level level) {
+/**
+ * A entity that's rotation is represented via a quaternion.
+ */
+public abstract class AdvancedVehicle extends GCVehicle {
+
+    protected Quaternionf rotation;
+
+    public AdvancedVehicle(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
 
-    public abstract boolean shouldMove();
-
-    public abstract boolean shouldSpawnParticles();
+    public Quaternionf getRotation() {
+        return rotation;
+    }
 }

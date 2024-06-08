@@ -39,7 +39,6 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
-import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlockEntity;
 import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -94,17 +93,13 @@ import org.joml.Vector3f;
 import java.util.Objects;
 
 @SuppressWarnings("UnstableApiUsage")
-public class RocketEntity extends Entity implements Rocket, IgnoreShift, ControllableEntity {
+public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift, ControllableEntity {
     private static final ResourceLocation NULL_ID = new ResourceLocation("null");
     private static final EntityDataAccessor<LaunchStage> STAGE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.LAUNCH_STAGE);
 
     private static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
 
     private static final EntityDataAccessor<Integer> TIME_AS_STATE = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
-
-    public static final EntityDataAccessor<Integer> DAMAGE_WOBBLE_TICKS = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> DAMAGE_WOBBLE_SIDE = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Float> DAMAGE_WOBBLE_STRENGTH = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.FLOAT);
 
     public static final EntityDataAccessor<Float> SPEED = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.FLOAT);
 
@@ -124,12 +119,6 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
     });
     private int timeBeforeLaunch;
     private float timeSinceLaunch;
-    private int lerpSteps;
-    private double lerpX;
-    private double lerpY;
-    private double lerpZ;
-    private double lerpYRot;
-    private double lerpXRot;
 
     public RocketEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -203,32 +192,6 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
     @Override
     public @NotNull BlockPos getLinkedPad() {
         return linkedPad.getDockPos();
-    }
-
-    @Override
-    public boolean hurt(DamageSource source, float amount) {
-        if (!this.level().isClientSide && !this.isRemoved()) {
-            if (this.isInvulnerableTo(source)) {
-                return false;
-            } else {
-                this.entityData.set(DAMAGE_WOBBLE_SIDE, -this.entityData.get(DAMAGE_WOBBLE_SIDE));
-                this.entityData.set(DAMAGE_WOBBLE_TICKS, 10);
-                this.entityData.set(DAMAGE_WOBBLE_STRENGTH, this.entityData.get(DAMAGE_WOBBLE_STRENGTH) + amount * 10.0F);
-                boolean creative = source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().instabuild;
-                if (creative || this.entityData.get(DAMAGE_WOBBLE_STRENGTH) > 40.0F) {
-                    this.ejectPassengers();
-                    if (creative && !this.hasCustomName()) {
-                        this.remove(RemovalReason.DISCARDED);
-                    } else {
-                        this.dropItems(source, false);
-                    }
-                }
-
-                return true;
-            }
-        } else {
-            return true;
-        }
     }
 
     @Override
@@ -389,45 +352,14 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
     }
 
     @Override
-    public void lerpTo(double x, double y, double z, float yRot, float xRot, int steps) {
-        this.lerpX = x;
-        this.lerpY = y;
-        this.lerpZ = z;
-        this.lerpYRot = yRot;
-        this.lerpXRot = xRot;
-        this.lerpSteps = 10;
-    }
-
-    private void tickLerp() { // Stolen from the boat class to fix the rocket from bugging out
-        if (this.isControlledByLocalInstance()) {
-            this.lerpSteps = 0;
-            this.syncPacketPositionCodec(this.getX(), this.getY(), this.getZ());
-        }
-
-        if (this.lerpSteps > 0) {
-            double d = this.getX() + (this.lerpX - this.getX()) / (double) this.lerpSteps;
-            double e = this.getY() + (this.lerpY - this.getY()) / (double) this.lerpSteps;
-            double f = this.getZ() + (this.lerpZ - this.getZ()) / (double) this.lerpSteps;
-            double g = Mth.wrapDegrees(this.lerpYRot - (double) this.getYRot());
-            this.setYRot(this.getYRot() + (float) g / (float) this.lerpSteps);
-            this.setXRot(this.getXRot() + (float) (this.lerpXRot - (double) this.getXRot()) / (float) this.lerpSteps);
-            --this.lerpSteps;
-            this.setPos(d, e, f);
-            this.setRot(this.getYRot(), this.getXRot());
-        }
-    }
-
-    @Override
     protected void defineSynchedData() {
+        super.defineSynchedData();
         this.entityData.define(STAGE, LaunchStage.IDLE);
         this.entityData.define(SPEED, 0.0f);
 
         this.entityData.define(COLOR, -1);
 
         this.entityData.define(TIME_AS_STATE, 0);
-        this.entityData.define(DAMAGE_WOBBLE_TICKS, 0);
-        this.entityData.define(DAMAGE_WOBBLE_SIDE, 0);
-        this.entityData.define(DAMAGE_WOBBLE_STRENGTH, 0.0F);
 
         this.entityData.define(ROCKET_CONE, NULL_ID);
         this.entityData.define(ROCKET_BODY, NULL_ID);
@@ -475,7 +407,6 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
         setTimeAsState(getTimeAsState() + 1);
 
         super.tick();
-        tickLerp();
 
         int particleChance;
 
