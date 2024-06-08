@@ -111,8 +111,6 @@ public class RocketEntity extends GCFueledVehicleEntity implements Rocket, Ignor
     public static final EntityDataAccessor<ResourceLocation> ROCKET_ENGINE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
     public static final EntityDataAccessor<ResourceLocation> ROCKET_UPGRADE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
 
-    private final boolean debugMode = false && FabricLoader.getInstance().isDevelopmentEnvironment();
-
     private BlockPos linkedPad = BlockPos.ZERO;
 
     private int timeBeforeLaunch;
@@ -338,7 +336,7 @@ public class RocketEntity extends GCFueledVehicleEntity implements Rocket, Ignor
         if (!this.getPassengers().isEmpty() && ticksSinceJump > 10) {
             if (this.getFirstPassenger() instanceof ServerPlayer) {
                 if (getLaunchStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
-                    if (!isTankEmpty() || debugMode) {
+                    if (!isTankEmpty()) {
                         this.timeBeforeLaunch = getPreLaunchWait();
                         this.setLaunchStage(this.getLaunchStage().next());
                         if (getLaunchStage() == LaunchStage.WARNING) {
@@ -375,13 +373,13 @@ public class RocketEntity extends GCFueledVehicleEntity implements Rocket, Ignor
     }
 
     @Override
-    public InteractionResult interactAt(Player player, Vec3 vec3d, InteractionHand hand) {
+    public @NotNull InteractionResult interactAt(Player player, Vec3 vec3d, InteractionHand hand) {
         player.startRiding(this);
         return InteractionResult.SUCCESS;
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
+    public @NotNull InteractionResult interact(Player player, InteractionHand hand) {
         if (this.getPassengers().isEmpty()) {
             player.startRiding(this);
             return InteractionResult.SUCCESS;
@@ -390,12 +388,12 @@ public class RocketEntity extends GCFueledVehicleEntity implements Rocket, Ignor
     }
 
     @Override
-    protected Vector3f getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float scale) {
+    protected @NotNull Vector3f getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float scale) {
         return new Vector3f(0F, 1.5F, 0F);
     }
 
     @Override
-    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+    public @NotNull Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
         return new Vec3(getX(), getY(), getZ() + 1f);
     }
 
@@ -462,7 +460,7 @@ public class RocketEntity extends GCFueledVehicleEntity implements Rocket, Ignor
             Entity passenger = getFirstPassenger();
             if (getLaunchStage() == LaunchStage.IGNITED) {
                 timeBeforeLaunch--;
-                if (isTankEmpty() && !debugMode) {
+                if (isTankEmpty()) {
                     this.setLaunchStage(LaunchStage.IDLE);
 
                     if (passenger instanceof ServerPlayer player) {
@@ -499,7 +497,7 @@ public class RocketEntity extends GCFueledVehicleEntity implements Rocket, Ignor
                     this.setSpeed(0.0f);
                 }
             } else if (getLaunchStage() == LaunchStage.LAUNCHED) {
-                if (!debugMode && (isTankEmpty() || !this.getFuelTank().getResource().getFluid().is(GCTags.FUEL)) && FabricLoader.getInstance().isDevelopmentEnvironment()) {
+                if (isTankEmpty() || !this.getFuelTank().getResource().getFluid().is(GCTags.FUEL) && FabricLoader.getInstance().isDevelopmentEnvironment()) {
                     this.setLaunchStage(LaunchStage.FAILED);
                 } else {
                     try (Transaction t = Transaction.openOuter()) {
@@ -598,7 +596,7 @@ public class RocketEntity extends GCFueledVehicleEntity implements Rocket, Ignor
         }
 
         if (getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
-            if (getPassengers().size() >= 1) { // When the screen changes to the
+            if (!getPassengers().isEmpty()) { // When the screen changes to the
                 // map, the player is not riding
                 // the rocket anymore.
                 if (getPassengers().get(0) instanceof ServerPlayer player) {
