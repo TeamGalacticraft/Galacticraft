@@ -33,7 +33,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class ParachestScreen extends AbstractContainerScreen<ParachestMenu> {
-    private static ResourceLocation[] parachestTexture = new ResourceLocation[4];
+    private static final ResourceLocation[] parachestTexture = new ResourceLocation[4];
 
     static {
         for (int i = 0; i < 4; i++) {

@@ -33,6 +33,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
 public class RocketInventoryScreen extends AbstractContainerScreen<RocketMenu> {
+
     public RocketInventoryScreen(RocketMenu abstractContainerMenu, Inventory inventory, Component component) {
         super(abstractContainerMenu, inventory, component);
     }
