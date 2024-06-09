@@ -33,7 +33,7 @@ import net.minecraft.world.item.ItemStack;
 public class RocketMenu extends AbstractContainerMenu {
     public final Player player;
     public final RocketEntity rocket;
-    protected RocketMenu(int syncId, Inventory playerInventory, FriendlyByteBuf buf) {
+    public RocketMenu(int syncId, Inventory playerInventory, FriendlyByteBuf buf) {
         this(syncId, playerInventory, playerInventory.player, (RocketEntity) playerInventory.player.level().getEntity(buf.readInt()));
     }
 
@@ -42,6 +42,7 @@ public class RocketMenu extends AbstractContainerMenu {
 
         this.player = player;
         this.rocket = rocket;
+        this.rocket.startOpen(playerInventory.player);
 
         // Player main inv
         for (int slotY = 0; slotY < 3; ++slotY) {
@@ -54,6 +55,8 @@ public class RocketMenu extends AbstractContainerMenu {
         for (int slotY = 0; slotY < 9; ++slotY) {
             this.addSlot(new Slot(playerInventory, slotY, 8 + slotY * 18, 108));
         }
+
+        this.addSlot(new Slot(this.rocket, this.rocket.getContainerSize() - 3, 125, 24));
     }
 
     @Override

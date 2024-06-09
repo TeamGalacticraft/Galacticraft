@@ -32,24 +32,40 @@ import org.lwjgl.glfw.GLFW;
 
 public class GCKeyBinds {
     public static final KeyMapping OPEN_CELESTIAL_SCREEN = new KeyMapping(Translations.Keybindings.OPEN_CELESTIAL_SCREEN, GLFW.GLFW_KEY_M, KeyMapping.CATEGORY_MISC);
-    public static final KeyMapping OPEN_ROCKET_INVENTORY = new KeyMapping(Translations.Keybindings.ROCKET_INVENTORY, GLFW.GLFW_KEY_G, KeyMapping.CATEGORY_INVENTORY);
+    //public static final KeyMapping OPEN_ROCKET_INVENTORY = new KeyMapping(Translations.Keybindings.ROCKET_INVENTORY, GLFW.GLFW_KEY_G, KeyMapping.CATEGORY_INVENTORY);
 
     public static void register() {
         KeyBindingHelper.registerKeyBinding(OPEN_CELESTIAL_SCREEN);
-        KeyBindingHelper.registerKeyBinding(OPEN_ROCKET_INVENTORY);
+        //KeyBindingHelper.registerKeyBinding(OPEN_ROCKET_INVENTORY);
     }
 
     public static void handleKeybinds(Minecraft client) {
         if (client.level != null && client.player != null) {
-            if (client.screen == null) {
-                while (OPEN_CELESTIAL_SCREEN.consumeClick()) {
+            while (OPEN_CELESTIAL_SCREEN.consumeClick()) {
+                if (client.screen == null) {
                     client.setScreen(new CelestialSelectionScreen(true, null, false, null));
                 }
-            } else if (client.player.getVehicle() instanceof RocketEntity rocket) {
-                while (OPEN_ROCKET_INVENTORY.consumeClick()) {
-                    rocket.openCustomInventoryScreen(client.player);
-                }
             }
+//            while (OPEN_ROCKET_INVENTORY.consumeClick()) {
+//                if (client.player.getVehicle() instanceof RocketEntity rocket) {
+//                    rocket.openCustomInventoryScreen(client.player);
+//                }
+//            }
+//            if (client.screen == null) {
+//                while (OPEN_CELESTIAL_SCREEN.consumeClick()) {
+//                    client.setScreen(new CelestialSelectionScreen(true, null, false, null));
+//                }
+//            }
+//            if (client.player.getVehicle() instanceof RocketEntity rocket) {
+//                while (OPEN_ROCKET_INVENTORY.consumeClick()) {
+//                    rocket.openCustomInventoryScreen(client.player);
+//                }
+//            }
+//            if (OPEN_CELESTIAL_SCREEN.consumeClick() && client.screen == null) {
+//                client.setScreen(new CelestialSelectionScreen(true, null, false, null));
+//            } else if (OPEN_ROCKET_INVENTORY.consumeClick() && client.player.getVehicle() instanceof RocketEntity rocket) {
+//                rocket.openCustomInventoryScreen(client.player);
+//            }
         }
     }
 }

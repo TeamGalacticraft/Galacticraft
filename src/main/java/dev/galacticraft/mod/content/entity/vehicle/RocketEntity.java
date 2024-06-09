@@ -877,8 +877,8 @@ public class RocketEntity extends GCFueledVehicleEntity implements Rocket, Ignor
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        //return new RocketMenu(containerId, inventory, player, this);
-        return new ParachestMenu(containerId, inventory, this);
+        return new RocketMenu(containerId, inventory, player, this);
+        //return new ParachestMenu(containerId, inventory, this);
     }
 
     @Override
