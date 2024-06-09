@@ -93,31 +93,15 @@ public abstract class AbstractLanderEntity extends GCFueledVehicleEntity impleme
 
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
-        if (this.level().isClientSide) {
-            if (!this.onGround()) {
-                return InteractionResult.FAIL;
-            }
-
-            if (!this.getPassengers().isEmpty()) {
-                this.ejectPassengers();
-            }
-
-            return InteractionResult.SUCCESS;
+        if (!this.onGround()) {
+            return InteractionResult.FAIL;
         }
-
         if (this.getPassengers().isEmpty()) {
-            openCustomInventoryScreen(player);
-            return InteractionResult.SUCCESS;
-        } else if (player instanceof ServerPlayer) {
-            if (!this.onGround()) {
-                return InteractionResult.FAIL;
-            }
-
-            this.ejectPassengers();
-            return InteractionResult.SUCCESS;
+            this.openCustomInventoryScreen(player);
         } else {
-            return InteractionResult.SUCCESS;
+            this.ejectPassengers();
         }
+        return InteractionResult.SUCCESS;
     }
 
     // **************************************** TICK ****************************************
