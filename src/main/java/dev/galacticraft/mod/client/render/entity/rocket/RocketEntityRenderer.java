@@ -60,15 +60,15 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         matrices.mulPose(Axis.YN.rotationDegrees(yRot));
         matrices.translate(0, 0.25D, 0);
 
-        float wobbleTicks = (float) entity.getEntityData().get(RocketEntity.DAMAGE_WOBBLE_TICKS) - partialTick;
-        float wobbleStrength = entity.getEntityData().get(RocketEntity.DAMAGE_WOBBLE_STRENGTH) - partialTick;
+        float wobbleTicks = (float) entity.getHurtTime() - partialTick;
+        float wobbleStrength = entity.getDamage() - partialTick;
 
         if (wobbleStrength < 0.0F) {
             wobbleStrength = 0.0F;
         }
 
         if (wobbleTicks > 0.0F) {
-            matrices.mulPose(Axis.XP.rotationDegrees(Mth.sin(wobbleTicks) * wobbleTicks * wobbleStrength / 10.0F * (float) entity.getEntityData().get(RocketEntity.DAMAGE_WOBBLE_SIDE)));
+            matrices.mulPose(Axis.XP.rotationDegrees(Mth.sin(wobbleTicks) * wobbleTicks * wobbleStrength / 10.0F * (float) entity.getHurtDir()));
         }
 
 //        RenderSystem.setShaderTexture(0, getTextureLocation(entity));

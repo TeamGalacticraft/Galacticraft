@@ -11,7 +11,9 @@
     "celestial_handler": "galacticraft:default",
     "day_length": 192000,
     "day_temperature": 105,
-    "description": "planet.galacticraft.moon.description",
+    "description": {
+      "translate": "planet.galacticraft.moon.description"
+    },
     "display": {
       "type": "galacticraft:icon",
       "config": {
@@ -23,9 +25,10 @@
         "width": 8
       }
     },
-    "galaxy": "galacticraft:milky_way",
     "gravity": 0.166,
-    "name": "planet.galacticraft.moon",
+    "name": {
+      "translate": "planet.galacticraft.moon"
+    },
     "night_temperature": -180,
     "position": {
       "type": "galacticraft:orbital",

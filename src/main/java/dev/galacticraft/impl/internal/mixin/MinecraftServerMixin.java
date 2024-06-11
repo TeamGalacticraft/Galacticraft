@@ -23,6 +23,8 @@
 package dev.galacticraft.impl.internal.mixin;
 
 import com.google.common.collect.ImmutableMap;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.DataResult;
 import dev.galacticraft.api.accessor.SatelliteAccessor;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.dynamicdimensions.api.event.DynamicDimensionLoadCallback;
@@ -46,7 +48,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -99,7 +100,13 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
                 ListTag nbt = NbtIo.readCompressed(worldFile.resolve("satellites.dat"), NbtAccounter.unlimitedHeap()).getList("satellites", NbtType.COMPOUND);
                 for (Tag compound : nbt) {
                     assert compound instanceof CompoundTag : "Not a compound?!";
-                    this.satellites.put(new ResourceLocation(((CompoundTag) compound).getString("id")), new CelestialBody<>(SatelliteType.INSTANCE, SatelliteConfig.CODEC.decode(NbtOps.INSTANCE, compound).get().orThrow().getFirst()));
+                    ResourceLocation id = new ResourceLocation(((CompoundTag) compound).getString("id"));
+                    DataResult<Pair<SatelliteConfig, Tag>> decode = SatelliteConfig.CODEC.decode(NbtOps.INSTANCE, compound);
+                    if (decode.error().isPresent()) {
+                        Constant.LOGGER.error("Skipping satellite '{}' - {}", id, decode.error().get().message());
+                        continue;
+                    }
+                    this.satellites.put(id, new CelestialBody<>(SatelliteType.INSTANCE, decode.get().orThrow().getFirst()));
                 }
             } catch (Throwable exception) {
                 throw new RuntimeException("Failed to read satellite data!", exception);

@@ -27,10 +27,10 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
 import dev.galacticraft.api.universe.position.CelestialPosition;
-import dev.galacticraft.impl.codec.MiscCodecs;
 import dev.galacticraft.impl.universe.galaxy.GalaxyImpl;
 import net.minecraft.core.*;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Contract;
@@ -38,8 +38,8 @@ import org.jetbrains.annotations.NotNull;
 
 public interface Galaxy {
     Codec<Galaxy> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            MiscCodecs.TRANSLATABLE_COMPONENT.fieldOf("name").forGetter(Galaxy::name),
-            MiscCodecs.TRANSLATABLE_COMPONENT.fieldOf("description").forGetter(Galaxy::description),
+            ComponentSerialization.CODEC.fieldOf("name").forGetter(Galaxy::name),
+            ComponentSerialization.CODEC.fieldOf("description").forGetter(Galaxy::description),
             CelestialPosition.CODEC.fieldOf("position").forGetter(Galaxy::position),
             CelestialDisplay.CODEC.fieldOf("display").forGetter(Galaxy::display)
     ).apply(instance, Galaxy::create));
@@ -47,7 +47,7 @@ public interface Galaxy {
     Codec<HolderSet<Galaxy>> LIST_CODEC = RegistryCodecs.homogeneousList(AddonRegistries.GALAXY, DIRECT_CODEC);
 
     @Contract("_, _, _, _ -> new")
-    static @NotNull Galaxy create(@NotNull MutableComponent name, @NotNull MutableComponent description, CelestialPosition<?, ?> position, CelestialDisplay<?, ?> display) {
+    static @NotNull Galaxy create(@NotNull Component name, @NotNull Component description, CelestialPosition<?, ?> position, CelestialDisplay<?, ?> display) {
         return new GalaxyImpl(name, description, position, display);
     }
 
@@ -71,9 +71,9 @@ public interface Galaxy {
         return registry.getKey(galaxy);
     }
 
-    @NotNull MutableComponent name();
+    @NotNull Component name();
 
-    @NotNull MutableComponent description();
+    @NotNull Component description();
 
     CelestialPosition<?, ?> position();
 

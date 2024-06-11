@@ -28,7 +28,9 @@
     "celestial_handler": "galacticraft:overworld",
     "day_length": 24000,
     "day_temperature": 21,
-    "description": "planet.galacticraft.earth.description",
+    "description": {
+      "translate": "planet.galacticraft.earth.description"
+    },
     "display": {
       "type": "galacticraft:icon",
       "config": {
@@ -40,9 +42,10 @@
         "width": 16
       }
     },
-    "galaxy": "galacticraft:milky_way",
     "gravity": 1.0,
-    "name": "planet.galacticraft.earth",
+    "name": {
+      "translate": "planet.galacticraft.earth"
+    },
     "night_temperature": 15,
     "position": {
       "type": "galacticraft:orbital",

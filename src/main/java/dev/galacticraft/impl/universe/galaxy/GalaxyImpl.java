@@ -33,14 +33,13 @@ import dev.galacticraft.impl.universe.position.type.StaticCelestialPositionType;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public record GalaxyImpl(@NotNull MutableComponent name,
-                         @NotNull MutableComponent description,
+public record GalaxyImpl(@NotNull Component name,
+                         @NotNull Component description,
                          CelestialPosition<?, ?> position,
                          CelestialDisplay<?, ?> display) implements Galaxy {
 

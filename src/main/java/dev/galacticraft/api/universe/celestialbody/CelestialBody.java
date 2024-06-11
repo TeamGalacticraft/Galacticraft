@@ -23,6 +23,7 @@
 package dev.galacticraft.api.universe.celestialbody;
 
 import com.mojang.serialization.Codec;
+import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import dev.galacticraft.api.gas.GasComposition;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.BuiltInAddonRegistries;
@@ -36,6 +37,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -83,6 +87,15 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
         return Optional.empty();
     }
 
+    public static double getGravity(Entity entity) {
+        if (entity instanceof LivingEntity living) {
+            AttributeInstance attribute = living.getAttribute(GcApiEntityAttributes.LOCAL_GRAVITY_LEVEL);
+            if (attribute != null && attribute.getValue() > 0)
+                return attribute.getValue() * 0.08d;
+        }
+        return CelestialBody.getByDimension(entity.level()).map(celestialBodyType -> celestialBodyType.gravity() * 0.08d).orElse(0.08);
+    }
+
     /**
      * Returns the name of this celestial body
      * Be sure to {@link Component#copy() copy} the returned text if you intend on stylizing it.
@@ -106,22 +119,10 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
     /**
      * Returns this celestial body's parent, or {@code null} if it does not have one
      *
-     * @param registry the registry to query for the parent
      * @return this celestial body's parent
      */
-    public @Nullable CelestialBody<?, ?> parent(Registry<CelestialBody<?, ?>> registry) {
-        return this.type().parent(registry, this.config());
-    }
-
-    /**
-     * Returns this celestial body's parent, or {@code null} if it does not have one
-     *
-     * @param manager the dynamic registry manager to supply the registry
-     * @return this celestial body's parent
-     * @see #parent(Registry)
-     */
-    public @Nullable CelestialBody<?, ?> parent(RegistryAccess manager) {
-        return this.type().parent(manager, this.config());
+    public @Nullable Holder<CelestialBody<?, ?>> parent() {
+        return this.type().parent(this.config());
     }
 
     /**
@@ -129,7 +130,7 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
      *
      * @return this celestial body's parent galaxy's id
      */
-    public @NotNull ResourceKey<Galaxy> galaxy() {
+    public @NotNull Holder<Galaxy> galaxy() {
         return this.type().galaxy(this.config());
     }
 

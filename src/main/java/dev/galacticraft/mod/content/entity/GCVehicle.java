@@ -94,7 +94,7 @@ public abstract class GCVehicle extends Entity {
         return 40.0F;
     }
 
-    boolean shouldSourceDestroy(DamageSource source) {
+    protected boolean shouldSourceDestroy(DamageSource source) {
         return false;
     }
 
@@ -177,22 +177,15 @@ public abstract class GCVehicle extends Entity {
         this.lerpSteps = 10;
     }
 
-    private void tickLerp() { // Stolen from the boat class to fix the rocket from bugging out
+    protected void tickLerp() { // Stolen from the boat class to fix the rocket from bugging out
         if (this.isControlledByLocalInstance()) {
             this.lerpSteps = 0;
             this.syncPacketPositionCodec(getX(), getY(), getZ());
         }
 
         if (this.lerpSteps > 0) {
-            double lerpedX = getX() + (this.lerpX - getX()) / (double) this.lerpSteps;
-            double lerpedY = getY() + (this.lerpY - getY()) / (double) this.lerpSteps;
-            double lerpedZ = getZ() + (this.lerpZ - getZ()) / (double) this.lerpSteps;
-            double g = Mth.wrapDegrees(this.lerpYRot - (double) this.getYRot());
-            setYRot(getYRot() + (float) g / (float) this.lerpSteps);
-            setXRot(getXRot() + (float) (this.lerpXRot - (double) getXRot()) / (float) this.lerpSteps);
+            lerpPositionAndRotationStep(this.lerpSteps, this.lerpX, this.lerpY, this.lerpZ, this.lerpYRot, this.lerpXRot);
             --this.lerpSteps;
-            setPos(lerpedX, lerpedY, lerpedZ);
-            setRot(getYRot(), getXRot());
         }
     }
 

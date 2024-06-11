@@ -25,7 +25,7 @@ package dev.galacticraft.mod.content.block.machine;
 import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.FuelLoaderBlockEntity;
-import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
+import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -56,7 +56,7 @@ public class FuelLoaderBlock extends MachineBlock<FuelLoaderBlockEntity> {
 
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState newState, LevelAccessor world, BlockPos pos, BlockPos posFrom) {
-        if (direction != Direction.UP && direction != Direction.DOWN && newState.getBlock() instanceof RocketLaunchPadBlock) {
+        if (direction != Direction.UP && direction != Direction.DOWN && newState.getBlock() instanceof AbstractLaunchPad) {
             ((FuelLoaderBlockEntity) world.getBlockEntity(pos)).updateConnections(direction);
         }
         return super.updateShape(state, direction, newState, world, pos, posFrom);

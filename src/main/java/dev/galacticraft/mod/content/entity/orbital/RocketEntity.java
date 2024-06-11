@@ -33,13 +33,12 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyType;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.api.block.entity.FuelDock;
 import dev.galacticraft.mod.attachments.GCServerPlayer;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
-import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
-import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
+import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -94,17 +93,13 @@ import org.joml.Vector3f;
 import java.util.Objects;
 
 @SuppressWarnings("UnstableApiUsage")
-public class RocketEntity extends Entity implements Rocket, IgnoreShift, ControllableEntity {
+public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift, ControllableEntity {
     private static final ResourceLocation NULL_ID = new ResourceLocation("null");
     private static final EntityDataAccessor<LaunchStage> STAGE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.LAUNCH_STAGE);
 
     private static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
 
     private static final EntityDataAccessor<Integer> TIME_AS_STATE = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
-
-    public static final EntityDataAccessor<Integer> DAMAGE_WOBBLE_TICKS = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> DAMAGE_WOBBLE_SIDE = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Float> DAMAGE_WOBBLE_STRENGTH = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.FLOAT);
 
     public static final EntityDataAccessor<Float> SPEED = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.FLOAT);
 
@@ -118,18 +113,12 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
     public static final EntityDataAccessor<Long> FUEL = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.LONG);
     private final boolean debugMode = false && FabricLoader.getInstance().isDevelopmentEnvironment();
 
-    private BlockPos linkedPad = BlockPos.ZERO;
+    private FuelDock linkedPad = null;
     private final SingleFluidStorage tank = SingleFluidStorage.withFixedCapacity(FluidUtil.bucketsToDroplets(100), () -> {
         this.entityData.set(FUEL, getTank().getAmount());
     });
     private int timeBeforeLaunch;
     private float timeSinceLaunch;
-    private int lerpSteps;
-    private double lerpX;
-    private double lerpY;
-    private double lerpZ;
-    private double lerpYRot;
-    private double lerpXRot;
 
     public RocketEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -146,6 +135,13 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
     @Override
     protected boolean canAddPassenger(Entity passenger) {
         return this.getPassengers().isEmpty();
+    }
+
+    @Override
+    public LivingEntity getControllingPassenger() {
+        if (getLaunchStage() == LaunchStage.LAUNCHED)
+            return getFirstPassenger() instanceof LivingEntity livingEntity ? livingEntity : super.getControllingPassenger();
+        return null;
     }
 
     @Override
@@ -195,49 +191,14 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
 
     @Override
     public @NotNull BlockPos getLinkedPad() {
-        return linkedPad;
-    }
-
-    @Override
-    public void setLinkedPad(@NotNull BlockPos blockPos) {
-        this.linkedPad = blockPos;
-    }
-
-    @Override
-    public boolean hurt(DamageSource source, float amount) {
-        if (!this.level().isClientSide && !this.isRemoved()) {
-            if (this.isInvulnerableTo(source)) {
-                return false;
-            } else {
-                this.entityData.set(DAMAGE_WOBBLE_SIDE, -this.entityData.get(DAMAGE_WOBBLE_SIDE));
-                this.entityData.set(DAMAGE_WOBBLE_TICKS, 10);
-                this.entityData.set(DAMAGE_WOBBLE_STRENGTH, this.entityData.get(DAMAGE_WOBBLE_STRENGTH) + amount * 10.0F);
-                boolean creative = source.getEntity() instanceof Player && ((Player) source.getEntity()).getAbilities().instabuild;
-                if (creative || this.entityData.get(DAMAGE_WOBBLE_STRENGTH) > 40.0F) {
-                    this.ejectPassengers();
-                    if (creative && !this.hasCustomName()) {
-                        this.remove(RemovalReason.DISCARDED);
-                    } else {
-                        this.dropItems(source, false);
-                    }
-                }
-
-                return true;
-            }
-        } else {
-            return true;
-        }
+        return linkedPad.getDockPos();
     }
 
     @Override
     public void remove(RemovalReason reason) {
         super.remove(reason);
-        if (this.linkedPad != null && reason == RemovalReason.KILLED || reason == RemovalReason.DISCARDED) {
-            BlockEntity blockEntity = this.level().getBlockEntity(this.linkedPad);
-            if (blockEntity instanceof RocketLaunchPadBlockEntity pad) {
-                pad.setLinkedRocket(null);
-            }
-
+        if (this.linkedPad != null && (reason == RemovalReason.KILLED || reason == RemovalReason.DISCARDED)) {
+            this.linkedPad.setDockedEntity(null);
         }
     }
 
@@ -290,7 +251,17 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
     }
 
     @Override
-    public void onBaseDestroyed() {
+    public void setPad(FuelDock pad) {
+        this.linkedPad = pad;
+    }
+
+    @Override
+    public FuelDock getLandingPad() {
+        return this.linkedPad;
+    }
+
+    @Override
+    public void onPadDestroyed() {
         RocketData data = RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.engine(), this.upgrade());
         CompoundTag tag = new CompoundTag();
         data.toNbt(tag);
@@ -298,6 +269,16 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
         rocket.setTag(tag);
         this.spawnAtLocation(rocket);
         this.remove(RemovalReason.DISCARDED);
+    }
+
+    @Override
+    public boolean isDockValid(FuelDock dock) {
+        return false;
+    }
+
+    @Override
+    public boolean inFlight() {
+        return false;
     }
 
     @Override
@@ -371,45 +352,14 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
     }
 
     @Override
-    public void lerpTo(double x, double y, double z, float yRot, float xRot, int steps) {
-        this.lerpX = x;
-        this.lerpY = y;
-        this.lerpZ = z;
-        this.lerpYRot = yRot;
-        this.lerpXRot = xRot;
-        this.lerpSteps = 10;
-    }
-
-    private void tickLerp() { // Stolen from the boat class to fix the rocket from bugging out
-        if (this.isControlledByLocalInstance()) {
-            this.lerpSteps = 0;
-            this.syncPacketPositionCodec(this.getX(), this.getY(), this.getZ());
-        }
-
-        if (this.lerpSteps > 0) {
-            double d = this.getX() + (this.lerpX - this.getX()) / (double) this.lerpSteps;
-            double e = this.getY() + (this.lerpY - this.getY()) / (double) this.lerpSteps;
-            double f = this.getZ() + (this.lerpZ - this.getZ()) / (double) this.lerpSteps;
-            double g = Mth.wrapDegrees(this.lerpYRot - (double) this.getYRot());
-            this.setYRot(this.getYRot() + (float) g / (float) this.lerpSteps);
-            this.setXRot(this.getXRot() + (float) (this.lerpXRot - (double) this.getXRot()) / (float) this.lerpSteps);
-            --this.lerpSteps;
-            this.setPos(d, e, f);
-            this.setRot(this.getYRot(), this.getXRot());
-        }
-    }
-
-    @Override
     protected void defineSynchedData() {
+        super.defineSynchedData();
         this.entityData.define(STAGE, LaunchStage.IDLE);
         this.entityData.define(SPEED, 0.0f);
 
         this.entityData.define(COLOR, -1);
 
         this.entityData.define(TIME_AS_STATE, 0);
-        this.entityData.define(DAMAGE_WOBBLE_TICKS, 0);
-        this.entityData.define(DAMAGE_WOBBLE_SIDE, 0);
-        this.entityData.define(DAMAGE_WOBBLE_STRENGTH, 0.0F);
 
         this.entityData.define(ROCKET_CONE, NULL_ID);
         this.entityData.define(ROCKET_BODY, NULL_ID);
@@ -457,7 +407,6 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
         setTimeAsState(getTimeAsState() + 1);
 
         super.tick();
-        tickLerp();
 
         int particleChance;
 
@@ -526,10 +475,11 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
                             gcPlayer.setRocketData(this);
                             gcPlayer.setLaunchpadStack(new ItemStack(GCBlocks.ROCKET_LAUNCH_PAD, 9));
                         }
+                        this.linkedPad.setDockedEntity(null);
                         for (int x = -1; x <= 1; x++) {
                             for (int z = -1; z <= 1; z++) {
                                 if (level().getBlockState(getLinkedPad().offset(x, 0, z)).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD
-                                        && level().getBlockState(getLinkedPad().offset(x, 0, z)).getValue(RocketLaunchPadBlock.PART) != RocketLaunchPadBlock.Part.NONE) {
+                                        && level().getBlockState(getLinkedPad().offset(x, 0, z)).getValue(AbstractLaunchPad.PART) != AbstractLaunchPad.Part.NONE) {
                                     level().setBlock(getLinkedPad().offset(x, 0, z), Blocks.AIR.defaultBlockState(), Block.UPDATE_NONE);
                                 }
                             }
@@ -667,7 +617,7 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
 //            double y1 = 2 * Math.sin((this.getXRot() - 90) / Constant.RADIANS_TO_DEGREES) * this.getSpeed();
 
             if (this.getLaunchStage() == LaunchStage.FAILED && this.linkedPad != null) {
-                double modifier = this.getY() - this.linkedPad.getY();
+                double modifier = this.getY() - this.linkedPad.getDockPos().getY();
                 modifier = Math.min(Math.max(modifier, 120.0), 300.0);
                 x1 *= modifier / 100.0D;
                 y1 *= modifier / 100.0D;
@@ -758,7 +708,9 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
             setSpeed(tag.getFloat("Speed"));
         }
 
-        this.linkedPad = new BlockPos(tag.getInt("lX"), tag.getInt("lY"), tag.getInt("lZ"));
+        BlockEntity be = this.level().getBlockEntity(new BlockPos(tag.getInt("lX"), tag.getInt("lY"), tag.getInt("lZ")));
+        if (be instanceof FuelDock pad)
+            this.linkedPad = pad;
     }
 
     @Override
@@ -784,9 +736,9 @@ public class RocketEntity extends Entity implements Rocket, IgnoreShift, Control
         tag.putDouble("Speed", this.getSpeed());
         tag.putInt("Color", this.color());
 
-        tag.putInt("lX", linkedPad.getX());
-        tag.putInt("lY", linkedPad.getY());
-        tag.putInt("lZ", linkedPad.getZ());
+        tag.putInt("lX", linkedPad.getDockPos().getX());
+        tag.putInt("lY", linkedPad.getDockPos().getY());
+        tag.putInt("lZ", linkedPad.getDockPos().getZ());
     }
 
     @Override

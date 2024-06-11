@@ -22,11 +22,11 @@
 
 package dev.galacticraft.mod.content.entity.orbital.lander;
 
-import dev.galacticraft.mod.content.entity.GCVehicle;
+import dev.galacticraft.mod.content.entity.orbital.AdvancedVehicle;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 
-public abstract class AbstractLanderEntity extends GCVehicle {
+public abstract class AbstractLanderEntity extends AdvancedVehicle {
     public AbstractLanderEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }

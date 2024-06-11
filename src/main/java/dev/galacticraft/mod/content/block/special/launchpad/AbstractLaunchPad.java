@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.block.special.rocketlaunchpad;
+package dev.galacticraft.mod.content.block.special.launchpad;
 
 import com.mojang.serialization.MapCodec;
 import org.jetbrains.annotations.Nullable;
@@ -43,22 +43,20 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class RocketLaunchPadBlock extends BaseEntityBlock {
-    public static final MapCodec<RocketLaunchPadBlock> CODEC = simpleCodec(RocketLaunchPadBlock::new);
+public abstract class AbstractLaunchPad extends BaseEntityBlock {
+
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
     private static final Direction[] CARDINAL = {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
     private static final VoxelShape CENTER_SHAPE = Shapes.create(0.0D, 0.0D, 0.0D, 1.0D, 0.1875D, 1.0D);
     private static final VoxelShape NORMAL_SHAPE = Shapes.create(0.0D, 0.0D, 0.0D, 1.0D, 1D / 8D, 1.0D);
 
-    public RocketLaunchPadBlock(Properties properties) {
+    public AbstractLaunchPad(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.getStateDefinition().any().setValue(PART, Part.NONE));
+        registerDefaultState(getStateDefinition().any().setValue(PART, Part.NONE));
     }
 
     @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
+    protected abstract MapCodec<? extends AbstractLaunchPad> codec();
 
     public static BlockPos partToCenterPos(Part part) {
         if (part == null) {
@@ -115,10 +113,10 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
             return;
         }
         // figure out where the center block is and remove the rocket
-        BlockPos center = blockPos.offset(RocketLaunchPadBlock.partToCenterPos(blockState.getValue(PART)));
-        if (level.getBlockEntity(center) instanceof RocketLaunchPadBlockEntity pad) {
-            if (pad.hasRocket() && pad.getRocket() != null) {
-                pad.getRocket().onBaseDestroyed();
+        BlockPos center = blockPos.offset(AbstractLaunchPad.partToCenterPos(blockState.getValue(PART)));
+        if (level.getBlockEntity(center) instanceof LaunchPadBlockEntity pad) {
+            if (pad.hasDockedEntity() && pad.getDockedEntity() != null) {
+                pad.getDockedEntity().onPadDestroyed();
             }
         }
         // calling this removes the block entity
@@ -231,12 +229,6 @@ public class RocketLaunchPadBlock extends BaseEntityBlock {
     @Override
     public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
         return Block.canSupportRigidBlock(levelReader, blockPos.below());
-    }
-
-    @Nullable
-    @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new RocketLaunchPadBlockEntity(pos, state);
     }
 
     public enum Part implements StringRepresentable {

@@ -25,7 +25,6 @@ package dev.galacticraft.impl.universe.celestialbody.config;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.gas.GasComposition;
-import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.satellite.SatelliteRecipe;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
@@ -33,37 +32,33 @@ import dev.galacticraft.api.universe.celestialbody.CelestialHandler;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
 import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
-import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
-import dev.galacticraft.impl.codec.MiscCodecs;
-import dev.galacticraft.impl.codec.MoreProducts;
 import net.minecraft.core.Holder;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.RegistryFileCodec;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public record PlanetConfig(@NotNull MutableComponent name, @NotNull MutableComponent description,
-                           @NotNull ResourceKey<Galaxy> galaxy, @NotNull ResourceKey<CelestialBody<?, ?>> parent,
+public record PlanetConfig(@NotNull Component name, @NotNull Component description,
+                           @NotNull Holder<CelestialBody<?, ?>> parent,
                            @NotNull CelestialPosition<?, ?> position, @NotNull CelestialDisplay<?, ?> display, @NotNull CelestialRingDisplay<?, ?> ring,
                            @NotNull ResourceKey<Level> world, Holder<CelestialTeleporter<?, ?>> teleporter, @NotNull GasComposition atmosphere, float gravity,
                            CelestialHandler celestialHandler,
                            int accessWeight, int dayTemperature, int nightTemperature, long dayLength,
-                           @NotNull Optional<SatelliteRecipe> satelliteRecipe) implements CelestialBodyConfig {
-    public static final Codec<PlanetConfig> CODEC = RecordCodecBuilder.create(instance -> new MoreProducts.P17<>(
-            MiscCodecs.TRANSLATABLE_COMPONENT.fieldOf("name").forGetter(PlanetConfig::name),
-            MiscCodecs.TRANSLATABLE_COMPONENT.fieldOf("description").forGetter(PlanetConfig::description),
-            ResourceKey.codec(AddonRegistries.GALAXY).fieldOf("galaxy").forGetter(PlanetConfig::galaxy),
-            ResourceKey.codec(AddonRegistries.CELESTIAL_BODY).fieldOf("parent").forGetter(PlanetConfig::parent),
+                           @Nullable SatelliteRecipe satelliteRecipe) implements CelestialBodyConfig {
+    public static final Codec<PlanetConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            ComponentSerialization.CODEC.fieldOf("name").forGetter(PlanetConfig::name),
+            ComponentSerialization.CODEC.fieldOf("description").forGetter(PlanetConfig::description),
+            CelestialBody.CODEC.fieldOf("parent").forGetter(PlanetConfig::parent),
             CelestialPosition.CODEC.fieldOf("position").forGetter(PlanetConfig::position),
             CelestialDisplay.CODEC.fieldOf("display").forGetter(PlanetConfig::display),
             CelestialRingDisplay.CODEC.fieldOf("ring").forGetter(PlanetConfig::ring),
             Level.RESOURCE_KEY_CODEC.fieldOf("world").forGetter(PlanetConfig::world),
-            RegistryFileCodec.create(AddonRegistries.CELESTIAL_TELEPORTER, CelestialTeleporter.DIRECT_CODEC).fieldOf("teleporter").forGetter(PlanetConfig::teleporter),
+            CelestialTeleporter.CODEC.fieldOf("teleporter").forGetter(PlanetConfig::teleporter),
             GasComposition.CODEC.fieldOf("atmosphere").forGetter(PlanetConfig::atmosphere),
             Codec.FLOAT.fieldOf("gravity").forGetter(PlanetConfig::gravity),
             CelestialHandler.CODEC.fieldOf("celestial_handler").forGetter(PlanetConfig::celestialHandler),
@@ -71,6 +66,10 @@ public record PlanetConfig(@NotNull MutableComponent name, @NotNull MutableCompo
             Codec.INT.fieldOf("day_temperature").forGetter(PlanetConfig::dayTemperature),
             Codec.INT.fieldOf("night_temperature").forGetter(PlanetConfig::nightTemperature),
             Codec.LONG.fieldOf("day_length").forGetter(PlanetConfig::dayLength),
-            SatelliteRecipe.CODEC.optionalFieldOf("satellite_recipe").forGetter(PlanetConfig::satelliteRecipe)
+            SatelliteRecipe.CODEC.optionalFieldOf("satellite_recipe").forGetter(c -> Optional.ofNullable(c.satelliteRecipe))
     ).apply(instance, PlanetConfig::new));
+
+    private PlanetConfig(Component name, Component description, Holder<CelestialBody<?, ?>> parent, CelestialPosition<?, ?> position, CelestialDisplay<?, ?> display, CelestialRingDisplay<?, ?> ring, ResourceKey<Level> world, Holder<CelestialTeleporter<?, ?>> teleporter, GasComposition atmosphere, float gravity, CelestialHandler celestialHandler, int accessWeight, int dayTemperature, int nightTemperature, long dayLength, Optional<SatelliteRecipe> satelliteRecipe) {
+        this(name, description, parent, position, display, ring, world, teleporter, atmosphere, gravity, celestialHandler, accessWeight, dayTemperature, nightTemperature, dayLength, satelliteRecipe.orElse(null));
+    }
 }

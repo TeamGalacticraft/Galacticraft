@@ -20,15 +20,26 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.codec;
+package dev.galacticraft.mod.screen;
 
-import com.mojang.serialization.Codec;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
-public final class MiscCodecs {
-    //todo: auto derive name/desc?
-    public static final Codec<MutableComponent> TRANSLATABLE_COMPONENT = Codec.STRING.xmap(Component::translatable, c -> c.getContents() instanceof TranslatableContents translatable ? translatable.getKey() : c.getString());
-    private MiscCodecs() {}
+public class BuggyMenu extends AbstractContainerMenu {
+    protected BuggyMenu(@Nullable MenuType<?> menuType, int i) {
+        super(menuType, i);
+    }
+
+    @Override
+    public ItemStack quickMoveStack(Player player, int slot) {
+        return null;
+    }
+
+    @Override
+    public boolean stillValid(Player player) {
+        return false;
+    }
 }

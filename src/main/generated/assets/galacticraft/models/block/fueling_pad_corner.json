@@ -1,0 +1,9 @@
+{
+  "parent": "galacticraft:block/rocket_launch_pad_part",
+  "textures": {
+    "bottom": "galacticraft:block/fueling_pad",
+    "particle": "galacticraft:block/fueling_pad_corner",
+    "side": "galacticraft:block/fueling_pad",
+    "top": "galacticraft:block/fueling_pad_corner"
+  }
+}

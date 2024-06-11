@@ -31,10 +31,8 @@ import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.impl.universe.celestialbody.config.StarConfig;
-import dev.galacticraft.impl.universe.display.type.ring.DefaultCelestialRingDisplayType;
-import net.minecraft.core.Registry;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,17 +51,16 @@ public class StarType extends CelestialBodyType<StarConfig> implements Star<Star
     /**
      * Returns {@code null} as stars do not have parent celestial bodies
      *
-     * @param registry the registry to query for the parent
-     * @param config   the celestial body configuration to be queried
+     * @param config the celestial body configuration to be queried
      * @return {@code null}
      */
     @Override
-    public @Nullable CelestialBody<?, ?> parent(Registry<CelestialBody<?, ?>> registry, StarConfig config) {
-        return config.parent().isPresent() ? registry.get(config.parent().get()) : null;
+    public @Nullable Holder<CelestialBody<?, ?>> parent(StarConfig config) {
+        return null;
     }
 
     @Override
-    public @NotNull ResourceKey<Galaxy> galaxy(StarConfig config) {
+    public @NotNull Holder<Galaxy> galaxy(StarConfig config) {
         return config.galaxy();
     }
 

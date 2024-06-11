@@ -24,7 +24,7 @@ package dev.galacticraft.mod.data;
 
 import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.block.special.rocketlaunchpad.RocketLaunchPadBlock;
+import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
@@ -227,7 +227,8 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         );
         this.add(GCBlocks.BOSS_SPAWNER, noDrop());
 
-        this.add(GCBlocks.ROCKET_LAUNCH_PAD, this::createRocketLaunchPadTable);
+        this.add(GCBlocks.FUELING_PAD, this::createLaunchPadTable);
+        this.add(GCBlocks.ROCKET_LAUNCH_PAD, this::createLaunchPadTable);
         this.dropSelf(GCBlocks.AIR_LOCK_CONTROLLER);
         this.dropSelf(GCBlocks.AIR_LOCK_FRAME);
         this.dropSelf(GCBlocks.CRYOGENIC_CHAMBER);
@@ -257,16 +258,16 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         dropSelf(GCBlocks.PARACHEST);
     }
 
-    private LootTable.Builder createRocketLaunchPadTable(Block block) {
+    private LootTable.Builder createLaunchPadTable(Block block) {
         return LootTable.lootTable().withPool(this.applyExplosionCondition(block, LootPool.lootPool()
                 .setRolls(ConstantValue.exactly(1.0F))
                 .add(LootItem.lootTableItem(block)
                         .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
-                                .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(RocketLaunchPadBlock.PART, RocketLaunchPadBlock.Part.NONE))))))
+                                .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AbstractLaunchPad.PART, AbstractLaunchPad.Part.NONE))))))
                 .withPool(this.applyExplosionCondition(block, LootPool.lootPool()
                         .setRolls(ConstantValue.exactly(9.0F))
                         .add(LootItem.lootTableItem(block)
                                 .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
-                                        .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(RocketLaunchPadBlock.PART, RocketLaunchPadBlock.Part.CENTER))))));
+                                        .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AbstractLaunchPad.PART, AbstractLaunchPad.Part.CENTER))))));
     }
 }

@@ -25,6 +25,7 @@ package dev.galacticraft.api.rocket.entity;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.*;
+import dev.galacticraft.mod.api.entity.Dockable;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
@@ -34,7 +35,7 @@ import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface Rocket extends RocketData {
+public interface Rocket extends RocketData, Dockable {
     /**
      * Returns the launch stage of this rocket.
      * @return the launch stage of this rocket.
@@ -57,19 +58,11 @@ public interface Rocket extends RocketData {
 
     @NotNull BlockPos getLinkedPad();
 
-    void setLinkedPad(@NotNull BlockPos linkedPad);
-
     /**
      * Called when the player riding the rocket jumps
      * Used to initiate the launch countdown in the rocket
      */
     void onJump();
-
-
-    /**
-     * Called when the rocket launch pad linked to this rocket is destroyed
-     */
-    void onBaseDestroyed();
 
     /**
      * Called when the rocket is destroyed
@@ -78,11 +71,4 @@ public interface Rocket extends RocketData {
      * @param exploded whether the damage is self-inflicted (the rocket failed)
      */
     void dropItems(DamageSource source, boolean exploded);
-
-    @Nullable Fluid getFuelTankFluid();
-    long getFuelTankAmount();
-    long getFuelTankCapacity();
-    Storage<FluidVariant> getFuelTank();
-
-    Entity asEntity();
 }

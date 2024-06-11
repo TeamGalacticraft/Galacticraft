@@ -170,6 +170,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(
                         GCBlocks.FALLEN_METEOR,
                         GCBlocks.TIN_LADDER,
+                        GCBlocks.FUELING_PAD,
                         GCBlocks.ROCKET_LAUNCH_PAD,
                         GCBlocks.GLOWSTONE_LANTERN,
                         GCBlocks.UNLIT_LANTERN,

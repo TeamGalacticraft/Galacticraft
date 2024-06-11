@@ -28,6 +28,7 @@ import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.satellite.SatelliteRecipe;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
+import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.impl.universe.celestialbody.config.DecorativePlanetConfig;
 import dev.galacticraft.impl.universe.celestialbody.config.PlanetConfig;
@@ -39,6 +40,7 @@ import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
 import dev.galacticraft.impl.universe.display.config.ring.DefaultCelestialRingDisplayConfig;
 import dev.galacticraft.impl.universe.display.type.IconCelestialDisplayType;
 import dev.galacticraft.impl.universe.display.type.SpinningIconCelestialDisplayType;
+import dev.galacticraft.impl.universe.display.type.ring.AsteroidCelestialRingDisplayType;
 import dev.galacticraft.impl.universe.display.type.ring.DefaultCelestialRingDisplayType;
 import dev.galacticraft.impl.universe.position.config.OrbitalCelestialPositionConfig;
 import dev.galacticraft.impl.universe.position.config.StaticCelestialPositionConfig;
@@ -50,6 +52,7 @@ import dev.galacticraft.mod.util.Translations;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.network.chat.Component;
@@ -70,20 +73,21 @@ public class GCCelestialBodies {
     public static final ResourceKey<CelestialBody<?, ?>> MERCURY = key("mercury");
     public static final ResourceKey<CelestialBody<?, ?>> VENUS = key("venus");
     public static final ResourceKey<CelestialBody<?, ?>> MARS = key("mars");
-    public static final ResourceKey<CelestialBody<?, ?>> ASTEROID = key("asteroid");
+    public static final ResourceKey<CelestialBody<?, ?>> ASTEROIDS = key("asteroids");
     public static final ResourceKey<CelestialBody<?, ?>> JUPITER = key("jupiter");
     public static final ResourceKey<CelestialBody<?, ?>> SATURN = key("saturn");
     public static final ResourceKey<CelestialBody<?, ?>> URANUS = key("uranus");
     public static final ResourceKey<CelestialBody<?, ?>> NEPTUNE = key("neptune");
 
     public static void bootstrapRegistries(BootstapContext<CelestialBody<?, ?>> context) {
-        HolderGetter<CelestialTeleporter<?, ?>> lookup = context.lookup(AddonRegistries.CELESTIAL_TELEPORTER);
-        context.register(BuiltinObjects.SOL_KEY, StarType.INSTANCE.configure(
+        HolderGetter<CelestialTeleporter<?, ?>> teleporters = context.lookup(AddonRegistries.CELESTIAL_TELEPORTER);
+        HolderGetter<Galaxy> galaxies = context.lookup(AddonRegistries.GALAXY);
+
+        Holder.Reference<CelestialBody<?, ?>> sol = context.register(BuiltinObjects.SOL_KEY, StarType.INSTANCE.configure(
                 new StarConfig(
                         Component.translatable(Translations.CelestialBody.SOL),
                         Component.translatable(Translations.CelestialBody.SOL_DESC),
-                        BuiltinObjects.MILKY_WAY_KEY,
-                        Optional.empty(),
+                        galaxies.getOrThrow(BuiltinObjects.MILKY_WAY_KEY),
                         StaticCelestialPositionType.INSTANCE.configure(new StaticCelestialPositionConfig(0, 0)),
                         IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/body_icons.png"), 0, 0, 16, 16, 1.5f, Optional.empty())),
                         DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
@@ -100,17 +104,16 @@ public class GCCelestialBodies {
                         5772
                 )
         ));
-        context.register(EARTH, PlanetType.INSTANCE.configure(
+        Holder.Reference<CelestialBody<?, ?>> earth = context.register(EARTH, PlanetType.INSTANCE.configure(
                 new PlanetConfig(
                         Component.translatable(Translations.CelestialBody.EARTH),
                         Component.translatable(Translations.CelestialBody.EARTH_DESC),
-                        BuiltinObjects.MILKY_WAY_KEY,
-                        BuiltinObjects.SOL_KEY,
+                        sol,
                         OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(1.0F, 1.0, 0.0F, true)),
                         IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/body_icons.png"), 0, 16, 16, 16)),
                         DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
                         Level.OVERWORLD,
-                        lookup.getOrThrow(GCTeleporterTypes.OVERWORLD_TELEPORTER),
+                        teleporters.getOrThrow(GCTeleporterTypes.OVERWORLD_TELEPORTER),
                         new GasComposition.Builder()
                                 .pressure(1.0f)
                                 .temperature(15.0f)
@@ -137,20 +140,19 @@ public class GCCelestialBodies {
                         21, //todo
                         15, //todo
                         24000,
-                        Optional.of(SatelliteRecipe.create(EARTH_SATELLITE_RECIPE))
+                        SatelliteRecipe.create(EARTH_SATELLITE_RECIPE)
                 )
         ));
 
         context.register(MOON, PlanetType.INSTANCE.configure(new PlanetConfig(
                 Component.translatable(Translations.CelestialBody.MOON),
                 Component.translatable(Translations.CelestialBody.MOON_DESC),
-                BuiltinObjects.MILKY_WAY_KEY,
-                BuiltinObjects.EARTH_KEY,
+                earth,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(1 / 0.01F, 20.0, 0.2667, false)),
                 IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/moon.png"), 0, 0, 8, 8)),
                 DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
                 GCDimensions.MOON,
-                lookup.getOrThrow(GCTeleporterTypes.LANDER_CELESTIAL_TELEPORTER),
+                teleporters.getOrThrow(GCTeleporterTypes.LANDER_CELESTIAL_TELEPORTER),
                 new GasComposition.Builder()
                         .temperature(23.0)
                         .pressure(3.0E-15F)
@@ -161,14 +163,13 @@ public class GCCelestialBodies {
                 105,
                 -180,
                 192000L,
-                Optional.empty()
+                null
         )));
 
         context.register(MERCURY, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
                 Component.translatable(Translations.CelestialBody.MERCURY),
                 Component.translatable(Translations.CelestialBody.MERCURY_DESC),
-                BuiltinObjects.MILKY_WAY_KEY,
-                BuiltinObjects.SOL_KEY,
+                sol,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(0.24096385542168674698795180722892F, 0.5F, 1.45F, true)),
                 IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/mercury.png"), 0, 0, 16, 16)),
                 DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
@@ -177,37 +178,35 @@ public class GCCelestialBodies {
                         .pressure(3.0E-15F)
                         .build(),
                 0.166F,
-                Optional.empty()
+                null
         )));
 
         context.register(VENUS, PlanetType.INSTANCE.configure(new PlanetConfig(
                 Component.translatable(Translations.CelestialBody.VENUS),
                 Component.translatable(Translations.CelestialBody.VENUS_DESC),
-                BuiltinObjects.MILKY_WAY_KEY,
-                BuiltinObjects.SOL_KEY,
+                sol,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(0.61527929901423877327491785323111F, 0.75F, 2.0F, true)),
                 IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/venus.png"), 0, 0, 16, 16)),
                 DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
                 GCDimensions.VENUS,
-                lookup.getOrThrow(GCTeleporterTypes.LANDER_CELESTIAL_TELEPORTER),
+                teleporters.getOrThrow(GCTeleporterTypes.LANDER_CELESTIAL_TELEPORTER),
                 new GasComposition.Builder()
                         .temperature(23.0)
                         .pressure(3.0E-15F)
                         .build(),
-                0.9F,
+                0.0375F,
                 GCCelestialHandlers.DEFAULT,
                 1,
                 105,
                 -180,
                 720000L, // 30 times longer than earth
-                Optional.empty()
+                null
         )));
 
         context.register(MARS, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
                 Component.translatable(Translations.CelestialBody.MARS),
                 Component.translatable(Translations.CelestialBody.MARS_DESC),
-                BuiltinObjects.MILKY_WAY_KEY,
-                BuiltinObjects.SOL_KEY,
+                sol,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(1.8811610076670317634173055859803F, 1.25F, 0.1667F, true)),
                 IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/mars.png"), 0, 0, 16, 16)),
                 DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
@@ -216,37 +215,28 @@ public class GCCelestialBodies {
                         .pressure(3.0E-15F)
                         .build(),
                 0.166F,
-                Optional.empty()
+                null
         )));
 
-        context.register(ASTEROID, PlanetType.INSTANCE.configure(new PlanetConfig(
-                Component.translatable(Translations.CelestialBody.ASTEROID),
-                Component.translatable(Translations.CelestialBody.ASTEROID_DESC),
-                BuiltinObjects.MILKY_WAY_KEY,
-                BuiltinObjects.SOL_KEY,
-                OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(0.61527929901423877327491785323111F, 0.75F, 2.0F, false)),
-                IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/asteroid.png"), 0, 0, 16, 16)),
-                DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
-                GCDimensions.ASTEROID,
-                lookup.getOrThrow(GCTeleporterTypes.LANDER_CELESTIAL_TELEPORTER),
+        context.register(ASTEROIDS, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
+                Component.translatable(Translations.CelestialBody.ASTEROIDS),
+                Component.translatable(Translations.CelestialBody.ASTEROIDS_DESC),
+                sol,
+                OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(45.0F, 1.375F, 0.0F, true)),
+                SpinningIconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/asteroid.png"), 0, 0, 16, 16)),
+                AsteroidCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
                 new GasComposition.Builder()
-                        .temperature(-1.5)
-                        .pressure(3.0E-1F)
+                        .temperature(23.0)
+                        .pressure(3.0E-15F)
                         .build(),
-                0.1F,
-                GCCelestialHandlers.DEFAULT,
-                2,
-                -2,
-                -2,
-                99999999L, //set to really long time so change isnt seen much
-                Optional.empty()
+                0.166F,
+                null
         )));
 
         context.register(JUPITER, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
                 Component.translatable(Translations.CelestialBody.JUPITER),
                 Component.translatable(Translations.CelestialBody.JUPITER_DESC),
-                BuiltinObjects.MILKY_WAY_KEY,
-                BuiltinObjects.SOL_KEY,
+                sol,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(11.861993428258488499452354874042F, 1.5F, Mth.PI, true)),
                 IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/jupiter.png"), 0, 0, 16, 16)),
                 DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
@@ -255,14 +245,13 @@ public class GCCelestialBodies {
                         .pressure(3.0E-15F)
                         .build(),
                 0.166F,
-                Optional.empty()
+                null
         )));
 
         context.register(SATURN, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
                 Component.translatable(Translations.CelestialBody.SATURN),
                 Component.translatable(Translations.CelestialBody.SATURN_DESC),
-                BuiltinObjects.MILKY_WAY_KEY,
-                BuiltinObjects.SOL_KEY,
+                sol,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(29.463307776560788608981380065717F, 1.75F, 5.45F, true)),
                 IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(
                         Constant.id("textures/gui/celestialbodies/saturn.png"), 0, 0, 16, 16, 1,
@@ -274,14 +263,13 @@ public class GCCelestialBodies {
                         .pressure(3.0E-15F)
                         .build(),
                 0.166F,
-                Optional.empty()
+                null
         )));
 
         context.register(URANUS, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
                 Component.translatable(Translations.CelestialBody.URANUS),
                 Component.translatable(Translations.CelestialBody.URANUS_DESC),
-                BuiltinObjects.MILKY_WAY_KEY,
-                BuiltinObjects.SOL_KEY,
+                sol,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(84.063526834611171960569550930997F, 2.0F, 1.38F, true)),
                 IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(
                         Constant.id("textures/gui/celestialbodies/uranus.png"), 0, 0, 16, 16, 1,
@@ -293,14 +281,13 @@ public class GCCelestialBodies {
                         .pressure(3.0E-15F)
                         .build(),
                 0.166F,
-                Optional.empty()
+                null
         )));
 
         context.register(NEPTUNE, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
                 Component.translatable(Translations.CelestialBody.NEPTUNE),
                 Component.translatable(Translations.CelestialBody.NEPTUNE_DESC),
-                BuiltinObjects.MILKY_WAY_KEY,
-                BuiltinObjects.SOL_KEY,
+                sol,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(164.84118291347207009857612267251F, 2.25F, 1.0F, true)),
                 IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/neptune.png"), 0, 0, 16, 16)),
                 DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
@@ -309,7 +296,7 @@ public class GCCelestialBodies {
                         .pressure(3.0E-15F)
                         .build(),
                 0.166F,
-                Optional.empty()
+                null
         )));
     }
 

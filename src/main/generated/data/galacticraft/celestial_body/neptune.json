@@ -7,7 +7,9 @@
       "pressure": 3.0E-15,
       "temperature": 23.0
     },
-    "description": "planet.galacticraft.neptune.description",
+    "description": {
+      "translate": "planet.galacticraft.neptune.description"
+    },
     "display": {
       "type": "galacticraft:icon",
       "config": {
@@ -19,9 +21,10 @@
         "width": 16
       }
     },
-    "galaxy": "galacticraft:milky_way",
     "gravity": 0.166,
-    "name": "planet.galacticraft.neptune",
+    "name": {
+      "translate": "planet.galacticraft.neptune"
+    },
     "position": {
       "type": "galacticraft:orbital",
       "config": {
