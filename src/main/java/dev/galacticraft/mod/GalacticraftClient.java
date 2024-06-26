@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod;
 
-import com.sun.jna.platform.win32.DdemlUtil;
 import dev.galacticraft.api.client.tabs.InventoryTabRegistry;
 import dev.galacticraft.machinelib.client.api.model.MachineModelRegistry;
 import dev.galacticraft.mod.client.GCKeyBinds;
@@ -69,41 +68,27 @@ import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
-import net.fabricmc.fabric.api.event.Event;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.impl.client.rendering.ColorProviderRegistryImpl;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.color.item.ItemColor;
+import net.fabricmc.fabric.mixin.registry.sync.RegistriesAccessor;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelManager;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentContents;
-import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
 
-import javax.imageio.ImageIO;
-import javax.swing.event.EventListenerList;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import static dev.galacticraft.mod.content.item.CannedFoodItem.registerCan;
 import static dev.galacticraft.mod.content.item.GCItems.CANNED_FOOD_ITEMS;
 import static dev.galacticraft.mod.util.TextureUtils.getAverageColor;
 
@@ -220,6 +205,7 @@ public class GalacticraftClient implements ClientModInitializer {
         //couldn't be bothered finding a better way to get the texture of the items so overrides exists now
         List<String[]> nameOverride = new ArrayList<>();
         nameOverride.add(new String[]{"enchanted_golden_apple", "golden_apple"});
+        nameOverride.add(new String[]{"air", "lime_dye"});
         ModelLoadingPlugin.register(GCModelLoader.INSTANCE);
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (!colorsInitialized)
@@ -227,30 +213,41 @@ public class GalacticraftClient implements ClientModInitializer {
                 if (client.player != null && client.level != null)
                 {
                     CANNED_FOOD_ITEMS.forEach(cannedFoodItem -> {
-                        Item cannedItem = cannedFoodItem.getCannedItem();
-                        String nameComponent = cannedItem.toString();
-                        String itemName = extractInsideBrackets(nameComponent);
-                        assert itemName != null;
-                        String[] parts = itemName.split(":");
-                        String namespace = parts[0];
-                        String item = parts[1];
-                        for (String[] element: nameOverride)
-                        {
-                            if (parts[1].equals(element[0]))
+                        Optional<ItemStack> cannedItem = CannedFoodItem.getContents(cannedFoodItem.getDefaultInstance()).findFirst();
+                        if (cannedItem.isPresent()) {
+                            String nameComponent = cannedItem.toString();
+                            String itemName = extractInsideBrackets(nameComponent);
+                            assert itemName != null;
+                            String[] parts = itemName.split(":");
+                            String namespace = parts[0];
+                            String item = parts[1];
+                            for (String[] element: nameOverride)
                             {
-                                item = element[1];
+                                if (parts[1].equals(element[0]))
+                                {
+                                    item = element[1];
+                                }
                             }
+                            ResourceLocation textureLocation = new ResourceLocation(namespace, "textures/item/" + item + ".png");
+                            int avgColor = getAverageColor(textureLocation);
+                            cannedFoodItem.setColor(avgColor);
                         }
-                        ResourceLocation textureLocation = new ResourceLocation(namespace, "textures/item/" + item + ".png");
-                        int avgColor = getAverageColor(textureLocation);
-                        cannedFoodItem.setColor(avgColor);
                     });
                     colorsInitialized = true;
                 }
             }
         });
-
-
+        //For every edible food create a creative item of that canned food type
+        for (Item item : BuiltInRegistries.ITEM)
+        {
+            if (item.getFoodProperties() != null)
+            {
+                if (!(item instanceof CannedFoodItem))
+                {
+                    registerCan(item.getDefaultInstance());
+                }
+            }
+        }
         Constant.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 

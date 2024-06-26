@@ -28,6 +28,8 @@
     "client.ClientPacketListenerMixin"
   ],
   "client": [
+    "client.ClientTooltipMixin",
+    "client.FabricItemMixin",
     "client.AbstractClientPlayerMixin",
     "client.AlphaWarningTitleScreenMixin",
     "client.AnimalModelAgeableListModel",

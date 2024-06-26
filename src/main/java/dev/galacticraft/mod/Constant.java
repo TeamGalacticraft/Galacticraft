@@ -306,8 +306,10 @@ public interface Constant {
     }
 
     interface Item {
-        String ITEM_GROUP = "items";
         String ITEM_GROUP_CANS = "cans";
+        String ITEM_GROUP = "items";
+        String CANNED_FOOD = "canned_food";
+        String EMPTY_CANNED_FOOD = "empty_can";
         String RAW_SILICON = "raw_silicon";
         String RAW_METEORIC_IRON = "raw_meteoric_iron";
         String METEORIC_IRON_INGOT = "meteoric_iron_ingot";
@@ -358,7 +360,6 @@ public interface Constant {
         String STEEL_POLE = "steel_pole";
         String COPPER_CANISTER = "copper_canister";
         String TIN_CANISTER = "tin_canister";
-        String EMPTY_FOOD_CAN = "empty_food_can";
         String THERMAL_CLOTH = "thermal_cloth";
         String ISOTHERMAL_FABRIC = "isothermal_fabric";
         String ORION_DRIVE = "orion_drive";

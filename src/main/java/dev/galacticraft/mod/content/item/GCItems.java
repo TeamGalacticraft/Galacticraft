@@ -288,7 +288,6 @@ public class GCItems {
     public static final Item STEEL_POLE = new Item(new Item.Properties());
     public static final Item COPPER_CANISTER = new Item(new Item.Properties());
     public static final Item TIN_CANISTER = ITEMS.register(Constant.Item.TIN_CANISTER, new Item(new Item.Properties()));
-    public static final Item EMPTY_FOOD_CAN = ITEMS.register(Constant.Item.EMPTY_FOOD_CAN, new Item(new Item.Properties()));
     public static final Item THERMAL_CLOTH = new Item(new Item.Properties());
     public static final Item ISOTHERMAL_FABRIC = new Item(new Item.Properties());
     public static final Item ORION_DRIVE = new Item(new Item.Properties());
@@ -426,34 +425,14 @@ public class GCItems {
     public static final Item TIER_3_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties());
     public static final Item ASTRO_MINER_SCHEMATIC = new SchematicItem(new Item.Properties());
 
+    public static final CannedFoodItem CANNED_FOOD = new CannedFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(20).saturationMod(1).build()));
+    public static final CannedFoodItem EMPTY_CANNED_FOOD = new CannedFoodItem(new Item.Properties().food(null));
+
     
     public static void register() {
         // === START BLOCKS ===
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.APPLE,"canned_dehydrated_apple", "Canned Dehydrated Apple"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.CARROT,"canned_dehydrated_carrot", "Canned Dehydrated Carrot"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.MELON_SLICE, "canned_dehydrated_melon", "Canned Dehydrated Melon"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.POTATO, "canned_dehydrated_potato", "Canned Dehydrated Potato"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan( GCItems.GROUND_BEEF,"canned_beef", "Canned Beef"));
-        //filler items for testing purposes
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.GOLDEN_APPLE,"canned_golden_apple", "Canned Golden Apple"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.ENCHANTED_GOLDEN_APPLE,"canned_enchanted_golden_apple", "Canned Enchanted Golden Apple"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.SPIDER_EYE,"canned_spider_eye", "Canned Spider Eye"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.PUFFERFISH,"canned_pufferfish", "Canned Pufferfish"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.CHORUS_FRUIT,"canned_chorus_fruit", "Canned Chorus Fruit"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.SWEET_BERRIES,"canned_sweet_berries", "Canned Sweet Berries"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.GLOW_BERRIES,"canned_glow_berries", "Canned Glow Berries"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.GOLDEN_CARROT,"canned_golden_carrot", "Canned Golden Carrot"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.BAKED_POTATO,"canned_baked_potato", "Canned Baked Potato"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.POISONOUS_POTATO,"canned_poisonous_potato", "Canned Poisonous Potato"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.DRIED_KELP,"canned_kelp", "Canned Kelp"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.COD,"canned_cod", "Canned Cod"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.SALMON,"canned_salmon", "Canned Salmon"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.TROPICAL_FISH,"canned_tropical_fish", "Canned Tropical Fish"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.BREAD,"canned_bread", "Canned Bread"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.COOKIE,"canned_cookie", "Canned Cookie"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.PUMPKIN_PIE,"canned_pumpkin_pie", "Canned Pumpkin Pie"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(Items.BEETROOT,"canned_beetroot", "Canned Beetroot"));
-        CANNED_FOOD_ITEMS.add(CannedFoodItem.newCan(GCItems.CHEESE_SLICE,"canned_cheese", "Canned Cheese"));
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.EMPTY_CANNED_FOOD), EMPTY_CANNED_FOOD);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_FOOD), CANNED_FOOD);
 
         // MOON NATURAL
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_TURF), MOON_TURF);
