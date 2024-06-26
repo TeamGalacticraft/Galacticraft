@@ -425,7 +425,7 @@ public class GCItems {
     public static final Item TIER_3_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties());
     public static final Item ASTRO_MINER_SCHEMATIC = new SchematicItem(new Item.Properties());
 
-    public static final CannedFoodItem CANNED_FOOD = new CannedFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(20).saturationMod(1).build()));
+    public static final CannedFoodItem CANNED_FOOD = new CannedFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(0).saturationMod(0).build()));
     public static final CannedFoodItem EMPTY_CANNED_FOOD = new CannedFoodItem(new Item.Properties().food(null));
 
     

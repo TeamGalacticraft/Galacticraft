@@ -26,6 +26,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.CannedFoodTooltip;
 import net.fabricmc.fabric.api.item.v1.FabricItemStack;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.NonNullList;
@@ -43,10 +44,14 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -156,11 +161,24 @@ public class CannedFoodItem extends Item implements FabricItemStack {
     @Override
     public @NotNull Optional<TooltipComponent> getTooltipImage(ItemStack stack)
     {
-        NonNullList<ItemStack> nonNullList = NonNullList.create();
-        Stream<ItemStack> stream = getContents(stack);
-        Objects.requireNonNull(nonNullList);
-        stream.forEach(nonNullList::add);
-        return Optional.of(new CannedFoodTooltip(nonNullList));
+        if (getContents(stack).findAny().isPresent())
+        {
+            NonNullList<ItemStack> nonNullList = NonNullList.create();
+            Stream<ItemStack> stream = getContents(stack);
+            Objects.requireNonNull(nonNullList);
+            stream.forEach(nonNullList::add);
+            return Optional.of(new CannedFoodTooltip(nonNullList));
+        }else
+        {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
+        if (getContents(stack).findAny().isPresent()) {
+            tooltip.add(Component.literal("Total Nutrition: " + getTotalNutrition(stack)).withColor(ChatFormatting.DARK_GRAY.getColor()));
+        }
     }
 
     public static Stream<ItemStack> getContents(ItemStack stack) {
@@ -302,7 +320,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
         }
         int nutritionRequired = 20 - playerHunger;
         int canNutrition = 0;
-        int canSaturation = 0;
+        float canSaturation = 0f;
         if (nutritionRequired != 0)
         {
             Stream<ItemStack> stream = getContents(stack);
@@ -328,6 +346,20 @@ public class CannedFoodItem extends Item implements FabricItemStack {
             }
         }
         return null;
+    }
+
+    public static int getTotalNutrition(ItemStack stack) {
+        int canNutrition = 0;
+        Stream<ItemStack> stream = getContents(stack);
+        for (ItemStack foodItem : stream.toList())
+        {
+            int itemCount = foodItem.getCount();
+            for (int i = 0; i < itemCount; i++)
+            {
+                canNutrition += Objects.requireNonNull(foodItem.getFoodComponent()).getNutrition();
+            }
+        }
+        return canNutrition;
     }
 
     public static int getItemsToBeConsumed(ItemStack stack) {

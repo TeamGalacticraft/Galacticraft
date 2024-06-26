@@ -139,6 +139,9 @@
     ],
     "jei_mod_plugin": [
       "dev.galacticraft.mod.compat.jei.GCJEIPlugin"
+    ],
+    "appleskin": [
+      "dev.galacticraft.mod.compat.AppleSkinEventHandler"
     ]
   },
   "mixins": [
