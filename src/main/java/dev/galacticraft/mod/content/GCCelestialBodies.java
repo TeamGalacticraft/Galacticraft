@@ -219,8 +219,8 @@ public class GCCelestialBodies {
         )));
 
         context.register(ASTEROIDS, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
-                Component.translatable(Translations.CelestialBody.ASTEROIDS),
-                Component.translatable(Translations.CelestialBody.ASTEROIDS_DESC),
+                Component.translatable(Translations.CelestialBody.ASTEROID),
+                Component.translatable(Translations.CelestialBody.ASTEROID_DESC),
                 sol,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(45.0F, 1.375F, 0.0F, true)),
                 SpinningIconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/asteroid.png"), 0, 0, 16, 16)),

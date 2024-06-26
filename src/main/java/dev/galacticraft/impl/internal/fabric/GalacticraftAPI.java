@@ -26,21 +26,35 @@ import dev.galacticraft.api.accessor.SatelliteAccessor;
 import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.registry.BuiltInRocketRegistries;
+import dev.galacticraft.dynamicdimensions.api.DynamicDimensionRegistry;
 import dev.galacticraft.dynamicdimensions.api.event.DynamicDimensionLoadCallback;
 import dev.galacticraft.impl.internal.command.GCApiCommands;
 import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.data.gen.SatelliteChunkGenerator;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.LevelStorageSource;
 import org.jetbrains.annotations.ApiStatus;
+
+import javax.swing.event.ChangeEvent;
+import java.io.File;
+import java.nio.file.Path;
 
 @ApiStatus.Internal
 public class GalacticraftAPI implements ModInitializer {
     public static final SimpleContainer EMPTY_INV = new SimpleContainer(0);
+    //don't know if this is the best way to get file path, but it works
+    public static Path currentWorldSaveDirectory;
 
     @Override
     public void onInitialize() {
@@ -69,11 +83,22 @@ public class GalacticraftAPI implements ModInitializer {
         BuiltinObjects.register();
         BuiltInRocketRegistries.initialize();
         GcApiEntityAttributes.init();
+        ServerLifecycleEvents.SERVER_STARTED.register(this::onServerStarted);
 
         DynamicDimensionLoadCallback.register((minecraftServer, dynamicDimensionLoader) -> {
             ((SatelliteAccessor) minecraftServer).galacticraft$loadSatellites(dynamicDimensionLoader);
         });
         Gases.init();
         Constant.LOGGER.info("API Initialization Complete. (Took {}ms).", System.currentTimeMillis() - startInitTime);
+    }
+
+    private void onServerStarted(MinecraftServer server) {
+        // Update the directory when the server starts
+        updateWorldSaveDirectory(server);
+    }
+
+    private void updateWorldSaveDirectory(MinecraftServer server) {
+        currentWorldSaveDirectory = Path.of(Minecraft.getInstance().getLevelSource().getBaseDir().toString(), server.getWorldData().getLevelName());
+        System.out.println("World Save Directory: " + currentWorldSaveDirectory.toString());
     }
 }

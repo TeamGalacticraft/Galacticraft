@@ -40,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 
 public interface Constant {
     String MOD_ID = "galacticraft";
+    public static final String GCDATAFOLDER = "../galacticraft/";
     String COMMON_NAMESPACE = "c";
     Logger LOGGER = LogManager.getLogger("Galacticraft");
 
@@ -117,6 +118,9 @@ public interface Constant {
         String VAPOR_SPOUT = "vapor_spout";
 
         // Ore
+        String MARS_IRON_ORE = "mars_iron_ore";
+        String MARS_TIN_ORE = "mars_tin_ore";
+        String MARS_COPPER_ORE = "mars_copper_ore";
         String MOON_COPPER_ORE = "moon_copper_ore";
         String LUNASLATE_COPPER_ORE = "lunaslate_copper_ore";
         String DESH_ORE = "desh_ore";
@@ -302,7 +306,10 @@ public interface Constant {
     }
 
     interface Item {
+        String ITEM_GROUP_CANS = "cans";
         String ITEM_GROUP = "items";
+        String CANNED_FOOD = "canned_food";
+        String EMPTY_CANNED_FOOD = "empty_can";
         String RAW_SILICON = "raw_silicon";
         String RAW_METEORIC_IRON = "raw_meteoric_iron";
         String METEORIC_IRON_INGOT = "meteoric_iron_ingot";
@@ -367,12 +374,6 @@ public interface Constant {
         String GROUND_BEEF = "ground_beef";
         String BEEF_PATTY = "beef_patty";
         String CHEESEBURGER = "cheeseburger";
-        //CANNED FOOD
-        String CANNED_DEHYDRATED_APPLE = "canned_dehydrated_apple";
-        String CANNED_DEHYDRATED_CARROT = "canned_dehydrated_carrot";
-        String CANNED_DEHYDRATED_MELON = "canned_dehydrated_melon";
-        String CANNED_DEHYDRATED_POTATO = "canned_dehydrated_potato";
-        String CANNED_BEEF = "canned_beef";
         //ROCKET PARTS
         String TIER_1_HEAVY_DUTY_PLATE = "heavy_plating";
         String TIER_2_HEAVY_DUTY_PLATE = "heavy_plating_t2";

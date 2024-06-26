@@ -189,8 +189,8 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(CelestialBody.SOL_DESC, "");
         this.add(CelestialBody.SOL, "Sol");
-        this.add(CelestialBody.ASTEROIDS_DESC, "");
-        this.add(CelestialBody.ASTEROIDS, "Asteroids");
+        this.add(CelestialBody.ASTEROID_DESC, "");
+        this.add(CelestialBody.ASTEROID, "Asteroid");
         this.add(CelestialBody.EARTH_DESC, "The Overworld");
         this.add(CelestialBody.EARTH, "Earth");
         this.add(CelestialBody.JUPITER_DESC, "");

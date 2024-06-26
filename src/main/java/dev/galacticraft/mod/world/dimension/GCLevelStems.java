@@ -42,6 +42,7 @@ import org.jetbrains.annotations.NotNull;
 public class GCLevelStems {
     public static final ResourceKey<LevelStem> MOON = key("moon");
     public static final ResourceKey<LevelStem> VENUS = key("venus");
+    public static final ResourceKey<LevelStem> ASTEROID = key("asteroid");
 
     public static void bootstrapRegistries(@NotNull BootstapContext<LevelStem> context) {
         HolderGetter<DimensionType> typeLookup = context.lookup(Registries.DIMENSION_TYPE);
@@ -52,6 +53,7 @@ public class GCLevelStems {
         // the returned reference may be null
 //        context.register(MOON, new LevelStem(typeLookup.getOrThrow(GCDimensionTypes.MOON), new NoiseBasedChunkGenerator(MultiNoiseBiomeSource.createFromPreset(biomeNoiseLookup.getOrThrow(GCMultiNoiseBiomeSourceParameterLists.MOON)), noiseLookup.getOrThrow(GCNoiseGeneratorSettings.MOON))));
         context.register(VENUS, new LevelStem(typeLookup.getOrThrow(GCDimensionTypes.VENUS), new NoiseBasedChunkGenerator(MultiNoiseBiomeSource.createFromPreset(biomeNoiseLookup.getOrThrow(GCMultiNoiseBiomeSourceParameterLists.VENUS)), noiseLookup.getOrThrow(GCNoiseGeneratorSettings.VENUS))));
+        context.register(ASTEROID, new LevelStem(typeLookup.getOrThrow(GCDimensionTypes.ASTEROID), new NoiseBasedChunkGenerator(MultiNoiseBiomeSource.createFromPreset(biomeNoiseLookup.getOrThrow(GCMultiNoiseBiomeSourceParameterLists.ASTEROID)), noiseLookup.getOrThrow(GCNoiseGeneratorSettings.ASTEROID))));
     }
 
     @Contract(value = "_ -> new", pure = true)

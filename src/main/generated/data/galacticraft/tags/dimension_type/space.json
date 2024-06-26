@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "galacticraft:moon",
-    "galacticraft:venus"
+    "galacticraft:venus",
+    "galacticraft:asteroid"
   ]
 }

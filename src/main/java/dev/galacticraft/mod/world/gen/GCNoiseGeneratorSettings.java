@@ -26,6 +26,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.world.gen.surfacebuilder.MoonSurfaceRules;
 import dev.galacticraft.mod.world.gen.surfacebuilder.VenusSurfaceRules;
+import dev.galacticraft.mod.world.gen.surfacebuilder.AsteroidSurfaceRules;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
@@ -43,6 +44,7 @@ import org.jetbrains.annotations.NotNull;
 public class GCNoiseGeneratorSettings {
     public static final ResourceKey<NoiseGeneratorSettings> MOON = key("moon");
     public static final ResourceKey<NoiseGeneratorSettings> VENUS = key("venus");
+    public static final ResourceKey<NoiseGeneratorSettings> ASTEROID = key("asteroid");
 
     public static void bootstrapRegistries(BootstapContext<NoiseGeneratorSettings> context) {
         HolderGetter<DensityFunction> densityLookup = context.lookup(Registries.DENSITY_FUNCTION);
@@ -68,6 +70,20 @@ public class GCNoiseGeneratorSettings {
                 Blocks.AIR.defaultBlockState(),
                 GCNoiseGeneratorSettings.venus(densityLookup, noiseLookup),
                 VenusSurfaceRules.VENUS,
+                new OverworldBiomeBuilder().spawnTarget(),
+                -32,
+                false,
+                false,
+                true,
+                false
+        ));
+
+        context.register(ASTEROID, new NoiseGeneratorSettings(
+                NoiseSettings.create(-32, 256, 1, 2),
+                GCBlocks.HARD_VENUS_ROCK.defaultBlockState(),
+                Blocks.AIR.defaultBlockState(),
+                GCNoiseGeneratorSettings.asteroid(densityLookup, noiseLookup),
+                AsteroidSurfaceRules.ASTEROID,
                 new OverworldBiomeBuilder().spawnTarget(),
                 -32,
                 false,
@@ -173,6 +189,26 @@ public class GCNoiseGeneratorSettings {
                 DensityFunctions.zero(), // ridges
                 DensityFunctions.noise(noiseLookup.getOrThrow(Noises.SPAGHETTI_3D_1)), // initialDensityWithoutJaggedness
                 DensityFunctions.blendDensity(GCDensityFunctions.getFunction(densityLookup, GCDensityFunctions.Venus.FINAL_DENSITY)), // finalDensity
+                DensityFunctions.zero(), // veinToggle
+                DensityFunctions.zero(), // veinRidged
+                DensityFunctions.zero()  // veinGap
+        );
+    }
+
+    public static NoiseRouter asteroid(HolderGetter<DensityFunction> densityLookup, HolderGetter<NormalNoise.NoiseParameters> noiseLookup) {
+        return new NoiseRouter(
+                DensityFunctions.zero(), // barrierNoise
+                DensityFunctions.zero(), // fluidLevelFloodednessNoise
+                DensityFunctions.zero(), // fluidLevelSpreadNoise
+                DensityFunctions.zero(), // lavaNoise
+                DensityFunctions.zero(), // temperature
+                DensityFunctions.zero(), // vegetation
+                DensityFunctions.zero(), // continents
+                DensityFunctions.zero(), // erosion
+                DensityFunctions.zero(), // depth
+                DensityFunctions.zero(), // ridges
+                DensityFunctions.noise(noiseLookup.getOrThrow(Noises.SPAGHETTI_3D_1)), // initialDensityWithoutJaggedness
+                DensityFunctions.blendDensity(GCDensityFunctions.getFunction(densityLookup, GCDensityFunctions.Asteroid.FINAL_DENSITY)), // finalDensity
                 DensityFunctions.zero(), // veinToggle
                 DensityFunctions.zero(), // veinRidged
                 DensityFunctions.zero()  // veinGap

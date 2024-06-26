@@ -407,12 +407,6 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.BEEF_PATTY, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.CHEESEBURGER, ModelTemplates.FLAT_ITEM);
 
-        generator.generateFlatItem(GCItems.CANNED_DEHYDRATED_APPLE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.CANNED_DEHYDRATED_CARROT, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.CANNED_DEHYDRATED_MELON, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.CANNED_DEHYDRATED_POTATO, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.CANNED_BEEF, ModelTemplates.FLAT_ITEM);
-
         generator.generateFlatItem(GCItems.NOSE_CONE, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.HEAVY_NOSE_CONE, "_joined", ModelTemplates.FLAT_ITEM);
 
@@ -433,6 +427,7 @@ public class GCModelProvider extends FabricModelProvider {
                 generator.generateArmorTrims(armorItem);
             }
         }
+
 
         generator.generateFlatItem(GCItems.SENSOR_GLASSES, ModelTemplates.FLAT_ITEM);
 
