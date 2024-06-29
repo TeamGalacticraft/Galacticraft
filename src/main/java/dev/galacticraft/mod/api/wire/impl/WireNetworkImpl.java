@@ -215,6 +215,7 @@ public class WireNetworkImpl extends SnapshotParticipant<Long> implements WireNe
         final long baseTransferred = this.transferred;
 
         this.updateSnapshots(transaction);
+
         requests.forEach((storage, requested) -> {
             long insert = (long) (requested * ratio);
             if (insert > 0) {

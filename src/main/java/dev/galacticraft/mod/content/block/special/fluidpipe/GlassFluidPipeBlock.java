@@ -29,6 +29,7 @@ import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
 import dev.galacticraft.mod.content.item.StandardWrenchItem;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
+import dev.galacticraft.mod.util.DirectionUtil;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -80,11 +81,16 @@ public class GlassFluidPipeBlock extends FluidPipe {
                     livingEntity.setItemInHand(interactionHand, copy);
                 }
             }
+
+            // Regular Stuff
+            var changed = false;
             for (var direction : Constant.Misc.DIRECTIONS) {
-                var otherBlockEntity = level.getBlockEntity(blockPos.relative(direction));
-                glassPipe.getConnections()[direction.ordinal()] = (otherBlockEntity instanceof Pipe pipe && pipe.canConnect(direction.getOpposite())) || FluidUtil.canAccessFluid(level, blockPos.relative(direction), direction);
+                changed |= glassPipe.getConnections()[direction.ordinal()] = glassPipe.canConnect(direction) && FluidUtil.canAccessFluid(level, blockPos.relative(direction), direction);
             }
-            level.updateNeighborsAt(blockPos, blockState.getBlock());
+            if (changed) {
+                glassPipe.setChanged();
+            }
+            level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
         }
     }
 
@@ -125,14 +131,21 @@ public class GlassFluidPipeBlock extends FluidPipe {
     @Override
     public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos fromPos, boolean notify) {
         super.neighborChanged(blockState, level, blockPos, block, fromPos, notify);
-        var neighborState = level.getBlockState(fromPos);
-        var delta = fromPos.subtract(blockPos);
-        var direction = Direction.fromDelta(delta.getX(), delta.getY(), delta.getZ());
+        System.out.println("neighborChanged");
 
-        if (direction != null && level.getBlockEntity(blockPos) instanceof GlassFluidPipeBlockEntity glassPipe) {
-            var otherBlockEntity = level.getBlockEntity(fromPos);
-            glassPipe.getConnections()[direction.ordinal()] = !neighborState.isAir() && ((otherBlockEntity instanceof Pipe pipe && pipe.canConnect(direction.getOpposite())) || FluidUtil.canAccessFluid(level, fromPos, direction));
-            level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
+        if (level.getBlockEntity(blockPos) instanceof PipeBlockEntity glassPipe) {
+            var direction = DirectionUtil.fromNormal(fromPos.getX() - blockPos.getX(), fromPos.getY() - blockPos.getY(), fromPos.getZ() - blockPos.getZ());
+
+            if (direction != null) {
+                if (!level.isClientSide
+                        && glassPipe.getConnections()[direction.ordinal()]
+                        != (glassPipe.getConnections()[direction.ordinal()]
+                        = glassPipe.canConnect(direction) && FluidUtil.canAccessFluid(level, fromPos, direction))
+                ) {
+                    level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
+                }
+            }
+            glassPipe.setChanged();
         }
     }
 
