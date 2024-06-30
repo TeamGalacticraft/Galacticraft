@@ -32,7 +32,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.BakedObjModel;
 import dev.galacticraft.mod.client.model.GCBakedModel;
 import dev.galacticraft.mod.client.model.GCModel;
-import dev.galacticraft.mod.client.model.GCSheets;
+import dev.galacticraft.mod.client.model.GCRenderTypes;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceLocation;
@@ -70,7 +70,7 @@ public class ObjModel implements GCModel {
             List<BakedMaterial> bakedMaterials = new ArrayList<>();
             for (Mtl material : materials) {
                 if (material.getMapKdOptions() != null && material.getMapKdOptions().getFileName() != null)
-                    bakedMaterials.add(new BakedMaterial(material, spriteGetter.apply(new Material(atlas.orElse(GCSheets.OBJ_ATLAS), new ResourceLocation(material.getMapKdOptions().getFileName())))));
+                    bakedMaterials.add(new BakedMaterial(material, spriteGetter.apply(new Material(atlas.orElse(GCRenderTypes.OBJ_ATLAS), new ResourceLocation(material.getMapKdOptions().getFileName())))));
             }
 
             return new BakedObjModel(obj, bakedMaterials);

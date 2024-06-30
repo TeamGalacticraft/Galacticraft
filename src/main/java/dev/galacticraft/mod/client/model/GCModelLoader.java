@@ -126,7 +126,7 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
     public CompletableFuture<Void> reload(PreparationBarrier synchronizer, ResourceManager resourceManager, ProfilerFiller preparationsProfiler, ProfilerFiller reloadProfiler, Executor backgroundExecutor, Executor gameExecutor) {
         preparationsProfiler.startTick();
         Map<ResourceLocation, ResourceLocation> atlasMap = new HashMap<>();
-        atlasMap.put(GCSheets.OBJ_ATLAS, Constant.id("obj"));
+        atlasMap.put(GCRenderTypes.OBJ_ATLAS, Constant.id("obj"));
         TextureManager textureManager = Minecraft.getInstance().getTextureManager();
         RocketAtlasCallback.EVENT.invoker().collectAtlases(atlasMap, textureManager);
         this.atlases = new AtlasSet(atlasMap, textureManager);
@@ -267,7 +267,7 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
     }
 
     public TextureAtlasSprite getDefaultSprite() {
-        return this.atlases.getAtlas(GCSheets.OBJ_ATLAS).getSprite(WHITE_SPRITE);
+        return this.atlases.getAtlas(GCRenderTypes.OBJ_ATLAS).getSprite(WHITE_SPRITE);
     }
 
     public record ReloadState(

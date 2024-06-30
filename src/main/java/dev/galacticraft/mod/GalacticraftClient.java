@@ -27,6 +27,7 @@ import dev.galacticraft.machinelib.client.api.model.MachineModelRegistry;
 import dev.galacticraft.mod.client.GCKeyBinds;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.GCModelLoader;
+import dev.galacticraft.mod.client.model.GCRenderTypes;
 import dev.galacticraft.mod.client.model.OxygenSealerSpriteProvider;
 import dev.galacticraft.mod.client.model.SolarPanelSpriteProvider;
 import dev.galacticraft.mod.client.model.types.ObjModel;
@@ -182,6 +183,8 @@ public class GalacticraftClient implements ClientModInitializer {
         });
 
         ModelLoadingPlugin.register(GCModelLoader.INSTANCE);
+
+        GCRenderTypes.init();
 
         Constant.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

@@ -29,7 +29,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.GCBakedModel;
 import dev.galacticraft.mod.client.model.GCModelLoader;
 import dev.galacticraft.mod.client.model.GCModelState;
-import dev.galacticraft.mod.client.model.GCSheets;
+import dev.galacticraft.mod.client.model.GCRenderTypes;
 import dev.galacticraft.mod.content.entity.Buggy;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -61,7 +61,7 @@ public class BuggyRenderer extends EntityRenderer<Buggy> {
         if (this.buggyModel == null)
             this.buggyModel = GCModelLoader.INSTANCE.getModel(MODEL);
         float pitch = Mth.lerp(tickDelta, buggy.xRotO, buggy.getXRot());
-        VertexConsumer consumer = vertexConsumers.getBuffer(GCSheets.obj(GCSheets.OBJ_ATLAS));
+        VertexConsumer consumer = vertexConsumers.getBuffer(GCRenderTypes.obj(GCRenderTypes.OBJ_ATLAS));
         matrices.pushPose();
         matrices.scale(1.0F, 1.0F, 1.0F);
         matrices.mulPose(Axis.YP.rotationDegrees(180.0F - yaw));
