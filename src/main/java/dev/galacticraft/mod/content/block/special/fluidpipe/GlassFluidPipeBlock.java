@@ -89,8 +89,8 @@ public class GlassFluidPipeBlock extends FluidPipe {
             }
             if (changed) {
                 glassPipe.setChanged();
+                level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
             }
-            level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
         }
     }
 
@@ -131,7 +131,6 @@ public class GlassFluidPipeBlock extends FluidPipe {
     @Override
     public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos fromPos, boolean notify) {
         super.neighborChanged(blockState, level, blockPos, block, fromPos, notify);
-        System.out.println("neighborChanged");
 
         if (level.getBlockEntity(blockPos) instanceof PipeBlockEntity glassPipe) {
             var direction = DirectionUtil.fromNormal(fromPos.getX() - blockPos.getX(), fromPos.getY() - blockPos.getY(), fromPos.getZ() - blockPos.getZ());
@@ -143,9 +142,9 @@ public class GlassFluidPipeBlock extends FluidPipe {
                         = glassPipe.canConnect(direction) && FluidUtil.canAccessFluid(level, fromPos, direction))
                 ) {
                     level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
+                    glassPipe.setChanged();
                 }
             }
-            glassPipe.setChanged();
         }
     }
 

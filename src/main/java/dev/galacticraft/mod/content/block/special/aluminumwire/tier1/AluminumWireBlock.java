@@ -97,8 +97,8 @@ public class AluminumWireBlock extends WireBlock {
             }
             if (changed) {
                 wire.setChanged();
+                level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
             }
-            level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
         }
     }
 
@@ -112,9 +112,9 @@ public class AluminumWireBlock extends WireBlock {
             if (direction != null) {
                 if (!level.isClientSide && wire.getConnections()[direction.ordinal()] != (wire.getConnections()[direction.ordinal()] = wire.canConnect(direction) && EnergyStorage.SIDED.find(level, neighborPos, direction.getOpposite()) != null)) {
                     level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
+                    wire.setChanged();
                 }
             }
-            wire.setChanged();
         }
     }
 
