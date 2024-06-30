@@ -32,7 +32,8 @@ import org.joml.Quaternionf;
  */
 public abstract class AdvancedVehicle extends GCVehicle {
 
-    protected Quaternionf rotation;
+    protected Quaternionf rotation = new Quaternionf();
+    public Quaternionf rotationO = rotation;
 
     public AdvancedVehicle(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -40,5 +41,15 @@ public abstract class AdvancedVehicle extends GCVehicle {
 
     public Quaternionf getRotation() {
         return rotation;
+    }
+
+    public Quaternionf getViewRotation(float tickDelta) {
+        return tickDelta == 1.0F ? getRotation() : this.rotationO.slerp(this.rotation, tickDelta);
+    }
+
+    @Override
+    public void baseTick() {
+        this.rotationO = new Quaternionf(rotation);
+        super.baseTick();
     }
 }

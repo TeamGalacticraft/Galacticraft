@@ -836,14 +836,19 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
         if (stage.ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
             if (up) {
+                this.getRotation().rotationX((Math.min(Math.max(getXRot() - 0.5F * turnFactor, -angle), angle)) * Mth.DEG_TO_RAD);
+//                this.rotation.mul()
                 setXRot(Math.min(Math.max(getXRot() - 0.5F * turnFactor, -angle), angle));
             } else if (down) {
+                this.getRotation().rotationX(((getXRot() + 2.0F) % 360.0f) * Mth.DEG_TO_RAD);
                 setXRot((getXRot() + 2.0F) % 360.0f);
             }
 
             if (left) {
+                this.getRotation().rotationY(((getYRot() - 2.0F) % 360.0f) * Mth.DEG_TO_RAD);
                 setYRot((getYRot() - 2.0F) % 360.0f);
             } else if (right) {
+                this.getRotation().rotationY(((getYRot() + 2.0F) % 360.0f) * Mth.DEG_TO_RAD);
                 setYRot((getYRot() + 2.0F) % 360.0f);
             }
         }
