@@ -2,6 +2,9 @@
   "replace": false,
   "values": [
     "galacticraft:moon_rock_slab",
+    "galacticraft:moon_rock_brick_slab",
+    "galacticraft:cracked_moon_rock_brick_slab",
+    "galacticraft:polished_moon_rock_slab",
     "galacticraft:lunaslate_slab",
     "galacticraft:cobbled_moon_rock_slab",
     "galacticraft:cobbled_lunaslate_slab",

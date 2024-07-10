@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "galacticraft:block/polished_moon_rock",
+    "side": "galacticraft:block/polished_moon_rock",
+    "top": "galacticraft:block/polished_moon_rock"
+  }
+}

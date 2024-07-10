@@ -97,6 +97,9 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         var stairs = new Block[] {
                 GCBlocks.MOON_ROCK_STAIRS,
+                GCBlocks.MOON_ROCK_BRICK_STAIRS,
+                GCBlocks.CRACKED_MOON_ROCK_BRICK_STAIRS,
+                GCBlocks.POLISHED_MOON_ROCK_STAIRS,
                 GCBlocks.LUNASLATE_STAIRS,
                 GCBlocks.COBBLED_MOON_ROCK_STAIRS,
                 GCBlocks.COBBLED_LUNASLATE_STAIRS,
@@ -109,6 +112,9 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         var wall = new Block[] {
                 GCBlocks.MOON_ROCK_WALL,
+                GCBlocks.MOON_ROCK_BRICK_WALL,
+                GCBlocks.CRACKED_MOON_ROCK_BRICK_WALL,
+                GCBlocks.POLISHED_MOON_ROCK_WALL,
                 GCBlocks.LUNASLATE_WALL,
                 GCBlocks.COBBLED_MOON_ROCK_WALL,
                 GCBlocks.COBBLED_LUNASLATE_WALL,
@@ -121,6 +127,9 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         var slab = new Block[] {
                 GCBlocks.MOON_ROCK_SLAB,
+                GCBlocks.MOON_ROCK_BRICK_SLAB,
+                GCBlocks.CRACKED_MOON_ROCK_BRICK_SLAB,
+                GCBlocks.POLISHED_MOON_ROCK_SLAB,
                 GCBlocks.LUNASLATE_SLAB,
                 GCBlocks.COBBLED_MOON_ROCK_SLAB,
                 GCBlocks.COBBLED_LUNASLATE_SLAB,
@@ -229,6 +238,11 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.METEORIC_IRON_DECORATION.detailedBlock(),
                         GCBlocks.DARK_DECORATION.detailedBlock(),
                         GCBlocks.MOON_ROCK,
+                        GCBlocks.MOON_ROCK_BRICK,
+                        GCBlocks.CRACKED_MOON_ROCK_BRICK,
+                        GCBlocks.POLISHED_MOON_ROCK,
+                        GCBlocks.CHISELED_MOON_ROCK,
+                        GCBlocks.MOON_ROCK_PILLAR,
                         GCBlocks.LUNASLATE,
                         GCBlocks.COBBLED_MOON_ROCK,
                         GCBlocks.COBBLED_LUNASLATE,
