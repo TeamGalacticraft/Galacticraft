@@ -56,6 +56,7 @@ public class ConfigImpl implements Config {
     private long electricCompressorEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
     private long electricArcFurnaceEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
     private long oxygenCollectorEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
+    private long foodCannerEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long refineryEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
     private long electricFurnaceEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
     private long energyStorageModuleStorageSize = 300_000;
@@ -209,8 +210,18 @@ public class ConfigImpl implements Config {
         return oxygenCompressorEnergyConsumptionRate;
     }
 
+
     public void setOxygenCompressorEnergyConsumptionRate(long amount) {
         this.oxygenCompressorEnergyConsumptionRate = amount;
+    }
+
+    @Override
+    public long foodCannerEnergyConsumptionRate() {
+        return foodCannerEnergyConsumptionRate;
+    }
+
+    public void setFoodCannerEnergyConsumptionRate(long amount) {
+        this.foodCannerEnergyConsumptionRate = amount;
     }
 
     @Override
@@ -417,6 +428,16 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
                     config.oxygenCompressorEnergyConsumptionRate())
                     .setSaveConsumer(config::setOxygenCompressorEnergyConsumptionRate)
+                    .setDefaultValue(15)
+                    .requireRestart()
+                    .build()
+            );
+
+            machines.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.FOOD_CANNER_ENERGY_CONSUMPTION_RATE),
+                    config.foodCannerEnergyConsumptionRate())
+                    .setSaveConsumer(config::setFoodCannerEnergyConsumptionRate)
                     .setDefaultValue(15)
                     .requireRestart()
                     .build()

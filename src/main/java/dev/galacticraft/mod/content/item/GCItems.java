@@ -224,6 +224,7 @@ public class GCItems {
     public static final Item OXYGEN_BUBBLE_DISTRIBUTOR = new BlockItem(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, new Item.Properties());
     public static final Item OXYGEN_DECOMPRESSOR = new BlockItem(GCBlocks.OXYGEN_DECOMPRESSOR, new Item.Properties());
     public static final Item OXYGEN_COMPRESSOR = new BlockItem(GCBlocks.OXYGEN_COMPRESSOR, new Item.Properties());
+    public static final Item FOOD_CANNER = new BlockItem(GCBlocks.FOOD_CANNER, new Item.Properties());
     public static final Item OXYGEN_STORAGE_MODULE = new BlockItem(GCBlocks.OXYGEN_STORAGE_MODULE, new Item.Properties());
     public static final Item FUEL_LOADER = new BlockItem(GCBlocks.FUEL_LOADER, new Item.Properties());
     public static final Item ROCKET_WORKBENCH = new BlockItem(GCBlocks.ROCKET_WORKBENCH, new Item.Properties());
@@ -425,8 +426,8 @@ public class GCItems {
     public static final Item TIER_3_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties());
     public static final Item ASTRO_MINER_SCHEMATIC = new SchematicItem(new Item.Properties());
 
-    public static final CannedFoodItem CANNED_FOOD = new CannedFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(0).saturationMod(0).build()));
-    public static final CannedFoodItem EMPTY_CANNED_FOOD = new CannedFoodItem(new Item.Properties().food(null));
+    public static final CannedFoodItem CANNED_FOOD = new CannedFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(0).saturationMod(0).build()).stacksTo(1));
+    public static final CannedFoodItem EMPTY_CANNED_FOOD = new CannedFoodItem(new Item.Properties().food(null).stacksTo(64));
 
     
     public static void register() {
@@ -588,6 +589,7 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR), OXYGEN_BUBBLE_DISTRIBUTOR);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.OXYGEN_DECOMPRESSOR), OXYGEN_DECOMPRESSOR);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.OXYGEN_COMPRESSOR), OXYGEN_COMPRESSOR);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.FOOD_CANNER), FOOD_CANNER);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.OXYGEN_STORAGE_MODULE), OXYGEN_STORAGE_MODULE);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.FUEL_LOADER), FUEL_LOADER);
 

@@ -56,6 +56,7 @@ public class GCMenuTypes {
     public static final MenuType<OxygenCollectorMenu> OXYGEN_COLLECTOR = MachineMenu.createType(OxygenCollectorMenu::new);
 
     public static final MenuType<MachineMenu<OxygenCompressorBlockEntity>> OXYGEN_COMPRESSOR = MachineMenu.createSimple(() -> GCMachineTypes.OXYGEN_COMPRESSOR);
+    public static final MenuType<FoodCannerMenu> FOOD_CANNER = MachineMenu.createType(FoodCannerMenu::new);
     public static final MenuType<MachineMenu<OxygenDecompressorBlockEntity>> OXYGEN_DECOMPRESSOR = MachineMenu.createSimple(() -> GCMachineTypes.OXYGEN_DECOMPRESSOR);
 
     public static final MenuType<MachineMenu<OxygenSealerBlockEntity>> OXYGEN_SEALER = MachineMenu.createSimple(() -> GCMachineTypes.OXYGEN_SEALER);
@@ -90,6 +91,7 @@ public class GCMenuTypes {
 
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.OXYGEN_COLLECTOR_MENU), OXYGEN_COLLECTOR);
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.OXYGEN_COMPRESSOR_MENU), OXYGEN_COMPRESSOR);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.FOOD_CANNER_MENU), FOOD_CANNER);
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.OXYGEN_DECOMPRESSOR_MENU), OXYGEN_DECOMPRESSOR);
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.BUBBLE_DISTRIBUTOR_MENU), OXYGEN_BUBBLE_DISTRIBUTOR);
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.OXYGEN_SEALER_MENU), OXYGEN_SEALER);

@@ -194,6 +194,17 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.OXYGEN_CONCENTRATOR), has(GCItems.OXYGEN_CONCENTRATOR))
                 .save(output);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.FOOD_CANNER)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .define('B', GCItems.COMPRESSED_BRONZE)
+                .define('C', GCItems.OXYGEN_CONCENTRATOR)
+                .define('A', GCItems.COMPRESSED_ALUMINUM)
+                .pattern("SAS")
+                .pattern("ACA")
+                .pattern("SBS")
+                .unlockedBy(getHasName(GCItems.OXYGEN_CONCENTRATOR), has(GCItems.OXYGEN_CONCENTRATOR))
+                .save(output);
+
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_DECOMPRESSOR)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('R', Items.REDSTONE_TORCH)

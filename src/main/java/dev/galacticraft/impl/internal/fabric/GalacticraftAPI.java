@@ -43,6 +43,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.LevelResource;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -98,7 +99,14 @@ public class GalacticraftAPI implements ModInitializer {
     }
 
     private void updateWorldSaveDirectory(MinecraftServer server) {
-        currentWorldSaveDirectory = Path.of(Minecraft.getInstance().getLevelSource().getBaseDir().toString(), server.getWorldData().getLevelName());
-        System.out.println("World Save Directory: " + currentWorldSaveDirectory.toString());
+        // Get the main (overworld) level from the server
+        ServerLevel overworld = server.getLevel(net.minecraft.world.level.Level.OVERWORLD);
+
+        if (overworld != null) {
+            currentWorldSaveDirectory = overworld.getServer().getWorldPath(LevelResource.ROOT);
+            System.out.println("World Save Directory: " + currentWorldSaveDirectory.toString());
+        } else {
+            System.err.println("Error: Overworld level is null");
+        }
     }
 }

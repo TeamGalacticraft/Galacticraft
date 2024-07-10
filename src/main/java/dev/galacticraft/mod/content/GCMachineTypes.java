@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content;
 
 import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.machinelib.api.filter.ResourceFilter;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineType;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
@@ -35,13 +36,16 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.InputType;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.block.entity.machine.*;
+import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.screen.*;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Items;
@@ -351,6 +355,81 @@ public class GCMachineTypes {
                             .pos(31, 8)
                             .capacity(OxygenCompressorBlockEntity.MAX_OXYGEN)
                             .filter(ResourceFilters.ofResource(Gases.OXYGEN))
+            )
+    );
+
+    public static final MachineType<FoodCannerBlockEntity, FoodCannerMenu> FOOD_CANNER = MachineType.create(
+            GCBlocks.FOOD_CANNER,
+            GCBlockEntityTypes.FOOD_CANNER,
+            GCMenuTypes.FOOD_CANNER,
+            () -> MachineEnergyStorage.create(
+                    Galacticraft.CONFIG.machineEnergyStorageSize(),
+                    Galacticraft.CONFIG.foodCannerEnergyConsumptionRate() * 2,
+                    Galacticraft.CONFIG.foodCannerEnergyConsumptionRate() * 2,
+                    true,
+                    false
+            ),
+            MachineItemStorage.of(
+                    ItemResourceSlot.builder(InputType.TRANSFER)
+                            .pos(8, 67)
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
+                    ItemResourceSlot.builder(InputType.INPUT)
+                            .pos(62, 13)
+                            .filter(ResourceFilters.ofResource(GCItems.EMPTY_CANNED_FOOD)),
+                    ItemResourceSlot.builder(InputType.STORAGE)
+                            .pos(62, 40)
+                            .capacity(1)
+                            .filter(ResourceFilters.ofResource(GCItems.EMPTY_CANNED_FOOD)),
+                    ItemResourceSlot.builder(InputType.RECIPE_OUTPUT)
+                            .pos(62, 67),
+                    ItemResourceSlot.builder(InputType.INPUT)
+                            .pos(98, 13)
+                            .filter((item, tag) -> item != null && item.isEdible() && !(item instanceof CannedFoodItem)),
+                    ItemResourceSlot.builder(InputType.INPUT)
+                            .pos(116, 13)
+                            .filter((item, tag) -> item != null && item.isEdible() && !(item instanceof CannedFoodItem)),
+                    ItemResourceSlot.builder(InputType.INPUT)
+                            .pos(134, 13)
+                            .filter((item, tag) -> item != null && item.isEdible() && !(item instanceof CannedFoodItem)),
+                    ItemResourceSlot.builder(InputType.INPUT)
+                            .pos(152, 13)
+                            .filter((item, tag) -> item != null && item.isEdible() && !(item instanceof CannedFoodItem)),
+                    ItemResourceSlot.builder(InputType.INPUT)
+                            .pos(98, 31)
+                            .filter((item, tag) -> item != null && item.isEdible() && !(item instanceof CannedFoodItem)),
+                    ItemResourceSlot.builder(InputType.INPUT)
+                            .pos(116, 31)
+                            .filter((item, tag) -> item != null && item.isEdible() && !(item instanceof CannedFoodItem)),
+                    ItemResourceSlot.builder(InputType.INPUT)
+                            .pos(134, 31)
+                            .filter((item, tag) -> item != null && item.isEdible() && !(item instanceof CannedFoodItem)),
+                    ItemResourceSlot.builder(InputType.INPUT)
+                            .pos(152, 31)
+                            .filter((item, tag) -> item != null && item.isEdible() && !(item instanceof CannedFoodItem)),
+                    ItemResourceSlot.builder(InputType.INPUT)
+                            .pos(98, 49)
+                            .filter((item, tag) -> item != null && item.isEdible() && !(item instanceof CannedFoodItem)),
+                    ItemResourceSlot.builder(InputType.INPUT)
+                            .pos(116, 49)
+                            .filter((item, tag) -> item != null && item.isEdible() && !(item instanceof CannedFoodItem)),
+                    ItemResourceSlot.builder(InputType.INPUT)
+                            .pos(134, 49)
+                            .filter((item, tag) -> item != null && item.isEdible() && !(item instanceof CannedFoodItem)),
+                    ItemResourceSlot.builder(InputType.INPUT)
+                            .pos(152, 49)
+                            .filter((item, tag) -> item != null && item.isEdible() && !(item instanceof CannedFoodItem)),
+                    ItemResourceSlot.builder(InputType.INPUT)
+                            .pos(98, 67)
+                            .filter((item, tag) -> item != null && item.isEdible() && !(item instanceof CannedFoodItem)),
+                    ItemResourceSlot.builder(InputType.INPUT)
+                            .pos(116, 67)
+                            .filter((item, tag) -> item != null && item.isEdible() && !(item instanceof CannedFoodItem)),
+                    ItemResourceSlot.builder(InputType.INPUT)
+                            .pos(134, 67)
+                            .filter((item, tag) -> item != null && item.isEdible() && !(item instanceof CannedFoodItem)),
+                    ItemResourceSlot.builder(InputType.INPUT)
+                            .pos(152, 67)
+                            .filter((item, tag) -> item != null && item.isEdible() && !(item instanceof CannedFoodItem))
             )
     );
 

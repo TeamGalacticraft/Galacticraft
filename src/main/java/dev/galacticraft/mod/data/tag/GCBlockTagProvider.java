@@ -84,6 +84,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR,
                         GCBlocks.OXYGEN_DECOMPRESSOR,
                         GCBlocks.OXYGEN_COMPRESSOR,
+                        GCBlocks.FOOD_CANNER,
                         GCBlocks.OXYGEN_STORAGE_MODULE,
                         GCBlocks.FUEL_LOADER
                 );

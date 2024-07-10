@@ -116,6 +116,7 @@ public class GalacticraftClient implements ClientModInitializer {
         MenuScreens.register(GCMenuTypes.ENERGY_STORAGE_MODULE, EnergyStorageModuleScreen::new);
         MenuScreens.register(GCMenuTypes.OXYGEN_COLLECTOR, OxygenCollectorScreen::new);
         MenuScreens.register(GCMenuTypes.OXYGEN_COMPRESSOR, OxygenCompressorScreen::new);
+        MenuScreens.register(GCMenuTypes.FOOD_CANNER, FoodCannerScreen::new);
         MenuScreens.register(GCMenuTypes.OXYGEN_DECOMPRESSOR, OxygenDecompressorScreen::new);
         MenuScreens.register(GCMenuTypes.PLAYER_INV_GC, GCPlayerInventoryScreen::new);
         MenuScreens.register(GCMenuTypes.OXYGEN_BUBBLE_DISTRIBUTOR, OxygenBubbleDistributorScreen::new);

@@ -30,6 +30,7 @@ import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.Item;
 
 import java.util.concurrent.CompletableFuture;
@@ -114,6 +115,17 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 GCItems.DESH_ORE,
                 GCItems.ILMENITE_ORE,
                 GCItems.GALENA_ORE
+        );
+
+        // Food Tags
+        tag(ConventionalItemTags.FOODS).add(
+                GCItems.MOON_BERRIES,
+                GCItems.CHEESE_CURD,
+                GCItems.CHEESE_SLICE,
+                GCItems.BURGER_BUN,
+                GCItems.GROUND_BEEF,
+                GCItems.BEEF_PATTY,
+                GCItems.CHEESEBURGER
         );
     }
 

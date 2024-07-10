@@ -230,6 +230,7 @@ public class GCModelProvider extends FabricModelProvider {
         createMachineDelegate(generator, GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR);
         createMachineDelegate(generator, GCBlocks.OXYGEN_DECOMPRESSOR);
         createMachineDelegate(generator, GCBlocks.OXYGEN_COMPRESSOR);
+        createMachineDelegate(generator, GCBlocks.FOOD_CANNER);
         createMachineDelegate(generator, GCBlocks.OXYGEN_STORAGE_MODULE);
         createMachineDelegate(generator, GCBlocks.FUEL_LOADER);
 

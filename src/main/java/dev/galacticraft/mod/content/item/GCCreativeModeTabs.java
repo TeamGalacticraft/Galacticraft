@@ -41,6 +41,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
+import static dev.galacticraft.mod.content.GCBlocks.FOOD_CANNER;
 import static dev.galacticraft.mod.content.item.GCItems.*;
 
 public class GCCreativeModeTabs {
@@ -438,6 +439,7 @@ public class GCCreativeModeTabs {
                 output.accept(OXYGEN_BUBBLE_DISTRIBUTOR);
                 output.accept(OXYGEN_DECOMPRESSOR);
                 output.accept(OXYGEN_COMPRESSOR);
+                output.accept(FOOD_CANNER);
                 output.accept(OXYGEN_STORAGE_MODULE);
                 output.accept(FUEL_LOADER);
             }).build();

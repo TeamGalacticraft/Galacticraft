@@ -226,6 +226,7 @@ public interface Constant {
         String OXYGEN_BUBBLE_DISTRIBUTOR = "oxygen_bubble_distributor";
         String OXYGEN_COLLECTOR = "oxygen_collector";
         String OXYGEN_COMPRESSOR = "oxygen_compressor";
+        String FOOD_CANNER = "food_canner";
         String OXYGEN_DECOMPRESSOR = "oxygen_decompressor";
         String OXYGEN_DETECTOR = "oxygen_detector";
         String OXYGEN_SEALER = "oxygen_sealer";
@@ -518,6 +519,7 @@ public interface Constant {
         ResourceLocation PLANET_ICONS = id("textures/gui/planet_icons.png");
         ResourceLocation BUBBLE_DISTRIBUTOR_SCREEN = id("textures/gui/oxygen_bubble_distributor_screen.png");
         ResourceLocation OXYGEN_COMPRESSOR_SCREEN = id("textures/gui/oxygen_compressor_screen.png");
+        ResourceLocation FOOD_CANNER_SCREEN = id("textures/gui/food_canner_screen.png");
         ResourceLocation OXYGEN_STORAGE_MODULE_SCREEN = id("textures/gui/oxygen_storage_module_screen.png");
         ResourceLocation OXYGEN_SEALER_SCREEN = id("textures/gui/oxygen_sealer_screen.png");
         ResourceLocation FUEL_LOADER_SCREEN = id("textures/gui/fuel_loader_screen.png");
@@ -638,6 +640,7 @@ public interface Constant {
         String OXYGEN_COLLECTOR_MENU = "oxygen_collector_menu";
         String BUBBLE_DISTRIBUTOR_MENU = "bubble_distributor_menu";
         String OXYGEN_COMPRESSOR_MENU = "oxygen_compressor_menu";
+        String FOOD_CANNER_MENU = "food_canner_menu";
         String OXYGEN_DECOMPRESSOR_MENU = "oxygen_decompressor_menu";
         String OXYGEN_STORAGE_MODULE_MENU = "oxygen_storage_module_menu";
         String OXYGEN_SEALER_MENU = "oxygen_sealer_menu";

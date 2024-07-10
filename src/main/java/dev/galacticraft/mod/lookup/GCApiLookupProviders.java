@@ -52,6 +52,7 @@ public class GCApiLookupProviders {
             GCBlocks.REFINERY,
             GCBlocks.OXYGEN_COLLECTOR,
             GCBlocks.OXYGEN_COMPRESSOR,
+            GCBlocks.FOOD_CANNER,
             GCBlocks.OXYGEN_DECOMPRESSOR,
             GCBlocks.OXYGEN_SEALER,
             GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR,

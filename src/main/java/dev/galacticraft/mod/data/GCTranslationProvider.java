@@ -164,6 +164,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.ENERGY_STORAGE_SIZE, "Default Machine Energy Storage Size");
         this.add(Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE, "Oxygen Collector Energy Consumption Rate/t");
         this.add(Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE, "Oxygen Compressor Energy Consumption Rate/t");
+        this.add(Config.FOOD_CANNER_ENERGY_CONSUMPTION_RATE, "Food Canner Energy Consumption Rate/t");
         this.add(Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE, "Oxygen Decompressor Energy Consumption Rate/t");
         this.add(Config.REFINERY_ENERGY_CONSUMPTION_RATE, "Refinery Energy Consumption Rate/t");
         this.add(Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE, "Solar Panel Energy Production Rate/t");
