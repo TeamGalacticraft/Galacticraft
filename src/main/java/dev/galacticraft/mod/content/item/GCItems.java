@@ -173,6 +173,8 @@ public class GCItems {
 
     public static final Item SOLAR_ORE = new BlockItem(GCBlocks.SOLAR_ORE, new Item.Properties());
 
+    public static final Item CHEESE_ORE = new BlockItem(GCBlocks.CHEESE_ORE, new Item.Properties());
+
     // CHEESE BLOCK
     public static final Item MOON_CHEESE_WHEEL = new BlockItem(GCBlocks.MOON_CHEESE_WHEEL, new Item.Properties());
 
@@ -538,6 +540,8 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.GALENA_ORE), GALENA_ORE);
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.SOLAR_ORE), SOLAR_ORE);
+
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CHEESE_ORE), CHEESE_ORE);
 
         // CHEESE BLOCK
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_CHEESE_WHEEL), MOON_CHEESE_WHEEL);

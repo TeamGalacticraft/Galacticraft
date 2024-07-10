@@ -393,6 +393,8 @@ public class GCCreativeModeTabs {
 
                 output.accept(SOLAR_ORE);
 
+                output.accept(CHEESE_ORE);
+
                 // COMPACT MINERAL BLOCKS
                 output.accept(MOON_CHEESE_WHEEL);
                 output.accept(SILICON_BLOCK);

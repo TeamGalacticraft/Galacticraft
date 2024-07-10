@@ -158,7 +158,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 GCBlocks.DESH_ORE,
                 GCBlocks.ILMENITE_ORE,
                 GCBlocks.GALENA_ORE,
-                GCBlocks.SOLAR_ORE
+                GCBlocks.SOLAR_ORE,
+                GCBlocks.CHEESE_ORE
         };
 
         this.tag(ConventionalBlockTags.ORES).add(ores);
@@ -275,7 +276,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         this.tag(BlockTags.NEEDS_DIAMOND_TOOL)
                 .add(
                         GCBlocks.DESH_ORE,
-                        GCBlocks.ILMENITE_ORE
+                        GCBlocks.ILMENITE_ORE,
+                        GCBlocks.CHEESE_ORE
                 );
 
         this.tag(BlockTags.DRAGON_IMMUNE)

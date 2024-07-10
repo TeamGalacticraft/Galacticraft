@@ -56,6 +56,7 @@ public class GCOreRecipeProvider extends FabricRecipeProvider {
         oreSmeltingAndBlasting(output, List.of(GCItems.RAW_DESH, GCItems.DESH_ORE), GCItems.DESH_INGOT, 0.7f, 100);
         oreSmeltingAndBlasting(output, List.of(GCItems.RAW_TITANIUM, GCItems.ILMENITE_ORE), GCItems.TITANIUM_INGOT, 0.7f, 100);
         oreSmeltingAndBlasting(output, List.of(GCItems.RAW_LEAD, GCItems.GALENA_ORE), GCItems.LEAD_INGOT, 0.7f, 100);
+        oreSmeltingAndBlasting(output, List.of(GCItems.CHEESE_ORE), GCItems.CHEESE_CURD, 0.7f, 100);
 
         oreSmeltingAndBlasting(output, List.of(GCItems.MOON_COPPER_ORE, GCItems.LUNASLATE_COPPER_ORE), Items.COPPER_INGOT, 0.7f, 100);
         oreSmeltingAndBlasting(output, List.of(GCItems.IRON_SHARD), Items.IRON_INGOT, 0.7f, 100);

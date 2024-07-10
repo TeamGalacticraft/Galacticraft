@@ -181,6 +181,8 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         this.add(GCBlocks.SOLAR_ORE, this.createOreDrop(GCBlocks.SOLAR_ORE, GCItems.SOLAR_DUST));
 
+        this.add(GCBlocks.CHEESE_ORE, this.createOreDrop(GCBlocks.CHEESE_ORE, GCItems.CHEESE_CURD));
+
         this.add(GCBlocks.MOON_CHEESE_WHEEL, noDrop());
         this.add(GCBlocks.CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.CANDLE));
         this.add(GCBlocks.WHITE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.WHITE_CANDLE));

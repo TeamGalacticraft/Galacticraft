@@ -171,6 +171,8 @@ public class GCModelProvider extends FabricModelProvider {
 
         generator.createTrivialCube(GCBlocks.SOLAR_ORE);
 
+        generator.createTrivialCube(GCBlocks.CHEESE_ORE);
+
         this.createCheeseBlock(generator);
         this.createCandleCheeseBlock(generator, Blocks.CANDLE, GCBlocks.CANDLE_MOON_CHEESE_WHEEL);
         this.createCandleCheeseBlock(generator, Blocks.WHITE_CANDLE, GCBlocks.WHITE_CANDLE_MOON_CHEESE_WHEEL);
