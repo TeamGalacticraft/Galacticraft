@@ -224,6 +224,8 @@ public class GCBlocks {
 
     public static final Block GALENA_ORE = BLOCKS.register(Constant.Block.GALENA_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 5.0F, false)));
 
+    public static final Block SOLAR_ORE = BLOCKS.register(Constant.Block.SOLAR_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 5.0F, false)));
+
     // CHEESE BLOCK
     public static final Block MOON_CHEESE_WHEEL = BLOCKS.register(Constant.Block.MOON_CHEESE_WHEEL, new MoonCheeseBlock(BlockBehaviour.Properties.of().forceSolidOn().strength(0.5F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY)));
     public static final Block CANDLE_MOON_CHEESE_WHEEL = BLOCKS.register(Constant.Block.CANDLE_MOON_CHEESE_WHEEL, new CandleMoonCheeseBlock(Blocks.CANDLE, BlockBehaviour.Properties.ofFullCopy(MOON_CHEESE_WHEEL).lightLevel(litBlockEmission(3))));

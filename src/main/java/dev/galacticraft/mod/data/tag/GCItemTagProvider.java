@@ -113,7 +113,8 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 GCItems.ALUMINUM_ORE, GCItems.DEEPSLATE_ALUMINUM_ORE,
                 GCItems.DESH_ORE,
                 GCItems.ILMENITE_ORE,
-                GCItems.GALENA_ORE
+                GCItems.GALENA_ORE,
+                GCItems.SOLAR_ORE
         );
     }
 

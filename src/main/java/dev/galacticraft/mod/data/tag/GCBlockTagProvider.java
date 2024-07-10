@@ -157,7 +157,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 GCBlocks.ALUMINUM_ORE, GCBlocks.DEEPSLATE_ALUMINUM_ORE,
                 GCBlocks.DESH_ORE,
                 GCBlocks.ILMENITE_ORE,
-                GCBlocks.GALENA_ORE
+                GCBlocks.GALENA_ORE,
+                GCBlocks.SOLAR_ORE
         };
 
         this.tag(ConventionalBlockTags.ORES).add(ores);
@@ -260,7 +261,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.LUNASLATE_TIN_ORE,
                         GCBlocks.ALUMINUM_ORE,
                         GCBlocks.DEEPSLATE_ALUMINUM_ORE,
-                        GCBlocks.GALENA_ORE
+                        GCBlocks.GALENA_ORE,
+                        GCBlocks.SOLAR_ORE
                 );
 
         this.tag(BlockTags.NEEDS_IRON_TOOL)

@@ -131,6 +131,8 @@ public interface Constant {
         String DEEPSLATE_ALUMINUM_ORE = "deepslate_aluminum_ore";
         String GALENA_ORE = "galena_ore";
 
+        String SOLAR_ORE = "solar_ore";
+
         // Solid Blocks
         String SILICON_BLOCK = "silicon_block";
         String METEORIC_IRON_BLOCK = "meteoric_iron_block";
