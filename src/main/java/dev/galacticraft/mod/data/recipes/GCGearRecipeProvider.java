@@ -249,7 +249,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .define('D', GCItems.DESH_INGOT)
                 .define('S', GCItems.DESH_STICK)
                 .pattern("D")
-                .pattern("S")
+                .pattern("D")
                 .pattern("S")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
                 .save(output);
