@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.7,
+  "group": "raw_silicon",
+  "ingredient": {
+    "item": "galacticraft:deepslate_silicon_ore"
+  },
+  "result": "galacticraft:raw_silicon"
+}

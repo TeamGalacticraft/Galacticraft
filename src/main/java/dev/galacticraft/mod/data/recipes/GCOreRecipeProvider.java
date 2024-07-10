@@ -49,8 +49,9 @@ public class GCOreRecipeProvider extends FabricRecipeProvider {
     @Override
     public void buildRecipes(RecipeOutput output) {
         // Ore Smelting and Blasting
+        oreSmeltingAndBlasting(output, List.of(GCItems.SILICON_ORE, GCItems.DEEPSLATE_SILICON_ORE), GCItems.RAW_SILICON, 0.7f, 100);
         oreSmeltingAndBlasting(output, List.of(GCItems.RAW_ALUMINUM, GCItems.ALUMINUM_ORE, GCItems.DEEPSLATE_ALUMINUM_ORE), GCItems.ALUMINUM_INGOT, 0.7f, 100);
-        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_TIN, GCItems.TIN_ORE, GCItems.DEEPSLATE_TIN_ORE, GCItems.MOON_TIN_ORE), GCItems.TIN_INGOT, 0.7f, 100);
+        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_TIN, GCItems.TIN_ORE, GCItems.DEEPSLATE_TIN_ORE, GCItems.MOON_TIN_ORE, GCItems.LUNASLATE_TIN_ORE), GCItems.TIN_INGOT, 0.7f, 100);
         oreSmeltingAndBlasting(output, List.of(GCItems.RAW_METEORIC_IRON), GCItems.METEORIC_IRON_INGOT, 0.7f, 100);
         oreSmeltingAndBlasting(output, List.of(GCItems.RAW_DESH, GCItems.DESH_ORE), GCItems.DESH_INGOT, 0.7f, 100);
         oreSmeltingAndBlasting(output, List.of(GCItems.RAW_TITANIUM, GCItems.ILMENITE_ORE), GCItems.TITANIUM_INGOT, 0.7f, 100);
