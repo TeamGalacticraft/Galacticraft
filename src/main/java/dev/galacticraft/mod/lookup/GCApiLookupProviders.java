@@ -50,6 +50,7 @@ public class GCApiLookupProviders {
             GCBlocks.ELECTRIC_FURNACE,
             GCBlocks.ELECTRIC_ARC_FURNACE,
             GCBlocks.REFINERY,
+            GCBlocks.FUEL_LOADER,
             GCBlocks.OXYGEN_COLLECTOR,
             GCBlocks.OXYGEN_COMPRESSOR,
             GCBlocks.OXYGEN_DECOMPRESSOR,
