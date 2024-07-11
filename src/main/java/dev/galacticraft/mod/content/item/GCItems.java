@@ -81,7 +81,7 @@ public class GCItems {
     public static final Item POLISHED_MOON_ROCK_STAIRS = new BlockItem(GCBlocks.POLISHED_MOON_ROCK_STAIRS, new Item.Properties());
     public static final Item POLISHED_MOON_ROCK_WALL = new BlockItem(GCBlocks.POLISHED_MOON_ROCK_WALL, new Item.Properties());
 
-    public static final Item CHISELED_MOON_ROCK = new BlockItem(GCBlocks.CHISELED_MOON_ROCK, new Item.Properties());
+    public static final Item CHISELED_MOON_ROCK_BRICK = new BlockItem(GCBlocks.CHISELED_MOON_ROCK_BRICK, new Item.Properties());
     public static final Item MOON_ROCK_PILLAR = new BlockItem(GCBlocks.MOON_ROCK_PILLAR, new Item.Properties());
 
     public static final Item COBBLED_MOON_ROCK = new BlockItem(GCBlocks.COBBLED_MOON_ROCK, new Item.Properties());
@@ -465,7 +465,7 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.POLISHED_MOON_ROCK_STAIRS), POLISHED_MOON_ROCK_STAIRS);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.POLISHED_MOON_ROCK_WALL), POLISHED_MOON_ROCK_WALL);
 
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CHISELED_MOON_ROCK), CHISELED_MOON_ROCK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CHISELED_MOON_ROCK_BRICK), CHISELED_MOON_ROCK_BRICK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_ROCK_PILLAR), MOON_ROCK_PILLAR);
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.COBBLED_MOON_ROCK), COBBLED_MOON_ROCK);

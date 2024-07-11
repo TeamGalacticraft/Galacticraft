@@ -241,7 +241,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.MOON_ROCK_BRICK,
                         GCBlocks.CRACKED_MOON_ROCK_BRICK,
                         GCBlocks.POLISHED_MOON_ROCK,
-                        GCBlocks.CHISELED_MOON_ROCK,
+                        GCBlocks.CHISELED_MOON_ROCK_BRICK,
                         GCBlocks.MOON_ROCK_PILLAR,
                         GCBlocks.LUNASLATE,
                         GCBlocks.COBBLED_MOON_ROCK,

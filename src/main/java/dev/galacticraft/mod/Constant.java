@@ -85,7 +85,7 @@ public interface Constant {
         String POLISHED_MOON_ROCK_STAIRS = "polished_moon_rock_stairs";
         String POLISHED_MOON_ROCK_WALL = "polished_moon_rock_wall";
 
-        String CHISELED_MOON_ROCK = "chiseled_moon_rock";
+        String CHISELED_MOON_ROCK_BRICK = "chiseled_moon_rock_brick";
         String MOON_ROCK_PILLAR = "moon_rock_pillar";
 
         String COBBLED_MOON_ROCK = "cobbled_moon_rock";

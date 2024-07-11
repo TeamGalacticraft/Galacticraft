@@ -129,7 +129,7 @@ public class GCBlocks {
     public static final Block POLISHED_MOON_ROCK_STAIRS = BLOCKS.register(Constant.Block.POLISHED_MOON_ROCK_STAIRS, new StairBlock(POLISHED_MOON_ROCK.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(POLISHED_MOON_ROCK)));
     public static final Block POLISHED_MOON_ROCK_WALL = BLOCKS.register(Constant.Block.POLISHED_MOON_ROCK_WALL, new WallBlock(BlockBehaviour.Properties.ofFullCopy(POLISHED_MOON_ROCK)));
 
-    public static final Block CHISELED_MOON_ROCK = BLOCKS.register(Constant.Block.CHISELED_MOON_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F)));
+    public static final Block CHISELED_MOON_ROCK_BRICK = BLOCKS.register(Constant.Block.CHISELED_MOON_ROCK_BRICK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F)));
     public static final Block MOON_ROCK_PILLAR = BLOCKS.register(Constant.Block.MOON_ROCK_PILLAR, new RotatedPillarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F)));
 
     public static final Block COBBLED_MOON_ROCK = BLOCKS.register(Constant.Block.COBBLED_MOON_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F)));

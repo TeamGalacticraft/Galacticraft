@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 1,
+  "ingredient": {
+    "item": "galacticraft:detailed_tin_decoration"
+  },
+  "result": "galacticraft:detailed_tin_decoration_stairs"
+}

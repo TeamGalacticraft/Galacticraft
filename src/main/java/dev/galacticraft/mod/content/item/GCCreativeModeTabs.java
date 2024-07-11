@@ -295,7 +295,7 @@ public class GCCreativeModeTabs {
                 output.accept(POLISHED_MOON_ROCK_STAIRS);
                 output.accept(POLISHED_MOON_ROCK_WALL);
 
-                output.accept(CHISELED_MOON_ROCK);
+                output.accept(CHISELED_MOON_ROCK_BRICK);
                 output.accept(MOON_ROCK_PILLAR);
 
                 output.accept(COBBLED_MOON_ROCK);
