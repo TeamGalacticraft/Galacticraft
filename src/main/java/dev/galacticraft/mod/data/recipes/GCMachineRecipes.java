@@ -236,6 +236,17 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.CRUDE_OIL_BUCKET), has(GCItems.CRUDE_OIL_BUCKET))
                 .save(output);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.FUEL_LOADER)
+                .define('U', GCItems.COMPRESSED_COPPER)
+                .define('C', GCItems.TIN_CANISTER)
+                .define('T', GCItems.COMPRESSED_TIN)
+                .define('W', GCItems.BASIC_WAFER)
+                .pattern("UUU")
+                .pattern("UCU")
+                .pattern("TWT")
+                .unlockedBy(getHasName(GCItems.FUEL_BUCKET), has(GCItems.FUEL_BUCKET))
+                .save(output);
+
         // Wires + Pipes
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.GLASS_FLUID_PIPE, 6)
                 .define('X', Items.GLASS_PANE)
