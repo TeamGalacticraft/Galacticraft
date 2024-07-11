@@ -24,7 +24,7 @@ package dev.galacticraft.mod.world.gen;
 
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 
@@ -37,14 +37,14 @@ public class GCNoiseData {
         return ResourceKey.create(Registries.NOISE, Constant.id(id));
     }
 
-    public static void bootstrapRegistries(BootstapContext<NormalNoise.NoiseParameters> context) {
+    public static void bootstrapRegistries(BootstrapContext<NormalNoise.NoiseParameters> context) {
         register(context, EROSION, -11, 1, 1, 0, 1, 1);
         register(context, BASALT_MARE, 5, 0, 0.1, 0.2, 0.1, 0, 0, 0, 0);
         register(context, BASALT_MARE_HEIGHT, -12, 0.3);
     }
 
     private static void register(
-            BootstapContext<NormalNoise.NoiseParameters> context,
+            BootstrapContext<NormalNoise.NoiseParameters> context,
             ResourceKey<NormalNoise.NoiseParameters> key,
             int firstOctave,
             double amplitude,

@@ -100,7 +100,7 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
                 ListTag nbt = NbtIo.readCompressed(worldFile.resolve("satellites.dat"), NbtAccounter.unlimitedHeap()).getList("satellites", NbtType.COMPOUND);
                 for (Tag compound : nbt) {
                     assert compound instanceof CompoundTag : "Not a compound?!";
-                    ResourceLocation id = new ResourceLocation(((CompoundTag) compound).getString("id"));
+                    ResourceLocation id = ResourceLocation.parse(((CompoundTag) compound).getString("id"));
                     DataResult<Pair<SatelliteConfig, Tag>> decode = SatelliteConfig.CODEC.decode(NbtOps.INSTANCE, compound);
                     if (decode.error().isPresent()) {
                         Constant.LOGGER.error("Skipping satellite '{}' - {}", id, decode.error().get().message());

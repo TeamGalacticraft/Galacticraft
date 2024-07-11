@@ -35,7 +35,7 @@ import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.rocket.part.config.StorageUpgradeConfig;
 import dev.galacticraft.mod.content.rocket.part.type.StorageUpgradeType;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -55,7 +55,7 @@ public class GCRocketParts {
     public static final ResourceKey<RocketBooster<?, ?>> TIER_2_BOOSTER = booster("tier_2");
     public static final ResourceKey<RocketUpgrade<?, ?>> STORAGE_UPGRADE = upgrade("storage");
 
-    public static void bootstrapCone(BootstapContext<RocketCone<?, ?>> context) {
+    public static void bootstrapCone(BootstrapContext<RocketCone<?, ?>> context) {
         context.register(TIER_1_CONE,
                 BasicRocketConeType.INSTANCE.configure(
                         new BasicRocketConeConfig(
@@ -100,7 +100,7 @@ public class GCRocketParts {
         );
     }
 
-    public static void bootstrapBody(BootstapContext<RocketBody<?, ?>> context) {
+    public static void bootstrapBody(BootstrapContext<RocketBody<?, ?>> context) {
         context.register(TIER_1_BODY,
                 BasicRocketBodyType.INSTANCE.configure(new BasicRocketBodyConfig(
                         AccessWeightTravelPredicateType.INSTANCE.configure(new AccessWeightTravelPredicateConfig(1, TravelPredicateType.Result.PASS)),
@@ -120,7 +120,7 @@ public class GCRocketParts {
         );
     }
 
-    public static void bootstrapFin(BootstapContext<RocketFin<?, ?>> context) {
+    public static void bootstrapFin(BootstrapContext<RocketFin<?, ?>> context) {
         context.register(TIER_1_FIN,
                 BasicRocketFinType.INSTANCE.configure(
                         new BasicRocketFinConfig(
@@ -140,7 +140,7 @@ public class GCRocketParts {
         );
     }
 
-    public static void bootstrapBooster(BootstapContext<RocketBooster<?, ?>> context) {
+    public static void bootstrapBooster(BootstrapContext<RocketBooster<?, ?>> context) {
         context.register(TIER_1_BOOSTER,
                 BasicRocketBoosterType.INSTANCE.configure(
                         new BasicRocketBoosterConfig(
@@ -156,7 +156,7 @@ public class GCRocketParts {
         );
     }
 
-    public static void bootstrapEngine(BootstapContext<RocketEngine<?, ?>> context) {
+    public static void bootstrapEngine(BootstrapContext<RocketEngine<?, ?>> context) {
         context.register(TIER_1_ENGINE,
                 BasicRocketEngineType.INSTANCE.configure(
                         new BasicRocketEngineConfig(
@@ -173,7 +173,7 @@ public class GCRocketParts {
         );
     }
 
-    public static void bootstrapUpgrade(BootstapContext<RocketUpgrade<?, ?>> context) {
+    public static void bootstrapUpgrade(BootstrapContext<RocketUpgrade<?, ?>> context) {
         context.register(STORAGE_UPGRADE, RocketUpgrade.create(new StorageUpgradeConfig(1,
                 RocketPartRecipeBuilder.create()
                         .define('C', Ingredient.of(Items.CHEST))

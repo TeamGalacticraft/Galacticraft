@@ -41,7 +41,7 @@ public class OxygenSealerSpriteProvider implements MachineModelRegistry.SpritePr
     private final TextureAtlasSprite machine;
 
     public OxygenSealerSpriteProvider(JsonObject json, Function<net.minecraft.client.resources.model.Material, TextureAtlasSprite> function) {
-        this.top = function.apply(new net.minecraft.client.resources.model.Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation(GsonHelper.getAsString(json, "top"))));
+        this.top = function.apply(new net.minecraft.client.resources.model.Material(TextureAtlas.LOCATION_BLOCKS, ResourceLocation.parse(GsonHelper.getAsString(json, "top"))));
         this.machine = function.apply(MachineBakedModel.MACHINE);
         this.machineSide = function.apply(MachineBakedModel.MACHINE_SIDE);
     }

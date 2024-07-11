@@ -22,35 +22,33 @@
 
 package dev.galacticraft.mod.screen;
 
+import dev.galacticraft.machinelib.api.menu.MenuData;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
-import dev.galacticraft.machinelib.api.menu.sync.MenuSyncHandler;
-import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.CompressorBlockEntity;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.crafting.CraftingInput;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Consumer;
-
-public class CompressorMenu extends RecipeMachineMenu<CraftingContainer, CompressingRecipe, CompressorBlockEntity> {
+public class CompressorMenu extends RecipeMachineMenu<CraftingInput, CompressingRecipe, CompressorBlockEntity> {
     private int fuelTime = 0;
     private int fuelLength = 0;
 
     public CompressorMenu(int syncId, ServerPlayer player, CompressorBlockEntity machine) {
-        super(syncId, player, machine);
+        super(GCMenuTypes.COMPRESSOR, syncId, player, machine);
     }
 
     public CompressorMenu(int syncId, Inventory inv, FriendlyByteBuf buf) {
-        super(syncId, inv, buf, 8, 84, GCMachineTypes.COMPRESSOR);
+        super(GCMenuTypes.COMPRESSOR, syncId, inv, buf, 8, 84);
     }
 
     @Override
-    public void registerSyncHandlers(Consumer<MenuSyncHandler> consumer) {
-        super.registerSyncHandlers(consumer);
-        consumer.accept(MenuSyncHandler.simple(this.machine::getFuelTime, this::setFuelTime));
-        consumer.accept(MenuSyncHandler.simple(this.machine::getFuelLength, this::setFuelLength));
+    public void registerData(@NotNull MenuData data) {
+        super.registerData(data);
+        data.registerInt(this.be::getFuelTime, this::setFuelTime);
+        data.registerInt(this.be::getFuelLength, this::setFuelLength);
     }
 
     public int getFuelLength() {

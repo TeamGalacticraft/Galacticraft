@@ -34,6 +34,7 @@ import dev.galacticraft.mod.events.GCEventHandlers;
 import dev.galacticraft.mod.lookup.GCApiLookupProviders;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.misc.banner.GCBannerPatterns;
+import dev.galacticraft.mod.network.GCPackets;
 import dev.galacticraft.mod.network.GCServerPacketReceivers;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.recipe.GCRecipes;
@@ -85,6 +86,7 @@ public class Galacticraft implements ModInitializer {
         GCParticleTypes.register();
         GCCommands.register();
         GCLightSources.register();
+        GCPackets.register();
         GCServerPacketReceivers.register();
         GCSounds.register();
         GCPointOfInterestTypes.register();

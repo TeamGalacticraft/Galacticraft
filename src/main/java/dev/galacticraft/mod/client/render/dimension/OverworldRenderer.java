@@ -43,7 +43,7 @@ import org.joml.Matrix4f;
 
 // TODO: Allow support for more planets
 public class OverworldRenderer {
-    public static final ResourceLocation MOON_LOCATION = new ResourceLocation("textures/environment/moon_phases.png");
+    public static final ResourceLocation MOON_LOCATION = ResourceLocation.withDefaultNamespace("textures/environment/moon_phases.png");
     @Nullable
     private VertexBuffer starBuffer;
     @Nullable

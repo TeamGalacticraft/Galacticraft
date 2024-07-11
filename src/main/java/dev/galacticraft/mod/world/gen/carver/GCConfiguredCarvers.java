@@ -28,7 +28,7 @@ import dev.galacticraft.mod.world.gen.carver.config.CraterCarverConfig;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.valueproviders.ConstantFloat;
 import net.minecraft.util.valueproviders.TrapezoidFloat;
@@ -51,7 +51,7 @@ public class GCConfiguredCarvers {
         return Constant.key(Registries.CONFIGURED_CARVER, s);
     }
 
-    public static void bootstrapRegistries(BootstapContext<ConfiguredWorldCarver<?>> context) {
+    public static void bootstrapRegistries(BootstrapContext<ConfiguredWorldCarver<?>> context) {
         context.register(MOON_CANYON_CARVER, WorldCarver.CANYON.configured(new CanyonCarverConfiguration(
                 0.05f,
                 UniformHeight.of(VerticalAnchor.absolute(10), VerticalAnchor.absolute(67)),

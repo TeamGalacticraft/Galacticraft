@@ -115,6 +115,6 @@ public class ShapelessCompressorRecipeBuilder implements RecipeBuilder {
                 .rewards(AdvancementRewards.Builder.recipe(recipeId))
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(builder::addCriterion);
-        output.accept(new ResourceLocation(recipeId.getNamespace(), "compressing/" + recipeId.getPath()), new ShapelessCompressingRecipe(this.group == null ? "" : this.group, new ItemStack(this.result, count), this.ingredients, 200), builder.build(recipeId.withPrefix("recipes/")));
+        output.accept(ResourceLocation.fromNamespaceAndPath(recipeId.getNamespace(), "compressing/" + recipeId.getPath()), new ShapelessCompressingRecipe(this.group == null ? "" : this.group, new ItemStack(this.result, count), this.ingredients, 200), builder.build(recipeId.withPrefix("recipes/")));
     }
 }

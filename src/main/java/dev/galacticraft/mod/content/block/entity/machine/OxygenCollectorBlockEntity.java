@@ -27,10 +27,20 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
+import dev.galacticraft.machinelib.api.storage.MachineEnergyStorage;
+import dev.galacticraft.machinelib.api.storage.MachineFluidStorage;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.StorageSpec;
+import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
+import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
+import dev.galacticraft.machinelib.api.transfer.InputType;
+import dev.galacticraft.machinelib.api.util.FluidSource;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.content.GCMachineTypes;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.OxygenCollectorMenu;
 import dev.galacticraft.mod.util.FluidUtil;
@@ -40,7 +50,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.LeavesBlock;
@@ -54,11 +63,31 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
 
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
 
+    private static final StorageSpec SPEC = StorageSpec.of(
+            MachineItemStorage.spec(
+                    ItemResourceSlot.builder(InputType.TRANSFER)
+                            .pos(8, 62)
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
+            ),
+            MachineEnergyStorage.spec(
+                    Galacticraft.CONFIG.machineEnergyStorageSize(),
+                    Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate() * 2,
+                    0
+            ),
+            MachineFluidStorage.spec(
+                    FluidResourceSlot.builder(InputType.OUTPUT)
+                            .pos(31, 8)
+                            .capacity(OxygenCollectorBlockEntity.MAX_OXYGEN)
+                            .filter(ResourceFilters.ofResource(Gases.OXYGEN))
+            )
+    );
+
+    private final FluidSource fluidSource = new FluidSource(this);
     public int collectionAmount = 0;
     private boolean oxygenWorld = false;
 
     public OxygenCollectorBlockEntity(BlockPos pos, BlockState state) {
-        super(GCMachineTypes.OXYGEN_COLLECTOR, pos, state);
+        super(GCBlockEntityTypes.OXYGEN_COLLECTOR, pos, state, SPEC);
     }
 
     @Override
@@ -102,15 +131,15 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
-        this.chargeFromStack(CHARGE_SLOT);
+        this.chargeFromSlot(CHARGE_SLOT);
     }
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("transfer");
-        this.trySpreadFluids(level, state);
+        this.fluidSource.trySpreadFluids(level, pos, state);
 
-        if (this.fluidStorage().getSlot(OXYGEN_TANK).isFull()) return GCMachineStatuses.OXYGEN_TANK_FULL;
+        if (this.fluidStorage().slot(OXYGEN_TANK).isFull()) return GCMachineStatuses.OXYGEN_TANK_FULL;
         profiler.popPush("transaction");
         try {
             if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate())) {
@@ -119,7 +148,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
                 profiler.pop();
                 if (this.collectionAmount > 0) {
                     this.energyStorage().extract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate());
-                    this.fluidStorage().getSlot(OXYGEN_TANK).insert(Gases.OXYGEN, FluidUtil.bucketsToDroplets(this.collectionAmount));
+                    this.fluidStorage().slot(OXYGEN_TANK).insert(Gases.OXYGEN, FluidUtil.bucketsToDroplets(this.collectionAmount));
                     return GCMachineStatuses.COLLECTING;
                 } else {
                     return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
@@ -135,7 +164,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
+    public MachineMenu<? extends MachineBlockEntity> openMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) return new OxygenCollectorMenu(syncId, (ServerPlayer) player, this);
         return null;
     }

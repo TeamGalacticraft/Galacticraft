@@ -193,7 +193,7 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
             this.inventory.readTag(nbt);
             String selLoc = nbt.getString("selection");
             if (!selLoc.isEmpty()) {
-                this.selection = new ResourceLocation(selLoc);
+                this.selection = ResourceLocation.parse(selLoc);
 //                this.inventory.resize(nbt.getInt("size"));
             }
         }

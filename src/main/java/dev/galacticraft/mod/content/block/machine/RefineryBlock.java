@@ -22,18 +22,33 @@
 
 package dev.galacticraft.mod.content.block.machine;
 
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.machinelib.api.block.MachineBlock;
-import dev.galacticraft.mod.Constant;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.content.block.entity.machine.RefineryBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
-public class RefineryBlock extends MachineBlock<RefineryBlockEntity> {
+public class RefineryBlock extends MachineBlock {
+    private static final MapCodec<RefineryBlock> CODEC = simpleCodec(RefineryBlock::new);
+
     public RefineryBlock(Properties settings) {
-        super(settings, Constant.id(Constant.Block.REFINERY));
+        super(settings);
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
+    public @NotNull MachineBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new RefineryBlockEntity(pos, state);
     }
 
     @Override

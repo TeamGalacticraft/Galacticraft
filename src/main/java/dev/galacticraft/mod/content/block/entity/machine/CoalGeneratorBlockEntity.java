@@ -24,25 +24,32 @@ package dev.galacticraft.mod.content.block.entity.machine;
 
 import com.google.common.annotations.VisibleForTesting;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
+import dev.galacticraft.machinelib.api.storage.MachineEnergyStorage;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
+import dev.galacticraft.machinelib.api.transfer.InputType;
+import dev.galacticraft.machinelib.api.util.EnergySource;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.content.GCMachineTypes;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.CoalGeneratorMenu;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
@@ -60,6 +67,23 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         map.put(Items.CHARCOAL, 310);
     });
 
+    private static final StorageSpec SPEC = StorageSpec.of(
+            MachineItemStorage.spec(
+                    ItemResourceSlot.builder(InputType.TRANSFER)
+                            .pos(8, 62)
+                            .filter(ResourceFilters.CAN_INSERT_ENERGY),
+                    ItemResourceSlot.builder(InputType.INPUT)
+                            .pos(71, 53)
+                            .filter((item, tag) -> CoalGeneratorBlockEntity.FUEL_MAP.containsKey(item))
+            ),
+            MachineEnergyStorage.spec(
+                    Galacticraft.CONFIG.machineEnergyStorageSize(),
+                    0,
+                    Galacticraft.CONFIG.coalGeneratorEnergyProductionRate() * 2
+            )
+    );
+
+    private final EnergySource energySource = new EnergySource(this);
     private int fuelLength = 0;
     private long fuelSlotModCount = -1;
     private int fuelTime = 0;
@@ -72,7 +96,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
      */
 
     public CoalGeneratorBlockEntity(BlockPos pos, BlockState state) {
-        super(GCMachineTypes.COAL_GENERATOR, pos, state);
+        super(GCBlockEntityTypes.COAL_GENERATOR, pos, state, SPEC);
     }
 
     @Override
@@ -84,7 +108,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
             }
         }
         profiler.push("charge");
-        this.drainPowerToStack(CHARGE_SLOT);
+        this.drainPowerToSlot(CHARGE_SLOT);
         profiler.pop();
     }
 
@@ -92,7 +116,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     public @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("transaction");
         this.energyStorage().insert((long) (Galacticraft.CONFIG.coalGeneratorEnergyProductionRate() * this.heat));
-        this.trySpreadEnergy(level, state);
+        this.energySource.trySpreadEnergy(level, pos, state);
         profiler.popPush("fuel_reset");
         if (this.fuelLength == 0) {
             if (!this.consumeFuel()) {
@@ -123,7 +147,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         this.fuelTime = 0;
         this.fuelLength = 0;
 
-        ItemResourceSlot slot = this.itemStorage().getSlot(INPUT_SLOT);
+        ItemResourceSlot slot = this.itemStorage().slot(INPUT_SLOT);
         if (slot.getModifications() != this.fuelSlotModCount) {
             this.fuelSlotModCount = slot.getModifications();
             int time = FUEL_MAP.getInt(slot.getResource());
@@ -145,9 +169,8 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         this.fuelLength = fuelLength;
     }
 
-    @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
+    public @Nullable MachineMenu<? extends MachineBlockEntity> openMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) return new CoalGeneratorMenu(syncId, (ServerPlayer) player, this);
         return null;
     }
@@ -170,16 +193,16 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public void load(CompoundTag nbt) {
-        super.load(nbt);
-        this.fuelLength = nbt.getInt(Constant.Nbt.FUEL_LENGTH);
-        this.fuelTime = nbt.getInt(Constant.Nbt.FUEL_TIME);
-        this.heat = nbt.getDouble(Constant.Nbt.HEAT);
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
+        super.loadAdditional(tag, lookup);
+        this.fuelLength = tag.getInt(Constant.Nbt.FUEL_LENGTH);
+        this.fuelTime = tag.getInt(Constant.Nbt.FUEL_TIME);
+        this.heat = tag.getDouble(Constant.Nbt.HEAT);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
+        super.saveAdditional(tag, lookup);
         tag.putInt(Constant.Nbt.FUEL_LENGTH, this.fuelLength);
         tag.putInt(Constant.Nbt.FUEL_TIME, this.fuelTime);
         tag.putDouble(Constant.Nbt.HEAT, this.heat);

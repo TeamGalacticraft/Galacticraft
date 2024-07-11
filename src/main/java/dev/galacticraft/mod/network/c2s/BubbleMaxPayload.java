@@ -20,40 +20,39 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.network.packets;
+package dev.galacticraft.mod.network.c2s;
 
-import dev.galacticraft.mod.Constant.Packet;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.player.Player;
+import io.netty.buffer.ByteBuf;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
-public record ToggleBubbleVisibilityPacket(boolean visible) implements GCPacket {
-    public static final PacketType<ToggleBubbleVisibilityPacket> TYPE = PacketType.create(Packet.BUBBLE_VISIBLE, ToggleBubbleVisibilityPacket::new);
-
-    public ToggleBubbleVisibilityPacket(FriendlyByteBuf buf) {
-        this(buf.readBoolean());
-    }
+public record BubbleMaxPayload(byte max) implements C2SPayload {
+    public static final StreamCodec<ByteBuf, BubbleMaxPayload> STREAM_CODEC = ByteBufCodecs.BYTE.map(BubbleMaxPayload::new, packet -> packet.max);
+    public static final ResourceLocation ID = Constant.id("bubble_max");
+    public static final CustomPacketPayload.Type<BubbleMaxPayload> TYPE = new CustomPacketPayload.Type<>(ID);
 
     @Override
-    public void handle(Player player, PacketSender responseSender) {
-        if (player.containerMenu instanceof OxygenBubbleDistributorMenu sHandler) {
-            OxygenBubbleDistributorBlockEntity machine = sHandler.machine;
-            if (machine.getSecurity().hasAccess(player)) {
-                machine.setBubbleVisible(visible);
+    public void handle(ServerPlayNetworking.@NotNull Context context) {
+
+        if (context.player().containerMenu instanceof OxygenBubbleDistributorMenu menu) {
+            OxygenBubbleDistributorBlockEntity machine = menu.be;
+            if (machine.getSecurity().hasAccess(context.player())) {
+                if (max > 0) {
+                    machine.setTargetSize(max);
+                }
             }
         }
     }
 
     @Override
-    public void write(FriendlyByteBuf buf) {
-        buf.writeBoolean(visible);
-    }
-
-    @Override
-    public PacketType<?> getType() {
+    public @NotNull Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 }

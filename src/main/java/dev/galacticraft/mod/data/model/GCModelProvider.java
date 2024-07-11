@@ -245,10 +245,10 @@ public class GCModelProvider extends FabricModelProvider {
         GCBlocks.PARACHEST.getStateDefinition().getPossibleStates().forEach(state -> {
             para.with(Condition.condition().term(ParaChestBlock.FACING, state.getValue(ParaChestBlock.FACING))/*.term(ParaChestBlock.COLOR, state.getValue(ParaChestBlock.COLOR))*/, Variant.variant()
                     .with(VariantProperties.Y_ROT, getRotationFromDirection(state.getValue(ParaChestBlock.FACING)))
-                    .with(VariantProperties.MODEL, new ResourceLocation("galacticraft:block/parachest/parachest")));
+                    .with(VariantProperties.MODEL, ResourceLocation.parse("galacticraft:block/parachest/parachest")));
             para.with(Condition.condition().term(ParaChestBlock.COLOR, state.getValue(ParaChestBlock.COLOR)), Variant.variant()
                     .with(VariantProperties.Y_ROT, getRotationFromDirection(state.getValue(ParaChestBlock.FACING)))
-                    .with(VariantProperties.MODEL, new ResourceLocation("galacticraft:block/parachest/" + state.getValue(ParaChestBlock.COLOR) + "_chute")));
+                    .with(VariantProperties.MODEL, ResourceLocation.parse("galacticraft:block/parachest/" + state.getValue(ParaChestBlock.COLOR) + "_chute")));
         });
         generator.blockStateOutput.accept(para);
     }
@@ -513,7 +513,7 @@ public class GCModelProvider extends FabricModelProvider {
                 .put(TextureSlot.WALL, resourceLocation)
                 .put(TextureSlot.SIDE, resourceLocation)
                 .put(TextureSlot.TOP, TextureMapping.getBlockTexture(block, "_top"))
-                .put(TextureSlot.BOTTOM, new ResourceLocation(TextureMapping.getBlockTexture(block).toString().replace("detailed_", "")));
+                .put(TextureSlot.BOTTOM, ResourceLocation.parse(TextureMapping.getBlockTexture(block).toString().replace("detailed_", "")));
     }
 
     private void createCheeseBlock(BlockModelGenerators generators) {

@@ -22,15 +22,34 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
+import dev.galacticraft.machinelib.api.filter.ResourceFilters;
+import dev.galacticraft.machinelib.api.storage.MachineEnergyStorage;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.StorageSpec;
+import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
+import dev.galacticraft.machinelib.api.transfer.InputType;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.AbstractSolarPanelBlockEntity;
-import dev.galacticraft.mod.content.GCMachineTypes;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class BasicSolarPanelBlockEntity extends AbstractSolarPanelBlockEntity {
+    private static final StorageSpec STORAGE_SPEC = StorageSpec.of(
+            MachineItemStorage.spec(
+                    ItemResourceSlot.builder(InputType.TRANSFER)
+                            .pos(8, 62)
+                            .filter(ResourceFilters.CAN_INSERT_ENERGY)
+            ),
+            MachineEnergyStorage.spec(
+                    Galacticraft.CONFIG.machineEnergyStorageSize(),
+                    0,
+                    Galacticraft.CONFIG.solarPanelEnergyProductionRate() * 2
+            )
+    );
+
     public BasicSolarPanelBlockEntity(BlockPos pos, BlockState state) {
-        super(GCMachineTypes.BASIC_SOLAR_PANEL, pos, state);
+        super(GCBlockEntityTypes.BASIC_SOLAR_PANEL, pos, state, STORAGE_SPEC);
     }
 
     @Override

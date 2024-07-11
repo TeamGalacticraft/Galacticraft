@@ -55,7 +55,7 @@ public class GratingBlock extends Block implements FluidLoggable {
     public GratingBlock(Properties settings) {
         super(settings);
         this.registerDefaultState(this.getStateDefinition().any()
-                .setValue(FLUID, new ResourceLocation("invalid"))
+                .setValue(FLUID, ResourceLocation.withDefaultNamespace("invalid"))
                 .setValue(FlowingFluid.LEVEL, 8)
                 .setValue(STATE, State.UPPER)
                 .setValue(FlowingFluid.FALLING, false));

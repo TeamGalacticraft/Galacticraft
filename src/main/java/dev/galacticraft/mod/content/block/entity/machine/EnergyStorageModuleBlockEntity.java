@@ -23,17 +23,25 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
-import dev.galacticraft.mod.content.GCMachineTypes;
+import dev.galacticraft.machinelib.api.storage.MachineEnergyStorage;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.StorageSpec;
+import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
+import dev.galacticraft.machinelib.api.transfer.InputType;
+import dev.galacticraft.machinelib.api.util.EnergySource;
+import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.screen.GCMenuTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,38 +50,46 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
     public static final int CHARGE_SELF_SLOT = 0;
     public static final int CHARGE_ITEM_SLOT = 1;
 
+    public static final StorageSpec SPEC = StorageSpec.of(
+            MachineItemStorage.spec(
+                    ItemResourceSlot.builder(InputType.TRANSFER)
+                            .pos(102, 48)
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
+                    ItemResourceSlot.builder(InputType.TRANSFER)
+                            .pos(102, 24)
+                            .filter(ResourceFilters.CAN_INSERT_ENERGY)
+            ),
+            MachineEnergyStorage.spec(
+                    Galacticraft.CONFIG.energyStorageModuleStorageSize(),
+                    Galacticraft.CONFIG.energyStorageModuleStorageSize() / 200
+            )
+    );
+
+    private final EnergySource energySource = new EnergySource(this);
+
     public EnergyStorageModuleBlockEntity(BlockPos pos, BlockState state) {
-        super(GCMachineTypes.ENERGY_STORAGE_MODULE, pos, state);
-    }
-
-    @Override
-    public long getEnergyItemExtractionRate() {
-        return super.getEnergyItemExtractionRate() * 2;
-    }
-
-    @Override
-    public long getEnergyItemInsertionRate() {
-        return super.getEnergyItemInsertionRate() * 2;
+        super(GCBlockEntityTypes.ENERGY_STORAGE_MODULE, pos, state, SPEC);
     }
 
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
-        this.chargeFromStack(CHARGE_SELF_SLOT);
-        this.drainPowerToStack(CHARGE_ITEM_SLOT);
+        this.chargeFromSlot(CHARGE_SELF_SLOT);
+        this.drainPowerToSlot(CHARGE_ITEM_SLOT);
     }
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        this.trySpreadEnergy(level, state);
+        this.energySource.trySpreadEnergy(level, pos, state);
         return MachineStatuses.ACTIVE;
     }
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
+    public MachineMenu<? extends MachineBlockEntity> openMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) {
             return new MachineMenu<>(
+                    GCMenuTypes.ENERGY_STORAGE_MODULE,
                     syncId,
                     (ServerPlayer) player,
                     this

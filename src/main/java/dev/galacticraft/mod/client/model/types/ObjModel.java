@@ -70,7 +70,7 @@ public class ObjModel implements GCModel {
             List<BakedMaterial> bakedMaterials = new ArrayList<>();
             for (Mtl material : materials) {
                 if (material.getMapKdOptions() != null && material.getMapKdOptions().getFileName() != null)
-                    bakedMaterials.add(new BakedMaterial(material, spriteGetter.apply(new Material(atlas.orElse(GCRenderTypes.OBJ_ATLAS), new ResourceLocation(material.getMapKdOptions().getFileName())))));
+                    bakedMaterials.add(new BakedMaterial(material, spriteGetter.apply(new Material(atlas.orElse(GCRenderTypes.OBJ_ATLAS), ResourceLocation.parse(material.getMapKdOptions().getFileName())))));
             }
 
             return new BakedObjModel(obj, bakedMaterials);

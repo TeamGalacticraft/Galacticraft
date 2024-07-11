@@ -29,7 +29,6 @@ import dev.galacticraft.impl.rocket.RocketDataImpl;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
-import dev.galacticraft.mod.network.packets.FootprintRemovedPacket;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;

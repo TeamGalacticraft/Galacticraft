@@ -27,7 +27,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public final class CelestialBodyTextures {
     public static final ResourceLocation ATMOSPHERIC_SUN = Constant.id("textures/gui/planets/atmosphericsun.png");
-    public static final ResourceLocation SUN = new ResourceLocation("textures/environment/sun.png");
+    public static final ResourceLocation SUN = ResourceLocation.withDefaultNamespace("textures/environment/sun.png");
     public static final ResourceLocation EARTH = Constant.id("textures/gui/celestialbodies/earth.png");
 
     private CelestialBodyTextures() {}

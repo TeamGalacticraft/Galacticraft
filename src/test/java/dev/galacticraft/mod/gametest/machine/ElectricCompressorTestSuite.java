@@ -24,7 +24,6 @@ package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
-import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricCompressorBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
@@ -41,8 +40,8 @@ public final class ElectricCompressorTestSuite extends RecipeGameTest<CraftingCo
     public ElectricCompressorTestSuite() {
         super(GCMachineTypes.ELECTRIC_COMPRESSOR, List.of(
                 machine -> machine.energyStorage().setEnergy(Long.MAX_VALUE / 2),
-                machine -> machine.itemStorage().getSlot(ElectricCompressorBlockEntity.INPUT_SLOTS).set(Items.IRON_INGOT, 1),
-                machine -> machine.itemStorage().getSlot(ElectricCompressorBlockEntity.INPUT_SLOTS + 1).set(Items.IRON_INGOT, 1)
+                machine -> machine.itemStorage().slot(ElectricCompressorBlockEntity.INPUT_SLOTS).set(Items.IRON_INGOT, 1),
+                machine -> machine.itemStorage().slot(ElectricCompressorBlockEntity.INPUT_SLOTS + 1).set(Items.IRON_INGOT, 1)
         ), ElectricCompressorBlockEntity.OUTPUT_SLOTS, ElectricCompressorBlockEntity.OUTPUT_LENGTH, 200);
     }
 

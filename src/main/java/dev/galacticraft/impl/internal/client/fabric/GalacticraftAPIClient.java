@@ -53,7 +53,7 @@ public class GalacticraftAPIClient implements ClientModInitializer {
             boolean add = buffer.readBoolean();
             ResourceLocation[] ids = new ResourceLocation[len];
             for (int i = 0; i < len; i++) {
-                ids[i] = new ResourceLocation(buffer.readUtf());
+                ids[i] = ResourceLocation.parse(buffer.readUtf());
             }
             client.execute(() -> ((ClientResearchAccessor) Objects.requireNonNull(client.player)).galacticraft$updateResearch(add, ids));
         });

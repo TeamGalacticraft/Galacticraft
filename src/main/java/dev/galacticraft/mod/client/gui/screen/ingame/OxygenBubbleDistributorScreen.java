@@ -26,8 +26,7 @@ import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
-import dev.galacticraft.mod.network.packets.BubbleMaxPacket;
-import dev.galacticraft.mod.network.packets.ToggleBubbleVisibilityPacket;
+import dev.galacticraft.mod.network.c2s.BubbleMaxPayload;
 import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
 import dev.galacticraft.mod.util.Translations;
@@ -146,7 +145,7 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
                 if (this.menu.targetSize != Byte.MAX_VALUE) {
                     this.menu.targetSize = ((byte) (this.menu.targetSize + 1));
                     textField.setValue(String.valueOf(this.menu.targetSize));
-                    ClientPlayNetworking.send(new BubbleMaxPacket(this.menu.targetSize));
+                    ClientPlayNetworking.send(new BubbleMaxPayload(this.menu.targetSize));
                     return true;
                 }
             }
@@ -155,7 +154,7 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
                 if (this.menu.targetSize > 1) {
                     this.menu.targetSize = (byte) (this.menu.targetSize - 1);
                     textField.setValue(String.valueOf(this.menu.targetSize));
-                    ClientPlayNetworking.send(new BubbleMaxPacket(this.menu.targetSize));
+                    ClientPlayNetworking.send(new BubbleMaxPayload(this.menu.targetSize));
                     return true;
                 }
             }

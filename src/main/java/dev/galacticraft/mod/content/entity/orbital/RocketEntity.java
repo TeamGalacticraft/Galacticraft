@@ -43,7 +43,7 @@ import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.events.RocketEvents;
-import dev.galacticraft.mod.network.packets.RocketSpawnPacket;
+import dev.galacticraft.mod.network.s2c.RocketSpawnPacket;
 import dev.galacticraft.mod.particle.EntityParticleOption;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.tag.GCTags;
@@ -94,7 +94,7 @@ import java.util.Objects;
 
 @SuppressWarnings("UnstableApiUsage")
 public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift, ControllableEntity {
-    private static final ResourceLocation NULL_ID = new ResourceLocation("null");
+    private static final ResourceLocation NULL_ID = ResourceLocation.withDefaultNamespace("null");
     private static final EntityDataAccessor<LaunchStage> STAGE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.LAUNCH_STAGE);
 
     private static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
@@ -689,12 +689,12 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
-        this.setCone(tag.contains("Cone") ? new ResourceLocation(tag.getString("Cone")) : null);
-        this.setBody(tag.contains("Body") ? new ResourceLocation(tag.getString("Body")) : null);
-        this.setFin(tag.contains("Fin") ? new ResourceLocation(tag.getString("Fin")) : null);
-        this.setBooster(tag.contains("Booster") ? new ResourceLocation(tag.getString("Booster")) : null);
-        this.setEngine(tag.contains("Engine") ? new ResourceLocation(tag.getString("Engine")) : null);
-        this.setUpgrade(tag.contains("Upgrade") ? new ResourceLocation(tag.getString("Upgrade")) : null);
+        this.setCone(tag.contains("Cone") ? ResourceLocation.parse(tag.getString("Cone")) : null);
+        this.setBody(tag.contains("Body") ? ResourceLocation.parse(tag.getString("Body")) : null);
+        this.setFin(tag.contains("Fin") ? ResourceLocation.parse(tag.getString("Fin")) : null);
+        this.setBooster(tag.contains("Booster") ? ResourceLocation.parse(tag.getString("Booster")) : null);
+        this.setEngine(tag.contains("Engine") ? ResourceLocation.parse(tag.getString("Engine")) : null);
+        this.setUpgrade(tag.contains("Upgrade") ? ResourceLocation.parse(tag.getString("Upgrade")) : null);
 
         if (tag.contains("Color")) {
             this.setColor(tag.getInt("Color"));

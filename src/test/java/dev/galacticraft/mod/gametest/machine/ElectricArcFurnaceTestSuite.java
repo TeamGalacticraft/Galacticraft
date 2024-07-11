@@ -24,7 +24,6 @@ package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
-import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricArcFurnaceBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.gametest.framework.GameTestGenerator;
@@ -41,7 +40,7 @@ public final class ElectricArcFurnaceTestSuite extends RecipeGameTest<Container,
     public ElectricArcFurnaceTestSuite() {
         super(GCMachineTypes.ELECTRIC_ARC_FURNACE, List.of(
                 machine -> machine.energyStorage().setEnergy(Long.MAX_VALUE / 2),
-                machine -> machine.itemStorage().getSlot(ElectricArcFurnaceBlockEntity.INPUT_SLOT).set(Items.RAW_IRON, 1)
+                machine -> machine.itemStorage().slot(ElectricArcFurnaceBlockEntity.INPUT_SLOT).set(Items.RAW_IRON, 1)
         ), ElectricArcFurnaceBlockEntity.OUTPUT_SLOTS, ElectricArcFurnaceBlockEntity.OUTPUT_LENGTH, 100);
     }
 

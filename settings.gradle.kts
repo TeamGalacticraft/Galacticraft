@@ -1,5 +1,11 @@
 pluginManagement {
     repositories {
+        mavenLocal {
+            content {
+                includeGroup("dev.galacticraft")
+                includeGroup("dev.galacticraft.mojarn")
+            }
+        }
         maven("https://maven.fabricmc.net/") {
             name = "Fabric"
             content {

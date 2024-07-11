@@ -31,7 +31,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -46,9 +46,9 @@ import java.util.function.Consumer;
 public class GCLevelStemProvider implements DataProvider {
 	private final PackOutput.PathProvider path;
 	private final CompletableFuture<HolderLookup.Provider> registriesFuture;
-	private final Consumer<BootstapContext<LevelStem>> bootstrap;
+	private final Consumer<BootstrapContext<LevelStem>> bootstrap;
 
-	public GCLevelStemProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture, Consumer<BootstapContext<LevelStem>> bootstrap) {
+	public GCLevelStemProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture, Consumer<BootstrapContext<LevelStem>> bootstrap) {
 		this.path = output.createPathProvider(PackOutput.Target.DATA_PACK, "dimension");
 		this.registriesFuture = registriesFuture;
 		this.bootstrap = bootstrap;
@@ -58,7 +58,7 @@ public class GCLevelStemProvider implements DataProvider {
 	public @NotNull CompletableFuture<?> run(CachedOutput output) {
 		return this.registriesFuture.thenCompose(registries -> {
 			Map<ResourceLocation, LevelStem> entries = new HashMap<>();
-			this.bootstrap.accept(new BootstapContext<>() {
+			this.bootstrap.accept(new BootstrapContext<>() {
 				@Override
 				public Holder.Reference<LevelStem> register(ResourceKey<LevelStem> resourceKey, LevelStem object, Lifecycle lifecycle) {
 					entries.put(resourceKey.location(), object);

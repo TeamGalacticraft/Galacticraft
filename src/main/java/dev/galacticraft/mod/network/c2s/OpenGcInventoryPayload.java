@@ -20,34 +20,37 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.network.packets;
+package dev.galacticraft.mod.network.c2s;
 
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
-import net.minecraft.network.FriendlyByteBuf;
+import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
+import io.netty.buffer.ByteBuf;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.SimpleMenuProvider;
+import org.jetbrains.annotations.NotNull;
 
-public record PlanetTpPacket(ResourceLocation body) implements GCPacket {
-    public static final PacketType<PlanetTpPacket> TYPE = PacketType.create(Constant.Packet.PLANET_TP, PlanetTpPacket::new);
+public record OpenGcInventoryPayload() implements C2SPayload {
+    public static final OpenGcInventoryPayload INSTANCE = new OpenGcInventoryPayload();
+    public static final StreamCodec<ByteBuf, OpenGcInventoryPayload> STREAM_CODEC = StreamCodec.unit(INSTANCE);;
+    public static final ResourceLocation ID = Constant.id("open_gc_inventory");
+    public static final Type<OpenGcInventoryPayload> TYPE = new Type<>(ID);
 
-    public PlanetTpPacket(FriendlyByteBuf buf) {
-        this(buf.readResourceLocation());
+    @Override
+    public void handle(ServerPlayNetworking.@NotNull Context context) {
+        context.player().openMenu(new SimpleMenuProvider(GCPlayerInventoryMenu::new, Component.empty()) {
+            @Override
+            public boolean shouldCloseCurrentScreen() {
+                return false;
+            }
+        });
     }
 
     @Override
-    public void handle(Player player, PacketSender responseSender) {
-
-    }
-
-    @Override
-    public void write(FriendlyByteBuf buf) {
-        buf.writeResourceLocation(body);
-    }
-
-    @Override
-    public PacketType<?> getType() {
+    public @NotNull Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 }

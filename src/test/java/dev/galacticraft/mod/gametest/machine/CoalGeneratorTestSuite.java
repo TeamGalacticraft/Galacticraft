@@ -26,7 +26,6 @@ import dev.galacticraft.machinelib.api.gametest.MachineGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.MachineTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
-import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.CoalGeneratorBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.gametest.framework.GameTestGenerator;
@@ -45,14 +44,14 @@ public final class CoalGeneratorTestSuite extends MachineGameTest<CoalGeneratorB
 
     @MachineTest
     public Runnable fuelBurning(CoalGeneratorBlockEntity machine) {
-        ItemResourceSlot slot = machine.itemStorage().getSlot(CoalGeneratorBlockEntity.INPUT_SLOT);
+        ItemResourceSlot slot = machine.itemStorage().slot(CoalGeneratorBlockEntity.INPUT_SLOT);
         slot.set(Items.COAL, 1);
         return () -> Assertions.assertTrue(slot.isEmpty(), "Failed to consume fuel");
     }
 
     @MachineTest
     public Runnable fuelConsumption(CoalGeneratorBlockEntity machine) {
-        ItemResourceSlot slot = machine.itemStorage().getSlot(CoalGeneratorBlockEntity.INPUT_SLOT);
+        ItemResourceSlot slot = machine.itemStorage().slot(CoalGeneratorBlockEntity.INPUT_SLOT);
 
         slot.set(Items.COAL, 1);
         return () -> Assertions.assertNotEquals(0, machine.getFuelLength(), "Failed to burn fuel");
@@ -60,7 +59,7 @@ public final class CoalGeneratorTestSuite extends MachineGameTest<CoalGeneratorB
 
     @MachineTest(workTime = 320)
     public Runnable multipleFuelBurning(CoalGeneratorBlockEntity machine) {
-        ItemResourceSlot slot = machine.itemStorage().getSlot(CoalGeneratorBlockEntity.INPUT_SLOT);
+        ItemResourceSlot slot = machine.itemStorage().slot(CoalGeneratorBlockEntity.INPUT_SLOT);
 
         slot.set(Items.COAL, 2);
         return () -> Assertions.assertTrue(slot.isEmpty(), "Failed to consume two coals!");

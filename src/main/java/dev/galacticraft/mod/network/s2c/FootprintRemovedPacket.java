@@ -20,39 +20,40 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.network.packets;
+package dev.galacticraft.mod.network.s2c;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
+import dev.galacticraft.mod.util.StreamCodecs;
+import io.netty.buffer.ByteBuf;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.ChunkPos;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public record FootprintRemovedPacket(long packedPos, BlockPos pos) implements GCPacket {
-    public static final PacketType<FootprintRemovedPacket> TYPE = PacketType.create(Constant.Packet.FOOTPRINT_REMOVED, FootprintRemovedPacket::new);
-
-    public FootprintRemovedPacket(FriendlyByteBuf buf) {
-        this(buf.readLong(), buf.readBlockPos());
-    }
-
-    @Override
-    public void write(FriendlyByteBuf buf) {
-        buf.writeLong(packedPos);
-        buf.writeBlockPos(pos);
-    }
+public record FootprintRemovedPacket(ChunkPos chunk, BlockPos pos) implements S2CPayload {
+    public static final StreamCodec<ByteBuf, FootprintRemovedPacket> STREAM_CODEC = StreamCodec.composite(
+            StreamCodecs.CHUNK_POS_CODEC,
+            p -> p.chunk,
+            BlockPos.STREAM_CODEC,
+            p -> p.pos,
+            FootprintRemovedPacket::new
+    );
+    public static final ResourceLocation ID = Constant.id("footprint_removed");
+    public static final Type<FootprintRemovedPacket> TYPE = new Type<>(ID);
 
     @Override
-    public void handle(Player player, PacketSender responseSender) {
-        long packedPos = packedPos();
+    public void handle(ClientPlayNetworking.@NotNull Context context) {
         BlockPos pos = pos();
-        FootprintManager manager = player.level().galacticraft$getFootprintManager();
-        List<Footprint> footprintList = manager.getFootprints().get(packedPos);
+        FootprintManager manager = context.player().level().galacticraft$getFootprintManager();
+        List<Footprint> footprintList = manager.getFootprints().get(this.chunk.toLong());
         List<Footprint> toRemove = new ArrayList<>();
 
         if (footprintList != null) {
@@ -65,12 +66,12 @@ public record FootprintRemovedPacket(long packedPos, BlockPos pos) implements GC
 
         if (!toRemove.isEmpty()) {
             footprintList.removeAll(toRemove);
-            manager.getFootprints().put(packedPos, footprintList);
+            manager.getFootprints().put(this.chunk.toLong(), footprintList);
         }
     }
 
     @Override
-    public PacketType<?> getType() {
+    public @NotNull Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 }

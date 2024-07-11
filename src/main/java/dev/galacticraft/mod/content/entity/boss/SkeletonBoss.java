@@ -34,7 +34,10 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -45,15 +48,12 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.List;
 import java.util.Random;
 
 public class SkeletonBoss extends AbstractBossEntity implements RangedAttackMob, IgnoreShift {
@@ -173,11 +173,6 @@ public class SkeletonBoss extends AbstractBossEntity implements RangedAttackMob,
 //    }
 
     @Override
-    public MobType getMobType() {
-        return MobType.UNDEAD;
-    }
-
-    @Override
     public void aiStep() {
         this.ticks++;
 
@@ -286,8 +281,9 @@ public class SkeletonBoss extends AbstractBossEntity implements RangedAttackMob,
             return;
         }
 
-        ItemStack arrowItem = this.getProjectile(this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, Items.BOW)));
-        AbstractArrow arrow = getArrow(arrowItem, pullProgress);
+        ItemStack itemInHand = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, Items.BOW));
+        ItemStack arrowItem = this.getProjectile(itemInHand);
+        AbstractArrow arrow = getArrow(arrowItem, pullProgress, itemInHand);
         double d0 = target.getX() - this.getX();
         double d1 = target.getY(0.3333333333333333) - arrow.getY();
         double d2 = target.getZ() - this.getZ();
@@ -298,8 +294,8 @@ public class SkeletonBoss extends AbstractBossEntity implements RangedAttackMob,
         this.level().addFreshEntity(arrow);
     }
 
-    protected AbstractArrow getArrow(ItemStack arrow, float damageModifier) {
-        return ProjectileUtil.getMobArrow(this, arrow, damageModifier);
+    protected AbstractArrow getArrow(ItemStack arrow, float damageModifier, ItemStack itemInHand) {
+        return ProjectileUtil.getMobArrow(this, arrow, damageModifier, itemInHand);
     }
 
     @Override

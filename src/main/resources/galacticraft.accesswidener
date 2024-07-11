@@ -1,64 +1,64 @@
 accessWidener v1 named
 
 # constructors
-accessible method net/minecraft/client/particle/DripParticle$DripHangParticle                <init> (Lnet/minecraft/client/multiplayer/ClientLevel;DDDLnet/minecraft/world/level/material/Fluid;Lnet/minecraft/core/particles/ParticleOptions;)V
-accessible method net/minecraft/client/particle/DripParticle$FallingParticle                 <init> (Lnet/minecraft/client/multiplayer/ClientLevel;DDDLnet/minecraft/world/level/material/Fluid;)V
-accessible method net/minecraft/client/resources/model/SimpleBakedModel$Builder              <init> (ZZZLnet/minecraft/client/renderer/block/model/ItemTransforms;Lnet/minecraft/client/renderer/block/model/ItemOverrides;)V
-accessible method net/minecraft/client/renderer/block/model/ItemOverrides                    <init> ()V
-accessible method net/minecraft/world/level/block/StairBlock                                 <init> (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
-accessible method net/minecraft/world/item/AxeItem                                           <init> (Lnet/minecraft/world/item/Tier;FFLnet/minecraft/world/item/Item$Properties;)V
-accessible method net/minecraft/world/item/HoeItem                                           <init> (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V
-accessible method net/minecraft/world/item/PickaxeItem                                       <init> (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V
-accessible method net/minecraft/world/level/levelgen/structure/pools/LegacySinglePoolElement <init> (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/core/Holder;Lnet/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool$Projection;)V
+#accessible method net/minecraft/client/particle/DripParticle$DripHangParticle                <init> (Lnet/minecraft/client/multiplayer/ClientLevel;DDDLnet/minecraft/world/level/material/Fluid;Lnet/minecraft/core/particles/ParticleOptions;)V
+#accessible method net/minecraft/client/particle/DripParticle$FallingParticle                 <init> (Lnet/minecraft/client/multiplayer/ClientLevel;DDDLnet/minecraft/world/level/material/Fluid;)V
+#accessible method net/minecraft/client/resources/model/SimpleBakedModel$Builder              <init> (ZZZLnet/minecraft/client/renderer/block/model/ItemTransforms;Lnet/minecraft/client/renderer/block/model/ItemOverrides;)V
+#accessible method net/minecraft/client/renderer/block/model/ItemOverrides                    <init> ()V
+#accessible method net/minecraft/world/level/block/StairBlock                                 <init> (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
+#accessible method net/minecraft/world/item/AxeItem                                           <init> (Lnet/minecraft/world/item/Tier;FFLnet/minecraft/world/item/Item$Properties;)V
+#accessible method net/minecraft/world/item/HoeItem                                           <init> (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V
+#accessible method net/minecraft/world/item/PickaxeItem                                       <init> (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V
+#accessible method net/minecraft/world/level/levelgen/structure/pools/LegacySinglePoolElement <init> (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/core/Holder;Lnet/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool$Projection;)V
 
 # private classes
-accessible class  net/minecraft/world/level/biome/MultiNoiseBiomeSourceParameterList$Preset$SourceProvider
-accessible class  net/minecraft/world/level/levelgen/SurfaceRules$Condition
-accessible class  net/minecraft/world/level/levelgen/SurfaceRules$LazyYCondition
-accessible class  net/minecraft/world/level/levelgen/SurfaceRules$Context
-accessible class  net/minecraft/data/models/BlockModelGenerators$BlockStateGeneratorSupplier
-accessible class  net/minecraft/client/resources/model/ModelManager$ReloadState
-accessible class  net/minecraft/core/registries/BuiltInRegistries$RegistryBootstrap
-accessible class  net/minecraft/core/RegistrySynchronization$NetworkedRegistryData
+#accessible class  net/minecraft/world/level/biome/MultiNoiseBiomeSourceParameterList$Preset$SourceProvider
+#accessible class  net/minecraft/world/level/levelgen/SurfaceRules$Condition
+#accessible class  net/minecraft/world/level/levelgen/SurfaceRules$LazyYCondition
+#accessible class  net/minecraft/world/level/levelgen/SurfaceRules$Context
+#accessible class  net/minecraft/data/models/BlockModelGenerators$BlockStateGeneratorSupplier
+#accessible class  net/minecraft/client/resources/model/ModelManager$ReloadState
+#accessible class  net/minecraft/core/registries/BuiltInRegistries$RegistryBootstrap
+#accessible class  net/minecraft/core/RegistrySynchronization$NetworkedRegistryData
 
 # fields in final classes
-accessible field  net/minecraft/world/level/levelgen/SurfaceRules$Context   biome    Ljava/util/function/Supplier;
+#accessible field  net/minecraft/world/level/levelgen/SurfaceRules$Context   biome    Ljava/util/function/Supplier;
 
 # final classes
 extendable class net/minecraft/world/SimpleMenuProvider
 
 # static methods
-accessible method net/minecraft/world/level/levelgen/NoiseRouterData       overworld (Lnet/minecraft/core/HolderGetter;Lnet/minecraft/core/HolderGetter;ZZ)Lnet/minecraft/world/level/levelgen/NoiseRouter;
-accessible method net/minecraft/world/level/block/ChestBlock               isCatSittingOnChest (Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/core/BlockPos;)Z
-accessible method net/minecraft/data/models/model/ModelTemplates           createItem (Ljava/lang/String;[Lnet/minecraft/data/models/model/TextureSlot;)Lnet/minecraft/data/models/model/ModelTemplate;
-accessible method net/minecraft/data/loot/BlockLootSubProvider             createSilkTouchOnlyTable (Lnet/minecraft/world/level/ItemLike;)Lnet/minecraft/world/level/storage/loot/LootTable$Builder;
-accessible method net/minecraft/data/worldgen/Structures                   structure (Lnet/minecraft/core/HolderSet;Lnet/minecraft/world/level/levelgen/structure/TerrainAdjustment;)Lnet/minecraft/world/level/levelgen/structure/Structure$StructureSettings;
-accessible method net/minecraft/stats/Stats                                makeCustomStat (Ljava/lang/String;Lnet/minecraft/stats/StatFormatter;)Lnet/minecraft/resources/ResourceLocation;
-accessible method net/minecraft/world/level/storage/loot/BuiltInLootTables register (Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/resources/ResourceLocation;
+#accessible method net/minecraft/world/level/levelgen/NoiseRouterData       overworld (Lnet/minecraft/core/HolderGetter;Lnet/minecraft/core/HolderGetter;ZZ)Lnet/minecraft/world/level/levelgen/NoiseRouter;
+#accessible method net/minecraft/world/level/block/ChestBlock               isCatSittingOnChest (Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/core/BlockPos;)Z
+#accessible method net/minecraft/data/models/model/ModelTemplates           createItem (Ljava/lang/String;[Lnet/minecraft/data/models/model/TextureSlot;)Lnet/minecraft/data/models/model/ModelTemplate;
+#accessible method net/minecraft/data/loot/BlockLootSubProvider             createSilkTouchOnlyTable (Lnet/minecraft/world/level/ItemLike;)Lnet/minecraft/world/level/storage/loot/LootTable$Builder;
+#accessible method net/minecraft/data/worldgen/Structures                   structure (Lnet/minecraft/core/HolderSet;Lnet/minecraft/world/level/levelgen/structure/TerrainAdjustment;)Lnet/minecraft/world/level/levelgen/structure/Structure$StructureSettings;
+#accessible method net/minecraft/stats/Stats                                makeCustomStat (Ljava/lang/String;Lnet/minecraft/stats/StatFormatter;)Lnet/minecraft/resources/ResourceLocation;
+#accessible method net/minecraft/world/level/storage/loot/BuiltInLootTables register (Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/resources/ResourceLocation;
 
 # private fields
-accessible field net/minecraft/client/resources/model/ModelManager bakedRegistry Ljava/util/Map;
-accessible field net/minecraft/data/worldgen/ProcessorLists EMPTY Lnet/minecraft/resources/ResourceKey;
-accessible field net/minecraft/world/level/block/DispenserBlock DISPENSER_REGISTRY Ljava/util/Map;
-accessible field net/minecraft/client/renderer/LevelRenderer ticks I
+#accessible field net/minecraft/client/resources/model/ModelManager bakedRegistry Ljava/util/Map;
+#accessible field net/minecraft/data/worldgen/ProcessorLists EMPTY Lnet/minecraft/resources/ResourceKey;
+#accessible field net/minecraft/world/level/block/DispenserBlock DISPENSER_REGISTRY Ljava/util/Map;
+#accessible field net/minecraft/client/renderer/LevelRenderer ticks I
 
 # private final fields
-accessible field net/minecraft/data/models/BlockModelGenerators texturedModels Ljava/util/Map;
-mutable field net/minecraft/data/models/BlockModelGenerators texturedModels Ljava/util/Map;
-accessible field net/minecraft/data/models/BlockModelGenerators fullBlockModelCustomGenerators Ljava/util/Map;
-mutable field net/minecraft/data/models/BlockModelGenerators fullBlockModelCustomGenerators Ljava/util/Map;
-accessible field net/minecraft/client/renderer/block/model/BlockModel textureMap Ljava/util/Map;
+#accessible field net/minecraft/data/models/BlockModelGenerators texturedModels Ljava/util/Map;
+#mutable field net/minecraft/data/models/BlockModelGenerators texturedModels Ljava/util/Map;
+#accessible field net/minecraft/data/models/BlockModelGenerators fullBlockModelCustomGenerators Ljava/util/Map;
+#mutable field net/minecraft/data/models/BlockModelGenerators fullBlockModelCustomGenerators Ljava/util/Map;
+#accessible field net/minecraft/client/renderer/block/model/BlockModel textureMap Ljava/util/Map;
 
 # private static fields
-accessible field net/minecraft/data/loot/EntityLootSubProvider SPECIAL_LOOT_TABLE_TYPES Ljava/util/Set;
-accessible field net/minecraft/data/loot/EntityLootSubProvider map Ljava/util/Map;
-accessible field net/minecraft/world/level/levelgen/NoiseRouterData Y Lnet/minecraft/resources/ResourceKey;
-accessible field net/minecraft/world/level/levelgen/NoiseRouterData SHIFT_X Lnet/minecraft/resources/ResourceKey;
-accessible field net/minecraft/world/level/levelgen/NoiseRouterData SHIFT_Z Lnet/minecraft/resources/ResourceKey;
+#accessible field net/minecraft/data/loot/EntityLootSubProvider SPECIAL_LOOT_TABLE_TYPES Ljava/util/Set;
+#accessible field net/minecraft/data/loot/EntityLootSubProvider map Ljava/util/Map;
+#accessible field net/minecraft/world/level/levelgen/NoiseRouterData Y Lnet/minecraft/resources/ResourceKey;
+#accessible field net/minecraft/world/level/levelgen/NoiseRouterData SHIFT_X Lnet/minecraft/resources/ResourceKey;
+#accessible field net/minecraft/world/level/levelgen/NoiseRouterData SHIFT_Z Lnet/minecraft/resources/ResourceKey;
 accessible field net/minecraft/client/gui/screens/inventory/SmithingScreen ARMOR_STAND_ANGLE Lorg/joml/Quaternionf;
-accessible field net/minecraft/client/particle/Particle MAXIMUM_COLLISION_VELOCITY_SQUARED D
-accessible field net/minecraft/client/renderer/LevelRenderer RAIN_RADIUS I
-accessible field net/minecraft/client/renderer/LevelRenderer RAIN_DIAMETER I
+#accessible field net/minecraft/client/particle/Particle MAXIMUM_COLLISION_VELOCITY_SQUARED D
+#accessible field net/minecraft/client/renderer/LevelRenderer RAIN_RADIUS I
+#accessible field net/minecraft/client/renderer/LevelRenderer RAIN_DIAMETER I
 
 # private methods
-extendable method net/minecraft/world/entity/LivingEntity setPosToBed (Lnet/minecraft/core/BlockPos;)V
+#extendable method net/minecraft/world/entity/LivingEntity setPosToBed (Lnet/minecraft/core/BlockPos;)V

@@ -43,8 +43,8 @@ public class SolarPanelSpriteProvider implements MachineModelRegistry.SpriteProv
     private TextureAtlasSprite machine;
 
     public SolarPanelSpriteProvider(JsonObject json, Function<Material, TextureAtlasSprite> function) {
-        this.front = function.apply(new Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation(GsonHelper.getAsString(json, "front"))));
-        this.top = function.apply(new Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation(GsonHelper.getAsString(json, "top"))));
+        this.front = function.apply(new Material(TextureAtlas.LOCATION_BLOCKS, ResourceLocation.parse(GsonHelper.getAsString(json, "front"))));
+        this.top = function.apply(new Material(TextureAtlas.LOCATION_BLOCKS, ResourceLocation.parse(GsonHelper.getAsString(json, "top"))));
         this.machine = function.apply(MachineBakedModel.MACHINE);
         this.machineSide = function.apply(MachineBakedModel.MACHINE_SIDE);
     }

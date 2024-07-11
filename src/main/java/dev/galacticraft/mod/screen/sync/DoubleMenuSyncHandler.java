@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.screen.sync;
 
-import dev.galacticraft.machinelib.api.menu.sync.MenuSyncHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import org.jetbrains.annotations.NotNull;
 

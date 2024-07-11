@@ -23,13 +23,20 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
+import dev.galacticraft.machinelib.api.storage.MachineEnergyStorage;
+import dev.galacticraft.machinelib.api.storage.MachineFluidStorage;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
+import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
+import dev.galacticraft.machinelib.api.transfer.InputType;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
-import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
@@ -39,7 +46,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -55,24 +61,53 @@ public class RefineryBlockEntity extends MachineBlockEntity { //fixme
     @VisibleForTesting
     public static final long MAX_CAPACITY = FluidUtil.bucketsToDroplets(8);
 
+    private static final StorageSpec SPEC = StorageSpec.of(
+            MachineItemStorage.spec(
+                    ItemResourceSlot.builder(InputType.TRANSFER)
+                            .pos(8, 7)
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
+                    ItemResourceSlot.builder(InputType.TRANSFER)
+                            .pos(123, 7)
+                            .filter(ResourceFilters.canExtractFluid(GCFluids.CRUDE_OIL)), // fixme: tag?,
+                    ItemResourceSlot.builder(InputType.TRANSFER)
+                            .pos(153, 7)
+                            .filter(ResourceFilters.canInsertFluid(GCFluids.FUEL)) // fixme: tag?
+            ),
+            MachineEnergyStorage.spec(
+                    Galacticraft.CONFIG.machineEnergyStorageSize(),
+                    Galacticraft.CONFIG.refineryEnergyConsumptionRate() * 2,
+                    0
+            ),
+            MachineFluidStorage.spec(
+                    FluidResourceSlot.builder(InputType.INPUT)
+                            .pos(123, 29)
+                            .capacity(RefineryBlockEntity.MAX_CAPACITY)
+                            .filter(ResourceFilters.ofResource(GCFluids.CRUDE_OIL)),
+                    FluidResourceSlot.builder(InputType.RECIPE_OUTPUT)
+                            .pos(153, 29)
+                            .capacity(RefineryBlockEntity.MAX_CAPACITY)
+                            .filter(ResourceFilters.ofResource(GCFluids.FUEL))
+            )
+    );
+
     public RefineryBlockEntity(BlockPos pos, BlockState state) {
-        super(GCMachineTypes.REFINERY, pos, state);
+        super(GCBlockEntityTypes.REFINERY, pos, state, SPEC);
     }
 
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
-        this.chargeFromStack(CHARGE_SLOT);
+        this.chargeFromSlot(CHARGE_SLOT);
 
-        this.takeFluidFromStack(OIL_INPUT_SLOT, OIL_TANK, GCFluids.CRUDE_OIL);
-        this.insertFluidToStack(FUEL_OUTPUT_SLOT, FUEL_TANK, GCFluids.FUEL);
+        this.takeFluidFromSlot(OIL_INPUT_SLOT, OIL_TANK, GCFluids.CRUDE_OIL);
+        this.drainFluidToSlot(FUEL_OUTPUT_SLOT, FUEL_TANK);
     }
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        FluidResourceSlot oilTank = this.fluidStorage().getSlot(OIL_TANK);
+        FluidResourceSlot oilTank = this.fluidStorage().slot(OIL_TANK);
         if (oilTank.isEmpty()) return GCMachineStatuses.MISSING_OIL;
-        FluidResourceSlot fuelTank = this.fluidStorage().getSlot(FUEL_TANK);
+        FluidResourceSlot fuelTank = this.fluidStorage().slot(FUEL_TANK);
         if (fuelTank.isFull()) return GCMachineStatuses.FUEL_TANK_FULL;
         profiler.push("transaction");
         try {
@@ -93,9 +128,10 @@ public class RefineryBlockEntity extends MachineBlockEntity { //fixme
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
+    public MachineMenu<? extends MachineBlockEntity> openMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) {
             return new MachineMenu<>(
+                    GCMachineTypes.REFINERY,
                     syncId,
                     (ServerPlayer) player,
                     this

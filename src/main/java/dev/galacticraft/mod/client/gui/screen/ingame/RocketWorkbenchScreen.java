@@ -30,13 +30,12 @@ import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartTypes;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.util.BatchedRenderer;
+import dev.galacticraft.mod.client.util.Graphics;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
-import dev.galacticraft.mod.network.packets.SelectPartPacket;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -182,28 +181,30 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float delta, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics guiGraphics, float delta, int mouseX, int mouseY) {
         this.inventoryLabelY = this.imageHeight - 96 + this.menu.additionalHeight;
 
-        drawSelection(graphics, mouseX, mouseY, delta);
+        drawSelection(guiGraphics, mouseX, mouseY, delta);
 
-        try (BatchedRenderer render = new BatchedRenderer(graphics, Constant.ScreenTexture.ROCKET_WORKBENCH_SCREEN, 512, 256)) {
-            render.blit(this.leftPos, this.topPos + this.menu.additionalHeight + CAP_HEIGHT, 0, 0, BASE_UI_WIDTH, BASE_UI_HEIGHT);
+        try (Graphics graphics = Graphics.managed(guiGraphics, this.font)) {
+            try (Graphics.Texture texture = graphics.texture(Constant.ScreenTexture.ROCKET_WORKBENCH_SCREEN, 512, 512)) {
+                texture.blit(this.leftPos, this.topPos + this.menu.additionalHeight + CAP_HEIGHT, 0, 0, BASE_UI_WIDTH, BASE_UI_HEIGHT);
 
-            if (this.menu.additionalHeight > 0) {
-                render.blit(this.leftPos, this.topPos + CAP_HEIGHT, HEIGHT_EXT_U, 0, MAIN_UI_WIDTH, this.menu.additionalHeight);
-            }
+                if (this.menu.additionalHeight > 0) {
+                    texture.blit(this.leftPos, this.topPos + CAP_HEIGHT, HEIGHT_EXT_U, 0, MAIN_UI_WIDTH, this.menu.additionalHeight);
+                }
 
-            render.blit(this.leftPos, this.topPos, 0, BASE_UI_HEIGHT, BASE_UI_WIDTH, CAP_HEIGHT);
+                texture.blit(this.leftPos, this.topPos, 0, BASE_UI_HEIGHT, BASE_UI_WIDTH, CAP_HEIGHT);
 
-            for (Slot slot : this.menu.slots) {
-                if (slot.container instanceof VariableSizedContainer) {
-                    render.blit(this.leftPos + slot.x - 1, this.topPos + slot.y - 1, NORMAL_SLOT_U, NORMAL_SLOT_V, NORMAL_SLOT_SIZE, NORMAL_SLOT_SIZE);
+                for (Slot slot : this.menu.slots) {
+                    if (slot.container instanceof VariableSizedContainer) {
+                        texture.blit(this.leftPos + slot.x - 1, this.topPos + slot.y - 1, NORMAL_SLOT_U, NORMAL_SLOT_V, NORMAL_SLOT_SIZE, NORMAL_SLOT_SIZE);
+                    }
                 }
             }
         }
 
-        renderEntityInInventory(graphics, this.leftPos + ROCKET_PREVIEW_X, this.topPos + ROCKET_PREVIEW_Y, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, this.entity);
+        renderEntityInInventory(guiGraphics, this.leftPos + ROCKET_PREVIEW_X, this.topPos + ROCKET_PREVIEW_Y, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, this.entity);
     }
 
     @Override
@@ -279,52 +280,54 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
         }
     }
 
-    private void drawSelection(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        PoseStack pose = graphics.pose();
+    private void drawSelection(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+        PoseStack pose = guiGraphics.pose();
         pose.pushPose();
         pose.translate(this.leftPos - SELECTION_SCREEN_WIDTH - SCREEN_SPACING, this.topPos, 0);
         mouseX -= this.leftPos - SELECTION_SCREEN_WIDTH - SCREEN_SPACING;
         mouseY -= this.topPos;
 
         int size = this.recipes != null ? this.recipes.size() : 0;
-        try (BatchedRenderer render = new BatchedRenderer(graphics, Constant.ScreenTexture.ROCKET_SELECTION, 256, 256)) {
-            render.blit(0, 0, 0, 0, SELECTION_SCREEN_WIDTH, SELECTION_SCREEN_HEIGHT);
+        try (Graphics graphics = Graphics.managed(guiGraphics, this.font)) {
+            try (Graphics.Texture texture = graphics.texture(Constant.ScreenTexture.ROCKET_WORKBENCH_SCREEN, 512, 512)) {
+                texture.blit(0, 0, 0, 0, SELECTION_SCREEN_WIDTH, SELECTION_SCREEN_HEIGHT);
 
-            {
-                int y = 4;
-                for (Tab tab : Tab.values()) {
-                    if (tab == Tab.COLOR) continue;
-                    if (tab == this.openTab) {
-                        render.blit(-(TAB_SELECTED_WIDTH - 3), y, TAB_SELECTED_U, TAB_SELECTED_V, TAB_SELECTED_WIDTH, TAB_HEIGHT);
-                    } else {
-                        render.blit(-TAB_WIDTH, y, TAB_U, TAB_V, TAB_WIDTH, TAB_HEIGHT);
-                    }
-                    y += TAB_SPACING + TAB_HEIGHT;
-                }
-            }
-
-            if (this.openTab != Tab.COLOR) {
-                assert this.recipes != null;
-                final int pages = Math.floorDiv(size, RECIPES_PER_PAGE) + size % RECIPES_PER_PAGE == 0 ? 0 : 1;
-
-                if (this.page >= pages) {
-                    this.page = 0;
-                }
-                int i = this.page * 5 * 7;
-                for (int y = 0; y < 7 && i < size; y++) {
-                    for (int x = 0; x < 5 && i < size; x++) {
-                        Holder.Reference<? extends RocketPart<?, ?>> part = this.recipes.get(i);
-                        int uOffset = isCraftable(part) ? RECIPE_CRAFTABLE_U : RECIPE_UNCRAFTABLE_U;
-                        int vOffset = Objects.equals(this.getSelection().selection, part == null ? null : part.key().location()) ? RECIPE_SELECTED_V : RECIPE_V;
-                        render.blit(11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, uOffset, vOffset, RECIPE_WIDTH, RECIPE_HEIGHT);
-                        if (part != null && mouseIn(mouseX, mouseY, 11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, RECIPE_WIDTH, RECIPE_HEIGHT)) {
-                            setTooltipForNextRenderPass(RocketPart.getName(part.key()));
+                {
+                    int y = 4;
+                    for (Tab tab : Tab.values()) {
+                        if (tab == Tab.COLOR) continue;
+                        if (tab == this.openTab) {
+                            texture.blit(-(TAB_SELECTED_WIDTH - 3), y, TAB_SELECTED_U, TAB_SELECTED_V, TAB_SELECTED_WIDTH, TAB_HEIGHT);
+                        } else {
+                            texture.blit(-TAB_WIDTH, y, TAB_U, TAB_V, TAB_WIDTH, TAB_HEIGHT);
                         }
-                        i++;
+                        y += TAB_SPACING + TAB_HEIGHT;
                     }
                 }
-            } else {
-                //todo color
+
+                if (this.openTab != Tab.COLOR) {
+                    assert this.recipes != null;
+                    final int pages = Math.floorDiv(size, RECIPES_PER_PAGE) + size % RECIPES_PER_PAGE == 0 ? 0 : 1;
+
+                    if (this.page >= pages) {
+                        this.page = 0;
+                    }
+                    int i = this.page * 5 * 7;
+                    for (int y = 0; y < 7 && i < size; y++) {
+                        for (int x = 0; x < 5 && i < size; x++) {
+                            Holder.Reference<? extends RocketPart<?, ?>> part = this.recipes.get(i);
+                            int uOffset = isCraftable(part) ? RECIPE_CRAFTABLE_U : RECIPE_UNCRAFTABLE_U;
+                            int vOffset = Objects.equals(this.getSelection().selection, part == null ? null : part.key().location()) ? RECIPE_SELECTED_V : RECIPE_V;
+                            texture.blit(11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, uOffset, vOffset, RECIPE_WIDTH, RECIPE_HEIGHT);
+                            if (part != null && mouseIn(mouseX, mouseY, 11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, RECIPE_WIDTH, RECIPE_HEIGHT)) {
+                                setTooltipForNextRenderPass(RocketPart.getName(part.key()));
+                            }
+                            i++;
+                        }
+                    }
+                } else {
+                    //todo color
+                }
             }
         }
 
@@ -335,7 +338,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
                     continue;
 //                    graphics.renderFakeItem(new ItemStack(Items.RED_DYE), -TAB_WIDTH + TAB_ICON_OFFSET, y);
                 } else {
-                    RocketPartRendererRegistry.INSTANCE.getRenderer(tab.part).renderGUI(graphics, -TAB_WIDTH + TAB_ICON_OFFSET, y, mouseX, mouseY, delta);
+                    RocketPartRendererRegistry.INSTANCE.getRenderer(tab.part).renderGUI(guiGraphics, -TAB_WIDTH + TAB_ICON_OFFSET, y, mouseX, mouseY, delta);
                 }
                 y += TAB_SPACING + TAB_HEIGHT;
             }
@@ -349,7 +352,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
                     Holder.Reference<? extends RocketPart<?, ?>> recipe = this.recipes.get(i);
                     if (recipe != null) {
                         RocketPartRenderer renderer = RocketPartRendererRegistry.INSTANCE.getRenderer(recipe.key());
-                        renderer.renderGUI(graphics, 15 + x * RECIPE_WIDTH, 33 + y * RECIPE_HEIGHT, mouseX, mouseY, delta);
+                        renderer.renderGUI(guiGraphics, 15 + x * RECIPE_WIDTH, 33 + y * RECIPE_HEIGHT, mouseX, mouseY, delta);
                     }
                     i++;
                 }
@@ -357,7 +360,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
         } else {
             
         }
-        graphics.drawString(this.font, this.openTab.name, 12, 14, 0xEEEEEE, true);
+        guiGraphics.drawString(this.font, this.openTab.name, 12, 14, 0xEEEEEE, true);
         pose.popPose();
     }
 

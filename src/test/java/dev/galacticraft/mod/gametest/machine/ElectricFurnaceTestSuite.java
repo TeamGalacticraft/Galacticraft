@@ -24,7 +24,6 @@ package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
-import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricFurnaceBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.gametest.framework.GameTestGenerator;
@@ -41,7 +40,7 @@ public final class ElectricFurnaceTestSuite extends RecipeGameTest<Container, Sm
     public ElectricFurnaceTestSuite() {
         super(GCMachineTypes.ELECTRIC_FURNACE, List.of(
                 machine -> machine.energyStorage().setEnergy(Long.MAX_VALUE / 2),
-                machine -> machine.itemStorage().getSlot(ElectricFurnaceBlockEntity.INPUT_SLOT).set(Items.PORKCHOP, 1)
+                machine -> machine.itemStorage().slot(ElectricFurnaceBlockEntity.INPUT_SLOT).set(Items.PORKCHOP, 1)
         ), ElectricFurnaceBlockEntity.OUTPUT_SLOT, 200);
     }
 

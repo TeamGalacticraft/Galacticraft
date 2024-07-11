@@ -44,7 +44,7 @@ public class SchematicItem extends Item implements Schematic {
             String registry = tag.getString("registry");
             String location = tag.getString("location");
             if (!registry.isEmpty() && !location.isEmpty()) {
-                return ResourceKey.create(ResourceKey.createRegistryKey(new ResourceLocation(registry)), new ResourceLocation(location));
+                return ResourceKey.create(ResourceKey.createRegistryKey(ResourceLocation.parse(registry)), ResourceLocation.parse(location));
             }
         }
         return null;

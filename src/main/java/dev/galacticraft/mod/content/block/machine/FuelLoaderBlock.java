@@ -22,25 +22,39 @@
 
 package dev.galacticraft.mod.content.block.machine;
 
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.machinelib.api.block.MachineBlock;
-import dev.galacticraft.mod.Constant;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.content.block.entity.machine.FuelLoaderBlockEntity;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import org.jetbrains.annotations.NotNull;
 
-public class FuelLoaderBlock extends MachineBlock<FuelLoaderBlockEntity> {
+public class FuelLoaderBlock extends MachineBlock {
     public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
+    private static final MapCodec<FuelLoaderBlock> CODEC = simpleCodec(FuelLoaderBlock::new);
 
     public FuelLoaderBlock(Properties settings) {
-        super(settings, Constant.id(Constant.Block.FUEL_LOADER));
+        super(settings);
         registerDefaultState(getStateDefinition().any().setValue(CONNECTED, false));
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
+    public @NotNull MachineBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new FuelLoaderBlockEntity(pos, state);
     }
 
     @Override

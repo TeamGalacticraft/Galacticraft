@@ -35,7 +35,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 
 @ApiStatus.Internal
 public record RocketDataImpl(int color, @Nullable ResourceKey<RocketCone<?, ?>> cone, @Nullable ResourceKey<RocketBody<?, ?>> body,
@@ -57,12 +56,12 @@ public record RocketDataImpl(int color, @Nullable ResourceKey<RocketCone<?, ?>> 
     public static @NotNull RocketDataImpl fromNbt(CompoundTag nbt) {
         return new RocketDataImpl(
                 nbt.getInt("Color"),
-                nbt.contains("Cone") ? ResourceKey.create(RocketRegistries.ROCKET_CONE, new ResourceLocation(nbt.getString("Cone"))) : null,
-                nbt.contains("Body") ? ResourceKey.create(RocketRegistries.ROCKET_BODY, new ResourceLocation(nbt.getString("Body"))) : null,
-                nbt.contains("Fin") ? ResourceKey.create(RocketRegistries.ROCKET_FIN, new ResourceLocation(nbt.getString("Fin"))) : null,
-                nbt.contains("Booster") ? ResourceKey.create(RocketRegistries.ROCKET_BOOSTER, new ResourceLocation(nbt.getString("Booster"))) : null,
-                nbt.contains("Engine") ? ResourceKey.create(RocketRegistries.ROCKET_ENGINE, new ResourceLocation(nbt.getString("Engine"))) : null,
-                nbt.contains("Upgrade") ? ResourceKey.create(RocketRegistries.ROCKET_UPGRADE, new ResourceLocation(nbt.getString("Upgrade"))) : null
+                nbt.contains("Cone") ? ResourceKey.create(RocketRegistries.ROCKET_CONE, ResourceLocation.parse(nbt.getString("Cone"))) : null,
+                nbt.contains("Body") ? ResourceKey.create(RocketRegistries.ROCKET_BODY, ResourceLocation.parse(nbt.getString("Body"))) : null,
+                nbt.contains("Fin") ? ResourceKey.create(RocketRegistries.ROCKET_FIN, ResourceLocation.parse(nbt.getString("Fin"))) : null,
+                nbt.contains("Booster") ? ResourceKey.create(RocketRegistries.ROCKET_BOOSTER, ResourceLocation.parse(nbt.getString("Booster"))) : null,
+                nbt.contains("Engine") ? ResourceKey.create(RocketRegistries.ROCKET_ENGINE, ResourceLocation.parse(nbt.getString("Engine"))) : null,
+                nbt.contains("Upgrade") ? ResourceKey.create(RocketRegistries.ROCKET_UPGRADE, ResourceLocation.parse(nbt.getString("Upgrade"))) : null
         );
     }
 

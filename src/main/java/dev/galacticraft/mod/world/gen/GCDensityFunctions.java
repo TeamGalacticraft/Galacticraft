@@ -23,15 +23,13 @@
 package dev.galacticraft.mod.world.gen;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.DensityFunction;
 import net.minecraft.world.level.levelgen.DensityFunctions;
 import net.minecraft.world.level.levelgen.NoiseRouterData;
-import net.minecraft.world.level.levelgen.Noises;
 import net.minecraft.world.level.levelgen.synth.BlendedNoise;
 
 public class GCDensityFunctions {
@@ -48,7 +46,7 @@ public class GCDensityFunctions {
     private static ResourceKey<DensityFunction> createKey(String id) {
         return ResourceKey.create(Registries.DENSITY_FUNCTION, Constant.id(id));
     }
-    public static void bootstrapRegistries(BootstapContext<DensityFunction> context) {
+    public static void bootstrapRegistries(BootstrapContext<DensityFunction> context) {
         var vanillaRegistry = context.lookup(Registries.DENSITY_FUNCTION);
         var noiseRegistry = context.lookup(Registries.NOISE);
         DensityFunction shiftX = getFunction(vanillaRegistry, NoiseRouterData.SHIFT_X);
@@ -129,7 +127,7 @@ public class GCDensityFunctions {
         ));
     }
 
-    private static DensityFunction registerAndWrap(BootstapContext<DensityFunction> context, ResourceKey<DensityFunction> key, DensityFunction densityFunction) {
+    private static DensityFunction registerAndWrap(BootstrapContext<DensityFunction> context, ResourceKey<DensityFunction> key, DensityFunction densityFunction) {
         return new DensityFunctions.HolderHolder(context.register(key, densityFunction));
     }
 

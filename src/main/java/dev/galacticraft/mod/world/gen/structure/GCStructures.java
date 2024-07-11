@@ -34,7 +34,7 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderOwner;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.Structures;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
@@ -69,7 +69,7 @@ public class GCStructures {
         return Constant.key(Registries.STRUCTURE, id);
     }
 
-    public static void bootstrapRegistries(BootstapContext<Structure> context) {
+    public static void bootstrapRegistries(BootstrapContext<Structure> context) {
         HolderGetter<Biome> biomeLookup = context.lookup(Registries.BIOME);
         HolderGetter<StructureTemplatePool> templatePoolLookup = context.lookup(Registries.TEMPLATE_POOL);
         context.register(Moon.RUINS, new MoonRuinsStructure(Structures.structure(biomeLookup.get(GCTags.MOON_RUINS_HAS_STRUCTURE).orElseGet(() -> createEmptyTag(GCTags.MOON_RUINS_HAS_STRUCTURE)), TerrainAdjustment.BEARD_THIN)));

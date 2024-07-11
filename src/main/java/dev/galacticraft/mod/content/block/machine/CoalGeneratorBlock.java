@@ -22,8 +22,9 @@
 
 package dev.galacticraft.mod.content.block.machine;
 
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.machinelib.api.block.MachineBlock;
-import dev.galacticraft.mod.Constant;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.content.block.entity.machine.CoalGeneratorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,12 +33,26 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import org.jetbrains.annotations.NotNull;
 
-public class CoalGeneratorBlock extends MachineBlock<CoalGeneratorBlockEntity> {
+public class CoalGeneratorBlock extends MachineBlock {
+    private static final MapCodec<CoalGeneratorBlock> CODEC = simpleCodec(CoalGeneratorBlock::new);
+
     public CoalGeneratorBlock(Properties settings) {
-        super(settings, Constant.id(Constant.Block.COAL_GENERATOR));
+        super(settings);
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
+    public @NotNull MachineBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new CoalGeneratorBlockEntity(pos, state);
     }
 
     @Override

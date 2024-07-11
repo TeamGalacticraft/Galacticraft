@@ -22,11 +22,19 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
-import dev.galacticraft.mod.content.GCMachineTypes;
+import dev.galacticraft.machinelib.api.storage.MachineFluidStorage;
+import dev.galacticraft.machinelib.api.storage.StorageSpec;
+import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
+import dev.galacticraft.machinelib.api.transfer.InputType;
+import dev.galacticraft.machinelib.api.util.FluidSource;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -34,7 +42,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -43,21 +50,32 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     public static final int OXYGEN_TANK = 0;
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(100);
 
+    public static final StorageSpec SPEC = StorageSpec.of(
+            MachineFluidStorage.spec(
+                    FluidResourceSlot.builder(InputType.STORAGE)
+                            .hidden()
+                            .capacity(OxygenStorageModuleBlockEntity.MAX_OXYGEN)
+                            .filter(ResourceFilters.ofResource(Gases.OXYGEN))
+            )
+    );
+    private final FluidSource source = new FluidSource(this);
+
     public OxygenStorageModuleBlockEntity(BlockPos pos, BlockState state) {
-        super(GCMachineTypes.OXYGEN_STORAGE_MODULE, pos, state);
+        super(GCBlockEntityTypes.OXYGEN_STORAGE_MODULE, pos, state, SPEC);
     }
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        this.trySpreadFluids(level, state);
+        this.source.trySpreadFluids(level, pos, state);
         return MachineStatuses.ACTIVE;
     }
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
+    public MachineMenu<? extends MachineBlockEntity> openMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) {
             return new MachineMenu<>(
+                    GCMenuTypes.OXYGEN_STORAGE_MODULE,
                     syncId,
                     (ServerPlayer) player,
                     this

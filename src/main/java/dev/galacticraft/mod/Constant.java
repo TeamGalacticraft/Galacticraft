@@ -48,7 +48,7 @@ public interface Constant {
 
     @Contract(value = "_ -> new", pure = true)
     static @NotNull ResourceLocation id(String id) {
-        return new ResourceLocation(MOD_ID, id);
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, id);
     }
 
     @Contract(value = "_, _ -> new", pure = true)
@@ -735,7 +735,7 @@ public interface Constant {
     @ApiStatus.Internal
     interface Misc {
         ResourceLocation INVALID = Constant.id("invalid");
-        ResourceLocation EMPTY = new ResourceLocation("empty");
+        ResourceLocation EMPTY = ResourceLocation.withDefaultNamespace("empty");
         Direction[] DIRECTIONS = Direction.values();
         Direction[] HORIZONTALS = {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
         Direction[] VERTICALS = {Direction.UP, Direction.DOWN};
@@ -795,7 +795,7 @@ public interface Constant {
     }
 
     interface Packet {
-        ResourceLocation BUBBLE_SIZE = id("bubble_size");
+        ResourceLocation STREAM_CODECBUBBLE_SIZE = id("bubble_size");
         ResourceLocation BUBBLE_MAX = id("bubble_max");
         ResourceLocation BUBBLE_VISIBLE = id("bubble_visible");
         ResourceLocation OPEN_GC_INVENTORY = id("open_gc_inv");

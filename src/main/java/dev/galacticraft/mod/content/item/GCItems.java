@@ -28,7 +28,6 @@ import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCRegistry;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.util.Translations;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -191,9 +190,9 @@ public class GCItems {
     // MISC MACHINES
     public static final Item CRYOGENIC_CHAMBER = new BlockItem(GCBlocks.CRYOGENIC_CHAMBER, new Item.Properties());
     public static final Item PLAYER_TRANSPORT_TUBE = new BlockItem(GCBlocks.PLAYER_TRANSPORT_TUBE, new Item.Properties());
-    public static final Item AIR_LOCK_FRAME = new BlockItem(GCBlocks.AIR_LOCK_FRAME, new FabricItemSettings());
-    public static final Item AIR_LOCK_CONTROLLER = new BlockItem(GCBlocks.AIR_LOCK_CONTROLLER, new FabricItemSettings());
-    public static final Item AIR_LOCK_SEAL = new BlockItem(GCBlocks.AIR_LOCK_SEAL, new FabricItemSettings());
+    public static final Item AIR_LOCK_FRAME = new BlockItem(GCBlocks.AIR_LOCK_FRAME, new Item.Properties());
+    public static final Item AIR_LOCK_CONTROLLER = new BlockItem(GCBlocks.AIR_LOCK_CONTROLLER, new Item.Properties());
+    public static final Item AIR_LOCK_SEAL = new BlockItem(GCBlocks.AIR_LOCK_SEAL, new Item.Properties());
 
     // MACHINES
     public static final Item CIRCUIT_FABRICATOR = new BlockItem(GCBlocks.CIRCUIT_FABRICATOR, new Item.Properties());
@@ -352,16 +351,16 @@ public class GCItems {
             Component.translatable(Translations.Misc.UPGRADE_TITANIUM_DESCRIPTION),
             Component.translatable(Translations.Misc.UPGRADE_TITANIUM_BASE_SLOT_DESCRIPTION),
             Component.translatable(Translations.Misc.UPGRADE_TITANIUM_ADDITIONS_SLOT_DESCRIPTON),
-            List.of(new ResourceLocation("item/empty_armor_slot_helmet"),
-                    new ResourceLocation("item/empty_armor_slot_chestplate"),
-                    new ResourceLocation("item/empty_armor_slot_leggings"),
-                    new ResourceLocation("item/empty_armor_slot_boots"),
-                    new ResourceLocation("item/empty_slot_hoe"),
-                    new ResourceLocation("item/empty_slot_axe"),
-                    new ResourceLocation("item/empty_slot_sword"),
-                    new ResourceLocation("item/empty_slot_shovel"),
-                    new ResourceLocation("item/empty_slot_pickaxe")),
-            List.of(new ResourceLocation("item/empty_slot_ingot"))
+            List.of(ResourceLocation.withDefaultNamespace("item/empty_armor_slot_helmet"),
+                    ResourceLocation.withDefaultNamespace("item/empty_armor_slot_chestplate"),
+                    ResourceLocation.withDefaultNamespace("item/empty_armor_slot_leggings"),
+                    ResourceLocation.withDefaultNamespace("item/empty_armor_slot_boots"),
+                    ResourceLocation.withDefaultNamespace("item/empty_slot_hoe"),
+                    ResourceLocation.withDefaultNamespace("item/empty_slot_axe"),
+                    ResourceLocation.withDefaultNamespace("item/empty_slot_sword"),
+                    ResourceLocation.withDefaultNamespace("item/empty_slot_shovel"),
+                    ResourceLocation.withDefaultNamespace("item/empty_slot_pickaxe")),
+            List.of(ResourceLocation.withDefaultNamespace("item/empty_slot_ingot"))
     );
     // 		this.appliesTo = component;
     //		this.ingredients = component2;

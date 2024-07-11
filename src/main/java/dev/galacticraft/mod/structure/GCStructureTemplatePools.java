@@ -29,7 +29,7 @@ import dev.galacticraft.mod.Constant;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.ProcessorLists;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -42,7 +42,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import java.util.function.Function;
 
 public final class GCStructureTemplatePools {
-    private static final ResourceKey<StructureTemplatePool> EMPTY = ResourceKey.create(Registries.TEMPLATE_POOL, new ResourceLocation("empty"));
+    private static final ResourceKey<StructureTemplatePool> EMPTY = ResourceKey.create(Registries.TEMPLATE_POOL, ResourceLocation.withDefaultNamespace("empty"));
     public static final class Moon {
         public static final class PillagerOutpost {
             public static final ResourceKey<StructureTemplatePool> ENTRANCE = key("moon_pillager_outpost/entrances");
@@ -74,7 +74,7 @@ public final class GCStructureTemplatePools {
         return Constant.key(Registries.TEMPLATE_POOL, id);
     }
 
-    public static void bootstrapRegistries(BootstapContext<StructureTemplatePool> context) {
+    public static void bootstrapRegistries(BootstrapContext<StructureTemplatePool> context) {
         HolderGetter<StructureTemplatePool> templateLookup = context.lookup(Registries.TEMPLATE_POOL);
         Holder<StructureTemplatePool> empty = templateLookup.getOrThrow(EMPTY);
         Holder<StructureProcessorList> emptyList = context.lookup(Registries.PROCESSOR_LIST).getOrThrow(ProcessorLists.EMPTY);

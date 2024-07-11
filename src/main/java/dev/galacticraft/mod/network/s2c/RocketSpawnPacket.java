@@ -20,30 +20,64 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.network.packets;
+package dev.galacticraft.mod.network.s2c;
 
 import dev.galacticraft.api.rocket.RocketData;
-import dev.galacticraft.mod.Constant.Packet;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
-import net.minecraft.client.Minecraft;
+import dev.galacticraft.mod.util.StreamCodecs;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public record RocketSpawnPacket(EntityType<?> type, int id, UUID uuid, double x, double y, double z, float xRot, float yRot, RocketData data) implements GCPacket {
-    public static final PacketType<RocketSpawnPacket> TYPE = PacketType.create(Packet.ROCKET_SPAWN, RocketSpawnPacket::new);
+public record RocketSpawnPacket(EntityType<?> eType, int id, UUID uuid, double x, double y, double z, float xRot, float yRot, RocketData data) implements S2CPayload {
+    public static final StreamCodec<RegistryFriendlyByteBuf, RocketSpawnPacket> STREAM_CODEC = StreamCodecs.composite(
+            ByteBufCodecs.registry(Registries.ENTITY_TYPE),
+            p -> p.eType,
+            ByteBufCodecs.VAR_INT,
+            p -> p.id,
+            UUIDUtil.STREAM_CODEC,
+            p -> p.uuid,
+            ByteBufCodecs.DOUBLE,
+            p -> p.x,
+            ByteBufCodecs.DOUBLE,
+            p -> p.y,
+            ByteBufCodecs.DOUBLE,
+            p -> p.z,
+            ByteBufCodecs.FLOAT,
+            p -> p.xRot,
+            ByteBufCodecs.FLOAT,
+            p -> p.yRot,
+            RocketData.STREAM_CODEC,
+            p -> p.data,
+            RocketSpawnPacket::new
+    );
+
+    public static final ResourceLocation ID = Constant.id("spawn_rocket");
+    public static final CustomPacketPayload.Type<RocketSpawnPacket> TYPE = new CustomPacketPayload.Type<>(ID);
+
     public RocketSpawnPacket(FriendlyByteBuf buf) {
         this(BuiltInRegistries.ENTITY_TYPE.byId(buf.readVarInt()), buf.readVarInt(), buf.readUUID(), buf.readDouble(), buf.readDouble(), buf.readDouble(), (buf.readByte() * 360) / 256.0F, (buf.readByte() * 360) / 256.0F, RocketData.fromNetwork(buf));
     }
 
     @Override
-    public void handle(Player player, PacketSender responseSender) {
-        RocketEntity entity = (RocketEntity) type.create(player.level());
+    public void handle(ClientPlayNetworking.@NotNull Context context) {
+        ClientLevel level = context.client().level;
+        assert level != null;
+
+        RocketEntity entity = (RocketEntity) this.eType.create(level);
         assert entity != null;
         entity.syncPacketPositionCodec(x, y, z);
         entity.setPos(x, y, z);
@@ -54,24 +88,11 @@ public record RocketSpawnPacket(EntityType<?> type, int id, UUID uuid, double x,
 
         entity.setData(data);
 
-        Minecraft.getInstance().level.addEntity(entity);
+        level.addEntity(entity);
     }
 
     @Override
-    public void write(FriendlyByteBuf buf) {
-        buf.writeVarInt(BuiltInRegistries.ENTITY_TYPE.getId(type));
-        buf.writeVarInt(id);
-        buf.writeUUID(uuid);
-        buf.writeDouble(x);
-        buf.writeDouble(y);
-        buf.writeDouble(z);
-        buf.writeByte((int) (xRot / 360F * 256F));
-        buf.writeByte((int) (yRot / 360F * 256F));
-        data.toNetwork(buf);
-    }
-
-    @Override
-    public PacketType<?> getType() {
+    public @NotNull Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 }

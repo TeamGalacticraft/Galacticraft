@@ -114,19 +114,19 @@ public class RocketItem extends Item {
             if (tag.contains("color") && tag.contains("cone")) {
 //                tooltip.add(Component.translatable("tooltip.galacticraft.tier", tag.getInt("tier")).setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GRAY)));
                 tooltip.add(Component.translatable(Translations.Ui.COLOR).append(": #" + Integer.toHexString(tag.getInt("color"))));
-                ResourceLocation id = new ResourceLocation(tag.getString("cone"));
+                ResourceLocation id = ResourceLocation.parse(tag.getString("cone"));
                 tooltip.add(RocketPartTypes.CONE.name.copy().append(" ").append(RocketPart.getName(ResourceKey.create(RocketRegistries.ROCKET_CONE, id))).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
-                id = new ResourceLocation(tag.getString("body"));
+                id = ResourceLocation.parse(tag.getString("body"));
                 tooltip.add(RocketPartTypes.BODY.name.copy().append(" ").append(RocketPart.getName(ResourceKey.create(RocketRegistries.ROCKET_BODY, id))).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
-                id = new ResourceLocation(tag.getString("fin"));
+                id = ResourceLocation.parse(tag.getString("fin"));
                 tooltip.add(RocketPartTypes.FIN.name.copy().append(" ").append(RocketPart.getName(ResourceKey.create(RocketRegistries.ROCKET_FIN, id))).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
-                id = new ResourceLocation(tag.getString("booster"));
+                id = ResourceLocation.parse(tag.getString("booster"));
                 tooltip.add(RocketPartTypes.BOOSTER.name.copy().append(" ").append(RocketPart.getName(ResourceKey.create(RocketRegistries.ROCKET_BOOSTER, id))).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
-                id = new ResourceLocation(tag.getString("engine"));
+                id = ResourceLocation.parse(tag.getString("engine"));
                 tooltip.add(RocketPartTypes.ENGINE.name.copy().append(" ").append(RocketPart.getName(ResourceKey.create(RocketRegistries.ROCKET_ENGINE, id))).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
                 ListTag list = tag.getList("upgrades", Tag.TAG_STRING);
                 for (int i = 0; i < list.size(); i++) {
-                    id = new ResourceLocation(list.getString(i));
+                    id = ResourceLocation.parse(list.getString(i));
                     tooltip.add(RocketPartTypes.CONE.name.copy().append(" ").append(RocketPart.getName(ResourceKey.create(RocketRegistries.ROCKET_UPGRADE, id))).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
                 }
             }

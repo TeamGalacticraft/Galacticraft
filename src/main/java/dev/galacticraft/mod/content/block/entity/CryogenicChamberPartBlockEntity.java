@@ -25,6 +25,7 @@ package dev.galacticraft.mod.content.block.entity;
 import dev.galacticraft.mod.api.block.MultiBlockPart;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -42,16 +43,16 @@ public class CryogenicChamberPartBlockEntity extends BlockEntity implements Mult
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
+        super.saveAdditional(tag, lookup);
         if (this.basePos != BlockPos.ZERO) {
             tag.putLong("Base", this.basePos.asLong());
         }
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registryLookup) {
+        super.loadAdditional(tag, registryLookup);
         if (tag.contains("Base")) {
             this.basePos = BlockPos.of(tag.getLong("Base"));
         }

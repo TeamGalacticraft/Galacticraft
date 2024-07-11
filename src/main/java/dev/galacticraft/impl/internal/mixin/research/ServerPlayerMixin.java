@@ -96,7 +96,7 @@ public abstract class ServerPlayerMixin implements ServerResearchAccessor {
         this.unlockedRecipes.clear();
         ListTag list = nbt.getList("gcResearch", Tag.TAG_STRING);
         for (int i = 0; i < list.size(); i++) {
-            this.unlockedRecipes.add(new ResourceLocation(list.getString(i)));
+            this.unlockedRecipes.add(ResourceLocation.parse(list.getString(i)));
         }
     }
 

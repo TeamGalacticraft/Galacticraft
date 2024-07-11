@@ -23,41 +23,67 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.compat.vanilla.RecipeTestContainer;
+import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
+import dev.galacticraft.machinelib.api.storage.MachineEnergyStorage;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.StorageSpec;
+import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
+import dev.galacticraft.machinelib.api.transfer.InputType;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.content.GCMachineTypes;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<Container, BlastingRecipe> {
+public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<SingleRecipeInput, BlastingRecipe> {
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
     public static final int OUTPUT_SLOTS = 2;
     public static final int OUTPUT_LENGTH = 2;
 
+    private static final StorageSpec SPEC = StorageSpec.of(
+            MachineItemStorage.spec(
+                    ItemResourceSlot.builder(InputType.TRANSFER)
+                            .pos(8, 62)
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
+                    ItemResourceSlot.builder(InputType.INPUT)
+                            .pos(44, 35),
+                    ItemResourceSlot.builder(InputType.RECIPE_OUTPUT)
+                            .pos(108, 35),
+                    ItemResourceSlot.builder(InputType.RECIPE_OUTPUT)
+                            .pos(134, 35)
+            ),
+            MachineEnergyStorage.spec(
+                    Galacticraft.CONFIG.machineEnergyStorageSize(),
+                    Galacticraft.CONFIG.electricArcFurnaceEnergyConsumptionRate() * 2,
+                    0
+            )
+    );
+
     public ElectricArcFurnaceBlockEntity(BlockPos pos, BlockState state) {
-        super(GCMachineTypes.ELECTRIC_ARC_FURNACE, pos, state, RecipeType.BLASTING, INPUT_SLOT, 1, OUTPUT_SLOTS, OUTPUT_LENGTH);
+        super(GCBlockEntityTypes.ELECTRIC_ARC_FURNACE, pos, state, RecipeType.BLASTING, SPEC, INPUT_SLOT, 1, OUTPUT_SLOTS, OUTPUT_LENGTH);
     }
 
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
-        this.chargeFromStack(CHARGE_SLOT);
+        this.chargeFromSlot(CHARGE_SLOT);
     }
 
     @Override
@@ -80,9 +106,8 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
         return (int) (recipe.value().getCookingTime() * 0.9);
     }
 
-    @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
+    public @Nullable MachineMenu<? extends MachineBlockEntity> openMenu(int syncId, Inventory inv, Player player) {
         if (this.getSecurity().hasAccess(player)) {
             return new RecipeMachineMenu<>(
                     syncId,
@@ -94,7 +119,8 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
     }
 
     @Override
-    protected Container createCraftingInv() {
-        return RecipeTestContainer.create(this.itemStorage(), this.inputSlots, this.inputSlotsLen);
+    protected SingleRecipeInput createCraftingInv() {
+        assert this.inputSlots.size() == 1;
+        return RecipeTestContainer.create(this.inputSlots.slot(0));
     }
 }

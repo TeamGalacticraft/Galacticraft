@@ -20,51 +20,41 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.network.packets;
+package dev.galacticraft.mod.network.s2c;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.render.FootprintRenderer;
 import dev.galacticraft.mod.misc.footprint.Footprint;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.player.Player;
+import dev.galacticraft.mod.util.StreamCodecs;
+import io.netty.buffer.ByteBuf;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.ChunkPos;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public record FootprintPacket(long packedPos, List<Footprint> footprints) implements GCPacket {
-    public static final PacketType<FootprintPacket> TYPE = PacketType.create(Constant.Packet.FOOTPRINT, FootprintPacket::new);
+public record FootprintPacket(ChunkPos pos, List<Footprint> footprints) implements S2CPayload {
+    public static final StreamCodec<ByteBuf, FootprintPacket> STREAM_CODEC = StreamCodec.composite(
+            StreamCodecs.CHUNK_POS_CODEC,
+            p -> p.pos,
+            ByteBufCodecs.list().apply(Footprint.STREAM_CODEC),
+            p -> p.footprints,
+            FootprintPacket::new
+    );
+    public static final ResourceLocation ID = Constant.id("footprint");
+    public static final CustomPacketPayload.Type<FootprintPacket> TYPE = new CustomPacketPayload.Type<>(ID);
 
-    public FootprintPacket(FriendlyByteBuf buf) {
-        this(buf.readLong(), readFootprints(buf));
+    @Override
+    public void handle(ClientPlayNetworking.@NotNull Context context) {
+        FootprintRenderer.setFootprints(this.pos, this.footprints);
     }
 
     @Override
-    public void write(FriendlyByteBuf buf) {
-        buf.writeLong(packedPos);
-        buf.writeInt(footprints.size());
-        for (Footprint footprint : footprints) {
-            footprint.write(buf);
-        }
-    }
-
-    public static List<Footprint> readFootprints(FriendlyByteBuf buf) {
-        int length = buf.readInt();
-        List<Footprint> footprints = new ArrayList<>(length);
-        for (int i = 0; i < length; i++) {
-            footprints.add(Footprint.read(buf));
-        }
-        return footprints;
-    }
-
-    @Override
-    public PacketType<?> getType() {
+    public @NotNull Type<? extends CustomPacketPayload> type() {
         return TYPE;
-    }
-
-    @Override
-    public void handle(Player player, PacketSender responseSender) {
-        FootprintRenderer.setFootprints(packedPos(), footprints());
     }
 }

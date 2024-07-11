@@ -31,13 +31,10 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
-public class FabricationRecipe implements Recipe<Container> {
+public class FabricationRecipe implements Recipe<RecipeInput> {
     private final String group;
     private final ItemStack output;
     private final NonNullList<Ingredient> input = NonNullList.withSize(1, Ingredient.EMPTY);
