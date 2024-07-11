@@ -24,7 +24,6 @@ package dev.galacticraft.mod.data.model;
 
 import com.google.common.collect.Maps;
 import dev.galacticraft.mod.content.GCBlockRegistry;
-import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.world.level.block.Block;
