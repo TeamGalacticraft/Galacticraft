@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 1,
+  "ingredient": {
+    "item": "galacticraft:aluminum_decoration"
+  },
+  "result": "galacticraft:aluminum_decoration_stairs"
+}

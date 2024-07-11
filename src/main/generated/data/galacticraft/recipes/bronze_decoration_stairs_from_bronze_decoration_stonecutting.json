@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 1,
+  "ingredient": {
+    "item": "galacticraft:bronze_decoration"
+  },
+  "result": "galacticraft:bronze_decoration_stairs"
+}

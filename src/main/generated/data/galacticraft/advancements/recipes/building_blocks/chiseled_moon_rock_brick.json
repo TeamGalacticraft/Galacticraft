@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_moon_rock_brick_slab": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "galacticraft:moon_rock_brick_slab"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraft:chiseled_moon_rock_brick"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_moon_rock_brick_slab"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraft:chiseled_moon_rock_brick"
+    ]
+  }
+}

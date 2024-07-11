@@ -68,9 +68,7 @@ public class GCModelProvider extends FabricModelProvider {
 
         List<GCBlockRegistry.DecorationSet> decorations = GCBlocks.BLOCKS.getDecorations();
 
-        decorations.forEach(decorationSet -> {
-            putDetailedTextured(generator, decorationSet.detailedBlock());
-        });
+        decorations.forEach(decorationSet -> putDetailedTextured(generator, decorationSet.detailedBlock()));
         generator.texturedModels.put(GCBlocks.LUNASLATE, TexturedModel.COLUMN_WITH_WALL.get(GCBlocks.LUNASLATE));
 
         GCBlockFamilies.getAllFamilies()
@@ -96,6 +94,8 @@ public class GCModelProvider extends FabricModelProvider {
         createRotatedDelegate(generator, GCBlocks.MOON_DIRT_PATH);
         generator.createTrivialCube(GCBlocks.MOON_SURFACE_ROCK);
         generator.createTrivialCube(GCBlocks.MOON_DUNGEON_BRICK);
+        generator.createTrivialCube(GCBlocks.CHISELED_MOON_ROCK_BRICK);
+        generator.createAxisAlignedPillarBlock(GCBlocks.MOON_ROCK_PILLAR, TexturedModel.COLUMN);
 
         // MARS NATURAL
         generator.createTrivialCube(GCBlocks.MARS_SURFACE_ROCK);
@@ -470,9 +470,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.SULFURIC_ACID_BUCKET, ModelTemplates.FLAT_ITEM);
 
         //GALACTICRAFT INVENTORY
-        GCItems.PARACHUTE.colorMap().forEach((color, parachute) -> {
-            generator.generateFlatItem(parachute, ModelTemplates.FLAT_ITEM);
-        });
+        GCItems.PARACHUTE.colorMap().forEach((color, parachute) -> generator.generateFlatItem(parachute, ModelTemplates.FLAT_ITEM));
 
         generator.generateFlatItem(GCItems.OXYGEN_MASK, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.OXYGEN_GEAR, ModelTemplates.FLAT_ITEM);

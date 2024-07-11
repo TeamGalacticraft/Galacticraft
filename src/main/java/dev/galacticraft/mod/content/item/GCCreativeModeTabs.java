@@ -280,6 +280,24 @@ public class GCCreativeModeTabs {
                 output.accept(MOON_ROCK_STAIRS);
                 output.accept(MOON_ROCK_WALL);
 
+                output.accept(MOON_ROCK_BRICK);
+                output.accept(MOON_ROCK_BRICK_SLAB);
+                output.accept(MOON_ROCK_BRICK_STAIRS);
+                output.accept(MOON_ROCK_BRICK_WALL);
+
+                output.accept(CRACKED_MOON_ROCK_BRICK);
+                output.accept(CRACKED_MOON_ROCK_BRICK_SLAB);
+                output.accept(CRACKED_MOON_ROCK_BRICK_STAIRS);
+                output.accept(CRACKED_MOON_ROCK_BRICK_WALL);
+
+                output.accept(POLISHED_MOON_ROCK);
+                output.accept(POLISHED_MOON_ROCK_SLAB);
+                output.accept(POLISHED_MOON_ROCK_STAIRS);
+                output.accept(POLISHED_MOON_ROCK_WALL);
+
+                output.accept(CHISELED_MOON_ROCK_BRICK);
+                output.accept(MOON_ROCK_PILLAR);
+
                 output.accept(COBBLED_MOON_ROCK);
                 output.accept(COBBLED_MOON_ROCK_SLAB);
                 output.accept(COBBLED_MOON_ROCK_STAIRS);

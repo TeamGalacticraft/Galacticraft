@@ -30,6 +30,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -282,6 +283,33 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
         );
 
         // Rock decoration blocks
+        decorationBlockVariants(output, GCItems.MOON_ROCK,
+                GCItems.MOON_ROCK_SLAB,
+                GCItems.MOON_ROCK_STAIRS,
+                GCItems.MOON_ROCK_WALL
+        );
+        decorationBlockVariants(output, GCBlocks.MOON_ROCK_BRICK,
+                GCBlocks.MOON_ROCK_BRICK_SLAB,
+                GCBlocks.MOON_ROCK_BRICK_STAIRS,
+                GCBlocks.MOON_ROCK_BRICK_WALL
+        );
+        decorationBlockVariants(output, GCBlocks.CRACKED_MOON_ROCK_BRICK,
+                GCBlocks.CRACKED_MOON_ROCK_BRICK_SLAB,
+                GCBlocks.CRACKED_MOON_ROCK_BRICK_STAIRS,
+                GCBlocks.CRACKED_MOON_ROCK_BRICK_WALL
+        );
+        decorationBlockVariants(output, GCBlocks.POLISHED_MOON_ROCK,
+                GCBlocks.POLISHED_MOON_ROCK_SLAB,
+                GCBlocks.POLISHED_MOON_ROCK_STAIRS,
+                GCBlocks.POLISHED_MOON_ROCK_WALL
+        );
+        smeltBuildingBlock(output, GCBlocks.MOON_ROCK, GCBlocks.COBBLED_MOON_ROCK);
+        smeltBuildingBlock(output, GCBlocks.CRACKED_MOON_ROCK_BRICK, GCBlocks.MOON_ROCK_BRICK);
+        squareStone(output, GCBlocks.MOON_ROCK_BRICK, GCBlocks.MOON_ROCK);
+        squareStone(output, GCBlocks.POLISHED_MOON_ROCK, GCBlocks.MOON_ROCK_BRICK);
+        chiseledStone(output, GCBlocks.CHISELED_MOON_ROCK_BRICK, GCBlocks.MOON_ROCK_BRICK_SLAB, GCBlocks.MOON_ROCK, GCBlocks.MOON_ROCK_BRICK);
+        pillar(output, GCBlocks.MOON_ROCK_PILLAR, GCBlocks.MOON_ROCK);
+
         decorationBlockVariants(output, GCItems.LUNASLATE,
                 GCItems.LUNASLATE_SLAB,
                 GCItems.LUNASLATE_STAIRS,
@@ -325,10 +353,45 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
         slab(output, RecipeCategory.BUILDING_BLOCKS, slab, base);
         stairs(output, stairs, base);
         wall(output, RecipeCategory.BUILDING_BLOCKS, wall, base);
+
+        stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, slab, base, 2);
+        stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, stairs, base);
+        stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, wall, base);
+    }
+
+    public static void pillar(RecipeOutput output, ItemLike pillar, ItemLike base) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, pillar, 2)
+                .define('#', base)
+                .pattern("#")
+                .pattern("#")
+                .unlockedBy(getHasName(base), has(base))
+                .save(output);
+    }
+
+    public static void squareStone(RecipeOutput output, ItemLike brick, ItemLike base) {
+        stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, brick, base);
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, brick, 4)
+                .define('#', base)
+                .pattern("##")
+                .pattern("##")
+                .unlockedBy(getHasName(base), has(base))
+                .save(output);
+    }
+
+    public static void smeltBuildingBlock(RecipeOutput output, ItemLike result, ItemLike ingredient) {
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(ingredient), RecipeCategory.BUILDING_BLOCKS, result, 0.1F, 200)
+                .unlockedBy(getHasName(ingredient), has(ingredient))
+                .save(output);
+    }
+
+    public static void chiseledStone(RecipeOutput output, ItemLike chiseled, ItemLike brickSlab, ItemLike base, ItemLike brick) {
+        chiseled(output, RecipeCategory.BUILDING_BLOCKS, chiseled, brickSlab);
+        stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, chiseled, base);
+        stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, chiseled, brick);
     }
 
     public static void decorationBlock(RecipeOutput output, ItemLike input, ItemLike block, ItemLike slab, ItemLike stairs, ItemLike wall) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, block, 1)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, block, 4)
                 .define('#', Items.STONE)
                 .define('X', input)
                 .pattern("## ")
@@ -340,7 +403,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
     }
 
     public static void detailedDecorationBlock(RecipeOutput output, ItemLike input, ItemLike block, ItemLike slab, ItemLike stairs, ItemLike wall) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, block, 1)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, block, 4)
                 .define('#', Items.STONE)
                 .define('X', input)
                 .pattern("##")

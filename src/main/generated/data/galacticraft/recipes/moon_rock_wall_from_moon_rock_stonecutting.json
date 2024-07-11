@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 1,
+  "ingredient": {
+    "item": "galacticraft:moon_rock"
+  },
+  "result": "galacticraft:moon_rock_wall"
+}

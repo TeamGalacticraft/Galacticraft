@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 1,
+  "ingredient": {
+    "item": "galacticraft:detailed_dark_decoration"
+  },
+  "result": "galacticraft:detailed_dark_decoration_wall"
+}

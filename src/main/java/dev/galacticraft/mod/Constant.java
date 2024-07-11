@@ -64,30 +64,55 @@ public interface Constant {
         String MOON_TURF = "moon_turf";
         String MOON_SURFACE_ROCK = "moon_surface_rock";
         String MOON_DUNGEON_BRICK = "moon_dungeon_brick";
+
         String MOON_ROCK = "moon_rock";
         String MOON_ROCK_SLAB = "moon_rock_slab";
         String MOON_ROCK_STAIRS = "moon_rock_stairs";
         String MOON_ROCK_WALL = "moon_rock_wall";
+
+        String MOON_ROCK_BRICK = "moon_rock_brick";
+        String MOON_ROCK_BRICK_SLAB = "moon_rock_brick_slab";
+        String MOON_ROCK_BRICK_STAIRS = "moon_rock_brick_stairs";
+        String MOON_ROCK_BRICK_WALL = "moon_rock_brick_wall";
+
+        String CRACKED_MOON_ROCK_BRICK = "cracked_moon_rock_brick";
+        String CRACKED_MOON_ROCK_BRICK_SLAB = "cracked_moon_rock_brick_slab";
+        String CRACKED_MOON_ROCK_BRICK_STAIRS = "cracked_moon_rock_brick_stairs";
+        String CRACKED_MOON_ROCK_BRICK_WALL = "cracked_moon_rock_brick_wall";
+
+        String POLISHED_MOON_ROCK = "polished_moon_rock";
+        String POLISHED_MOON_ROCK_SLAB = "polished_moon_rock_slab";
+        String POLISHED_MOON_ROCK_STAIRS = "polished_moon_rock_stairs";
+        String POLISHED_MOON_ROCK_WALL = "polished_moon_rock_wall";
+
+        String CHISELED_MOON_ROCK_BRICK = "chiseled_moon_rock_brick";
+        String MOON_ROCK_PILLAR = "moon_rock_pillar";
+
         String COBBLED_MOON_ROCK = "cobbled_moon_rock";
         String COBBLED_MOON_ROCK_SLAB = "cobbled_moon_rock_slab";
         String COBBLED_MOON_ROCK_STAIRS = "cobbled_moon_rock_stairs";
         String COBBLED_MOON_ROCK_WALL = "cobbled_moon_rock_wall";
+
         String LUNASLATE = "lunaslate";
         String LUNASLATE_SLAB = "lunaslate_slab";
         String LUNASLATE_STAIRS = "lunaslate_stairs";
         String LUNASLATE_WALL = "lunaslate_wall";
+
         String COBBLED_LUNASLATE = "cobbled_lunaslate";
         String COBBLED_LUNASLATE_SLAB = "cobbled_lunaslate_slab";
         String COBBLED_LUNASLATE_STAIRS = "cobbled_lunaslate_stairs";
         String COBBLED_LUNASLATE_WALL = "cobbled_lunaslate_wall";
+
         String MOON_BASALT = "moon_basalt";
         String MOON_BASALT_SLAB = "moon_basalt_slab";
         String MOON_BASALT_STAIRS = "moon_basalt_stairs";
         String MOON_BASALT_WALL = "moon_basalt_wall";
+
         String MOON_BASALT_BRICK = "moon_basalt_brick";
         String MOON_BASALT_BRICK_SLAB = "moon_basalt_brick_slab";
         String MOON_BASALT_BRICK_STAIRS = "moon_basalt_brick_stairs";
         String MOON_BASALT_BRICK_WALL = "moon_basalt_brick_wall";
+
         String CRACKED_MOON_BASALT_BRICK = "cracked_moon_basalt_brick";
         String CRACKED_MOON_BASALT_BRICK_SLAB = "cracked_moon_basalt_brick_slab";
         String CRACKED_MOON_BASALT_BRICK_STAIRS = "cracked_moon_basalt_brick_stairs";

@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 2,
+  "ingredient": {
+    "item": "galacticraft:meteoric_iron_decoration"
+  },
+  "result": "galacticraft:meteoric_iron_decoration_slab"
+}
