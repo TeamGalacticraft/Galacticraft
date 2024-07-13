@@ -580,31 +580,31 @@ public class GCModelProvider extends FabricModelProvider {
     }
 
     public final void createOlivineCluster(BlockModelGenerators generator, Block block) {
-        ResourceLocation vertical = ModelTemplates.CROSS.createWithSuffix(block, "_vertical", TextureMapping.cross(blockTextureWithSuffix(block, "_vertical")), generator.modelOutput);
-        ResourceLocation horizontal = ModelTemplates.CROSS.createWithSuffix(block, "_horizontal", TextureMapping.cross(blockTextureWithSuffix(block, "_horizontal")), generator.modelOutput);
+        ResourceLocation verticalModel = ModelTemplates.CROSS.createWithSuffix(block, "_vertical", TextureMapping.cross(blockTextureWithSuffix(block, "_vertical")), generator.modelOutput);
+        ResourceLocation horizontalModel = ModelTemplates.CROSS.createWithSuffix(block, "_horizontal", TextureMapping.cross(blockTextureWithSuffix(block, "_horizontal")), generator.modelOutput);
         generator.skipAutoItemBlock(block);
         generator.blockStateOutput
                 .accept(
                         MultiVariantGenerator.multiVariant(block)
                                 .with(PropertyDispatch.property(BlockStateProperties.FACING)
                                         .select(Direction.DOWN, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R180)
-                                                .with(VariantProperties.MODEL, vertical))
+                                                .with(VariantProperties.MODEL, verticalModel))
                                         .select(Direction.UP, Variant.variant()
-                                                .with(VariantProperties.MODEL, vertical))
+                                                .with(VariantProperties.MODEL, verticalModel))
                                         .select(Direction.NORTH, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90)
-                                                .with(VariantProperties.MODEL, horizontal))
+                                                .with(VariantProperties.MODEL, horizontalModel))
                                         .select(
                                                 Direction.SOUTH,
                                                 Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)
-                                                        .with(VariantProperties.MODEL, horizontal))
+                                                        .with(VariantProperties.MODEL, horizontalModel))
                                         .select(
                                                 Direction.WEST,
                                                 Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)
-                                                        .with(VariantProperties.MODEL, horizontal))
+                                                        .with(VariantProperties.MODEL, horizontalModel))
                                         .select(
                                                 Direction.EAST,
                                                 Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
-                                                        .with(VariantProperties.MODEL, horizontal))
+                                                        .with(VariantProperties.MODEL, horizontalModel))
                                 )
                 );
     }

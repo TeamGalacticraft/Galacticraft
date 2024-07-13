@@ -201,9 +201,9 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         this.add(GCBlocks.GALENA_ORE, this.createOreDrop(GCBlocks.GALENA_ORE, GCItems.RAW_LEAD));
 
-        this.add(GCBlocks.OLIVINE_CLUSTER, (block) -> this.createCrystalClusterDrop(block, GCItems.OLIVINE_SHARD));
-        this.add(GCBlocks.OLIVINE_BASALT, (block) -> this.createOreDrop(block, GCItems.OLIVINE_SHARD, 1.0F, 2.0F));
-        this.add(GCBlocks.RICH_OLIVINE_BASALT, (block) -> this.createOreDrop(block, GCItems.OLIVINE_SHARD, 3.0F, 4.0F));
+        this.add(GCBlocks.OLIVINE_CLUSTER, this.createCrystalClusterDrop(GCBlocks.OLIVINE_CLUSTER, GCItems.OLIVINE_SHARD));
+        this.add(GCBlocks.OLIVINE_BASALT, this.createOreDrop(GCBlocks.OLIVINE_BASALT, GCItems.OLIVINE_SHARD, 1.0F, 2.0F));
+        this.add(GCBlocks.RICH_OLIVINE_BASALT, this.createOreDrop(GCBlocks.RICH_OLIVINE_BASALT, GCItems.OLIVINE_SHARD, 3.0F, 4.0F));
 
         this.add(GCBlocks.MOON_CHEESE_WHEEL, noDrop());
         this.add(GCBlocks.CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.CANDLE));
