@@ -24,7 +24,6 @@ package dev.galacticraft.mod.content;
 
 import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.AbstractDirectionalBlock;
 import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.block.boss.BossSpawner;
 import dev.galacticraft.mod.content.block.decoration.GratingBlock;
