@@ -118,6 +118,10 @@ public interface Constant {
         String CRACKED_MOON_BASALT_BRICK_STAIRS = "cracked_moon_basalt_brick_stairs";
         String CRACKED_MOON_BASALT_BRICK_WALL = "cracked_moon_basalt_brick_wall";
 
+        String OLIVINE_CLUSTER = "olivine_cluster";
+        String OLIVINE_BASALT = "olivine_basalt";
+        String RICH_OLIVINE_BASALT = "rich_olivine_basalt";
+
         String MOON_DIRT = "moon_dirt";
         String MARS_SURFACE_ROCK = "mars_surface_rock";
         String MARS_SUB_SURFACE_ROCK = "mars_sub_surface_rock";
@@ -163,6 +167,7 @@ public interface Constant {
         String TITANIUM_BLOCK = "titanium_block";
         String LEAD_BLOCK = "lead_block";
         String LUNAR_SAPPHIRE_BLOCK = "lunar_sapphire_block";
+        String OLIVINE_BLOCK = "olivine_block";
 
         // Decorative BLocks
         String ALUMINUM_DECORATION = "aluminum_decoration";
@@ -349,6 +354,7 @@ public interface Constant {
         String TITANIUM_NUGGET = "titanium_nugget";
         String STEEL_INGOT = "steel_ingot";
         String LUNAR_SAPPHIRE = "lunar_sapphire";
+        String OLIVINE_SHARD = "olivine_shard";
         String DESH_STICK = "desh_stick";
         String CARBON_FRAGMENTS = "carbon_fragments";
         String IRON_SHARD = "iron_shard";

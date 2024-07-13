@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "galacticraft:block/olivine_block_top",
+    "side": "galacticraft:block/olivine_block_side"
+  }
+}
