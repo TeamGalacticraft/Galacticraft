@@ -29,6 +29,8 @@ import dev.galacticraft.api.perlin.generator.Billowed;
 import dev.galacticraft.api.perlin.generator.Gradient;
 import dev.galacticraft.api.vector.BlockVec3;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.world.gen.base.MapGenAbandonedBase;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
@@ -129,6 +131,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
     private static HashSet<BlockVec3> chunksDone = new HashSet<BlockVec3>();
     private int largeAsteroidsLastChunkX;
     private int largeAsteroidsLastChunkZ;
+    private final MapGenAbandonedBase dungeonGenerator = new MapGenAbandonedBase();
 
     public static final Codec<AsteroidChunkGenerator> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
@@ -559,7 +562,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
                     } else if (!(chunkAccess.getBlockState(new BlockPos(px - 4, y, pz)).isAir())) {
                         count = 7;
                     }
-//LIGHTEMP                    world.setLightFor(EnumSkyBlock.BLOCK, new BlockPos(px - (count > 1 ? 1 : 0), y, pz), count);
+                    //world.setLightFor(EnumSkyBlock.BLOCK, new BlockPos(px - (count > 1 ? 1 : 0), y, pz), count);
                 }
             }
         }
@@ -654,7 +657,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
             }
         }
 
-        //this.dungeonGenerator.generate(this.world, this.rand, new ChunkPos(chunkX, chunkZ));
+        //this.dungeonGenerator.generateStructure(chunkAccess, this.rand, new ChunkPos(chunkX, chunkZ));
     }
 
     @Override
@@ -812,6 +815,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
         Path dataFile = dataPath.resolve("data.dat");
         this.setData(dataFile, datafile);
     }
+
 
     private void writeToNBT(CompoundTag nbt)
     {

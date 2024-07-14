@@ -245,7 +245,6 @@ public class CannedFoodItem extends Item implements FabricItemStack {
                 for (int i = 0; i < listTag.size(); i++) {
                     if (listTag.getCompound(i).get("id").getAsString().equals(compoundTag3.get("id").getAsString()))
                     {
-                        System.out.println(i);
                         iter = i;
                     }
                 }
