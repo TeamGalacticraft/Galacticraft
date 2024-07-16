@@ -245,7 +245,7 @@ public class GCCreativeModeTabs {
 
     public static final CreativeModeTab BLOCKS_GROUP = FabricItemGroup
             .builder()
-            .icon(() -> new ItemStack(GCItems.MOON_TURF))
+            .icon(() -> new ItemStack(GCBlocks.MOON_TURF))
             .title(Component.translatable(Translations.ItemGroup.BLOCKS))
             .displayItems((parameters, output) -> {
                 // DECORATION BLOCKS
@@ -265,105 +265,105 @@ public class GCCreativeModeTabs {
                 output.accept(UNLIT_TORCH);
 
                 // LANTERNS
-                output.accept(GLOWSTONE_LANTERN);
-                output.accept(UNLIT_LANTERN);
+                output.accept(GCBlocks.GLOWSTONE_LANTERN);
+                output.accept(GCBlocks.UNLIT_LANTERN);
 
                 // MOON NATURAL
-                output.accept(MOON_TURF);
-                output.accept(MOON_DIRT);
-                output.accept(MOON_DIRT_PATH);
-                output.accept(MOON_SURFACE_ROCK);
+                output.accept(GCBlocks.MOON_TURF);
+                output.accept(GCBlocks.MOON_DIRT);
+                output.accept(GCBlocks.MOON_DIRT_PATH);
+                output.accept(GCBlocks.MOON_SURFACE_ROCK);
                 output.accept(GCBlocks.MOON_DUNGEON_BRICK);
 
-                output.accept(MOON_ROCK);
-                output.accept(MOON_ROCK_SLAB);
-                output.accept(MOON_ROCK_STAIRS);
-                output.accept(MOON_ROCK_WALL);
+                output.accept(GCBlocks.MOON_ROCK.asItem());
+                output.accept(GCBlocks.MOON_ROCK_SLAB.asItem().asItem());
+                output.accept(GCBlocks.MOON_ROCK_STAIRS.asItem().asItem());
+                output.accept(GCBlocks.MOON_ROCK_WALL.asItem().asItem());
 
-                output.accept(MOON_ROCK_BRICK);
-                output.accept(MOON_ROCK_BRICK_SLAB);
-                output.accept(MOON_ROCK_BRICK_STAIRS);
-                output.accept(MOON_ROCK_BRICK_WALL);
+                output.accept(GCBlocks.MOON_ROCK_BRICK.asItem());
+                output.accept(GCBlocks.MOON_ROCK_BRICK_SLAB.asItem());
+                output.accept(GCBlocks.MOON_ROCK_BRICK_STAIRS.asItem());
+                output.accept(GCBlocks.MOON_ROCK_BRICK_WALL.asItem());
 
-                output.accept(CRACKED_MOON_ROCK_BRICK);
-                output.accept(CRACKED_MOON_ROCK_BRICK_SLAB);
-                output.accept(CRACKED_MOON_ROCK_BRICK_STAIRS);
-                output.accept(CRACKED_MOON_ROCK_BRICK_WALL);
+                output.accept(GCBlocks.CRACKED_MOON_ROCK_BRICK.asItem());
+                output.accept(GCBlocks.CRACKED_MOON_ROCK_BRICK_SLAB.asItem());
+                output.accept(GCBlocks.CRACKED_MOON_ROCK_BRICK_STAIRS.asItem());
+                output.accept(GCBlocks.CRACKED_MOON_ROCK_BRICK_WALL.asItem());
 
-                output.accept(POLISHED_MOON_ROCK);
-                output.accept(POLISHED_MOON_ROCK_SLAB);
-                output.accept(POLISHED_MOON_ROCK_STAIRS);
-                output.accept(POLISHED_MOON_ROCK_WALL);
+                output.accept(GCBlocks.POLISHED_MOON_ROCK.asItem());
+                output.accept(GCBlocks.POLISHED_MOON_ROCK_SLAB.asItem());
+                output.accept(GCBlocks.POLISHED_MOON_ROCK_STAIRS.asItem());
+                output.accept(GCBlocks.POLISHED_MOON_ROCK_WALL.asItem());
 
-                output.accept(CHISELED_MOON_ROCK_BRICK);
-                output.accept(MOON_ROCK_PILLAR);
+                output.accept(GCBlocks.CHISELED_MOON_ROCK_BRICK.asItem());
+                output.accept(GCBlocks.MOON_ROCK_PILLAR.asItem());
 
-                output.accept(COBBLED_MOON_ROCK);
-                output.accept(COBBLED_MOON_ROCK_SLAB);
-                output.accept(COBBLED_MOON_ROCK_STAIRS);
-                output.accept(COBBLED_MOON_ROCK_WALL);
+                output.accept(GCBlocks.COBBLED_MOON_ROCK);
+                output.accept(GCBlocks.COBBLED_MOON_ROCK_SLAB);
+                output.accept(GCBlocks.COBBLED_MOON_ROCK_STAIRS);
+                output.accept(GCBlocks.COBBLED_MOON_ROCK_WALL);
 
-                output.accept(LUNASLATE);
-                output.accept(LUNASLATE_SLAB);
-                output.accept(LUNASLATE_STAIRS);
-                output.accept(LUNASLATE_WALL);
+                output.accept(GCBlocks.LUNASLATE);
+                output.accept(GCBlocks.LUNASLATE_SLAB);
+                output.accept(GCBlocks.LUNASLATE_STAIRS);
+                output.accept(GCBlocks.LUNASLATE_WALL);
 
-                output.accept(COBBLED_LUNASLATE);
-                output.accept(COBBLED_LUNASLATE_SLAB);
-                output.accept(COBBLED_LUNASLATE_STAIRS);
-                output.accept(COBBLED_LUNASLATE_WALL);
+                output.accept(GCBlocks.COBBLED_LUNASLATE);
+                output.accept(GCBlocks.COBBLED_LUNASLATE_SLAB);
+                output.accept(GCBlocks.COBBLED_LUNASLATE_STAIRS);
+                output.accept(GCBlocks.COBBLED_LUNASLATE_WALL);
 
-                output.accept(MOON_BASALT);
-                output.accept(MOON_BASALT_SLAB);
-                output.accept(MOON_BASALT_STAIRS);
-                output.accept(MOON_BASALT_WALL);
+                output.accept(GCBlocks.MOON_BASALT);
+                output.accept(GCBlocks.MOON_BASALT_SLAB);
+                output.accept(GCBlocks.MOON_BASALT_STAIRS);
+                output.accept(GCBlocks.MOON_BASALT_WALL);
 
-                output.accept(MOON_BASALT_BRICK);
-                output.accept(MOON_BASALT_BRICK_SLAB);
-                output.accept(MOON_BASALT_BRICK_STAIRS);
-                output.accept(MOON_BASALT_BRICK_WALL);
+                output.accept(GCBlocks.MOON_BASALT_BRICK);
+                output.accept(GCBlocks.MOON_BASALT_BRICK_SLAB);
+                output.accept(GCBlocks.MOON_BASALT_BRICK_STAIRS);
+                output.accept(GCBlocks.MOON_BASALT_BRICK_WALL);
 
-                output.accept(CRACKED_MOON_BASALT_BRICK);
-                output.accept(CRACKED_MOON_BASALT_BRICK_SLAB);
-                output.accept(CRACKED_MOON_BASALT_BRICK_STAIRS);
-                output.accept(CRACKED_MOON_BASALT_BRICK_WALL);
+                output.accept(GCBlocks.CRACKED_MOON_BASALT_BRICK);
+                output.accept(GCBlocks.CRACKED_MOON_BASALT_BRICK_SLAB);
+                output.accept(GCBlocks.CRACKED_MOON_BASALT_BRICK_STAIRS);
+                output.accept(GCBlocks.CRACKED_MOON_BASALT_BRICK_WALL);
 
                 // MARS NATURAL
-                output.accept(MARS_SURFACE_ROCK);
-                output.accept(MARS_SUB_SURFACE_ROCK);
-                output.accept(MARS_STONE);
-                output.accept(MARS_COBBLESTONE);
-                output.accept(MARS_COBBLESTONE_SLAB);
-                output.accept(MARS_COBBLESTONE_STAIRS);
-                output.accept(MARS_COBBLESTONE_WALL);
+                output.accept(GCBlocks.MARS_SURFACE_ROCK);
+                output.accept(GCBlocks.MARS_SUB_SURFACE_ROCK);
+                output.accept(GCBlocks.MARS_STONE);
+                output.accept(GCBlocks.MARS_COBBLESTONE);
+                output.accept(GCBlocks.MARS_COBBLESTONE_SLAB);
+                output.accept(GCBlocks.MARS_COBBLESTONE_STAIRS);
+                output.accept(GCBlocks.MARS_COBBLESTONE_WALL);
 
                 // ASTEROID NATURAL
-                output.accept(ASTEROID_ROCK);
-                output.accept(ASTEROID_ROCK_1);
-                output.accept(ASTEROID_ROCK_2);
+                output.accept(GCBlocks.ASTEROID_ROCK);
+                output.accept(GCBlocks.ASTEROID_ROCK_1);
+                output.accept(GCBlocks.ASTEROID_ROCK_2);
 
                 // VENUS NATURAL
-                output.accept(SOFT_VENUS_ROCK);
-                output.accept(HARD_VENUS_ROCK);
-                output.accept(SCORCHED_VENUS_ROCK);
-                output.accept(VOLCANIC_ROCK);
-                output.accept(PUMICE);
-                output.accept(VAPOR_SPOUT);
+                output.accept(GCBlocks.SOFT_VENUS_ROCK);
+                output.accept(GCBlocks.HARD_VENUS_ROCK);
+                output.accept(GCBlocks.SCORCHED_VENUS_ROCK);
+                output.accept(GCBlocks.VOLCANIC_ROCK);
+                output.accept(GCBlocks.PUMICE);
+                output.accept(GCBlocks.VAPOR_SPOUT);
 
                 // MISC DECOR
-                output.accept(WALKWAY);
-                output.accept(WIRE_WALKWAY);
-                output.accept(FLUID_PIPE_WALKWAY);
-                output.accept(TIN_LADDER);
-                output.accept(GRATING);
+                output.accept(GCBlocks.WALKWAY);
+                output.accept(GCBlocks.WIRE_WALKWAY);
+                output.accept(GCBlocks.FLUID_PIPE_WALKWAY);
+                output.accept(GCBlocks.TIN_LADDER);
+                output.accept(GCBlocks.GRATING);
 
                 // SPECIAL
-                output.accept(ALUMINUM_WIRE);
-                output.accept(SEALABLE_ALUMINUM_WIRE);
-                output.accept(HEAVY_SEALABLE_ALUMINUM_WIRE);
-                output.accept(GLASS_FLUID_PIPE);
-                output.accept(FUELING_PAD);
-                output.accept(ROCKET_LAUNCH_PAD);
+                output.accept(GCBlocks.ALUMINUM_WIRE);
+                output.accept(GCBlocks.SEALABLE_ALUMINUM_WIRE);
+                output.accept(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE);
+                output.accept(GCBlocks.GLASS_FLUID_PIPE);
+                output.accept(GCBlocks.FUELING_PAD);
+                output.accept(GCBlocks.ROCKET_LAUNCH_PAD);
 
                 for (DyeColor color : DyeColor.values()) {
                     ItemStack stack = new ItemStack(GCBlocks.PARACHEST);
@@ -377,82 +377,82 @@ public class GCCreativeModeTabs {
                 }
 
                 // LIGHT PANELS
-                output.accept(SQUARE_LIGHT_PANEL);
-                output.accept(SPOTLIGHT_LIGHT_PANEL);
-                output.accept(LINEAR_LIGHT_PANEL);
-                output.accept(DASHED_LIGHT_PANEL);
-                output.accept(DIAGONAL_LIGHT_PANEL);
+                output.accept(GCBlocks.SQUARE_LIGHT_PANEL);
+                output.accept(GCBlocks.SPOTLIGHT_LIGHT_PANEL);
+                output.accept(GCBlocks.LINEAR_LIGHT_PANEL);
+                output.accept(GCBlocks.DASHED_LIGHT_PANEL);
+                output.accept(GCBlocks.DIAGONAL_LIGHT_PANEL);
 
                 // VACUUM GLASS
-                output.accept(VACUUM_GLASS);
-                output.accept(CLEAR_VACUUM_GLASS);
-                output.accept(STRONG_VACUUM_GLASS);
+                output.accept(GCBlocks.VACUUM_GLASS);
+                output.accept(GCBlocks.CLEAR_VACUUM_GLASS);
+                output.accept(GCBlocks.STRONG_VACUUM_GLASS);
 
                 // ORES
-                output.accept(SILICON_ORE);
-                output.accept(DEEPSLATE_SILICON_ORE);
+                output.accept(GCBlocks.SILICON_ORE);
+                output.accept(GCBlocks.DEEPSLATE_SILICON_ORE);
 
-                output.accept(MOON_COPPER_ORE);
-                output.accept(LUNASLATE_COPPER_ORE);
+                output.accept(GCBlocks.MOON_COPPER_ORE);
+                output.accept(GCBlocks.LUNASLATE_COPPER_ORE);
 
-                output.accept(TIN_ORE);
-                output.accept(DEEPSLATE_TIN_ORE);
-                output.accept(MOON_TIN_ORE);
-                output.accept(LUNASLATE_TIN_ORE);
+                output.accept(GCBlocks.TIN_ORE);
+                output.accept(GCBlocks.DEEPSLATE_TIN_ORE);
+                output.accept(GCBlocks.MOON_TIN_ORE);
+                output.accept(GCBlocks.LUNASLATE_TIN_ORE);
 
-                output.accept(ALUMINUM_ORE);
-                output.accept(DEEPSLATE_ALUMINUM_ORE);
+                output.accept(GCBlocks.ALUMINUM_ORE);
+                output.accept(GCBlocks.DEEPSLATE_ALUMINUM_ORE);
 
-                output.accept(DESH_ORE);
+                output.accept(GCBlocks.DESH_ORE);
 
-                output.accept(ILMENITE_ORE);
+                output.accept(GCBlocks.ILMENITE_ORE);
 
-                output.accept(GALENA_ORE);
+                output.accept(GCBlocks.GALENA_ORE);
 
                 // COMPACT MINERAL BLOCKS
-                output.accept(MOON_CHEESE_WHEEL);
-                output.accept(SILICON_BLOCK);
-                output.accept(METEORIC_IRON_BLOCK);
-                output.accept(DESH_BLOCK);
-                output.accept(TITANIUM_BLOCK);
-                output.accept(LEAD_BLOCK);
-                output.accept(LUNAR_SAPPHIRE_BLOCK);
+                output.accept(GCBlocks.MOON_CHEESE_WHEEL);
+                output.accept(GCBlocks.SILICON_BLOCK);
+                output.accept(GCBlocks.METEORIC_IRON_BLOCK);
+                output.accept(GCBlocks.DESH_BLOCK);
+                output.accept(GCBlocks.TITANIUM_BLOCK);
+                output.accept(GCBlocks.LEAD_BLOCK);
+                output.accept(GCBlocks.LUNAR_SAPPHIRE_BLOCK);
 
                 // MOON VILLAGER SPECIAL
-                output.accept(LUNAR_CARTOGRAPHY_TABLE);
+                output.accept(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
 
                 // MISC WORLD GEN
-                output.accept(CAVERNOUS_VINES);
+                output.accept(GCBlocks.CAVERNOUS_VINES);
 
                 // MISC MACHINES
-                output.accept(CRYOGENIC_CHAMBER);
-                output.accept(PLAYER_TRANSPORT_TUBE);
+                output.accept(GCBlocks.CRYOGENIC_CHAMBER);
+                output.accept(GCBlocks.PLAYER_TRANSPORT_TUBE);
 
                 // MACHINES
             }).build();
 
     public static final CreativeModeTab MACHINES_GROUP = FabricItemGroup
             .builder()
-            .icon(() -> new ItemStack(GCItems.COAL_GENERATOR))
+            .icon(() -> new ItemStack(GCBlocks.COAL_GENERATOR))
             .title(Component.translatable(Translations.ItemGroup.MACHINES))
             .displayItems((parameters, output) -> {
-                output.accept(CIRCUIT_FABRICATOR);
-                output.accept(COMPRESSOR);
-                output.accept(ELECTRIC_COMPRESSOR);
-                output.accept(COAL_GENERATOR);
-                output.accept(BASIC_SOLAR_PANEL);
-                output.accept(ADVANCED_SOLAR_PANEL);
-                output.accept(ENERGY_STORAGE_MODULE);
-                output.accept(ELECTRIC_FURNACE);
-                output.accept(ELECTRIC_ARC_FURNACE);
-                output.accept(REFINERY);
-                output.accept(OXYGEN_COLLECTOR);
-                output.accept(OXYGEN_SEALER);
-                output.accept(OXYGEN_BUBBLE_DISTRIBUTOR);
-                output.accept(OXYGEN_DECOMPRESSOR);
-                output.accept(OXYGEN_COMPRESSOR);
-                output.accept(OXYGEN_STORAGE_MODULE);
-                output.accept(FUEL_LOADER);
+                output.accept(GCBlocks.CIRCUIT_FABRICATOR);
+                output.accept(GCBlocks.COMPRESSOR);
+                output.accept(GCBlocks.ELECTRIC_COMPRESSOR);
+                output.accept(GCBlocks.COAL_GENERATOR);
+                output.accept(GCBlocks.BASIC_SOLAR_PANEL);
+                output.accept(GCBlocks.ADVANCED_SOLAR_PANEL);
+                output.accept(GCBlocks.ENERGY_STORAGE_MODULE);
+                output.accept(GCBlocks.ELECTRIC_FURNACE);
+                output.accept(GCBlocks.ELECTRIC_ARC_FURNACE);
+                output.accept(GCBlocks.REFINERY);
+                output.accept(GCBlocks.OXYGEN_COLLECTOR);
+                output.accept(GCBlocks.OXYGEN_SEALER);
+                output.accept(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR);
+                output.accept(GCBlocks.OXYGEN_DECOMPRESSOR);
+                output.accept(GCBlocks.OXYGEN_COMPRESSOR);
+                output.accept(GCBlocks.OXYGEN_STORAGE_MODULE);
+                output.accept(GCBlocks.FUEL_LOADER);
             }).build();
 
     public static void register() {

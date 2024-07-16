@@ -53,7 +53,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(Items.GLOWSTONE_DUST), has(Items.GLOWSTONE_DUST))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCItems.GLOWSTONE_LANTERN)
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.GLOWSTONE_LANTERN)
                 .define('G', GCItems.GLOWSTONE_TORCH)
                 .define('I', Items.IRON_NUGGET)
                 .pattern("III")
@@ -63,7 +63,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         // Vacuum glass
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCItems.VACUUM_GLASS)
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.VACUUM_GLASS)
                 .define('G', Items.GLASS)
                 .define('T', GCItems.TIN_INGOT)
                 .pattern("TGT")
@@ -72,7 +72,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.TIN_INGOT), has(GCItems.TIN_INGOT))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCItems.CLEAR_VACUUM_GLASS)
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.CLEAR_VACUUM_GLASS)
                 .define('G', Items.GLASS)
                 .define('A', GCItems.ALUMINUM_INGOT)
                 .pattern("AGA")
@@ -81,7 +81,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItems.ALUMINUM_INGOT))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCItems.STRONG_VACUUM_GLASS)
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.STRONG_VACUUM_GLASS)
                 .define('G', Items.GLASS)
                 .define('A', GCItems.COMPRESSED_ALUMINUM)
                 .pattern("AGA")
@@ -91,7 +91,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         // Light panels
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCItems.DASHED_LIGHT_PANEL)
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.DASHED_LIGHT_PANEL)
                 .define('S', Items.GLASS_PANE)
                 .define('G', GCItems.GLOWSTONE_TORCH)
                 .define('T', GCItems.COMPRESSED_STEEL)
@@ -100,7 +100,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCItems.DIAGONAL_LIGHT_PANEL)
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.DIAGONAL_LIGHT_PANEL)
                 .define('S', Items.GLASS_PANE)
                 .define('G', GCItems.GLOWSTONE_TORCH)
                 .define('T', GCItems.COMPRESSED_STEEL)
@@ -110,7 +110,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCItems.DIAGONAL_LIGHT_PANEL)
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.DIAGONAL_LIGHT_PANEL)
                 .define('S', Items.GLASS_PANE)
                 .define('G', GCItems.GLOWSTONE_TORCH)
                 .define('T', GCItems.COMPRESSED_STEEL)
@@ -118,9 +118,9 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .pattern("SG")
                 .pattern(" T")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
-                .save(output, BuiltInRegistries.ITEM.getKey(GCItems.DIAGONAL_LIGHT_PANEL).withSuffix("_flipped"));
+                .save(output, BuiltInRegistries.ITEM.getKey(GCBlocks.DIAGONAL_LIGHT_PANEL.asItem()).withSuffix("_flipped"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCItems.SPOTLIGHT_LIGHT_PANEL)
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.SPOTLIGHT_LIGHT_PANEL)
                 .define('S', Items.GLASS_PANE)
                 .define('G', GCItems.GLOWSTONE_TORCH)
                 .define('T', GCItems.COMPRESSED_STEEL)
@@ -130,7 +130,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCItems.SQUARE_LIGHT_PANEL)
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.SQUARE_LIGHT_PANEL)
                 .define('S', Items.GLASS_PANE)
                 .define('G', GCItems.GLOWSTONE_TORCH)
                 .define('T', GCItems.COMPRESSED_STEEL)
@@ -140,7 +140,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCItems.LINEAR_LIGHT_PANEL)
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.LINEAR_LIGHT_PANEL)
                 .define('S', Items.GLASS_PANE)
                 .define('G', GCItems.GLOWSTONE_TORCH)
                 .define('T', GCItems.COMPRESSED_STEEL)
@@ -151,14 +151,14 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         // Misc decoration blocks
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, GCItems.GRATING, 4)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, GCBlocks.GRATING, 4)
                 .define('I', Items.IRON_BARS)
                 .pattern("II")
                 .pattern("II")
                 .unlockedBy(getHasName(Items.IRON_BARS), has(Items.IRON_BARS))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, GCItems.TIN_LADDER, 6)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, GCBlocks.TIN_LADDER, 6)
                 .define('T', GCItems.TIN_INGOT)
                 .pattern("T T")
                 .pattern("TTT")
@@ -283,10 +283,10 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
         );
 
         // Rock decoration blocks
-        decorationBlockVariants(output, GCItems.MOON_ROCK,
-                GCItems.MOON_ROCK_SLAB,
-                GCItems.MOON_ROCK_STAIRS,
-                GCItems.MOON_ROCK_WALL
+        decorationBlockVariants(output, GCBlocks.MOON_ROCK,
+                GCBlocks.MOON_ROCK_SLAB,
+                GCBlocks.MOON_ROCK_STAIRS,
+                GCBlocks.MOON_ROCK_WALL
         );
         decorationBlockVariants(output, GCBlocks.MOON_ROCK_BRICK,
                 GCBlocks.MOON_ROCK_BRICK_SLAB,
@@ -310,42 +310,42 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
         chiseledStone(output, GCBlocks.CHISELED_MOON_ROCK_BRICK, GCBlocks.MOON_ROCK_BRICK_SLAB, GCBlocks.MOON_ROCK, GCBlocks.MOON_ROCK_BRICK);
         pillar(output, GCBlocks.MOON_ROCK_PILLAR, GCBlocks.MOON_ROCK);
 
-        decorationBlockVariants(output, GCItems.LUNASLATE,
-                GCItems.LUNASLATE_SLAB,
-                GCItems.LUNASLATE_STAIRS,
-                GCItems.LUNASLATE_WALL
+        decorationBlockVariants(output, GCBlocks.LUNASLATE,
+                GCBlocks.LUNASLATE_SLAB,
+                GCBlocks.LUNASLATE_STAIRS,
+                GCBlocks.LUNASLATE_WALL
         );
-        decorationBlockVariants(output, GCItems.COBBLED_LUNASLATE,
-                GCItems.COBBLED_LUNASLATE_SLAB,
-                GCItems.COBBLED_LUNASLATE_STAIRS,
-                GCItems.COBBLED_LUNASLATE_WALL
+        decorationBlockVariants(output, GCBlocks.COBBLED_LUNASLATE,
+                GCBlocks.COBBLED_LUNASLATE_SLAB,
+                GCBlocks.COBBLED_LUNASLATE_STAIRS,
+                GCBlocks.COBBLED_LUNASLATE_WALL
         );
-        decorationBlockVariants(output, GCItems.MOON_BASALT,
-                GCItems.MOON_BASALT_SLAB,
-                GCItems.MOON_BASALT_STAIRS,
-                GCItems.MOON_BASALT_WALL
-        );
-
-        decorationBlockVariants(output, GCItems.MOON_BASALT_BRICK,
-                GCItems.MOON_BASALT_BRICK_SLAB,
-                GCItems.MOON_BASALT_BRICK_STAIRS,
-                GCItems.MOON_BASALT_BRICK_WALL
-        );
-        decorationBlockVariants(output, GCItems.CRACKED_MOON_BASALT_BRICK,
-                GCItems.CRACKED_MOON_BASALT_BRICK_SLAB,
-                GCItems.CRACKED_MOON_BASALT_BRICK_STAIRS,
-                GCItems.CRACKED_MOON_BASALT_BRICK_WALL
+        decorationBlockVariants(output, GCBlocks.MOON_BASALT,
+                GCBlocks.MOON_BASALT_SLAB,
+                GCBlocks.MOON_BASALT_STAIRS,
+                GCBlocks.MOON_BASALT_WALL
         );
 
-        decorationBlockVariants(output, GCItems.MARS_STONE,
-                GCItems.MARS_STONE_SLAB,
-                GCItems.MARS_STONE_STAIRS,
-                GCItems.MARS_STONE_WALL
+        decorationBlockVariants(output, GCBlocks.MOON_BASALT_BRICK,
+                GCBlocks.MOON_BASALT_BRICK_SLAB,
+                GCBlocks.MOON_BASALT_BRICK_STAIRS,
+                GCBlocks.MOON_BASALT_BRICK_WALL
         );
-        decorationBlockVariants(output, GCItems.MARS_COBBLESTONE,
-                GCItems.MARS_COBBLESTONE_SLAB,
-                GCItems.MARS_COBBLESTONE_STAIRS,
-                GCItems.MARS_COBBLESTONE_WALL
+        decorationBlockVariants(output, GCBlocks.CRACKED_MOON_BASALT_BRICK,
+                GCBlocks.CRACKED_MOON_BASALT_BRICK_SLAB,
+                GCBlocks.CRACKED_MOON_BASALT_BRICK_STAIRS,
+                GCBlocks.CRACKED_MOON_BASALT_BRICK_WALL
+        );
+
+        decorationBlockVariants(output, GCBlocks.MARS_STONE,
+                GCBlocks.MARS_STONE_SLAB,
+                GCBlocks.MARS_STONE_STAIRS,
+                GCBlocks.MARS_STONE_WALL
+        );
+        decorationBlockVariants(output, GCBlocks.MARS_COBBLESTONE,
+                GCBlocks.MARS_COBBLESTONE_SLAB,
+                GCBlocks.MARS_COBBLESTONE_STAIRS,
+                GCBlocks.MARS_COBBLESTONE_WALL
         );
     }
 

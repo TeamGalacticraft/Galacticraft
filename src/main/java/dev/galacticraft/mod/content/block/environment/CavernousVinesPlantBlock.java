@@ -24,7 +24,6 @@ package dev.galacticraft.mod.content.block.environment;
 
 import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -65,7 +64,7 @@ public class CavernousVinesPlantBlock extends GrowingPlantBodyBlock implements B
 
     @Override
     public ItemStack getCloneItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
-        return new ItemStack(GCItems.CAVERNOUS_VINES);
+        return new ItemStack(GCBlocks.CAVERNOUS_VINES);
     }
 
     @Override
