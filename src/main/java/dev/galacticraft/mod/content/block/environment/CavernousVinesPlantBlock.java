@@ -65,7 +65,7 @@ public class CavernousVinesPlantBlock extends GrowingPlantBodyBlock implements B
 
     @Override
     public ItemStack getCloneItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
-        return new ItemStack(GCItems.CAVERNOUS_VINES);
+        return new ItemStack(GCBlocks.CAVERNOUS_VINES);
     }
 
     @Override

@@ -113,7 +113,7 @@ public class CavernousVinesBlock extends GrowingPlantHeadBlock implements Boneme
 
     @Override
     public ItemStack getCloneItemStack(LevelReader blockGetter, BlockPos blockPos, BlockState blockState) {
-        return new ItemStack(GCItems.CAVERNOUS_VINES);
+        return new ItemStack(GCBlocks.CAVERNOUS_VINES);
     }
 
     @Override
