@@ -60,7 +60,6 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 
-import java.util.Map;
 import java.util.function.ToIntFunction;
 
 @SuppressWarnings("unused")
