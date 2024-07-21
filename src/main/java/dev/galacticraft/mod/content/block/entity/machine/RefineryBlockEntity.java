@@ -33,16 +33,16 @@ import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
-import dev.galacticraft.machinelib.api.transfer.InputType;
+import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
+import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -63,13 +63,13 @@ public class RefineryBlockEntity extends MachineBlockEntity { //fixme
 
     private static final StorageSpec SPEC = StorageSpec.of(
             MachineItemStorage.spec(
-                    ItemResourceSlot.builder(InputType.TRANSFER)
+                    ItemResourceSlot.builder(TransferType.TRANSFER)
                             .pos(8, 7)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
-                    ItemResourceSlot.builder(InputType.TRANSFER)
+                    ItemResourceSlot.builder(TransferType.TRANSFER)
                             .pos(123, 7)
                             .filter(ResourceFilters.canExtractFluid(GCFluids.CRUDE_OIL)), // fixme: tag?,
-                    ItemResourceSlot.builder(InputType.TRANSFER)
+                    ItemResourceSlot.builder(TransferType.TRANSFER)
                             .pos(153, 7)
                             .filter(ResourceFilters.canInsertFluid(GCFluids.FUEL)) // fixme: tag?
             ),
@@ -79,11 +79,11 @@ public class RefineryBlockEntity extends MachineBlockEntity { //fixme
                     0
             ),
             MachineFluidStorage.spec(
-                    FluidResourceSlot.builder(InputType.INPUT)
+                    FluidResourceSlot.builder(TransferType.INPUT)
                             .pos(123, 29)
                             .capacity(RefineryBlockEntity.MAX_CAPACITY)
                             .filter(ResourceFilters.ofResource(GCFluids.CRUDE_OIL)),
-                    FluidResourceSlot.builder(InputType.RECIPE_OUTPUT)
+                    FluidResourceSlot.builder(TransferType.OUTPUT)
                             .pos(153, 29)
                             .capacity(RefineryBlockEntity.MAX_CAPACITY)
                             .filter(ResourceFilters.ofResource(GCFluids.FUEL))
@@ -128,15 +128,12 @@ public class RefineryBlockEntity extends MachineBlockEntity { //fixme
 
     @Nullable
     @Override
-    public MachineMenu<? extends MachineBlockEntity> openMenu(int syncId, Inventory inv, Player player) {
-        if (this.getSecurity().hasAccess(player)) {
-            return new MachineMenu<>(
-                    GCMachineTypes.REFINERY,
-                    syncId,
-                    (ServerPlayer) player,
-                    this
-            );
-        }
-        return null;
+    public MachineMenu<? extends MachineBlockEntity> createMenu(int syncId, Inventory inv, Player player) {
+        return new MachineMenu<>(
+                GCMenuTypes.REFINERY,
+                syncId,
+                player,
+                this
+        );
     }
 }

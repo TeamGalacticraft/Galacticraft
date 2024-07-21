@@ -23,6 +23,7 @@
 package dev.galacticraft.api.rocket.part.type;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.api.rocket.part.RocketUpgrade;
 import dev.galacticraft.api.rocket.part.config.RocketUpgradeConfig;
 import org.jetbrains.annotations.NotNull;
@@ -31,10 +32,10 @@ import org.jetbrains.annotations.NotNull;
  * An upgrade for a rocket.
  */
 public non-sealed abstract class RocketUpgradeType<C extends RocketUpgradeConfig> implements RocketPartType<C> {
-    private final @NotNull Codec<RocketUpgrade<C, RocketUpgradeType<C>>> codec;
+    private final @NotNull MapCodec<RocketUpgrade<C, RocketUpgradeType<C>>> codec;
 
     protected RocketUpgradeType(@NotNull Codec<C> configCodec) {
-        this.codec = configCodec.fieldOf("config").xmap(this::configure, RocketUpgrade::config).codec();
+        this.codec = configCodec.fieldOf("config").xmap(this::configure, RocketUpgrade::config);
     }
 
     @Override
@@ -43,7 +44,7 @@ public non-sealed abstract class RocketUpgradeType<C extends RocketUpgradeConfig
     }
 
     @Override
-    public @NotNull Codec<RocketUpgrade<C, RocketUpgradeType<C>>> codec() {
+    public @NotNull MapCodec<? extends RocketUpgrade<C, ? extends RocketUpgradeType<C>>> codec() {
         return this.codec;
     }
 }

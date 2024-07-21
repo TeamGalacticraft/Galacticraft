@@ -32,14 +32,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class BrittleSwordItem extends SwordItem {
-    public BrittleSwordItem(Tier toolMaterial, int attackDamage, float attackSpeed, Properties settings) {
-        super(toolMaterial, attackDamage, attackSpeed, settings);
+    public BrittleSwordItem(Tier toolMaterial, Properties settings) {
+        super(toolMaterial, settings);
     }
 
     @Override
     public boolean mineBlock(ItemStack stack, Level world, BlockState blockState, BlockPos blockPos, LivingEntity entityLiving) {
         if (blockState.getDestroySpeed(world, blockPos) > 0.2001F) {
-            stack.hurtAndBreak(2, entityLiving, (livingEntity) -> livingEntity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+            stack.hurtAndBreak(2, entityLiving, EquipmentSlot.MAINHAND);
         }
         return true;
     }

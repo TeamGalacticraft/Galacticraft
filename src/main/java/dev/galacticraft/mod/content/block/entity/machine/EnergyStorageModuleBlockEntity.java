@@ -31,14 +31,13 @@ import dev.galacticraft.machinelib.api.storage.MachineEnergyStorage;
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
-import dev.galacticraft.machinelib.api.transfer.InputType;
+import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.machinelib.api.util.EnergySource;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -52,10 +51,10 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
 
     public static final StorageSpec SPEC = StorageSpec.of(
             MachineItemStorage.spec(
-                    ItemResourceSlot.builder(InputType.TRANSFER)
+                    ItemResourceSlot.builder(TransferType.TRANSFER)
                             .pos(102, 48)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
-                    ItemResourceSlot.builder(InputType.TRANSFER)
+                    ItemResourceSlot.builder(TransferType.TRANSFER)
                             .pos(102, 24)
                             .filter(ResourceFilters.CAN_INSERT_ENERGY)
             ),
@@ -86,15 +85,12 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
 
     @Nullable
     @Override
-    public MachineMenu<? extends MachineBlockEntity> openMenu(int syncId, Inventory inv, Player player) {
-        if (this.getSecurity().hasAccess(player)) {
-            return new MachineMenu<>(
-                    GCMenuTypes.ENERGY_STORAGE_MODULE,
-                    syncId,
-                    (ServerPlayer) player,
-                    this
-            );
-        }
-        return null;
+    public MachineMenu<? extends MachineBlockEntity> createMenu(int syncId, Inventory inv, Player player) {
+        return new MachineMenu<>(
+                GCMenuTypes.ENERGY_STORAGE_MODULE,
+                syncId,
+                player,
+                this
+        );
     }
 }

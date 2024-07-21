@@ -27,6 +27,7 @@ import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.network.c2s.BubbleMaxPayload;
+import dev.galacticraft.mod.network.c2s.BubbleVisibilityPayload;
 import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
 import dev.galacticraft.mod.util.Translations;
@@ -137,7 +138,7 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
         if (button == 0) {
             if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 156, this.topPos + 16, Constant.TextureCoordinate.BUTTON_WIDTH, Constant.TextureCoordinate.BUTTON_HEIGHT)) {
                 this.menu.bubbleVisible = ! this.menu.bubbleVisible;
-                ClientPlayNetworking.send(new ToggleBubbleVisibilityPacket(this.menu.bubbleVisible));
+                ClientPlayNetworking.send(new BubbleVisibilityPayload(this.menu.bubbleVisible));
                 return true;
             }
 

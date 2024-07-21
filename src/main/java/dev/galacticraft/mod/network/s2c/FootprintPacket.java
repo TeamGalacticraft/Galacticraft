@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.network.s2c;
 
+import dev.galacticraft.impl.network.s2c.S2CPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.render.FootprintRenderer;
 import dev.galacticraft.mod.misc.footprint.Footprint;
@@ -32,16 +33,15 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.ChunkPos;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record FootprintPacket(ChunkPos pos, List<Footprint> footprints) implements S2CPayload {
+public record FootprintPacket(long chunk, List<Footprint> footprints) implements S2CPayload {
     public static final StreamCodec<ByteBuf, FootprintPacket> STREAM_CODEC = StreamCodec.composite(
-            StreamCodecs.CHUNK_POS_CODEC,
-            p -> p.pos,
-            ByteBufCodecs.list().apply(Footprint.STREAM_CODEC),
+            StreamCodecs.LONG,
+            p -> p.chunk,
+            ByteBufCodecs.<ByteBuf, Footprint>list().apply(Footprint.STREAM_CODEC),
             p -> p.footprints,
             FootprintPacket::new
     );
@@ -50,7 +50,7 @@ public record FootprintPacket(ChunkPos pos, List<Footprint> footprints) implemen
 
     @Override
     public void handle(ClientPlayNetworking.@NotNull Context context) {
-        FootprintRenderer.setFootprints(this.pos, this.footprints);
+        FootprintRenderer.setFootprints(this.chunk, this.footprints);
     }
 
     @Override

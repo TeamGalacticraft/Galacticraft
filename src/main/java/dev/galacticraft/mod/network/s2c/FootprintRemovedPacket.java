@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.network.s2c;
 
+import dev.galacticraft.impl.network.s2c.S2CPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
@@ -32,15 +33,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.ChunkPos;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public record FootprintRemovedPacket(ChunkPos chunk, BlockPos pos) implements S2CPayload {
+public record FootprintRemovedPacket(long chunk, BlockPos pos) implements S2CPayload {
     public static final StreamCodec<ByteBuf, FootprintRemovedPacket> STREAM_CODEC = StreamCodec.composite(
-            StreamCodecs.CHUNK_POS_CODEC,
+            StreamCodecs.LONG,
             p -> p.chunk,
             BlockPos.STREAM_CODEC,
             p -> p.pos,
@@ -53,7 +53,7 @@ public record FootprintRemovedPacket(ChunkPos chunk, BlockPos pos) implements S2
     public void handle(ClientPlayNetworking.@NotNull Context context) {
         BlockPos pos = pos();
         FootprintManager manager = context.player().level().galacticraft$getFootprintManager();
-        List<Footprint> footprintList = manager.getFootprints().get(this.chunk.toLong());
+        List<Footprint> footprintList = manager.getFootprints().get(this.chunk);
         List<Footprint> toRemove = new ArrayList<>();
 
         if (footprintList != null) {
@@ -66,7 +66,7 @@ public record FootprintRemovedPacket(ChunkPos chunk, BlockPos pos) implements S2
 
         if (!toRemove.isEmpty()) {
             footprintList.removeAll(toRemove);
-            manager.getFootprints().put(this.chunk.toLong(), footprintList);
+            manager.getFootprints().put(this.chunk, footprintList);
         }
     }
 

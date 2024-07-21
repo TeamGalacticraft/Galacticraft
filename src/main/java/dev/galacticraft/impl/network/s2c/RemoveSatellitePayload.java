@@ -20,17 +20,29 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin;
+package dev.galacticraft.impl.network.s2c;
 
+import dev.galacticraft.api.accessor.SatelliteAccessor;
+import dev.galacticraft.mod.Constant;
+import io.netty.buffer.ByteBuf;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Invoker;
+import org.jetbrains.annotations.NotNull;
 
-@Mixin(BuiltInLootTables.class)
-public interface BuiltInLootTablesAccessor {
-    @Invoker("register")
-    static ResourceLocation callRegisterLootTable(ResourceLocation id) {
-        throw new UnsupportedOperationException("Invoker was not transformed.");
+public record RemoveSatellitePayload(ResourceLocation id) implements S2CPayload {
+    public static final ResourceLocation ID = Constant.id("remove_satellite");
+    public static final Type<RemoveSatellitePayload> TYPE = new Type<>(ID);
+    public static final StreamCodec<ByteBuf, RemoveSatellitePayload> CODEC = ResourceLocation.STREAM_CODEC.map(RemoveSatellitePayload::new, RemoveSatellitePayload::id);
+
+    @Override
+    public void handle(ClientPlayNetworking.@NotNull Context context) {
+        ((SatelliteAccessor) context.client().getConnection()).galacticraft$removeSatellite(this.id);
+    }
+
+    @Override
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

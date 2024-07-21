@@ -530,7 +530,7 @@ public class Graphics implements AutoCloseable {
                 .addVertex(matrix, x2, y1, z).setUv(u2, v1);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, texture);
-        BufferUploader.drawWithShader(buffer.build());
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
     }
 
     public static void blitCentered(Matrix4f matrix, float x, float y, float width, float height, float z, float u, float v, float uWidth, float vHeight, int textureWidth, int textureHeight, ResourceLocation texture, int color) {

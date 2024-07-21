@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.structure;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.Holder;
@@ -281,6 +280,6 @@ public final class GCStructureTemplatePools {
     }
 
     public static Function<Projection, LegacySinglePoolElement> single(ResourceLocation id, Holder<StructureProcessorList> list) { // Legacy means that air CAN be replaced by worldgen.
-        return projection -> new LegacySinglePoolElement(Either.left(id), list, projection);
+        return StructurePoolElement.legacy(id.toString(), list);
     }
 }

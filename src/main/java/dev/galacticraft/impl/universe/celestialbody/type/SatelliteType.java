@@ -138,7 +138,7 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
         ((SatelliteAccessor) server).galacticraft$addSatellite(id, satellite);
 
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            CompoundTag compound = (CompoundTag) SatelliteConfig.CODEC.encode(satellite.config(), NbtOps.INSTANCE, new CompoundTag()).get().orThrow();
+            CompoundTag compound = (CompoundTag) SatelliteConfig.CODEC.encode(satellite.config(), NbtOps.INSTANCE, new CompoundTag()).getOrThrow();
             ServerPlayNetworking.send(player, Constant.id("add_satellite"), new FriendlyByteBuf(Unpooled.buffer()).writeResourceLocation(id).writeNbt(compound));
         }
         return satellite;

@@ -149,10 +149,10 @@ public class VenusWeatherRenderer implements DimensionRenderingRegistry.WeatherR
                         int light = LevelRenderer.getLightColor(level, mutablePos);
                         double xc = x + 0.5D;
                         double zc = z + 0.5D;
-                        worldrenderer.vertex(xc - camX - dx, (double) ymax - yo - camY, zc - camZ - dz).uv(0.0F, (float) y * 0.25F + vOff).color(1.0F, 1.0F, 1.0F, alpha).uv2(light).endVertex();
-                        worldrenderer.vertex(xc - camX + dx, (double) ymax - yo - camY, zc - camZ + dz).uv(1.0F, (float) y * 0.25F + vOff).color(1.0F, 1.0F, 1.0F, alpha).uv2(light).endVertex();
-                        worldrenderer.vertex(xc - camX + dx, (double) y - yo - camY, zc - camZ + dz).uv(1.0F, (float) ymax * 0.25F + vOff).color(1.0F, 1.0F, 1.0F, alpha).uv2(light).endVertex();
-                        worldrenderer.vertex(xc - camX - dx, (double) y - yo - camY, zc - camZ - dz).uv(0.0F, (float) ymax * 0.25F + vOff).color(1.0F, 1.0F, 1.0F, alpha).uv2(light).endVertex();
+                        worldrenderer.addVertex(xc - camX - dx, (double) ymax - yo - camY, zc - camZ - dz).setUv(0.0F, (float) y * 0.25F + vOff).setColor(1.0F, 1.0F, 1.0F, alpha).uv2(light).endVertex();
+                        worldrenderer.addVertex(xc - camX + dx, (double) ymax - yo - camY, zc - camZ + dz).setUv(1.0F, (float) y * 0.25F + vOff).setColor(1.0F, 1.0F, 1.0F, alpha).uv2(light).endVertex();
+                        worldrenderer.addVertex(xc - camX + dx, (double) y - yo - camY, zc - camZ + dz).setUv(1.0F, (float) ymax * 0.25F + vOff).setColor(1.0F, 1.0F, 1.0F, alpha).uv2(light).endVertex();
+                        worldrenderer.addVertex(xc - camX - dx, (double) y - yo - camY, zc - camZ - dz).setUv(0.0F, (float) ymax * 0.25F + vOff).setColor(1.0F, 1.0F, 1.0F, alpha).uv2(light).endVertex();
                     }
                 }
             }

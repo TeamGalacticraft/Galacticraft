@@ -25,21 +25,15 @@ package dev.galacticraft.mod.api.block.entity;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
-import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.util.EnergySource;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
-import dev.galacticraft.mod.screen.SolarPanelMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity implements SolarPanel {
     public static final int CHARGE_SLOT = 0;
@@ -95,19 +89,6 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
     }
 
     protected abstract long calculateEnergyProduction(long time, double multiplier);
-
-    @Nullable
-    @Override
-    public MachineMenu<? extends MachineBlockEntity> openMenu(int syncId, Inventory inv, Player player) {
-        if (this.getSecurity().hasAccess(player)) {
-            return new SolarPanelMenu<>(
-                    syncId,
-                    ((ServerPlayer) player),
-                    this
-            );
-        }
-        return null;
-    }
 
     @Override
     public boolean @NotNull [] getBlockage() {

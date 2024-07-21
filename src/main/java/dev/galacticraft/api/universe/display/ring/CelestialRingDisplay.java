@@ -28,17 +28,13 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.ShaderInstance;
 import org.joml.Vector3f;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public record CelestialRingDisplay<C extends CelestialRingDisplayConfig, T extends CelestialRingDisplayType<C>>(T type, C config) {
     public static final Codec<CelestialRingDisplay<?, ?>> CODEC = BuiltInAddonRegistries.CELESTIAL_RING_DISPLAY_TYPE.byNameCodec().dispatch(CelestialRingDisplay::type, CelestialRingDisplayType::codec);
 
     @Environment(EnvType.CLIENT)
-    public boolean render(CelestialBody<?, ?> body, GuiGraphics graphics, int count, Vector3f systemOffset, float alpha, float lineScale, double mouseX, double mouseY, float delta, Consumer<Supplier<ShaderInstance>> shaderSetter) {
-        return this.type().render(body, graphics, count, systemOffset, lineScale, alpha, mouseX, mouseY, delta, shaderSetter, this.config());
+    public boolean render(CelestialBody<?, ?> body, GuiGraphics graphics, int count, Vector3f systemOffset, float alpha, float lineScale, double mouseX, double mouseY, float delta) {
+        return this.type().render(body, graphics, count, systemOffset, lineScale, alpha, mouseX, mouseY, delta, this.config());
     }
 }

@@ -27,9 +27,9 @@ import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.menu.MenuData;
 import dev.galacticraft.machinelib.api.util.BlockFace;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,11 +37,11 @@ public class SolarPanelMenu<Machine extends MachineBlockEntity & SolarPanel> ext
     private final boolean followsSun;
     private final boolean nightCollection;
 
-    private boolean[] blockage;
+    private final boolean[] blockage = new boolean[9];
     private @NotNull SolarPanel.SolarPanelSource source;
     private long energyGeneration;
 
-    public SolarPanelMenu(MenuType<? extends SolarPanelMenu<Machine>> type, int syncId, @NotNull ServerPlayer player, @NotNull Machine machine) {
+    public SolarPanelMenu(MenuType<? extends SolarPanelMenu<Machine>> type, int syncId, @NotNull Player player, @NotNull Machine machine) {
         super(type, syncId, player, machine);
 
         this.followsSun = machine.followsSun();
@@ -50,17 +50,17 @@ public class SolarPanelMenu<Machine extends MachineBlockEntity & SolarPanel> ext
         this.energyGeneration = machine.getCurrentEnergyGeneration();
     }
 
-    protected SolarPanelMenu(MenuType<? extends SolarPanelMenu<Machine>> type, int syncId, @NotNull Inventory inventory, @NotNull RegistryFriendlyByteBuf buf) {
-        this(type, syncId, inventory, buf, 8, 84);
+    protected SolarPanelMenu(MenuType<? extends SolarPanelMenu<Machine>> type, int syncId, @NotNull Inventory inventory, @NotNull BlockPos pos) {
+        this(type, syncId, inventory, pos, 8, 84);
     }
 
-    protected SolarPanelMenu(MenuType<? extends SolarPanelMenu<Machine>> type, int syncId, @NotNull Inventory inventory, @NotNull RegistryFriendlyByteBuf buf, int invX, int invY) {
-        super(type, syncId, inventory, buf, invX, invY);
+    protected SolarPanelMenu(MenuType<? extends SolarPanelMenu<Machine>> type, int syncId, @NotNull Inventory inventory, @NotNull BlockPos pos, int invX, int invY) {
+        super(type, syncId, inventory, pos, invX, invY);
 
-        this.followsSun = buf.readBoolean();
-        this.nightCollection = buf.readBoolean();
-        this.source = SolarPanel.SolarPanelSource.values()[buf.readByte()];
-        this.energyGeneration = buf.readVarLong();
+        this.followsSun = this.be.followsSun();
+        this.nightCollection = this.be.nightCollection();
+        this.source = this.be.getSource();
+        this.energyGeneration = this.be.getCurrentEnergyGeneration();
     }
 
     @Override

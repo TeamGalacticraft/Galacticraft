@@ -23,6 +23,7 @@
 package dev.galacticraft.api.rocket.part.type;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.api.rocket.part.RocketFin;
 import dev.galacticraft.api.rocket.part.config.RocketFinConfig;
 import org.jetbrains.annotations.NotNull;
@@ -31,10 +32,10 @@ import org.jetbrains.annotations.NotNull;
  * The fins of a rocket. Controls how fast the rocket can accelerate.
  */
 public non-sealed abstract class RocketFinType<C extends RocketFinConfig> implements RocketPartType<C> {
-    private final @NotNull Codec<RocketFin<C, RocketFinType<C>>> codec;
+    private final @NotNull MapCodec<RocketFin<C, RocketFinType<C>>> codec;
 
     protected RocketFinType(@NotNull Codec<C> configCodec) {
-        this.codec = configCodec.fieldOf("config").xmap(this::configure, RocketFin::config).codec();
+        this.codec = configCodec.fieldOf("config").xmap(this::configure, RocketFin::config);
     }
 
     @Override
@@ -43,7 +44,7 @@ public non-sealed abstract class RocketFinType<C extends RocketFinConfig> implem
     }
 
     @Override
-    public @NotNull Codec<RocketFin<C, RocketFinType<C>>> codec() {
+    public @NotNull MapCodec<? extends RocketFin<C, ? extends RocketFinType<C>>> codec() {
         return this.codec;
     }
 

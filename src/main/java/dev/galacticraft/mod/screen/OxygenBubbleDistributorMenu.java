@@ -25,9 +25,9 @@ package dev.galacticraft.mod.screen;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.menu.MenuData;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class OxygenBubbleDistributorMenu extends MachineMenu<OxygenBubbleDistributorBlockEntity> {
@@ -35,15 +35,15 @@ public class OxygenBubbleDistributorMenu extends MachineMenu<OxygenBubbleDistrib
     public byte targetSize;
     public double size;
 
-    public OxygenBubbleDistributorMenu(int syncId, ServerPlayer player, OxygenBubbleDistributorBlockEntity machine) {
+    public OxygenBubbleDistributorMenu(int syncId, Player player, OxygenBubbleDistributorBlockEntity machine) {
         super(GCMenuTypes.OXYGEN_BUBBLE_DISTRIBUTOR, syncId, player, machine);
         this.bubbleVisible = machine.isBubbleVisible();
         this.size = machine.getSize();
         this.targetSize = machine.getTargetSize();
     }
 
-    public OxygenBubbleDistributorMenu(int syncId, Inventory inv, RegistryFriendlyByteBuf buf) {
-        super(GCMenuTypes.OXYGEN_BUBBLE_DISTRIBUTOR, syncId, inv, buf, 8, 84);
+    public OxygenBubbleDistributorMenu(int syncId, Inventory inv, BlockPos pos) {
+        super(GCMenuTypes.OXYGEN_BUBBLE_DISTRIBUTOR, syncId, inv, pos, 8, 84);
     }
 
     @Override

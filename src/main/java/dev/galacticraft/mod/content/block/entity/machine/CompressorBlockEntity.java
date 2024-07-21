@@ -24,13 +24,13 @@ package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.compat.vanilla.CraftingRecipeTestContainer;
+import dev.galacticraft.machinelib.api.compat.vanilla.RecipeHelper;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
-import dev.galacticraft.machinelib.api.transfer.InputType;
+import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
@@ -42,7 +42,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -68,14 +67,14 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
 
     private static final StorageSpec SPEC = StorageSpec.of(
             MachineItemStorage.builder()
-                    .add(ItemResourceSlot.builder(InputType.TRANSFER)
+                    .add(ItemResourceSlot.builder(TransferType.TRANSFER)
                             .pos(83, 47)
                             .filter((item, tag) -> {
                                 Integer integer = FuelRegistry.INSTANCE.get(item);
                                 return integer != null && integer > 0;
                             }))
-                    .add3x3Grid(InputType.INPUT, 17, 17)
-                    .add(ItemResourceSlot.builder(InputType.RECIPE_OUTPUT)
+                    .add3x3Grid(TransferType.INPUT, 17, 17)
+                    .add(ItemResourceSlot.builder(TransferType.OUTPUT)
                             .pos(143, 36))
     );
 
@@ -171,13 +170,12 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
     }
 
     @Override
-    public @Nullable MachineMenu<? extends MachineBlockEntity> openMenu(int syncId, Inventory inv, Player player) {
-        if (this.getSecurity().hasAccess(player)) return new CompressorMenu(syncId, (ServerPlayer) player, this);
-        return null;
+    public @Nullable MachineMenu<? extends MachineBlockEntity> createMenu(int syncId, Inventory inv, Player player) {
+        return new CompressorMenu(syncId, player, this);
     }
 
     @Override
     protected CraftingInput createCraftingInv() {
-        return CraftingRecipeTestContainer.create(3, 3, this.inputSlots.getSlots());
+        return RecipeHelper.craftingInput(3, 3, this.inputSlots.getSlots());
     }
 }

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.world.gen.surfacebuilder;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
@@ -32,20 +32,16 @@ import net.minecraft.world.level.levelgen.SurfaceRules;
 import org.jetbrains.annotations.NotNull;
 
 public record BiomeTagRule(@NotNull TagKey<Biome> tag) implements SurfaceRules.ConditionSource {
-    private static final Codec<BiomeTagRule> CODEC;
-
-    static {
-        CODEC = RecordCodecBuilder.create(instance -> instance.group(TagKey.codec(Registries.BIOME).fieldOf("tag").forGetter(rule -> rule.tag)).apply(instance, BiomeTagRule::new));
-    }
+    private static final MapCodec<BiomeTagRule> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(TagKey.codec(Registries.BIOME).fieldOf("tag").forGetter(rule -> rule.tag)).apply(instance, BiomeTagRule::new));
 
     @Override
     public KeyDispatchDataCodec<? extends SurfaceRules.ConditionSource> codec() {
-        return KeyDispatchDataCodec.of(CODEC);
+        return KeyDispatchDataCodec.of(BiomeTagRule.CODEC);
     }
 
     @Override
     public SurfaceRules.Condition apply(SurfaceRules.Context context) {
-        return new Predicate(context);
+        return null;
     }
 
     private class Predicate extends SurfaceRules.LazyYCondition {

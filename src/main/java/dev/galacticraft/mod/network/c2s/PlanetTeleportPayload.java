@@ -25,6 +25,7 @@ package dev.galacticraft.mod.network.c2s;
 import dev.galacticraft.api.accessor.SatelliteAccessor;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.events.GCEventHandlers;
 import io.netty.buffer.ByteBuf;

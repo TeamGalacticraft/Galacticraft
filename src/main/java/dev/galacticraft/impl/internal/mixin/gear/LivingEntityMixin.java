@@ -47,6 +47,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
@@ -69,7 +70,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
 
     @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z", ordinal = 0))
     private boolean galacticraft_testForBreathability(LivingEntity entity, TagKey<Fluid> tag) {
-        return entity.isEyeInFluid(tag) || !entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(entity.getPose(), entity.getDimensions(entity.getPose())))));
+        return entity.isEyeInFluid(tag) || !entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(entity.getPose()))));
     }
 
     @Inject(method = "tick", at = @At(value = "RETURN"))
@@ -127,7 +128,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
             for (int i = 0; i < gearInv.getContainerSize(); ++i) {
                 ItemStack itemStack = gearInv.getItem(i);
                 gearInv.setItem(i, ItemStack.EMPTY);
-                if (!itemStack.isEmpty() && !EnchantmentHelper.hasVanishingCurse(itemStack)) {
+                if (!itemStack.isEmpty() && !EnchantmentHelper.has(itemStack, EnchantmentEffectComponents.PREVENT_EQUIPMENT_DROP)) {
                     //noinspection ConstantConditions
                     if (((Object) this) instanceof Player player) {
                         player.drop(itemStack, true, false);

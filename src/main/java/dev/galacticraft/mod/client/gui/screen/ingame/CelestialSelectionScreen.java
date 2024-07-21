@@ -42,7 +42,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.SharedConstants;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
@@ -50,6 +49,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
+import net.minecraft.util.StringUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
@@ -267,7 +267,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
     @Override
     public boolean charTyped(char character, int modifiers) {
-        if (this.renamingSpaceStation && SharedConstants.isAllowedChatCharacter(character)) {
+        if (this.renamingSpaceStation && StringUtil.isAllowedChatCharacter(character)) {
             this.renamingString = this.renamingString + character;
             this.renamingString = this.renamingString.substring(0, Math.min(this.renamingString.length(), MAX_SPACE_STATION_NAME_LENGTH));
             return true;
@@ -277,7 +277,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
     }
 
     public boolean isValid(String string) {
-        return !string.isEmpty() && SharedConstants.isAllowedChatCharacter(string.charAt(string.length() - 1));
+        return !string.isEmpty() && StringUtil.isAllowedChatCharacter(string.charAt(string.length() - 1));
     }
 
     protected boolean canCreateSpaceStation(CelestialBody<?, ?> atBody) {

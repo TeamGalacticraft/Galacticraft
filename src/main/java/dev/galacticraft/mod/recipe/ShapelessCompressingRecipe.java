@@ -24,44 +24,45 @@ package dev.galacticraft.mod.recipe;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.galacticraft.mod.Constant;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.util.ExtraCodecs;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.StackedContents;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 public record ShapelessCompressingRecipe(String group,
-                                         ItemStack output,
-                                         NonNullList<Ingredient> input, int time) implements CompressingRecipe {
+                                         ItemStack result,
+                                         NonNullList<Ingredient> ingredients, int time) implements CompressingRecipe {
 
    @Override
-   public RecipeSerializer<?> getSerializer() {
+   public @NotNull RecipeSerializer<?> getSerializer() {
       return GCRecipes.SHAPELESS_COMPRESSING_SERIALIZER;
    }
 
    @Override
-   public String getGroup() {
+   public @NotNull String getGroup() {
       return this.group;
    }
 
    @Override
-   public NonNullList<Ingredient> getIngredients() {
-      return this.input;
+   public @NotNull NonNullList<Ingredient> getIngredients() {
+      return this.ingredients;
    }
 
    @Override
-   public boolean matches(CraftingContainer inv, Level world) {
+   public boolean matches(CraftingInput inv, Level world) {
       StackedContents recipeFinder = new StackedContents();
       int i = 0;
 
-      for (int j = 0; j < inv.getContainerSize(); ++j) {
+      for (int j = 0; j < inv.size(); ++j) {
          ItemStack itemStack = inv.getItem(j);
          if (!itemStack.isEmpty()) {
             ++i;
@@ -69,80 +70,80 @@ public record ShapelessCompressingRecipe(String group,
          }
       }
 
-      return i == this.input.size() && recipeFinder.canCraft(this, null);
+      return i == this.ingredients.size() && recipeFinder.canCraft(this, null);
    }
 
    @Override
-   public ItemStack assemble(CraftingContainer container, RegistryAccess registryAccess) {
-      return this.getResultItem(registryAccess).copy();
+   public @NotNull ItemStack assemble(CraftingInput input, HolderLookup.Provider lookup) {
+      return this.getResultItem(lookup).copy();
    }
 
    @Override
    public boolean canCraftInDimensions(int width, int height) {
-      return width * height >= this.input.size();
+      return width * height >= this.ingredients.size();
    }
 
    @Override
-   public ItemStack getResultItem(RegistryAccess registryAccess) {
-      return this.output;
+   public @NotNull ItemStack getResultItem(HolderLookup.Provider registriesLookup) {
+      return this.result;
    }
 
    public static class Serializer implements RecipeSerializer<ShapelessCompressingRecipe> {
       public static final Serializer INSTANCE = new Serializer();
-      public static final Codec<ShapelessCompressingRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-              ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(ShapelessCompressingRecipe::group),
-              ItemStack.ITEM_WITH_COUNT_CODEC.fieldOf("result").forGetter(ShapelessCompressingRecipe::output),
+      public static final MapCodec<ShapelessCompressingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+              Codec.STRING.optionalFieldOf("group", "").forGetter(ShapelessCompressingRecipe::group),
+              ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
               Ingredient.CODEC_NONEMPTY
                       .listOf()
                       .fieldOf("ingredients")
                       .flatXmap(
-                              list -> {
-                                 Ingredient[] ingredients = (Ingredient[])list.stream().filter(ingredient -> !ingredient.isEmpty()).toArray(i -> new Ingredient[i]);
-                                 if (ingredients.length == 0) {
+                              ingredients -> {
+                                 Ingredient[] ingredients2 = ingredients.stream().filter(ingredient -> !ingredient.isEmpty()).toArray(Ingredient[]::new);
+                                 if (ingredients2.length == 0) {
                                     return DataResult.error(() -> "No ingredients for shapeless recipe");
                                  } else {
-                                    return ingredients.length > 9
+                                    return ingredients2.length > 9
                                             ? DataResult.error(() -> "Too many ingredients for shapeless recipe")
-                                            : DataResult.success(NonNullList.<Ingredient>of(Ingredient.EMPTY, ingredients));
+                                            : DataResult.success(NonNullList.of(Ingredient.EMPTY, ingredients2));
                                  }
                               },
                               DataResult::success
                       )
-                      .forGetter(ShapelessCompressingRecipe::input),
-              ExtraCodecs.strictOptionalField(Codec.INT, "time", 200).forGetter(ShapelessCompressingRecipe::time)
+                      .forGetter(recipe -> recipe.ingredients),
+              Codec.INT.optionalFieldOf("time", 200).forGetter(ShapelessCompressingRecipe::time)
       ).apply(instance, ShapelessCompressingRecipe::new));
+      private static final StreamCodec<RegistryFriendlyByteBuf, ShapelessCompressingRecipe> STREAM_CODEC = StreamCodec.of(Serializer::toNetwork, Serializer::fromNetwork);
 
       @Override
-      public Codec<ShapelessCompressingRecipe> codec() {
+      public @NotNull MapCodec<ShapelessCompressingRecipe> codec() {
          return CODEC;
       }
 
       @Override
-      public ShapelessCompressingRecipe fromNetwork(FriendlyByteBuf buf) {
-         String group = buf.readUtf(Constant.Misc.MAX_STRING_READ);
-         int time = buf.readInt();
-         int size = buf.readVarInt();
-         NonNullList<Ingredient> ingredients = NonNullList.withSize(size, Ingredient.EMPTY);
-
-         for (int i = 0; i < ingredients.size(); ++i) {
-            ingredients.set(i, Ingredient.fromNetwork(buf));
-         }
-
-         ItemStack itemStack = buf.readItem();
-         return new ShapelessCompressingRecipe(group, itemStack, ingredients, time);
+      public @NotNull StreamCodec<RegistryFriendlyByteBuf, ShapelessCompressingRecipe> streamCodec() {
+         return STREAM_CODEC;
       }
 
-      @Override
-      public void toNetwork(FriendlyByteBuf buf, ShapelessCompressingRecipe recipe) {
-         buf.writeUtf(recipe.group);
-         buf.writeInt(recipe.time);
-         buf.writeVarInt(recipe.input.size());
+      private static ShapelessCompressingRecipe fromNetwork(RegistryFriendlyByteBuf buf) {
+         String group = buf.readUtf();
+         int i = buf.readVarInt();
+         int time = buf.readInt();
+         NonNullList<Ingredient> ingredients = NonNullList.withSize(i, Ingredient.EMPTY);
+         ingredients.replaceAll(empty -> Ingredient.CONTENTS_STREAM_CODEC.decode(buf));
+         ItemStack result = ItemStack.STREAM_CODEC.decode(buf);
 
-         for (Ingredient ingredient : recipe.input) {
-            ingredient.toNetwork(buf);
+         return new ShapelessCompressingRecipe(group, result, ingredients, time);
+      }
+
+      private static void toNetwork(RegistryFriendlyByteBuf buf, ShapelessCompressingRecipe recipe) {
+         buf.writeUtf(recipe.group);
+         buf.writeVarInt(recipe.ingredients.size());
+
+         for (Ingredient ingredient : recipe.ingredients) {
+            Ingredient.CONTENTS_STREAM_CODEC.encode(buf, ingredient);
          }
 
-         buf.writeItem(recipe.output);
+         ItemStack.STREAM_CODEC.encode(buf, recipe.result);
       }
    }
 

@@ -26,9 +26,9 @@ import dev.galacticraft.machinelib.api.menu.MenuData;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.mod.content.block.entity.machine.CompressorBlockEntity;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.CraftingInput;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,12 +36,12 @@ public class CompressorMenu extends RecipeMachineMenu<CraftingInput, Compressing
     private int fuelTime = 0;
     private int fuelLength = 0;
 
-    public CompressorMenu(int syncId, ServerPlayer player, CompressorBlockEntity machine) {
+    public CompressorMenu(int syncId, Player player, CompressorBlockEntity machine) {
         super(GCMenuTypes.COMPRESSOR, syncId, player, machine);
     }
 
-    public CompressorMenu(int syncId, Inventory inv, FriendlyByteBuf buf) {
-        super(GCMenuTypes.COMPRESSOR, syncId, inv, buf, 8, 84);
+    public CompressorMenu(int syncId, Inventory inv, BlockPos pos) {
+        super(GCMenuTypes.COMPRESSOR, syncId, inv, pos, 8, 84);
     }
 
     @Override

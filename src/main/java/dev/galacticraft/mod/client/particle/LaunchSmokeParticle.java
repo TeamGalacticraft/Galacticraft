@@ -31,7 +31,6 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.core.particles.SimpleParticleType;
 
 public class LaunchSmokeParticle extends LaunchParticle {
     float smokeParticleScale;
@@ -109,7 +108,7 @@ public class LaunchSmokeParticle extends LaunchParticle {
     public record Provider(SpriteSet sprites) implements ParticleProvider<LaunchSmokeParticleOption> {
         @Override
         public Particle createParticle(LaunchSmokeParticleOption option, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            return new LaunchSmokeParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, option.getScale(), option.isLaunched(), this.sprites);
+            return new LaunchSmokeParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, option.scale(), option.launched(), this.sprites);
         }
     }
 }

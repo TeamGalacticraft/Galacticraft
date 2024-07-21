@@ -78,7 +78,7 @@ public class GCCreativeModeTabs {
                 output.accept(FREQUENCY_MODULE);
                 PARACHUTE.colorMap().values().forEach(output::accept);
 
-//                output.accept(SPACE_EMERGENCY_KIT);
+//                result.accept(SPACE_EMERGENCY_KIT);
                 output.accept(SHIELD_CONTROLLER);
 
                 // ROCKETS

@@ -24,6 +24,7 @@ package dev.galacticraft.mod.network.c2s;
 
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;

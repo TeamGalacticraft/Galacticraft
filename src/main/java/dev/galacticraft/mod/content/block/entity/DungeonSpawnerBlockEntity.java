@@ -30,6 +30,7 @@ import dev.galacticraft.mod.content.entity.EvolvedZombieEntity;
 import dev.galacticraft.mod.content.entity.boss.AbstractBossEntity;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;

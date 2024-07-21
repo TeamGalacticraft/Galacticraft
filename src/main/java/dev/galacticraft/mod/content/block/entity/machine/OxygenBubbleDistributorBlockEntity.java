@@ -34,21 +34,21 @@ import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
-import dev.galacticraft.machinelib.api.transfer.InputType;
+import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.BubbleEntity;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
+import dev.galacticraft.mod.network.s2c.BubbleSizePayload;
+import dev.galacticraft.mod.network.s2c.BubbleUpdatePayload;
 import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
 import dev.galacticraft.mod.util.FluidUtil;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -69,10 +69,10 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
 
     private static final StorageSpec SPEC = StorageSpec.of(
             MachineItemStorage.spec(
-                    ItemResourceSlot.builder(InputType.TRANSFER)
+                    ItemResourceSlot.builder(TransferType.TRANSFER)
                             .pos(8, 62)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
-                    ItemResourceSlot.builder(InputType.TRANSFER)
+                    ItemResourceSlot.builder(TransferType.TRANSFER)
                             .pos(31, 62)
                             .filter(ResourceFilters.canExtractFluid(Gases.OXYGEN))
             ),
@@ -82,7 +82,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
                     0
             ),
             MachineFluidStorage.spec(
-                    FluidResourceSlot.builder(InputType.INPUT)
+                    FluidResourceSlot.builder(TransferType.INPUT)
                             .pos(31, 8)
                             .capacity(OxygenBubbleDistributorBlockEntity.MAX_OXYGEN)
                             .filter(ResourceFilters.ofResource(Gases.OXYGEN))
@@ -208,7 +208,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
             this.prevSize = this.size;
             profiler.push("network");
             for (ServerPlayer player : world.players()) {
-                ServerPlayNetworking.send(player, Constant.Packet.BUBBLE_SIZE, new FriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeDouble(this.size)));
+                ServerPlayNetworking.send(player, new BubbleSizePayload(pos, this.size));
             }
             profiler.pop();
         }
@@ -280,23 +280,12 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public @Nullable MachineMenu<? extends MachineBlockEntity> openMenu(int syncId, Inventory inv, Player player) {
-        if (this.getSecurity().hasAccess(player)) return new OxygenBubbleDistributorMenu(syncId, (ServerPlayer) player, this);
-        return null;
+    public @Nullable MachineMenu<? extends MachineBlockEntity> createMenu(int syncId, Inventory inv, Player player) {
+        return new OxygenBubbleDistributorMenu(syncId, player, this);
     }
 
     @Override
     public @NotNull CustomPacketPayload createUpdatePayload() {
-        return super.createUpdatePayload(); // TODO vv
-    }
-
-    @Override
-    public @NotNull CompoundTag getUpdateTag() {
-        CompoundTag tag = super.getUpdateTag();
-
-        tag.putInt(Constant.Nbt.MAX_SIZE, this.targetSize); // REVIEW: should we be sending this along? Because we do save it
-        tag.putDouble(Constant.Nbt.SIZE, this.size);
-        tag.putBoolean(Constant.Nbt.VISIBLE, this.bubbleVisible);
-        return tag;
+        return new BubbleUpdatePayload(this.getBlockPos(), this.targetSize, this.size, this.bubbleVisible);
     }
 }

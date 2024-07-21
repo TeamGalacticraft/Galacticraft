@@ -32,20 +32,20 @@ import me.shedaniel.rei.api.common.transfer.info.simple.DumpHandler;
 import me.shedaniel.rei.api.common.transfer.info.simple.SimpleGridMenuInfo;
 import me.shedaniel.rei.api.common.transfer.info.stack.SlotAccessor;
 import me.shedaniel.rei.api.common.transfer.info.stack.VanillaSlotAccessor;
-import net.minecraft.world.Container;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeInput;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public record SimpleMachineMenuInfo<C extends Container, R extends Recipe<C>, B extends RecipeMachineBlockEntity<C, R>, T extends RecipeMachineMenu<C, R, B>, D extends SimpleGridMenuDisplay>(int width, int height, int resultIndex, D display) implements SimpleGridMenuInfo<T, D> {
+public record SimpleMachineMenuInfo<I extends RecipeInput, R extends Recipe<I>, B extends RecipeMachineBlockEntity<I, R>, T extends RecipeMachineMenu<I, R, B>, D extends SimpleGridMenuDisplay>(int width, int height, int resultIndex, D display) implements SimpleGridMenuInfo<T, D> {
     @Override
     public Iterable<SlotAccessor> getInputSlots(MenuInfoContext<T, ?, D> context) {
         List<SlotAccessor> accessors = new ArrayList<>(this.width() * this.height());
         for (StorageSlot machineSlot : context.getMenu().machineSlots) {
-            if (machineSlot.getSlot().inputType().isInput()) {
+            if (machineSlot.getSlot().transferType().isInput()) {
                 accessors.add(new VanillaSlotAccessor(machineSlot));
             }
         }

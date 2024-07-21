@@ -28,28 +28,28 @@ import com.mojang.serialization.*;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public record MapCodec<A, B, M extends Map<A, B>>(Supplier<M> supplier, Encoder<A> encoderA, Decoder<A> decoderA,
-                                                  Encoder<B> encoderB, Decoder<B> decoderB) implements Codec<M> {
+public record MapKvCodec<K, V, M extends Map<K, V>>(Supplier<M> supplier, Encoder<K> encoderA, Decoder<K> decoderA,
+                                                    Encoder<V> encoderB, Decoder<V> decoderB) implements Codec<M> {
 
-    public static <A, B, M extends Map<A, B>> MapCodec<A, B, M> create(Supplier<M> supplier, Encoder<A> encoderA, Decoder<A> decoderA, Encoder<B> encoderB, Decoder<B> decoderB) {
-        return new MapCodec<>(supplier, encoderA, decoderA, encoderB, decoderB);
+    public static <A, B, M extends Map<A, B>> MapKvCodec<A, B, M> create(Supplier<M> supplier, Encoder<A> encoderA, Decoder<A> decoderA, Encoder<B> encoderB, Decoder<B> decoderB) {
+        return new MapKvCodec<>(supplier, encoderA, decoderA, encoderB, decoderB);
     }
 
-    public static <A, B, M extends Map<A, B>> MapCodec<A, B, M> create(Supplier<M> supplier, Codec<A> codecA, Codec<B> codecB) {
-        return new MapCodec<>(supplier, codecA, codecA, codecB, codecB);
+    public static <A, B, M extends Map<A, B>> MapKvCodec<A, B, M> create(Supplier<M> supplier, Codec<A> codecA, Codec<B> codecB) {
+        return new MapKvCodec<>(supplier, codecA, codecA, codecB, codecB);
     }
 
     @Override
     public <T> DataResult<Pair<M, T>> decode(DynamicOps<T> ops, T input) {
         M map = supplier.get();
-        ops.getMap(input).get().orThrow().entries().forEach(pair -> map.put(this.decoderA.decode(ops, pair.getFirst()).get().orThrow().getFirst(), this.decoderB.decode(ops, pair.getSecond()).get().orThrow().getFirst()));
+        ops.getMap(input).getOrThrow().entries().forEach(pair -> map.put(this.decoderA.decode(ops, pair.getFirst()).getOrThrow().getFirst(), this.decoderB.decode(ops, pair.getSecond()).getOrThrow().getFirst()));
         return DataResult.success(new Pair<>(map, input));
     }
 
     @Override
     public <T> DataResult<T> encode(M input, DynamicOps<T> ops, T prefix) {
         RecordBuilder<T> recordBuilder = ops.mapBuilder();
-        input.forEach((a, b) -> recordBuilder.add(encoderA.encode(a, ops, prefix), encoderB.encode(b, ops, prefix)));
+        input.forEach((k, v) -> recordBuilder.add(encoderA.encode(k, ops, prefix), encoderB.encode(v, ops, prefix)));
         return recordBuilder.build(prefix);
     }
 }

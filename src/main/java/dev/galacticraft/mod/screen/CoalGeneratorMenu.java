@@ -25,7 +25,7 @@ package dev.galacticraft.mod.screen;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.menu.MenuData;
 import dev.galacticraft.mod.content.block.entity.machine.CoalGeneratorBlockEntity;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
@@ -38,8 +38,8 @@ public class CoalGeneratorMenu extends MachineMenu<CoalGeneratorBlockEntity> {
         super(GCMenuTypes.COAL_GENERATOR, syncId, player, machine);
     }
 
-    public CoalGeneratorMenu(int syncId, @NotNull Inventory inventory, @NotNull RegistryFriendlyByteBuf buf) {
-        super(GCMenuTypes.COAL_GENERATOR, syncId, inventory, buf, 8, 84);
+    public CoalGeneratorMenu(int syncId, @NotNull Inventory inventory, @NotNull BlockPos pos) {
+        super(GCMenuTypes.COAL_GENERATOR, syncId, inventory, pos, 8, 84);
     }
 
     @Override

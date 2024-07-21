@@ -27,7 +27,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import de.javagl.obj.*;
 import dev.galacticraft.mod.client.model.types.ObjModel;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
 
 import java.util.List;
 
@@ -66,10 +65,10 @@ public class BakedObjModel implements GCBakedModel {
         PoseStack.Pose last = matrices.last();
         for (int vtx = 0; vtx < face.getNumVertices(); vtx++) {
             FloatTuple pos = obj.getVertex(face.getVertexIndex(vtx));
-            consumer.vertex(last.pose(), pos.getX(), pos.getY(), pos.getZ());
-            consumer.color(255, 255, 255, 255);
+            consumer.addVertex(last.pose(), pos.getX(), pos.getY(), pos.getZ());
+            consumer.setColor(255, 255, 255, 255);
             FloatTuple uv = obj.getTexCoord(face.getTexCoordIndex(vtx));
-            consumer.uv(uv.getX(), 1 - uv.getY());
+            consumer.setUv(uv.getX(), 1 - uv.getY());
 
             consumer.overlayCoords(overlay);
             consumer.uv2(light);

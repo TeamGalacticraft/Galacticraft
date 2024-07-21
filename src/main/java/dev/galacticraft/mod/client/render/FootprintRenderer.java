@@ -33,7 +33,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 
@@ -132,15 +131,15 @@ public class FootprintRenderer {
         context.profiler().pop();
     }
 
-    public static void setFootprints(ChunkPos chunkKey, List<Footprint> prints) {
+    public static void setFootprints(long chunk, List<Footprint> prints) {
         FootprintManager manager = Minecraft.getInstance().level.galacticraft$getFootprintManager();
-        List<Footprint> footprintList = manager.getFootprints().get(chunkKey.toLong());
+        List<Footprint> footprintList = manager.getFootprints().get(chunk);
 
         if (footprintList == null) {
             footprintList = new ArrayList<>();
         }
 
         footprintList.addAll(prints);
-        manager.getFootprints().put(chunkKey.toLong(), footprintList);
+        manager.getFootprints().put(chunk, footprintList);
     }
 }

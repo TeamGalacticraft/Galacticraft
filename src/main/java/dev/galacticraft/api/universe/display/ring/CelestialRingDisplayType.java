@@ -22,30 +22,25 @@
 
 package dev.galacticraft.api.universe.display.ring;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.ShaderInstance;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public abstract class CelestialRingDisplayType<C extends CelestialRingDisplayConfig> {
-    private final Codec<CelestialRingDisplay<C, CelestialRingDisplayType<C>>> codec;
+    private final MapCodec<CelestialRingDisplay<C, CelestialRingDisplayType<C>>> codec;
 
     public CelestialRingDisplayType(Codec<C> codec) {
-        this.codec = codec.fieldOf("config").xmap((config) -> new CelestialRingDisplay<>(this, config), CelestialRingDisplay::config).codec();
+        this.codec = codec.fieldOf("config").xmap((config) -> new CelestialRingDisplay<>(this, config), CelestialRingDisplay::config);
     }
 
     @Environment(EnvType.CLIENT)
-    public abstract boolean render(CelestialBody<?, ?> body, GuiGraphics graphics, int count, Vector3f systemOffset, float lineScale, float alpha, double mouseX, double mouseY, float delta, Consumer<Supplier<ShaderInstance>> shaderSetter, C config);
+    public abstract boolean render(CelestialBody<?, ?> body, GuiGraphics graphics, int count, Vector3f systemOffset, float lineScale, float alpha, double mouseX, double mouseY, float delta, C config);
 
-    public Codec<CelestialRingDisplay<C, CelestialRingDisplayType<C>>> codec() {
+    public MapCodec<CelestialRingDisplay<C, CelestialRingDisplayType<C>>> codec() {
         return this.codec;
     }
 

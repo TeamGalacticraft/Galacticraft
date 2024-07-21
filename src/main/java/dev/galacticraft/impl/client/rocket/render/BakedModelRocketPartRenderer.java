@@ -36,7 +36,9 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 
 import java.util.function.Supplier;
@@ -51,7 +53,7 @@ public record BakedModelRocketPartRenderer(Supplier<GCBakedModel> model,
 
     @Override
     public void renderGUI(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float delta) {
-        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         PoseStack pose = graphics.pose();
         pose.pushPose();
         pose.translate(x, y-5, 10); //todo: add GUI model transforms to models

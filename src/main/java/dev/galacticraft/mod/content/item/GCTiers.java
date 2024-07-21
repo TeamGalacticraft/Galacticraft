@@ -23,27 +23,31 @@
 package dev.galacticraft.mod.content.item;
 
 import com.google.common.base.Suppliers;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
-public enum GCToolMaterial implements Tier {
-    STEEL(Tiers.IRON.getLevel(), 768, Tiers.IRON.getSpeed(), Tiers.IRON.getAttackDamageBonus(), Tiers.IRON.getEnchantmentValue(), () -> Ingredient.of(new ItemStack(GCItems.COMPRESSED_STEEL))),
-    DESH(3, 1024, 5.0F, 2.5F, 10, () -> Ingredient.of(new ItemStack(GCItems.DESH_INGOT))),
-    TITANIUM(4, 760, 14.0F, 4.0F, 16, () -> Ingredient.of(new ItemStack(GCItems.TITANIUM_INGOT)));
+public enum GCTiers implements Tier {
+    STEEL(BlockTags.INCORRECT_FOR_IRON_TOOL, 768, Tiers.IRON.getSpeed(), Tiers.IRON.getAttackDamageBonus(), Tiers.IRON.getEnchantmentValue(), () -> Ingredient.of(new ItemStack(GCItems.COMPRESSED_STEEL))),
+    DESH(BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1024, 5.0F, 2.5F, 10, () -> Ingredient.of(new ItemStack(GCItems.DESH_INGOT))),
+    TITANIUM(BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 760, 14.0F, 4.0F, 16, () -> Ingredient.of(new ItemStack(GCItems.TITANIUM_INGOT)));
 
-    private final int miningLevel;
+    private final TagKey<Block> incorrectBlocksForDrops;
     private final int durability;
     private final float blockBreakSpeed;
     private final float attackDamage;
     private final int enchantability;
     private final Supplier<Ingredient> repairIngredient;
 
-    GCToolMaterial(int miningLevel, int durability, float breakSpeed, float attackDamage, int enchantability, Supplier<Ingredient> repairIngredient) {
-        this.miningLevel = miningLevel;
+    GCTiers(TagKey<Block> incorrectBlocksForDrops, int durability, float breakSpeed, float attackDamage, int enchantability, Supplier<Ingredient> repairIngredient) {
+        this.incorrectBlocksForDrops = incorrectBlocksForDrops;
         this.durability = durability;
         this.blockBreakSpeed = breakSpeed;
         this.attackDamage = attackDamage;
@@ -67,8 +71,8 @@ public enum GCToolMaterial implements Tier {
     }
 
     @Override
-    public int getLevel() {
-        return miningLevel;
+    public @NotNull TagKey<Block> getIncorrectBlocksForDrops() {
+        return this.incorrectBlocksForDrops;
     }
 
     @Override
@@ -77,7 +81,7 @@ public enum GCToolMaterial implements Tier {
     }
 
     @Override
-    public Ingredient getRepairIngredient() {
+    public @NotNull Ingredient getRepairIngredient() {
         return repairIngredient.get();
     }
 }

@@ -32,19 +32,19 @@ import me.shedaniel.rei.api.common.transfer.info.clean.InputCleanHandler;
 import me.shedaniel.rei.api.common.transfer.info.simple.SimplePlayerInventoryMenuInfo;
 import me.shedaniel.rei.api.common.transfer.info.stack.SlotAccessor;
 import me.shedaniel.rei.api.common.transfer.info.stack.VanillaSlotAccessor;
-import net.minecraft.world.Container;
+import net.minecraft.world.item.crafting.RecipeInput;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public record FabricationMenuInfo<B extends RecipeMachineBlockEntity<Container, FabricationRecipe>, T extends RecipeMachineMenu<Container, FabricationRecipe, B>, D extends DefaultFabricationDisplay>(D display) implements SimplePlayerInventoryMenuInfo<T, D> {
+public record FabricationMenuInfo<B extends RecipeMachineBlockEntity<RecipeInput, FabricationRecipe>, T extends RecipeMachineMenu<RecipeInput, FabricationRecipe, B>, D extends DefaultFabricationDisplay>(D display) implements SimplePlayerInventoryMenuInfo<T, D> {
     @Override
     public Iterable<SlotAccessor> getInputSlots(MenuInfoContext<T, ?, D> context) {
         T menu = context.getMenu();
 
         List<SlotAccessor> list = new ArrayList<>(5);
         for (StorageSlot slot : menu.machineSlots) {
-            if (slot.getSlot().inputType().isInput()) {
+            if (slot.getSlot().transferType().isInput()) {
                 list.add(new VanillaSlotAccessor(slot));
             }
         }

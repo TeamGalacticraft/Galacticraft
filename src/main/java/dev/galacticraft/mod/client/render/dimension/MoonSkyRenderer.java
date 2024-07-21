@@ -69,11 +69,11 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, SUN_TEXTURE);
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.vertex(matrix, -size, 100.0F, -size).uv(0.0F, 0.0F).endVertex();
-        buffer.vertex(matrix, size, 100.0F, -size).uv(1.0F, 0.0F).endVertex();
-        buffer.vertex(matrix, size, 100.0F, size).uv(1.0F, 1.0F).endVertex();
-        buffer.vertex(matrix, -size, 100.0F, size).uv(0.0F, 1.0F).endVertex();
-        BufferUploader.drawWithShader(buffer.end());
+        buffer.addVertex(matrix, -size, 100.0F, -size).setUv(0.0F, 0.0F).endVertex();
+        buffer.addVertex(matrix, size, 100.0F, -size).setUv(1.0F, 0.0F).endVertex();
+        buffer.addVertex(matrix, size, 100.0F, size).setUv(1.0F, 1.0F).endVertex();
+        buffer.addVertex(matrix, -size, 100.0F, size).setUv(0.0F, 1.0F).endVertex();
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
 
         matrices.popPose();
         context.profiler().pop();
@@ -92,11 +92,11 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
         RenderSystem.setShaderTexture(0, EARTH_TEXTURE);
 
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.vertex(matrix, -size, -100.0F, size).uv(0.0F, 1.0F).endVertex();
-        buffer.vertex(matrix, size, -100.0F, size).uv(1.0F, 1.0F).endVertex();
-        buffer.vertex(matrix, size, -100.0F, -size).uv(1.0F, 0.0F).endVertex();
-        buffer.vertex(matrix, -size, -100.0F, -size).uv(0.0F, 0.0F).endVertex();
-        BufferUploader.drawWithShader(buffer.end());
+        buffer.addVertex(matrix, -size, -100.0F, size).setUv(0.0F, 1.0F).endVertex();
+        buffer.addVertex(matrix, size, -100.0F, size).setUv(1.0F, 1.0F).endVertex();
+        buffer.addVertex(matrix, size, -100.0F, -size).setUv(1.0F, 0.0F).endVertex();
+        buffer.addVertex(matrix, -size, -100.0F, -size).setUv(0.0F, 0.0F).endVertex();
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
 
         context.profiler().pop();
         matrices.popPose();

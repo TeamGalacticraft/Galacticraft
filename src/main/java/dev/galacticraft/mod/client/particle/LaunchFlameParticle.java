@@ -55,7 +55,7 @@ public class LaunchFlameParticle extends TextureSheetParticle {
         this.lifetime = (int) (this.lifetime * 1F);
         this.hasPhysics = true;
         this.spawnSmokeShort = launched;
-        this.ridingEntity = particleData.getEntityUUID();
+        this.ridingEntity = particleData.getUuid();
         this.sprites = sprites;
         this.setSpriteFromAge(sprites);
     }
@@ -121,7 +121,7 @@ public class LaunchFlameParticle extends TextureSheetParticle {
                 if (entities != null) {
                     for (Entity entity : entities) {
                         if (entity instanceof LivingEntity && entity.isAlive() && !entity.isOnFire() && !entity.getUUID().equals(this.ridingEntity)) {
-                            entity.setSecondsOnFire(3);
+                            entity.igniteForSeconds(3);
 //                            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_SET_ENTITY_FIRE, GCCoreUtil.getDimensionType(entity.level()), new Object[]{entity.getEntityId()}));
                         }
                     }

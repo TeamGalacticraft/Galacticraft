@@ -103,7 +103,7 @@ public class GreyEntity extends PathfinderMob implements InventoryCarrier, Npc {
                 .add(Attributes.MAX_HEALTH, 24.0)
                 .add(Attributes.ATTACK_DAMAGE, 5.0)
                 .add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D)
-                .add(GcApiEntityAttributes.LOCAL_GRAVITY_LEVEL, 0.9F);
+                .add(Attributes.GRAVITY, 0.9F);
     }
 
     static class GreyAvoidEntityGoal<T extends LivingEntity> extends AvoidEntityGoal<T> {

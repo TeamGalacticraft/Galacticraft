@@ -24,7 +24,7 @@ package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.compat.vanilla.RecipeTestContainer;
+import dev.galacticraft.machinelib.api.compat.vanilla.RecipeHelper;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
@@ -34,12 +34,12 @@ import dev.galacticraft.machinelib.api.storage.MachineEnergyStorage;
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
-import dev.galacticraft.machinelib.api.transfer.InputType;
+import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.screen.GCMenuTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -58,12 +58,12 @@ public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<Si
 
     public static final StorageSpec SPEC = StorageSpec.of(
             MachineItemStorage.spec(
-                    ItemResourceSlot.builder(InputType.TRANSFER)
+                    ItemResourceSlot.builder(TransferType.TRANSFER)
                             .pos(8, 61)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
-                    ItemResourceSlot.builder(InputType.INPUT)
+                    ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(52, 35),
-                    ItemResourceSlot.builder(InputType.RECIPE_OUTPUT)
+                    ItemResourceSlot.builder(TransferType.OUTPUT)
                             .pos(113, 35)
             ),
             MachineEnergyStorage.spec(
@@ -104,19 +104,17 @@ public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<Si
     }
 
     @Override
-    public @Nullable MachineMenu<? extends MachineBlockEntity> openMenu(int syncId, Inventory inv, Player player) {
-        if (this.getSecurity().hasAccess(player)) {
-            return new RecipeMachineMenu<>(
-                    syncId,
-                    (ServerPlayer) player,
-                    this
-            );
-        }
-        return null;
+    public @Nullable MachineMenu<? extends MachineBlockEntity> createMenu(int syncId, Inventory inv, Player player) {
+        return new RecipeMachineMenu<>(
+                GCMenuTypes.ELECTRIC_FURNACE,
+                syncId,
+                player,
+                this
+        );
     }
 
     @Override
     protected SingleRecipeInput createCraftingInv() {
-        return RecipeTestContainer.create(this.inputSlots);
+        return RecipeHelper.single(this.inputSlots.slot(0));
     }
 }

@@ -29,6 +29,7 @@ import dev.galacticraft.impl.rocket.RocketDataImpl;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
+import dev.galacticraft.mod.network.s2c.FootprintRemovedPacket;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -103,8 +104,8 @@ public class GCEventHandlers {
 
     public static ItemStack modifyOnGive(ItemStack previousItemStack) {
         // This will set default data of an empty Rocket item when /give command is used, it also checks required tags for Rocket item to be rendered properly.
-        if (previousItemStack.is(GCItems.ROCKET) && (!previousItemStack.hasTag() || previousItemStack.hasTag() && !previousItemStack.getTag().getAllKeys().containsAll(RocketDataImpl.DEFAULT_ROCKET.getAllKeys()))) {
-            previousItemStack.setTag(RocketDataImpl.DEFAULT_ROCKET);
+        if (previousItemStack.is(GCItems.ROCKET) && (!previousItemStack.getComponentsPatch().isEmpty() || previousItemStack.getComponentsPatch().isEmpty() && !previousItemStack.getTag().getAllKeys().containsAll(RocketDataImpl.DEFAULT_ROCKET.getAllKeys()))) {
+            previousItemStack.applyComponents(RocketDataImpl.DEFAULT_ROCKET);
         }
         return previousItemStack;
     }

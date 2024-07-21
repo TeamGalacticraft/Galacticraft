@@ -35,7 +35,7 @@ import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
-import dev.galacticraft.machinelib.api.transfer.InputType;
+import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.ServerLevelAccessor;
@@ -46,7 +46,6 @@ import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
@@ -73,10 +72,10 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
 
     private static final StorageSpec SPEC = StorageSpec.of(
             MachineItemStorage.spec(
-                    ItemResourceSlot.builder(InputType.TRANSFER)
+                    ItemResourceSlot.builder(TransferType.TRANSFER)
                             .pos(8, 62)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
-                    ItemResourceSlot.builder(InputType.TRANSFER) // todo: drop for decompressor?
+                    ItemResourceSlot.builder(TransferType.TRANSFER) // todo: drop for decompressor?
                             .pos(31, 62)
                             .filter(ResourceFilters.canExtractFluid(Gases.OXYGEN))
             ),
@@ -86,7 +85,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                     0
             ),
             MachineFluidStorage.spec(
-                    FluidResourceSlot.builder(InputType.INPUT)
+                    FluidResourceSlot.builder(TransferType.INPUT)
                             .pos(30, 8)
                             .capacity(OxygenSealerBlockEntity.MAX_OXYGEN)
                             .filter(ResourceFilters.ofResource(Gases.OXYGEN))
@@ -251,16 +250,13 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
 
     @Nullable
     @Override
-    public MachineMenu<? extends MachineBlockEntity> openMenu(int syncId, Inventory inv, Player player) {
-        if (this.getSecurity().hasAccess(player)) {
-            return new MachineMenu<>(
-                    GCMenuTypes.OXYGEN_SEALER,
-                    syncId,
-                    (ServerPlayer) player,
-                    this
-            );
-        }
-        return null;
+    public MachineMenu<? extends MachineBlockEntity> createMenu(int syncId, Inventory inv, Player player) {
+        return new MachineMenu<>(
+                GCMenuTypes.OXYGEN_SEALER,
+                syncId,
+                player,
+                this
+        );
     }
 
     public void enqueueUpdate(BlockPos pos, VoxelShape voxelShape2) {

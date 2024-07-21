@@ -20,31 +20,12 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.gl;
+package dev.galacticraft.impl.network.c2s;
 
-import static org.lwjgl.opengl.GL45.*;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import org.jetbrains.annotations.NotNull;
 
-public class GlVertexArray extends GlObject {
-
-    public GlVertexArray() {
-        super(glGenVertexArrays());
-    }
-
-    public void draw(int count) {
-        this.bind();
-        glDrawArrays(GL_TRIANGLES, 0, count);
-        this.unbind();
-    }
-
-    public void bind() {
-        glBindVertexArray(this.handle);
-    }
-
-    public void unbind() {
-        glBindVertexArray(0);
-    }
-
-    public void delete() {
-        glDeleteVertexArrays(this.handle);
-    }
+public interface C2SPayload extends CustomPacketPayload {
+    void handle(@NotNull ServerPlayNetworking.Context context);
 }

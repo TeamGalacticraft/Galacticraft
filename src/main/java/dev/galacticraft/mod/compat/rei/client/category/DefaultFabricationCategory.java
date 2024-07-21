@@ -68,11 +68,11 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
         widgets.add(Widgets.createRecipeBase(bounds));
         widgets.add(Widgets.createTexturedWidget(Constant.ScreenTexture.RECIPE_VEIWER_DISPLAY_TEXTURE, new Rectangle(startPoint.x, startPoint.y, 162, 82)));
 
-        // Diamond input
+        // Diamond ingredients
         // Silicon
         // Silicon
         // Redstone
-        // User input
+        // User ingredients
         // Output
         widgets.add(Widgets.createSlot(new Point(startPoint.x + 1, startPoint.y + 1)).entries(recipeDisplay.getInputEntries().get(0)));
         widgets.add(Widgets.createSlot(new Point(startPoint.x + 55, startPoint.y + 47)).entries(recipeDisplay.getInputEntries().get(1)));

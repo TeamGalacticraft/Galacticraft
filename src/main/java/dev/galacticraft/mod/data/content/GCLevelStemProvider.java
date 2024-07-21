@@ -74,7 +74,7 @@ public class GCLevelStemProvider implements DataProvider {
 			var i = 0;
 			var ops = RegistryOps.create(JsonOps.INSTANCE, registries);
 			for (var entry : entries.entrySet()) {
-				var completableFuture = CompletableFuture.supplyAsync(() -> LevelStem.CODEC.encodeStart(ops, entry.getValue()).get().orThrow())
+				var completableFuture = CompletableFuture.supplyAsync(() -> LevelStem.CODEC.encodeStart(ops, entry.getValue()).getOrThrow())
 						.thenCompose(json -> DataProvider.saveStable(output, json, this.path.json(entry.getKey())));
 				futures[i++] = completableFuture;
 			}

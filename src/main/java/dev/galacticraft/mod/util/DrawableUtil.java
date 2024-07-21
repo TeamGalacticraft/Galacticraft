@@ -78,10 +78,10 @@ public class DrawableUtil {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
         bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        bufferBuilder.vertex(matrices, x0, y1, z).uv(u0, v1).endVertex();
-        bufferBuilder.vertex(matrices, x1, y1, z).uv(u1, v1).endVertex();
-        bufferBuilder.vertex(matrices, x1, y0, z).uv(u1, v0).endVertex();
-        bufferBuilder.vertex(matrices, x0, y0, z).uv(u0, v0).endVertex();
+        bufferBuilder.addVertex(matrices, x0, y1, z).setUv(u0, v1).endVertex();
+        bufferBuilder.addVertex(matrices, x1, y1, z).setUv(u1, v1).endVertex();
+        bufferBuilder.addVertex(matrices, x1, y0, z).setUv(u1, v0).endVertex();
+        bufferBuilder.addVertex(matrices, x0, y0, z).setUv(u0, v0).endVertex();
         BufferUploader.drawWithShader(bufferBuilder.end());
     }
 
@@ -96,10 +96,10 @@ public class DrawableUtil {
     public static void drawTexturedQuadColor(Matrix4f matrices, int x0, int x1, int y0, int y1, int z, float u0, float u1, float v0, float v1, int red, int green, int blue, int alwha) {
         BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
         bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-        bufferBuilder.vertex(matrices, (float)x0, (float)y1, (float)z).color(red, green, blue, 255).uv(u0, v1).endVertex();
-        bufferBuilder.vertex(matrices, (float)x1, (float)y1, (float)z).color(red, green, blue, 255).uv(u1, v1).endVertex();
-        bufferBuilder.vertex(matrices, (float)x1, (float)y0, (float)z).color(red, green, blue, 255).uv(u1, v0).endVertex();
-        bufferBuilder.vertex(matrices, (float)x0, (float)y0, (float)z).color(red, green, blue, 255).uv(u0, v0).endVertex();
+        bufferBuilder.addVertex(matrices, (float)x0, (float)y1, (float)z).setColor(red, green, blue, 255).setUv(u0, v1).endVertex();
+        bufferBuilder.addVertex(matrices, (float)x1, (float)y1, (float)z).setColor(red, green, blue, 255).setUv(u1, v1).endVertex();
+        bufferBuilder.addVertex(matrices, (float)x1, (float)y0, (float)z).setColor(red, green, blue, 255).setUv(u1, v0).endVertex();
+        bufferBuilder.addVertex(matrices, (float)x0, (float)y0, (float)z).setColor(red, green, blue, 255).setUv(u0, v0).endVertex();
         BufferUploader.draw(bufferBuilder.end());
     }
 

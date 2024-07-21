@@ -38,6 +38,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -45,6 +46,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Mixin(AbstractClientPlayer.class)
@@ -91,7 +93,7 @@ public abstract class AbstractClientPlayerEntityMixin implements ClientResearchA
     }
 
     @Override
-    public void galacticraft$updateResearch(boolean add, ResourceLocation[] ids) {
+    public void galacticraft$updateResearch(boolean add, List<ResourceLocation> ids) {
         for (ResourceLocation id : ids) {
             if (add) {
                 this.unlockedResearch.add(id);
@@ -123,11 +125,11 @@ public abstract class AbstractClientPlayerEntityMixin implements ClientResearchA
 
     @Override
     public void galacticraft$writeGearToNbt(CompoundTag tag) {
-        tag.put(Constant.Nbt.GEAR_INV, this.galacticraft$getGearInv().createTag());
+        tag.put(Constant.Nbt.GEAR_INV, this.galacticraft$getGearInv().createTag(((Entity)(Object)this).registryAccess()));
     }
 
     @Override
     public void galacticraft$readGearFromNbt(CompoundTag tag) {
-        this.galacticraft$getGearInv().fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND));
+        this.galacticraft$getGearInv().fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND), ((Entity)(Object)this).registryAccess());
     }
 }

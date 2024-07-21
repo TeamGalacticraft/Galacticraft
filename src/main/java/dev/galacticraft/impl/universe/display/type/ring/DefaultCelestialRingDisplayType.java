@@ -22,6 +22,7 @@
 
 package dev.galacticraft.impl.universe.display.type.ring;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
@@ -29,13 +30,9 @@ import dev.galacticraft.api.universe.display.ring.CelestialRingDisplayType;
 import dev.galacticraft.impl.universe.display.config.ring.DefaultCelestialRingDisplayConfig;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class DefaultCelestialRingDisplayType extends CelestialRingDisplayType<DefaultCelestialRingDisplayConfig> {
     public static final DefaultCelestialRingDisplayType INSTANCE = new DefaultCelestialRingDisplayType(DefaultCelestialRingDisplayConfig.CODEC);
@@ -45,8 +42,8 @@ public class DefaultCelestialRingDisplayType extends CelestialRingDisplayType<De
     }
 
     @Override
-    public boolean render(CelestialBody<?, ?> body, GuiGraphics graphics, int count, Vector3f systemOffset, float lineScale, float alpha, double mouseX, double mouseY, float delta, Consumer<Supplier<ShaderInstance>> shaderSetter, DefaultCelestialRingDisplayConfig config) {
-        shaderSetter.accept(GameRenderer::getRendertypeLinesShader);
+    public boolean render(CelestialBody<?, ?> body, GuiGraphics graphics, int count, Vector3f systemOffset, float lineScale, float alpha, double mouseX, double mouseY, float delta, DefaultCelestialRingDisplayConfig config) {
+        RenderSystem.setShader(GameRenderer::getRendertypeLinesShader);
 
         PoseStack matrices = graphics.pose();
 
@@ -72,49 +69,43 @@ public class DefaultCelestialRingDisplayType extends CelestialRingDisplayType<De
                 default -> throw new IllegalStateException("Unexpected value: " + count % 2);
             };
 
-            Tesselator tesselator = Tesselator.getInstance();
-            BufferBuilder buffer = tesselator.getBuilder();
-            buffer.begin(VertexFormat.Mode.LINE_STRIP, DefaultVertexFormat.POSITION_COLOR_NORMAL);
+            BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.LINE_STRIP, DefaultVertexFormat.POSITION_COLOR_NORMAL);
 
             float temp;
             float x1 = x;
             float y1 = y;
             Matrix4f model = matrices.last().pose();
             for (int i = 0; i < 180; i++) {
-                buffer.vertex(model, x, y, 0).color(color[0], color[1], color[2], color[3]);
+                buffer.addVertex(model, x, y, 0).setColor(color[0], color[1], color[2], color[3]);
                 if (i < 90) {
-                    buffer.normal(1, 1, 1);
+                    buffer.setNormal(1, 1, 1);
                 } else {
-                    buffer.normal(1, -1, -1);
+                    buffer.setNormal(1, -1, -1);
                 }
-
-                buffer.endVertex();
 
                 temp = x;
                 x = cos * x - sin * y;
                 y = sin * temp + cos * y;
             }
-            buffer.vertex(model, x1, y1, 0).color(color[0], color[1], color[2], color[3]).normal(1, 1, 1).endVertex(); //LINE_LOOP is gone
+            buffer.addVertex(model, x1, y1, 0).setColor(color[0], color[1], color[2], color[3]).setNormal(1, 1, 1); //LINE_LOOP is gone
             x = x1;
             y = y1;
 
             for (int i = 0; i < 180; i++) {
-                buffer.vertex(model, x, y, 0).color(color[0], color[1], color[2], color[3]);
+                buffer.addVertex(model, x, y, 0).setColor(color[0], color[1], color[2], color[3]);
                 if (i < 90) {
-                    buffer.normal(1, 1, 1);
+                    buffer.setNormal(1, 1, 1);
                 } else {
-                    buffer.normal(1, -1, -1);
+                    buffer.setNormal(1, -1, -1);
                 }
-
-                buffer.endVertex();
 
                 temp = x;
                 x = cos2 * x - sin2 * y;
                 y = sin2 * temp + cos2 * y;
             }
-            buffer.vertex(model, x1, y1, 0).color(color[0], color[1], color[2], color[3]).normal(1, 1, 1).endVertex(); //LINE_LOOP is gone
+            buffer.addVertex(model, x1, y1, 0).setColor(color[0], color[1], color[2], color[3]).setNormal(1, 1, 1); //LINE_LOOP is gone
 
-            tesselator.end();
+            BufferUploader.drawWithShader(buffer.buildOrThrow());
             matrices.popPose();
 
             return true;

@@ -55,8 +55,8 @@ public class OxygenOverlay {
                     long capacity = 1;
 
                     if (storage != null) {
-                        amount = StorageHelper.calculateAmount(FluidVariant.of(Gases.OXYGEN), storage, null);
-                        capacity = StorageHelper.calculateCapacity(FluidVariant.of(Gases.OXYGEN), storage, null);
+                        amount = StorageHelper.calculateAmount(FluidVariant.of(Gases.OXYGEN), storage);
+                        capacity = StorageHelper.theoreticalCapacity(storage);
                     } else if (mc.player.isCreative()) {
                         amount = capacity;
                     }

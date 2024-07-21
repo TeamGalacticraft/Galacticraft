@@ -23,6 +23,7 @@
 package dev.galacticraft.api.universe.celestialbody.landable.teleporter.type;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.config.CelestialTeleporterConfig;
@@ -31,13 +32,13 @@ import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class CelestialTeleporterType<C extends CelestialTeleporterConfig> {
-    private final Codec<CelestialTeleporter<C, CelestialTeleporterType<C>>> codec;
+    private final MapCodec<CelestialTeleporter<C, CelestialTeleporterType<C>>> codec;
 
     public CelestialTeleporterType(Codec<C> codec) {
-        this.codec = codec.fieldOf("config").xmap((config) -> new CelestialTeleporter<>(this, config), CelestialTeleporter::config).codec();
+        this.codec = codec.fieldOf("config").xmap((config) -> new CelestialTeleporter<>(this, config), CelestialTeleporter::config);
     }
 
-    public @NotNull Codec<CelestialTeleporter<C, CelestialTeleporterType<C>>> codec() {
+    public @NotNull MapCodec<CelestialTeleporter<C, CelestialTeleporterType<C>>> codec() {
         return this.codec;
     }
 

@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.client.network;
 
+import dev.galacticraft.impl.network.s2c.S2CPayload;
 import dev.galacticraft.mod.network.s2c.*;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -32,6 +33,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 public class GCClientPacketReceiver {
     public static void register() {
         register(BubbleSizePayload.TYPE);
+        register(BubbleUpdatePayload.TYPE);
         register(OpenCelestialScreenPayload.TYPE);
         register(RocketSpawnPacket.TYPE);
         register(FootprintPacket.TYPE);

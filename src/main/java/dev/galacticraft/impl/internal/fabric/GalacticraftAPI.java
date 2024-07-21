@@ -84,7 +84,7 @@ public class GalacticraftAPI implements ModInitializer {
 
         DynamicRegistries.register(AddonRegistries.CELESTIAL_TELEPORTER, CelestialTeleporter.DIRECT_CODEC);
 
-        Registry.register(BuiltInRegistries.CHUNregirsterK_GENERATOR, Constant.id("satellite"), SatelliteChunkGenerator.CODEC);
+        Registry.register(BuiltInRegistries.CHUNK_GENERATOR, Constant.id("satellite"), SatelliteChunkGenerator.CODEC);
         BuiltinObjects.register();
         BuiltInRocketRegistries.initialize();
         GcApiEntityAttributes.init();

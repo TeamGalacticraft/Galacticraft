@@ -25,20 +25,20 @@ package dev.galacticraft.mod.screen;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.menu.MenuData;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenCollectorBlockEntity;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class OxygenCollectorMenu extends MachineMenu<OxygenCollectorBlockEntity> {
     public int collectionAmount = 0;
 
-    public OxygenCollectorMenu(int syncId, ServerPlayer player, OxygenCollectorBlockEntity machine) {
+    public OxygenCollectorMenu(int syncId, Player player, OxygenCollectorBlockEntity machine) {
         super(GCMenuTypes.OXYGEN_COLLECTOR, syncId, player, machine);
     }
 
-    public OxygenCollectorMenu(int syncId, Inventory inv, RegistryFriendlyByteBuf buf) {
-        super(GCMenuTypes.OXYGEN_COLLECTOR, syncId, inv, buf, 8, 84);
+    public OxygenCollectorMenu(int syncId, Inventory inv, BlockPos pos) {
+        super(GCMenuTypes.OXYGEN_COLLECTOR, syncId, inv, pos, 8, 84);
     }
 
     @Override

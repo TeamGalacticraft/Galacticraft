@@ -27,11 +27,7 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.display.ring.CelestialRingDisplayType;
 import dev.galacticraft.impl.universe.display.config.ring.DefaultCelestialRingDisplayConfig;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.ShaderInstance;
 import org.joml.Vector3f;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class EmptyCelestialRingDisplayType extends CelestialRingDisplayType<DefaultCelestialRingDisplayConfig> {
     public static final EmptyCelestialRingDisplayType INSTANCE = new EmptyCelestialRingDisplayType(DefaultCelestialRingDisplayConfig.CODEC);
@@ -41,7 +37,7 @@ public class EmptyCelestialRingDisplayType extends CelestialRingDisplayType<Defa
     }
 
     @Override
-    public boolean render(CelestialBody<?, ?> body, GuiGraphics graphics, int count, Vector3f systemOffset, float lineScale, float alpha, double mouseX, double mouseY, float delta, Consumer<Supplier<ShaderInstance>> shaderSetter, DefaultCelestialRingDisplayConfig config) {
+    public boolean render(CelestialBody<?, ?> body, GuiGraphics graphics, int count, Vector3f systemOffset, float lineScale, float alpha, double mouseX, double mouseY, float delta, DefaultCelestialRingDisplayConfig config) {
         return false;
     }
 }

@@ -30,6 +30,7 @@ import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -45,6 +46,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, VariableSizedContainer.Listener {
@@ -69,10 +71,10 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.saveAdditional(tag, provider);
 
-        ListTag tag1 = this.output.createTag();
+        ListTag tag1 = this.output.createTag(provider);
         if (!tag1.isEmpty()) tag.put("Output", tag1.get(0));
         tag.put("Cone", this.cone.toTag());
         tag.put("Body", this.body.toTag());
@@ -84,12 +86,12 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registryLookup) {
+        super.loadAdditional(tag, registryLookup);
         if (tag.contains("Output")) {
             ListTag list = new ListTag();
             list.add(tag.get("Output"));
-            this.output.fromTag(list);
+            this.output.fromTag(list, registryLookup);
         }
         this.cone.readTag(tag.getCompound("Cone"));
         this.body.readTag(tag.getCompound("Body"));
@@ -119,7 +121,7 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
     }
 
     @Override
-    public Component getDisplayName() {
+    public @NotNull Component getDisplayName() {
         return this.getBlockState().getBlock().getName();
     }
 

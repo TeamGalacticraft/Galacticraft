@@ -22,68 +22,39 @@
 
 package dev.galacticraft.mod.particle;
 
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.mojang.serialization.MapCodec;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.util.ExtraCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Locale;
 import java.util.UUID;
 
 public class EntityParticleOption implements ParticleOptions {
-    public static final Codec<EntityParticleOption> CODEC = RecordCodecBuilder.create(
-            instance -> instance.group(
-                    BuiltInRegistries.PARTICLE_TYPE.byNameCodec().fieldOf("particle").forGetter(EntityParticleOption::getType),
-                    UUIDUtil.CODEC.fieldOf("uuid").forGetter(EntityParticleOption::getEntityUUID)
-            ).apply(instance, EntityParticleOption::new)
-    );
+    private final ParticleType<?> type;
+    private final UUID uuid;
 
-    public static final ParticleOptions.Deserializer<EntityParticleOption> DESERIALIZER = new ParticleOptions.Deserializer<>() {
-        @Override
-        public EntityParticleOption fromCommand(ParticleType<EntityParticleOption> particleTypeIn, StringReader reader) throws CommandSyntaxException {
-            reader.expect(' ');
-            return new EntityParticleOption(particleTypeIn, UUID.fromString(reader.readString()));
-        }
+    public EntityParticleOption(ParticleType<?> type, UUID uuid) {
+        this.type = type;
+        this.uuid = uuid;
+    }
 
-        @Override
-        public EntityParticleOption fromNetwork(ParticleType<EntityParticleOption> particleTypeIn, FriendlyByteBuf buffer) {
-            return new EntityParticleOption(particleTypeIn, buffer.readUUID());
-        }
-    };
+    public static MapCodec<EntityParticleOption> codec(ParticleType<? extends EntityParticleOption> type) {
+        return UUIDUtil.CODEC.xmap(uuid -> new EntityParticleOption(type, uuid), o -> o.uuid).fieldOf("uuid");
+    }
 
-    private final ParticleType<?> particleType;
-    private final UUID entityUUID;
-
-    public EntityParticleOption(ParticleType<?> particleType, UUID entityUUID) {
-        this.particleType = particleType;
-        this.entityUUID = entityUUID;
+    public static StreamCodec<ByteBuf, EntityParticleOption> streamCodec(ParticleType<?> type) {
+        return UUIDUtil.STREAM_CODEC.map(uuid -> new EntityParticleOption(type, uuid), o -> o.uuid);
     }
 
     @Override
-    public ParticleType<?> getType() {
-        return particleType;
+    public @NotNull ParticleType<?> getType() {
+        return this.type;
     }
 
-    @Override
-    public void writeToNetwork(FriendlyByteBuf buffer) {
-        buffer.writeBoolean(this.entityUUID != null);
-        if (this.entityUUID != null) {
-            buffer.writeUUID(this.entityUUID);
-        }
-    }
-
-    @Override
-    public String writeToString() {
-        return String.format(Locale.ROOT, "%s %s", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()), this.entityUUID.toString());
-    }
-
-    public UUID getEntityUUID() {
-        return entityUUID;
+    public UUID getUuid() {
+        return this.uuid;
     }
 }

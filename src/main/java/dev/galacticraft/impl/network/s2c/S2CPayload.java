@@ -20,16 +20,12 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.gl;
+package dev.galacticraft.impl.network.s2c;
 
-public abstract class GlObject {
-    protected final int handle;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import org.jetbrains.annotations.NotNull;
 
-    public GlObject(int handle) {
-        this.handle = handle;
-    }
-
-    public int getHandle() {
-        return handle;
-    }
+public interface S2CPayload extends CustomPacketPayload {
+    void handle(@NotNull ClientPlayNetworking.Context context);
 }

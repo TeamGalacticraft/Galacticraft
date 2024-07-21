@@ -23,6 +23,7 @@
 package dev.galacticraft.api.rocket.part.type;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.api.rocket.part.RocketBooster;
 import dev.galacticraft.api.rocket.part.config.RocketBoosterConfig;
 import org.jetbrains.annotations.Contract;
@@ -32,10 +33,10 @@ import org.jetbrains.annotations.NotNull;
  * The booster of a rocket. Controls how fast the rocket accelerates, where the rocket can travel to, and how much fuel is consumed.
  */
 public non-sealed abstract class RocketBoosterType<C extends RocketBoosterConfig> implements RocketPartType<C> {
-    private final @NotNull Codec<RocketBooster<C, RocketBoosterType<C>>> codec;
+    private final @NotNull MapCodec<RocketBooster<C, RocketBoosterType<C>>> codec;
 
     protected RocketBoosterType(@NotNull Codec<C> configCodec) {
-        this.codec = configCodec.fieldOf("config").xmap(this::configure, RocketBooster::config).codec();
+        this.codec = configCodec.fieldOf("config").xmap(this::configure, RocketBooster::config);
     }
 
     public @NotNull RocketBooster<C, RocketBoosterType<C>> configure(@NotNull C config) {
@@ -43,7 +44,7 @@ public non-sealed abstract class RocketBoosterType<C extends RocketBoosterConfig
     }
 
     @Override
-    public @NotNull Codec<RocketBooster<C, RocketBoosterType<C>>> codec() {
+    public @NotNull MapCodec<? extends RocketBooster<C, ? extends RocketBoosterType<C>>> codec() {
         return this.codec;
     }
 

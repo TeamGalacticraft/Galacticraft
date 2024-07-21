@@ -61,7 +61,7 @@ public class CenteredPatternedRocketPartRecipeType extends RocketPartRecipeType<
                 if (item == null) return true;
 
                 ItemStack stack = new ItemStack(item, 1);
-                stack.setTag(tag);
+                stack.applyComponents(tag);
                 return slot.ingredient().test(stack);
             });
         }

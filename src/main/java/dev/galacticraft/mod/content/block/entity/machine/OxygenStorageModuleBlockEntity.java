@@ -31,14 +31,13 @@ import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.storage.MachineFluidStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
-import dev.galacticraft.machinelib.api.transfer.InputType;
+import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.machinelib.api.util.FluidSource;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -52,7 +51,7 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
 
     public static final StorageSpec SPEC = StorageSpec.of(
             MachineFluidStorage.spec(
-                    FluidResourceSlot.builder(InputType.STORAGE)
+                    FluidResourceSlot.builder(TransferType.STORAGE)
                             .hidden()
                             .capacity(OxygenStorageModuleBlockEntity.MAX_OXYGEN)
                             .filter(ResourceFilters.ofResource(Gases.OXYGEN))
@@ -72,15 +71,12 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
 
     @Nullable
     @Override
-    public MachineMenu<? extends MachineBlockEntity> openMenu(int syncId, Inventory inv, Player player) {
-        if (this.getSecurity().hasAccess(player)) {
-            return new MachineMenu<>(
-                    GCMenuTypes.OXYGEN_STORAGE_MODULE,
-                    syncId,
-                    (ServerPlayer) player,
-                    this
-            );
-        }
-        return null;
+    public MachineMenu<? extends MachineBlockEntity> createMenu(int syncId, Inventory inv, Player player) {
+        return new MachineMenu<>(
+                GCMenuTypes.OXYGEN_STORAGE_MODULE,
+                syncId,
+                player,
+                this
+        );
     }
 }

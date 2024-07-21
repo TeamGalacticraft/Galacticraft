@@ -26,7 +26,6 @@ import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.menu.MenuData;
 import dev.galacticraft.mod.content.block.entity.machine.FuelLoaderBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
@@ -40,8 +39,8 @@ public class FuelLoaderMenu extends MachineMenu<FuelLoaderBlockEntity> {
         super(GCMenuTypes.FUEL_LOADER, syncId, player, machine);
     }
 
-    public FuelLoaderMenu(int syncId, Inventory inv, RegistryFriendlyByteBuf buf) {
-        super(GCMenuTypes.FUEL_LOADER, syncId, inv, buf, 8, 84);
+    public FuelLoaderMenu(int syncId, Inventory inv, BlockPos pos) {
+        super(GCMenuTypes.FUEL_LOADER, syncId, inv, pos, 8, 84);
     }
 
     @Override

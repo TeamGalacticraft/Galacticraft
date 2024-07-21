@@ -80,15 +80,13 @@ public class RocketOverlay {
             float var8 = 1.0F;
             float sizeScale = 0.65F;
 
-            final Tesselator tess = Tesselator.getInstance();
-            BufferBuilder worldRenderer = tess.getBuilder();
+            BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            worldRenderer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-            worldRenderer.vertex(var1 + 0, var2 + 242.0F * sizeScale, 0.0).uv((var3 + 0) * var7, (var4 + var6) * var8).endVertex();
-            worldRenderer.vertex(var1 + 20.0F * sizeScale, var2 + 242.0F * sizeScale, 0.0).uv((var3 + var5) * var7, (var4 + var6) * var8).endVertex();
-            worldRenderer.vertex(var1 + 20.0F * sizeScale, var2 + 0, 0.0).uv((var3 + var5) * var7, (var4 + 0) * var8).endVertex();
-            worldRenderer.vertex(var1 + 0, var2 + 0, 0.0).uv((var3 + 0) * var7, (var4 + 0) * var8).endVertex();
-            BufferUploader.drawWithShader(worldRenderer.end());
+            buffer.addVertex(var1 + 0, var2 + 242.0F * sizeScale, 0.0F).setUv((var3 + 0) * var7, (var4 + var6) * var8)
+                    .addVertex(var1 + 20.0F * sizeScale, var2 + 242.0F * sizeScale, 0.0F).setUv((var3 + var5) * var7, (var4 + var6) * var8)
+                    .addVertex(var1 + 20.0F * sizeScale, var2 + 0, 0.0F).setUv((var3 + var5) * var7, (var4 + 0) * var8)
+                    .addVertex(var1 + 0, var2 + 0, 0.0F).setUv((var3 + 0) * var7, (var4 + 0) * var8);
+            BufferUploader.drawWithShader(buffer.buildOrThrow());
 
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -132,20 +130,20 @@ public class RocketOverlay {
             graphics.pose().translate(0F, -12F + headOffset, 60F);
 
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            worldRenderer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-            worldRenderer.vertex(var1 + 0, var2 + var6 - 10, 0.0).uv((var3 + 0) * var7, (var4 + var6) * var8).endVertex();
-            worldRenderer.vertex(var1 + var5, var2 + var6 - 10, 0.0).uv((var3 + var5) * var7, (var4 + var6) * var8).endVertex();
-            worldRenderer.vertex(var1 + var5, var2 - 10, 0.0).uv((var3 + var5) * var7, (var4 + 0) * var8).endVertex();
-            worldRenderer.vertex(var1 + 0, var2 - 10, 0.0).uv((var3 + 0) * var7, (var4 + 0) * var8).endVertex();
-            BufferUploader.drawWithShader(worldRenderer.end());
+            buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+            buffer.addVertex(var1 + 0, var2 + var6 - 10, 0.0F).setUv((var3 + 0) * var7, (var4 + var6) * var8)
+                    .addVertex(var1 + var5, var2 + var6 - 10, 0.0F).setUv((var3 + var5) * var7, (var4 + var6) * var8)
+                    .addVertex(var1 + var5, var2 - 10, 0.0F).setUv((var3 + var5) * var7, (var4 + 0) * var8)
+                    .addVertex(var1 + 0, var2 - 10, 0.0F).setUv((var3 + 0) * var7, (var4 + 0) * var8);
+            BufferUploader.drawWithShader(buffer.buildOrThrow());
 
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            worldRenderer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-            worldRenderer.vertex(var1 + 0, var2 + var6, 0.0).uv((var3b + 0) * var7, (var4 + var6) * var8).endVertex();
-            worldRenderer.vertex(var1 + var5, var2 + var6, 0.0).uv((var3b + var5) * var7, (var4 + var6) * var8).endVertex();
-            worldRenderer.vertex(var1 + var5, var2 + 0, 0.0).uv((var3b + var5) * var7, (var4 + 0) * var8).endVertex();
-            worldRenderer.vertex(var1 + 0, var2 + 0, 0.0).uv((var3b + 0) * var7, (var4 + 0) * var8).endVertex();
-            BufferUploader.drawWithShader(worldRenderer.end());
+            buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+            buffer.addVertex(var1 + 0, var2 + var6, 0.0F).setUv((var3b + 0) * var7, (var4 + var6) * var8)
+                    .addVertex(var1 + var5, var2 + var6, 0.0F).setUv((var3b + var5) * var7, (var4 + var6) * var8)
+                    .addVertex(var1 + var5, var2 + 0, 0.0F).setUv((var3b + var5) * var7, (var4 + 0) * var8)
+                    .addVertex(var1 + 0, var2 + 0, 0.0F).setUv((var3b + 0) * var7, (var4 + 0) * var8);
+            BufferUploader.drawWithShader(buffer.buildOrThrow());
 
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.disableBlend();
