@@ -26,6 +26,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
@@ -55,16 +56,17 @@ import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.blending.Blender;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
+import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 import java.util.stream.Stream;
 
 @ApiStatus.Internal
@@ -89,7 +91,7 @@ public class SatelliteChunkGenerator extends ChunkGenerator {
             return DataResult.success(NbtOps.INSTANCE.convertTo(ops, input.save(new CompoundTag())));
         }
     };
-    public static final Codec<SatelliteChunkGenerator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final MapCodec<SatelliteChunkGenerator> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Biome.CODEC.fieldOf("biome").forGetter(SatelliteChunkGenerator::getBiome),
             STRUCTURE_CODEC.fieldOf("structure").forGetter(SatelliteChunkGenerator::getStructure)
     ).apply(instance, SatelliteChunkGenerator::new));
@@ -109,7 +111,7 @@ public class SatelliteChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    protected Codec<? extends ChunkGenerator> codec() {
+    protected @NotNull MapCodec<? extends ChunkGenerator> codec() {
         return CODEC;
     }
 
@@ -126,14 +128,14 @@ public class SatelliteChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public CompletableFuture<ChunkAccess> createBiomes(Executor executor, RandomState randomState, Blender blender, StructureManager structureManager, ChunkAccess chunkAccess) {
-        return CompletableFuture.completedFuture(chunkAccess);
+    public CompletableFuture<ChunkAccess> createBiomes(RandomState noiseConfig, Blender blender, StructureManager structureAccessor, ChunkAccess chunkAccess) {
+        return super.createBiomes(noiseConfig, blender, structureAccessor, chunkAccess);
     }
 
     @Override
     public void applyBiomeDecoration(WorldGenLevel world, ChunkAccess chunk, StructureManager structureAccessor) {
         if (chunk.getPos().x == 0 && chunk.getPos().z == 0) {
-            this.structure.placeInWorld(world, new BlockPos(0, 60, 0), new BlockPos(0, 60, 0), new StructurePlaceSettings().setIgnoreEntities(true).setKeepLiquids(true).setRandom(world.getRandom()), world.getRandom(), 0);
+            this.structure.placeInWorld(world, new BlockPos(0, 60, 0), new BlockPos(0, 60, 0), new StructurePlaceSettings().setIgnoreEntities(true).setLiquidSettings(LiquidSettings.APPLY_WATERLOGGING).setRandom(world.getRandom()), world.getRandom(), 0);
         }
     }
 
@@ -161,7 +163,7 @@ public class SatelliteChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor, Blender arg, RandomState noiseConfig, StructureManager structureAccessor, ChunkAccess chunk) {
+    public @NotNull CompletableFuture<ChunkAccess> fillFromNoise(Blender blender, RandomState noiseConfig, StructureManager structureAccessor, ChunkAccess chunk) {
         return CompletableFuture.completedFuture(chunk);
     }
 
@@ -192,7 +194,7 @@ public class SatelliteChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public Optional<ResourceKey<Codec<? extends ChunkGenerator>>> getTypeNameForDataFixer() {
+    public Optional<ResourceKey<MapCodec<? extends ChunkGenerator>>> getTypeNameForDataFixer() {
         return super.getTypeNameForDataFixer();
     }
 

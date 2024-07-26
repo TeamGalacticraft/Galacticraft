@@ -20,33 +20,32 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.model;
+package dev.galacticraft.impl.network.c2s;
 
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.*;
+import dev.galacticraft.mod.Constant;
+import io.netty.buffer.ByteBuf;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.function.Function;
+public record FlagDataPayload(byte[] data) implements C2SPayload {
+    public static final ResourceLocation ID = Constant.id("flag_data");
+    public static final Type<FlagDataPayload> TYPE = new Type<>(ID);
+    public static final StreamCodec<ByteBuf, FlagDataPayload> CODEC = ByteBufCodecs.BYTE_ARRAY.map(FlagDataPayload::new, FlagDataPayload::data);
 
-public class WireWalkwayUnbakedModel implements UnbakedModel {
-    public static final WireWalkwayUnbakedModel INSTANCE = new WireWalkwayUnbakedModel();
-
-    @Override
-    public @NotNull Collection<ResourceLocation> getDependencies() {
-        return Collections.singleton(WireWalkwayBakedModel.WALKWAY_PLATFORM);
+    public FlagDataPayload {
+        if (data.length != 48 * 32 * 3) throw new IllegalArgumentException();
     }
 
     @Override
-    public void resolveParents(Function<ResourceLocation, UnbakedModel> function) {
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
-    @Nullable
     @Override
-    public BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer) {
-        return WireWalkwayBakedModel.getInstance(baker, textureGetter, rotationContainer);
+    public void handle(ServerPlayNetworking.@NotNull Context context) {
     }
 }

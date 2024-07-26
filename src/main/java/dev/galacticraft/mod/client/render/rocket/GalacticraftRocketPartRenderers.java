@@ -36,14 +36,14 @@ import net.minecraft.world.item.Items;
 import java.util.Objects;
 
 public class GalacticraftRocketPartRenderers {
-    private static final ResourceLocation DEFAULT_CONE = Constant.id("models/misc/rocket_cone_basic.json");
-    private static final ResourceLocation ADVANCED_CONE = Constant.id("models/misc/rocket_cone_advanced.json");
-    private static final ResourceLocation SLOPED_CONE = Constant.id("models/misc/rocket_cone_sloped.json");
-    private static final ResourceLocation DEFAULT_BODY = Constant.id("models/misc/rocket_body.json");
-    private static final ResourceLocation DEFAULT_FIN = Constant.id("models/misc/rocket_fins.json");
-    private static final ResourceLocation DEFAULT_ENGINE = Constant.id("models/misc/rocket_engine.json");
-    private static final ResourceLocation BOOSTER_TIER_1 = Constant.id("models/misc/rocket_thruster_tier_1.json");
-    private static final ResourceLocation BOOSTER_TIER_2 = Constant.id("models/misc/rocket_thruster_tier_2.json");
+    public static final ResourceLocation DEFAULT_CONE = Constant.id("models/misc/rocket_cone_basic.json");
+    public static final ResourceLocation ADVANCED_CONE = Constant.id("models/misc/rocket_cone_advanced.json");
+    public static final ResourceLocation SLOPED_CONE = Constant.id("models/misc/rocket_cone_sloped.json");
+    public static final ResourceLocation DEFAULT_BODY = Constant.id("models/misc/rocket_body.json");
+    public static final ResourceLocation DEFAULT_FIN = Constant.id("models/misc/rocket_fins.json");
+    public static final ResourceLocation DEFAULT_ENGINE = Constant.id("models/misc/rocket_engine.json");
+    public static final ResourceLocation BOOSTER_TIER_1 = Constant.id("models/misc/rocket_thruster_tier_1.json");
+    public static final ResourceLocation BOOSTER_TIER_2 = Constant.id("models/misc/rocket_thruster_tier_2.json");
 
     public static void register() {
         RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(DEFAULT_CONE))), Sheets::translucentCullBlockSheet));
@@ -55,18 +55,5 @@ public class GalacticraftRocketPartRenderers {
         RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.STORAGE_UPGRADE, new BakedModelItemRocketPartRenderer(Items.CHEST.getDefaultInstance(), null));
         RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_BOOSTER, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(BOOSTER_TIER_1))), Sheets::translucentCullBlockSheet));
         RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_2_BOOSTER, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(BOOSTER_TIER_2))), Sheets::translucentCullBlockSheet));
-    }
-
-    public static void registerModelLoader() {
-        ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> {
-            out.accept(DEFAULT_CONE);
-            out.accept(SLOPED_CONE);
-            out.accept(ADVANCED_CONE);
-            out.accept(DEFAULT_BODY);
-            out.accept(DEFAULT_ENGINE);
-            out.accept(DEFAULT_FIN);
-            out.accept(BOOSTER_TIER_1);
-            out.accept(BOOSTER_TIER_2);
-        });
     }
 }

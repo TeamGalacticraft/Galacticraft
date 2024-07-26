@@ -39,7 +39,6 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.data.gen.SatelliteChunkGenerator;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.SimpleContainer;
@@ -53,24 +52,6 @@ public class GalacticraftAPI implements ModInitializer {
     public void onInitialize() {
         long startInitTime = System.currentTimeMillis();
         GCApiCommands.register();
-        ServerPlayNetworking.registerGlobalReceiver(Constant.id("flag_data"), (server, player, handler, buf, responseSender) -> {
-            int[] array = buf.readVarIntArray();
-            for (int i = 0; i < array.length; i++) {
-                array[i] &= 0x00FFFFFF;
-            }
-            // FORMAT: [A - IGNORE]BGR - 48 width 32 height if it is not a 1536 int array then ignore
-            // since it is purely colour data, there isn't really much a malicious client could do
-            server.execute(() -> {
-                //todo: teams
-            });
-        });
-        ServerPlayNetworking.registerGlobalReceiver(Constant.id("team_name"), (server, player, handler, buf, responseSender) -> {
-            String s = buf.readUtf();
-
-            server.execute(() -> {
-                //todo: teams
-            });
-        });
 
         DynamicRegistries.register(AddonRegistries.CELESTIAL_BODY, CelestialBody.DIRECT_CODEC);
         DynamicRegistries.register(AddonRegistries.GALAXY, Galaxy.DIRECT_CODEC);

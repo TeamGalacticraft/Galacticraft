@@ -27,6 +27,7 @@ import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -35,12 +36,14 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * Armor, tools, and other gear recipes
  */
 public class GCGearRecipeProvider extends FabricRecipeProvider {
-    public GCGearRecipeProvider(FabricDataOutput output) {
-        super(output);
+    public GCGearRecipeProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> lookup) {
+        super(output, lookup);
     }
 
     @Override

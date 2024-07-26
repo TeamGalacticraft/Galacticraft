@@ -36,6 +36,7 @@ import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
+import dev.galacticraft.mod.network.c2s.SelectPartPayload;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -246,7 +247,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
                             if (button == GLFW.GLFW_MOUSE_BUTTON_1) {
                                 Holder.Reference<? extends RocketPart<?, ?>> ref = this.recipes.get(i);
                                 this.getSelection().setSelection(ref != null ? ref.key().location() : null);
-                                ClientPlayNetworking.send(new SelectPartPacket(this.openTab.type, ref != null ? ref.key() : null));
+                                ClientPlayNetworking.send(new SelectPartPayload(this.openTab.type, ref != null ? ref.key().location() : null));
                                 return true;
                             } else if (button == GLFW.GLFW_MOUSE_BUTTON_2) {
                                 //todo
@@ -369,7 +370,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
     ) {
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(x, y, 50.0);
-        guiGraphics.pose().mulPoseMatrix(new Matrix4f().scaling((float)scale, (float)scale, (float)(-scale)));
+        guiGraphics.pose().mulPose(new Matrix4f().scaling((float)scale, (float)scale, (float)(-scale)));
         guiGraphics.pose().mulPose(pose);
         Lighting.setupForEntityInInventory();
         EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();

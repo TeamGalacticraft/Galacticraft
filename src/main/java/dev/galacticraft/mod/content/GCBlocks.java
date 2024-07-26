@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content;
 
-import dev.galacticraft.machinelib.api.block.MachineBlock;
+import dev.galacticraft.machinelib.api.block.SimpleMachineBlock;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.block.boss.BossSpawner;
@@ -38,7 +38,6 @@ import dev.galacticraft.mod.content.block.special.aluminumwire.tier1.SealableAlu
 import dev.galacticraft.mod.content.block.special.aluminumwire.tier2.HeavySealableAluminumWireBlock;
 import dev.galacticraft.mod.content.block.special.fluidpipe.GlassFluidPipeBlock;
 import dev.galacticraft.mod.content.block.special.launchpad.FuelPadBlock;
-import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlock;
 import dev.galacticraft.mod.content.block.special.walkway.FluidPipeWalkway;
 import dev.galacticraft.mod.content.block.special.walkway.WalkwayBlock;
@@ -270,22 +269,22 @@ public class GCBlocks {
     public static final Block PLAYER_TRANSPORT_TUBE = BLOCKS.register(Constant.Block.PLAYER_TRANSPORT_TUBE, new TransportTube(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).noCollission()));
 
     // MACHINES
-    public static final Block CIRCUIT_FABRICATOR = BLOCKS.register(Constant.Block.CIRCUIT_FABRICATOR, new MachineBlock<>(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.CIRCUIT_FABRICATOR)));
-    public static final Block COMPRESSOR = BLOCKS.register(Constant.Block.COMPRESSOR, new MachineBlock<>(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.COMPRESSOR)));
-    public static final Block ELECTRIC_COMPRESSOR = BLOCKS.register(Constant.Block.ELECTRIC_COMPRESSOR, new MachineBlock<>(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.ELECTRIC_COMPRESSOR)));
+    public static final Block CIRCUIT_FABRICATOR = BLOCKS.register(Constant.Block.CIRCUIT_FABRICATOR, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.CIRCUIT_FABRICATOR)));
+    public static final Block COMPRESSOR = BLOCKS.register(Constant.Block.COMPRESSOR, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.COMPRESSOR)));
+    public static final Block ELECTRIC_COMPRESSOR = BLOCKS.register(Constant.Block.ELECTRIC_COMPRESSOR, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.ELECTRIC_COMPRESSOR)));
     public static final Block COAL_GENERATOR = BLOCKS.register(Constant.Block.COAL_GENERATOR, new CoalGeneratorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).lightLevel(state -> state.getValue(CoalGeneratorBlock.ACTIVE) ? 13 : 0)));
     public static final Block BASIC_SOLAR_PANEL = BLOCKS.register(Constant.Block.BASIC_SOLAR_PANEL, SimpleMultiBlockMachineBlock.create(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.BASIC_SOLAR_PANEL), MultiBlockUtil.generateSolarPanelParts(), GCBlocks.SOLAR_PANEL_PART));
     public static final Block ADVANCED_SOLAR_PANEL = BLOCKS.register(Constant.Block.ADVANCED_SOLAR_PANEL, SimpleMultiBlockMachineBlock.create(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.ADVANCED_SOLAR_PANEL), MultiBlockUtil.generateSolarPanelParts(), GCBlocks.SOLAR_PANEL_PART));
-    public static final Block ENERGY_STORAGE_MODULE = BLOCKS.register(Constant.Block.ENERGY_STORAGE_MODULE, new MachineBlock<>(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.ENERGY_STORAGE_MODULE)));
-    public static final Block ELECTRIC_FURNACE = BLOCKS.register(Constant.Block.ELECTRIC_FURNACE, new MachineBlock<>(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.ELECTRIC_FURNACE)));
-    public static final Block ELECTRIC_ARC_FURNACE = BLOCKS.register(Constant.Block.ELECTRIC_ARC_FURNACE, new MachineBlock<>(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.ELECTRIC_ARC_FURNACE)));
+    public static final Block ENERGY_STORAGE_MODULE = BLOCKS.register(Constant.Block.ENERGY_STORAGE_MODULE, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.ENERGY_STORAGE_MODULE)));
+    public static final Block ELECTRIC_FURNACE = BLOCKS.register(Constant.Block.ELECTRIC_FURNACE, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.ELECTRIC_FURNACE)));
+    public static final Block ELECTRIC_ARC_FURNACE = BLOCKS.register(Constant.Block.ELECTRIC_ARC_FURNACE, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.ELECTRIC_ARC_FURNACE)));
     public static final Block REFINERY = BLOCKS.register(Constant.Block.REFINERY, new RefineryBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL)));
     public static final Block OXYGEN_COLLECTOR = BLOCKS.register(Constant.Block.OXYGEN_COLLECTOR, new OxygenCollectorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL)));
-    public static final Block OXYGEN_SEALER = BLOCKS.register(Constant.Block.OXYGEN_SEALER, new MachineBlock<>(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.OXYGEN_SEALER)));
-    public static final Block OXYGEN_BUBBLE_DISTRIBUTOR = BLOCKS.register(Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR, new MachineBlock<>(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR)));
-    public static final Block OXYGEN_DECOMPRESSOR = BLOCKS.register(Constant.Block.OXYGEN_DECOMPRESSOR, new MachineBlock<>(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.OXYGEN_DECOMPRESSOR)));
-    public static final Block OXYGEN_COMPRESSOR = BLOCKS.register(Constant.Block.OXYGEN_COMPRESSOR, new MachineBlock<>(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.OXYGEN_COMPRESSOR)));
-    public static final Block OXYGEN_STORAGE_MODULE = BLOCKS.register(Constant.Block.OXYGEN_STORAGE_MODULE, new MachineBlock<>(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.OXYGEN_STORAGE_MODULE)));
+    public static final Block OXYGEN_SEALER = BLOCKS.register(Constant.Block.OXYGEN_SEALER, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.OXYGEN_SEALER)));
+    public static final Block OXYGEN_BUBBLE_DISTRIBUTOR = BLOCKS.register(Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR)));
+    public static final Block OXYGEN_DECOMPRESSOR = BLOCKS.register(Constant.Block.OXYGEN_DECOMPRESSOR, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.OXYGEN_DECOMPRESSOR)));
+    public static final Block OXYGEN_COMPRESSOR = BLOCKS.register(Constant.Block.OXYGEN_COMPRESSOR, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.OXYGEN_COMPRESSOR)));
+    public static final Block OXYGEN_STORAGE_MODULE = BLOCKS.register(Constant.Block.OXYGEN_STORAGE_MODULE, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.OXYGEN_STORAGE_MODULE)));
     public static final Block FUEL_LOADER = BLOCKS.register(Constant.Block.FUEL_LOADER, new FuelLoaderBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL)));
 
     public static final AirlockBlock AIR_LOCK_FRAME = BLOCKS.register(Constant.Block.AIR_LOCK_FRAME, new AirlockBlock(false, BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)));

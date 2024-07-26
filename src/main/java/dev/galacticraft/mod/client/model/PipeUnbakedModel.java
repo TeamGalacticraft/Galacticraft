@@ -45,7 +45,7 @@ public class PipeUnbakedModel implements UnbakedModel {
 
     @Nullable
     @Override
-    public BakedModel bake(ModelBaker modelBaker, Function<Material, TextureAtlasSprite> function, ModelState modelState, ResourceLocation resourceLocation) {
-        return PipeBakedModel.getInstance(function);
+    public BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> textureGetter, ModelState state) {
+        return PipeBakedModel.getInstance(textureGetter);
     }
 }

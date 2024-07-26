@@ -27,6 +27,7 @@ import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
@@ -35,12 +36,14 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * Intermediate crafting materials and food recipes.
  */
 public class GCMiscRecipeProvider extends FabricRecipeProvider {
-    public GCMiscRecipeProvider(FabricDataOutput output) {
-        super(output);
+    public GCMiscRecipeProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> lookup) {
+        super(output, lookup);
     }
 
     @Override

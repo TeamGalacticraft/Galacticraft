@@ -85,9 +85,9 @@ public class LanderModel extends EntityModel<LanderEntity> {
     }
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        feet.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        legs.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-        head.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
+    public void renderToBuffer(PoseStack matrices, VertexConsumer vertices, int light, int overlay, int color) {
+        feet.render(matrices, vertices, light, overlay, color);
+        legs.render(matrices, vertices, light, overlay, color);
+        head.render(matrices, vertices, overlay, overlay, color);
     }
 }

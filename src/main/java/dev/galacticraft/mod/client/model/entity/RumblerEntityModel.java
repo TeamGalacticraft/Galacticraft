@@ -32,25 +32,25 @@ import net.minecraft.world.entity.Entity;
 
 public class RumblerEntityModel<T extends Entity> extends EntityModel<T> {
 	private final ModelPart body;
-	private final ModelPart Left_Claw;
-	private final ModelPart Right_Claw;
-	private final ModelPart Front_Left_Leg;
-	private final ModelPart Middle_Left_Leg;
-	private final ModelPart Back_Left_Leg;
-	private final ModelPart Front_Right_Leg;
-	private final ModelPart Middle_Right_Leg;
-	private final ModelPart Back_Right_Leg;
+	private final ModelPart leftClaw;
+	private final ModelPart rightClaw;
+	private final ModelPart frontLeftLeg;
+	private final ModelPart middleLeftLeg;
+	private final ModelPart backLeftLeg;
+	private final ModelPart frontRightLeg;
+	private final ModelPart middleRightLeg;
+	private final ModelPart backRightLeg;
 
 	public RumblerEntityModel(ModelPart root) {
 		this.body = root.getChild("body");
-		this.Left_Claw = root.getChild("Left_Claw");
-		this.Right_Claw = root.getChild("Right_Claw");
-		this.Front_Left_Leg = root.getChild("Front_Left_Leg");
-		this.Middle_Left_Leg = root.getChild("Middle_Left_Leg");
-		this.Back_Left_Leg = root.getChild("Back_Left_Leg");
-		this.Front_Right_Leg = root.getChild("Front_Right_Leg");
-		this.Middle_Right_Leg = root.getChild("Middle_Right_Leg");
-		this.Back_Right_Leg = root.getChild("Back_Right_Leg");
+		this.leftClaw = root.getChild("Left_Claw");
+		this.rightClaw = root.getChild("Right_Claw");
+		this.frontLeftLeg = root.getChild("Front_Left_Leg");
+		this.middleLeftLeg = root.getChild("Middle_Left_Leg");
+		this.backLeftLeg = root.getChild("Back_Left_Leg");
+		this.frontRightLeg = root.getChild("Front_Right_Leg");
+		this.middleRightLeg = root.getChild("Middle_Right_Leg");
+		this.backRightLeg = root.getChild("Back_Right_Leg");
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -89,15 +89,15 @@ public class RumblerEntityModel<T extends Entity> extends EntityModel<T> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		body.render(poseStack, buffer, packedLight, packedOverlay);
-		Left_Claw.render(poseStack, buffer, packedLight, packedOverlay);
-		Right_Claw.render(poseStack, buffer, packedLight, packedOverlay);
-		Front_Left_Leg.render(poseStack, buffer, packedLight, packedOverlay);
-		Middle_Left_Leg.render(poseStack, buffer, packedLight, packedOverlay);
-		Back_Left_Leg.render(poseStack, buffer, packedLight, packedOverlay);
-		Front_Right_Leg.render(poseStack, buffer, packedLight, packedOverlay);
-		Middle_Right_Leg.render(poseStack, buffer, packedLight, packedOverlay);
-		Back_Right_Leg.render(poseStack, buffer, packedLight, packedOverlay);
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertices, int light, int overlay, int color) {
+		body.render(poseStack, vertices, light, overlay);
+		leftClaw.render(poseStack, vertices, light, overlay);
+		rightClaw.render(poseStack, vertices, light, overlay);
+		frontLeftLeg.render(poseStack, vertices, light, overlay);
+		middleLeftLeg.render(poseStack, vertices, light, overlay);
+		backLeftLeg.render(poseStack, vertices, light, overlay);
+		frontRightLeg.render(poseStack, vertices, light, overlay);
+		middleRightLeg.render(poseStack, vertices, light, overlay);
+		backRightLeg.render(poseStack, vertices, light, overlay);
 	}
 }

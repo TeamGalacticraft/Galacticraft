@@ -28,9 +28,9 @@ import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.api.rocket.recipe.config.RocketPartRecipeConfig;
 import dev.galacticraft.machinelib.api.filter.ResourceFilter;
 import net.minecraft.core.NonNullList;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,7 +57,7 @@ public abstract class RocketPartRecipeType<C extends RocketPartRecipeConfig> {
 
     public abstract @NotNull NonNullList<Ingredient> ingredients(C config);
 
-    public abstract boolean matches(Container container, Level level, C config);
+    public abstract boolean matches(RecipeInput input, Level level, C config);
 
     @FunctionalInterface
     public interface SlotConsumer {

@@ -62,7 +62,6 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 
 import java.util.List;
 
@@ -417,8 +416,8 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
     }
 
     @Override
-    protected Vector3f getPassengerAttachmentPoint(Entity passenger, EntityDimensions dimensions, float scaleFactor) {
-        return new Vector3f(0, 1.5F, 0);
+    protected Vec3 getPassengerAttachmentPoint(Entity passenger, EntityDimensions dimensions, float scaleFactor) {
+        return new Vec3(0, 1.5F, 0);
     }
 
     @Override

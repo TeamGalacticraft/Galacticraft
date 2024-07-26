@@ -37,6 +37,7 @@ import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.dynamicdimensions.api.DynamicDimensionRegistry;
+import dev.galacticraft.impl.network.s2c.AddSatellitePayload;
 import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
 import dev.galacticraft.impl.universe.display.config.ring.DefaultCelestialRingDisplayConfig;
@@ -49,14 +50,10 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.data.gen.SatelliteChunkGenerator;
 import dev.galacticraft.mod.util.Translations;
 import dev.galacticraft.mod.world.biome.GCBiomes;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -138,8 +135,7 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
         ((SatelliteAccessor) server).galacticraft$addSatellite(id, satellite);
 
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            CompoundTag compound = (CompoundTag) SatelliteConfig.CODEC.encode(satellite.config(), NbtOps.INSTANCE, new CompoundTag()).getOrThrow();
-            ServerPlayNetworking.send(player, Constant.id("add_satellite"), new FriendlyByteBuf(Unpooled.buffer()).writeResourceLocation(id).writeNbt(compound));
+            ServerPlayNetworking.send(player, new AddSatellitePayload(id, satellite.config()));
         }
         return satellite;
     }

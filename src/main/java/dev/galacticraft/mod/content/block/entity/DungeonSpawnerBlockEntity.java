@@ -135,7 +135,7 @@ public class DungeonSpawnerBlockEntity extends BlockEntity implements Spawner {
 
                 // Now spawn the boss
                 if (this.boss != null) {
-                    this.boss.finalizeSpawn(level, level.getCurrentDifficultyAt(this.boss.blockPosition()), MobSpawnType.SPAWNER, null, null);
+                    this.boss.finalizeSpawn(level, level.getCurrentDifficultyAt(this.boss.blockPosition()), MobSpawnType.SPAWNER, null);
                     level.addFreshEntity(this.boss);
                     this.playSpawnSound(this.boss);
                     this.spawned = true;
@@ -165,8 +165,8 @@ public class DungeonSpawnerBlockEntity extends BlockEntity implements Spawner {
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registryLookup) {
+        super.loadAdditional(tag, registryLookup);
 
         this.playerInRange = this.lastPlayerInRange = tag.getBoolean("playerInRange");
         this.isBossDefeated = tag.getBoolean("defeated");

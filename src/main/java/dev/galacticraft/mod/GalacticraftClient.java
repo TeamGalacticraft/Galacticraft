@@ -131,7 +131,6 @@ public class GalacticraftClient implements ClientModInitializer {
         GCClientPacketReceiver.register();
         GCEntityModelLayer.register();
         GalacticraftRocketPartRenderers.register();
-        GalacticraftRocketPartRenderers.registerModelLoader();
         GCKeyBinds.register();
 
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.TIN_LADDER, RenderType.cutout());

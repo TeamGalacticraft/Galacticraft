@@ -20,33 +20,28 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.model;
+package dev.galacticraft.impl.network.s2c;
 
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.*;
+import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
+import dev.galacticraft.mod.Constant;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.function.Function;
-
-public class WireWalkwayUnbakedModel implements UnbakedModel {
-    public static final WireWalkwayUnbakedModel INSTANCE = new WireWalkwayUnbakedModel();
-
-    @Override
-    public @NotNull Collection<ResourceLocation> getDependencies() {
-        return Collections.singleton(WireWalkwayBakedModel.WALKWAY_PLATFORM);
-    }
+public record AddSatellitePayload(ResourceLocation id, SatelliteConfig config) implements CustomPacketPayload {
+    public static final ResourceLocation ID = Constant.id("add_satellite");
+    public static final Type<AddSatellitePayload> TYPE = new Type<>(ID);
+    public static final StreamCodec<ByteBuf, AddSatellitePayload> CODEC = StreamCodec.composite(
+            ResourceLocation.STREAM_CODEC,
+            p -> p.id,
+            SatelliteConfig.STREAM_CODEC,
+            p -> p.config,
+            AddSatellitePayload::new);
 
     @Override
-    public void resolveParents(Function<ResourceLocation, UnbakedModel> function) {
-    }
-
-    @Nullable
-    @Override
-    public BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer) {
-        return WireWalkwayBakedModel.getInstance(baker, textureGetter, rotationContainer);
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

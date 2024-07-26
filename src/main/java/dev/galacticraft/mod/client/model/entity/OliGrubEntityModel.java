@@ -60,9 +60,9 @@ public class OliGrubEntityModel<T extends Entity> extends EntityModel<T> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		Body.render(poseStack, buffer, packedLight, packedOverlay);
-		Left_mandible.render(poseStack, buffer, packedLight, packedOverlay);
-		Right_Mandible.render(poseStack, buffer, packedLight, packedOverlay);
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertices, int light, int overlay, int color) {
+		Body.render(poseStack, vertices, light, overlay);
+		Left_mandible.render(poseStack, vertices, light, overlay);
+		Right_Mandible.render(poseStack, vertices, light, overlay);
 	}
 }

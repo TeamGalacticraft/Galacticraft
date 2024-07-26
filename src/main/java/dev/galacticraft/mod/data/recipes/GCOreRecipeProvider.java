@@ -26,6 +26,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -36,14 +37,15 @@ import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Ingot and raw ore recipes
  */
 public class GCOreRecipeProvider extends FabricRecipeProvider {
 
-    public GCOreRecipeProvider(FabricDataOutput output) {
-        super(output);
+    public GCOreRecipeProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> lookup) {
+        super(output, lookup);
     }
 
     @Override

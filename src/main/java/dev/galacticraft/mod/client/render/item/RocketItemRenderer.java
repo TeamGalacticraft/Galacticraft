@@ -45,7 +45,7 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
 
     @Override
     public void render(ItemStack stack, ItemDisplayContext mode, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
-        RocketData data = RocketData.fromNbt(stack.getTag());
+        RocketData data = RocketData.fromNbt(stack.getComponents());
         rocket.setLevel(Minecraft.getInstance().level);
         rocket.setData(data);
         rocket.setOldPosAndRot();

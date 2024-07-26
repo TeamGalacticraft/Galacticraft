@@ -46,7 +46,7 @@ public class FootprintRenderer {
     public static void renderFootprints(WorldRenderContext context) {
         context.profiler().push("footprints");
         PoseStack poseStack = context.matrixStack();
-        ResourceLocation dimActive = context.world().dimensionTypeId().location();
+        ResourceLocation dimActive = context.world().dimensionTypeRegistration().unwrapKey().get().location();
         List<Footprint> footprintsToDraw = new LinkedList<>();
 
         for (List<Footprint> footprintList : context.world().galacticraft$getFootprintManager().getFootprints().values()) {

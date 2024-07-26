@@ -37,10 +37,10 @@ public class SpaceSkyRenderer implements DimensionRenderingRegistry.SkyRenderer 
         context.profiler().push("stars");
         matrices.pushPose();
         matrices.mulPose(Axis.YP.rotationDegrees(-90.0F));
-        matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickDelta()) * 360.0f));
+        matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks()) * 360.0f));
         matrices.mulPose(Axis.YP.rotationDegrees(-19.0F));
 
-        this.starManager.render(context.matrixStack(), context.projectionMatrix(), context.world(), context.tickDelta());
+        this.starManager.render(context.matrixStack(), context.projectionMatrix(), context.world(), context.tickCounter().getRealtimeDeltaTicks());
 
         matrices.popPose();
         context.profiler().pop();

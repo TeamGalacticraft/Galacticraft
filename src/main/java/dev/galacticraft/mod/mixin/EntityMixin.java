@@ -198,7 +198,7 @@ public abstract class EntityMixin implements EntityAccessor {
                     pos = Footprint.getFootprintPosition(level, getYRot() - 180, pos, position());
 
                     long chunkKey = ChunkPos.asLong(SectionPos.blockToSectionCoord(pos.x), SectionPos.blockToSectionCoord(pos.z));
-                    level.galacticraft$getFootprintManager().addFootprint(chunkKey, new Footprint(level.dimensionTypeId().location(), pos, getYRot(), getUUID()));
+                    level.galacticraft$getFootprintManager().addFootprint(chunkKey, new Footprint(level.dimensionTypeRegistration().unwrapKey().get().location(), pos, getYRot(), getUUID()));
 
                     // Increment and cap step counter at 1
                     galacticraft$setLastStep((galacticraft$getLastStep() + 1) % 2);

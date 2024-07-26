@@ -40,13 +40,13 @@ public class VacuumGlassUnbakedModel implements UnbakedModel {
     }
 
     @Override
-    public void resolveParents(Function<ResourceLocation, UnbakedModel> modelLoader) {
+    public void resolveParents(Function<ResourceLocation, UnbakedModel> baker) {
 
     }
 
     @Nullable
     @Override
-    public BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer, ResourceLocation modelId) {
+    public BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> textureGetter, ModelState state) {
         return new VacuumGlassBakedModel(textureGetter);
     }
 }

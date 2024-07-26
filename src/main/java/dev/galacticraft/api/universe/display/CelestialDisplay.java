@@ -22,7 +22,7 @@
 
 package dev.galacticraft.api.universe.display;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.registry.BuiltInAddonRegistries;
 import net.fabricmc.api.EnvType;
@@ -34,7 +34,7 @@ public record CelestialDisplay<C extends CelestialDisplayConfig, T extends Celes
     public static final Codec<CelestialDisplay<?, ?>> CODEC = BuiltInAddonRegistries.CELESTIAL_DISPLAY_TYPE.byNameCodec().dispatch(CelestialDisplay::type, CelestialDisplayType::codec);
 
     @Environment(EnvType.CLIENT)
-    public Vector4f render(GuiGraphics graphics, BufferBuilder buffer, int scale, double mouseX, double mouseY, float delta) {
-        return this.type().render(graphics, buffer, scale, mouseX, mouseY, delta, this.config());
+    public Vector4f render(GuiGraphics graphics, Tesselator tesselator, int scale, double mouseX, double mouseY, float delta) {
+        return this.type().render(graphics, tesselator, scale, mouseX, mouseY, delta, this.config());
     }
 }

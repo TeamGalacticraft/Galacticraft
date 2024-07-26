@@ -54,7 +54,7 @@ public class GreyEntity extends PathfinderMob implements InventoryCarrier, Npc {
     @Override
     protected void registerGoals() {
         // this.goalSelector.addGoal(0, new RandomLookAroundGoal(this));
-        this.followPlayerGoal = new FollowPlayerGoal(this, 10.0F, 0.8);
+        this.followPlayerGoal = new FollowPlayerGoal(this, 10.0F, 3.0f, 0.8f);
         this.greyAvoidEntityGoal = new GreyAvoidEntityGoal<>(this, Player.class, 3.0f, 0.8, 1);
         this.goalSelector.addGoal(0, new LookAtPlayerGoal(this, Player.class, 15F));
         this.goalSelector.addGoal(0, this.followPlayerGoal);

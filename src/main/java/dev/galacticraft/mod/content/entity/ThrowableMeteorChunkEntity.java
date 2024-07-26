@@ -52,9 +52,9 @@ public class ThrowableMeteorChunkEntity extends ThrowableItemProjectile {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(HOT, false);
+    protected void defineSynchedData(SynchedEntityData.Builder compositeStateBuilder) {
+        super.defineSynchedData(compositeStateBuilder);
+        compositeStateBuilder.define(HOT, false);
     }
 
     @Override

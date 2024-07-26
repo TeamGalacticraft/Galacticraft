@@ -25,16 +25,22 @@ package dev.galacticraft.mod.util;
 
 import com.mojang.datafixers.util.*;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.network.VarInt;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.BitSet;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 
 public interface StreamCodecs {
     StreamCodec<ByteBuf, Long> LONG = StreamCodec.of(
             ByteBuf::writeLong,
             ByteBuf::readLong
     );
+    StreamCodec<ByteBuf, BitSet> BITSET = ByteBufCodecs.BYTE_ARRAY.map(BitSet::valueOf, BitSet::toByteArray);
 
     static <B, C, T1, T2, T3, T4, T5, T6, T7> StreamCodec<B, C> composite(
             StreamCodec<? super B, T1> codec1, Function<C, T1> from1, StreamCodec<? super B, T2> codec2, Function<C, T2> from2,
@@ -282,5 +288,25 @@ public interface StreamCodecs {
                 codec14.encode(object, from14.apply(object2));
             }
         };
+    }
+
+    @Contract(value = "_, _ -> new", pure = true)
+    static <B extends ByteBuf, T> @NotNull StreamCodec<B, T[]> array(StreamCodec<B, T> codec, IntFunction<T[]> constructor) {
+        return StreamCodec.of(
+                (b, a) -> {
+                    VarInt.write(b, a.length);
+                    for (T t : a) {
+                        codec.encode(b, t);
+                    }
+                },
+                b -> {
+                    int len = VarInt.read(b);
+                    T[] a = constructor.apply(len);
+                    for (int i = 0; i < len; i++) {
+                        a[i] = codec.decode(b);
+                    }
+                    return a;
+                }
+        );
     }
 }

@@ -27,6 +27,7 @@ import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
@@ -58,7 +59,7 @@ public class RocketOverlay {
 
         return (int) Math.floor(player.getY());
     }
-    public static void onHudRender(GuiGraphics graphics, float tickDelta) {
+    public static void onHudRender(GuiGraphics graphics, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         if (playerHead == null) {
             playerHead = mc.getSkinManager().getInsecureSkin(mc.player.getGameProfile()).texture();
@@ -116,7 +117,7 @@ public class RocketOverlay {
 
             try {
                 MultiBufferSource.BufferSource source = Minecraft.getInstance().renderBuffers().bufferSource();
-                spaceshipRender.render(rocketEntity, rocketEntity.getYRot(), tickDelta, graphics.pose(), source, LightTexture.FULL_BRIGHT);
+                spaceshipRender.render(rocketEntity, rocketEntity.getYRot(), delta.getGameTimeDeltaTicks(), graphics.pose(), source, LightTexture.FULL_BRIGHT);
                 source.endBatch();
             } catch (Exception e) {
                 e.printStackTrace();

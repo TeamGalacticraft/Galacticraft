@@ -121,7 +121,7 @@ public class OverworldRenderer {
                 rand3 = (float) (var27 * (Math.PI * 2) / phi);
                 final float xx = Mth.sin(rand3);
                 final float rand5 = Mth.cos(rand3);
-                buffer.addVertex(xx * 120.0F, rand5 * 120.0F, -rand5 * 40.0F * sunriseColors[3]).setColor(sunriseColors[0] * sunsetModInv, sunriseColors[1] * sunsetModInv, sunriseColors[2] * sunsetModInv, 0.0F).endVertex();
+                buffer.addVertex(xx * 120.0F, rand5 * 120.0F, -rand5 * 40.0F * sunriseColors[3]).setColor(sunriseColors[0] * sunsetModInv, sunriseColors[1] * sunsetModInv, sunriseColors[2] * sunsetModInv, 0.0F);
             }
 
             BufferUploader.drawWithShader(buffer.buildOrThrow());

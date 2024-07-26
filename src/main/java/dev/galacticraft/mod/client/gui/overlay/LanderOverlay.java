@@ -25,6 +25,7 @@ package dev.galacticraft.mod.client.gui.overlay;
 import com.mojang.blaze3d.platform.Window;
 import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
 import dev.galacticraft.mod.util.Translations;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -33,7 +34,7 @@ import net.minecraft.util.FastColor;
 
 public class LanderOverlay {
     private static long tickCount;
-    public static void onRenderHud(GuiGraphics graphics, float tickDelta) {
+    public static void onRenderHud(GuiGraphics graphics, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         final Window scaledresolution = mc.getWindow();
         final int width = scaledresolution.getGuiScaledWidth();

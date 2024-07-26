@@ -23,10 +23,13 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import dev.galacticraft.impl.network.c2s.FlagDataPayload;
+import dev.galacticraft.impl.network.c2s.TeamNamePayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.Translations;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -88,7 +91,7 @@ public class SpaceRaceScreen extends Screen {
                     if (focused) {
                         this.prevText = this.getValue();
                     } else if (this.prevText == null || !this.prevText.equals(this.getValue())) {
-                        ClientPlayNetworking.send(Constant.id("team_name"), PacketByteBufs.create().writeUtf(this.getValue()));
+                        ClientPlayNetworking.send(new TeamNamePayload(this.getValue()));
                     }
                 }
                 super.setFocused(focused);
@@ -274,13 +277,17 @@ public class SpaceRaceScreen extends Screen {
             this.minecraft.getTextureManager().register(location, texture);
             this.minecraft.setScreen(new ConfirmFlagScreen(yes -> {
                 if (yes) {
-                    int[] array = new int[48 * 32];
+                    ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(48 * 32 * 3, 48 * 32 * 3);
                     for (int y = 0; y < 32; y++) {
                         for (int x = 0; x < 48; x++) {
-                            array[y * 48 + x] = (finalImage.getPixelRGBA(x, y) /*& 0x00FFFFFF will be done on server (don't trust clients, so why do extra work?)*/); //ignore alpha channel
+                            int color = finalImage.getPixelRGBA(x, y);
+                            //ignore alpha channel
+                            buf.writeByte((color >> 16) & 0xFF)
+                                    .writeByte((color >> 8) & 0xFF)
+                                    .writeByte(color & 0xFF);
                         }
                     }
-                    ClientPlayNetworking.send(Constant.id("flag_data"), PacketByteBufs.create().writeVarIntArray(array));
+                    ClientPlayNetworking.send(new FlagDataPayload(buf.array()));
                     this.minecraft.getTextureManager().register(this.teamFlag, texture);
                 } else {
                     finalImage.close();

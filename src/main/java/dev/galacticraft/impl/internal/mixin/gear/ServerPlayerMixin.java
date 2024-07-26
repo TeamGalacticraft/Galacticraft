@@ -32,6 +32,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.Container;
@@ -45,6 +46,8 @@ import java.util.Collection;
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin implements GearInventoryProvider {
     @Shadow public ServerGamePacketListenerImpl connection;
+
+    @Shadow public abstract ServerLevel serverLevel();
 
     private final @Unique SimpleContainer gearInv = this.galacticraft_createGearInventory();
     private final @Unique Container tankInv = MappedInventory.create(this.gearInv, 4, 5);
@@ -98,11 +101,11 @@ public abstract class ServerPlayerMixin implements GearInventoryProvider {
 
     @Override
     public void galacticraft$writeGearToNbt(CompoundTag tag) {
-        tag.put(Constant.Nbt.GEAR_INV, this.galacticraft$getGearInv().createTag());
+        tag.put(Constant.Nbt.GEAR_INV, this.galacticraft$getGearInv().createTag(this.serverLevel().registryAccess()));
     }
 
     @Override
     public void galacticraft$readGearFromNbt(CompoundTag tag) {
-        this.galacticraft$getGearInv().fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND));
+        this.galacticraft$getGearInv().fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND), this.serverLevel().registryAccess());
     }
 }

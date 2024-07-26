@@ -88,11 +88,11 @@ public class OxygenTankItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> lines, TooltipFlag context) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
+        super.appendHoverText(stack, context, tooltip, type);
         StorageView<FluidVariant> storage = (StorageView<FluidVariant>) ContainerItemContext.withConstant(stack).find(FluidStorage.ITEM);
         assert storage != null;
-        lines.add(Component.translatable(Translations.Tooltip.OXYGEN_REMAINING, storage.getAmount() + "/" + storage.getCapacity()).setStyle(Constant.Text.Color.getStorageLevelStyle(1.0 - ((double) storage.getAmount() / (double) storage.getCapacity()))));
-        super.appendHoverText(stack, world, lines, context);
+        tooltip.add(Component.translatable(Translations.Tooltip.OXYGEN_REMAINING, storage.getAmount() + "/" + storage.getCapacity()).setStyle(Constant.Text.Color.getStorageLevelStyle(1.0 - ((double) storage.getAmount() / (double) storage.getCapacity()))));
     }
 
     @Override

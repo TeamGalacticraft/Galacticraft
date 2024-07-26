@@ -36,12 +36,13 @@ import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.util.Graphics;
+import dev.galacticraft.mod.network.c2s.PlanetTeleportPayload;
+import dev.galacticraft.mod.network.c2s.SatelliteCreationPayload;
 import dev.galacticraft.mod.util.Translations;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
@@ -321,7 +322,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
             if (this.data == null || this.data.canTravel(manager, this.fromBody, this.selectedBody)) {
                 try {
                     assert this.minecraft != null;
-                    ClientPlayNetworking.send(Constant.Packet.PLANET_TP, PacketByteBufs.create().writeResourceLocation(celestialBodies.getKey(this.selectedBody)));
+                    ClientPlayNetworking.send(new PlanetTeleportPayload(celestialBodies.getKey(this.selectedBody)));
                     this.minecraft.setScreen(new SpaceTravelScreen(isSatellite(selectedBody) ? ((Satellite) this.selectedBody.type()).getCustomName(this.selectedBody.config()).getString() : ((TranslatableContents)this.selectedBody.name().getContents()).getKey(), ((Landable) this.selectedBody.type()).world(this.selectedBody.config())));
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -361,7 +362,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
                         if (recipe.test(this.minecraft.player.getInventory()) || this.minecraft.player.getAbilities().instabuild)
                         {
 //                            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_BIND_SPACE_STATION_ID, GCCoreUtil.getWorld(this.minecraft.level), new Object[]{this.selectedBody.getWorld()}));
-                            ClientPlayNetworking.send(Constant.Packet.CREATE_SATELLITE, PacketByteBufs.create().writeResourceLocation(celestialBodies.getKey(this.selectedBody)));
+                            ClientPlayNetworking.send(new SatelliteCreationPayload(celestialBodies.getHolderOrThrow(celestialBodies.getResourceKey(this.selectedBody).get())));
                             //Zoom in on planet to show the new SpaceStation if not already zoomed
                             if (!this.isZoomed())
                             {

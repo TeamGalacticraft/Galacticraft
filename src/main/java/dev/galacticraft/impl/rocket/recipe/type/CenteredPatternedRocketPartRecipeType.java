@@ -26,9 +26,9 @@ import dev.galacticraft.api.rocket.recipe.RocketPartRecipeSlot;
 import dev.galacticraft.api.rocket.recipe.type.RocketPartRecipeType;
 import dev.galacticraft.impl.rocket.recipe.config.CenteredPatternedRocketPartRecipeConfig;
 import net.minecraft.core.NonNullList;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -73,10 +73,10 @@ public class CenteredPatternedRocketPartRecipeType extends RocketPartRecipeType<
     }
 
     @Override
-    public boolean matches(Container container, Level level, CenteredPatternedRocketPartRecipeConfig config) {
+    public boolean matches(RecipeInput input, Level level, CenteredPatternedRocketPartRecipeConfig config) {
         List<RocketPartRecipeSlot> slots = config.slots();
         for (int i = 0, n = slots.size(); i < n; i++) {
-            ItemStack stack = container.getItem(i);
+            ItemStack stack = input.getItem(i);
             if (stack.isEmpty() || !slots.get(i).ingredient().test(stack)) {
                 return false;
             }

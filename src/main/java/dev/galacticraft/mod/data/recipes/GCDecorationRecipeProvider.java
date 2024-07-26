@@ -26,6 +26,7 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -34,12 +35,14 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * Decoration block recipes
  */
 public class GCDecorationRecipeProvider extends FabricRecipeProvider {
-    public GCDecorationRecipeProvider(FabricDataOutput output) {
-        super(output);
+    public GCDecorationRecipeProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> lookup) {
+        super(output, lookup);
     }
 
     @Override

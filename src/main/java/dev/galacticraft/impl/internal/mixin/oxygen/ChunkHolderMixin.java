@@ -23,7 +23,7 @@
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenSyncer;
-import dev.galacticraft.mod.Constant;
+import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
@@ -49,6 +49,6 @@ public abstract class ChunkHolderMixin {
     @Inject(method = "broadcastChanges", at = @At("HEAD"))
     private void galacticraft_flushOxygenPackets(LevelChunk chunk, CallbackInfo ci) {
         FriendlyByteBuf buf = ((ChunkOxygenSyncer) chunk).galacticraft$syncOxygenPacketsToClient();
-        if (buf != null) this.broadcast(this.playerProvider.getPlayers(((GenerationChunkHolder)(Object)this).getPos(), false), ServerPlayNetworking.createS2CPacket(Constant.id("oxygen_update"), buf));
+        if (buf != null) this.broadcast(this.playerProvider.getPlayers(((GenerationChunkHolder)(Object)this).getPos(), false), ServerPlayNetworking.createS2CPacket(new OxygenUpdatePayload()));
     }
 }

@@ -51,9 +51,9 @@ public class EvolvedCreeperEntity extends Creeper {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(BABY, false);
+    protected void defineSynchedData(SynchedEntityData.Builder compositeStateBuilder) {
+        super.defineSynchedData(compositeStateBuilder);
+        compositeStateBuilder.define(BABY, false);
     }
 
     public void tick() {
@@ -98,7 +98,7 @@ public class EvolvedCreeperEntity extends Creeper {
     }
 
     @Override
-    public EntityDimensions getDimensions(Pose pose) {
+    protected EntityDimensions getDefaultDimensions(Pose pose) {
         if (this.isBaby()) {
             return this.getType().getDimensions().scale(0.75F, 0.5F);
         } else {

@@ -70,11 +70,10 @@ public class BakedObjModel implements GCBakedModel {
             FloatTuple uv = obj.getTexCoord(face.getTexCoordIndex(vtx));
             consumer.setUv(uv.getX(), 1 - uv.getY());
 
-            consumer.overlayCoords(overlay);
-            consumer.uv2(light);
+            consumer.setOverlay(overlay);
+            consumer.setLight(light);
             FloatTuple normals = obj.getNormal(face.getNormalIndex(vtx));
-            consumer.normal(last.normal(), normals.getX(), normals.getY(), normals.getZ());
-            consumer.endVertex();
+            consumer.setNormal(last, normals.getX(), normals.getY(), normals.getZ());
         }
 
         return material;

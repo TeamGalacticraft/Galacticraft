@@ -65,11 +65,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -88,7 +90,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 
 import java.util.Objects;
 
@@ -352,23 +353,23 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(STAGE, LaunchStage.IDLE);
-        this.entityData.define(SPEED, 0.0f);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(STAGE, LaunchStage.IDLE);
+        builder.define(SPEED, 0.0f);
 
-        this.entityData.define(COLOR, -1);
+        builder.define(COLOR, -1);
 
-        this.entityData.define(TIME_AS_STATE, 0);
+        builder.define(TIME_AS_STATE, 0);
 
-        this.entityData.define(ROCKET_CONE, NULL_ID);
-        this.entityData.define(ROCKET_BODY, NULL_ID);
-        this.entityData.define(ROCKET_FIN, NULL_ID);
-        this.entityData.define(ROCKET_BOOSTER, NULL_ID);
-        this.entityData.define(ROCKET_ENGINE, NULL_ID);
-        this.entityData.define(ROCKET_UPGRADE, NULL_ID);
+        builder.define(ROCKET_CONE, NULL_ID);
+        builder.define(ROCKET_BODY, NULL_ID);
+        builder.define(ROCKET_FIN, NULL_ID);
+        builder.define(ROCKET_BOOSTER, NULL_ID);
+        builder.define(ROCKET_ENGINE, NULL_ID);
+        builder.define(ROCKET_UPGRADE, NULL_ID);
 
-        this.entityData.define(FUEL, 0L);
+        builder.define(FUEL, 0L);
     }
 
     @Override
@@ -392,8 +393,8 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     }
 
     @Override
-    protected Vector3f getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float scale) {
-        return new Vector3f(0F, 1.5F, 0F);
+    protected Vec3 getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float scale) {
+        return new Vec3(0F, 1.5F, 0F);
     }
 
     @Override
@@ -742,8 +743,8 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     }
 
     @Override
-    public @NotNull Packet getAddEntityPacket() {
-        return ServerPlayNetworking.createS2CPacket(new RocketSpawnPacket(getType(), getId(), this.uuid, getX(), getY(), getZ(), getXRot(), getYRot(), this));
+    public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity serverEntity) {
+        return (Packet)ServerPlayNetworking.createS2CPacket(new RocketSpawnPacket(getType(), getId(), this.uuid, getX(), getY(), getZ(), getXRot(), getYRot(), this));
     }
 
     public int getTimeBeforeLaunch() {

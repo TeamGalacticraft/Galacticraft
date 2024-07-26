@@ -57,8 +57,8 @@ public record RocketPartRecipeImpl<C extends RocketPartRecipeConfig, T extends R
     }
 
     @Override
-    public boolean matches(RecipeInput input, Level world) {
-        return this.type.matches(container, level, this.config);
+    public boolean matches(RecipeInput input, Level level) {
+        return this.type.matches(input, level, this.config);
     }
 
     @Override
