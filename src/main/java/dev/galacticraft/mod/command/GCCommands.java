@@ -23,12 +23,15 @@
 package dev.galacticraft.mod.command;
 
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.world.ships.CreateShipCommand;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 
 public class GCCommands {
     public static void register() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             DimensionTpCommand.register(dispatcher);
+
+            CreateShipCommand.register(dispatcher, registryAccess);
 
             if (Galacticraft.CONFIG.enableGcHouston()) {
                 GCHoustonCommand.register(dispatcher);
