@@ -241,6 +241,10 @@ public class GCBlocks {
 
     public static final Block GALENA_ORE = BLOCKS.register(Constant.Block.GALENA_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 5.0F, false)));
 
+    public static final Block OLIVINE_CLUSTER = BLOCKS.registerWithItem(Constant.Block.OLIVINE_CLUSTER, new OlivineClusterBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.AMETHYST_CLUSTER).mapColor(MapColor.COLOR_LIGHT_GREEN)));
+    public static final Block OLIVINE_BASALT = BLOCKS.registerWithItem(Constant.Block.OLIVINE_BASALT, new Block(BlockBehaviour.Properties.ofFullCopy(MOON_BASALT).strength(3.5F, 6.0F)));
+    public static final Block RICH_OLIVINE_BASALT = BLOCKS.registerWithItem(Constant.Block.RICH_OLIVINE_BASALT, new Block(BlockBehaviour.Properties.ofFullCopy(OLIVINE_BASALT)));
+
     // CHEESE BLOCK
     public static final Block MOON_CHEESE_WHEEL = BLOCKS.register(Constant.Block.MOON_CHEESE_WHEEL, new MoonCheeseBlock(BlockBehaviour.Properties.of().forceSolidOn().strength(0.5F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY)));
     public static final Block CANDLE_MOON_CHEESE_WHEEL = BLOCKS.register(Constant.Block.CANDLE_MOON_CHEESE_WHEEL, new CandleMoonCheeseBlock(Blocks.CANDLE, BlockBehaviour.Properties.ofFullCopy(MOON_CHEESE_WHEEL).lightLevel(litBlockEmission(3))));
@@ -268,6 +272,7 @@ public class GCBlocks {
     public static final Block TITANIUM_BLOCK = BLOCKS.register(Constant.Block.TITANIUM_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL)));
     public static final Block LEAD_BLOCK = BLOCKS.register(Constant.Block.LEAD_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL)));
     public static final Block LUNAR_SAPPHIRE_BLOCK = BLOCKS.register(Constant.Block.LUNAR_SAPPHIRE_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(5.0F, 6.0F).sound(SoundType.STONE)));
+    public static final Block OLIVINE_BLOCK = BLOCKS.registerWithItem(Constant.Block.OLIVINE_BLOCK, new RotatedPillarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).strength(1.5F, 1.5F).sound(SoundType.AMETHYST)));
 
     // MOON VILLAGER SPECIAL
     public static final Block LUNAR_CARTOGRAPHY_TABLE = BLOCKS.register(Constant.Block.LUNAR_CARTOGRAPHY_TABLE, new LunarCartographyTableBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).ignitedByLava().instrument(NoteBlockInstrument.BASS).strength(2.5F).sound(SoundType.WOOD)));

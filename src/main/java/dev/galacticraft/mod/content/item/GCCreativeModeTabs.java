@@ -105,6 +105,7 @@ public class GCCreativeModeTabs {
                 output.accept(RAW_TITANIUM);
                 output.accept(RAW_SILICON);
                 output.accept(LUNAR_SAPPHIRE);
+                output.accept(OLIVINE_SHARD);
 
                 output.accept(METEORIC_IRON_INGOT);
                 output.accept(DESH_INGOT);
@@ -409,6 +410,10 @@ public class GCCreativeModeTabs {
 
                 output.accept(GALENA_ORE);
 
+                output.accept(GCBlocks.OLIVINE_BASALT);
+                output.accept(GCBlocks.RICH_OLIVINE_BASALT);
+                output.accept(GCBlocks.OLIVINE_CLUSTER);
+
                 // COMPACT MINERAL BLOCKS
                 output.accept(MOON_CHEESE_WHEEL);
                 output.accept(SILICON_BLOCK);
@@ -417,6 +422,7 @@ public class GCCreativeModeTabs {
                 output.accept(TITANIUM_BLOCK);
                 output.accept(LEAD_BLOCK);
                 output.accept(LUNAR_SAPPHIRE_BLOCK);
+                output.accept(GCBlocks.OLIVINE_BLOCK);
 
                 // MOON VILLAGER SPECIAL
                 output.accept(LUNAR_CARTOGRAPHY_TABLE);

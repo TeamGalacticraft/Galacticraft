@@ -242,6 +242,8 @@ public class GCItems {
     public static final Item METEORIC_IRON_NUGGET = new Item(new Item.Properties());
     public static final Item COMPRESSED_METEORIC_IRON = new Item(new Item.Properties());
 
+    public static final Item OLIVINE_SHARD = registerItem(Constant.Item.OLIVINE_SHARD, new Item(new Item.Properties()));
+
     public static final Item RAW_DESH = new Item(new Item.Properties());
     public static final Item DESH_INGOT = new Item(new Item.Properties());
     public static final Item DESH_NUGGET = new Item(new Item.Properties());
@@ -435,6 +437,10 @@ public class GCItems {
     public static final Item MOON_BUGGY_SCHEMATIC = new SchematicItem(new Item.Properties());
     public static final Item TIER_3_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties());
     public static final Item ASTRO_MINER_SCHEMATIC = new SchematicItem(new Item.Properties());
+
+    public static Item registerItem(String id, Item item) {
+        return Registry.register(BuiltInRegistries.ITEM, Constant.id(id), item);
+    }
     
     public static void register() {
         // === START BLOCKS ===

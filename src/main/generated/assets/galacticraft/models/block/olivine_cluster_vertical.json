@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "galacticraft:block/olivine_cluster_vertical"
+  }
+}
