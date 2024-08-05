@@ -3,6 +3,7 @@
   "package": "dev.galacticraft.impl.internal.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "LevelCelestialBodyMixin",
     "LevelTimeAccessMixin",
     "MinecraftServerMixin",
     "gear.LivingEntityMixin",

@@ -115,6 +115,10 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 GCItems.ILMENITE_ORE,
                 GCItems.GALENA_ORE
         );
+
+        tag(ItemTags.MEAT)
+                .add(GCItems.GROUND_BEEF)
+                .add(GCItems.BEEF_PATTY);
     }
 
     protected FabricTagProvider<Item>.FabricTagBuilder tag(TagKey<Item> tag) {

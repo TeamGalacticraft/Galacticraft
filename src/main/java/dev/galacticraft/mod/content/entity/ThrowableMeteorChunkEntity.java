@@ -96,7 +96,7 @@ public class ThrowableMeteorChunkEntity extends ThrowableItemProjectile {
         super.onHitEntity(result);
         if (this.entityData.get(HOT)) {
             result.getEntity().hurt(this.damageSources().thrown(this, this.getOwner()), 4.0F);
-            result.getEntity().setSecondsOnFire(3);
+            result.getEntity().igniteForSeconds(3);
         } else {
             result.getEntity().hurt(this.damageSources().thrown(this, this.getOwner()), 2.0F);
         }

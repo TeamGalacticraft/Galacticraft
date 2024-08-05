@@ -33,6 +33,7 @@ import dev.galacticraft.mod.world.inventory.GearInventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
@@ -66,7 +67,8 @@ public abstract class AbstractClientPlayerEntityMixin implements ClientResearchA
     private SimpleContainer galacticraft_createGearInventory() {
         SimpleContainer inv = new GearInventory();
         inv.addListener((inventory) -> {
-            float pressure = CelestialBody.getByDimension(this.clientLevel).map(body -> body.atmosphere().pressure()).orElse(1.0f);
+            Holder<CelestialBody<?, ?>> holder = this.clientLevel.galacticraft$getCelestialBody();
+            float pressure = holder != null ? holder.value().atmosphere().pressure() : 1.0f;
             if (pressure != 1.0f) {
                 for (int i = 0; i < inventory.getContainerSize(); i++) {
                     ItemStack stack = inventory.getItem(i);

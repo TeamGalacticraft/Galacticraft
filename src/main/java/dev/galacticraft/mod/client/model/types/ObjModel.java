@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.model.types;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.javagl.obj.Mtl;
 import de.javagl.obj.MtlReader;
@@ -83,14 +83,14 @@ public class ObjModel implements GCModel {
 
     public static class ObjType implements GCModelType {
         public static final ResourceLocation ID = Constant.id("obj");
-        public static final Codec<ObjModel> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+        public static final MapCodec<ObjModel> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 ResourceLocation.CODEC.fieldOf("model").forGetter(o -> o.model),
                 ResourceLocation.CODEC.fieldOf("mtl").forGetter(o -> o.material),
                 ResourceLocation.CODEC.optionalFieldOf("atlas").forGetter(o -> o.atlas)
         ).apply(instance, ObjModel::new));
 
         @Override
-        public Codec<ObjModel> codec() {
+        public MapCodec<? extends GCModel> codec() {
             return CODEC;
         }
 

@@ -27,7 +27,6 @@ import dev.galacticraft.mod.api.block.MultiBlockBase;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.SolarPanelPartBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -42,7 +41,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 
 public class SolarPanelPartBlock extends BaseEntityBlock {
     public static final MapCodec<SolarPanelPartBlock> CODEC = simpleCodec(SolarPanelPartBlock::new);
@@ -121,14 +119,14 @@ public class SolarPanelPartBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, @NotNull Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
-        BlockEntity partEntity = world.getBlockEntity(pos);
-        if (world.isClientSide || world.isEmptyBlock(pos) || !(partEntity instanceof SolarPanelPartBlockEntity)) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        BlockEntity partEntity = level.getBlockEntity(pos);
+        if (level.isClientSide || level.isEmptyBlock(pos) || !(partEntity instanceof SolarPanelPartBlockEntity)) {
             return InteractionResult.SUCCESS;
         }
 
         BlockPos basePos = ((SolarPanelPartBlockEntity) partEntity).basePos;
-        BlockState base = world.getBlockState(basePos);
-        return base.getBlock().use(base, world, basePos, player, hand, blockHitResult);
+        BlockState base = level.getBlockState(basePos);
+        return base.getBlock().use(base, level, basePos, player, hit);
     }
 }

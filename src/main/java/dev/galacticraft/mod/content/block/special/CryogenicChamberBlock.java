@@ -164,8 +164,8 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        return this.onMultiBlockUse(blockState, level, blockPos, player, interactionHand, blockHitResult);
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        return this.onMultiBlockUse(state, level, pos, player, hit);
     }
 
     @Override

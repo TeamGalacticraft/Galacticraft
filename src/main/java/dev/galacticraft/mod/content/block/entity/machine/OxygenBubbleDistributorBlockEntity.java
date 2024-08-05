@@ -130,9 +130,6 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
                     entity.zo = this.getBlockPos().getZ();
                     level.addFreshEntity(entity);
                     this.bubbleId = entity.getId();
-                    for (ServerPlayer player : level.players()) {
-                        player.connection.send(entity.getAddEntityPacket());
-                    }
                 } else if (!this.bubbleVisible && this.bubbleId != -1) {
                     level.getEntity(bubbleId).discard();
                     this.bubbleId = -1;

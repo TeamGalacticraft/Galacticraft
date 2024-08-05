@@ -25,13 +25,16 @@ package dev.galacticraft.mod.util;
 
 import com.mojang.datafixers.util.*;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.VarInt;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.BitSet;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 
@@ -40,7 +43,27 @@ public interface StreamCodecs {
             ByteBuf::writeLong,
             ByteBuf::readLong
     );
-    StreamCodec<ByteBuf, BitSet> BITSET = ByteBufCodecs.BYTE_ARRAY.map(BitSet::valueOf, BitSet::toByteArray);
+
+    static <B extends RegistryFriendlyByteBuf, V> StreamCodec<B, V> ofRegistryEntry(ResourceKey<Registry<V>> registry) {
+        return StreamCodec.of(
+                (b, v) -> b.writeResourceLocation(b.registryAccess().registryOrThrow(registry).getKey(v)),
+                b -> Objects.requireNonNull(b.registryAccess().registryOrThrow(registry).get(b.readResourceLocation()))
+        );
+    }
+
+    static <B extends RegistryFriendlyByteBuf, V> StreamCodec<B, Holder<V>> ofHolder(ResourceKey<Registry<V>> registry) {
+        return StreamCodec.of(
+                (b, v) -> b.writeResourceLocation(b.registryAccess().registryOrThrow(registry).getKey(v.value())),
+                b -> Objects.requireNonNull(b.registryAccess().registryOrThrow(registry).getHolderOrThrow(ResourceKey.create(registry, b.readResourceLocation())))
+        );
+    }
+
+    static <B extends RegistryFriendlyByteBuf, V> StreamCodec<B, Holder.Reference<V>> ofReference(ResourceKey<Registry<V>> registry) {
+        return StreamCodec.of(
+                (b, v) -> b.writeResourceKey(v.key()),
+                b -> Objects.requireNonNull(b.registryAccess().registryOrThrow(registry).getHolderOrThrow(b.readResourceKey(registry)))
+        );
+    }
 
     static <B, C, T1, T2, T3, T4, T5, T6, T7> StreamCodec<B, C> composite(
             StreamCodec<? super B, T1> codec1, Function<C, T1> from1, StreamCodec<? super B, T2> codec2, Function<C, T2> from2,
@@ -308,5 +331,9 @@ public interface StreamCodecs {
                     return a;
                 }
         );
+    }
+
+    static <E extends Enum<E>> StreamCodec<ByteBuf, E> ofEnum(E[] values) {
+        return StreamCodec.of((b, e) -> b.writeByte(e.ordinal()), b -> values[b.readByte()]);
     }
 }

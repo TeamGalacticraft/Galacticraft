@@ -36,17 +36,20 @@ import dev.galacticraft.mod.world.inventory.RocketResultSlot;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.EitherHolder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -186,6 +189,22 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         };
     }
 
+    public RocketData createData() {
+        return new RocketData(
+                maybeHolder(RocketRegistries.ROCKET_CONE, this.cone.selection),
+                maybeHolder(RocketRegistries.ROCKET_BODY, this.body.selection),
+                maybeHolder(RocketRegistries.ROCKET_FIN, this.fins.selection),
+                maybeHolder(RocketRegistries.ROCKET_BOOSTER, this.booster.selection),
+                maybeHolder(RocketRegistries.ROCKET_ENGINE, this.engine.selection),
+                maybeHolder(RocketRegistries.ROCKET_UPGRADE, this.upgrade.selection),
+                0xFFFFFFFF
+        );
+    }
+
+    private static <T> @Nullable EitherHolder<T> maybeHolder(ResourceKey<Registry<T>> key, @Nullable ResourceLocation id) {
+        return id == null ? null : new EitherHolder<>(ResourceKey.create(key, id));
+    }
+
     @Override
     public boolean stillValid(Player player) {
         return Container.stillValidBlockEntity(this.workbench, player);
@@ -308,7 +327,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
 
     @Override
     public void onItemChanged() {
-        RocketData rocketData = RocketData.create(-1, this.cone.getSelectionKey(), this.body.getSelectionKey(), this.fins.getSelectionKey(), this.booster.getSelectionKey(), this.engine.getSelectionKey(), this.upgrade.getSelectionKey());
+        RocketData rocketData = this.createData();
         boolean craftable = rocketData.isValid();
         RocketPartRecipe<?, ?> recipe = this.cone.getRecipe();
         craftable = craftable && (recipe != null && recipe.matches(this.cone.inventory, this.workbench.getLevel()));
@@ -324,9 +343,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         craftable = craftable && (recipe == null ||recipe.matches(this.upgrade.inventory, this.workbench.getLevel()));
         if (craftable) {
             ItemStack stack = new ItemStack(GCItems.ROCKET, 1);
-            CompoundTag tag = new CompoundTag();
-            rocketData.toNbt(tag);
-            stack.setTag(tag);
+            stack.applyComponents(rocketData.asPatch());
             this.workbench.output.setItem(0, stack);
         } else {
             this.workbench.output.setItem(0, ItemStack.EMPTY);
@@ -377,7 +394,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
 
         @Override
         public boolean mayPlace(ItemStack stack) {
-            return stack.isEmpty() || this.filter.test(stack.getItem(), stack.getTag());
+            return stack.isEmpty() || this.filter.test(stack.getItem(), stack.getComponentsPatch());
         }
 
         @Override

@@ -34,9 +34,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.EitherHolder;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
@@ -45,7 +45,7 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
 
     @Override
     public void render(ItemStack stack, ItemDisplayContext mode, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
-        RocketData data = RocketData.fromNbt(stack.getComponents());
+        RocketData data = RocketData.fromPatch(stack.getComponentsPatch());
         rocket.setLevel(Minecraft.getInstance().level);
         rocket.setData(data);
         rocket.setOldPosAndRot();
@@ -80,10 +80,10 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
         }
         RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
         matrices.translate(0.0D, -1.75D, 0.0D);
-        ResourceKey<? extends RocketPart<?, ?>> part = data.engine();
+        EitherHolder<? extends RocketPart<?, ?>> part = data.engine();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(level, matrices, rocket, vertexConsumers, 0, light, overlay);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part.key()).render(level, matrices, rocket, vertexConsumers, 0, light, overlay);
             matrices.popPose();
         }
 
@@ -92,14 +92,14 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
         part = data.booster();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(level, matrices, rocket, vertexConsumers, 0, light, overlay);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part.key()).render(level, matrices, rocket, vertexConsumers, 0, light, overlay);
             matrices.popPose();
         }
 
         part = data.fin();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(level, matrices, rocket, vertexConsumers, 0, light, overlay);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part.key()).render(level, matrices, rocket, vertexConsumers, 0, light, overlay);
             matrices.popPose();
         }
 
@@ -108,7 +108,7 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
         part = data.body();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(level, matrices, rocket, vertexConsumers, 0, light, overlay);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part.key()).render(level, matrices, rocket, vertexConsumers, 0, light, overlay);
             matrices.popPose();
         }
 
@@ -117,7 +117,7 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
         part = data.cone();
         if (part != null) {
             matrices.pushPose();
-            RocketPartRendererRegistry.INSTANCE.getRenderer(part).render(level, matrices, rocket, vertexConsumers, 0, light, overlay);
+            RocketPartRendererRegistry.INSTANCE.getRenderer(part.key()).render(level, matrices, rocket, vertexConsumers, 0, light, overlay);
             matrices.popPose();
         }
 

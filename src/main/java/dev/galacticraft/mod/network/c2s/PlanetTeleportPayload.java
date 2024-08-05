@@ -30,6 +30,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.events.GCEventHandlers;
 import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -45,9 +46,9 @@ public record PlanetTeleportPayload(ResourceLocation id) implements C2SPayload {
     public void handle(ServerPlayNetworking.@NotNull Context context) {
         if (context.player().galacticraft$isCelestialScreenActive()) {
             CelestialBody<?, ?> body = ((SatelliteAccessor) context.server()).galacticraft$getSatellites().get(id);
-            CelestialBody<?, ?> fromBody = CelestialBody.getByDimension(context.player().level()).orElseThrow();
+            Holder<CelestialBody<?, ?>> fromBody = context.player().level().galacticraft$getCelestialBody();
             if (body == null) body = context.server().registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).get(id);
-            GCEventHandlers.onPlayerChangePlanets(context.server(), context.player(), body, fromBody);
+            GCEventHandlers.onPlayerChangePlanets(context.server(), context.player(), body, fromBody.value());
         } else {
             context.player().connection.disconnect(Component.literal("Invalid planet teleport packet received."));
         }

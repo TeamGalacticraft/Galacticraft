@@ -50,7 +50,7 @@ public class GCEntityLoot extends GCEntityLootSubProvider {
     private final HolderLookup.Provider lookup;
 
     protected GCEntityLoot(HolderLookup.Provider lookup) {
-        super(FeatureFlags.REGISTRY.allFlags());
+        super(FeatureFlags.REGISTRY.allFlags(), lookup);
         this.lookup = lookup;
     }
 

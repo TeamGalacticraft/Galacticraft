@@ -37,7 +37,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public record OpenCelestialScreenPayload(RocketData data, Holder<CelestialBody> celestialBody) implements S2CPayload {
+public record OpenCelestialScreenPayload(RocketData data, Holder<CelestialBody<?, ?>> celestialBody) implements S2CPayload {
     public static final StreamCodec<RegistryFriendlyByteBuf, OpenCelestialScreenPayload> STREAM_CODEC = StreamCodec.composite(
             RocketData.STREAM_CODEC,
             p -> p.data,

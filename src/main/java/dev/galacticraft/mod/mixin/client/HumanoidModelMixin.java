@@ -27,6 +27,7 @@ import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.content.item.RocketItem;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,21 +41,36 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HumanoidModel.class)
 public class HumanoidModelMixin<T extends LivingEntity> {
-    @Shadow @Final public ModelPart head;
+    @Shadow
+    @Final
+    public ModelPart head;
 
-    @Shadow @Final public ModelPart leftArm;
+    @Shadow
+    @Final
+    public ModelPart leftArm;
 
-    @Shadow @Final public ModelPart rightArm;
+    @Shadow
+    @Final
+    public ModelPart rightArm;
 
-    @Shadow @Final public ModelPart leftLeg;
+    @Shadow
+    @Final
+    public ModelPart leftLeg;
 
-    @Shadow @Final public ModelPart rightLeg;
+    @Shadow
+    @Final
+    public ModelPart rightLeg;
 
-    @Shadow @Final public ModelPart body;
+    @Shadow
+    @Final
+    public ModelPart body;
 
-    @Shadow @Final public ModelPart hat;
+    @Shadow
+    @Final
+    public ModelPart hat;
 
-    @Shadow public HumanoidModel.ArmPose rightArmPose;
+    @Shadow
+    public HumanoidModel.ArmPose rightArmPose;
 
     @Inject(at = @At("HEAD"), method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V")
     private void standInRocketGC(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo ci) {
@@ -67,10 +83,8 @@ public class HumanoidModelMixin<T extends LivingEntity> {
 
     @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
     private void gc$modifyPlayerAnim(LivingEntity entity, float f, float g, float h, float i, float j, CallbackInfo ci) {
-
-        CelestialBody.getByDimension(entity.level()).ifPresent(celestialBody -> {
-            if (celestialBody.gravity() > .8)
-                return;
+        Holder<CelestialBody<?, ?>> holder = entity.level().galacticraft$getCelestialBody();
+        if (holder != null && holder.value().gravity() < 0.8) {
             float speedModifier = 0.1162F * 2;
 
             final float floatPI = 3.1415927F;
@@ -85,7 +99,7 @@ public class HumanoidModelMixin<T extends LivingEntity> {
             this.leftLeg.xRot += Mth.cos(f * 0.1162F * 2 + floatPI) * 1.4F * g;
             this.rightLeg.xRot -= Mth.cos(f * 0.6662F) * 1.4F * g;
             this.rightLeg.xRot += Mth.cos(f * 0.1162F * 2) * 1.4F * g;
-        });
+        }
 
         if (entity.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof RocketItem || entity.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof RocketItem) {
             float armXRot = Mth.PI + 0.3F;
@@ -97,8 +111,8 @@ public class HumanoidModelMixin<T extends LivingEntity> {
             this.rightArm.yRot = 0.0F;
             this.rightArm.zRot = (float) -Math.PI / 10.0F;
         }
-        
-        
+
+
         if (entity.isInCryoSleep()) { // TODO: possibly cleaner way of doing this?
             this.hat.xRot = 45F;
             this.hat.yRot = 0;

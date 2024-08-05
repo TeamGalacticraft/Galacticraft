@@ -22,16 +22,12 @@
 
 package dev.galacticraft.mod.content.entity.orbital;
 
+import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.entity.IgnoreShift;
-import dev.galacticraft.api.registry.AddonRegistries;
-import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.rocket.part.*;
-import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
-import dev.galacticraft.api.universe.celestialbody.CelestialBodyType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.FuelDock;
 import dev.galacticraft.mod.attachments.GCServerPlayer;
@@ -43,13 +39,13 @@ import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.events.RocketEvents;
+import dev.galacticraft.mod.network.s2c.OpenCelestialScreenPayload;
 import dev.galacticraft.mod.network.s2c.RocketSpawnPacket;
 import dev.galacticraft.mod.particle.EntityParticleOption;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.util.FluidUtil;
 import dev.galacticraft.mod.util.Translations;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -59,17 +55,17 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
@@ -80,6 +76,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.EitherHolder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -87,29 +84,19 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
 
 @SuppressWarnings("UnstableApiUsage")
 public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift, ControllableEntity {
     private static final ResourceLocation NULL_ID = ResourceLocation.withDefaultNamespace("null");
     private static final EntityDataAccessor<LaunchStage> STAGE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.LAUNCH_STAGE);
 
-    private static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
-
     private static final EntityDataAccessor<Integer> TIME_AS_STATE = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
 
     public static final EntityDataAccessor<Float> SPEED = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.FLOAT);
 
-    public static final EntityDataAccessor<ResourceLocation> ROCKET_CONE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
-    public static final EntityDataAccessor<ResourceLocation> ROCKET_BODY = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
-    public static final EntityDataAccessor<ResourceLocation> ROCKET_FIN = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
-    public static final EntityDataAccessor<ResourceLocation> ROCKET_BOOSTER = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
-    public static final EntityDataAccessor<ResourceLocation> ROCKET_ENGINE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
-    public static final EntityDataAccessor<ResourceLocation> ROCKET_UPGRADE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.IDENTIFIER);
+    public static final EntityDataAccessor<RocketData> ROCKET_DATA = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.ROCKET_DATA);
 
     public static final EntityDataAccessor<Long> FUEL = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.LONG);
     private final boolean debugMode = false && FabricLoader.getInstance().isDevelopmentEnvironment();
@@ -161,33 +148,8 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     }
 
     @Override
-    public RocketCone<?, ?> getCone() {
-        return this.level().registryAccess().registryOrThrow(RocketRegistries.ROCKET_CONE).get(this.cone());
-    }
-
-    @Override
-    public RocketBody<?, ?> getBody() {
-        return this.level().registryAccess().registryOrThrow(RocketRegistries.ROCKET_BODY).get(this.body());
-    }
-
-    @Override
-    public RocketFin<?, ?> getFin() {
-        return this.level().registryAccess().registryOrThrow(RocketRegistries.ROCKET_FIN).get(this.fin());
-    }
-
-    @Override
-    public RocketBooster<?, ?> getBooster() {
-        return this.level().registryAccess().registryOrThrow(RocketRegistries.ROCKET_BOOSTER).get(this.booster());
-    }
-
-    @Override
-    public RocketEngine<?, ?> getEngine() {
-        return this.level().registryAccess().registryOrThrow(RocketRegistries.ROCKET_ENGINE).get(this.engine());
-    }
-
-    @Override
-    public RocketUpgrade<?, ?> getUpgrade() {
-        return this.level().registryAccess().registryOrThrow(RocketRegistries.ROCKET_UPGRADE).get(this.upgrade());
+    public @NotNull RocketData getData() {
+        return this.entityData.get(ROCKET_DATA);
     }
 
     @Override
@@ -263,11 +225,8 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
     @Override
     public void onPadDestroyed() {
-        RocketData data = RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.engine(), this.upgrade());
-        CompoundTag tag = new CompoundTag();
-        data.toNbt(tag);
         var rocket = new ItemStack(GCItems.ROCKET);
-        rocket.setTag(tag);
+        rocket.applyComponents(this.getData().asPatch());
         this.spawnAtLocation(rocket);
         this.remove(RemovalReason.DISCARDED);
     }
@@ -285,11 +244,8 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     @Override
     public void dropItems(DamageSource damageSource, boolean exploded) {
         if (!exploded) {
-            RocketData data = RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.engine(), this.upgrade());
-            CompoundTag tag = new CompoundTag();
-            data.toNbt(tag);
             var rocket = new ItemStack(GCItems.ROCKET);
-            rocket.setTag(tag);
+            rocket.applyComponents(this.getData().asPatch());
             this.spawnAtLocation(rocket);
         }
         this.remove(RemovalReason.KILLED);
@@ -358,16 +314,9 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         builder.define(STAGE, LaunchStage.IDLE);
         builder.define(SPEED, 0.0f);
 
-        builder.define(COLOR, -1);
-
         builder.define(TIME_AS_STATE, 0);
 
-        builder.define(ROCKET_CONE, NULL_ID);
-        builder.define(ROCKET_BODY, NULL_ID);
-        builder.define(ROCKET_FIN, NULL_ID);
-        builder.define(ROCKET_BOOSTER, NULL_ID);
-        builder.define(ROCKET_ENGINE, NULL_ID);
-        builder.define(ROCKET_UPGRADE, NULL_ID);
+        builder.define(ROCKET_DATA, RocketData.DEFAULT_ROCKET);
 
         builder.define(FUEL, 0L);
     }
@@ -473,7 +422,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                     if (this.getLinkedPad() != BlockPos.ZERO) {
                         if (passenger instanceof ServerPlayer player) {
                             GCServerPlayer gcPlayer = GCServerPlayer.get(player);
-                            gcPlayer.setRocketData(this);
+                            gcPlayer.setRocketData(this.getData());
                             gcPlayer.setLaunchpadStack(new ItemStack(GCBlocks.ROCKET_LAUNCH_PAD, 9));
                         }
                         this.linkedPad.setDockedEntity(null);
@@ -529,30 +478,17 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                 }
 
                 if (this.position().y() >= 1200.0F) {
-                    CelestialBody<CelestialBodyConfig, ? extends CelestialBodyType<CelestialBodyConfig>> body = CelestialBody.getByDimension(this.level()).orElse(null);
-                    int id;
-                    if (body != null) {
-                        id = level().registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).getId(body);
-                    } else {
-                        id = -1;
-                    }
                     for (Entity entity : getPassengers()) {
                         if (entity instanceof ServerPlayer serverPlayer) {
                             GCServerPlayer gcPlayer = GCServerPlayer.get(serverPlayer);
                             gcPlayer.setRocketStacks(NonNullList.withSize(2, ItemStack.EMPTY)); // TODO un-hardcode this
-                            RocketData data = RocketData.create(this.color(), this.cone(), this.body(), this.fin(), this.booster(), this.engine(), this.upgrade());
                             gcPlayer.setFuel(this.tank.getAmount());
-                            CompoundTag tag = new CompoundTag();
-                            data.toNbt(tag);
                             var rocket = new ItemStack(GCItems.ROCKET);
-                            rocket.setTag(tag);
+                            RocketData data = this.getData();
+                            rocket.applyComponents(data.asPatch());
                             gcPlayer.setRocketItem(rocket);
                             serverPlayer.galacticraft$openCelestialScreen(data);
-                            CompoundTag nbt = new CompoundTag();
-                            data.toNbt(nbt);
-                            FriendlyByteBuf buf = PacketByteBufs.create().writeNbt(nbt);
-                            buf.writeInt(id);
-                            ServerPlayNetworking.send(serverPlayer, Constant.Packet.PLANET_MENU_PACKET, buf);
+                            ServerPlayNetworking.send(serverPlayer, new OpenCelestialScreenPayload(this.getData(), this.level().galacticraft$getCelestialBody()));
                             remove(RemovalReason.UNLOADED_WITH_PLAYER);
                             break;
                         }
@@ -664,42 +600,9 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         this.getEntityData().set(SPEED, speed);
     }
 
-    public void setCone(ResourceLocation id) {
-        this.getEntityData().set(ROCKET_CONE, id);
-    }
-
-    public void setBody(ResourceLocation id) {
-        this.getEntityData().set(ROCKET_BODY, id);
-    }
-
-    public void setFin(ResourceLocation id) {
-        this.getEntityData().set(ROCKET_FIN, id);
-    }
-
-    public void setBooster(ResourceLocation id) {
-        this.getEntityData().set(ROCKET_BOOSTER, id);
-    }
-
-    public void setEngine(ResourceLocation id) {
-        this.getEntityData().set(ROCKET_ENGINE, id);
-    }
-
-    public void setUpgrade(ResourceLocation id) {
-        this.getEntityData().set(ROCKET_UPGRADE, id);
-    }
-
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
-        this.setCone(tag.contains("Cone") ? ResourceLocation.parse(tag.getString("Cone")) : null);
-        this.setBody(tag.contains("Body") ? ResourceLocation.parse(tag.getString("Body")) : null);
-        this.setFin(tag.contains("Fin") ? ResourceLocation.parse(tag.getString("Fin")) : null);
-        this.setBooster(tag.contains("Booster") ? ResourceLocation.parse(tag.getString("Booster")) : null);
-        this.setEngine(tag.contains("Engine") ? ResourceLocation.parse(tag.getString("Engine")) : null);
-        this.setUpgrade(tag.contains("Upgrade") ? ResourceLocation.parse(tag.getString("Upgrade")) : null);
-
-        if (tag.contains("Color")) {
-            this.setColor(tag.getInt("Color"));
-        }
+        this.setData(RocketData.CODEC.decode(NbtOps.INSTANCE, tag.getCompound("data")).mapOrElse(Pair::getFirst, e -> RocketData.DEFAULT_ROCKET));
 
         if (tag.contains("Stage")) {
             this.setLaunchStage(LaunchStage.valueOf(tag.getString("Stage")));
@@ -709,42 +612,26 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
             setSpeed(tag.getFloat("Speed"));
         }
 
-        BlockEntity be = this.level().getBlockEntity(new BlockPos(tag.getInt("lX"), tag.getInt("lY"), tag.getInt("lZ")));
+        BlockEntity be = this.level().getBlockEntity(BlockPos.of(tag.getLong("Linked")));
         if (be instanceof FuelDock pad)
             this.linkedPad = pad;
     }
 
     @Override
-    @ApiStatus.Internal
-    public void setLevel(Level level) {
-        super.setLevel(level);
-    }
-
-    public void setColor(int color) {
-        this.getEntityData().set(COLOR, color);
-    }
-
-    @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
-        if (this.cone() != null) tag.putString("Cone", Objects.requireNonNull(this.cone()).toString());
-        if (this.body() != null) tag.putString("Body", Objects.requireNonNull(this.body()).toString());
-        if (this.fin() != null) tag.putString("Fin", Objects.requireNonNull(this.fin()).toString());
-        if (this.booster() != null) tag.putString("Booster", Objects.requireNonNull(this.booster()).toString());
-        if (this.engine() != null) tag.putString("Engine", Objects.requireNonNull(this.engine()).toString());
-        if (this.upgrade() != null) tag.putString("Upgrade", Objects.requireNonNull(this.upgrade()).toString());
+        CompoundTag data = new CompoundTag();
+        RocketData.CODEC.encode(this.getData(), NbtOps.INSTANCE, data);
+        tag.put("data", data);
 
         tag.putString("Stage", getLaunchStage().name());
         tag.putDouble("Speed", this.getSpeed());
-        tag.putInt("Color", this.color());
 
-        tag.putInt("lX", linkedPad.getDockPos().getX());
-        tag.putInt("lY", linkedPad.getDockPos().getY());
-        tag.putInt("lZ", linkedPad.getDockPos().getZ());
+        if (this.linkedPad != null) tag.putLong("Linked", this.linkedPad.getDockPos().asLong());
     }
 
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity serverEntity) {
-        return (Packet)ServerPlayNetworking.createS2CPacket(new RocketSpawnPacket(getType(), getId(), this.uuid, getX(), getY(), getZ(), getXRot(), getYRot(), this));
+        return (Packet)ServerPlayNetworking.createS2CPacket(new RocketSpawnPacket(getType(), getId(), this.uuid, getX(), getY(), getZ(), getXRot(), getYRot(), this.getData()));
     }
 
     public int getTimeBeforeLaunch() {
@@ -756,73 +643,41 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     }
 
     @Override
-    public int color() {
-        return this.getEntityData().get(COLOR);
+    public @Nullable Holder<RocketCone<?, ?>> cone() {
+        return maybeGet(this.getData().cone());
     }
 
     @Override
-    public @Nullable ResourceKey<RocketCone<?, ?>> cone() {
-        ResourceLocation location = this.getEntityData().get(ROCKET_CONE);
-        if (location == null || NULL_ID.equals(location)) {
-            return null;
-        }
-        return ResourceKey.create(RocketRegistries.ROCKET_CONE, location);
+    public @Nullable Holder<RocketBody<?, ?>> body() {
+        return maybeGet(this.getData().body());
     }
 
     @Override
-    public @Nullable ResourceKey<RocketBody<?, ?>> body() {
-        ResourceLocation location = this.getEntityData().get(ROCKET_BODY);
-        if (location == null || NULL_ID.equals(location)) {
-            return null;
-        }
-        return ResourceKey.create(RocketRegistries.ROCKET_BODY, location);
+    public @Nullable Holder<RocketFin<?, ?>> fin() {
+        return maybeGet(this.getData().fin());
     }
 
     @Override
-    public @Nullable ResourceKey<RocketFin<?, ?>> fin() {
-        ResourceLocation location = this.getEntityData().get(ROCKET_FIN);
-        if (location == null || NULL_ID.equals(location)) {
-            return null;
-        }
-        return ResourceKey.create(RocketRegistries.ROCKET_FIN, location);
+    public @Nullable Holder<RocketBooster<?, ?>> booster() {
+        return maybeGet(this.getData().booster());
     }
 
     @Override
-    public @Nullable ResourceKey<RocketBooster<?, ?>> booster() {
-        ResourceLocation location = this.getEntityData().get(ROCKET_BOOSTER);
-        if (location == null || NULL_ID.equals(location)) {
-            return null;
-        }
-        return ResourceKey.create(RocketRegistries.ROCKET_BOOSTER, location);
+    public @Nullable Holder<RocketEngine<?, ?>> engine() {
+        return maybeGet(this.getData().engine());
     }
 
     @Override
-    public @Nullable ResourceKey<RocketEngine<?, ?>> engine() {
-        ResourceLocation location = this.getEntityData().get(ROCKET_ENGINE);
-        if (location == null || NULL_ID.equals(location)) {
-            return null;
-        }
-        return ResourceKey.create(RocketRegistries.ROCKET_ENGINE, location);
+    public @Nullable Holder<RocketUpgrade<?, ?>> upgrade() {
+        return maybeGet(this.getData().upgrade());
     }
 
-    @Override
-    public @Nullable ResourceKey<RocketUpgrade<?, ?>> upgrade() {
-        ResourceLocation location = this.getEntityData().get(ROCKET_UPGRADE);
-        if (location == null || NULL_ID.equals(location)) {
-            return null;
-        }
-        return ResourceKey.create(RocketRegistries.ROCKET_UPGRADE, location);
+    private <T> @Nullable Holder<T> maybeGet(@Nullable EitherHolder<T> holder) {
+        return holder != null ? holder.unwrap(this.registryAccess()).orElse(null) : null;
     }
 
     public void setData(RocketData data) {
-        this.setColor(data.color());
-
-        this.setCone(data.cone() != null ? data.cone().location() : null);
-        this.setBody(data.body() != null ? data.body().location() : null);
-        this.setFin(data.fin() != null ? data.fin().location() : null);
-        this.setBooster(data.booster() != null ? data.booster().location() : null);
-        this.setEngine(data.engine() != null ? data.engine().location() : null);
-        this.setUpgrade(data.upgrade() != null ? data.upgrade().location() : null);
+        this.entityData.set(ROCKET_DATA, data);
     }
 
     @Override
@@ -853,5 +708,10 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     @Override
     public boolean shouldIgnoreShiftExit() {
         return getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal();
+    }
+
+    @Override
+    public void setLevel(Level level) { // public for render
+        super.setLevel(level);
     }
 }

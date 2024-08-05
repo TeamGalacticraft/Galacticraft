@@ -28,6 +28,7 @@ import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.Tiered;
 import dev.galacticraft.impl.rocket.travelpredicate.config.AccessWeightTravelPredicateConfig;
+import net.minecraft.core.Holder;
 
 public final class AccessWeightTravelPredicateType extends TravelPredicateType<AccessWeightTravelPredicateConfig> {
     public static final AccessWeightTravelPredicateType INSTANCE = new AccessWeightTravelPredicateType(AccessWeightTravelPredicateConfig.CODEC);
@@ -37,7 +38,7 @@ public final class AccessWeightTravelPredicateType extends TravelPredicateType<A
     }
 
     @Override
-    public Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, RocketCone<?, ?> cone, RocketBody<?, ?> body, RocketFin<?, ?> fin, RocketBooster<?, ?> booster, RocketEngine<?, ?> engine, RocketUpgrade<?, ?> upgrade, AccessWeightTravelPredicateConfig config) {
+    public Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, Holder<RocketCone<?, ?>> cone, Holder<RocketBody<?, ?>> body, Holder<RocketFin<?, ?>> fin, Holder<RocketBooster<?, ?>> booster, Holder<RocketEngine<?, ?>> engine, Holder<RocketUpgrade<?, ?>> upgrade, AccessWeightTravelPredicateConfig config) {
         if (to.type() instanceof Tiered tiered) {
             int weight = tiered.accessWeight(to.config());
             if (weight <= config.weight()) {

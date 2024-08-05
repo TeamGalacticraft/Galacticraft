@@ -44,7 +44,7 @@ import java.util.UUID;
 public class EvolvedCreeperEntity extends Creeper {
     private static final EntityDataAccessor<Boolean> BABY = SynchedEntityData.defineId(EvolvedCreeperEntity.class, EntityDataSerializers.BOOLEAN);
     private static final UUID BABY_SPEED_ID = UUID.fromString("B9766B59-9566-4402-BC1F-2EE2A276D836");
-    private static final AttributeModifier BABY_SPEED_BONUS = new AttributeModifier(BABY_SPEED_ID, "Baby speed boost", 0.8D, AttributeModifier.Operation.MULTIPLY_BASE);
+    private static final AttributeModifier BABY_SPEED_BONUS = new AttributeModifier(BABY_SPEED_ID, 0.8D, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
 
     public EvolvedCreeperEntity(EntityType<? extends Creeper> entityType, Level world) {
         super(entityType, world);

@@ -26,6 +26,7 @@ import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.rocket.travelpredicate.config.ConstantTravelPredicateConfig;
+import net.minecraft.core.Holder;
 
 public final class ConstantTravelPredicateType extends TravelPredicateType<ConstantTravelPredicateConfig> {
     public static final ConstantTravelPredicateType INSTANCE = new ConstantTravelPredicateType();
@@ -35,7 +36,7 @@ public final class ConstantTravelPredicateType extends TravelPredicateType<Const
     }
 
     @Override
-    public Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, RocketCone<?, ?> cone, RocketBody<?, ?> body, RocketFin<?, ?> fin, RocketBooster<?, ?> booster, RocketEngine<?, ?> engine, RocketUpgrade<?, ?> upgrade, ConstantTravelPredicateConfig config) {
+    public Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, Holder<RocketCone<?, ?>> cone, Holder<RocketBody<?, ?>> body, Holder<RocketFin<?, ?>> fin, Holder<RocketBooster<?, ?>> booster, Holder<RocketEngine<?, ?>> engine, Holder<RocketUpgrade<?, ?>> upgrade, ConstantTravelPredicateConfig config) {
         return config.type();
     }
 }

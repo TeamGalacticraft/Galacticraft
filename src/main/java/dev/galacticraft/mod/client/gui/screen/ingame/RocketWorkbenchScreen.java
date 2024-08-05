@@ -170,12 +170,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
             this.menu.upgradeRecipes.calculateCraftable(contents);
         }
 
-        this.entity.setCone(this.menu.cone.selection != null ? this.menu.cone.selection : null);
-        this.entity.setBody(this.menu.body.selection != null ? this.menu.body.selection : null);
-        this.entity.setFin(this.menu.fins.selection != null ? this.menu.fins.selection : null);
-        this.entity.setBooster(this.menu.booster.selection != null ? this.menu.booster.selection : null);
-        this.entity.setEngine(this.menu.engine.selection != null ? this.menu.engine.selection : null);
-        this.entity.setUpgrade(this.menu.upgrade.selection != null ? this.menu.upgrade.selection : null);
+        this.entity.setData(this.menu.createData());
 
         this.entity.setXRot(0.0f);
         this.entity.setYRot(90.0f - 20.0f);

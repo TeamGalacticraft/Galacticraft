@@ -43,30 +43,30 @@ public class BakedObjModel implements GCBakedModel {
     }
 
     @Override
-    public void render(PoseStack modelStack, @Nullable GCModelState state, VertexConsumer consumer, int light, int overlay) {
+    public void render(PoseStack modelStack, @Nullable GCModelState state, VertexConsumer consumer, int light, int overlay, int color) {
         ObjModel.BakedMaterial lastMaterial = null;
         if (state == null) {
             for (int index = 0; index < obj.getNumFaces(); index++) {
                 ObjFace face = obj.getFace(index);
-                lastMaterial = renderFace(lastMaterial, face, consumer, modelStack, light, overlay);
+                lastMaterial = renderFace(lastMaterial, face, consumer, modelStack, light, overlay, color);
             }
         } else {
             ObjGroup group = obj.getGroup(state.getName());
             for (int index = 0; index < group.getNumFaces(); index++) {
                 ObjFace face = group.getFace(index);
-                lastMaterial = renderFace(lastMaterial, face, consumer, modelStack, light, overlay);
+                lastMaterial = renderFace(lastMaterial, face, consumer, modelStack, light, overlay, color);
             }
         }
     }
 
-    protected ObjModel.BakedMaterial renderFace(ObjModel.BakedMaterial lastMaterial, ObjFace face, VertexConsumer consumer, PoseStack matrices, int light, int overlay) {
+    protected ObjModel.BakedMaterial renderFace(ObjModel.BakedMaterial lastMaterial, ObjFace face, VertexConsumer consumer, PoseStack matrices, int light, int overlay, int color) {
         ObjModel.BakedMaterial material = findMaterial(this.obj.getActivatedMaterialGroupName(face), lastMaterial);
         consumer = (material != null ? material.sprite() : GCModelLoader.INSTANCE.getDefaultSprite()).wrap(consumer);
         PoseStack.Pose last = matrices.last();
         for (int vtx = 0; vtx < face.getNumVertices(); vtx++) {
             FloatTuple pos = obj.getVertex(face.getVertexIndex(vtx));
             consumer.addVertex(last.pose(), pos.getX(), pos.getY(), pos.getZ());
-            consumer.setColor(255, 255, 255, 255);
+            consumer.setColor(color);
             FloatTuple uv = obj.getTexCoord(face.getTexCoordIndex(vtx));
             consumer.setUv(uv.getX(), 1 - uv.getY());
 

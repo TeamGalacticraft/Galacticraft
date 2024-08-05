@@ -39,6 +39,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.data.gen.SatelliteChunkGenerator;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
+import net.fabricmc.fabric.api.event.registry.DynamicRegistrySetupCallback;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.SimpleContainer;
@@ -72,6 +73,13 @@ public class GalacticraftAPI implements ModInitializer {
 
         DynamicDimensionLoadCallback.register((minecraftServer, dynamicDimensionLoader) -> {
             ((SatelliteAccessor) minecraftServer).galacticraft$loadSatellites(dynamicDimensionLoader);
+        });
+
+        // todo: update celestial body level cache
+        DynamicRegistrySetupCallback.EVENT.register(view -> {
+            view.registerEntryAdded(AddonRegistries.CELESTIAL_BODY, (rawId, id, object) -> {
+
+            });
         });
         Gases.init();
         Constant.LOGGER.info("API Initialization Complete. (Took {}ms).", System.currentTimeMillis() - startInitTime);

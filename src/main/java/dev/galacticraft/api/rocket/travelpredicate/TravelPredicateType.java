@@ -46,7 +46,7 @@ public abstract class TravelPredicateType<C extends TravelPredicateConfig> {
         return new ConfiguredTravelPredicate<>(config, this);
     }
 
-    public abstract Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, RocketCone<?, ?> cone, RocketBody<?, ?> body, RocketFin<?, ?> fin, RocketBooster<?, ?> booster, RocketEngine<?, ?> engine, RocketUpgrade<?, ?> upgrade, C config);
+    public abstract Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, Holder<RocketCone<?, ?>> cone, Holder<RocketBody<?, ?>> body, Holder<RocketFin<?, ?>> fin, Holder<RocketBooster<?, ?>> booster, Holder<RocketEngine<?, ?>> engine, Holder<RocketUpgrade<?, ?>> upgrade, C config);
 
     public MapCodec<ConfiguredTravelPredicate<C, TravelPredicateType<C>>> codec() {
         return this.codec;

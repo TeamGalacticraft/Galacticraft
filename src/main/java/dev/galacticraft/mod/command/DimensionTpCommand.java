@@ -27,9 +27,8 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.network.GCScreenType;
+import dev.galacticraft.mod.network.s2c.OpenCelestialScreenPayload;
 import dev.galacticraft.mod.util.Translations;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -107,11 +106,7 @@ public class DimensionTpCommand {
         var player = context.getSource().getPlayerOrException();
 
         player.galacticraft$openCelestialScreen(null);
-        var buf = PacketByteBufs.create();
-        buf.writeEnum(GCScreenType.CELESTIAL);
-        buf.writeBoolean(false);
-        ServerPlayNetworking.send(player, Constant.Packet.OPEN_SCREEN, buf);
-
+        ServerPlayNetworking.send(player, new OpenCelestialScreenPayload(null)); //todo
         return Command.SINGLE_SUCCESS;
     }
 

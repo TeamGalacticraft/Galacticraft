@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
@@ -397,7 +398,12 @@ public class GCItems {
     public static final Item THERMAL_PADDING_BOOTS = new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.BOOTS);
     // Vehicles
     public static final Item BUGGY = ITEMS.register(Constant.Item.BUGGY, new BuggyItem(new Item.Properties().stacksTo(1)));
-    public static final Item ROCKET = ITEMS.register(Constant.Item.ROCKET, new RocketItem(new Item.Properties().stacksTo(1)));
+    public static final Item ROCKET = ITEMS.register(Constant.Item.ROCKET, new RocketItem(new Item.Properties()
+            .component(GCDataComponents.ROCKET_CONE, new EitherHolder<>(GCRocketParts.TIER_1_CONE))
+            .component(GCDataComponents.ROCKET_BODY, new EitherHolder<>(GCRocketParts.TIER_1_BODY))
+            .component(GCDataComponents.ROCKET_FIN, new EitherHolder<>(GCRocketParts.TIER_1_FIN))
+            .component(GCDataComponents.ROCKET_ENGINE, new EitherHolder<>(GCRocketParts.TIER_1_ENGINE))
+            .stacksTo(1)));
 
     // ROCKET PIECES
     public static final Item NOSE_CONE = ITEMS.register(Constant.Item.NOSE_CONE, new Item(new Item.Properties()));

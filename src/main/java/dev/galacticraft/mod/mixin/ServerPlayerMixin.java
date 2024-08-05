@@ -29,6 +29,7 @@ import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -79,7 +80,7 @@ public abstract class ServerPlayerMixin extends LivingEntityMixin implements Ser
         nbt.putBoolean("CelestialActive", this.celestialActive);
         if (this.rocketData != null) {
             CompoundTag nbt1 = new CompoundTag();
-            this.rocketData.toNbt(nbt1);
+            RocketData.CODEC.encode(this.rocketData, NbtOps.INSTANCE, nbt1);
             nbt.put("CelestialState", nbt1);
         }
     }
@@ -88,7 +89,7 @@ public abstract class ServerPlayerMixin extends LivingEntityMixin implements Ser
     private void readCelestialData(CompoundTag nbt, CallbackInfo ci) {
         this.celestialActive = nbt.getBoolean("CelestialActive");
         if (nbt.contains("CelestialState")) {
-            this.rocketData = RocketData.fromNbt(nbt.getCompound("CelestialState"));
+            this.rocketData = RocketData.CODEC.decode(NbtOps.INSTANCE, nbt.getCompound("CelestialState")).getOrThrow().getFirst();
         }
     }
 

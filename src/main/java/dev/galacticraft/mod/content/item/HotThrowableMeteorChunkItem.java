@@ -38,7 +38,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class HotThrowableMeteorChunkItem extends ThrowableMeteorChunkItem {
-    public static String TICKS_UNTIL_COOL = "TicksUntilCool";
     public static int MAX_TICKS = 45 * 20;
 
     public HotThrowableMeteorChunkItem(Properties settings) {

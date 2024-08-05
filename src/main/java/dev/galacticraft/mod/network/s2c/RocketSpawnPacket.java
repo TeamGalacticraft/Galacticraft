@@ -30,9 +30,7 @@ import dev.galacticraft.mod.util.StreamCodecs;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.UUIDUtil;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -68,10 +66,6 @@ public record RocketSpawnPacket(EntityType<?> eType, int id, UUID uuid, double x
 
     public static final ResourceLocation ID = Constant.id("spawn_rocket");
     public static final CustomPacketPayload.Type<RocketSpawnPacket> TYPE = new CustomPacketPayload.Type<>(ID);
-
-    public RocketSpawnPacket(FriendlyByteBuf buf) {
-        this(BuiltInRegistries.ENTITY_TYPE.byId(buf.readVarInt()), buf.readVarInt(), buf.readUUID(), buf.readDouble(), buf.readDouble(), buf.readDouble(), (buf.readByte() * 360) / 256.0F, (buf.readByte() * 360) / 256.0F, RocketData.fromNetwork(buf));
-    }
 
     @Override
     public void handle(ClientPlayNetworking.@NotNull Context context) {

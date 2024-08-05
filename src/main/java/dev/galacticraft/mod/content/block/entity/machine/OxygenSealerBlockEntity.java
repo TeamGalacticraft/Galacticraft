@@ -45,6 +45,7 @@ import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -109,7 +110,8 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     public void setLevel(Level world) {
         super.setLevel(world);
         this.sealCheckTime = SEAL_CHECK_TIME;
-        this.oxygenWorld = CelestialBody.getByDimension(world).map(body -> body.atmosphere().breathable()).orElse(true);
+        Holder<CelestialBody<?, ?>> holder = world.galacticraft$getCelestialBody();
+        this.oxygenWorld = holder == null || holder.value().atmosphere().breathable();
         if (!world.isClientSide) ((ServerLevelAccessor) world).addSealer(this);
     }
 

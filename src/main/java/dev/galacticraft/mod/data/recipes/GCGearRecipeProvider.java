@@ -131,7 +131,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.SENSOR_GLASSES)
-                .define('D', ConventionalItemTags.DIAMONDS)
+                .define('D', ConventionalItemTags.DIAMOND_GEMS)
                 .define('S', Items.STRING)
                 .define('L', GCItems.SENSOR_LENS)
                 .define('M', GCItems.METEORIC_IRON_INGOT)

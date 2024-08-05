@@ -25,15 +25,12 @@ package dev.galacticraft.mod.content.block.special.fluidpipe;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidPipe;
 import dev.galacticraft.mod.api.block.entity.Connected;
-import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
 import dev.galacticraft.mod.content.item.StandardWrenchItem;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import dev.galacticraft.mod.util.DirectionUtil;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -117,7 +114,7 @@ public class GlassFluidPipeBlock extends FluidPipe {
                 var stack = itemStack.copy();
 
                 if (!player.getAbilities().instabuild) {
-                    stack.hurt(1, level.random, player instanceof ServerPlayer ? ((ServerPlayer) player) : null);
+                    stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(interactionHand));
                 }
 
                 player.setItemInHand(interactionHand, stack);

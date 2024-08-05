@@ -24,8 +24,6 @@ package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
-import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
@@ -45,6 +43,7 @@ import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.OxygenCollectorMenu;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
@@ -92,8 +91,8 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     @Override
     public void setLevel(Level world) {
         super.setLevel(world);
-        CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getByDimension(world).orElse(null);
-        this.oxygenWorld = body == null || body.atmosphere().breathable();
+        Holder<CelestialBody<?, ?>> body = world.galacticraft$getCelestialBody();
+        this.oxygenWorld = body == null || body.value().atmosphere().breathable();
     }
 
     private int collectOxygen(@NotNull ServerLevel world, @NotNull BlockPos pos) {

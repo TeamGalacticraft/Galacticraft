@@ -22,19 +22,17 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartTypes;
-import dev.galacticraft.impl.rocket.RocketDataImpl;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlockEntity;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.util.Translations;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -51,8 +49,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -72,13 +68,13 @@ public class RocketItem extends Item {
 
             if (context.getLevel() instanceof ServerLevel) {
                 RocketEntity rocket = new RocketEntity(GCEntityTypes.ROCKET, context.getLevel());
-                CompoundTag tag = context.getItemInHand().getTag();
-                RocketData data = RocketData.fromNbt(tag);
+                RocketData data = RocketData.fromPatch(context.getItemInHand().getComponentsPatch());
                 rocket.setData(data);
                 rocket.setPad(pad);
                 rocket.setOldPosAndRot();
                 rocket.absMoveTo(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
-                if (tag.contains("creative")) {
+                boolean creative = context.getItemInHand().getComponents().getOrDefault(GCDataComponents.CREATIVE, false);
+                if (creative) {
                     rocket.setFuel(Long.MAX_VALUE);
                 }
                 context.getLevel().addFreshEntity(rocket);
@@ -96,20 +92,14 @@ public class RocketItem extends Item {
     }
 
     @Override
-    public ItemStack getDefaultInstance() {
-        var itemStack = super.getDefaultInstance();
-        itemStack.setTag(RocketDataImpl.DEFAULT_ROCKET.copy());
-        return itemStack;
-    }
-
-    @Override
-    @Environment(EnvType.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
-        super.appendHoverText(stack, world, tooltip, context);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
+        super.appendHoverText(stack, context, tooltip, type);
 
         CompoundTag tag = stack.getOrCreateTag();
-        if (tag.contains("creative"))
+        boolean creative = stack.getComponents().getOrDefault(GCDataComponents.CREATIVE, false);
+        if (creative) {
             tooltip.add(Component.literal("Creative Only").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+        }
         if (Screen.hasShiftDown()) {
             if (tag.contains("color") && tag.contains("cone")) {
 //                tooltip.add(Component.translatable("tooltip.galacticraft.tier", tag.getInt("tier")).setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GRAY)));

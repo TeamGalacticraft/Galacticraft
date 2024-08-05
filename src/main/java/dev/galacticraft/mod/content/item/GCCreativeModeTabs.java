@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry;
@@ -34,6 +35,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -46,7 +48,7 @@ import static dev.galacticraft.mod.content.item.GCItems.*;
 public class GCCreativeModeTabs {
     public static final CreativeModeTab ITEMS_GROUP = FabricItemGroup
             .builder()
-            .icon(() -> new ItemStack(GCItems.CANVAS))
+            .icon(() -> new ItemStack(CANVAS))
             .title(Component.translatable(Translations.ItemGroup.ITEMS))
             .displayItems((parameters, output) -> { // todo: add rockets here
                 // GEAR
@@ -82,12 +84,14 @@ public class GCCreativeModeTabs {
                 output.accept(SHIELD_CONTROLLER);
 
                 // ROCKETS
-                output.accept(ROCKET.getDefaultInstance());
+                output.accept(ROCKET);
 
-                var rocket = ROCKET.getDefaultInstance();
-                CompoundTag tag = rocket.getOrCreateTag();
-                tag.putBoolean("creative", true);
-                output.accept(rocket);
+                var creativeRocket = new ItemStack(ROCKET);
+                creativeRocket.applyComponents(DataComponentPatch.builder()
+                        .set(GCDataComponents.CREATIVE, true)
+                        .build()
+                );
+                output.accept(creativeRocket);
 
                 // MATERIALS
                 output.accept(TIN_NUGGET);

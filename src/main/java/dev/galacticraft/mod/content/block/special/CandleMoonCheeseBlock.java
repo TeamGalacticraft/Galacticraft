@@ -31,6 +31,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -92,24 +93,26 @@ public class CandleMoonCheeseBlock extends AbstractCandleBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        var itemStack = player.getItemInHand(interactionHand);
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        var itemStack = player.getItemInHand(hand);
 
         if (itemStack.is(Items.FLINT_AND_STEEL) || itemStack.is(Items.FIRE_CHARGE)) {
-            return InteractionResult.PASS;
+            return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+        } else if (candleHit(hit) && stack.isEmpty() && state.getValue(LIT)) {
+            extinguish(player, state, world, pos);
+            return ItemInteractionResult.sidedSuccess(world.isClientSide);
         }
-        else if (candleHit(blockHitResult) && player.getItemInHand(interactionHand).isEmpty() && blockState.getValue(LIT)) {
-            extinguish(player, blockState, level, blockPos);
-            return InteractionResult.sidedSuccess(level.isClientSide);
-        }
-        else {
-            var interactionResult = MoonCheeseBlock.eat(level, blockPos, GCBlocks.MOON_CHEESE_WHEEL.defaultBlockState(), player);
+        return super.useItemOn(stack, state, world, pos, player, hand, hit);
+    }
 
-            if (interactionResult.consumesAction()) {
-                dropResources(blockState, level, blockPos);
-            }
-            return interactionResult;
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        var interactionResult = MoonCheeseBlock.eat(level, pos, GCBlocks.MOON_CHEESE_WHEEL.defaultBlockState(), player);
+
+        if (interactionResult.consumesAction()) {
+            dropResources(state, level, pos);
         }
+        return interactionResult;
     }
 
     private static boolean candleHit(BlockHitResult blockHitResult) {
@@ -147,7 +150,7 @@ public class CandleMoonCheeseBlock extends AbstractCandleBlock {
     }
 
     @Override
-    public boolean isPathfindable(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, PathComputationType pathComputationType) {
+    protected boolean isPathfindable(BlockState state, PathComputationType type) {
         return false;
     }
 

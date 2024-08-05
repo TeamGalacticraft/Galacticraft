@@ -93,14 +93,14 @@ public record BakedModelRocketPartRenderer(Supplier<GCBakedModel> model,
 
     @Override
     public void render(ClientLevel world, PoseStack matrices, Rocket rocket, MultiBufferSource vertices, float partialTick, int light, int overlay) {
-        RenderSystem.setShaderColor(rocket.red() / 255.0f, rocket.green() / 255.0f, rocket.blue() / 255.0f, rocket.alpha() / 255.0f);
+        int color = rocket.getData().color();
 //        matrices.translate(0.5D, 0.5D, 0.5D);
 //        PoseStack.Pose entry = matrices.last();
 //        VertexConsumer vertexConsumer = vertices.getBuffer(layer.get());
 //        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
 
         VertexConsumer consumer = vertices.getBuffer(GCRenderTypes.obj(GCRenderTypes.OBJ_ATLAS));
-        this.model.get().render(matrices, null, consumer, light, overlay);
+        this.model.get().render(matrices, null, consumer, light, overlay, color);
 //        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(entry, vertexConsumer, null, this.model.get(), 1, 1, 1, light, overlay);
     }
 }

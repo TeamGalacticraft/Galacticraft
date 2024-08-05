@@ -24,9 +24,12 @@ package dev.galacticraft.mod.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
 import org.jetbrains.annotations.Nullable;
 
 public interface GCBakedModel extends AutoCloseable {
-    void render(PoseStack modelStack, @Nullable GCModelState state, VertexConsumer consumer, int light, int overlay);
+    default void render(PoseStack modelStack, @Nullable GCModelState state, VertexConsumer consumer, int light, int overlay) {
+        this.render(modelStack, state, consumer, light, overlay, 0xFFFFFFFF);
+    }
+
+    void render(PoseStack modelStack, @Nullable GCModelState state, VertexConsumer consumer, int light, int overlay, int color);
 }

@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.content.entity;
 
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -102,7 +104,9 @@ public abstract class GCVehicle extends Entity {
         if (!selfAsItem.isEmpty()) {
             if (this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
                 if (this.hasCustomName()) {
-                    selfAsItem.setHoverName(this.getCustomName());
+                    selfAsItem.applyComponents(DataComponentPatch.builder()
+                            .set(DataComponents.CUSTOM_NAME, this.getCustomName())
+                            .build());
                 }
 
                 this.spawnAtLocation(selfAsItem);

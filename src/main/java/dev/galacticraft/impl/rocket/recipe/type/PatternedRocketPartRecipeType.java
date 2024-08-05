@@ -56,11 +56,11 @@ public class PatternedRocketPartRecipeType extends RocketPartRecipeType<Patterne
         List<RocketPartRecipeSlot> slots = config.left();
         for (int i = 0; i < slots.size(); i++) {
             RocketPartRecipeSlot slot = slots.get(i);
-            consumer.createSlot(i, leftEdge + slot.x(), bottomEdge - this.height(config) + slot.y(), (item, tag) -> {
+            consumer.createSlot(i, leftEdge + slot.x(), bottomEdge - this.height(config) + slot.y(), (item, patch) -> {
                 if (item == null) return true;
 
                 ItemStack stack = new ItemStack(item, 1);
-                stack.setTag(tag);
+                stack.applyComponents(patch);
                 return slot.ingredient().test(stack);
             });
         }
@@ -68,11 +68,11 @@ public class PatternedRocketPartRecipeType extends RocketPartRecipeType<Patterne
         slots = config.right();
         for (int i = 0; i < slots.size(); i++) {
             RocketPartRecipeSlot slot = slots.get(i);
-            consumer.createSlot(i + size, rightEdge + slot.x(), bottomEdge - this.height(config) + slot.y(), (item, tag) -> {
+            consumer.createSlot(i + size, rightEdge + slot.x(), bottomEdge - this.height(config) + slot.y(), (item, patch) -> {
                 if (item == null) return true;
 
                 ItemStack stack = new ItemStack(item, 1);
-                stack.setTag(tag);
+                stack.applyComponents(patch);
                 return slot.ingredient().test(stack);
             });
         }

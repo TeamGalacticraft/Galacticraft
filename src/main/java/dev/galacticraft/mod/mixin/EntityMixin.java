@@ -28,6 +28,7 @@ import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.tag.GCTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
@@ -159,7 +160,6 @@ public abstract class EntityMixin implements EntityAccessor {
     // GC 4 ticks footprints on the client and server, however we will just do it on the server
     @Inject(method = "move", at = @At("HEAD"))
     private void tickFootprints(MoverType type, Vec3 motion, CallbackInfo ci) {
-        var level = level();
         if (!getType().is(GCTags.HAS_FOOTPRINTS))
             return;
         double motionSqrd = Mth.lengthSquared(motion.x, motion.z);
@@ -168,12 +168,12 @@ public abstract class EntityMixin implements EntityAccessor {
         boolean isFlying = false;
         if ((Object) this instanceof Player player)
             isFlying = player.getAbilities().flying;
-        if (motionSqrd > 0.001 && level.dimensionTypeRegistration().is(GCTags.FOOTPRINTS_DIMENSIONS) && getVehicle() == null && !isFlying) {
+        if (motionSqrd > 0.001 && this.level.dimensionTypeRegistration().is(GCTags.FOOTPRINTS_DIMENSIONS) && getVehicle() == null && !isFlying) {
             int iPosX = Mth.floor(getX());
             int iPosY = Mth.floor(getY() - 0.05);
             int iPosZ = Mth.floor(getZ());
             BlockPos pos1 = new BlockPos(iPosX, iPosY, iPosZ);
-            BlockState state = level.getBlockState(pos1);
+            BlockState state = this.level.getBlockState(pos1);
 
             // If the block below is the moon block
             if (state.is(GCTags.FOOTPRINTS)) {
@@ -212,7 +212,8 @@ public abstract class EntityMixin implements EntityAccessor {
 
     @Redirect(method = "getGravity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getDefaultGravity()D"))
     public double overrideGravity(Entity entity) {
-        return CelestialBody.getByDimension(this.level()).map(CelestialBody::gravity).orElse(1.0f) * this.getDefaultGravity();
+        Holder<CelestialBody<?, ?>> holder = this.level.galacticraft$getCelestialBody();
+        return (holder != null ? holder.value().gravity() : 1.0d) * this.getDefaultGravity();
     }
 
     @Override
