@@ -41,6 +41,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 public class SolarPanelPartBlock extends BaseEntityBlock {
     public static final MapCodec<SolarPanelPartBlock> CODEC = simpleCodec(SolarPanelPartBlock::new);
@@ -119,7 +120,7 @@ public class SolarPanelPartBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+    protected @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         BlockEntity partEntity = level.getBlockEntity(pos);
         if (level.isClientSide || level.isEmptyBlock(pos) || !(partEntity instanceof SolarPanelPartBlockEntity)) {
             return InteractionResult.SUCCESS;
@@ -127,6 +128,6 @@ public class SolarPanelPartBlock extends BaseEntityBlock {
 
         BlockPos basePos = ((SolarPanelPartBlockEntity) partEntity).basePos;
         BlockState base = level.getBlockState(basePos);
-        return base.getBlock().use(base, level, basePos, player, hit);
+        return ((MultiBlockBase)base.getBlock()).multiBlockUseWithoutItem(base, level, basePos, player);
     }
 }

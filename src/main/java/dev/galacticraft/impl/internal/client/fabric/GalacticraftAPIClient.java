@@ -24,6 +24,7 @@ package dev.galacticraft.impl.internal.client.fabric;
 
 import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenSyncer;
+import dev.galacticraft.impl.network.GCApiClientPacketReceivers;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -40,23 +41,7 @@ public class GalacticraftAPIClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         Constant.LOGGER.info("Loaded client module");
-        ClientPlayNetworking.registerGlobalReceiver(Constant.id("oxygen_update"), (client, handler, buf, responseSender) -> {
-            int x = buf.readInt();
-            int y = buf.readInt();
-            ((ChunkOxygenSyncer) handler.getLevel().getChunk(x, y)).galacticraft$readOxygenUpdate(buf);
-        });
 
-        ClientPlayNetworking.registerGlobalReceiver(Constant.id("gear_inv_sync"), (client, handler, buf, responseSender) -> {
-            int entity = buf.readInt();
-            ItemStack[] stacks = new ItemStack[buf.readInt()];
-            for (int i = 0; i < stacks.length; i++) {
-                stacks[i] = buf.readItem();
-            }
-            client.execute(() -> {
-                for (int i = 0; i < stacks.length; i++) {
-                    ((GearInventoryProvider) Objects.requireNonNull(client.level.getEntity(entity))).galacticraft$getGearInv().setItem(i, stacks[i]);
-                }
-            });
-        });
+        GCApiClientPacketReceivers.register();
     }
 }

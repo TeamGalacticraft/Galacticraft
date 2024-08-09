@@ -148,7 +148,8 @@ public class GratingTestSuite implements GalacticraftGameTest {
         var blockEntity = context.getBlockEntity(pos1);
 
         if (blockEntity instanceof DispenserBlockEntity dispenserBlockEntity) {
-            dispenserBlockEntity.addItem(new ItemStack(Items.WATER_BUCKET));
+            dispenserBlockEntity.setItem(0, new ItemStack(Items.WATER_BUCKET));
+            dispenserBlockEntity.setChanged();
         }
 
         context.runAtTickTime(context.getTick() + 10L, () -> context.setBlock(pos2, Blocks.REDSTONE_BLOCK.defaultBlockState()));
@@ -194,7 +195,8 @@ public class GratingTestSuite implements GalacticraftGameTest {
         var blockEntity = context.getBlockEntity(pos1);
 
         if (blockEntity instanceof DispenserBlockEntity dispenserBlockEntity) {
-            dispenserBlockEntity.addItem(new ItemStack(Items.BUCKET));
+            dispenserBlockEntity.setItem(0, new ItemStack(Items.BUCKET));
+            dispenserBlockEntity.setChanged();
         }
 
         context.runAtTickTime(context.getTick() + 10L, () -> context.setBlock(pos2, Blocks.REDSTONE_BLOCK.defaultBlockState()));

@@ -41,7 +41,7 @@ public record SelectPartPayload(RocketPartTypes partType, @Nullable ResourceLoca
             SelectPartPayload::new
     );
 
-    public static final ResourceLocation ID = Constant.id("planet_teleport");
+    public static final ResourceLocation ID = Constant.id("select_part");
     public static final Type<SelectPartPayload> TYPE = new Type<>(ID);
 
     public SelectPartPayload(FriendlyByteBuf buf) {

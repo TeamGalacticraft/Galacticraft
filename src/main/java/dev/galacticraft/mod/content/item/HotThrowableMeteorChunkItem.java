@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.nbt.CompoundTag;
@@ -45,15 +46,15 @@ public class HotThrowableMeteorChunkItem extends ThrowableMeteorChunkItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
-        CompoundTag tag = stack.getTag();
-        if (tag != null) {
-            int ticksUntilCool = tag.getInt(TICKS_UNTIL_COOL);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
+        super.appendHoverText(stack, context, tooltip, type);
+        Integer maybeTicks = stack.get(GCDataComponents.TICKS_UNTIL_COOL);
+        if (maybeTicks != null) {
+            int ticksUntilCool = maybeTicks;
             double secondsUntilCool = ticksUntilCool / 20.0;
             Style style = Constant.Text.Color.getStorageLevelStyle(1.0 - (double)ticksUntilCool/(double)MAX_TICKS);
-            tooltipComponents.add(Component.translatable(Translations.Tooltip.TIME_UNTIL_COOL, String.format("%.1f", secondsUntilCool)).setStyle(style));
+            tooltip.add(Component.translatable(Translations.Tooltip.TIME_UNTIL_COOL, String.format("%.1f", secondsUntilCool)).setStyle(style));
         }
-        super.appendHoverText(stack, level, tooltipComponents, isAdvanced);
     }
 
     @Override
@@ -61,21 +62,25 @@ public class HotThrowableMeteorChunkItem extends ThrowableMeteorChunkItem {
         if (level.isClientSide())
             return;
 
-        CompoundTag stackTag = stack.getOrCreateTag();
+        Integer i = stack.get(GCDataComponents.TICKS_UNTIL_COOL);
+        int ticks;
+        if (i == null) {
+            ticks = MAX_TICKS;
+        } else {
+            ticks = i;
+        }
 
-        if (!stackTag.contains(TICKS_UNTIL_COOL, CompoundTag.TAG_INT))
-            stackTag.putInt(TICKS_UNTIL_COOL, MAX_TICKS);
-
-        int ticksUntilCool = stackTag.getInt(TICKS_UNTIL_COOL);
-        if (ticksUntilCool == 0) {
+        if (ticks == 0) {
             if (entity instanceof Player player) {
+                stack.remove(GCDataComponents.TICKS_UNTIL_COOL);
                 ItemStack cooledStack = new ItemStack(GCItems.THROWABLE_METEOR_CHUNK, stack.getCount());
-                cooledStack.setTag(stackTag);
+                cooledStack.applyComponents(stack.getComponents());
+
                 Inventory inventory = player.getInventory();
                 inventory.setItem(slotId, new ItemStack(GCItems.THROWABLE_METEOR_CHUNK, stack.getCount()));
                 inventory.setChanged();
             }
         }
-        stackTag.putInt(TICKS_UNTIL_COOL, ticksUntilCool - 1);
+        stack.set(GCDataComponents.TICKS_UNTIL_COOL, ticks - 1);
     }
 }

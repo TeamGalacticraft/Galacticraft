@@ -26,6 +26,7 @@ import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -43,25 +44,23 @@ import java.util.Collections;
 import java.util.List;
 
 public class VolcanicRockBlock extends Block {
-    private static final ItemPredicate HAS_SILK_TOUCH = ItemPredicate.Builder.item().hasEnchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.Ints.atLeast(1))).build();
-
     public VolcanicRockBlock(Properties settings) {
         super(settings);
     }
 
     @Override
-    public void playerDestroy(Level world, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack stack) {
-        super.playerDestroy(world, player, pos, state, blockEntity, stack);
-        if (!HAS_SILK_TOUCH.matches(stack)) {
-            world.setBlockAndUpdate(pos, Blocks.LAVA.defaultBlockState());
+    public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack stack) {
+        super.playerDestroy(level, player, pos, state, blockEntity, stack);
+        if (stack.getEnchantments().getLevel(level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.SILK_TOUCH)) < 1) {
+            level.setBlockAndUpdate(pos, Blocks.LAVA.defaultBlockState());
         }
     }
 
     @Override
     public List<ItemStack> getDrops(BlockState state, LootParams.@NotNull Builder builder) {
-        ItemStack itemStack = builder.getParameter(LootContextParams.TOOL);
+        ItemStack itemStack = builder.getOptionalParameter(LootContextParams.TOOL);
         if (itemStack != null) {
-            if (HAS_SILK_TOUCH.matches(itemStack)) {
+            if (itemStack.getEnchantments().getLevel(builder.getLevel().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.SILK_TOUCH)) >= 1) {
                 return super.getDrops(state, builder);
             }
         }

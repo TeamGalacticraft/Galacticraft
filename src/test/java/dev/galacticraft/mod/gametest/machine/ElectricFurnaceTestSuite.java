@@ -24,21 +24,23 @@ package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricFurnaceBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 @TestSuite("electric_furnace")
-public final class ElectricFurnaceTestSuite extends RecipeGameTest<Container, SmeltingRecipe, ElectricFurnaceBlockEntity> {
+public final class ElectricFurnaceTestSuite extends RecipeGameTest<SingleRecipeInput, SmeltingRecipe, ElectricFurnaceBlockEntity> {
     public ElectricFurnaceTestSuite() {
-        super(GCMachineTypes.ELECTRIC_FURNACE, List.of(
+        super(GCBlocks.ELECTRIC_FURNACE, List.of(
                 machine -> machine.energyStorage().setEnergy(Long.MAX_VALUE / 2),
                 machine -> machine.itemStorage().slot(ElectricFurnaceBlockEntity.INPUT_SLOT).set(Items.PORKCHOP, 1)
         ), ElectricFurnaceBlockEntity.OUTPUT_SLOT, 200);

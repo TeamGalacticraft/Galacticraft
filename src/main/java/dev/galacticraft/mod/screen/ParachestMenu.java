@@ -24,7 +24,11 @@ package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.block.special.ParaChestBlockEntity;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.VarInt;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -33,20 +37,17 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 public class ParachestMenu extends AbstractContainerMenu {
     private final Container container;
 
-    public ParachestMenu(int syncId, Inventory playerInventory, FriendlyByteBuf buf) {
-        this(syncId, playerInventory, getContainer(playerInventory.player.level(), buf));
+    public ParachestMenu(int syncId, Inventory playerInventory, OpeningData data) {
+        this(syncId, playerInventory, getContainer(playerInventory.player.level(), data));
     }
 
-    public static Container getContainer(Level level, FriendlyByteBuf buf) {
-        boolean isBe = buf.readBoolean();
-        if (isBe)
-            return GCBlockEntityTypes.PARACHEST.getBlockEntity(level, buf.readBlockPos());
-        else
-            return new SimpleContainer(buf.readVarInt());
+    public static Container getContainer(Level level, OpeningData data) {
+        return data.pos != null ? GCBlockEntityTypes.PARACHEST.getBlockEntity(level, data.pos) : new SimpleContainer(data.size);
     }
 
     public ParachestMenu(int syncId, Inventory playerInventory, Container container) {
@@ -119,5 +120,28 @@ public class ParachestMenu extends AbstractContainerMenu {
 
     public Container getContainer() {
         return this.container;
+    }
+
+    public record OpeningData(@Nullable BlockPos pos, int size) {
+        public static final StreamCodec<ByteBuf, OpeningData> STREAM_CODEC = StreamCodec.of(
+                (b, v) -> {
+                    if (v.pos != null) {
+                        b.writeBoolean(true);
+                        b.writeLong(v.pos.asLong());
+                    } else {
+                        b.writeBoolean(false);
+                        VarInt.write(b, v.size);
+                    }
+                },
+                b -> b.readBoolean() ? new OpeningData(BlockPos.of(b.readLong())) : new OpeningData(VarInt.read(b))
+        );
+
+        public OpeningData(BlockPos blockPos) {
+            this(blockPos, 0);
+        }
+
+        public OpeningData(int size) {
+            this(null, size);
+        }
     }
 }

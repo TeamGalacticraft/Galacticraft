@@ -104,9 +104,7 @@ public abstract class GCVehicle extends Entity {
         if (!selfAsItem.isEmpty()) {
             if (this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
                 if (this.hasCustomName()) {
-                    selfAsItem.applyComponents(DataComponentPatch.builder()
-                            .set(DataComponents.CUSTOM_NAME, this.getCustomName())
-                            .build());
+                    selfAsItem.set(DataComponents.CUSTOM_NAME, this.getCustomName());
                 }
 
                 this.spawnAtLocation(selfAsItem);

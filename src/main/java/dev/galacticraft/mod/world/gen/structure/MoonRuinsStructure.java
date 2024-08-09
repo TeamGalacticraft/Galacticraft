@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.world.gen.structure;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.mod.structure.MoonRuinsGenerator;
 import net.minecraft.core.BlockPos;
@@ -35,7 +36,7 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilde
 import java.util.Optional;
 
 public class MoonRuinsStructure extends Structure {
-   public static final Codec<MoonRuinsStructure> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+   public static final MapCodec<MoonRuinsStructure> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
            StructureSettings.CODEC.fieldOf("config").forGetter((moonRuinsStructure) -> moonRuinsStructure.settings)
    ).apply(instance, MoonRuinsStructure::new));
 

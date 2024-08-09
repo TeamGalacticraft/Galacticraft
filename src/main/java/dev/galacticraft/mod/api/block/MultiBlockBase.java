@@ -50,7 +50,7 @@ public interface MultiBlockBase {
 
     void onMultiBlockPlaced(Level level, BlockPos blockPos, BlockState blockState);
 
-    default InteractionResult onMultiBlockUse(BlockState blockState, Level level, BlockPos basePos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    default InteractionResult multiBlockUseWithoutItem(BlockState baseState, Level level, BlockPos basePos, Player player) {
         return InteractionResult.PASS;
     }
 }

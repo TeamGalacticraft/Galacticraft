@@ -20,27 +20,24 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.misc.footprint;
+package dev.galacticraft.impl.network;
 
-import dev.galacticraft.mod.network.s2c.FootprintPacket;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
+import dev.galacticraft.impl.network.c2s.FlagDataPayload;
+import dev.galacticraft.impl.network.c2s.TeamNamePayload;
+import dev.galacticraft.impl.network.s2c.*;
+import dev.galacticraft.mod.network.c2s.*;
+import dev.galacticraft.mod.network.s2c.*;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 
-import java.util.ArrayList;
-import java.util.List;
+public class GCApiPackets {
+    public static void register() {
+        PayloadTypeRegistry.playS2C().register(AddSatellitePayload.TYPE, AddSatellitePayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(GearInvPayload.TYPE, GearInvPayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(OxygenUpdatePayload.TYPE, OxygenUpdatePayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(RemoveSatellitePayload.TYPE, RemoveSatellitePayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(ResearchUpdatePayload.TYPE, ResearchUpdatePayload.CODEC);
 
-public class ServerFootprintManager extends FootprintManager {
-    @Override
-    public void onChange(Level level, long packedPos, List<Footprint> footprints) {
-        if (level.getGameTime() % 100 == 0) {
-            PlayerLookup.tracking((ServerLevel) level, new ChunkPos(packedPos)).forEach(player -> {
-                List<Footprint> toSync = new ArrayList<>(footprints);
-                toSync.removeIf(footprint -> footprint.owner.equals(player.getUUID()));
-                ServerPlayNetworking.send(player, new FootprintPacket(packedPos, toSync));
-            });
-        }
+        PayloadTypeRegistry.playC2S().register(FlagDataPayload.TYPE, FlagDataPayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(TeamNamePayload.TYPE, TeamNamePayload.CODEC);
     }
 }

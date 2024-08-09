@@ -33,6 +33,7 @@ import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeItem;
@@ -70,10 +71,7 @@ public class GlassFluidPipeBlock extends FluidPipe {
                 if (stack.getItem() instanceof DyeItem dye && dye.getDyeColor() != glassPipe.getColor()) {
                     glassPipe.setColor(dye.getDyeColor());
                     var copy = stack.copy();
-
-                    if (livingEntity instanceof Player player && !player.getAbilities().instabuild) {
-                        copy.shrink(1);
-                    }
+                    copy.consume(1, livingEntity);
 
                     livingEntity.setItemInHand(interactionHand, copy);
                 }
@@ -92,37 +90,34 @@ public class GlassFluidPipeBlock extends FluidPipe {
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        var itemStack = player.getItemInHand(interactionHand);
-        if (level.getBlockEntity(blockPos) instanceof GlassFluidPipeBlockEntity glassPipe) {
-            if (itemStack.getItem() instanceof DyeItem dye) {
-                var stack = itemStack.copy();
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (level.getBlockEntity(pos) instanceof GlassFluidPipeBlockEntity glassPipe) {
+            if (stack.getItem() instanceof DyeItem dye) {
+                var stack2 = stack.copy();
                 var color = dye.getDyeColor();
                 if (color != glassPipe.getColor()) {
                     if (!player.getAbilities().instabuild) {
-                        stack.shrink(1);
+                        stack2.shrink(1);
                     }
-                    player.setItemInHand(interactionHand, stack);
+                    player.setItemInHand(hand, stack2);
                     glassPipe.setColor(color);
-                    level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
-                    return InteractionResult.sidedSuccess(level.isClientSide());
+                    level.sendBlockUpdated(pos, state, state, Block.UPDATE_IMMEDIATE);
+                    return ItemInteractionResult.SUCCESS;
+                } else {
+                    return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
                 }
-                else {
-                    return InteractionResult.PASS;
-                }
-            } else if (itemStack.getItem() instanceof StandardWrenchItem) {
-                var stack = itemStack.copy();
+            } else if (stack.getItem() instanceof StandardWrenchItem) {
+                var stack2 = stack.copy();
 
-                if (!player.getAbilities().instabuild) {
-                    stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(interactionHand));
-                }
+                stack2.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
 
-                player.setItemInHand(interactionHand, stack);
+                player.setItemInHand(hand, stack2);
                 glassPipe.setPull(!glassPipe.isPull());
-                return InteractionResult.sidedSuccess(level.isClientSide());
+                return ItemInteractionResult.SUCCESS;
             }
         }
-        return super.use(blockState, level, blockPos, player, interactionHand, blockHitResult);
+
+        return super.useItemOn(stack, state, level, pos, player, hand, hit);
     }
 
     @Override

@@ -52,7 +52,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
-public class ParaChestBlockEntity extends RandomizableContainerBlockEntity implements SidedStorageBlockEntity, ExtendedScreenHandlerFactory, ScalableFuelLevel {
+public class ParaChestBlockEntity extends RandomizableContainerBlockEntity implements SidedStorageBlockEntity, ExtendedScreenHandlerFactory<ParachestMenu.OpeningData>, ScalableFuelLevel {
 
     public final SingleFluidStorage tank = SingleFluidStorage.withFixedCapacity(FluidConstants.BUCKET * 5, () -> {
     });
@@ -107,12 +107,6 @@ public class ParaChestBlockEntity extends RandomizableContainerBlockEntity imple
     }
 
     @Override
-    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
-        buf.writeBoolean(true);
-        buf.writeBlockPos(getBlockPos());
-    }
-
-    @Override
     public int getScaledFuelLevel(int scale) {
         final double fuelLevel = this.tank.getResource().isBlank() ? 0 : this.tank.getAmount();
 
@@ -128,5 +122,10 @@ public class ParaChestBlockEntity extends RandomizableContainerBlockEntity imple
                 tx.commit();
             }
         }
+    }
+
+    @Override
+    public ParachestMenu.OpeningData getScreenOpeningData(ServerPlayer player) {
+        return new ParachestMenu.OpeningData(this.getBlockPos());
     }
 }

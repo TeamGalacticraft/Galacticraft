@@ -116,7 +116,7 @@ public class CryogenicChamberPart extends BaseEntityBlock {
         if (baseState.isAir()) return InteractionResult.PASS;
 
         var block = (MultiBlockBase) baseState.getBlock();
-        return block.onMultiBlockUse(state, level, basePos, player, hit);
+        return block.multiBlockUseWithoutItem(baseState, level, basePos, player);
     }
 
     @Override

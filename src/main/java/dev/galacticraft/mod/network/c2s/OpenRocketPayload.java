@@ -49,8 +49,8 @@ public record OpenRocketPayload() implements C2SPayload {
     public void handle(ServerPlayNetworking.@NotNull Context context) {
         context.player().openMenu(new ExtendedScreenHandlerFactory<>() {
             @Override
-            public Object getScreenOpeningData(ServerPlayer player) {
-                return player.getVehicle();
+            public Integer getScreenOpeningData(ServerPlayer player) {
+                return player.getVehicle().getId();
             }
 
             @Override

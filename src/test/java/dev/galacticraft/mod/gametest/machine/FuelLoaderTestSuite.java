@@ -24,6 +24,7 @@ package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.MachineGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.FuelLoaderBlockEntity;
 import dev.galacticraft.mod.content.block.entity.machine.RefineryBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -36,7 +37,7 @@ import java.util.List;
 @TestSuite("fuel_loader")
 public final class FuelLoaderTestSuite extends MachineGameTest<FuelLoaderBlockEntity> {
     public FuelLoaderTestSuite() {
-        super(GCMachineTypes.FUEL_LOADER);
+        super(GCBlocks.FUEL_LOADER);
     }
 
     @Override

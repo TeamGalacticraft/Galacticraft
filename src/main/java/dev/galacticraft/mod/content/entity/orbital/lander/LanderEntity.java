@@ -67,7 +67,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class LanderEntity extends AbstractLanderEntity implements Container, ScalableFuelLevel, ControllableEntity, HasCustomInventoryScreen, IgnoreShift, ExtendedScreenHandlerFactory {
+public class LanderEntity extends AbstractLanderEntity implements Container, ScalableFuelLevel, ControllableEntity, HasCustomInventoryScreen, IgnoreShift, ExtendedScreenHandlerFactory<ParachestMenu.OpeningData> {
     public static final float NO_PARTICLES = 0.0000001F;
     protected NonNullList<ItemStack> inventory;
     protected InventoryStorage storage;
@@ -376,12 +376,6 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
         this.inventory.clear();
     }
 
-    @Override
-    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
-        buf.writeBoolean(false);
-        buf.writeVarInt(this.inventory.size());
-    }
-
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
@@ -455,5 +449,10 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
     @Override
     public boolean shouldIgnoreShiftExit() {
         return !onGround();
+    }
+
+    @Override
+    public ParachestMenu.OpeningData getScreenOpeningData(ServerPlayer player) {
+        return new ParachestMenu.OpeningData(this.inventory.size());
     }
 }

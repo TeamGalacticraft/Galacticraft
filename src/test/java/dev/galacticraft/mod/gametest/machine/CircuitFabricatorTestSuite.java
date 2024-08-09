@@ -24,6 +24,7 @@ package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.CircuitFabricatorBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
@@ -31,14 +32,16 @@ import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 @TestSuite("circuit_fabricator")
-public final class CircuitFabricatorTestSuite extends RecipeGameTest<Container, FabricationRecipe, CircuitFabricatorBlockEntity> {
+public final class CircuitFabricatorTestSuite extends RecipeGameTest<RecipeInput, FabricationRecipe, CircuitFabricatorBlockEntity> {
     public CircuitFabricatorTestSuite() {
-        super(GCMachineTypes.CIRCUIT_FABRICATOR, List.of(
+        super(GCBlocks.CIRCUIT_FABRICATOR, List.of(
                 machine -> machine.energyStorage().setEnergy(Long.MAX_VALUE / 2),
                 machine -> machine.itemStorage().slot(CircuitFabricatorBlockEntity.DIAMOND_SLOT).set(Items.DIAMOND, 1),
                 machine -> machine.itemStorage().slot(CircuitFabricatorBlockEntity.REDSTONE_SLOT).set(Items.REDSTONE, 1),

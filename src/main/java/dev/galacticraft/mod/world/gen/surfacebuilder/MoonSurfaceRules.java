@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.world.gen.surfacebuilder;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.world.biome.GCBiomes;
@@ -111,6 +112,6 @@ public class MoonSurfaceRules {
     }
 
     public static void register() {
-        Registry.register(BuiltInRegistries.MATERIAL_RULE, Constant.id("moon"), Codec.unit(MOON));
+        Registry.register(BuiltInRegistries.MATERIAL_RULE, Constant.id("moon"), MapCodec.unit(MOON));
     }
 }

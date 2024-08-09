@@ -22,18 +22,23 @@
 
 package dev.galacticraft.impl.network.s2c;
 
+import dev.galacticraft.api.client.accessor.ClientSatelliteAccessor;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.mod.Constant;
 import io.netty.buffer.ByteBuf;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public record AddSatellitePayload(ResourceLocation id, SatelliteConfig config) implements CustomPacketPayload {
+public record AddSatellitePayload(ResourceLocation id, SatelliteConfig config) implements S2CPayload {
     public static final ResourceLocation ID = Constant.id("add_satellite");
     public static final Type<AddSatellitePayload> TYPE = new Type<>(ID);
-    public static final StreamCodec<ByteBuf, AddSatellitePayload> CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, AddSatellitePayload> CODEC = StreamCodec.composite(
             ResourceLocation.STREAM_CODEC,
             p -> p.id,
             SatelliteConfig.STREAM_CODEC,
@@ -43,5 +48,10 @@ public record AddSatellitePayload(ResourceLocation id, SatelliteConfig config) i
     @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {
         return TYPE;
+    }
+
+    @Override
+    public void handle(ClientPlayNetworking.@NotNull Context context) {
+        ((ClientSatelliteAccessor) context.client().player.connection).galacticraft$addSatellite(this.id, new CelestialBody<>(SatelliteType.INSTANCE, this.config));
     }
 }

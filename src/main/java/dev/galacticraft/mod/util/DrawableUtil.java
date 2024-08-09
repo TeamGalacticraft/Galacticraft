@@ -76,13 +76,13 @@ public class DrawableUtil {
 
     public static void drawTexturedQuad_F(Matrix4f matrices, float x0, float x1, float y0, float y1, float z, float u0, float u1, float v0, float v1) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        bufferBuilder.addVertex(matrices, x0, y1, z).setUv(u0, v1).endVertex();
-        bufferBuilder.addVertex(matrices, x1, y1, z).setUv(u1, v1).endVertex();
-        bufferBuilder.addVertex(matrices, x1, y0, z).setUv(u1, v0).endVertex();
-        bufferBuilder.addVertex(matrices, x0, y0, z).setUv(u0, v0).endVertex();
-        BufferUploader.drawWithShader(bufferBuilder.end());
+        BufferBuilder bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        bufferBuilder
+                .addVertex(matrices, x0, y1, z).setUv(u0, v1)
+                .addVertex(matrices, x1, y1, z).setUv(u1, v1)
+                .addVertex(matrices, x1, y0, z).setUv(u1, v0)
+                .addVertex(matrices, x0, y0, z).setUv(u0, v0);
+        BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
     }
 
     public static void drawTextureColor(PoseStack matrices, int x, int y, int z, float u, float v, int width, int height, int textureHeight, int textureWidth, int red, int green, int blue, int alpha) {
@@ -93,14 +93,13 @@ public class DrawableUtil {
         drawTexturedQuadColor(matrices.last().pose(), x0, x1, y0, y1, z, (u + 0.0F) / (float)textureWidth, (u + (float)regionWidth) / (float)textureWidth, (v + 0.0F) / (float)textureHeight, (v + (float)regionHeight) / (float)textureHeight, red, green, blue, alpha);
     }
 
-    public static void drawTexturedQuadColor(Matrix4f matrices, int x0, int x1, int y0, int y1, int z, float u0, float u1, float v0, float v1, int red, int green, int blue, int alwha) {
-        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-        bufferBuilder.addVertex(matrices, (float)x0, (float)y1, (float)z).setColor(red, green, blue, 255).setUv(u0, v1).endVertex();
-        bufferBuilder.addVertex(matrices, (float)x1, (float)y1, (float)z).setColor(red, green, blue, 255).setUv(u1, v1).endVertex();
-        bufferBuilder.addVertex(matrices, (float)x1, (float)y0, (float)z).setColor(red, green, blue, 255).setUv(u1, v0).endVertex();
-        bufferBuilder.addVertex(matrices, (float)x0, (float)y0, (float)z).setColor(red, green, blue, 255).setUv(u0, v0).endVertex();
-        BufferUploader.draw(bufferBuilder.end());
+    public static void drawTexturedQuadColor(Matrix4f matrices, int x0, int x1, int y0, int y1, int z, float u0, float u1, float v0, float v1, int red, int green, int blue, int alpha) {
+        BufferBuilder bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        bufferBuilder.addVertex(matrices, (float)x0, (float)y1, (float)z).setColor(red, green, blue, alpha).setUv(u0, v1)
+                .addVertex(matrices, (float)x1, (float)y1, (float)z).setColor(red, green, blue, alpha).setUv(u1, v1)
+                .addVertex(matrices, (float)x1, (float)y0, (float)z).setColor(red, green, blue, alpha).setUv(u1, v0)
+                .addVertex(matrices, (float)x0, (float)y0, (float)z).setColor(red, green, blue, alpha).setUv(u0, v0);
+        BufferUploader.draw(bufferBuilder.buildOrThrow());
     }
 
     public static String roundForDisplay(double d, int places) {

@@ -127,8 +127,8 @@ public class SkeletonBoss extends AbstractBossEntity implements RangedAttackMob,
         final double offsetX = Math.sin(-this.getYHeadRot() / Constant.RADIANS_TO_DEGREES);
         final double offsetZ = Math.cos(this.getYHeadRot() / Constant.RADIANS_TO_DEGREES);
         final double offsetY = 2 * Math.cos((this.throwTimer + this.postThrowDelay) * 0.05F);
-
-        positionUpdater.accept(passenger, vec3.x() + offsetX, vec3.y() + passenger.getMyRidingOffset(this) + offsetY, vec3.z() + offsetZ);
+        Vec3 point = passenger.getVehicleAttachmentPoint(this);
+        positionUpdater.accept(passenger, vec3.x() + offsetX, vec3.y() + point.y + offsetY, vec3.z() + offsetZ);
     }
 
     @Override

@@ -30,7 +30,9 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.GenerationChunkHolder;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.LevelChunk;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -48,7 +50,10 @@ public abstract class ChunkHolderMixin {
 
     @Inject(method = "broadcastChanges", at = @At("HEAD"))
     private void galacticraft_flushOxygenPackets(LevelChunk chunk, CallbackInfo ci) {
-        FriendlyByteBuf buf = ((ChunkOxygenSyncer) chunk).galacticraft$syncOxygenPacketsToClient();
-        if (buf != null) this.broadcast(this.playerProvider.getPlayers(((GenerationChunkHolder)(Object)this).getPos(), false), ServerPlayNetworking.createS2CPacket(new OxygenUpdatePayload()));
+        OxygenUpdatePayload.OxygenData[] data = ((ChunkOxygenSyncer) chunk).galacticraft$syncOxygenPacketsToClient();
+        if (data != null) {
+            ChunkPos pos = ((GenerationChunkHolder) (Object) this).getPos();
+            this.broadcast(this.playerProvider.getPlayers(pos, false), ServerPlayNetworking.createS2CPacket(new OxygenUpdatePayload(pos.toLong(), data)));
+        }
     }
 }

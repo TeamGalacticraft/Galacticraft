@@ -201,11 +201,6 @@ public class GCModelProvider extends FabricModelProvider {
 
         // MISC WORLD GEN
         this.createCavernousVines(generator);
-        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(GCBlocks.MOON_BERRY_BUSH)
-                        .with(PropertyDispatch.property(BlockStateProperties.AGE_3)
-                                        .generate(integer -> Variant.variant().with(VariantProperties.MODEL, generator.createSuffixedVariant(GCBlocks.MOON_BERRY_BUSH, "_stage" + integer, ModelTemplates.CROSS, TextureMapping::cross)))
-                        )
-        );
 
         // DUMMY
         generator.createAirLikeBlock(GCBlocks.SOLAR_PANEL_PART, GCItems.BLUE_SOLAR_WAFER);
@@ -398,7 +393,6 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.AMBIENT_THERMAL_CONTROLLER, ModelTemplates.FLAT_ITEM);
 
         // FOOD
-        generator.generateFlatItem(GCItems.MOON_BERRIES, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.CHEESE_CURD, ModelTemplates.FLAT_ITEM);
 
         generator.generateFlatItem(GCItems.CHEESE_SLICE, ModelTemplates.FLAT_ITEM);

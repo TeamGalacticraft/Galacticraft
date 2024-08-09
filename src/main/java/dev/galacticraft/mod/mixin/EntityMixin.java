@@ -137,8 +137,6 @@ public abstract class EntityMixin implements EntityAccessor {
     @Shadow
     public abstract EntityType<?> getType();
 
-    @Shadow protected abstract double getDefaultGravity();
-
     @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At("TAIL"))
     private void checkWaterStateGC(CallbackInfo ci) {
         if (this.updateFluidHeightAndDoFluidPushing(GCTags.OIL, 0.0028d) || this.updateFluidHeightAndDoFluidPushing(GCTags.FUEL, 0.0028d)) {
@@ -208,12 +206,6 @@ public abstract class EntityMixin implements EntityAccessor {
                 }
             }
         }
-    }
-
-    @Redirect(method = "getGravity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getDefaultGravity()D"))
-    public double overrideGravity(Entity entity) {
-        Holder<CelestialBody<?, ?>> holder = this.level.galacticraft$getCelestialBody();
-        return (holder != null ? holder.value().gravity() : 1.0d) * this.getDefaultGravity();
     }
 
     @Override

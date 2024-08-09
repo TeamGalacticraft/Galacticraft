@@ -35,6 +35,7 @@ import dev.galacticraft.mod.data.content.BootstrapDataProvider;
 import dev.galacticraft.mod.data.model.GCModelProvider;
 import dev.galacticraft.mod.data.recipes.*;
 import dev.galacticraft.mod.data.tag.*;
+import dev.galacticraft.mod.misc.banner.GCBannerPatterns;
 import dev.galacticraft.mod.structure.GCStructureSets;
 import dev.galacticraft.mod.structure.GCStructureTemplatePools;
 import dev.galacticraft.mod.world.biome.GCBiomes;
@@ -108,6 +109,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(BootstrapDataProvider.create("Celestial Teleporters", GCTeleporterTypes::bootstrapRegistries));
 
         // misc
+        pack.addProvider(BootstrapDataProvider.create("Banner Patterns", GCBannerPatterns::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Damage Types", GCDamageTypes::bootstrapRegistries));
 
         // rocket parts
@@ -126,6 +128,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
     public void buildRegistry(RegistrySetBuilder builder) {
 
         // world generation
+        builder.add(Registries.BANNER_PATTERN, Lifecycle.stable(), GCBannerPatterns::bootstrapRegistries);
         builder.add(Registries.BIOME, Lifecycle.stable(), GCBiomes::bootstrapRegistries);
         builder.add(Registries.DIMENSION_TYPE, Lifecycle.stable(), GCDimensionTypes::bootstrapRegistries);
         builder.add(Registries.LEVEL_STEM, Lifecycle.stable(), GCLevelStems::bootstrapRegistries);

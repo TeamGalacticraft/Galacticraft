@@ -218,20 +218,6 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
 
         this.add(GCBlocks.CAVERNOUS_VINES, BlockLootSubProvider::createShearsOnlyDrop);
-        this.add(GCBlocks.MOON_BERRY_BUSH, block -> this.applyExplosionDecay(block, LootTable.lootTable()
-                        .withPool(LootPool.lootPool()
-                                .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SweetBerryBushBlock.AGE, 3)))
-                                .add(LootItem.lootTableItem(GCItems.MOON_BERRIES))
-                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(2.0F, 3.0F)))
-                                .apply(ApplyBonusCount.addUniformBonusCount(enchantments.getOrThrow(Enchantments.FORTUNE))))
-                        .withPool(LootPool.lootPool()
-                                .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SweetBerryBushBlock.AGE, 2)))
-                                .add(LootItem.lootTableItem(GCItems.MOON_BERRIES))
-                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F)))
-                                .apply(ApplyBonusCount.addUniformBonusCount(enchantments.getOrThrow(Enchantments.FORTUNE)))
-                        )
-                )
-        );
         this.add(GCBlocks.BOSS_SPAWNER, noDrop());
 
         this.add(GCBlocks.FUELING_PAD, this::createLaunchPadTable);

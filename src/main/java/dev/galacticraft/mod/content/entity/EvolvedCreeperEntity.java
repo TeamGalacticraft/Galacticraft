@@ -27,9 +27,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Pose;
@@ -39,12 +39,12 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.level.Level;
 
-import java.util.UUID;
-
 public class EvolvedCreeperEntity extends Creeper {
     private static final EntityDataAccessor<Boolean> BABY = SynchedEntityData.defineId(EvolvedCreeperEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final UUID BABY_SPEED_ID = UUID.fromString("B9766B59-9566-4402-BC1F-2EE2A276D836");
-    private static final AttributeModifier BABY_SPEED_BONUS = new AttributeModifier(BABY_SPEED_ID, 0.8D, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+    private static final ResourceLocation SPEED_MODIFIER_BABY_ID = ResourceLocation.withDefaultNamespace("baby");
+    private static final AttributeModifier BABY_SPEED_BONUS = new AttributeModifier(
+            SPEED_MODIFIER_BABY_ID, 0.8D, AttributeModifier.Operation.ADD_MULTIPLIED_BASE
+    );
 
     public EvolvedCreeperEntity(EntityType<? extends Creeper> entityType, Level world) {
         super(entityType, world);
@@ -86,13 +86,14 @@ public class EvolvedCreeperEntity extends Creeper {
         return this.entityData.get(BABY);
     }
 
+    @Override
     public void setBaby(boolean baby) {
         this.getEntityData().set(BABY, baby);
-        if (this.level() != null && !this.level().isClientSide) {
-            AttributeInstance entityAttributeInstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
-            entityAttributeInstance.removeModifier(BABY_SPEED_ID);
+        if (!this.level().isClientSide) {
+            AttributeInstance attributeInstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
+            attributeInstance.removeModifier(SPEED_MODIFIER_BABY_ID);
             if (baby) {
-                entityAttributeInstance.addTransientModifier(BABY_SPEED_BONUS);
+                attributeInstance.addTransientModifier(BABY_SPEED_BONUS);
             }
         }
     }
@@ -100,7 +101,7 @@ public class EvolvedCreeperEntity extends Creeper {
     @Override
     protected EntityDimensions getDefaultDimensions(Pose pose) {
         if (this.isBaby()) {
-            return this.getType().getDimensions().scale(0.75F, 0.5F);
+            return this.getType().getDimensions().scale(0.75F, 0.5F).withEyeHeight(0.75F);
         } else {
             return this.getType().getDimensions();
         }
@@ -112,15 +113,5 @@ public class EvolvedCreeperEntity extends Creeper {
             this.refreshDimensions();
         }
         super.onSyncedDataUpdated(data);
-    }
-
-    @Override
-    protected float getStandingEyeHeight(Pose pose, EntityDimensions dimensions) {
-        return this.isBaby() ? 0.75F : 1.4F;
-    }
-
-    @Override
-    public float getMyRidingOffset(Entity entity) {
-        return this.isBaby() ? 0.0F : -0.45F;
     }
 }

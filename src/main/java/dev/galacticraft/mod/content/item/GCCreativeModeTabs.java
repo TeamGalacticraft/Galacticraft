@@ -36,12 +36,14 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.DyedItemColor;
 
 import static dev.galacticraft.mod.content.item.GCItems.*;
 
@@ -59,7 +61,7 @@ public class GCCreativeModeTabs {
                     PlaceholderItemStorage itemStorage = new PlaceholderItemStorage();
                     ContainerItemContext context = ContainerItemContext.ofSingleSlot(itemStorage);
 
-                    output.accept(SMALL_OXYGEN_TANK);
+                    output.accept(SMALL_OXYGEN_TANK);//todo: set directly
                     itemStorage.setItem(SMALL_OXYGEN_TANK);
                     context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
                     output.accept(itemStorage.variant.toStack());
@@ -87,10 +89,7 @@ public class GCCreativeModeTabs {
                 output.accept(ROCKET);
 
                 var creativeRocket = new ItemStack(ROCKET);
-                creativeRocket.applyComponents(DataComponentPatch.builder()
-                        .set(GCDataComponents.CREATIVE, true)
-                        .build()
-                );
+                creativeRocket.set(GCDataComponents.CREATIVE, true);
                 output.accept(creativeRocket);
 
                 // MATERIALS
@@ -159,7 +158,6 @@ public class GCCreativeModeTabs {
                 output.accept(AMBIENT_THERMAL_CONTROLLER);
 
                 // FOOD
-                output.accept(MOON_BERRIES);
                 output.accept(CHEESE_CURD);
 
                 output.accept(CHEESE_SLICE);
@@ -353,12 +351,7 @@ public class GCCreativeModeTabs {
 
                 for (DyeColor color : DyeColor.values()) {
                     ItemStack stack = new ItemStack(GCBlocks.PARACHEST);
-                    CompoundTag itemTag = new CompoundTag();
-                    CompoundTag blockStateTag = new CompoundTag();
-                    itemTag.put("BlockStateTag", blockStateTag);
-                    blockStateTag.putString("color", color.getName());
-
-                    stack.setTag(itemTag);
+                    stack.set(DataComponents.BASE_COLOR, color);
                     output.accept(stack);
                 }
 

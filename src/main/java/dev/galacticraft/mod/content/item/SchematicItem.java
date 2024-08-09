@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.item.Schematic;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import net.minecraft.nbt.CompoundTag;
@@ -39,13 +40,9 @@ public class SchematicItem extends Item implements Schematic {
 
     @Override
     public @Nullable ResourceKey<? extends RocketPart<?, ?>> getPart(@NotNull ItemStack stack) {
-        CompoundTag tag = stack.getTag();
-        if (tag != null) {
-            String registry = tag.getString("registry");
-            String location = tag.getString("location");
-            if (!registry.isEmpty() && !location.isEmpty()) {
-                return ResourceKey.create(ResourceKey.createRegistryKey(ResourceLocation.parse(registry)), ResourceLocation.parse(location));
-            }
+        ResourceKey<?> resourceKey = stack.get(GCDataComponents.KEY);
+        if (resourceKey != null) {
+            return (ResourceKey<? extends RocketPart<?, ?>>) resourceKey;
         }
         return null;
     }

@@ -34,9 +34,13 @@ import dev.galacticraft.api.universe.display.CelestialDisplay;
 import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
+import dev.galacticraft.mod.util.StreamCodecs;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
@@ -59,6 +63,7 @@ public final class SatelliteConfig implements CelestialBodyConfig {
             Codec.INT.fieldOf("accessWeight").forGetter(SatelliteConfig::accessWeight),
             LevelStem.CODEC.fieldOf("dimension_options").forGetter(SatelliteConfig::dimensionOptions)
     ).apply(instance, SatelliteConfig::new));
+    public static final StreamCodec<RegistryFriendlyByteBuf, SatelliteConfig> STREAM_CODEC = StreamCodecs.wrapCodec(CODEC);
 
     private final Holder<CelestialBody<?, ?>> parent;
     private final Holder<Galaxy> galaxy;

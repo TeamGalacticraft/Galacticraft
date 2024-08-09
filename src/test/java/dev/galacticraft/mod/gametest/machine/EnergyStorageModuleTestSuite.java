@@ -24,6 +24,7 @@ package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.MachineGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.EnergyStorageModuleBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.gametest.framework.GameTestGenerator;
@@ -35,7 +36,7 @@ import java.util.List;
 @TestSuite("energy_storage_module")
 public final class EnergyStorageModuleTestSuite extends MachineGameTest<EnergyStorageModuleBlockEntity> {
     public EnergyStorageModuleTestSuite() {
-        super(GCMachineTypes.ENERGY_STORAGE_MODULE);
+        super(GCBlocks.ENERGY_STORAGE_MODULE);
     }
 
     @Override

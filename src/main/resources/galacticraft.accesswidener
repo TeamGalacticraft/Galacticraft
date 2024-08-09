@@ -5,9 +5,11 @@ accessible method net/minecraft/client/particle/DripParticle$DripHangParticle <i
 accessible method net/minecraft/client/particle/DripParticle$FallingParticle <init> (Lnet/minecraft/client/multiplayer/ClientLevel;DDDLnet/minecraft/world/level/material/Fluid;)V
 
 # private classes
-accessible class  net/minecraft/world/level/levelgen/SurfaceRules$Condition
-accessible class  net/minecraft/world/level/levelgen/SurfaceRules$LazyYCondition
-accessible class  net/minecraft/world/level/levelgen/SurfaceRules$Context
+accessible class net/minecraft/data/models/BlockModelGenerators$BlockStateGeneratorSupplier
+accessible class net/minecraft/world/level/levelgen/SurfaceRules$Condition
+accessible class net/minecraft/world/level/levelgen/SurfaceRules$LazyYCondition
+accessible class net/minecraft/world/level/levelgen/SurfaceRules$Context
+accessible class net/minecraft/world/level/biome/MultiNoiseBiomeSourceParameterList$Preset$SourceProvider
 
 # fields in final classes
 accessible field net/minecraft/world/level/levelgen/SurfaceRules$Context biome Ljava/util/function/Supplier;
@@ -39,6 +41,3 @@ accessible field net/minecraft/client/renderer/LevelRenderer RAIN_DIAMETER I
 
 # private fields
 accessible field net/minecraft/client/renderer/LevelRenderer ticks I
-
-# private methods
-accessible method net/minecraft/data/models/BlockModelGenerators createMirroredColumnGenerator (Lnet/minecraft/world/level/block/Block;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/data/models/model/TextureMapping;Ljava/util/function/BiConsumer;)Lnet/minecraft/data/models/blockstates/BlockStateGenerator;

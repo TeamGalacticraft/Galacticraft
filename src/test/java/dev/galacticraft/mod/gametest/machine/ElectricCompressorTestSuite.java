@@ -24,6 +24,7 @@ package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricCompressorBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
@@ -31,14 +32,15 @@ import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CraftingInput;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 @TestSuite("electric_compressor")
-public final class ElectricCompressorTestSuite extends RecipeGameTest<CraftingContainer, CompressingRecipe, ElectricCompressorBlockEntity> {
+public final class ElectricCompressorTestSuite extends RecipeGameTest<CraftingInput, CompressingRecipe, ElectricCompressorBlockEntity> {
     public ElectricCompressorTestSuite() {
-        super(GCMachineTypes.ELECTRIC_COMPRESSOR, List.of(
+        super(GCBlocks.ELECTRIC_COMPRESSOR, List.of(
                 machine -> machine.energyStorage().setEnergy(Long.MAX_VALUE / 2),
                 machine -> machine.itemStorage().slot(ElectricCompressorBlockEntity.INPUT_SLOTS).set(Items.IRON_INGOT, 1),
                 machine -> machine.itemStorage().slot(ElectricCompressorBlockEntity.INPUT_SLOTS + 1).set(Items.IRON_INGOT, 1)

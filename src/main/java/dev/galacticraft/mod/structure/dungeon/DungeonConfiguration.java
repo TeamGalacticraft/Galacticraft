@@ -67,7 +67,7 @@ public class DungeonConfiguration {
     }
 
     public CompoundTag write(CompoundTag tagCompound) {
-        tagCompound.put("brickBlock", Util.getOrThrow(BlockState.CODEC.encodeStart(NbtOps.INSTANCE, this.brickBlock), RuntimeException::new));
+        tagCompound.put("brickBlock", BlockState.CODEC.encodeStart(NbtOps.INSTANCE, this.brickBlock).getOrThrow());
         tagCompound.putInt("yPosition", this.yPosition);
         tagCompound.putInt("hallwayLengthMin", this.hallwayLengthMin);
         tagCompound.putInt("hallwayLengthMax", this.hallwayLengthMax);
@@ -80,7 +80,7 @@ public class DungeonConfiguration {
 
     public void read(CompoundTag tagCompound) {
         try {
-            this.brickBlock = Util.getOrThrow(BlockState.CODEC.decode(NbtOps.INSTANCE, tagCompound.get("brickBlock")), RuntimeException::new).getFirst();
+            this.brickBlock = BlockState.CODEC.decode(NbtOps.INSTANCE, tagCompound.get("brickBlock")).getOrThrow().getFirst();
             this.yPosition = tagCompound.getInt("yPosition");
             this.hallwayLengthMin = tagCompound.getInt("hallwayLengthMin");
             this.hallwayLengthMax = tagCompound.getInt("hallwayLengthMax");

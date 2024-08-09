@@ -26,6 +26,7 @@ import dev.galacticraft.machinelib.api.gametest.MachineGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.MachineTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.block.entity.machine.RefineryBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -40,7 +41,7 @@ import java.util.List;
 @TestSuite("refinery")
 public final class RefineryTestSuite extends MachineGameTest<RefineryBlockEntity> {
     public RefineryTestSuite() {
-        super(GCMachineTypes.REFINERY);
+        super(GCBlocks.REFINERY);
     }
 
     @Override

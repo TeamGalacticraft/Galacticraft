@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.client.model;
 
-import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.special.ParaChestBlock;
 import net.fabricmc.fabric.api.renderer.v1.model.WrapperBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -30,25 +29,24 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
 public class ParaChestBakedModel implements BakedModel, WrapperBakedModel {
-    private final ParaChestOverride ITEM_OVERRIDE = new ParaChestOverride();
+    private final ParaChestOverride itemOverride;
     private final BakedModel parent;
     private final Map<DyeColor, BakedModel> bakedChutes;
     private final DyeColor defaultColor;
@@ -61,6 +59,7 @@ public class ParaChestBakedModel implements BakedModel, WrapperBakedModel {
         this.parent = parent;
         this.bakedChutes = bakedChutes;
         this.defaultColor = defaultColor;
+        this.itemOverride = new ParaChestOverride();
     }
 
     @Override
@@ -76,19 +75,7 @@ public class ParaChestBakedModel implements BakedModel, WrapperBakedModel {
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
         BakedModel.super.emitItemQuads(stack, randomSupplier, context);
-        CompoundTag compoundTag = stack.getTag();
-        if (compoundTag != null) {
-            CompoundTag blockStateTag = compoundTag.getCompound("BlockStateTag");
-            StateDefinition<Block, BlockState> stateDefinition = GCBlocks.PARACHEST.getStateDefinition();
-                Property<?> property = stateDefinition.getProperty("color");
-                if (property != null) {
-                    property.getValue(blockStateTag.getString("color")).ifPresent(color -> {
-                        bakedChutes.get(color).emitItemQuads(stack, randomSupplier, context);
-                    });
-                }
-        } else {
-            bakedChutes.get(DyeColor.WHITE).emitItemQuads(stack, randomSupplier, context);
-        }
+        this.bakedChutes.get(stack.getOrDefault(DataComponents.BASE_COLOR, defaultColor)).emitItemQuads(stack, randomSupplier, context);
     }
 
     @Override
@@ -128,7 +115,7 @@ public class ParaChestBakedModel implements BakedModel, WrapperBakedModel {
 
     @Override
     public ItemOverrides getOverrides() {
-        return ITEM_OVERRIDE;
+        return itemOverride;
     }
 
     @Override
@@ -137,19 +124,16 @@ public class ParaChestBakedModel implements BakedModel, WrapperBakedModel {
     }
 
     public class ParaChestOverride extends ItemOverrides {
+        public ParaChestOverride() {
+            super(null, null, Collections.emptyList());
+        }
+
         @Nullable
         @Override
         public BakedModel resolve(BakedModel model, ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed) {
-            CompoundTag compoundTag = stack.getTag();
-            if (compoundTag != null) {
-                CompoundTag blockStateTag = compoundTag.getCompound("BlockStateTag");
-                StateDefinition<Block, BlockState> stateDefinition = GCBlocks.PARACHEST.getStateDefinition();
-                Property<?> property = stateDefinition.getProperty("color");
-                if (property != null) {
-                    var value = property.getValue(blockStateTag.getString("color"));
-                    if (value.isPresent())
-                        return new ParaChestBakedModel(ParaChestBakedModel.this.parent, ParaChestBakedModel.this.bakedChutes, (DyeColor) value.get());
-                }
+            DyeColor dyeColor = stack.get(DataComponents.BASE_COLOR);
+            if (dyeColor != null) {
+                return new ParaChestBakedModel(ParaChestBakedModel.this.parent, ParaChestBakedModel.this.bakedChutes, dyeColor);
             }
             return ParaChestBakedModel.this.parent.getOverrides().resolve(model, stack, level, entity, seed);
         }

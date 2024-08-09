@@ -22,41 +22,42 @@
 
 package dev.galacticraft.mod.lookup;
 
+import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.mod.Constant;
+import dev.galacticraft.machinelib.api.filter.ResourceFilter;
+import dev.galacticraft.machinelib.api.filter.ResourceFilters;
+import dev.galacticraft.machinelib.api.item.SingleVariantFixedItemBackedFluidStorage;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.item.OxygenTankItem;
-import dev.galacticraft.mod.storage.SingleTypeStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import team.reborn.energy.api.EnergyStorage;
 
 @SuppressWarnings("UnstableApiUsage")
 public class GCApiLookupProviders {
-    private static final Block[] MACHINE_BLOCKS = new Block[]{
-            GCBlocks.COAL_GENERATOR,
-            GCBlocks.BASIC_SOLAR_PANEL,
-            GCBlocks.ADVANCED_SOLAR_PANEL,
-            GCBlocks.CIRCUIT_FABRICATOR,
-            GCBlocks.COMPRESSOR,
-            GCBlocks.ELECTRIC_COMPRESSOR,
-            GCBlocks.ELECTRIC_FURNACE,
-            GCBlocks.ELECTRIC_ARC_FURNACE,
-            GCBlocks.REFINERY,
-            GCBlocks.OXYGEN_COLLECTOR,
-            GCBlocks.OXYGEN_COMPRESSOR,
-            GCBlocks.OXYGEN_DECOMPRESSOR,
-            GCBlocks.OXYGEN_SEALER,
-            GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR,
-            GCBlocks.ENERGY_STORAGE_MODULE,
-            GCBlocks.OXYGEN_STORAGE_MODULE
+    private static final BlockEntityType<? extends MachineBlockEntity>[] MACHINE_BLOCKS = new BlockEntityType[]{
+            GCBlockEntityTypes.COAL_GENERATOR,
+            GCBlockEntityTypes.BASIC_SOLAR_PANEL,
+            GCBlockEntityTypes.ADVANCED_SOLAR_PANEL,
+            GCBlockEntityTypes.CIRCUIT_FABRICATOR,
+            GCBlockEntityTypes.COMPRESSOR,
+            GCBlockEntityTypes.ELECTRIC_COMPRESSOR,
+            GCBlockEntityTypes.ELECTRIC_FURNACE,
+            GCBlockEntityTypes.ELECTRIC_ARC_FURNACE,
+            GCBlockEntityTypes.REFINERY,
+            GCBlockEntityTypes.OXYGEN_COLLECTOR,
+            GCBlockEntityTypes.OXYGEN_COMPRESSOR,
+            GCBlockEntityTypes.OXYGEN_DECOMPRESSOR,
+            GCBlockEntityTypes.OXYGEN_SEALER,
+            GCBlockEntityTypes.OXYGEN_BUBBLE_DISTRIBUTOR,
+            GCBlockEntityTypes.ENERGY_STORAGE_MODULE,
+            GCBlockEntityTypes.OXYGEN_STORAGE_MODULE
     };
     @SuppressWarnings("rawtypes")
     private static final BlockEntityType[] WIRE_TYPES = new BlockEntityType[]{
@@ -72,7 +73,7 @@ public class GCApiLookupProviders {
     };
 
     public static void register() {
-        MachineBlockEntity.registerComponents(MACHINE_BLOCKS);
+        MachineBlockEntity.registerProviders(MACHINE_BLOCKS);
 
         FluidStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
             if (direction == null || !((Pipe) blockEntity).canConnect(direction)) return null;
@@ -85,8 +86,8 @@ public class GCApiLookupProviders {
         }, WIRE_TYPES);
 
         FluidStorage.ITEM.registerForItems((itemStack, context) -> {
-            long amount = itemStack.getTag() != null ? itemStack.getTag().getLong(Constant.Nbt.VALUE) : 0;
-            return new SingleTypeStorage<>(FluidVariant.of(Gases.OXYGEN), context, ((OxygenTankItem) itemStack.getItem()).capacity, FluidVariant.blank(), amount);
+            long capacity = ((OxygenTankItem) itemStack.getItem()).capacity;
+            return new SingleVariantFixedItemBackedFluidStorage(itemStack, context, capacity / 100, capacity / 100, capacity, FluidVariant.of(Gases.OXYGEN));
         }, GCItems.SMALL_OXYGEN_TANK, GCItems.MEDIUM_OXYGEN_TANK, GCItems.LARGE_OXYGEN_TANK);
         FluidStorage.ITEM.registerSelf(GCItems.INFINITE_OXYGEN_TANK);
     }

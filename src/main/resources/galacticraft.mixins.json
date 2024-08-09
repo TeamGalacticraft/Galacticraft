@@ -9,7 +9,6 @@
     "BlockBehaviourMixin",
     "BucketItemAccessor",
     "BucketItemMixin",
-    "BuiltInLootTablesAccessor",
     "DimensionTypeMixin",
     "EntityMixin",
     "FlowingFluidMixin",

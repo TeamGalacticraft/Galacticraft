@@ -32,11 +32,15 @@ import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity.Reci
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import dev.galacticraft.mod.mixin.AbstractContainerMenuAccessor;
+import dev.galacticraft.mod.util.StreamCodecs;
 import dev.galacticraft.mod.world.inventory.RocketResultSlot;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -132,15 +136,15 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         this.upgrade.inventory.removeListener(this);
     }
 
-    public RocketWorkbenchMenu(int syncId, Inventory playerInventory, FriendlyByteBuf buf) {
-        this(syncId, (RocketWorkbenchBlockEntity) playerInventory.player.level().getBlockEntity(buf.readBlockPos()), playerInventory);
+    public RocketWorkbenchMenu(int syncId, Inventory playerInventory, OpeningData data) {
+        this(syncId, (RocketWorkbenchBlockEntity) playerInventory.player.level().getBlockEntity(data.pos), playerInventory);
 
-        if (buf.readBoolean()) this.cone.setSelection(buf.readResourceLocation());
-        if (buf.readBoolean()) this.body.setSelection(buf.readResourceLocation());
-        if (buf.readBoolean()) this.fins.setSelection(buf.readResourceLocation());
-        if (buf.readBoolean()) this.booster.setSelection(buf.readResourceLocation());
-        if (buf.readBoolean()) this.engine.setSelection(buf.readResourceLocation());
-        if (buf.readBoolean()) this.upgrade.setSelection(buf.readResourceLocation());
+        this.cone.setSelection(data.cone);
+        this.body.setSelection(data.body);
+        this.fins.setSelection(data.fin);
+        this.booster.setSelection(data.booster);
+        this.engine.setSelection(data.engine);
+        this.upgrade.setSelection(data.upgrade);
     }
 
     public static int calculateAdditionalHeight(RocketPartRecipe<?, ?> cone, RocketPartRecipe<?, ?> body, RocketPartRecipe<?, ?> fins, RocketPartRecipe<?, ?> booster, RocketPartRecipe<?, ?> engine, RocketPartRecipe<?, ?> upgrade) {
@@ -401,5 +405,28 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         public int getMaxStackSize() {
             return 1;
         }
+    }
+
+    public record OpeningData(BlockPos pos, ResourceLocation cone, ResourceLocation body,
+                              ResourceLocation fin, ResourceLocation booster,
+                              ResourceLocation engine, ResourceLocation upgrade) {
+        private static final StreamCodec<ByteBuf, ResourceLocation> OPT_ID = StreamCodecs.ofNullable(ResourceLocation.STREAM_CODEC);
+        public static final StreamCodec<ByteBuf, OpeningData> CODEC = StreamCodecs.composite(
+                BlockPos.STREAM_CODEC,
+                OpeningData::pos,
+                OPT_ID,
+                OpeningData::cone,
+                OPT_ID,
+                OpeningData::body,
+                OPT_ID,
+                OpeningData::fin,
+                OPT_ID,
+                OpeningData::booster,
+                OPT_ID,
+                OpeningData::engine,
+                OPT_ID,
+                OpeningData::upgrade,
+                OpeningData::new
+        );
     }
 }

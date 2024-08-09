@@ -54,9 +54,7 @@ public abstract class ItemEntityMixin extends Entity {
             if (ttc == 0) {
                 this.setItem(new ItemStack(GCItems.THROWABLE_METEOR_CHUNK, stack.getCount()));
             } else {
-                stack.applyComponents(DataComponentPatch.builder()
-                        .set(GCDataComponents.TICKS_UNTIL_COOL, ttc - 1)
-                        .build());
+                stack.set(GCDataComponents.TICKS_UNTIL_COOL, ttc - 1);
             }
 
             if (this.isInWater()) {

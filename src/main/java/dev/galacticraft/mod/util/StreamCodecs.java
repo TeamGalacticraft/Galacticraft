@@ -24,15 +24,20 @@ package dev.galacticraft.mod.util;
 
 
 import com.mojang.datafixers.util.*;
+import com.mojang.serialization.Codec;
+import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.VarInt;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -48,6 +53,20 @@ public interface StreamCodecs {
         return StreamCodec.of(
                 (b, v) -> b.writeResourceLocation(b.registryAccess().registryOrThrow(registry).getKey(v)),
                 b -> Objects.requireNonNull(b.registryAccess().registryOrThrow(registry).get(b.readResourceLocation()))
+        );
+    }
+
+    static <B extends ByteBuf, V> StreamCodec<B, @Nullable V> ofNullable(StreamCodec<B, @NotNull V> codec) {
+        return StreamCodec.of(
+                (b, v) -> {
+                    if (v == null) {
+                        b.writeBoolean(false);
+                    } else {
+                        b.writeBoolean(true);
+                        codec.encode(b, v);
+                    }
+                },
+                b -> b.readBoolean() ? codec.decode(b) : null
         );
     }
 
@@ -335,5 +354,12 @@ public interface StreamCodecs {
 
     static <E extends Enum<E>> StreamCodec<ByteBuf, E> ofEnum(E[] values) {
         return StreamCodec.of((b, e) -> b.writeByte(e.ordinal()), b -> values[b.readByte()]);
+    }
+
+    static <T> StreamCodec<RegistryFriendlyByteBuf, T> wrapCodec(Codec<T> codec) {
+        return StreamCodec.of(
+                (b, v) -> b.writeNbt(codec.encode(v, NbtOps.INSTANCE, new CompoundTag()).getOrThrow()),
+                b -> codec.decode(NbtOps.INSTANCE, b.readNbt()).getOrThrow().getFirst()
+        );
     }
 }

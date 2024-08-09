@@ -26,6 +26,7 @@ import dev.galacticraft.machinelib.api.gametest.MachineGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.MachineTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.CoalGeneratorBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.gametest.framework.GameTestGenerator;
@@ -39,7 +40,7 @@ import java.util.List;
 @TestSuite("coal_generator")
 public final class CoalGeneratorTestSuite extends MachineGameTest<CoalGeneratorBlockEntity> {
     public CoalGeneratorTestSuite() {
-        super(GCMachineTypes.COAL_GENERATOR);
+        super(GCBlocks.COAL_GENERATOR);
     }
 
     @MachineTest

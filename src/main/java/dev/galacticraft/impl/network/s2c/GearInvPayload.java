@@ -20,36 +20,33 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.network.s2c;
+package dev.galacticraft.impl.network.s2c;
 
-import dev.galacticraft.api.registry.AddonRegistries;
-import dev.galacticraft.api.rocket.RocketData;
-import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.impl.network.s2c.S2CPayload;
+import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
 import dev.galacticraft.mod.util.StreamCodecs;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public record OpenCelestialScreenPayload(@Nullable RocketData data, Holder<CelestialBody<?, ?>> celestialBody) implements S2CPayload {
-    public static final StreamCodec<RegistryFriendlyByteBuf, OpenCelestialScreenPayload> STREAM_CODEC = StreamCodec.composite(
-            StreamCodecs.ofNullable(RocketData.STREAM_CODEC),
-            p -> p.data,
-            ByteBufCodecs.holderRegistry(AddonRegistries.CELESTIAL_BODY),
-            p -> p.celestialBody,
-            OpenCelestialScreenPayload::new
+import java.util.Objects;
+
+public record GearInvPayload(int entityId, ItemStack[] items) implements S2CPayload {
+    public static final ResourceLocation ID = Constant.id("gear_inv");
+    public static final Type<GearInvPayload> TYPE = new Type<>(ID);
+    public static final StreamCodec<RegistryFriendlyByteBuf, GearInvPayload> CODEC = StreamCodec.composite(
+            ByteBufCodecs.VAR_INT,
+            GearInvPayload::entityId,
+            StreamCodecs.array(ItemStack.STREAM_CODEC, ItemStack[]::new),
+            GearInvPayload::items,
+            GearInvPayload::new
     );
-
-    public static final ResourceLocation ID = Constant.id("open_celestial_screen");
-    public static final Type<OpenCelestialScreenPayload> TYPE = new Type<>(ID);
 
     @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {
@@ -58,6 +55,9 @@ public record OpenCelestialScreenPayload(@Nullable RocketData data, Holder<Celes
 
     @Override
     public void handle(ClientPlayNetworking.@NotNull Context context) {
-        context.client().execute(() -> context.client().setScreen(new CelestialSelectionScreen(false, this.data(), true, this.celestialBody.value())));
+        Container container = ((GearInventoryProvider) Objects.requireNonNull(context.client().level.getEntity(this.entityId))).galacticraft$getGearInv();
+        for (int i = 0; i < this.items.length; i++) {
+            container.setItem(i, this.items[i]);
+        }
     }
 }

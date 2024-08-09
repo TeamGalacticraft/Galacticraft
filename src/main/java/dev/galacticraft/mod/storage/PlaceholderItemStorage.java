@@ -35,12 +35,7 @@ public class PlaceholderItemStorage extends SingleItemStorage {
     }
 
     @Override
-    public long extract(ItemVariant extractedVariant, long maxAmount, TransactionContext transaction) {
-        return super.extract(extractedVariant, maxAmount, transaction);
-    }
-
-    @Override
     protected long getCapacity(ItemVariant variant) {
-        return variant.isBlank() ? 64 : variant.getItem().getMaxStackSize();
+        return variant.isBlank() ? 64 : variant.toStack().getMaxStackSize();
     }
 }

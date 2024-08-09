@@ -173,7 +173,6 @@ public interface Constant {
         String UNLIT_LANTERN = "unlit_lantern";
         String CAVERNOUS_VINES = "cavernous_vines";
         String CAVERNOUS_VINES_PLANT = "cavernous_vines_plant";
-        String MOON_BERRY_BUSH = "moon_berry_bush";
         String WEB_TORCH = "web_torch";
         String FALLEN_METEOR = "fallen_meteor";
         String SLIMELING_EGG = "slimeling_egg";
@@ -360,7 +359,6 @@ public interface Constant {
         String AMBIENT_THERMAL_CONTROLLER = "ambient_thermal_controller";
         String LIQUID_CANISTER = "liquid_canister";
         //FOOD
-        String MOON_BERRIES = "moon_berries";
         String CHEESE_CURD = "cheese_curd";
         String CHEESE_SLICE = "cheese_slice";
         String BURGER_BUN = "burger_bun";

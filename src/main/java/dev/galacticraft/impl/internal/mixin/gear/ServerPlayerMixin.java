@@ -24,6 +24,7 @@ package dev.galacticraft.impl.internal.mixin.gear;
 
 import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.impl.internal.inventory.MappedInventory;
+import dev.galacticraft.impl.network.s2c.GearInvPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.world.inventory.GearInventory;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -37,6 +38,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -58,21 +60,20 @@ public abstract class ServerPlayerMixin implements GearInventoryProvider {
     private SimpleContainer galacticraft_createGearInventory() {
         SimpleContainer inv = new GearInventory();
         inv.addListener((inventory) -> {
-            FriendlyByteBuf buf = PacketByteBufs.create();
-            buf.writeInt(((ServerPlayer) (Object) this).getId());
-            buf.writeInt(inventory.getContainerSize());
+            ItemStack[] stacks = new ItemStack[inventory.getContainerSize()];
             for (int i = 0; i < inventory.getContainerSize(); i++) {
-                buf.writeItem(inventory.getItem(i));
+                stacks[i] = inventory.getItem(i);
             }
+            ServerPlayer player = (ServerPlayer) (Object) this;
+            GearInvPayload payload = new GearInvPayload(player.getId(), stacks);
 
             if (this.connection != null) {
-                Collection<ServerPlayer> tracking = PlayerLookup.tracking(((ServerPlayer) (Object) this));
-                //noinspection SuspiciousMethodCalls
-                if (!tracking.contains(this)) {
-                    ServerPlayNetworking.send(((ServerPlayer) (Object) this), Constant.id("gear_inv_sync"), buf);
+                Collection<ServerPlayer> tracking = PlayerLookup.tracking(player);
+                if (!tracking.contains(player)) {
+                    ServerPlayNetworking.send(player, payload);
                 }
-                for (ServerPlayer player : tracking) {
-                    ServerPlayNetworking.send(player, Constant.id("gear_inv_sync"), PacketByteBufs.copy(buf));
+                for (ServerPlayer remote : tracking) {
+                    ServerPlayNetworking.send(remote, payload);
                 }
             }
         });

@@ -28,9 +28,12 @@ import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.impl.universe.galaxy.GalaxyImpl;
+import dev.galacticraft.mod.util.StreamCodecs;
 import net.minecraft.core.*;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Contract;
@@ -45,6 +48,7 @@ public interface Galaxy {
     ).apply(instance, Galaxy::create));
     Codec<Holder<Galaxy>> CODEC = RegistryFileCodec.create(AddonRegistries.GALAXY, DIRECT_CODEC);
     Codec<HolderSet<Galaxy>> LIST_CODEC = RegistryCodecs.homogeneousList(AddonRegistries.GALAXY, DIRECT_CODEC);
+    StreamCodec<RegistryFriendlyByteBuf, Galaxy> STREAM_CODEC = StreamCodecs.ofRegistryEntry(AddonRegistries.GALAXY);
 
     @Contract("_, _, _, _ -> new")
     static @NotNull Galaxy create(@NotNull Component name, @NotNull Component description, CelestialPosition<?, ?> position, CelestialDisplay<?, ?> display) {

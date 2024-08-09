@@ -20,27 +20,27 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.misc.footprint;
+package dev.galacticraft.impl.network;
 
-import dev.galacticraft.mod.network.s2c.FootprintPacket;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
+import dev.galacticraft.impl.network.c2s.FlagDataPayload;
+import dev.galacticraft.impl.network.c2s.TeamNamePayload;
+import dev.galacticraft.impl.network.s2c.*;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-import java.util.ArrayList;
-import java.util.List;
+/**
+ * Handles server-bound (C2S) packets.
+ */
+public class GCApiClientPacketReceivers {
+    public static void register() {
+        registerPacket(AddSatellitePayload.TYPE);
+        registerPacket(GearInvPayload.TYPE);
+        registerPacket(OxygenUpdatePayload.TYPE);
+        registerPacket(RemoveSatellitePayload.TYPE);
+        registerPacket(ResearchUpdatePayload.TYPE);
+    }
 
-public class ServerFootprintManager extends FootprintManager {
-    @Override
-    public void onChange(Level level, long packedPos, List<Footprint> footprints) {
-        if (level.getGameTime() % 100 == 0) {
-            PlayerLookup.tracking((ServerLevel) level, new ChunkPos(packedPos)).forEach(player -> {
-                List<Footprint> toSync = new ArrayList<>(footprints);
-                toSync.removeIf(footprint -> footprint.owner.equals(player.getUUID()));
-                ServerPlayNetworking.send(player, new FootprintPacket(packedPos, toSync));
-            });
-        }
+    public static <P extends S2CPayload> void registerPacket(CustomPacketPayload.Type<P> type) {
+        ClientPlayNetworking.registerGlobalReceiver(type, S2CPayload::handle);
     }
 }

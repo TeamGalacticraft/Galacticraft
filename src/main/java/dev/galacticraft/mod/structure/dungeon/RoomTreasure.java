@@ -26,7 +26,9 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.structure.GCStructurePieceTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
@@ -37,11 +39,11 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootTable;
 
 public class RoomTreasure extends SizedPiece {
 
-    public static ResourceLocation MOONCHEST = Constant.id("dungeon_tier_1");
-    public static final ResourceLocation TABLE_TIER_1_DUNGEON = BuiltInLootTables.register(MOONCHEST);
+    public static ResourceKey<LootTable> MOONCHEST = BuiltInLootTables.register(ResourceKey.create(Registries.LOOT_TABLE, Constant.id("dungeon_tier_1")));
 
     public RoomTreasure(CompoundTag tag) {
         super(GCStructurePieceTypes.ROOM_TREASURE, tag);
