@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.7,
+  "group": "desh_ingot",
+  "ingredient": {
+    "item": "galacticraft:desh_ore"
+  },
+  "result": {
+    "id": "galacticraft:desh_ingot"
+  }
+}

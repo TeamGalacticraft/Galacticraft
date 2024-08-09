@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "galacticraft:compressed_bronze"
+    },
+    "S": {
+      "item": "galacticraft:compressed_steel"
+    }
+  },
+  "pattern": [
+    "  S",
+    " B ",
+    "B  "
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:standard_wrench"
+  }
+}

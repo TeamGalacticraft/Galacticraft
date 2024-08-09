@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "tag": "c:coal"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    },
+    "T": {
+      "item": "galacticraft:compressed_tin"
+    }
+  },
+  "pattern": [
+    " T ",
+    "TRT",
+    "TCT"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:battery"
+  }
+}

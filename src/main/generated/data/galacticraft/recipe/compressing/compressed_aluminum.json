@@ -1,0 +1,15 @@
+{
+  "type": "galacticraft:compressing_shapeless",
+  "ingredients": [
+    {
+      "tag": "c:aluminum_ingots"
+    },
+    {
+      "tag": "c:aluminum_ingots"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:compressed_aluminum"
+  }
+}

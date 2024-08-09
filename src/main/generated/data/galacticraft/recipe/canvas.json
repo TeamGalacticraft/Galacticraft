@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "minecraft:stick"
+    },
+    "S": {
+      "item": "minecraft:string"
+    }
+  },
+  "pattern": [
+    "SSI",
+    "SSS",
+    "ISS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:canvas"
+  }
+}

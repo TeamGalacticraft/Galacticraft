@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "galacticraft:compressed_aluminum"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    }
+  },
+  "pattern": [
+    "AGA",
+    "GGG",
+    "AGA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:vacuum_glass_strong"
+  }
+}

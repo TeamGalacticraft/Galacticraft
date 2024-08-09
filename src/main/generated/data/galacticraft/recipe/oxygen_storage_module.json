@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": {
+      "item": "galacticraft:compressed_steel"
+    },
+    "T": {
+      "item": "galacticraft:large_oxygen_tank"
+    }
+  },
+  "pattern": [
+    "SSS",
+    "TTT",
+    "SSS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:oxygen_storage_module"
+  }
+}

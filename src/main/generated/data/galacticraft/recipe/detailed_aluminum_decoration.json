@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "minecraft:stone"
+    },
+    "X": {
+      "item": "galacticraft:compressed_aluminum"
+    }
+  },
+  "pattern": [
+    "##",
+    "##",
+    " X"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:detailed_aluminum_decoration"
+  }
+}

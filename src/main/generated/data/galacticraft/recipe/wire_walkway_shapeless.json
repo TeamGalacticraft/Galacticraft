@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "galacticraft:compressed_titanium"
+    },
+    {
+      "item": "galacticraft:aluminum_wire"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:wire_walkway"
+  }
+}
