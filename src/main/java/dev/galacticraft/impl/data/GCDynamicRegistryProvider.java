@@ -22,31 +22,15 @@
 
 package dev.galacticraft.impl.data;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
-
 import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.Encoder;
 import com.mojang.serialization.JsonOps;
-import org.jetbrains.annotations.ApiStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.impl.registry.sync.DynamicRegistriesImpl;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.HolderOwner;
-import net.minecraft.core.Registry;
+import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -57,6 +41,16 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.nio.file.Path;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * Modified version of {@link net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider} to support {@link RegistryDataLoader#DIMENSION_REGISTRIES}
@@ -130,7 +124,7 @@ public abstract class GCDynamicRegistryProvider implements DataProvider {
          */
         public <T> Holder<T> ref(ResourceKey<T> key) {
             RegistryEntries<T> entries = getQueuedEntries(key);
-            return Holder.Reference.createStandAlone(entries.lookup, key);
+            return new UniversalReferenceHack<>(entries.lookup, key);
         }
 
         /**
@@ -197,7 +191,7 @@ public abstract class GCDynamicRegistryProvider implements DataProvider {
                 throw new IllegalArgumentException("Trying to add registry key " + key + " more than once.");
             }
 
-            return Holder.Reference.createStandAlone(lookup, key);
+            return new UniversalReferenceHack<>(lookup, key);
         }
 
         public Holder<T> add(ResourceLocation id, T value) {
@@ -206,25 +200,23 @@ public abstract class GCDynamicRegistryProvider implements DataProvider {
     }
 
     @Override
-    public CompletableFuture<?> run(CachedOutput writer) {
-        return registriesFuture.thenCompose(registries -> {
-            return CompletableFuture
-                    .supplyAsync(() -> {
-                        Entries entries = new Entries(registries, output.getModId());
-                        configure(registries, entries);
-                        return entries;
-                    })
-                    .thenCompose(entries -> {
-                        final RegistryOps<JsonElement> dynamicOps = RegistryOps.create(JsonOps.INSTANCE, registries);
-                        ArrayList<CompletableFuture<?>> futures = new ArrayList<>();
+    public @NotNull CompletableFuture<?> run(CachedOutput writer) {
+        return registriesFuture.thenCompose(registries -> CompletableFuture
+                .supplyAsync(() -> {
+                    Entries entries = new Entries(registries, output.getModId());
+                    configure(registries, entries);
+                    return entries;
+                })
+                .thenCompose(entries -> {
+                    final RegistryOps<JsonElement> dynamicOps = registries.createSerializationContext(JsonOps.INSTANCE);
+                    ArrayList<CompletableFuture<?>> futures = new ArrayList<>();
 
-                        for (RegistryEntries<?> registryEntries : entries.queuedEntries.values()) {
-                            futures.add(writeRegistryEntries(writer, dynamicOps, registryEntries));
-                        }
+                    for (RegistryEntries<?> registryEntries : entries.queuedEntries.values()) {
+                        futures.add(writeRegistryEntries(writer, dynamicOps, registryEntries));
+                    }
 
-                        return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
-                    });
-        });
+                    return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
+                }));
     }
 
     private <T> CompletableFuture<?> writeRegistryEntries(CachedOutput writer, RegistryOps<JsonElement> ops, RegistryEntries<T> entries) {
@@ -252,5 +244,16 @@ public abstract class GCDynamicRegistryProvider implements DataProvider {
         }
 
         return CompletableFuture.completedFuture(null);
+    }
+
+    private static class UniversalReferenceHack<T> extends Holder.Reference<T> {
+        protected UniversalReferenceHack(HolderOwner<T> holderOwner, @Nullable ResourceKey<T> resourceKey) {
+            super(Holder.Reference.Type.STAND_ALONE, holderOwner, resourceKey, null);
+        }
+
+        @Override
+        public boolean canSerializeIn(HolderOwner<T> owner) {
+            return true;
+        }
     }
 }

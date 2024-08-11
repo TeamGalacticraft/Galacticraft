@@ -26,12 +26,7 @@ import dev.galacticraft.mod.Constant;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.storage.loot.LootTable;
-import org.jetbrains.annotations.NotNull;
 
 public class GCLootTables {
-    public static final ResourceKey<LootTable> BASIC_MOON_RUINS_CHEST = key(Constant.LootTable.BASIC_MOON_RUINS_CHEST);
-
-    private static @NotNull ResourceKey<LootTable> key(String id) {
-        return ResourceKey.create(Registries.LOOT_TABLE, Constant.id(id));
-    }
+    public static final ResourceKey<LootTable> BASIC_MOON_RUINS_CHEST = Constant.key(Registries.LOOT_TABLE, Constant.LootTable.BASIC_MOON_RUINS_CHEST);
 }

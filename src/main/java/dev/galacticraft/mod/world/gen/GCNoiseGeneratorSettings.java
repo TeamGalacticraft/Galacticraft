@@ -24,7 +24,7 @@ package dev.galacticraft.mod.world.gen;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.world.gen.surfacebuilder.VenusSurfaceRules;
+import dev.galacticraft.mod.world.gen.surfacerule.VenusSurfaceRules;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;

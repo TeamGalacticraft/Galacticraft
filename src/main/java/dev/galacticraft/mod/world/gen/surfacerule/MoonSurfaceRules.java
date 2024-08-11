@@ -20,9 +20,8 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.gen.surfacebuilder;
+package dev.galacticraft.mod.world.gen.surfacerule;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;

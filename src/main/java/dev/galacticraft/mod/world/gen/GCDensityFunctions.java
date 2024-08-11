@@ -34,10 +34,12 @@ import net.minecraft.world.level.levelgen.synth.BlendedNoise;
 
 public class GCDensityFunctions {
     public static final ResourceKey<DensityFunction> NOODLES = createKey("caves/noodles");
+
     public static final class Moon {
         public static final ResourceKey<DensityFunction> EROSION = createKey("moon/erosion");
         public static final ResourceKey<DensityFunction> FINAL_DENSITY = createKey("moon/final_density");
     }
+
     public static final class Venus {
         // Final Density handles overall terrain shape
         public static final ResourceKey<DensityFunction> FINAL_DENSITY = createKey("venus/final_density");
@@ -46,12 +48,14 @@ public class GCDensityFunctions {
     private static ResourceKey<DensityFunction> createKey(String id) {
         return ResourceKey.create(Registries.DENSITY_FUNCTION, Constant.id(id));
     }
+
     public static void bootstrapRegistries(BootstrapContext<DensityFunction> context) {
         var vanillaRegistry = context.lookup(Registries.DENSITY_FUNCTION);
         var noiseRegistry = context.lookup(Registries.NOISE);
         DensityFunction shiftX = getFunction(vanillaRegistry, NoiseRouterData.SHIFT_X);
         DensityFunction shiftZ = getFunction(vanillaRegistry, NoiseRouterData.SHIFT_Z);
         DensityFunction y = getFunction(vanillaRegistry, NoiseRouterData.Y);
+
 //        DensityFunction noodles = registerAndWrap(context, NOODLES, DensityFunctions.rangeChoice(
 //                DensityFunctions.interpolated(
 //                        DensityFunctions.rangeChoice(
@@ -98,7 +102,7 @@ public class GCDensityFunctions {
 //        ));
 //        DensityFunction erosion = registerAndWrap(context, Moon.EROSION, DensityFunctions.flatCache(
 //              DensityFunctions.shiftedNoise2d(
-//                      shiftX, shiftZ, 1, noiseRegistry.getOrThrow(GCNoiseData.EROSION)
+//                      shiftX, shiftZ, 1.0, noiseRegistry.getOrThrow(GCNoiseData.EROSION)
 //              )
 //        ));
 //        context.register(Moon.FINAL_DENSITY, DensityFunctions.min(

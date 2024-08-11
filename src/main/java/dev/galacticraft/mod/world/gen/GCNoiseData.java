@@ -38,9 +38,9 @@ public class GCNoiseData {
     }
 
     public static void bootstrapRegistries(BootstrapContext<NormalNoise.NoiseParameters> context) {
-        register(context, EROSION, -11, 1, 1, 0, 1, 1);
-        register(context, BASALT_MARE, 5, 0, 0.1, 0.2, 0.1, 0, 0, 0, 0);
-        register(context, BASALT_MARE_HEIGHT, -12, 0.3);
+//        register(context, EROSION, -11, 1, 1, 0, 1, 1);
+//        register(context, BASALT_MARE, 5, 0, 0.1, 0.2, 0.1, 0, 0, 0, 0);
+//        register(context, BASALT_MARE_HEIGHT, -12, 0.3);
     }
 
     private static void register(

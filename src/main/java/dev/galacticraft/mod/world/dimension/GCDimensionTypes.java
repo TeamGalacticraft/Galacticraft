@@ -56,6 +56,7 @@ public class GCDimensionTypes {
                 0.1f,
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)
         ));
+
         context.register(VENUS, new DimensionType(
                 OptionalLong.empty(), // fixedTime
                 true, // hasSkyLight
