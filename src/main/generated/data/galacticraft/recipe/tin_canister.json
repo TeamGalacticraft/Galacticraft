@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "X": {
-      "tag": "c:tin_ingots"
+      "tag": "c:ingots/tin"
     }
   },
   "pattern": [

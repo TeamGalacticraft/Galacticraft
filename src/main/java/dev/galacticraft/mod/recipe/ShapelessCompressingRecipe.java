@@ -127,7 +127,7 @@ public record ShapelessCompressingRecipe(String group,
       private static ShapelessCompressingRecipe fromNetwork(RegistryFriendlyByteBuf buf) {
          String group = buf.readUtf();
          int i = buf.readVarInt();
-         int time = buf.readInt();
+         int time = buf.readVarInt();
          NonNullList<Ingredient> ingredients = NonNullList.withSize(i, Ingredient.EMPTY);
          ingredients.replaceAll(empty -> Ingredient.CONTENTS_STREAM_CODEC.decode(buf));
          ItemStack result = ItemStack.STREAM_CODEC.decode(buf);
@@ -138,7 +138,7 @@ public record ShapelessCompressingRecipe(String group,
       private static void toNetwork(RegistryFriendlyByteBuf buf, ShapelessCompressingRecipe recipe) {
          buf.writeUtf(recipe.group);
          buf.writeVarInt(recipe.ingredients.size());
-
+         buf.writeVarInt(recipe.time);
          for (Ingredient ingredient : recipe.ingredients) {
             Ingredient.CONTENTS_STREAM_CODEC.encode(buf, ingredient);
          }

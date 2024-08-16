@@ -114,7 +114,7 @@ public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<Si
     }
 
     @Override
-    protected SingleRecipeInput createCraftingInv() {
+    protected SingleRecipeInput craftingInv() {
         return RecipeHelper.single(this.inputSlots.slot(0));
     }
 }

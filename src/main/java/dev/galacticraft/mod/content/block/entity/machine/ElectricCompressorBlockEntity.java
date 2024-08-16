@@ -134,7 +134,7 @@ public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity
     }
 
     @Override
-    protected CraftingInput createCraftingInv() {
+    protected CraftingInput craftingInv() {
         return RecipeHelper.craftingInput(3, 3, this.inputSlots.getSlots());
     }
 }

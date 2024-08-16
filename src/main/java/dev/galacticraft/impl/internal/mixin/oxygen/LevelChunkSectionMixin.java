@@ -98,8 +98,12 @@ public abstract class LevelChunkSectionMixin implements ChunkSectionOxygenAccess
 
     @Override
     public void galacticraft$writeOxygenPacket(@NotNull FriendlyByteBuf buf) {
-        byte[] bytes = this.bits.toByteArray();
-        buf.writeByteArray(bytes);
+        if (this.bits != null) {
+            byte[] bytes = this.bits.toByteArray();
+            buf.writeByteArray(bytes);
+        } else {
+            buf.writeVarInt(0);
+        }
     }
 
     @Override

@@ -2,10 +2,10 @@
   "type": "galacticraft:compressing_shapeless",
   "ingredients": [
     {
-      "tag": "c:steel_ingots"
+      "tag": "c:ingots/steel"
     },
     {
-      "tag": "c:steel_ingots"
+      "tag": "c:ingots/steel"
     }
   ],
   "result": {

@@ -43,7 +43,7 @@ public record GearInvPayload(int entityId, ItemStack[] items) implements S2CPayl
     public static final StreamCodec<RegistryFriendlyByteBuf, GearInvPayload> CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT,
             GearInvPayload::entityId,
-            StreamCodecs.array(ItemStack.STREAM_CODEC, ItemStack[]::new),
+            StreamCodecs.array(ItemStack.OPTIONAL_STREAM_CODEC, ItemStack[]::new),
             GearInvPayload::items,
             GearInvPayload::new
     );

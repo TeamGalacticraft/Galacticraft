@@ -6,7 +6,7 @@
       "tag": "c:glass_panes"
     },
     "I": {
-      "tag": "c:compressed_iron"
+      "tag": "c:plates/iron"
     },
     "R": {
       "tag": "c:dusts/redstone"

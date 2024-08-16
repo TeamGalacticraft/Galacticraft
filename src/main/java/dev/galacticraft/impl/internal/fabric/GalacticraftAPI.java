@@ -56,17 +56,17 @@ public class GalacticraftAPI implements ModInitializer {
         long startInitTime = System.currentTimeMillis();
         GCApiCommands.register();
 
-        DynamicRegistries.register(AddonRegistries.CELESTIAL_BODY, CelestialBody.DIRECT_CODEC);
-        DynamicRegistries.register(AddonRegistries.GALAXY, Galaxy.DIRECT_CODEC);
+        DynamicRegistries.registerSynced(AddonRegistries.CELESTIAL_BODY, CelestialBody.DIRECT_CODEC);
+        DynamicRegistries.registerSynced(AddonRegistries.GALAXY, Galaxy.DIRECT_CODEC);
 
-        DynamicRegistries.register(RocketRegistries.ROCKET_CONE, RocketCone.DIRECT_CODEC);
-        DynamicRegistries.register(RocketRegistries.ROCKET_BODY, RocketBody.DIRECT_CODEC);
-        DynamicRegistries.register(RocketRegistries.ROCKET_FIN, RocketFin.DIRECT_CODEC);
-        DynamicRegistries.register(RocketRegistries.ROCKET_BOOSTER, RocketBooster.DIRECT_CODEC);
-        DynamicRegistries.register(RocketRegistries.ROCKET_ENGINE, RocketEngine.DIRECT_CODEC);
-        DynamicRegistries.register(RocketRegistries.ROCKET_UPGRADE, RocketUpgrade.DIRECT_CODEC);
+        DynamicRegistries.registerSynced(RocketRegistries.ROCKET_CONE, RocketCone.DIRECT_CODEC);
+        DynamicRegistries.registerSynced(RocketRegistries.ROCKET_BODY, RocketBody.DIRECT_CODEC);
+        DynamicRegistries.registerSynced(RocketRegistries.ROCKET_FIN, RocketFin.DIRECT_CODEC);
+        DynamicRegistries.registerSynced(RocketRegistries.ROCKET_BOOSTER, RocketBooster.DIRECT_CODEC);
+        DynamicRegistries.registerSynced(RocketRegistries.ROCKET_ENGINE, RocketEngine.DIRECT_CODEC);
+        DynamicRegistries.registerSynced(RocketRegistries.ROCKET_UPGRADE, RocketUpgrade.DIRECT_CODEC);
 
-        DynamicRegistries.register(AddonRegistries.CELESTIAL_TELEPORTER, CelestialTeleporter.DIRECT_CODEC);
+        DynamicRegistries.registerSynced(AddonRegistries.CELESTIAL_TELEPORTER, CelestialTeleporter.DIRECT_CODEC);
 
         Registry.register(BuiltInRegistries.CHUNK_GENERATOR, Constant.id("satellite"), SatelliteChunkGenerator.CODEC);
         BuiltinObjects.register();

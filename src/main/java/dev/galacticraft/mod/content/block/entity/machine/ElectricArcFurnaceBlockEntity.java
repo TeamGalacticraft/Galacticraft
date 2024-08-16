@@ -118,7 +118,7 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
     }
 
     @Override
-    protected SingleRecipeInput createCraftingInv() {
+    protected SingleRecipeInput craftingInv() {
         assert this.inputSlots.size() == 1;
         return RecipeHelper.single(this.inputSlots.slot(0));
     }

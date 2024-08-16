@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "W": {
-      "tag": "c:compressed_tin"
+      "tag": "c:plates/tin"
     },
     "X": {
       "item": "galacticraft:oxygen_vent"
@@ -12,7 +12,7 @@
       "item": "galacticraft:tin_canister"
     },
     "Z": {
-      "tag": "c:compressed_steel"
+      "tag": "c:plates/steel"
     }
   },
   "pattern": [

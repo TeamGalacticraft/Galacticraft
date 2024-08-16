@@ -175,7 +175,7 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
     }
 
     @Override
-    protected CraftingInput createCraftingInv() {
+    protected CraftingInput craftingInv() {
         return RecipeHelper.craftingInput(3, 3, this.inputSlots.getSlots());
     }
 }

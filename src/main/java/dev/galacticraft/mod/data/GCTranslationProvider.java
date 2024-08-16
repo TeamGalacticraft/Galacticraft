@@ -120,7 +120,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.blockDesc(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, "Oxygen Bubble Distributor creates a bubble of air around itself. Requires oxygen and electricity.");
         this.blockDesc(GCBlocks.OXYGEN_COLLECTOR, "Oxygen Collector will store oxygen collected from leaves in the surrounding area.");
         this.blockDesc(GCBlocks.PARACHEST, "Parachests will fall from the sky after landing on certain planets/moons, such as Earth. Contains rocket, fuel, and cargo from previous launch.");
-        this.blockDesc(GCBlocks.REFINERY, "Refinery will take an ingredients of oil and energy, and output fuel used for rockets and vehicles.");
+        this.blockDesc(GCBlocks.REFINERY, "Refinery will take an imput of oil and energy, and output fuel used for rockets and vehicles.");
 
         this.add(RecipeCategory.CIRCUIT_FABRICATOR, "Circuit Fabricating");
         this.add(RecipeCategory.COMPRESSOR, "Compressing");
