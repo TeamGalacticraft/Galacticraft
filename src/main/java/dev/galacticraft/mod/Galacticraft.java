@@ -22,34 +22,26 @@
 
 package dev.galacticraft.mod;
 
-import dev.galacticraft.mod.api.config.Config;
+import dev.galacticraft.api.Config;
 import dev.galacticraft.mod.command.GCCommands;
 import dev.galacticraft.mod.config.ConfigImpl;
 import dev.galacticraft.mod.content.*;
-import dev.galacticraft.mod.content.advancements.GCTriggers;
-import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCCreativeModeTabs;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.events.GCEventHandlers;
-import dev.galacticraft.mod.lookup.GCApiLookupProviders;
-import dev.galacticraft.mod.machine.GCMachineStatuses;
+import dev.galacticraft.mod.content.recipe.GCRecipes;
+import dev.galacticraft.mod.event.GCEventHandlers;
+import dev.galacticraft.mod.menu.GCMenuTypes;
 import dev.galacticraft.mod.network.GCPackets;
 import dev.galacticraft.mod.network.GCServerPacketReceivers;
-import dev.galacticraft.mod.particle.GCParticleTypes;
-import dev.galacticraft.mod.recipe.GCRecipes;
-import dev.galacticraft.mod.screen.GCMenuTypes;
-import dev.galacticraft.mod.structure.GCStructurePieceTypes;
-import dev.galacticraft.mod.tag.GCTags;
-import dev.galacticraft.mod.village.GCVillagerProfessions;
-import dev.galacticraft.mod.village.MoonVillagerTypes;
+import dev.galacticraft.mod.villager.GCVillagerProfessions;
+import dev.galacticraft.mod.villager.MoonVillagerTypes;
 import dev.galacticraft.mod.world.biome.source.GCMultiNoiseBiomeSourceParameterLists;
-import dev.galacticraft.mod.world.dimension.GCGases;
-import dev.galacticraft.mod.world.gen.carver.GCCarvers;
+import dev.galacticraft.mod.world.gen.GCCarvers;
 import dev.galacticraft.mod.world.gen.feature.GCOrePlacedFeatures;
 import dev.galacticraft.mod.world.gen.feature.GCPlacedFeatures;
+import dev.galacticraft.mod.world.gen.structure.GCStructurePieceTypes;
 import dev.galacticraft.mod.world.gen.structure.GCStructureTypes;
 import dev.galacticraft.mod.world.gen.surfacerule.MoonSurfaceRules;
-import dev.galacticraft.mod.world.poi.GCPointOfInterestTypes;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 

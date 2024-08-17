@@ -23,11 +23,11 @@
 package dev.galacticraft.mod.content.block.special;
 
 import com.mojang.serialization.MapCodec;
-import dev.galacticraft.mod.api.block.MultiBlockBase;
-import dev.galacticraft.mod.api.block.MultiBlockPart;
+import dev.galacticraft.api.block.MultiBlockBase;
+import dev.galacticraft.api.block.MultiBlockPart;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.GCParticleTypes;
 import dev.galacticraft.mod.content.block.entity.CryogenicChamberBlockEntity;
-import dev.galacticraft.mod.particle.GCParticleTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;

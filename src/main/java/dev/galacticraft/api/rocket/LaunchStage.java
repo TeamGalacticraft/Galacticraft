@@ -22,7 +22,7 @@
 
 package dev.galacticraft.api.rocket;
 
-import dev.galacticraft.mod.util.StreamCodecs;
+import dev.galacticraft.impl.codec.StreamCodecs;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;

@@ -36,9 +36,9 @@ public class LanderOverlay {
     private static long tickCount;
     public static void onRenderHud(GuiGraphics graphics, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
-        final Window scaledresolution = mc.getWindow();
-        final int width = scaledresolution.getGuiScaledWidth();
-        final int height = scaledresolution.getGuiScaledHeight();
+        final Window window = mc.getWindow();
+        final int width = window.getGuiScaledWidth();
+        final int height = window.getGuiScaledHeight();
         if (mc.player.getVehicle() instanceof LanderEntity lander) {
             double motionY = lander.getDeltaMovement().y();
             graphics.pose().pushPose();

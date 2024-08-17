@@ -26,22 +26,20 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.api.accessor.SatelliteAccessor;
 import dev.galacticraft.api.rocket.RocketData;
-import dev.galacticraft.api.satellite.Satellite;
-import dev.galacticraft.api.satellite.SatelliteRecipe;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.Tiered;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.satellite.Orbitable;
-import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
-import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
+import dev.galacticraft.api.universe.celestialbody.type.SatelliteType;
+import dev.galacticraft.api.universe.position.config.SatelliteConfig;
+import dev.galacticraft.api.universe.satellite.Satellite;
+import dev.galacticraft.api.universe.satellite.SatelliteRecipe;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.util.Graphics;
 import dev.galacticraft.mod.network.c2s.PlanetTeleportPayload;
 import dev.galacticraft.mod.network.c2s.SatelliteCreationPayload;
 import dev.galacticraft.mod.util.Translations;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -60,7 +58,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"SpellCheckingInspection", "DataFlowIssue"})
-@Environment(EnvType.CLIENT)
 public class CelestialSelectionScreen extends CelestialScreen {
     protected static final int MAX_SPACE_STATION_NAME_LENGTH = 32;
 

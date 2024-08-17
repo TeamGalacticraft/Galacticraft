@@ -23,14 +23,14 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.galacticraft.api.block.entity.SolarPanel;
+import dev.galacticraft.api.block.solarpanel.LightSource;
+import dev.galacticraft.api.block.solarpanel.SolarPanelRegistry;
+import dev.galacticraft.api.block.solarpanel.WorldLightSources;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.entity.SolarPanel;
-import dev.galacticraft.mod.api.solarpanel.LightSource;
-import dev.galacticraft.mod.api.solarpanel.SolarPanelRegistry;
-import dev.galacticraft.mod.api.solarpanel.WorldLightSources;
-import dev.galacticraft.mod.screen.SolarPanelMenu;
+import dev.galacticraft.mod.menu.SolarPanelMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.client.gui.GuiGraphics;

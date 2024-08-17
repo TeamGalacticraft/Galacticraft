@@ -24,7 +24,6 @@ package dev.galacticraft.mod.world.gen.structure;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.galacticraft.mod.structure.MoonRuinsGenerator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.Heightmap;

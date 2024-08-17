@@ -25,15 +25,12 @@ package dev.galacticraft.mod.client.render.entity;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.render.entity.feature.EvolvedSpiderEyesRenderLayer;
 import dev.galacticraft.mod.content.entity.EvolvedSpiderEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.model.SpiderModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
-@Environment(EnvType.CLIENT)
 public class EvolvedSpiderEntityRenderer extends MobRenderer<EvolvedSpiderEntity, SpiderModel<EvolvedSpiderEntity>> {
     public static final ResourceLocation TEXTURE = Constant.id("textures/entity/evolved/spider.png");
 

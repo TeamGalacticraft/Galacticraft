@@ -22,7 +22,7 @@
 
 package dev.galacticraft.impl.satellite;
 
-import dev.galacticraft.api.satellite.SatelliteRecipe;
+import dev.galacticraft.api.universe.satellite.SatelliteRecipe;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;

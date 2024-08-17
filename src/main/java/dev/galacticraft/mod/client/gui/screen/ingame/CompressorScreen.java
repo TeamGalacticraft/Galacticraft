@@ -27,15 +27,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.CompressorBlockEntity;
-import dev.galacticraft.mod.screen.CompressorMenu;
+import dev.galacticraft.mod.menu.CompressorMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-@Environment(EnvType.CLIENT)
 public class CompressorScreen extends MachineScreen<CompressorBlockEntity, CompressorMenu> {
     private static final int PROGRESS_U = 204;
     private static final int PROGRESS_V = 0;

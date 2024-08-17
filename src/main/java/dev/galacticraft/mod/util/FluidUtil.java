@@ -34,9 +34,6 @@ import org.jetbrains.annotations.NotNull;
 public class FluidUtil {
     private FluidUtil() {}
 
-    public static final String SUFFIX_MILLIBUCKETS = "mB";
-    public static final String SUFFIX_BUCKETS = "B";
-
     public static long bucketsToDroplets(int buckets) {
         return buckets * FluidConstants.BUCKET;
     }

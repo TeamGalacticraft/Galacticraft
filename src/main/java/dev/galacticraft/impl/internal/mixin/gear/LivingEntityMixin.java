@@ -23,7 +23,7 @@
 package dev.galacticraft.impl.internal.mixin.gear;
 
 import dev.galacticraft.api.accessor.GearInventoryProvider;
-import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
+import dev.galacticraft.api.entity.GcApiEntityAttributes;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.api.item.OxygenGear;

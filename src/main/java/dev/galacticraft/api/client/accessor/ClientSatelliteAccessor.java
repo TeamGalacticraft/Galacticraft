@@ -24,12 +24,9 @@ package dev.galacticraft.api.client.accessor;
 
 import dev.galacticraft.api.accessor.SatelliteAccessor;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
-import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import dev.galacticraft.api.universe.celestialbody.type.SatelliteType;
+import dev.galacticraft.api.universe.position.config.SatelliteConfig;
 
-@Environment(EnvType.CLIENT)
 public interface ClientSatelliteAccessor extends SatelliteAccessor {
     void addListener(SatelliteListener listener);
 

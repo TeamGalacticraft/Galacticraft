@@ -76,19 +76,19 @@ public class GCOrePlacedFeatures {
 
     public static void bootstrapRegistries(BootstrapContext<PlacedFeature> context) {
         HolderGetter<ConfiguredFeature<?, ?>> lookup = context.lookup(Registries.CONFIGURED_FEATURE);
-        context.register(ORE_SILICON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_SILICON_SMALL), modifiersWithCount(5, HeightRangePlacement.triangle(VerticalAnchor.aboveBottom(-80), VerticalAnchor.aboveBottom(80)))));
-        context.register(ORE_SILICON_LARGE, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_SILICON_LARGE), modifiersWithRarity(11, HeightRangePlacement.triangle(VerticalAnchor.aboveBottom(-80), VerticalAnchor.aboveBottom(80)))));
-        context.register(ORE_TIN_UPPER, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_TIN), modifiersWithCount(99, HeightRangePlacement.triangle(VerticalAnchor.absolute(90), VerticalAnchor.absolute(384)))));
-        context.register(ORE_TIN_MIDDLE, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_TIN), modifiersWithCount(11, HeightRangePlacement.triangle(VerticalAnchor.absolute(-16), VerticalAnchor.absolute(56)))));
-        context.register(ORE_TIN_SMALL, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_TIN_SMALL), modifiersWithCount(11, HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.absolute(80)))));
-        context.register(ORE_ALUMINUM_MIDDLE, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_ALUMINUM), modifiersWithCount(10, HeightRangePlacement.triangle(VerticalAnchor.absolute(-96), VerticalAnchor.absolute(0)))));
-        context.register(ORE_ALUMINUM_SMALL, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_ALUMINUM_SMALL), modifiersWithCount(10, HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.absolute(16)))));
-        context.register(BASALT_DISK_MOON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.BASALT_DISK_MOON), modifiersWithCount(14, HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.top()))));
-        context.register(ORE_COPPER_MOON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_COPPER_SMALL_MOON), modifiersWithCount(18, HeightRangePlacement.triangle(VerticalAnchor.absolute(0), VerticalAnchor.absolute(112)))));
-        context.register(ORE_COPPER_LARGE_MOON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_COPPER_LARGE_MOON), modifiersWithCount(17, HeightRangePlacement.triangle(VerticalAnchor.absolute(0), VerticalAnchor.absolute(112)))));
-        context.register(ORE_TIN_UPPER_MOON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_TIN_MOON), modifiersWithCount(54, HeightRangePlacement.triangle(VerticalAnchor.absolute(90), VerticalAnchor.absolute(384)))));
-        context.register(ORE_TIN_MIDDLE_MOON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_TIN_MOON), modifiersWithCount(6, HeightRangePlacement.triangle(VerticalAnchor.absolute(-16), VerticalAnchor.absolute(56)))));
-        context.register(ORE_TIN_SMALL_MOON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_TIN_SMALL_MOON), modifiersWithCount(6, HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.absolute(80)))));
+        context.register(ORE_SILICON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeatures.ORE_SILICON_SMALL), modifiersWithCount(5, HeightRangePlacement.triangle(VerticalAnchor.aboveBottom(-80), VerticalAnchor.aboveBottom(80)))));
+        context.register(ORE_SILICON_LARGE, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeatures.ORE_SILICON_LARGE), modifiersWithRarity(11, HeightRangePlacement.triangle(VerticalAnchor.aboveBottom(-80), VerticalAnchor.aboveBottom(80)))));
+        context.register(ORE_TIN_UPPER, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeatures.ORE_TIN), modifiersWithCount(99, HeightRangePlacement.triangle(VerticalAnchor.absolute(90), VerticalAnchor.absolute(384)))));
+        context.register(ORE_TIN_MIDDLE, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeatures.ORE_TIN), modifiersWithCount(11, HeightRangePlacement.triangle(VerticalAnchor.absolute(-16), VerticalAnchor.absolute(56)))));
+        context.register(ORE_TIN_SMALL, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeatures.ORE_TIN_SMALL), modifiersWithCount(11, HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.absolute(80)))));
+        context.register(ORE_ALUMINUM_MIDDLE, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeatures.ORE_ALUMINUM), modifiersWithCount(10, HeightRangePlacement.triangle(VerticalAnchor.absolute(-96), VerticalAnchor.absolute(0)))));
+        context.register(ORE_ALUMINUM_SMALL, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeatures.ORE_ALUMINUM_SMALL), modifiersWithCount(10, HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.absolute(16)))));
+        context.register(BASALT_DISK_MOON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeatures.BASALT_DISK_MOON), modifiersWithCount(14, HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.top()))));
+        context.register(ORE_COPPER_MOON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeatures.ORE_COPPER_SMALL_MOON), modifiersWithCount(18, HeightRangePlacement.triangle(VerticalAnchor.absolute(0), VerticalAnchor.absolute(112)))));
+        context.register(ORE_COPPER_LARGE_MOON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeatures.ORE_COPPER_LARGE_MOON), modifiersWithCount(17, HeightRangePlacement.triangle(VerticalAnchor.absolute(0), VerticalAnchor.absolute(112)))));
+        context.register(ORE_TIN_UPPER_MOON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeatures.ORE_TIN_MOON), modifiersWithCount(54, HeightRangePlacement.triangle(VerticalAnchor.absolute(90), VerticalAnchor.absolute(384)))));
+        context.register(ORE_TIN_MIDDLE_MOON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeatures.ORE_TIN_MOON), modifiersWithCount(6, HeightRangePlacement.triangle(VerticalAnchor.absolute(-16), VerticalAnchor.absolute(56)))));
+        context.register(ORE_TIN_SMALL_MOON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeatures.ORE_TIN_SMALL_MOON), modifiersWithCount(6, HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.absolute(80)))));
     }
 
     @Contract(pure = true)

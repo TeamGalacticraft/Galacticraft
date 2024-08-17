@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content.block.environment;
 
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.content.GCTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;

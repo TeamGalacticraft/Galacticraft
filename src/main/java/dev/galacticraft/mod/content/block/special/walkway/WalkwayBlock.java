@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.content.block.special.walkway;
 
 import com.google.common.collect.Lists;
-import dev.galacticraft.mod.api.block.FluidLoggable;
+import dev.galacticraft.api.block.FluidLoggable;
 import dev.galacticraft.mod.content.block.entity.WalkwayBlockEntity;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import dev.galacticraft.mod.util.DirectionUtil;

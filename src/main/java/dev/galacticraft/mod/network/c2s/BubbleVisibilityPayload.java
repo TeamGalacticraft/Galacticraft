@@ -25,7 +25,7 @@ package dev.galacticraft.mod.network.c2s;
 import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
-import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
+import dev.galacticraft.mod.menu.OxygenBubbleDistributorMenu;
 import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.codec.ByteBufCodecs;

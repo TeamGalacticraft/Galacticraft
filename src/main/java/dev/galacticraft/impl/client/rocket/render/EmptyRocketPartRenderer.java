@@ -23,16 +23,13 @@
 package dev.galacticraft.impl.client.rocket.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.api.entity.rocket.render.RocketPartRenderer;
+import dev.galacticraft.api.client.render.rocket.RocketPartRenderer;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 
-@Environment(EnvType.CLIENT)
 public enum EmptyRocketPartRenderer implements RocketPartRenderer {
     INSTANCE;
     private static boolean hasWarned = false;

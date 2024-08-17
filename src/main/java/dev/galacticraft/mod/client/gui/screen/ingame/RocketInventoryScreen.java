@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.screen.RocketMenu;
+import dev.galacticraft.mod.menu.RocketMenu;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;

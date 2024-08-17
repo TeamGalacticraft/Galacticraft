@@ -22,12 +22,12 @@
 
 package dev.galacticraft.mod.data.recipes;
 
-import dev.galacticraft.mod.api.data.recipe.CircuitFabricatorRecipeBuilder;
-import dev.galacticraft.mod.api.data.recipe.ShapedCompressorRecipeBuilder;
-import dev.galacticraft.mod.api.data.recipe.ShapelessCompressorRecipeBuilder;
+import dev.galacticraft.api.data.recipe.CircuitFabricatorRecipeBuilder;
+import dev.galacticraft.api.data.recipe.ShapedCompressorRecipeBuilder;
+import dev.galacticraft.api.data.recipe.ShapelessCompressorRecipeBuilder;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.GCTags;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;

@@ -40,24 +40,22 @@ import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import dev.galacticraft.mod.client.render.entity.rocket.RocketEntityRenderer;
 import dev.galacticraft.mod.client.render.item.RocketItemRenderer;
 import dev.galacticraft.mod.client.render.rocket.GalacticraftRocketPartRenderers;
-import dev.galacticraft.mod.client.resources.GCResourceReloadListener;
-import dev.galacticraft.mod.client.resources.RocketTextureManager;
+import dev.galacticraft.mod.client.resource.GCResourceReloadListener;
+import dev.galacticraft.mod.client.resource.RocketTextureManager;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
+import dev.galacticraft.mod.content.GCParticleTypes;
 import dev.galacticraft.mod.content.block.environment.FallenMeteorBlock;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.events.ClientEventHandler;
-import dev.galacticraft.mod.misc.cape.CapesLoader;
+import dev.galacticraft.mod.event.ClientEventHandler;
+import dev.galacticraft.mod.menu.GCMenuTypes;
+import dev.galacticraft.mod.menu.GCPlayerInventoryMenu;
+import dev.galacticraft.mod.menu.RocketMenu;
+import dev.galacticraft.mod.misc.CapesLoader;
 import dev.galacticraft.mod.network.c2s.OpenGcInventoryPayload;
 import dev.galacticraft.mod.network.c2s.OpenRocketPayload;
-import dev.galacticraft.mod.particle.GCParticleTypes;
-import dev.galacticraft.mod.screen.GCMenuTypes;
-import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
-import dev.galacticraft.mod.screen.RocketMenu;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -74,7 +72,6 @@ import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.level.material.Fluids;
 
-@Environment(EnvType.CLIENT)
 public class GalacticraftClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {

@@ -30,7 +30,7 @@ import dev.galacticraft.api.universe.display.CelestialDisplay;
 import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
-import dev.galacticraft.mod.util.StreamCodecs;
+import dev.galacticraft.impl.codec.StreamCodecs;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;

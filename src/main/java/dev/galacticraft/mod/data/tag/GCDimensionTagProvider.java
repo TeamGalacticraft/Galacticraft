@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.data.tag;
 
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.content.GCTags;
 import dev.galacticraft.mod.world.dimension.GCDimensionTypes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;

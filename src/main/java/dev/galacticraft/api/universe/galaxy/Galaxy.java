@@ -27,15 +27,16 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
 import dev.galacticraft.api.universe.position.CelestialPosition;
+import dev.galacticraft.impl.codec.StreamCodecs;
 import dev.galacticraft.impl.universe.galaxy.GalaxyImpl;
-import dev.galacticraft.mod.util.StreamCodecs;
-import net.minecraft.core.*;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.RegistryCodecs;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFileCodec;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -53,26 +54,6 @@ public interface Galaxy {
     @Contract("_, _, _, _ -> new")
     static @NotNull Galaxy create(@NotNull Component name, @NotNull Component description, CelestialPosition<?, ?> position, CelestialDisplay<?, ?> display) {
         return new GalaxyImpl(name, description, position, display);
-    }
-
-    static Registry<Galaxy> getRegistry(@NotNull RegistryAccess manager) {
-        return manager.registryOrThrow(AddonRegistries.GALAXY);
-    }
-
-    static Galaxy getById(RegistryAccess manager, ResourceLocation id) {
-        return getById(getRegistry(manager), id);
-    }
-
-    static ResourceLocation getId(RegistryAccess manager, Galaxy galaxy) {
-        return getId(getRegistry(manager), galaxy);
-    }
-
-    static Galaxy getById(@NotNull Registry<Galaxy> registry, ResourceLocation id) {
-        return registry.get(id);
-    }
-
-    static ResourceLocation getId(@NotNull Registry<Galaxy> registry, Galaxy galaxy) {
-        return registry.getKey(galaxy);
     }
 
     @NotNull Component name();

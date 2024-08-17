@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.world.dimension;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.content.GCTags;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;

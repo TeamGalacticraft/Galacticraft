@@ -27,7 +27,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.jei.category.JEICompressingCategory;
 import dev.galacticraft.mod.compat.jei.category.JEIFabricationCategory;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.recipe.GCRecipes;
+import dev.galacticraft.mod.content.recipe.GCRecipes;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;

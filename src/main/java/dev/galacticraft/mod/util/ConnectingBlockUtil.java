@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.util;
 
-import dev.galacticraft.mod.api.block.entity.Connected;
+import dev.galacticraft.api.block.entity.Connected;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;

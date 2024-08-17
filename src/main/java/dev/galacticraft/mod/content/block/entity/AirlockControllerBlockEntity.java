@@ -24,7 +24,7 @@ package dev.galacticraft.mod.content.block.entity;
 
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.screen.AirlockControllerMenu;
+import dev.galacticraft.mod.menu.AirlockControllerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;

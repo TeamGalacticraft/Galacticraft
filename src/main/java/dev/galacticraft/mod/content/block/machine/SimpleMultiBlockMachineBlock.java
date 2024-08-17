@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.content.block.machine;
 
-import dev.galacticraft.mod.api.block.MultiBlockMachineBlock;
-import dev.galacticraft.mod.api.block.MultiBlockPart;
+import dev.galacticraft.api.block.MultiBlockMachineBlock;
+import dev.galacticraft.api.block.MultiBlockPart;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;

@@ -26,7 +26,7 @@ import dev.galacticraft.api.entity.IgnoreShift;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCSounds;
-import dev.galacticraft.mod.content.advancements.GCTriggers;
+import dev.galacticraft.mod.content.GCTriggers;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.impl.internal.mixin.client;
 
-import dev.galacticraft.mod.api.dimension.GalacticDimensionEffects;
+import dev.galacticraft.api.client.render.dimension.GalacticDimensionEffects;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.world.phys.Vec3;

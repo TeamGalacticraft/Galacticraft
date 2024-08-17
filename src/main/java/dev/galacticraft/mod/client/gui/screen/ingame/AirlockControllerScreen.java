@@ -24,7 +24,7 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.gui.widget.CheckboxButton;
-import dev.galacticraft.mod.screen.AirlockControllerMenu;
+import dev.galacticraft.mod.menu.AirlockControllerMenu;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;

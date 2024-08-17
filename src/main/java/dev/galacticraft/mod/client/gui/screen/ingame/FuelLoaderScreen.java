@@ -30,10 +30,8 @@ import dev.galacticraft.machinelib.client.api.util.GraphicsUtil;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.block.entity.machine.FuelLoaderBlockEntity;
-import dev.galacticraft.mod.screen.FuelLoaderMenu;
+import dev.galacticraft.mod.menu.FuelLoaderMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -42,7 +40,6 @@ import net.minecraft.world.entity.player.Inventory;
 import java.util.ArrayList;
 import java.util.List;
 
-@Environment(EnvType.CLIENT)
 public class FuelLoaderScreen extends MachineScreen<FuelLoaderBlockEntity, FuelLoaderMenu> {
     public static final int RED_X_U = 176;
     public static final int RED_X_V = 40;

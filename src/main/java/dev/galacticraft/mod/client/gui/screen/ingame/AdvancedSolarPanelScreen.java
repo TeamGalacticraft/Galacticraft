@@ -24,16 +24,13 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.AdvancedSolarPanelBlockEntity;
-import dev.galacticraft.mod.screen.SolarPanelMenu;
+import dev.galacticraft.mod.menu.SolarPanelMenu;
 import dev.galacticraft.mod.util.Translations;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
 import java.util.List;
 
-@Environment(EnvType.CLIENT)
 public class AdvancedSolarPanelScreen extends SolarPanelScreen<AdvancedSolarPanelBlockEntity, SolarPanelMenu<AdvancedSolarPanelBlockEntity>> {
     public AdvancedSolarPanelScreen(SolarPanelMenu<AdvancedSolarPanelBlockEntity> handler, Inventory inv, Component title) {
         super(handler, inv, title);

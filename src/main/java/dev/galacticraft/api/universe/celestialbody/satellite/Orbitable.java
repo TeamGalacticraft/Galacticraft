@@ -22,8 +22,8 @@
 
 package dev.galacticraft.api.universe.celestialbody.satellite;
 
-import dev.galacticraft.api.satellite.SatelliteRecipe;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
+import dev.galacticraft.api.universe.satellite.SatelliteRecipe;
 import org.jetbrains.annotations.Nullable;
 
 /**

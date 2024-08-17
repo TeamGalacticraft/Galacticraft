@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.data.tag;
 
-import dev.galacticraft.mod.misc.banner.GCBannerPatterns;
+import dev.galacticraft.mod.content.GCBannerPatterns;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;

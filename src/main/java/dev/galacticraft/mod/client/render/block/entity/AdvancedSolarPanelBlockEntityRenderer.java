@@ -29,8 +29,6 @@ import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import dev.galacticraft.mod.content.block.entity.machine.AdvancedSolarPanelBlockEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -41,7 +39,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
-@Environment(EnvType.CLIENT)
 public class AdvancedSolarPanelBlockEntityRenderer implements BlockEntityRenderer<AdvancedSolarPanelBlockEntity> {
     private static final ResourceLocation TEXTURE = Constant.id("textures/model/solar_panel.png");
     private final ModelPart panel;

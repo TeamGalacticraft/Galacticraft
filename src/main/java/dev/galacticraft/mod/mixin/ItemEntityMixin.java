@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.api.component.GCDataComponents;
+import dev.galacticraft.api.item.GCDataComponents;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;

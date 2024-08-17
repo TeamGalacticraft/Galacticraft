@@ -23,9 +23,7 @@
 package dev.galacticraft.mod.mixin.client;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.village.MoonVillagerTypes;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import dev.galacticraft.mod.villager.MoonVillagerTypes;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.npc.Villager;
@@ -36,7 +34,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(VillagerRenderer.class)
-@Environment(EnvType.CLIENT)
 public abstract class VillagerRendererMixin {
     private static final @Unique ResourceLocation MOON_TEXTURE = Constant.id("textures/entity/villager/moon_villager.png");
 

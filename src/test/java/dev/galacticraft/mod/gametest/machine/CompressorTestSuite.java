@@ -28,7 +28,7 @@ import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.CompressorBlockEntity;
-import dev.galacticraft.mod.recipe.CompressingRecipe;
+import dev.galacticraft.mod.content.recipe.CompressingRecipe;
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
 import net.minecraft.world.item.Items;

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content.block.entity;
 
-import dev.galacticraft.mod.api.block.MultiBlockPart;
+import dev.galacticraft.api.block.MultiBlockPart;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;

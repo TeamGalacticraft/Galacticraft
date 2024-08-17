@@ -53,10 +53,10 @@ public final class GCBiomes {
 
     public static final ResourceKey<Biome> SPACE = ResourceKey.create(Registries.BIOME, Constant.id("space"));
 
-    public static Biome createSpaceBiome(HolderGetter<PlacedFeature> holderGetter, HolderGetter<ConfiguredWorldCarver<?>> holderGetter2) {
+    public static Biome createSpaceBiome(HolderGetter<PlacedFeature> features, HolderGetter<ConfiguredWorldCarver<?>> carvers) {
         Biome.BiomeBuilder builder = new Biome.BiomeBuilder();
         MobSpawnSettings.Builder spawns = new MobSpawnSettings.Builder();
-        BiomeGenerationSettings.Builder genSettings = new BiomeGenerationSettings.Builder(holderGetter, holderGetter2);
+        BiomeGenerationSettings.Builder genSettings = new BiomeGenerationSettings.Builder(features, carvers);
         BiomeSpecialEffects.Builder effects = new BiomeSpecialEffects.Builder();
         effects.fogColor(0).waterColor(4159204).waterFogColor(329011).skyColor(0);
         return builder

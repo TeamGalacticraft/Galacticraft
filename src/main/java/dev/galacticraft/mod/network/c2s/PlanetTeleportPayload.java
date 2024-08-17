@@ -27,7 +27,7 @@ import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.events.GCEventHandlers;
+import dev.galacticraft.mod.event.GCEventHandlers;
 import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.Holder;

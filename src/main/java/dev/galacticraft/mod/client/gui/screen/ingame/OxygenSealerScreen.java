@@ -28,14 +28,11 @@ import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
 import dev.galacticraft.mod.util.Translations;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-@Environment(EnvType.CLIENT)
 public class OxygenSealerScreen extends MachineScreen<OxygenSealerBlockEntity, MachineMenu<OxygenSealerBlockEntity>> {
     public OxygenSealerScreen(MachineMenu<OxygenSealerBlockEntity> handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.OXYGEN_SEALER_SCREEN);

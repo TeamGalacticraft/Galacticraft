@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.events.GiveCommandEvents;
+import dev.galacticraft.mod.event.GiveCommandEvents;
 import net.minecraft.server.commands.GiveCommand;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;

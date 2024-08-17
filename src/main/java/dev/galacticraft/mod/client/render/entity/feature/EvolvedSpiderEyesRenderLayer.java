@@ -24,14 +24,11 @@ package dev.galacticraft.mod.client.render.entity.feature;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.EvolvedSpiderEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.model.SpiderModel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.EyesLayer;
 
-@Environment(EnvType.CLIENT)
 public class EvolvedSpiderEyesRenderLayer<T extends EvolvedSpiderEntity, M extends SpiderModel<T>> extends EyesLayer<T, M> {
     private static final RenderType LAYER = RenderType.eyes(Constant.id("textures/entity/evolved/spider_eyes.png"));
 

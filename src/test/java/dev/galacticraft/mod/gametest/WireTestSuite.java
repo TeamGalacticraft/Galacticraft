@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.gametest;
 
-import dev.galacticraft.mod.api.wire.Wire;
-import dev.galacticraft.mod.api.wire.impl.WireNetworkImpl;
+import dev.galacticraft.api.block.wire.Wire;
+import dev.galacticraft.impl.wire.WireNetworkImpl;
 import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;

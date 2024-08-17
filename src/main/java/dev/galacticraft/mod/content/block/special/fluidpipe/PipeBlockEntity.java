@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.content.block.special.fluidpipe;
 
-import dev.galacticraft.mod.api.pipe.Pipe;
-import dev.galacticraft.mod.api.pipe.PipeNetwork;
-import dev.galacticraft.mod.api.pipe.impl.PipeNetworkImpl;
+import dev.galacticraft.api.block.pipe.Pipe;
+import dev.galacticraft.api.block.pipe.PipeNetwork;
+import dev.galacticraft.api.block.pipe.impl.PipeNetworkImpl;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;

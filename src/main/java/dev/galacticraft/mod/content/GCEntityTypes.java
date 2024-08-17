@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content;
 
-import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
+import dev.galacticraft.api.entity.GcApiEntityAttributes;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Constant.Entity;
 import dev.galacticraft.mod.content.entity.*;

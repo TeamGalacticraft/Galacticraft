@@ -25,7 +25,7 @@ package dev.galacticraft.mod.network.c2s;
 import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
-import dev.galacticraft.mod.screen.RocketMenu;
+import dev.galacticraft.mod.menu.RocketMenu;
 import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;

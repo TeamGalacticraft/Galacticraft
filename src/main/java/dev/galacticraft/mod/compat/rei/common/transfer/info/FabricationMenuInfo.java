@@ -26,7 +26,7 @@ import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.machinelib.impl.compat.vanilla.StorageSlot;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
-import dev.galacticraft.mod.recipe.FabricationRecipe;
+import dev.galacticraft.mod.content.recipe.FabricationRecipe;
 import me.shedaniel.rei.api.common.transfer.info.MenuInfoContext;
 import me.shedaniel.rei.api.common.transfer.info.clean.InputCleanHandler;
 import me.shedaniel.rei.api.common.transfer.info.simple.SimplePlayerInventoryMenuInfo;

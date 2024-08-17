@@ -27,13 +27,10 @@ import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenCompressorBlockEntity;
 import dev.galacticraft.mod.util.DrawableUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-@Environment(EnvType.CLIENT)
 public class OxygenCompressorScreen extends MachineScreen<OxygenCompressorBlockEntity, MachineMenu<OxygenCompressorBlockEntity>> {
     public OxygenCompressorScreen(MachineMenu<OxygenCompressorBlockEntity> handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.OXYGEN_COMPRESSOR_SCREEN);

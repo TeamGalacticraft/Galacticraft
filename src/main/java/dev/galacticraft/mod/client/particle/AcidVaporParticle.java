@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.particle;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import dev.galacticraft.mod.particle.ScaleParticleType;
+import dev.galacticraft.mod.content.particle.ScaleParticleType;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;

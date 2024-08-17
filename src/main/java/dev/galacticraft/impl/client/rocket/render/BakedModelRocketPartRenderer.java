@@ -27,12 +27,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import dev.galacticraft.api.entity.rocket.render.RocketPartRenderer;
+import dev.galacticraft.api.client.render.rocket.RocketPartRenderer;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.mod.client.model.GCBakedModel;
 import dev.galacticraft.mod.client.model.GCRenderTypes;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -43,7 +41,6 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 
 import java.util.function.Supplier;
 
-@Environment(EnvType.CLIENT)
 public record BakedModelRocketPartRenderer(Supplier<GCBakedModel> model,
                                            Supplier<RenderType> layer) implements RocketPartRenderer {
 

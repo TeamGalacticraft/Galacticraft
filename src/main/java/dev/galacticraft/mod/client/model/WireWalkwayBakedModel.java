@@ -25,8 +25,6 @@ package dev.galacticraft.mod.client.model;
 import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.networked.WireWalkwayBlockEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
@@ -55,7 +53,6 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@Environment(EnvType.CLIENT)
 public class WireWalkwayBakedModel implements BakedModel {
     private static WireWalkwayBakedModel instance = null;
 

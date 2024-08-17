@@ -23,9 +23,9 @@
 package dev.galacticraft.api.accessor;
 
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.api.universe.celestialbody.type.SatelliteType;
+import dev.galacticraft.api.universe.position.config.SatelliteConfig;
 import dev.galacticraft.dynamicdimensions.api.event.DynamicDimensionLoadCallback;
-import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
-import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;

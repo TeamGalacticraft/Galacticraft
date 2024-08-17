@@ -23,9 +23,9 @@
 package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.mod.accessor.EntityAccessor;
-import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
+import dev.galacticraft.mod.content.GCDamageTypes;
+import dev.galacticraft.mod.content.GCTags;
 import dev.galacticraft.mod.misc.footprint.Footprint;
-import dev.galacticraft.mod.tag.GCTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.Registries;

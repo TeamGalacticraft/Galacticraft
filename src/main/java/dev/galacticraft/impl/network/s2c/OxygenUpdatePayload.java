@@ -22,9 +22,9 @@
 
 package dev.galacticraft.impl.network.s2c;
 
+import dev.galacticraft.impl.codec.StreamCodecs;
 import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.util.StreamCodecs;
 import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.codec.ByteBufCodecs;

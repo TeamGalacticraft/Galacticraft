@@ -47,7 +47,6 @@ public class GCServerPlayer {
         return player.getAttachedOrCreate(GCAttachments.SERVER_PLAYER, () -> new GCServerPlayer(player));
     }
 
-
     public GCServerPlayer(ServerPlayer player) {
     }
 

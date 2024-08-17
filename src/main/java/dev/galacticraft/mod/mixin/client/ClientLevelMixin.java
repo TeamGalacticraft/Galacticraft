@@ -24,8 +24,6 @@ package dev.galacticraft.mod.mixin.client;
 
 import dev.galacticraft.mod.accessor.LevelAccessor;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,7 +33,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientLevel.class)
-@Environment(EnvType.CLIENT)
 public abstract class ClientLevelMixin implements LevelAccessor {
     private final @Unique FootprintManager footprintManager = new FootprintManager();
 

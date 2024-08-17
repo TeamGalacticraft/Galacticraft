@@ -23,9 +23,7 @@
 package dev.galacticraft.mod.mixin.client;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.village.MoonVillagerTypes;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import dev.galacticraft.mod.villager.MoonVillagerTypes;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartNames;
@@ -46,7 +44,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.NoSuchElementException;
 
 @Mixin(VillagerModel.class)
-@Environment(EnvType.CLIENT)
 public abstract class VillagerModelMixin<T extends Entity> {
     @Shadow public abstract void hatVisible(boolean visible);
     @Shadow @Final private ModelPart head;

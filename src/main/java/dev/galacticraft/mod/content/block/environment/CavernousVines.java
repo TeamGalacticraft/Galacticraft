@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content.block.environment;
 
-import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
+import dev.galacticraft.mod.content.GCDamageTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.damagesource.DamageSource;

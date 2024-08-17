@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.mixin;
 
+import dev.galacticraft.mod.content.GCTags;
 import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
-import dev.galacticraft.mod.tag.GCTags;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;

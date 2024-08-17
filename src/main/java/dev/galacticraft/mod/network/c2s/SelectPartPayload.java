@@ -25,7 +25,7 @@ package dev.galacticraft.mod.network.c2s;
 import dev.galacticraft.api.rocket.part.RocketPartTypes;
 import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
+import dev.galacticraft.mod.menu.RocketWorkbenchMenu;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;

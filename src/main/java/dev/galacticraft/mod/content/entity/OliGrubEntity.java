@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content.entity;
 
-import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
+import dev.galacticraft.api.entity.GcApiEntityAttributes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;

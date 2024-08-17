@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.client.render.dimension;
 
-import dev.galacticraft.mod.api.dimension.GalacticDimensionEffects;
-import dev.galacticraft.mod.particle.ScaleParticleType;
+import dev.galacticraft.api.client.render.dimension.GalacticDimensionEffects;
+import dev.galacticraft.mod.content.particle.ScaleParticleType;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.ParticleStatus;

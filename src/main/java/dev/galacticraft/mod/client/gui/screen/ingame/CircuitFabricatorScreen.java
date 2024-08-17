@@ -28,16 +28,13 @@ import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.CircuitFabricatorBlockEntity;
-import dev.galacticraft.mod.recipe.FabricationRecipe;
+import dev.galacticraft.mod.content.recipe.FabricationRecipe;
 import dev.galacticraft.mod.util.DrawableUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.crafting.RecipeInput;
 
-@Environment(EnvType.CLIENT)
 public class CircuitFabricatorScreen extends MachineScreen<CircuitFabricatorBlockEntity, RecipeMachineMenu<RecipeInput, FabricationRecipe, CircuitFabricatorBlockEntity>> {
     private static final int PROGRESS_SIZE = 4;
     private static final int INITIAL_PROGRESS_U = 0;

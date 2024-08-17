@@ -29,7 +29,7 @@ import dev.galacticraft.impl.accessor.SoundSystemAccessor;
 import dev.galacticraft.impl.client.accessor.ClientResearchAccessor;
 import dev.galacticraft.impl.internal.inventory.MappedInventory;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.world.inventory.GearInventory;
+import dev.galacticraft.mod.storage.GearInventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;

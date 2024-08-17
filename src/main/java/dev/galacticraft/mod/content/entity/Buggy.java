@@ -22,10 +22,10 @@
 
 package dev.galacticraft.mod.content.entity;
 
+import dev.galacticraft.api.block.entity.FuelDock;
+import dev.galacticraft.api.entity.Dockable;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.entity.FuelDock;
-import dev.galacticraft.mod.api.entity.Dockable;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.SingleFluidStorage;

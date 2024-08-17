@@ -31,16 +31,14 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.galacticraft.api.client.accessor.ClientSatelliteAccessor;
 import dev.galacticraft.api.registry.AddonRegistries;
-import dev.galacticraft.api.satellite.Satellite;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.star.Star;
+import dev.galacticraft.api.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
-import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
-import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
+import dev.galacticraft.api.universe.position.config.SatelliteConfig;
+import dev.galacticraft.api.universe.satellite.Satellite;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.util.Graphics;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -65,7 +63,6 @@ import org.lwjgl.glfw.GLFW;
 import java.util.*;
 
 @SuppressWarnings({"SpellCheckingInspection", "DataFlowIssue"})
-@Environment(EnvType.CLIENT)
 public class CelestialScreen extends Screen implements ClientSatelliteAccessor.SatelliteListener {
     protected static final int BORDER_Z = 9900;
 

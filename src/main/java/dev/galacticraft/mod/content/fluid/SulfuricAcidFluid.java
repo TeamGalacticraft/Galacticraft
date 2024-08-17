@@ -24,8 +24,8 @@ package dev.galacticraft.mod.content.fluid;
 
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
+import dev.galacticraft.mod.content.GCParticleTypes;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.particle.GCParticleTypes;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;

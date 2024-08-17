@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content.item;
 
-import dev.galacticraft.api.component.GCDataComponents;
+import dev.galacticraft.api.item.GCDataComponents;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartTypes;

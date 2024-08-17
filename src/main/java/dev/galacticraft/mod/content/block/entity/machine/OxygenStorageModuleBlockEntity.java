@@ -34,7 +34,7 @@ import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.machinelib.api.util.FluidSource;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.screen.GCMenuTypes;
+import dev.galacticraft.mod.menu.GCMenuTypes;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;

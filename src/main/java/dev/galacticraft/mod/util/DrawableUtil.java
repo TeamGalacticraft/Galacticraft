@@ -25,15 +25,12 @@ package dev.galacticraft.mod.util;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import org.joml.Matrix4f;
 
-@Environment(EnvType.CLIENT)
 public class DrawableUtil {
     private DrawableUtil() {}
 

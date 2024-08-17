@@ -24,8 +24,6 @@ package dev.galacticraft.impl.internal.mixin.client;
 
 import com.mojang.blaze3d.audio.Listener;
 import dev.galacticraft.impl.accessor.SoundSystemAccessor;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.sounds.SoundEngine;
 import net.minecraft.sounds.SoundSource;
@@ -40,7 +38,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(SoundEngine.class)
-@Environment(EnvType.CLIENT)
 public abstract class SoundEngineMixin implements SoundSystemAccessor {
     @Shadow @Final private Listener listener;
     @Unique private float multiplier = 1.0f;

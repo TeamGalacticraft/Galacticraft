@@ -24,7 +24,7 @@ package dev.galacticraft.mod.client.particle;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import dev.galacticraft.mod.particle.LaunchSmokeParticleOption;
+import dev.galacticraft.mod.content.particle.LaunchSmokeParticleOption;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;

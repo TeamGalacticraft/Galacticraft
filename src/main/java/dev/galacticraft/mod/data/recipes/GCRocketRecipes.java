@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.data.recipes;
 
+import dev.galacticraft.mod.content.GCTags;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.core.HolderLookup;

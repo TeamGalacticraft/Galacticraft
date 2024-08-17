@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.content.block.decoration;
 
 import com.google.common.annotations.VisibleForTesting;
-import dev.galacticraft.mod.api.block.FluidLoggable;
+import dev.galacticraft.api.block.FluidLoggable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;

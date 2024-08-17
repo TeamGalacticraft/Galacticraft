@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.data.content;
 
-import dev.galacticraft.impl.data.GCDynamicRegistryProvider;
-import dev.galacticraft.impl.data.GeneratingBootstrapContext;
+import dev.galacticraft.api.data.GCDynamicRegistryProvider;
+import dev.galacticraft.api.data.GeneratingBootstrapContext;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;

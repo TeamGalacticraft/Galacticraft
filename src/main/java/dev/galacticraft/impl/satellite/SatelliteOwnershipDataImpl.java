@@ -23,7 +23,7 @@
 package dev.galacticraft.impl.satellite;
 
 import com.google.common.collect.ImmutableList;
-import dev.galacticraft.api.satellite.SatelliteOwnershipData;
+import dev.galacticraft.api.universe.satellite.SatelliteOwnershipData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;

@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.content.item;
 
-import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.api.item.GCDataComponents;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;

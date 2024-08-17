@@ -24,7 +24,7 @@ package dev.galacticraft.mod.world.gen.carver.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.content.GCTags;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.world.level.levelgen.VerticalAnchor;

@@ -24,11 +24,11 @@ package dev.galacticraft.mod.content;
 
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.BuiltInAddonRegistries;
+import dev.galacticraft.api.universe.BuiltinObjects;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
+import dev.galacticraft.api.universe.celestialbody.landable.teleporter.config.DefaultCelestialTeleporterConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.type.CelestialTeleporterType;
-import dev.galacticraft.impl.universe.BuiltinObjects;
-import dev.galacticraft.impl.universe.celestialbody.landable.teleporter.config.DefaultCelestialTeleporterConfig;
-import dev.galacticraft.impl.universe.celestialbody.landable.teleporter.type.DirectCelestialTeleporterType;
+import dev.galacticraft.api.universe.celestialbody.landable.teleporter.type.DirectCelestialTeleporterType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Constant.Teleporters;
 import dev.galacticraft.mod.content.teleporters.LanderCelestialTeleporterType;

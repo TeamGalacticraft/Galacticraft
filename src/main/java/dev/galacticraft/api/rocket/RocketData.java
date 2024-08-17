@@ -24,12 +24,12 @@ package dev.galacticraft.api.rocket;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.galacticraft.api.component.GCDataComponents;
+import dev.galacticraft.api.item.GCDataComponents;
 import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.impl.codec.StreamCodecs;
 import dev.galacticraft.mod.content.GCRocketParts;
-import dev.galacticraft.mod.util.StreamCodecs;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;

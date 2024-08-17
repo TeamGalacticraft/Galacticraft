@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.content.block.entity.networked;
 
-import dev.galacticraft.mod.api.block.entity.Colored;
-import dev.galacticraft.mod.api.block.entity.Connected;
-import dev.galacticraft.mod.api.block.entity.Pullable;
+import dev.galacticraft.api.block.entity.Colored;
+import dev.galacticraft.api.block.entity.Connected;
+import dev.galacticraft.api.block.entity.Pullable;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;

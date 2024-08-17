@@ -26,7 +26,7 @@ import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.impl.internal.inventory.MappedInventory;
 import dev.galacticraft.impl.network.s2c.GearInvPayload;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.world.inventory.GearInventory;
+import dev.galacticraft.mod.storage.GearInventory;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.CompoundTag;

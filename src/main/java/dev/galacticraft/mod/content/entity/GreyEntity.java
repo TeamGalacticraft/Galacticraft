@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content.entity;
 
-import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
+import dev.galacticraft.api.entity.GcApiEntityAttributes;
 import dev.galacticraft.mod.content.entity.goals.FollowPlayerGoal;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.EntitySelector;

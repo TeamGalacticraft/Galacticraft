@@ -23,10 +23,10 @@
 package dev.galacticraft.mod.network.s2c;
 
 import dev.galacticraft.api.rocket.RocketData;
+import dev.galacticraft.impl.codec.StreamCodecs;
 import dev.galacticraft.impl.network.s2c.S2CPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
-import dev.galacticraft.mod.util.StreamCodecs;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.UUIDUtil;

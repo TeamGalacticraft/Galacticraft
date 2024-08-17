@@ -22,10 +22,10 @@
 
 package dev.galacticraft.api.rocket.entity;
 
+import dev.galacticraft.api.entity.Dockable;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.*;
-import dev.galacticraft.mod.api.entity.Dockable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.world.damagesource.DamageSource;

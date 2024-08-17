@@ -18,15 +18,15 @@ accessible field net/minecraft/world/level/levelgen/SurfaceRules$Context biome L
 extendable class net/minecraft/world/SimpleMenuProvider
 
 # static methods
-accessible method net/minecraft/data/models/model/ModelTemplates            createItem (Ljava/lang/String;[Lnet/minecraft/data/models/model/TextureSlot;)Lnet/minecraft/data/models/model/ModelTemplate;
-accessible method net/minecraft/world/level/storage/loot/BuiltInLootTables  register (Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/resources/ResourceKey;
-accessible method net/minecraft/stats/Stats                                 makeCustomStat (Ljava/lang/String;Lnet/minecraft/stats/StatFormatter;)Lnet/minecraft/resources/ResourceLocation;
+accessible method net/minecraft/data/models/model/ModelTemplates createItem (Ljava/lang/String;[Lnet/minecraft/data/models/model/TextureSlot;)Lnet/minecraft/data/models/model/ModelTemplate;
+accessible method net/minecraft/world/level/storage/loot/BuiltInLootTables register (Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/resources/ResourceKey;
+accessible method net/minecraft/stats/Stats makeCustomStat (Ljava/lang/String;Lnet/minecraft/stats/StatFormatter;)Lnet/minecraft/resources/ResourceLocation;
 
 # private final fields
 accessible field net/minecraft/data/models/BlockModelGenerators texturedModels Ljava/util/Map;
-mutable field net/minecraft/data/models/BlockModelGenerators    texturedModels Ljava/util/Map;
+mutable field net/minecraft/data/models/BlockModelGenerators texturedModels Ljava/util/Map;
 accessible field net/minecraft/data/models/BlockModelGenerators fullBlockModelCustomGenerators Ljava/util/Map;
-mutable field net/minecraft/data/models/BlockModelGenerators    fullBlockModelCustomGenerators Ljava/util/Map;
+mutable field net/minecraft/data/models/BlockModelGenerators fullBlockModelCustomGenerators Ljava/util/Map;
 
 # private static fields
 accessible field net/minecraft/data/loot/EntityLootSubProvider SPECIAL_LOOT_TABLE_TYPES Ljava/util/Set;

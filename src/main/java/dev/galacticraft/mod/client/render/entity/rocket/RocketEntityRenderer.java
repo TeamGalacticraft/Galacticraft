@@ -24,7 +24,7 @@ package dev.galacticraft.mod.client.render.entity.rocket;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
+import dev.galacticraft.api.client.render.rocket.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;

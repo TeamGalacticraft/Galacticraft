@@ -22,7 +22,7 @@
 
 package dev.galacticraft.impl.internal.mixin;
 
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.content.GCTags;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelTimeAccess;

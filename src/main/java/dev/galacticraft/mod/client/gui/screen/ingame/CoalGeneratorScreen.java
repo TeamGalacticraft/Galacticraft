@@ -25,15 +25,12 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.CoalGeneratorBlockEntity;
-import dev.galacticraft.mod.screen.CoalGeneratorMenu;
+import dev.galacticraft.mod.menu.CoalGeneratorMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-@Environment(EnvType.CLIENT)
 public class CoalGeneratorScreen extends MachineScreen<CoalGeneratorBlockEntity, CoalGeneratorMenu> {
     private static final int FIRE_X = 72;
     private static final int FIRE_Y = 37;

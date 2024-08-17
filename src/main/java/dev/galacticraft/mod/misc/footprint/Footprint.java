@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.misc.footprint;
 
+import dev.galacticraft.impl.codec.StreamCodecs;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.util.StreamCodecs;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

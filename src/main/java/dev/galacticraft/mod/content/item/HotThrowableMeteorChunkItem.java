@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content.item;
 
-import dev.galacticraft.api.component.GCDataComponents;
+import dev.galacticraft.api.item.GCDataComponents;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.network.chat.Component;

@@ -24,7 +24,7 @@ package dev.galacticraft.mod.content.block.special;
 
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.entity.ScalableFuelLevel;
-import dev.galacticraft.mod.screen.ParachestMenu;
+import dev.galacticraft.mod.menu.ParachestMenu;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;

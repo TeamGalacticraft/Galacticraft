@@ -24,7 +24,7 @@ package dev.galacticraft.mod.client.render.rocket;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import dev.galacticraft.api.entity.rocket.render.RocketPartRenderer;
+import dev.galacticraft.api.client.render.rocket.RocketPartRenderer;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import net.minecraft.client.Minecraft;

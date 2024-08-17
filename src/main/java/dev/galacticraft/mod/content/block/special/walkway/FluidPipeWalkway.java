@@ -23,11 +23,11 @@
 package dev.galacticraft.mod.content.block.special.walkway;
 
 import com.mojang.serialization.MapCodec;
+import dev.galacticraft.api.block.FluidLoggable;
+import dev.galacticraft.api.block.FluidPipe;
+import dev.galacticraft.api.block.entity.Walkway;
+import dev.galacticraft.api.block.pipe.Pipe;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.FluidLoggable;
-import dev.galacticraft.mod.api.block.FluidPipe;
-import dev.galacticraft.mod.api.block.entity.Walkway;
-import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.content.block.entity.networked.FluidPipeWalkwayBlockEntity;
 import dev.galacticraft.mod.content.block.special.fluidpipe.GlassFluidPipeBlock;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
