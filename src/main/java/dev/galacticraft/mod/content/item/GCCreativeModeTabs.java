@@ -35,15 +35,12 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.DyedItemColor;
 
 import static dev.galacticraft.mod.content.item.GCItems.*;
 
@@ -108,6 +105,7 @@ public class GCCreativeModeTabs {
                 output.accept(RAW_TITANIUM);
                 output.accept(RAW_SILICON);
                 output.accept(LUNAR_SAPPHIRE);
+                output.accept(OLIVINE_SHARD);
 
                 output.accept(METEORIC_IRON_INGOT);
                 output.accept(DESH_INGOT);
@@ -282,6 +280,24 @@ public class GCCreativeModeTabs {
                 output.accept(MOON_ROCK_STAIRS);
                 output.accept(MOON_ROCK_WALL);
 
+                output.accept(MOON_ROCK_BRICK);
+                output.accept(MOON_ROCK_BRICK_SLAB);
+                output.accept(MOON_ROCK_BRICK_STAIRS);
+                output.accept(MOON_ROCK_BRICK_WALL);
+
+                output.accept(CRACKED_MOON_ROCK_BRICK);
+                output.accept(CRACKED_MOON_ROCK_BRICK_SLAB);
+                output.accept(CRACKED_MOON_ROCK_BRICK_STAIRS);
+                output.accept(CRACKED_MOON_ROCK_BRICK_WALL);
+
+                output.accept(POLISHED_MOON_ROCK);
+                output.accept(POLISHED_MOON_ROCK_SLAB);
+                output.accept(POLISHED_MOON_ROCK_STAIRS);
+                output.accept(POLISHED_MOON_ROCK_WALL);
+
+                output.accept(CHISELED_MOON_ROCK_BRICK);
+                output.accept(MOON_ROCK_PILLAR);
+
                 output.accept(COBBLED_MOON_ROCK);
                 output.accept(COBBLED_MOON_ROCK_SLAB);
                 output.accept(COBBLED_MOON_ROCK_STAIRS);
@@ -388,6 +404,10 @@ public class GCCreativeModeTabs {
 
                 output.accept(GALENA_ORE);
 
+                output.accept(GCBlocks.OLIVINE_BASALT);
+                output.accept(GCBlocks.RICH_OLIVINE_BASALT);
+                output.accept(GCBlocks.OLIVINE_CLUSTER);
+
                 // COMPACT MINERAL BLOCKS
                 output.accept(MOON_CHEESE_WHEEL);
                 output.accept(SILICON_BLOCK);
@@ -396,6 +416,7 @@ public class GCCreativeModeTabs {
                 output.accept(TITANIUM_BLOCK);
                 output.accept(LEAD_BLOCK);
                 output.accept(LUNAR_SAPPHIRE_BLOCK);
+                output.accept(GCBlocks.OLIVINE_BLOCK);
 
                 // MOON VILLAGER SPECIAL
                 output.accept(LUNAR_CARTOGRAPHY_TABLE);

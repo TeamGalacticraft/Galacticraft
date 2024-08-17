@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.data.tag;
 
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -109,12 +110,19 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         tag(ConventionalItemTags.ORES).add(
                 GCItems.SILICON_ORE, GCItems.DEEPSLATE_SILICON_ORE,
                 GCItems.MOON_COPPER_ORE, GCItems.LUNASLATE_COPPER_ORE,
+                GCBlocks.OLIVINE_BASALT.asItem(), GCBlocks.RICH_OLIVINE_BASALT.asItem(),
                 GCItems.TIN_ORE, GCItems.DEEPSLATE_TIN_ORE, GCItems.MOON_TIN_ORE, GCItems.LUNASLATE_TIN_ORE,
                 GCItems.ALUMINUM_ORE, GCItems.DEEPSLATE_ALUMINUM_ORE,
                 GCItems.DESH_ORE,
                 GCItems.ILMENITE_ORE,
                 GCItems.GALENA_ORE
         );
+
+        tag(ConventionalItemTags.GEMS)
+                .add(GCItems.OLIVINE_SHARD);
+
+        tag(ConventionalItemTags.CLUSTERS)
+                .add(GCBlocks.OLIVINE_CLUSTER.asItem());
 
         tag(ItemTags.MEAT)
                 .add(GCItems.GROUND_BEEF)

@@ -55,6 +55,21 @@ public class GCBlockFamilies {
             .stairs(MOON_ROCK_STAIRS)
             .wall(MOON_ROCK_WALL)
             .getFamily();
+    public static final BlockFamily MOON_ROCK_BRICKS = builder(MOON_ROCK_BRICK)
+            .slab(MOON_ROCK_BRICK_SLAB)
+            .stairs(MOON_ROCK_BRICK_STAIRS)
+            .wall(MOON_ROCK_BRICK_WALL)
+            .getFamily();
+    public static final BlockFamily CRACKED_MOON_ROCK_BRICKS = builder(CRACKED_MOON_ROCK_BRICK)
+            .slab(CRACKED_MOON_ROCK_BRICK_SLAB)
+            .stairs(CRACKED_MOON_ROCK_BRICK_STAIRS)
+            .wall(CRACKED_MOON_ROCK_BRICK_WALL)
+            .getFamily();
+    public static final BlockFamily POLISHED_MOON_ROCKS = builder(POLISHED_MOON_ROCK)
+            .slab(POLISHED_MOON_ROCK_SLAB)
+            .stairs(POLISHED_MOON_ROCK_STAIRS)
+            .wall(POLISHED_MOON_ROCK_WALL)
+            .getFamily();
     public static final BlockFamily COBBLED_MOON_ROCKS = builder(COBBLED_MOON_ROCK)
             .slab(COBBLED_MOON_ROCK_SLAB)
             .stairs(COBBLED_MOON_ROCK_STAIRS)

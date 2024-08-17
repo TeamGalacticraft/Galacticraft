@@ -97,6 +97,9 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         var stairs = new Block[] {
                 GCBlocks.MOON_ROCK_STAIRS,
+                GCBlocks.MOON_ROCK_BRICK_STAIRS,
+                GCBlocks.CRACKED_MOON_ROCK_BRICK_STAIRS,
+                GCBlocks.POLISHED_MOON_ROCK_STAIRS,
                 GCBlocks.LUNASLATE_STAIRS,
                 GCBlocks.COBBLED_MOON_ROCK_STAIRS,
                 GCBlocks.COBBLED_LUNASLATE_STAIRS,
@@ -109,6 +112,9 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         var wall = new Block[] {
                 GCBlocks.MOON_ROCK_WALL,
+                GCBlocks.MOON_ROCK_BRICK_WALL,
+                GCBlocks.CRACKED_MOON_ROCK_BRICK_WALL,
+                GCBlocks.POLISHED_MOON_ROCK_WALL,
                 GCBlocks.LUNASLATE_WALL,
                 GCBlocks.COBBLED_MOON_ROCK_WALL,
                 GCBlocks.COBBLED_LUNASLATE_WALL,
@@ -121,6 +127,9 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         var slab = new Block[] {
                 GCBlocks.MOON_ROCK_SLAB,
+                GCBlocks.MOON_ROCK_BRICK_SLAB,
+                GCBlocks.CRACKED_MOON_ROCK_BRICK_SLAB,
+                GCBlocks.POLISHED_MOON_ROCK_SLAB,
                 GCBlocks.LUNASLATE_SLAB,
                 GCBlocks.COBBLED_MOON_ROCK_SLAB,
                 GCBlocks.COBBLED_LUNASLATE_SLAB,
@@ -153,6 +162,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         var ores = new Block[] {
                 GCBlocks.SILICON_ORE, GCBlocks.DEEPSLATE_SILICON_ORE,
                 GCBlocks.MOON_COPPER_ORE, GCBlocks.LUNASLATE_COPPER_ORE,
+                GCBlocks.OLIVINE_BASALT, GCBlocks.RICH_OLIVINE_BASALT,
                 GCBlocks.TIN_ORE, GCBlocks.DEEPSLATE_TIN_ORE, GCBlocks.MOON_TIN_ORE, GCBlocks.LUNASLATE_TIN_ORE,
                 GCBlocks.ALUMINUM_ORE, GCBlocks.DEEPSLATE_ALUMINUM_ORE,
                 GCBlocks.DESH_ORE,
@@ -162,9 +172,16 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         this.tag(ConventionalBlockTags.ORES).add(ores);
 
+        var clusters = new Block[] {
+                GCBlocks.OLIVINE_CLUSTER
+        };
+
+        this.tag(ConventionalBlockTags.CLUSTERS).add(clusters);
+
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .forceAddTag(GCTags.MACHINES)
                 .add(ores)
+                .add(clusters)
                 .add(slab)
                 .add(stairs)
                 .add(
@@ -193,6 +210,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.TITANIUM_BLOCK,
                         GCBlocks.LEAD_BLOCK,
                         GCBlocks.LUNAR_SAPPHIRE_BLOCK,
+                        GCBlocks.OLIVINE_BLOCK,
 
                         GCBlocks.MOON_TURF,
                         GCBlocks.MOON_DIRT,
@@ -229,6 +247,11 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.METEORIC_IRON_DECORATION.detailedBlock(),
                         GCBlocks.DARK_DECORATION.detailedBlock(),
                         GCBlocks.MOON_ROCK,
+                        GCBlocks.MOON_ROCK_BRICK,
+                        GCBlocks.CRACKED_MOON_ROCK_BRICK,
+                        GCBlocks.POLISHED_MOON_ROCK,
+                        GCBlocks.CHISELED_MOON_ROCK_BRICK,
+                        GCBlocks.MOON_ROCK_PILLAR,
                         GCBlocks.LUNASLATE,
                         GCBlocks.COBBLED_MOON_ROCK,
                         GCBlocks.COBBLED_LUNASLATE,

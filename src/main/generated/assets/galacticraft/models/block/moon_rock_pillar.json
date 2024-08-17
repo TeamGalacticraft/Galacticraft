@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "galacticraft:block/moon_rock_pillar_top",
+    "side": "galacticraft:block/moon_rock_pillar_side"
+  }
+}

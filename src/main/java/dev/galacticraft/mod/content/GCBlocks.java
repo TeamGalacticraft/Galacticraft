@@ -114,6 +114,24 @@ public class GCBlocks {
     public static final Block MOON_ROCK_STAIRS = BLOCKS.register(Constant.Block.MOON_ROCK_STAIRS, new StairBlock(MOON_ROCK.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(MOON_ROCK)));
     public static final Block MOON_ROCK_WALL = BLOCKS.register(Constant.Block.MOON_ROCK_WALL, new WallBlock(BlockBehaviour.Properties.ofFullCopy(MOON_ROCK)));
 
+    public static final Block MOON_ROCK_BRICK = BLOCKS.register(Constant.Block.MOON_ROCK_BRICK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F)));
+    public static final Block MOON_ROCK_BRICK_SLAB = BLOCKS.register(Constant.Block.MOON_ROCK_BRICK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(MOON_ROCK_BRICK).strength(2.5F, 6.0F)));
+    public static final Block MOON_ROCK_BRICK_STAIRS = BLOCKS.register(Constant.Block.MOON_ROCK_BRICK_STAIRS, new StairBlock(MOON_ROCK_BRICK.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(MOON_ROCK_BRICK)));
+    public static final Block MOON_ROCK_BRICK_WALL = BLOCKS.register(Constant.Block.MOON_ROCK_BRICK_WALL, new WallBlock(BlockBehaviour.Properties.ofFullCopy(MOON_ROCK_BRICK)));
+
+    public static final Block CRACKED_MOON_ROCK_BRICK = BLOCKS.register(Constant.Block.CRACKED_MOON_ROCK_BRICK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F)));
+    public static final Block CRACKED_MOON_ROCK_BRICK_SLAB = BLOCKS.register(Constant.Block.CRACKED_MOON_ROCK_BRICK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(CRACKED_MOON_ROCK_BRICK).strength(2.5F, 6.0F)));
+    public static final Block CRACKED_MOON_ROCK_BRICK_STAIRS = BLOCKS.register(Constant.Block.CRACKED_MOON_ROCK_BRICK_STAIRS, new StairBlock(CRACKED_MOON_ROCK_BRICK.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(CRACKED_MOON_ROCK_BRICK)));
+    public static final Block CRACKED_MOON_ROCK_BRICK_WALL = BLOCKS.register(Constant.Block.CRACKED_MOON_ROCK_BRICK_WALL, new WallBlock(BlockBehaviour.Properties.ofFullCopy(CRACKED_MOON_ROCK_BRICK)));
+
+    public static final Block POLISHED_MOON_ROCK = BLOCKS.register(Constant.Block.POLISHED_MOON_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F)));
+    public static final Block POLISHED_MOON_ROCK_SLAB = BLOCKS.register(Constant.Block.POLISHED_MOON_ROCK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(POLISHED_MOON_ROCK).strength(2.5F, 6.0F)));
+    public static final Block POLISHED_MOON_ROCK_STAIRS = BLOCKS.register(Constant.Block.POLISHED_MOON_ROCK_STAIRS, new StairBlock(POLISHED_MOON_ROCK.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(POLISHED_MOON_ROCK)));
+    public static final Block POLISHED_MOON_ROCK_WALL = BLOCKS.register(Constant.Block.POLISHED_MOON_ROCK_WALL, new WallBlock(BlockBehaviour.Properties.ofFullCopy(POLISHED_MOON_ROCK)));
+
+    public static final Block CHISELED_MOON_ROCK_BRICK = BLOCKS.register(Constant.Block.CHISELED_MOON_ROCK_BRICK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F)));
+    public static final Block MOON_ROCK_PILLAR = BLOCKS.register(Constant.Block.MOON_ROCK_PILLAR, new RotatedPillarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F)));
+
     public static final Block COBBLED_MOON_ROCK = BLOCKS.register(Constant.Block.COBBLED_MOON_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F)));
     public static final Block COBBLED_MOON_ROCK_SLAB = BLOCKS.register(Constant.Block.COBBLED_MOON_ROCK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(COBBLED_MOON_ROCK).strength(2.5F, 6.0F)));
     public static final Block COBBLED_MOON_ROCK_STAIRS = BLOCKS.register(Constant.Block.COBBLED_MOON_ROCK_STAIRS, new StairBlock(COBBLED_MOON_ROCK.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(COBBLED_MOON_ROCK)));
@@ -223,6 +241,10 @@ public class GCBlocks {
 
     public static final Block GALENA_ORE = BLOCKS.register(Constant.Block.GALENA_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 5.0F, false)));
 
+    public static final Block OLIVINE_CLUSTER = BLOCKS.registerWithItem(Constant.Block.OLIVINE_CLUSTER, new OlivineClusterBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.AMETHYST_CLUSTER).mapColor(MapColor.COLOR_LIGHT_GREEN)));
+    public static final Block OLIVINE_BASALT = BLOCKS.registerWithItem(Constant.Block.OLIVINE_BASALT, new Block(BlockBehaviour.Properties.ofFullCopy(MOON_BASALT).strength(3.5F, 6.0F)));
+    public static final Block RICH_OLIVINE_BASALT = BLOCKS.registerWithItem(Constant.Block.RICH_OLIVINE_BASALT, new Block(BlockBehaviour.Properties.ofFullCopy(OLIVINE_BASALT)));
+
     // CHEESE BLOCK
     public static final Block MOON_CHEESE_WHEEL = BLOCKS.register(Constant.Block.MOON_CHEESE_WHEEL, new MoonCheeseBlock(BlockBehaviour.Properties.of().forceSolidOn().strength(0.5F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY)));
     public static final Block CANDLE_MOON_CHEESE_WHEEL = BLOCKS.register(Constant.Block.CANDLE_MOON_CHEESE_WHEEL, new CandleMoonCheeseBlock(Blocks.CANDLE, BlockBehaviour.Properties.ofFullCopy(MOON_CHEESE_WHEEL).lightLevel(litBlockEmission(3))));
@@ -250,6 +272,7 @@ public class GCBlocks {
     public static final Block TITANIUM_BLOCK = BLOCKS.register(Constant.Block.TITANIUM_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL)));
     public static final Block LEAD_BLOCK = BLOCKS.register(Constant.Block.LEAD_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL)));
     public static final Block LUNAR_SAPPHIRE_BLOCK = BLOCKS.register(Constant.Block.LUNAR_SAPPHIRE_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(5.0F, 6.0F).sound(SoundType.STONE)));
+    public static final Block OLIVINE_BLOCK = BLOCKS.registerWithItem(Constant.Block.OLIVINE_BLOCK, new RotatedPillarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).strength(1.5F, 1.5F).sound(SoundType.AMETHYST)));
 
     // MOON VILLAGER SPECIAL
     public static final Block LUNAR_CARTOGRAPHY_TABLE = BLOCKS.register(Constant.Block.LUNAR_CARTOGRAPHY_TABLE, new LunarCartographyTableBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).ignitedByLava().instrument(NoteBlockInstrument.BASS).strength(2.5F).sound(SoundType.WOOD)));

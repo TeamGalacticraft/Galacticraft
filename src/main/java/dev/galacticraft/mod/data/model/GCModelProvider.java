@@ -68,9 +68,7 @@ public class GCModelProvider extends FabricModelProvider {
 
         List<GCBlockRegistry.DecorationSet> decorations = GCBlocks.BLOCKS.getDecorations();
 
-        decorations.forEach(decorationSet -> {
-            putDetailedTextured(generator, decorationSet.detailedBlock());
-        });
+        decorations.forEach(decorationSet -> putDetailedTextured(generator, decorationSet.detailedBlock()));
         generator.texturedModels.put(GCBlocks.LUNASLATE, TexturedModel.COLUMN_WITH_WALL.get(GCBlocks.LUNASLATE));
 
         GCBlockFamilies.getAllFamilies()
@@ -96,6 +94,9 @@ public class GCModelProvider extends FabricModelProvider {
         createRotatedDelegate(generator, GCBlocks.MOON_DIRT_PATH);
         generator.createTrivialCube(GCBlocks.MOON_SURFACE_ROCK);
         generator.createTrivialCube(GCBlocks.MOON_DUNGEON_BRICK);
+        generator.createTrivialCube(GCBlocks.CHISELED_MOON_ROCK_BRICK);
+        generator.createAxisAlignedPillarBlock(GCBlocks.MOON_ROCK_PILLAR, TexturedModel.COLUMN);
+        generator.createAxisAlignedPillarBlock(GCBlocks.OLIVINE_BLOCK, TexturedModel.COLUMN);
 
         // MARS NATURAL
         generator.createTrivialCube(GCBlocks.MARS_SURFACE_ROCK);
@@ -168,6 +169,11 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.ILMENITE_ORE);
 
         generator.createTrivialCube(GCBlocks.GALENA_ORE);
+
+        this.createOlivineCluster(generator, GCBlocks.OLIVINE_CLUSTER);
+        generator.createSimpleFlatItemModel(GCBlocks.OLIVINE_CLUSTER, "_vertical");
+        generator.createTrivialCube(GCBlocks.OLIVINE_BASALT);
+        generator.createTrivialCube(GCBlocks.RICH_OLIVINE_BASALT);
 
         this.createCheeseBlock(generator);
         this.createCandleCheeseBlock(generator, Blocks.CANDLE, GCBlocks.CANDLE_MOON_CHEESE_WHEEL);
@@ -365,6 +371,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.COMPRESSED_STEEL, ModelTemplates.FLAT_ITEM);
 
         generator.generateFlatItem(GCItems.LUNAR_SAPPHIRE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.OLIVINE_SHARD, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.DESH_STICK, ModelTemplates.FLAT_HANDHELD_ITEM);
         generator.generateFlatItem(GCItems.CARBON_FRAGMENTS, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.IRON_SHARD, ModelTemplates.FLAT_ITEM);
@@ -464,9 +471,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.SULFURIC_ACID_BUCKET, ModelTemplates.FLAT_ITEM);
 
         //GALACTICRAFT INVENTORY
-        GCItems.PARACHUTE.colorMap().forEach((color, parachute) -> {
-            generator.generateFlatItem(parachute, ModelTemplates.FLAT_ITEM);
-        });
+        GCItems.PARACHUTE.colorMap().forEach((color, parachute) -> generator.generateFlatItem(parachute, ModelTemplates.FLAT_ITEM));
 
         generator.generateFlatItem(GCItems.OXYGEN_MASK, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.OXYGEN_GEAR, ModelTemplates.FLAT_ITEM);
@@ -561,6 +566,41 @@ public class GCModelProvider extends FabricModelProvider {
         var resourceLocation3 = generator.createSuffixedVariant(cavernousVinesPlant, "", ModelTemplates.CROSS, TextureMapping::cross);
         var resourceLocation4 = generator.createSuffixedVariant(cavernousVinesPlant, "_poisonous", ModelTemplates.CROSS, TextureMapping::cross);
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(cavernousVinesPlant).with(BlockModelGenerators.createBooleanModelDispatch(CavernousVines.POISONOUS, resourceLocation4, resourceLocation3)));
+    }
+
+    private ResourceLocation blockTextureWithSuffix(Block block, String suffix) {
+        ResourceLocation resourceLocation = BuiltInRegistries.BLOCK.getKey(block);
+        return resourceLocation.withPrefix("block/").withSuffix(suffix);
+    }
+
+    public final void createOlivineCluster(BlockModelGenerators generator, Block block) {
+        ResourceLocation verticalModel = ModelTemplates.CROSS.createWithSuffix(block, "_vertical", TextureMapping.cross(blockTextureWithSuffix(block, "_vertical")), generator.modelOutput);
+        ResourceLocation horizontalModel = ModelTemplates.CROSS.createWithSuffix(block, "_horizontal", TextureMapping.cross(blockTextureWithSuffix(block, "_horizontal")), generator.modelOutput);
+        generator.skipAutoItemBlock(block);
+        generator.blockStateOutput
+                .accept(
+                        MultiVariantGenerator.multiVariant(block)
+                                .with(PropertyDispatch.property(BlockStateProperties.FACING)
+                                        .select(Direction.DOWN, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R180)
+                                                .with(VariantProperties.MODEL, verticalModel))
+                                        .select(Direction.UP, Variant.variant()
+                                                .with(VariantProperties.MODEL, verticalModel))
+                                        .select(Direction.NORTH, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90)
+                                                .with(VariantProperties.MODEL, horizontalModel))
+                                        .select(
+                                                Direction.SOUTH,
+                                                Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)
+                                                        .with(VariantProperties.MODEL, horizontalModel))
+                                        .select(
+                                                Direction.WEST,
+                                                Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)
+                                                        .with(VariantProperties.MODEL, horizontalModel))
+                                        .select(
+                                                Direction.EAST,
+                                                Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
+                                                        .with(VariantProperties.MODEL, horizontalModel))
+                                )
+                );
     }
 
     private static TextureMapping rocketLaunchPadPart(Block block, String suffix) {

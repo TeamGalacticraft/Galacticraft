@@ -22,11 +22,8 @@
 
 package dev.galacticraft.mod.lookup;
 
-import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.filter.ResourceFilter;
-import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.item.SingleVariantFixedItemBackedFluidStorage;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.api.wire.Wire;
@@ -35,7 +32,6 @@ import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.item.OxygenTankItem;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import team.reborn.energy.api.EnergyStorage;
 
@@ -51,6 +47,7 @@ public class GCApiLookupProviders {
             GCBlockEntityTypes.ELECTRIC_FURNACE,
             GCBlockEntityTypes.ELECTRIC_ARC_FURNACE,
             GCBlockEntityTypes.REFINERY,
+            GCBlockEntityTypes.FUEL_LOADER,
             GCBlockEntityTypes.OXYGEN_COLLECTOR,
             GCBlockEntityTypes.OXYGEN_COMPRESSOR,
             GCBlockEntityTypes.OXYGEN_DECOMPRESSOR,

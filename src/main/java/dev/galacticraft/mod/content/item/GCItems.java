@@ -66,6 +66,24 @@ public class GCItems {
     public static final Item MOON_ROCK_STAIRS = new BlockItem(GCBlocks.MOON_ROCK_STAIRS, new Item.Properties());
     public static final Item MOON_ROCK_WALL = new BlockItem(GCBlocks.MOON_ROCK_WALL, new Item.Properties());
 
+    public static final Item MOON_ROCK_BRICK = new BlockItem(GCBlocks.MOON_ROCK_BRICK, new Item.Properties());
+    public static final Item MOON_ROCK_BRICK_SLAB = new BlockItem(GCBlocks.MOON_ROCK_BRICK_SLAB, new Item.Properties());
+    public static final Item MOON_ROCK_BRICK_STAIRS = new BlockItem(GCBlocks.MOON_ROCK_BRICK_STAIRS, new Item.Properties());
+    public static final Item MOON_ROCK_BRICK_WALL = new BlockItem(GCBlocks.MOON_ROCK_BRICK_WALL, new Item.Properties());
+
+    public static final Item CRACKED_MOON_ROCK_BRICK = new BlockItem(GCBlocks.CRACKED_MOON_ROCK_BRICK, new Item.Properties());
+    public static final Item CRACKED_MOON_ROCK_BRICK_SLAB = new BlockItem(GCBlocks.CRACKED_MOON_ROCK_BRICK_SLAB, new Item.Properties());
+    public static final Item CRACKED_MOON_ROCK_BRICK_STAIRS = new BlockItem(GCBlocks.CRACKED_MOON_ROCK_BRICK_STAIRS, new Item.Properties());
+    public static final Item CRACKED_MOON_ROCK_BRICK_WALL = new BlockItem(GCBlocks.CRACKED_MOON_ROCK_BRICK_WALL, new Item.Properties());
+
+    public static final Item POLISHED_MOON_ROCK = new BlockItem(GCBlocks.POLISHED_MOON_ROCK, new Item.Properties());
+    public static final Item POLISHED_MOON_ROCK_SLAB = new BlockItem(GCBlocks.POLISHED_MOON_ROCK_SLAB, new Item.Properties());
+    public static final Item POLISHED_MOON_ROCK_STAIRS = new BlockItem(GCBlocks.POLISHED_MOON_ROCK_STAIRS, new Item.Properties());
+    public static final Item POLISHED_MOON_ROCK_WALL = new BlockItem(GCBlocks.POLISHED_MOON_ROCK_WALL, new Item.Properties());
+
+    public static final Item CHISELED_MOON_ROCK_BRICK = new BlockItem(GCBlocks.CHISELED_MOON_ROCK_BRICK, new Item.Properties());
+    public static final Item MOON_ROCK_PILLAR = new BlockItem(GCBlocks.MOON_ROCK_PILLAR, new Item.Properties());
+
     public static final Item COBBLED_MOON_ROCK = new BlockItem(GCBlocks.COBBLED_MOON_ROCK, new Item.Properties());
     public static final Item COBBLED_MOON_ROCK_SLAB = new BlockItem(GCBlocks.COBBLED_MOON_ROCK_SLAB, new Item.Properties());
     public static final Item COBBLED_MOON_ROCK_STAIRS = new BlockItem(GCBlocks.COBBLED_MOON_ROCK_STAIRS, new Item.Properties());
@@ -223,6 +241,8 @@ public class GCItems {
     public static final Item METEORIC_IRON_INGOT = new Item(new Item.Properties());
     public static final Item METEORIC_IRON_NUGGET = new Item(new Item.Properties());
     public static final Item COMPRESSED_METEORIC_IRON = new Item(new Item.Properties());
+
+    public static final Item OLIVINE_SHARD = registerItem(Constant.Item.OLIVINE_SHARD, new Item(new Item.Properties()));
 
     public static final Item RAW_DESH = new Item(new Item.Properties());
     public static final Item DESH_INGOT = new Item(new Item.Properties());
@@ -421,6 +441,10 @@ public class GCItems {
     public static final Item MOON_BUGGY_SCHEMATIC = new SchematicItem(new Item.Properties());
     public static final Item TIER_3_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties());
     public static final Item ASTRO_MINER_SCHEMATIC = new SchematicItem(new Item.Properties());
+
+    public static Item registerItem(String id, Item item) {
+        return Registry.register(BuiltInRegistries.ITEM, Constant.id(id), item);
+    }
     
     public static void register() {
         // === START BLOCKS ===
@@ -435,6 +459,24 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_ROCK_SLAB), MOON_ROCK_SLAB);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_ROCK_STAIRS), MOON_ROCK_STAIRS);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_ROCK_WALL), MOON_ROCK_WALL);
+
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_ROCK_BRICK), MOON_ROCK_BRICK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_ROCK_BRICK_SLAB), MOON_ROCK_BRICK_SLAB);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_ROCK_BRICK_STAIRS), MOON_ROCK_BRICK_STAIRS);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_ROCK_BRICK_WALL), MOON_ROCK_BRICK_WALL);
+
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CRACKED_MOON_ROCK_BRICK), CRACKED_MOON_ROCK_BRICK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CRACKED_MOON_ROCK_BRICK_SLAB), CRACKED_MOON_ROCK_BRICK_SLAB);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CRACKED_MOON_ROCK_BRICK_STAIRS), CRACKED_MOON_ROCK_BRICK_STAIRS);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CRACKED_MOON_ROCK_BRICK_WALL), CRACKED_MOON_ROCK_BRICK_WALL);
+
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.POLISHED_MOON_ROCK), POLISHED_MOON_ROCK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.POLISHED_MOON_ROCK_SLAB), POLISHED_MOON_ROCK_SLAB);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.POLISHED_MOON_ROCK_STAIRS), POLISHED_MOON_ROCK_STAIRS);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.POLISHED_MOON_ROCK_WALL), POLISHED_MOON_ROCK_WALL);
+
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CHISELED_MOON_ROCK_BRICK), CHISELED_MOON_ROCK_BRICK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_ROCK_PILLAR), MOON_ROCK_PILLAR);
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.COBBLED_MOON_ROCK), COBBLED_MOON_ROCK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.COBBLED_MOON_ROCK_SLAB), COBBLED_MOON_ROCK_SLAB);
