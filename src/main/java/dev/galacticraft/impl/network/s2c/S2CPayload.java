@@ -27,5 +27,5 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.NotNull;
 
 public interface S2CPayload extends CustomPacketPayload {
-    void handle(@NotNull ClientPlayNetworking.Context context);
+    Runnable handle(@NotNull ClientPlayNetworking.Context context);
 }

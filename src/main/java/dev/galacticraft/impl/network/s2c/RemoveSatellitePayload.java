@@ -37,8 +37,8 @@ public record RemoveSatellitePayload(ResourceLocation id) implements S2CPayload 
     public static final StreamCodec<ByteBuf, RemoveSatellitePayload> CODEC = ResourceLocation.STREAM_CODEC.map(RemoveSatellitePayload::new, RemoveSatellitePayload::id);
 
     @Override
-    public void handle(ClientPlayNetworking.@NotNull Context context) {
-        ((SatelliteAccessor) context.client().getConnection()).galacticraft$removeSatellite(this.id);
+    public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
+        return () -> ((SatelliteAccessor) context.client().getConnection()).galacticraft$removeSatellite(this.id);
     }
 
     @Override

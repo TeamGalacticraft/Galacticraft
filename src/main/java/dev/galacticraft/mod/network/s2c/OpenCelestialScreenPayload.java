@@ -57,7 +57,12 @@ public record OpenCelestialScreenPayload(@Nullable RocketData data, Holder<Celes
     }
 
     @Override
-    public void handle(ClientPlayNetworking.@NotNull Context context) {
-        context.client().execute(() -> context.client().setScreen(new CelestialSelectionScreen(false, this.data(), true, this.celestialBody.value())));
+    public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                context.client().setScreen(new CelestialSelectionScreen(false, OpenCelestialScreenPayload.this.data(), true, OpenCelestialScreenPayload.this.celestialBody.value()));
+            }
+        };
     }
 }

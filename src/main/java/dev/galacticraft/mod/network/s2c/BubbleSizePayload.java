@@ -56,14 +56,16 @@ public record BubbleSizePayload(BlockPos pos, double size) implements S2CPayload
     }
 
     @Override
-    public void handle(@NotNull ClientPlayNetworking.Context context) {
-        ClientLevel level = context.client().level;
-        if (level != null && level.hasChunk(SectionPos.blockToSectionCoord(this.pos().getX()), SectionPos.blockToSectionCoord(this.pos().getZ()))) {
-            BlockEntity entity = level.getBlockEntity(this.pos());
-            if (entity instanceof OxygenBubbleDistributorBlockEntity machine) {
-                machine.setSize(this.size());
+    public Runnable handle(@NotNull ClientPlayNetworking.Context context) {
+        return () -> {
+            ClientLevel level = context.client().level;
+            if (level != null && level.hasChunk(SectionPos.blockToSectionCoord(this.pos().getX()), SectionPos.blockToSectionCoord(this.pos().getZ()))) {
+                BlockEntity entity = level.getBlockEntity(this.pos());
+                if (entity instanceof OxygenBubbleDistributorBlockEntity machine) {
+                    machine.setSize(this.size());
+                }
             }
-        }
+        };
     }
 
     @Override

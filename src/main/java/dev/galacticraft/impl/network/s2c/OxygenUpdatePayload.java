@@ -54,12 +54,14 @@ public record OxygenUpdatePayload(long chunk, OxygenData[] data) implements S2CP
     }
 
     @Override
-    public void handle(ClientPlayNetworking.@NotNull Context context) {
-        LevelChunk chunk = context.client().level.getChunk(ChunkPos.getX(this.chunk), ChunkPos.getZ(this.chunk));
-        for (OxygenData datum : this.data) {
-            ChunkSectionOxygenAccessor accessor = (ChunkSectionOxygenAccessor)chunk.getSection(datum.section);
-            accessor.galacticraft$setBits(datum.data);
-        }
+    public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
+        return () -> {
+            LevelChunk chunk = context.client().level.getChunk(ChunkPos.getX(this.chunk), ChunkPos.getZ(this.chunk));
+            for (OxygenData datum : this.data) {
+                ChunkSectionOxygenAccessor accessor = (ChunkSectionOxygenAccessor) chunk.getSection(datum.section);
+                accessor.galacticraft$setBits(datum.data);
+            }
+        };
     }
 
     public record OxygenData(byte section, @NotNull BitSet data) {

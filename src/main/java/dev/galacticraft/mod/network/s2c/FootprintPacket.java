@@ -49,8 +49,8 @@ public record FootprintPacket(long chunk, List<Footprint> footprints) implements
     public static final CustomPacketPayload.Type<FootprintPacket> TYPE = new CustomPacketPayload.Type<>(ID);
 
     @Override
-    public void handle(ClientPlayNetworking.@NotNull Context context) {
-        FootprintRenderer.setFootprints(this.chunk, this.footprints);
+    public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
+        return () -> FootprintRenderer.setFootprints(this.chunk, this.footprints);
     }
 
     @Override

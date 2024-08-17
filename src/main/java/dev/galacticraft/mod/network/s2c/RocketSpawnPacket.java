@@ -68,22 +68,27 @@ public record RocketSpawnPacket(EntityType<?> eType, int id, UUID uuid, double x
     public static final CustomPacketPayload.Type<RocketSpawnPacket> TYPE = new CustomPacketPayload.Type<>(ID);
 
     @Override
-    public void handle(ClientPlayNetworking.@NotNull Context context) {
-        ClientLevel level = context.client().level;
-        assert level != null;
+    public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                ClientLevel level = context.client().level;
+                assert level != null;
 
-        RocketEntity entity = (RocketEntity) this.eType.create(level);
-        assert entity != null;
-        entity.syncPacketPositionCodec(x, y, z);
-        entity.setPos(x, y, z);
-        entity.setXRot(xRot);
-        entity.setYRot(yRot);
-        entity.setId(id);
-        entity.setUUID(uuid);
+                RocketEntity entity = (RocketEntity) RocketSpawnPacket.this.eType.create(level);
+                assert entity != null;
+                entity.syncPacketPositionCodec(x, y, z);
+                entity.setPos(x, y, z);
+                entity.setXRot(xRot);
+                entity.setYRot(yRot);
+                entity.setId(id);
+                entity.setUUID(uuid);
 
-        entity.setData(data);
+                entity.setData(data);
 
-        level.addEntity(entity);
+                level.addEntity(entity);
+            }
+        };
     }
 
     @Override

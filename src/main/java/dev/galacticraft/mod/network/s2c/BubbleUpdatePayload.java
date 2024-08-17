@@ -50,12 +50,14 @@ public record BubbleUpdatePayload(BlockPos pos, byte maxSize, double size, boole
     );
 
     @Override
-    public void handle(ClientPlayNetworking.@NotNull Context context) {
-        if (context.player().level().getBlockEntity(this.pos) instanceof OxygenBubbleDistributorBlockEntity machine) {
-            machine.setTargetSize(this.maxSize);
-            machine.setSize(this.size);
-            machine.setBubbleVisible(this.visible);
-        }
+    public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
+        return () -> {
+            if (context.player().level().getBlockEntity(this.pos) instanceof OxygenBubbleDistributorBlockEntity machine) {
+                machine.setTargetSize(this.maxSize);
+                machine.setSize(this.size);
+                machine.setBubbleVisible(this.visible);
+            }
+        };
     }
 
     @Override

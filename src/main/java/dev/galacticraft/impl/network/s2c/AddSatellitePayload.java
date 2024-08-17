@@ -27,7 +27,6 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.mod.Constant;
-import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -51,7 +50,7 @@ public record AddSatellitePayload(ResourceLocation id, SatelliteConfig config) i
     }
 
     @Override
-    public void handle(ClientPlayNetworking.@NotNull Context context) {
-        ((ClientSatelliteAccessor) context.client().player.connection).galacticraft$addSatellite(this.id, new CelestialBody<>(SatelliteType.INSTANCE, this.config));
+    public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
+        return () -> ((ClientSatelliteAccessor) context.client().player.connection).galacticraft$addSatellite(this.id, new CelestialBody<>(SatelliteType.INSTANCE, this.config));
     }
 }

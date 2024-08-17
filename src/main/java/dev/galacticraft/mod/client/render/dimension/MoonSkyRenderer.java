@@ -43,7 +43,8 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
         RenderSystem.disableBlend();
         RenderSystem.depthMask(false);
 
-        final PoseStack matrices = context.matrixStack();
+        PoseStack matrices = context.matrixStack();
+        if (matrices == null) matrices = new PoseStack();
 
         context.profiler().push("stars");
         matrices.pushPose();
@@ -51,7 +52,7 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
         matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks()) * 360.0f));
         matrices.mulPose(Axis.YP.rotationDegrees(-19.0F));
 
-        this.starManager.render(context.matrixStack(), context.projectionMatrix(), context.world(), context.tickCounter().getRealtimeDeltaTicks());
+        this.starManager.render(matrices, context.projectionMatrix(), context.world(), context.tickCounter().getRealtimeDeltaTicks());
 
         matrices.popPose();
         context.profiler().pop();

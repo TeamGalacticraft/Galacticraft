@@ -42,6 +42,6 @@ public class GCClientPacketReceiver {
     }
 
     public static <P extends S2CPayload> void register(CustomPacketPayload.Type<P> type) {
-        ClientPlayNetworking.registerGlobalReceiver(type, S2CPayload::handle);
+        ClientPlayNetworking.registerGlobalReceiver(type, (payload, context) -> context.client().execute(payload.handle(context)));
     }
 }

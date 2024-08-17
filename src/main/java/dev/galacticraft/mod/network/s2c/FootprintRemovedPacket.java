@@ -50,24 +50,26 @@ public record FootprintRemovedPacket(long chunk, BlockPos pos) implements S2CPay
     public static final Type<FootprintRemovedPacket> TYPE = new Type<>(ID);
 
     @Override
-    public void handle(ClientPlayNetworking.@NotNull Context context) {
-        BlockPos pos = pos();
-        FootprintManager manager = context.player().level().galacticraft$getFootprintManager();
-        List<Footprint> footprintList = manager.getFootprints().get(this.chunk);
-        List<Footprint> toRemove = new ArrayList<>();
+    public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
+        return () -> {
+            BlockPos pos = pos();
+            FootprintManager manager = context.player().level().galacticraft$getFootprintManager();
+            List<Footprint> footprintList = manager.getFootprints().get(this.chunk);
+            List<Footprint> toRemove = new ArrayList<>();
 
-        if (footprintList != null) {
-            for (Footprint footprint : footprintList) {
-                if (footprint.position.x > pos.getX() && footprint.position.x < pos.getX() + 1 && footprint.position.z > pos.getZ() && footprint.position.z < pos.getZ() + 1) {
-                    toRemove.add(footprint);
+            if (footprintList != null) {
+                for (Footprint footprint : footprintList) {
+                    if (footprint.position.x > pos.getX() && footprint.position.x < pos.getX() + 1 && footprint.position.z > pos.getZ() && footprint.position.z < pos.getZ() + 1) {
+                        toRemove.add(footprint);
+                    }
                 }
             }
-        }
 
-        if (!toRemove.isEmpty()) {
-            footprintList.removeAll(toRemove);
-            manager.getFootprints().put(this.chunk, footprintList);
-        }
+            if (!toRemove.isEmpty()) {
+                footprintList.removeAll(toRemove);
+                manager.getFootprints().put(this.chunk, footprintList);
+            }
+        };
     }
 
     @Override

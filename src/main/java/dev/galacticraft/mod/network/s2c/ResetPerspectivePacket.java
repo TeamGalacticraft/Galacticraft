@@ -41,8 +41,8 @@ public record ResetPerspectivePacket() implements S2CPayload {
     public static final Type<ResetPerspectivePacket> TYPE = new Type<>(ID);
 
     @Override
-    public void handle(@NotNull ClientPlayNetworking.Context context) {
-        Minecraft.getInstance().options.setCameraType(GCClientPlayer.get(context.player()).getCameraType());
+    public Runnable handle(@NotNull ClientPlayNetworking.Context context) {
+        return () -> Minecraft.getInstance().options.setCameraType(GCClientPlayer.get(context.player()).getCameraType());
     }
 
     @Override

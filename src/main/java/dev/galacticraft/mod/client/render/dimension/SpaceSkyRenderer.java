@@ -32,7 +32,8 @@ public class SpaceSkyRenderer implements DimensionRenderingRegistry.SkyRenderer 
 
     @Override
     public void render(WorldRenderContext context) {
-        final PoseStack matrices = context.matrixStack();
+        PoseStack matrices = context.matrixStack();
+        if (matrices == null) matrices = new PoseStack();
 
         context.profiler().push("stars");
         matrices.pushPose();

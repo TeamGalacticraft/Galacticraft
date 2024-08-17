@@ -22,8 +22,6 @@
 
 package dev.galacticraft.impl.network;
 
-import dev.galacticraft.impl.network.c2s.FlagDataPayload;
-import dev.galacticraft.impl.network.c2s.TeamNamePayload;
 import dev.galacticraft.impl.network.s2c.*;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -41,6 +39,6 @@ public class GCApiClientPacketReceivers {
     }
 
     public static <P extends S2CPayload> void registerPacket(CustomPacketPayload.Type<P> type) {
-        ClientPlayNetworking.registerGlobalReceiver(type, S2CPayload::handle);
+        ClientPlayNetworking.registerGlobalReceiver(type, (payload, context) -> context.client().execute(payload.handle(context)));
     }
 }
