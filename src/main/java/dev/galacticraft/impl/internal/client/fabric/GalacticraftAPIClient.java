@@ -22,18 +22,12 @@
 
 package dev.galacticraft.impl.internal.client.fabric;
 
-import dev.galacticraft.api.accessor.GearInventoryProvider;
-import dev.galacticraft.impl.internal.accessor.ChunkOxygenSyncer;
 import dev.galacticraft.impl.network.GCApiClientPacketReceivers;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.ApiStatus;
-
-import java.util.Objects;
 
 @ApiStatus.Internal
 @Environment(EnvType.CLIENT)

@@ -23,7 +23,6 @@
 package dev.galacticraft.impl.internal.accessor;
 
 import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
-import net.minecraft.network.FriendlyByteBuf;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

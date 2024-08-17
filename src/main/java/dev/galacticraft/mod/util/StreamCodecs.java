@@ -25,7 +25,6 @@ package dev.galacticraft.mod.util;
 
 import com.mojang.datafixers.util.*;
 import com.mojang.serialization.Codec;
-import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;

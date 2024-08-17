@@ -30,10 +30,8 @@ import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

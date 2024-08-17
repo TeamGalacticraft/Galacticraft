@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.client.render.entity.model;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.ParachestEntity;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;

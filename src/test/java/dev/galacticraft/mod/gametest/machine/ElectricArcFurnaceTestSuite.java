@@ -29,7 +29,6 @@ import dev.galacticraft.mod.content.block.entity.machine.ElectricArcFurnaceBlock
 import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.SingleRecipeInput;

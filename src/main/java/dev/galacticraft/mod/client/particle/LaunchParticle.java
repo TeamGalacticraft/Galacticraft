@@ -24,13 +24,9 @@ package dev.galacticraft.mod.client.particle;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.TextureSheetParticle;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public abstract class LaunchParticle extends TextureSheetParticle {

@@ -43,7 +43,6 @@ import dev.galacticraft.impl.universe.position.type.StaticCelestialPositionType;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 
 public class BuiltinObjects {
     public static final ResourceKey<Galaxy> MILKY_WAY_KEY = ResourceKey.create(AddonRegistries.GALAXY, Constant.id("milky_way"));

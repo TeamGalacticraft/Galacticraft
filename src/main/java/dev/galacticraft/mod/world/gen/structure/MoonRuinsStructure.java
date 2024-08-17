@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.world.gen.structure;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.mod.structure.MoonRuinsGenerator;

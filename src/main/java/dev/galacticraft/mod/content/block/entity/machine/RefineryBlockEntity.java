@@ -51,7 +51,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
 
-public class RefineryBlockEntity extends MachineBlockEntity { //fixme
+public class RefineryBlockEntity extends MachineBlockEntity {
     public static final int CHARGE_SLOT = 0;
     public static final int OIL_INPUT_SLOT = 1;
     public static final int FUEL_OUTPUT_SLOT = 2;

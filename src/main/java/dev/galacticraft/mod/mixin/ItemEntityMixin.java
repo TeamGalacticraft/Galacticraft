@@ -24,7 +24,6 @@ package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.mod.content.item.GCItems;
-import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;

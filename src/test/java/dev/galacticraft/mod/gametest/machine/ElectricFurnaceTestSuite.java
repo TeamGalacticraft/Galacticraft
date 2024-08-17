@@ -29,7 +29,6 @@ import dev.galacticraft.mod.content.block.entity.machine.ElectricFurnaceBlockEnt
 import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.SmeltingRecipe;

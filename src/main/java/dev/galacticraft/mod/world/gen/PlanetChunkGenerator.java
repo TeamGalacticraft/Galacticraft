@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.world.gen;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -42,7 +41,6 @@ import net.minecraft.world.level.levelgen.blending.Blender;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
 /**
  * Empty for now, possibly future replacement for {@link net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator}

@@ -23,12 +23,7 @@
 package dev.galacticraft.api.universe.position;
 
 import com.mojang.serialization.Codec;
-import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.BuiltInAddonRegistries;
-import dev.galacticraft.mod.util.StreamCodecs;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 
 public record CelestialPosition<C extends CelestialPositionConfig, T extends CelestialPositionType<C>>(T type,
                                                                                                        C config) {

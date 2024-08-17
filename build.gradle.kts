@@ -55,7 +55,7 @@ plugins {
     id("fabric-loom") version("1.7-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
     id("org.ajoberstar.grgit") version("5.2.2")
-    id("dev.galacticraft.mojarn") version("0.4.0+9")
+    id("dev.galacticraft.mojarn") version("0.4.0+10")
 }
 
 java {
@@ -134,7 +134,14 @@ loom {
         }
 
         afterEvaluate {
-            val mixinJarFile = configurations.compileClasspath.get().files { it.group == "net.fabricmc" && it.name == "sponge-mixin" }.first()
+            val mixinJarFile = configurations.runtimeClasspath.get().incoming.artifactView {
+                componentFilter {
+                    it is ModuleComponentIdentifier
+                            && it.group == "net.fabricmc"
+                            && it.module == "sponge-mixin"
+                }
+            }.files.first()
+
             configureEach {
                 vmArg("-javaagent:$mixinJarFile")
 
@@ -240,8 +247,8 @@ dependencies {
     }
 
     multicompat(group = "mezz.jei",
-            api = "jei-$minecraftVersion-common-api",
-            extra = "jei-$minecraftVersion-fabric-api",
+            api = "jei-1.21-common-api",
+            extra = "jei-1.21-fabric-api",
 //            runtime = "jei-$minecraftVersion-fabric", // we already have REI at runtime
             version = jeiVersion) {
         exclude(group = "net.fabricmc.fabric-api")
@@ -263,14 +270,6 @@ tasks.processResources {
         fileTree(mapOf("dir" to outputs.files.asPath, "includes" to listOf("**/*.json", "**/*.mcmeta"))).forEach {
             groovy.json.JsonOutput.toJson(jsonSlurper.parse(it))
         }
-    }
-}
-
-tasks.processTestResources {
-    inputs.property("version", project.version)
-
-    filesMatching("fabric.mod.json") {
-        expand("version" to project.version)
     }
 }
 
