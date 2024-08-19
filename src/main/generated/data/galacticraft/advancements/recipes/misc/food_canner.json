@@ -1,5 +1,4 @@
 {
-  //TODO come back to this and change recipe requirements
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_oxygen_concentrator": {
