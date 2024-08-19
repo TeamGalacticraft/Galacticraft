@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.compat.rei.common.display;
 
 import com.google.common.collect.Lists;
-import dev.galacticraft.mod.content.recipe.ShapelessCompressingRecipe;
+import dev.galacticraft.api.recipe.ShapelessCompressingRecipe;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;

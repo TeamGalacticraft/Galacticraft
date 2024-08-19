@@ -22,6 +22,9 @@
 
 package dev.galacticraft.mod.compat.rei.client;
 
+import dev.galacticraft.api.recipe.FabricationRecipe;
+import dev.galacticraft.api.recipe.ShapedCompressingRecipe;
+import dev.galacticraft.api.recipe.ShapelessCompressingRecipe;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.machinelib.impl.Constant.TextureCoordinate;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultCompressingCategory;
@@ -32,10 +35,7 @@ import dev.galacticraft.mod.compat.rei.common.display.DefaultShapedCompressingDi
 import dev.galacticraft.mod.compat.rei.common.display.DefaultShapelessCompressingDisplay;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.content.recipe.FabricationRecipe;
 import dev.galacticraft.mod.content.recipe.GCRecipes;
-import dev.galacticraft.mod.content.recipe.ShapedCompressingRecipe;
-import dev.galacticraft.mod.content.recipe.ShapelessCompressingRecipe;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;

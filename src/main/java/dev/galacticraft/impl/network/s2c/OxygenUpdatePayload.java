@@ -22,7 +22,7 @@
 
 package dev.galacticraft.impl.network.s2c;
 
-import dev.galacticraft.impl.codec.StreamCodecs;
+import dev.galacticraft.api.codec.StreamCodecs;
 import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
 import dev.galacticraft.mod.Constant;
 import io.netty.buffer.ByteBuf;

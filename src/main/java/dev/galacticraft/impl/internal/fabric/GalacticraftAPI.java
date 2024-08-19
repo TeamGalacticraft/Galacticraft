@@ -38,7 +38,7 @@ import dev.galacticraft.impl.internal.command.GCApiCommands;
 import dev.galacticraft.impl.network.GCApiPackets;
 import dev.galacticraft.impl.network.GCApiServerPacketReceivers;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.data.gen.SatelliteChunkGenerator;
+import dev.galacticraft.mod.world.gen.chunk.SatelliteChunkGenerator;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistrySetupCallback;

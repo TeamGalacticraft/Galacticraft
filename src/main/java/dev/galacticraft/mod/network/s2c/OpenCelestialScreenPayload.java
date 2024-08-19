@@ -22,10 +22,10 @@
 
 package dev.galacticraft.mod.network.s2c;
 
+import dev.galacticraft.api.codec.StreamCodecs;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.impl.codec.StreamCodecs;
 import dev.galacticraft.impl.network.s2c.S2CPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;

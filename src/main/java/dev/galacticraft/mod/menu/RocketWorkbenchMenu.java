@@ -22,11 +22,11 @@
 
 package dev.galacticraft.mod.menu;
 
+import dev.galacticraft.api.codec.StreamCodecs;
 import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
-import dev.galacticraft.impl.codec.StreamCodecs;
 import dev.galacticraft.machinelib.api.filter.ResourceFilter;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity.RecipeSelection;

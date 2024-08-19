@@ -23,7 +23,7 @@
 package dev.galacticraft.impl.network.s2c;
 
 import dev.galacticraft.api.accessor.GearInventoryProvider;
-import dev.galacticraft.impl.codec.StreamCodecs;
+import dev.galacticraft.api.codec.StreamCodecs;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.RegistryFriendlyByteBuf;

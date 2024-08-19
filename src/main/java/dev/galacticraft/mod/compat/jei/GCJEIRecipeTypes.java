@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.compat.jei;
 
+import dev.galacticraft.api.recipe.CompressingRecipe;
+import dev.galacticraft.api.recipe.FabricationRecipe;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.recipe.CompressingRecipe;
-import dev.galacticraft.mod.content.recipe.FabricationRecipe;
 import mezz.jei.api.recipe.RecipeType;
 
 public interface GCJEIRecipeTypes {

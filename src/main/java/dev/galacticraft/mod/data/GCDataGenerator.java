@@ -25,7 +25,7 @@ package dev.galacticraft.mod.data;
 import com.mojang.serialization.Lifecycle;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.RocketRegistries;
-import dev.galacticraft.api.universe.galaxy.GalaxyImpl;
+import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.*;
 import dev.galacticraft.mod.data.content.BootstrapDataProvider;
@@ -100,7 +100,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(BootstrapDataProvider.create("Structure Template Pools", GCStructureTemplatePools::bootstrapRegistries));
 
         // universe
-        pack.addProvider(BootstrapDataProvider.create("Galaxies", GalaxyImpl::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Galaxies", Galaxy::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Celestial Bodies", GCCelestialBodies::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Celestial Teleporters", GCTeleporterTypes::bootstrapRegistries));
 
@@ -144,7 +144,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         builder.add(Registries.TEMPLATE_POOL, Lifecycle.stable(), GCStructureTemplatePools::bootstrapRegistries);
 
         // universe
-        builder.add(AddonRegistries.GALAXY, GalaxyImpl::bootstrapRegistries);
+        builder.add(AddonRegistries.GALAXY, Galaxy::bootstrapRegistries);
         builder.add(AddonRegistries.CELESTIAL_BODY, Lifecycle.stable(), GCCelestialBodies::bootstrapRegistries);
         builder.add(AddonRegistries.CELESTIAL_TELEPORTER, Lifecycle.stable(), GCTeleporterTypes::bootstrapRegistries);
 

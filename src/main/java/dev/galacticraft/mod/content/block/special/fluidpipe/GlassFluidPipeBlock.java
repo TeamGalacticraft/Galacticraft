@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.content.block.special.fluidpipe;
 
-import dev.galacticraft.api.block.FluidPipe;
 import dev.galacticraft.api.block.entity.Connected;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.block.FluidPipe;
 import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
 import dev.galacticraft.mod.content.item.StandardWrenchItem;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;

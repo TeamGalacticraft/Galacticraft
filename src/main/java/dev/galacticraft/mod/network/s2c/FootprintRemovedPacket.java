@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.network.s2c;
 
-import dev.galacticraft.impl.codec.StreamCodecs;
+import dev.galacticraft.api.codec.StreamCodecs;
 import dev.galacticraft.impl.network.s2c.S2CPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.misc.footprint.Footprint;

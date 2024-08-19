@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.compat.rei.common.display;
 
+import dev.galacticraft.api.recipe.FabricationRecipe;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.content.recipe.FabricationRecipe;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;

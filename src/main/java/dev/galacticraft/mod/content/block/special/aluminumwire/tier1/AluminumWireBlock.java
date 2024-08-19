@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.content.block.special.aluminumwire.tier1;
 
-import dev.galacticraft.api.block.WireBlock;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.block.WireBlock;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import dev.galacticraft.mod.util.DirectionUtil;
 import net.minecraft.core.BlockPos;

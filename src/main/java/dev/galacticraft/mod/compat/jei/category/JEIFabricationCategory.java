@@ -22,11 +22,11 @@
 
 package dev.galacticraft.mod.compat.jei.category;
 
+import dev.galacticraft.api.recipe.FabricationRecipe;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.jei.GCJEIRecipeTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.content.recipe.FabricationRecipe;
 import dev.galacticraft.mod.util.Translations;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;

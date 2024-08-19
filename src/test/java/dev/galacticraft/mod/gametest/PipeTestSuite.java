@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.gametest;
 
 import dev.galacticraft.api.block.pipe.Pipe;
-import dev.galacticraft.api.block.pipe.impl.PipeNetworkImpl;
+import dev.galacticraft.impl.pipe.PipeNetworkImpl;
 import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;

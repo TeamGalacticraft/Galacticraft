@@ -22,6 +22,10 @@
 
 package dev.galacticraft.mod.content.recipe;
 
+import dev.galacticraft.api.recipe.CompressingRecipe;
+import dev.galacticraft.api.recipe.FabricationRecipe;
+import dev.galacticraft.api.recipe.ShapedCompressingRecipe;
+import dev.galacticraft.api.recipe.ShapelessCompressingRecipe;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;

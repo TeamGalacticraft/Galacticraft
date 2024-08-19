@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
+import dev.galacticraft.api.recipe.CompressingRecipe;
 import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.compat.vanilla.RecipeHelper;
@@ -38,7 +39,6 @@ import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCMachineStatuses;
-import dev.galacticraft.mod.content.recipe.CompressingRecipe;
 import dev.galacticraft.mod.content.recipe.GCRecipes;
 import dev.galacticraft.mod.menu.GCMenuTypes;
 import net.minecraft.core.BlockPos;
