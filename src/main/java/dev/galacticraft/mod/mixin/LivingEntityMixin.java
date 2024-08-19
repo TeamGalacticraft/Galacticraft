@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.api.accessor.CryogenicAccessor;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.accessor.CryogenicAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;

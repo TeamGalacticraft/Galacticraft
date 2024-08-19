@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
-import dev.galacticraft.api.block.entity.AbstractSolarPanelBlockEntity;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
@@ -32,6 +31,7 @@ import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.api.block.entity.AbstractSolarPanelBlockEntity;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.menu.GCMenuTypes;
 import dev.galacticraft.mod.menu.SolarPanelMenu;

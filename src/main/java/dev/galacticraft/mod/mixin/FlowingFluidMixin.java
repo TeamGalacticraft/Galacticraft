@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.api.block.FluidLoggable;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.block.FluidLoggable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;

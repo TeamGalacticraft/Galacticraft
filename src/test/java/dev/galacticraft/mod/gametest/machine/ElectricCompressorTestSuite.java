@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.gametest.machine;
 
-import dev.galacticraft.api.recipe.CompressingRecipe;
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
+import dev.galacticraft.mod.api.recipe.CompressingRecipe;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricCompressorBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;

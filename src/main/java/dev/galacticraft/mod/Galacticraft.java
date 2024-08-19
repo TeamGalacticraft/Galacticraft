@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod;
 
-import dev.galacticraft.api.Config;
+import dev.galacticraft.mod.api.Config;
 import dev.galacticraft.mod.command.GCCommands;
 import dev.galacticraft.mod.config.ConfigImpl;
 import dev.galacticraft.mod.content.*;

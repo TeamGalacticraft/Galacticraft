@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.menu;
 
-import dev.galacticraft.api.recipe.CompressingRecipe;
 import dev.galacticraft.machinelib.api.menu.MenuData;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
+import dev.galacticraft.mod.api.recipe.CompressingRecipe;
 import dev.galacticraft.mod.content.block.entity.machine.CompressorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.api.accessor.EntityAccessor;
+import dev.galacticraft.mod.api.accessor.EntityAccessor;
 import dev.galacticraft.mod.content.GCDamageTypes;
 import dev.galacticraft.mod.content.GCTags;
 import dev.galacticraft.mod.misc.footprint.Footprint;

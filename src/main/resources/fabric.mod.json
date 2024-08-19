@@ -155,15 +155,15 @@
       "net/minecraft/class_742": ["dev/galacticraft/api/accessor/GearInventoryProvider"],
       "net/minecraft/class_1309": [
         "dev/galacticraft/api/accessor/GearInventoryProvider",
-        "dev/galacticraft/api/accessor/CryogenicAccessor"
+        "dev/galacticraft/mod/api/accessor/CryogenicAccessor"
       ],
       "net/minecraft/class_1937": [
         "dev/galacticraft/api/accessor/LevelBodyAccessor",
         "dev/galacticraft/api/accessor/LevelOxygenAccessor",
         "dev/galacticraft/mod/accessor/LevelAccessor"
       ],
-      "net/minecraft/class_1657": ["dev/galacticraft/api/accessor/CryogenicAccessor"],
-      "net/minecraft/class_1297": ["dev/galacticraft/api/accessor/EntityAccessor"]
+      "net/minecraft/class_1657": ["dev/galacticraft/mod/api/accessor/CryogenicAccessor"],
+      "net/minecraft/class_1297": ["dev/galacticraft/mod/api/accessor/EntityAccessor"]
     }
   },
   "depends": {

@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.content.block.special.walkway;
 
 import com.google.common.collect.Lists;
-import dev.galacticraft.api.block.FluidLoggable;
-import dev.galacticraft.api.block.wire.Wire;
+import dev.galacticraft.mod.api.block.FluidLoggable;
+import dev.galacticraft.mod.api.block.wire.Wire;
 import dev.galacticraft.mod.content.block.WireBlock;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import dev.galacticraft.mod.content.block.entity.networked.WireWalkwayBlockEntity;

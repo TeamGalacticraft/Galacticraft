@@ -22,11 +22,11 @@
 
 package dev.galacticraft.mod.compat.rei.client;
 
-import dev.galacticraft.api.recipe.FabricationRecipe;
-import dev.galacticraft.api.recipe.ShapedCompressingRecipe;
-import dev.galacticraft.api.recipe.ShapelessCompressingRecipe;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.machinelib.impl.Constant.TextureCoordinate;
+import dev.galacticraft.mod.api.recipe.FabricationRecipe;
+import dev.galacticraft.mod.api.recipe.ShapedCompressingRecipe;
+import dev.galacticraft.mod.api.recipe.ShapelessCompressingRecipe;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultCompressingCategory;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultFabricationCategory;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;

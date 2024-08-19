@@ -22,12 +22,12 @@
 
 package dev.galacticraft.mod.menu;
 
-import dev.galacticraft.api.recipe.CompressingRecipe;
-import dev.galacticraft.api.recipe.FabricationRecipe;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.machinelib.api.menu.SynchronizedMenuType;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.recipe.CompressingRecipe;
+import dev.galacticraft.mod.api.recipe.FabricationRecipe;
 import dev.galacticraft.mod.content.block.entity.machine.*;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.core.Registry;

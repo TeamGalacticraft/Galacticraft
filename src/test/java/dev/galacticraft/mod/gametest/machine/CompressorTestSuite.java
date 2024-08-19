@@ -22,11 +22,11 @@
 
 package dev.galacticraft.mod.gametest.machine;
 
-import dev.galacticraft.api.recipe.CompressingRecipe;
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.MachineTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
+import dev.galacticraft.mod.api.recipe.CompressingRecipe;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.CompressorBlockEntity;
 import net.minecraft.gametest.framework.GameTestGenerator;

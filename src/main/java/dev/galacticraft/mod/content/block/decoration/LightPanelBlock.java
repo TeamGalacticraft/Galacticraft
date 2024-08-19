@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content.block.decoration;
 
-import dev.galacticraft.api.block.AbstractDirectionalBlock;
+import dev.galacticraft.mod.api.block.AbstractDirectionalBlock;
 
 public class LightPanelBlock extends AbstractDirectionalBlock {
     private float lightLevel = 6.0f;

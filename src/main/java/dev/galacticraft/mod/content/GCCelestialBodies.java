@@ -45,8 +45,8 @@ import dev.galacticraft.api.universe.position.config.OrbitalCelestialPositionCon
 import dev.galacticraft.api.universe.position.config.StaticCelestialPositionConfig;
 import dev.galacticraft.api.universe.position.type.OrbitalCelestialPositionType;
 import dev.galacticraft.api.universe.position.type.StaticCelestialPositionType;
-import dev.galacticraft.api.universe.satellite.SatelliteRecipe;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.universe.satellite.SatelliteRecipe;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.util.Translations;
 import dev.galacticraft.mod.world.dimension.GCDimensions;

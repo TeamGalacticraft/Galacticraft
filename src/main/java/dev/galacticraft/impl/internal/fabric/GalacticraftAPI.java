@@ -22,7 +22,6 @@
 
 package dev.galacticraft.impl.internal.fabric;
 
-import dev.galacticraft.api.accessor.SatelliteAccessor;
 import dev.galacticraft.api.entity.GcApiEntityAttributes;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.registry.AddonRegistries;
@@ -38,6 +37,7 @@ import dev.galacticraft.impl.internal.command.GCApiCommands;
 import dev.galacticraft.impl.network.GCApiPackets;
 import dev.galacticraft.impl.network.GCApiServerPacketReceivers;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.accessor.SatelliteAccessor;
 import dev.galacticraft.mod.world.gen.chunk.SatelliteChunkGenerator;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;

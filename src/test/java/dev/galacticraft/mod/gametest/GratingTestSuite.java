@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.gametest;
 
-import dev.galacticraft.api.block.FluidLoggable;
+import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.decoration.GratingBlock;
 import net.minecraft.core.BlockPos;

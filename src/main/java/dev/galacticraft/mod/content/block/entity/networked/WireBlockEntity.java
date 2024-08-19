@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.content.block.entity.networked;
 
-import dev.galacticraft.api.block.wire.Wire;
-import dev.galacticraft.api.block.wire.WireNetwork;
-import dev.galacticraft.impl.wire.WireNetworkImpl;
+import dev.galacticraft.mod.api.block.wire.Wire;
+import dev.galacticraft.mod.api.block.wire.WireNetwork;
+import dev.galacticraft.mod.misc.WireNetworkImpl;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;

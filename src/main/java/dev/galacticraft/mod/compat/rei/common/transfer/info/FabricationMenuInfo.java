@@ -22,10 +22,10 @@
 
 package dev.galacticraft.mod.compat.rei.common.transfer.info;
 
-import dev.galacticraft.api.recipe.FabricationRecipe;
 import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.machinelib.impl.compat.vanilla.StorageSlot;
+import dev.galacticraft.mod.api.recipe.FabricationRecipe;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
 import me.shedaniel.rei.api.common.transfer.info.MenuInfoContext;
 import me.shedaniel.rei.api.common.transfer.info.clean.InputCleanHandler;

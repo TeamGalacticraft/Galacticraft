@@ -22,10 +22,10 @@
 
 package dev.galacticraft.mod.content;
 
-import dev.galacticraft.api.block.solarpanel.LightSource;
-import dev.galacticraft.api.block.solarpanel.SolarPanelRegistry;
-import dev.galacticraft.api.block.solarpanel.WorldLightSources;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.block.solarpanel.LightSource;
+import dev.galacticraft.mod.api.block.solarpanel.SolarPanelRegistry;
+import dev.galacticraft.mod.api.block.solarpanel.WorldLightSources;
 import dev.galacticraft.mod.util.Translations;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import net.minecraft.network.chat.Component;

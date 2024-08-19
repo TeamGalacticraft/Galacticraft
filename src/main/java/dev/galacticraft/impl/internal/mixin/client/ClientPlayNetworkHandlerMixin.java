@@ -22,10 +22,10 @@
 
 package dev.galacticraft.impl.internal.mixin.client;
 
-import dev.galacticraft.api.client.accessor.ClientSatelliteAccessor;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.api.universe.position.config.SatelliteConfig;
+import dev.galacticraft.mod.api.client.accessor.ClientSatelliteAccessor;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;

@@ -24,9 +24,9 @@ package dev.galacticraft.mod.config;
 
 import com.google.gson.*;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import dev.galacticraft.api.Config;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.api.Config;
 import dev.galacticraft.mod.util.Translations;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;

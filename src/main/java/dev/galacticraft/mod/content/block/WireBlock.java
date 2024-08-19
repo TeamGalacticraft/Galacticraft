@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.content.block;
 
-import dev.galacticraft.api.block.wire.Wire;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.api.block.wire.Wire;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;

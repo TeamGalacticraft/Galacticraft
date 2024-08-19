@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import dev.galacticraft.api.block.FluidLoggable;
+import dev.galacticraft.mod.api.block.FluidLoggable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.InteractionHand;

@@ -67,17 +67,7 @@ java {
 }
 
 sourceSets {
-//    val api = register("api") {
-//        java {
-//            compileClasspath += main.get().compileClasspath.minus(output)
-//        }
-//    }
-
     main {
-        java {
-//            compileClasspath += api.get().output
-            srcDir("src/api/java")
-        }
         resources {
             srcDir("src/main/generated")
             exclude(".cache/")
@@ -115,8 +105,6 @@ println("Galacticraft: $version")
 loom {
     accessWidenerPath.set(project.file("src/main/resources/galacticraft.accesswidener"))
     mixin.add(sourceSets.main.get(), "galacticraft.refmap.json")
-
-//    createRemapConfigurations(sourceSets.getByName("api"))
 
     runs {
         getByName("client") {
@@ -297,9 +285,6 @@ tasks.withType(JavaCompile::class) {
 }
 
 tasks.jar {
-//    dependsOn(tasks.getByName("apiClasses"))
-//    from(sourceSets.getByName("api"))
-
     from("LICENSE") {
         rename { "${it}_${modName}"}
     }
@@ -317,11 +302,6 @@ tasks.jar {
         )
     }
 }
-
-//tasks.create("apiJar", Jar::class) {
-//    dependsOn(tasks.getByName("apiClasses"))
-//    from(sourceSets.getByName("api"))
-//}
 
 tasks.test {
     workingDir = project.file("run")

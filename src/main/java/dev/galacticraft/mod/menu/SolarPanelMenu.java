@@ -22,11 +22,11 @@
 
 package dev.galacticraft.mod.menu;
 
-import dev.galacticraft.api.block.entity.SolarPanel;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.menu.MenuData;
 import dev.galacticraft.machinelib.api.util.BlockFace;
+import dev.galacticraft.mod.api.block.entity.SolarPanel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

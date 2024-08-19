@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content.block.entity;
 
-import dev.galacticraft.api.block.entity.Walkway;
+import dev.galacticraft.mod.api.block.entity.Walkway;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

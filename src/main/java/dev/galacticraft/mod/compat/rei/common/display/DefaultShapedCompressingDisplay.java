@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.compat.rei.common.display;
 
-import dev.galacticraft.api.recipe.ShapedCompressingRecipe;
+import dev.galacticraft.mod.api.recipe.ShapedCompressingRecipe;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;

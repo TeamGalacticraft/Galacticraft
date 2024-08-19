@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.data.recipes;
 
-import dev.galacticraft.api.data.recipe.CircuitFabricatorRecipeBuilder;
-import dev.galacticraft.api.data.recipe.ShapedCompressorRecipeBuilder;
-import dev.galacticraft.api.data.recipe.ShapelessCompressorRecipeBuilder;
+import dev.galacticraft.mod.api.data.recipe.CircuitFabricatorRecipeBuilder;
+import dev.galacticraft.mod.api.data.recipe.ShapedCompressorRecipeBuilder;
+import dev.galacticraft.mod.api.data.recipe.ShapelessCompressorRecipeBuilder;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCTags;
 import dev.galacticraft.mod.content.item.GCItems;

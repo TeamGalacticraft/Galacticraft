@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.content.block.special;
 
 import com.mojang.serialization.MapCodec;
-import dev.galacticraft.api.block.MultiBlockBase;
+import dev.galacticraft.mod.api.block.MultiBlockBase;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.CryogenicChamberPartBlockEntity;
 import net.minecraft.core.BlockPos;
