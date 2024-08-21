@@ -26,10 +26,12 @@ import com.google.common.collect.ImmutableList;
 import dev.galacticraft.mod.accessor.LevelAccessor;
 import dev.galacticraft.mod.accessor.ServerLevelAccessor;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
+import dev.galacticraft.mod.machine.SealerManager;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.misc.footprint.ServerFootprintManager;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import dev.galacticraft.mod.world.gen.spawner.EvolvedPillagerSpawner;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
@@ -64,7 +66,6 @@ import java.util.function.Supplier;
 @Mixin(ServerLevel.class)
 public abstract class ServerLevelMixin extends Level implements LevelAccessor, ServerLevelAccessor {
     @Shadow @Final @Mutable private List<CustomSpawner> customSpawners;
-    private final @Unique Set<OxygenSealerBlockEntity> sealers = new HashSet<>();
     private final @Unique FootprintManager footprintManager = new ServerFootprintManager();
 
     protected ServerLevelMixin(WritableLevelData levelData, ResourceKey<Level> dimension, RegistryAccess registryAccess, Holder<DimensionType> dimensionTypeRegistration, Supplier<ProfilerFiller> profiler, boolean isClientSide, boolean isDebug, long biomeZoomSeed, int maxChainedNeighborUpdates) {
@@ -80,25 +81,23 @@ public abstract class ServerLevelMixin extends Level implements LevelAccessor, S
 
     @Inject(method = "sendBlockUpdated", at = @At(value = "INVOKE", target = "Ljava/util/Set;iterator()Ljava/util/Iterator;", remap = false))
     private void updateSealerListeners_gc(BlockPos pos, BlockState oldState, BlockState newState, int flags, CallbackInfo ci) {
-        List<OxygenSealerBlockEntity> queueRemove = new LinkedList<>();
-        for (OxygenSealerBlockEntity sealer : this.sealers) {
-            if (sealer.isRemoved()) {
-                queueRemove.add(sealer);
-                assert false : "this shouldn't happen! Oxygen sealer was removed but nothing called #markRemoved";
-            }
-            sealer.enqueueUpdate(pos, newState.getCollisionShape(((Level)(Object) this), pos));
+        //make sure old state and new state aren't both solid blocks
+        //if they are both solid blocks then nothing would have changed
+        if (oldState.isSolid() && newState.isSolid()) {
+            //nothing will have changed
+            return;
         }
-        this.sealers.removeAll(queueRemove);
+        SealerManager.INSTANCE.onBlockChange(pos, newState, this.dimensionType());
     }
 
     @Override
-    public void addSealer(OxygenSealerBlockEntity sealer) {
-        this.sealers.add(sealer);
+    public void addSealer(OxygenSealerBlockEntity sealer, ServerLevel world) {
+        SealerManager.INSTANCE.addSealer(sealer, world);
     }
 
     @Override
-    public void removeSealer(OxygenSealerBlockEntity sealer) {
-        this.sealers.remove(sealer);
+    public void removeSealer(OxygenSealerBlockEntity sealer, ServerLevel world) {
+        SealerManager.INSTANCE.removeSealer(sealer, world);
     }
 
     @Inject(method = "tickChunk", at = @At("HEAD"))
