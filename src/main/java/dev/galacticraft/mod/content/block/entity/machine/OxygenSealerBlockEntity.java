@@ -25,24 +25,32 @@ package dev.galacticraft.mod.content.block.entity.machine;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
+import dev.galacticraft.machinelib.api.storage.MachineEnergyStorage;
+import dev.galacticraft.machinelib.api.storage.MachineFluidStorage;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.StorageSpec;
+import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
+import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
+import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.ServerLevelAccessor;
-import dev.galacticraft.mod.content.GCMachineTypes;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
+import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -63,6 +71,28 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
     public static final int SEAL_CHECK_TIME = 20;
 
+    private static final StorageSpec SPEC = StorageSpec.of(
+            MachineItemStorage.spec(
+                    ItemResourceSlot.builder(TransferType.TRANSFER)
+                            .pos(8, 62)
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
+                    ItemResourceSlot.builder(TransferType.TRANSFER) // todo: drop for decompressor?
+                            .pos(31, 62)
+                            .filter(ResourceFilters.canExtractFluid(Gases.OXYGEN))
+            ),
+            MachineEnergyStorage.spec(
+                    Galacticraft.CONFIG.machineEnergyStorageSize(),
+                    Galacticraft.CONFIG.oxygenCompressorEnergyConsumptionRate() * 2, // fixme
+                    0
+            ),
+            MachineFluidStorage.spec(
+                    FluidResourceSlot.builder(TransferType.INPUT)
+                            .pos(30, 8)
+                            .capacity(OxygenSealerBlockEntity.MAX_OXYGEN)
+                            .filter(ResourceFilters.ofResource(Gases.OXYGEN))
+            )
+    );
+
     private final Set<BlockPos> breathablePositions = new HashSet<>();
     private final Set<BlockPos> watching = new HashSet<>();
     private int sealCheckTime;
@@ -73,14 +103,15 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     private boolean oxygenUnloaded = true;
 
     public OxygenSealerBlockEntity(BlockPos pos, BlockState state) {
-        super(GCMachineTypes.OXYGEN_SEALER, pos, state);
+        super(GCBlockEntityTypes.OXYGEN_SEALER, pos, state, SPEC);
     }
 
     @Override
     public void setLevel(Level world) {
         super.setLevel(world);
         this.sealCheckTime = SEAL_CHECK_TIME;
-        this.oxygenWorld = CelestialBody.getByDimension(world).map(body -> body.atmosphere().breathable()).orElse(true);
+        Holder<CelestialBody<?, ?>> holder = world.galacticraft$getCelestialBody();
+        this.oxygenWorld = holder == null || holder.value().atmosphere().breathable();
         if (!world.isClientSide) ((ServerLevelAccessor) world).addSealer(this);
     }
 
@@ -89,8 +120,8 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         super.tickConstant(world, pos, state, profiler);
         this.oxygenUnloaded = false;
         profiler.push("extract_resources");
-        this.chargeFromStack(CHARGE_SLOT);
-        this.takeFluidFromStack(OXYGEN_INPUT_SLOT, OXYGEN_TANK, Gases.OXYGEN);
+        this.chargeFromSlot(CHARGE_SLOT);
+        this.takeFluidFromSlot(OXYGEN_INPUT_SLOT, OXYGEN_TANK, Gases.OXYGEN);
         profiler.pop();
     }
 
@@ -102,7 +133,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         // }
 
         if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCompressorEnergyConsumptionRate())) {
-            if (!this.fluidStorage().getSlot(OXYGEN_TANK).isEmpty()) {
+            if (!this.fluidStorage().slot(OXYGEN_TANK).isEmpty()) {
                 if (this.sealCheckTime > 0) this.sealCheckTime--;
                 if (this.updateQueued && this.sealCheckTime == 0) {
                     profiler.push("check_seal");
@@ -169,7 +200,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
 
                 profiler.push("extract");
                 this.energyStorage().extract(Galacticraft.CONFIG.oxygenCompressorEnergyConsumptionRate());
-                this.fluidStorage().getSlot(OXYGEN_TANK).extract(Gases.OXYGEN, breathablePositions.size() * 2L);
+                this.fluidStorage().slot(OXYGEN_TANK).extract(Gases.OXYGEN, breathablePositions.size() * 2L);
                 profiler.pop();
                 return GCMachineStatuses.SEALED;
             } else {
@@ -221,15 +252,13 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
-        if (this.getSecurity().hasAccess(player)) {
-            return new MachineMenu<>(
-                    syncId,
-                    (ServerPlayer) player,
-                    this
-            );
-        }
-        return null;
+    public MachineMenu<? extends MachineBlockEntity> createMenu(int syncId, Inventory inv, Player player) {
+        return new MachineMenu<>(
+                GCMenuTypes.OXYGEN_SEALER,
+                syncId,
+                player,
+                this
+        );
     }
 
     public void enqueueUpdate(BlockPos pos, VoxelShape voxelShape2) {

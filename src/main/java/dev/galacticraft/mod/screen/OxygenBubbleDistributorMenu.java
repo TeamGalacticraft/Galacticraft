@@ -23,58 +23,34 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
-import dev.galacticraft.machinelib.api.menu.sync.MenuSyncHandler;
-import dev.galacticraft.mod.content.GCMachineTypes;
+import dev.galacticraft.machinelib.api.menu.MenuData;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
-import dev.galacticraft.mod.screen.sync.BooleanMenuSyncHandler;
-import dev.galacticraft.mod.screen.sync.DoubleMenuSyncHandler;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Consumer;
 
 public class OxygenBubbleDistributorMenu extends MachineMenu<OxygenBubbleDistributorBlockEntity> {
     public boolean bubbleVisible;
     public byte targetSize;
     public double size;
 
-    public OxygenBubbleDistributorMenu(int syncId, ServerPlayer player, OxygenBubbleDistributorBlockEntity machine) {
-        super(syncId, player, machine);
+    public OxygenBubbleDistributorMenu(int syncId, Player player, OxygenBubbleDistributorBlockEntity machine) {
+        super(GCMenuTypes.OXYGEN_BUBBLE_DISTRIBUTOR, syncId, player, machine);
         this.bubbleVisible = machine.isBubbleVisible();
         this.size = machine.getSize();
         this.targetSize = machine.getTargetSize();
     }
 
-    public OxygenBubbleDistributorMenu(int syncId, Inventory inv, FriendlyByteBuf buf) {
-        super(syncId, inv, buf, 8, 84, GCMachineTypes.OXYGEN_BUBBLE_DISTRIBUTOR);
+    public OxygenBubbleDistributorMenu(int syncId, Inventory inv, BlockPos pos) {
+        super(GCMenuTypes.OXYGEN_BUBBLE_DISTRIBUTOR, syncId, inv, pos, 8, 84);
     }
 
     @Override
-    public void registerSyncHandlers(Consumer<MenuSyncHandler> consumer) {
-        super.registerSyncHandlers(consumer);
-        consumer.accept(new MenuSyncHandler() {
-            private byte value;
-
-            @Override
-            public boolean needsSyncing() {
-                return this.value != OxygenBubbleDistributorMenu.this.targetSize;
-            }
-
-            @Override
-            public void sync(@NotNull FriendlyByteBuf buf) {
-                this.value = OxygenBubbleDistributorMenu.this.targetSize;
-                buf.writeByte(this.value);
-            }
-
-            @Override
-            public void read(@NotNull FriendlyByteBuf buf) {
-                this.value = buf.readByte();
-                OxygenBubbleDistributorMenu.this.targetSize = this.value;
-            }
-        });
-        consumer.accept(new DoubleMenuSyncHandler(this.machine::getSize, value -> this.size = value));
-        consumer.accept(new BooleanMenuSyncHandler(this.machine::isBubbleVisible, t -> this.bubbleVisible = t));
+    public void registerData(@NotNull MenuData data) {
+        super.registerData(data);
+        data.registerByte(this.be::getTargetSize, b -> this.targetSize = (byte) b);
+        data.registerDouble(this.be::getSize, d -> this.size = d);
+        data.registerBoolean(this.be::isBubbleVisible, b -> this.bubbleVisible = b);
     }
 }

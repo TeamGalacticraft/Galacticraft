@@ -60,26 +60,26 @@ public abstract class LivingEntityRendererMixin {
     }
 
     @Inject(method = "setupRotations", at = @At("HEAD"))
-    private void rotateToMatchRocket(LivingEntity entity, PoseStack poseStack, float ageInTicks, float rotationYaw, float partialTicks, CallbackInfo ci) {
+    private void rotateToMatchRocket(LivingEntity entity, PoseStack pose, float animationProgress, float bodyYaw, float tickDelta, float scale, CallbackInfo ci) {
         if (entity.isPassenger()) {
             if (entity.getVehicle() instanceof RocketEntity rocket) {
                 double rotationOffset = -0.5F;
-                poseStack.translate(0, -rotationOffset, 0);
+                pose.translate(0, -rotationOffset, 0);
                 float anglePitch = rocket.xRotO;
                 float angleYaw = rocket.yRotO;
-                poseStack.mulPose(Axis.YN.rotationDegrees(angleYaw));
-                poseStack.mulPose(Axis.ZP.rotationDegrees(anglePitch));
-                poseStack.translate(0, rotationOffset, 0);
+                pose.mulPose(Axis.YN.rotationDegrees(angleYaw));
+                pose.mulPose(Axis.ZP.rotationDegrees(anglePitch));
+                pose.translate(0, rotationOffset, 0);
             }
         }
     }
 
     @Inject(method = "setupRotations", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getBedOrientation()Lnet/minecraft/core/Direction;"), cancellable = true)
-    private void galacticraft$renderCryoChamberPos(LivingEntity livingEntity, PoseStack poseStack, float f, float g, float h, CallbackInfo ci) {
-        if (livingEntity.isInCryoSleep()) {
-            Direction direction = livingEntity.getBedOrientation();
-            float j = direction != null ? sleepDirectionToRotationCryo(direction) : g;
-            poseStack.mulPose(Axis.YP.rotationDegrees(j));
+    private void galacticraft$renderCryoChamberPos(LivingEntity entity, PoseStack pose, float animationProgress, float bodyYaw, float tickDelta, float scale, CallbackInfo ci) {
+        if (entity.isInCryoSleep()) {
+            Direction direction = entity.getBedOrientation();
+            float j = direction != null ? sleepDirectionToRotationCryo(direction) : bodyYaw;
+            pose.mulPose(Axis.YP.rotationDegrees(j));
             ci.cancel();
         }
     }

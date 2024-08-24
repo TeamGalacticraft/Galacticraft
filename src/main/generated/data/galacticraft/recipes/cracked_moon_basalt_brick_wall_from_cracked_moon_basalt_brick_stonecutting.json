@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 1,
-  "ingredient": {
-    "item": "galacticraft:cracked_moon_basalt_brick"
-  },
-  "result": "galacticraft:cracked_moon_basalt_brick_wall"
-}

@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 1,
-  "ingredient": {
-    "item": "galacticraft:mars_stone"
-  },
-  "result": "galacticraft:mars_stone_wall"
-}

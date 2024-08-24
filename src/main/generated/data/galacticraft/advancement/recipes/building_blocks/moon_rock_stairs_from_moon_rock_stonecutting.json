@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_moon_rock": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:moon_rock"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:moon_rock_stairs_from_moon_rock_stonecutting"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_moon_rock"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:moon_rock_stairs_from_moon_rock_stonecutting"
+    ]
+  }
+}

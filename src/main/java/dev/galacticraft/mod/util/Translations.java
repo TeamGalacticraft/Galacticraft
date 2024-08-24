@@ -34,6 +34,10 @@ public interface Translations {
         String COMPRESSOR = "category.recipe_viewer.compressing";
     }
 
+    interface BannerPattern {
+        String ROCKET = "banner_pattern.galacticraft.rocket";
+    }
+
     interface Chat {
         String BED_FAIL = "chat.galacticraft.bed_fail";
         String ROCKET_WARNING = "chat.galacticraft.rocket.warning";

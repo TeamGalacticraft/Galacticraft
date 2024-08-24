@@ -23,18 +23,23 @@
 package dev.galacticraft.impl.internal.mixin.gravity;
 
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.item.PrimedTnt;
-import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin({ItemEntity.class, PrimedTnt.class, AbstractMinecart.class})
+@Mixin(Entity.class)
 public abstract class EntityGravityMixin {
-    @ModifyConstant(method = "tick", constant = @Constant(doubleValue = -0.04D))
-    private double galacticraft_changeEntityGravity(double defaultValue) {
-        return CelestialBody.getByDimension(((Entity) (Object) this).level()).map(celestialBody -> celestialBody.gravity() * defaultValue).orElse(defaultValue);
+    @Shadow protected abstract double getDefaultGravity();
+
+    @Shadow private Level level;
+
+    @Redirect(method = "getGravity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getDefaultGravity()D"))
+    private double replaceGravity(Entity instance) {
+        Holder<CelestialBody<?, ?>> holder = this.level.galacticraft$getCelestialBody();
+        return (holder != null ? holder.value().gravity() : 1.0d) * this.getDefaultGravity();
     }
 }

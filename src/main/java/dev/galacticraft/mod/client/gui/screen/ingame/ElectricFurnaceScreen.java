@@ -29,11 +29,11 @@ import dev.galacticraft.mod.content.block.entity.machine.ElectricFurnaceBlockEnt
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 
-public class ElectricFurnaceScreen extends MachineScreen<ElectricFurnaceBlockEntity, RecipeMachineMenu<Container, SmeltingRecipe, ElectricFurnaceBlockEntity>> {
+public class ElectricFurnaceScreen extends MachineScreen<ElectricFurnaceBlockEntity, RecipeMachineMenu<SingleRecipeInput, SmeltingRecipe, ElectricFurnaceBlockEntity>> {
     private static final int ARROW_X = 74;
     private static final int ARROW_Y = 34;
     private static final int ARROW_U = 176;
@@ -41,7 +41,7 @@ public class ElectricFurnaceScreen extends MachineScreen<ElectricFurnaceBlockEnt
     private static final int ARROW_WIDTH = 30;
     private static final int ARROW_HEIGHT = 16;
 
-    public ElectricFurnaceScreen(RecipeMachineMenu<Container, SmeltingRecipe, ElectricFurnaceBlockEntity> handler, Inventory inv, Component title) {
+    public ElectricFurnaceScreen(RecipeMachineMenu<SingleRecipeInput, SmeltingRecipe, ElectricFurnaceBlockEntity> handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.ELECTRIC_FURNACE_SCREEN);
     }
 

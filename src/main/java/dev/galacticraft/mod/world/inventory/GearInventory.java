@@ -22,46 +22,46 @@
 
 package dev.galacticraft.mod.world.inventory;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Vanilla copy of {@link net.minecraft.world.inventory.PlayerEnderChestContainer} save methods
  */
 public class GearInventory extends SimpleContainer {
-
     public GearInventory() {
         super(12);
     }
 
     @Override
-    public void fromTag(ListTag listTag) {
-        for(int i = 0; i < this.getContainerSize(); ++i) {
+    public void fromTag(ListTag list, HolderLookup.Provider lookup) {
+        for (int i = 0; i < this.getContainerSize(); i++) {
             this.setItem(i, ItemStack.EMPTY);
         }
 
-        for(int i = 0; i < listTag.size(); ++i) {
-            CompoundTag compoundTag = listTag.getCompound(i);
-            int j = compoundTag.getByte("Slot") & 255;
-            if (j >= 0 && j < this.getContainerSize()) {
-                this.setItem(j, ItemStack.of(compoundTag));
+        for (int i = 0; i < list.size(); i++) {
+            CompoundTag tag = list.getCompound(i);
+            int j = tag.getByte("Slot") & 255;
+            if (j < this.getContainerSize()) {
+                this.setItem(j, ItemStack.parse(lookup, tag).orElse(ItemStack.EMPTY));
             }
         }
     }
 
     @Override
-    public ListTag createTag() {
+    public @NotNull ListTag createTag(HolderLookup.Provider lookup) {
         ListTag listTag = new ListTag();
 
-        for(int i = 0; i < this.getContainerSize(); ++i) {
-            ItemStack itemStack = this.getItem(i);
-            if (!itemStack.isEmpty()) {
+        for (int i = 0; i < this.getContainerSize(); i++) {
+            ItemStack stack = this.getItem(i);
+            if (!stack.isEmpty()) {
                 CompoundTag compoundTag = new CompoundTag();
                 compoundTag.putByte("Slot", (byte)i);
-                itemStack.save(compoundTag);
-                listTag.add(compoundTag);
+                listTag.add(stack.save(lookup, compoundTag));
             }
         }
 

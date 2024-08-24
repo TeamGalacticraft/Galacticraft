@@ -28,6 +28,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.core.Holder;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -42,6 +43,7 @@ public abstract class ParticleManagerMixin {
 
     @Inject(method = "add(Lnet/minecraft/client/particle/Particle;)V", at = @At("RETURN"))
     protected void galacticraft_overrideGravity(Particle particle, CallbackInfo ci) {
-        CelestialBody.getByDimension(this.level).ifPresent(celestialBodyType -> ((ParticleAccessor) particle).setGravityStrength(((ParticleAccessor) particle).getGravityStrength() * celestialBodyType.gravity()));
+        Holder<CelestialBody<?, ?>> holder = this.level.galacticraft$getCelestialBody();
+        if (holder != null) ((ParticleAccessor) particle).setGravityStrength(((ParticleAccessor) particle).getGravityStrength() * holder.value().gravity());
     }
 }

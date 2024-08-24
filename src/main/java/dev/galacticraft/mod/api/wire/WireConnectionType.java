@@ -36,7 +36,7 @@ public enum WireConnectionType implements StringRepresentable {
     WIRE,
 
     /**
-     * The wire is connected to an output face of an energy holding block.
+     * The wire is connected to an result face of an energy holding block.
      */
     ENERGY_INPUT,
 

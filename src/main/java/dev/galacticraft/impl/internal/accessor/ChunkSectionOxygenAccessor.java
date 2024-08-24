@@ -31,17 +31,23 @@ import java.util.BitSet;
 
 @ApiStatus.Internal
 public interface ChunkSectionOxygenAccessor {
-    boolean galacticraft$isInverted(int x, int y, int z);
+    default boolean galacticraft$isInverted(int x, int y, int z) {
+        return this.galacticraft$isInverted(x + (y << 4) + (z << 8));
+    }
 
-    void galacticraft$setInverted(int x, int y, int z, boolean inverted);
+    boolean galacticraft$isInverted(int pos);
 
-    @Nullable BitSet galacticraft$inversionBits();
+    default void galacticraft$setInverted(int x, int y, int z, boolean inverted) {
+        this.galacticraft$setInverted(x + (y << 4) + (z << 8), inverted);
+    }
 
-    void galacticraft$setInversionBits(@Nullable BitSet set);
+    void galacticraft$setInverted(int pos, boolean value);
 
-    short galacticraft$modifiedBlocks();
+    boolean galacticraft$isEmpty();
 
-    void galacticraft$setModifiedBlocks(short amount);
+    @Nullable BitSet galacticraft$getBits();
+
+    void galacticraft$setBits(@Nullable BitSet set);
 
     void galacticraft$writeOxygenPacket(@NotNull FriendlyByteBuf buf);
 

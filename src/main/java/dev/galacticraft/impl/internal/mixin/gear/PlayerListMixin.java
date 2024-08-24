@@ -22,16 +22,15 @@
 
 package dev.galacticraft.impl.internal.mixin.gear;
 
-import dev.galacticraft.mod.Constant;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import dev.galacticraft.impl.network.s2c.GearInvPayload;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.Connection;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -43,20 +42,19 @@ import java.util.Collection;
 public abstract class PlayerListMixin {
     @Inject(method = "placeNewPlayer", at = @At("RETURN"))
     private void syncGearInventory(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci) {
-        FriendlyByteBuf buf = PacketByteBufs.create();
         Container inventory = player.galacticraft$getGearInv();
-        buf.writeInt(player.getId());
-        buf.writeInt(inventory.getContainerSize());
+        ItemStack[] stacks = new ItemStack[inventory.getContainerSize()];
         for (int i = 0; i < inventory.getContainerSize(); i++) {
-            buf.writeItem(inventory.getItem(i));
+            stacks[i] = inventory.getItem(i);
         }
+        GearInvPayload gearInvPayload = new GearInvPayload(player.getId(), stacks);
 
         Collection<ServerPlayer> tracking = PlayerLookup.tracking(player);
         if (!tracking.contains(player)) {
-            ServerPlayNetworking.send(player, Constant.id("gear_inv_sync"), buf);
+            ServerPlayNetworking.send(player, gearInvPayload);
         }
-        for (ServerPlayer pl : tracking) {
-            ServerPlayNetworking.send(pl, Constant.id("gear_inv_sync"), PacketByteBufs.copy(buf));
+        for (ServerPlayer remote : tracking) {
+            ServerPlayNetworking.send(remote, gearInvPayload);
         }
     }
 }

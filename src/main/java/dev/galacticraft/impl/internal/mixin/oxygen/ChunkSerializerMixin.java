@@ -27,14 +27,17 @@ import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.*;
 import net.minecraft.world.level.chunk.storage.ChunkSerializer;
+import net.minecraft.world.level.chunk.storage.RegionStorageInfo;
 import net.minecraft.world.level.levelgen.BelowZeroRetrogen;
 import net.minecraft.world.level.levelgen.blending.BlendingData;
 import net.minecraft.world.level.lighting.LevelLightEngine;
@@ -45,31 +48,27 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.BitSet;
+import java.util.Objects;
 
 @Mixin(ChunkSerializer.class)
 public abstract class ChunkSerializerMixin {
     @Inject(method = "write", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/chunk/LevelChunkSection;getStates()Lnet/minecraft/world/level/chunk/PalettedContainer;"), locals = LocalCapture.CAPTURE_FAILHARD)
     private static void galacticraft_serializeOxygen(ServerLevel world, ChunkAccess chunk, CallbackInfoReturnable<CompoundTag> cir, ChunkPos chunkPos, CompoundTag nbtCompound, BlendingData blendingData, BelowZeroRetrogen belowZeroRetrogen, UpgradeData upgradeData, LevelChunkSection[] chunkSections, ListTag nbtList, LevelLightEngine lightingProvider, Registry<Biome> registry, Codec<PalettedContainerRO<Holder<Biome>>> codec, boolean bl, int i, int j, boolean bl2, DataLayer chunkNibbleArray, DataLayer chunkNibbleArray2, CompoundTag nbtCompound2, LevelChunkSection section) {
         var accessor = (ChunkSectionOxygenAccessor) section;
-        if (accessor.galacticraft$modifiedBlocks() > 0) {
+        if (!accessor.galacticraft$isEmpty()) {
             CompoundTag nbt = new CompoundTag();
-            nbt.putShort(Constant.Nbt.CHANGE_COUNT, ((ChunkSectionOxygenAccessor) section).galacticraft$modifiedBlocks());
-            if (((ChunkSectionOxygenAccessor) section).galacticraft$modifiedBlocks() > 0) {
-                BitSet bits = ((ChunkSectionOxygenAccessor) section).galacticraft$inversionBits();
-                assert bits != null;
-                nbt.putLongArray(Constant.Nbt.OXYGEN, bits.toLongArray());
-            }
+            nbt.putByteArray(Constant.Nbt.OXYGEN, Objects.requireNonNull(accessor.galacticraft$getBits()).toByteArray());
             nbtCompound2.put(Constant.Nbt.GC_API, nbt);
         }
     }
 
     @Inject(method = "read", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/village/poi/PoiManager;checkConsistencyWithBlocks(Lnet/minecraft/core/SectionPos;Lnet/minecraft/world/level/chunk/LevelChunkSection;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private static void galacticraft_deserializeOxygen(ServerLevel world, PoiManager poiStorage, ChunkPos chunkPos, CompoundTag nbt, CallbackInfoReturnable<ProtoChunk> cir, ChunkPos chunkPos2, UpgradeData upgradeData, boolean bl, ListTag nbtList, int i, LevelChunkSection[] chunkSections, boolean bl2, ChunkSource chunkManager, LevelLightEngine lightingProvider, Registry<Biome> registry, Codec<PalettedContainerRO<Holder<Biome>>> codec, boolean bl3, int j, CompoundTag nbtCompound, int k, int l, PalettedContainer palettedContainer, PalettedContainerRO readableContainer, LevelChunkSection section) {
-        CompoundTag apiCompound = nbtCompound.getCompound(Constant.Nbt.GC_API);
-        short changedCount = apiCompound.getShort(Constant.Nbt.CHANGE_COUNT);
-        ((ChunkSectionOxygenAccessor) section).galacticraft$setModifiedBlocks(changedCount);
-        if (changedCount > 0) {
-            ((ChunkSectionOxygenAccessor) section).galacticraft$setInversionBits(BitSet.valueOf(apiCompound.getLongArray(Constant.Nbt.OXYGEN)));
+    private static void galacticraft_deserializeOxygen(ServerLevel world, PoiManager poiStorage, RegionStorageInfo key, ChunkPos chunkPos, CompoundTag nbt, CallbackInfoReturnable<ProtoChunk> cir, ChunkPos chunkPos2, UpgradeData upgradeData, boolean bl, ListTag listTag, int i, LevelChunkSection[] levelChunkSections, boolean bl2, ChunkSource chunkSource, LevelLightEngine levelLightEngine, Registry registry, Codec codec, boolean bl3, int j, CompoundTag compoundTag, int k, int l, PalettedContainer palettedContainer, PalettedContainerRO palettedContainerRO, LevelChunkSection levelChunkSection, SectionPos sectionPos) {
+        CompoundTag apiCompound = compoundTag.getCompound(Constant.Nbt.GC_API);
+        if (apiCompound.contains(Constant.Nbt.OXYGEN, Tag.TAG_BYTE_ARRAY)) {
+            ((ChunkSectionOxygenAccessor) levelChunkSection).galacticraft$setBits(BitSet.valueOf(apiCompound.getByteArray(Constant.Nbt.OXYGEN)));
+        } else {
+            ((ChunkSectionOxygenAccessor) levelChunkSection).galacticraft$setBits(null);
         }
     }
 }

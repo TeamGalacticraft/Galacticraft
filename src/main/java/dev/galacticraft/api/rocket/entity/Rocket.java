@@ -26,16 +26,13 @@ import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.mod.api.entity.Dockable;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface Rocket extends RocketData, Dockable {
+public interface Rocket extends Dockable {
     /**
      * Returns the launch stage of this rocket.
      * @return the launch stage of this rocket.
@@ -44,17 +41,19 @@ public interface Rocket extends RocketData, Dockable {
 
     void setLaunchStage(LaunchStage stage);
 
-    @Nullable RocketCone<?, ?> getCone();
+    @NotNull RocketData getData();
 
-    @Nullable RocketBody<?, ?> getBody();
+    @Nullable Holder<RocketCone<?, ?>> cone();
 
-    @Nullable RocketFin<?, ?> getFin();
+    @Nullable Holder<RocketBody<?, ?>> body();
 
-    @Nullable RocketBooster<?, ?> getBooster();
+    @Nullable Holder<RocketFin<?, ?>> fin();
 
-    @Nullable RocketEngine<?, ?> getEngine();
+    @Nullable Holder<RocketBooster<?, ?>> booster();
 
-    @Nullable RocketUpgrade<?, ?> getUpgrade();
+    @Nullable Holder<RocketEngine<?, ?>> engine();
+
+    @Nullable Holder<RocketUpgrade<?, ?>> upgrade();
 
     @NotNull BlockPos getLinkedPad();
 

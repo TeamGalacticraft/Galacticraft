@@ -22,7 +22,7 @@
 
 package dev.galacticraft.api.rocket.part.type;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.config.RocketPartConfig;
@@ -46,7 +46,7 @@ public sealed interface RocketPartType<C extends RocketPartConfig> permits Rocke
      */
     void tick(@NotNull Rocket rocket, @NotNull C config);
 
-    @NotNull Codec<? extends RocketPart<C, ? extends RocketPartType<C>>> codec();
+    @NotNull MapCodec<? extends RocketPart<C, ? extends RocketPartType<C>>> codec();
 
     @NotNull ConfiguredTravelPredicate<?, ?> travelPredicate(@NotNull C config);
 

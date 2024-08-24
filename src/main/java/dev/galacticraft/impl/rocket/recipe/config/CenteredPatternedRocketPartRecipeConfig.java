@@ -76,7 +76,7 @@ public record CenteredPatternedRocketPartRecipeConfig(int height, @NotNull List<
                 if (element.isJsonPrimitive()) {
                     spacing.put(key, element.getAsInt());
                 } else {
-                    Ingredient.CODEC.decode(JsonOps.INSTANCE, element).get().ifLeft(pair -> ingredients.put(key, pair.getFirst()));
+                    ingredients.put(key, Ingredient.CODEC.decode(JsonOps.INSTANCE, element).getOrThrow().getFirst());
                 }
             }
 

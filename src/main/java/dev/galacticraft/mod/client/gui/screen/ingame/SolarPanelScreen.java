@@ -41,7 +41,7 @@ import net.minecraft.world.entity.player.Inventory;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S extends SolarPanelMenu<M>> extends MachineScreen<M, S> {
+public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, Menu extends SolarPanelMenu<Machine>> extends MachineScreen<Machine, Menu> {
     private static final int DAY_SOURCE_U = 0;
     private static final int DAY_SOURCE_V = 0;
     private static final int OVERCAST_SOURCE_U = 32;
@@ -77,9 +77,9 @@ public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S exten
     private final ResourceLocation solarPanelTexture;
     private final WorldLightSources lightSource;
 
-    public SolarPanelScreen(S handler, Inventory inv, Component title) {
-        super(handler, title, Constant.ScreenTexture.SOLAR_PANEL_SCREEN);
-        this.solarPanelTexture = SolarPanelRegistry.getSolarPanelTexture(handler.machine.getType());
+    public SolarPanelScreen(Menu menu, Inventory inv, Component title) {
+        super(menu, title, Constant.ScreenTexture.SOLAR_PANEL_SCREEN);
+        this.solarPanelTexture = SolarPanelRegistry.getSolarPanelTexture(menu.be.getType());
         this.lightSource = SolarPanelRegistry.getLightSource(this.menu.playerInventory.player.level().dimension());
     }
 

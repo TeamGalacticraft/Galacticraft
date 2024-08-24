@@ -23,30 +23,28 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
-import dev.galacticraft.machinelib.api.menu.sync.MenuSyncHandler;
-import dev.galacticraft.mod.content.GCMachineTypes;
+import dev.galacticraft.machinelib.api.menu.MenuData;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenCollectorBlockEntity;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
-
-import java.util.function.Consumer;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class OxygenCollectorMenu extends MachineMenu<OxygenCollectorBlockEntity> {
     public int collectionAmount = 0;
 
-    public OxygenCollectorMenu(int syncId, ServerPlayer player, OxygenCollectorBlockEntity machine) {
-        super(syncId, player, machine);
+    public OxygenCollectorMenu(int syncId, Player player, OxygenCollectorBlockEntity machine) {
+        super(GCMenuTypes.OXYGEN_COLLECTOR, syncId, player, machine);
     }
 
-    public OxygenCollectorMenu(int syncId, Inventory inv, FriendlyByteBuf buf) {
-        super(syncId, inv, buf, 8, 84, GCMachineTypes.OXYGEN_COLLECTOR);
+    public OxygenCollectorMenu(int syncId, Inventory inv, BlockPos pos) {
+        super(GCMenuTypes.OXYGEN_COLLECTOR, syncId, inv, pos, 8, 84);
     }
 
     @Override
-    public void registerSyncHandlers(Consumer<MenuSyncHandler> consumer) {
-        super.registerSyncHandlers(consumer);
-        consumer.accept(MenuSyncHandler.simple(this.machine::getCollectionAmount, this::setCollectionAmount));
+    public void registerData(@NotNull MenuData data) {
+        super.registerData(data);
+        data.registerInt(this.be::getCollectionAmount, this::setCollectionAmount);
     }
 
     public void setCollectionAmount(int collectionAmount) {

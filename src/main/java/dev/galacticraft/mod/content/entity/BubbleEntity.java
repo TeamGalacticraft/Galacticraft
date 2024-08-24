@@ -24,24 +24,17 @@ package dev.galacticraft.mod.content.entity;
 
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 
 public class BubbleEntity extends Entity {
     public BubbleEntity(EntityType<?> type, Level world) {
         super(type, world);
-    }
-
-    @Override
-    protected void defineSynchedData() {
     }
 
     @Override
@@ -50,10 +43,6 @@ public class BubbleEntity extends Entity {
 
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
-    }
-
-    @Override
-    protected void handleNetherPortal() {
     }
 
     @Override
@@ -112,11 +101,6 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    public boolean canChangeDimensions() {
-        return false;
-    }
-
-    @Override
     public boolean isPushedByFluid() {
         return false;
     }
@@ -127,11 +111,12 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    public void lavaHurt() {
+    protected void defineSynchedData(SynchedEntityData.Builder compositeStateBuilder) {
+
     }
 
     @Override
-    public void setSecondsOnFire(int seconds) {
+    public void lavaHurt() {
     }
 
     @Override
@@ -228,10 +213,5 @@ public class BubbleEntity extends Entity {
     @Override
     public boolean shouldShowName() {
         return false;
-    }
-
-    @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return new ClientboundAddEntityPacket(this);
     }
 }

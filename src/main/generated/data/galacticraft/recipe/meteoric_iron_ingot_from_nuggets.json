@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "meteoric_iron_ingot",
+  "key": {
+    "#": {
+      "item": "galacticraft:meteoric_iron_nugget"
+    }
+  },
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:meteoric_iron_ingot"
+  }
+}

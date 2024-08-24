@@ -22,69 +22,34 @@
 
 package dev.galacticraft.mod.particle;
 
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Locale;
-
-public class LaunchSmokeParticleOption implements ParticleOptions {
-    public static final Codec<LaunchSmokeParticleOption> CODEC = RecordCodecBuilder.create(
+public record LaunchSmokeParticleOption(boolean launched, float scale) implements ParticleOptions {
+    public static final MapCodec<LaunchSmokeParticleOption> CODEC = RecordCodecBuilder.mapCodec(
             instance -> instance.group(
-                    Codec.BOOL.fieldOf("launched").forGetter(LaunchSmokeParticleOption::isLaunched),
-                    Codec.FLOAT.fieldOf("scale").forGetter(LaunchSmokeParticleOption::getScale)
+                    Codec.BOOL.fieldOf("launched").forGetter(LaunchSmokeParticleOption::launched),
+                    Codec.FLOAT.fieldOf("scale").forGetter(LaunchSmokeParticleOption::scale)
             ).apply(instance, LaunchSmokeParticleOption::new)
     );
 
-    public static final ParticleOptions.Deserializer<LaunchSmokeParticleOption> DESERIALIZER = new ParticleOptions.Deserializer<>() {
-        public LaunchSmokeParticleOption fromCommand(ParticleType<LaunchSmokeParticleOption> particleType, StringReader stringReader) throws CommandSyntaxException {
-            stringReader.expect(' ');
-            boolean launched = stringReader.readBoolean();
-            float scale = stringReader.readFloat();
-            return new LaunchSmokeParticleOption(launched, scale);
-        }
-
-        public LaunchSmokeParticleOption fromNetwork(ParticleType<LaunchSmokeParticleOption> particleType, FriendlyByteBuf buffer) {
-            return new LaunchSmokeParticleOption(buffer.readBoolean(), buffer.readFloat());
-        }
-    };
-
-    private final boolean launched;
-    private final float scale;
-
-    public LaunchSmokeParticleOption(boolean launched, float scale) {
-        this.launched = launched;
-        this.scale = scale;
-    }
+    public static final StreamCodec<ByteBuf, LaunchSmokeParticleOption> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.BOOL,
+            o -> o.launched,
+            ByteBufCodecs.FLOAT,
+            o -> o.scale,
+            LaunchSmokeParticleOption::new
+    );
 
     @Override
-    public ParticleType<?> getType() {
+    public @NotNull ParticleType<?> getType() {
         return GCParticleTypes.LAUNCH_SMOKE_PARTICLE;
-    }
-
-    @Override
-    public void writeToNetwork(FriendlyByteBuf buffer) {
-        buffer.writeBoolean(this.launched);
-        buffer.writeFloat(this.scale);
-    }
-
-    @Override
-    public String writeToString() {
-        return String.format(
-                Locale.ROOT, "%s %s %.2f", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()), this.launched, this.scale
-        );
-    }
-
-    public boolean isLaunched() {
-        return launched;
-    }
-
-    public float getScale() {
-        return scale;
     }
 }

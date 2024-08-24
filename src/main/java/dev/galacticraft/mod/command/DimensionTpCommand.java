@@ -26,10 +26,12 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import dev.galacticraft.api.registry.AddonRegistries;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.network.GCScreenType;
+import dev.galacticraft.mod.content.GCCelestialBodies;
+import dev.galacticraft.mod.network.s2c.OpenCelestialScreenPayload;
 import dev.galacticraft.mod.util.Translations;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -38,6 +40,7 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.commands.arguments.coordinates.Vec3Argument;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -107,11 +110,8 @@ public class DimensionTpCommand {
         var player = context.getSource().getPlayerOrException();
 
         player.galacticraft$openCelestialScreen(null);
-        var buf = PacketByteBufs.create();
-        buf.writeEnum(GCScreenType.CELESTIAL);
-        buf.writeBoolean(false);
-        ServerPlayNetworking.send(player, Constant.Packet.OPEN_SCREEN, buf);
-
+        Holder<CelestialBody<?, ?>> body = player.level().galacticraft$getCelestialBody();
+        ServerPlayNetworking.send(player, new OpenCelestialScreenPayload(null, body != null ? body : player.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).getHolderOrThrow(GCCelestialBodies.EARTH))); //todo
         return Command.SINGLE_SUCCESS;
     }
 

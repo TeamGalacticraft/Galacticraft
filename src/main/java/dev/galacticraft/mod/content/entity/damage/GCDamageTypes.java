@@ -24,7 +24,7 @@ package dev.galacticraft.mod.content.entity.damage;
 
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageScaling;
 import net.minecraft.world.damagesource.DamageType;
@@ -35,7 +35,7 @@ public class GCDamageTypes {
     public static final ResourceKey<DamageType> SUFFOCATION = Constant.key(Registries.DAMAGE_TYPE, "suffocation");
     public static final ResourceKey<DamageType> SULFURIC_ACID = Constant.key(Registries.DAMAGE_TYPE, "sulfuric_acid");
 
-    public static void bootstrapRegistries(BootstapContext<DamageType> context) {
+    public static void bootstrapRegistries(BootstrapContext<DamageType> context) {
         context.register(OIL_BOOM, new DamageType("oil_boom", DamageScaling.ALWAYS, 0.1f));
         context.register(VINE_POISON, new DamageType("vine_poison", 0.0f));
         context.register(SUFFOCATION, new DamageType("suffocation", 0.0f));

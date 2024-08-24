@@ -24,69 +24,87 @@ package dev.galacticraft.mod.content.entity.goals;
 
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
-import java.util.List;
-import java.util.Objects;
 
+// vanilla copy of net.minecraft.world.entity.ai.goal.FollowMobGoal adapted for players
 public class FollowPlayerGoal extends Goal {
     private final Mob mob;
-    private Player followingPlayer;
-    private final PathNavigation navigation;
+    @Nullable
+    private Player following;
     private final double speedModifier;
-    private final double areaSize;
+    private final PathNavigation navigation;
     private int timeToRecalcPath;
+    private final float stopDistance;
     private float oldWaterCost;
+    private final float areaSize;
 
-    public FollowPlayerGoal(Mob mob, double areaSize, double speedModifier) {
+    public FollowPlayerGoal(Mob mob, double speedModifier, float stopDistance, float areaSize) {
         this.mob = mob;
-        this.navigation = mob.getNavigation();
-        this.areaSize = areaSize;
         this.speedModifier = speedModifier;
+        this.navigation = mob.getNavigation();
+        this.stopDistance = stopDistance;
+        this.areaSize = areaSize;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        if (!(mob.getNavigation() instanceof GroundPathNavigation) && !(mob.getNavigation() instanceof FlyingPathNavigation)) {
+            throw new IllegalArgumentException("Unsupported mob type for FollowMobGoal");
+        }
     }
 
     @Override
     public boolean canUse() {
-        List<Player> list = this.mob.level().getEntitiesOfClass(Player.class, this.mob.getBoundingBox().inflate(this.areaSize), Objects::nonNull);
-        if (!list.isEmpty()) {
-            for(Player player : list) {
-                if (!player.isInvisible()) {
-                    this.followingPlayer = player;
-                    return true;
-                }
-            }
+        for (Player player : this.mob.level().getEntitiesOfClass(Player.class, this.mob.getBoundingBox().inflate(this.areaSize), p -> !p.isInvisible())) {
+            this.following = player;
+            return true;
         }
-
         return false;
+    }
+
+    @Override
+    public boolean canContinueToUse() {
+        return this.following != null && !this.navigation.isDone() && this.mob.distanceToSqr(this.following) > (double)(this.stopDistance * this.stopDistance);
     }
 
     @Override
     public void start() {
         this.timeToRecalcPath = 0;
-        this.oldWaterCost = this.mob.getPathfindingMalus(BlockPathTypes.WATER);
-        this.mob.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+        this.oldWaterCost = this.mob.getPathfindingMalus(PathType.WATER);
+        this.mob.setPathfindingMalus(PathType.WATER, 0.0F);
     }
 
     @Override
     public void stop() {
-        this.followingPlayer = null;
+        this.following = null;
         this.navigation.stop();
-        this.mob.setPathfindingMalus(BlockPathTypes.WATER, this.oldWaterCost);
+        this.mob.setPathfindingMalus(PathType.WATER, this.oldWaterCost);
     }
 
     @Override
     public void tick() {
-        if (this.followingPlayer == null)
-            return;
-        this.mob.getLookControl().setLookAt(this.followingPlayer, 10.0F, (float)this.mob.getMaxHeadXRot());
-        if (--this.timeToRecalcPath <= 0) {
-            this.timeToRecalcPath = this.adjustedTickDelay(10);
-            if (!this.mob.isLeashed() && !this.mob.isPassenger()) {
-                this.navigation.moveTo(this.followingPlayer, this.speedModifier);
+        if (this.following != null && !this.mob.isLeashed()) {
+            this.mob.getLookControl().setLookAt(this.following, 10.0F, (float)this.mob.getMaxHeadXRot());
+            if (--this.timeToRecalcPath <= 0) {
+                this.timeToRecalcPath = this.adjustedTickDelay(10);
+                double d = this.mob.getX() - this.following.getX();
+                double e = this.mob.getY() - this.following.getY();
+                double f = this.mob.getZ() - this.following.getZ();
+                double g = d * d + e * e + f * f;
+                if (!(g <= (this.stopDistance * this.stopDistance))) {
+                    this.navigation.moveTo(this.following, this.speedModifier);
+                } else {
+                    this.navigation.stop();
+                    if (g <= this.stopDistance) {
+                        double h = this.following.getX() - this.mob.getX();
+                        double i = this.following.getZ() - this.mob.getZ();
+                        this.navigation.moveTo(this.mob.getX() - h, this.mob.getY(), this.mob.getZ() - i, this.speedModifier);
+                    }
+                }
             }
         }
     }

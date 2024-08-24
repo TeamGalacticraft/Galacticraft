@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.model;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceLocation;
@@ -39,7 +39,7 @@ public interface GCModel {
     GCBakedModel bake(ResourceManager resourceManager, Function<Material, TextureAtlasSprite> spriteGetter);
 
     interface GCModelType {
-        Codec<? extends GCModel> codec();
+        MapCodec<? extends GCModel> codec();
 
         ResourceLocation getId();
     }

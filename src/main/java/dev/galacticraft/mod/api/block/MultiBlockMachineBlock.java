@@ -22,8 +22,7 @@
 
 package dev.galacticraft.mod.api.block;
 
-import dev.galacticraft.machinelib.api.block.MachineBlock;
-import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.block.SimpleMachineBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -36,7 +35,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class MultiBlockMachineBlock<T extends MachineBlockEntity> extends MachineBlock<T> implements MultiBlockBase {
+public abstract class MultiBlockMachineBlock extends SimpleMachineBlock implements MultiBlockBase {
     protected MultiBlockMachineBlock(Properties settings, ResourceLocation factory) {
         super(settings, factory);
     }

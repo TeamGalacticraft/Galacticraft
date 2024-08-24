@@ -23,10 +23,7 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.*;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.client.GameNarrator;
@@ -66,17 +63,16 @@ public class SpaceTravelScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuilder();
-        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         this.minecraft.getTextureManager().bindForSetup(TEXTURE);
         RenderSystem.setShaderTexture(0, TEXTURE);
-        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-        bufferBuilder.vertex(0.0D, this.height, 0.0D).color(200, 200, 200, 255).uv(0.0F, (float)this.height / 32.0F).endVertex();
-        bufferBuilder.vertex(this.width, this.height, 0.0D).color(200, 200, 200, 255).uv((float)this.width / 32.0F, (float)this.height / 32.0F).endVertex();
-        bufferBuilder.vertex(this.width, 0.0D, 0.0D).color(200, 200, 200, 255).uv((float)this.width / 32.0F, 0.0F).endVertex();
-        bufferBuilder.vertex(0.0D, 0.0D, 0.0D).color(200, 200, 200, 255).uv(0.0F, 0.0F).endVertex();
-        tessellator.end();
+        BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        buffer.addVertex(0.0F, this.height, 0.0F).setUv(0.0F, (float)this.height / 32.0F).setColor(200, 200, 200, 255)
+                .addVertex(this.width, this.height, 0.0F).setUv((float)this.width / 32.0F, (float)this.height / 32.0F).setColor(200, 200, 200, 255)
+                .addVertex(this.width, 0.0F, 0.0F).setUv((float)this.width / 32.0F, 0.0F).setColor(200, 200, 200, 255)
+                .addVertex(0.0F, 0.0F, 0.0F).setUv(0.0F, 0.0F).setColor(200, 200, 200, 255);
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
+
         if (minecraft.level.random.nextInt(30) == 1) {
             if (dots.equals("...")) {
                 dots = ".";

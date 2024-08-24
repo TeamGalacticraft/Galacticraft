@@ -27,7 +27,7 @@ import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -118,13 +118,15 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 GCItems.GALENA_ORE
         );
 
-        tag(ConventionalItemTags.GEMS).add(
-                GCItems.OLIVINE_SHARD
-        );
+        tag(ConventionalItemTags.GEMS)
+                .add(GCItems.OLIVINE_SHARD);
 
-        tag(ConventionalItemTags.CLUSTERS).add(
-                GCBlocks.OLIVINE_CLUSTER.asItem()
-        );
+        tag(ConventionalItemTags.CLUSTERS)
+                .add(GCBlocks.OLIVINE_CLUSTER.asItem());
+
+        tag(ItemTags.MEAT)
+                .add(GCItems.GROUND_BEEF)
+                .add(GCItems.BEEF_PATTY);
     }
 
     protected FabricTagProvider<Item>.FabricTagBuilder tag(TagKey<Item> tag) {

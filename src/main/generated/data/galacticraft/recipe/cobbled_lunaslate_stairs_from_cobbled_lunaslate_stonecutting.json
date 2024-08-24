@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "galacticraft:cobbled_lunaslate"
+  },
+  "result": {
+    "count": 1,
+    "id": "galacticraft:cobbled_lunaslate_stairs"
+  }
+}

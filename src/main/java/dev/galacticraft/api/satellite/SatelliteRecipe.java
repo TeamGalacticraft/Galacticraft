@@ -42,15 +42,15 @@ public interface SatelliteRecipe extends Predicate<Container> {
                 @Override
                 public <T> DataResult<T> encode(Int2ObjectMap<Ingredient> input, DynamicOps<T> ops, T prefix) {
                     RecordBuilder<T> mapBuilder = ops.mapBuilder();
-                    input.forEach((amount, ingredient) -> mapBuilder.add(ops.createInt(amount).toString(), Ingredient.CODEC.encodeStart(ops, ingredient).get().orThrow()));
+                    input.forEach((amount, ingredient) -> mapBuilder.add(ops.createInt(amount).toString(), Ingredient.CODEC.encodeStart(ops, ingredient).getOrThrow()));
                     return mapBuilder.build(prefix);
                 }
 
                 @Override
                 public <T> DataResult<Pair<Int2ObjectMap<Ingredient>, T>> decode(DynamicOps<T> ops, T input) {
-                    MapLike<T> mapLike = ops.getMap(input).get().orThrow();
+                    MapLike<T> mapLike = ops.getMap(input).getOrThrow();
                     Int2ObjectMap<Ingredient> list = new Int2ObjectArrayMap<>();
-                    mapLike.entries().forEachOrdered(ttPair -> list.put(Integer.decode(ops.getStringValue(ttPair.getFirst()).get().orThrow()).intValue(), Ingredient.CODEC.decode(ops, ttPair.getSecond()).get().orThrow().getFirst()));
+                    mapLike.entries().forEachOrdered(ttPair -> list.put(Integer.decode(ops.getStringValue(ttPair.getFirst()).getOrThrow()).intValue(), Ingredient.CODEC.decode(ops, ttPair.getSecond()).getOrThrow().getFirst()));
                     return DataResult.success(new Pair<>(list, input));
                 }
             }.fieldOf("ingredients").forGetter(SatelliteRecipe::ingredients)

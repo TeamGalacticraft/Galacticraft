@@ -23,12 +23,11 @@
 package dev.galacticraft.mod.api.block.entity;
 
 import dev.galacticraft.mod.Constant;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
-
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 
 public interface Walkway extends Connected {
     Direction getDirection();

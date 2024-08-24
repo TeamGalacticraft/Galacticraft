@@ -29,7 +29,7 @@ import dev.galacticraft.mod.mixin.MultiNoiseBiomeSourceParameterListPresetAccess
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
@@ -196,7 +196,7 @@ public class GCMultiNoiseBiomeSourceParameterLists {
         MultiNoiseBiomeSourceParameterListPresetAccessor.getByName().put(VENUS_PRESET_ID, VENUS_PRESET);
     }
 
-    public static void bootstrapRegistries(BootstapContext<MultiNoiseBiomeSourceParameterList> context) {
+    public static void bootstrapRegistries(BootstrapContext<MultiNoiseBiomeSourceParameterList> context) {
         HolderGetter<Biome> lookup = context.lookup(Registries.BIOME);
         context.register(MOON, new MultiNoiseBiomeSourceParameterList(MOON_PRESET, lookup));
         context.register(VENUS, new MultiNoiseBiomeSourceParameterList(VENUS_PRESET, lookup));

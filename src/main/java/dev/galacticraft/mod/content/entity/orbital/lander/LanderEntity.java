@@ -31,7 +31,7 @@ import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.content.entity.ScalableFuelLevel;
-import dev.galacticraft.mod.network.packets.ResetThirdPersonPacket;
+import dev.galacticraft.mod.network.s2c.ResetPerspectivePacket;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.screen.ParachestMenu;
 import dev.galacticraft.mod.util.FluidUtil;
@@ -44,9 +44,9 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.base.SingleFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
@@ -63,11 +63,10 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 
 import java.util.List;
 
-public class LanderEntity extends AbstractLanderEntity implements Container, ScalableFuelLevel, ControllableEntity, HasCustomInventoryScreen, IgnoreShift, ExtendedScreenHandlerFactory {
+public class LanderEntity extends AbstractLanderEntity implements Container, ScalableFuelLevel, ControllableEntity, HasCustomInventoryScreen, IgnoreShift, ExtendedScreenHandlerFactory<ParachestMenu.OpeningData> {
     public static final float NO_PARTICLES = 0.0000001F;
     protected NonNullList<ItemStack> inventory;
     protected InventoryStorage storage;
@@ -105,20 +104,20 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
 
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
-        tank.readNbt(tag);
+        tank.readNbt(tag, this.registryAccess());
         this.inventory = NonNullList.withSize(tag.getInt("size"), ItemStack.EMPTY);
         this.storage = InventoryStorage.of(this, null);
-        ContainerHelper.loadAllItems(tag, this.inventory);
+        ContainerHelper.loadAllItems(tag, this.inventory, this.registryAccess());
 
         this.lastDeltaY = this.getDeltaMovement().y;
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
-        tank.writeNbt(tag);
+        tank.writeNbt(tag, this.registryAccess());
 
         tag.putInt("size", this.inventory.size());
-        ContainerHelper.saveAllItems(tag, this.inventory);
+        ContainerHelper.saveAllItems(tag, this.inventory, this.registryAccess());
     }
 
     public Pair<Vec3, Vec3> getParticlePosition() {
@@ -236,7 +235,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
                 for (Entity entity : this.getPassengers()) {
                     entity.removeVehicle();
                     if (entity instanceof ServerPlayer player) {
-                        ServerPlayNetworking.send(player, new ResetThirdPersonPacket());
+                        ServerPlayNetworking.send(player, new ResetPerspectivePacket());
                     }
                     entity.setDeltaMovement(Vec3.ZERO);
                     entity.setPos(entity.getX(), this.getY() + 2.25, entity.getZ());
@@ -254,7 +253,8 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
 
     public void tickInAir() {
         if (!this.onGround()) {
-            this.addDeltaMovement(new Vec3(0, CelestialBody.getByDimension(level()).map(CelestialBody::gravity).orElse(1F) * -0.008D, 0));
+            Holder<CelestialBody<?, ?>> holder = this.level().galacticraft$getCelestialBody();
+            this.addDeltaMovement(new Vec3(0, (holder != null ? holder.value().gravity() : 1.0d) * -0.008D, 0));
         }
 
         double motY = -1 * Math.sin(getXRot() / Constant.RADIANS_TO_DEGREES);
@@ -375,12 +375,6 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
         this.inventory.clear();
     }
 
-    @Override
-    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
-        buf.writeBoolean(false);
-        buf.writeVarInt(this.inventory.size());
-    }
-
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
@@ -418,8 +412,8 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
     }
 
     @Override
-    protected Vector3f getPassengerAttachmentPoint(Entity passenger, EntityDimensions dimensions, float scaleFactor) {
-        return new Vector3f(0, 1.5F, 0);
+    protected Vec3 getPassengerAttachmentPoint(Entity passenger, EntityDimensions dimensions, float scaleFactor) {
+        return new Vec3(0, 1.5F, 0);
     }
 
     @Override
@@ -454,5 +448,10 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
     @Override
     public boolean shouldIgnoreShiftExit() {
         return !onGround();
+    }
+
+    @Override
+    public ParachestMenu.OpeningData getScreenOpeningData(ServerPlayer player) {
+        return new ParachestMenu.OpeningData(this.inventory.size());
     }
 }

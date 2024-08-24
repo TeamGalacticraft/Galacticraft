@@ -11,7 +11,7 @@ The classic Minecraft space mod, rewritten from the ground up for modern version
 Here we answer a few common questions we get regarding the release of the mod.\
 More information can be found in the `#faq` channel in [our Discord](https://discord.gg/n3QqhMYyFK).
 
-**When will Galacticraft 5 for 1.20+ be released?**\
+**When will Galacticraft 5 for 1.21+ be released?**\
 There is currently no ETA for a release.
 Keep an eye out on [our Discord server](https://discord.gg/n3QqhMYyFK) for an alpha release announcement.
 

@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 2,
-  "ingredient": {
-    "item": "galacticraft:aluminum_decoration"
-  },
-  "result": "galacticraft:aluminum_decoration_slab"
-}

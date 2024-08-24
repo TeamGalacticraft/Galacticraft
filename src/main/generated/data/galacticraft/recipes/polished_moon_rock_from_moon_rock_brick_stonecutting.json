@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 1,
-  "ingredient": {
-    "item": "galacticraft:moon_rock_brick"
-  },
-  "result": "galacticraft:polished_moon_rock"
-}

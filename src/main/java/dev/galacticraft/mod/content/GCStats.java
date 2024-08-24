@@ -23,6 +23,8 @@
 package dev.galacticraft.mod.content;
 
 import dev.galacticraft.mod.Constant;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
@@ -32,7 +34,10 @@ public class GCStats {
     public static final ResourceLocation INTERACT_WITH_NASA_WORKBENCH = register("interact_with_nasa_workbench", StatFormatter.DEFAULT);
 
     public static ResourceLocation register(String id, StatFormatter formatter) {
-        return Stats.makeCustomStat(Constant.MOD_ID + ":" + id, formatter);
+        ResourceLocation resourceLocation = Constant.id(id);
+        Registry.register(BuiltInRegistries.CUSTOM_STAT, id, resourceLocation);
+        Stats.CUSTOM.get(resourceLocation, formatter);
+        return resourceLocation;
     }
 
     public static void register() {}

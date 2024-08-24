@@ -77,7 +77,7 @@ public abstract class GCRecipeBuilder implements RecipeBuilder {
                 .rewards(AdvancementRewards.Builder.recipe(id))
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(builder::addCriterion);
-        output.accept(new ResourceLocation(id.getNamespace(), this.subPath + '/' + id.getPath()), createRecipe(id), builder.build(id.withPrefix("recipes/")));
+        output.accept(ResourceLocation.fromNamespaceAndPath(id.getNamespace(), this.subPath + '/' + id.getPath()), createRecipe(id), builder.build(id.withPrefix("recipes/")));
     }
 
     public abstract Recipe<?> createRecipe(ResourceLocation id);

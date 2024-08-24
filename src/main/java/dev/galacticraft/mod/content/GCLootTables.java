@@ -23,13 +23,10 @@
 package dev.galacticraft.mod.content;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.mixin.BuiltInLootTablesAccessor;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.storage.loot.LootTable;
 
 public class GCLootTables {
-    public static final ResourceLocation BASIC_MOON_RUINS_CHEST = Constant.id(Constant.LootTable.BASIC_MOON_RUINS_CHEST);
-
-    public static void register() {
-        BuiltInLootTablesAccessor.callRegisterLootTable(BASIC_MOON_RUINS_CHEST);
-    }
+    public static final ResourceKey<LootTable> BASIC_MOON_RUINS_CHEST = Constant.key(Registries.LOOT_TABLE, Constant.LootTable.BASIC_MOON_RUINS_CHEST);
 }

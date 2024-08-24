@@ -1,16 +1,15 @@
 {
   "required": true,
   "package": "dev.galacticraft.impl.internal.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "LevelCelestialBodyMixin",
     "LevelTimeAccessMixin",
     "MinecraftServerMixin",
     "gear.LivingEntityMixin",
     "gear.PlayerListMixin",
     "gear.ServerPlayerMixin",
-    "gravity.ArrowGravityMixin",
     "gravity.EntityGravityMixin",
-    "gravity.LivingEntityMixin",
     "oxygen.ChunkHolderMixin",
     "oxygen.ChunkSerializerMixin",
     "oxygen.EmptyLevelChunkMixin",
@@ -19,8 +18,6 @@
     "oxygen.LevelChunkSectionMixin",
     "oxygen.LevelMixin",
     "oxygen.ProtoChunkMixin",
-    "registry.RegistryDataLoaderMixin",
-    "registry.RegistrySynchronizationMixin",
     "research.AdvancementRewardsMixin",
     "research.ServerPlayerMixin"
   ],

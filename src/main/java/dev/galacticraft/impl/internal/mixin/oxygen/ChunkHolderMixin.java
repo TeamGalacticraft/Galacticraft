@@ -23,11 +23,11 @@
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenSyncer;
-import dev.galacticraft.mod.Constant;
+import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.GenerationChunkHolder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -46,11 +46,12 @@ public abstract class ChunkHolderMixin {
 
     @Shadow @Final private ChunkHolder.PlayerProvider playerProvider;
 
-    @Shadow @Final ChunkPos pos;
-
     @Inject(method = "broadcastChanges", at = @At("HEAD"))
     private void galacticraft_flushOxygenPackets(LevelChunk chunk, CallbackInfo ci) {
-        FriendlyByteBuf buf = ((ChunkOxygenSyncer) chunk).galacticraft$syncOxygenPacketsToClient();
-        if (buf != null) this.broadcast(this.playerProvider.getPlayers(this.pos, false), ServerPlayNetworking.createS2CPacket(Constant.id("oxygen_update"), buf));
+        OxygenUpdatePayload.OxygenData[] data = ((ChunkOxygenSyncer) chunk).galacticraft$syncOxygenPacketsToClient();
+        if (data != null) {
+            ChunkPos pos = ((GenerationChunkHolder) (Object) this).getPos();
+            this.broadcast(this.playerProvider.getPlayers(pos, false), ServerPlayNetworking.createS2CPacket(new OxygenUpdatePayload(pos.toLong(), data)));
+        }
     }
 }

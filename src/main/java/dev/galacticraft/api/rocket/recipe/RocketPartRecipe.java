@@ -28,14 +28,14 @@ import dev.galacticraft.api.rocket.recipe.config.RocketPartRecipeConfig;
 import dev.galacticraft.api.rocket.recipe.type.RocketPartRecipeType;
 import dev.galacticraft.impl.rocket.recipe.RocketPartRecipeImpl;
 import net.minecraft.core.NonNullList;
-import net.minecraft.data.worldgen.BootstapContext;
-import net.minecraft.world.Container;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeInput;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public interface RocketPartRecipe<C extends RocketPartRecipeConfig, T extends RocketPartRecipeType<C>> extends Recipe<Container> {
+public interface RocketPartRecipe<C extends RocketPartRecipeConfig, T extends RocketPartRecipeType<C>> extends Recipe<RecipeInput> {
     Codec<RocketPartRecipe<?, ?>> DIRECT_CODEC = BuiltInRocketRegistries.ROCKET_PART_RECIPE_TYPE.byNameCodec().dispatch(RocketPartRecipe::type, RocketPartRecipeType::codec);
 
     @Contract("_, _ -> new")
@@ -56,7 +56,7 @@ public interface RocketPartRecipe<C extends RocketPartRecipeConfig, T extends Ro
     @Override
     @NotNull NonNullList<Ingredient> getIngredients();
 
-    static void bootstrapRegistries(BootstapContext<RocketPartRecipe<?, ?>> context) {
+    static void bootstrapRegistries(BootstrapContext<RocketPartRecipe<?, ?>> context) {
 
     }
 }

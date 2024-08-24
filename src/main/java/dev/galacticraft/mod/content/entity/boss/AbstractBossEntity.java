@@ -24,7 +24,6 @@ package dev.galacticraft.mod.content.entity.boss;
 
 import dev.galacticraft.mod.content.block.entity.DungeonSpawnerBlockEntity;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.BossEvent;

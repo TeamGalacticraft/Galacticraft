@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   
   "id": "galacticraft-test",
-  "version": "$version",
+  "version": "0.1.0",
   "name": "Galacticraft Test Mod",
   "description": "The test mod for Galacticraft 5.",
   "license": "MIT",

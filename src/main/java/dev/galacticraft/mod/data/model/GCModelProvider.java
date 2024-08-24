@@ -207,11 +207,6 @@ public class GCModelProvider extends FabricModelProvider {
 
         // MISC WORLD GEN
         this.createCavernousVines(generator);
-        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(GCBlocks.MOON_BERRY_BUSH)
-                        .with(PropertyDispatch.property(BlockStateProperties.AGE_3)
-                                        .generate(integer -> Variant.variant().with(VariantProperties.MODEL, generator.createSuffixedVariant(GCBlocks.MOON_BERRY_BUSH, "_stage" + integer, ModelTemplates.CROSS, TextureMapping::cross)))
-                        )
-        );
 
         // DUMMY
         generator.createAirLikeBlock(GCBlocks.SOLAR_PANEL_PART, GCItems.BLUE_SOLAR_WAFER);
@@ -251,10 +246,10 @@ public class GCModelProvider extends FabricModelProvider {
         GCBlocks.PARACHEST.getStateDefinition().getPossibleStates().forEach(state -> {
             para.with(Condition.condition().term(ParaChestBlock.FACING, state.getValue(ParaChestBlock.FACING))/*.term(ParaChestBlock.COLOR, state.getValue(ParaChestBlock.COLOR))*/, Variant.variant()
                     .with(VariantProperties.Y_ROT, getRotationFromDirection(state.getValue(ParaChestBlock.FACING)))
-                    .with(VariantProperties.MODEL, new ResourceLocation("galacticraft:block/parachest/parachest")));
+                    .with(VariantProperties.MODEL, ResourceLocation.parse("galacticraft:block/parachest/parachest")));
             para.with(Condition.condition().term(ParaChestBlock.COLOR, state.getValue(ParaChestBlock.COLOR)), Variant.variant()
                     .with(VariantProperties.Y_ROT, getRotationFromDirection(state.getValue(ParaChestBlock.FACING)))
-                    .with(VariantProperties.MODEL, new ResourceLocation("galacticraft:block/parachest/" + state.getValue(ParaChestBlock.COLOR) + "_chute")));
+                    .with(VariantProperties.MODEL, ResourceLocation.parse("galacticraft:block/parachest/" + state.getValue(ParaChestBlock.COLOR) + "_chute")));
         });
         generator.blockStateOutput.accept(para);
     }
@@ -405,7 +400,6 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.AMBIENT_THERMAL_CONTROLLER, ModelTemplates.FLAT_ITEM);
 
         // FOOD
-        generator.generateFlatItem(GCItems.MOON_BERRIES, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.CHEESE_CURD, ModelTemplates.FLAT_ITEM);
 
         generator.generateFlatItem(GCItems.CHEESE_SLICE, ModelTemplates.FLAT_ITEM);
@@ -518,7 +512,7 @@ public class GCModelProvider extends FabricModelProvider {
                 .put(TextureSlot.WALL, resourceLocation)
                 .put(TextureSlot.SIDE, resourceLocation)
                 .put(TextureSlot.TOP, TextureMapping.getBlockTexture(block, "_top"))
-                .put(TextureSlot.BOTTOM, new ResourceLocation(TextureMapping.getBlockTexture(block).toString().replace("detailed_", "")));
+                .put(TextureSlot.BOTTOM, ResourceLocation.parse(TextureMapping.getBlockTexture(block).toString().replace("detailed_", "")));
     }
 
     private void createCheeseBlock(BlockModelGenerators generators) {

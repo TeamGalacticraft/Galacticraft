@@ -49,11 +49,13 @@ public class ConfigTestSuite extends SimpleGameTest {
 
     @BasicTest(batch = "config")
     public void load() {
-        writeConfig("""
+        writeConfig(
+            """
             {
                 "debug_log": true
             }
-            """);
+            """
+        );
 
         ConfigImpl config = new ConfigImpl(CONFIG_FILE);
         assertTrue(config.isDebugLogEnabled());

@@ -1,0 +1,12 @@
+{
+  "type": "galacticraft:compressing_shapeless",
+  "ingredients": [
+    {
+      "item": "galacticraft:desh_ingot"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:compressed_desh"
+  }
+}

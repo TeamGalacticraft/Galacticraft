@@ -3,7 +3,8 @@
 
 
 ### Adding more resources
-Resources that cannot be generated (e.g. music, textures, languages, etc.) should be put into [src/main/resources](../resources).
+Resources that cannot be generated (e.g., music, textures, translations)
+should be put into [src/main/resources](../resources).
 
 To generate additional resources, see the `dev.galacticraft.mod.data` package.
 

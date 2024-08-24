@@ -23,7 +23,7 @@
 package dev.galacticraft.impl.universe.display.type;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.universe.display.CelestialDisplayType;
 import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
@@ -42,7 +42,7 @@ public class IconCelestialDisplayType extends CelestialDisplayType<IconCelestial
     }
 
     @Override
-    public Vector4f render(GuiGraphics graphics, BufferBuilder buffer, int size, double mouseX, double mouseY, float delta, IconCelestialDisplayConfig config) {
+    public Vector4f render(GuiGraphics graphics, Tesselator tesselator, int size, double mouseX, double mouseY, float delta, IconCelestialDisplayConfig config) {
         float realSize = config.scale() * size;
         AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(config.texture());
         texture.bind();

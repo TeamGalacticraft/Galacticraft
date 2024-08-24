@@ -28,6 +28,7 @@ import dev.galacticraft.mod.api.block.entity.FuelDock;
 import dev.galacticraft.mod.api.entity.Dockable;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ByIdMap;
@@ -88,14 +89,14 @@ public class LaunchPadBlockEntity extends BlockEntity implements FuelDock {
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+        super.loadAdditional(nbt, registryLookup);
         this.entityUUID = null;
         this.docked = null;
-        this.type = Type.byName(tag.getString(TYPE));
+        this.type = Type.byName(nbt.getString(TYPE));
 
-        if (tag.contains(Constant.Nbt.ROCKET_UUID)) {
-            this.entityUUID = tag.getUUID(Constant.Nbt.ROCKET_UUID);
+        if (nbt.contains(Constant.Nbt.ROCKET_UUID)) {
+            this.entityUUID = nbt.getUUID(Constant.Nbt.ROCKET_UUID);
             if (this.level instanceof ServerLevel) {
                 this.docked = (Rocket) ((ServerLevel) this.level).getEntity(this.entityUUID);
             }
@@ -103,18 +104,18 @@ public class LaunchPadBlockEntity extends BlockEntity implements FuelDock {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        if (this.entityUUID != null) tag.putUUID(ENTITY_UUID, entityUUID);
-        tag.putString(TYPE, type.getSerializedName());
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+        if (this.entityUUID != null) nbt.putUUID(ENTITY_UUID, entityUUID);
+        nbt.putString(TYPE, type.getSerializedName());
+        super.saveAdditional(nbt, registryLookup);
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        CompoundTag tag = super.getUpdateTag();
-        if (this.entityUUID != null) tag.putUUID(ENTITY_UUID, this.entityUUID);
-        tag.putString(TYPE, type.getSerializedName());
-        return tag;
+    public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        CompoundTag nbt = super.getUpdateTag(registryLookup);
+        if (this.entityUUID != null) nbt.putUUID(ENTITY_UUID, this.entityUUID);
+        nbt.putString(TYPE, type.getSerializedName());
+        return nbt;
     }
 
     public UUID getDockedUUID() {

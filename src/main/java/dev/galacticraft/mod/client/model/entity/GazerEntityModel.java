@@ -33,19 +33,19 @@ import net.minecraft.world.entity.Entity;
 public class GazerEntityModel<T extends Entity> extends EntityModel<T> {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
 	private final ModelPart Body;
-	private final ModelPart Left_Arm;
-	private final ModelPart Right_Arm;
-	private final ModelPart Left_leg;
-	private final ModelPart Right_leg;
-	private final ModelPart Head;
+	private final ModelPart leftArm;
+	private final ModelPart rightArm;
+	private final ModelPart leftLeg;
+	private final ModelPart rightLeg;
+	private final ModelPart head;
 
 	public GazerEntityModel(ModelPart root) {
 		this.Body = root.getChild("Body");
-		this.Left_Arm = root.getChild("Left_Arm");
-		this.Right_Arm = root.getChild("Right_Arm");
-		this.Left_leg = root.getChild("Left_leg");
-		this.Right_leg = root.getChild("Right_leg");
-		this.Head = root.getChild("Head");
+		this.leftArm = root.getChild("Left_Arm");
+		this.rightArm = root.getChild("Right_Arm");
+		this.leftLeg = root.getChild("Left_leg");
+		this.rightLeg = root.getChild("Right_leg");
+		this.head = root.getChild("Head");
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -80,12 +80,12 @@ public class GazerEntityModel<T extends Entity> extends EntityModel<T> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		Body.render(poseStack, buffer, packedLight, packedOverlay);
-		Left_Arm.render(poseStack, buffer, packedLight, packedOverlay);
-		Right_Arm.render(poseStack, buffer, packedLight, packedOverlay);
-		Left_leg.render(poseStack, buffer, packedLight, packedOverlay);
-		Right_leg.render(poseStack, buffer, packedLight, packedOverlay);
-		Head.render(poseStack, buffer, packedLight, packedOverlay);
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertices, int light, int overlay, int color) {
+		Body.render(poseStack, vertices, light, overlay);
+		leftArm.render(poseStack, vertices, light, overlay);
+		rightArm.render(poseStack, vertices, light, overlay);
+		leftLeg.render(poseStack, vertices, light, overlay);
+		rightLeg.render(poseStack, vertices, light, overlay);
+		head.render(poseStack, vertices, light, overlay);
 	}
 }

@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry;
@@ -34,8 +35,8 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
@@ -46,7 +47,7 @@ import static dev.galacticraft.mod.content.item.GCItems.*;
 public class GCCreativeModeTabs {
     public static final CreativeModeTab ITEMS_GROUP = FabricItemGroup
             .builder()
-            .icon(() -> new ItemStack(GCItems.CANVAS))
+            .icon(() -> new ItemStack(CANVAS))
             .title(Component.translatable(Translations.ItemGroup.ITEMS))
             .displayItems((parameters, output) -> { // todo: add rockets here
                 // GEAR
@@ -57,7 +58,7 @@ public class GCCreativeModeTabs {
                     PlaceholderItemStorage itemStorage = new PlaceholderItemStorage();
                     ContainerItemContext context = ContainerItemContext.ofSingleSlot(itemStorage);
 
-                    output.accept(SMALL_OXYGEN_TANK);
+                    output.accept(SMALL_OXYGEN_TANK);//todo: set directly
                     itemStorage.setItem(SMALL_OXYGEN_TANK);
                     context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
                     output.accept(itemStorage.variant.toStack());
@@ -78,16 +79,15 @@ public class GCCreativeModeTabs {
                 output.accept(FREQUENCY_MODULE);
                 PARACHUTE.colorMap().values().forEach(output::accept);
 
-//                output.accept(SPACE_EMERGENCY_KIT);
+//                result.accept(SPACE_EMERGENCY_KIT);
                 output.accept(SHIELD_CONTROLLER);
 
                 // ROCKETS
-                output.accept(ROCKET.getDefaultInstance());
+                output.accept(ROCKET);
 
-                var rocket = ROCKET.getDefaultInstance();
-                CompoundTag tag = rocket.getOrCreateTag();
-                tag.putBoolean("creative", true);
-                output.accept(rocket);
+                var creativeRocket = new ItemStack(ROCKET);
+                creativeRocket.set(GCDataComponents.CREATIVE, true);
+                output.accept(creativeRocket);
 
                 // MATERIALS
                 output.accept(TIN_NUGGET);
@@ -156,7 +156,6 @@ public class GCCreativeModeTabs {
                 output.accept(AMBIENT_THERMAL_CONTROLLER);
 
                 // FOOD
-                output.accept(MOON_BERRIES);
                 output.accept(CHEESE_CURD);
 
                 output.accept(CHEESE_SLICE);
@@ -368,12 +367,7 @@ public class GCCreativeModeTabs {
 
                 for (DyeColor color : DyeColor.values()) {
                     ItemStack stack = new ItemStack(GCBlocks.PARACHEST);
-                    CompoundTag itemTag = new CompoundTag();
-                    CompoundTag blockStateTag = new CompoundTag();
-                    itemTag.put("BlockStateTag", blockStateTag);
-                    blockStateTag.putString("color", color.getName());
-
-                    stack.setTag(itemTag);
+                    stack.set(DataComponents.BASE_COLOR, color);
                     output.accept(stack);
                 }
 

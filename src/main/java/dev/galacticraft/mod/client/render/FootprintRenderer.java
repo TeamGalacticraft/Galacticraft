@@ -46,7 +46,7 @@ public class FootprintRenderer {
     public static void renderFootprints(WorldRenderContext context) {
         context.profiler().push("footprints");
         PoseStack poseStack = context.matrixStack();
-        ResourceLocation dimActive = context.world().dimensionTypeId().location();
+        ResourceLocation dimActive = context.world().dimensionTypeRegistration().unwrapKey().get().location();
         List<Footprint> footprintsToDraw = new LinkedList<>();
 
         for (List<Footprint> footprintList : context.world().galacticraft$getFootprintManager().getFootprints().values()) {
@@ -96,9 +96,8 @@ public class FootprintRenderer {
 //            }
 
             float ageScale = footprint.age / (float) Footprint.MAX_AGE;
-            BufferBuilder worldRenderer = tessellator.getBuilder();
+            BufferBuilder buffer = tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            worldRenderer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
             Vec3 cameraPos = context.camera().getPosition();
             float x = (float) (footprint.position.x - cameraPos.x);
@@ -110,20 +109,17 @@ public class FootprintRenderer {
             RenderSystem.setShaderColor(1F - ageScale, 1F - ageScale, 1F - ageScale, 1F - ageScale);
             float footprintScale = 0.5F;
             Matrix4f last = poseStack.last().pose();
-            worldRenderer
-                    .vertex(last, Mth.sin((45 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale, 0, Mth.cos((45 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale)
-                    .uv(f7, f9).endVertex();
-            worldRenderer
-                    .vertex(last, Mth.sin((135 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale, 0, Mth.cos((135 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale)
-                    .uv(f7, f8).endVertex();
-            worldRenderer
-                    .vertex(last, Mth.sin((225 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale, 0, Mth.cos((225 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale)
-                    .uv(f6, f8).endVertex();
-            worldRenderer
-                    .vertex(last, Mth.sin((315 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale, 0, Mth.cos((315 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale)
-                    .uv(f6, f9).endVertex();
+            buffer
+                    .addVertex(last, Mth.sin((45 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale, 0, Mth.cos((45 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale)
+                    .setUv(f7, f9)
+                    .addVertex(last, Mth.sin((135 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale, 0, Mth.cos((135 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale)
+                    .setUv(f7, f8)
+                    .addVertex(last, Mth.sin((225 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale, 0, Mth.cos((225 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale)
+                    .setUv(f6, f8)
+                    .addVertex(last, Mth.sin((315 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale, 0, Mth.cos((315 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale)
+                    .setUv(f6, f9);
 
-            tessellator.end();
+            BufferUploader.drawWithShader(buffer.buildOrThrow());
             poseStack.popPose();
         }
 
@@ -135,15 +131,15 @@ public class FootprintRenderer {
         context.profiler().pop();
     }
 
-    public static void setFootprints(long chunkKey, List<Footprint> prints) {
+    public static void setFootprints(long chunk, List<Footprint> prints) {
         FootprintManager manager = Minecraft.getInstance().level.galacticraft$getFootprintManager();
-        List<Footprint> footprintList = manager.getFootprints().get(chunkKey);
+        List<Footprint> footprintList = manager.getFootprints().get(chunk);
 
         if (footprintList == null) {
             footprintList = new ArrayList<>();
         }
 
         footprintList.addAll(prints);
-        manager.getFootprints().put(chunkKey, footprintList);
+        manager.getFootprints().put(chunk, footprintList);
     }
 }

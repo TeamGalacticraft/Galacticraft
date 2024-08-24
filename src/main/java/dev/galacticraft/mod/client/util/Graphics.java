@@ -34,6 +34,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
 import java.util.ArrayList;
@@ -41,17 +42,16 @@ import java.util.List;
 
 public class Graphics implements AutoCloseable {
     private final PoseStack pose;
-    private final BufferBuilder buffer;
     private final MultiBufferSource.BufferSource bufferSource;
     private final Font font;
     private final List<BatchedDrawable> renderers = new ArrayList<>(1);
+    private @Nullable BufferBuilder buffer;
 
     private Graphics(PoseStack pose, MultiBufferSource.BufferSource bufferSource, Font font) {
         this.pose = pose;
         this.bufferSource = bufferSource;
         this.font = font;
-        this.buffer = Tesselator.getInstance().getBuilder();
-        if (this.buffer.building()) throw new IllegalStateException();
+        this.buffer = null;
     }
 
     public static Graphics managed(GuiGraphics graphics, Font font) {
@@ -98,6 +98,7 @@ public class Graphics implements AutoCloseable {
         for (BatchedDrawable renderer : this.renderers) {
             renderer.draw();
         }
+        assert this.buffer == null;
     }
 
     @Override
@@ -123,8 +124,9 @@ public class Graphics implements AutoCloseable {
             this.ensureOpen();
 
             Matrix4f matrix = Graphics.this.pose.last().pose();
-            this.consumer.vertex(matrix, x1, y1, z).color(color1).endVertex();
-            this.consumer.vertex(matrix, x2, y2, z).color(color2).endVertex();
+            this.consumer
+                    .addVertex(matrix, x1, y1, z).setColor(color1)
+                    .addVertex(matrix, x2, y2, z).setColor(color2);
         }
 
         private void ensureOpen() {
@@ -184,10 +186,11 @@ public class Graphics implements AutoCloseable {
             this.ensureOpen();
 
             Matrix4f matrix = Graphics.this.pose.last().pose();
-            this.consumer.vertex(matrix, x1, y1, z).color(colorA).endVertex();
-            this.consumer.vertex(matrix, x1, y2, z).color(colorB).endVertex();
-            this.consumer.vertex(matrix, x2, y2, z).color(colorB).endVertex();
-            this.consumer.vertex(matrix, x2, y1, z).color(colorA).endVertex();
+            this.consumer
+                    .addVertex(matrix, x1, y1, z).setColor(colorA)
+                    .addVertex(matrix, x1, y2, z).setColor(colorB)
+                    .addVertex(matrix, x2, y2, z).setColor(colorB)
+                    .addVertex(matrix, x2, y1, z).setColor(colorA);
         }
 
         private void ensureOpen() {
@@ -245,10 +248,11 @@ public class Graphics implements AutoCloseable {
             this.ensureOpen();
 
             Matrix4f matrix = Graphics.this.pose.last().pose();
-            Graphics.this.buffer.vertex(matrix, x1, y1, z).uv(u1, v1).color(color).endVertex();
-            Graphics.this.buffer.vertex(matrix, x1, y2, z).uv(u1, v2).color(color).endVertex();
-            Graphics.this.buffer.vertex(matrix, x2, y2, z).uv(u2, v2).color(color).endVertex();
-            Graphics.this.buffer.vertex(matrix, x2, y1, z).uv(u2, v1).color(color).endVertex();
+            Graphics.this.buffer
+                    .addVertex(matrix, x1, y1, z).setUv(u1, v1).setColor(color)
+                    .addVertex(matrix, x1, y2, z).setUv(u1, v2).setColor(color)
+                    .addVertex(matrix, x2, y2, z).setUv(u2, v2).setColor(color)
+                    .addVertex(matrix, x2, y1, z).setUv(u2, v1).setColor(color);
         }
 
         public void blit(int x, int y, int width, int height, int u, int v, int color) {
@@ -270,7 +274,7 @@ public class Graphics implements AutoCloseable {
         private void ensureOpen() {
             if (!this.open) {
                 Graphics.this.cleanupState();
-                Graphics.this.buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+                Graphics.this.buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
                 this.open = true;
             }
         }
@@ -285,12 +289,14 @@ public class Graphics implements AutoCloseable {
         @Override
         public void draw() {
             if (this.open) {
+                assert Graphics.this.buffer != null;
                 RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
                 RenderSystem.setShaderTexture(0, this.texture);
                 RenderSystem.enableBlend();
-                BufferUploader.drawWithShader(Graphics.this.buffer.end());
+                BufferUploader.drawWithShader(Graphics.this.buffer.build());
                 RenderSystem.disableBlend();
                 this.open = false;
+                Graphics.this.buffer = null;
             }
         }
     }
@@ -324,10 +330,11 @@ public class Graphics implements AutoCloseable {
             this.ensureOpen();
 
             Matrix4f matrix = Graphics.this.pose.last().pose();
-            Graphics.this.buffer.vertex(matrix, x1, y1, z).uv(u1, v1).endVertex();
-            Graphics.this.buffer.vertex(matrix, x1, y2, z).uv(u1, v2).endVertex();
-            Graphics.this.buffer.vertex(matrix, x2, y2, z).uv(u2, v2).endVertex();
-            Graphics.this.buffer.vertex(matrix, x2, y1, z).uv(u2, v1).endVertex();
+            Graphics.this.buffer
+                    .addVertex(matrix, x1, y1, z).setUv(u1, v1)
+                    .addVertex(matrix, x1, y2, z).setUv(u1, v2)
+                    .addVertex(matrix, x2, y2, z).setUv(u2, v2)
+                    .addVertex(matrix, x2, y1, z).setUv(u2, v1);
         }
 
         public void blit(int x, int y, int width, int height, int u, int v) {
@@ -349,7 +356,7 @@ public class Graphics implements AutoCloseable {
         private void ensureOpen() {
             if (!this.open) {
                 Graphics.this.cleanupState();
-                Graphics.this.buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                Graphics.this.buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
                 this.open = true;
             }
         }
@@ -364,12 +371,14 @@ public class Graphics implements AutoCloseable {
         @Override
         public void draw() {
             if (this.open) {
+                assert Graphics.this.buffer != null;
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.setShaderTexture(0, this.texture);
                 RenderSystem.enableBlend();
-                BufferUploader.drawWithShader(Graphics.this.buffer.end());
+                BufferUploader.drawWithShader(Graphics.this.buffer.build());
                 RenderSystem.disableBlend();
                 this.open = false;
+                Graphics.this.buffer = null;
             }
         }
     }
@@ -514,15 +523,14 @@ public class Graphics implements AutoCloseable {
     }
 
     public static void blitRaw(Matrix4f matrix, float x1, float y1, float x2, float y2, float z, float u1, float v1, float u2, float v2, ResourceLocation texture) {
-        BufferBuilder builder = Tesselator.getInstance().getBuilder();
-        builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        builder.vertex(matrix, x1, y1, z).uv(u1, v1).endVertex();
-        builder.vertex(matrix, x1, y2, z).uv(u1, v2).endVertex();
-        builder.vertex(matrix, x2, y2, z).uv(u2, v2).endVertex();
-        builder.vertex(matrix, x2, y1, z).uv(u2, v1).endVertex();
+        BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.addVertex(matrix, x1, y1, z).setUv(u1, v1)
+                .addVertex(matrix, x1, y2, z).setUv(u1, v2)
+                .addVertex(matrix, x2, y2, z).setUv(u2, v2)
+                .addVertex(matrix, x2, y1, z).setUv(u2, v1);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, texture);
-        BufferUploader.drawWithShader(builder.end());
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
     }
 
     public static void blitCentered(Matrix4f matrix, float x, float y, float width, float height, float z, float u, float v, float uWidth, float vHeight, int textureWidth, int textureHeight, ResourceLocation texture, int color) {
@@ -554,15 +562,14 @@ public class Graphics implements AutoCloseable {
     }
 
     public static void blitRaw(Matrix4f matrix, float x1, float y1, float x2, float y2, float z, float u1, float v1, float u2, float v2, ResourceLocation texture, int color) {
-        BufferBuilder builder = Tesselator.getInstance().getBuilder();
-        builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        builder.vertex(matrix, x1, y1, z).uv(u1, v1).color(color).endVertex();
-        builder.vertex(matrix, x1, y2, z).uv(u1, v2).color(color).endVertex();
-        builder.vertex(matrix, x2, y2, z).uv(u2, v2).color(color).endVertex();
-        builder.vertex(matrix, x2, y1, z).uv(u2, v1).color(color).endVertex();
+        BufferBuilder builder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        builder.addVertex(matrix, x1, y1, z).setUv(u1, v1).setColor(color)
+                .addVertex(matrix, x1, y2, z).setUv(u1, v2).setColor(color)
+                .addVertex(matrix, x2, y2, z).setUv(u2, v2).setColor(color)
+                .addVertex(matrix, x2, y1, z).setUv(u2, v1).setColor(color);
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.setShaderTexture(0, texture);
-        BufferUploader.drawWithShader(builder.end());
+        BufferUploader.drawWithShader(builder.build());
     }
 
     private interface BatchedDrawable {

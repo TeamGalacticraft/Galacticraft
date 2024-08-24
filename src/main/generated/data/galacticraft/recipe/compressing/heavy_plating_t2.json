@@ -1,0 +1,15 @@
+{
+  "type": "galacticraft:compressing_shapeless",
+  "ingredients": [
+    {
+      "item": "galacticraft:heavy_plating"
+    },
+    {
+      "item": "galacticraft:compressed_meteoric_iron"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:heavy_plating_t2"
+  }
+}

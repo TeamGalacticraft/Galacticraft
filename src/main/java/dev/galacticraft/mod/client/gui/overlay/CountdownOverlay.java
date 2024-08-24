@@ -24,12 +24,13 @@ package dev.galacticraft.mod.client.gui.overlay;
 
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.FastColor;
 
 public class CountdownOverlay {
-    public static void renderCountdown(GuiGraphics graphics, float tickDelta) {
+    public static void renderCountdown(GuiGraphics graphics, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player.getVehicle() instanceof RocketEntity rocket && rocket.getLaunchStage() == LaunchStage.IGNITED) {
             int count = (int) Math.floor(((float) rocket.getTimeAsState()) / 20.0f);

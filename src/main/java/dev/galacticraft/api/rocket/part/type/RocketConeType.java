@@ -23,6 +23,7 @@
 package dev.galacticraft.api.rocket.part.type;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.api.rocket.part.RocketCone;
 import dev.galacticraft.api.rocket.part.config.RocketConeConfig;
 import org.jetbrains.annotations.NotNull;
@@ -31,10 +32,10 @@ import org.jetbrains.annotations.NotNull;
  * The cone of a rocket. Controls how fast the rocket can accelerate.
  */
 public non-sealed abstract class RocketConeType<C extends RocketConeConfig> implements RocketPartType<C> {
-    private final @NotNull Codec<RocketCone<C, RocketConeType<C>>> codec;
+    private final @NotNull MapCodec<RocketCone<C, RocketConeType<C>>> codec;
 
     public RocketConeType(@NotNull Codec<C> configCodec) {
-        this.codec = configCodec.fieldOf("config").xmap(this::configure, RocketCone::config).codec();
+        this.codec = configCodec.fieldOf("config").xmap(this::configure, RocketCone::config);
     }
 
     @Override
@@ -43,7 +44,7 @@ public non-sealed abstract class RocketConeType<C extends RocketConeConfig> impl
     }
 
     @Override
-    public @NotNull Codec<RocketCone<C, RocketConeType<C>>> codec() {
+    public @NotNull MapCodec<? extends RocketCone<C, ? extends RocketConeType<C>>> codec() {
         return this.codec;
     }
 

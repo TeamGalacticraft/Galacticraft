@@ -25,7 +25,7 @@ package dev.galacticraft.mod.content.block.special;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -43,7 +43,7 @@ public class TinLadderBlock extends LadderBlock {
     }
 
     @Nullable
-    private InteractionResult checkCanTinLadderBePlaced(Level level, BlockPos checkPos, Player player, ItemStack itemStack, BlockState blockState) {
+    private ItemInteractionResult checkCanTinLadderBePlaced(Level level, BlockPos checkPos, Player player, ItemStack itemStack, BlockState blockState) {
         if (level.getBlockState(checkPos).canBeReplaced()) {
             var newState = this.defaultBlockState().setValue(FACING, blockState.getValue(FACING));
             level.setBlockAndUpdate(checkPos, newState);
@@ -53,38 +53,33 @@ public class TinLadderBlock extends LadderBlock {
             if (!player.getAbilities().instabuild) {
                 itemStack.shrink(1);
             }
-            return InteractionResult.sidedSuccess(level.isClientSide());
-        }
-        else if (!level.getBlockState(checkPos).is(this)) {
-            return InteractionResult.PASS;
+            return ItemInteractionResult.SUCCESS;
+        } else if (!level.getBlockState(checkPos).is(this)) {
+            return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
         }
         return null;
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        var itemStack = player.getItemInHand(interactionHand);
-        if (itemStack.is(this.asItem())) {
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (stack.is(this.asItem())) {
             if (player.getXRot() < 0f) {
-                for (BlockPos checkPos = new BlockPos.MutableBlockPos(blockPos.getX(), blockPos.getY(), blockPos.getZ()); checkPos.getY() < level.getMaxBuildHeight(); checkPos = checkPos.offset(0, 1, 0))
-                {
-                    var result = this.checkCanTinLadderBePlaced(level, checkPos, player, itemStack, blockState);
+                for (BlockPos checkPos = new BlockPos.MutableBlockPos(pos.getX(), pos.getY(), pos.getZ()); checkPos.getY() < level.getMaxBuildHeight(); checkPos = checkPos.offset(0, 1, 0)) {
+                    var result = this.checkCanTinLadderBePlaced(level, checkPos, player, stack, state);
                     if (result != null) {
                         return result;
                     }
                 }
-            }
-            else {
-                for (BlockPos checkPos = new BlockPos.MutableBlockPos(blockPos.getX(), blockPos.getY(), blockPos.getZ()); checkPos.getY() > level.getMinBuildHeight(); checkPos = checkPos.offset(0, -1, 0))
-                {
-                    var result = this.checkCanTinLadderBePlaced(level, checkPos, player, itemStack, blockState);
+            } else {
+                for (BlockPos checkPos = new BlockPos.MutableBlockPos(pos.getX(), pos.getY(), pos.getZ()); checkPos.getY() > level.getMinBuildHeight(); checkPos = checkPos.offset(0, -1, 0)) {
+                    var result = this.checkCanTinLadderBePlaced(level, checkPos, player, stack, state);
                     if (result != null) {
                         return result;
                     }
                 }
             }
         }
-        return super.use(blockState, level, blockPos, player, interactionHand, blockHitResult);
+        return super.useItemOn(stack, state, level, pos, player, hand, hit);
     }
 
     @Override

@@ -49,7 +49,7 @@ import java.util.Optional;
 
 public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
     FluidState EMPTY_STATE = Fluids.EMPTY.defaultFluidState();
-    ResourceLocation INVALID = new ResourceLocation("invalid");
+    ResourceLocation INVALID = ResourceLocation.withDefaultNamespace("invalid");
     String DOT_REP = "_gc_dot_";
     String DASH_REP = "_gc_dash_"; // yes this is bad.... but who's going to name a mod/fluid something like that
     String COLON_REP = "_gc_colon_";
@@ -75,7 +75,7 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
 
         @Override
         public Optional<ResourceLocation> getValue(String name) {
-            return Optional.of(new ResourceLocation(name.replace(DOT_REP, ".").replace(DASH_REP, "-").replace(COLON_REP, ":")));
+            return Optional.of(ResourceLocation.parse(name.replace(DOT_REP, ".").replace(DASH_REP, "-").replace(COLON_REP, ":")));
         }
 
         @Override

@@ -22,90 +22,27 @@
 
 package dev.galacticraft.mod.network;
 
-import dev.galacticraft.api.accessor.SatelliteAccessor;
-import dev.galacticraft.api.registry.AddonRegistries;
-import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
-import dev.galacticraft.mod.events.GCEventHandlers;
-import dev.galacticraft.mod.network.packets.*;
-import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
-import dev.galacticraft.mod.screen.RocketMenu;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
+import dev.galacticraft.impl.network.c2s.C2SPayload;
+import dev.galacticraft.mod.network.c2s.*;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.SimpleMenuProvider;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 /**
  * Handles server-bound (C2S) packets.
  */
 public class GCServerPacketReceivers {
     public static void register() {
-        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.OPEN_GC_INVENTORY, (server, player, handler, buf, responseSender) -> server.execute(() -> player.openMenu(new SimpleMenuProvider(GCPlayerInventoryMenu::new, Component.empty()) {
-            @Override
-            public boolean shouldCloseCurrentScreen() {
-                return false;
-            }
-        })));
-        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.OPEN_GC_ROCKET, (server, player, handler, buf, responseSender) -> server.execute(() -> player.openMenu(new ExtendedScreenHandlerFactory() {
-            @Override
-            public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
-                return new RocketMenu(syncId, inventory, player, (RocketEntity) player.getVehicle());
-            }
-
-            @Override
-            public Component getDisplayName() {
-                return Component.empty();
-            }
-
-            @Override
-            public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
-                assert player.getVehicle() instanceof RocketEntity;
-                RocketEntity rocket = (RocketEntity) player.getVehicle();
-                buf.writeInt(rocket.getId());
-            }
-
-            @Override
-            public boolean shouldCloseCurrentScreen() {
-                return false;
-            }
-        })));
-
-        registerPacket(BubbleMaxPacket.TYPE);
-        registerPacket(SelectPartPacket.TYPE);
-        registerPacket(ToggleBubbleVisibilityPacket.TYPE);
-        registerPacket(ControlEntityPacket.TYPE);
-
-        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.PLANET_TP, ((server, player, handler, buf, responseSender) -> {
-            FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
-            if (player.galacticraft$isCelestialScreenActive()) {
-                server.execute(() -> {
-                    ResourceLocation id = buffer.readResourceLocation();
-                    CelestialBody<?, ?> body = ((SatelliteAccessor) server).galacticraft$getSatellites().get(id);
-                    CelestialBody<?, ?> fromBody = CelestialBody.getByDimension(player.level()).orElseThrow();
-                    if (body == null) body = server.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).get(id);
-                    GCEventHandlers.onPlayerChangePlanets(server, player, body, fromBody);
-                });
-            } else {
-                player.connection.disconnect(Component.literal("Invalid planet teleport packet received."));
-            }
-        }));
-
-        ServerPlayNetworking.registerGlobalReceiver(Constant.Packet.CREATE_SATELLITE, (server, player, handler, buf, responseSender) -> {
-            SatelliteType.registerSatellite(server, player, server.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).getHolderOrThrow(ResourceKey.create(AddonRegistries.CELESTIAL_BODY, buf.readResourceLocation())), server.getStructureManager().get(Constant.Structure.SPACE_STATION).orElseThrow());
-        });
+        registerPacket(ControlEntityPayload.TYPE);
+        registerPacket(OpenRocketPayload.TYPE);
+        registerPacket(SatelliteCreationPayload.TYPE);
+        registerPacket(BubbleVisibilityPayload.TYPE);
+        registerPacket(SelectPartPayload.TYPE);
+        registerPacket(OpenGcInventoryPayload.TYPE);
+        registerPacket(PlanetTeleportPayload.TYPE);
+        registerPacket(BubbleMaxPayload.TYPE);
     }
 
-    public static <Packet extends GCPacket> void registerPacket(PacketType<Packet> type) {
-        ServerPlayNetworking.registerGlobalReceiver(type, GCPacket::handle);
+    public static <P extends C2SPayload> void registerPacket(CustomPacketPayload.Type<P> type) {
+        ServerPlayNetworking.registerGlobalReceiver(type, C2SPayload::handle);
     }
 }

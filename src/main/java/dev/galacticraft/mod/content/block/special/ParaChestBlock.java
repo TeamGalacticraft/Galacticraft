@@ -27,13 +27,16 @@ import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.block.GCBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.*;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.BlockItemStateProperties;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -83,10 +86,8 @@ public class ParaChestBlock extends GCBlock implements EntityBlock {
     @Override
     public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
         if (!level.isClientSide) {
-            CompoundTag stateTag = new CompoundTag();
-            stateTag.putString(COLOR_TAG, blockState.getValue(COLOR).getName());
             ItemStack parachest = new ItemStack(this);
-            parachest.addTagElement(BlockItem.BLOCK_STATE_TAG, stateTag);
+            parachest.set(DataComponents.BLOCK_STATE, BlockItemStateProperties.EMPTY.with(COLOR, blockState.getValue(COLOR)));
             ItemEntity itemEntity = new ItemEntity(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), parachest);
             itemEntity.setDefaultPickUpDelay();
             level.addFreshEntity(itemEntity);
@@ -108,11 +109,11 @@ public class ParaChestBlock extends GCBlock implements EntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            MenuProvider menuProvider = this.getMenuProvider(blockState, level, blockPos);
+            MenuProvider menuProvider = this.getMenuProvider(state, level, pos);
             if (menuProvider != null) {
                 player.openMenu(menuProvider);
                 player.awardStat(GCStats.OPEN_PARACHEST);

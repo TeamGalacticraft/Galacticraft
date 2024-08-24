@@ -29,6 +29,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
@@ -42,7 +43,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.List;
 
 public class StandardWrenchItem extends Item {
@@ -59,36 +62,42 @@ public class StandardWrenchItem extends Item {
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {
+    public @NotNull InteractionResult useOn(UseOnContext context) {
         Player player = context.getPlayer();
         Level world = context.getLevel();
         if (!world.isClientSide && player != null) {
             BlockPos pos = context.getClickedPos();
-            this.use(player, world.getBlockState(pos), world, pos, context.getItemInHand());
+            this.use(player, world.getBlockState(pos), world, pos, context.getHand(), context.getItemInHand());
         }
 
         return InteractionResult.SUCCESS;
     }
 
-    private void use(Player player, BlockState state, LevelAccessor world, BlockPos pos, ItemStack stack) {
+    private void use(Player player, BlockState state, LevelAccessor world, BlockPos pos, InteractionHand hand, ItemStack stack) {
         Block block = state.getBlock();
-        if (block.getStateDefinition().getProperty("facing") instanceof EnumProperty property && property.getPossibleValues().contains(Direction.NORTH)) {
-            BlockState newState = cycle(state, property, player.isShiftKeyDown());
-            world.setBlock(pos, newState, 18);
-            stack.hurtAndBreak(2, player, (entity) -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
-        }/* else if (block.getStateDefinition().getProperty("axis") instanceof EnumProperty property && property.getPossibleValues().contains(Direction.Axis.X)) {
-            BlockState newState = cycle(state, property, player.isShiftKeyDown());
-            world.setBlock(pos, newState, 18);
-            stack.hurtAndBreak(2, player, (entity) -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
-        }*/
+        if (block.getStateDefinition().getProperty("facing") instanceof EnumProperty property) {
+            Collection<?> possibleValues = property.getPossibleValues();
+            if (possibleValues.size() <= Direction.values().length) {
+                for (Object value : possibleValues) {
+                    if (!(value instanceof Direction)) {
+                        return;
+                    }
+                }
+
+                BlockState newState = cycle(state, property, player.isShiftKeyDown());
+                world.setBlock(pos, newState, 18);
+                stack.hurtAndBreak(2, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
+            }
+        }
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> lines, TooltipFlag context) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
+        super.appendHoverText(stack, context, tooltip, type);
         if (Screen.hasShiftDown()) {
-            lines.add(Component.translatable(Translations.Tooltip.STANDARD_WRENCH).setStyle(Constant.Text.Color.GRAY_STYLE));
+            tooltip.add(Component.translatable(Translations.Tooltip.STANDARD_WRENCH).setStyle(Constant.Text.Color.GRAY_STYLE));
         } else {
-            lines.add(Component.translatable(Translations.Tooltip.PRESS_SHIFT).setStyle(Constant.Text.Color.GRAY_STYLE));
+            tooltip.add(Component.translatable(Translations.Tooltip.PRESS_SHIFT).setStyle(Constant.Text.Color.GRAY_STYLE));
         }
     }
 }

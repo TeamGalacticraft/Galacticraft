@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "item": "galacticraft:oxygen_concentrator"
+    },
+    "Y": {
+      "item": "galacticraft:glass_fluid_pipe"
+    }
+  },
+  "pattern": [
+    " Y ",
+    "YXY",
+    "Y Y"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:oxygen_gear"
+  }
+}

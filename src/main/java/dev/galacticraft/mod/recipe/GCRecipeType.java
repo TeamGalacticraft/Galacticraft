@@ -24,14 +24,14 @@ package dev.galacticraft.mod.recipe;
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
 
-public class GCRecipeType<C extends Container, T extends Recipe<C>> implements RecipeType<T> {
+public class GCRecipeType<I extends RecipeInput, T extends Recipe<I>> implements RecipeType<T> {
     @Override
     public String toString() {
         ResourceLocation id = BuiltInRegistries.RECIPE_TYPE.getKey(this);
-        return id == null ? "Unregistered GCRecipeType" : id.toString();
+        return id == null ? "<unregistered " + super.toString() + ">" : id.toString();
     }
 }

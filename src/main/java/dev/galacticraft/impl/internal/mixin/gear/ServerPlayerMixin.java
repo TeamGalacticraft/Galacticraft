@@ -24,18 +24,19 @@ package dev.galacticraft.impl.internal.mixin.gear;
 
 import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.impl.internal.inventory.MappedInventory;
+import dev.galacticraft.impl.network.s2c.GearInvPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.world.inventory.GearInventory;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -46,6 +47,8 @@ import java.util.Collection;
 public abstract class ServerPlayerMixin implements GearInventoryProvider {
     @Shadow public ServerGamePacketListenerImpl connection;
 
+    @Shadow public abstract ServerLevel serverLevel();
+
     private final @Unique SimpleContainer gearInv = this.galacticraft_createGearInventory();
     private final @Unique Container tankInv = MappedInventory.create(this.gearInv, 4, 5);
     private final @Unique Container thermalArmorInv = MappedInventory.create(this.gearInv, 0, 1, 2, 3);
@@ -55,21 +58,20 @@ public abstract class ServerPlayerMixin implements GearInventoryProvider {
     private SimpleContainer galacticraft_createGearInventory() {
         SimpleContainer inv = new GearInventory();
         inv.addListener((inventory) -> {
-            FriendlyByteBuf buf = PacketByteBufs.create();
-            buf.writeInt(((ServerPlayer) (Object) this).getId());
-            buf.writeInt(inventory.getContainerSize());
+            ItemStack[] stacks = new ItemStack[inventory.getContainerSize()];
             for (int i = 0; i < inventory.getContainerSize(); i++) {
-                buf.writeItem(inventory.getItem(i));
+                stacks[i] = inventory.getItem(i);
             }
+            ServerPlayer player = (ServerPlayer) (Object) this;
+            GearInvPayload payload = new GearInvPayload(player.getId(), stacks);
 
             if (this.connection != null) {
-                Collection<ServerPlayer> tracking = PlayerLookup.tracking(((ServerPlayer) (Object) this));
-                //noinspection SuspiciousMethodCalls
-                if (!tracking.contains(this)) {
-                    ServerPlayNetworking.send(((ServerPlayer) (Object) this), Constant.id("gear_inv_sync"), buf);
+                Collection<ServerPlayer> tracking = PlayerLookup.tracking(player);
+                if (!tracking.contains(player)) {
+                    ServerPlayNetworking.send(player, payload);
                 }
-                for (ServerPlayer player : tracking) {
-                    ServerPlayNetworking.send(player, Constant.id("gear_inv_sync"), PacketByteBufs.copy(buf));
+                for (ServerPlayer remote : tracking) {
+                    ServerPlayNetworking.send(remote, payload);
                 }
             }
         });
@@ -98,11 +100,11 @@ public abstract class ServerPlayerMixin implements GearInventoryProvider {
 
     @Override
     public void galacticraft$writeGearToNbt(CompoundTag tag) {
-        tag.put(Constant.Nbt.GEAR_INV, this.galacticraft$getGearInv().createTag());
+        tag.put(Constant.Nbt.GEAR_INV, this.galacticraft$getGearInv().createTag(this.serverLevel().registryAccess()));
     }
 
     @Override
     public void galacticraft$readGearFromNbt(CompoundTag tag) {
-        this.galacticraft$getGearInv().fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND));
+        this.galacticraft$getGearInv().fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND), this.serverLevel().registryAccess());
     }
 }

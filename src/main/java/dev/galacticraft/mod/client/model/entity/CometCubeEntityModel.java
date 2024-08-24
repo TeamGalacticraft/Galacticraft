@@ -31,11 +31,11 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.entity.Entity;
 
 public class CometCubeEntityModel<T extends Entity> extends EntityModel<T> {
-	private final ModelPart Body;
+	private final ModelPart body;
 	private final ModelPart tail;
 
 	public CometCubeEntityModel(ModelPart root) {
-		this.Body = root.getChild("Body");
+		this.body = root.getChild("Body");
 		this.tail = root.getChild("tail");
 	}
 
@@ -56,8 +56,9 @@ public class CometCubeEntityModel<T extends Entity> extends EntityModel<T> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		Body.render(poseStack, buffer, packedLight, packedOverlay);
-		tail.render(poseStack, buffer, packedLight, packedOverlay);
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertices, int light, int overlay, int color) {
+		body.render(poseStack, vertices, light, overlay);
+		tail.render(poseStack, vertices, light, overlay);
+
 	}
 }

@@ -34,7 +34,6 @@ import dev.galacticraft.api.universe.position.CelestialPositionType;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 
 public final class AddonRegistries {
     private AddonRegistries() {}

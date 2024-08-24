@@ -23,10 +23,9 @@
 package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
-import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -48,8 +47,8 @@ public abstract class TorchBlockMixin extends Block {
     @Deprecated
     public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean moved) {
         super.onPlace(state, world, pos, oldState, moved);
-        CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getByDimension(world).orElse(null);
-        if (body != null && !body.atmosphere().breathable()) {
+        Holder<CelestialBody<?, ?>> body = world.galacticraft$getCelestialBody();
+        if (body != null && !body.value().atmosphere().breathable()) {
             if (state.getBlock() == Blocks.TORCH) {
                 world.setBlockAndUpdate(pos, GCBlocks.UNLIT_TORCH.defaultBlockState());
             } else if (state.getBlock() == Blocks.WALL_TORCH) {

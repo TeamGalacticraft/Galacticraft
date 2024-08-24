@@ -26,9 +26,9 @@ import dev.galacticraft.api.rocket.recipe.RocketPartRecipeSlot;
 import dev.galacticraft.api.rocket.recipe.type.RocketPartRecipeType;
 import dev.galacticraft.impl.rocket.recipe.config.PatternedRocketPartRecipeConfig;
 import net.minecraft.core.NonNullList;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -56,11 +56,11 @@ public class PatternedRocketPartRecipeType extends RocketPartRecipeType<Patterne
         List<RocketPartRecipeSlot> slots = config.left();
         for (int i = 0; i < slots.size(); i++) {
             RocketPartRecipeSlot slot = slots.get(i);
-            consumer.createSlot(i, leftEdge + slot.x(), bottomEdge - this.height(config) + slot.y(), (item, tag) -> {
+            consumer.createSlot(i, leftEdge + slot.x(), bottomEdge - this.height(config) + slot.y(), (item, patch) -> {
                 if (item == null) return true;
 
                 ItemStack stack = new ItemStack(item, 1);
-                stack.setTag(tag);
+                stack.applyComponents(patch);
                 return slot.ingredient().test(stack);
             });
         }
@@ -68,11 +68,11 @@ public class PatternedRocketPartRecipeType extends RocketPartRecipeType<Patterne
         slots = config.right();
         for (int i = 0; i < slots.size(); i++) {
             RocketPartRecipeSlot slot = slots.get(i);
-            consumer.createSlot(i + size, rightEdge + slot.x(), bottomEdge - this.height(config) + slot.y(), (item, tag) -> {
+            consumer.createSlot(i + size, rightEdge + slot.x(), bottomEdge - this.height(config) + slot.y(), (item, patch) -> {
                 if (item == null) return true;
 
                 ItemStack stack = new ItemStack(item, 1);
-                stack.setTag(tag);
+                stack.applyComponents(patch);
                 return slot.ingredient().test(stack);
             });
         }
@@ -84,17 +84,17 @@ public class PatternedRocketPartRecipeType extends RocketPartRecipeType<Patterne
     }
 
     @Override
-    public boolean matches(Container container, Level level, PatternedRocketPartRecipeConfig config) {
+    public boolean matches(RecipeInput input, Level level, PatternedRocketPartRecipeConfig config) {
         List<RocketPartRecipeSlot> left = config.left();
         for (int i = 0, leftSize = left.size(); i < leftSize; i++) {
-            ItemStack stack = container.getItem(i);
+            ItemStack stack = input.getItem(i);
             if (stack.isEmpty() || !left.get(i).ingredient().test(stack)) {
                 return false;
             }
         }
         List<RocketPartRecipeSlot> right = config.right();
         for (int i = 0, rightSize = right.size(); i < rightSize; i++) {
-            ItemStack stack = container.getItem(left.size() + i);
+            ItemStack stack = input.getItem(left.size() + i);
             if (stack.isEmpty() || !left.get(i).ingredient().test(stack)) {
                 return false;
             }

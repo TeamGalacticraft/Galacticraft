@@ -25,13 +25,13 @@ package dev.galacticraft.mod.client.render.rocket;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRenderer;
+import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -61,10 +61,9 @@ public class BakedModelItemRocketPartRenderer implements RocketPartRenderer {
         if (this.model != null) {
             PoseStack.Pose entry = matrices.last();
             VertexConsumer consumer = vertices.getBuffer(layer);
-            Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(entry, consumer, null, model, (rocket.red() / 255f) * (rocket.alpha() / 255f),
-                    (rocket.green() / 255f) * (rocket.alpha() / 255f),
-                    (rocket.blue() / 255f) * (rocket.alpha() / 255f),
-                    light, overlay);
+            RocketData data = rocket.getData();
+            Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(entry, consumer, null, model,
+                    data.red() / 255f, data.blue() / 255f, data.green() / 255f, light, overlay);
         }
     }
 }

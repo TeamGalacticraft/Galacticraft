@@ -27,7 +27,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.Translations;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
@@ -60,7 +59,7 @@ public class GCHoustonCommand {
             throw IN_OVERWORLD.create();
         }
 
-        if (CelestialBody.getByDimension(context.getSource().registryAccess(), context.getSource().getLevel().dimension()).isEmpty()) {
+        if (context.getSource().getLevel().galacticraft$getCelestialBody() == null) {
             throw IN_OTHER_DIMENSION.create();
         }
 

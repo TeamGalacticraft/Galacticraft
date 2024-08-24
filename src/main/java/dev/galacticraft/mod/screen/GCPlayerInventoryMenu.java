@@ -34,7 +34,6 @@ import dev.galacticraft.mod.screen.slot.AccessorySlot;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -124,7 +123,7 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
         Item item_1 = stack.getItem();
         if (item_1 instanceof ThermalArmorItem thermalArmorItem)
             return thermalArmorItem.getSlotGroup().getSlot();
-        return LivingEntity.getEquipmentSlotForItem(stack);
+        return this.player.getEquipmentSlotForItem(stack);
     }
 
     @Override
@@ -140,7 +139,7 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
 
         @Override
         public boolean mayPlace(ItemStack stack) {
-            return FILTER.test(stack.getItem(), stack.getTag());
+            return FILTER.test(stack.getItem(), stack.getComponentsPatch());
         }
 
         @Override

@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 2,
-  "ingredient": {
-    "item": "galacticraft:copper_decoration"
-  },
-  "result": "galacticraft:copper_decoration_slab"
-}

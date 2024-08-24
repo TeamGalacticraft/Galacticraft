@@ -23,27 +23,38 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
+import dev.galacticraft.machinelib.api.storage.MachineEnergyStorage;
+import dev.galacticraft.machinelib.api.storage.MachineFluidStorage;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
+import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
+import dev.galacticraft.machinelib.api.transfer.TransferType;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.entity.Dockable;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
-import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlockEntity;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.FuelLoaderMenu;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,12 +64,35 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     public static final int CHARGE_SLOT = 0;
     public static final int FUEL_INPUT_SLOT = 1;
     public static final int FUEL_TANK = 0;
+
+    private static final StorageSpec SPEC = StorageSpec.of(
+            MachineItemStorage.spec(
+                    ItemResourceSlot.builder(TransferType.TRANSFER)
+                            .pos(8, 62)
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
+                    ItemResourceSlot.builder(TransferType.TRANSFER)
+                            .pos(80, 62)
+                            .filter(ResourceFilters.canExtractFluid(GCFluids.FUEL)) // fixme: fuel tag?,
+            ),
+            MachineEnergyStorage.spec(
+                    Galacticraft.CONFIG.machineEnergyStorageSize(),
+                    150 * 2, // fixme
+                    0
+            ),
+            MachineFluidStorage.spec(
+                    FluidResourceSlot.builder(TransferType.INPUT)
+                            .hidden()
+                            .capacity(FluidConstants.BUCKET * 50)
+                            .filter(ResourceFilters.ofResource(GCFluids.FUEL)) // fixme: tag?
+            )
+        );
+
     private BlockPos connectionPos = BlockPos.ZERO;
     public Dockable linkedRocket = null;
     private Direction check = null;
 
     public FuelLoaderBlockEntity(BlockPos pos, BlockState state) {
-        super(GCMachineTypes.FUEL_LOADER, pos, state);
+        super(GCBlockEntityTypes.FUEL_LOADER, pos, state, SPEC);
     }
 
     @NotNull
@@ -74,10 +108,10 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
             return GCMachineStatuses.NO_ROCKET;
         }
 
-        FluidResourceSlot slot = this.fluidStorage().getSlot(FUEL_TANK);
+        FluidResourceSlot slot = this.fluidStorage().slot(FUEL_TANK);
 
         try (Transaction transaction = Transaction.openOuter()) {
-            long insert = this.linkedRocket.getFuelTank().insert(FluidVariant.of(slot.getResource(), slot.getTag()), Math.min(TRANSFER_RATE, slot.getAmount()), transaction);
+            long insert = this.linkedRocket.getFuelTank().insert(FluidVariant.of(slot.getResource(), slot.getComponents()), Math.min(TRANSFER_RATE, slot.getAmount()), transaction);
             if (insert > 0) {
                 slot.extract(insert);
                 transaction.commit();
@@ -108,23 +142,24 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
             this.linkedRocket = null;
         }
 
-        this.chargeFromStack(CHARGE_SLOT);
-        this.takeFluidFromStack(FUEL_INPUT_SLOT, FUEL_TANK, GCFluids.FUEL);
+        this.chargeFromSlot(CHARGE_SLOT);
+        this.takeFluidFromSlot(FUEL_INPUT_SLOT, FUEL_TANK, GCFluids.FUEL);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
+        super.saveAdditional(tag, lookup);
+
         if (this.connectionPos != BlockPos.ZERO) {
-            tag.putBoolean("has_connection" , true);
             tag.putLong("connection_pos", this.connectionPos.asLong());
         }
-        super.saveAdditional(tag);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        if (tag.getBoolean("has_connection")) {
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
+        super.loadAdditional(tag, lookup);
+
+        if (tag.contains("connection_pos", Tag.TAG_LONG)) {
             this.connectionPos = BlockPos.of(tag.getLong("connection_pos"));
         } else {
             this.connectionPos = BlockPos.ZERO;
@@ -135,9 +170,8 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
         this.check = direction;
     }
 
-    @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
+    public @Nullable MachineMenu<? extends MachineBlockEntity> createMenu(int syncId, Inventory inv, Player player) {
         return new FuelLoaderMenu(syncId, (ServerPlayer) player, this);
     }
 }

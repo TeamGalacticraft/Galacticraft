@@ -40,10 +40,10 @@ public class GCParticleTypes {
     public static final SimpleParticleType SPARK_PARTICLE = PARTICLES.register(Particle.SPARK, FabricParticleTypes.simple());
     public static final SimpleParticleType DRIPPING_SULFURIC_ACID = PARTICLES.register(Particle.DRIPPING_SULFURIC_ACID, FabricParticleTypes.simple());
     public static final SimpleParticleType FALLING_SULFURIC_ACID = PARTICLES.register(Particle.FALLING_SULFURIC_ACID, FabricParticleTypes.simple()); // Why does this exist?
-    public static final ComplexParticleType<LaunchSmokeParticleOption> LAUNCH_SMOKE_PARTICLE = PARTICLES.register(Particle.LAUNCH_SMOKE, new ComplexParticleType<>(false, LaunchSmokeParticleOption.DESERIALIZER, LaunchSmokeParticleOption.CODEC)); // FabricParticleTypes.complex doesn't support codec ): this was fixed in 1.20.5 snapshots
-    public static final ComplexParticleType<EntityParticleOption> LAUNCH_FLAME = PARTICLES.register(Particle.LAUNCH_FLAME, new ComplexParticleType<>(false, EntityParticleOption.DESERIALIZER, EntityParticleOption.CODEC));
-    public static final ComplexParticleType<EntityParticleOption> LAUNCH_FLAME_LAUNCHED = PARTICLES.register(Particle.LAUNCH_FLAME_LAUNCHED, new ComplexParticleType<>(false, EntityParticleOption.DESERIALIZER, EntityParticleOption.CODEC));
-    public static final ComplexParticleType<ScaleParticleType> ACID_VAPOR_PARTICLE = PARTICLES.register(Particle.ACID_VAPOR_PARTICLE, new ComplexParticleType<>(false, ScaleParticleType.DESERIALIZER, ScaleParticleType.CODEC));
+    public static final ParticleType<LaunchSmokeParticleOption> LAUNCH_SMOKE_PARTICLE = PARTICLES.register(Particle.LAUNCH_SMOKE, FabricParticleTypes.complex(false, LaunchSmokeParticleOption.CODEC, LaunchSmokeParticleOption.STREAM_CODEC));
+    public static final ParticleType<EntityParticleOption> LAUNCH_FLAME = PARTICLES.register(Particle.LAUNCH_FLAME, FabricParticleTypes.complex(false, EntityParticleOption::codec, EntityParticleOption::streamCodec));
+    public static final ParticleType<EntityParticleOption> LAUNCH_FLAME_LAUNCHED = PARTICLES.register(Particle.LAUNCH_FLAME_LAUNCHED, FabricParticleTypes.complex(false, EntityParticleOption::codec, EntityParticleOption::streamCodec));
+    public static final ParticleType<ScaleParticleType> ACID_VAPOR_PARTICLE = PARTICLES.register(Particle.ACID_VAPOR_PARTICLE, FabricParticleTypes.complex(false, ScaleParticleType::codec, ScaleParticleType::streamCodec));
 
     public static void register() {}
 }

@@ -22,37 +22,27 @@
 
 package dev.galacticraft.mod.content.item;
 
-import dev.galacticraft.api.registry.RocketRegistries;
+import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartTypes;
-import dev.galacticraft.impl.rocket.RocketDataImpl;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlockEntity;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.util.Translations;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -72,13 +62,13 @@ public class RocketItem extends Item {
 
             if (context.getLevel() instanceof ServerLevel) {
                 RocketEntity rocket = new RocketEntity(GCEntityTypes.ROCKET, context.getLevel());
-                CompoundTag tag = context.getItemInHand().getTag();
-                RocketData data = RocketData.fromNbt(tag);
+                RocketData data = RocketData.fromPatch(context.getItemInHand().getComponentsPatch());
                 rocket.setData(data);
                 rocket.setPad(pad);
                 rocket.setOldPosAndRot();
                 rocket.absMoveTo(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
-                if (tag.contains("creative")) {
+                boolean creative = context.getItemInHand().getComponents().getOrDefault(GCDataComponents.CREATIVE, false);
+                if (creative) {
                     rocket.setFuel(Long.MAX_VALUE);
                 }
                 context.getLevel().addFreshEntity(rocket);
@@ -96,40 +86,22 @@ public class RocketItem extends Item {
     }
 
     @Override
-    public ItemStack getDefaultInstance() {
-        var itemStack = super.getDefaultInstance();
-        itemStack.setTag(RocketDataImpl.DEFAULT_ROCKET.copy());
-        return itemStack;
-    }
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
+        super.appendHoverText(stack, context, tooltip, type);
 
-    @Override
-    @Environment(EnvType.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
-        super.appendHoverText(stack, world, tooltip, context);
-
-        CompoundTag tag = stack.getOrCreateTag();
-        if (tag.contains("creative"))
+        boolean creative = stack.getComponents().getOrDefault(GCDataComponents.CREATIVE, false);
+        if (creative) {
             tooltip.add(Component.literal("Creative Only").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+        }
         if (Screen.hasShiftDown()) {
-            if (tag.contains("color") && tag.contains("cone")) {
-//                tooltip.add(Component.translatable("tooltip.galacticraft.tier", tag.getInt("tier")).setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GRAY)));
-                tooltip.add(Component.translatable(Translations.Ui.COLOR).append(": #" + Integer.toHexString(tag.getInt("color"))));
-                ResourceLocation id = new ResourceLocation(tag.getString("cone"));
-                tooltip.add(RocketPartTypes.CONE.name.copy().append(" ").append(RocketPart.getName(ResourceKey.create(RocketRegistries.ROCKET_CONE, id))).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
-                id = new ResourceLocation(tag.getString("body"));
-                tooltip.add(RocketPartTypes.BODY.name.copy().append(" ").append(RocketPart.getName(ResourceKey.create(RocketRegistries.ROCKET_BODY, id))).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
-                id = new ResourceLocation(tag.getString("fin"));
-                tooltip.add(RocketPartTypes.FIN.name.copy().append(" ").append(RocketPart.getName(ResourceKey.create(RocketRegistries.ROCKET_FIN, id))).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
-                id = new ResourceLocation(tag.getString("booster"));
-                tooltip.add(RocketPartTypes.BOOSTER.name.copy().append(" ").append(RocketPart.getName(ResourceKey.create(RocketRegistries.ROCKET_BOOSTER, id))).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
-                id = new ResourceLocation(tag.getString("engine"));
-                tooltip.add(RocketPartTypes.ENGINE.name.copy().append(" ").append(RocketPart.getName(ResourceKey.create(RocketRegistries.ROCKET_ENGINE, id))).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
-                ListTag list = tag.getList("upgrades", Tag.TAG_STRING);
-                for (int i = 0; i < list.size(); i++) {
-                    id = new ResourceLocation(list.getString(i));
-                    tooltip.add(RocketPartTypes.CONE.name.copy().append(" ").append(RocketPart.getName(ResourceKey.create(RocketRegistries.ROCKET_UPGRADE, id))).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
-                }
-            }
+            RocketData data = RocketData.fromPatch(stack.getComponentsPatch());
+            tooltip.add(Component.translatable(Translations.Ui.COLOR).append(Component.literal(": #" + Integer.toHexString(data.color())).withColor(data.color())));
+            if (data.cone() != null) tooltip.add(RocketPartTypes.CONE.name.copy().append(" ").append(RocketPart.getName(data.cone().key())).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+            if (data.body() != null) tooltip.add(RocketPartTypes.BODY.name.copy().append(" ").append(RocketPart.getName(data.body().key())).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+            if (data.fin() != null) tooltip.add(RocketPartTypes.FIN.name.copy().append(" ").append(RocketPart.getName(data.fin().key())).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+            if (data.booster() != null) tooltip.add(RocketPartTypes.BOOSTER.name.copy().append(" ").append(RocketPart.getName(data.booster().key())).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+            if (data.engine() != null) tooltip.add(RocketPartTypes.ENGINE.name.copy().append(" ").append(RocketPart.getName(data.engine().key())).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+            if (data.upgrade() != null) tooltip.add(RocketPartTypes.UPGRADE.name.copy().append(" ").append(RocketPart.getName(data.upgrade().key())).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         } else {
             tooltip.add(Component.translatable(Translations.Tooltip.PRESS_SHIFT).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         }

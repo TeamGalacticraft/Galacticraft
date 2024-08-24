@@ -22,6 +22,7 @@
 
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
+import dev.galacticraft.api.accessor.LevelBodyAccessor;
 import dev.galacticraft.api.accessor.LevelOxygenAccessor;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
@@ -52,7 +53,8 @@ public abstract class LevelMixin implements LevelOxygenAccessor, InternalLevelOx
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void initializeOxygenValues(WritableLevelData writableLevelData, ResourceKey<Level> resourceKey, RegistryAccess registryAccess, Holder holder, Supplier supplier, boolean bl, boolean bl2, long l, int i, CallbackInfo ci) {
-        this.setDefaultBreathable(CelestialBody.getByDimension(registryAccess, resourceKey).map(c -> c.atmosphere().breathable()).orElse(true));
+        Holder<CelestialBody<?, ?>> holder1 = ((LevelBodyAccessor) this).galacticraft$getCelestialBody();
+        this.setDefaultBreathable(holder1 != null ? holder1.value().atmosphere().breathable() : this.breathable);
     }
 
     @Override

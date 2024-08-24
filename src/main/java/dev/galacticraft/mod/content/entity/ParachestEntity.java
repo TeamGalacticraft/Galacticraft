@@ -70,8 +70,8 @@ public class ParachestEntity extends Entity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(COLOR, (byte) DyeColor.WHITE.getId());
+    protected void defineSynchedData(SynchedEntityData.Builder compositeStateBuilder) {
+        compositeStateBuilder.define(COLOR, (byte) DyeColor.WHITE.getId());
     }
 
     @Override
@@ -82,7 +82,7 @@ public class ParachestEntity extends Entity {
         }
         this.cargo = NonNullList.withSize(size, ItemStack.EMPTY);
 
-        ContainerHelper.loadAllItems(tag, this.cargo);
+        ContainerHelper.loadAllItems(tag, this.cargo, this.level().registryAccess());
 
         this.placedChest = tag.getBoolean("placedChest");
         this.fuelLevel = tag.getLong("FuelLevel");
@@ -95,7 +95,7 @@ public class ParachestEntity extends Entity {
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
         tag.putInt("CargoLength", this.cargo.size());
-        ContainerHelper.saveAllItems(tag, this.cargo);
+        ContainerHelper.saveAllItems(tag, this.cargo, this.level().registryAccess());
 
         tag.putBoolean("placedChest", this.placedChest);
         tag.putLong("FuelLevel", this.fuelLevel);

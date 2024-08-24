@@ -97,7 +97,7 @@ public class AcidVaporParticle extends TextureSheetParticle {
     public record Provider(SpriteSet sprites) implements ParticleProvider<ScaleParticleType> {
         @Override
         public Particle createParticle(ScaleParticleType type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            return new AcidVaporParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, sprites, type.scale());
+            return new AcidVaporParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, sprites, type.getScale());
         }
     }
 }

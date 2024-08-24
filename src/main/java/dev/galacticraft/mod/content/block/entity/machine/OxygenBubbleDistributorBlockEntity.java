@@ -24,29 +24,38 @@ package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
+import dev.galacticraft.machinelib.api.storage.MachineEnergyStorage;
+import dev.galacticraft.machinelib.api.storage.MachineFluidStorage;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
+import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
+import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCEntityTypes;
-import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.entity.BubbleEntity;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
+import dev.galacticraft.mod.network.s2c.BubbleSizePayload;
+import dev.galacticraft.mod.network.s2c.BubbleUpdatePayload;
 import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
 import dev.galacticraft.mod.util.FluidUtil;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -57,6 +66,29 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     public static final int OXYGEN_INPUT_SLOT = 1; // REVIEW: should this be 0 or 1?
     public static final int OXYGEN_TANK = 0;
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
+
+    private static final StorageSpec SPEC = StorageSpec.of(
+            MachineItemStorage.spec(
+                    ItemResourceSlot.builder(TransferType.TRANSFER)
+                            .pos(8, 62)
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
+                    ItemResourceSlot.builder(TransferType.TRANSFER)
+                            .pos(31, 62)
+                            .filter(ResourceFilters.canExtractFluid(Gases.OXYGEN))
+            ),
+            MachineEnergyStorage.spec(
+                    Galacticraft.CONFIG.machineEnergyStorageSize(),
+                    Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate() * 2,
+                    0
+            ),
+            MachineFluidStorage.spec(
+                    FluidResourceSlot.builder(TransferType.INPUT)
+                            .pos(31, 8)
+                            .capacity(OxygenBubbleDistributorBlockEntity.MAX_OXYGEN)
+                            .filter(ResourceFilters.ofResource(Gases.OXYGEN))
+            )
+    );
+
     private boolean bubbleVisible = true;
     private double size = 0;
     private byte targetSize = 1;
@@ -66,7 +98,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     private boolean oxygenUnloaded = true;
 
     public OxygenBubbleDistributorBlockEntity(BlockPos pos, BlockState state) {
-        super(GCMachineTypes.OXYGEN_BUBBLE_DISTRIBUTOR, pos, state);
+        super(GCBlockEntityTypes.OXYGEN_BUBBLE_DISTRIBUTOR, pos, state, SPEC);
     }
 
     @Override
@@ -74,8 +106,8 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         super.tickConstant(world, pos, state, profiler);
         this.oxygenUnloaded = false;
         profiler.push("extract_resources");
-        this.chargeFromStack(CHARGE_SLOT);
-        this.takeFluidFromStack(OXYGEN_INPUT_SLOT, OXYGEN_TANK, Gases.OXYGEN);
+        this.chargeFromSlot(CHARGE_SLOT);
+        this.takeFluidFromSlot(OXYGEN_INPUT_SLOT, OXYGEN_TANK, Gases.OXYGEN);
         profiler.pop();
     }
 
@@ -98,9 +130,6 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
                     entity.zo = this.getBlockPos().getZ();
                     level.addFreshEntity(entity);
                     this.bubbleId = entity.getId();
-                    for (ServerPlayer player : level.players()) {
-                        player.connection.send(entity.getAddEntityPacket());
-                    }
                 } else if (!this.bubbleVisible && this.bubbleId != -1) {
                     level.getEntity(bubbleId).discard();
                     this.bubbleId = -1;
@@ -111,7 +140,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
 
                 profiler.push("bubbler_distributor_transfer");
                 long oxygenRequired = Math.max((long) ((4.0 / 3.0) * Math.PI * this.size * this.size * this.size), 1);
-                FluidResourceSlot slot = this.fluidStorage().getSlot(OXYGEN_TANK);
+                FluidResourceSlot slot = this.fluidStorage().slot(OXYGEN_TANK);
 
                 if (slot.canExtract(oxygenRequired)) {
                     slot.extract(oxygenRequired);
@@ -176,7 +205,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
             this.prevSize = this.size;
             profiler.push("network");
             for (ServerPlayer player : world.players()) {
-                ServerPlayNetworking.send(player, Constant.Packet.BUBBLE_SIZE, new FriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeDouble(this.size)));
+                ServerPlayNetworking.send(player, new BubbleSizePayload(pos, this.size));
             }
             profiler.pop();
         }
@@ -213,27 +242,27 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
+        super.saveAdditional(tag, lookup);
         tag.putByte(Constant.Nbt.MAX_SIZE, this.targetSize);
         tag.putDouble(Constant.Nbt.SIZE, this.size);
         tag.putBoolean(Constant.Nbt.VISIBLE, this.bubbleVisible);
     }
 
     @Override
-    public void load(CompoundTag nbt) {
-        this.size = nbt.getDouble(Constant.Nbt.SIZE);
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
+        super.loadAdditional(tag, lookup);
+        this.size = tag.getDouble(Constant.Nbt.SIZE);
         if (this.size < 0) this.size = 0;
-        this.targetSize = nbt.getByte(Constant.Nbt.MAX_SIZE);
+        this.targetSize = tag.getByte(Constant.Nbt.MAX_SIZE);
         if (this.targetSize < 1) this.targetSize = 1;
-        this.bubbleVisible = nbt.getBoolean(Constant.Nbt.VISIBLE);
-
-        super.load(nbt);
+        this.bubbleVisible = tag.getBoolean(Constant.Nbt.VISIBLE);
     }
 
     public double getSize() {
         return this.size;
     }
+
     public void setSize(double size) {
         this.size = size;
     }
@@ -241,25 +270,19 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     public boolean isBubbleVisible() {
         return this.bubbleVisible;
     }
+
     public void setBubbleVisible(boolean bubbleVisible) {
         this.bubbleVisible = bubbleVisible;
         this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
     }
 
-    @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
-        if (this.getSecurity().hasAccess(player)) return new OxygenBubbleDistributorMenu(syncId, (ServerPlayer) player, this);
-        return null;
+    public @Nullable MachineMenu<? extends MachineBlockEntity> createMenu(int syncId, Inventory inv, Player player) {
+        return new OxygenBubbleDistributorMenu(syncId, player, this);
     }
 
     @Override
-    public @NotNull CompoundTag getUpdateTag() {
-        CompoundTag tag = super.getUpdateTag();
-
-        tag.putInt(Constant.Nbt.MAX_SIZE, this.targetSize); // REVIEW: should we be sending this along? Because we do save it
-        tag.putDouble(Constant.Nbt.SIZE, this.size);
-        tag.putBoolean(Constant.Nbt.VISIBLE, this.bubbleVisible);
-        return tag;
+    public @NotNull CustomPacketPayload createUpdatePayload() {
+        return new BubbleUpdatePayload(this.getBlockPos(), this.targetSize, this.size, this.bubbleVisible);
     }
 }

@@ -23,17 +23,16 @@
 package dev.galacticraft.mod.misc.banner;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
+import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
 public class GCBannerPatterns {
-    public static final ResourceKey<BannerPattern> ROCKET_KEY = Constant.key(Registries.BANNER_PATTERN, "rocket");
-    public static final BannerPattern ROCKET = new BannerPattern(ROCKET_KEY.location().toString());
+    public static final ResourceKey<BannerPattern> ROCKET = Constant.key(Registries.BANNER_PATTERN, "rocket");
 
-    public static void register() {
-        Registry.register(BuiltInRegistries.BANNER_PATTERN, ROCKET_KEY, ROCKET);
+    public static void bootstrapRegistries(BootstrapContext<BannerPattern> context) {
+        context.register(ROCKET, new BannerPattern(Constant.id("rocket"), Translations.BannerPattern.ROCKET));
     }
 }

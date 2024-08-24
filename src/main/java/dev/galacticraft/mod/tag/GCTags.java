@@ -35,10 +35,10 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.material.Fluid;
 
 public class GCTags {
-    public static final TagKey<Fluid> OIL = TagKey.create(Registries.FLUID, new ResourceLocation(Constant.COMMON_NAMESPACE, "oil"));
-    public static final TagKey<Fluid> FUEL = TagKey.create(Registries.FLUID, new ResourceLocation(Constant.COMMON_NAMESPACE, "fuel"));
-    public static final TagKey<Fluid> SULFURIC_ACID = TagKey.create(Registries.FLUID, new ResourceLocation(Constant.COMMON_NAMESPACE, "sulfuric_acid"));
-    public static final TagKey<Fluid> LIQUID_OXYGEN = TagKey.create(Registries.FLUID, new ResourceLocation(Constant.COMMON_NAMESPACE, "oxygen"));
+    public static final TagKey<Fluid> OIL = TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, "oil"));
+    public static final TagKey<Fluid> FUEL = TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, "fuel"));
+    public static final TagKey<Fluid> SULFURIC_ACID = TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, "sulfuric_acid"));
+    public static final TagKey<Fluid> LIQUID_OXYGEN = TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, "oxygen"));
     public static final TagKey<Fluid> OXYGEN = TagKey.create(Registries.FLUID, Constant.id("oxygen"));
 
     public static final TagKey<Block> INFINIBURN_MOON = TagKey.create(Registries.BLOCK, Constant.id("infiniburn_moon"));
@@ -59,17 +59,17 @@ public class GCTags {
     public static final TagKey<Biome> MOON_RUINS_HAS_STRUCTURE = TagKey.create(Registries.BIOME, Constant.id("has_structure/moon_ruins"));
     public static final TagKey<Biome> MOON_BOSS_HAS_STRUCTURE = TagKey.create(Registries.BIOME, Constant.id("has_structure/moon_boss"));
 
-    public static final TagKey<Item> ALUMINUM_INGOTS = commonTag("aluminum_ingots");
-    public static final TagKey<Item> RAW_ALUMINUM_ORES = commonTag("raw_aluminum_ores");
-    public static final TagKey<Item> LEAD_INGOTS = commonTag("lead_ingots");
-    public static final TagKey<Item> RAW_LEAD_ORES = commonTag("raw_lead_ores");
-    public static final TagKey<Item> SILICONS = commonTag("silicons");
-    public static final TagKey<Item> STEEL_INGOTS = commonTag("steel_ingots");
-    public static final TagKey<Item> TIN_INGOTS = commonTag("tin_ingots");
-    public static final TagKey<Item> RAW_TIN_ORES = commonTag("raw_tin_ores");
-    public static final TagKey<Item> COMPRESSED_STEEL = commonTag("compressed_steel");
-    public static final TagKey<Item> COMPRESSED_IRON = commonTag("compressed_iron");
-    public static final TagKey<Item> COMPRESSED_TIN = commonTag("compressed_tin");
+    public static final TagKey<Item> ALUMINUM_INGOTS = commonTag("ingots/aluminum");
+    public static final TagKey<Item> RAW_ALUMINUM_ORES = commonTag("raw_materials/aluminum");
+    public static final TagKey<Item> LEAD_INGOTS = commonTag("ingots/lead");
+    public static final TagKey<Item> RAW_LEAD_ORES = commonTag("raw_materials/lead");
+    public static final TagKey<Item> SILICONS = commonTag("gems/silicon");
+    public static final TagKey<Item> STEEL_INGOTS = commonTag("ingots/steel");
+    public static final TagKey<Item> TIN_INGOTS = commonTag("ingots/tin");
+    public static final TagKey<Item> RAW_TIN_ORES = commonTag("raw_materials/tin");
+    public static final TagKey<Item> COMPRESSED_STEEL = commonTag("plates/steel");
+    public static final TagKey<Item> COMPRESSED_IRON = commonTag("plates/iron");
+    public static final TagKey<Item> COMPRESSED_TIN = commonTag("plates/tin");
 
     public static final TagKey<Structure> MOON_RUINS = TagKey.create(Registries.STRUCTURE, Constant.id("moon_ruins"));
 
@@ -79,7 +79,7 @@ public class GCTags {
     public static final TagKey<EntityType<?>> HAS_FOOTPRINTS = TagKey.create(Registries.ENTITY_TYPE, Constant.id("has_footprints"));
 
     public static TagKey<Item> commonTag(String path) {
-        return TagKey.create(Registries.ITEM, new ResourceLocation(Constant.COMMON_NAMESPACE, path));
+        return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, path));
     }
 
     public static void register() {

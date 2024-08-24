@@ -23,6 +23,7 @@
 package dev.galacticraft.api.rocket.part.type;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.api.rocket.part.RocketEngine;
 import dev.galacticraft.api.rocket.part.config.RocketEngineConfig;
 import org.jetbrains.annotations.NotNull;
@@ -31,10 +32,10 @@ import org.jetbrains.annotations.NotNull;
  * The engine of a rocket. Controls how much fuel the rocket can hold.
  */
 public non-sealed abstract class RocketEngineType<C extends RocketEngineConfig> implements RocketPartType<C> {
-    private final @NotNull Codec<RocketEngine<C, RocketEngineType<C>>> codec;
+    private final @NotNull MapCodec<RocketEngine<C, RocketEngineType<C>>> codec;
 
     protected RocketEngineType(@NotNull Codec<C> configCodec) {
-        this.codec = configCodec.fieldOf("config").xmap(this::configure, RocketEngine::config).codec();
+        this.codec = configCodec.fieldOf("config").xmap(this::configure, RocketEngine::config);
     }
 
     @Override
@@ -43,7 +44,7 @@ public non-sealed abstract class RocketEngineType<C extends RocketEngineConfig> 
     }
 
     @Override
-    public @NotNull Codec<RocketEngine<C, RocketEngineType<C>>> codec() {
+    public @NotNull MapCodec<? extends RocketEngine<C, ? extends RocketEngineType<C>>> codec() {
         return this.codec;
     }
 

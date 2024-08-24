@@ -23,77 +23,41 @@
 package dev.galacticraft.api.universe.celestialbody;
 
 import com.mojang.serialization.Codec;
-import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import dev.galacticraft.api.gas.GasComposition;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.BuiltInAddonRegistries;
-import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
 import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
-import net.minecraft.core.*;
+import dev.galacticraft.mod.util.StreamCodecs;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.RegistryCodecs;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFileCodec;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBodyType<C>>(T type, C config) {
     public static final Codec<CelestialBody<?, ?>> DIRECT_CODEC = BuiltInAddonRegistries.CELESTIAL_BODY_TYPE.byNameCodec().dispatch(CelestialBody::type, CelestialBodyType::codec);
     public static final Codec<Holder<CelestialBody<?, ?>>> CODEC = RegistryFileCodec.create(AddonRegistries.CELESTIAL_BODY, DIRECT_CODEC);
     public static final Codec<HolderSet<CelestialBody<?, ?>>> LIST_CODEC = RegistryCodecs.homogeneousList(AddonRegistries.CELESTIAL_BODY, DIRECT_CODEC);
-
-    public static Registry<CelestialBody<?, ?>> getRegistry(RegistryAccess manager) {
-        return manager.registryOrThrow(AddonRegistries.CELESTIAL_BODY);
-    }
-
-    public static CelestialBody<?, ?> getById(RegistryAccess manager, ResourceLocation id) {
-        return getById(getRegistry(manager), id);
-    }
-
-    public static ResourceLocation getId(RegistryAccess manager, CelestialBody<?, ?> celestialBody) {
-        return getId(getRegistry(manager), celestialBody);
-    }
-
-    public static <C extends CelestialBodyConfig, T extends CelestialBodyType<C> & Landable<C>> Optional<CelestialBody<C, T>> getByDimension(RegistryAccess manager, ResourceKey<Level> key) {
-        return getByDimension(getRegistry(manager), key);
-    }
-
-    public static <C extends CelestialBodyConfig, T extends CelestialBodyType<C> & Landable<C>> Optional<CelestialBody<C, T>> getByDimension(Level level) {
-        return getByDimension(level.registryAccess(), level.dimension());
-    }
-
-    public static CelestialBody<?, ?> getById(Registry<CelestialBody<?, ?>> registry, ResourceLocation id) {
-        return registry.get(id);
-    }
-
-    public static ResourceLocation getId(Registry<CelestialBody<?, ?>> registry, CelestialBody<?, ?> celestialBody) {
-        return registry.getKey(celestialBody);
-    }
-
-    public static <C extends CelestialBodyConfig, T extends CelestialBodyType<C> & Landable<C>> Optional<CelestialBody<C, T>> getByDimension(Registry<CelestialBody<?, ?>> registry, ResourceKey<Level> key) {
-        for (CelestialBody<?, ?> body : registry) {
-            if (body.type() instanceof Landable landable && landable.world(body.config()).equals(key))
-                return Optional.of((CelestialBody<C, T>) body);
-        }
-        return Optional.empty();
-    }
+    public static final StreamCodec<RegistryFriendlyByteBuf, Holder<CelestialBody<?, ?>>> STREAM_CODEC = StreamCodecs.ofHolder(AddonRegistries.CELESTIAL_BODY);
 
     public static double getGravity(Entity entity) {
-        if (entity instanceof LivingEntity living) {
-            AttributeInstance attribute = living.getAttribute(GcApiEntityAttributes.LOCAL_GRAVITY_LEVEL);
-            if (attribute != null && attribute.getValue() > 0)
-                return attribute.getValue() * 0.08d;
-        }
-        return CelestialBody.getByDimension(entity.level()).map(celestialBodyType -> celestialBodyType.gravity() * 0.08d).orElse(0.08);
+        return modifyGravity(entity.level(), entity instanceof LivingEntity living ? living.getAttributeBaseValue(Attributes.GRAVITY) : 0.08d);
+    }
+
+    public static double modifyGravity(Level level, double d) {
+        Holder<CelestialBody<?, ?>> holder = level.galacticraft$getCelestialBody();
+        return holder != null ? holder.value().gravity() * d : d;
     }
 
     /**

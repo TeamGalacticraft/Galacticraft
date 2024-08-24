@@ -35,10 +35,11 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.saveddata.maps.MapDecoration;
+import net.minecraft.world.level.saveddata.maps.MapDecorationTypes;
 import org.jetbrains.annotations.Nullable;
 
 public class GCVillagerProfessions {
@@ -52,36 +53,36 @@ public class GCVillagerProfessions {
         Registry.register(BuiltInRegistries.VILLAGER_PROFESSION, Constant.id("lunar_cartographer"), LUNAR_CARTOGRAPHER);
 
         TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 1, factories -> {
-            factories.add(new GCVillagerTrades.BuyForOneEmeraldFactory(Items.PAPER, 24, 16, 2));
-            factories.add(new GCVillagerTrades.SellItemFactory(Items.MAP, 7, 1, 1));
+            factories.add(new VillagerTrades.EmeraldForItems(Items.PAPER, 24, 16, 2));
+            factories.add(new VillagerTrades.ItemsForEmeralds(Items.MAP, 7, 1, 1));
         });
         TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 2, factories -> {
-            factories.add(new GCVillagerTrades.BuyForOneEmeraldFactory(Items.GLASS_PANE, 11, 16, 10));
-            factories.add(new GCVillagerTrades.SellMapFactory(13, GCTags.MOON_RUINS, MapDecoration.Type.RED_X, 12, 5));
+            factories.add(new VillagerTrades.EmeraldForItems(Items.GLASS_PANE, 11, 16, 10));
+            factories.add(new VillagerTrades.TreasureMapForEmeralds(13, GCTags.MOON_RUINS, "filled_map.moon_ruins", MapDecorationTypes.RED_X, 12, 5));
         });
         TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 3, factories -> {
-            factories.add(new GCVillagerTrades.BuyForOneEmeraldFactory(Items.COMPASS, 1, 12, 20));
+            factories.add(new VillagerTrades.EmeraldForItems(Items.COMPASS, 1, 12, 20));
 //            factories.add(new GalacticraftTradeOffers.SellMapFactory(14, GalacticraftStructures.MOON_RUINS, MapIcon.Type.MANSION, 12, 10));
         });
         TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 4, factories -> {
-            factories.add(new GCVillagerTrades.SellItemFactory(Items.ITEM_FRAME, 7, 1, 15));
-            factories.add(new GCVillagerTrades.SellItemFactory(Items.WHITE_BANNER, 3, 1, 15));
-            factories.add(new GCVillagerTrades.SellItemFactory(Items.BLUE_BANNER, 3, 1, 15));
-            factories.add(new GCVillagerTrades.SellItemFactory(Items.LIGHT_BLUE_BANNER, 3, 1, 15));
-            factories.add(new GCVillagerTrades.SellItemFactory(Items.RED_BANNER, 3, 1, 15));
-            factories.add(new GCVillagerTrades.SellItemFactory(Items.PINK_BANNER, 3, 1, 15));
-            factories.add(new GCVillagerTrades.SellItemFactory(Items.GREEN_BANNER, 3, 1, 15));
-            factories.add(new GCVillagerTrades.SellItemFactory(Items.LIME_BANNER, 3, 1, 15));
-            factories.add(new GCVillagerTrades.SellItemFactory(Items.GRAY_BANNER, 3, 1, 15));
-            factories.add(new GCVillagerTrades.SellItemFactory(Items.BLACK_BANNER, 3, 1, 15));
-            factories.add(new GCVillagerTrades.SellItemFactory(Items.PURPLE_BANNER, 3, 1, 15));
-            factories.add(new GCVillagerTrades.SellItemFactory(Items.MAGENTA_BANNER, 3, 1, 15));
-            factories.add(new GCVillagerTrades.SellItemFactory(Items.CYAN_BANNER, 3, 1, 15));
-            factories.add(new GCVillagerTrades.SellItemFactory(Items.BROWN_BANNER, 3, 1, 15));
-            factories.add(new GCVillagerTrades.SellItemFactory(Items.YELLOW_BANNER, 3, 1, 15));
-            factories.add(new GCVillagerTrades.SellItemFactory(Items.ORANGE_BANNER, 3, 1, 15));
-            factories.add(new GCVillagerTrades.SellItemFactory(Items.LIGHT_GRAY_BANNER, 3, 1, 15));
+            factories.add(new VillagerTrades.ItemsForEmeralds(Items.ITEM_FRAME, 7, 1, 15));
+            factories.add(new VillagerTrades.ItemsForEmeralds(Items.WHITE_BANNER, 3, 1, 15));
+            factories.add(new VillagerTrades.ItemsForEmeralds(Items.BLUE_BANNER, 3, 1, 15));
+            factories.add(new VillagerTrades.ItemsForEmeralds(Items.LIGHT_BLUE_BANNER, 3, 1, 15));
+            factories.add(new VillagerTrades.ItemsForEmeralds(Items.RED_BANNER, 3, 1, 15));
+            factories.add(new VillagerTrades.ItemsForEmeralds(Items.PINK_BANNER, 3, 1, 15));
+            factories.add(new VillagerTrades.ItemsForEmeralds(Items.GREEN_BANNER, 3, 1, 15));
+            factories.add(new VillagerTrades.ItemsForEmeralds(Items.LIME_BANNER, 3, 1, 15));
+            factories.add(new VillagerTrades.ItemsForEmeralds(Items.GRAY_BANNER, 3, 1, 15));
+            factories.add(new VillagerTrades.ItemsForEmeralds(Items.BLACK_BANNER, 3, 1, 15));
+            factories.add(new VillagerTrades.ItemsForEmeralds(Items.PURPLE_BANNER, 3, 1, 15));
+            factories.add(new VillagerTrades.ItemsForEmeralds(Items.MAGENTA_BANNER, 3, 1, 15));
+            factories.add(new VillagerTrades.ItemsForEmeralds(Items.CYAN_BANNER, 3, 1, 15));
+            factories.add(new VillagerTrades.ItemsForEmeralds(Items.BROWN_BANNER, 3, 1, 15));
+            factories.add(new VillagerTrades.ItemsForEmeralds(Items.YELLOW_BANNER, 3, 1, 15));
+            factories.add(new VillagerTrades.ItemsForEmeralds(Items.ORANGE_BANNER, 3, 1, 15));
+            factories.add(new VillagerTrades.ItemsForEmeralds(Items.LIGHT_GRAY_BANNER, 3, 1, 15));
         });
-        TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 5, factories -> factories.add(new GCVillagerTrades.SellItemFactory(Items.GLOBE_BANNER_PATTERN, 8, 1, 30)));
+        TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 5, factories -> factories.add(new VillagerTrades.ItemsForEmeralds(Items.GLOBE_BANNER_PATTERN, 8, 1, 30)));
     }
 }

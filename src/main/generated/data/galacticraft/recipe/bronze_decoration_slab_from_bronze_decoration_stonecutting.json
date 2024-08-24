@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "galacticraft:bronze_decoration"
+  },
+  "result": {
+    "count": 2,
+    "id": "galacticraft:bronze_decoration_slab"
+  }
+}

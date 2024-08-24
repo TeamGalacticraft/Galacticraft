@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 1,
-  "ingredient": {
-    "item": "galacticraft:detailed_bronze_decoration"
-  },
-  "result": "galacticraft:detailed_bronze_decoration_wall"
-}

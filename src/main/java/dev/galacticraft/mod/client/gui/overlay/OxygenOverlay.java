@@ -24,8 +24,6 @@ package dev.galacticraft.mod.client.gui.overlay;
 
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
-import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.machinelib.api.util.StorageHelper;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.DrawableUtil;
@@ -33,16 +31,18 @@ import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.Holder;
 import net.minecraft.world.Container;
 
 public class OxygenOverlay {
-    public static void onHudRender(GuiGraphics graphics, float tickDelta) {
+    public static void onHudRender(GuiGraphics graphics, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.level != null && mc.player != null && !mc.player.isSpectator()) {
-            CelestialBody<CelestialBodyConfig, ? extends Landable<CelestialBodyConfig>> body = CelestialBody.getByDimension(mc.level).orElse(null);
-            if (body != null && !body.atmosphere().breathable()) {
+            Holder<CelestialBody<?, ?>> body = mc.level.galacticraft$getCelestialBody();
+            if (body != null && !body.value().atmosphere().breathable()) {
                 Container inv = mc.player.galacticraft$getOxygenTanks();
                 final int y = 4;
                 for (int i = 0; i < inv.getContainerSize(); i++) {
@@ -55,8 +55,8 @@ public class OxygenOverlay {
                     long capacity = 1;
 
                     if (storage != null) {
-                        amount = StorageHelper.calculateAmount(FluidVariant.of(Gases.OXYGEN), storage, null);
-                        capacity = StorageHelper.calculateCapacity(FluidVariant.of(Gases.OXYGEN), storage, null);
+                        amount = StorageHelper.calculateAmount(FluidVariant.of(Gases.OXYGEN), storage);
+                        capacity = StorageHelper.theoreticalCapacity(storage);
                     } else if (mc.player.isCreative()) {
                         amount = capacity;
                     }

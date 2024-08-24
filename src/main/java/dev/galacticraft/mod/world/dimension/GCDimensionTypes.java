@@ -25,7 +25,7 @@ package dev.galacticraft.mod.world.dimension;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.tag.GCTags;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.dimension.DimensionType;
@@ -38,7 +38,7 @@ public class GCDimensionTypes {
     public static final ResourceKey<DimensionType> MOON = key("moon");
     public static final ResourceKey<DimensionType> VENUS = key("venus");
 
-    public static void bootstrapRegistries(BootstapContext<DimensionType> context) {
+    public static void bootstrapRegistries(BootstrapContext<DimensionType> context) {
         context.register(MOON, new DimensionType(
                 OptionalLong.empty(),
                 true,
@@ -56,6 +56,7 @@ public class GCDimensionTypes {
                 0.1f,
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)
         ));
+
         context.register(VENUS, new DimensionType(
                 OptionalLong.empty(), // fixedTime
                 true, // hasSkyLight

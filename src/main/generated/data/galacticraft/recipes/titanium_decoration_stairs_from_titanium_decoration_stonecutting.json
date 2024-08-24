@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "count": 1,
-  "ingredient": {
-    "item": "galacticraft:titanium_decoration"
-  },
-  "result": "galacticraft:titanium_decoration_stairs"
-}

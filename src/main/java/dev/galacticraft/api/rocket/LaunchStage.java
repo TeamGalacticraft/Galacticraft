@@ -22,6 +22,9 @@
 
 package dev.galacticraft.api.rocket;
 
+import dev.galacticraft.mod.util.StreamCodecs;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,6 +55,8 @@ public enum LaunchStage implements StringRepresentable {
      * The rocket is probably falling out of the sky.
      */
     FAILED;
+
+    public static final StreamCodec<ByteBuf, LaunchStage> STREAM_CODEC = StreamCodecs.ofEnum(LaunchStage.values());
 
     public LaunchStage next() {
         if (this.ordinal() < LAUNCHED.ordinal()) {

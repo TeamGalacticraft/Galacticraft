@@ -1,0 +1,10 @@
+{
+  "type": "galacticraft:fabrication",
+  "ingredient": {
+    "item": "minecraft:repeater"
+  },
+  "result": {
+    "count": 1,
+    "id": "galacticraft:advanced_wafer"
+  }
+}

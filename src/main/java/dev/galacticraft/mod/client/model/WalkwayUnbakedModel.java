@@ -25,6 +25,7 @@ package dev.galacticraft.mod.client.model;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -42,8 +43,9 @@ public class WalkwayUnbakedModel implements UnbakedModel {
     public void resolveParents(Function<ResourceLocation, UnbakedModel> function) {
     }
 
+    @Nullable
     @Override
-    public BakedModel bake(ModelBaker loader, Function<Material, TextureAtlasSprite> spriteFunction, ModelState rotationContainer, ResourceLocation modelId) {
-        return WalkwayBakedModel.getInstance(loader, spriteFunction, rotationContainer);
+    public BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> textureGetter, ModelState state) {
+        return WalkwayBakedModel.getInstance(baker, textureGetter, state);
     }
 }

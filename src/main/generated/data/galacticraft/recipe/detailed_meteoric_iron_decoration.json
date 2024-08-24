@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "minecraft:stone"
+    },
+    "X": {
+      "item": "galacticraft:compressed_meteoric_iron"
+    }
+  },
+  "pattern": [
+    "##",
+    "##",
+    " X"
+  ],
+  "result": {
+    "count": 4,
+    "id": "galacticraft:detailed_meteoric_iron_decoration"
+  }
+}

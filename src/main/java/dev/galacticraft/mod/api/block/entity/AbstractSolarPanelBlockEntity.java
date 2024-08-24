@@ -25,35 +25,31 @@ package dev.galacticraft.mod.api.block.entity;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
-import dev.galacticraft.machinelib.api.machine.MachineType;
+import dev.galacticraft.machinelib.api.storage.StorageSpec;
+import dev.galacticraft.machinelib.api.util.EnergySource;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
-import dev.galacticraft.mod.screen.SolarPanelMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity implements SolarPanel {
     public static final int CHARGE_SLOT = 0;
     protected final boolean[] blockage = new boolean[9];
     protected int blocked = 0;
     public long currentEnergyGeneration = 0;
+    private final EnergySource energySource = new EnergySource(this);
 
-    public AbstractSolarPanelBlockEntity(MachineType<? extends AbstractSolarPanelBlockEntity, ? extends SolarPanelMenu<? extends AbstractSolarPanelBlockEntity>> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
+    public AbstractSolarPanelBlockEntity(BlockEntityType<? extends AbstractSolarPanelBlockEntity> type, BlockPos pos, BlockState state, StorageSpec spec) {
+        super(type, pos, state, spec);
     }
 
     @Override
     public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("charge");
-        this.drainPowerToStack(CHARGE_SLOT);
+        this.drainPowerToSlot(CHARGE_SLOT);
         profiler.popPush("blockage");
         this.blocked = 0;
         for (int x = -1; x < 2; x++) { //todo: cache?
@@ -70,7 +66,7 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
     @Override
     public @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("push_energy");
-        this.trySpreadEnergy(level, state);
+        this.energySource.trySpreadEnergy(level, pos, state);
         profiler.pop();
         if (this.blocked >= 9) return GCMachineStatuses.BLOCKED;
         if (this.energyStorage().isFull()) return MachineStatuses.CAPACITOR_FULL;
@@ -93,29 +89,6 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
     }
 
     protected abstract long calculateEnergyProduction(long time, double multiplier);
-
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
-        if (this.getSecurity().hasAccess(player)) {
-            return new SolarPanelMenu<>(
-                    syncId,
-                    ((ServerPlayer) player),
-                    this
-            );
-        }
-        return null;
-    }
-
-    @Override
-    public void writeScreenOpeningData(ServerPlayer player, @NotNull FriendlyByteBuf buf) {
-        super.writeScreenOpeningData(player, buf);
-
-        buf.writeBoolean(this.followsSun());
-        buf.writeBoolean(this.nightCollection());
-        buf.writeByte(this.getSource().ordinal());
-        buf.writeVarLong(this.getCurrentEnergyGeneration());
-    }
 
     @Override
     public boolean @NotNull [] getBlockage() {

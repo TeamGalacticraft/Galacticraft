@@ -23,28 +23,26 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.machine.MachineType;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
-import dev.galacticraft.machinelib.api.menu.sync.MenuSyncHandler;
+import dev.galacticraft.machinelib.api.menu.MenuData;
 import dev.galacticraft.machinelib.api.util.BlockFace;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Consumer;
 
 public class SolarPanelMenu<Machine extends MachineBlockEntity & SolarPanel> extends MachineMenu<Machine> {
     private final boolean followsSun;
     private final boolean nightCollection;
 
-    private boolean[] blockage;
+    private final boolean[] blockage = new boolean[9];
     private @NotNull SolarPanel.SolarPanelSource source;
     private long energyGeneration;
 
-    public SolarPanelMenu(int syncId, @NotNull ServerPlayer player, @NotNull Machine machine) {
-        super(syncId, player, machine);
+    public SolarPanelMenu(MenuType<? extends SolarPanelMenu<Machine>> type, int syncId, @NotNull Player player, @NotNull Machine machine) {
+        super(type, syncId, player, machine);
 
         this.followsSun = machine.followsSun();
         this.nightCollection = machine.nightCollection();
@@ -52,27 +50,26 @@ public class SolarPanelMenu<Machine extends MachineBlockEntity & SolarPanel> ext
         this.energyGeneration = machine.getCurrentEnergyGeneration();
     }
 
-    protected SolarPanelMenu(int syncId, @NotNull Inventory inventory, @NotNull FriendlyByteBuf buf, @NotNull MachineType<Machine, ? extends MachineMenu<Machine>> type) {
-        this(syncId, inventory, buf, 8, 84, type);
+    protected SolarPanelMenu(MenuType<? extends SolarPanelMenu<Machine>> type, int syncId, @NotNull Inventory inventory, @NotNull BlockPos pos) {
+        this(type, syncId, inventory, pos, 8, 84);
     }
 
-    protected SolarPanelMenu(int syncId, @NotNull Inventory inventory, @NotNull FriendlyByteBuf buf, int invX, int invY, @NotNull MachineType<Machine, ? extends MachineMenu<Machine>> type) {
-        super(syncId, inventory, buf, invX, invY, type);
+    protected SolarPanelMenu(MenuType<? extends SolarPanelMenu<Machine>> type, int syncId, @NotNull Inventory inventory, @NotNull BlockPos pos, int invX, int invY) {
+        super(type, syncId, inventory, pos, invX, invY);
 
-        this.followsSun = buf.readBoolean();
-        this.nightCollection = buf.readBoolean();
-        this.source = SolarPanel.SolarPanelSource.values()[buf.readByte()];
-        this.energyGeneration = buf.readVarLong();
+        this.followsSun = this.be.followsSun();
+        this.nightCollection = this.be.nightCollection();
+        this.source = this.be.getSource();
+        this.energyGeneration = this.be.getCurrentEnergyGeneration();
     }
 
     @Override
-    public void registerSyncHandlers(Consumer<MenuSyncHandler> consumer) {
-        super.registerSyncHandlers(consumer);
+    public void registerData(@NotNull MenuData data) {
+        super.registerData(data);
 
-        consumer.accept(MenuSyncHandler.simple(this.machine::getCurrentEnergyGeneration, this::setEnergyGeneration));
-        consumer.accept(MenuSyncHandler.simple(this.machine::getSource, this::setSource, SolarPanel.SolarPanelSource.values()));
-        this.blockage = new boolean[9];
-        consumer.accept(MenuSyncHandler.booleans(this.machine.getBlockage(), this.blockage));
+        data.registerLong(this.be::getCurrentEnergyGeneration, this::setEnergyGeneration);
+        data.registerEnum(SolarPanel.SolarPanelSource.values(), this.be::getSource, this::setSource);
+        data.registerBits(9, this.be.getBlockage(), this.blockage);
     }
 
     public boolean @NotNull [/*9*/] getBlockage() {

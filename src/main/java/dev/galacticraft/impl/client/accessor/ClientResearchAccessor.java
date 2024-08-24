@@ -28,8 +28,10 @@ import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 
+import java.util.List;
+
 @Environment(EnvType.CLIENT)
 @ApiStatus.Internal
 public interface ClientResearchAccessor extends ResearchAccessor {
-    void galacticraft$updateResearch(boolean add, ResourceLocation[] ids);
+    void galacticraft$updateResearch(boolean add, List<ResourceLocation> ids);
 }

@@ -34,8 +34,7 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderOwner;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
-import net.minecraft.data.worldgen.Structures;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.random.WeightedRandomList;
@@ -69,10 +68,10 @@ public class GCStructures {
         return Constant.key(Registries.STRUCTURE, id);
     }
 
-    public static void bootstrapRegistries(BootstapContext<Structure> context) {
+    public static void bootstrapRegistries(BootstrapContext<Structure> context) {
         HolderGetter<Biome> biomeLookup = context.lookup(Registries.BIOME);
         HolderGetter<StructureTemplatePool> templatePoolLookup = context.lookup(Registries.TEMPLATE_POOL);
-        context.register(Moon.RUINS, new MoonRuinsStructure(Structures.structure(biomeLookup.get(GCTags.MOON_RUINS_HAS_STRUCTURE).orElseGet(() -> createEmptyTag(GCTags.MOON_RUINS_HAS_STRUCTURE)), TerrainAdjustment.BEARD_THIN)));
+        context.register(Moon.RUINS, new MoonRuinsStructure(new Structure.StructureSettings(biomeLookup.getOrThrow(GCTags.MOON_RUINS_HAS_STRUCTURE))));
         context.register(Moon.PILLAGER_BASE, new JigsawStructure(
                 new Structure.StructureSettings(biomeLookup.get(GCTags.MOON_PILLAGER_BASE_HAS_STRUCTURE).orElseGet(() -> createEmptyTag(GCTags.MOON_PILLAGER_BASE_HAS_STRUCTURE)), Map.of(MobCategory.MONSTER,
                         new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.STRUCTURE,
@@ -96,7 +95,7 @@ public class GCStructures {
                 true,
                 Heightmap.Types.WORLD_SURFACE_WG
         ));
-        context.register(Moon.BOSS, new DungeonStructure(Structures.structure(biomeLookup.get(GCTags.MOON_BOSS_HAS_STRUCTURE).orElseGet(() -> createEmptyTag(GCTags.MOON_BOSS_HAS_STRUCTURE)), TerrainAdjustment.NONE), new DungeonConfiguration(GCBlocks.MOON_DUNGEON_BRICK.defaultBlockState(), 25, 8, 16,
+        context.register(Moon.BOSS, new DungeonStructure(new Structure.StructureSettings(biomeLookup.getOrThrow(GCTags.MOON_BOSS_HAS_STRUCTURE)), new DungeonConfiguration(GCBlocks.MOON_DUNGEON_BRICK.defaultBlockState(), 25, 8, 16,
                 5, 6, GCStructurePieceTypes.ROOM_BOSS, GCStructurePieceTypes.ROOM_TREASURE)));
     }
 

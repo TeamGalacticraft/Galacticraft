@@ -33,13 +33,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class AsteroidCelestialRingDisplayType extends CelestialRingDisplayType<DefaultCelestialRingDisplayConfig> {
     public static final AsteroidCelestialRingDisplayType INSTANCE = new AsteroidCelestialRingDisplayType(DefaultCelestialRingDisplayConfig.CODEC);
@@ -49,15 +45,13 @@ public class AsteroidCelestialRingDisplayType extends CelestialRingDisplayType<D
     }
 
     @Override
-    public boolean render(CelestialBody<?, ?> body, GuiGraphics graphics, int count, Vector3f systemOffset, float lineScale, float alpha, double mouseX, double mouseY, float delta, Consumer<Supplier<ShaderInstance>> shaderSetter, DefaultCelestialRingDisplayConfig config) {
-        shaderSetter.accept(GameRenderer::getRendertypeLinesShader);
+    public boolean render(CelestialBody<?, ?> body, GuiGraphics graphics, int count, Vector3f systemOffset, float lineScale, float alpha, double mouseX, double mouseY, float delta, DefaultCelestialRingDisplayConfig config) {
+        RenderSystem.setShader(GameRenderer::getRendertypeLinesShader);
         PoseStack matrices = graphics.pose();
         matrices.pushPose();
         Screen screen = Minecraft.getInstance().screen;
         float[] color = screen instanceof CelestialSelectionScreen ? new float[]{0.7F, 0.0F, 0.0F, alpha / 2.0F} : new float[]{0.3F, 0.1F, 0.1F, 1.0F};
-        Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder buffer = tesselator.getBuilder();
-        buffer.begin(VertexFormat.Mode.LINE_STRIP, DefaultVertexFormat.POSITION_COLOR_NORMAL);
+        BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.LINE_STRIP, DefaultVertexFormat.POSITION_COLOR_NORMAL);
 
         final float theta = Mth.TWO_PI / 90;
         final float cos = Mth.cos(theta);
@@ -77,42 +71,38 @@ public class AsteroidCelestialRingDisplayType extends CelestialRingDisplayType<D
         float y1 = y;
         Matrix4f model = matrices.last().pose();
         for (int i = 0; i < 180; i++) {
-            buffer.vertex(model, x, y, 0).color(color[0], color[1], color[2], color[3]);
+            buffer.addVertex(model, x, y, 0).setColor(color[0], color[1], color[2], color[3]);
             if (i < 90) {
-                buffer.normal(1, 1, 1);
+                buffer.setNormal(1, 1, 1);
             } else {
-                buffer.normal(1, -1, -1);
+                buffer.setNormal(1, -1, -1);
             }
-
-            buffer.endVertex();
 
             temp = x;
             x = cos * x - sin * y;
             y = sin * temp + cos * y;
         }
 
-        buffer.vertex(model, x1, y1, 0).color(color[0], color[1], color[2], color[3]).normal(1, 1, 1).endVertex(); //LINE_LOOP is gone
+        buffer.addVertex(model, x1, y1, 0).setColor(color[0], color[1], color[2], color[3]).setNormal(1, 1, 1); //LINE_LOOP is gone
         x = x1;
         y = y1;
 
         for (int i = 0; i < 180; i++) {
-            buffer.vertex(model, x, y, 0).color(color[0], color[1], color[2], color[3]);
+            buffer.addVertex(model, x, y, 0).setColor(color[0], color[1], color[2], color[3]);
             if (i < 90) {
-                buffer.normal(1, 1, 1);
+                buffer.setNormal(1, 1, 1);
             } else {
-                buffer.normal(1, -1, -1);
+                buffer.setNormal(1, -1, -1);
             }
-
-            buffer.endVertex();
 
             temp = x;
             x = cos2 * x - sin2 * y;
             y = sin2 * temp + cos2 * y;
         }
-        buffer.vertex(model, x1, y1, 0).color(color[0], color[1], color[2], color[3]).normal(1, 1, 1).endVertex(); //LINE_LOOP is gone
+        buffer.addVertex(model, x1, y1, 0).setColor(color[0], color[1], color[2], color[3]).setNormal(1, 1, 1); //LINE_LOOP is gone
 
-        tesselator.end();
-        buffer.begin(VertexFormat.Mode.LINE_STRIP, DefaultVertexFormat.POSITION_COLOR_NORMAL);
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
+        buffer = Tesselator.getInstance().begin(VertexFormat.Mode.LINE_STRIP, DefaultVertexFormat.POSITION_COLOR_NORMAL);
 
         x = min * body.position().lineScale();
         y = 0;
@@ -121,43 +111,38 @@ public class AsteroidCelestialRingDisplayType extends CelestialRingDisplayType<D
         y1 = y;
 
         for (int i = 0; i < 180; i++) {
-            buffer.vertex(model, x, y, 0).color(color[0], color[1], color[2], color[3]);
+            buffer.addVertex(model, x, y, 0).setColor(color[0], color[1], color[2], color[3]);
             if (i < 90) {
-                buffer.normal(1, 1, 1);
+                buffer.setNormal(1, 1, 1);
             } else {
-                buffer.normal(1, -1, -1);
+                buffer.setNormal(1, -1, -1);
             }
-
-            buffer.endVertex();
 
             temp = x;
             x = cos * x - sin * y;
             y = sin * temp + cos * y;
         }
 
-        buffer.vertex(model, x1, y1, 0).color(color[0], color[1], color[2], color[3]).normal(1, 1, 1).endVertex(); //LINE_LOOP is gone
+        buffer.addVertex(model, x1, y1, 0).setColor(color[0], color[1], color[2], color[3]).setNormal(1, 1, 1); //LINE_LOOP is gone
         x = x1;
         y = y1;
 
         for (int i = 0; i < 180; i++) {
-            buffer.vertex(model, x, y, 0).color(color[0], color[1], color[2], color[3]);
+            buffer.addVertex(model, x, y, 0).setColor(color[0], color[1], color[2], color[3]);
             if (i < 90) {
-                buffer.normal(1, 1, 1);
+                buffer.setNormal(1, 1, 1);
             } else {
-                buffer.normal(1, -1, -1);
+                buffer.setNormal(1, -1, -1);
             }
-
-            buffer.endVertex();
 
             temp = x;
             x = cos2 * x - sin2 * y;
             y = sin2 * temp + cos2 * y;
         }
-        buffer.vertex(model, x1, y1, 0).color(color[0], color[1], color[2], color[3]).normal(1, 1, 1).endVertex(); //LINE_LOOP is gone
+        buffer.addVertex(model, x1, y1, 0).setColor(color[0], color[1], color[2], color[3]).setNormal(1, 1, 1); //LINE_LOOP is gone
 
-        tesselator.end();
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
+        buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 
         x = min * body.position().lineScale();
         y = 0;
@@ -165,8 +150,8 @@ public class AsteroidCelestialRingDisplayType extends CelestialRingDisplayType<D
         float y2 = 0;
 
         for (int i = 0; i < 90; i++) {
-            buffer.vertex(model, x2, y2, 0).color(0.7F, 0.0F, 0.0F, alpha / 10.0F).endVertex();
-            buffer.vertex(model, x, y, 0).color(0.7F, 0.0F, 0.0F, alpha / 10.0F).endVertex();
+            buffer.addVertex(model, x2, y2, 0).setColor(0.7F, 0.0F, 0.0F, alpha / 10.0F);
+            buffer.addVertex(model, x, y, 0).setColor(0.7F, 0.0F, 0.0F, alpha / 10.0F);
 
             temp = x;
             x = cos * x - sin * y;
@@ -175,11 +160,12 @@ public class AsteroidCelestialRingDisplayType extends CelestialRingDisplayType<D
             x2 = cos * x2 - sin * y2;
             y2 = sin * temp + cos * y2;
 
-            buffer.vertex(model, x, y, 0).color(0.7F, 0.0F, 0.0F, alpha / 10.0F).endVertex();
-            buffer.vertex(model, x2, y2, 0).color(0.7F, 0.0F, 0.0F, alpha / 10.0F).endVertex();
+            buffer.addVertex(model, x, y, 0).setColor(0.7F, 0.0F, 0.0F, alpha / 10.0F);
+            buffer.addVertex(model, x2, y2, 0).setColor(0.7F, 0.0F, 0.0F, alpha / 10.0F);
         }
 
-        tesselator.end();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
         matrices.popPose();
         return false;
     }

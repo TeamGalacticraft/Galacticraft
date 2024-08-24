@@ -38,7 +38,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeItem;
@@ -102,28 +102,25 @@ public class FluidPipeWalkway extends FluidPipe implements FluidLoggable {
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        var itemStack = player.getItemInHand(interactionHand);
-        if (level.getBlockEntity(blockPos) instanceof FluidPipeWalkwayBlockEntity walkway) {
-            if (itemStack.getItem() instanceof DyeItem dye) {
-                var stack = itemStack.copy();
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (level.getBlockEntity(pos) instanceof FluidPipeWalkwayBlockEntity walkway) {
+            if (stack.getItem() instanceof DyeItem dye) {
+                var stack2 = stack.copy();
                 var color = dye.getDyeColor();
                 if (color != walkway.getColor()) {
-                    if (!player.getAbilities().instabuild) {
-                        stack.shrink(1);
-                    }
-                    player.setItemInHand(interactionHand, stack);
+                    stack2.consume(1, player);
+                    player.setItemInHand(hand, stack2);
                     walkway.setColor(color);
-                    level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
-                    return InteractionResult.sidedSuccess(level.isClientSide());
-                }
-                else {
-                    return InteractionResult.PASS;
+                    level.sendBlockUpdated(pos, state, state, Block.UPDATE_IMMEDIATE);
+                    return ItemInteractionResult.SUCCESS;
+                } else {
+                    return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
                 }
             }
         }
-        return super.use(blockState, level, blockPos, player, interactionHand, blockHitResult);
+        return super.useItemOn(stack, state, level, pos, player, hand, hit);
     }
+
 
     @Override
     public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity livingEntity, ItemStack itemStack) {

@@ -23,12 +23,13 @@
 package dev.galacticraft.api.universe.position;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 
 public abstract class CelestialPositionType<C extends CelestialPositionConfig> {
-    private final Codec<CelestialPosition<C, CelestialPositionType<C>>> codec;
+    private final MapCodec<CelestialPosition<C, CelestialPositionType<C>>> codec;
 
     public CelestialPositionType(Codec<C> codec) {
-        this.codec = codec.fieldOf("config").xmap((config) -> new CelestialPosition<>(this, config), CelestialPosition::config).codec();
+        this.codec = codec.fieldOf("config").xmap((config) -> new CelestialPosition<>(this, config), CelestialPosition::config);
     }
 
     public abstract double x(C config, long worldTime, float delta);
@@ -39,7 +40,7 @@ public abstract class CelestialPositionType<C extends CelestialPositionConfig> {
         return Float.NaN;
     }
 
-    public Codec<CelestialPosition<C, CelestialPositionType<C>>> codec() {
+    public MapCodec<CelestialPosition<C, CelestialPositionType<C>>> codec() {
         return this.codec;
     }
 

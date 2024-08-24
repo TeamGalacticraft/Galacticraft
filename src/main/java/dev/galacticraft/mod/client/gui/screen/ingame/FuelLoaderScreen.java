@@ -67,9 +67,9 @@ public class FuelLoaderScreen extends MachineScreen<FuelLoaderBlockEntity, FuelL
     protected void renderMachineBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.renderMachineBackground(graphics, mouseX, mouseY, delta);
 
-        FluidResourceSlot slot = this.menu.fluidStorage.getSlot(FuelLoaderBlockEntity.FUEL_TANK);
+        FluidResourceSlot slot = this.menu.fluidStorage.slot(FuelLoaderBlockEntity.FUEL_TANK);
         if (!slot.isEmpty()) {
-            GraphicsUtil.drawFluid(graphics, this.leftPos + 69, this.topPos + 8, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT, slot.getCapacity(), FluidVariant.of(slot.getResource(), slot.getTag()), slot.getAmount());
+            GraphicsUtil.drawFluid(graphics, this.leftPos + 69, this.topPos + 8, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT, slot.getCapacity(), FluidVariant.of(slot.getResource(), slot.getComponents()), slot.getAmount());
             graphics.blit(Constant.ScreenTexture.FUEL_LOADER_SCREEN, this.leftPos + 69, this.topPos + 8, TANK_OVERLAY_U, TANK_OVERLAY_V, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT);
         }
 
@@ -89,8 +89,8 @@ public class FuelLoaderScreen extends MachineScreen<FuelLoaderBlockEntity, FuelL
         super.renderTooltip(graphics, mouseX, mouseY);
         List<Component> list = new ArrayList<>();
         if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 69, this.topPos + 17, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT)) {
-            FluidResourceSlot slot = this.menu.fluidStorage.getSlot(FuelLoaderBlockEntity.FUEL_TANK);
-            DisplayUtil.createFluidTooltip(list, slot.getResource(), slot.getTag(), slot.getAmount(), slot.getCapacity());
+            FluidResourceSlot slot = this.menu.fluidStorage.slot(FuelLoaderBlockEntity.FUEL_TANK);
+            DisplayUtil.createFluidTooltip(list, slot.getResource(), slot.getComponents(), slot.getAmount(), slot.getCapacity());
         } else if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 145, this.topPos + 37, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT)) {
             DisplayUtil.createFluidTooltip(list, GCFluids.FUEL, null, this.menu.rocketAmount, this.menu.rocketCapacity);
         }
