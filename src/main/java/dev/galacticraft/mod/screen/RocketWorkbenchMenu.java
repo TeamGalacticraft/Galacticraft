@@ -333,17 +333,17 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         RocketData rocketData = this.createData();
         boolean craftable = rocketData.isValid();
         RocketPartRecipe<?, ?> recipe = this.cone.getRecipe();
-        craftable = craftable && (recipe != null && recipe.matches(this.cone.inventory, this.workbench.getLevel()));
+        craftable = craftable && (recipe != null && recipe.matches(this.cone.inventory.asInput(), this.workbench.getLevel()));
         recipe = this.body.getRecipe();
-        craftable = craftable && (recipe != null && recipe.matches(this.body.inventory, this.workbench.getLevel()));
+        craftable = craftable && (recipe != null && recipe.matches(this.body.inventory.asInput(), this.workbench.getLevel()));
         recipe = this.fins.getRecipe();
-        craftable = craftable && (recipe != null && recipe.matches(this.fins.inventory, this.workbench.getLevel()));
+        craftable = craftable && (recipe != null && recipe.matches(this.fins.inventory.asInput(), this.workbench.getLevel()));
         recipe = this.booster.getRecipe();
-        craftable = craftable && (recipe == null || recipe.matches(this.booster.inventory, this.workbench.getLevel()));
+        craftable = craftable && (recipe == null || recipe.matches(this.booster.inventory.asInput(), this.workbench.getLevel()));
         recipe = this.engine.getRecipe();
-        craftable = craftable && (recipe != null && recipe.matches(this.engine.inventory, this.workbench.getLevel()));
+        craftable = craftable && (recipe != null && recipe.matches(this.engine.inventory.asInput(), this.workbench.getLevel()));
         recipe = this.upgrade.getRecipe();
-        craftable = craftable && (recipe == null ||recipe.matches(this.upgrade.inventory, this.workbench.getLevel()));
+        craftable = craftable && (recipe == null ||recipe.matches(this.upgrade.inventory.asInput(), this.workbench.getLevel()));
         if (craftable) {
             ItemStack stack = new ItemStack(GCItems.ROCKET, 1);
             stack.applyComponents(rocketData.asPatch());

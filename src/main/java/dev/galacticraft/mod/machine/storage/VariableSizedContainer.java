@@ -37,10 +37,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class VariableSizedContainer implements Container, RecipeInput {
+public class VariableSizedContainer implements Container {
     private int targetSize;
     private final ArrayList<ItemStack> stacks;
     private final List<Listener> listeners = new ArrayList<>();
+    private final RecipeInput input = new VariableRecipeInput();
 
     public VariableSizedContainer(int targetSize) {
         this.targetSize = targetSize;
@@ -103,11 +104,6 @@ public class VariableSizedContainer implements Container, RecipeInput {
     @Override
     public @NotNull ItemStack getItem(int i) {
         return this.stacks.get(i);
-    }
-
-    @Override
-    public int size() {
-        return this.stacks.size();
     }
 
     @Override
@@ -202,8 +198,25 @@ public class VariableSizedContainer implements Container, RecipeInput {
             this.stacks.add(ItemStack.EMPTY);
         }
     }
+
+    public RecipeInput asInput() {
+        return this.input;
+    }
+
     public interface Listener {
         void onSizeChanged();
         void onItemChanged();
+    }
+
+    private class VariableRecipeInput implements RecipeInput {
+        @Override
+        public @NotNull ItemStack getItem(int slot) {
+            return VariableSizedContainer.this.getItem(slot);
+        }
+
+        @Override
+        public int size() {
+            return VariableSizedContainer.this.stacks.size();
+        }
     }
 }
