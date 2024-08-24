@@ -154,12 +154,8 @@ loom {
 
 repositories {
     mavenLocal()
-    maven("https://maven.galacticraft.net/repository/maven-releases/") {
-        content {
-            includeGroup("dev.galacticraft")
-        }
-    }
-    maven("https://maven.galacticraft.net/repository/maven-snapshots/") {
+    maven("https://repo.terradevelopment.net/repository/maven-releases/") {
+        // https://maven.galacticraft.net/repository/maven-releases
         content {
             includeGroup("dev.galacticraft")
         }
