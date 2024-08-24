@@ -24,8 +24,12 @@ package dev.galacticraft.mod.content.block.machine;
 
 import dev.galacticraft.mod.api.block.MultiBlockMachineBlock;
 import dev.galacticraft.mod.api.block.MultiBlockPart;
+import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.block.special.SolarPanelPartBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -33,6 +37,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 
 public class SimpleMultiBlockMachineBlock extends MultiBlockMachineBlock {
     private final List<BlockPos> parts;
@@ -49,6 +54,21 @@ public class SimpleMultiBlockMachineBlock extends MultiBlockMachineBlock {
         super(properties, factory);
         this.parts = parts;
         this.partState = partBlock.defaultBlockState();
+    }
+
+    @Override
+    protected void onExplosionHit(BlockState state, Level world, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> stackMerger) {
+        if (state.getBlock() != GCBlocks.ADVANCED_SOLAR_PANEL && state.getBlock() != GCBlocks.BASIC_SOLAR_PANEL) {
+            return;
+        }
+        for (BlockPos part : parts) {
+            BlockPos actualPartPos = pos.offset(part);
+            if (!(world.getBlockState(actualPartPos).getBlock() instanceof SolarPanelPartBlock)) {
+                return;
+            }
+            world.removeBlock(actualPartPos, false);
+        }
+        super.onExplosionHit(state, world, pos, explosion, stackMerger);
     }
 
     @Override
