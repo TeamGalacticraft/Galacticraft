@@ -773,11 +773,6 @@ public interface Constant {
         int MAX_STRING_READ = 32767;
     }
 
-    @ApiStatus.Internal
-    interface Mixin {
-        String DATAGEN_SKIP_README = "HashCacheMixin";
-    }
-
     interface Recipe {
         String FABRICATION = "fabrication";
         String COMPRESSING = "compressing";
