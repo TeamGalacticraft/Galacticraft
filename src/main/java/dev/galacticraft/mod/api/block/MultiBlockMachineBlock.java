@@ -28,6 +28,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -55,6 +56,18 @@ public abstract class MultiBlockMachineBlock extends SimpleMachineBlock implemen
         }
 
         return returnState;
+    }
+
+    @Override
+    public void wasExploded(Level world, BlockPos pos, Explosion explosion) {
+        for (BlockPos part : this.getOtherParts(world.getBlockState(pos))) {
+            part = pos.immutable().offset(part);
+            if (!(world.getBlockEntity(part) instanceof MultiBlockPart)) {
+                continue;
+            }
+            world.removeBlock(part, false);
+        }
+        super.wasExploded(world, pos, explosion);
     }
 
     @Override
