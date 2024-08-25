@@ -43,8 +43,8 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
         RenderSystem.disableBlend();
         RenderSystem.depthMask(false);
 
-        PoseStack matrices = context.matrixStack();
-        if (matrices == null) matrices = new PoseStack();
+        PoseStack matrices = new PoseStack();
+        matrices.mulPose(context.positionMatrix());
 
         context.profiler().push("stars");
         matrices.pushPose();

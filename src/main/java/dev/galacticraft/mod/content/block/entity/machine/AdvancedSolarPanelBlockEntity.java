@@ -36,7 +36,6 @@ import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.screen.SolarPanelMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
@@ -82,6 +81,6 @@ public class AdvancedSolarPanelBlockEntity extends AbstractSolarPanelBlockEntity
 
     @Override
     public @Nullable MachineMenu<? extends MachineBlockEntity> createMenu(int syncId, Inventory inventory, Player player) {
-        return new SolarPanelMenu<>(GCMenuTypes.ADVANCED_SOLAR_PANEL, syncId, (ServerPlayer) player, this);
+        return new SolarPanelMenu<>(GCMenuTypes.ADVANCED_SOLAR_PANEL, syncId, player, this);
     }
 }

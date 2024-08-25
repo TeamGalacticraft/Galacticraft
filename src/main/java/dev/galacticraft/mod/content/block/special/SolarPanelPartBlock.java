@@ -121,13 +121,12 @@ public class SolarPanelPartBlock extends BaseEntityBlock {
 
     @Override
     protected @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-        BlockEntity partEntity = level.getBlockEntity(pos);
-        if (level.isClientSide || level.isEmptyBlock(pos) || !(partEntity instanceof SolarPanelPartBlockEntity)) {
-            return InteractionResult.SUCCESS;
+        if (level.isClientSide) return InteractionResult.SUCCESS;
+        if (level.getBlockEntity(pos) instanceof SolarPanelPartBlockEntity part) {
+            BlockPos basePos = part.basePos;
+            BlockState base = level.getBlockState(basePos);
+            return ((MultiBlockBase) base.getBlock()).multiBlockUseWithoutItem(base, level, basePos, player);
         }
-
-        BlockPos basePos = ((SolarPanelPartBlockEntity) partEntity).basePos;
-        BlockState base = level.getBlockState(basePos);
-        return ((MultiBlockBase)base.getBlock()).multiBlockUseWithoutItem(base, level, basePos, player);
+        return InteractionResult.PASS;
     }
 }

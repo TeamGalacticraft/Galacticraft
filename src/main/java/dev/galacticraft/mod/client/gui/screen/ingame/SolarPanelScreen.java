@@ -25,6 +25,7 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
+import dev.galacticraft.machinelib.client.api.util.GraphicsUtil;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
 import dev.galacticraft.mod.api.solarpanel.LightSource;
@@ -116,6 +117,8 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, this.topPos + SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT)) {
+                    GraphicsUtil.highlightElement(graphics, this.leftPos, this.topPos, SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT, 0x80ffffff);
+
                     if (this.menu.getBlockage()[y * 3 + x]) {
                         graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.Color.GRAY_STYLE).append(BLOCKED), mouseX, mouseY);
                     } else {

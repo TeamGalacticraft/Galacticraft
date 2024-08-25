@@ -26,6 +26,8 @@ import dev.galacticraft.mod.api.block.MultiBlockMachineBlock;
 import dev.galacticraft.mod.api.block.MultiBlockPart;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -62,6 +64,11 @@ public class SimpleMultiBlockMachineBlock extends MultiBlockMachineBlock {
             ((MultiBlockPart) part).setBasePos(blockPos);
             part.setChanged();
         }
+    }
+
+    @Override
+    public InteractionResult multiBlockUseWithoutItem(BlockState baseState, Level level, BlockPos basePos, Player player) {
+        return this.useWithoutItem(baseState, level, basePos, player, null);
     }
 
     @Override
