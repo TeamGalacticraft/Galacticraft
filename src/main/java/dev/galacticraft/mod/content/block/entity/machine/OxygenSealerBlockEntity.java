@@ -28,12 +28,10 @@ import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.ServerLevelAccessor;
 import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
-import dev.galacticraft.mod.machine.Region;
 import dev.galacticraft.mod.machine.SealerManager;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
@@ -46,14 +44,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.Queue;
 import java.util.Set;
 
 public class OxygenSealerBlockEntity extends MachineBlockEntity {
@@ -64,23 +58,13 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
     public static final int SEAL_CHECK_TIME = 20;
 
-    private final Set<BlockPos> breathablePositions = new HashSet<>();
-    private final Set<BlockPos> watching = new HashSet<>();
     private int sealCheckTime;
-    private boolean updateQueued = true;
-    private boolean disabled = false;
     private boolean oxygenWorld = false;
-    private boolean sealed = false;
-    private boolean oxygenUnloaded = true;
-    private final Region region;
-    private int remainingCapacity;
+    private boolean outputBlocked;
 
-    public static final int SEALING_POWER = 1024;
 
     public OxygenSealerBlockEntity(BlockPos pos, BlockState state) {
         super(GCMachineTypes.OXYGEN_SEALER, pos, state);
-        this.region = Region.EMPTY;
-        this.remainingCapacity = SEALING_POWER;
     }
 
     @Override
@@ -88,13 +72,13 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         super.setLevel(world);
         this.sealCheckTime = SEAL_CHECK_TIME;
         this.oxygenWorld = CelestialBody.getByDimension(world).map(body -> body.atmosphere().breathable()).orElse(true);
+        this.outputBlocked = false;
         if (!world.isClientSide) ((ServerLevelAccessor) world).addSealer(this, (ServerLevel) world);
     }
 
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
-        this.oxygenUnloaded = false;
         profiler.push("extract_resources");
         this.chargeFromStack(CHARGE_SLOT);
         this.takeFluidFromStack(OXYGEN_INPUT_SLOT, OXYGEN_TANK, Gases.OXYGEN);
@@ -107,14 +91,23 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCompressorEnergyConsumptionRate())) {
             if (!this.fluidStorage().getSlot(OXYGEN_TANK).isEmpty()) {
                 if (this.sealCheckTime > 0) this.sealCheckTime--;
-                for (BlockPos sealedBlockPos : region.getPositions()) {
-                    spawnParticlesAtCenter(level, sealedBlockPos, ParticleTypes.FLAME);
-                }
-                if (sealed)
+                if (this.sealCheckTime == 0)
                 {
-                    return GCMachineStatuses.SEALED;
+                    this.sealCheckTime = 20;
+                    if (this.outputBlocked)
+                    {
+                        return GCMachineStatuses.BLOCKED;
+                    }
+                    RenderOxygenSealedArea(SealerManager.INSTANCE.getInsideSealerGroupings(pos.above(), level.dimensionType()).getCalculatedArea(), level, ParticleTypes.FLAME);
+                    RenderOxygenSealedArea(SealerManager.INSTANCE.getInsideSealerGroupings(pos.above(), level.dimensionType()).getUncalculatedArea(), level, ParticleTypes.DRAGON_BREATH);
+                    //checks if the block above the sealer is sealed or not
+                    if (SealerManager.INSTANCE.getInsideSealerGroupings(pos.above(), level.dimensionType()).getBreathable())
+                    {
+                        return GCMachineStatuses.SEALED;
+                    }
+                    return GCMachineStatuses.AREA_TOO_LARGE;
                 }
-                return GCMachineStatuses.AREA_TOO_LARGE;
+                return this.getState().getStatus();
             } else {
                 return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
             }
@@ -123,18 +116,11 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         }
     }
 
-    private void tryClearSeal(@NotNull ServerLevel world) {
-        if (this.sealed) {
-            for (BlockPos pos1 : this.breathablePositions) {
-                world.setBreathable(pos1, false);
-            }
-            this.breathablePositions.clear();
-            this.watching.clear();
-
-            this.sealed = false;
+    private void RenderOxygenSealedArea(Set<BlockPos> calculatedArea, @NotNull ServerLevel level, SimpleParticleType type) {
+        for (BlockPos pos : calculatedArea)
+        {
+            spawnParticlesAtCenter(level, pos, type);
         }
-        this.updateQueued = true;
-        this.sealCheckTime = 0;
     }
 
     @Override
@@ -147,15 +133,6 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         if (!this.level.isClientSide) {
             ((ServerLevelAccessor) this.level).removeSealer(this, (ServerLevel) this.level);
         }
-        if (!this.oxygenUnloaded) {
-            this.oxygenUnloaded = true;
-            for (BlockPos pos : this.breathablePositions) {
-                this.level.setBreathable(pos, false);
-            }
-        }
-        this.breathablePositions.clear();
-        this.watching.clear();
-
         super.setRemoved();
     }
 
@@ -172,45 +149,6 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         return null;
     }
 
-    public void enqueueUpdate(BlockPos pos, VoxelShape voxelShape) {
-        if ((this.watching.contains(pos) && !Block.isShapeFullBlock(voxelShape)) || (this.breathablePositions.contains(pos) && !voxelShape.isEmpty())) {
-            this.updateQueued = true;
-        }
-    }
-
-
-
-    public void checkAndUpdateSealing(BlockPos changedPos, ServerLevel world)
-    {
-        if (Block.isShapeFullBlock(world.getBlockState(changedPos).getCollisionShape(world, changedPos))) {
-            System.out.println("solid block");
-            SealerManager.recalculateSealedRegion(this, world);
-        }else{
-            System.out.println("unsolid block");
-        }
-        //recalculate region
-    }
-
-    private void sealRegion() {
-        System.out.println("SEALING REGION");
-        sealed = true;
-    }
-
-    private void unsealRegion() {
-        System.out.println("UNSEALING REGION");
-        sealed = false;
-    }
-
-    private boolean canSealRegion() {
-        //if region still has capacity
-        return remainingCapacity > 0;
-    }
-
-    private void requestAdditionalSealingPower() {
-        // Request sealing power from adjacent sealers or update sealing power
-        // Implement logic to communicate with neighboring sealers
-    }
-
     public static void spawnParticlesAtCenter(ServerLevel level, BlockPos pos, SimpleParticleType type) {
             double centerX = pos.getX() + 0.5;
             double centerY = pos.getY() + 0.5;
@@ -221,24 +159,23 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
 
     }
 
-    public void buildRegion(Queue<BlockPos> visitedQueue, Queue<BlockPos> regionQueue) {
-        this.region.setPositions(new HashSet<>(visitedQueue));
-        this.remainingCapacity = SEALING_POWER - this.region.getRegionSize();
-        if (regionQueue.isEmpty())
-        {
-            this.sealRegion();
-        }
+    public void setBlocked(boolean b) {
+        this.outputBlocked = b;
+    }
+
+    public boolean isBlocked() {
+        return outputBlocked;
     }
 
     public int getSealingPower() {
-        return SEALING_POWER - this.region.getRegionSize();
+        return 1024;
     }
 
-    public Region getRegion() {
-        return this.region;
+    public int getInsideArea() {
+        return SealerManager.INSTANCE.getInsideSealerGroupings(this.getBlockPos().above(), this.level.dimensionType()).getTotalInsideBlocks();
     }
 
-    public void updateRegion(Set<BlockPos> blocks) {
-        this.region.setPositions(blocks);
+    public int getOutsideArea() {
+        return SealerManager.INSTANCE.getInsideSealerGroupings(this.getBlockPos().above(), this.level.dimensionType()).getTotalOutsideBlocks();
     }
 }

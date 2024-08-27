@@ -71,7 +71,6 @@ public class GCEventHandlers {
         EntitySleepEvents.STOP_SLEEPING.register(GCEventHandlers::onWakeFromCryoSleep);
         GiveCommandEvents.MODIFY.register(GCEventHandlers::modifyOnGive);
         ServerTickEvents.END_WORLD_TICK.register(GCEventHandlers::onWorldTick);
-        ServerWorldEvents.LOAD.register(SealerManager::calculateQueuedRegions);
         UseItemCallback.EVENT.register(GCEventHandlers::onPlayerUseItem);
     }
 
@@ -170,7 +169,5 @@ public class GCEventHandlers {
 
             footprintManager.footprintBlockChanges.clear();
         }
-        SealerManager.checkSealerQueue(world);
-        SealerManager.processBlockChanges(world);
     }
 }

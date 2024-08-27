@@ -29,6 +29,7 @@ import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity
 import dev.galacticraft.mod.machine.SealerManager;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.misc.footprint.ServerFootprintManager;
+import dev.galacticraft.mod.util.Translations;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import dev.galacticraft.mod.world.gen.spawner.EvolvedPillagerSpawner;
 import net.minecraft.client.Minecraft;
@@ -39,6 +40,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.progress.ChunkProgressListener;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.RandomSequences;
 import net.minecraft.world.level.CustomSpawner;
@@ -56,6 +58,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import javax.naming.Context;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,6 +69,9 @@ import java.util.function.Supplier;
 @Mixin(ServerLevel.class)
 public abstract class ServerLevelMixin extends Level implements LevelAccessor, ServerLevelAccessor {
     @Shadow @Final @Mutable private List<CustomSpawner> customSpawners;
+
+    @Shadow public abstract ServerLevel getLevel();
+
     private final @Unique FootprintManager footprintManager = new ServerFootprintManager();
 
     protected ServerLevelMixin(WritableLevelData levelData, ResourceKey<Level> dimension, RegistryAccess registryAccess, Holder<DimensionType> dimensionTypeRegistration, Supplier<ProfilerFiller> profiler, boolean isClientSide, boolean isDebug, long biomeZoomSeed, int maxChainedNeighborUpdates) {
@@ -80,14 +86,19 @@ public abstract class ServerLevelMixin extends Level implements LevelAccessor, S
     }
 
     @Inject(method = "sendBlockUpdated", at = @At(value = "INVOKE", target = "Ljava/util/Set;iterator()Ljava/util/Iterator;", remap = false))
-    private void updateSealerListeners_gc(BlockPos pos, BlockState oldState, BlockState newState, int flags, CallbackInfo ci) {
+    private void onBlockChanges(BlockPos pos, BlockState oldState, BlockState newState, int flags, CallbackInfo ci) {
+        System.out.println("old: " + oldState.getBlock().toString() + "new: " + newState.getBlock().toString());
         //make sure old state and new state aren't both solid blocks
         //if they are both solid blocks then nothing would have changed
         if (oldState.isSolid() && newState.isSolid()) {
             //nothing will have changed
             return;
         }
-        SealerManager.INSTANCE.onBlockChange(pos, newState, this.dimensionType());
+        if (newState.is(BlockTags.LEAVES))
+        {
+            //oxygen collector code update?
+        }
+        SealerManager.INSTANCE.onBlockChange(pos, newState, this.getLevel());
     }
 
     @Override
