@@ -31,6 +31,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -100,6 +101,37 @@ public class CryogenicChamberPart extends BaseEntityBlock {
         super.destroy(level, blockPos, blockState);
 
         return baseState;
+    }
+
+    @Override
+    public void wasExploded(Level level, BlockPos pos, Explosion explosion) {
+        boolean foundValidBlock = false;
+        BlockPos validPartPos = null;
+        for (BlockPos posTest : BlockPos.betweenClosed(pos.below(), pos.above())) {
+            if (level.getBlockEntity(posTest) instanceof CryogenicChamberPartBlockEntity) {
+                foundValidBlock = true;
+                validPartPos = posTest;
+                break;
+            }
+        }
+        if (foundValidBlock && validPartPos != null) {
+            var partBE = level.getBlockEntity(validPartPos);
+            var be = (CryogenicChamberPartBlockEntity) partBE;
+            if (be == null || be.basePos == BlockPos.ZERO) {
+                return;
+            }
+            var basePos = new BlockPos(be.basePos);
+            var baseState = level.getBlockState(basePos);
+
+            if (baseState.isAir()) {
+                return;
+            }
+
+            var block = (MultiBlockBase) baseState.getBlock();
+            block.onPartExploded(level, baseState, basePos);
+        }
+
+        super.wasExploded(level, pos, explosion);
     }
 
     @Override

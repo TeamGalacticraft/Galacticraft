@@ -44,6 +44,17 @@ public interface MultiBlockBase {
         }
     }
 
+    default void onPartExploded(Level level, BlockState blockState, BlockPos blockPos) {
+        level.destroyBlock(blockPos, false);
+
+        for (var otherPart : this.getOtherParts(blockState)) {
+            otherPart = otherPart.immutable().offset(blockPos);
+            if (!level.getBlockState(otherPart).isAir()) {
+                level.setBlock(otherPart, Blocks.AIR.defaultBlockState(), 3);
+            }
+        }
+    }
+
     @Unmodifiable List<BlockPos> getOtherParts(BlockState blockState);
 
     void onMultiBlockPlaced(Level level, BlockPos blockPos, BlockState blockState);
