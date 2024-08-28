@@ -45,7 +45,7 @@ public interface MultiBlockBase {
     }
 
     default void onPartExploded(Level level, BlockState blockState, BlockPos blockPos) {
-        level.destroyBlock(blockPos, false);
+        level.destroyBlock(blockPos, true);
 
         for (var otherPart : this.getOtherParts(blockState)) {
             otherPart = otherPart.immutable().offset(blockPos);
