@@ -320,6 +320,7 @@ public class GCCreativeModeTabs {
                 output.accept(ASTEROID_ROCK);
                 output.accept(ASTEROID_ROCK_1);
                 output.accept(ASTEROID_ROCK_2);
+                output.accept(DENSE_ICE);
 
                 // VENUS NATURAL
                 output.accept(SOFT_VENUS_ROCK);
@@ -378,6 +379,11 @@ public class GCCreativeModeTabs {
                 output.accept(DEEPSLATE_TIN_ORE);
                 output.accept(MOON_TIN_ORE);
                 output.accept(LUNASLATE_TIN_ORE);
+
+                output.accept(ASTEROID_ALUMINUM_ORE);
+                output.accept(ASTEROID_IRON_ORE);
+                output.accept(ASTEROID_SILICON_ORE);
+
 
                 output.accept(ALUMINUM_ORE);
                 output.accept(DEEPSLATE_ALUMINUM_ORE);

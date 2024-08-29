@@ -176,6 +176,10 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.add(GCBlocks.ASTEROID_IRON_ORE, this.createOreDrop(GCBlocks.ASTEROID_IRON_ORE, Items.RAW_IRON));
         this.add(GCBlocks.ASTEROID_SILICON_ORE, this.createOreDrop(GCBlocks.ASTEROID_SILICON_ORE, GCItems.RAW_SILICON));
 
+        this.add(GCBlocks.MARS_COPPER_ORE, this.createOreDrop(GCBlocks.MARS_COPPER_ORE, Items.RAW_COPPER));
+        this.add(GCBlocks.MARS_TIN_ORE, this.createOreDrop(GCBlocks.MARS_TIN_ORE, GCItems.RAW_TIN));
+        this.add(GCBlocks.MARS_IRON_ORE, this.createOreDrop(GCBlocks.MARS_IRON_ORE, Items.RAW_IRON));
+
         this.add(GCBlocks.ALUMINUM_ORE, this.createOreDrop(GCBlocks.ALUMINUM_ORE, GCItems.RAW_ALUMINUM));
         this.add(GCBlocks.DEEPSLATE_ALUMINUM_ORE, this.createOreDrop(GCBlocks.ALUMINUM_ORE, GCItems.RAW_ALUMINUM));
 
@@ -210,11 +214,6 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.TITANIUM_BLOCK);
         this.dropSelf(GCBlocks.LEAD_BLOCK);
         this.dropSelf(GCBlocks.LUNAR_SAPPHIRE_BLOCK);
-
-        //TODO: maybe make it drop ores instead of self
-        this.dropSelf(GCBlocks.MARS_COPPER_ORE);
-        this.dropSelf(GCBlocks.MARS_TIN_ORE);
-        this.dropSelf(GCBlocks.MARS_IRON_ORE);
 
         this.add(GCBlocks.FALLEN_METEOR, block -> BlockLootSubProvider.createSilkTouchDispatchTable(block, this.applyExplosionDecay(block, LootItem.lootTableItem(GCItems.RAW_METEORIC_IRON)
                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 2.0f))))));

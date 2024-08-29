@@ -111,7 +111,7 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 GCItems.SILICON_ORE, GCItems.DEEPSLATE_SILICON_ORE,
                 GCItems.MOON_COPPER_ORE, GCItems.LUNASLATE_COPPER_ORE,
                 GCItems.TIN_ORE, GCItems.DEEPSLATE_TIN_ORE, GCItems.MOON_TIN_ORE, GCItems.LUNASLATE_TIN_ORE,
-                GCItems.ALUMINUM_ORE, GCItems.DEEPSLATE_ALUMINUM_ORE,
+                GCItems.ALUMINUM_ORE, GCItems.DEEPSLATE_ALUMINUM_ORE, GCItems.ASTEROID_ALUMINUM_ORE, GCItems.ASTEROID_IRON_ORE, GCItems.ASTEROID_SILICON_ORE,
                 GCItems.DESH_ORE,
                 GCItems.ILMENITE_ORE,
                 GCItems.GALENA_ORE

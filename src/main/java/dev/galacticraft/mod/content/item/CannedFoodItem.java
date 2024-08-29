@@ -24,6 +24,7 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.CannedFoodTooltip;
+import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.item.v1.FabricItemStack;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.ChatFormatting;
@@ -134,13 +135,13 @@ public class CannedFoodItem extends Item implements FabricItemStack {
     public @NotNull Component getName(ItemStack stack) {
         if (getContents(stack).findAny().isEmpty())
         {
-            return Component.literal("Empty Food Can");
+            return Component.translatable(Translations.Items.EMPTY_CANNED_FOOD);
         }else
         {
             String result = getContents(stack)
                     .map(CannedFoodItem::getItemDisplayName)
                     .collect(new TopNCollector<>(3));
-            return Component.literal("Canned " + result);
+            return Component.translatable(Translations.Items.CANNED_FOOD).append(Component.literal(result));
         }
     }
 
@@ -177,7 +178,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
         if (getContents(stack).findAny().isPresent()) {
-            tooltip.add(Component.literal("Total Nutrition: " + getTotalNutrition(stack)).withColor(ChatFormatting.DARK_GRAY.getColor()));
+            tooltip.add(Component.translatable(Translations.Items.TOTAL_NUTRITION).append(Component.literal(String.valueOf(getTotalNutrition(stack)))).withColor(ChatFormatting.DARK_GRAY.getColor()));
         }
     }
 

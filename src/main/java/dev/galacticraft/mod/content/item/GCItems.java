@@ -174,7 +174,7 @@ public class GCItems {
     public static final Item LUNASLATE_TIN_ORE = new BlockItem(GCBlocks.LUNASLATE_TIN_ORE, new Item.Properties());
 
     public static final Item ASTEROID_ALUMINUM_ORE = new BlockItem(GCBlocks.ASTEROID_ALUMINUM_ORE, new Item.Properties());
-    public static final Item ASTEROID_TIN_ORE = new BlockItem(GCBlocks.ASTEROID_IRON_ORE, new Item.Properties());
+    public static final Item ASTEROID_IRON_ORE = new BlockItem(GCBlocks.ASTEROID_IRON_ORE, new Item.Properties());
     public static final Item ASTEROID_SILICON_ORE = new BlockItem(GCBlocks.ASTEROID_SILICON_ORE, new Item.Properties());
 
 
@@ -500,6 +500,7 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ASTEROID_ROCK), ASTEROID_ROCK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ASTEROID_ROCK_1), ASTEROID_ROCK_1);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ASTEROID_ROCK_2), ASTEROID_ROCK_2);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DENSE_ICE), DENSE_ICE);
 
         // VENUS NATURAL
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.SOFT_VENUS_ROCK), SOFT_VENUS_ROCK);
@@ -535,6 +536,10 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.STRONG_VACUUM_GLASS), STRONG_VACUUM_GLASS);
 
         // ORES
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ASTEROID_ALUMINUM_ORE), ASTEROID_ALUMINUM_ORE);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ASTEROID_IRON_ORE), ASTEROID_IRON_ORE);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ASTEROID_SILICON_ORE), ASTEROID_SILICON_ORE);
+
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.SILICON_ORE), SILICON_ORE);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DEEPSLATE_SILICON_ORE), DEEPSLATE_SILICON_ORE);
 

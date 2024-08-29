@@ -108,6 +108,11 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.THERMAL_PADDING_HELMET, "Thermal Padding Helm");
         this.item(GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         this.item(GCItems.PARACHUTE.get(DyeColor.WHITE), "Parachute");
+        this.item(GCItems.CANNED_FOOD, "Canned ");
+
+        this.add("item.galacticraft.empty_canned_food", "Empty Canned Food");
+        this.add("item.galacticraft.total_nutrition", "Total Nutrition: ");
+
 
         // Block Descriptions
         this.blockDesc(GCBlocks.ADVANCED_SOLAR_PANEL, "Advanced Solar Panels collect energy from the sun, and store it for further use. Adjusts position to face the sun, to collect more electricity.");

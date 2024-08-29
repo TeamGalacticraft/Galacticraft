@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.util;
 
 public interface Translations {
+
     interface ItemGroup {
         String ITEMS = "itemGroup.galacticraft.items";
         String BLOCKS = "itemGroup.galacticraft.blocks";
@@ -116,6 +117,12 @@ public interface Translations {
     interface Keybindings {
         String ROCKET_INVENTORY = "key.galacticraft.rocket.inventory";
         String OPEN_CELESTIAL_SCREEN = "key.galacticraft.open_celestial_screen";
+    }
+
+    interface Items {
+        String EMPTY_CANNED_FOOD = "item.galacticraft.empty_canned_food";
+        String CANNED_FOOD = "item.galacticraft.canned_food";
+        String TOTAL_NUTRITION = "item.galacticraft.total_nutrition";
     }
 
     interface CelestialBody {
