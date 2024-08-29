@@ -124,6 +124,7 @@ public class GCItems {
     public static final Item ASTEROID_ROCK = new BlockItem(GCBlocks.ASTEROID_ROCK, new Item.Properties());
     public static final Item ASTEROID_ROCK_1 = new BlockItem(GCBlocks.ASTEROID_ROCK_1, new Item.Properties());
     public static final Item ASTEROID_ROCK_2 = new BlockItem(GCBlocks.ASTEROID_ROCK_2, new Item.Properties());
+    public static final Item DENSE_ICE = new BlockItem(GCBlocks.DENSE_ICE, new Item.Properties());
 
     // VENUS NATURAL
     public static final Item SOFT_VENUS_ROCK = new BlockItem(GCBlocks.SOFT_VENUS_ROCK, new Item.Properties());
@@ -171,6 +172,11 @@ public class GCItems {
     public static final Item DEEPSLATE_TIN_ORE = new BlockItem(GCBlocks.DEEPSLATE_TIN_ORE, new Item.Properties());
     public static final Item MOON_TIN_ORE = new BlockItem(GCBlocks.MOON_TIN_ORE, new Item.Properties());
     public static final Item LUNASLATE_TIN_ORE = new BlockItem(GCBlocks.LUNASLATE_TIN_ORE, new Item.Properties());
+
+    public static final Item ASTEROID_ALUMINUM_ORE = new BlockItem(GCBlocks.ASTEROID_ALUMINUM_ORE, new Item.Properties());
+    public static final Item ASTEROID_TIN_ORE = new BlockItem(GCBlocks.ASTEROID_IRON_ORE, new Item.Properties());
+    public static final Item ASTEROID_SILICON_ORE = new BlockItem(GCBlocks.ASTEROID_SILICON_ORE, new Item.Properties());
+
 
     public static final Item ALUMINUM_ORE = new BlockItem(GCBlocks.ALUMINUM_ORE, new Item.Properties());
     public static final Item MARS_TIN_ORE = new BlockItem(GCBlocks.MARS_TIN_ORE, new Item.Properties());

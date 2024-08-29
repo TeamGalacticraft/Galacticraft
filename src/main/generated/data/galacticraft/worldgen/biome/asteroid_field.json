@@ -20,7 +20,7 @@
     "water_fog_color": 0
   },
   "features": [],
-  "has_precipitation": true,
+  "has_precipitation": false,
   "spawn_costs": {},
   "spawners": {
     "ambient": [],

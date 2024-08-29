@@ -27,6 +27,7 @@ public interface Translations {
         String ITEMS = "itemGroup.galacticraft.items";
         String BLOCKS = "itemGroup.galacticraft.blocks";
         String MACHINES = "itemGroup.galacticraft.machines";
+        String CANNED_FOOD = "itemGroup.galacticraft.canned_food";
     }
 
     interface RecipeCategory {

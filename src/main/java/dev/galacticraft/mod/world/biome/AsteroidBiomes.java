@@ -75,7 +75,7 @@ public class AsteroidBiomes {
 
         return new Biome.BiomeBuilder()
                 .mobSpawnSettings(spawnBuilder.build())
-                .hasPrecipitation(true)
+                .hasPrecipitation(false)
                 .temperature(-2F) // temp is hot to prevent snow
                 .downfall(0.5F)
                 .specialEffects(specialEffects.build())

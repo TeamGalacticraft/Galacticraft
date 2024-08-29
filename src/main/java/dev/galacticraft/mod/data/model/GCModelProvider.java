@@ -105,6 +105,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.ASTEROID_ROCK);
         generator.createTrivialCube(GCBlocks.ASTEROID_ROCK_1);
         generator.createTrivialCube(GCBlocks.ASTEROID_ROCK_2);
+        generator.createTrivialCube(GCBlocks.DENSE_ICE);
 
         // VENUS NATURAL
         generator.createTrivialCube(GCBlocks.SOFT_VENUS_ROCK);
@@ -159,6 +160,10 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.DEEPSLATE_TIN_ORE);
         generator.createTrivialCube(GCBlocks.MOON_TIN_ORE);
         generator.createTrivialCube(GCBlocks.LUNASLATE_TIN_ORE);
+
+        generator.createTrivialCube(GCBlocks.ASTEROID_ALUMINUM_ORE);
+        generator.createTrivialCube(GCBlocks.ASTEROID_IRON_ORE);
+        generator.createTrivialCube(GCBlocks.ASTEROID_SILICON_ORE);
 
         generator.createTrivialCube(GCBlocks.ALUMINUM_ORE);
         generator.createTrivialCube(GCBlocks.DEEPSLATE_ALUMINUM_ORE);

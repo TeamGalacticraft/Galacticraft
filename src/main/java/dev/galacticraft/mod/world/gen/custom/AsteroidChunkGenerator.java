@@ -170,19 +170,18 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
         this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.ASTEROID_ROCK_1,  7, .3));
         this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.ASTEROID_ROCK,  11, .25));
 
-        //TODO: FIX ORE TYPES ASTEROID DOESNT HAVE ORES
         //!ConfigManagerAst.disableAluminumGen
         if (true)
-            this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.ALUMINUM_ORE, 5, .2));
+            this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.ASTEROID_ALUMINUM_ORE, 5, .2));
         //!ConfigManagerAsteroids.disableIlmeniteGen
         if (true)
             this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.ILMENITE_ORE, 4, .15));
         //!ConfigManagerAsteroids.disableIronGen
         if (true)
-            this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.MARS_IRON_ORE, 3, .2));
+            this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.ASTEROID_IRON_ORE, 3, .2));
         //ConfigManagerCore.enableSiliconOreGen
         if (true)
-            this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.SILICON_ORE,2, .15));
+            this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.ASTEROID_SILICON_ORE,2, .15));
         //Solid Meteoric Iron - has no config to disable
         this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.METEORIC_IRON_BLOCK, 2, .13));
         //Diamond ore - has no config to disable
@@ -192,7 +191,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
         this.shellHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.ASTEROID_ROCK, 1, .15));
         this.shellHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.ASTEROID_ROCK_1, 3, .15));
         this.shellHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.ASTEROID_ROCK_2, 1, .15));
-        this.shellHandler.addBlock(new SpecialAsteroidBlock(Blocks.PACKED_ICE, 1, .15)); //TODO: REPLACE WITH DENSE ICE
+        this.shellHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.DENSE_ICE, 1, .15));
     }
 
     private ChunkAccess generateChunkData(Blender blender, RandomState randomState, StructureManager structureManager, ChunkAccess chunkAccess) {
@@ -264,8 +263,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
         if (rand.nextInt(AsteroidChunkGenerator.HOLLOW_CHANCE) == 0 && size >= AsteroidChunkGenerator.MIN_RADIUS_FOR_HOLLOW)
         {
             isHollow = true;
-            //TODO: set to dense ice
-            shell = new SpecialAsteroidBlock(Blocks.PACKED_ICE, 1, .15);
+            shell = new SpecialAsteroidBlock(GCBlocks.DENSE_ICE, 1, .15);
         }
 
         //Add to the list of asteroids for external use

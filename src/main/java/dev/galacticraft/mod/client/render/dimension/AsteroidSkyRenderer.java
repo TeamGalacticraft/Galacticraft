@@ -73,7 +73,7 @@ public class AsteroidSkyRenderer extends SpaceSkyRenderer {
 
         Matrix4f matrix = matrices.last().pose();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        float size = 20.0F;
+        float size = 6.0F;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, SUN_TEXTURE);
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
@@ -90,7 +90,7 @@ public class AsteroidSkyRenderer extends SpaceSkyRenderer {
         matrices.pushPose();
         matrix = matrices.last().pose();
 
-        size = 10.0F;
+        size = 1.0F;
         assert Minecraft.getInstance().player != null;
         float earthRotation = (float) (context.world().getSharedSpawnPos().getZ() - Minecraft.getInstance().player.getZ()) * 0.01F;
         matrices.scale(0.6F, 0.6F, 0.6F);

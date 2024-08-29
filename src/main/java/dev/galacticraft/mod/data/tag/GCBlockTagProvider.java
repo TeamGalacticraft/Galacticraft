@@ -155,6 +155,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 GCBlocks.SILICON_ORE, GCBlocks.DEEPSLATE_SILICON_ORE,
                 GCBlocks.MOON_COPPER_ORE, GCBlocks.LUNASLATE_COPPER_ORE,
                 GCBlocks.TIN_ORE, GCBlocks.DEEPSLATE_TIN_ORE, GCBlocks.MOON_TIN_ORE, GCBlocks.LUNASLATE_TIN_ORE,
+                GCBlocks.ASTEROID_ALUMINUM_ORE, GCBlocks.ASTEROID_IRON_ORE, GCBlocks.ASTEROID_SILICON_ORE,
                 GCBlocks.ALUMINUM_ORE, GCBlocks.DEEPSLATE_ALUMINUM_ORE,
                 GCBlocks.DESH_ORE,
                 GCBlocks.ILMENITE_ORE,
@@ -210,6 +211,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.ASTEROID_ROCK,
                         GCBlocks.ASTEROID_ROCK_1,
                         GCBlocks.ASTEROID_ROCK_2,
+                        GCBlocks.DENSE_ICE,
 
                         GCBlocks.TIN_DECORATION.block(),
                         GCBlocks.COPPER_DECORATION.block(),
@@ -259,6 +261,9 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.DEEPSLATE_TIN_ORE,
                         GCBlocks.MOON_TIN_ORE,
                         GCBlocks.LUNASLATE_TIN_ORE,
+                        GCBlocks.ASTEROID_ALUMINUM_ORE,
+                        GCBlocks.ASTEROID_IRON_ORE,
+                        GCBlocks.ASTEROID_SILICON_ORE,
                         GCBlocks.ALUMINUM_ORE,
                         GCBlocks.DEEPSLATE_ALUMINUM_ORE,
                         GCBlocks.GALENA_ORE

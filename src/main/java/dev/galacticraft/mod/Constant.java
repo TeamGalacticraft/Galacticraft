@@ -111,6 +111,7 @@ public interface Constant {
         String ASTEROID_ROCK = "asteroid_rock";
         String ASTEROID_ROCK_1 = "asteroid_rock_block_1";
         String ASTEROID_ROCK_2 = "asteroid_rock_block_2";
+        String DENSE_ICE = "dense_ice";
 
         String SOFT_VENUS_ROCK = "soft_venus_rock";
         String HARD_VENUS_ROCK = "hard_venus_rock";
@@ -133,6 +134,9 @@ public interface Constant {
         String DEEPSLATE_TIN_ORE = "deepslate_tin_ore";
         String MOON_TIN_ORE = "moon_tin_ore";
         String LUNASLATE_TIN_ORE = "lunaslate_tin_ore";
+        String ASTEROID_ALUMINUM_ORE = "asteroid_aluminum_ore";
+        String ASTEROID_IRON_ORE = "asteroid_iron_ore";
+        String ASTEROID_SILICON_ORE = "asteroid_silicon_ore";
         String ALUMINUM_ORE = "aluminum_ore";
         String DEEPSLATE_ALUMINUM_ORE = "deepslate_aluminum_ore";
         String GALENA_ORE = "galena_ore";

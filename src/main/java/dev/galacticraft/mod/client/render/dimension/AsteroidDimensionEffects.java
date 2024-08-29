@@ -58,7 +58,7 @@ public class AsteroidDimensionEffects extends DimensionSpecialEffects {
     public static final AsteroidDimensionEffects INSTANCE = new AsteroidDimensionEffects();
 
     private AsteroidDimensionEffects() {
-        super(Float.NaN, false, SkyType.NORMAL, true, true);
+        super(Float.NaN, false, SkyType.NORMAL, false, false);
     }
 
     @Override

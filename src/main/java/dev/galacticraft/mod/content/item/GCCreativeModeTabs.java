@@ -410,11 +410,10 @@ public class GCCreativeModeTabs {
                 // MACHINES
             }).build();
 
-    //Todo: fix up my bad programming to be translatable
     public static final CreativeModeTab CANNED_FOOD_GROUP = FabricItemGroup
             .builder()
             .icon(() -> new ItemStack(CANNED_FOOD))
-            .title(Component.literal("Galacticraft Cans"))
+            .title(Component.translatable(Translations.ItemGroup.CANNED_FOOD))
             .displayItems((parameters, output) -> {
                 output.accept(EMPTY_CANNED_FOOD);
             }).build();

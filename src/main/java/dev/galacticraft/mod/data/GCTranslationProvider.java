@@ -51,6 +51,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(ItemGroup.BLOCKS, "Galacticraft Blocks");
         this.add(ItemGroup.ITEMS, "Galacticraft Items");
         this.add(ItemGroup.MACHINES, "Galacticraft Machines");
+        this.add(ItemGroup.CANNED_FOOD, "Canned Food");
 
         this.block(GCBlocks.ASTEROID_ROCK_1, "Asteroid Rock");
         this.block(GCBlocks.ASTEROID_ROCK_2, "Asteroid Rock");

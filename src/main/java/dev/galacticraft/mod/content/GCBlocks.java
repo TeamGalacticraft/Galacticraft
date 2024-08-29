@@ -165,6 +165,7 @@ public class GCBlocks {
     public static final Block ASTEROID_ROCK = BLOCKS.register(Constant.Block.ASTEROID_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).instrument(NoteBlockInstrument.BASEDRUM).destroyTime(3.0F)));
     public static final Block ASTEROID_ROCK_1 = BLOCKS.register(Constant.Block.ASTEROID_ROCK_1, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).instrument(NoteBlockInstrument.BASEDRUM).destroyTime(3.0F))); // todo naming
     public static final Block ASTEROID_ROCK_2 = BLOCKS.register(Constant.Block.ASTEROID_ROCK_2, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).instrument(NoteBlockInstrument.BASEDRUM).destroyTime(3.0F)));
+    public static final Block DENSE_ICE = BLOCKS.register(Constant.Block.DENSE_ICE, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLUE).instrument(NoteBlockInstrument.BASS).destroyTime(1.0F)));
 
     // VENUS NATURAL
     public static final Block SOFT_VENUS_ROCK = BLOCKS.register(Constant.Block.SOFT_VENUS_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F)));
@@ -214,6 +215,10 @@ public class GCBlocks {
     public static final Block DEEPSLATE_TIN_ORE = BLOCKS.register(Constant.Block.DEEPSLATE_TIN_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(4.5F, 3.0F, true)));
     public static final Block MOON_TIN_ORE = BLOCKS.register(Constant.Block.MOON_TIN_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 5.0F, false)));
     public static final Block LUNASLATE_TIN_ORE = BLOCKS.register(Constant.Block.LUNASLATE_TIN_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(5.0F, 5.0F, true)));
+
+    public static final Block ASTEROID_ALUMINUM_ORE = BLOCKS.register(Constant.Block.ASTEROID_ALUMINUM_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 3.0F, false)));
+    public static final Block ASTEROID_IRON_ORE = BLOCKS.register(Constant.Block.ASTEROID_IRON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 3.0F, false)));
+    public static final Block ASTEROID_SILICON_ORE = BLOCKS.register(Constant.Block.ASTEROID_SILICON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 3.0F, false)));
 
     public static final Block ALUMINUM_ORE = BLOCKS.register(Constant.Block.ALUMINUM_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 3.0F, false)));
     public static final Block DEEPSLATE_ALUMINUM_ORE = BLOCKS.register(Constant.Block.DEEPSLATE_ALUMINUM_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.5F, 3.0F, true)));
