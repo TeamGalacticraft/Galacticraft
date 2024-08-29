@@ -5,13 +5,15 @@
     "access_weight": 2,
     "atmosphere": {
       "composition": {},
-      "pressure": 0,
-      "temperature": -1.5
+      "pressure": 0.0,
+      "temperature": -2.0
     },
     "celestial_handler": "galacticraft:default",
     "day_length": 99999999,
-    "day_temperature": -1.5,
-    "description": "planet.galacticraft.asteroid.description",
+    "day_temperature": -2,
+    "description": {
+      "translate": "planet.galacticraft.asteroid.description"
+    },
     "display": {
       "type": "galacticraft:icon",
       "config": {
@@ -23,17 +25,18 @@
         "width": 16
       }
     },
-    "galaxy": "galacticraft:milky_way",
     "gravity": 0.1,
-    "name": "planet.galacticraft.asteroid",
-    "night_temperature": -1.5,
+    "name": {
+      "translate": "planet.galacticraft.asteroid"
+    },
+    "night_temperature": -2,
     "position": {
       "type": "galacticraft:orbital",
       "config": {
         "distance": 0.75,
         "orbit_time": 0.6152793169021606,
         "phase_shift": 2.0,
-        "planet": true
+        "planet": false
       }
     },
     "ring": {

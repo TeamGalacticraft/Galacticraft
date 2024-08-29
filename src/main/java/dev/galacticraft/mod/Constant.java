@@ -27,6 +27,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.data.models.model.ModelTemplate;
+import net.minecraft.data.models.model.TextureSlot;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;

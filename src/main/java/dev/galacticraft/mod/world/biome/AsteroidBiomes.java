@@ -65,7 +65,7 @@ public class AsteroidBiomes {
         specialEffects.waterColor(0)
                 .waterFogColor(0)
                 .fogColor(0)
-                .skyColor(new Color(0, 0, 0).getRGB())
+                .skyColor(0)
                 .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS)
                 .backgroundMusic(Musics.createGameMusic(GCSounds.MUSIC_MOON));
 

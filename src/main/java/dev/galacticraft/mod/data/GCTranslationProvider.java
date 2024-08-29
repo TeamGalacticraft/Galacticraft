@@ -293,6 +293,10 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(MachineStatus.ALREADY_SEALED, "Already Sealed");
         this.add(MachineStatus.AREA_TOO_LARGE, "Area Too Large");
+        this.add(MachineStatus.MISSING_EMPTY_CAN, "Missing Empty Can");
+        this.add(MachineStatus.NO_FOOD, "No Food");
+        this.add(MachineStatus.TRANSFERRING_CAN, "Transferring Can");
+        this.add(MachineStatus.CANNING, "Canning");
         this.add(MachineStatus.BLOCKED, "Blocked");
         this.add(MachineStatus.COLLECTING, "Collecting");
         this.add(MachineStatus.COMPRESSING, "Compressing");

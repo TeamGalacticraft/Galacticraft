@@ -3,10 +3,10 @@
   "generator": {
     "type": "galacticraft:asteroid_chunk_generator",
     "biomeSource": {
-      "type": "minecraft:fixed",
-      "biome": "galacticraft:asteroid_field"
+      "type": "minecraft:multi_noise",
+      "preset": "galacticraft:asteroid"
     },
-    "par2": 1000,
-    "dimensionKey": "galacticraft:asteroid"
+    "dimensionKey": "galacticraft:asteroid",
+    "par2": 1000
   }
 }

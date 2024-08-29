@@ -205,6 +205,11 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.LEAD_BLOCK);
         this.dropSelf(GCBlocks.LUNAR_SAPPHIRE_BLOCK);
 
+        //TODO: maybe make it drop ores instead of self
+        this.dropSelf(GCBlocks.MARS_COPPER_ORE);
+        this.dropSelf(GCBlocks.MARS_TIN_ORE);
+        this.dropSelf(GCBlocks.MARS_IRON_ORE);
+
         this.add(GCBlocks.FALLEN_METEOR, block -> BlockLootSubProvider.createSilkTouchDispatchTable(block, this.applyExplosionDecay(block, LootItem.lootTableItem(GCItems.RAW_METEORIC_IRON)
                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 2.0f))))));
 

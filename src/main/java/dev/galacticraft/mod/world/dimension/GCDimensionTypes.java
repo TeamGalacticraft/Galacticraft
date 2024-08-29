@@ -76,7 +76,7 @@ public class GCDimensionTypes {
         ));
         context.register(ASTEROID, new DimensionType(
                 OptionalLong.empty(), // fixedTime
-                true, // hasSkyLight
+                false, // hasSkyLight
                 false, // hasCeiling
                 false, // ultraWarm
                 false, // natural
@@ -88,7 +88,7 @@ public class GCDimensionTypes {
                 384, // logicalHeight
                 GCTags.INFINIBURN_ASTEROID, // infiniburn
                 Constant.id("asteroid"), // effectsLocation // fixme
-                0.1F, // ambientLight
+                0.0F, // ambientLight
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)
         ));
     }

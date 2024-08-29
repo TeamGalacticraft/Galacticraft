@@ -164,6 +164,10 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.DEEPSLATE_ALUMINUM_ORE);
 
         generator.createTrivialCube(GCBlocks.DESH_ORE);
+        generator.createTrivialCube(GCBlocks.MARS_COPPER_ORE);
+        generator.createTrivialCube(GCBlocks.MARS_IRON_ORE);
+        generator.createTrivialCube(GCBlocks.MARS_TIN_ORE);
+
 
         generator.createTrivialCube(GCBlocks.ILMENITE_ORE);
 
@@ -240,7 +244,6 @@ public class GCModelProvider extends FabricModelProvider {
 
         generator.createTrivialCube(GCBlocks.AIR_LOCK_FRAME);
         this.createAirLockController(generator);
-        generator.createNonTemplateModelBlock(GCBlocks.AIR_LOCK_SEAL);
 
         var para = MultiPartGenerator.multiPart(GCBlocks.PARACHEST);
         GCBlocks.PARACHEST.getStateDefinition().getPossibleStates().forEach(state -> {

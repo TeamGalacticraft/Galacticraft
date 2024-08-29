@@ -23,15 +23,16 @@
 package dev.galacticraft.mod.world.dimension;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.world.biome.GCBiomes;
 import dev.galacticraft.mod.world.biome.source.GCMultiNoiseBiomeSourceParameterLists;
 import dev.galacticraft.mod.world.gen.GCNoiseGeneratorSettings;
+import dev.galacticraft.mod.world.gen.custom.AsteroidChunkGenerator;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.MultiNoiseBiomeSource;
-import net.minecraft.world.level.biome.MultiNoiseBiomeSourceParameterList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
@@ -53,7 +54,7 @@ public class GCLevelStems {
         // the returned reference may be null
 //        context.register(MOON, new LevelStem(typeLookup.getOrThrow(GCDimensionTypes.MOON), new NoiseBasedChunkGenerator(MultiNoiseBiomeSource.createFromPreset(biomeNoiseLookup.getOrThrow(GCMultiNoiseBiomeSourceParameterLists.MOON)), noiseLookup.getOrThrow(GCNoiseGeneratorSettings.MOON))));
         context.register(VENUS, new LevelStem(typeLookup.getOrThrow(GCDimensionTypes.VENUS), new NoiseBasedChunkGenerator(MultiNoiseBiomeSource.createFromPreset(biomeNoiseLookup.getOrThrow(GCMultiNoiseBiomeSourceParameterLists.VENUS)), noiseLookup.getOrThrow(GCNoiseGeneratorSettings.VENUS))));
-        context.register(ASTEROID, new LevelStem(typeLookup.getOrThrow(GCDimensionTypes.ASTEROID), new NoiseBasedChunkGenerator(MultiNoiseBiomeSource.createFromPreset(biomeNoiseLookup.getOrThrow(GCMultiNoiseBiomeSourceParameterLists.ASTEROID)), noiseLookup.getOrThrow(GCNoiseGeneratorSettings.ASTEROID))));
+        context.register(ASTEROID, new LevelStem(typeLookup.getOrThrow(GCDimensionTypes.ASTEROID), new AsteroidChunkGenerator(MultiNoiseBiomeSource.createFromPreset(biomeNoiseLookup.getOrThrow(GCMultiNoiseBiomeSourceParameterLists.ASTEROID)), ResourceKey.create(Registries.DIMENSION, new ResourceLocation("galacticraft", "asteroid")), 1000)));
     }
 
     @Contract(value = "_ -> new", pure = true)
