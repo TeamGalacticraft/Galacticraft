@@ -1,0 +1,9 @@
+{
+  "parent": "galacticraft:block/rocket_launch_pad_center",
+  "textures": {
+    "bottom": "galacticraft:block/netherite_rocket_launch_pad",
+    "particle": "galacticraft:block/netherite_rocket_launch_pad",
+    "side": "galacticraft:block/netherite_rocket_launch_pad",
+    "top": "galacticraft:block/netherite_rocket_launch_pad"
+  }
+}

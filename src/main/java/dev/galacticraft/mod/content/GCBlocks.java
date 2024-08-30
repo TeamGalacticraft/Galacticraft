@@ -43,6 +43,7 @@ import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlock;
 import dev.galacticraft.mod.content.block.special.walkway.FluidPipeWalkway;
 import dev.galacticraft.mod.content.block.special.walkway.WalkwayBlock;
 import dev.galacticraft.mod.content.block.special.walkway.WireWalkway;
+import dev.galacticraft.mod.rockets.RocketParts;
 import dev.galacticraft.mod.util.MultiBlockUtil;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FlattenableBlockRegistry;
@@ -59,6 +60,8 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.ToIntFunction;
 
 @SuppressWarnings("unused")
@@ -188,7 +191,6 @@ public class GCBlocks {
     public static final Block HEAVY_SEALABLE_ALUMINUM_WIRE = BLOCKS.register(Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE, new HeavySealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(TIN_DECORATION.block())));
     public static final Block GLASS_FLUID_PIPE = BLOCKS.register(Constant.Block.GLASS_FLUID_PIPE, new GlassFluidPipeBlock(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).sound(SoundType.GLASS)));
     public static final Block FUELING_PAD = BLOCKS.register(Constant.Block.FUELING_PAD, new FuelPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 10.0F)));
-    public static final Block ROCKET_LAUNCH_PAD = BLOCKS.register(Constant.Block.ROCKET_LAUNCH_PAD, new LaunchPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 10.0F)));
     public static final Block ROCKET_WORKBENCH = BLOCKS.register(Constant.Block.ROCKET_WORKBENCH, new RocketWorkbench(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F)));
     public static final Block PARACHEST = BLOCKS.registerWithItem(Constant.Block.PARACHEST, new ParaChestBlock(BlockBehaviour.Properties.of()));
 
@@ -302,6 +304,9 @@ public class GCBlocks {
     public static final AirlockBlock AIR_LOCK_CONTROLLER = BLOCKS.register(Constant.Block.AIR_LOCK_CONTROLLER, new AirlockBlock(true, BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)));
     public static final Block AIR_LOCK_SEAL = BLOCKS.register(Constant.Block.AIR_LOCK_SEAL, new AirlockSealBlock(BlockBehaviour.Properties.ofFullCopy(AIR_LOCK_FRAME)));
 
+    //dynamic rockets
+    public static List<Block> LAUNCH_PADS = new ArrayList<>();
+
     public static Block register(String id, Block block) {
         return Registry.register(BuiltInRegistries.BLOCK, Constant.id(id), block);
     }
@@ -312,6 +317,10 @@ public class GCBlocks {
         FlammableBlockRegistry.getDefaultInstance().add(CAVERNOUS_VINES, 15, 60);
         FlammableBlockRegistry.getDefaultInstance().add(CAVERNOUS_VINES_PLANT, 15, 60);
         FlattenableBlockRegistry.register(MOON_DIRT, MOON_DIRT_PATH.defaultBlockState());
+        for (LaunchPadBlock launchPadBlock : RocketParts.LAUNCH_PADS)
+        {
+            LAUNCH_PADS.add(BLOCKS.register(launchPadBlock.getType(), launchPadBlock));
+        }
     }
 
     private static BlockBehaviour.Properties oreSettings(float hardness, float resistance, boolean deepslate) {

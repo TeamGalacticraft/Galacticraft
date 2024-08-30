@@ -2,20 +2,19 @@
   "credit": "Made with Blockbench",
   "parent": "block/thin_block",
   "textures": {
-    "particle": "galacticraft:block/rocket_launch_pad",
-    "all": "galacticraft:block/rocket_launch_pad"
+    "particle": "#top"
   },
   "elements": [
     {
       "from": [0, 0, 0],
       "to": [16, 3, 16],
       "faces": {
-        "north": {"uv": [0, 0, 16, 3], "texture": "#all", "cullface": "north"},
-        "east": {"uv": [0, 0, 16, 3], "texture": "#all", "cullface": "east"},
-        "south": {"uv": [0, 0, 16, 3], "texture": "#all", "cullface": "south"},
-        "west": {"uv": [0, 0, 16, 3], "texture": "#all", "cullface": "west"},
-        "up": {"uv": [0, 0, 16, 16], "texture": "#all"},
-        "down": {"uv": [0, 0, 16, 16], "texture": "#all", "cullface": "down"}
+        "north": {"uv": [0, 0, 16, 3], "texture": "#side", "cullface": "north"},
+        "east": {"uv": [0, 0, 16, 3], "texture": "#side", "cullface": "east"},
+        "south": {"uv": [0, 0, 16, 3], "texture": "#side", "cullface": "south"},
+        "west": {"uv": [0, 0, 16, 3], "texture": "#side", "cullface": "west"},
+        "up": {"uv": [0, 0, 16, 16], "texture": "#top"},
+        "down": {"uv": [0, 0, 16, 16], "texture": "#bottom", "cullface": "down"}
       }
     }
   ]

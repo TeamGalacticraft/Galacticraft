@@ -247,7 +247,6 @@ public interface Constant {
 
         // Pad Blocks
         String FUELING_PAD = "fueling_pad";
-        String ROCKET_LAUNCH_PAD = "rocket_launch_pad";
         String FUEL_LOADER = "fuel_loader";
         String CARGO_LOADER = "cargo_loader";
         String CARGO_UNLOADER = "cargo_unloader";

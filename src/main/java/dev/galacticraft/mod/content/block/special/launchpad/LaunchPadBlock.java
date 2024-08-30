@@ -23,17 +23,26 @@
 package dev.galacticraft.mod.content.block.special.launchpad;
 
 import com.mojang.serialization.MapCodec;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class LaunchPadBlock extends AbstractLaunchPad {
-    public static final MapCodec<LaunchPadBlock> CODEC = simpleCodec(LaunchPadBlock::new);
+    public static final MapCodec<LaunchPadBlock> CODEC = simpleCodec(properties1 -> new LaunchPadBlock(properties1, "", 0));
+    public String type;
+    public Integer thrust;
 
-    public LaunchPadBlock(Properties properties) {
+    public LaunchPadBlock(Properties properties, String type, Integer thrust) {
         super(properties);
+        this.type = type;
+        this.thrust = thrust;
     }
 
+    public String getType()
+    {
+        return type + "rocket_launch_pad";
+    }
     @Override
     protected MapCodec<? extends AbstractLaunchPad> codec() {
         return CODEC;
@@ -41,6 +50,10 @@ public class LaunchPadBlock extends AbstractLaunchPad {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new LaunchPadBlockEntity(pos, state, LaunchPadBlockEntity.Type.ROCKET);
+        return new LaunchPadBlockEntity(pos, state, LaunchPadBlockEntity.Type.ROCKET, 0, GCBlockEntityTypes.LAUNCH_PADS.get(0));
+    }
+
+    public Integer getThrust() {
+        return this.thrust;
     }
 }

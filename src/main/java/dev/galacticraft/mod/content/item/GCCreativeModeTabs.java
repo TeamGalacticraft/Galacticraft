@@ -39,6 +39,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import static dev.galacticraft.mod.content.GCBlocks.FOOD_CANNER;
@@ -343,7 +344,12 @@ public class GCCreativeModeTabs {
                 output.accept(HEAVY_SEALABLE_ALUMINUM_WIRE);
                 output.accept(GLASS_FLUID_PIPE);
                 output.accept(FUELING_PAD);
-                output.accept(ROCKET_LAUNCH_PAD);
+
+
+                for (Item launchPad : GCItems.LAUNCH_PADS)
+                {
+                    output.accept(launchPad);
+                }
 
                 for (DyeColor color : DyeColor.values()) {
                     ItemStack stack = new ItemStack(GCBlocks.PARACHEST);

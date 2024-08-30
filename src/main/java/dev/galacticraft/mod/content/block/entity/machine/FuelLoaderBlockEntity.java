@@ -91,7 +91,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         if (this.check != null) {
             BlockPos launchPad = this.worldPosition.relative(this.check);
-            if (this.level.getBlockState(launchPad).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD) {
+            if (GCBlocks.LAUNCH_PADS.contains(this.level.getBlockState(launchPad).getBlock())) {
                 launchPad = launchPad.offset(AbstractLaunchPad.partToCenterPos(level.getBlockState(launchPad).getValue(AbstractLaunchPad.PART)));
                 if (this.level.getBlockState(launchPad).getBlock() instanceof AbstractLaunchPad
                         && this.level.getBlockState(launchPad).getValue(AbstractLaunchPad.PART) == AbstractLaunchPad.Part.CENTER

@@ -25,6 +25,7 @@ package dev.galacticraft.mod.data.tag;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.rockets.RocketParts;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
@@ -169,11 +170,11 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ores)
                 .add(slab)
                 .add(stairs)
+                .add(GCBlocks.LAUNCH_PADS.toArray(new Block[0]))
                 .add(
                         GCBlocks.FALLEN_METEOR,
                         GCBlocks.TIN_LADDER,
                         GCBlocks.FUELING_PAD,
-                        GCBlocks.ROCKET_LAUNCH_PAD,
                         GCBlocks.GLOWSTONE_LANTERN,
                         GCBlocks.UNLIT_LANTERN,
                         GCBlocks.GRATING,
