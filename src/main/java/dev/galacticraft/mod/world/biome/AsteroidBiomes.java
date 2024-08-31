@@ -47,15 +47,6 @@ public class AsteroidBiomes {
 //        builder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_WITCH, 5, 1, 1));
     }
 
-    public static void addDefaultAsteroidOres(BiomeGenerationSettings.Builder builder) {
-//        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GCOrePlacedFeatures.ORE_COPPER_MOON);
-//        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GCOrePlacedFeatures.ORE_COPPER_LARGE_MOON);
-//
-//        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GCOrePlacedFeatures.ORE_TIN_SMALL_MOON);
-//        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GCOrePlacedFeatures.ORE_TIN_MIDDLE_MOON);
-//        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GCOrePlacedFeatures.ORE_TIN_UPPER_MOON);
-    }
-
     public static Biome asteroid(
             HolderGetter<PlacedFeature> featureGetter, HolderGetter<ConfiguredWorldCarver<?>> carverGetter
     ) {
@@ -67,16 +58,13 @@ public class AsteroidBiomes {
                 .fogColor(0)
                 .skyColor(0)
                 .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS)
-                .backgroundMusic(Musics.createGameMusic(GCSounds.MUSIC_MOON));
-
-        AsteroidBiomes.addDefaultAsteroidOres(generation);
-//        AsteroidBiomes.addDefaultSoftDisks(generation);
+                .backgroundMusic(Musics.createGameMusic(GCSounds.MUSIC_ORBIT));
         AsteroidBiomes.monsters(spawnBuilder, 95, 5, 100);
 
         return new Biome.BiomeBuilder()
                 .mobSpawnSettings(spawnBuilder.build())
                 .hasPrecipitation(false)
-                .temperature(-2F) // temp is hot to prevent snow
+                .temperature(2.0F)
                 .downfall(0.5F)
                 .specialEffects(specialEffects.build())
                 .generationSettings(generation.build())

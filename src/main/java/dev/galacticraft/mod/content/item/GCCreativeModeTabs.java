@@ -186,6 +186,11 @@ public class GCCreativeModeTabs {
                 output.accept(ROCKET_FIN);
                 output.accept(ROCKET_ENGINE);
 
+                for (Item noseCone : NOSE_CONES)
+                {
+                    output.accept(noseCone);
+                }
+
                 // SCHEMATICS
                 output.accept(TIER_2_ROCKET_SCHEMATIC);
                 output.accept(CARGO_ROCKET_SCHEMATIC);
