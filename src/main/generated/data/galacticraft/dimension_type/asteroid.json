@@ -3,7 +3,7 @@
   "bed_works": false,
   "coordinate_scale": 1.0,
   "effects": "galacticraft:asteroid",
-  "has_ceiling": true,
+  "has_ceiling": false,
   "has_raids": false,
   "has_skylight": false,
   "height": 384,

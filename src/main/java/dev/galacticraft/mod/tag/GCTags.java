@@ -72,7 +72,6 @@ public class GCTags {
     public static final TagKey<Item> COMPRESSED_STEEL = commonTag("compressed_steel");
     public static final TagKey<Item> COMPRESSED_IRON = commonTag("compressed_iron");
     public static final TagKey<Item> COMPRESSED_TIN = commonTag("compressed_tin");
-    public static final TagKey<Item> ROCKET_NOSE_CONE = commonTag("rocket_nose_cone");
 
     public static final TagKey<Structure> MOON_RUINS = TagKey.create(Registries.STRUCTURE, Constant.id("moon_ruins"));
 

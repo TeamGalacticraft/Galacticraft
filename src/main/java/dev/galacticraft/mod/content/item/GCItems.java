@@ -28,7 +28,6 @@ import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCRegistry;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlock;
-import dev.galacticraft.mod.rockets.RocketNoseConeItem;
 import dev.galacticraft.mod.rockets.RocketParts;
 import dev.galacticraft.mod.util.TextureUtils;
 import dev.galacticraft.mod.util.Translations;
@@ -439,7 +438,6 @@ public class GCItems {
 
     //rocket parts
     public static List<Item> LAUNCH_PADS = new ArrayList<>();
-    public static List<Item> NOSE_CONES = new ArrayList<>();
 
     public static void register() {
         // === START BLOCKS ===
@@ -450,10 +448,6 @@ public class GCItems {
         for (LaunchPadBlock launchPadBlock : RocketParts.LAUNCH_PADS)
         {
             LAUNCH_PADS.add(ITEMS.register(launchPadBlock.getType(), new BlockItem(launchPadBlock, new Item.Properties())));
-        }
-        for (RocketNoseConeItem noseConeItem : RocketParts.NOSE_CONES)
-        {
-            NOSE_CONES.add(ITEMS.register(noseConeItem.getType(), noseConeItem));
         }
 
         // MOON NATURAL

@@ -44,7 +44,6 @@ import net.minecraft.data.models.model.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -422,10 +421,6 @@ public class GCModelProvider extends FabricModelProvider {
 
         generator.generateFlatItem(GCItems.NOSE_CONE, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.HEAVY_NOSE_CONE, "_joined", ModelTemplates.FLAT_ITEM);
-        for (Item noseCone : GCItems.NOSE_CONES)
-        {
-            generator.generateFlatItem(noseCone, ModelTemplates.FLAT_ITEM);
-        }
 
         // ROCKET PLATES
         generator.generateFlatItem(GCItems.TIER_1_HEAVY_DUTY_PLATE, ModelTemplates.FLAT_ITEM);

@@ -127,9 +127,6 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 GCItems.BEEF_PATTY,
                 GCItems.CHEESEBURGER
         );
-
-        //rocket tags
-        tag(GCTags.ROCKET_NOSE_CONE).add(GCItems.NOSE_CONES.toArray(new Item[0]));
     }
 
     protected FabricTagProvider<Item>.FabricTagBuilder tag(TagKey<Item> tag) {

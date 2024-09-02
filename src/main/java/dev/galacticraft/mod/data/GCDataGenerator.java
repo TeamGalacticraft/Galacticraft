@@ -82,6 +82,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(GCStructureTagProvider::new);
 
         // world generation
+//        pack.addProvider(BootstrapDataProvider.create("Noise", GCNoiseData::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Density Functions", GCDensityFunctions::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Biomes", GCBiomes::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Dimension Types", GCDimensionTypes::bootstrapRegistries));
