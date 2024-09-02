@@ -1,0 +1,8 @@
+{
+  "machinelib:generate": "machinelib:z_axis",
+  "sprites": {
+    "back": "galacticraft:block/oxygen_storage_model_8",
+    "front": "galacticraft:block/oxygen_storage_model_8",
+    "sided": false
+  }
+}
