@@ -86,7 +86,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.OXYGEN_COMPRESSOR,
                         GCBlocks.FOOD_CANNER,
                         GCBlocks.OXYGEN_STORAGE_MODULE,
-                        GCBlocks.FUEL_LOADER
+                        GCBlocks.FUEL_LOADER,
+                        GCBlocks.ROCKET_WORKBENCH
                 );
 
         this.tag(BlockTags.CLIMBABLE)

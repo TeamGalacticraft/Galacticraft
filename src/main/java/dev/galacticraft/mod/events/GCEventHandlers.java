@@ -80,14 +80,17 @@ public class GCEventHandlers {
         {
             ItemStack itemStack = player.getItemInHand(hand);
 
-            if (itemStack.getItem() instanceof CannedFoodItem)
+            if (itemStack.isEdible())
             {
-                return InteractionResultHolder.pass(itemStack);
-            } else {
+                if (itemStack.getItem() instanceof CannedFoodItem)
+                {
+                    return InteractionResultHolder.pass(itemStack);
+                } else {
                     player.displayClientMessage(Component.literal("You cannot eat this here!").withColor(Color.RED.getRGB()), true);
                     player.playNotifySound(SoundEvents.GENERIC_EAT, player.getSoundSource(), 1.0F, 1.0F);
 
-                return InteractionResultHolder.fail(itemStack);
+                    return InteractionResultHolder.fail(itemStack);
+                }
             }
         }
         return InteractionResultHolder.pass(player.getItemInHand(hand));

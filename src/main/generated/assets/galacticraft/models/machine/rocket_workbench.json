@@ -1,0 +1,15 @@
+{
+  "machinelib:generate": "machinelib:front_face",
+  "sprites": {
+    "sprite": "galacticraft:block/refinery_front"
+  },
+  "textures": {
+    "down": "galacticraft:block/machine_side",
+    "east": "galacticraft:block/machine_side",
+    "north": "galacticraft:block/machine_side",
+    "particle": "galacticraft:block/machine_side",
+    "south": "galacticraft:block/machine_side",
+    "up": "galacticraft:block/machine_side",
+    "west": "galacticraft:block/machine_side"
+  }
+}

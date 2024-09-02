@@ -1,8 +1,8 @@
 {
   "machinelib:generate": "machinelib:z_axis",
   "sprites": {
-    "front": "galacticraft:block/food_canner",
     "back": "galacticraft:block/food_canner_back",
+    "front": "galacticraft:block/food_canner",
     "sided": true
   }
 }
