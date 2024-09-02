@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_iron_block": {
+    "has_desh_block": {
       "conditions": {
         "items": [
           {
             "items": [
-              "minecraft:iron_block"
+              "galacticraft:desh_block"
             ]
           }
         ]
@@ -23,7 +23,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_iron_block"
+      "has_desh_block"
     ]
   ],
   "rewards": {

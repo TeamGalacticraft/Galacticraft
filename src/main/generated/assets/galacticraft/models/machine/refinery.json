@@ -1,8 +1,0 @@
-{
-  "machinelib:generate": "machinelib:z_axis",
-  "sprites": {
-    "back": "galacticraft:block/refinery_back",
-    "front": "galacticraft:block/refinery_front",
-    "sided": true
-  }
-}

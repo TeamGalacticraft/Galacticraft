@@ -1,7 +1,6 @@
 {
   "machinelib:generate": "machinelib:single",
   "sprites": {
-    "particle": "galacticraft:block/oxygen_bubble_distributor",
     "sprite": "galacticraft:block/oxygen_bubble_distributor"
   }
 }

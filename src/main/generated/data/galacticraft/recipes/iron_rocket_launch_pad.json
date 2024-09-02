@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "C": {
-      "item": "galacticraft:compressed_steel"
+      "item": "galacticraft:compressed_iron"
     },
     "I": {
-      "item": "galacticraft:desh_block"
+      "item": "minecraft:iron_block"
     }
   },
   "pattern": [
