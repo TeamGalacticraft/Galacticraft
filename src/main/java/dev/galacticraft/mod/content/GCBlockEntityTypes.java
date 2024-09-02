@@ -30,16 +30,11 @@ import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEn
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import dev.galacticraft.mod.content.block.entity.networked.WireWalkwayBlockEntity;
 import dev.galacticraft.mod.content.block.special.ParaChestBlockEntity;
-import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlock;
 import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlockEntity;
-import dev.galacticraft.mod.rockets.RocketParts;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class GCBlockEntityTypes {
     public static final GCRegistry<BlockEntityType<?>> BLOCK_ENTITIES = new GCRegistry<>(BuiltInRegistries.BLOCK_ENTITY_TYPE);
@@ -77,10 +72,7 @@ public class GCBlockEntityTypes {
     public static final BlockEntityType<OxygenStorageModuleBlockEntity> OXYGEN_STORAGE_MODULE = FabricBlockEntityTypeBuilder.create(OxygenStorageModuleBlockEntity::new, GCBlocks.OXYGEN_STORAGE_MODULE).build();
 
     // ROCKETS
-    public static List<BlockEntityType<LaunchPadBlockEntity>> LAUNCH_PADS = new ArrayList<>();
-
-
-
+    public static final BlockEntityType<LaunchPadBlockEntity> LAUNCH_PAD = FabricBlockEntityTypeBuilder.create(LaunchPadBlockEntity::new, GCBlocks.ROCKET_LAUNCH_PAD).build();
     public static final BlockEntityType<FuelLoaderBlockEntity> FUEL_LOADER = FabricBlockEntityTypeBuilder.create(FuelLoaderBlockEntity::new, GCBlocks.FUEL_LOADER).build();
     public static final BlockEntityType<ParaChestBlockEntity> PARACHEST = FabricBlockEntityTypeBuilder.create(ParaChestBlockEntity::new, GCBlocks.PARACHEST).build();
 
@@ -94,17 +86,6 @@ public class GCBlockEntityTypes {
     public static final BlockEntityType<RocketWorkbenchBlockEntity> ROCKET_WORKBENCH = FabricBlockEntityTypeBuilder.create(RocketWorkbenchBlockEntity::new, GCBlocks.ROCKET_WORKBENCH).build();
 
     public static void register() {
-        //ROCKET PARTS
-        for (LaunchPadBlock launchPadBlock : RocketParts.LAUNCH_PADS)
-        {
-            var ref = new Object() {
-                BlockEntityType<LaunchPadBlockEntity> launchPadBlockEntityBlockEntityType = null;
-            };
-            ref.launchPadBlockEntityBlockEntityType = FabricBlockEntityTypeBuilder.create((pos, state) -> new LaunchPadBlockEntity(pos, state, launchPadBlock.getThrust(), ref.launchPadBlockEntityBlockEntityType), launchPadBlock).build();
-            LAUNCH_PADS.add(ref.launchPadBlockEntityBlockEntityType);
-            Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(launchPadBlock.getType()), ref.launchPadBlockEntityBlockEntityType);
-        }
-
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.COAL_GENERATOR), COAL_GENERATOR);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.BASIC_SOLAR_PANEL), BASIC_SOLAR_PANEL);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.ADVANCED_SOLAR_PANEL), ADVANCED_SOLAR_PANEL);
@@ -134,6 +115,7 @@ public class GCBlockEntityTypes {
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.FUEL_LOADER), FUEL_LOADER);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.PARACHEST), PARACHEST);
 
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.ROCKET_LAUNCH_PAD), LAUNCH_PAD);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.SOLAR_PANEL_PART), SOLAR_PANEL_PART);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.CRYOGENIC_CHAMBER_PART), CRYOGENIC_CHAMBER_PART);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.CRYOGENIC_CHAMBER), CRYOGENIC_CHAMBER);

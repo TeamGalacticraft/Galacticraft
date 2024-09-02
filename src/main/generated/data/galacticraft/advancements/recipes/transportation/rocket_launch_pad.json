@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "galacticraft:iron_rocket_launch_pad"
+        "recipe": "galacticraft:rocket_launch_pad"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "galacticraft:iron_rocket_launch_pad"
+      "galacticraft:rocket_launch_pad"
     ]
   }
 }

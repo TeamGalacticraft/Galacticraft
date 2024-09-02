@@ -1,9 +1,0 @@
-{
-  "parent": "galacticraft:block/rocket_launch_pad_center",
-  "textures": {
-    "bottom": "galacticraft:block/testrocket_launch_pad",
-    "particle": "galacticraft:block/testrocket_launch_pad",
-    "side": "galacticraft:block/testrocket_launch_pad",
-    "top": "galacticraft:block/testrocket_launch_pad"
-  }
-}

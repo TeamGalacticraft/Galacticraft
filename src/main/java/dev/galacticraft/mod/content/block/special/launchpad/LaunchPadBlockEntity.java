@@ -26,13 +26,13 @@ import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.FuelDock;
 import dev.galacticraft.mod.api.entity.Dockable;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,21 +42,18 @@ import java.util.function.IntFunction;
 public class LaunchPadBlockEntity extends BlockEntity implements FuelDock {
     public static final String ENTITY_UUID = "entity_uuid";
     public static final String TYPE = "type";
-    private final int thrustLimit;
 
     private UUID entityUUID = null;
     private @Nullable Dockable docked;
     private Type type;
 
-    public LaunchPadBlockEntity(BlockPos pos, BlockState state, Type type, int thrustLimit, BlockEntityType blockEntityType) {
-        super(blockEntityType, pos, state);
+    public LaunchPadBlockEntity(BlockPos pos, BlockState state, Type type) {
+        super(GCBlockEntityTypes.LAUNCH_PAD, pos, state);
         this.type = type;
-        this.thrustLimit = thrustLimit;
     }
 
-    public LaunchPadBlockEntity(BlockPos pos, BlockState state, int thrustLimit, BlockEntityType blockEntityType) {
-        super(blockEntityType, pos, state);
-        this.thrustLimit = 0;
+    public LaunchPadBlockEntity(BlockPos pos, BlockState state) {
+        super(GCBlockEntityTypes.LAUNCH_PAD, pos, state);
     }
 
     public void setDockedEntity(@Nullable Dockable dockable) {

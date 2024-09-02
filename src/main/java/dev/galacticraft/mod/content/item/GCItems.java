@@ -27,8 +27,6 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCRegistry;
 import dev.galacticraft.mod.content.GCRocketParts;
-import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlock;
-import dev.galacticraft.mod.rockets.RocketParts;
 import dev.galacticraft.mod.util.TextureUtils;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
@@ -149,6 +147,7 @@ public class GCItems {
     public static final Item HEAVY_SEALABLE_ALUMINUM_WIRE = new BlockItem(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE, new Item.Properties());
     public static final Item GLASS_FLUID_PIPE = new BlockItem(GCBlocks.GLASS_FLUID_PIPE, new Item.Properties());
     public static final Item FUELING_PAD = ITEMS.register(Constant.Block.FUELING_PAD, new BlockItem(GCBlocks.FUELING_PAD, new Item.Properties()));
+    public static final Item ROCKET_LAUNCH_PAD = ITEMS.register(Constant.Block.ROCKET_LAUNCH_PAD, new BlockItem(GCBlocks.ROCKET_LAUNCH_PAD, new Item.Properties()));
 
     // LIGHT PANELS
     public static final Item SQUARE_LIGHT_PANEL = new BlockItem(GCBlocks.SQUARE_LIGHT_PANEL, new Item.Properties());
@@ -436,19 +435,11 @@ public class GCItems {
     public static final CannedFoodItem CANNED_FOOD = new CannedFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(0).saturationMod(0).build()).stacksTo(1));
     public static final CannedFoodItem EMPTY_CANNED_FOOD = new CannedFoodItem(new Item.Properties().food(null).stacksTo(64));
 
-    //rocket parts
-    public static List<Item> LAUNCH_PADS = new ArrayList<>();
-
+    
     public static void register() {
         // === START BLOCKS ===
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.EMPTY_CANNED_FOOD), EMPTY_CANNED_FOOD);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_FOOD), CANNED_FOOD);
-
-        //ROCKET PARTS
-        for (LaunchPadBlock launchPadBlock : RocketParts.LAUNCH_PADS)
-        {
-            LAUNCH_PADS.add(ITEMS.register(launchPadBlock.getType(), new BlockItem(launchPadBlock, new Item.Properties())));
-        }
 
         // MOON NATURAL
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_TURF), MOON_TURF);

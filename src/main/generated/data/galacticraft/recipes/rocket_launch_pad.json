@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "C": {
-      "item": "galacticraft:compressed_steel"
+      "item": "galacticraft:compressed_iron"
     },
     "I": {
-      "item": "galacticraft:desh_block"
+      "item": "minecraft:iron_block"
     }
   },
   "pattern": [
@@ -15,6 +15,6 @@
   ],
   "result": {
     "count": 9,
-    "item": "galacticraft:netherite_rocket_launch_pad"
+    "item": "galacticraft:rocket_launch_pad"
   }
 }

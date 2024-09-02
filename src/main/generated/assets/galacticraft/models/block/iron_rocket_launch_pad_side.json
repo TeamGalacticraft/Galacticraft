@@ -1,9 +1,0 @@
-{
-  "parent": "galacticraft:block/rocket_launch_pad_part",
-  "textures": {
-    "bottom": "galacticraft:block/iron_rocket_launch_pad",
-    "particle": "galacticraft:block/iron_rocket_launch_pad_side",
-    "side": "galacticraft:block/iron_rocket_launch_pad",
-    "top": "galacticraft:block/iron_rocket_launch_pad_side"
-  }
-}

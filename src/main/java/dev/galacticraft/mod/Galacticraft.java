@@ -37,7 +37,6 @@ import dev.galacticraft.mod.misc.banner.GCBannerPatterns;
 import dev.galacticraft.mod.network.GCServerPacketReceivers;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.recipe.GCRecipes;
-import dev.galacticraft.mod.rockets.RocketParts;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.structure.GCStructurePieceTypes;
 import dev.galacticraft.mod.tag.GCTags;
@@ -67,7 +66,6 @@ public class Galacticraft implements ModInitializer {
         long startInitTime = System.currentTimeMillis();
         Constant.LOGGER.info("Starting initialization.");
         GCChunkGenerator.register();
-        RocketParts.register();
         GCTags.register();
         GCFluids.register();
         GCBlocks.register();

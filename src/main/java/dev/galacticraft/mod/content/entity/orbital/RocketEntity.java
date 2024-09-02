@@ -39,7 +39,6 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
-import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlock;
 import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -115,7 +114,6 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     private final boolean debugMode = false && FabricLoader.getInstance().isDevelopmentEnvironment();
 
     private FuelDock linkedPad = null;
-    private LaunchPadBlock launchPadType = null;
     private final SingleFluidStorage tank = SingleFluidStorage.withFixedCapacity(FluidUtil.bucketsToDroplets(100), () -> {
         this.entityData.set(FUEL, getTank().getAmount());
     });
@@ -196,10 +194,6 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         return linkedPad.getDockPos();
     }
 
-    public @NotNull LaunchPadBlock getLaunchPadType() {
-        return launchPadType;
-    }
-
     @Override
     public void remove(RemovalReason reason) {
         super.remove(reason);
@@ -259,10 +253,6 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     @Override
     public void setPad(FuelDock pad) {
         this.linkedPad = pad;
-    }
-
-    public void setLaunchPadType(LaunchPadBlock pad) {
-        this.launchPadType = pad;
     }
 
     @Override
@@ -483,15 +473,12 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                         if (passenger instanceof ServerPlayer player) {
                             GCServerPlayer gcPlayer = GCServerPlayer.get(player);
                             gcPlayer.setRocketData(this);
-
-
-                            gcPlayer.setLaunchpadStack(new ItemStack(this.launchPadType, 9));
+                            gcPlayer.setLaunchpadStack(new ItemStack(GCBlocks.ROCKET_LAUNCH_PAD, 9));
                         }
                         this.linkedPad.setDockedEntity(null);
-                        this.linkedPad.setDockedEntity(this);
                         for (int x = -1; x <= 1; x++) {
                             for (int z = -1; z <= 1; z++) {
-                                if (GCBlocks.LAUNCH_PADS.contains(level().getBlockState(getLinkedPad().offset(x, 0, z)).getBlock())
+                                if (level().getBlockState(getLinkedPad().offset(x, 0, z)).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD
                                         && level().getBlockState(getLinkedPad().offset(x, 0, z)).getValue(AbstractLaunchPad.PART) != AbstractLaunchPad.Part.NONE) {
                                     level().setBlock(getLinkedPad().offset(x, 0, z), Blocks.AIR.defaultBlockState(), Block.UPDATE_NONE);
                                 }
@@ -724,8 +711,6 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         BlockEntity be = this.level().getBlockEntity(new BlockPos(tag.getInt("lX"), tag.getInt("lY"), tag.getInt("lZ")));
         if (be instanceof FuelDock pad)
             this.linkedPad = pad;
-        if (this.level().getBlockState(new BlockPos(tag.getInt("lX"), tag.getInt("lY"), tag.getInt("lZ"))).getBlock() instanceof LaunchPadBlock pad)
-            this.launchPadType = pad;
     }
 
     @Override

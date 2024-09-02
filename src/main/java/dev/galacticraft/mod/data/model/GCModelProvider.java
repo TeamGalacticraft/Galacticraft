@@ -133,10 +133,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.SEALABLE_ALUMINUM_WIRE);
         generator.createTrivialCube(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE);
         createLaunchPadBlock(GCBlocks.FUELING_PAD, generator);
-        for (Block launch_pad : GCBlocks.LAUNCH_PADS)
-        {
-            createLaunchPadBlock(launch_pad, generator);
-        }
+        createLaunchPadBlock(GCBlocks.ROCKET_LAUNCH_PAD, generator);
         generator.createNonTemplateModelBlock(GCBlocks.ROCKET_WORKBENCH);
         generator.createNonTemplateModelBlock(GCBlocks.FALLEN_METEOR);
 
@@ -543,8 +540,7 @@ public class GCModelProvider extends FabricModelProvider {
     }
 
     private void createLaunchPadBlock(Block pad, BlockModelGenerators generator) {
-
-        var centerModel = GCModelTemplates.ROCKET_LAUNCH_PAD_CENTER.createWithSuffix(pad, "_center", rocketLaunchPadPart(pad, ""), generator.modelOutput);
+        var centerModel = ModelLocationUtils.getModelLocation(pad, "_center");
         var corner = GCModelTemplates.ROCKET_LAUNCH_PAD_PART.createWithSuffix(pad, "_corner", rocketLaunchPadPart(pad, "_corner"), generator.modelOutput);
         var side = GCModelTemplates.ROCKET_LAUNCH_PAD_PART.createWithSuffix(pad, "_side", rocketLaunchPadPart(pad, "_side"), generator.modelOutput);
         var defaultModel = Variant.variant().with(VariantProperties.MODEL, centerModel);

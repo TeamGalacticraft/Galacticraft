@@ -289,20 +289,12 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(Items.COPPER_INGOT), has(Items.COPPER_INGOT))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.LAUNCH_PADS.get(0), 9)
+        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.ROCKET_LAUNCH_PAD, 9)
                 .define('C', GCItems.COMPRESSED_IRON)
                 .define('I', Items.IRON_BLOCK)
                 .pattern("CCC")
                 .pattern("III")
                 .unlockedBy(getHasName(Items.IRON_BLOCK), has(Items.IRON_BLOCK))
-                .save(output);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.LAUNCH_PADS.get(1), 9)
-                .define('C', GCItems.COMPRESSED_STEEL)
-                .define('I', GCItems.DESH_BLOCK)
-                .pattern("CCC")
-                .pattern("III")
-                .unlockedBy(getHasName(GCItems.DESH_BLOCK), has(GCItems.DESH_BLOCK))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.FUELING_PAD, 9)

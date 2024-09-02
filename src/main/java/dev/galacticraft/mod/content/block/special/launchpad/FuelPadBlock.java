@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.block.special.launchpad;
 
 import com.mojang.serialization.MapCodec;
-import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -42,6 +41,6 @@ public class FuelPadBlock extends AbstractLaunchPad {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new LaunchPadBlockEntity(pos, state, LaunchPadBlockEntity.Type.FUEL, 0, null);
+        return new LaunchPadBlockEntity(pos, state, LaunchPadBlockEntity.Type.FUEL);
     }
 }
