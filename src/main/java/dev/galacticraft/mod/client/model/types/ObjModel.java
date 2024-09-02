@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.model.types;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.javagl.obj.Mtl;
 import de.javagl.obj.MtlReader;
@@ -32,7 +32,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.BakedObjModel;
 import dev.galacticraft.mod.client.model.GCBakedModel;
 import dev.galacticraft.mod.client.model.GCModel;
-import dev.galacticraft.mod.client.model.GCSheets;
+import dev.galacticraft.mod.client.model.GCRenderTypes;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceLocation;
@@ -70,7 +70,7 @@ public class ObjModel implements GCModel {
             List<BakedMaterial> bakedMaterials = new ArrayList<>();
             for (Mtl material : materials) {
                 if (material.getMapKdOptions() != null && material.getMapKdOptions().getFileName() != null)
-                    bakedMaterials.add(new BakedMaterial(material, spriteGetter.apply(new Material(atlas.orElse(GCSheets.OBJ_ATLAS), new ResourceLocation(material.getMapKdOptions().getFileName())))));
+                    bakedMaterials.add(new BakedMaterial(material, spriteGetter.apply(new Material(atlas.orElse(GCRenderTypes.OBJ_ATLAS), ResourceLocation.parse(material.getMapKdOptions().getFileName())))));
             }
 
             return new BakedObjModel(obj, bakedMaterials);
@@ -83,14 +83,14 @@ public class ObjModel implements GCModel {
 
     public static class ObjType implements GCModelType {
         public static final ResourceLocation ID = Constant.id("obj");
-        public static final Codec<ObjModel> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+        public static final MapCodec<ObjModel> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 ResourceLocation.CODEC.fieldOf("model").forGetter(o -> o.model),
                 ResourceLocation.CODEC.fieldOf("mtl").forGetter(o -> o.material),
                 ResourceLocation.CODEC.optionalFieldOf("atlas").forGetter(o -> o.atlas)
         ).apply(instance, ObjModel::new));
 
         @Override
-        public Codec<ObjModel> codec() {
+        public MapCodec<? extends GCModel> codec() {
             return CODEC;
         }
 

@@ -22,19 +22,35 @@
 
 package dev.galacticraft.mod.content.block.machine;
 
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.machinelib.api.block.MachineBlock;
-import dev.galacticraft.mod.Constant;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenCollectorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-public class OxygenCollectorBlock extends MachineBlock<OxygenCollectorBlockEntity> {
+public class OxygenCollectorBlock extends MachineBlock {
+    private static final MapCodec<OxygenCollectorBlock> CODEC = simpleCodec(OxygenCollectorBlock::new);
+
     public OxygenCollectorBlock(Properties settings) {
-        super(settings, Constant.id(Constant.Block.OXYGEN_COLLECTOR));
+        super(settings);
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
+    public @Nullable MachineBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new OxygenCollectorBlockEntity(pos, state);
     }
 
     @Override

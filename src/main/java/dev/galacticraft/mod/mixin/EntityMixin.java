@@ -26,11 +26,9 @@ import dev.galacticraft.mod.accessor.EntityAccessor;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.tag.GCTags;
-import dev.galacticraft.mod.world.dimension.GCDimensions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -42,9 +40,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.portal.PortalInfo;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
@@ -55,7 +51,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.UUID;
 
@@ -76,13 +71,13 @@ public abstract class EntityMixin implements EntityAccessor {
     @Shadow
     private Level level;
 
-    @Inject(method = "findDimensionEntryPoint", at = @At("HEAD"), cancellable = true)
-    private void getTeleportTargetGC(ServerLevel destination, CallbackInfoReturnable<PortalInfo> cir) {
-        if (destination.dimension().equals(GCDimensions.MOON) || this.level.dimension().equals(GCDimensions.MOON)) { //TODO lander/parachute stuff
-            BlockPos pos = destination.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, destination.getSharedSpawnPos());
-            cir.setReturnValue(new PortalInfo(new Vec3((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D), this.getDeltaMovement(), this.yRot, this.xRot));
-        }
-    }
+//    @Inject(method = "findDimensionEntryPoint", at = @At("HEAD"), cancellable = true)
+//    private void getTeleportTargetGC(ServerLevel destination, CallbackInfoReturnable<PortalInfo> cir) {
+//        if (destination.dimension().equals(GCDimensions.MOON) || this.level.dimension().equals(GCDimensions.MOON)) { //TODO lander/parachute stuff
+//            BlockPos pos = destination.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, destination.getSharedSpawnPos());
+//            cir.setReturnValue(new PortalInfo(new Vec3((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D), this.getDeltaMovement(), this.yRot, this.xRot));
+//        }
+//    }
 
     @Shadow
     public abstract boolean updateFluidHeightAndDoFluidPushing(TagKey<Fluid> tag, double d);
@@ -160,7 +155,6 @@ public abstract class EntityMixin implements EntityAccessor {
     // GC 4 ticks footprints on the client and server, however we will just do it on the server
     @Inject(method = "move", at = @At("HEAD"))
     private void tickFootprints(MoverType type, Vec3 motion, CallbackInfo ci) {
-        var level = level();
         if (!getType().is(GCTags.HAS_FOOTPRINTS))
             return;
         double motionSqrd = Mth.lengthSquared(motion.x, motion.z);
@@ -169,12 +163,12 @@ public abstract class EntityMixin implements EntityAccessor {
         boolean isFlying = false;
         if ((Object) this instanceof Player player)
             isFlying = player.getAbilities().flying;
-        if (motionSqrd > 0.001 && level.dimensionTypeRegistration().is(GCTags.FOOTPRINTS_DIMENSIONS) && getVehicle() == null && !isFlying) {
+        if (motionSqrd > 0.001 && this.level.dimensionTypeRegistration().is(GCTags.FOOTPRINTS_DIMENSIONS) && getVehicle() == null && !isFlying) {
             int iPosX = Mth.floor(getX());
             int iPosY = Mth.floor(getY() - 0.05);
             int iPosZ = Mth.floor(getZ());
             BlockPos pos1 = new BlockPos(iPosX, iPosY, iPosZ);
-            BlockState state = level.getBlockState(pos1);
+            BlockState state = this.level.getBlockState(pos1);
 
             // If the block below is the moon block
             if (state.is(GCTags.FOOTPRINTS)) {
@@ -199,7 +193,7 @@ public abstract class EntityMixin implements EntityAccessor {
                     pos = Footprint.getFootprintPosition(level, getYRot() - 180, pos, position());
 
                     long chunkKey = ChunkPos.asLong(SectionPos.blockToSectionCoord(pos.x), SectionPos.blockToSectionCoord(pos.z));
-                    level.galacticraft$getFootprintManager().addFootprint(chunkKey, new Footprint(level.dimensionTypeId().location(), pos, getYRot(), getUUID()));
+                    level.galacticraft$getFootprintManager().addFootprint(chunkKey, new Footprint(level.dimensionTypeRegistration().unwrapKey().get().location(), pos, getYRot(), getUUID()));
 
                     // Increment and cap step counter at 1
                     galacticraft$setLastStep((galacticraft$getLastStep() + 1) % 2);

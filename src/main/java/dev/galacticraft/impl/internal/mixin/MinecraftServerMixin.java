@@ -79,7 +79,7 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
         Path path = this.storageSource.getLevelPath(LevelResource.ROOT);
         ListTag nbt = new ListTag();
         for (Map.Entry<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> entry : this.satellites.entrySet()) {
-            CompoundTag compound = (CompoundTag) SatelliteConfig.CODEC.encode(entry.getValue().config(), NbtOps.INSTANCE, new CompoundTag()).get().orThrow();
+            CompoundTag compound = (CompoundTag) SatelliteConfig.CODEC.encode(entry.getValue().config(), NbtOps.INSTANCE, new CompoundTag()).getOrThrow();
             compound.putString("id", entry.getKey().toString());
             nbt.add(compound);
         }
@@ -100,13 +100,13 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
                 ListTag nbt = NbtIo.readCompressed(worldFile.resolve("satellites.dat"), NbtAccounter.unlimitedHeap()).getList("satellites", NbtType.COMPOUND);
                 for (Tag compound : nbt) {
                     assert compound instanceof CompoundTag : "Not a compound?!";
-                    ResourceLocation id = new ResourceLocation(((CompoundTag) compound).getString("id"));
+                    ResourceLocation id = ResourceLocation.parse(((CompoundTag) compound).getString("id"));
                     DataResult<Pair<SatelliteConfig, Tag>> decode = SatelliteConfig.CODEC.decode(NbtOps.INSTANCE, compound);
                     if (decode.error().isPresent()) {
                         Constant.LOGGER.error("Skipping satellite '{}' - {}", id, decode.error().get().message());
                         continue;
                     }
-                    this.satellites.put(id, new CelestialBody<>(SatelliteType.INSTANCE, decode.get().orThrow().getFirst()));
+                    this.satellites.put(id, new CelestialBody<>(SatelliteType.INSTANCE, decode.getOrThrow().getFirst()));
                 }
             } catch (Throwable exception) {
                 throw new RuntimeException("Failed to read satellite data!", exception);

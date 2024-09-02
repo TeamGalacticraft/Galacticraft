@@ -23,6 +23,7 @@
 package dev.galacticraft.api.universe.celestialbody;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.api.gas.GasComposition;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
 import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
@@ -35,10 +36,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class CelestialBodyType<C extends CelestialBodyConfig> {
-    private final Codec<CelestialBody<C, CelestialBodyType<C>>> codec;
+    private final MapCodec<CelestialBody<C, CelestialBodyType<C>>> codec;
 
     public CelestialBodyType(Codec<C> codec) {
-        this.codec = codec.fieldOf("config").xmap((config) -> new CelestialBody<>(this, config), CelestialBody::config).codec();
+        this.codec = codec.fieldOf("config").xmap((config) -> new CelestialBody<>(this, config), CelestialBody::config);
     }
 
     /**
@@ -131,7 +132,7 @@ public abstract class CelestialBodyType<C extends CelestialBodyConfig> {
      *
      * @return a codec that will (de)serialize a fully-configured celestial body of this type.
      */
-    public Codec<CelestialBody<C, CelestialBodyType<C>>> codec() {
+    public MapCodec<CelestialBody<C, CelestialBodyType<C>>> codec() {
         return this.codec;
     }
 

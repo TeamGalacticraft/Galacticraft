@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "galacticraft:lunaslate"
+  },
+  "result": {
+    "count": 1,
+    "id": "galacticraft:lunaslate_wall"
+  }
+}

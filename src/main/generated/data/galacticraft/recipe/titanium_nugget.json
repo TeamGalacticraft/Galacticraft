@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "galacticraft:titanium_ingot"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "galacticraft:titanium_nugget"
+  }
+}

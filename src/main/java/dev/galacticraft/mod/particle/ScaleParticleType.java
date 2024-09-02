@@ -22,48 +22,33 @@
 
 package dev.galacticraft.mod.particle;
 
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.particles.ParticleOptions;
+import com.mojang.serialization.MapCodec;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.particles.ScalableParticleOptionsBase;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Locale;
+public class ScaleParticleType extends ScalableParticleOptionsBase {
+    private final ParticleType<?> type;
 
-public record ScaleParticleType(float scale) implements ParticleOptions {
-    public static final Codec<ScaleParticleType> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.FLOAT.fieldOf("scale").forGetter(type -> type.scale)
-    ).apply(instance, ScaleParticleType::new));
-    public static final Deserializer<ScaleParticleType> DESERIALIZER = new Deserializer<>() {
-        @Override
-        public ScaleParticleType fromCommand(ParticleType<ScaleParticleType> particleType, StringReader reader) throws CommandSyntaxException {
-            reader.expect(' ');
-            return new ScaleParticleType(reader.readFloat());
-        }
+    public ScaleParticleType(ParticleType<?> type, float scale) {
+        super(scale);
+        this.type = type;
+    }
 
-        @Override
-        public ScaleParticleType fromNetwork(ParticleType<ScaleParticleType> particleType, FriendlyByteBuf buffer) {
-            return new ScaleParticleType(buffer.readFloat());
-        }
-    };
+    public static MapCodec<ScaleParticleType> codec(ParticleType<? extends ScaleParticleType> type) {
+        return Codec.FLOAT.xmap(uuid -> new ScaleParticleType(type, uuid), ScalableParticleOptionsBase::getScale).fieldOf("scale");
+    }
 
-    @Override
-    public ParticleType<?> getType() {
-        return GCParticleTypes.ACID_VAPOR_PARTICLE; // TODO: make this more general purpose
+    public static StreamCodec<ByteBuf, ScaleParticleType> streamCodec(ParticleType<?> type) {
+        return ByteBufCodecs.FLOAT.map(uuid -> new ScaleParticleType(type, uuid), ScalableParticleOptionsBase::getScale);
     }
 
     @Override
-    public void writeToNetwork(FriendlyByteBuf buffer) {
-        buffer.writeFloat(this.scale);
-    }
-
-    @Override
-    public String writeToString() {
-        return String.format(
-                Locale.ROOT, "%s %.2f", BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()), this.scale
-        );
+    public @NotNull ParticleType<?> getType() {
+        return this.type;
     }
 }

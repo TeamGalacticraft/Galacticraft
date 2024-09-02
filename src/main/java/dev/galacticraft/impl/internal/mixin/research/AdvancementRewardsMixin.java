@@ -22,9 +22,6 @@
 
 package dev.galacticraft.impl.internal.mixin.research;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import dev.galacticraft.api.accessor.ServerResearchAccessor;
 import dev.galacticraft.impl.internal.accessor.AdvancementRewardsAccessor;
 import net.minecraft.advancements.AdvancementRewards;
@@ -54,7 +51,7 @@ public abstract class AdvancementRewardsMixin implements AdvancementRewardsAcces
 //            JsonArray array = json.get("rocket_parts").getAsJsonArray();
 //            ResourceLocation[] ids = new ResourceLocation[array.size()];
 //            for (int i = 0; i < array.size(); i++) {
-//                ids[i] = new ResourceLocation(array.get(i).getAsString());
+//                ids[i] = ResourceLocation.parse(array.get(i).getAsString());
 //            }
 //            ((AdvancementRewardsAccessor) rewards).setRocketPartRecipeRewards(ids);
 //        }

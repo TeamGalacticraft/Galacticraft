@@ -23,16 +23,13 @@
 package dev.galacticraft.impl.internal.mixin.research;
 
 import dev.galacticraft.api.accessor.ServerResearchAccessor;
-import dev.galacticraft.mod.Constant;
-import io.netty.buffer.Unpooled;
+import dev.galacticraft.impl.network.s2c.ResearchUpdatePayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -43,12 +40,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin implements ServerResearchAccessor {
-    @Shadow public abstract ServerLevel serverLevel();
-
     @Shadow public abstract boolean isCreative();
 
     private final @Unique Set<ResourceLocation> unlockedRecipes = new HashSet<>();
@@ -63,15 +59,7 @@ public abstract class ServerPlayerMixin implements ServerResearchAccessor {
     public void galacticraft$unlockRocketPartRecipes(ResourceLocation... ids) {
         Collections.addAll(this.unlockedRecipes, ids);
 
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-        buf.writeVarInt(ids.length);
-        buf.writeBoolean(true);
-        for (ResourceLocation id : ids) {
-            buf.writeUtf(id.toString());
-        }
-        ServerPlayNetworking.send((ServerPlayer) (Object)this,
-                Constant.id("research_update"),
-                buf);
+        ServerPlayNetworking.send((ServerPlayer) (Object)this, new ResearchUpdatePayload(true, List.of(ids)));
     }
 
     @Override
@@ -80,15 +68,7 @@ public abstract class ServerPlayerMixin implements ServerResearchAccessor {
             this.unlockedRecipes.remove(id);
         }
 
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-        buf.writeVarInt(ids.length);
-        buf.writeBoolean(false);
-        for (ResourceLocation id : ids) {
-            buf.writeUtf(id.toString());
-        }
-        ServerPlayNetworking.send((ServerPlayer) (Object)this,
-                Constant.id("research_update"),
-                buf);
+        ServerPlayNetworking.send((ServerPlayer) (Object)this, new ResearchUpdatePayload(false, List.of(ids)));
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
@@ -96,7 +76,7 @@ public abstract class ServerPlayerMixin implements ServerResearchAccessor {
         this.unlockedRecipes.clear();
         ListTag list = nbt.getList("gcResearch", Tag.TAG_STRING);
         for (int i = 0; i < list.size(); i++) {
-            this.unlockedRecipes.add(new ResourceLocation(list.getString(i)));
+            this.unlockedRecipes.add(ResourceLocation.parse(list.getString(i)));
         }
     }
 

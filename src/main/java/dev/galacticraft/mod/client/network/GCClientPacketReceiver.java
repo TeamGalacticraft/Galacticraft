@@ -22,68 +22,26 @@
 
 package dev.galacticraft.mod.client.network;
 
-import dev.galacticraft.api.registry.AddonRegistries;
-import dev.galacticraft.api.rocket.RocketData;
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Constant.Packet;
-import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
-import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
-import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.network.GCScreenType;
-import dev.galacticraft.mod.network.packets.*;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import dev.galacticraft.impl.network.s2c.S2CPayload;
+import dev.galacticraft.mod.network.s2c.*;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.level.block.entity.BlockEntity;
-
-import java.util.Objects;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 /**
  * Handles client-bound (S2C) packets
-= */
-@Environment(EnvType.CLIENT)
+ */
 public class GCClientPacketReceiver {
     public static void register() {
-        ClientPlayNetworking.registerGlobalReceiver(Packet.BUBBLE_SIZE, (client, handler, buf, responseSender) -> {
-            FriendlyByteBuf buffer = new FriendlyByteBuf(buf.copy());
-            client.execute(() -> {
-                BlockPos pos = buffer.readBlockPos();
-                if (client.level.hasChunk(pos.getX() >> 4, pos.getZ() >> 4)) {
-                    BlockEntity entity = client.level.getBlockEntity(pos);
-                    if (entity instanceof OxygenBubbleDistributorBlockEntity machine) {
-                        machine.setSize(buffer.readDouble());
-                    }
-                }
-            });
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(Packet.OPEN_SCREEN, (client, handler, buf, responseSender) -> {
-            var screen = buf.readEnum(GCScreenType.class);
-            switch (screen) {
-                case CELESTIAL -> {
-                    boolean mapMode = buf.readBoolean();
-                    client.execute(() -> client.setScreen(new CelestialSelectionScreen(mapMode, RocketData.fromNbt(GCItems.ROCKET.getDefaultInstance().getTag()), true, null)));
-                }
-                default -> Constant.LOGGER.error("No screen found with id '{}'!", screen);
-            }
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(Packet.PLANET_MENU_PACKET, (minecraftClient, clientPlayNetworkHandler, buf, packetSender) -> {
-            RocketData rocketData = RocketData.fromNbt(Objects.requireNonNull(buf.readNbt()));
-            int cBody = buf.readInt();
-            minecraftClient.execute(() -> minecraftClient.setScreen(new CelestialSelectionScreen(false, rocketData, true, cBody == -1 ? null : clientPlayNetworkHandler.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).getHolder(cBody).orElseThrow().value())));
-        });
-
-        registerPacket(RocketSpawnPacket.TYPE);
-        registerPacket(FootprintPacket.TYPE);
-        registerPacket(FootprintRemovedPacket.TYPE);
-        registerPacket(ResetThirdPersonPacket.TYPE);
+        register(BubbleSizePayload.TYPE);
+        register(BubbleUpdatePayload.TYPE);
+        register(OpenCelestialScreenPayload.TYPE);
+        register(RocketSpawnPacket.TYPE);
+        register(FootprintPacket.TYPE);
+        register(FootprintRemovedPacket.TYPE);
+        register(ResetPerspectivePacket.TYPE);
     }
 
-    public static <Packet extends GCPacket> void registerPacket(PacketType<Packet> type) {
-        ClientPlayNetworking.registerGlobalReceiver(type, GCPacket::handle);
+    public static <P extends S2CPayload> void register(CustomPacketPayload.Type<P> type) {
+        ClientPlayNetworking.registerGlobalReceiver(type, (payload, context) -> context.client().execute(payload.handle(context)));
     }
 }

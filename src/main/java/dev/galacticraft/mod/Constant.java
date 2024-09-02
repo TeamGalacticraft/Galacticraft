@@ -51,7 +51,7 @@ public interface Constant {
 
     @Contract(value = "_ -> new", pure = true)
     static @NotNull ResourceLocation id(String id) {
-        return new ResourceLocation(MOD_ID, id);
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, id);
     }
 
     @Contract(value = "_, _ -> new", pure = true)
@@ -67,34 +67,63 @@ public interface Constant {
         String MOON_TURF = "moon_turf";
         String MOON_SURFACE_ROCK = "moon_surface_rock";
         String MOON_DUNGEON_BRICK = "moon_dungeon_brick";
+
         String MOON_ROCK = "moon_rock";
         String MOON_ROCK_SLAB = "moon_rock_slab";
         String MOON_ROCK_STAIRS = "moon_rock_stairs";
         String MOON_ROCK_WALL = "moon_rock_wall";
+
+        String MOON_ROCK_BRICK = "moon_rock_brick";
+        String MOON_ROCK_BRICK_SLAB = "moon_rock_brick_slab";
+        String MOON_ROCK_BRICK_STAIRS = "moon_rock_brick_stairs";
+        String MOON_ROCK_BRICK_WALL = "moon_rock_brick_wall";
+
+        String CRACKED_MOON_ROCK_BRICK = "cracked_moon_rock_brick";
+        String CRACKED_MOON_ROCK_BRICK_SLAB = "cracked_moon_rock_brick_slab";
+        String CRACKED_MOON_ROCK_BRICK_STAIRS = "cracked_moon_rock_brick_stairs";
+        String CRACKED_MOON_ROCK_BRICK_WALL = "cracked_moon_rock_brick_wall";
+
+        String POLISHED_MOON_ROCK = "polished_moon_rock";
+        String POLISHED_MOON_ROCK_SLAB = "polished_moon_rock_slab";
+        String POLISHED_MOON_ROCK_STAIRS = "polished_moon_rock_stairs";
+        String POLISHED_MOON_ROCK_WALL = "polished_moon_rock_wall";
+
+        String CHISELED_MOON_ROCK_BRICK = "chiseled_moon_rock_brick";
+        String MOON_ROCK_PILLAR = "moon_rock_pillar";
+
         String COBBLED_MOON_ROCK = "cobbled_moon_rock";
         String COBBLED_MOON_ROCK_SLAB = "cobbled_moon_rock_slab";
         String COBBLED_MOON_ROCK_STAIRS = "cobbled_moon_rock_stairs";
         String COBBLED_MOON_ROCK_WALL = "cobbled_moon_rock_wall";
+
         String LUNASLATE = "lunaslate";
         String LUNASLATE_SLAB = "lunaslate_slab";
         String LUNASLATE_STAIRS = "lunaslate_stairs";
         String LUNASLATE_WALL = "lunaslate_wall";
+
         String COBBLED_LUNASLATE = "cobbled_lunaslate";
         String COBBLED_LUNASLATE_SLAB = "cobbled_lunaslate_slab";
         String COBBLED_LUNASLATE_STAIRS = "cobbled_lunaslate_stairs";
         String COBBLED_LUNASLATE_WALL = "cobbled_lunaslate_wall";
+
         String MOON_BASALT = "moon_basalt";
         String MOON_BASALT_SLAB = "moon_basalt_slab";
         String MOON_BASALT_STAIRS = "moon_basalt_stairs";
         String MOON_BASALT_WALL = "moon_basalt_wall";
+
         String MOON_BASALT_BRICK = "moon_basalt_brick";
         String MOON_BASALT_BRICK_SLAB = "moon_basalt_brick_slab";
         String MOON_BASALT_BRICK_STAIRS = "moon_basalt_brick_stairs";
         String MOON_BASALT_BRICK_WALL = "moon_basalt_brick_wall";
+
         String CRACKED_MOON_BASALT_BRICK = "cracked_moon_basalt_brick";
         String CRACKED_MOON_BASALT_BRICK_SLAB = "cracked_moon_basalt_brick_slab";
         String CRACKED_MOON_BASALT_BRICK_STAIRS = "cracked_moon_basalt_brick_stairs";
         String CRACKED_MOON_BASALT_BRICK_WALL = "cracked_moon_basalt_brick_wall";
+
+        String OLIVINE_CLUSTER = "olivine_cluster";
+        String OLIVINE_BASALT = "olivine_basalt";
+        String RICH_OLIVINE_BASALT = "rich_olivine_basalt";
 
         String MOON_DIRT = "moon_dirt";
         String MARS_SURFACE_ROCK = "mars_surface_rock";
@@ -148,6 +177,7 @@ public interface Constant {
         String TITANIUM_BLOCK = "titanium_block";
         String LEAD_BLOCK = "lead_block";
         String LUNAR_SAPPHIRE_BLOCK = "lunar_sapphire_block";
+        String OLIVINE_BLOCK = "olivine_block";
 
         // Decorative BLocks
         String ALUMINUM_DECORATION = "aluminum_decoration";
@@ -183,7 +213,6 @@ public interface Constant {
         String UNLIT_LANTERN = "unlit_lantern";
         String CAVERNOUS_VINES = "cavernous_vines";
         String CAVERNOUS_VINES_PLANT = "cavernous_vines_plant";
-        String MOON_BERRY_BUSH = "moon_berry_bush";
         String WEB_TORCH = "web_torch";
         String FALLEN_METEOR = "fallen_meteor";
         String SLIMELING_EGG = "slimeling_egg";
@@ -338,6 +367,7 @@ public interface Constant {
         String TITANIUM_NUGGET = "titanium_nugget";
         String STEEL_INGOT = "steel_ingot";
         String LUNAR_SAPPHIRE = "lunar_sapphire";
+        String OLIVINE_SHARD = "olivine_shard";
         String DESH_STICK = "desh_stick";
         String CARBON_FRAGMENTS = "carbon_fragments";
         String IRON_SHARD = "iron_shard";
@@ -374,7 +404,6 @@ public interface Constant {
         String AMBIENT_THERMAL_CONTROLLER = "ambient_thermal_controller";
         String LIQUID_CANISTER = "liquid_canister";
         //FOOD
-        String MOON_BERRIES = "moon_berries";
         String CHEESE_CURD = "cheese_curd";
         String CHEESE_SLICE = "cheese_slice";
         String BURGER_BUN = "burger_bun";
@@ -745,18 +774,13 @@ public interface Constant {
     @ApiStatus.Internal
     interface Misc {
         ResourceLocation INVALID = Constant.id("invalid");
-        ResourceLocation EMPTY = new ResourceLocation("empty");
+        ResourceLocation EMPTY = ResourceLocation.withDefaultNamespace("empty");
         Direction[] DIRECTIONS = Direction.values();
         Direction[] HORIZONTALS = {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
         Direction[] VERTICALS = {Direction.UP, Direction.DOWN};
         String LOGGER_PREFIX = "[Galacticraft] ";
         boolean DEBUG = false;
         int MAX_STRING_READ = 32767;
-    }
-
-    @ApiStatus.Internal
-    interface Mixin {
-        String DATAGEN_SKIP_README = "HashCacheMixin";
     }
 
     interface Recipe {
@@ -805,7 +829,7 @@ public interface Constant {
     }
 
     interface Packet {
-        ResourceLocation BUBBLE_SIZE = id("bubble_size");
+        ResourceLocation STREAM_CODECBUBBLE_SIZE = id("bubble_size");
         ResourceLocation BUBBLE_MAX = id("bubble_max");
         ResourceLocation BUBBLE_VISIBLE = id("bubble_visible");
         ResourceLocation OPEN_GC_INVENTORY = id("open_gc_inv");

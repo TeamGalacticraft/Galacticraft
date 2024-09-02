@@ -25,14 +25,10 @@ package dev.galacticraft.mod.content.item;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.DrawableUtil;
 import dev.galacticraft.mod.util.Translations;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import team.reborn.energy.api.EnergyStorage;
 import team.reborn.energy.api.base.SimpleEnergyItem;
 
@@ -51,9 +47,10 @@ public class BatteryItem extends Item implements SimpleEnergyItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> lines, TooltipFlag context) {
-        lines.add(Component.translatable(Translations.Tooltip.ENERGY_REMAINING, DrawableUtil.getEnergyDisplay(getStoredEnergy(stack)).setStyle(Constant.Text.Color.getStorageLevelStyle(1.0 - ((double)getStoredEnergy(stack)) / ((double)this.getEnergyCapacity(stack))))));
-        super.appendHoverText(stack, world, lines, context);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
+        super.appendHoverText(stack, context, tooltip, type);
+
+        tooltip.add(Component.translatable(Translations.Tooltip.ENERGY_REMAINING, DrawableUtil.getEnergyDisplay(getStoredEnergy(stack)).setStyle(Constant.Text.Color.getStorageLevelStyle(1.0 - ((double)getStoredEnergy(stack)) / ((double)this.getEnergyCapacity(stack))))));
     }
 
     @Override
@@ -70,12 +67,6 @@ public class BatteryItem extends Item implements SimpleEnergyItem {
     public int getBarColor(ItemStack stack) {
         double scale = 1.0 - Math.max(0.0, (double) getStoredEnergy(stack) / (double)this.getEnergyCapacity(stack));
         return ((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8);
-    }
-
-    @Override
-    public void onCraftedBy(@NotNull ItemStack battery, Level world, Player player) {
-        CompoundTag batteryTag = battery.getOrCreateTag();
-        battery.setTag(batteryTag);
     }
 
     @Override

@@ -23,8 +23,8 @@
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
 import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
-import dev.galacticraft.mod.Constant;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.VarInt;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,47 +39,36 @@ import java.util.BitSet;
 
 @Mixin(LevelChunkSection.class)
 public abstract class LevelChunkSectionMixin implements ChunkSectionOxygenAccessor {
-    private @Unique @Nullable BitSet inversionBits = null;
-    private @Unique short modifiedBlocks = 0;
+    private @Unique @Nullable BitSet bits = null;
 
     @Override
-    public boolean galacticraft$isInverted(int x, int y, int z) {
-        if (this.modifiedBlocks == 0) return false;
-        assert this.inversionBits != null; // if modifiedBlocks > 0 inverted should not be null.
-        return this.inversionBits.get(x + (y << 4) + (z << 8));
+    public boolean galacticraft$isInverted(int pos) {
+        return this.bits != null && this.bits.get(pos);
     }
 
     @Override
-    public void galacticraft$setInverted(int x, int y, int z, boolean inverted) {
-        int bitIndex = x + (y << 4) + (z << 8);
-        if (inverted) {
-            if (this.inversionBits == null) {
-                assert this.modifiedBlocks == 0;
-                this.inversionBits = new BitSet(bitIndex); // do not allocate a full bitset if not necessary
-                this.inversionBits.set(bitIndex);
-                this.modifiedBlocks = 1;
-            } else {
-                if (!this.inversionBits.get(bitIndex)) {
-                    this.inversionBits.set(bitIndex);
-                    this.modifiedBlocks++;
-                }
-            }
-        } else if (this.inversionBits != null && this.inversionBits.get(bitIndex)) {
-            this.inversionBits.clear(bitIndex);
-            if (--this.modifiedBlocks == 0) {
-                this.inversionBits = null;
-            }
+    public void galacticraft$setInverted(int pos, boolean value) {
+        if (value) {
+            if (this.bits == null) this.bits = new BitSet(pos);
+            this.bits.set(pos);
+        } else if (this.bits != null) {
+            this.bits.clear(pos);
         }
     }
 
     @Inject(method = "getSerializedSize", at = @At("RETURN"), cancellable = true)
     private void increaseChunkPacketSize(CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue(cir.getReturnValueI() + (this.modifiedBlocks == 0 ? 0 : (Constant.Chunk.CHUNK_SECTION_AREA / Byte.SIZE)) + 2 + 1);
+        if (this.bits == null) {
+            cir.setReturnValue(cir.getReturnValueI() + VarInt.getByteSize(0));
+        } else {
+            byte[] byteArray = this.bits.toByteArray();
+            cir.setReturnValue(cir.getReturnValueI() + (VarInt.getByteSize(byteArray.length) + byteArray.length));
+        }
     }
 
     @Inject(method = "hasOnlyAir()Z", at = @At("RETURN"), cancellable = true)
     private void verifyOxygenEmpty(CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(cir.getReturnValueZ() && this.modifiedBlocks == 0);
+        cir.setReturnValue(cir.getReturnValueZ() && this.galacticraft$isEmpty());
     }
 
     @Inject(method = "write", at = @At("RETURN"))
@@ -93,42 +82,37 @@ public abstract class LevelChunkSectionMixin implements ChunkSectionOxygenAccess
     }
 
     @Override
-    public BitSet galacticraft$inversionBits() {
-        return this.inversionBits;
+    public boolean galacticraft$isEmpty() {
+        return this.bits == null || this.bits.isEmpty();
     }
 
     @Override
-    public void galacticraft$setInversionBits(BitSet set) {
-        this.inversionBits = set;
+    public BitSet galacticraft$getBits() {
+        return this.bits;
     }
 
     @Override
-    public short galacticraft$modifiedBlocks() {
-        return this.modifiedBlocks;
-    }
-
-    @Override
-    public void galacticraft$setModifiedBlocks(short amount) {
-        this.modifiedBlocks = amount;
+    public void galacticraft$setBits(@Nullable BitSet set) {
+        this.bits = set;
     }
 
     @Override
     public void galacticraft$writeOxygenPacket(@NotNull FriendlyByteBuf buf) {
-        buf.writeShort(this.galacticraft$modifiedBlocks());
-
-        if (this.galacticraft$modifiedBlocks() > 0) {
-            assert this.inversionBits != null;
-            buf.writeLongArray(this.inversionBits.toLongArray());
+        if (this.bits != null) {
+            byte[] bytes = this.bits.toByteArray();
+            buf.writeByteArray(bytes);
+        } else {
+            buf.writeVarInt(0);
         }
     }
 
     @Override
     public void galacticraft$readOxygenPacket(@NotNull FriendlyByteBuf buf) {
-        this.galacticraft$setModifiedBlocks(buf.readShort());
-        if (this.galacticraft$modifiedBlocks() > 0) {
-            this.galacticraft$setInversionBits(BitSet.valueOf(buf.readLongArray()));
+        byte[] bytes = buf.readByteArray();
+        if (bytes.length != 0) {
+            this.bits = BitSet.valueOf(bytes);
         } else {
-            this.galacticraft$setInversionBits(null);
+            this.bits = null;
         }
     }
 }

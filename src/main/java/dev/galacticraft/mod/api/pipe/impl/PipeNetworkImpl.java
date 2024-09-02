@@ -60,7 +60,7 @@ public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSna
     public PipeNetworkImpl(@NotNull ServerLevel level, long maxTransferRate, @NotNull BlockPos pos) {
         this.level = level;
         this.maxTransferRate = maxTransferRate;
-        this.tickId = level.getServer().getTickCount();
+        this.tickId = this.level.getServer().getTickCount();
         this.addPipe(pos, null);
     }
 

@@ -130,6 +130,9 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(RecipeCategory.CIRCUIT_FABRICATOR, "Circuit Fabricating");
         this.add(RecipeCategory.COMPRESSOR, "Compressing");
+
+        this.add(BannerPattern.ROCKET, "Rocket");
+
         this.add(Chat.BED_FAIL, "Uh oh, what if the oxygen runs out when I am asleep?  I'll need a Cryogenic Chamber to sleep in space!");
         this.add(Chat.ROCKET_WARNING, "Press again to launch.");
 

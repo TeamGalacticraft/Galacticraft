@@ -28,10 +28,14 @@ import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.part.config.RocketFinConfig;
 import dev.galacticraft.api.rocket.part.type.RocketFinType;
 import dev.galacticraft.impl.rocket.part.RocketFinImpl;
+import dev.galacticraft.mod.util.StreamCodecs;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFileCodec;
+import net.minecraft.world.item.EitherHolder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,6 +43,10 @@ public non-sealed interface RocketFin<C extends RocketFinConfig, T extends Rocke
     Codec<RocketFin<?, ?>> DIRECT_CODEC = BuiltInRocketRegistries.ROCKET_FIN_TYPE.byNameCodec().dispatch(RocketFin::type, RocketFinType::codec);
     Codec<Holder<RocketFin<?, ?>>> CODEC = RegistryFileCodec.create(RocketRegistries.ROCKET_FIN, DIRECT_CODEC);
     Codec<HolderSet<RocketFin<?, ?>>> LIST_CODEC = RegistryCodecs.homogeneousList(RocketRegistries.ROCKET_FIN, DIRECT_CODEC);
+    StreamCodec<RegistryFriendlyByteBuf, Holder<RocketFin<?, ?>>> STREAM_CODEC = StreamCodecs.ofHolder(RocketRegistries.ROCKET_FIN);
+
+    Codec<EitherHolder<RocketFin<?, ?>>> EITHER_CODEC = EitherHolder.codec(RocketRegistries.ROCKET_FIN, CODEC);
+    StreamCodec<RegistryFriendlyByteBuf, EitherHolder<RocketFin<?, ?>>> EITHER_STREAM_CODEC = EitherHolder.streamCodec(RocketRegistries.ROCKET_FIN, STREAM_CODEC);
 
     @Contract(pure = true, value = "_, _ -> new")
     static @NotNull <C extends RocketFinConfig, T extends RocketFinType<C>> RocketFin<C, T> create(@NotNull C config, @NotNull T type) {

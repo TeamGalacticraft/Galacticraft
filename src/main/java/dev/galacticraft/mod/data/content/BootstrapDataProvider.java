@@ -27,7 +27,7 @@ import dev.galacticraft.impl.data.GeneratingBootstrapContext;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,14 +36,14 @@ import java.util.function.Consumer;
 
 public class BootstrapDataProvider<T> extends GCDynamicRegistryProvider {
     private final String name;
-    private final Consumer<BootstapContext<T>> consumer;
+    private final Consumer<BootstrapContext<T>> consumer;
 
     @Contract(pure = true)
-    public static <T> FabricDataGenerator.Pack.@NotNull RegistryDependentFactory<BootstrapDataProvider<T>> create(String name, Consumer<BootstapContext<T>> bootstrap) {
+    public static <T> FabricDataGenerator.Pack.@NotNull RegistryDependentFactory<BootstrapDataProvider<T>> create(String name, Consumer<BootstrapContext<T>> bootstrap) {
         return (output, registriesFuture) -> new BootstrapDataProvider<>(output, registriesFuture, name, bootstrap);
     }
 
-    private BootstrapDataProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> future, String name, Consumer<BootstapContext<T>> consumer) {
+    private BootstrapDataProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> future, String name, Consumer<BootstrapContext<T>> consumer) {
         super(output, future);
         this.name = name;
         this.consumer = consumer;

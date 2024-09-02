@@ -23,13 +23,11 @@
 package dev.galacticraft.mod.api.block;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
@@ -50,7 +48,7 @@ public interface MultiBlockBase {
 
     void onMultiBlockPlaced(Level level, BlockPos blockPos, BlockState blockState);
 
-    default InteractionResult onMultiBlockUse(BlockState blockState, Level level, BlockPos basePos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    default InteractionResult multiBlockUseWithoutItem(BlockState baseState, Level level, BlockPos basePos, Player player) {
         return InteractionResult.PASS;
     }
 }

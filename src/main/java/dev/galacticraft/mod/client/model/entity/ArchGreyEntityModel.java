@@ -75,12 +75,12 @@ public class ArchGreyEntityModel<T extends Entity> extends EntityModel<T> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		Body.render(poseStack, buffer, packedLight, packedOverlay);
-		Left_Arm.render(poseStack, buffer, packedLight, packedOverlay);
-		Right_Arm.render(poseStack, buffer, packedLight, packedOverlay);
-		Left_Leg.render(poseStack, buffer, packedLight, packedOverlay);
-		Right_Leg.render(poseStack, buffer, packedLight, packedOverlay);
-		Head.render(poseStack, buffer, packedLight, packedOverlay);
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertices, int light, int overlay, int color) {
+		Body.render(poseStack, vertices, light, overlay);
+		Left_Arm.render(poseStack, vertices, light, overlay);
+		Right_Arm.render(poseStack, vertices, light, overlay);
+		Left_Leg.render(poseStack, vertices, light, overlay);
+		Right_Leg.render(poseStack, vertices, light, overlay);
+		Head.render(poseStack, vertices, light, overlay);
 	}
 }

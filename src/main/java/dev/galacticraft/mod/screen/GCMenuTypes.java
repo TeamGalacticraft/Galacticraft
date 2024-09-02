@@ -24,56 +24,54 @@ package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
+import dev.galacticraft.machinelib.api.menu.SynchronizedMenuType;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.Container;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.world.flag.FeatureFlags;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.crafting.BlastingRecipe;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.item.crafting.*;
 
 public class GCMenuTypes {
-    public static final MenuType<CoalGeneratorMenu> COAL_GENERATOR = MachineMenu.createType(CoalGeneratorMenu::new);
-    public static final MenuType<SolarPanelMenu<BasicSolarPanelBlockEntity>> BASIC_SOLAR_PANEL = MachineMenu.createType(SolarPanelMenu::new, () -> GCMachineTypes.BASIC_SOLAR_PANEL);
-    public static final MenuType<SolarPanelMenu<AdvancedSolarPanelBlockEntity>> ADVANCED_SOLAR_PANEL = MachineMenu.createType(SolarPanelMenu::new, () -> GCMachineTypes.ADVANCED_SOLAR_PANEL);
+    public static final MenuType<CoalGeneratorMenu> COAL_GENERATOR = SynchronizedMenuType.create(CoalGeneratorMenu::new);
+    public static final MenuType<SolarPanelMenu<BasicSolarPanelBlockEntity>> BASIC_SOLAR_PANEL = SynchronizedMenuType.create(SolarPanelMenu::new);
+    public static final MenuType<SolarPanelMenu<AdvancedSolarPanelBlockEntity>> ADVANCED_SOLAR_PANEL = SynchronizedMenuType.create(SolarPanelMenu::new);
 
-    public static final MenuType<RecipeMachineMenu<Container, FabricationRecipe, CircuitFabricatorBlockEntity>> CIRCUIT_FABRICATOR = RecipeMachineMenu.createType(() -> GCMachineTypes.CIRCUIT_FABRICATOR, 94);
-    public static final MenuType<CompressorMenu> COMPRESSOR = MachineMenu.createType(CompressorMenu::new);
+    public static final MenuType<RecipeMachineMenu<RecipeInput, FabricationRecipe, CircuitFabricatorBlockEntity>> CIRCUIT_FABRICATOR = SynchronizedMenuType.create(RecipeMachineMenu::new, 94);
+    public static final MenuType<CompressorMenu> COMPRESSOR = SynchronizedMenuType.create(CompressorMenu::new);
 
-    public static final MenuType<RecipeMachineMenu<CraftingContainer, CompressingRecipe, ElectricCompressorBlockEntity>> ELECTRIC_COMPRESSOR = RecipeMachineMenu.createType(() -> GCMachineTypes.ELECTRIC_COMPRESSOR);
-    public static final MenuType<RecipeMachineMenu<Container, SmeltingRecipe, ElectricFurnaceBlockEntity>> ELECTRIC_FURNACE = RecipeMachineMenu.createType(() -> GCMachineTypes.ELECTRIC_FURNACE);
-    public static final MenuType<RecipeMachineMenu<Container, BlastingRecipe, ElectricArcFurnaceBlockEntity>> ELECTRIC_ARC_FURNACE = RecipeMachineMenu.createType(() -> GCMachineTypes.ELECTRIC_ARC_FURNACE);
+    public static final MenuType<RecipeMachineMenu<CraftingInput, CompressingRecipe, ElectricCompressorBlockEntity>> ELECTRIC_COMPRESSOR = SynchronizedMenuType.createSimple(RecipeMachineMenu::new);
+    public static final MenuType<RecipeMachineMenu<SingleRecipeInput, SmeltingRecipe, ElectricFurnaceBlockEntity>> ELECTRIC_FURNACE = SynchronizedMenuType.createSimple(RecipeMachineMenu::new);
+    public static final MenuType<RecipeMachineMenu<SingleRecipeInput, BlastingRecipe, ElectricArcFurnaceBlockEntity>> ELECTRIC_ARC_FURNACE = SynchronizedMenuType.createSimple(RecipeMachineMenu::new);
 
-    public static final MenuType<MachineMenu<RefineryBlockEntity>> REFINERY = MachineMenu.createSimple(86, () -> GCMachineTypes.REFINERY);
+    public static final MenuType<MachineMenu<RefineryBlockEntity>> REFINERY = SynchronizedMenuType.create(MachineMenu::new, 86);
 
-    public static final MenuType<OxygenCollectorMenu> OXYGEN_COLLECTOR = MachineMenu.createType(OxygenCollectorMenu::new);
+    public static final MenuType<OxygenCollectorMenu> OXYGEN_COLLECTOR = SynchronizedMenuType.create(OxygenCollectorMenu::new);
 
-    public static final MenuType<MachineMenu<OxygenCompressorBlockEntity>> OXYGEN_COMPRESSOR = MachineMenu.createSimple(() -> GCMachineTypes.OXYGEN_COMPRESSOR);
-    public static final MenuType<FoodCannerMenu> FOOD_CANNER = MachineMenu.createType(FoodCannerMenu::new);
-    public static final MenuType<MachineMenu<OxygenDecompressorBlockEntity>> OXYGEN_DECOMPRESSOR = MachineMenu.createSimple(() -> GCMachineTypes.OXYGEN_DECOMPRESSOR);
+    public static final MenuType<MachineMenu<OxygenCompressorBlockEntity>> OXYGEN_COMPRESSOR = SynchronizedMenuType.createSimple(MachineMenu::new);
+    public static final MenuType<MachineMenu<OxygenDecompressorBlockEntity>> OXYGEN_DECOMPRESSOR = SynchronizedMenuType.createSimple(MachineMenu::new);
+    public static final MenuType<FoodCannerMenu> FOOD_CANNER = SynchronizedMenuType.createSimple(MachineMenu::new);
 
-    public static final MenuType<MachineMenu<OxygenSealerBlockEntity>> OXYGEN_SEALER = MachineMenu.createSimple(() -> GCMachineTypes.OXYGEN_SEALER);
+    public static final MenuType<MachineMenu<OxygenSealerBlockEntity>> OXYGEN_SEALER = SynchronizedMenuType.createSimple(MachineMenu::new);
 
-    public static final MenuType<OxygenBubbleDistributorMenu> OXYGEN_BUBBLE_DISTRIBUTOR = MachineMenu.createType(OxygenBubbleDistributorMenu::new);
+    public static final MenuType<OxygenBubbleDistributorMenu> OXYGEN_BUBBLE_DISTRIBUTOR = SynchronizedMenuType.create(OxygenBubbleDistributorMenu::new);
 
-    public static final MenuType<MachineMenu<OxygenStorageModuleBlockEntity>> OXYGEN_STORAGE_MODULE = MachineMenu.createSimple(() -> GCMachineTypes.OXYGEN_STORAGE_MODULE);
-    public static final MenuType<MachineMenu<EnergyStorageModuleBlockEntity>> ENERGY_STORAGE_MODULE = MachineMenu.createSimple(() -> GCMachineTypes.ENERGY_STORAGE_MODULE);
+    public static final MenuType<MachineMenu<OxygenStorageModuleBlockEntity>> OXYGEN_STORAGE_MODULE = SynchronizedMenuType.createSimple(MachineMenu::new);
+    public static final MenuType<MachineMenu<EnergyStorageModuleBlockEntity>> ENERGY_STORAGE_MODULE = SynchronizedMenuType.createSimple(MachineMenu::new);
+
+    public static final MenuType<FuelLoaderMenu> FUEL_LOADER = SynchronizedMenuType.create(FuelLoaderMenu::new);
 
     public static final MenuType<GCPlayerInventoryMenu> PLAYER_INV_GC = new MenuType<>(GCPlayerInventoryMenu::new, FeatureFlags.VANILLA_SET);
 
-    public static final ExtendedScreenHandlerType<FuelLoaderMenu> FUEL_LOADER = new ExtendedScreenHandlerType<>(FuelLoaderMenu::new);
-
     public static final MenuType<AirlockControllerMenu> AIRLOCK_CONTROLLER_MENU = new MenuType<>(AirlockControllerMenu::new, FeatureFlags.VANILLA_SET);
-    public static final MenuType<RocketWorkbenchMenu> ROCKET_WORKBENCH = new ExtendedScreenHandlerType<>(RocketWorkbenchMenu::new);
-    public static final ExtendedScreenHandlerType<RocketMenu> ROCKET = new ExtendedScreenHandlerType<>(RocketMenu::new);
-    public static final MenuType<ParachestMenu> PARACHEST = new ExtendedScreenHandlerType<>(ParachestMenu::new);
+    public static final MenuType<RocketWorkbenchMenu> ROCKET_WORKBENCH = new ExtendedScreenHandlerType<>(RocketWorkbenchMenu::new, RocketWorkbenchMenu.OpeningData.CODEC);
+    public static final MenuType<RocketMenu> ROCKET = new ExtendedScreenHandlerType<>(RocketMenu::new, ByteBufCodecs.INT);
+    public static final MenuType<ParachestMenu> PARACHEST = new ExtendedScreenHandlerType<>(ParachestMenu::new, ParachestMenu.OpeningData.STREAM_CODEC);
 
     public static void register() {
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.PLAYER_INVENTORY_MENU), PLAYER_INV_GC);

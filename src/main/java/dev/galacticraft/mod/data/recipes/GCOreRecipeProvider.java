@@ -23,9 +23,11 @@
 package dev.galacticraft.mod.data.recipes;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -36,14 +38,15 @@ import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Ingot and raw ore recipes
  */
 public class GCOreRecipeProvider extends FabricRecipeProvider {
 
-    public GCOreRecipeProvider(FabricDataOutput output) {
-        super(output);
+    public GCOreRecipeProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> lookup) {
+        super(output, lookup);
     }
 
     @Override
@@ -73,6 +76,7 @@ public class GCOreRecipeProvider extends FabricRecipeProvider {
         nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.LEAD_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.LEAD_BLOCK, "lead_ingot_from_block", "lead_ingot");
         nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.TITANIUM_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.TITANIUM_BLOCK, "titanium_ingot_from_block", "titanium_ingot");
         nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.LUNAR_SAPPHIRE, RecipeCategory.BUILDING_BLOCKS, GCItems.LUNAR_SAPPHIRE_BLOCK, "lunar_sapphire_from_block", "lunar_sapphire");
+        crystalBlockStorageRecipe(output, GCItems.OLIVINE_SHARD, RecipeCategory.MISC, GCBlocks.OLIVINE_BLOCK, "olivine_block_from_shards", null);
     }
 
     @Override
@@ -104,6 +108,16 @@ public class GCOreRecipeProvider extends FabricRecipeProvider {
                 .pattern("###")
                 .pattern("###")
                 .pattern("###")
+                .group(compactingGroup)
+                .unlockedBy(getHasName(baseItem), has(baseItem))
+                .save(exporter, Constant.id(compactingId));
+    }
+
+    public static void crystalBlockStorageRecipe(RecipeOutput exporter, ItemLike baseItem, RecipeCategory compactingCategory, ItemLike compactItem, String compactingId, @Nullable String compactingGroup) {
+        ShapedRecipeBuilder.shaped(compactingCategory, compactItem)
+                .define('#', baseItem)
+                .pattern("##")
+                .pattern("##")
                 .group(compactingGroup)
                 .unlockedBy(getHasName(baseItem), has(baseItem))
                 .save(exporter, Constant.id(compactingId));

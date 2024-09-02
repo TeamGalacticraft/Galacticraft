@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "galacticraft:moon_basalt"
+  },
+  "result": {
+    "count": 2,
+    "id": "galacticraft:moon_basalt_slab"
+  }
+}

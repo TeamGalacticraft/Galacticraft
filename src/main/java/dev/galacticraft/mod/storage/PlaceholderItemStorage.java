@@ -24,7 +24,6 @@ package dev.galacticraft.mod.storage;
 
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.base.SingleItemStorage;
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,12 +34,7 @@ public class PlaceholderItemStorage extends SingleItemStorage {
     }
 
     @Override
-    public long extract(ItemVariant extractedVariant, long maxAmount, TransactionContext transaction) {
-        return super.extract(extractedVariant, maxAmount, transaction);
-    }
-
-    @Override
     protected long getCapacity(ItemVariant variant) {
-        return variant.isBlank() ? 64 : variant.getItem().getMaxStackSize();
+        return variant.isBlank() ? 64 : variant.toStack().getMaxStackSize();
     }
 }

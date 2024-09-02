@@ -26,8 +26,8 @@ import dev.galacticraft.machinelib.api.gametest.MachineGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.MachineTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
-import dev.galacticraft.mod.content.GCMachineTypes;
 import dev.galacticraft.mod.content.block.entity.machine.RefineryBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
@@ -41,7 +41,7 @@ import java.util.List;
 @TestSuite("refinery")
 public final class RefineryTestSuite extends MachineGameTest<RefineryBlockEntity> {
     public RefineryTestSuite() {
-        super(GCMachineTypes.REFINERY);
+        super(GCBlocks.REFINERY);
     }
 
     @Override
@@ -56,8 +56,8 @@ public final class RefineryTestSuite extends MachineGameTest<RefineryBlockEntity
 
     @MachineTest
     public Runnable crafting(RefineryBlockEntity machine) {
-        FluidResourceSlot fuel = machine.fluidStorage().getSlot(RefineryBlockEntity.FUEL_TANK);
-        FluidResourceSlot oil = machine.fluidStorage().getSlot(RefineryBlockEntity.OIL_TANK);
+        FluidResourceSlot fuel = machine.fluidStorage().slot(RefineryBlockEntity.FUEL_TANK);
+        FluidResourceSlot oil = machine.fluidStorage().slot(RefineryBlockEntity.OIL_TANK);
 
         oil.set(GCFluids.CRUDE_OIL, FluidConstants.BUCKET);
         machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
@@ -69,8 +69,8 @@ public final class RefineryTestSuite extends MachineGameTest<RefineryBlockEntity
 
     @MachineTest
     public Runnable craftingFailFull(RefineryBlockEntity machine) {
-        FluidResourceSlot fuel = machine.fluidStorage().getSlot(RefineryBlockEntity.FUEL_TANK);
-        FluidResourceSlot oil = machine.fluidStorage().getSlot(RefineryBlockEntity.OIL_TANK);
+        FluidResourceSlot fuel = machine.fluidStorage().slot(RefineryBlockEntity.FUEL_TANK);
+        FluidResourceSlot oil = machine.fluidStorage().slot(RefineryBlockEntity.OIL_TANK);
 
         machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
         fuel.set(GCFluids.FUEL, fuel.getCapacity());

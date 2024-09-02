@@ -29,9 +29,9 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.TorchBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -50,11 +50,13 @@ public class GlowstoneTorchBlock extends TorchBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, BlockGetter blockView, List<Component> list, TooltipFlag tooltipContext) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag options) {
+        super.appendHoverText(stack, context, tooltip, options);
+
         if (Screen.hasShiftDown()) {
-            list.add(Component.translatable(Translations.Tooltip.GLOWSTONE_TORCH).setStyle(Constant.Text.Color.GRAY_STYLE));
+            tooltip.add(Component.translatable(Translations.Tooltip.GLOWSTONE_TORCH).setStyle(Constant.Text.Color.GRAY_STYLE));
         } else {
-            list.add(Component.translatable(Translations.Tooltip.PRESS_SHIFT).setStyle(Constant.Text.Color.GRAY_STYLE));
+            tooltip.add(Component.translatable(Translations.Tooltip.PRESS_SHIFT).setStyle(Constant.Text.Color.GRAY_STYLE));
         }
     }
 

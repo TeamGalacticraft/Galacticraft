@@ -23,6 +23,7 @@
 package dev.galacticraft.api.rocket.travelpredicate;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.api.registry.BuiltInRocketRegistries;
 import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
@@ -35,19 +36,19 @@ import java.util.Locale;
 
 public abstract class TravelPredicateType<C extends TravelPredicateConfig> {
     private final @NotNull Holder.Reference<TravelPredicateType<?>> reference = BuiltInRocketRegistries.TRAVEL_PREDICATE_TYPE.createIntrusiveHolder(this);
-    private final @NotNull Codec<ConfiguredTravelPredicate<C, TravelPredicateType<C>>> codec;
+    private final @NotNull MapCodec<ConfiguredTravelPredicate<C, TravelPredicateType<C>>> codec;
 
     public TravelPredicateType(@NotNull Codec<C> configCodec) {
-        this.codec = configCodec.fieldOf("config").xmap(this::configure, ConfiguredTravelPredicate::config).codec();
+        this.codec = configCodec.fieldOf("config").xmap(this::configure, ConfiguredTravelPredicate::config);
     }
 
     public ConfiguredTravelPredicate<C, TravelPredicateType<C>> configure(C config) {
         return new ConfiguredTravelPredicate<>(config, this);
     }
 
-    public abstract Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, RocketCone<?, ?> cone, RocketBody<?, ?> body, RocketFin<?, ?> fin, RocketBooster<?, ?> booster, RocketEngine<?, ?> engine, RocketUpgrade<?, ?> upgrade, C config);
+    public abstract Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, Holder<RocketCone<?, ?>> cone, Holder<RocketBody<?, ?>> body, Holder<RocketFin<?, ?>> fin, Holder<RocketBooster<?, ?>> booster, Holder<RocketEngine<?, ?>> engine, Holder<RocketUpgrade<?, ?>> upgrade, C config);
 
-    public Codec<ConfiguredTravelPredicate<C, TravelPredicateType<C>>> codec() {
+    public MapCodec<ConfiguredTravelPredicate<C, TravelPredicateType<C>>> codec() {
         return this.codec;
     }
 

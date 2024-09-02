@@ -76,17 +76,17 @@ public class BasicSolarPanelBlockEntityRenderer implements BlockEntityRenderer<B
         matrices.pushPose();
         matrices.translate(0.5F, 1.0F, 0.5F);
         RenderSystem.setShaderTexture(0, BasicSolarPanelBlockEntityRenderer.TEXTURE);
-        this.render(matrices, vertexConsumers.getBuffer(RenderType.entityCutout(TEXTURE)), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
+        this.render(matrices, vertexConsumers.getBuffer(RenderType.entityCutout(TEXTURE)), light, overlay);
         matrices.popPose();
     }
 
-    public void render(PoseStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        this.pole.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+    public void render(PoseStack matrices, VertexConsumer vertexConsumer, int light, int overlay) {
+        this.pole.render(matrices, vertexConsumer, light, overlay);
         matrices.translate(0.0F, 1.5F, 0.0F);
 
         matrices.mulPose(Axis.ZP.rotationDegrees(180.0F));
         matrices.mulPose(Axis.YP.rotationDegrees(-90.0F));
 
-        this.panel.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+        this.panel.render(matrices, vertexConsumer, light, overlay);
     }
 }

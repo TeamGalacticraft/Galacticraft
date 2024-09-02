@@ -127,7 +127,7 @@ public class EvolvedPillagerSpawner implements CustomSpawner {
             }
 
             patrolEntity.setPos(pos.getX(), pos.getY(), pos.getZ());
-            patrolEntity.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.PATROL, null, null);
+            patrolEntity.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.PATROL, null);
             world.addFreshEntityWithPassengers(patrolEntity);
             return true;
          } else {

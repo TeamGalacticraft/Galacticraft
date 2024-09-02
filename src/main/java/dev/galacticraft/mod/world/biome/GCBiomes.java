@@ -25,7 +25,7 @@ package dev.galacticraft.mod.world.biome;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
@@ -73,7 +73,7 @@ public final class GCBiomes {
                 .temperatureAdjustment(Biome.TemperatureModifier.NONE).build();
     }
 
-    public static void bootstrapRegistries(BootstapContext<Biome> context) { // moj-map typo :(
+    public static void bootstrapRegistries(BootstrapContext<Biome> context) { // moj-map typo :(
         HolderGetter<PlacedFeature> featureLookup = context.lookup(Registries.PLACED_FEATURE);
         HolderGetter<ConfiguredWorldCarver<?>> carverLookup = context.lookup(Registries.CONFIGURED_CARVER);
         context.register(SPACE, createSpaceBiome(context.lookup(Registries.PLACED_FEATURE), context.lookup(Registries.CONFIGURED_CARVER)));

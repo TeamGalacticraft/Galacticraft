@@ -28,6 +28,7 @@ import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
 import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.rocket.travelpredicate.config.OrTravelPredicateConfig;
+import net.minecraft.core.Holder;
 
 public final class OrTravelPredicateType extends TravelPredicateType<OrTravelPredicateConfig> {
     public static final OrTravelPredicateType INSTANCE = new OrTravelPredicateType(OrTravelPredicateConfig.CODEC);
@@ -36,7 +37,7 @@ public final class OrTravelPredicateType extends TravelPredicateType<OrTravelPre
     }
 
     @Override
-    public Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, RocketCone<?, ?> cone, RocketBody<?, ?> body, RocketFin<?, ?> fin, RocketBooster<?, ?> booster, RocketEngine<?, ?> engine, RocketUpgrade<?, ?> upgrade, OrTravelPredicateConfig config) {
+    public Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, Holder<RocketCone<?, ?>> cone, Holder<RocketBody<?, ?>> body, Holder<RocketFin<?, ?>> fin, Holder<RocketBooster<?, ?>> booster, Holder<RocketEngine<?, ?>> engine, Holder<RocketUpgrade<?, ?>> upgrade, OrTravelPredicateConfig config) {
         for (ConfiguredTravelPredicate<?, ?> predicate : config.predicates()) {
             Result result = predicate.canTravel(from, to, cone, body, fin, booster, engine, upgrade);
             if (result != Result.PASS) return result;

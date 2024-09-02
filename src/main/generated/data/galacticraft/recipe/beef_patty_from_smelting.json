@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smelting",
+  "category": "food",
+  "cookingtime": 200,
+  "experience": 1.0,
+  "ingredient": {
+    "item": "galacticraft:ground_beef"
+  },
+  "result": {
+    "id": "galacticraft:beef_patty"
+  }
+}

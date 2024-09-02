@@ -30,6 +30,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -49,8 +50,9 @@ public class FluidPipeWalkwayUnbakedModel implements UnbakedModel {
     public void resolveParents(Function<ResourceLocation, UnbakedModel> function) {
     }
 
+    @Nullable
     @Override
-    public BakedModel bake(ModelBaker loader, Function<Material, TextureAtlasSprite> spriteFunction, ModelState rotationContainer, ResourceLocation modelId) {
-        return FluidPipeWalkwayBakedModel.getInstance(loader, spriteFunction, rotationContainer);
+    public BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> textureGetter, ModelState state) {
+        return FluidPipeWalkwayBakedModel.getInstance(baker, textureGetter, state);
     }
 }

@@ -24,16 +24,16 @@ package dev.galacticraft.mod.client.model;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import org.jetbrains.annotations.Nullable;
 
 public class GCMissingModel implements GCBakedModel {
-
     @Override
-    public void render(PoseStack modelStack, GCModelState state, VertexConsumer vertexConsumer, int light, int overlay) {
+    public void render(PoseStack modelStack, @Nullable GCModelState state, VertexConsumer consumer, int light, int overlay, int color) {
 
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
 
     }
 }

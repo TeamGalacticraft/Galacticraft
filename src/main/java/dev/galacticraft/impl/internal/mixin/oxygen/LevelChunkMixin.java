@@ -25,10 +25,9 @@ package dev.galacticraft.impl.internal.mixin.oxygen;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenSyncer;
 import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
-import io.netty.buffer.Unpooled;
+import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelHeightAccessor;
@@ -48,6 +47,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.BitSet;
 
 @Mixin(LevelChunk.class)
 public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygenAccessor, ChunkOxygenSyncer {
@@ -69,38 +70,42 @@ public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygen
         if (inverted != accessor.galacticraft$isInverted(x, y & 15, z)) {
             if (!this.level.isClientSide) {
                 this.unsaved = true;
-                this.dirtySections |= (0b1 << this.getSectionIndex(y));
+                this.dirtySections |= (short) (0b1 << this.getSectionIndex(y));
             }
             accessor.galacticraft$setInverted(x, y & 15, z, inverted);
         }
     }
 
     @Override
-    public @Nullable FriendlyByteBuf galacticraft$syncOxygenPacketsToClient() {
+    public @Nullable OxygenUpdatePayload.OxygenData[] galacticraft$syncOxygenPacketsToClient() {
         assert !this.level.isClientSide;
-        if (this.dirtySections != 0) {
-            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer(Integer.BYTES * 2 + Short.BYTES + (Short.BYTES + 1)));
-            buf.writeInt(this.getPos().x);
-            buf.writeInt(this.getPos().z);
-            buf.writeShort(this.dirtySections);
+        if (this.dirtySections != 0b0) {
+            int count = 0;
             for (int i = 0; i < this.sections.length; i++) {
                 if ((this.dirtySections & (0b1 << i++)) != 0) {
-                    ((ChunkSectionOxygenAccessor) this.sections[i]).galacticraft$writeOxygenPacket(buf);
+                    count++;
+                }
+            }
+
+            OxygenUpdatePayload.OxygenData[] data = new OxygenUpdatePayload.OxygenData[count];
+
+            int idx = 0;
+            for (byte i = 0; i < this.sections.length; i++) {
+                if ((this.dirtySections & (0b1 << i++)) != 0) {
+                    BitSet data1 = ((ChunkSectionOxygenAccessor) this.sections[i]).galacticraft$getBits();
+                    data[idx++] = new OxygenUpdatePayload.OxygenData(i, data1 == null ? new BitSet(0) : data1);
                 }
             }
             this.dirtySections = 0;
-            return buf;
+            return data;
         }
         return null;
     }
 
     @Override
-    public void galacticraft$readOxygenUpdate(@NotNull FriendlyByteBuf buf) {
-        short dirty = buf.readShort();
-        for (int i = 0; i < this.sections.length; i++) {
-            if ((dirty & (0b1 << i++)) != 0) {
-                ((ChunkSectionOxygenAccessor) this.sections[i]).galacticraft$readOxygenPacket(buf);
-            }
+    public void galacticraft$readOxygenUpdate(@NotNull OxygenUpdatePayload.OxygenData[] buf) {
+        for (OxygenUpdatePayload.@NotNull OxygenData oxygenData : buf) {
+            ((ChunkSectionOxygenAccessor) this.sections[oxygenData.section()]).galacticraft$setBits(oxygenData.data());
         }
     }
 

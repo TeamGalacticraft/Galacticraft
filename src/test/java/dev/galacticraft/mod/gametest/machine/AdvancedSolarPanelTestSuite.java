@@ -24,7 +24,7 @@ package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.MachineGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
-import dev.galacticraft.mod.content.GCMachineTypes;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.AdvancedSolarPanelBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.gametest.framework.GameTestGenerator;
@@ -36,7 +36,7 @@ import java.util.List;
 @TestSuite("advanced_solar_panel")
 public final class AdvancedSolarPanelTestSuite extends MachineGameTest<AdvancedSolarPanelBlockEntity> {
     public AdvancedSolarPanelTestSuite() {
-        super(GCMachineTypes.ADVANCED_SOLAR_PANEL);
+        super(GCBlocks.ADVANCED_SOLAR_PANEL);
     }
 
     @Override

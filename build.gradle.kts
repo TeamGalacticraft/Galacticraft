@@ -53,15 +53,15 @@ val objVersion               = project.property("obj.version").toString()
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("1.6-SNAPSHOT")
+    id("fabric-loom") version("1.7-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
     id("org.ajoberstar.grgit") version("5.2.2")
-    id("dev.galacticraft.mojarn") version("0.1.2")
+    id("dev.galacticraft.mojarn") version("0.4.0+10")
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 
     withSourcesJar()
     withJavadocJar()
@@ -135,7 +135,14 @@ loom {
         }
 
         afterEvaluate {
-            val mixinJarFile = configurations.compileClasspath.get().files { it.group == "net.fabricmc" && it.name == "sponge-mixin" }.first()
+            val mixinJarFile = configurations.runtimeClasspath.get().incoming.artifactView {
+                componentFilter {
+                    it is ModuleComponentIdentifier
+                            && it.group == "net.fabricmc"
+                            && it.module == "sponge-mixin"
+                }
+            }.files.first()
+
             configureEach {
                 vmArg("-javaagent:$mixinJarFile")
 
@@ -148,12 +155,8 @@ loom {
 
 repositories {
     mavenLocal()
-    maven("https://maven.galacticraft.net/repository/maven-releases/") {
-        content {
-            includeGroup("dev.galacticraft")
-        }
-    }
-    maven("https://maven.galacticraft.net/repository/maven-snapshots/") {
+    maven("https://repo.terradevelopment.net/repository/maven-releases/") {
+        // https://maven.galacticraft.net/repository/maven-releases
         content {
             includeGroup("dev.galacticraft")
         }
@@ -247,8 +250,8 @@ dependencies {
     }
 
     multicompat(group = "mezz.jei",
-            api = "jei-$minecraftVersion-common-api",
-            extra = "jei-$minecraftVersion-fabric-api",
+            api = "jei-1.21-common-api",
+            extra = "jei-1.21-fabric-api",
 //            runtime = "jei-$minecraftVersion-fabric", // we already have REI at runtime
             version = jeiVersion) {
         exclude(group = "net.fabricmc.fabric-api")
@@ -273,21 +276,13 @@ tasks.processResources {
     }
 }
 
-tasks.processTestResources {
-    inputs.property("version", project.version)
-
-    filesMatching("fabric.mod.json") {
-        expand("version" to project.version)
-    }
-}
-
 tasks.javadoc {
     options.encoding = "UTF-8"
 }
 
 tasks.withType(JavaCompile::class) {
     options.encoding = "UTF-8"
-    options.release.set(17)
+    options.release.set(21)
 }
 
 tasks.jar {

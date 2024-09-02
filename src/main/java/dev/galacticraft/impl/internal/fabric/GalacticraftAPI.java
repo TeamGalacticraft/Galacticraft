@@ -25,14 +25,24 @@ package dev.galacticraft.impl.internal.fabric;
 import dev.galacticraft.api.accessor.SatelliteAccessor;
 import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.BuiltInRocketRegistries;
+import dev.galacticraft.api.registry.RocketRegistries;
+import dev.galacticraft.api.rocket.part.*;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
+import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.dynamicdimensions.api.DynamicDimensionRegistry;
 import dev.galacticraft.dynamicdimensions.api.event.DynamicDimensionLoadCallback;
 import dev.galacticraft.impl.internal.command.GCApiCommands;
+import dev.galacticraft.impl.network.GCApiPackets;
+import dev.galacticraft.impl.network.GCApiServerPacketReceivers;
 import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.data.gen.SatelliteChunkGenerator;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
+import net.fabricmc.fabric.api.event.registry.DynamicRegistrySetupCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.Minecraft;
@@ -61,24 +71,18 @@ public class GalacticraftAPI implements ModInitializer {
     public void onInitialize() {
         long startInitTime = System.currentTimeMillis();
         GCApiCommands.register();
-        ServerPlayNetworking.registerGlobalReceiver(Constant.id("flag_data"), (server, player, handler, buf, responseSender) -> {
-            int[] array = buf.readVarIntArray();
-            for (int i = 0; i < array.length; i++) {
-                array[i] &= 0x00FFFFFF;
-            }
-            // FORMAT: [A - IGNORE]BGR - 48 width 32 height if it is not a 1536 int array then ignore
-            // since it is purely colour data, there isn't really much a malicious client could do
-            server.execute(() -> {
-                //todo: teams
-            });
-        });
-        ServerPlayNetworking.registerGlobalReceiver(Constant.id("team_name"), (server, player, handler, buf, responseSender) -> {
-            String s = buf.readUtf();
 
-            server.execute(() -> {
-                //todo: teams
-            });
-        });
+        DynamicRegistries.registerSynced(AddonRegistries.CELESTIAL_BODY, CelestialBody.DIRECT_CODEC);
+        DynamicRegistries.registerSynced(AddonRegistries.GALAXY, Galaxy.DIRECT_CODEC);
+
+        DynamicRegistries.registerSynced(RocketRegistries.ROCKET_CONE, RocketCone.DIRECT_CODEC);
+        DynamicRegistries.registerSynced(RocketRegistries.ROCKET_BODY, RocketBody.DIRECT_CODEC);
+        DynamicRegistries.registerSynced(RocketRegistries.ROCKET_FIN, RocketFin.DIRECT_CODEC);
+        DynamicRegistries.registerSynced(RocketRegistries.ROCKET_BOOSTER, RocketBooster.DIRECT_CODEC);
+        DynamicRegistries.registerSynced(RocketRegistries.ROCKET_ENGINE, RocketEngine.DIRECT_CODEC);
+        DynamicRegistries.registerSynced(RocketRegistries.ROCKET_UPGRADE, RocketUpgrade.DIRECT_CODEC);
+
+        DynamicRegistries.registerSynced(AddonRegistries.CELESTIAL_TELEPORTER, CelestialTeleporter.DIRECT_CODEC);
 
         Registry.register(BuiltInRegistries.CHUNK_GENERATOR, Constant.id("satellite"), SatelliteChunkGenerator.CODEC);
         BuiltinObjects.register();
@@ -89,7 +93,16 @@ public class GalacticraftAPI implements ModInitializer {
         DynamicDimensionLoadCallback.register((minecraftServer, dynamicDimensionLoader) -> {
             ((SatelliteAccessor) minecraftServer).galacticraft$loadSatellites(dynamicDimensionLoader);
         });
+
+        // todo: update celestial body level cache
+        DynamicRegistrySetupCallback.EVENT.register(view -> {
+            view.registerEntryAdded(AddonRegistries.CELESTIAL_BODY, (rawId, id, object) -> {
+
+            });
+        });
         Gases.init();
+        GCApiPackets.register();
+        GCApiServerPacketReceivers.register();
         Constant.LOGGER.info("API Initialization Complete. (Took {}ms).", System.currentTimeMillis() - startInitTime);
     }
 

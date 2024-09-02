@@ -31,7 +31,7 @@ import dev.galacticraft.impl.universe.display.type.EmptyCelestialDisplayType;
 import dev.galacticraft.impl.universe.position.config.StaticCelestialPositionConfig;
 import dev.galacticraft.impl.universe.position.type.StaticCelestialPositionType;
 import dev.galacticraft.mod.util.Translations;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +43,7 @@ public record GalaxyImpl(@NotNull Component name,
                          CelestialPosition<?, ?> position,
                          CelestialDisplay<?, ?> display) implements Galaxy {
 
-    public static void bootstrapRegistries(@NotNull BootstapContext<Galaxy> context) {
+    public static void bootstrapRegistries(@NotNull BootstrapContext<Galaxy> context) {
         context.register(BuiltinObjects.MILKY_WAY_KEY, createMilkyWay());
     }
 

@@ -1,0 +1,42 @@
+name: Bug Report (Crash)
+description: File a crashing bug report
+labels:
+  - 'status: triage'
+  - 'type: bug'
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to submit a bug report!
+  - type: markdown
+    attributes:
+      value: >-
+        For help with Galacticraft 4 and below, please use [TeamGalacticraft/Galacticraft-Legacy](https://github.com/TeamGalacticraft/Galacticraft-Legacy).
+
+        For general Galacticraft help and support visit the [Galacticraft Central Discord](http://discord.galacticraftcentral.com/)
+  - type: input
+    id: version
+    attributes:
+      label: Version Information
+      description: What version (commit hash or actions build number) of Galacticraft are you using?
+      placeholder: a17fe4784ed658a9c70ecebd2173af755299d0cb
+    validations:
+      required: true
+  - type: input
+    id: logs
+    attributes:
+      label: Log or Crash Report
+      description: >-
+        Please upload your log (latest.log or crash report) to [GitHub
+        Gist](https://gist.github.com/) or another paste site and link it here.
+      placeholder: 'https://gist.github.com/ghost/1a79a4d60de6718e8e5b326e338ae533'
+      validations:
+        required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      description: How do you trigger this crash? Please be as detailed as possible.
+      value: |
+        ...
+    validations:
+      required: true

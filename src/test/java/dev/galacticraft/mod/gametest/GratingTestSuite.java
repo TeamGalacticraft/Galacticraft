@@ -53,8 +53,7 @@ public class GratingTestSuite implements GalacticraftGameTest {
 
         if (!context.getBlockState(pos2).getFluidState().isEmpty()) {
             context.fail(String.format("Expected grating to not be filled with fluid but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos2).getFluidState().getType())), pos2);
-        }
-        else {
+        } else {
             for (var x = -1; x < 2; x++) {
                 for (var z = -1; z < 2; z++) {
                     if (mutable.set(xz + x, 4, xz + z).equals(pos4)) {
@@ -67,23 +66,18 @@ public class GratingTestSuite implements GalacticraftGameTest {
             context.runAtTickTime(context.getTick() + 40L, () -> {
                 if (!context.getBlockState(pos3).getFluidState().is(FluidTags.WATER)) {
                     context.fail(String.format("Expected water to flow downward but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos3).getFluidState().getType())), pos3);
-                }
-                else if (!context.getBlockState(pos2).getFluidState().is(FluidTags.WATER)) {
+                } else if (!context.getBlockState(pos2).getFluidState().is(FluidTags.WATER)) {
                     context.fail(String.format("Expected grating to be filled with water but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos2).getFluidState().getType())), pos2);
-                }
-                else if (!context.getBlockState(pos1).getFluidState().is(FluidTags.WATER)) {
+                } else if (!context.getBlockState(pos1).getFluidState().is(FluidTags.WATER)) {
                     context.fail(String.format("Expected water to be found below grating but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos1).getFluidState().getType())), pos1);
-                }
-                else {
+                } else {
                     context.setBlock(pos4, Blocks.AIR);
                     context.runAtTickTime(context.getTick() + 50L, () -> context.succeedWhen(() -> {
                         if (!context.getBlockState(pos3).getFluidState().isEmpty()) {
                             context.fail(String.format("Expected water to drain itself but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos3).getFluidState().getType())), pos3);
-                        }
-                        else if (!context.getBlockState(pos2).getFluidState().isEmpty()) {
+                        } else if (!context.getBlockState(pos2).getFluidState().isEmpty()) {
                             context.fail(String.format("Expected grating to not be filled with fluid but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos2).getFluidState().getType())), pos2);
-                        }
-                        else if (!context.getBlockState(pos1).getFluidState().isEmpty()) {
+                        } else if (!context.getBlockState(pos1).getFluidState().isEmpty()) {
                             context.fail(String.format("Expected no fluid to be found below grating but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos1).getFluidState().getType())), pos1);
                         }
                     }));
@@ -115,8 +109,7 @@ public class GratingTestSuite implements GalacticraftGameTest {
             if (z == 1) {
                 context.setBlock(mutable, grating.setValue(FluidLoggable.FLUID, BuiltInRegistries.FLUID.getKey(Fluids.WATER)));
                 gratingWaterPos = mutable.immutable();
-            }
-            else {
+            } else {
                 context.setBlock(mutable, grating);
             }
         }
@@ -148,7 +141,8 @@ public class GratingTestSuite implements GalacticraftGameTest {
         var blockEntity = context.getBlockEntity(pos1);
 
         if (blockEntity instanceof DispenserBlockEntity dispenserBlockEntity) {
-            dispenserBlockEntity.addItem(new ItemStack(Items.WATER_BUCKET));
+            dispenserBlockEntity.setItem(0, new ItemStack(Items.WATER_BUCKET));
+            dispenserBlockEntity.setChanged();
         }
 
         context.runAtTickTime(context.getTick() + 10L, () -> context.setBlock(pos2, Blocks.REDSTONE_BLOCK.defaultBlockState()));
@@ -194,7 +188,8 @@ public class GratingTestSuite implements GalacticraftGameTest {
         var blockEntity = context.getBlockEntity(pos1);
 
         if (blockEntity instanceof DispenserBlockEntity dispenserBlockEntity) {
-            dispenserBlockEntity.addItem(new ItemStack(Items.BUCKET));
+            dispenserBlockEntity.setItem(0, new ItemStack(Items.BUCKET));
+            dispenserBlockEntity.setChanged();
         }
 
         context.runAtTickTime(context.getTick() + 10L, () -> context.setBlock(pos2, Blocks.REDSTONE_BLOCK.defaultBlockState()));

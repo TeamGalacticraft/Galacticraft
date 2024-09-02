@@ -22,8 +22,9 @@
 
 package dev.galacticraft.api.universe.display;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
@@ -31,16 +32,16 @@ import org.joml.Vector4f;
 
 public abstract class CelestialDisplayType<C extends CelestialDisplayConfig> {
     public static final Vector4f NULL_VECTOR = new Vector4f(0, 0, 0, 0);
-    private final Codec<CelestialDisplay<C, CelestialDisplayType<C>>> codec;
+    private final MapCodec<CelestialDisplay<C, CelestialDisplayType<C>>> codec;
 
     public CelestialDisplayType(Codec<C> codec) {
-        this.codec = codec.fieldOf("config").xmap((config) -> new CelestialDisplay<>(this, config), CelestialDisplay::config).codec();
+        this.codec = codec.fieldOf("config").xmap((config) -> new CelestialDisplay<>(this, config), CelestialDisplay::config);
     }
 
     @Environment(EnvType.CLIENT)
-    public abstract Vector4f render(GuiGraphics graphics, BufferBuilder buffer, int size, double mouseX, double mouseY, float delta, C config);
+    public abstract Vector4f render(GuiGraphics graphics, Tesselator tesselator, int size, double mouseX, double mouseY, float delta, C config);
 
-    public Codec<CelestialDisplay<C, CelestialDisplayType<C>>> codec() {
+    public MapCodec<CelestialDisplay<C, CelestialDisplayType<C>>> codec() {
         return this.codec;
     }
 

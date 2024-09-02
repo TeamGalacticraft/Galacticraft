@@ -25,7 +25,7 @@ package dev.galacticraft.mod.mixin.client;
 import com.mojang.authlib.GameProfile;
 import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.content.item.RocketItem;
-import dev.galacticraft.mod.network.packets.ControlEntityPacket;
+import dev.galacticraft.mod.network.c2s.ControlEntityPayload;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -65,7 +65,7 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer {
         if (player.isPassenger()) {
             if (player.getVehicle() instanceof ControllableEntity controllable) {
                 controllable.inputTick(input.leftImpulse, input.forwardImpulse, input.up, input.down, input.left, input.right, input.jumping, input.shiftKeyDown);
-                ClientPlayNetworking.send(new ControlEntityPacket(input.leftImpulse, input.forwardImpulse, input.up, input.down, input.left, input.right, input.jumping, input.shiftKeyDown));
+                ClientPlayNetworking.send(new ControlEntityPayload(input.leftImpulse, input.forwardImpulse, input.up, input.down, input.left, input.right, input.jumping, input.shiftKeyDown));
             }
         }
     }

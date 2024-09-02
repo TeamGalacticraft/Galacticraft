@@ -26,6 +26,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -152,7 +153,7 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
 
     @Override
     public void spawnAfterBreak(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, boolean bl) {
-        if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, itemStack) == 0) {
+        if (bl && EnchantmentHelper.getItemEnchantmentLevel(serverLevel.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.SILK_TOUCH), itemStack) == 0) {
             var i = Mth.nextInt(serverLevel.random, 3, 7);
             if (i > 0) {
                 this.popExperience(serverLevel, blockPos, i);

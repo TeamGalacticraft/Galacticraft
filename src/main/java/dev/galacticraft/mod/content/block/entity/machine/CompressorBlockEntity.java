@@ -23,33 +23,37 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
-import dev.galacticraft.machinelib.api.compat.vanilla.CraftingRecipeTestContainer;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.compat.vanilla.RecipeHelper;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
+import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.GCMachineTypes;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.screen.CompressorMenu;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<CraftingContainer, CompressingRecipe> {
+public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<CraftingInput, CompressingRecipe> {
     public static final int FUEL_SLOT = 0;
     public static final int INPUT_SLOTS = 1;
     public static final int INPUT_LENGTH = 9;
@@ -61,8 +65,21 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
     private long fuelSlotModification = -1;
     private boolean hasFuel = false;
 
+    private static final StorageSpec SPEC = StorageSpec.of(
+            MachineItemStorage.builder()
+                    .add(ItemResourceSlot.builder(TransferType.TRANSFER)
+                            .pos(83, 47)
+                            .filter((item, tag) -> {
+                                Integer integer = FuelRegistry.INSTANCE.get(item);
+                                return integer != null && integer > 0;
+                            }))
+                    .add3x3Grid(TransferType.INPUT, 17, 17)
+                    .add(ItemResourceSlot.builder(TransferType.OUTPUT)
+                            .pos(143, 36))
+    );
+
     public CompressorBlockEntity(BlockPos pos, BlockState state) {
-        super(GCMachineTypes.COMPRESSOR, pos, state, GCRecipes.COMPRESSING_TYPE, INPUT_SLOTS, INPUT_LENGTH, OUTPUT_SLOT);
+        super(GCBlockEntityTypes.COMPRESSOR, pos, state, GCRecipes.COMPRESSING_TYPE, SPEC, INPUT_SLOTS, INPUT_LENGTH, OUTPUT_SLOT);
     }
 
     @Override
@@ -73,7 +90,7 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
     @Override
     protected @Nullable MachineStatus hasResourcesToWork() {
         if (this.fuelLength == 0) {
-            ItemResourceSlot slot = this.itemStorage().getSlot(FUEL_SLOT);
+            ItemResourceSlot slot = this.itemStorage().slot(FUEL_SLOT);
             if (slot.getModifications() != this.fuelSlotModification) {
                 this.fuelSlotModification = slot.getModifications();
                 if (!slot.isEmpty()) {
@@ -92,7 +109,7 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
     @Override
     protected void extractResourcesToWork() {
         if (this.fuelLength == 0) {
-            ItemResourceSlot slot = this.itemStorage().getSlot(FUEL_SLOT);
+            ItemResourceSlot slot = this.itemStorage().slot(FUEL_SLOT);
             if (!slot.isEmpty()) {
                 Integer time = FuelRegistry.INSTANCE.get(slot.getResource());
                 if (time > 0) {
@@ -139,28 +156,26 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
+        super.saveAdditional(tag, lookup);
         tag.putInt(Constant.Nbt.FUEL_TIME, this.fuelTime);
         tag.putInt(Constant.Nbt.FUEL_LENGTH, this.fuelLength);
     }
 
     @Override
-    public void load(@NotNull CompoundTag nbt) {
-        super.load(nbt);
-        this.fuelTime = nbt.getInt(Constant.Nbt.FUEL_TIME);
-        this.fuelLength = nbt.getInt(Constant.Nbt.FUEL_LENGTH);
-    }
-
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
-        if (this.getSecurity().hasAccess(player)) return new CompressorMenu(syncId, (ServerPlayer) player, this);
-        return null;
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
+        super.loadAdditional(tag, lookup);
+        this.fuelTime = tag.getInt(Constant.Nbt.FUEL_TIME);
+        this.fuelLength = tag.getInt(Constant.Nbt.FUEL_LENGTH);
     }
 
     @Override
-    protected CraftingContainer createCraftingInv() {
-        return CraftingRecipeTestContainer.create(3, 3, this.itemStorage(), this.inputSlots, this.inputSlotsLen);
+    public @Nullable MachineMenu<? extends MachineBlockEntity> createMenu(int syncId, Inventory inv, Player player) {
+        return new CompressorMenu(syncId, player, this);
+    }
+
+    @Override
+    protected CraftingInput craftingInv() {
+        return RecipeHelper.craftingInput(3, 3, this.inputSlots.getSlots());
     }
 }

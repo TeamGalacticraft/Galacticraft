@@ -26,7 +26,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
@@ -50,13 +49,12 @@ public record ParachestUnbakedModel(UnbakedModel parentModel, Map<DyeColor, Unba
         });
     }
 
-    @Nullable
     @Override
-    public BakedModel bake(ModelBaker modelBaker, Function<Material, TextureAtlasSprite> function, ModelState modelState, ResourceLocation resourceLocation) {
+    public BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> textureGetter, ModelState state) {
         Map<DyeColor, BakedModel> bakedChutes = new HashMap<>();
         chutes.forEach((color, unbakedModel) -> {
-            bakedChutes.put(color, unbakedModel.bake(modelBaker, function, modelState, resourceLocation));
+            bakedChutes.put(color, unbakedModel.bake(baker, textureGetter, state));
         });
-        return new ParaChestBakedModel(parentModel.bake(modelBaker, function, modelState, resourceLocation), bakedChutes);
+        return new ParaChestBakedModel(parentModel.bake(baker, textureGetter, state), bakedChutes);
     }
 }

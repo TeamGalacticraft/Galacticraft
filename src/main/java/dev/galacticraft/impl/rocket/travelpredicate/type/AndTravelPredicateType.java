@@ -28,6 +28,7 @@ import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
 import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.rocket.travelpredicate.config.AndTravelPredicateConfig;
+import net.minecraft.core.Holder;
 
 public final class AndTravelPredicateType extends TravelPredicateType<AndTravelPredicateConfig> {
     public static final AndTravelPredicateType INSTANCE = new AndTravelPredicateType(AndTravelPredicateConfig.CODEC);
@@ -37,7 +38,7 @@ public final class AndTravelPredicateType extends TravelPredicateType<AndTravelP
     }
 
     @Override
-    public Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, RocketCone<?, ?> cone, RocketBody<?, ?> body, RocketFin<?, ?> fin, RocketBooster<?, ?> booster, RocketEngine<?, ?> engine, RocketUpgrade<?, ?> upgrade, AndTravelPredicateConfig config) {
+    public Result canTravel(CelestialBody<?, ?> from, CelestialBody<?, ?> to, Holder<RocketCone<?, ?>> cone, Holder<RocketBody<?, ?>> body, Holder<RocketFin<?, ?>> fin, Holder<RocketBooster<?, ?>> booster, Holder<RocketEngine<?, ?>> engine, Holder<RocketUpgrade<?, ?>> upgrade, AndTravelPredicateConfig config) {
         Result result = Result.PASS;
         for (ConfiguredTravelPredicate<?, ?> predicate : config.predicates()) {
             result = result.merge(predicate.canTravel(from, to, cone, body, fin, booster, engine, upgrade));

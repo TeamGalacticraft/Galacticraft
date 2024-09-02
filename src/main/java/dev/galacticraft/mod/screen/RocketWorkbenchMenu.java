@@ -32,21 +32,27 @@ import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity.Reci
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import dev.galacticraft.mod.mixin.AbstractContainerMenuAccessor;
+import dev.galacticraft.mod.util.StreamCodecs;
 import dev.galacticraft.mod.world.inventory.RocketResultSlot;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.EitherHolder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,15 +135,15 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         this.upgrade.inventory.removeListener(this);
     }
 
-    public RocketWorkbenchMenu(int syncId, Inventory playerInventory, FriendlyByteBuf buf) {
-        this(syncId, (RocketWorkbenchBlockEntity) playerInventory.player.level().getBlockEntity(buf.readBlockPos()), playerInventory);
+    public RocketWorkbenchMenu(int syncId, Inventory playerInventory, OpeningData data) {
+        this(syncId, (RocketWorkbenchBlockEntity) playerInventory.player.level().getBlockEntity(data.pos), playerInventory);
 
-        if (buf.readBoolean()) this.cone.setSelection(buf.readResourceLocation());
-        if (buf.readBoolean()) this.body.setSelection(buf.readResourceLocation());
-        if (buf.readBoolean()) this.fins.setSelection(buf.readResourceLocation());
-        if (buf.readBoolean()) this.booster.setSelection(buf.readResourceLocation());
-        if (buf.readBoolean()) this.engine.setSelection(buf.readResourceLocation());
-        if (buf.readBoolean()) this.upgrade.setSelection(buf.readResourceLocation());
+        this.cone.setSelection(data.cone);
+        this.body.setSelection(data.body);
+        this.fins.setSelection(data.fin);
+        this.booster.setSelection(data.booster);
+        this.engine.setSelection(data.engine);
+        this.upgrade.setSelection(data.upgrade);
     }
 
     public static int calculateAdditionalHeight(RocketPartRecipe<?, ?> cone, RocketPartRecipe<?, ?> body, RocketPartRecipe<?, ?> fins, RocketPartRecipe<?, ?> booster, RocketPartRecipe<?, ?> engine, RocketPartRecipe<?, ?> upgrade) {
@@ -184,6 +190,22 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
             case ENGINE -> this.engine;
             case UPGRADE -> this.upgrade;
         };
+    }
+
+    public RocketData createData() {
+        return new RocketData(
+                maybeHolder(RocketRegistries.ROCKET_CONE, this.cone.selection),
+                maybeHolder(RocketRegistries.ROCKET_BODY, this.body.selection),
+                maybeHolder(RocketRegistries.ROCKET_FIN, this.fins.selection),
+                maybeHolder(RocketRegistries.ROCKET_BOOSTER, this.booster.selection),
+                maybeHolder(RocketRegistries.ROCKET_ENGINE, this.engine.selection),
+                maybeHolder(RocketRegistries.ROCKET_UPGRADE, this.upgrade.selection),
+                0xFFFFFFFF
+        );
+    }
+
+    private static <T> @Nullable EitherHolder<T> maybeHolder(ResourceKey<Registry<T>> key, @Nullable ResourceLocation id) {
+        return id == null ? null : new EitherHolder<>(ResourceKey.create(key, id));
     }
 
     @Override
@@ -308,25 +330,23 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
 
     @Override
     public void onItemChanged() {
-        RocketData rocketData = RocketData.create(-1, this.cone.getSelectionKey(), this.body.getSelectionKey(), this.fins.getSelectionKey(), this.booster.getSelectionKey(), this.engine.getSelectionKey(), this.upgrade.getSelectionKey());
+        RocketData rocketData = this.createData();
         boolean craftable = rocketData.isValid();
         RocketPartRecipe<?, ?> recipe = this.cone.getRecipe();
-        craftable = craftable && (recipe != null && recipe.matches(this.cone.inventory, this.workbench.getLevel()));
+        craftable = craftable && (recipe != null && recipe.matches(this.cone.inventory.asInput(), this.workbench.getLevel()));
         recipe = this.body.getRecipe();
-        craftable = craftable && (recipe != null && recipe.matches(this.body.inventory, this.workbench.getLevel()));
+        craftable = craftable && (recipe != null && recipe.matches(this.body.inventory.asInput(), this.workbench.getLevel()));
         recipe = this.fins.getRecipe();
-        craftable = craftable && (recipe != null && recipe.matches(this.fins.inventory, this.workbench.getLevel()));
+        craftable = craftable && (recipe != null && recipe.matches(this.fins.inventory.asInput(), this.workbench.getLevel()));
         recipe = this.booster.getRecipe();
-        craftable = craftable && (recipe == null || recipe.matches(this.booster.inventory, this.workbench.getLevel()));
+        craftable = craftable && (recipe == null || recipe.matches(this.booster.inventory.asInput(), this.workbench.getLevel()));
         recipe = this.engine.getRecipe();
-        craftable = craftable && (recipe != null && recipe.matches(this.engine.inventory, this.workbench.getLevel()));
+        craftable = craftable && (recipe != null && recipe.matches(this.engine.inventory.asInput(), this.workbench.getLevel()));
         recipe = this.upgrade.getRecipe();
-        craftable = craftable && (recipe == null ||recipe.matches(this.upgrade.inventory, this.workbench.getLevel()));
+        craftable = craftable && (recipe == null ||recipe.matches(this.upgrade.inventory.asInput(), this.workbench.getLevel()));
         if (craftable) {
             ItemStack stack = new ItemStack(GCItems.ROCKET, 1);
-            CompoundTag tag = new CompoundTag();
-            rocketData.toNbt(tag);
-            stack.setTag(tag);
+            stack.applyComponents(rocketData.asPatch());
             this.workbench.output.setItem(0, stack);
         } else {
             this.workbench.output.setItem(0, ItemStack.EMPTY);
@@ -377,12 +397,35 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
 
         @Override
         public boolean mayPlace(ItemStack stack) {
-            return stack.isEmpty() || this.filter.test(stack.getItem(), stack.getTag());
+            return stack.isEmpty() || this.filter.test(stack.getItem(), stack.getComponentsPatch());
         }
 
         @Override
         public int getMaxStackSize() {
             return 1;
         }
+    }
+
+    public record OpeningData(BlockPos pos, ResourceLocation cone, ResourceLocation body,
+                              ResourceLocation fin, ResourceLocation booster,
+                              ResourceLocation engine, ResourceLocation upgrade) {
+        private static final StreamCodec<ByteBuf, ResourceLocation> OPT_ID = StreamCodecs.ofNullable(ResourceLocation.STREAM_CODEC);
+        public static final StreamCodec<ByteBuf, OpeningData> CODEC = StreamCodecs.composite(
+                BlockPos.STREAM_CODEC,
+                OpeningData::pos,
+                OPT_ID,
+                OpeningData::cone,
+                OPT_ID,
+                OpeningData::body,
+                OPT_ID,
+                OpeningData::fin,
+                OPT_ID,
+                OpeningData::booster,
+                OPT_ID,
+                OpeningData::engine,
+                OPT_ID,
+                OpeningData::upgrade,
+                OpeningData::new
+        );
     }
 }

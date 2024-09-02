@@ -22,13 +22,13 @@
 
 package dev.galacticraft.mod.api.block;
 
-import dev.galacticraft.machinelib.api.block.MachineBlock;
-import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.block.SimpleMachineBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -36,7 +36,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class MultiBlockMachineBlock<T extends MachineBlockEntity> extends MachineBlock<T> implements MultiBlockBase {
+public abstract class MultiBlockMachineBlock extends SimpleMachineBlock implements MultiBlockBase {
     protected MultiBlockMachineBlock(Properties settings, ResourceLocation factory) {
         super(settings, factory);
     }
@@ -56,6 +56,18 @@ public abstract class MultiBlockMachineBlock<T extends MachineBlockEntity> exten
         }
 
         return returnState;
+    }
+
+    @Override
+    public void wasExploded(Level world, BlockPos pos, Explosion explosion) {
+        for (BlockPos part : this.getOtherParts(world.getBlockState(pos))) {
+            part = pos.immutable().offset(part);
+            if (!(world.getBlockEntity(part) instanceof MultiBlockPart)) {
+                continue;
+            }
+            world.removeBlock(part, false);
+        }
+        super.wasExploded(world, pos, explosion);
     }
 
     @Override

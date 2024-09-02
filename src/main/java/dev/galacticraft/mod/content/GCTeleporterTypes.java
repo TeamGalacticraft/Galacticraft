@@ -33,7 +33,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Constant.Teleporters;
 import dev.galacticraft.mod.content.teleporters.LanderCelestialTeleporterType;
 import dev.galacticraft.mod.content.teleporters.OverworldCelestialTeleporterType;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 
 public class GCTeleporterTypes {
@@ -45,7 +45,7 @@ public class GCTeleporterTypes {
 
     public static void register() {}
 
-    public static void bootstrapRegistries(BootstapContext<CelestialTeleporter<?, ?>> context) {
+    public static void bootstrapRegistries(BootstrapContext<CelestialTeleporter<?, ?>> context) {
         context.register(BuiltinObjects.DIRECT_CELESTIAL_TELEPORTER, new CelestialTeleporter<>(DirectCelestialTeleporterType.INSTANCE, DefaultCelestialTeleporterConfig.INSTANCE));
         context.register(LANDER_CELESTIAL_TELEPORTER, new CelestialTeleporter<>(LANDER, DefaultCelestialTeleporterConfig.INSTANCE));
         context.register(OVERWORLD_TELEPORTER, new CelestialTeleporter<>(OVERWORLD, DefaultCelestialTeleporterConfig.INSTANCE));

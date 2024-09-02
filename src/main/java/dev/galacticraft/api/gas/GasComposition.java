@@ -24,7 +24,7 @@ package dev.galacticraft.api.gas;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.galacticraft.impl.codec.MapCodec;
+import dev.galacticraft.impl.codec.MapKvCodec;
 import dev.galacticraft.impl.gas.GasCompositionImpl;
 import it.unimi.dsi.fastutil.objects.Object2DoubleArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public interface GasComposition {
-    MapCodec<ResourceKey<Fluid>, Double, Object2DoubleMap<ResourceKey<Fluid>>> MAP_CODEC = MapCodec.create(Object2DoubleArrayMap::new, ResourceKey.codec(Registries.FLUID), Codec.DOUBLE);
+    MapKvCodec<ResourceKey<Fluid>, Double, Object2DoubleMap<ResourceKey<Fluid>>> MAP_CODEC = MapKvCodec.create(Object2DoubleArrayMap::new, ResourceKey.codec(Registries.FLUID), Codec.DOUBLE);
     Codec<GasComposition> CODEC = RecordCodecBuilder.create(atmosphericInfoInstance -> atmosphericInfoInstance.group(
             MAP_CODEC.fieldOf("composition").forGetter(GasComposition::composition),
             Codec.DOUBLE.fieldOf("temperature").forGetter(GasComposition::temperature),

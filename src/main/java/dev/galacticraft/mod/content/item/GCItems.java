@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
@@ -75,6 +76,24 @@ public class GCItems {
     public static final Item MOON_ROCK_SLAB = new BlockItem(GCBlocks.MOON_ROCK_SLAB, new Item.Properties());
     public static final Item MOON_ROCK_STAIRS = new BlockItem(GCBlocks.MOON_ROCK_STAIRS, new Item.Properties());
     public static final Item MOON_ROCK_WALL = new BlockItem(GCBlocks.MOON_ROCK_WALL, new Item.Properties());
+
+    public static final Item MOON_ROCK_BRICK = new BlockItem(GCBlocks.MOON_ROCK_BRICK, new Item.Properties());
+    public static final Item MOON_ROCK_BRICK_SLAB = new BlockItem(GCBlocks.MOON_ROCK_BRICK_SLAB, new Item.Properties());
+    public static final Item MOON_ROCK_BRICK_STAIRS = new BlockItem(GCBlocks.MOON_ROCK_BRICK_STAIRS, new Item.Properties());
+    public static final Item MOON_ROCK_BRICK_WALL = new BlockItem(GCBlocks.MOON_ROCK_BRICK_WALL, new Item.Properties());
+
+    public static final Item CRACKED_MOON_ROCK_BRICK = new BlockItem(GCBlocks.CRACKED_MOON_ROCK_BRICK, new Item.Properties());
+    public static final Item CRACKED_MOON_ROCK_BRICK_SLAB = new BlockItem(GCBlocks.CRACKED_MOON_ROCK_BRICK_SLAB, new Item.Properties());
+    public static final Item CRACKED_MOON_ROCK_BRICK_STAIRS = new BlockItem(GCBlocks.CRACKED_MOON_ROCK_BRICK_STAIRS, new Item.Properties());
+    public static final Item CRACKED_MOON_ROCK_BRICK_WALL = new BlockItem(GCBlocks.CRACKED_MOON_ROCK_BRICK_WALL, new Item.Properties());
+
+    public static final Item POLISHED_MOON_ROCK = new BlockItem(GCBlocks.POLISHED_MOON_ROCK, new Item.Properties());
+    public static final Item POLISHED_MOON_ROCK_SLAB = new BlockItem(GCBlocks.POLISHED_MOON_ROCK_SLAB, new Item.Properties());
+    public static final Item POLISHED_MOON_ROCK_STAIRS = new BlockItem(GCBlocks.POLISHED_MOON_ROCK_STAIRS, new Item.Properties());
+    public static final Item POLISHED_MOON_ROCK_WALL = new BlockItem(GCBlocks.POLISHED_MOON_ROCK_WALL, new Item.Properties());
+
+    public static final Item CHISELED_MOON_ROCK_BRICK = new BlockItem(GCBlocks.CHISELED_MOON_ROCK_BRICK, new Item.Properties());
+    public static final Item MOON_ROCK_PILLAR = new BlockItem(GCBlocks.MOON_ROCK_PILLAR, new Item.Properties());
 
     public static final Item COBBLED_MOON_ROCK = new BlockItem(GCBlocks.COBBLED_MOON_ROCK, new Item.Properties());
     public static final Item COBBLED_MOON_ROCK_SLAB = new BlockItem(GCBlocks.COBBLED_MOON_ROCK_SLAB, new Item.Properties());
@@ -210,9 +229,9 @@ public class GCItems {
     // MISC MACHINES
     public static final Item CRYOGENIC_CHAMBER = new BlockItem(GCBlocks.CRYOGENIC_CHAMBER, new Item.Properties());
     public static final Item PLAYER_TRANSPORT_TUBE = new BlockItem(GCBlocks.PLAYER_TRANSPORT_TUBE, new Item.Properties());
-    public static final Item AIR_LOCK_FRAME = new BlockItem(GCBlocks.AIR_LOCK_FRAME, new FabricItemSettings());
-    public static final Item AIR_LOCK_CONTROLLER = new BlockItem(GCBlocks.AIR_LOCK_CONTROLLER, new FabricItemSettings());
-    public static final Item AIR_LOCK_SEAL = new BlockItem(GCBlocks.AIR_LOCK_SEAL, new FabricItemSettings());
+    public static final Item AIR_LOCK_FRAME = new BlockItem(GCBlocks.AIR_LOCK_FRAME, new Item.Properties());
+    public static final Item AIR_LOCK_CONTROLLER = new BlockItem(GCBlocks.AIR_LOCK_CONTROLLER, new Item.Properties());
+    public static final Item AIR_LOCK_SEAL = new BlockItem(GCBlocks.AIR_LOCK_SEAL, new Item.Properties());
 
     // MACHINES
     public static final Item CIRCUIT_FABRICATOR = new BlockItem(GCBlocks.CIRCUIT_FABRICATOR, new Item.Properties());
@@ -243,6 +262,8 @@ public class GCItems {
     public static final Item METEORIC_IRON_INGOT = new Item(new Item.Properties());
     public static final Item METEORIC_IRON_NUGGET = new Item(new Item.Properties());
     public static final Item COMPRESSED_METEORIC_IRON = new Item(new Item.Properties());
+
+    public static final Item OLIVINE_SHARD = registerItem(Constant.Item.OLIVINE_SHARD, new Item(new Item.Properties()));
 
     public static final Item RAW_DESH = new Item(new Item.Properties());
     public static final Item DESH_INGOT = new Item(new Item.Properties());
@@ -302,7 +323,6 @@ public class GCItems {
     public static final Item AMBIENT_THERMAL_CONTROLLER = new Item(new Item.Properties());
     
     // FOOD
-    public static final Item MOON_BERRIES = new ItemNameBlockItem(GCBlocks.MOON_BERRY_BUSH, new Item.Properties().food(GCFoodComponent.MOON_BERRIES));
     public static final Item CHEESE_CURD = new Item(new Item.Properties().food(GCFoodComponent.CHEESE_CURD));
     
     public static final Item CHEESE_SLICE = ITEMS.register(Constant.Item.CHEESE_SLICE, new Item(new Item.Properties().food(GCFoodComponent.CHEESE_SLICE)));
@@ -321,41 +341,41 @@ public class GCItems {
     public static final Item HOT_THROWABLE_METEOR_CHUNK = new HotThrowableMeteorChunkItem(new Item.Properties().stacksTo(16));
 
     // ARMOR
-    public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties());
-    public static final Item HEAVY_DUTY_CHESTPLATE = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.CHESTPLATE, new Item.Properties());
-    public static final Item HEAVY_DUTY_LEGGINGS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.LEGGINGS, new Item.Properties());
-    public static final Item HEAVY_DUTY_BOOTS = new ArmorItem(GCArmorMaterial.HEAVY_DUTY, ArmorItem.Type.BOOTS, new Item.Properties());
+    public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties());
+    public static final Item HEAVY_DUTY_CHESTPLATE = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.CHESTPLATE, new Item.Properties());
+    public static final Item HEAVY_DUTY_LEGGINGS = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.LEGGINGS, new Item.Properties());
+    public static final Item HEAVY_DUTY_BOOTS = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.BOOTS, new Item.Properties());
 
-    public static final Item DESH_HELMET = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.HELMET, new Item.Properties());
-    public static final Item DESH_CHESTPLATE = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.CHESTPLATE, new Item.Properties());
-    public static final Item DESH_LEGGINGS = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.LEGGINGS, new Item.Properties());
-    public static final Item DESH_BOOTS = new ArmorItem(GCArmorMaterial.DESH, ArmorItem.Type.BOOTS, new Item.Properties());
+    public static final Item DESH_HELMET = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.HELMET, new Item.Properties());
+    public static final Item DESH_CHESTPLATE = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.CHESTPLATE, new Item.Properties());
+    public static final Item DESH_LEGGINGS = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.LEGGINGS, new Item.Properties());
+    public static final Item DESH_BOOTS = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.BOOTS, new Item.Properties());
 
-    public static final Item TITANIUM_HELMET = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.HELMET, new Item.Properties());
-    public static final Item TITANIUM_CHESTPLATE = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.CHESTPLATE, new Item.Properties());
-    public static final Item TITANIUM_LEGGINGS = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.LEGGINGS, new Item.Properties());
-    public static final Item TITANIUM_BOOTS = new ArmorItem(GCArmorMaterial.TITANIUM, ArmorItem.Type.BOOTS, new Item.Properties());
+    public static final Item TITANIUM_HELMET = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.HELMET, new Item.Properties());
+    public static final Item TITANIUM_CHESTPLATE = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.CHESTPLATE, new Item.Properties());
+    public static final Item TITANIUM_LEGGINGS = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.LEGGINGS, new Item.Properties());
+    public static final Item TITANIUM_BOOTS = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.BOOTS, new Item.Properties());
 
-    public static final Item SENSOR_GLASSES = new ArmorItem(GCArmorMaterial.SENSOR_GLASSES, ArmorItem.Type.HELMET, new Item.Properties());
+    public static final Item SENSOR_GLASSES = new ArmorItem(GCArmorMaterials.SENSOR_GLASSES, ArmorItem.Type.HELMET, new Item.Properties());
 
     // TOOLS + WEAPONS
-    public static final Item HEAVY_DUTY_SWORD = new BrittleSwordItem(GCToolMaterial.STEEL, 3, -2.4F, new Item.Properties());
-    public static final Item HEAVY_DUTY_SHOVEL = new ShovelItem(GCToolMaterial.STEEL, -1.5F, -3.0F, new Item.Properties());
-    public static final Item HEAVY_DUTY_PICKAXE = new PickaxeItem(GCToolMaterial.STEEL, 1, -2.8F, new Item.Properties());
-    public static final Item HEAVY_DUTY_AXE = new AxeItem(GCToolMaterial.STEEL, 6.0F, -3.1F, new Item.Properties());
-    public static final Item HEAVY_DUTY_HOE = new HoeItem(GCToolMaterial.STEEL, -2, -1.0F, new Item.Properties());
+    public static final Item HEAVY_DUTY_SWORD = new BrittleSwordItem(GCTiers.STEEL, new Item.Properties().attributes(SwordItem.createAttributes(GCTiers.STEEL, 3, -2.4F)));
+    public static final Item HEAVY_DUTY_SHOVEL = new ShovelItem(GCTiers.STEEL, new Item.Properties().attributes(ShovelItem.createAttributes(GCTiers.STEEL, -1.5F, -3.0F)));
+    public static final Item HEAVY_DUTY_PICKAXE = new PickaxeItem(GCTiers.STEEL, new Item.Properties().attributes(PickaxeItem.createAttributes(GCTiers.STEEL, 1, -2.8F)));
+    public static final Item HEAVY_DUTY_AXE = new AxeItem(GCTiers.STEEL, new Item.Properties().attributes(AxeItem.createAttributes(GCTiers.STEEL, 6.0F, -3.1F)));
+    public static final Item HEAVY_DUTY_HOE = new HoeItem(GCTiers.STEEL, new Item.Properties().attributes(HoeItem.createAttributes(GCTiers.STEEL, -2, -1.0F)));
 
-    public static final Item DESH_SWORD = new SwordItem(GCToolMaterial.DESH, 3, -2.4F, new Item.Properties());
-    public static final Item DESH_SHOVEL = new ShovelItem(GCToolMaterial.DESH, -1.5F, -3.0F, new Item.Properties());
-    public static final Item DESH_PICKAXE = new PickaxeItem(GCToolMaterial.DESH, 1, -2.8F, new Item.Properties());
-    public static final Item DESH_AXE = new AxeItem(GCToolMaterial.DESH, 6.0F, -3.1F, new Item.Properties());
-    public static final Item DESH_HOE = new HoeItem(GCToolMaterial.DESH, -3, -1.0F, new Item.Properties());
+    public static final Item DESH_SWORD = new SwordItem(GCTiers.DESH, new Item.Properties().attributes(SwordItem.createAttributes(GCTiers.DESH, 3, -2.4F)));
+    public static final Item DESH_SHOVEL = new ShovelItem(GCTiers.DESH, new Item.Properties().attributes(ShovelItem.createAttributes(GCTiers.DESH, -1.5F, -3.0F)));
+    public static final Item DESH_PICKAXE = new PickaxeItem(GCTiers.DESH, new Item.Properties().attributes(PickaxeItem.createAttributes(GCTiers.DESH, 1.0F, -2.8F)));
+    public static final Item DESH_AXE = new AxeItem(GCTiers.DESH, new Item.Properties().attributes(AxeItem.createAttributes(GCTiers.DESH, 6.0F, -3.1F)));
+    public static final Item DESH_HOE = new HoeItem(GCTiers.DESH, new Item.Properties().attributes(HoeItem.createAttributes(GCTiers.DESH, -3.0F, -1.0F)));
 
-    public static final Item TITANIUM_SWORD = new BrittleSwordItem(GCToolMaterial.TITANIUM, 3, -2.4F, new Item.Properties());
-    public static final Item TITANIUM_SHOVEL = new ShovelItem(GCToolMaterial.TITANIUM, -1.5F, -3.0F, new Item.Properties());
-    public static final Item TITANIUM_PICKAXE = new PickaxeItem(GCToolMaterial.TITANIUM, 1, -2.8F, new Item.Properties());
-    public static final Item TITANIUM_AXE = new AxeItem(GCToolMaterial.TITANIUM, 6.0F, -3.1F, new Item.Properties());
-    public static final Item TITANIUM_HOE = new HoeItem(GCToolMaterial.TITANIUM, -3, -1.0F, new Item.Properties());
+    public static final Item TITANIUM_SWORD = new BrittleSwordItem(GCTiers.TITANIUM, new Item.Properties().attributes(SwordItem.createAttributes(GCTiers.TITANIUM, 3, -2.4F)));
+    public static final Item TITANIUM_SHOVEL = new ShovelItem(GCTiers.TITANIUM, new Item.Properties().attributes(ShovelItem.createAttributes(GCTiers.TITANIUM, -1.5F, -3.0F)));
+    public static final Item TITANIUM_PICKAXE = new PickaxeItem(GCTiers.TITANIUM, new Item.Properties().attributes(PickaxeItem.createAttributes(GCTiers.TITANIUM, 1.0F, -2.8F)));
+    public static final Item TITANIUM_AXE = new AxeItem(GCTiers.TITANIUM, new Item.Properties().attributes(AxeItem.createAttributes(GCTiers.TITANIUM, 6.0F, -3.1F)));
+    public static final Item TITANIUM_HOE = new HoeItem(GCTiers.TITANIUM, new Item.Properties().attributes(HoeItem.createAttributes(GCTiers.TITANIUM, -3.0F, -1.0F)));
 
     public static final Item STANDARD_WRENCH = new StandardWrenchItem(new Item.Properties().durability(256));
 
@@ -366,16 +386,16 @@ public class GCItems {
             Component.translatable(Translations.Misc.UPGRADE_TITANIUM_DESCRIPTION),
             Component.translatable(Translations.Misc.UPGRADE_TITANIUM_BASE_SLOT_DESCRIPTION),
             Component.translatable(Translations.Misc.UPGRADE_TITANIUM_ADDITIONS_SLOT_DESCRIPTON),
-            List.of(new ResourceLocation("item/empty_armor_slot_helmet"),
-                    new ResourceLocation("item/empty_armor_slot_chestplate"),
-                    new ResourceLocation("item/empty_armor_slot_leggings"),
-                    new ResourceLocation("item/empty_armor_slot_boots"),
-                    new ResourceLocation("item/empty_slot_hoe"),
-                    new ResourceLocation("item/empty_slot_axe"),
-                    new ResourceLocation("item/empty_slot_sword"),
-                    new ResourceLocation("item/empty_slot_shovel"),
-                    new ResourceLocation("item/empty_slot_pickaxe")),
-            List.of(new ResourceLocation("item/empty_slot_ingot"))
+            List.of(ResourceLocation.withDefaultNamespace("item/empty_armor_slot_helmet"),
+                    ResourceLocation.withDefaultNamespace("item/empty_armor_slot_chestplate"),
+                    ResourceLocation.withDefaultNamespace("item/empty_armor_slot_leggings"),
+                    ResourceLocation.withDefaultNamespace("item/empty_armor_slot_boots"),
+                    ResourceLocation.withDefaultNamespace("item/empty_slot_hoe"),
+                    ResourceLocation.withDefaultNamespace("item/empty_slot_axe"),
+                    ResourceLocation.withDefaultNamespace("item/empty_slot_sword"),
+                    ResourceLocation.withDefaultNamespace("item/empty_slot_shovel"),
+                    ResourceLocation.withDefaultNamespace("item/empty_slot_pickaxe")),
+            List.of(ResourceLocation.withDefaultNamespace("item/empty_slot_ingot"))
     );
     // 		this.appliesTo = component;
     //		this.ingredients = component2;
@@ -412,7 +432,12 @@ public class GCItems {
     public static final Item THERMAL_PADDING_BOOTS = new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.BOOTS);
     // Vehicles
     public static final Item BUGGY = ITEMS.register(Constant.Item.BUGGY, new BuggyItem(new Item.Properties().stacksTo(1)));
-    public static final Item ROCKET = ITEMS.register(Constant.Item.ROCKET, new RocketItem(new Item.Properties().stacksTo(1)));
+    public static final Item ROCKET = ITEMS.register(Constant.Item.ROCKET, new RocketItem(new Item.Properties()
+            .component(GCDataComponents.ROCKET_CONE, new EitherHolder<>(GCRocketParts.TIER_1_CONE))
+            .component(GCDataComponents.ROCKET_BODY, new EitherHolder<>(GCRocketParts.TIER_1_BODY))
+            .component(GCDataComponents.ROCKET_FIN, new EitherHolder<>(GCRocketParts.TIER_1_FIN))
+            .component(GCDataComponents.ROCKET_ENGINE, new EitherHolder<>(GCRocketParts.TIER_1_ENGINE))
+            .stacksTo(1)));
 
     // ROCKET PIECES
     public static final Item NOSE_CONE = ITEMS.register(Constant.Item.NOSE_CONE, new Item(new Item.Properties()));
@@ -435,7 +460,10 @@ public class GCItems {
     public static final CannedFoodItem CANNED_FOOD = new CannedFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(0).saturationMod(0).build()).stacksTo(1));
     public static final CannedFoodItem EMPTY_CANNED_FOOD = new CannedFoodItem(new Item.Properties().food(null).stacksTo(64));
 
-    
+    public static Item registerItem(String id, Item item) {
+        return Registry.register(BuiltInRegistries.ITEM, Constant.id(id), item);
+    }
+
     public static void register() {
         // === START BLOCKS ===
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.EMPTY_CANNED_FOOD), EMPTY_CANNED_FOOD);
@@ -451,6 +479,24 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_ROCK_SLAB), MOON_ROCK_SLAB);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_ROCK_STAIRS), MOON_ROCK_STAIRS);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_ROCK_WALL), MOON_ROCK_WALL);
+
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_ROCK_BRICK), MOON_ROCK_BRICK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_ROCK_BRICK_SLAB), MOON_ROCK_BRICK_SLAB);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_ROCK_BRICK_STAIRS), MOON_ROCK_BRICK_STAIRS);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_ROCK_BRICK_WALL), MOON_ROCK_BRICK_WALL);
+
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CRACKED_MOON_ROCK_BRICK), CRACKED_MOON_ROCK_BRICK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CRACKED_MOON_ROCK_BRICK_SLAB), CRACKED_MOON_ROCK_BRICK_SLAB);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CRACKED_MOON_ROCK_BRICK_STAIRS), CRACKED_MOON_ROCK_BRICK_STAIRS);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CRACKED_MOON_ROCK_BRICK_WALL), CRACKED_MOON_ROCK_BRICK_WALL);
+
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.POLISHED_MOON_ROCK), POLISHED_MOON_ROCK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.POLISHED_MOON_ROCK_SLAB), POLISHED_MOON_ROCK_SLAB);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.POLISHED_MOON_ROCK_STAIRS), POLISHED_MOON_ROCK_STAIRS);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.POLISHED_MOON_ROCK_WALL), POLISHED_MOON_ROCK_WALL);
+
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.CHISELED_MOON_ROCK_BRICK), CHISELED_MOON_ROCK_BRICK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_ROCK_PILLAR), MOON_ROCK_PILLAR);
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.COBBLED_MOON_ROCK), COBBLED_MOON_ROCK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.COBBLED_MOON_ROCK_SLAB), COBBLED_MOON_ROCK_SLAB);
@@ -671,7 +717,6 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.AMBIENT_THERMAL_CONTROLLER), AMBIENT_THERMAL_CONTROLLER);
 
         // FOOD
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.MOON_BERRIES), MOON_BERRIES);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CHEESE_CURD), CHEESE_CURD);
 
         // THROWABLE METEOR CHUNKS

@@ -24,8 +24,9 @@ package dev.galacticraft.mod.data.loot;
 
 import com.google.common.collect.Sets;
 import dev.galacticraft.mod.content.GCRegistry;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.EntityLootSubProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.flag.FeatureFlagSet;
@@ -42,30 +43,30 @@ public abstract class GCEntityLootSubProvider extends EntityLootSubProvider {
     protected final FeatureFlagSet allowed;
     protected final FeatureFlagSet required;
 
-    protected GCEntityLootSubProvider(FeatureFlagSet allowed) {
-        this(allowed, allowed);
+    protected GCEntityLootSubProvider(FeatureFlagSet allowed, HolderLookup.Provider lookup) {
+        this(allowed, allowed, lookup);
     }
 
-    protected GCEntityLootSubProvider(FeatureFlagSet allowed, FeatureFlagSet required) {
-        super(allowed, required);
+    protected GCEntityLootSubProvider(FeatureFlagSet allowed, FeatureFlagSet required, HolderLookup.Provider lookup) {
+        super(allowed, required, lookup);
         this.allowed = allowed;
         this.required = required;
     }
 
     @Override
-    public void generate(BiConsumer<ResourceLocation, LootTable.Builder> biConsumer) {
+    public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> biConsumer) {
         this.generate();
-        Set<ResourceLocation> set = Sets.newHashSet();
+        Set<ResourceKey<LootTable>> set = Sets.newHashSet();
         getRegistry().getEntries()
                 .forEach(
                         entityType -> {
                             EntityType<?> entityType2 = entityType.value();
                             if (entityType2.isEnabled(this.allowed)) {
                                 if (canHaveLootTable(entityType2)) {
-                                    Map<ResourceLocation, LootTable.Builder> map = this.map.remove(entityType2);
-                                    ResourceLocation resourceLocation = entityType2.getDefaultLootTable();
-                                    if (!resourceLocation.equals(BuiltInLootTables.EMPTY) && entityType2.isEnabled(this.required) && (map == null || !map.containsKey(resourceLocation))) {
-                                        throw new IllegalStateException(String.format(Locale.ROOT, "Missing loottable '%s' for '%s'", resourceLocation, entityType.key().location()));
+                                    Map<ResourceKey<LootTable>, LootTable.Builder> map = this.map.remove(entityType2);
+                                    ResourceKey<LootTable> key = entityType2.getDefaultLootTable();
+                                    if (!key.equals(BuiltInLootTables.EMPTY) && entityType2.isEnabled(this.required) && (map == null || !map.containsKey(key))) {
+                                        throw new IllegalStateException(String.format(Locale.ROOT, "Missing loottable '%s' for '%s'", key, entityType.key().location()));
                                     }
 
                                     if (map != null) {
@@ -78,13 +79,13 @@ public abstract class GCEntityLootSubProvider extends EntityLootSubProvider {
                                         });
                                     }
                                 } else {
-                                    Map<ResourceLocation, LootTable.Builder> map = this.map.remove(entityType2);
+                                    Map<ResourceKey<LootTable>, LootTable.Builder> map = this.map.remove(entityType2);
                                     if (map != null) {
                                         throw new IllegalStateException(
                                                 String.format(
                                                         Locale.ROOT,
                                                         "Weird loottables '%s' for '%s', not a LivingEntity so should not have loot",
-                                                        map.keySet().stream().map(ResourceLocation::toString).collect(Collectors.joining(",")),
+                                                        map.keySet().stream().map(ResourceKey::toString).collect(Collectors.joining(",")),
                                                         entityType.key().location()
                                                 )
                                         );

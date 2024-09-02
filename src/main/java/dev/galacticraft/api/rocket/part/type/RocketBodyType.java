@@ -23,6 +23,7 @@
 package dev.galacticraft.api.rocket.part.type;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.api.rocket.part.RocketBody;
 import dev.galacticraft.api.rocket.part.config.RocketBodyConfig;
 import org.jetbrains.annotations.Contract;
@@ -32,10 +33,10 @@ import org.jetbrains.annotations.NotNull;
  * The body of a rocket. Controls the number of installable rocket upgrades and the maximum passenger count.
  */
 public non-sealed abstract class RocketBodyType<C extends RocketBodyConfig> implements RocketPartType<C> {
-    private final @NotNull Codec<RocketBody<C, RocketBodyType<C>>> codec;
+    private final @NotNull MapCodec<RocketBody<C, RocketBodyType<C>>> codec;
 
     protected RocketBodyType(@NotNull Codec<C> configCodec) {
-        this.codec = configCodec.fieldOf("config").xmap(this::configure, RocketBody::config).codec();
+        this.codec = configCodec.fieldOf("config").xmap(this::configure, RocketBody::config);
     }
 
     @Override
@@ -44,7 +45,7 @@ public non-sealed abstract class RocketBodyType<C extends RocketBodyConfig> impl
     }
 
     @Override
-    public @NotNull Codec<RocketBody<C, RocketBodyType<C>>> codec() {
+    public @NotNull MapCodec<? extends RocketBody<C, ? extends RocketBodyType<C>>> codec() {
         return this.codec;
     }
 

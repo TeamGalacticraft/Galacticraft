@@ -99,8 +99,8 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
     }
 
     @Inject(method = "defineSynchedData", at = @At("TAIL"))
-    private void gc$sleepData(CallbackInfo ci) {
-        this.entityData.define(IS_IN_CRYO_SLEEP_ID, false);
+    private void gc$sleepData(SynchedEntityData.Builder compositeStateBuilder, CallbackInfo ci) {
+        compositeStateBuilder.define(IS_IN_CRYO_SLEEP_ID, false);
     }
 
     @Inject(method = "setPosToBed", at = @At("HEAD"), cancellable = true)

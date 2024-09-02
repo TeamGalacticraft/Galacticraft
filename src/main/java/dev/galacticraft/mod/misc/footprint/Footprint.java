@@ -23,9 +23,13 @@
 package dev.galacticraft.mod.misc.footprint;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.util.StreamCodecs;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
@@ -36,6 +40,24 @@ import org.joml.Vector3d;
 import java.util.UUID;
 
 public class Footprint {
+    public static final StreamCodec<ByteBuf, Footprint> STREAM_CODEC = StreamCodecs.composite(
+            ResourceLocation.STREAM_CODEC,
+            f -> f.dimension,
+            ByteBufCodecs.DOUBLE,
+            f -> f.position.x,
+            ByteBufCodecs.DOUBLE,
+            f -> f.position.y,
+            ByteBufCodecs.DOUBLE,
+            f -> f.position.z,
+            ByteBufCodecs.FLOAT,
+            f -> f.rotation,
+            ByteBufCodecs.SHORT,
+            f -> f.age,
+            UUIDUtil.STREAM_CODEC,
+            f -> f.owner,
+            (id, x, y, z, r, a, o) -> new Footprint(id, new Vector3d(x, y, z), r, a, o)
+    );
+
     public static final short MAX_AGE = 3200;
     public final ResourceLocation dimension;
     public final float rotation;
@@ -121,19 +143,5 @@ public class Footprint {
         }
 
         return position;
-    }
-
-    public void write(FriendlyByteBuf buf) {
-        buf.writeResourceLocation(dimension);
-        buf.writeDouble(position.x());
-        buf.writeDouble(position.y());
-        buf.writeDouble(position.z());
-        buf.writeFloat(rotation);
-        buf.writeShort(age);
-        buf.writeUUID(owner);
-    }
-
-    public static Footprint read(FriendlyByteBuf buf) {
-        return new Footprint(buf.readResourceLocation(), new Vector3d(buf.readDouble(), buf.readDouble(), buf.readDouble()), buf.readFloat(), buf.readShort(), buf.readUUID());
     }
 }

@@ -30,6 +30,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
@@ -54,7 +55,7 @@ public abstract class TranslationProvider implements DataProvider {
     public TranslationProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         this.registriesFuture = registriesFuture;
         this.modId = output.getModId();
-        this.path = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "lang").json(new ResourceLocation(modId, "en_us"));
+        this.path = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "lang").json(ResourceLocation.fromNamespaceAndPath(modId, "en_us"));
     }
 
     protected void generateDefaultTranslations(@NotNull HolderLookup.Provider registries) {
@@ -99,7 +100,7 @@ public abstract class TranslationProvider implements DataProvider {
     }
 
     protected void enchantment(Enchantment enchantment, String translation) {
-        this.add(enchantment.getDescriptionId(), translation);
+        this.add(((TranslatableContents)enchantment.description().getContents()).getKey(), translation);
     }
 
     protected <T> void addDefaulted(Holder.Reference<T> reference) {

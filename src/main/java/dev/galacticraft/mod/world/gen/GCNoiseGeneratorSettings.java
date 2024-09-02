@@ -28,9 +28,10 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.world.gen.custom.AsteroidChunkGenerator;
 import dev.galacticraft.mod.world.gen.surfacebuilder.MoonSurfaceRules;
 import dev.galacticraft.mod.world.gen.surfacebuilder.VenusSurfaceRules;
+import dev.galacticraft.mod.world.gen.surfacerule.VenusSurfaceRules;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.OverworldBiomeBuilder;
@@ -48,7 +49,7 @@ public class GCNoiseGeneratorSettings {
     public static final ResourceKey<NoiseGeneratorSettings> MOON = key("moon");
     public static final ResourceKey<NoiseGeneratorSettings> VENUS = key("venus");
 
-    public static void bootstrapRegistries(BootstapContext<NoiseGeneratorSettings> context) {
+    public static void bootstrapRegistries(BootstrapContext<NoiseGeneratorSettings> context) {
         HolderGetter<DensityFunction> densityLookup = context.lookup(Registries.DENSITY_FUNCTION);
         HolderGetter<NormalNoise.NoiseParameters> noiseLookup = context.lookup(Registries.NOISE);
 

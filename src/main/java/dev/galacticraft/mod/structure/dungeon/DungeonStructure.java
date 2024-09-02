@@ -22,28 +22,26 @@
 
 package dev.galacticraft.mod.structure.dungeon;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.mod.world.gen.structure.GCStructureTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.WorldgenRandom;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
-import net.minecraft.world.level.levelgen.structure.structures.IglooPieces;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
 public class DungeonStructure extends Structure {
-    public static final Codec<DungeonStructure> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+    public static final MapCodec<DungeonStructure> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             StructureSettings.CODEC.fieldOf("config").forGetter((moonRuinsStructure) -> moonRuinsStructure.settings),
             DungeonConfiguration.CODEC.fieldOf("dungeon_configuration").forGetter(dungeonStructure -> dungeonStructure.configuration)
     ).apply(instance, DungeonStructure::new));

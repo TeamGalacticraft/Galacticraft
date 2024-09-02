@@ -37,22 +37,21 @@ import net.fabricmc.fabric.api.transfer.v1.storage.base.SidedStorageBlockEntity;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
-public class ParaChestBlockEntity extends RandomizableContainerBlockEntity implements SidedStorageBlockEntity, ExtendedScreenHandlerFactory, ScalableFuelLevel {
+public class ParaChestBlockEntity extends RandomizableContainerBlockEntity implements SidedStorageBlockEntity, ExtendedScreenHandlerFactory<ParachestMenu.OpeningData>, ScalableFuelLevel {
 
     public final SingleFluidStorage tank = SingleFluidStorage.withFixedCapacity(FluidConstants.BUCKET * 5, () -> {
     });
@@ -63,15 +62,17 @@ public class ParaChestBlockEntity extends RandomizableContainerBlockEntity imple
     }
 
     @Override
-    public void load(CompoundTag compoundTag) {
+    protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+        super.loadAdditional(nbt, registryLookup);
         this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        this.tank.readNbt(compoundTag);
+        this.tank.readNbt(nbt, registryLookup);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compoundTag) {
-        ContainerHelper.saveAllItems(compoundTag, this.inventory);
-        this.tank.writeNbt(compoundTag);
+    protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+        super.saveAdditional(nbt, registryLookup);
+        ContainerHelper.saveAllItems(nbt, this.inventory, registryLookup);
+        this.tank.writeNbt(nbt, registryLookup);
     }
 
     @Override
@@ -105,12 +106,6 @@ public class ParaChestBlockEntity extends RandomizableContainerBlockEntity imple
     }
 
     @Override
-    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
-        buf.writeBoolean(true);
-        buf.writeBlockPos(getBlockPos());
-    }
-
-    @Override
     public int getScaledFuelLevel(int scale) {
         final double fuelLevel = this.tank.getResource().isBlank() ? 0 : this.tank.getAmount();
 
@@ -126,5 +121,10 @@ public class ParaChestBlockEntity extends RandomizableContainerBlockEntity imple
                 tx.commit();
             }
         }
+    }
+
+    @Override
+    public ParachestMenu.OpeningData getScreenOpeningData(ServerPlayer player) {
+        return new ParachestMenu.OpeningData(this.getBlockPos());
     }
 }

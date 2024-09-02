@@ -37,6 +37,7 @@ import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.dynamicdimensions.api.DynamicDimensionRegistry;
+import dev.galacticraft.impl.network.s2c.AddSatellitePayload;
 import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
 import dev.galacticraft.impl.universe.display.config.ring.DefaultCelestialRingDisplayConfig;
@@ -49,14 +50,10 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.data.gen.SatelliteChunkGenerator;
 import dev.galacticraft.mod.util.Translations;
 import dev.galacticraft.mod.world.biome.GCBiomes;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -68,7 +65,7 @@ import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -108,8 +105,8 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
     }
 
     @ApiStatus.Internal
-    public static CelestialBody<SatelliteConfig, SatelliteType> registerSatellite(@NotNull MinecraftServer server, @NotNull ServerPlayer player, Holder.Reference<CelestialBody<?, ?>> parent, StructureTemplate structure) {
-        ResourceLocation id = new ResourceLocation(parent.key().location() + "_" + player.getScoreboardName().toLowerCase(Locale.ROOT));
+    public static CelestialBody<SatelliteConfig, SatelliteType> registerSatellite(@NotNull MinecraftServer server, @NotNull ServerPlayer player, Holder<CelestialBody<?, ?>> parent, StructureTemplate structure) {
+        ResourceLocation id = ResourceLocation.parse(parent.unwrapKey().get().location() + "_" + player.getScoreboardName().toLowerCase(Locale.ROOT));
         DimensionType type = new DimensionType(OptionalLong.empty(), true, false, false, true, 1, false, false, 0, 256, 256, TagKey.create(Registries.BLOCK, Constant.id("infiniburn_space")), Constant.id("space_sky"), 0, new DimensionType.MonsterSettings(false, true, UniformInt.of(0, 7), 0));
         SatelliteChunkGenerator chunkGenerator = new SatelliteChunkGenerator(server.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(GCBiomes.SPACE), structure);
         SatelliteOwnershipData ownershipData = SatelliteOwnershipData.create(player.getUUID(), player.getScoreboardName(), new LinkedList<>(), false);
@@ -124,7 +121,7 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
     }
 
     @ApiStatus.Internal
-    public static CelestialBody<SatelliteConfig, SatelliteType> create(ResourceLocation id, MinecraftServer server, Holder.Reference<CelestialBody<?, ?>> parent, CelestialPosition<?, ?> position, CelestialDisplay<?, ?> display, CelestialRingDisplay<?, ?> ring,
+    public static CelestialBody<SatelliteConfig, SatelliteType> create(ResourceLocation id, MinecraftServer server, Holder<CelestialBody<?, ?>> parent, CelestialPosition<?, ?> position, CelestialDisplay<?, ?> display, CelestialRingDisplay<?, ?> ring,
                                                                        ChunkGenerator generator, DimensionType type, SatelliteOwnershipData ownershipData, String name) {
         Constant.LOGGER.debug("Attempting to create a world dynamically ({})", id);
 
@@ -138,8 +135,7 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
         ((SatelliteAccessor) server).galacticraft$addSatellite(id, satellite);
 
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            CompoundTag compound = (CompoundTag) SatelliteConfig.CODEC.encode(satellite.config(), NbtOps.INSTANCE, new CompoundTag()).get().orThrow();
-            ServerPlayNetworking.send(player, Constant.id("add_satellite"), new FriendlyByteBuf(Unpooled.buffer()).writeResourceLocation(id).writeNbt(compound));
+            ServerPlayNetworking.send(player, new AddSatellitePayload(id, satellite.config()));
         }
         return satellite;
     }

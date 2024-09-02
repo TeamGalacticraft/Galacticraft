@@ -26,10 +26,8 @@
     },
     "y_scale": {
       "type": "minecraft:uniform",
-      "value": {
-        "max_exclusive": 0.6,
-        "min_inclusive": 0.4
-      }
+      "max_exclusive": 0.6,
+      "min_inclusive": 0.4
     }
   }
 }

@@ -31,7 +31,6 @@ import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import dev.galacticraft.mod.content.block.entity.networked.WireWalkwayBlockEntity;
 import dev.galacticraft.mod.content.block.special.ParaChestBlockEntity;
 import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlockEntity;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -39,51 +38,51 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 public class GCBlockEntityTypes {
     public static final GCRegistry<BlockEntityType<?>> BLOCK_ENTITIES = new GCRegistry<>(BuiltInRegistries.BLOCK_ENTITY_TYPE);
     // POWER GENERATION
-    public static final BlockEntityType<CoalGeneratorBlockEntity> COAL_GENERATOR = FabricBlockEntityTypeBuilder.create(CoalGeneratorBlockEntity::new, GCBlocks.COAL_GENERATOR).build();
-    public static final BlockEntityType<BasicSolarPanelBlockEntity> BASIC_SOLAR_PANEL = FabricBlockEntityTypeBuilder.create(BasicSolarPanelBlockEntity::new, GCBlocks.BASIC_SOLAR_PANEL).build();
-    public static final BlockEntityType<AdvancedSolarPanelBlockEntity> ADVANCED_SOLAR_PANEL = FabricBlockEntityTypeBuilder.create(AdvancedSolarPanelBlockEntity::new, GCBlocks.ADVANCED_SOLAR_PANEL).build();
+    public static final BlockEntityType<CoalGeneratorBlockEntity> COAL_GENERATOR = BlockEntityType.Builder.of(CoalGeneratorBlockEntity::new, GCBlocks.COAL_GENERATOR).build();
+    public static final BlockEntityType<BasicSolarPanelBlockEntity> BASIC_SOLAR_PANEL = BlockEntityType.Builder.of(BasicSolarPanelBlockEntity::new, GCBlocks.BASIC_SOLAR_PANEL).build();
+    public static final BlockEntityType<AdvancedSolarPanelBlockEntity> ADVANCED_SOLAR_PANEL = BlockEntityType.Builder.of(AdvancedSolarPanelBlockEntity::new, GCBlocks.ADVANCED_SOLAR_PANEL).build();
 
     // WIRES, PIPES, WALKWAYS
-    public static final BlockEntityType<WireBlockEntity> WIRE_T1 = FabricBlockEntityTypeBuilder.create((pos, state) -> WireBlockEntity.createT1(GCBlockEntityTypes.WIRE_T1, pos, state), GCBlocks.ALUMINUM_WIRE, GCBlocks.SEALABLE_ALUMINUM_WIRE).build();
-    public static final BlockEntityType<WireBlockEntity> WIRE_T2 = FabricBlockEntityTypeBuilder.create((pos, state) -> WireBlockEntity.createT2(GCBlockEntityTypes.WIRE_T2, pos, state)).build();
-    public static final BlockEntityType<GlassFluidPipeBlockEntity> GLASS_FLUID_PIPE = FabricBlockEntityTypeBuilder.create(GlassFluidPipeBlockEntity::new, GCBlocks.GLASS_FLUID_PIPE).build();
-    public static final BlockEntityType<WalkwayBlockEntity> WALKWAY = FabricBlockEntityTypeBuilder.create(WalkwayBlockEntity::new, GCBlocks.WALKWAY).build();
-    public static final BlockEntityType<WireWalkwayBlockEntity> WIRE_WALKWAY = FabricBlockEntityTypeBuilder.create(WireWalkwayBlockEntity::new, GCBlocks.WIRE_WALKWAY).build();
-    public static final BlockEntityType<FluidPipeWalkwayBlockEntity> FLUID_PIPE_WALKWAY = FabricBlockEntityTypeBuilder.create(FluidPipeWalkwayBlockEntity::new, GCBlocks.FLUID_PIPE_WALKWAY).build();
+    public static final BlockEntityType<WireBlockEntity> WIRE_T1 = BlockEntityType.Builder.of((pos, state) -> WireBlockEntity.createT1(GCBlockEntityTypes.WIRE_T1, pos, state), GCBlocks.ALUMINUM_WIRE, GCBlocks.SEALABLE_ALUMINUM_WIRE).build();
+    public static final BlockEntityType<WireBlockEntity> WIRE_T2 = BlockEntityType.Builder.of((pos, state) -> WireBlockEntity.createT2(GCBlockEntityTypes.WIRE_T2, pos, state)).build();
+    public static final BlockEntityType<GlassFluidPipeBlockEntity> GLASS_FLUID_PIPE = BlockEntityType.Builder.of(GlassFluidPipeBlockEntity::new, GCBlocks.GLASS_FLUID_PIPE).build();
+    public static final BlockEntityType<WalkwayBlockEntity> WALKWAY = BlockEntityType.Builder.of(WalkwayBlockEntity::new, GCBlocks.WALKWAY).build();
+    public static final BlockEntityType<WireWalkwayBlockEntity> WIRE_WALKWAY = BlockEntityType.Builder.of(WireWalkwayBlockEntity::new, GCBlocks.WIRE_WALKWAY).build();
+    public static final BlockEntityType<FluidPipeWalkwayBlockEntity> FLUID_PIPE_WALKWAY = BlockEntityType.Builder.of(FluidPipeWalkwayBlockEntity::new, GCBlocks.FLUID_PIPE_WALKWAY).build();
 
     // MACHINES
-    public static final BlockEntityType<CircuitFabricatorBlockEntity> CIRCUIT_FABRICATOR = FabricBlockEntityTypeBuilder.create(CircuitFabricatorBlockEntity::new, GCBlocks.CIRCUIT_FABRICATOR).build();
-    public static final BlockEntityType<CompressorBlockEntity> COMPRESSOR = FabricBlockEntityTypeBuilder.create(CompressorBlockEntity::new, GCBlocks.COMPRESSOR).build();
-    public static final BlockEntityType<ElectricCompressorBlockEntity> ELECTRIC_COMPRESSOR = FabricBlockEntityTypeBuilder.create(ElectricCompressorBlockEntity::new, GCBlocks.ELECTRIC_COMPRESSOR).build();
-    public static final BlockEntityType<ElectricFurnaceBlockEntity> ELECTRIC_FURNACE = FabricBlockEntityTypeBuilder.create(ElectricFurnaceBlockEntity::new, GCBlocks.ELECTRIC_FURNACE).build();
-    public static final BlockEntityType<ElectricArcFurnaceBlockEntity> ELECTRIC_ARC_FURNACE = FabricBlockEntityTypeBuilder.create(ElectricArcFurnaceBlockEntity::new, GCBlocks.ELECTRIC_ARC_FURNACE).build();
-    public static final BlockEntityType<RefineryBlockEntity> REFINERY = FabricBlockEntityTypeBuilder.create(RefineryBlockEntity::new, GCBlocks.REFINERY).build();
-    public static final BlockEntityType<FoodCannerBlockEntity> FOOD_CANNER = FabricBlockEntityTypeBuilder.create(FoodCannerBlockEntity::new, GCBlocks.FOOD_CANNER).build();
+    public static final BlockEntityType<CircuitFabricatorBlockEntity> CIRCUIT_FABRICATOR = BlockEntityType.Builder.of(CircuitFabricatorBlockEntity::new, GCBlocks.CIRCUIT_FABRICATOR).build();
+    public static final BlockEntityType<CompressorBlockEntity> COMPRESSOR = BlockEntityType.Builder.of(CompressorBlockEntity::new, GCBlocks.COMPRESSOR).build();
+    public static final BlockEntityType<ElectricCompressorBlockEntity> ELECTRIC_COMPRESSOR = BlockEntityType.Builder.of(ElectricCompressorBlockEntity::new, GCBlocks.ELECTRIC_COMPRESSOR).build();
+    public static final BlockEntityType<ElectricFurnaceBlockEntity> ELECTRIC_FURNACE = BlockEntityType.Builder.of(ElectricFurnaceBlockEntity::new, GCBlocks.ELECTRIC_FURNACE).build();
+    public static final BlockEntityType<ElectricArcFurnaceBlockEntity> ELECTRIC_ARC_FURNACE = BlockEntityType.Builder.of(ElectricArcFurnaceBlockEntity::new, GCBlocks.ELECTRIC_ARC_FURNACE).build();
+    public static final BlockEntityType<RefineryBlockEntity> REFINERY = BlockEntityType.Builder.of(RefineryBlockEntity::new, GCBlocks.REFINERY).build();
+    public static final BlockEntityType<FoodCannerBlockEntity> FOOD_CANNER = BlockEntityType.Builder.of(FoodCannerBlockEntity::new, GCBlocks.FOOD_CANNER).build();
 
     // OXYGEN MACHINES
-    public static final BlockEntityType<OxygenCollectorBlockEntity> OXYGEN_COLLECTOR = FabricBlockEntityTypeBuilder.create(OxygenCollectorBlockEntity::new, GCBlocks.OXYGEN_COLLECTOR).build();
-    public static final BlockEntityType<OxygenCompressorBlockEntity> OXYGEN_COMPRESSOR = FabricBlockEntityTypeBuilder.create(OxygenCompressorBlockEntity::new, GCBlocks.OXYGEN_COMPRESSOR).build();
-    public static final BlockEntityType<OxygenDecompressorBlockEntity> OXYGEN_DECOMPRESSOR = FabricBlockEntityTypeBuilder.create(OxygenDecompressorBlockEntity::new, GCBlocks.OXYGEN_DECOMPRESSOR).build();
-    public static final BlockEntityType<OxygenSealerBlockEntity> OXYGEN_SEALER = FabricBlockEntityTypeBuilder.create(OxygenSealerBlockEntity::new, GCBlocks.OXYGEN_SEALER).build();
-    public static final BlockEntityType<OxygenBubbleDistributorBlockEntity> OXYGEN_BUBBLE_DISTRIBUTOR = FabricBlockEntityTypeBuilder.create(OxygenBubbleDistributorBlockEntity::new, GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR).build();
+    public static final BlockEntityType<OxygenCollectorBlockEntity> OXYGEN_COLLECTOR = BlockEntityType.Builder.of(OxygenCollectorBlockEntity::new, GCBlocks.OXYGEN_COLLECTOR).build();
+    public static final BlockEntityType<OxygenCompressorBlockEntity> OXYGEN_COMPRESSOR = BlockEntityType.Builder.of(OxygenCompressorBlockEntity::new, GCBlocks.OXYGEN_COMPRESSOR).build();
+    public static final BlockEntityType<OxygenDecompressorBlockEntity> OXYGEN_DECOMPRESSOR = BlockEntityType.Builder.of(OxygenDecompressorBlockEntity::new, GCBlocks.OXYGEN_DECOMPRESSOR).build();
+    public static final BlockEntityType<OxygenSealerBlockEntity> OXYGEN_SEALER = BlockEntityType.Builder.of(OxygenSealerBlockEntity::new, GCBlocks.OXYGEN_SEALER).build();
+    public static final BlockEntityType<OxygenBubbleDistributorBlockEntity> OXYGEN_BUBBLE_DISTRIBUTOR = BlockEntityType.Builder.of(OxygenBubbleDistributorBlockEntity::new, GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR).build();
 
     // RESOURCE STORAGE
-    public static final BlockEntityType<EnergyStorageModuleBlockEntity> ENERGY_STORAGE_MODULE = FabricBlockEntityTypeBuilder.create(EnergyStorageModuleBlockEntity::new, GCBlocks.ENERGY_STORAGE_MODULE).build();
-    public static final BlockEntityType<OxygenStorageModuleBlockEntity> OXYGEN_STORAGE_MODULE = FabricBlockEntityTypeBuilder.create(OxygenStorageModuleBlockEntity::new, GCBlocks.OXYGEN_STORAGE_MODULE).build();
+    public static final BlockEntityType<EnergyStorageModuleBlockEntity> ENERGY_STORAGE_MODULE = BlockEntityType.Builder.of(EnergyStorageModuleBlockEntity::new, GCBlocks.ENERGY_STORAGE_MODULE).build();
+    public static final BlockEntityType<OxygenStorageModuleBlockEntity> OXYGEN_STORAGE_MODULE = BlockEntityType.Builder.of(OxygenStorageModuleBlockEntity::new, GCBlocks.OXYGEN_STORAGE_MODULE).build();
 
     // ROCKETS
-    public static final BlockEntityType<LaunchPadBlockEntity> LAUNCH_PAD = FabricBlockEntityTypeBuilder.create(LaunchPadBlockEntity::new, GCBlocks.ROCKET_LAUNCH_PAD).build();
-    public static final BlockEntityType<FuelLoaderBlockEntity> FUEL_LOADER = FabricBlockEntityTypeBuilder.create(FuelLoaderBlockEntity::new, GCBlocks.FUEL_LOADER).build();
-    public static final BlockEntityType<ParaChestBlockEntity> PARACHEST = FabricBlockEntityTypeBuilder.create(ParaChestBlockEntity::new, GCBlocks.PARACHEST).build();
+    public static final BlockEntityType<LaunchPadBlockEntity> LAUNCH_PAD = BlockEntityType.Builder.of(LaunchPadBlockEntity::new, GCBlocks.ROCKET_LAUNCH_PAD).build();
+    public static final BlockEntityType<FuelLoaderBlockEntity> FUEL_LOADER = BlockEntityType.Builder.of(FuelLoaderBlockEntity::new, GCBlocks.FUEL_LOADER).build();
+    public static final BlockEntityType<ParaChestBlockEntity> PARACHEST = BlockEntityType.Builder.of(ParaChestBlockEntity::new, GCBlocks.PARACHEST).build();
 
     // MISC
-    public static final BlockEntityType<SolarPanelPartBlockEntity> SOLAR_PANEL_PART = FabricBlockEntityTypeBuilder.create(SolarPanelPartBlockEntity::new, GCBlocks.SOLAR_PANEL_PART).build();
-    public static final BlockEntityType<CryogenicChamberBlockEntity> CRYOGENIC_CHAMBER = FabricBlockEntityTypeBuilder.create(CryogenicChamberBlockEntity::new, GCBlocks.CRYOGENIC_CHAMBER).build();
-    public static final BlockEntityType<CryogenicChamberPartBlockEntity> CRYOGENIC_CHAMBER_PART = FabricBlockEntityTypeBuilder.create(CryogenicChamberPartBlockEntity::new, GCBlocks.CRYOGENIC_CHAMBER_PART).build();
-    public static final BlockEntityType<DungeonSpawnerBlockEntity> DUNGEON_BOSS_SPAWNER = BLOCK_ENTITIES.register(Constant.Block.BOSS_SPAWNER, FabricBlockEntityTypeBuilder.create(DungeonSpawnerBlockEntity::new, GCBlocks.BOSS_SPAWNER).build());
+    public static final BlockEntityType<SolarPanelPartBlockEntity> SOLAR_PANEL_PART = BlockEntityType.Builder.of(SolarPanelPartBlockEntity::new, GCBlocks.SOLAR_PANEL_PART).build();
+    public static final BlockEntityType<CryogenicChamberBlockEntity> CRYOGENIC_CHAMBER = BlockEntityType.Builder.of(CryogenicChamberBlockEntity::new, GCBlocks.CRYOGENIC_CHAMBER).build();
+    public static final BlockEntityType<CryogenicChamberPartBlockEntity> CRYOGENIC_CHAMBER_PART = BlockEntityType.Builder.of(CryogenicChamberPartBlockEntity::new, GCBlocks.CRYOGENIC_CHAMBER_PART).build();
+    public static final BlockEntityType<DungeonSpawnerBlockEntity> DUNGEON_BOSS_SPAWNER = BLOCK_ENTITIES.register(Constant.Block.BOSS_SPAWNER, BlockEntityType.Builder.of(DungeonSpawnerBlockEntity::new, GCBlocks.BOSS_SPAWNER).build());
 
-    public static final BlockEntityType<AirlockControllerBlockEntity> AIRLOCK_CONTROLLER = FabricBlockEntityTypeBuilder.create(AirlockControllerBlockEntity::new, GCBlocks.AIR_LOCK_CONTROLLER).build();
-    public static final BlockEntityType<RocketWorkbenchBlockEntity> ROCKET_WORKBENCH = FabricBlockEntityTypeBuilder.create(RocketWorkbenchBlockEntity::new, GCBlocks.ROCKET_WORKBENCH).build();
+    public static final BlockEntityType<AirlockControllerBlockEntity> AIRLOCK_CONTROLLER = BlockEntityType.Builder.of(AirlockControllerBlockEntity::new, GCBlocks.AIR_LOCK_CONTROLLER).build();
+    public static final BlockEntityType<RocketWorkbenchBlockEntity> ROCKET_WORKBENCH = BlockEntityType.Builder.of(RocketWorkbenchBlockEntity::new, GCBlocks.ROCKET_WORKBENCH).build();
 
     public static void register() {
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.COAL_GENERATOR), COAL_GENERATOR);

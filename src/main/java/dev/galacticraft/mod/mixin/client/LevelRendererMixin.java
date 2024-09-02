@@ -45,25 +45,27 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LevelRenderer.class)
 public class LevelRendererMixin {
     @Unique
-    private OverworldRenderer gc$worldRenderer;
+    private OverworldRenderer worldRenderer;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void gc$setupRenderer(Minecraft minecraft, EntityRenderDispatcher entityRenderDispatcher, BlockEntityRenderDispatcher blockEntityRenderDispatcher, RenderBuffers renderBuffers, CallbackInfo ci) {
-        this.gc$worldRenderer = new OverworldRenderer();
+        this.worldRenderer = new OverworldRenderer();
     }
 
     @Inject(method = "renderSky", at = @At("HEAD"), cancellable = true)
-    public void gc$renderSky(PoseStack poseStack, Matrix4f matrix4f, float partialTicks, Camera camera, boolean bl, Runnable runnable, CallbackInfo ci) {
+    public void gc$renderSky(Matrix4f matrix4f, Matrix4f projectionMatrix, float tickDelta, Camera camera, boolean thickFog, Runnable fogCallback, CallbackInfo ci) {
         Player player = Minecraft.getInstance().player;
         if (player.getVehicle() instanceof RocketEntity && player.getVehicle().getY() > 200) {
-            runnable.run();
-            gc$worldRenderer.renderOverworldSky(player, poseStack, matrix4f, partialTicks, camera, bl, runnable);
+            fogCallback.run();
+            PoseStack poseStack = new PoseStack();
+            poseStack.mulPose(matrix4f);
+            this.worldRenderer.renderOverworldSky(player, poseStack, matrix4f, tickDelta, camera, thickFog, fogCallback);
             ci.cancel();
         }
     }
 
     @Inject(method = "renderClouds", at = @At("HEAD"), cancellable = true)
-    public void gc$preventCloudRendering(PoseStack poseStack, Matrix4f matrix4f, float f, double d, double e, double g, CallbackInfo ci) {
+    public void gc$preventCloudRendering(PoseStack matrices, Matrix4f matrix4f, Matrix4f matrix4f2, float tickDelta, double cameraX, double cameraY, double cameraZ, CallbackInfo ci) {
         Player player = Minecraft.getInstance().player;
         if (player != null && player.getVehicle() instanceof RocketEntity && player.getVehicle().getY() > Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) {
             // Have clouds slowly fade out

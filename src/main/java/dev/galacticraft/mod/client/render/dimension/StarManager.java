@@ -39,9 +39,8 @@ public class StarManager {
     public StarManager() {
         this.starBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
         final Random random = new Random(27893L);
-        final BufferBuilder buffer = Tesselator.getInstance().getBuilder();
+        final BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
         RenderSystem.setShader(GameRenderer::getPositionShader);
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
         for (int i = 0; i < 12000; ++i) {
             double j = random.nextFloat() * 2.0F - 1.0F;
             double k = random.nextFloat() * 2.0F - 1.0F;
@@ -77,12 +76,12 @@ public class StarManager {
                     double h = b * v - e * w;
                     double aa = h * s - f * t;
                     double ab = f * s + h * t;
-                    buffer.vertex((o + aa) * (i > 6000 ? -1 : 1), (p + g) * (i > 6000 ? -1 : 1), (q + ab) * (i > 6000 ? -1 : 1)).endVertex();
+                    buffer.addVertex((float) ((o + aa) * (i > 6000 ? -1 : 1)), (float) ((p + g) * (i > 6000 ? -1 : 1)), (float) ((q + ab) * (i > 6000 ? -1 : 1)));
                 }
             }
         }
         this.starBuffer.bind();
-        this.starBuffer.upload(buffer.end());
+        this.starBuffer.upload(buffer.buildOrThrow());
         VertexBuffer.unbind();
     }
 

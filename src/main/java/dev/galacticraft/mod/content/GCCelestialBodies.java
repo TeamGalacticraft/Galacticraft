@@ -54,7 +54,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
@@ -79,7 +79,7 @@ public class GCCelestialBodies {
     public static final ResourceKey<CelestialBody<?, ?>> URANUS = key("uranus");
     public static final ResourceKey<CelestialBody<?, ?>> NEPTUNE = key("neptune");
 
-    public static void bootstrapRegistries(BootstapContext<CelestialBody<?, ?>> context) {
+    public static void bootstrapRegistries(BootstrapContext<CelestialBody<?, ?>> context) {
         HolderGetter<CelestialTeleporter<?, ?>> teleporters = context.lookup(AddonRegistries.CELESTIAL_TELEPORTER);
         HolderGetter<Galaxy> galaxies = context.lookup(AddonRegistries.GALAXY);
 

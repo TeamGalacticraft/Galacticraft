@@ -27,7 +27,6 @@ import dev.galacticraft.mod.api.block.MultiBlockBase;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.CryogenicChamberPartBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -104,8 +103,8 @@ public class CryogenicChamberPart extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        var partBE = level.getBlockEntity(blockPos);
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        var partBE = level.getBlockEntity(pos);
         var be = (CryogenicChamberPartBlockEntity) partBE;
 
         if (be == null || be.basePos == BlockPos.ZERO) return InteractionResult.CONSUME;
@@ -117,7 +116,7 @@ public class CryogenicChamberPart extends BaseEntityBlock {
         if (baseState.isAir()) return InteractionResult.PASS;
 
         var block = (MultiBlockBase) baseState.getBlock();
-        return block.onMultiBlockUse(blockState, level, basePos, player, interactionHand, blockHitResult);
+        return block.multiBlockUseWithoutItem(baseState, level, basePos, player);
     }
 
     @Override

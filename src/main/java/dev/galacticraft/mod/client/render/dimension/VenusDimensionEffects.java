@@ -120,7 +120,7 @@ public class VenusDimensionEffects extends GalacticDimensionEffects {
                         double fluidHeight = fluidState.getHeight(level, below);
                         double yOffset = Math.max(baseYOff, fluidHeight);
                         ParticleOptions particle = !fluidState.is(FluidTags.LAVA) && !blockState.is(Blocks.MAGMA_BLOCK) && !CampfireBlock.isLitCampfire(blockState)
-                                ? new ScaleParticleType(0.95F)
+                                ? new ScaleParticleType(ParticleTypes.SMOKE, 0.95F)
                                 : ParticleTypes.SMOKE;
                         this.minecraft
                                 .level

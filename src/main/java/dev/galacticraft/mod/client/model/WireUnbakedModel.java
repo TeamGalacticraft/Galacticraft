@@ -25,6 +25,7 @@ package dev.galacticraft.mod.client.model;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -42,8 +43,9 @@ public class WireUnbakedModel implements UnbakedModel {
     public void resolveParents(Function<ResourceLocation, UnbakedModel> function) {
     }
 
+    @Nullable
     @Override
-    public BakedModel bake(ModelBaker loader, Function<Material, TextureAtlasSprite> spriteFunction, ModelState rotationContainer, ResourceLocation modelId) {
-        return WireBakedModel.getInstance(spriteFunction);
+    public BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> textureGetter, ModelState state) {
+        return WireBakedModel.getInstance(textureGetter);
     }
 }

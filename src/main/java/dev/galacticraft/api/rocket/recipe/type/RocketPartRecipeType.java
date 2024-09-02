@@ -23,24 +23,25 @@
 package dev.galacticraft.api.rocket.recipe.type;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.api.rocket.recipe.config.RocketPartRecipeConfig;
 import dev.galacticraft.machinelib.api.filter.ResourceFilter;
 import net.minecraft.core.NonNullList;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class RocketPartRecipeType<C extends RocketPartRecipeConfig> {
-    private final @NotNull Codec<RocketPartRecipe<C, RocketPartRecipeType<C>>> codec;
+    private final @NotNull MapCodec<RocketPartRecipe<C, RocketPartRecipeType<C>>> codec;
 
     protected RocketPartRecipeType(@NotNull Codec<C> configCodec) {
-        this.codec = configCodec.fieldOf("config").xmap(this::configure, RocketPartRecipe::config).codec();
+        this.codec = configCodec.fieldOf("config").xmap(this::configure, RocketPartRecipe::config);
     }
 
-    public @NotNull Codec<RocketPartRecipe<C, RocketPartRecipeType<C>>> codec() {
+    public @NotNull MapCodec<RocketPartRecipe<C, RocketPartRecipeType<C>>> codec() {
         return this.codec;
     }
 
@@ -56,7 +57,7 @@ public abstract class RocketPartRecipeType<C extends RocketPartRecipeConfig> {
 
     public abstract @NotNull NonNullList<Ingredient> ingredients(C config);
 
-    public abstract boolean matches(Container container, Level level, C config);
+    public abstract boolean matches(RecipeInput input, Level level, C config);
 
     @FunctionalInterface
     public interface SlotConsumer {

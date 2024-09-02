@@ -31,8 +31,10 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.WallTorchBlock;
@@ -48,22 +50,23 @@ public class UnlitWallTorchBlock extends WallTorchBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        var itemStack = player.getItemInHand(interactionHand);
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        var itemStack = player.getItemInHand(hand);
 
         if (itemStack.is(ItemTags.CREEPER_IGNITERS)) {
-            level.playSound(null, blockPos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
-            level.setBlockAndUpdate(blockPos, Blocks.WALL_TORCH.defaultBlockState().setValue(WallTorchBlock.FACING, blockState.getValue(WallTorchBlock.FACING)));
-            level.gameEvent(player, GameEvent.BLOCK_CHANGE, blockPos);
+            level.playSound(null, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
+            level.setBlockAndUpdate(pos, Blocks.WALL_TORCH.defaultBlockState().setValue(WallTorchBlock.FACING, state.getValue(WallTorchBlock.FACING)));
+            level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
 
             if (player instanceof ServerPlayer serverPlayer) {
-                CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, blockPos, itemStack);
-                itemStack.hurtAndBreak(1, player, playerx -> playerx.broadcastBreakEvent(interactionHand));
+                CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, pos, itemStack);
+                itemStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
             }
 
-            return InteractionResult.sidedSuccess(level.isClientSide());
+            return ItemInteractionResult.SUCCESS;
         }
-        return super.use(blockState, level, blockPos, player, interactionHand, blockHitResult);
+
+        return super.useItemOn(stack, state, level, pos, player, hand, hit);
     }
 
     @Override

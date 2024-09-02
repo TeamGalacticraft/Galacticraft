@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "desh_ingot",
+  "ingredients": [
+    {
+      "item": "galacticraft:desh_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "galacticraft:desh_ingot"
+  }
+}

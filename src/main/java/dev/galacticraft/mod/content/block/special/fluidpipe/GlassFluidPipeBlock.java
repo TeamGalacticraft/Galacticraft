@@ -25,16 +25,14 @@ package dev.galacticraft.mod.content.block.special.fluidpipe;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidPipe;
 import dev.galacticraft.mod.api.block.entity.Connected;
-import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
 import dev.galacticraft.mod.content.item.StandardWrenchItem;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
+import dev.galacticraft.mod.util.DirectionUtil;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeItem;
@@ -72,67 +70,72 @@ public class GlassFluidPipeBlock extends FluidPipe {
                 if (stack.getItem() instanceof DyeItem dye && dye.getDyeColor() != glassPipe.getColor()) {
                     glassPipe.setColor(dye.getDyeColor());
                     var copy = stack.copy();
-
-                    if (livingEntity instanceof Player player && !player.getAbilities().instabuild) {
-                        copy.shrink(1);
-                    }
+                    copy.consume(1, livingEntity);
 
                     livingEntity.setItemInHand(interactionHand, copy);
                 }
             }
+
+            // Regular Stuff
+            var changed = false;
             for (var direction : Constant.Misc.DIRECTIONS) {
-                var otherBlockEntity = level.getBlockEntity(blockPos.relative(direction));
-                glassPipe.getConnections()[direction.ordinal()] = (otherBlockEntity instanceof Pipe pipe && pipe.canConnect(direction.getOpposite())) || FluidUtil.canAccessFluid(level, blockPos.relative(direction), direction);
+                changed |= glassPipe.getConnections()[direction.ordinal()] = glassPipe.canConnect(direction) && FluidUtil.canAccessFluid(level, blockPos.relative(direction), direction);
             }
-            level.updateNeighborsAt(blockPos, blockState.getBlock());
+            if (changed) {
+                glassPipe.setChanged();
+                level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
+            }
         }
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-        var itemStack = player.getItemInHand(interactionHand);
-        if (level.getBlockEntity(blockPos) instanceof GlassFluidPipeBlockEntity glassPipe) {
-            if (itemStack.getItem() instanceof DyeItem dye) {
-                var stack = itemStack.copy();
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (level.getBlockEntity(pos) instanceof GlassFluidPipeBlockEntity glassPipe) {
+            if (stack.getItem() instanceof DyeItem dye) {
+                var stack2 = stack.copy();
                 var color = dye.getDyeColor();
                 if (color != glassPipe.getColor()) {
                     if (!player.getAbilities().instabuild) {
-                        stack.shrink(1);
+                        stack2.shrink(1);
                     }
-                    player.setItemInHand(interactionHand, stack);
+                    player.setItemInHand(hand, stack2);
                     glassPipe.setColor(color);
-                    level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
-                    return InteractionResult.sidedSuccess(level.isClientSide());
+                    level.sendBlockUpdated(pos, state, state, Block.UPDATE_IMMEDIATE);
+                    return ItemInteractionResult.SUCCESS;
+                } else {
+                    return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
                 }
-                else {
-                    return InteractionResult.PASS;
-                }
-            } else if (itemStack.getItem() instanceof StandardWrenchItem) {
-                var stack = itemStack.copy();
+            } else if (stack.getItem() instanceof StandardWrenchItem) {
+                var stack2 = stack.copy();
 
-                if (!player.getAbilities().instabuild) {
-                    stack.hurt(1, level.random, player instanceof ServerPlayer ? ((ServerPlayer) player) : null);
-                }
+                stack2.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
 
-                player.setItemInHand(interactionHand, stack);
+                player.setItemInHand(hand, stack2);
                 glassPipe.setPull(!glassPipe.isPull());
-                return InteractionResult.sidedSuccess(level.isClientSide());
+                return ItemInteractionResult.SUCCESS;
             }
         }
-        return super.use(blockState, level, blockPos, player, interactionHand, blockHitResult);
+
+        return super.useItemOn(stack, state, level, pos, player, hand, hit);
     }
 
     @Override
     public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos fromPos, boolean notify) {
         super.neighborChanged(blockState, level, blockPos, block, fromPos, notify);
-        var neighborState = level.getBlockState(fromPos);
-        var delta = fromPos.subtract(blockPos);
-        var direction = Direction.fromDelta(delta.getX(), delta.getY(), delta.getZ());
 
-        if (direction != null && level.getBlockEntity(blockPos) instanceof GlassFluidPipeBlockEntity glassPipe) {
-            var otherBlockEntity = level.getBlockEntity(fromPos);
-            glassPipe.getConnections()[direction.ordinal()] = !neighborState.isAir() && ((otherBlockEntity instanceof Pipe pipe && pipe.canConnect(direction.getOpposite())) || FluidUtil.canAccessFluid(level, fromPos, direction));
-            level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
+        if (level.getBlockEntity(blockPos) instanceof PipeBlockEntity glassPipe) {
+            var direction = DirectionUtil.fromNormal(fromPos.getX() - blockPos.getX(), fromPos.getY() - blockPos.getY(), fromPos.getZ() - blockPos.getZ());
+
+            if (direction != null) {
+                if (!level.isClientSide
+                        && glassPipe.getConnections()[direction.ordinal()]
+                        != (glassPipe.getConnections()[direction.ordinal()]
+                        = glassPipe.canConnect(direction) && FluidUtil.canAccessFluid(level, fromPos, direction))
+                ) {
+                    level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
+                    glassPipe.setChanged();
+                }
+            }
         }
     }
 

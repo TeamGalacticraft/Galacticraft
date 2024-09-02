@@ -23,15 +23,12 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
-import dev.galacticraft.machinelib.api.menu.sync.MenuSyncHandler;
-import dev.galacticraft.mod.content.GCMachineTypes;
+import dev.galacticraft.machinelib.api.menu.MenuData;
 import dev.galacticraft.mod.content.block.entity.machine.FuelLoaderBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
-
-import java.util.function.Consumer;
+import org.jetbrains.annotations.NotNull;
 
 public class FuelLoaderMenu extends MachineMenu<FuelLoaderBlockEntity> {
     public long rocketAmount;
@@ -39,18 +36,18 @@ public class FuelLoaderMenu extends MachineMenu<FuelLoaderBlockEntity> {
     public BlockPos connectionPos = BlockPos.ZERO;
 
     public FuelLoaderMenu(int syncId, ServerPlayer player, FuelLoaderBlockEntity machine) {
-        super(syncId, player, machine);
+        super(GCMenuTypes.FUEL_LOADER, syncId, player, machine);
     }
 
-    public FuelLoaderMenu(int syncId, Inventory inv, FriendlyByteBuf buf) {
-        super(syncId, inv, buf, 8, 84, GCMachineTypes.FUEL_LOADER);
+    public FuelLoaderMenu(int syncId, Inventory inv, BlockPos pos) {
+        super(GCMenuTypes.FUEL_LOADER, syncId, inv, pos, 8, 84);
     }
 
     @Override
-    public void registerSyncHandlers(Consumer<MenuSyncHandler> consumer) {
-        super.registerSyncHandlers(consumer);
-        consumer.accept(MenuSyncHandler.simple(() -> this.machine.getConnectionPos().asLong(), l -> this.connectionPos = (BlockPos.of(l))));
-        consumer.accept(MenuSyncHandler.simple(() -> this.machine.linkedRocket == null ? 0 : this.machine.linkedRocket.getFuelTankAmount(), l -> this.rocketAmount = l));
-        consumer.accept(MenuSyncHandler.simple(() -> this.machine.linkedRocket == null ? 0 : this.machine.linkedRocket.getFuelTankCapacity(), l -> this.rocketCapacity = l));
+    public void registerData(@NotNull MenuData data) {
+        super.registerData(data);
+        data.register(BlockPos.STREAM_CODEC, this.be::getConnectionPos, p -> this.connectionPos = p);
+        data.registerLong(() -> this.be.linkedRocket == null ? 0 : this.be.linkedRocket.getFuelTankAmount(), l -> this.rocketAmount = l);
+        data.registerLong(() -> this.be.linkedRocket == null ? 0 : this.be.linkedRocket.getFuelTankCapacity(), l -> this.rocketCapacity = l);
     }
 }

@@ -27,7 +27,7 @@ import dev.galacticraft.mod.world.gen.structure.GCStructures;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructureSets;
 import net.minecraft.world.level.levelgen.structure.Structure;
@@ -45,7 +45,7 @@ public class GCStructureSets {
         public static final ResourceKey<StructureSet> BOSS = ResourceKey.create(Registries.STRUCTURE_SET, Constant.id("moon_boss"));
     }
 
-    public static void bootstrapRegistries(BootstapContext<StructureSet> context) {
+    public static void bootstrapRegistries(BootstrapContext<StructureSet> context) {
         HolderGetter<Structure> structureLookup = context.lookup(Registries.STRUCTURE);
         HolderGetter<StructureSet> structureSetLookup = context.lookup(Registries.STRUCTURE_SET);
 

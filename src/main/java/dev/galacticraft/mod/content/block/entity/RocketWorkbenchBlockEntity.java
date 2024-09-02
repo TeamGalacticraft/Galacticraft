@@ -30,10 +30,10 @@ import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -45,9 +45,10 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, VariableSizedContainer.Listener {
+public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory<RocketWorkbenchMenu.OpeningData>, VariableSizedContainer.Listener {
     public final SimpleContainer output = new SimpleContainer(1) {
         @Override
         public boolean canPlaceItem(int index, ItemStack stack) {
@@ -69,57 +70,39 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.saveAdditional(tag, provider);
 
-        ListTag tag1 = this.output.createTag();
+        ListTag tag1 = this.output.createTag(provider);
         if (!tag1.isEmpty()) tag.put("Output", tag1.get(0));
-        tag.put("Cone", this.cone.toTag());
-        tag.put("Body", this.body.toTag());
-        tag.put("Fins", this.fins.toTag());
-        tag.put("Booster", this.booster.toTag());
-        tag.put("Engine", this.engine.toTag());
-        tag.put("Upgrade", this.upgrade.toTag());
+        tag.put("Cone", this.cone.toTag(provider));
+        tag.put("Body", this.body.toTag(provider));
+        tag.put("Fins", this.fins.toTag(provider));
+        tag.put("Booster", this.booster.toTag(provider));
+        tag.put("Engine", this.engine.toTag(provider));
+        tag.put("Upgrade", this.upgrade.toTag(provider));
         tag.putByteArray("Color", this.color);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registryLookup) {
+        super.loadAdditional(tag, registryLookup);
         if (tag.contains("Output")) {
             ListTag list = new ListTag();
             list.add(tag.get("Output"));
-            this.output.fromTag(list);
+            this.output.fromTag(list, registryLookup);
         }
-        this.cone.readTag(tag.getCompound("Cone"));
-        this.body.readTag(tag.getCompound("Body"));
-        this.fins.readTag(tag.getCompound("Fins"));
-        this.booster.readTag(tag.getCompound("Booster"));
-        this.engine.readTag(tag.getCompound("Engine"));
-        this.upgrade.readTag(tag.getCompound("Upgrade"));
+        this.cone.readTag(tag.getCompound("Cone"), registryLookup);
+        this.body.readTag(tag.getCompound("Body"), registryLookup);
+        this.fins.readTag(tag.getCompound("Fins"), registryLookup);
+        this.booster.readTag(tag.getCompound("Booster"), registryLookup);
+        this.engine.readTag(tag.getCompound("Engine"), registryLookup);
+        this.upgrade.readTag(tag.getCompound("Upgrade"), registryLookup);
         this.color = tag.getByteArray("Color");
     }
 
     @Override
-    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
-        buf.writeBlockPos(this.getBlockPos());
-
-        buf.writeBoolean(this.cone.selection != null);
-        if (this.cone.selection != null) buf.writeResourceLocation(this.cone.selection);
-        buf.writeBoolean(this.body.selection != null);
-        if (this.body.selection != null) buf.writeResourceLocation(this.body.selection);
-        buf.writeBoolean(this.fins.selection != null);
-        if (this.fins.selection != null) buf.writeResourceLocation(this.fins.selection);
-        buf.writeBoolean(this.booster.selection != null);
-        if (this.booster.selection != null) buf.writeResourceLocation(this.booster.selection);
-        buf.writeBoolean(this.engine.selection != null);
-        if (this.engine.selection != null) buf.writeResourceLocation(this.engine.selection);
-        buf.writeBoolean(this.upgrade.selection != null);
-        if (this.upgrade.selection != null) buf.writeResourceLocation(this.upgrade.selection);
-    }
-
-    @Override
-    public Component getDisplayName() {
+    public @NotNull Component getDisplayName() {
         return this.getBlockState().getBlock().getName();
     }
 
@@ -137,6 +120,11 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
     @Override
     public void onItemChanged() {
         this.setChanged();
+    }
+
+    @Override
+    public RocketWorkbenchMenu.OpeningData getScreenOpeningData(ServerPlayer player) {
+        return new RocketWorkbenchMenu.OpeningData(this.getBlockPos(), this.cone.selection, this.body.selection, this.fins.selection, this.booster.selection, this.engine.selection, this.upgrade.selection);
     }
 
     public class RecipeSelection<P extends RocketPart<?, ?>> {
@@ -180,8 +168,8 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
             return value != null ? value.getRecipe() : null;
         }
 
-        public CompoundTag toTag() {
-            CompoundTag nbt = this.inventory.toTag();
+        public CompoundTag toTag(HolderLookup.Provider lookup) {
+            CompoundTag nbt = this.inventory.toTag(lookup);
             if (this.selection != null) {
                 nbt.putString("selection", this.selection.toString());
 //                nbt.putInt("size", this.inventory.getContainerSize());
@@ -189,11 +177,11 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
             return nbt;
         }
 
-        public void readTag(CompoundTag nbt) {
-            this.inventory.readTag(nbt);
+        public void readTag(CompoundTag nbt, HolderLookup.Provider lookup) {
+            this.inventory.readTag(nbt, lookup);
             String selLoc = nbt.getString("selection");
             if (!selLoc.isEmpty()) {
-                this.selection = new ResourceLocation(selLoc);
+                this.selection = ResourceLocation.parse(selLoc);
 //                this.inventory.resize(nbt.getInt("size"));
             }
         }

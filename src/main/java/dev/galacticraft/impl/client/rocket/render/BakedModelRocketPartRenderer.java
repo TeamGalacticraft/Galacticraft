@@ -30,13 +30,15 @@ import com.mojang.math.Axis;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRenderer;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.mod.client.model.GCBakedModel;
-import dev.galacticraft.mod.client.model.GCSheets;
+import dev.galacticraft.mod.client.model.GCRenderTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 
 import java.util.function.Supplier;
@@ -51,7 +53,7 @@ public record BakedModelRocketPartRenderer(Supplier<GCBakedModel> model,
 
     @Override
     public void renderGUI(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float delta) {
-        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         PoseStack pose = graphics.pose();
         pose.pushPose();
         pose.translate(x, y-5, 10); //todo: add GUI model transforms to models
@@ -91,14 +93,14 @@ public record BakedModelRocketPartRenderer(Supplier<GCBakedModel> model,
 
     @Override
     public void render(ClientLevel world, PoseStack matrices, Rocket rocket, MultiBufferSource vertices, float partialTick, int light, int overlay) {
-        RenderSystem.setShaderColor(rocket.red() / 255.0f, rocket.green() / 255.0f, rocket.blue() / 255.0f, rocket.alpha() / 255.0f);
+        int color = rocket.getData().color();
 //        matrices.translate(0.5D, 0.5D, 0.5D);
 //        PoseStack.Pose entry = matrices.last();
 //        VertexConsumer vertexConsumer = vertices.getBuffer(layer.get());
 //        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
 
-        VertexConsumer consumer = vertices.getBuffer(GCSheets.obj(GCSheets.OBJ_ATLAS));
-        this.model.get().render(matrices, null, consumer, light, overlay);
+        VertexConsumer consumer = vertices.getBuffer(GCRenderTypes.obj(GCRenderTypes.OBJ_ATLAS));
+        this.model.get().render(matrices, null, consumer, light, overlay, color);
 //        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(entry, vertexConsumer, null, this.model.get(), 1, 1, 1, light, overlay);
     }
 }

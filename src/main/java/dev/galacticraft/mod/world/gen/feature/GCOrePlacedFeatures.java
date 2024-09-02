@@ -28,7 +28,7 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.ModificationPhase;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
@@ -74,7 +74,7 @@ public class GCOrePlacedFeatures {
         });
     }
 
-    public static void bootstrapRegistries(BootstapContext<PlacedFeature> context) {
+    public static void bootstrapRegistries(BootstrapContext<PlacedFeature> context) {
         HolderGetter<ConfiguredFeature<?, ?>> lookup = context.lookup(Registries.CONFIGURED_FEATURE);
         context.register(ORE_SILICON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_SILICON_SMALL), modifiersWithCount(5, HeightRangePlacement.triangle(VerticalAnchor.aboveBottom(-80), VerticalAnchor.aboveBottom(80)))));
         context.register(ORE_SILICON_LARGE, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_SILICON_LARGE), modifiersWithRarity(11, HeightRangePlacement.triangle(VerticalAnchor.aboveBottom(-80), VerticalAnchor.aboveBottom(80)))));

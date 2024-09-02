@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.misc.footprint;
 
-import dev.galacticraft.mod.network.packets.FootprintPacket;
+import dev.galacticraft.mod.network.s2c.FootprintPacket;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.level.ServerLevel;

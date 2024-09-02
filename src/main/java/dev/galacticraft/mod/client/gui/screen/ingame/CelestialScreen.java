@@ -530,7 +530,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
                 this.setupMatrix(body, matrices, moon ? 0.25F : 1.0F, delta);
                 CelestialDisplay<?, ?> display = body.display();
                 RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
-                Vector4f vector4f = display.render(graphics, Tesselator.getInstance().getBuilder(), getWidthForCelestialBody(body), mouseX, mouseY, delta);
+                Vector4f vector4f = display.render(graphics, Tesselator.getInstance(), getWidthForCelestialBody(body), mouseX, mouseY, delta);
                 Matrix4f planetMatrix = matrices.last().pose();
 
                 Matrix4f matrix0 = RenderSystem.getProjectionMatrix().mul(planetMatrix, planetMatrix);
@@ -597,18 +597,17 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
      */
     public void drawGrid(GuiGraphics graphics, float gridSize, float gridScale) {
         RenderSystem.depthMask(false);
-        VertexConsumer vertexConsumer = graphics.bufferSource().getBuffer(RenderType.LINES);
+        VertexConsumer buffer = graphics.bufferSource().getBuffer(RenderType.LINES);
         Matrix4f model = graphics.pose().last().pose();
 
         RenderSystem.lineWidth(2.0f);
         gridSize += gridScale / 2.0f;
 
         for (float v = -gridSize; v <= gridSize; v += gridScale) {
-            vertexConsumer.vertex(model, v, -gridSize, 0).color(0, 51, 127, 140).normal(1.0f, 1.0f, 1.0f).endVertex();
-            vertexConsumer.vertex(model, v, gridSize, 0).color(0, 51, 127, 140).normal(1.0f, 1.0f, 1.0f).endVertex();
-
-            vertexConsumer.vertex(model, -gridSize, v, 0).color(0, 51, 127, 140).normal(1.0f, 0.0f, 1.0f).endVertex();
-            vertexConsumer.vertex(model, gridSize, v, 0).color(0, 51, 127, 140).normal(1.0f, 0.0f, 1.0f).endVertex();
+            buffer.addVertex(model, v, -gridSize, 0).setColor(0, 51, 127, 140).setNormal(1.0f, 1.0f, 1.0f)
+                    .addVertex(model, v, gridSize, 0).setColor(0, 51, 127, 140).setNormal(1.0f, 1.0f, 1.0f)
+                    .addVertex(model, -gridSize, v, 0).setColor(0, 51, 127, 140).setNormal(1.0f, 0.0f, 1.0f)
+                    .addVertex(model, gridSize, v, 0).setColor(0, 51, 127, 140).setNormal(1.0f, 0.0f, 1.0f);
         }
 
         graphics.bufferSource().endBatch();
@@ -627,7 +626,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
             if (body.parent() != null) {
                 systemOffset = getCelestialBodyPosition(body.parent().value(), delta);
             }
-            if (body.ring().render(body, graphics, count, systemOffset, getAlpha(body), lineScale(body), mouseX, mouseY, delta, RenderSystem::setShader))
+            if (body.ring().render(body, graphics, count, systemOffset, getAlpha(body), lineScale(body), mouseX, mouseY, delta))
                 count++;
         }
         RenderSystem.lineWidth(1.0f);

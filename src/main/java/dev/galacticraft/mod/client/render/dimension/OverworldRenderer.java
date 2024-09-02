@@ -43,7 +43,7 @@ import org.joml.Matrix4f;
 
 // TODO: Allow support for more planets
 public class OverworldRenderer {
-    public static final ResourceLocation MOON_LOCATION = new ResourceLocation("textures/environment/moon_phases.png");
+    public static final ResourceLocation MOON_LOCATION = ResourceLocation.withDefaultNamespace("textures/environment/moon_phases.png");
     @Nullable
     private VertexBuffer starBuffer;
     @Nullable
@@ -55,8 +55,6 @@ public class OverworldRenderer {
     private Minecraft minecraft = Minecraft.getInstance();
     public OverworldRenderer() {
         RandomSource rand = RandomSource.create(10842L);
-        Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder worldrenderer = tessellator.getBuilder();
         RenderSystem.setShader(GameRenderer::getPositionShader);
         if (this.starBuffer != null) {
             this.starBuffer.close();
@@ -64,19 +62,19 @@ public class OverworldRenderer {
 
         this.starBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
         this.starBuffer.bind();
-        this.starBuffer.upload(this.renderStars(worldrenderer, rand));
+        this.starBuffer.upload(this.renderStars(rand));
         VertexBuffer.unbind();
         this.starBuffer2 = new VertexBuffer(VertexBuffer.Usage.STATIC);
         this.starBuffer2.bind();
-        this.starBuffer2.upload(this.renderStars(worldrenderer, rand));
+        this.starBuffer2.upload(this.renderStars(rand));
         VertexBuffer.unbind();
         this.starBuffer3 = new VertexBuffer(VertexBuffer.Usage.STATIC);
         this.starBuffer3.bind();
-        this.starBuffer3.upload(this.renderStars(worldrenderer, rand));
+        this.starBuffer3.upload(this.renderStars(rand));
         VertexBuffer.unbind();
         this.starBuffer4 = new VertexBuffer(VertexBuffer.Usage.STATIC);
         this.starBuffer4.bind();
-        this.starBuffer4.upload(this.renderStars(worldrenderer, rand));
+        this.starBuffer4.upload(this.renderStars(rand));
         VertexBuffer.unbind();
     }
     public void renderOverworldSky(Player player, PoseStack poseStack, Matrix4f matrix4f, float partialTicks, Camera camera, boolean bl, Runnable runnable) {
@@ -91,8 +89,6 @@ public class OverworldRenderer {
 
         FogRenderer.levelFogColor();
         RenderSystem.setShaderColor(i, x, var5, 1.0F);
-        final Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder worldRenderer = tesselator.getBuilder();
         RenderSystem.depthMask(false);
         RenderSystem.setShaderColor(i, x, var5, 1.0F);
         RenderSystem.enableBlend();
@@ -116,19 +112,19 @@ public class OverworldRenderer {
             size = sunriseColors[2] * sunsetModInv;
             float rand3;
 
-            worldRenderer.begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
+            BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
 
-            worldRenderer.vertex(0.0D, 100.0D, 0.0D).color(z * sunsetModInv, var9 * sunsetModInv, size * sunsetModInv, sunriseColors[3]).endVertex();
+            buffer.addVertex(0.0F, 100.0F, 0.0F).setColor(z * sunsetModInv, var9 * sunsetModInv, size * sunsetModInv, sunriseColors[3]);
             final byte phi = 16;
 
             for (int var27 = 0; var27 <= phi; ++var27) {
                 rand3 = (float) (var27 * (Math.PI * 2) / phi);
                 final float xx = Mth.sin(rand3);
                 final float rand5 = Mth.cos(rand3);
-                worldRenderer.vertex(xx * 120.0F, rand5 * 120.0F, -rand5 * 40.0F * sunriseColors[3]).color(sunriseColors[0] * sunsetModInv, sunriseColors[1] * sunsetModInv, sunriseColors[2] * sunsetModInv, 0.0F).endVertex();
+                buffer.addVertex(xx * 120.0F, rand5 * 120.0F, -rand5 * 40.0F * sunriseColors[3]).setColor(sunriseColors[0] * sunsetModInv, sunriseColors[1] * sunsetModInv, sunriseColors[2] * sunsetModInv, 0.0F);
             }
 
-            tesselator.end();
+            BufferUploader.drawWithShader(buffer.buildOrThrow());
             poseStack.popPose();
         }
 
@@ -191,12 +187,12 @@ public class OverworldRenderer {
         RenderSystem.setShaderTexture(0, CelestialBodyTextures.SUN);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         Matrix4f matrix4f1 = poseStack.last().pose();
-        worldRenderer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        worldRenderer.vertex(matrix4f1, -r, 100.0F, -r).uv(0.0F, 0.0F).endVertex();
-        worldRenderer.vertex(matrix4f1, r, 100.0F, -r).uv(1.0F, 0.0F).endVertex();
-        worldRenderer.vertex(matrix4f1, r, 100.0F, r).uv(1.0F, 1.0F).endVertex();
-        worldRenderer.vertex(matrix4f1, -r, 100.0F, r).uv(0.0F, 1.0F).endVertex();
-        tesselator.end();
+        BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.addVertex(matrix4f1, -r, 100.0F, -r).setUv(0.0F, 0.0F)
+                .addVertex(matrix4f1, r, 100.0F, -r).setUv(1.0F, 0.0F)
+                .addVertex(matrix4f1, r, 100.0F, r).setUv(1.0F, 1.0F)
+                .addVertex(matrix4f1, -r, 100.0F, r).setUv(0.0F, 1.0F);
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
 
         // Draw moon
         r = 40.0F;
@@ -208,12 +204,12 @@ public class OverworldRenderer {
         final float rand7 = (var29) / 2.0F;
         final float zz = (cosphi + 1) / 4.0F;
         final float rand9 = (var29 + 1) / 2.0F;
-        worldRenderer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        worldRenderer.vertex(matrix4f1, -r, -100.0F, r).uv(zz, rand9).endVertex();
-        worldRenderer.vertex(matrix4f1, r, -100.0F, r).uv(yy, rand9).endVertex();
-        worldRenderer.vertex(matrix4f1, r, -100.0F, -r).uv(yy, rand7).endVertex();
-        worldRenderer.vertex(matrix4f1, -r, -100.0F, -r).uv(zz, rand7).endVertex();
-        tesselator.end();
+        buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.addVertex(matrix4f1, -r, -100.0F, r).setUv(zz, rand9)
+                .addVertex(matrix4f1, r, -100.0F, r).setUv(yy, rand9)
+                .addVertex(matrix4f1, r, -100.0F, -r).setUv(yy, rand7)
+                .addVertex(matrix4f1, -r, -100.0F, -r).setUv(zz, rand7);
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.disableBlend();
@@ -238,16 +234,16 @@ public class OverworldRenderer {
             size = 1.0F;
 
             RenderSystem.setShaderColor(sinth, sinth, sinth, 1.0F);
-            worldRenderer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+            buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
             float zoomIn = 0.0F;
             float cornerB = 1.0F - zoomIn;
             Matrix4f matrix4f2 = poseStack.last().pose();
-            worldRenderer.vertex(matrix4f2, -size, 0, size).uv(zoomIn, cornerB).endVertex();
-            worldRenderer.vertex(matrix4f2, size, 0, size).uv(cornerB, cornerB).endVertex();
-            worldRenderer.vertex(matrix4f2, size, 0, -size).uv(cornerB, zoomIn).endVertex();
-            worldRenderer.vertex(matrix4f2, -size, 0, -size).uv(zoomIn, zoomIn).endVertex();
-            tesselator.end();
+            buffer.addVertex(matrix4f2, -size, 0, size).setUv(zoomIn, cornerB)
+                    .addVertex(matrix4f2, size, 0, size).setUv(cornerB, cornerB)
+                    .addVertex(matrix4f2, size, 0, -size).setUv(cornerB, zoomIn)
+                    .addVertex(matrix4f2, -size, 0, -size).setUv(zoomIn, zoomIn);
+            BufferUploader.drawWithShader(buffer.buildOrThrow());
             poseStack.popPose();
         }
 
@@ -276,9 +272,9 @@ public class OverworldRenderer {
     }
 
     // TODO: Move this to a common place
-    private BufferBuilder.RenderedBuffer renderStars(BufferBuilder worldRenderer, RandomSource rand) {
+    private MeshData renderStars(RandomSource rand) {
         RenderSystem.setShader(GameRenderer::getPositionShader);
-        worldRenderer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
+        BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
 
         for (int i = 0; i < 4000; ++i) {
             double x = rand.nextFloat() * 2.0F - 1.0F;
@@ -315,10 +311,10 @@ public class OverworldRenderer {
                     final double ff = a * sinphi - d * cosphi;
                     final double dx = ff * sinth - e * costh;
                     final double dz = e * sinth + ff * costh;
-                    worldRenderer.vertex(xx + dx, yy + dy, zz + dz).endVertex();
+                    buffer.addVertex((float) (xx + dx), (float) (yy + dy), (float) (zz + dz));
                 }
             }
         }
-        return worldRenderer.end();
+        return buffer.buildOrThrow();
     }
 }

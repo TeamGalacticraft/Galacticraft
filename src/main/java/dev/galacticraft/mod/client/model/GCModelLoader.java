@@ -35,6 +35,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.event.RocketAtlasCallback;
+import dev.galacticraft.mod.client.render.rocket.GalacticraftRocketPartRenderers;
 import dev.galacticraft.mod.client.resources.RocketTextureManager;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
@@ -111,6 +112,17 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
             }
             return null;
         });
+
+        pluginContext.addModels(
+                GalacticraftRocketPartRenderers.DEFAULT_CONE,
+                GalacticraftRocketPartRenderers.SLOPED_CONE,
+                GalacticraftRocketPartRenderers.ADVANCED_CONE,
+                GalacticraftRocketPartRenderers.DEFAULT_BODY,
+                GalacticraftRocketPartRenderers.DEFAULT_ENGINE,
+                GalacticraftRocketPartRenderers.DEFAULT_FIN,
+                GalacticraftRocketPartRenderers.BOOSTER_TIER_1,
+                GalacticraftRocketPartRenderers.BOOSTER_TIER_2
+        );
     }
 
     public static void registerModelType(GCModel.GCModelType type) {
@@ -126,7 +138,7 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
     public CompletableFuture<Void> reload(PreparationBarrier synchronizer, ResourceManager resourceManager, ProfilerFiller preparationsProfiler, ProfilerFiller reloadProfiler, Executor backgroundExecutor, Executor gameExecutor) {
         preparationsProfiler.startTick();
         Map<ResourceLocation, ResourceLocation> atlasMap = new HashMap<>();
-        atlasMap.put(GCSheets.OBJ_ATLAS, Constant.id("obj"));
+        atlasMap.put(GCRenderTypes.OBJ_ATLAS, Constant.id("obj"));
         TextureManager textureManager = Minecraft.getInstance().getTextureManager();
         RocketAtlasCallback.EVENT.invoker().collectAtlases(atlasMap, textureManager);
         this.atlases = new AtlasSet(atlasMap, textureManager);
@@ -218,14 +230,12 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
                                             DataResult<GCModel> model = MODEL_CODEC.parse(JsonOps.INSTANCE, GsonHelper.convertToJsonObject(GsonHelper.fromJson(GSON, reader, JsonElement.class), "top element"));
                                             if (model.error().isPresent())
                                                 return null;
-                                            modelPair = Pair.of(entry.getKey(), model.getOrThrow(false, error -> Constant.LOGGER.error("Failed to load model: {}, {}", modelId, error)));
+                                            modelPair = Pair.of(entry.getKey(), model.getOrThrow(error -> new RuntimeException(String.format("Failed to load model: %s, %s", modelId, error))));
                                         } catch (Throwable error) {
-                                            if (reader != null) {
-                                                try {
-                                                    reader.close();
-                                                } catch (Throwable nestedError) {
-                                                    error.addSuppressed(nestedError);
-                                                }
+                                            try {
+                                                reader.close();
+                                            } catch (Throwable nestedError) {
+                                                error.addSuppressed(nestedError);
                                             }
 
                                             throw error;
@@ -267,7 +277,7 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
     }
 
     public TextureAtlasSprite getDefaultSprite() {
-        return this.atlases.getAtlas(GCSheets.OBJ_ATLAS).getSprite(WHITE_SPRITE);
+        return this.atlases.getAtlas(GCRenderTypes.OBJ_ATLAS).getSprite(WHITE_SPRITE);
     }
 
     public record ReloadState(

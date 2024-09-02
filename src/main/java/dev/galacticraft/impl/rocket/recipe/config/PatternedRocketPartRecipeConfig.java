@@ -76,7 +76,7 @@ public record PatternedRocketPartRecipeConfig(int height, @NotNull List<RocketPa
             if (element.isJsonPrimitive()) {
                 spacing.put(key, element.getAsInt());
             } else {
-                Ingredient.CODEC.decode(JsonOps.INSTANCE, element).get().ifLeft(pair -> ingredients.put(key, pair.getFirst()));
+                ingredients.put(key, Ingredient.CODEC.decode(JsonOps.INSTANCE, element).getOrThrow().getFirst());
             }
         });
 

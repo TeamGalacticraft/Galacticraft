@@ -23,31 +23,39 @@
 package dev.galacticraft.mod.recipe;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.galacticraft.mod.Constant;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.util.ExtraCodecs;
-import net.minecraft.world.Container;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
-public class FabricationRecipe implements Recipe<Container> {
+public class FabricationRecipe implements Recipe<RecipeInput> {
     private final String group;
-    private final ItemStack output;
-    private final NonNullList<Ingredient> input = NonNullList.withSize(1, Ingredient.EMPTY);
+    private final ItemStack result;
+    private final NonNullList<Ingredient> ingredients = NonNullList.withSize(1, Ingredient.EMPTY);
     private final int time;
 
-    public FabricationRecipe(String group, Ingredient input, ItemStack output, int time) {
+    public FabricationRecipe(String group, Ingredient ingredients, ItemStack result, int time) {
         this.group = group;
-        this.input.set(0, input);
-        this.output = output;
+        this.ingredients.set(0, ingredients);
+        this.result = result;
         this.time = time;
+    }
+
+    @Override
+    public boolean matches(RecipeInput input, Level world) {
+        return this.ingredients.get(0).test(input.getItem(0));
+    }
+
+    @Override
+    public @NotNull ItemStack assemble(RecipeInput input, HolderLookup.Provider lookup) {
+        return this.getResultItem(lookup).copy();
     }
 
     @Override
@@ -56,37 +64,27 @@ public class FabricationRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess registryAccess) {
-        return this.output;
+    public @NotNull ItemStack getResultItem(HolderLookup.Provider registriesLookup) {
+        return this.result;
     }
 
     @Override
-    public NonNullList<Ingredient> getIngredients() {
-        return this.input;
+    public @NotNull NonNullList<Ingredient> getIngredients() {
+        return this.ingredients;
     }
 
     @Override
-    public boolean matches(Container inventory, Level world) {
-        return this.input.get(0).test(inventory.getItem(0));
-    }
-
-    @Override
-    public ItemStack assemble(Container container, RegistryAccess registryAccess) {
-        return this.getResultItem(registryAccess).copy();
-    }
-
-    @Override
-    public RecipeType<?> getType() {
+    public @NotNull RecipeType<?> getType() {
         return GCRecipes.FABRICATION_TYPE;
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public @NotNull RecipeSerializer<?> getSerializer() {
         return GCRecipes.FABRICATION_SERIALIZER;
     }
 
     @Override
-    public String getGroup() {
+    public @NotNull String getGroup() {
         return this.group;
     }
 
@@ -96,29 +94,33 @@ public class FabricationRecipe implements Recipe<Container> {
 
     public static class Serializer implements RecipeSerializer<FabricationRecipe> {
         public static final Serializer INSTANCE = new Serializer();
-        public static final Codec<FabricationRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(recipe -> recipe.group),
-                Ingredient.CODEC.fieldOf("ingredient").forGetter(recipe -> recipe.input.get(0)),
-                ItemStack.CODEC.fieldOf("result").forGetter(recipe -> recipe.output),
-                ExtraCodecs.strictOptionalField(Codec.INT, "time", 300).forGetter(recipe -> recipe.time)
+        public static final MapCodec<FabricationRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                Codec.STRING.optionalFieldOf("group", "").forGetter(recipe -> recipe.group),
+                Ingredient.CODEC.fieldOf("ingredient").forGetter(recipe -> recipe.ingredients.get(0)),
+                ItemStack.CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
+                Codec.INT.optionalFieldOf("time", 300).forGetter(recipe -> recipe.time)
         ).apply(instance, FabricationRecipe::new));
 
+        public static final StreamCodec<RegistryFriendlyByteBuf, FabricationRecipe> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.STRING_UTF8,
+                r -> r.group,
+                Ingredient.CONTENTS_STREAM_CODEC,
+                r -> r.ingredients.get(0),
+                ItemStack.STREAM_CODEC,
+                r -> r.result,
+                ByteBufCodecs.INT,
+                r -> r.time,
+                FabricationRecipe::new
+        );
+
         @Override
-        public Codec<FabricationRecipe> codec() {
+        public @NotNull MapCodec<FabricationRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public FabricationRecipe fromNetwork(FriendlyByteBuf buf) {
-            return new FabricationRecipe(buf.readUtf(Constant.Misc.MAX_STRING_READ), Ingredient.fromNetwork(buf), buf.readItem(), buf.readInt());
-        }
-
-        @Override
-        public void toNetwork(FriendlyByteBuf buf, FabricationRecipe recipe) {
-            buf.writeUtf(recipe.group);
-            recipe.input.get(0).toNetwork(buf);
-            buf.writeItem(recipe.output);
-            buf.writeInt(recipe.time);
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, FabricationRecipe> streamCodec() {
+            return STREAM_CODEC;
         }
     }
 }

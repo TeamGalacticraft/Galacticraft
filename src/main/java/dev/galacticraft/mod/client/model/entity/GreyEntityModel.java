@@ -83,14 +83,13 @@ public class GreyEntityModel<T extends Entity> extends EntityModel<T> {
 		Left_Arm.xRot = Mth.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F / armSwingScale;
 	}
 
-
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-		Body.render(poseStack, buffer, packedLight, packedOverlay);
-		Left_Arm.render(poseStack, buffer, packedLight, packedOverlay);
-		Right_Arm.render(poseStack, buffer, packedLight, packedOverlay);
-		Left_Leg.render(poseStack, buffer, packedLight, packedOverlay);
-		Right_Leg.render(poseStack, buffer, packedLight, packedOverlay);
-		Head.render(poseStack, buffer, packedLight, packedOverlay);
+	public void renderToBuffer(PoseStack matrices, VertexConsumer vertices, int light, int overlay, int color) {
+		Body.render(matrices, vertices, light, overlay);
+		Left_Arm.render(matrices, vertices, light, overlay);
+		Right_Arm.render(matrices, vertices, light, overlay);
+		Left_Leg.render(matrices, vertices, light, overlay);
+		Right_Leg.render(matrices, vertices, light, overlay);
+		Head.render(matrices, vertices, light, overlay);
 	}
 }

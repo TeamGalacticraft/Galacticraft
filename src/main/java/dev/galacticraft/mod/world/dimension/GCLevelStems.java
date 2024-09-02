@@ -29,7 +29,7 @@ import dev.galacticraft.mod.world.gen.GCNoiseGeneratorSettings;
 import dev.galacticraft.mod.world.gen.custom.AsteroidChunkGenerator;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.*;
@@ -45,7 +45,7 @@ public class GCLevelStems {
     public static final ResourceKey<LevelStem> VENUS = key("venus");
     public static final ResourceKey<LevelStem> ASTEROID = key("asteroid");
 
-    public static void bootstrapRegistries(@NotNull BootstapContext<LevelStem> context) {
+    public static void bootstrapRegistries(@NotNull BootstrapContext<LevelStem> context) {
         HolderGetter<DimensionType> typeLookup = context.lookup(Registries.DIMENSION_TYPE);
         HolderGetter<Biome> biomeLookup = context.lookup(Registries.BIOME);
         HolderGetter<NoiseGeneratorSettings> noiseLookup = context.lookup(Registries.NOISE_SETTINGS);

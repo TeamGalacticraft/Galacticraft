@@ -26,7 +26,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.rocket.RocketData;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
@@ -39,17 +38,10 @@ public class GCServerPlayer {
     public long fuel;
 
     public static final Codec<GCServerPlayer> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            CompoundTag.CODEC.optionalFieldOf("rocket_data").forGetter(o -> {
-                if (o.rocketData != null) {
-                    CompoundTag tag = new CompoundTag();
-                    o.rocketData.toNbt(tag);
-                    return Optional.of(tag);
-                }
-                return Optional.empty();
-            }),
+            RocketData.CODEC.optionalFieldOf("rocket_data").forGetter(o -> Optional.ofNullable(o.rocketData)),
             Codec.LONG.fieldOf("fuel").forGetter(GCServerPlayer::getFuel),
             ItemStack.CODEC.listOf().fieldOf("rocket_stacks").forGetter(GCServerPlayer::getRocketStacks)
-    ).apply(instance, GCServerPlayer::new));
+    ).apply(instance, (data, fuel, stacks) -> new GCServerPlayer(data.orElse(null), fuel, stacks)));
 
     public static GCServerPlayer get(ServerPlayer player) {
         return player.getAttachedOrCreate(GCAttachments.SERVER_PLAYER, () -> new GCServerPlayer(player));
@@ -59,8 +51,8 @@ public class GCServerPlayer {
     public GCServerPlayer(ServerPlayer player) {
     }
 
-    public GCServerPlayer(Optional<CompoundTag> data, long fuel, List<ItemStack> stacks) {
-        this.rocketData = data.map(RocketData::fromNbt).orElse(null);
+    public GCServerPlayer(RocketData data, long fuel, List<ItemStack> stacks) {
+        this.rocketData = data;
         this.fuel = fuel;
         this.stacks = NonNullList.of(ItemStack.EMPTY, stacks.toArray(ItemStack[]::new));
     }

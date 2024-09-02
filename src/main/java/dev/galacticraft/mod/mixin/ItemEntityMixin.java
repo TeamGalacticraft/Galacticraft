@@ -22,9 +22,8 @@
 
 package dev.galacticraft.mod.mixin;
 
+import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.content.item.HotThrowableMeteorChunkItem;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -49,14 +48,12 @@ public abstract class ItemEntityMixin extends Entity {
     @Inject(at = @At("RETURN"), method = "tick")
     void coolMeteorChunk(CallbackInfo ci) {
         ItemStack stack = this.getItem();
-        CompoundTag tag = stack.getTag();
         if (stack.is(GCItems.HOT_THROWABLE_METEOR_CHUNK)) {
-            if (tag != null) {
-                int ticksUntilCool = tag.getInt(HotThrowableMeteorChunkItem.TICKS_UNTIL_COOL);
-                if (ticksUntilCool == 0) {
-                    this.setItem(new ItemStack(GCItems.THROWABLE_METEOR_CHUNK, stack.getCount()));
-                }
-                tag.putInt(HotThrowableMeteorChunkItem.TICKS_UNTIL_COOL, ticksUntilCool - 1);
+            int ttc = stack.getComponents().getOrDefault(GCDataComponents.TICKS_UNTIL_COOL, 0);
+            if (ttc == 0) {
+                this.setItem(new ItemStack(GCItems.THROWABLE_METEOR_CHUNK, stack.getCount()));
+            } else {
+                stack.set(GCDataComponents.TICKS_UNTIL_COOL, ttc - 1);
             }
 
             if (this.isInWater()) {

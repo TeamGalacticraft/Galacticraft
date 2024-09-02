@@ -30,7 +30,8 @@ import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -38,9 +39,11 @@ import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.Items;
 
+import java.util.concurrent.CompletableFuture;
+
 public class GCMachineRecipes extends FabricRecipeProvider {
-    public GCMachineRecipes(FabricDataOutput output) {
-        super(output);
+    public GCMachineRecipes(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> lookup) {
+        super(output, lookup);
     }
 
     @Override
@@ -245,6 +248,17 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("SCS")
                 .pattern("SFS")
                 .unlockedBy(getHasName(GCItems.CRUDE_OIL_BUCKET), has(GCItems.CRUDE_OIL_BUCKET))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.FUEL_LOADER)
+                .define('U', GCItems.COMPRESSED_COPPER)
+                .define('C', GCItems.TIN_CANISTER)
+                .define('T', GCItems.COMPRESSED_TIN)
+                .define('W', GCItems.BASIC_WAFER)
+                .pattern("UUU")
+                .pattern("UCU")
+                .pattern("TWT")
+                .unlockedBy(getHasName(GCItems.FUEL_BUCKET), has(GCItems.FUEL_BUCKET))
                 .save(output);
 
         // Wires + Pipes

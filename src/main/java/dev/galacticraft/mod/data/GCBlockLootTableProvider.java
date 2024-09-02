@@ -28,36 +28,46 @@ import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
+import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.item.Items;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
+import java.util.concurrent.CompletableFuture;
+
 public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
-    protected GCBlockLootTableProvider(FabricDataOutput output) {
-        super(output);
+    protected GCBlockLootTableProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registryLookup) {
+        super(output, registryLookup);
     }
 
     public LootTable.Builder siliconOreDrops(Block ore) {
         return createSilkTouchDispatchTable(ore, this.applyExplosionDecay(ore, LootItem.lootTableItem(GCItems.RAW_SILICON)
                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(4.0F, 6.0F)))
-                .apply(ApplyBonusCount.addOreBonusCount(Enchantments.BLOCK_FORTUNE))
+                .apply(ApplyBonusCount.addOreBonusCount(this.registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.FORTUNE)))
         ));
     }
 
     @Override
     public void generate() {
+        HolderLookup.RegistryLookup<Enchantment> enchantments = this.registries.lookupOrThrow(Registries.ENCHANTMENT);
+
         this.dropSelf(GCBlocks.GLOWSTONE_TORCH);
         this.dropSelf(GCBlocks.UNLIT_TORCH);
 
@@ -85,6 +95,24 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.MOON_ROCK_SLAB);
         this.dropSelf(GCBlocks.MOON_ROCK_STAIRS);
         this.dropSelf(GCBlocks.MOON_ROCK_WALL);
+
+        this.dropSelf(GCBlocks.MOON_ROCK_BRICK);
+        this.dropSelf(GCBlocks.MOON_ROCK_BRICK_SLAB);
+        this.dropSelf(GCBlocks.MOON_ROCK_BRICK_STAIRS);
+        this.dropSelf(GCBlocks.MOON_ROCK_BRICK_WALL);
+
+        this.dropSelf(GCBlocks.CRACKED_MOON_ROCK_BRICK);
+        this.dropSelf(GCBlocks.CRACKED_MOON_ROCK_BRICK_SLAB);
+        this.dropSelf(GCBlocks.CRACKED_MOON_ROCK_BRICK_STAIRS);
+        this.dropSelf(GCBlocks.CRACKED_MOON_ROCK_BRICK_WALL);
+
+        this.dropSelf(GCBlocks.CHISELED_MOON_ROCK_BRICK);
+        this.dropSelf(GCBlocks.MOON_ROCK_PILLAR);
+
+        this.dropSelf(GCBlocks.POLISHED_MOON_ROCK);
+        this.dropSelf(GCBlocks.POLISHED_MOON_ROCK_SLAB);
+        this.dropSelf(GCBlocks.POLISHED_MOON_ROCK_STAIRS);
+        this.dropSelf(GCBlocks.POLISHED_MOON_ROCK_WALL);
 
         this.dropSelf(GCBlocks.COBBLED_MOON_ROCK);
         this.dropSelf(GCBlocks.COBBLED_MOON_ROCK_SLAB);
@@ -189,6 +217,10 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         this.add(GCBlocks.GALENA_ORE, this.createOreDrop(GCBlocks.GALENA_ORE, GCItems.RAW_LEAD));
 
+        this.add(GCBlocks.OLIVINE_CLUSTER, this.createCrystalClusterDrop(GCBlocks.OLIVINE_CLUSTER, GCItems.OLIVINE_SHARD));
+        this.add(GCBlocks.OLIVINE_BASALT, this.createOreDrop(GCBlocks.OLIVINE_BASALT, GCItems.OLIVINE_SHARD, 1.0F, 2.0F));
+        this.add(GCBlocks.RICH_OLIVINE_BASALT, this.createOreDrop(GCBlocks.RICH_OLIVINE_BASALT, GCItems.OLIVINE_SHARD, 3.0F, 4.0F));
+
         this.add(GCBlocks.MOON_CHEESE_WHEEL, noDrop());
         this.add(GCBlocks.CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.CANDLE));
         this.add(GCBlocks.WHITE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.WHITE_CANDLE));
@@ -214,27 +246,14 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.TITANIUM_BLOCK);
         this.dropSelf(GCBlocks.LEAD_BLOCK);
         this.dropSelf(GCBlocks.LUNAR_SAPPHIRE_BLOCK);
+        this.dropSelf(GCBlocks.OLIVINE_BLOCK);
 
-        this.add(GCBlocks.FALLEN_METEOR, block -> BlockLootSubProvider.createSilkTouchDispatchTable(block, this.applyExplosionDecay(block, LootItem.lootTableItem(GCItems.RAW_METEORIC_IRON)
+        this.add(GCBlocks.FALLEN_METEOR, block -> createSilkTouchDispatchTable(block, this.applyExplosionDecay(block, LootItem.lootTableItem(GCItems.RAW_METEORIC_IRON)
                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 2.0f))))));
 
         this.dropSelf(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
 
         this.add(GCBlocks.CAVERNOUS_VINES, BlockLootSubProvider::createShearsOnlyDrop);
-        this.add(GCBlocks.MOON_BERRY_BUSH, block -> this.applyExplosionDecay(block, LootTable.lootTable()
-                        .withPool(LootPool.lootPool()
-                                .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SweetBerryBushBlock.AGE, 3)))
-                                .add(LootItem.lootTableItem(GCItems.MOON_BERRIES))
-                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(2.0F, 3.0F)))
-                                .apply(ApplyBonusCount.addUniformBonusCount(Enchantments.BLOCK_FORTUNE)))
-                        .withPool(LootPool.lootPool()
-                                .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SweetBerryBushBlock.AGE, 2)))
-                                .add(LootItem.lootTableItem(GCItems.MOON_BERRIES))
-                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F)))
-                                .apply(ApplyBonusCount.addUniformBonusCount(Enchantments.BLOCK_FORTUNE))
-                        )
-                )
-        );
         this.add(GCBlocks.BOSS_SPAWNER, noDrop());
 
         this.add(GCBlocks.FUELING_PAD, this::createLaunchPadTable);
@@ -280,5 +299,31 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
                         .add(LootItem.lootTableItem(block)
                                 .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
                                         .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AbstractLaunchPad.PART, AbstractLaunchPad.Part.CENTER))))));
+    }
+
+    public LootTable.Builder createOreDrop(Block block, Item item, float min, float max) {
+        return createSilkTouchDispatchTable(
+                block,
+                this.applyExplosionDecay(
+                        block,
+                        LootItem.lootTableItem(item)
+                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(min, max)))
+                                .apply(ApplyBonusCount.addUniformBonusCount(this.registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.FORTUNE)))
+                )
+        );
+    }
+
+    public LootTable.Builder createCrystalClusterDrop(Block block, Item item) {
+        return createSilkTouchDispatchTable(
+                block,
+                (LootItem.lootTableItem(item)
+                        .apply(SetItemCountFunction.setCount(ConstantValue.exactly(4.0F)))
+                        .apply(ApplyBonusCount.addOreBonusCount(this.registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.FORTUNE)))
+                        .when(MatchTool.toolMatches(ItemPredicate.Builder.item().of(ItemTags.CLUSTER_MAX_HARVESTABLES)))
+                )
+                        .otherwise(
+                                this.applyExplosionDecay(block, LootItem.lootTableItem(item).apply(SetItemCountFunction.setCount(ConstantValue.exactly(2.0F))))
+                        )
+        );
     }
 }

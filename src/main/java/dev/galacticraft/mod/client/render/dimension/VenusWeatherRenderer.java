@@ -23,10 +23,7 @@
 package dev.galacticraft.mod.client.render.dimension;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.*;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
@@ -66,14 +63,12 @@ public class VenusWeatherRenderer implements DimensionRenderingRegistry.WeatherR
         double camY = camPos.y();
         double camZ = camPos.z();
         ClientLevel level = context.world();
-        float partialTicks = context.tickDelta();
+        float partialTicks = context.tickCounter().getRealtimeDeltaTicks();
         float strength = level.getRainLevel(partialTicks);
 
         if (strength > 0.0F) {
             context.lightmapTextureManager().turnOnLightLayer();
 
-            Tesselator tessellator = Tesselator.getInstance();
-            BufferBuilder worldrenderer = tessellator.getBuilder();
             RenderSystem.disableCull();
             RenderSystem.enableBlend();
             RenderSystem.enableDepthTest();
@@ -90,6 +85,8 @@ public class VenusWeatherRenderer implements DimensionRenderingRegistry.WeatherR
             int px = Mth.floor(camX);
             int py = Mth.floor(camY);
             int pz = Mth.floor(camZ);
+
+            BufferBuilder buffer = null;
 
             for (int z = pz - r; z <= pz + r; ++z) {
                 int indexZ = (z - pz + 16) * 32;
@@ -117,13 +114,13 @@ public class VenusWeatherRenderer implements DimensionRenderingRegistry.WeatherR
                         RandomSource random = RandomSource.create((long)(x * x * 3121 + x * 45238971 ^ z * z * 418711 + z * 13761));
 
                         if (drawFlag != 0) {
-                            if (drawFlag >= 0) {
-                                tessellator.end();
+                            if (drawFlag >= 0 && buffer != null) {
+                                BufferUploader.drawWithShader(buffer.buildOrThrow());
                             }
 
                             drawFlag = 0;
                             RenderSystem.setShaderTexture(0, RAIN_TEXTURES);
-                            worldrenderer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+                            buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
                         }
 
                         int index = indexZ + x - px + 16;
@@ -149,16 +146,16 @@ public class VenusWeatherRenderer implements DimensionRenderingRegistry.WeatherR
                         int light = LevelRenderer.getLightColor(level, mutablePos);
                         double xc = x + 0.5D;
                         double zc = z + 0.5D;
-                        worldrenderer.vertex(xc - camX - dx, (double) ymax - yo - camY, zc - camZ - dz).uv(0.0F, (float) y * 0.25F + vOff).color(1.0F, 1.0F, 1.0F, alpha).uv2(light).endVertex();
-                        worldrenderer.vertex(xc - camX + dx, (double) ymax - yo - camY, zc - camZ + dz).uv(1.0F, (float) y * 0.25F + vOff).color(1.0F, 1.0F, 1.0F, alpha).uv2(light).endVertex();
-                        worldrenderer.vertex(xc - camX + dx, (double) y - yo - camY, zc - camZ + dz).uv(1.0F, (float) ymax * 0.25F + vOff).color(1.0F, 1.0F, 1.0F, alpha).uv2(light).endVertex();
-                        worldrenderer.vertex(xc - camX - dx, (double) y - yo - camY, zc - camZ - dz).uv(0.0F, (float) ymax * 0.25F + vOff).color(1.0F, 1.0F, 1.0F, alpha).uv2(light).endVertex();
+                        buffer.addVertex((float) (xc - camX - dx), (float) (ymax - yo - camY), (float) (zc - camZ - dz)).setUv(0.0F, (float) y * 0.25F + vOff).setColor(1.0F, 1.0F, 1.0F, alpha).setLight(light)
+                                .addVertex((float) (xc - camX + dx), (float) (ymax - yo - camY), (float) (zc - camZ + dz)).setUv(1.0F, (float) y * 0.25F + vOff).setColor(1.0F, 1.0F, 1.0F, alpha).setLight(light)
+                                .addVertex((float) (xc - camX + dx), (float) (y - yo - camY), (float) (zc - camZ + dz)).setUv(1.0F, (float) ymax * 0.25F + vOff).setColor(1.0F, 1.0F, 1.0F, alpha).setLight(light)
+                                .addVertex((float) (xc - camX - dx), (float) (y - yo - camY), (float) (zc - camZ - dz)).setUv(0.0F, (float) ymax * 0.25F + vOff).setColor(1.0F, 1.0F, 1.0F, alpha).setLight(light);
                     }
                 }
             }
 
             if (drawFlag >= 0) {
-                tessellator.end();
+                BufferUploader.drawWithShader(buffer.buildOrThrow());
             }
 
             RenderSystem.enableCull();

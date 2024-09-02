@@ -29,11 +29,11 @@ import dev.galacticraft.mod.content.block.entity.machine.ElectricArcFurnaceBlock
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.crafting.BlastingRecipe;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 
-public class ElectricArcFurnaceScreen extends MachineScreen<ElectricArcFurnaceBlockEntity, RecipeMachineMenu<Container, BlastingRecipe, ElectricArcFurnaceBlockEntity>> {
+public class ElectricArcFurnaceScreen extends MachineScreen<ElectricArcFurnaceBlockEntity, RecipeMachineMenu<SingleRecipeInput, BlastingRecipe, ElectricArcFurnaceBlockEntity>> {
     private static final int ARROW_X = 68;
     private static final int ARROW_Y = 35;
     private static final int ARROW_U = 176;
@@ -41,7 +41,7 @@ public class ElectricArcFurnaceScreen extends MachineScreen<ElectricArcFurnaceBl
     private static final int ARROW_WIDTH = 26;
     private static final int ARROW_HEIGHT = 16;
 
-    public ElectricArcFurnaceScreen(RecipeMachineMenu<Container, BlastingRecipe, ElectricArcFurnaceBlockEntity> handler, Inventory inv, Component title) {
+    public ElectricArcFurnaceScreen(RecipeMachineMenu<SingleRecipeInput, BlastingRecipe, ElectricArcFurnaceBlockEntity> handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.ELECTRIC_ARC_FURNACE_SCREEN);
     }
 

@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "galacticraft:block/olivine_cluster_vertical",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "galacticraft:block/olivine_cluster_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "galacticraft:block/olivine_cluster_horizontal",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "galacticraft:block/olivine_cluster_horizontal",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
+      "model": "galacticraft:block/olivine_cluster_vertical"
+    },
+    "facing=west": {
+      "model": "galacticraft:block/olivine_cluster_horizontal",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

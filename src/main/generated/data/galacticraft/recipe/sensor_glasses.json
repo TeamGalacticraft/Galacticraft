@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "tag": "c:gems/diamond"
+    },
+    "L": {
+      "item": "galacticraft:sensor_lens"
+    },
+    "M": {
+      "item": "galacticraft:meteoric_iron_ingot"
+    },
+    "S": {
+      "item": "minecraft:string"
+    }
+  },
+  "pattern": [
+    "SDS",
+    "S S",
+    "LML"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:sensor_glasses"
+  }
+}

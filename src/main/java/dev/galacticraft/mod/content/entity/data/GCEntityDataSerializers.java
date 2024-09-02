@@ -23,32 +23,16 @@
 package dev.galacticraft.mod.content.entity.data;
 
 import dev.galacticraft.api.rocket.LaunchStage;
-import net.minecraft.network.FriendlyByteBuf;
+import dev.galacticraft.api.rocket.RocketData;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.resources.ResourceLocation;
 
 public class GCEntityDataSerializers {
-    public static final EntityDataSerializer<LaunchStage> LAUNCH_STAGE = EntityDataSerializer.simpleEnum(LaunchStage.class);
-    public static final EntityDataSerializer<ResourceLocation> IDENTIFIER = new EntityDataSerializer<>() {
-        @Override
-        public void write(FriendlyByteBuf buffer, ResourceLocation value) {
-            buffer.writeResourceLocation(value);
-        }
-
-        @Override
-        public ResourceLocation read(FriendlyByteBuf buffer) {
-            return buffer.readResourceLocation();
-        }
-
-        @Override
-        public ResourceLocation copy(ResourceLocation value) {
-            return value;
-        }
-    };
+    public static final EntityDataSerializer<RocketData> ROCKET_DATA = EntityDataSerializer.forValueType(RocketData.STREAM_CODEC);
+    public static final EntityDataSerializer<LaunchStage> LAUNCH_STAGE = EntityDataSerializer.forValueType(LaunchStage.STREAM_CODEC);
 
     public static void register() {
+        EntityDataSerializers.registerSerializer(ROCKET_DATA);
         EntityDataSerializers.registerSerializer(LAUNCH_STAGE);
-        EntityDataSerializers.registerSerializer(IDENTIFIER);
     }
 }

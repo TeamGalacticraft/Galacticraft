@@ -25,6 +25,7 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
+import dev.galacticraft.machinelib.client.api.util.GraphicsUtil;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
 import dev.galacticraft.mod.api.solarpanel.LightSource;
@@ -41,7 +42,7 @@ import net.minecraft.world.entity.player.Inventory;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S extends SolarPanelMenu<M>> extends MachineScreen<M, S> {
+public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, Menu extends SolarPanelMenu<Machine>> extends MachineScreen<Machine, Menu> {
     private static final int DAY_SOURCE_U = 0;
     private static final int DAY_SOURCE_V = 0;
     private static final int OVERCAST_SOURCE_U = 32;
@@ -77,9 +78,9 @@ public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S exten
     private final ResourceLocation solarPanelTexture;
     private final WorldLightSources lightSource;
 
-    public SolarPanelScreen(S handler, Inventory inv, Component title) {
-        super(handler, title, Constant.ScreenTexture.SOLAR_PANEL_SCREEN);
-        this.solarPanelTexture = SolarPanelRegistry.getSolarPanelTexture(handler.machine.getType());
+    public SolarPanelScreen(Menu menu, Inventory inv, Component title) {
+        super(menu, title, Constant.ScreenTexture.SOLAR_PANEL_SCREEN);
+        this.solarPanelTexture = SolarPanelRegistry.getSolarPanelTexture(menu.be.getType());
         this.lightSource = SolarPanelRegistry.getLightSource(this.menu.playerInventory.player.level().dimension());
     }
 
@@ -116,6 +117,8 @@ public class SolarPanelScreen<M extends MachineBlockEntity & SolarPanel, S exten
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, this.topPos + SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT)) {
+                    GraphicsUtil.highlightElement(graphics, this.leftPos, this.topPos, SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT, 0x80ffffff);
+
                     if (this.menu.getBlockage()[y * 3 + x]) {
                         graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.Color.GRAY_STYLE).append(BLOCKED), mouseX, mouseY);
                     } else {

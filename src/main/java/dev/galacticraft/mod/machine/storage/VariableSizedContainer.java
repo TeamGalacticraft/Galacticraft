@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.machine.storage;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -29,6 +30,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeInput;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public class VariableSizedContainer implements Container {
     private int targetSize;
     private final ArrayList<ItemStack> stacks;
     private final List<Listener> listeners = new ArrayList<>();
+    private final RecipeInput input = new VariableRecipeInput();
 
     public VariableSizedContainer(int targetSize) {
         this.targetSize = targetSize;
@@ -170,33 +173,50 @@ public class VariableSizedContainer implements Container {
         Collections.fill(this.stacks, ItemStack.EMPTY);
     }
 
-    public CompoundTag toTag() {
+    public CompoundTag toTag(HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();
         tag.putInt("TargetSize", this.targetSize);
         ListTag list = new ListTag();
         for (ItemStack stack : this.stacks) {
-            CompoundTag item =new CompoundTag();
-            stack.save(item);
+            CompoundTag item = new CompoundTag();
+            stack.save(provider, item);
             list.add(item);
         }
         tag.put("Items", list);
         return tag;
     }
 
-    public void readTag(CompoundTag tag) {
+    public void readTag(CompoundTag tag, HolderLookup.Provider provider) {
         this.targetSize = tag.getInt("TargetSize");
         ListTag items = tag.getList("Items", Tag.TAG_COMPOUND);
         this.stacks.clear();
         this.stacks.ensureCapacity(items.size());
         for (int i = 0; i < items.size(); i++) {
-            this.stacks.add(ItemStack.of(items.getCompound(i)));
+            this.stacks.add(ItemStack.parseOptional(provider, items.getCompound(i)));
         }
         while (this.stacks.size() < this.targetSize-1) {
             this.stacks.add(ItemStack.EMPTY);
         }
     }
+
+    public RecipeInput asInput() {
+        return this.input;
+    }
+
     public interface Listener {
         void onSizeChanged();
         void onItemChanged();
+    }
+
+    private class VariableRecipeInput implements RecipeInput {
+        @Override
+        public @NotNull ItemStack getItem(int slot) {
+            return VariableSizedContainer.this.getItem(slot);
+        }
+
+        @Override
+        public int size() {
+            return VariableSizedContainer.this.stacks.size();
+        }
     }
 }

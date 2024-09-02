@@ -26,7 +26,7 @@ import dev.galacticraft.mod.structure.GCStructurePieceTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
@@ -36,6 +36,7 @@ import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.storage.loot.LootTable;
 
 public class RoomChest extends RoomEmpty {
     public RoomChest(CompoundTag tag) {
@@ -59,7 +60,7 @@ public class RoomChest extends RoomEmpty {
             ChestBlockEntity chest = (ChestBlockEntity) worldIn.getBlockEntity(blockpos);
 
             if (chest != null) {
-                ResourceLocation chesttype = RoomTreasure.MOONCHEST;
+                ResourceKey<LootTable> chesttype = RoomTreasure.MOONCHEST;
 //                if (worldIn.provider instanceof IGalacticraftWorldProvider) {
 //                    chesttype = ((IGalacticraftWorldProvider) worldIn.provider).getDungeonChestType();
 //                }
