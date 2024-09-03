@@ -28,8 +28,12 @@ import net.minecraft.ChatFormatting;
 
 public final class GCMachineStatuses {
     public static final MachineStatus COLLECTING = MachineStatus.create(Translations.MachineStatus.COLLECTING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    public static final MachineStatus CANNING = MachineStatus.create(Translations.MachineStatus.CANNING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    public static final MachineStatus TRANSFERRING_CAN = MachineStatus.create(Translations.MachineStatus.TRANSFERRING_CAN, ChatFormatting.GREEN, MachineStatus.Type.PARTIALLY_WORKING);
+    public static final MachineStatus NO_FOOD = MachineStatus.create(Translations.MachineStatus.NO_FOOD, ChatFormatting.RED, MachineStatus.Type.MISSING_ITEMS);
     public static final MachineStatus PARTIALLY_BLOCKED = MachineStatus.create(Translations.MachineStatus.PARTIALLY_BLOCKED, ChatFormatting.GRAY, MachineStatus.Type.PARTIALLY_WORKING);
     public static final MachineStatus BLOCKED = MachineStatus.create(Translations.MachineStatus.BLOCKED, ChatFormatting.RED, MachineStatus.Type.OTHER);
+    public static final MachineStatus MISSING_EMPTY_CAN = MachineStatus.create(Translations.MachineStatus.MISSING_EMPTY_CAN, ChatFormatting.RED, MachineStatus.Type.MISSING_ITEMS);
     public static final MachineStatus NIGHT = MachineStatus.create(Translations.MachineStatus.NIGHT, ChatFormatting.DARK_BLUE, MachineStatus.Type.PARTIALLY_WORKING);
     public static final MachineStatus RAIN = MachineStatus.create(Translations.MachineStatus.RAIN, ChatFormatting.BLUE, MachineStatus.Type.PARTIALLY_WORKING);
     public static final MachineStatus FABRICATING = MachineStatus.create(Translations.MachineStatus.FABRICATING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);

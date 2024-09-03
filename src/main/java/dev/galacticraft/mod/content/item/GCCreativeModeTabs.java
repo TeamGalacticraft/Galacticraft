@@ -42,6 +42,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
+import static dev.galacticraft.mod.content.GCBlocks.FOOD_CANNER;
 import static dev.galacticraft.mod.content.item.GCItems.*;
 
 public class GCCreativeModeTabs {
@@ -164,11 +165,7 @@ public class GCCreativeModeTabs {
                 output.accept(BEEF_PATTY);
                 output.accept(CHEESEBURGER);
 
-                output.accept(CANNED_DEHYDRATED_APPLE);
-                output.accept(CANNED_DEHYDRATED_CARROT);
-                output.accept(CANNED_DEHYDRATED_MELON);
-                output.accept(CANNED_DEHYDRATED_POTATO);
-                output.accept(CANNED_BEEF);
+
                 output.accept(THROWABLE_METEOR_CHUNK);
                 output.accept(HOT_THROWABLE_METEOR_CHUNK);
 
@@ -341,6 +338,7 @@ public class GCCreativeModeTabs {
                 output.accept(ASTEROID_ROCK);
                 output.accept(ASTEROID_ROCK_1);
                 output.accept(ASTEROID_ROCK_2);
+                output.accept(DENSE_ICE);
 
                 // VENUS NATURAL
                 output.accept(SOFT_VENUS_ROCK);
@@ -395,6 +393,11 @@ public class GCCreativeModeTabs {
                 output.accept(MOON_TIN_ORE);
                 output.accept(LUNASLATE_TIN_ORE);
 
+                output.accept(ASTEROID_ALUMINUM_ORE);
+                output.accept(ASTEROID_IRON_ORE);
+                output.accept(ASTEROID_SILICON_ORE);
+
+
                 output.accept(ALUMINUM_ORE);
                 output.accept(DEEPSLATE_ALUMINUM_ORE);
 
@@ -431,6 +434,14 @@ public class GCCreativeModeTabs {
                 // MACHINES
             }).build();
 
+    public static final CreativeModeTab CANNED_FOOD_GROUP = FabricItemGroup
+            .builder()
+            .icon(() -> new ItemStack(CANNED_FOOD))
+            .title(Component.translatable(Translations.ItemGroup.CANNED_FOOD))
+            .displayItems((parameters, output) -> {
+                output.accept(EMPTY_CANNED_FOOD);
+            }).build();
+
     public static final CreativeModeTab MACHINES_GROUP = FabricItemGroup
             .builder()
             .icon(() -> new ItemStack(GCItems.COAL_GENERATOR))
@@ -451,6 +462,7 @@ public class GCCreativeModeTabs {
                 output.accept(OXYGEN_BUBBLE_DISTRIBUTOR);
                 output.accept(OXYGEN_DECOMPRESSOR);
                 output.accept(OXYGEN_COMPRESSOR);
+                output.accept(FOOD_CANNER);
                 output.accept(OXYGEN_STORAGE_MODULE);
                 output.accept(FUEL_LOADER);
             }).build();
@@ -459,5 +471,6 @@ public class GCCreativeModeTabs {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Item.ITEM_GROUP), ITEMS_GROUP);
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Block.ITEM_GROUP_BLOCKS), BLOCKS_GROUP);
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Block.ITEM_GROUP_MACHINES), MACHINES_GROUP);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Item.ITEM_GROUP_CANS), CANNED_FOOD_GROUP);
     }
 }

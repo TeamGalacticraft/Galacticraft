@@ -27,6 +27,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.data.models.model.ModelTemplate;
+import net.minecraft.data.models.model.TextureSlot;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;
@@ -40,6 +42,7 @@ import org.jetbrains.annotations.NotNull;
 
 public interface Constant {
     String MOD_ID = "galacticraft";
+    public static final String GCDATAFOLDER = "../galacticraft/";
     String COMMON_NAMESPACE = "c";
     Logger LOGGER = LogManager.getLogger("Galacticraft");
 
@@ -137,6 +140,7 @@ public interface Constant {
         String ASTEROID_ROCK = "asteroid_rock";
         String ASTEROID_ROCK_1 = "asteroid_rock_block_1";
         String ASTEROID_ROCK_2 = "asteroid_rock_block_2";
+        String DENSE_ICE = "dense_ice";
 
         String SOFT_VENUS_ROCK = "soft_venus_rock";
         String HARD_VENUS_ROCK = "hard_venus_rock";
@@ -146,6 +150,9 @@ public interface Constant {
         String VAPOR_SPOUT = "vapor_spout";
 
         // Ore
+        String MARS_IRON_ORE = "mars_iron_ore";
+        String MARS_TIN_ORE = "mars_tin_ore";
+        String MARS_COPPER_ORE = "mars_copper_ore";
         String MOON_COPPER_ORE = "moon_copper_ore";
         String LUNASLATE_COPPER_ORE = "lunaslate_copper_ore";
         String DESH_ORE = "desh_ore";
@@ -156,6 +163,9 @@ public interface Constant {
         String DEEPSLATE_TIN_ORE = "deepslate_tin_ore";
         String MOON_TIN_ORE = "moon_tin_ore";
         String LUNASLATE_TIN_ORE = "lunaslate_tin_ore";
+        String ASTEROID_ALUMINUM_ORE = "asteroid_aluminum_ore";
+        String ASTEROID_IRON_ORE = "asteroid_iron_ore";
+        String ASTEROID_SILICON_ORE = "asteroid_silicon_ore";
         String ALUMINUM_ORE = "aluminum_ore";
         String DEEPSLATE_ALUMINUM_ORE = "deepslate_aluminum_ore";
         String GALENA_ORE = "galena_ore";
@@ -251,6 +261,7 @@ public interface Constant {
         String OXYGEN_BUBBLE_DISTRIBUTOR = "oxygen_bubble_distributor";
         String OXYGEN_COLLECTOR = "oxygen_collector";
         String OXYGEN_COMPRESSOR = "oxygen_compressor";
+        String FOOD_CANNER = "food_canner";
         String OXYGEN_DECOMPRESSOR = "oxygen_decompressor";
         String OXYGEN_DETECTOR = "oxygen_detector";
         String OXYGEN_SEALER = "oxygen_sealer";
@@ -331,7 +342,10 @@ public interface Constant {
     }
 
     interface Item {
+        String ITEM_GROUP_CANS = "cans";
         String ITEM_GROUP = "items";
+        String CANNED_FOOD = "canned_food";
+        String EMPTY_CANNED_FOOD = "empty_can";
         String RAW_SILICON = "raw_silicon";
         String RAW_METEORIC_IRON = "raw_meteoric_iron";
         String METEORIC_IRON_INGOT = "meteoric_iron_ingot";
@@ -396,12 +410,6 @@ public interface Constant {
         String GROUND_BEEF = "ground_beef";
         String BEEF_PATTY = "beef_patty";
         String CHEESEBURGER = "cheeseburger";
-        //CANNED FOOD
-        String CANNED_DEHYDRATED_APPLE = "canned_dehydrated_apple";
-        String CANNED_DEHYDRATED_CARROT = "canned_dehydrated_carrot";
-        String CANNED_DEHYDRATED_MELON = "canned_dehydrated_melon";
-        String CANNED_DEHYDRATED_POTATO = "canned_dehydrated_potato";
-        String CANNED_BEEF = "canned_beef";
         //ROCKET PARTS
         String TIER_1_HEAVY_DUTY_PLATE = "heavy_plating";
         String TIER_2_HEAVY_DUTY_PLATE = "heavy_plating_t2";
@@ -546,6 +554,7 @@ public interface Constant {
         ResourceLocation PLANET_ICONS = id("textures/gui/planet_icons.png");
         ResourceLocation BUBBLE_DISTRIBUTOR_SCREEN = id("textures/gui/oxygen_bubble_distributor_screen.png");
         ResourceLocation OXYGEN_COMPRESSOR_SCREEN = id("textures/gui/oxygen_compressor_screen.png");
+        ResourceLocation FOOD_CANNER_SCREEN = id("textures/gui/food_canner_screen.png");
         ResourceLocation OXYGEN_STORAGE_MODULE_SCREEN = id("textures/gui/oxygen_storage_module_screen.png");
         ResourceLocation OXYGEN_SEALER_SCREEN = id("textures/gui/oxygen_sealer_screen.png");
         ResourceLocation FUEL_LOADER_SCREEN = id("textures/gui/fuel_loader_screen.png");
@@ -666,6 +675,7 @@ public interface Constant {
         String OXYGEN_COLLECTOR_MENU = "oxygen_collector_menu";
         String BUBBLE_DISTRIBUTOR_MENU = "bubble_distributor_menu";
         String OXYGEN_COMPRESSOR_MENU = "oxygen_compressor_menu";
+        String FOOD_CANNER_MENU = "food_canner_menu";
         String OXYGEN_DECOMPRESSOR_MENU = "oxygen_decompressor_menu";
         String OXYGEN_STORAGE_MODULE_MENU = "oxygen_storage_module_menu";
         String OXYGEN_SEALER_MENU = "oxygen_sealer_menu";

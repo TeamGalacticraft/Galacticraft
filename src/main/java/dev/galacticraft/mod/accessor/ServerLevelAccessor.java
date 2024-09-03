@@ -23,9 +23,10 @@
 package dev.galacticraft.mod.accessor;
 
 import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
+import net.minecraft.server.level.ServerLevel;
 
 public interface ServerLevelAccessor {
-    void addSealer(OxygenSealerBlockEntity sealer);
+    void addSealer(OxygenSealerBlockEntity sealer, ServerLevel world);
 
-    void removeSealer(OxygenSealerBlockEntity sealer);
+    void removeSealer(OxygenSealerBlockEntity sealer, ServerLevel world);
 }

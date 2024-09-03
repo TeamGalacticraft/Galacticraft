@@ -51,6 +51,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(ItemGroup.BLOCKS, "Galacticraft Blocks");
         this.add(ItemGroup.ITEMS, "Galacticraft Items");
         this.add(ItemGroup.MACHINES, "Galacticraft Machines");
+        this.add(ItemGroup.CANNED_FOOD, "Canned Food");
 
         this.block(GCBlocks.ASTEROID_ROCK_1, "Asteroid Rock");
         this.block(GCBlocks.ASTEROID_ROCK_2, "Asteroid Rock");
@@ -107,6 +108,11 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.THERMAL_PADDING_HELMET, "Thermal Padding Helm");
         this.item(GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         this.item(GCItems.PARACHUTE.get(DyeColor.WHITE), "Parachute");
+        this.item(GCItems.CANNED_FOOD, "Canned ");
+
+        this.add("item.galacticraft.empty_canned_food", "Empty Canned Food");
+        this.add("item.galacticraft.total_nutrition", "Total Nutrition: ");
+
 
         // Block Descriptions
         this.blockDesc(GCBlocks.ADVANCED_SOLAR_PANEL, "Advanced Solar Panels collect energy from the sun, and store it for further use. Adjusts position to face the sun, to collect more electricity.");
@@ -167,6 +173,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.ENERGY_STORAGE_SIZE, "Default Machine Energy Storage Size");
         this.add(Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE, "Oxygen Collector Energy Consumption Rate/t");
         this.add(Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE, "Oxygen Compressor Energy Consumption Rate/t");
+        this.add(Config.FOOD_CANNER_ENERGY_CONSUMPTION_RATE, "Food Canner Energy Consumption Rate/t");
         this.add(Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE, "Oxygen Decompressor Energy Consumption Rate/t");
         this.add(Config.REFINERY_ENERGY_CONSUMPTION_RATE, "Refinery Energy Consumption Rate/t");
         this.add(Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE, "Solar Panel Energy Production Rate/t");
@@ -192,8 +199,8 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(CelestialBody.SOL_DESC, "");
         this.add(CelestialBody.SOL, "Sol");
-        this.add(CelestialBody.ASTEROIDS_DESC, "");
-        this.add(CelestialBody.ASTEROIDS, "Asteroids");
+        this.add(CelestialBody.ASTEROID_DESC, "");
+        this.add(CelestialBody.ASTEROID, "Asteroid");
         this.add(CelestialBody.EARTH_DESC, "The Overworld");
         this.add(CelestialBody.EARTH, "Earth");
         this.add(CelestialBody.JUPITER_DESC, "");
@@ -295,6 +302,10 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(MachineStatus.ALREADY_SEALED, "Already Sealed");
         this.add(MachineStatus.AREA_TOO_LARGE, "Area Too Large");
+        this.add(MachineStatus.MISSING_EMPTY_CAN, "Missing Empty Can");
+        this.add(MachineStatus.NO_FOOD, "No Food");
+        this.add(MachineStatus.TRANSFERRING_CAN, "Transferring Can");
+        this.add(MachineStatus.CANNING, "Canning");
         this.add(MachineStatus.BLOCKED, "Blocked");
         this.add(MachineStatus.COLLECTING, "Collecting");
         this.add(MachineStatus.COMPRESSING, "Compressing");

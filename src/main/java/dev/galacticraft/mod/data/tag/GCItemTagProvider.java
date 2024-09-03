@@ -31,6 +31,7 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.Item;
 
 import java.util.concurrent.CompletableFuture;
@@ -112,7 +113,7 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 GCItems.MOON_COPPER_ORE, GCItems.LUNASLATE_COPPER_ORE,
                 GCBlocks.OLIVINE_BASALT.asItem(), GCBlocks.RICH_OLIVINE_BASALT.asItem(),
                 GCItems.TIN_ORE, GCItems.DEEPSLATE_TIN_ORE, GCItems.MOON_TIN_ORE, GCItems.LUNASLATE_TIN_ORE,
-                GCItems.ALUMINUM_ORE, GCItems.DEEPSLATE_ALUMINUM_ORE,
+                GCItems.ALUMINUM_ORE, GCItems.DEEPSLATE_ALUMINUM_ORE, GCItems.ASTEROID_ALUMINUM_ORE, GCItems.ASTEROID_IRON_ORE, GCItems.ASTEROID_SILICON_ORE,
                 GCItems.DESH_ORE,
                 GCItems.ILMENITE_ORE,
                 GCItems.GALENA_ORE
@@ -127,6 +128,16 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         tag(ItemTags.MEAT)
                 .add(GCItems.GROUND_BEEF)
                 .add(GCItems.BEEF_PATTY);
+
+        // Food Tags
+        tag(ConventionalItemTags.FOODS).add(
+                GCItems.CHEESE_CURD,
+                GCItems.CHEESE_SLICE,
+                GCItems.BURGER_BUN,
+                GCItems.GROUND_BEEF,
+                GCItems.BEEF_PATTY,
+                GCItems.CHEESEBURGER
+        );
     }
 
     protected FabricTagProvider<Item>.FabricTagBuilder tag(TagKey<Item> tag) {
