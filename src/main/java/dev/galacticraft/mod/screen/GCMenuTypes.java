@@ -55,7 +55,7 @@ public class GCMenuTypes {
 
     public static final MenuType<MachineMenu<OxygenCompressorBlockEntity>> OXYGEN_COMPRESSOR = SynchronizedMenuType.createSimple(MachineMenu::new);
     public static final MenuType<MachineMenu<OxygenDecompressorBlockEntity>> OXYGEN_DECOMPRESSOR = SynchronizedMenuType.createSimple(MachineMenu::new);
-    public static final MenuType<FoodCannerMenu> FOOD_CANNER = SynchronizedMenuType.createSimple(MachineMenu::new);
+    public static final MenuType<FoodCannerMenu> FOOD_CANNER = SynchronizedMenuType.create(FoodCannerMenu::new);
 
     public static final MenuType<MachineMenu<OxygenSealerBlockEntity>> OXYGEN_SEALER = SynchronizedMenuType.createSimple(MachineMenu::new);
 

@@ -28,10 +28,12 @@ import dev.galacticraft.machinelib.api.item.SingleVariantFixedItemBackedFluidSto
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.item.OxygenTankItem;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import team.reborn.energy.api.EnergyStorage;
 
@@ -54,26 +56,8 @@ public class GCApiLookupProviders {
             GCBlockEntityTypes.OXYGEN_SEALER,
             GCBlockEntityTypes.OXYGEN_BUBBLE_DISTRIBUTOR,
             GCBlockEntityTypes.ENERGY_STORAGE_MODULE,
+            GCBlockEntityTypes.FOOD_CANNER,
             GCBlockEntityTypes.OXYGEN_STORAGE_MODULE
-        };
-    private static final Block[] MACHINE_BLOCKS = new Block[]{
-            GCBlocks.COAL_GENERATOR,
-            GCBlocks.BASIC_SOLAR_PANEL,
-            GCBlocks.ADVANCED_SOLAR_PANEL,
-            GCBlocks.CIRCUIT_FABRICATOR,
-            GCBlocks.COMPRESSOR,
-            GCBlocks.ELECTRIC_COMPRESSOR,
-            GCBlocks.ELECTRIC_FURNACE,
-            GCBlocks.ELECTRIC_ARC_FURNACE,
-            GCBlocks.REFINERY,
-            GCBlocks.OXYGEN_COLLECTOR,
-            GCBlocks.OXYGEN_COMPRESSOR,
-            GCBlocks.FOOD_CANNER,
-            GCBlocks.OXYGEN_DECOMPRESSOR,
-            GCBlocks.OXYGEN_SEALER,
-            GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR,
-            GCBlocks.ENERGY_STORAGE_MODULE,
-            GCBlocks.OXYGEN_STORAGE_MODULE
     };
     @SuppressWarnings("rawtypes")
     private static final BlockEntityType[] WIRE_TYPES = new BlockEntityType[]{

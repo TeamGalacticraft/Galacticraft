@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content;
 
+import dev.galacticraft.mod.Constant;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
@@ -34,18 +35,20 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.tooltip.BundleTooltip;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.BundleContents;
+import org.apache.commons.lang3.math.Fraction;
 
 @Environment(EnvType.CLIENT)
 public class ClientCannedFoodTooltip implements ClientTooltipComponent {
-    private static final ResourceLocation BACKGROUND_SPRITE = new ResourceLocation("container/bundle/background");
+    private static final ResourceLocation BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("container/bundle/background");
     private static final int MARGIN_Y = 4;
     private static final int BORDER_WIDTH = 1;
     private static final int SLOT_SIZE_X = 18;
     private static final int SLOT_SIZE_Y = 20;
-    private final NonNullList<ItemStack> items;
+    private final NonNullList<ItemStack> contents;
 
     public ClientCannedFoodTooltip(CannedFoodTooltip cannedFoodTooltip) {
-        this.items = cannedFoodTooltip.getItems();
+        this.contents = cannedFoodTooltip.getItems();
     }
 
     public int getHeight() {
@@ -67,10 +70,8 @@ public class ClientCannedFoodTooltip implements ClientTooltipComponent {
     public void renderImage(Font textRenderer, int x, int y, GuiGraphics context) {
         int i = this.gridSizeX();
         int j = this.gridSizeY();
-        //creates a background panel over the items
         //context.blitSprite(BACKGROUND_SPRITE, x, y, this.backgroundWidth(), this.backgroundHeight());
-        int weight = 1;
-        boolean bl = weight >= 64;
+        boolean bl = true;
         int k = 0;
 
         for(int l = 0; l < j; ++l) {
@@ -84,12 +85,12 @@ public class ClientCannedFoodTooltip implements ClientTooltipComponent {
     }
 
     private void renderSlot(int x, int y, int index, boolean shouldBlock, GuiGraphics context, Font textRenderer) {
-        if (index >= this.items.size()) {
+        if (index >= this.contents.size()) {
             //creates a ending slot used for bundle not items contained
             //this.blit(context, x, y, shouldBlock ? ClientCannedFoodTooltip.Texture.BLOCKED_SLOT : ClientCannedFoodTooltip.Texture.SLOT);
         } else {
-            ItemStack itemStack = (ItemStack)this.items.get(index);
-            this.blit(context, x, y, ClientCannedFoodTooltip.Texture.SLOT);
+            ItemStack itemStack = this.contents.get(index);
+            this.blit(context, x, y, Texture.SLOT);
             context.renderItem(itemStack, x + 1, y + 1, index);
             context.renderItemDecorations(textRenderer, itemStack, x + 1, y + 1);
             //used to highlight the item slot
@@ -97,35 +98,35 @@ public class ClientCannedFoodTooltip implements ClientTooltipComponent {
 //            if (index == 0) {
 //                AbstractContainerScreen.renderSlotHighlight(context, x + 1, y + 1, 0);
 //            }
-
         }
     }
 
-    private void blit(GuiGraphics context, int x, int y, ClientCannedFoodTooltip.Texture sprite) {
+    private void blit(GuiGraphics context, int x, int y, Texture sprite) {
         context.blitSprite(sprite.sprite, x, y, 0, sprite.w, sprite.h);
     }
 
     private int gridSizeX() {
-        return Math.max(2, (int)Math.ceil(Math.sqrt((double)this.items.size() + 1.0)));
+        return Math.max(2, (int)Math.ceil(Math.sqrt((double)this.contents.size() + 1.0)));
     }
 
     private int gridSizeY() {
-        return (int)Math.ceil(((double)this.items.size() + 1.0) / (double)this.gridSizeX());
+        return (int)Math.ceil(((double)this.contents.size() + 1.0) / (double)this.gridSizeX());
     }
 
     @Environment(EnvType.CLIENT)
     private static enum Texture {
-        BLOCKED_SLOT(new ResourceLocation("container/bundle/blocked_slot"), 18, 20),
-        SLOT(new ResourceLocation("container/bundle/slot"), 18, 20);
+        BLOCKED_SLOT(ResourceLocation.withDefaultNamespace("container/bundle/blocked_slot"), 18, 20),
+        SLOT(ResourceLocation.withDefaultNamespace("container/bundle/slot"), 18, 20);
 
         public final ResourceLocation sprite;
         public final int w;
         public final int h;
 
-        private Texture(ResourceLocation resourceLocation, int j, int k) {
+        private Texture(final ResourceLocation resourceLocation, final int j, final int k) {
             this.sprite = resourceLocation;
             this.w = j;
             this.h = k;
         }
+
     }
 }

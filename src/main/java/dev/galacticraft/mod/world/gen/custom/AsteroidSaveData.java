@@ -25,6 +25,7 @@ package dev.galacticraft.mod.world.gen.custom;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.data.GCDataGenerator;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.nbt.CompoundTag;
@@ -59,15 +60,14 @@ public class AsteroidSaveData extends SavedData{
         this.datacompound = nbt.getCompound("asteroids");
     }
 
-    @Override
-    public CompoundTag save(CompoundTag nbt)
-    {
-        nbt.put("asteroids", this.datacompound);
-        return nbt;
-    }
-
     public static AsteroidSaveData load(CompoundTag compound) {
         String value = compound.getString("someValue");
         return new AsteroidSaveData(value);
+    }
+
+    @Override
+    public CompoundTag save(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+        nbt.put("asteroids", this.datacompound);
+        return nbt;
     }
 }

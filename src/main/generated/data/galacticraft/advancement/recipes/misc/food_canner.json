@@ -5,13 +5,7 @@
       "conditions": {
         "items": [
           {
-<<<<<<<< HEAD:src/main/generated/data/galacticraft/advancement/recipes/misc/food_canner.json
-            "items": [
-              "galacticraft:oxygen_concentrator"
-            ]
-========
-            "items": "galacticraft:tin_canister"
->>>>>>>> upstream/main:src/main/generated/data/galacticraft/advancement/recipes/food/canned_beef.json
+            "items": "galacticraft:oxygen_concentrator"
           }
         ]
       },

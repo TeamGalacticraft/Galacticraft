@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.world.gen.custom;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.perlin.NoiseModule;
 import dev.galacticraft.api.perlin.generator.Billowed;
@@ -50,13 +51,15 @@ import net.minecraft.world.level.chunk.*;
 import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.blending.Blender;
 import net.minecraft.world.level.storage.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static dev.galacticraft.impl.internal.fabric.GalacticraftAPI.currentWorldSaveDirectory;
 import static dev.galacticraft.mod.world.gen.custom.AsteroidSaveData.saveDataID;
@@ -133,7 +136,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
     private int largeAsteroidsLastChunkZ;
     private final MapGenAbandonedBase dungeonGenerator = new MapGenAbandonedBase();
 
-    public static final Codec<AsteroidChunkGenerator> CODEC = RecordCodecBuilder.create(instance ->
+    public static final MapCodec<AsteroidChunkGenerator> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
                     BiomeSource.CODEC.fieldOf("biomeSource").forGetter(generator -> generator.biomeSource),
                     ServerLevel.RESOURCE_KEY_CODEC.fieldOf("dimensionKey").forGetter(generator -> generator.dimensionKey),
@@ -496,7 +499,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    protected Codec<? extends ChunkGenerator> codec() {
+    protected @NotNull MapCodec<? extends ChunkGenerator> codec() {
         return CODEC;
     }
 
@@ -674,14 +677,13 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor, Blender blender, RandomState randomState, StructureManager structureManager, ChunkAccess chunkAccess) {
-
+    public CompletableFuture<ChunkAccess> fillFromNoise(Blender blender, RandomState noiseConfig, StructureManager structureAccessor, ChunkAccess chunk) {
         CompletableFuture<ChunkAccess> future = new CompletableFuture<>();
 
-        executor.execute(() -> {
+        Minecraft.getInstance().submit(() -> {
             try {
-                // Example asynchronous operation (replace with your actual logic)
-                ChunkAccess result = generateChunkData(blender, randomState, structureManager, chunkAccess);
+                // This operation will now run on Minecraft's main thread
+                ChunkAccess result = generateChunkData(blender, noiseConfig, structureAccessor, chunk);
                 future.complete(result);
             } catch (Exception e) {
                 future.completeExceptionally(e);

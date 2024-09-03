@@ -22,20 +22,41 @@
 
 package dev.galacticraft.mod.content.block.machine;
 
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.machinelib.api.block.MachineBlock;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.block.entity.machine.CoalGeneratorBlockEntity;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenCollectorBlockEntity;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-public class OxygenSealerBlock extends MachineBlock<OxygenSealerBlockEntity> {
+public class OxygenSealerBlock extends MachineBlock {
+    private static final MapCodec<OxygenSealerBlock> CODEC = simpleCodec(OxygenSealerBlock::new);
+
+
+
     public OxygenSealerBlock(Properties settings) {
-        super(settings, Constant.id(Constant.Block.OXYGEN_SEALER));
+        super(settings);
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
+
+
+    @Override
+    public @NotNull MachineBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new OxygenSealerBlockEntity(pos, state);
     }
 
     @Override

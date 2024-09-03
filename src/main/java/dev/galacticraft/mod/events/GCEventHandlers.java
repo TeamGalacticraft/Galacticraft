@@ -42,6 +42,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -52,6 +53,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BedBlock;
@@ -73,12 +75,14 @@ public class GCEventHandlers {
     }
 
     private static InteractionResultHolder<ItemStack> onPlayerUseItem(Player player, Level world, InteractionHand hand) {
-        boolean oxygenWorld = CelestialBody.getByDimension(world).map(body -> body.atmosphere().breathable()).orElse(true);
+        Holder<CelestialBody<?, ?>> body = world.galacticraft$getCelestialBody();
+        boolean oxygenWorld = body.value().atmosphere().breathable();
+
         if (!oxygenWorld)
         {
             ItemStack itemStack = player.getItemInHand(hand);
 
-            if (itemStack.isEdible())
+            if (itemStack.getComponents().has(DataComponents.FOOD))
             {
                 if (itemStack.getItem() instanceof CannedFoodItem)
                 {

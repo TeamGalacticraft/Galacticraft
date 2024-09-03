@@ -23,16 +23,12 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
-import dev.galacticraft.machinelib.api.menu.sync.MenuSyncHandler;
-import dev.galacticraft.mod.content.GCMachineTypes;
-import dev.galacticraft.mod.content.block.entity.machine.CoalGeneratorBlockEntity;
+import dev.galacticraft.machinelib.api.menu.MenuData;
 import dev.galacticraft.mod.content.block.entity.machine.FoodCannerBlockEntity;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Consumer;
 
 public class FoodCannerMenu extends MachineMenu<FoodCannerBlockEntity> {
     private int progress;
@@ -43,22 +39,23 @@ public class FoodCannerMenu extends MachineMenu<FoodCannerBlockEntity> {
     private int forthRowConsumed;
 
     public FoodCannerMenu(int syncId, @NotNull ServerPlayer player, @NotNull FoodCannerBlockEntity machine) {
-        super(syncId, player, machine);
+        super(GCMenuTypes.FOOD_CANNER, syncId, player, machine);
     }
 
-    public FoodCannerMenu(int syncId, @NotNull Inventory inventory, @NotNull FriendlyByteBuf buf) {
-        super(syncId, inventory, buf, 8, 89, GCMachineTypes.FOOD_CANNER);
+    public FoodCannerMenu(int syncId, Inventory inventory, BlockPos pos) {
+        super(GCMenuTypes.FOOD_CANNER, syncId, inventory, pos, 8, 89);
     }
 
     @Override
-    public void registerSyncHandlers(Consumer<MenuSyncHandler> consumer) {
-        super.registerSyncHandlers(consumer);
+    public void registerData(@NotNull MenuData data){
+        super.registerData(data);
 
-        consumer.accept(MenuSyncHandler.simple(this.machine::getProgress, this::setProgress));
-        consumer.accept(MenuSyncHandler.simple(this.machine::getFirstRowConsumed, this::setFirstRowConsumed));
-        consumer.accept(MenuSyncHandler.simple(this.machine::getSecondRowConsumed, this::setSecondRowConsumed));
-        consumer.accept(MenuSyncHandler.simple(this.machine::getThirdRowConsumed, this::setThirdRowConsumed));
-        consumer.accept(MenuSyncHandler.simple(this.machine::getForthRowConsumed, this::setForthRowConsumed));
+        data.registerInt(this.be::getProgress, this::setProgress);
+        data.registerInt(this.be::getFirstRowConsumed, this::setFirstRowConsumed);
+        data.registerInt(this.be::getSecondRowConsumed, this::setSecondRowConsumed);
+        data.registerInt(this.be::getThirdRowConsumed, this::setThirdRowConsumed);
+        data.registerInt(this.be::getForthRowConsumed, this::setForthRowConsumed);
+
     }
 
 

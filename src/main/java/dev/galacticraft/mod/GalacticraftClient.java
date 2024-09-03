@@ -27,6 +27,7 @@ import dev.galacticraft.machinelib.client.api.model.MachineModelRegistry;
 import dev.galacticraft.mod.client.GCKeyBinds;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.GCModelLoader;
+import dev.galacticraft.mod.client.model.GCRenderTypes;
 import dev.galacticraft.mod.client.model.OxygenSealerSpriteProvider;
 import dev.galacticraft.mod.client.model.SolarPanelSpriteProvider;
 import dev.galacticraft.mod.client.model.types.ObjModel;
@@ -49,6 +50,8 @@ import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.events.ClientEventHandler;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
+import dev.galacticraft.mod.network.c2s.OpenGcInventoryPayload;
+import dev.galacticraft.mod.network.c2s.OpenRocketPayload;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
@@ -70,7 +73,11 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluids;
 
 import java.util.*;
@@ -186,48 +193,49 @@ public class GalacticraftClient implements ClientModInitializer {
         LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
 
         });
+        GCRenderTypes.init();
         //couldn't be bothered finding a better way to get the texture of the items so overrides exists now
         List<String[]> nameOverride = new ArrayList<>();
         nameOverride.add(new String[]{"enchanted_golden_apple", "golden_apple"});
         nameOverride.add(new String[]{"air", "lime_dye"});
         ModelLoadingPlugin.register(GCModelLoader.INSTANCE);
 
-        GCRenderTypes.init();
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (!colorsInitialized)
-            {
-                if (client.player != null && client.level != null)
-                {
-                    CANNED_FOOD_ITEMS.forEach(cannedFoodItem -> {
-                        Optional<ItemStack> cannedItem = CannedFoodItem.getContents(cannedFoodItem.getDefaultInstance()).findFirst();
-                        if (cannedItem.isPresent()) {
-                            String nameComponent = cannedItem.toString();
-                            String itemName = extractInsideBrackets(nameComponent);
-                            assert itemName != null;
-                            String[] parts = itemName.split(":");
-                            String namespace = parts[0];
-                            String item = parts[1];
-                            for (String[] element: nameOverride)
-                            {
-                                if (parts[1].equals(element[0]))
-                                {
-                                    item = element[1];
-                                }
-                            }
-                            ResourceLocation textureLocation = new ResourceLocation(namespace, "textures/item/" + item + ".png");
-                            int avgColor = getAverageColor(textureLocation);
-                            cannedFoodItem.setColor(avgColor);
-                        }
-                    });
-                    colorsInitialized = true;
-                }
-            }
-        });
+        //Todo: make fix for the color of the labels based of component nbt
+//        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+//            if (!colorsInitialized)
+//            {
+//                if (client.player != null && client.level != null)
+//                {
+//                    CANNED_FOOD_ITEMS.forEach(cannedFoodItem -> {
+//                        Optional<ItemStack> cannedItem = CannedFoodItem.getContents(cannedFoodItem.getDefaultInstance()).stream().findFirst();
+//                        if (cannedItem.isPresent()) {
+//                            String nameComponent = cannedItem.toString();
+//                            String itemName = extractInsideBrackets(nameComponent);
+//                            assert itemName != null;
+//                            String[] parts = itemName.split(":");
+//                            String namespace = parts[0];
+//                            String item = parts[1];
+//                            for (String[] element: nameOverride)
+//                            {
+//                                if (parts[1].equals(element[0]))
+//                                {
+//                                    item = element[1];
+//                                }
+//                            }
+//                            ResourceLocation textureLocation = new ResourceLocation(namespace, "textures/item/" + item + ".png");
+//                            int avgColor = getAverageColor(textureLocation);
+//                            cannedFoodItem.setColor(avgColor);
+//                        }
+//                    });
+//                    colorsInitialized = true;
+//                }
+//            }
+//        });
         //For every edible food create a creative item of that canned food type
         for (Item item : BuiltInRegistries.ITEM)
         {
-            if (item.getFoodProperties() != null)
+            if (item.components().has(DataComponents.FOOD))
             {
                 if (!(item instanceof CannedFoodItem))
                 {

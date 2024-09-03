@@ -22,21 +22,15 @@
 
 package dev.galacticraft.mod.world.gen;
 
-import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.world.gen.custom.AsteroidChunkGenerator;
-import dev.galacticraft.mod.world.gen.surfacebuilder.MoonSurfaceRules;
-import dev.galacticraft.mod.world.gen.surfacebuilder.VenusSurfaceRules;
 import dev.galacticraft.mod.world.gen.surfacerule.VenusSurfaceRules;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.OverworldBiomeBuilder;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import org.jetbrains.annotations.Contract;

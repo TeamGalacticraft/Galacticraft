@@ -60,6 +60,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class OxygenSealerBlockEntity extends MachineBlockEntity {
@@ -109,7 +111,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         this.sealCheckTime = SEAL_CHECK_TIME;
         Holder<CelestialBody<?, ?>> holder = world.galacticraft$getCelestialBody();
         this.oxygenWorld = holder == null || holder.value().atmosphere().breathable();
-        if (!world.isClientSide) ((ServerLevelAccessor) world).addSealer(this);
+        if (!world.isClientSide) ((ServerLevelAccessor) world).addSealer(this, Objects.requireNonNull(world.getServer()).getLevel(world.dimension()));
         this.outputBlocked = false;
     }
 
@@ -126,7 +128,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         assert level != null;
         if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCompressorEnergyConsumptionRate())) {
-            if (!this.fluidStorage().getSlot(OXYGEN_TANK).isEmpty()) {
+            if (!this.fluidStorage().slot(OXYGEN_TANK).isEmpty()) {
                 if (this.sealCheckTime > 0) this.sealCheckTime--;
                 if (this.sealCheckTime == 0)
                 {

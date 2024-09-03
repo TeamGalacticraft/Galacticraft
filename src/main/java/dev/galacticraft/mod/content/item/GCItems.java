@@ -28,12 +28,7 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCRegistry;
 import dev.galacticraft.mod.content.GCRocketParts;
-import dev.galacticraft.mod.util.TextureUtils;
 import dev.galacticraft.mod.util.Translations;
-import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -43,12 +38,9 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.DispenserBlock;
-import org.intellij.lang.annotations.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static dev.galacticraft.mod.Constant.MOD_ID;
 
 @SuppressWarnings("unused")
 public class GCItems {
@@ -457,7 +449,7 @@ public class GCItems {
     public static final Item TIER_3_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties());
     public static final Item ASTRO_MINER_SCHEMATIC = new SchematicItem(new Item.Properties());
 
-    public static final CannedFoodItem CANNED_FOOD = new CannedFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(0).saturationMod(0).build()).stacksTo(1));
+    public static final CannedFoodItem CANNED_FOOD = new CannedFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(0).saturationModifier(0).build()).stacksTo(1));
     public static final CannedFoodItem EMPTY_CANNED_FOOD = new CannedFoodItem(new Item.Properties().food(null).stacksTo(64));
 
     public static Item registerItem(String id, Item item) {

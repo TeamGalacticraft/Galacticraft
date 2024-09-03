@@ -36,7 +36,7 @@ public interface ClientTooltipMixin {
     @Overwrite
     static ClientTooltipComponent create(TooltipComponent data) {
         if (data instanceof BundleTooltip) {
-            return new ClientBundleTooltip((BundleTooltip)data);
+            return new ClientBundleTooltip(((BundleTooltip)data).contents());
         } else if (data instanceof CannedFoodTooltip){
             return new ClientCannedFoodTooltip((CannedFoodTooltip)data);
         } else {

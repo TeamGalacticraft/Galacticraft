@@ -51,16 +51,16 @@ public class AsteroidSkyRenderer extends SpaceSkyRenderer {
         RenderSystem.disableBlend();
         RenderSystem.depthMask(false);
 
-        final PoseStack matrices = context.matrixStack();
-        final BufferBuilder buffer = Tesselator.getInstance().getBuilder();
+        PoseStack matrices = new PoseStack();
+        matrices.mulPose(context.positionMatrix());
 
         context.profiler().push("stars");
         matrices.pushPose();
-        matrices.mulPose(Axis.YP.rotationDegrees((context.world().getTimeOfDay(context.tickDelta()) * 360.0f) - 90F));
-        matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickDelta()) * 360.0f));
+        matrices.mulPose(Axis.YP.rotationDegrees((context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks()) * 360.0f) - 90F));
+        matrices.mulPose(Axis.XP.rotationDegrees((context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks())) * 360.0f));
         matrices.mulPose(Axis.YP.rotationDegrees(-19.0F));
 
-        this.starManager.render(context.matrixStack(), context.projectionMatrix(), context.world(), context.tickDelta());
+        this.starManager.render(matrices, context.projectionMatrix(), context.world(), context.tickCounter().getRealtimeDeltaTicks());
 
         matrices.popPose();
         context.profiler().pop();
@@ -69,19 +69,19 @@ public class AsteroidSkyRenderer extends SpaceSkyRenderer {
         matrices.pushPose();
 
         matrices.mulPose(Axis.YP.rotationDegrees(-90.0F));
-        matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickDelta()) * 360.0f));
+        matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks()) * 360.0f));
 
         Matrix4f matrix = matrices.last().pose();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         float size = 6.0F;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, SUN_TEXTURE);
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.vertex(matrix, -size, 100.0F, -size).uv(0.0F, 0.0F).endVertex();
-        buffer.vertex(matrix, size, 100.0F, -size).uv(1.0F, 0.0F).endVertex();
-        buffer.vertex(matrix, size, 100.0F, size).uv(1.0F, 1.0F).endVertex();
-        buffer.vertex(matrix, -size, 100.0F, size).uv(0.0F, 1.0F).endVertex();
-        BufferUploader.drawWithShader(buffer.end());
+        BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.addVertex(matrix, -size, 100.0F, -size).setUv(0.0F, 0.0F)
+                .addVertex(matrix, size, 100.0F, -size).setUv(1.0F, 0.0F)
+                .addVertex(matrix, size, 100.0F, size).setUv(1.0F, 1.0F)
+                .addVertex(matrix, -size, 100.0F, size).setUv(0.0F, 1.0F);
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
 
         matrices.popPose();
         context.profiler().pop();
@@ -94,17 +94,17 @@ public class AsteroidSkyRenderer extends SpaceSkyRenderer {
         assert Minecraft.getInstance().player != null;
         float earthRotation = (float) (context.world().getSharedSpawnPos().getZ() - Minecraft.getInstance().player.getZ()) * 0.01F;
         matrices.scale(0.6F, 0.6F, 0.6F);
-        matrices.mulPose(Axis.XP.rotationDegrees((context.world().getTimeOfDay(context.tickDelta()) * 360.0F) * 0.001F));
+        matrices.mulPose(Axis.XP.rotationDegrees((context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks()) * 360.0F) * 0.001F));
         matrices.mulPose(Axis.XP.rotationDegrees(earthRotation + 200.0F));
 
         RenderSystem.setShaderTexture(0, EARTH_TEXTURE);
 
-        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.vertex(matrix, -size, -100.0F, size).uv(0.0F, 1.0F).endVertex();
-        buffer.vertex(matrix, size, -100.0F, size).uv(1.0F, 1.0F).endVertex();
-        buffer.vertex(matrix, size, -100.0F, -size).uv(1.0F, 0.0F).endVertex();
-        buffer.vertex(matrix, -size, -100.0F, -size).uv(0.0F, 0.0F).endVertex();
-        BufferUploader.drawWithShader(buffer.end());
+        buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.addVertex(matrix, -size, -100.0F, size).setUv(0.0F, 1.0F)
+                .addVertex(matrix, size, -100.0F, size).setUv(1.0F, 1.0F)
+                .addVertex(matrix, size, -100.0F, -size).setUv(1.0F, 0.0F)
+                .addVertex(matrix, -size, -100.0F, -size).setUv(0.0F, 0.0F);
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
 
         context.profiler().pop();
         matrices.popPose();

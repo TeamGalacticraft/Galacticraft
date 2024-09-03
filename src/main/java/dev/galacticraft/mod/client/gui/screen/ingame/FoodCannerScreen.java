@@ -22,14 +22,10 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.machinelib.api.menu.MachineMenu;
-import dev.galacticraft.machinelib.api.menu.sync.MenuSyncHandler;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.FoodCannerBlockEntity;
-import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.FoodCannerMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
@@ -37,9 +33,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import org.jetbrains.annotations.MustBeInvokedByOverriders;
-
-import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public class FoodCannerScreen extends MachineScreen<FoodCannerBlockEntity, FoodCannerMenu> {
@@ -54,6 +47,7 @@ public class FoodCannerScreen extends MachineScreen<FoodCannerBlockEntity, FoodC
     private void drawProgressBar(PoseStack matrices) {
         if (this.menu.state.isActive()) {
             int progress = this.menu.getProgress();
+            System.out.println(progress);
             if (inBounds(progress, 1, 9))
             {
                 //transferring can

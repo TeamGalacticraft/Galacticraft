@@ -49,8 +49,8 @@ public class OxygenSealerScreen extends MachineScreen<OxygenSealerBlockEntity, M
         MachineStatus status = this.menu.state.getStatus();
         graphics.drawString(this.font, Component.translatable(Translations.Ui.MACHINE_STATUS).append(status != null ? status.getText() : Component.empty()), this.leftPos + 50, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
         if (!status.equals(GCMachineStatuses.BLOCKED)) {
-            int insideArea = this.menu.machine.getInsideArea();
-            int outsideArea = this.menu.machine.getOutsideArea();
+            int insideArea = this.menu.be.getInsideArea();
+            int outsideArea = this.menu.be.getOutsideArea();
             graphics.drawString(this.font, Component.literal("INSIDE AREA: ").append(String.valueOf(insideArea)), this.leftPos + 50, this.topPos + 50, ChatFormatting.DARK_GRAY.getColor(), false);
             graphics.drawString(this.font, Component.literal("OUTSIDE AREA: ").append(String.valueOf(outsideArea)), this.leftPos + 50, this.topPos + 70, ChatFormatting.DARK_GRAY.getColor(), false);
         }

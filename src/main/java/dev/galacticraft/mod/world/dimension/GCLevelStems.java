@@ -54,7 +54,7 @@ public class GCLevelStems {
         // the returned reference may be null
 //        context.register(MOON, new LevelStem(typeLookup.getOrThrow(GCDimensionTypes.MOON), new NoiseBasedChunkGenerator(MultiNoiseBiomeSource.createFromPreset(biomeNoiseLookup.getOrThrow(GCMultiNoiseBiomeSourceParameterLists.MOON)), noiseLookup.getOrThrow(GCNoiseGeneratorSettings.MOON))));
         context.register(VENUS, new LevelStem(typeLookup.getOrThrow(GCDimensionTypes.VENUS), new NoiseBasedChunkGenerator(MultiNoiseBiomeSource.createFromPreset(biomeNoiseLookup.getOrThrow(GCMultiNoiseBiomeSourceParameterLists.VENUS)), noiseLookup.getOrThrow(GCNoiseGeneratorSettings.VENUS))));
-        context.register(ASTEROID, new LevelStem(typeLookup.getOrThrow(GCDimensionTypes.ASTEROID), new AsteroidChunkGenerator(MultiNoiseBiomeSource.createFromPreset(biomeNoiseLookup.getOrThrow(GCMultiNoiseBiomeSourceParameterLists.ASTEROID)), ResourceKey.create(Registries.DIMENSION, new ResourceLocation("galacticraft", "asteroid")), 1000)));
+        context.register(ASTEROID, new LevelStem(typeLookup.getOrThrow(GCDimensionTypes.ASTEROID), new AsteroidChunkGenerator(MultiNoiseBiomeSource.createFromPreset(biomeNoiseLookup.getOrThrow(GCMultiNoiseBiomeSourceParameterLists.ASTEROID)), ResourceKey.create(Registries.DIMENSION, Constant.id("asteroid")), 1000)));
     }
 
     @Contract(value = "_ -> new", pure = true)
