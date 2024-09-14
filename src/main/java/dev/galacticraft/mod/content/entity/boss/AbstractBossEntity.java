@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.entity.boss;
 
 import dev.galacticraft.mod.content.block.entity.DungeonSpawnerBlockEntity;
+import dev.galacticraft.mod.util.Translations;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerPlayer;
@@ -174,7 +175,7 @@ public abstract class AbstractBossEntity extends Monster {
                 List<Player> entitiesWithin2 = this.level().getEntitiesOfClass(Player.class, this.spawner.getRangeBoundsPlus11());
 
                 for (Player p : entitiesWithin2) {
-                    p.sendSystemMessage(Component.translatable("gui.skeleton_boss.message"));
+                    p.sendSystemMessage(Component.translatable(Translations.Boss.SKELETON_BOSS_DESPAWN));
                 }
 
                 this.remove(RemovalReason.DISCARDED);
