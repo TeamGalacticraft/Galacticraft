@@ -206,6 +206,7 @@ public interface Translations {
     interface SolarPanel {
         String ATMOSPHERIC_INTERFERENCE = "ui.galacticraft.machine.solar_panel.atmospheric_interference";
         String BLOCKED = "ui.galacticraft.machine.solar_panel.blocked";
+        String FULL = "ui.galacticraft.machine.solar_panel.full";
         String DAY = "ui.galacticraft.machine.solar_panel.day";
         String MISSING_SOURCE = "ui.galacticraft.machine.solar_panel.missing_source";
         String NIGHT = "ui.galacticraft.machine.solar_panel.night";

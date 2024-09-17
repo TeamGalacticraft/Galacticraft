@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.BasicSolarPanelBlockEntity;
 import dev.galacticraft.mod.screen.SolarPanelMenu;
@@ -41,8 +42,12 @@ public class BasicSolarPanelScreen extends SolarPanelScreen<BasicSolarPanelBlock
 
     @Override
     public void appendEnergyTooltip(List<Component> list) {
-        if (this.menu.state.isActive()) {
+        if (this.menu.state.isActive() || this.menu.state.getStatus() == null) { // It never became null during testing, however when null it would crash games. Added as precaution.
             list.add(Component.translatable(Translations.Ui.GJT, this.menu.getCurrentEnergyGeneration()).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
+        } else if (this.menu.state.getStatus().getType().equals(MachineStatus.Type.OTHER)) {
+            list.add(Component.translatable(Translations.SolarPanel.BLOCKED).setStyle(Constant.Text.Color.DARK_RED_STYLE));
+        } else if (this.menu.state.getStatus().getType().equals(MachineStatus.Type.OUTPUT_FULL)) {
+            list.add(Component.translatable(Translations.SolarPanel.FULL).setStyle(Constant.Text.Color.GREEN_STYLE));
         }
     }
 }

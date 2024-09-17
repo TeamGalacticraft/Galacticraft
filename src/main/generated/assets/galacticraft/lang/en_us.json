@@ -590,6 +590,7 @@
   "ui.galacticraft.machine.max_oxygen": "Maximum Oxygen: %s",
   "ui.galacticraft.machine.solar_panel.atmospheric_interference": "Atmospheric Interference: %s",
   "ui.galacticraft.machine.solar_panel.blocked": "Blocked",
+  "ui.galacticraft.machine.solar_panel.full": "Full",
   "ui.galacticraft.machine.solar_panel.day": "Day",
   "ui.galacticraft.machine.solar_panel.missing_source": "Missing Light Source",
   "ui.galacticraft.machine.solar_panel.night": "Night",
