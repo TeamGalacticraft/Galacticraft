@@ -216,6 +216,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.MOON_DIRT,
                         GCBlocks.MOON_DIRT_PATH,
                         GCBlocks.MOON_SURFACE_ROCK,
+                        GCBlocks.MOON_DUNGEON_BRICK,
                         GCBlocks.MARS_SURFACE_ROCK,
                         GCBlocks.MARS_SUB_SURFACE_ROCK,
                         GCBlocks.SOFT_VENUS_ROCK,
@@ -339,7 +340,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .filterElements(block -> BuiltInRegistries.BLOCK.getKey(block).getNamespace().equals(Constant.MOD_ID) && block.defaultBlockState().canBeReplaced())
                 .listElementIds()
                 .forEach(replaceableTagAppender::add);
-        
+
         tag(GCTags.FOOTPRINTS)
                 .add(GCBlocks.MOON_TURF);
     }
