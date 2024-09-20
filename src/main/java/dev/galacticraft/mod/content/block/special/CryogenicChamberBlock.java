@@ -136,7 +136,7 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
 
     @Override
     public void onPartDestroyed(Level level, Player player, BlockState blockState, BlockPos blockPos, BlockState partState, BlockPos partPos) {
-        level.destroyBlock(blockPos, !player.isCreative());
+        level.destroyBlock(blockPos, player.hasCorrectToolForDrops(partState) && !player.isCreative());
 
         for (var otherPart : this.getOtherParts(blockState)) {
             otherPart = otherPart.immutable().offset(blockPos);
