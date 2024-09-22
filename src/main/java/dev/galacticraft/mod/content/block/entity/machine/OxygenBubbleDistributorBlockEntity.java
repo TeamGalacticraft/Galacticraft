@@ -205,6 +205,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
             this.prevSize = this.size;
             profiler.push("network");
             for (ServerPlayer player : world.players()) {
+                if (this.size < 0) this.size = 0;
                 ServerPlayNetworking.send(player, new BubbleSizePayload(pos, this.size));
             }
             profiler.pop();
