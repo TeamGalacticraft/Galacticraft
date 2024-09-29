@@ -1,8 +1,8 @@
 {
     "textures": {
         "particle": "galacticraft:block/moon_cheese_block_side",
-        "bottom": "galacticraft:block/moon_cheese_block",
-        "top": "galacticraft:block/moon_cheese_block",
+        "bottom": "galacticraft:block/moon_cheese_block_bottom",
+        "top": "galacticraft:block/moon_cheese_block_top",
         "side": "galacticraft:block/moon_cheese_block_side",
         "inside": "galacticraft:block/moon_cheese_block_inner"
     },
