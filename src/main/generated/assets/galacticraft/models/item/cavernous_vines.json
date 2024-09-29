@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "galacticraft:block/cavernous_vines"
+    "layer0": "galacticraft:block/cavernous_vines_plant"
   }
 }
