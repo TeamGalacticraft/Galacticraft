@@ -88,6 +88,7 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
         matrices.scale(0.6F, 0.6F, 0.6F);
         matrices.mulPose(Axis.XP.rotationDegrees((context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks()) * 360.0F) * 0.001F));
         matrices.mulPose(Axis.XP.rotationDegrees(earthRotation + 200.0F));
+        matrices.mulPose(Axis.YP.rotationDegrees(180.0F));
 
         RenderSystem.setShaderTexture(0, EARTH_TEXTURE);
 
