@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
+    "active=false": {
       "model": "galacticraft:machine/oxygen_bubble_distributor"
+    },
+    "active=true": {
+      "model": "galacticraft:machine/oxygen_bubble_distributor_active"
     }
   }
 }

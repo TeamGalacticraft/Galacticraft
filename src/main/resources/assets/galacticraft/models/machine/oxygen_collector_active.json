@@ -1,6 +1,6 @@
 {
   "machinelib:generate": "machinelib:single",
   "sprites": {
-    "sprite": "galacticraft:block/oxygen_collector"
+    "sprite": "galacticraft:block/oxygen_collector_active"
   }
 }
