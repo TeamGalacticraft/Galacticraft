@@ -31,7 +31,7 @@ import net.minecraft.stats.Stats;
 
 public class GCStats {
     public static final ResourceLocation OPEN_PARACHEST = register("open_parachest", StatFormatter.DEFAULT);
-    public static final ResourceLocation INTERACT_WITH_NASA_WORKBENCH = register("interact_with_nasa_workbench", StatFormatter.DEFAULT);
+    public static final ResourceLocation INTERACT_WITH_ROCKET_WORKBENCH = register("interact_with_rocket_workbench", StatFormatter.DEFAULT);
 
     public static ResourceLocation register(String id, StatFormatter formatter) {
         ResourceLocation resourceLocation = Constant.id(id);

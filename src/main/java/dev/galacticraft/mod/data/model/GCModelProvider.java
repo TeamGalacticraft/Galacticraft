@@ -175,24 +175,24 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.OLIVINE_BASALT);
         generator.createTrivialCube(GCBlocks.RICH_OLIVINE_BASALT);
 
-        this.createCheeseBlock(generator);
-        this.createCandleCheeseBlock(generator, Blocks.CANDLE, GCBlocks.CANDLE_MOON_CHEESE_WHEEL);
-        this.createCandleCheeseBlock(generator, Blocks.WHITE_CANDLE, GCBlocks.WHITE_CANDLE_MOON_CHEESE_WHEEL);
-        this.createCandleCheeseBlock(generator, Blocks.ORANGE_CANDLE, GCBlocks.ORANGE_CANDLE_MOON_CHEESE_WHEEL);
-        this.createCandleCheeseBlock(generator, Blocks.MAGENTA_CANDLE, GCBlocks.MAGENTA_CANDLE_MOON_CHEESE_WHEEL);
-        this.createCandleCheeseBlock(generator, Blocks.LIGHT_BLUE_CANDLE, GCBlocks.LIGHT_BLUE_CANDLE_MOON_CHEESE_WHEEL);
-        this.createCandleCheeseBlock(generator, Blocks.YELLOW_CANDLE, GCBlocks.YELLOW_CANDLE_MOON_CHEESE_WHEEL);
-        this.createCandleCheeseBlock(generator, Blocks.LIME_CANDLE, GCBlocks.LIME_CANDLE_MOON_CHEESE_WHEEL);
-        this.createCandleCheeseBlock(generator, Blocks.PINK_CANDLE, GCBlocks.PINK_CANDLE_MOON_CHEESE_WHEEL);
-        this.createCandleCheeseBlock(generator, Blocks.GRAY_CANDLE, GCBlocks.GRAY_CANDLE_MOON_CHEESE_WHEEL);
-        this.createCandleCheeseBlock(generator, Blocks.LIGHT_GRAY_CANDLE, GCBlocks.LIGHT_GRAY_CANDLE_MOON_CHEESE_WHEEL);
-        this.createCandleCheeseBlock(generator, Blocks.CYAN_CANDLE, GCBlocks.CYAN_CANDLE_MOON_CHEESE_WHEEL);
-        this.createCandleCheeseBlock(generator, Blocks.PURPLE_CANDLE, GCBlocks.PURPLE_CANDLE_MOON_CHEESE_WHEEL);
-        this.createCandleCheeseBlock(generator, Blocks.BLUE_CANDLE, GCBlocks.BLUE_CANDLE_MOON_CHEESE_WHEEL);
-        this.createCandleCheeseBlock(generator, Blocks.BROWN_CANDLE, GCBlocks.BROWN_CANDLE_MOON_CHEESE_WHEEL);
-        this.createCandleCheeseBlock(generator, Blocks.GREEN_CANDLE, GCBlocks.GREEN_CANDLE_MOON_CHEESE_WHEEL);
-        this.createCandleCheeseBlock(generator, Blocks.RED_CANDLE, GCBlocks.RED_CANDLE_MOON_CHEESE_WHEEL);
-        this.createCandleCheeseBlock(generator, Blocks.BLACK_CANDLE, GCBlocks.BLACK_CANDLE_MOON_CHEESE_WHEEL);
+        this.createCheeseWheel(generator);
+        this.createCandleCheeseWheel(generator, Blocks.CANDLE, GCBlocks.CANDLE_MOON_CHEESE_WHEEL);
+        this.createCandleCheeseWheel(generator, Blocks.WHITE_CANDLE, GCBlocks.WHITE_CANDLE_MOON_CHEESE_WHEEL);
+        this.createCandleCheeseWheel(generator, Blocks.ORANGE_CANDLE, GCBlocks.ORANGE_CANDLE_MOON_CHEESE_WHEEL);
+        this.createCandleCheeseWheel(generator, Blocks.MAGENTA_CANDLE, GCBlocks.MAGENTA_CANDLE_MOON_CHEESE_WHEEL);
+        this.createCandleCheeseWheel(generator, Blocks.LIGHT_BLUE_CANDLE, GCBlocks.LIGHT_BLUE_CANDLE_MOON_CHEESE_WHEEL);
+        this.createCandleCheeseWheel(generator, Blocks.YELLOW_CANDLE, GCBlocks.YELLOW_CANDLE_MOON_CHEESE_WHEEL);
+        this.createCandleCheeseWheel(generator, Blocks.LIME_CANDLE, GCBlocks.LIME_CANDLE_MOON_CHEESE_WHEEL);
+        this.createCandleCheeseWheel(generator, Blocks.PINK_CANDLE, GCBlocks.PINK_CANDLE_MOON_CHEESE_WHEEL);
+        this.createCandleCheeseWheel(generator, Blocks.GRAY_CANDLE, GCBlocks.GRAY_CANDLE_MOON_CHEESE_WHEEL);
+        this.createCandleCheeseWheel(generator, Blocks.LIGHT_GRAY_CANDLE, GCBlocks.LIGHT_GRAY_CANDLE_MOON_CHEESE_WHEEL);
+        this.createCandleCheeseWheel(generator, Blocks.CYAN_CANDLE, GCBlocks.CYAN_CANDLE_MOON_CHEESE_WHEEL);
+        this.createCandleCheeseWheel(generator, Blocks.PURPLE_CANDLE, GCBlocks.PURPLE_CANDLE_MOON_CHEESE_WHEEL);
+        this.createCandleCheeseWheel(generator, Blocks.BLUE_CANDLE, GCBlocks.BLUE_CANDLE_MOON_CHEESE_WHEEL);
+        this.createCandleCheeseWheel(generator, Blocks.BROWN_CANDLE, GCBlocks.BROWN_CANDLE_MOON_CHEESE_WHEEL);
+        this.createCandleCheeseWheel(generator, Blocks.GREEN_CANDLE, GCBlocks.GREEN_CANDLE_MOON_CHEESE_WHEEL);
+        this.createCandleCheeseWheel(generator, Blocks.RED_CANDLE, GCBlocks.RED_CANDLE_MOON_CHEESE_WHEEL);
+        this.createCandleCheeseWheel(generator, Blocks.BLACK_CANDLE, GCBlocks.BLACK_CANDLE_MOON_CHEESE_WHEEL);
 
         // COMPACT MINERAL BLOCKS
         generator.createTrivialCube(GCBlocks.SILICON_BLOCK);
@@ -515,7 +515,7 @@ public class GCModelProvider extends FabricModelProvider {
                 .put(TextureSlot.BOTTOM, ResourceLocation.parse(TextureMapping.getBlockTexture(block).toString().replace("detailed_", "")));
     }
 
-    private void createCheeseBlock(BlockModelGenerators generators) {
+    private void createCheeseWheel(BlockModelGenerators generators) {
         var block = GCBlocks.MOON_CHEESE_WHEEL;
         generators.createSimpleFlatItemModel(GCItems.MOON_CHEESE_WHEEL);
         generators.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(BlockStateProperties.BITES)
@@ -528,9 +528,9 @@ public class GCModelProvider extends FabricModelProvider {
                 .select(6, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_slice6")))));
     }
 
-    private void createCandleCheeseBlock(BlockModelGenerators generators, Block candle, Block cheese) {
-        var cheeseCake = ModelTemplates.CANDLE_CAKE.create(cheese, candleCheeseBlock(candle, false), generators.modelOutput);
-        var litCheeseCake = ModelTemplates.CANDLE_CAKE.createWithSuffix(cheese, "_lit", candleCheeseBlock(candle, true), generators.modelOutput);
+    private void createCandleCheeseWheel(BlockModelGenerators generators, Block candle, Block cheese) {
+        var cheeseCake = ModelTemplates.CANDLE_CAKE.create(cheese, candleCheeseWheel(candle, false), generators.modelOutput);
+        var litCheeseCake = ModelTemplates.CANDLE_CAKE.createWithSuffix(cheese, "_lit", candleCheeseWheel(candle, true), generators.modelOutput);
         generators.blockStateOutput.accept(MultiVariantGenerator.multiVariant(cheese).with(BlockModelGenerators.createBooleanModelDispatch(BlockStateProperties.LIT, litCheeseCake, cheeseCake)));
     }
 
@@ -611,7 +611,7 @@ public class GCModelProvider extends FabricModelProvider {
                 .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block));
     }
 
-    private static TextureMapping candleCheeseBlock(Block candle, boolean lit) {
+    private static TextureMapping candleCheeseWheel(Block candle, boolean lit) {
         return new TextureMapping()
                 .put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(GCBlocks.MOON_CHEESE_WHEEL, "_side"))
                 .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(GCBlocks.MOON_CHEESE_WHEEL))
