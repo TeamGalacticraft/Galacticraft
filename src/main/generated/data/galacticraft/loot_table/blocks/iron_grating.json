@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft:grating"
+          "name": "galacticraft:iron_grating"
         }
       ],
       "rolls": 1.0

@@ -180,7 +180,7 @@ public interface Constant {
         String TITANIUM_DECORATION = "titanium_decoration";
         String DARK_DECORATION = "dark_decoration";
 
-        String GRATING = "grating";
+        String IRON_GRATING = "iron_grating";
         String TIN_LADDER = "tin_ladder";
         String SQUARE_LIGHT_PANEL = "square_light_panel";
         String SPOTLIGHT_LIGHT_PANEL = "spotlight_light_panel";

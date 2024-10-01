@@ -26,7 +26,7 @@ import dev.galacticraft.machinelib.api.block.SimpleMachineBlock;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.block.boss.BossSpawner;
-import dev.galacticraft.mod.content.block.decoration.GratingBlock;
+import dev.galacticraft.mod.content.block.decoration.IronGratingBlock;
 import dev.galacticraft.mod.content.block.decoration.LightPanelBlock;
 import dev.galacticraft.mod.content.block.decoration.LunarCartographyTableBlock;
 import dev.galacticraft.mod.content.block.decoration.VacuumGlassBlock;
@@ -196,7 +196,7 @@ public class GCBlocks {
     public static final Block FLUID_PIPE_WALKWAY = BLOCKS.register(Constant.Block.FLUID_PIPE_WALKWAY, new FluidPipeWalkway(BlockBehaviour.Properties.ofFullCopy(WALKWAY)));
     public static final Block WIRE_WALKWAY = BLOCKS.register(Constant.Block.WIRE_WALKWAY, new WireWalkway(BlockBehaviour.Properties.ofFullCopy(WALKWAY)));
     public static final Block TIN_LADDER = BLOCKS.register(Constant.Block.TIN_LADDER, new TinLadderBlock(BlockBehaviour.Properties.of().forceSolidOff().noOcclusion().pushReaction(PushReaction.DESTROY).strength(1.0f, 1.0f).sound(SoundType.METAL).requiresCorrectToolForDrops()));
-    public static final Block GRATING = BLOCKS.register(Constant.Block.GRATING, new GratingBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(2.5f, 6.0f).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
+    public static final Block IRON_GRATING = BLOCKS.register(Constant.Block.IRON_GRATING, new IronGratingBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(2.5f, 6.0f).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
 
     // SPECIAL
     public static final Block ALUMINUM_WIRE = BLOCKS.register(Constant.Block.ALUMINUM_WIRE, new AluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL)));

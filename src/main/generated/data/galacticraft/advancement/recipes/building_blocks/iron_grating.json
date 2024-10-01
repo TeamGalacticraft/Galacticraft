@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "galacticraft:grating"
+        "recipe": "galacticraft:iron_grating"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "galacticraft:grating"
+      "galacticraft:iron_grating"
     ]
   }
 }

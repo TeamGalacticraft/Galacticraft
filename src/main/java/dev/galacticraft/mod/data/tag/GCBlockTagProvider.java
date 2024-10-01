@@ -191,7 +191,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.ROCKET_LAUNCH_PAD,
                         GCBlocks.GLOWSTONE_LANTERN,
                         GCBlocks.UNLIT_LANTERN,
-                        GCBlocks.GRATING,
+                        GCBlocks.IRON_GRATING,
                         GCBlocks.WALKWAY,
                         GCBlocks.WIRE_WALKWAY,
                         GCBlocks.FLUID_PIPE_WALKWAY,
@@ -272,7 +272,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         this.tag(BlockTags.NEEDS_STONE_TOOL)
                 .add(
-                        GCBlocks.GRATING,
+                        GCBlocks.IRON_GRATING,
                         GCBlocks.WALKWAY,
                         GCBlocks.WIRE_WALKWAY,
                         GCBlocks.FLUID_PIPE_WALKWAY,

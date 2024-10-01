@@ -1,24 +1,42 @@
 {
+	"parent": "block/block",
 	"textures": {
-		"particle": "galacticraft:block/grating",
-		"grating": "galacticraft:block/grating"
+		"particle": "galacticraft:block/iron_grating",
+		"grating": "galacticraft:block/iron_grating"
 	},
+    "display": {
+        "thirdperson_righthand": {
+            "rotation": [ 75, 45, 0 ],
+            "translation": [ 0, 0.8, 2],
+            "scale": [ 0.375, 0.375, 0.375 ]
+        },
+        "firstperson_righthand": {
+            "rotation": [ 0, 45, 0 ],
+            "translation": [ 0, 1.2, 0 ],
+            "scale": [ 0.40, 0.40, 0.40 ]
+        },
+        "firstperson_lefthand": {
+            "rotation": [ 0, 225, 0 ],
+            "translation": [ 0, 1.2, 0 ],
+            "scale": [ 0.40, 0.40, 0.40 ]
+        }
+    },
 	"elements": [
 		{
-			"from": [0, 14, 0],
-			"to": [16, 16, 16],
+			"from": [0, 6, 0],
+			"to": [16, 8, 16],
 			"faces": {
 				"north": {"uv": [16, 0, 0, 2], "texture": "#grating", "cullface": "north"},
 				"east": {"uv": [0, 0, 2, 16], "rotation": 90, "texture": "#grating", "cullface": "east"},
 				"south": {"uv": [0, 0, 16, 2], "texture": "#grating", "cullface": "south"},
 				"west": {"uv": [0, 16, 2, 0], "rotation": 90, "texture": "#grating", "cullface": "west"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#grating", "cullface": "up"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#grating"},
 				"down": {"uv": [0, 0, 16, 16], "rotation": 270, "texture": "#grating"}
 			}
 		},
 		{
-			"from": [15.998, 14.002, 0.002],
-			"to": [0.002, 15.998, 15.998],
+			"from": [15.998, 6.002, 0.002],
+			"to": [0.002, 7.998, 15.998],
 			"faces": {
 				"north": {"uv": [0, 0, 16, 2], "texture": "#grating", "cullface": "north"},
 				"east": {"uv": [0, 0, 2, 16], "rotation": 90, "texture": "#grating", "cullface": "west"},

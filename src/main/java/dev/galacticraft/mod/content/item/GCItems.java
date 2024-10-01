@@ -146,7 +146,7 @@ public class GCItems {
     public static final Item FLUID_PIPE_WALKWAY = new BlockItem(GCBlocks.FLUID_PIPE_WALKWAY, new Item.Properties());
     public static final Item WIRE_WALKWAY = new BlockItem(GCBlocks.WIRE_WALKWAY, new Item.Properties());
     public static final Item TIN_LADDER = new BlockItem(GCBlocks.TIN_LADDER, new Item.Properties());
-    public static final Item GRATING = new BlockItem(GCBlocks.GRATING, new Item.Properties());
+    public static final Item IRON_GRATING = new BlockItem(GCBlocks.IRON_GRATING, new Item.Properties());
 
     // SPECIAL
     public static final Item ALUMINUM_WIRE = new BlockItem(GCBlocks.ALUMINUM_WIRE, new Item.Properties());
@@ -540,7 +540,7 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.FLUID_PIPE_WALKWAY), FLUID_PIPE_WALKWAY);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.WIRE_WALKWAY), WIRE_WALKWAY);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.TIN_LADDER), TIN_LADDER);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.GRATING), GRATING);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.IRON_GRATING), IRON_GRATING);
 
         // SPECIAL
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ALUMINUM_WIRE), ALUMINUM_WIRE);

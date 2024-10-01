@@ -355,7 +355,7 @@ public class GCCreativeModeTabs {
                 output.accept(WIRE_WALKWAY);
                 output.accept(FLUID_PIPE_WALKWAY);
                 output.accept(TIN_LADDER);
-                output.accept(GRATING);
+                output.accept(IRON_GRATING);
 
                 // SPECIAL
                 output.accept(ALUMINUM_WIRE);

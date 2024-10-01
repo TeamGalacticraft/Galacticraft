@@ -24,7 +24,7 @@ package dev.galacticraft.mod.gametest;
 
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.block.decoration.GratingBlock;
+import dev.galacticraft.mod.content.block.decoration.IronGratingBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTest;
@@ -49,7 +49,7 @@ public class GratingTestSuite implements GalacticraftGameTest {
         final var pos2 = new BlockPos(xz, 2, xz);
         final var pos1 = new BlockPos(xz, 1, xz);
         final var mutable = new BlockPos.MutableBlockPos();
-        context.setBlock(pos2, GCBlocks.GRATING.defaultBlockState().setValue(GratingBlock.STATE, GratingBlock.State.LOWER));
+        context.setBlock(pos2, GCBlocks.IRON_GRATING.defaultBlockState().setValue(IronGratingBlock.STATE, IronGratingBlock.State.LOWER));
 
         if (!context.getBlockState(pos2).getFluidState().isEmpty()) {
             context.fail(String.format("Expected grating to not be filled with fluid but found %s instead!", BuiltInRegistries.FLUID.getKey(context.getBlockState(pos2).getFluidState().getType())), pos2);
@@ -100,7 +100,7 @@ public class GratingTestSuite implements GalacticraftGameTest {
             }
         }
 
-        var grating = GCBlocks.GRATING.defaultBlockState().setValue(GratingBlock.STATE, GratingBlock.State.LOWER);
+        var grating = GCBlocks.IRON_GRATING.defaultBlockState().setValue(IronGratingBlock.STATE, IronGratingBlock.State.LOWER);
         var gratingWaterPos = BlockPos.ZERO;
 
         for (var z = 1; z < 7; z++) {
@@ -134,7 +134,7 @@ public class GratingTestSuite implements GalacticraftGameTest {
         final var pos1 = new BlockPos(3, 0, 5);
         final var pos2 = new BlockPos(3, 1, 5);
         final var pos3 = new BlockPos(3, 0, 4);
-        var grating = GCBlocks.GRATING.defaultBlockState().setValue(GratingBlock.STATE, GratingBlock.State.LOWER);
+        var grating = GCBlocks.IRON_GRATING.defaultBlockState().setValue(IronGratingBlock.STATE, IronGratingBlock.State.LOWER);
 
         context.setBlock(pos1, Blocks.DISPENSER.defaultBlockState());
         context.setBlock(pos3, grating);
@@ -158,7 +158,7 @@ public class GratingTestSuite implements GalacticraftGameTest {
 //        final var pos1 = new BlockPos(3, 0, 5);
 //        final var pos2 = new BlockPos(3, 1, 5);
 //        final var pos3 = new BlockPos(3, 0, 4);
-//        var grating = GCBlocks.GRATING.defaultBlockState().setValue(GratingBlock.STATE, GratingBlock.State.LOWER);
+//        var grating = GCBlocks.IRON_GRATING.defaultBlockState().setValue(IronGratingBlock.STATE, IronGratingBlock.State.LOWER);
 //
 //        context.setBlock(pos1, Blocks.DISPENSER.defaultBlockState());
 //        context.setBlock(pos3, grating);
@@ -181,7 +181,7 @@ public class GratingTestSuite implements GalacticraftGameTest {
         final var pos1 = new BlockPos(3, 0, 5);
         final var pos2 = new BlockPos(3, 1, 5);
         final var pos3 = new BlockPos(3, 0, 4);
-        var grating = GCBlocks.GRATING.defaultBlockState().setValue(GratingBlock.STATE, GratingBlock.State.LOWER).setValue(FluidLoggable.FLUID, BuiltInRegistries.FLUID.getKey(Fluids.WATER));
+        var grating = GCBlocks.IRON_GRATING.defaultBlockState().setValue(IronGratingBlock.STATE, IronGratingBlock.State.LOWER).setValue(FluidLoggable.FLUID, BuiltInRegistries.FLUID.getKey(Fluids.WATER));
 
         context.setBlock(pos1, Blocks.DISPENSER.defaultBlockState());
         context.setBlock(pos3, grating);
@@ -205,7 +205,7 @@ public class GratingTestSuite implements GalacticraftGameTest {
 //        final var pos1 = new BlockPos(3, 0, 5);
 //        final var pos2 = new BlockPos(3, 1, 5);
 //        final var pos3 = new BlockPos(3, 0, 4);
-//        var grating = GCBlocks.GRATING.defaultBlockState().setValue(GratingBlock.STATE, GratingBlock.State.LOWER).setValue(FluidLoggable.FLUID, BuiltInRegistries.FLUID.getKey(GCFluids.FUEL));
+//        var grating = GCBlocks.IRON_GRATING.defaultBlockState().setValue(IronGratingBlock.STATE, IronGratingBlock.State.LOWER).setValue(FluidLoggable.FLUID, BuiltInRegistries.FLUID.getKey(GCFluids.FUEL));
 //
 //        context.setBlock(pos1, Blocks.DISPENSER.defaultBlockState());
 //        context.setBlock(pos3, grating);

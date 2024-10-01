@@ -46,13 +46,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class GratingBlock extends Block implements FluidLoggable {
+public class IronGratingBlock extends Block implements FluidLoggable {
     @VisibleForTesting
     public static final EnumProperty<State> STATE = EnumProperty.create("state", State.class);
     private static final VoxelShape UPPER_SHAPE = Block.box(0.0D, 14.0D, 0.0D, 16.0D, 16.0D, 16.0D);
     private static final VoxelShape LOWER_SHAPE = Block.box(0.0D, 6.0D, 0.0D, 16.0D, 8.0D, 16.0D);
 
-    public GratingBlock(Properties settings) {
+    public IronGratingBlock(Properties settings) {
         super(settings);
         this.registerDefaultState(this.getStateDefinition().any()
                 .setValue(FLUID, ResourceLocation.withDefaultNamespace("invalid"))
