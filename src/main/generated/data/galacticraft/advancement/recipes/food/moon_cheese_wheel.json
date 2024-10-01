@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "galacticraft:moon_cheese_block"
+        "recipe": "galacticraft:moon_cheese_wheel"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "galacticraft:moon_cheese_block"
+      "galacticraft:moon_cheese_wheel"
     ]
   }
 }
