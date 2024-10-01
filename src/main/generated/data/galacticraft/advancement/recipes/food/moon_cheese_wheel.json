@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_moon_cheese_wheel": {
+    "has_cheese_curd": {
       "conditions": {
         "items": [
           {
-            "items": "galacticraft:moon_cheese_wheel"
+            "items": "galacticraft:cheese_curd"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "galacticraft:cheese_slice"
+        "recipe": "galacticraft:moon_cheese_wheel"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_moon_cheese_wheel"
+      "has_cheese_curd"
     ]
   ],
   "rewards": {
     "recipes": [
-      "galacticraft:cheese_slice"
+      "galacticraft:moon_cheese_wheel"
     ]
   }
 }

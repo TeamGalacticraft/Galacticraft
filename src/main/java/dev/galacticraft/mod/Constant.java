@@ -218,24 +218,24 @@ public interface Constant {
         String BOSS_SPAWNER = "boss_spawner";
 
         // Moon Cheese
-        String MOON_CHEESE_WHEEL = "moon_cheese_block";
-        String CANDLE_MOON_CHEESE_WHEEL = "candle_moon_cheese_block";
-        String WHITE_CANDLE_MOON_CHEESE_WHEEL = "white_candle_moon_cheese_block";
-        String ORANGE_CANDLE_MOON_CHEESE_WHEEL = "orange_candle_moon_cheese_block";
-        String MAGENTA_CANDLE_MOON_CHEESE_WHEEL = "magenta_candle_moon_cheese_block";
-        String LIGHT_BLUE_CANDLE_MOON_CHEESE_WHEEL = "light_blue_candle_moon_cheese_block";
-        String YELLOW_CANDLE_MOON_CHEESE_WHEEL = "yellow_candle_moon_cheese_block";
-        String LIME_CANDLE_MOON_CHEESE_WHEEL = "lime_candle_moon_cheese_block";
-        String PINK_CANDLE_MOON_CHEESE_WHEEL = "pink_candle_moon_cheese_block";
-        String GRAY_CANDLE_MOON_CHEESE_WHEEL = "gray_candle_moon_cheese_block";
-        String LIGHT_GRAY_CANDLE_MOON_CHEESE_WHEEL = "light_gray_candle_moon_cheese_block";
-        String CYAN_CANDLE_MOON_CHEESE_WHEEL = "cyan_candle_moon_cheese_block";
-        String PURPLE_CANDLE_MOON_CHEESE_WHEEL = "purple_candle_moon_cheese_block";
-        String BLUE_CANDLE_MOON_CHEESE_WHEEL = "blue_candle_moon_cheese_block";
-        String BROWN_CANDLE_MOON_CHEESE_WHEEL = "brown_candle_moon_cheese_block";
-        String GREEN_CANDLE_MOON_CHEESE_WHEEL = "green_candle_moon_cheese_block";
-        String RED_CANDLE_MOON_CHEESE_WHEEL = "red_candle_moon_cheese_block";
-        String BLACK_CANDLE_MOON_CHEESE_WHEEL = "black_candle_moon_cheese_block";
+        String MOON_CHEESE_WHEEL = "moon_cheese_wheel";
+        String CANDLE_MOON_CHEESE_WHEEL = "candle_moon_cheese_wheel";
+        String WHITE_CANDLE_MOON_CHEESE_WHEEL = "white_candle_moon_cheese_wheel";
+        String ORANGE_CANDLE_MOON_CHEESE_WHEEL = "orange_candle_moon_cheese_wheel";
+        String MAGENTA_CANDLE_MOON_CHEESE_WHEEL = "magenta_candle_moon_cheese_wheel";
+        String LIGHT_BLUE_CANDLE_MOON_CHEESE_WHEEL = "light_blue_candle_moon_cheese_wheel";
+        String YELLOW_CANDLE_MOON_CHEESE_WHEEL = "yellow_candle_moon_cheese_wheel";
+        String LIME_CANDLE_MOON_CHEESE_WHEEL = "lime_candle_moon_cheese_wheel";
+        String PINK_CANDLE_MOON_CHEESE_WHEEL = "pink_candle_moon_cheese_wheel";
+        String GRAY_CANDLE_MOON_CHEESE_WHEEL = "gray_candle_moon_cheese_wheel";
+        String LIGHT_GRAY_CANDLE_MOON_CHEESE_WHEEL = "light_gray_candle_moon_cheese_wheel";
+        String CYAN_CANDLE_MOON_CHEESE_WHEEL = "cyan_candle_moon_cheese_wheel";
+        String PURPLE_CANDLE_MOON_CHEESE_WHEEL = "purple_candle_moon_cheese_wheel";
+        String BLUE_CANDLE_MOON_CHEESE_WHEEL = "blue_candle_moon_cheese_wheel";
+        String BROWN_CANDLE_MOON_CHEESE_WHEEL = "brown_candle_moon_cheese_wheel";
+        String GREEN_CANDLE_MOON_CHEESE_WHEEL = "green_candle_moon_cheese_wheel";
+        String RED_CANDLE_MOON_CHEESE_WHEEL = "red_candle_moon_cheese_wheel";
+        String BLACK_CANDLE_MOON_CHEESE_WHEEL = "black_candle_moon_cheese_wheel";
 
         // Liquids
         String FUEL = "fuel";
