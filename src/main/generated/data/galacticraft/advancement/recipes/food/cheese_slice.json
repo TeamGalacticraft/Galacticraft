@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_moon_cheese_block": {
+    "has_moon_cheese_wheel": {
       "conditions": {
         "items": [
           {
-            "items": "galacticraft:moon_cheese_block"
+            "items": "galacticraft:moon_cheese_wheel"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_moon_cheese_block"
+      "has_moon_cheese_wheel"
     ]
   ],
   "rewards": {

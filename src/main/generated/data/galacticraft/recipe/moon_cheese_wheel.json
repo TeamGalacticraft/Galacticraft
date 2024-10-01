@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "galacticraft:cheese_curd"
+    },
+    "M": {
+      "item": "minecraft:milk_bucket"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "CMC",
+    "CCC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:moon_cheese_wheel"
+  }
+}
