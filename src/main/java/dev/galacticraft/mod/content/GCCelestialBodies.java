@@ -89,7 +89,7 @@ public class GCCelestialBodies {
                         Component.translatable(Translations.CelestialBody.SOL_DESC),
                         galaxies.getOrThrow(BuiltinObjects.MILKY_WAY_KEY),
                         StaticCelestialPositionType.INSTANCE.configure(new StaticCelestialPositionConfig(0, 0)),
-                        IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/body_icons.png"), 0, 0, 16, 16, 1.5f, Optional.empty())),
+                        IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/sol.png"), 0, 0, 8, 8, 1.5f, Optional.empty())),
                         DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
                         new GasComposition.Builder()
                                 .pressure(28)
@@ -110,7 +110,7 @@ public class GCCelestialBodies {
                         Component.translatable(Translations.CelestialBody.EARTH_DESC),
                         sol,
                         OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(1.0F, 1.0, 0.0F, true)),
-                        IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/body_icons.png"), 0, 16, 16, 16)),
+                        IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.id("textures/gui/celestialbodies/earth.png"), 0, 0, 8, 8)),
                         DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
                         Level.OVERWORLD,
                         teleporters.getOrThrow(GCTeleporterTypes.OVERWORLD_TELEPORTER),

@@ -34,8 +34,6 @@ import org.joml.Matrix4f;
 
 public class MoonSkyRenderer extends SpaceSkyRenderer {
     public static final MoonSkyRenderer INSTANCE = new MoonSkyRenderer();
-    private static final ResourceLocation EARTH_TEXTURE = Constant.id("textures/gui/celestialbodies/earth.png");
-    private static final ResourceLocation SUN_TEXTURE = Constant.id("textures/gui/celestialbodies/sun.png");
 
     @Override
     public void render(WorldRenderContext context) {
@@ -67,7 +65,7 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         float size = 15.0F;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, SUN_TEXTURE);
+        RenderSystem.setShaderTexture(0, CelestialBodyTextures.SUN_MOON);
         BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         buffer.addVertex(matrix, -size, 100.0F, -size).setUv(0.0F, 0.0F)
                 .addVertex(matrix, size, 100.0F, -size).setUv(1.0F, 0.0F)
@@ -90,7 +88,7 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
         matrices.mulPose(Axis.XP.rotationDegrees(earthRotation + 200.0F));
         matrices.mulPose(Axis.YP.rotationDegrees(180.0F));
 
-        RenderSystem.setShaderTexture(0, EARTH_TEXTURE);
+        RenderSystem.setShaderTexture(0, CelestialBodyTextures.EARTH);
 
         buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         buffer.addVertex(matrix, -size, -100.0F, size).setUv(0.0F, 1.0F)
