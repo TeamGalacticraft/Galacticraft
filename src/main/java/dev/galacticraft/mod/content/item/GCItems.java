@@ -406,7 +406,7 @@ public class GCItems {
     public static final Item SMALL_OXYGEN_TANK = new OxygenTankItem(new Item.Properties(), 1620 * 10); // 16200 ticks
     public static final Item MEDIUM_OXYGEN_TANK = new OxygenTankItem(new Item.Properties(), 1620 * 20); //32400 ticks
     public static final Item LARGE_OXYGEN_TANK = new OxygenTankItem(new Item.Properties(), 1620 * 30); //48600 ticks
-    public static final Item INFINITE_OXYGEN_TANK = new InfiniteOxygenTankItem(new Item.Properties());
+    public static final Item INFINITE_OXYGEN_TANK = new InfiniteOxygenTankItem(new Item.Properties().rarity(Rarity.EPIC));
 
     public static final Item SHIELD_CONTROLLER = new AccessoryItem(new Item.Properties());
     public static final Item FREQUENCY_MODULE = new FrequencyModuleItem(new Item.Properties());
