@@ -49,13 +49,13 @@ public class CircuitFabricatorScreen extends MachineScreen<CircuitFabricatorBloc
     private static final int SECONDARY_PROGRESS_X = 79;
     private static final int SECONDARY_PROGRESS_Y = 51;
     private static final int SECONDARY_CONCURRENT_PROGRESS_U = 31;
-    private static final int SECONDARY_CONCURRENT_PROGRESS_V = 237;
+    private static final int SECONDARY_CONCURRENT_PROGRESS_V = 238;
     private static final int SECONDARY_CONCURRENT_PROGRESS_X = 79;
-    private static final int SECONDARY_CONCURRENT_PROGRESS_Y = 72;
+    private static final int SECONDARY_CONCURRENT_PROGRESS_Y = 73;
     private static final int SECONDARY_CONCURRENT_PROGRESS_2_U = 45;
-    private static final int SECONDARY_CONCURRENT_PROGRESS_2_V = 220;
+    private static final int SECONDARY_CONCURRENT_PROGRESS_2_V = 221;
     private static final int SECONDARY_CONCURRENT_PROGRESS_2_X = 93;
-    private static final int SECONDARY_CONCURRENT_PROGRESS_2_Y = 68;
+    private static final int SECONDARY_CONCURRENT_PROGRESS_2_Y = 69;
     private static final int TERTIARY_PROGRESS_U = 49;
     private static final int TERTIARY_PROGRESS_V = 216;
     private static final int TERTIARY_PROGRESS_X = 97;
