@@ -233,6 +233,8 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.SILICON_BLOCK);
         this.dropSelf(GCBlocks.METEORIC_IRON_BLOCK);
         this.dropSelf(GCBlocks.DESH_BLOCK);
+        this.dropSelf(GCBlocks.ALUMINUM_BLOCK);
+        this.dropSelf(GCBlocks.TIN_BLOCK);
         this.dropSelf(GCBlocks.TITANIUM_BLOCK);
         this.dropSelf(GCBlocks.LEAD_BLOCK);
         this.dropSelf(GCBlocks.LUNAR_SAPPHIRE_BLOCK);

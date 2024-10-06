@@ -411,8 +411,10 @@ public class GCCreativeModeTabs {
                 // COMPACT MINERAL BLOCKS
                 output.accept(MOON_CHEESE_WHEEL);
                 output.accept(SILICON_BLOCK);
+                output.accept(GCBlocks.ALUMINUM_BLOCK);
                 output.accept(METEORIC_IRON_BLOCK);
                 output.accept(DESH_BLOCK);
+                output.accept(GCBlocks.TIN_BLOCK);
                 output.accept(TITANIUM_BLOCK);
                 output.accept(LEAD_BLOCK);
                 output.accept(LUNAR_SAPPHIRE_BLOCK);

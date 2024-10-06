@@ -198,6 +198,8 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.SILICON_BLOCK);
         generator.createTrivialCube(GCBlocks.METEORIC_IRON_BLOCK);
         generator.createTrivialCube(GCBlocks.DESH_BLOCK);
+        generator.createTrivialCube(GCBlocks.ALUMINUM_BLOCK);
+        generator.createTrivialCube(GCBlocks.TIN_BLOCK);
         generator.createTrivialCube(GCBlocks.TITANIUM_BLOCK);
         generator.createTrivialCube(GCBlocks.LEAD_BLOCK);
         generator.createTrivialCube(GCBlocks.LUNAR_SAPPHIRE_BLOCK);

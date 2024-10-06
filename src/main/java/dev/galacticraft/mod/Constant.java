@@ -164,6 +164,8 @@ public interface Constant {
         String SILICON_BLOCK = "silicon_block";
         String METEORIC_IRON_BLOCK = "meteoric_iron_block";
         String DESH_BLOCK = "desh_block";
+        String ALUMINUM_BLOCK = "aluminum_block";
+        String TIN_BLOCK = "tin_block";
         String TITANIUM_BLOCK = "titanium_block";
         String LEAD_BLOCK = "lead_block";
         String LUNAR_SAPPHIRE_BLOCK = "lunar_sapphire_block";

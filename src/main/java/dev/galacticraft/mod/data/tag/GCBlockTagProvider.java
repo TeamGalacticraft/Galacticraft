@@ -207,6 +207,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.SILICON_BLOCK,
                         GCBlocks.METEORIC_IRON_BLOCK,
                         GCBlocks.DESH_BLOCK,
+                        GCBlocks.ALUMINUM_BLOCK,
+                        GCBlocks.TIN_BLOCK,
                         GCBlocks.TITANIUM_BLOCK,
                         GCBlocks.LEAD_BLOCK,
                         GCBlocks.LUNAR_SAPPHIRE_BLOCK,
