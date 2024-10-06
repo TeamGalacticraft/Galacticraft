@@ -59,7 +59,7 @@ public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<Si
     public static final StorageSpec SPEC = StorageSpec.of(
             MachineItemStorage.spec(
                     ItemResourceSlot.builder(TransferType.TRANSFER)
-                            .pos(8, 61)
+                            .pos(8, 62)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(52, 35),
