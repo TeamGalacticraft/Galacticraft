@@ -23,10 +23,11 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.client.util.ColorUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -35,10 +36,8 @@ import team.reborn.energy.api.EnergyStorage;
 import java.util.List;
 
 public class InfiniteBatteryItem extends Item implements EnergyStorage {
-    private int ticks = (int) (Math.random() * 1000.0);
-
     public InfiniteBatteryItem(Properties settings) {
-        super(settings.stacksTo(1));
+        super(settings);
 
         EnergyStorage.ITEM.registerSelf(this);
     }
@@ -50,7 +49,7 @@ public class InfiniteBatteryItem extends Item implements EnergyStorage {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
-        tooltip.add(Component.translatable(Translations.Tooltip.ENERGY_REMAINING, Component.translatable(Translations.Tooltip.INFINITE).setStyle(Constant.Text.Color.getRainbow(ticks))));
+        tooltip.add(Component.translatable(Translations.Tooltip.ENERGY_REMAINING, Component.translatable(Translations.Tooltip.INFINITE).setStyle(Style.EMPTY.withColor(ColorUtil.getRainbow(15000)))));
         tooltip.add(Component.translatable(Translations.Tooltip.CREATIVE_ONLY).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
         super.appendHoverText(stack, context, tooltip, type);
     }
@@ -67,8 +66,7 @@ public class InfiniteBatteryItem extends Item implements EnergyStorage {
 
     @Override
     public int getBarColor(ItemStack stack) {
-        if (++ticks > 1000) ticks = 0;
-        return Mth.hsvToRgb(this.ticks / 1000.0f, 1, 1);
+        return ColorUtil.getRainbow(15000);
     }
 
     @Override

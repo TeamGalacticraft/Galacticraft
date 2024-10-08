@@ -389,8 +389,8 @@ public class GCItems {
     //		this.additionsSlotDescription = component5;
 
     // BATTERIES
-    public static final Item BATTERY = new BatteryItem(new Item.Properties(), 15000, 500);
-    public static final Item INFINITE_BATTERY = new InfiniteBatteryItem(new Item.Properties().rarity(Rarity.EPIC));
+    public static final Item BATTERY = new BatteryItem(new Item.Properties().stacksTo(1), 15000, 500);
+    public static final Item INFINITE_BATTERY = new InfiniteBatteryItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
 
     //FLUID BUCKETS
     public static final Item CRUDE_OIL_BUCKET = new BucketItem(GCFluids.CRUDE_OIL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
@@ -406,7 +406,7 @@ public class GCItems {
     public static final Item SMALL_OXYGEN_TANK = new OxygenTankItem(new Item.Properties(), 1620 * 10); // 16200 ticks
     public static final Item MEDIUM_OXYGEN_TANK = new OxygenTankItem(new Item.Properties(), 1620 * 20); //32400 ticks
     public static final Item LARGE_OXYGEN_TANK = new OxygenTankItem(new Item.Properties(), 1620 * 30); //48600 ticks
-    public static final Item INFINITE_OXYGEN_TANK = new InfiniteOxygenTankItem(new Item.Properties().rarity(Rarity.EPIC));
+    public static final Item INFINITE_OXYGEN_TANK = new InfiniteOxygenTankItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
 
     public static final Item SHIELD_CONTROLLER = new AccessoryItem(new Item.Properties());
     public static final Item FREQUENCY_MODULE = new FrequencyModuleItem(new Item.Properties());

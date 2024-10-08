@@ -39,7 +39,7 @@ public class BatteryItem extends Item implements SimpleEnergyItem {
     private final long transfer;
 
     public BatteryItem(Properties settings, long capacity, long transfer) {
-        super(settings.stacksTo(1));
+        super(settings);
         this.capacity = capacity;
         this.transfer = transfer;
 

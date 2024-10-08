@@ -31,7 +31,6 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
@@ -705,10 +704,6 @@ public interface Constant {
 
             static Style getStorageLevelStyle(double scale) {
                 return Style.EMPTY.withColor(TextColor.fromRgb(getStorageLevelColor(scale)));
-            }
-
-            static Style getRainbow(int ticks) {
-                return Style.EMPTY.withColor(TextColor.fromRgb(Mth.hsvToRgb(ticks / 1000.0f, 1, 1)));
             }
         }
     }
