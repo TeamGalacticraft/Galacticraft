@@ -1,6 +1,8 @@
 {
-  "machinelib:generate": "machinelib:front_face",
-  "sprites": {
-    "sprite": "galacticraft:block/electric_compressor"
+  "machinelib:generate": "machinelib:simple",
+  "data": {
+    "front": "galacticraft:block/electric_compressor",
+    "base": "galacticraft:block/machine",
+    "side": "galacticraft:block/machine_side"
   }
 }

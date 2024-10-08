@@ -24,12 +24,13 @@ package dev.galacticraft.mod;
 
 import dev.galacticraft.api.client.tabs.InventoryTabRegistry;
 import dev.galacticraft.machinelib.client.api.model.MachineModelRegistry;
+import dev.galacticraft.machinelib.client.api.model.sprite.MachineTextureBase;
 import dev.galacticraft.mod.client.GCKeyBinds;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.GCModelLoader;
 import dev.galacticraft.mod.client.model.GCRenderTypes;
-import dev.galacticraft.mod.client.model.OxygenSealerSpriteProvider;
-import dev.galacticraft.mod.client.model.SolarPanelSpriteProvider;
+import dev.galacticraft.mod.client.model.sprite.OxygenSealerTextureProvider;
+import dev.galacticraft.mod.client.model.sprite.SolarPanelTextureProvider;
 import dev.galacticraft.mod.client.model.types.ObjModel;
 import dev.galacticraft.mod.client.network.GCClientPacketReceiver;
 import dev.galacticraft.mod.client.particle.*;
@@ -163,8 +164,9 @@ public class GalacticraftClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.LAUNCH_FLAME_LAUNCHED, LaunchFlameParticle.LaunchedProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.ACID_VAPOR_PARTICLE, AcidVaporParticle.Provider::new);
 
-        MachineModelRegistry.register(Constant.id("solar_panel"), SolarPanelSpriteProvider::new);
-        MachineModelRegistry.register(Constant.id("oxygen_sealer"), OxygenSealerSpriteProvider::new);
+        MachineModelRegistry.registerBase(Constant.id("base"), MachineTextureBase.prefixed(Constant.MOD_ID, "block/machine"));
+        MachineModelRegistry.register(Constant.id("solar_panel"), SolarPanelTextureProvider.CODEC);
+        MachineModelRegistry.register(Constant.id("oxygen_sealer"), OxygenSealerTextureProvider.CODEC);
 
         FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER); // Workaround for classloading order bug
 
