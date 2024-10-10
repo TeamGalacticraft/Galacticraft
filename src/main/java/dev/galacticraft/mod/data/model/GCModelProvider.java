@@ -203,6 +203,12 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.TITANIUM_BLOCK);
         generator.createTrivialCube(GCBlocks.LEAD_BLOCK);
         generator.createTrivialCube(GCBlocks.LUNAR_SAPPHIRE_BLOCK);
+        generator.createTrivialCube(GCBlocks.RAW_METEORIC_IRON_BLOCK);
+        generator.createTrivialCube(GCBlocks.RAW_DESH_BLOCK);
+        generator.createTrivialCube(GCBlocks.RAW_ALUMINUM_BLOCK);
+        generator.createTrivialCube(GCBlocks.RAW_TIN_BLOCK);
+        generator.createTrivialCube(GCBlocks.RAW_TITANIUM_BLOCK);
+        generator.createTrivialCube(GCBlocks.RAW_LEAD_BLOCK);
 
         // MOON VILLAGER SPECIAL
         generator.copyModel(Blocks.CARTOGRAPHY_TABLE, GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
@@ -336,7 +342,7 @@ public class GCModelProvider extends FabricModelProvider {
     @Override
     public void generateItemModels(ItemModelGenerators generator) {
         // MATERIALS
-        generator.generateFlatItem(GCItems.RAW_SILICON, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.SILICON, ModelTemplates.FLAT_ITEM);
 
         generator.generateFlatItem(GCItems.RAW_METEORIC_IRON, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.METEORIC_IRON_INGOT, ModelTemplates.FLAT_ITEM);

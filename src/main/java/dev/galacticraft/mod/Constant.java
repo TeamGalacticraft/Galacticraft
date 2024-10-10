@@ -169,6 +169,12 @@ public interface Constant {
         String LEAD_BLOCK = "lead_block";
         String LUNAR_SAPPHIRE_BLOCK = "lunar_sapphire_block";
         String OLIVINE_BLOCK = "olivine_block";
+        String RAW_METEORIC_IRON_BLOCK = "raw_meteoric_iron_block";
+        String RAW_DESH_BLOCK = "raw_desh_block";
+        String RAW_ALUMINUM_BLOCK = "raw_aluminum_block";
+        String RAW_TIN_BLOCK = "raw_tin_block";
+        String RAW_TITANIUM_BLOCK = "raw_titanium_block";
+        String RAW_LEAD_BLOCK = "raw_lead_block";
 
         // Decorative BLocks
         String ALUMINUM_DECORATION = "aluminum_decoration";
@@ -333,7 +339,7 @@ public interface Constant {
 
     interface Item {
         String ITEM_GROUP = "items";
-        String RAW_SILICON = "raw_silicon";
+        String SILICON = "silicon";
         String RAW_METEORIC_IRON = "raw_meteoric_iron";
         String METEORIC_IRON_INGOT = "meteoric_iron_ingot";
         String METEORIC_IRON_NUGGET = "meteoric_iron_nugget";

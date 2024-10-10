@@ -213,6 +213,12 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.LEAD_BLOCK,
                         GCBlocks.LUNAR_SAPPHIRE_BLOCK,
                         GCBlocks.OLIVINE_BLOCK,
+                        GCBlocks.RAW_METEORIC_IRON_BLOCK,
+                        GCBlocks.RAW_DESH_BLOCK,
+                        GCBlocks.RAW_ALUMINUM_BLOCK,
+                        GCBlocks.RAW_TIN_BLOCK,
+                        GCBlocks.RAW_TITANIUM_BLOCK,
+                        GCBlocks.RAW_LEAD_BLOCK,
 
                         GCBlocks.MOON_TURF,
                         GCBlocks.MOON_DIRT,

@@ -78,7 +78,14 @@ public class GCOreRecipeProvider extends FabricRecipeProvider {
         nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.TIN_INGOT, RecipeCategory.BUILDING_BLOCKS, GCBlocks.TIN_BLOCK, "tin_ingot_from_block", "tin_ingot");
         nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.TITANIUM_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.TITANIUM_BLOCK, "titanium_ingot_from_block", "titanium_ingot");
         nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.LUNAR_SAPPHIRE, RecipeCategory.BUILDING_BLOCKS, GCItems.LUNAR_SAPPHIRE_BLOCK, "lunar_sapphire_from_block", "lunar_sapphire");
+        nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.SILICON, RecipeCategory.BUILDING_BLOCKS, GCItems.SILICON_BLOCK, "silicon_from_block", "silicon");
         crystalBlockStorageRecipe(output, GCItems.OLIVINE_SHARD, RecipeCategory.MISC, GCBlocks.OLIVINE_BLOCK, "olivine_block_from_shards", null);
+        nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.RAW_METEORIC_IRON, RecipeCategory.BUILDING_BLOCKS, GCBlocks.RAW_METEORIC_IRON_BLOCK, "raw_meteoric_iron_from_block", "raw_meteoric_iron");
+        nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.RAW_DESH, RecipeCategory.BUILDING_BLOCKS, GCBlocks.RAW_DESH_BLOCK, "raw_desh_from_block", "raw_desh");
+        nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.RAW_LEAD, RecipeCategory.BUILDING_BLOCKS, GCBlocks.RAW_LEAD_BLOCK, "raw_lead_from_block", "raw_lead");
+        nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.RAW_ALUMINUM, RecipeCategory.BUILDING_BLOCKS, GCBlocks.RAW_ALUMINUM_BLOCK, "raw_aluminum_from_block", "raw_aluminum");
+        nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.RAW_TIN, RecipeCategory.BUILDING_BLOCKS, GCBlocks.RAW_TIN_BLOCK, "raw_tin_from_block", "raw_tin");
+        nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.RAW_TITANIUM, RecipeCategory.BUILDING_BLOCKS, GCBlocks.RAW_TITANIUM_BLOCK, "raw_titanium_from_block", "raw_titanium");
     }
 
     @Override

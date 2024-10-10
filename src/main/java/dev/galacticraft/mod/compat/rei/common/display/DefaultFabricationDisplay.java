@@ -63,8 +63,8 @@ public class DefaultFabricationDisplay extends BasicDisplay {
         if (recipe == null) return Collections.emptyList();
         List<EntryIngredient> list = new ArrayList<>(5);
         list.add(EntryIngredients.of(Items.DIAMOND));
-        list.add(EntryIngredients.of(GCItems.RAW_SILICON));
-        list.add(EntryIngredients.of(GCItems.RAW_SILICON));
+        list.add(EntryIngredients.of(GCItems.SILICON));
+        list.add(EntryIngredients.of(GCItems.SILICON));
         list.add(EntryIngredients.of(Items.REDSTONE));
         list.add(EntryIngredients.ofIngredient(recipe.value().getIngredients().get(0)));
         return list;

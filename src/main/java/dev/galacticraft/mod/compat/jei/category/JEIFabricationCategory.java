@@ -73,9 +73,9 @@ public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe
         builder.addSlot(RecipeIngredientRole.INPUT, 1, 1)
                 .addItemStack(Items.DIAMOND.getDefaultInstance());
         builder.addSlot(RecipeIngredientRole.INPUT, 55, 47)
-                .addItemStack(GCItems.RAW_SILICON.getDefaultInstance());
+                .addItemStack(GCItems.SILICON.getDefaultInstance());
         builder.addSlot(RecipeIngredientRole.INPUT, 55, 65)
-                .addItemStack(GCItems.RAW_SILICON.getDefaultInstance());
+                .addItemStack(GCItems.SILICON.getDefaultInstance());
         builder.addSlot(RecipeIngredientRole.CATALYST, 109, 47)
                 .addItemStack(Items.REDSTONE.getDefaultInstance());
         builder.addSlot(RecipeIngredientRole.CATALYST, 127, 1)

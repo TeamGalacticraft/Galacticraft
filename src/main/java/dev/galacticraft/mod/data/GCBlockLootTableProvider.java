@@ -57,7 +57,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
     }
 
     public LootTable.Builder siliconOreDrops(Block ore) {
-        return createSilkTouchDispatchTable(ore, this.applyExplosionDecay(ore, LootItem.lootTableItem(GCItems.RAW_SILICON)
+        return createSilkTouchDispatchTable(ore, this.applyExplosionDecay(ore, LootItem.lootTableItem(GCItems.SILICON)
                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(4.0F, 6.0F)))
                 .apply(ApplyBonusCount.addOreBonusCount(this.registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.FORTUNE)))
         ));
@@ -239,6 +239,12 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.LEAD_BLOCK);
         this.dropSelf(GCBlocks.LUNAR_SAPPHIRE_BLOCK);
         this.dropSelf(GCBlocks.OLIVINE_BLOCK);
+        this.dropSelf(GCBlocks.RAW_METEORIC_IRON_BLOCK);
+        this.dropSelf(GCBlocks.RAW_DESH_BLOCK);
+        this.dropSelf(GCBlocks.RAW_ALUMINUM_BLOCK);
+        this.dropSelf(GCBlocks.RAW_TIN_BLOCK);
+        this.dropSelf(GCBlocks.RAW_TITANIUM_BLOCK);
+        this.dropSelf(GCBlocks.RAW_LEAD_BLOCK);
 
         this.add(GCBlocks.FALLEN_METEOR, block -> createSilkTouchDispatchTable(block, this.applyExplosionDecay(block, LootItem.lootTableItem(GCItems.RAW_METEORIC_IRON)
                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 2.0f))))));

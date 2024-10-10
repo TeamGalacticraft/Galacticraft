@@ -103,7 +103,7 @@ public class GCCreativeModeTabs {
                 output.accept(RAW_DESH);
                 output.accept(RAW_LEAD);
                 output.accept(RAW_TITANIUM);
-                output.accept(RAW_SILICON);
+                output.accept(SILICON);
                 output.accept(LUNAR_SAPPHIRE);
                 output.accept(OLIVINE_SHARD);
 
@@ -418,6 +418,12 @@ public class GCCreativeModeTabs {
                 output.accept(TITANIUM_BLOCK);
                 output.accept(LEAD_BLOCK);
                 output.accept(LUNAR_SAPPHIRE_BLOCK);
+                output.accept(GCBlocks.RAW_ALUMINUM_BLOCK);
+                output.accept(GCBlocks.RAW_METEORIC_IRON_BLOCK);
+                output.accept(GCBlocks.RAW_DESH_BLOCK);
+                output.accept(GCBlocks.RAW_TIN_BLOCK);
+                output.accept(GCBlocks.RAW_TITANIUM_BLOCK);
+                output.accept(GCBlocks.RAW_LEAD_BLOCK);
                 output.accept(GCBlocks.OLIVINE_BLOCK);
 
                 // MOON VILLAGER SPECIAL

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "raw_tin",
+  "ingredients": [
+    {
+      "item": "galacticraft:raw_tin_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "galacticraft:raw_tin"
+  }
+}

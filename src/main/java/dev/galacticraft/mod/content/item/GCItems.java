@@ -235,7 +235,7 @@ public class GCItems {
     // === END BLOCKS ===
     
     // MATERIALS
-    public static final Item RAW_SILICON = new Item(new Item.Properties());
+    public static final Item SILICON = new Item(new Item.Properties());
     
     public static final Item RAW_METEORIC_IRON = new Item(new Item.Properties());
     public static final Item METEORIC_IRON_INGOT = new Item(new Item.Properties());
@@ -625,7 +625,7 @@ public class GCItems {
         // === END BLOCKS ===
 
         // MATERIALS
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.RAW_SILICON), RAW_SILICON);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.SILICON), SILICON);
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.RAW_METEORIC_IRON), RAW_METEORIC_IRON);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.METEORIC_IRON_INGOT), METEORIC_IRON_INGOT);

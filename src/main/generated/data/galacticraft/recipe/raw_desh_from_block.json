@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "raw_desh",
+  "ingredients": [
+    {
+      "item": "galacticraft:raw_desh_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "galacticraft:raw_desh"
+  }
+}
