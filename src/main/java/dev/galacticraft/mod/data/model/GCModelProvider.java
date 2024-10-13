@@ -382,7 +382,6 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.OLIVINE_SHARD, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.DESH_STICK, ModelTemplates.FLAT_HANDHELD_ITEM);
         generator.generateFlatItem(GCItems.CARBON_FRAGMENTS, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.IRON_SHARD, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.SOLAR_DUST, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.BASIC_WAFER, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.ADVANCED_WAFER, ModelTemplates.FLAT_ITEM);

@@ -276,7 +276,6 @@ public class GCItems {
     public static final Item LUNAR_SAPPHIRE = new Item(new Item.Properties());
     public static final Item DESH_STICK = new Item(new Item.Properties());
     public static final Item CARBON_FRAGMENTS = new Item(new Item.Properties());
-    public static final Item IRON_SHARD = new Item(new Item.Properties());
     public static final Item SOLAR_DUST = new Item(new Item.Properties());
     public static final Item BASIC_WAFER = new Item(new Item.Properties());
     public static final Item ADVANCED_WAFER = new Item(new Item.Properties());
@@ -664,7 +663,6 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.LUNAR_SAPPHIRE), LUNAR_SAPPHIRE);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.DESH_STICK), DESH_STICK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CARBON_FRAGMENTS), CARBON_FRAGMENTS);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.IRON_SHARD), IRON_SHARD);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.SOLAR_DUST), SOLAR_DUST);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.BASIC_WAFER), BASIC_WAFER);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.ADVANCED_WAFER), ADVANCED_WAFER);

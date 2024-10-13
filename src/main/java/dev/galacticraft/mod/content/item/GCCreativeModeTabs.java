@@ -130,7 +130,6 @@ public class GCCreativeModeTabs {
 
                 output.accept(DESH_STICK);
                 output.accept(CARBON_FRAGMENTS);
-                output.accept(IRON_SHARD);
                 output.accept(SOLAR_DUST);
                 output.accept(BASIC_WAFER);
                 output.accept(ADVANCED_WAFER);

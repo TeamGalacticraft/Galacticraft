@@ -363,7 +363,6 @@ public interface Constant {
         String OLIVINE_SHARD = "olivine_shard";
         String DESH_STICK = "desh_stick";
         String CARBON_FRAGMENTS = "carbon_fragments";
-        String IRON_SHARD = "iron_shard";
         String SOLAR_DUST = "solar_dust";
         String BASIC_WAFER = "basic_wafer";
         String ADVANCED_WAFER = "advanced_wafer";

@@ -1,6 +1,10 @@
 {
   "values": [
     "galacticraft:desh_ore",
-    "galacticraft:ilmenite_ore"
+    "galacticraft:raw_desh_block",
+    "galacticraft:desh_block",
+    "galacticraft:ilmenite_ore",
+    "galacticraft:raw_titanium_block",
+    "galacticraft:titanium_block"
   ]
 }
