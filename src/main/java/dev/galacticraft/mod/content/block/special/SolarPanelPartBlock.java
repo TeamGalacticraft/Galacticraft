@@ -31,6 +31,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -42,6 +43,9 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SolarPanelPartBlock extends BaseEntityBlock {
     public static final MapCodec<SolarPanelPartBlock> CODEC = simpleCodec(SolarPanelPartBlock::new);
@@ -92,6 +96,63 @@ public class SolarPanelPartBlock extends BaseEntityBlock {
 
         super.destroy(world, partPos, partState);
         return partState;
+    }
+
+    @Override
+    public void wasExploded(Level world, BlockPos pos, Explosion explosion) {
+        boolean foundValidBlock = false;
+        BlockPos validPartPos = null;
+        for (BlockPos posTest : BlockPos.betweenClosed(pos.east().north(), pos.west().south())) {
+            if (world.getBlockEntity(posTest) instanceof SolarPanelPartBlockEntity) {
+                validPartPos = posTest;
+                if (isCorrectBase(world, pos, posTest)) {
+                    foundValidBlock = true;
+                    break;
+                }
+            }
+        }
+
+        if (foundValidBlock && validPartPos != null) {
+            BlockEntity partBE = world.getBlockEntity(validPartPos);
+            SolarPanelPartBlockEntity be = (SolarPanelPartBlockEntity) partBE;
+            if (be == null || be.basePos == BlockPos.ZERO) {
+                return;
+            }
+            BlockPos basePos = new BlockPos(be.basePos);
+            BlockState baseState = world.getBlockState(basePos);
+
+            if (baseState.isAir()) {
+                return;
+            }
+
+            MultiBlockBase block = (MultiBlockBase) baseState.getBlock();
+            block.onPartExploded(world, baseState, basePos);
+        }
+
+        super.wasExploded(world, pos, explosion);
+    }
+
+
+    private boolean isCorrectBase(Level world, BlockPos originalPos, BlockPos testPos) {
+        BlockEntity partBE = world.getBlockEntity(testPos);
+        SolarPanelPartBlockEntity be = (SolarPanelPartBlockEntity) partBE;
+        if (be == null || be.basePos == BlockPos.ZERO) {
+            return false;
+        }
+        BlockPos basePos = new BlockPos(be.basePos);
+        BlockState baseState = world.getBlockState(basePos);
+
+        if (baseState.isAir()) {
+            return false;
+        }
+
+        MultiBlockBase block = (MultiBlockBase) baseState.getBlock();
+        List<BlockPos> blocksPos = new ArrayList<>();
+        for (BlockPos otherPart : block.getOtherParts(baseState)) {
+            otherPart = otherPart.immutable().offset(basePos);
+            blocksPos.add(otherPart);
+        }
+        return blocksPos.contains(originalPos);
     }
 
     @Override
