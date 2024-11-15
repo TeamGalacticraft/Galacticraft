@@ -60,19 +60,43 @@ public class GCCreativeModeTabs {
 
                     output.accept(SMALL_OXYGEN_TANK);//todo: set directly
                     itemStorage.setItem(SMALL_OXYGEN_TANK);
-                    context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
+                    OxygenTankItem smallTankItem = (OxygenTankItem) SMALL_OXYGEN_TANK.asItem();
+                    long smallCapacity = smallTankItem.capacity;
+                    long insertedSmall;
+
+                    do {
+                        insertedSmall = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), smallCapacity, t);
+                    } while (insertedSmall > 0 && smallCapacity > 0);
+
                     output.accept(itemStorage.variant.toStack());
 
                     output.accept(MEDIUM_OXYGEN_TANK);
                     itemStorage.setItem(MEDIUM_OXYGEN_TANK);
-                    context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
+                    OxygenTankItem mediumTankItem = (OxygenTankItem) MEDIUM_OXYGEN_TANK.asItem();
+                    long mediumCapacity = mediumTankItem.capacity;
+                    long insertedMedium;
+
+                    do {
+                        insertedMedium = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), mediumCapacity, t);
+                        mediumCapacity -= insertedMedium;
+                    } while (insertedMedium > 0 && mediumCapacity > 0);
+
                     output.accept(itemStorage.variant.toStack());
 
                     output.accept(LARGE_OXYGEN_TANK);
                     itemStorage.setItem(LARGE_OXYGEN_TANK);
-                    context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
+                    OxygenTankItem largeTankItem = (OxygenTankItem) LARGE_OXYGEN_TANK.asItem();
+                    long largeCapacity = largeTankItem.capacity;
+                    long insertedLarge;
+
+                    do {
+                        insertedLarge = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), largeCapacity, t);
+                        largeCapacity -= insertedLarge;
+                    } while (insertedLarge > 0 && largeCapacity > 0);
+
                     output.accept(itemStorage.variant.toStack());
                 }
+
 
                 output.accept(INFINITE_OXYGEN_TANK);
                 output.accept(SENSOR_GLASSES);
