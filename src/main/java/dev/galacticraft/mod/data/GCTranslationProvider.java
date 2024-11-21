@@ -280,6 +280,7 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(SolarPanel.ATMOSPHERIC_INTERFERENCE, "Atmospheric Interference: %s");
         this.add(SolarPanel.BLOCKED, "Blocked");
+        this.add(SolarPanel.FULL, "Full");
         this.add(SolarPanel.DAY, "Day");
         this.add(SolarPanel.MISSING_SOURCE, "Missing Light Source");
         this.add(SolarPanel.NIGHT, "Night");
