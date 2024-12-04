@@ -61,19 +61,43 @@ public class GCCreativeModeTabs {
 
                     output.accept(SMALL_OXYGEN_TANK);//todo: set directly
                     itemStorage.setItem(SMALL_OXYGEN_TANK);
-                    context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
+                    OxygenTankItem smallTankItem = (OxygenTankItem) SMALL_OXYGEN_TANK.asItem();
+                    long smallCapacity = smallTankItem.capacity;
+                    long insertedSmall;
+
+                    do {
+                        insertedSmall = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), smallCapacity, t);
+                    } while (insertedSmall > 0 && smallCapacity > 0);
+
                     output.accept(itemStorage.variant.toStack());
 
                     output.accept(MEDIUM_OXYGEN_TANK);
                     itemStorage.setItem(MEDIUM_OXYGEN_TANK);
-                    context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
+                    OxygenTankItem mediumTankItem = (OxygenTankItem) MEDIUM_OXYGEN_TANK.asItem();
+                    long mediumCapacity = mediumTankItem.capacity;
+                    long insertedMedium;
+
+                    do {
+                        insertedMedium = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), mediumCapacity, t);
+                        mediumCapacity -= insertedMedium;
+                    } while (insertedMedium > 0 && mediumCapacity > 0);
+
                     output.accept(itemStorage.variant.toStack());
 
                     output.accept(LARGE_OXYGEN_TANK);
                     itemStorage.setItem(LARGE_OXYGEN_TANK);
-                    context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, t);
+                    OxygenTankItem largeTankItem = (OxygenTankItem) LARGE_OXYGEN_TANK.asItem();
+                    long largeCapacity = largeTankItem.capacity;
+                    long insertedLarge;
+
+                    do {
+                        insertedLarge = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), largeCapacity, t);
+                        largeCapacity -= insertedLarge;
+                    } while (insertedLarge > 0 && largeCapacity > 0);
+
                     output.accept(itemStorage.variant.toStack());
                 }
+
 
                 output.accept(INFINITE_OXYGEN_TANK);
                 output.accept(SENSOR_GLASSES);
@@ -104,7 +128,7 @@ public class GCCreativeModeTabs {
                 output.accept(RAW_DESH);
                 output.accept(RAW_LEAD);
                 output.accept(RAW_TITANIUM);
-                output.accept(RAW_SILICON);
+                output.accept(SILICON);
                 output.accept(LUNAR_SAPPHIRE);
                 output.accept(OLIVINE_SHARD);
 
@@ -131,7 +155,6 @@ public class GCCreativeModeTabs {
 
                 output.accept(DESH_STICK);
                 output.accept(CARBON_FRAGMENTS);
-                output.accept(IRON_SHARD);
                 output.accept(SOLAR_DUST);
                 output.accept(BASIC_WAFER);
                 output.accept(ADVANCED_WAFER);
@@ -353,7 +376,7 @@ public class GCCreativeModeTabs {
                 output.accept(WIRE_WALKWAY);
                 output.accept(FLUID_PIPE_WALKWAY);
                 output.accept(TIN_LADDER);
-                output.accept(GRATING);
+                output.accept(IRON_GRATING);
 
                 // SPECIAL
                 output.accept(ALUMINUM_WIRE);
@@ -414,11 +437,19 @@ public class GCCreativeModeTabs {
                 // COMPACT MINERAL BLOCKS
                 output.accept(MOON_CHEESE_WHEEL);
                 output.accept(SILICON_BLOCK);
+                output.accept(GCBlocks.ALUMINUM_BLOCK);
                 output.accept(METEORIC_IRON_BLOCK);
                 output.accept(DESH_BLOCK);
+                output.accept(GCBlocks.TIN_BLOCK);
                 output.accept(TITANIUM_BLOCK);
                 output.accept(LEAD_BLOCK);
                 output.accept(LUNAR_SAPPHIRE_BLOCK);
+                output.accept(GCBlocks.RAW_ALUMINUM_BLOCK);
+                output.accept(GCBlocks.RAW_METEORIC_IRON_BLOCK);
+                output.accept(GCBlocks.RAW_DESH_BLOCK);
+                output.accept(GCBlocks.RAW_TIN_BLOCK);
+                output.accept(GCBlocks.RAW_TITANIUM_BLOCK);
+                output.accept(GCBlocks.RAW_LEAD_BLOCK);
                 output.accept(GCBlocks.OLIVINE_BLOCK);
 
                 // MOON VILLAGER SPECIAL

@@ -71,7 +71,7 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
         if (this.blocked >= 9) return GCMachineStatuses.BLOCKED;
         if (this.energyStorage().isFull()) return MachineStatuses.CAPACITOR_FULL;
         MachineStatus status = null;
-        double multiplier = blocked == 0 ? 1 : this.blocked / 9.0;
+        double multiplier = blocked == 0 ? 1 : (9.0 - this.blocked) / 9.0;
         if (this.blocked > 1) status = GCMachineStatuses.PARTIALLY_BLOCKED;
         if (level.isRaining() || level.isThundering()) {
             if (status == null) status = GCMachineStatuses.RAIN;

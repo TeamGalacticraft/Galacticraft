@@ -154,7 +154,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         // Misc decoration blocks
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, GCItems.GRATING, 4)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, GCItems.IRON_GRATING, 4)
                 .define('I', Items.IRON_BARS)
                 .pattern("II")
                 .pattern("II")

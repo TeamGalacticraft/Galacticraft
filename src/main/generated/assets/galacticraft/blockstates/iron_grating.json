@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "state=lower": {
+      "model": "galacticraft:block/iron_grating_lower"
+    },
+    "state=upper": {
+      "model": "galacticraft:block/iron_grating_upper"
+    }
+  }
+}

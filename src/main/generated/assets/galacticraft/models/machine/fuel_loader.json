@@ -1,8 +1,9 @@
 {
-  "machinelib:generate": "machinelib:z_axis",
-  "sprites": {
-    "back": "galacticraft:block/fuel_loader_controls",
+  "machinelib:generate": "machinelib:axis",
+  "data": {
     "front": "galacticraft:block/fuel_loader_controls",
-    "sided": false
+    "back": "galacticraft:block/fuel_loader_controls",
+    "base": "galacticraft:block/machine",
+    "side": "galacticraft:block/machine"
   }
 }

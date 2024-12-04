@@ -31,6 +31,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -45,6 +46,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
 
 public class CryogenicChamberPart extends BaseEntityBlock {
     public static final MapCodec<CryogenicChamberPart> CODEC = simpleCodec(CryogenicChamberPart::new);
@@ -100,6 +103,61 @@ public class CryogenicChamberPart extends BaseEntityBlock {
         super.destroy(level, blockPos, blockState);
 
         return baseState;
+    }
+
+    @Override
+    public void wasExploded(Level level, BlockPos pos, Explosion explosion) {
+        boolean foundValidBlock = false;
+        BlockPos validPartPos = null;
+        for (BlockPos posTest : BlockPos.betweenClosed(pos.below(), pos.above())) {
+            if (level.getBlockEntity(posTest) instanceof CryogenicChamberPartBlockEntity) {
+                validPartPos = posTest;
+                if (isCorrectBase(level, pos, posTest)) {
+                    foundValidBlock = true;
+                    break;
+                }
+            }
+        }
+        if (foundValidBlock && validPartPos != null) {
+            var partBE = level.getBlockEntity(validPartPos);
+            var be = (CryogenicChamberPartBlockEntity) partBE;
+            if (be == null || be.basePos == BlockPos.ZERO) {
+                return;
+            }
+            var basePos = new BlockPos(be.basePos);
+            var baseState = level.getBlockState(basePos);
+
+            if (baseState.isAir()) {
+                return;
+            }
+
+            var block = (MultiBlockBase) baseState.getBlock();
+            block.onPartExploded(level, baseState, basePos);
+        }
+
+        super.wasExploded(level, pos, explosion);
+    }
+
+    private boolean isCorrectBase(Level level, BlockPos originalPos, BlockPos testPos) {
+        var partBE = level.getBlockEntity(testPos);
+        var be = (CryogenicChamberPartBlockEntity) partBE;
+        if (be == null || be.basePos == BlockPos.ZERO) {
+            return false;
+        }
+        var basePos = new BlockPos(be.basePos);
+        var baseState = level.getBlockState(basePos);
+
+        if (baseState.isAir()) {
+            return false;
+        }
+
+        var block = (MultiBlockBase) baseState.getBlock();
+        var blocksPos = new ArrayList<>();
+        for (BlockPos otherPart : block.getOtherParts(baseState)) {
+            otherPart = otherPart.immutable().offset(basePos);
+            blocksPos.add(otherPart);
+        }
+        return blocksPos.contains(originalPos);
     }
 
     @Override

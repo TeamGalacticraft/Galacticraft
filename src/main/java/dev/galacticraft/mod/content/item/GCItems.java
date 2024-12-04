@@ -150,7 +150,7 @@ public class GCItems {
     public static final Item FLUID_PIPE_WALKWAY = new BlockItem(GCBlocks.FLUID_PIPE_WALKWAY, new Item.Properties());
     public static final Item WIRE_WALKWAY = new BlockItem(GCBlocks.WIRE_WALKWAY, new Item.Properties());
     public static final Item TIN_LADDER = new BlockItem(GCBlocks.TIN_LADDER, new Item.Properties());
-    public static final Item GRATING = new BlockItem(GCBlocks.GRATING, new Item.Properties());
+    public static final Item IRON_GRATING = new BlockItem(GCBlocks.IRON_GRATING, new Item.Properties());
 
     // SPECIAL
     public static final Item ALUMINUM_WIRE = new BlockItem(GCBlocks.ALUMINUM_WIRE, new Item.Properties());
@@ -248,7 +248,7 @@ public class GCItems {
     // === END BLOCKS ===
     
     // MATERIALS
-    public static final Item RAW_SILICON = new Item(new Item.Properties());
+    public static final Item SILICON = new Item(new Item.Properties());
     
     public static final Item RAW_METEORIC_IRON = new Item(new Item.Properties());
     public static final Item METEORIC_IRON_INGOT = new Item(new Item.Properties());
@@ -289,7 +289,6 @@ public class GCItems {
     public static final Item LUNAR_SAPPHIRE = new Item(new Item.Properties());
     public static final Item DESH_STICK = new Item(new Item.Properties());
     public static final Item CARBON_FRAGMENTS = new Item(new Item.Properties());
-    public static final Item IRON_SHARD = new Item(new Item.Properties());
     public static final Item SOLAR_DUST = new Item(new Item.Properties());
     public static final Item BASIC_WAFER = new Item(new Item.Properties());
     public static final Item ADVANCED_WAFER = new Item(new Item.Properties());
@@ -396,8 +395,8 @@ public class GCItems {
     //		this.additionsSlotDescription = component5;
 
     // BATTERIES
-    public static final Item BATTERY = new BatteryItem(new Item.Properties(), 15000, 500);
-    public static final Item INFINITE_BATTERY = new InfiniteBatteryItem(new Item.Properties().rarity(Rarity.EPIC));
+    public static final Item BATTERY = new BatteryItem(new Item.Properties().stacksTo(1), 15000, 500);
+    public static final Item INFINITE_BATTERY = new InfiniteBatteryItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
 
     //FLUID BUCKETS
     public static final Item CRUDE_OIL_BUCKET = new BucketItem(GCFluids.CRUDE_OIL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
@@ -413,7 +412,7 @@ public class GCItems {
     public static final Item SMALL_OXYGEN_TANK = new OxygenTankItem(new Item.Properties(), 1620 * 10); // 16200 ticks
     public static final Item MEDIUM_OXYGEN_TANK = new OxygenTankItem(new Item.Properties(), 1620 * 20); //32400 ticks
     public static final Item LARGE_OXYGEN_TANK = new OxygenTankItem(new Item.Properties(), 1620 * 30); //48600 ticks
-    public static final Item INFINITE_OXYGEN_TANK = new InfiniteOxygenTankItem(new Item.Properties());
+    public static final Item INFINITE_OXYGEN_TANK = new InfiniteOxygenTankItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
 
     public static final Item SHIELD_CONTROLLER = new AccessoryItem(new Item.Properties());
     public static final Item FREQUENCY_MODULE = new FrequencyModuleItem(new Item.Properties());
@@ -553,7 +552,7 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.FLUID_PIPE_WALKWAY), FLUID_PIPE_WALKWAY);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.WIRE_WALKWAY), WIRE_WALKWAY);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.TIN_LADDER), TIN_LADDER);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.GRATING), GRATING);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.IRON_GRATING), IRON_GRATING);
 
         // SPECIAL
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ALUMINUM_WIRE), ALUMINUM_WIRE);
@@ -646,7 +645,7 @@ public class GCItems {
         // === END BLOCKS ===
 
         // MATERIALS
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.RAW_SILICON), RAW_SILICON);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.SILICON), SILICON);
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.RAW_METEORIC_IRON), RAW_METEORIC_IRON);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.METEORIC_IRON_INGOT), METEORIC_IRON_INGOT);
@@ -685,7 +684,6 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.LUNAR_SAPPHIRE), LUNAR_SAPPHIRE);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.DESH_STICK), DESH_STICK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CARBON_FRAGMENTS), CARBON_FRAGMENTS);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.IRON_SHARD), IRON_SHARD);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.SOLAR_DUST), SOLAR_DUST);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.BASIC_WAFER), BASIC_WAFER);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.ADVANCED_WAFER), ADVANCED_WAFER);

@@ -30,6 +30,7 @@ import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCCreativeModeTabs;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.data.OxygenBlockDataManager;
 import dev.galacticraft.mod.events.GCEventHandlers;
 import dev.galacticraft.mod.lookup.GCApiLookupProviders;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
@@ -51,8 +52,10 @@ import dev.galacticraft.mod.world.gen.structure.GCStructureTypes;
 import dev.galacticraft.mod.world.gen.surfacerule.MoonSurfaceRules;
 import dev.galacticraft.mod.world.poi.GCPointOfInterestTypes;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.server.packs.PackType;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -101,6 +104,7 @@ public class Galacticraft implements ModInitializer {
         GCStats.register();
         GCCelestialHandlers.register();
         GCEventHandlers.init();
+        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(OxygenBlockDataManager.INSTANCE);
         Constant.LOGGER.info("Initialization complete. (Took {}ms).", System.currentTimeMillis() - startInitTime);
     }
 }

@@ -7,12 +7,12 @@
     "display": {
       "type": "galacticraft:icon",
       "config": {
-        "height": 16,
+        "height": 8,
         "scale": 1.5,
-        "texture": "galacticraft:textures/body_icons.png",
+        "texture": "galacticraft:textures/gui/celestialbodies/sol.png",
         "u": 0,
         "v": 0,
-        "width": 16
+        "width": 8
       }
     },
     "galaxy": "galacticraft:milky_way",

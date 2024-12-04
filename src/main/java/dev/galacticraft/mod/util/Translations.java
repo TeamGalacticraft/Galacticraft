@@ -330,6 +330,10 @@ public interface Translations {
         String TRAVELLING_TO = "ui.galacticraft.travelling_to";
     }
 
+    interface Boss {
+        String SKELETON_BOSS_DESPAWN = "gui.skeleton_boss.message";
+    }
+
     interface Misc {
         String UPGRADE_TITANIUM_APPLIES_TO = "smithing_template.galacticraft.titanium_upgrade.applies_to";
         String UPGRADE_TITANIUM_INGREDIENTS = "smithing_template.galacticraft.titanium_upgrade.ingredients";

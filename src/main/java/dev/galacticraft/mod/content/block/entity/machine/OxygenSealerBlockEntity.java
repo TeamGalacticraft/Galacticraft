@@ -88,7 +88,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
             ),
             MachineFluidStorage.spec(
                     FluidResourceSlot.builder(TransferType.INPUT)
-                            .pos(30, 8)
+                            .pos(31, 8)
                             .capacity(OxygenSealerBlockEntity.MAX_OXYGEN)
                             .filter(ResourceFilters.ofResource(Gases.OXYGEN))
             )

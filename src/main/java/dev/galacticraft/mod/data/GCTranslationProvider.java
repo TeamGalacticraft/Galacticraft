@@ -391,6 +391,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.GIANT_LEAP, "Taking one giant leap");
         this.add(Ui.PREPARE_FOR_ENTRY, "Prepare for entry!");
         this.add(Ui.TRAVELLING_TO, "Travelling to: ");
+
+        this.add(Boss.SKELETON_BOSS_DESPAWN, "Boss despawned, don't leave the boss room while fighting! Re-enter room to respawn boss.");
     }
 
     protected void blockDesc(Block block, String translation) {

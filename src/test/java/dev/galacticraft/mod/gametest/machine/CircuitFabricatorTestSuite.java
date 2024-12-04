@@ -43,8 +43,8 @@ public final class CircuitFabricatorTestSuite extends RecipeGameTest<RecipeInput
                 machine -> machine.energyStorage().setEnergy(Long.MAX_VALUE / 2),
                 machine -> machine.itemStorage().slot(CircuitFabricatorBlockEntity.DIAMOND_SLOT).set(Items.DIAMOND, 1),
                 machine -> machine.itemStorage().slot(CircuitFabricatorBlockEntity.REDSTONE_SLOT).set(Items.REDSTONE, 1),
-                machine -> machine.itemStorage().slot(CircuitFabricatorBlockEntity.SILICON_SLOT_1).set(GCItems.RAW_SILICON, 1),
-                machine -> machine.itemStorage().slot(CircuitFabricatorBlockEntity.SILICON_SLOT_2).set(GCItems.RAW_SILICON, 1),
+                machine -> machine.itemStorage().slot(CircuitFabricatorBlockEntity.SILICON_SLOT_1).set(GCItems.SILICON, 1),
+                machine -> machine.itemStorage().slot(CircuitFabricatorBlockEntity.SILICON_SLOT_2).set(GCItems.SILICON, 1),
                 machine -> machine.itemStorage().slot(CircuitFabricatorBlockEntity.INPUT_SLOT).set(Items.REDSTONE_TORCH, 1)
         ), CircuitFabricatorBlockEntity.OUTPUT_SLOT, 300);
     }

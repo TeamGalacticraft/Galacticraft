@@ -1,6 +1,6 @@
 {
   "values": [
-    "galacticraft:grating",
+    "galacticraft:iron_grating",
     "galacticraft:walkway",
     "galacticraft:wire_walkway",
     "galacticraft:fluid_pipe_walkway",
@@ -13,8 +13,16 @@
     "galacticraft:asteroid_aluminum_ore",
     "galacticraft:asteroid_iron_ore",
     "galacticraft:asteroid_silicon_ore",
+    "galacticraft:raw_tin_block",
+    "galacticraft:tin_block",
     "galacticraft:aluminum_ore",
     "galacticraft:deepslate_aluminum_ore",
-    "galacticraft:galena_ore"
+    "galacticraft:raw_aluminum_block",
+    "galacticraft:aluminum_block",
+    "galacticraft:galena_ore",
+    "galacticraft:raw_lead_block",
+    "galacticraft:lead_block",
+    "galacticraft:raw_meteoric_iron_block",
+    "galacticraft:meteoric_iron_block"
   ]
 }

@@ -194,7 +194,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.ROCKET_LAUNCH_PAD,
                         GCBlocks.GLOWSTONE_LANTERN,
                         GCBlocks.UNLIT_LANTERN,
-                        GCBlocks.GRATING,
+                        GCBlocks.IRON_GRATING,
                         GCBlocks.WALKWAY,
                         GCBlocks.WIRE_WALKWAY,
                         GCBlocks.FLUID_PIPE_WALKWAY,
@@ -210,15 +210,24 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.SILICON_BLOCK,
                         GCBlocks.METEORIC_IRON_BLOCK,
                         GCBlocks.DESH_BLOCK,
+                        GCBlocks.ALUMINUM_BLOCK,
+                        GCBlocks.TIN_BLOCK,
                         GCBlocks.TITANIUM_BLOCK,
                         GCBlocks.LEAD_BLOCK,
                         GCBlocks.LUNAR_SAPPHIRE_BLOCK,
                         GCBlocks.OLIVINE_BLOCK,
+                        GCBlocks.RAW_METEORIC_IRON_BLOCK,
+                        GCBlocks.RAW_DESH_BLOCK,
+                        GCBlocks.RAW_ALUMINUM_BLOCK,
+                        GCBlocks.RAW_TIN_BLOCK,
+                        GCBlocks.RAW_TITANIUM_BLOCK,
+                        GCBlocks.RAW_LEAD_BLOCK,
 
                         GCBlocks.MOON_TURF,
                         GCBlocks.MOON_DIRT,
                         GCBlocks.MOON_DIRT_PATH,
                         GCBlocks.MOON_SURFACE_ROCK,
+                        GCBlocks.MOON_DUNGEON_BRICK,
                         GCBlocks.MARS_SURFACE_ROCK,
                         GCBlocks.MARS_SUB_SURFACE_ROCK,
                         GCBlocks.SOFT_VENUS_ROCK,
@@ -275,7 +284,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         this.tag(BlockTags.NEEDS_STONE_TOOL)
                 .add(
-                        GCBlocks.GRATING,
+                        GCBlocks.IRON_GRATING,
                         GCBlocks.WALKWAY,
                         GCBlocks.WIRE_WALKWAY,
                         GCBlocks.FLUID_PIPE_WALKWAY,
@@ -346,7 +355,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .filterElements(block -> BuiltInRegistries.BLOCK.getKey(block).getNamespace().equals(Constant.MOD_ID) && block.defaultBlockState().canBeReplaced())
                 .listElementIds()
                 .forEach(replaceableTagAppender::add);
-        
+
         tag(GCTags.FOOTPRINTS)
                 .add(GCBlocks.MOON_TURF);
     }

@@ -1,15 +1,9 @@
 {
   "machinelib:generate": "galacticraft:oxygen_sealer",
-  "sprites": {
-    "top": "galacticraft:block/oxygen_sealer_top"
-  },
-  "textures": {
-    "down": "galacticraft:block/machine",
-    "east": "galacticraft:block/machine_side",
-    "north": "galacticraft:block/machine_side",
-    "particle": "galacticraft:block/machine",
-    "south": "galacticraft:block/machine_side",
-    "up": "galacticraft:block/oxygen_sealer_top",
-    "west": "galacticraft:block/machine_side"
+  "data": {
+    "inactive": "galacticraft:block/oxygen_sealer_top",
+    "active": "galacticraft:block/oxygen_sealer_top_active",
+    "base": "galacticraft:block/machine",
+    "side": "galacticraft:block/machine_side"
   }
 }

@@ -26,9 +26,10 @@ import dev.galacticraft.mod.Constant;
 import net.minecraft.resources.ResourceLocation;
 
 public final class CelestialBodyTextures {
-    public static final ResourceLocation ATMOSPHERIC_SUN = Constant.id("textures/gui/planets/atmosphericsun.png");
+    public static final ResourceLocation SUN_VENUS = Constant.id("textures/environment/sun_venus.png");
+    public static final ResourceLocation SUN_MOON = Constant.id("textures/environment/sun_moon.png");
     public static final ResourceLocation SUN = ResourceLocation.withDefaultNamespace("textures/environment/sun.png");
-    public static final ResourceLocation EARTH = Constant.id("textures/gui/celestialbodies/earth.png");
+    public static final ResourceLocation EARTH = Constant.id("textures/environment/earth.png");
 
     private CelestialBodyTextures() {}
 }

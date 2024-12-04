@@ -34,12 +34,12 @@
     "display": {
       "type": "galacticraft:icon",
       "config": {
-        "height": 16,
+        "height": 8,
         "scale": 1.0,
-        "texture": "galacticraft:textures/body_icons.png",
+        "texture": "galacticraft:textures/gui/celestialbodies/earth.png",
         "u": 0,
-        "v": 16,
-        "width": 16
+        "v": 0,
+        "width": 8
       }
     },
     "gravity": 1.0,

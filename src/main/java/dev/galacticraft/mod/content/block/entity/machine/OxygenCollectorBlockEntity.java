@@ -39,6 +39,7 @@ import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.machinelib.api.util.FluidSource;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.data.OxygenBlockDataManager;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.OxygenCollectorMenu;
 import dev.galacticraft.mod.util.FluidUtil;
@@ -49,8 +50,6 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.CropBlock;
-import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -111,11 +110,8 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
                 if (state.isAir()) {
                     continue;
                 }
-                if (state.getBlock() instanceof LeavesBlock && !state.getValue(LeavesBlock.PERSISTENT)) {
-                    leafBlocks++;
-                } else if (state.getBlock() instanceof CropBlock) {
-                    leafBlocks += 0.75F;
-                }
+
+                leafBlocks += OxygenBlockDataManager.getOxygen(world, pos1, state);
             }
 
             if (leafBlocks < 2) return 0;

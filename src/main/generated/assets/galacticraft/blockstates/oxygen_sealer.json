@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "active=false": {
+      "model": "galacticraft:machine/oxygen_sealer"
+    },
+    "active=true": {
+      "model": "galacticraft:machine/oxygen_sealer_active"
+    }
+  }
+}

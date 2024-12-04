@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "raw_lead",
+  "ingredients": [
+    {
+      "item": "galacticraft:raw_lead_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "galacticraft:raw_lead"
+  }
+}

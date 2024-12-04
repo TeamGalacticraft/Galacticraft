@@ -77,10 +77,10 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
                             .filter(ResourceFilters.itemTag(ConventionalItemTags.DIAMOND_GEMS)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(62, 45)
-                            .filter(ResourceFilters.ofResource(GCItems.RAW_SILICON)),
+                            .filter(ResourceFilters.ofResource(GCItems.SILICON)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(62, 63)
-                            .filter(ResourceFilters.ofResource(GCItems.RAW_SILICON)),
+                            .filter(ResourceFilters.ofResource(GCItems.SILICON)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(107, 70)
                             .filter(ResourceFilters.ofResource(Items.REDSTONE)),
@@ -162,8 +162,8 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
     @Override
     protected @Nullable RecipeHolder<FabricationRecipe> findValidRecipe(@NotNull Level world) {
         if (this.itemStorage().slot(DIAMOND_SLOT).contains(Items.DIAMOND)
-                && this.itemStorage().slot(SILICON_SLOT_1).contains(GCItems.RAW_SILICON)
-                && this.itemStorage().slot(SILICON_SLOT_2).contains(GCItems.RAW_SILICON)
+                && this.itemStorage().slot(SILICON_SLOT_1).contains(GCItems.SILICON)
+                && this.itemStorage().slot(SILICON_SLOT_2).contains(GCItems.SILICON)
                 && this.itemStorage().slot(REDSTONE_SLOT).contains(Items.REDSTONE)) {
             return super.findValidRecipe(world);
         }

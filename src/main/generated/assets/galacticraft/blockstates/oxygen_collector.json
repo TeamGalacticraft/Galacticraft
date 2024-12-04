@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
+    "active=false": {
       "model": "galacticraft:machine/oxygen_collector"
+    },
+    "active=true": {
+      "model": "galacticraft:machine/oxygen_collector_active"
     }
   }
 }

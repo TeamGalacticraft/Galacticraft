@@ -90,7 +90,7 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         tag(GCTags.RAW_LEAD_ORES)
                 .add(GCItems.RAW_LEAD);
         tag(GCTags.SILICONS)
-                .add(GCItems.RAW_SILICON);
+                .add(GCItems.SILICON);
         tag(GCTags.TIN_INGOTS)
                 .add(GCItems.TIN_INGOT);
         tag(GCTags.RAW_TIN_ORES)

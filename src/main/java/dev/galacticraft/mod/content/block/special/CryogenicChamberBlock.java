@@ -38,6 +38,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
@@ -136,7 +137,7 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
 
     @Override
     public void onPartDestroyed(Level level, Player player, BlockState blockState, BlockPos blockPos, BlockState partState, BlockPos partPos) {
-        level.destroyBlock(blockPos, !player.isCreative());
+        level.destroyBlock(blockPos, player.hasCorrectToolForDrops(partState) && !player.isCreative());
 
         for (var otherPart : this.getOtherParts(blockState)) {
             otherPart = otherPart.immutable().offset(blockPos);
@@ -144,6 +145,18 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
                 level.destroyBlock(otherPart, false);
             }
         }
+    }
+
+    @Override
+    public void wasExploded(Level world, BlockPos pos, Explosion explosion) {
+        for (BlockPos part : this.getOtherParts(world.getBlockState(pos))) {
+            part = pos.immutable().offset(part);
+            if (!(world.getBlockEntity(part) instanceof MultiBlockPart)) {
+                continue;
+            }
+            world.removeBlock(part, false);
+        }
+        super.wasExploded(world, pos, explosion);
     }
 
     @Override

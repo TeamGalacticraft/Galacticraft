@@ -33,7 +33,6 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
@@ -174,10 +173,18 @@ public interface Constant {
         String SILICON_BLOCK = "silicon_block";
         String METEORIC_IRON_BLOCK = "meteoric_iron_block";
         String DESH_BLOCK = "desh_block";
+        String ALUMINUM_BLOCK = "aluminum_block";
+        String TIN_BLOCK = "tin_block";
         String TITANIUM_BLOCK = "titanium_block";
         String LEAD_BLOCK = "lead_block";
         String LUNAR_SAPPHIRE_BLOCK = "lunar_sapphire_block";
         String OLIVINE_BLOCK = "olivine_block";
+        String RAW_METEORIC_IRON_BLOCK = "raw_meteoric_iron_block";
+        String RAW_DESH_BLOCK = "raw_desh_block";
+        String RAW_ALUMINUM_BLOCK = "raw_aluminum_block";
+        String RAW_TIN_BLOCK = "raw_tin_block";
+        String RAW_TITANIUM_BLOCK = "raw_titanium_block";
+        String RAW_LEAD_BLOCK = "raw_lead_block";
 
         // Decorative BLocks
         String ALUMINUM_DECORATION = "aluminum_decoration";
@@ -190,7 +197,7 @@ public interface Constant {
         String TITANIUM_DECORATION = "titanium_decoration";
         String DARK_DECORATION = "dark_decoration";
 
-        String GRATING = "grating";
+        String IRON_GRATING = "iron_grating";
         String TIN_LADDER = "tin_ladder";
         String SQUARE_LIGHT_PANEL = "square_light_panel";
         String SPOTLIGHT_LIGHT_PANEL = "spotlight_light_panel";
@@ -228,24 +235,24 @@ public interface Constant {
         String BOSS_SPAWNER = "boss_spawner";
 
         // Moon Cheese
-        String MOON_CHEESE_WHEEL = "moon_cheese_block";
-        String CANDLE_MOON_CHEESE_WHEEL = "candle_moon_cheese_block";
-        String WHITE_CANDLE_MOON_CHEESE_WHEEL = "white_candle_moon_cheese_block";
-        String ORANGE_CANDLE_MOON_CHEESE_WHEEL = "orange_candle_moon_cheese_block";
-        String MAGENTA_CANDLE_MOON_CHEESE_WHEEL = "magenta_candle_moon_cheese_block";
-        String LIGHT_BLUE_CANDLE_MOON_CHEESE_WHEEL = "light_blue_candle_moon_cheese_block";
-        String YELLOW_CANDLE_MOON_CHEESE_WHEEL = "yellow_candle_moon_cheese_block";
-        String LIME_CANDLE_MOON_CHEESE_WHEEL = "lime_candle_moon_cheese_block";
-        String PINK_CANDLE_MOON_CHEESE_WHEEL = "pink_candle_moon_cheese_block";
-        String GRAY_CANDLE_MOON_CHEESE_WHEEL = "gray_candle_moon_cheese_block";
-        String LIGHT_GRAY_CANDLE_MOON_CHEESE_WHEEL = "light_gray_candle_moon_cheese_block";
-        String CYAN_CANDLE_MOON_CHEESE_WHEEL = "cyan_candle_moon_cheese_block";
-        String PURPLE_CANDLE_MOON_CHEESE_WHEEL = "purple_candle_moon_cheese_block";
-        String BLUE_CANDLE_MOON_CHEESE_WHEEL = "blue_candle_moon_cheese_block";
-        String BROWN_CANDLE_MOON_CHEESE_WHEEL = "brown_candle_moon_cheese_block";
-        String GREEN_CANDLE_MOON_CHEESE_WHEEL = "green_candle_moon_cheese_block";
-        String RED_CANDLE_MOON_CHEESE_WHEEL = "red_candle_moon_cheese_block";
-        String BLACK_CANDLE_MOON_CHEESE_WHEEL = "black_candle_moon_cheese_block";
+        String MOON_CHEESE_WHEEL = "moon_cheese_wheel";
+        String CANDLE_MOON_CHEESE_WHEEL = "candle_moon_cheese_wheel";
+        String WHITE_CANDLE_MOON_CHEESE_WHEEL = "white_candle_moon_cheese_wheel";
+        String ORANGE_CANDLE_MOON_CHEESE_WHEEL = "orange_candle_moon_cheese_wheel";
+        String MAGENTA_CANDLE_MOON_CHEESE_WHEEL = "magenta_candle_moon_cheese_wheel";
+        String LIGHT_BLUE_CANDLE_MOON_CHEESE_WHEEL = "light_blue_candle_moon_cheese_wheel";
+        String YELLOW_CANDLE_MOON_CHEESE_WHEEL = "yellow_candle_moon_cheese_wheel";
+        String LIME_CANDLE_MOON_CHEESE_WHEEL = "lime_candle_moon_cheese_wheel";
+        String PINK_CANDLE_MOON_CHEESE_WHEEL = "pink_candle_moon_cheese_wheel";
+        String GRAY_CANDLE_MOON_CHEESE_WHEEL = "gray_candle_moon_cheese_wheel";
+        String LIGHT_GRAY_CANDLE_MOON_CHEESE_WHEEL = "light_gray_candle_moon_cheese_wheel";
+        String CYAN_CANDLE_MOON_CHEESE_WHEEL = "cyan_candle_moon_cheese_wheel";
+        String PURPLE_CANDLE_MOON_CHEESE_WHEEL = "purple_candle_moon_cheese_wheel";
+        String BLUE_CANDLE_MOON_CHEESE_WHEEL = "blue_candle_moon_cheese_wheel";
+        String BROWN_CANDLE_MOON_CHEESE_WHEEL = "brown_candle_moon_cheese_wheel";
+        String GREEN_CANDLE_MOON_CHEESE_WHEEL = "green_candle_moon_cheese_wheel";
+        String RED_CANDLE_MOON_CHEESE_WHEEL = "red_candle_moon_cheese_wheel";
+        String BLACK_CANDLE_MOON_CHEESE_WHEEL = "black_candle_moon_cheese_wheel";
 
         // Liquids
         String FUEL = "fuel";
@@ -344,6 +351,7 @@ public interface Constant {
     interface Item {
         String ITEM_GROUP_CANS = "cans";
         String ITEM_GROUP = "items";
+        String SILICON = "silicon";
         String CANNED_FOOD = "canned_food";
         String EMPTY_CANNED_FOOD = "empty_can";
         String RAW_SILICON = "raw_silicon";
@@ -370,7 +378,6 @@ public interface Constant {
         String OLIVINE_SHARD = "olivine_shard";
         String DESH_STICK = "desh_stick";
         String CARBON_FRAGMENTS = "carbon_fragments";
-        String IRON_SHARD = "iron_shard";
         String SOLAR_DUST = "solar_dust";
         String BASIC_WAFER = "basic_wafer";
         String ADVANCED_WAFER = "advanced_wafer";
@@ -713,10 +720,6 @@ public interface Constant {
 
             static Style getStorageLevelStyle(double scale) {
                 return Style.EMPTY.withColor(TextColor.fromRgb(getStorageLevelColor(scale)));
-            }
-
-            static Style getRainbow(int ticks) {
-                return Style.EMPTY.withColor(TextColor.fromRgb(Mth.hsvToRgb(ticks / 1000.0f, 1, 1)));
             }
         }
     }

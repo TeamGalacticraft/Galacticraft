@@ -77,24 +77,29 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
     @Override
     protected void renderMachineBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         if (!this.menu.bubbleVisible) {
-            if (!DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 156, this.topPos + 16, 13, 13)) {
+            if (!DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 156, this.topPos + 16, Constant.TextureCoordinate.BUTTON_WIDTH, Constant.TextureCoordinate.BUTTON_HEIGHT)) {
                 graphics.blit(Constant.ScreenTexture.OVERLAY, this.leftPos + 156, this.topPos + 16, Constant.TextureCoordinate.BUTTON_RED_X, Constant.TextureCoordinate.BUTTON_RED_Y, Constant.TextureCoordinate.BUTTON_WIDTH, Constant.TextureCoordinate.BUTTON_HEIGHT);
             } else {
                 graphics.blit(Constant.ScreenTexture.OVERLAY, this.leftPos + 156, this.topPos + 16, Constant.TextureCoordinate.BUTTON_RED_HOVER_X, Constant.TextureCoordinate.BUTTON_RED_HOVER_Y, Constant.TextureCoordinate.BUTTON_WIDTH, Constant.TextureCoordinate.BUTTON_HEIGHT);
             }
             graphics.drawString(this.font, Component.translatable(Translations.Ui.BUBBLE_NOT_VISIBLE), this.leftPos + 60 , this.topPos + 18, ChatFormatting.RED.getColor(), false);
         } else {
-            if (!DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 156, this.topPos + 16, 13, 13)) {
+            if (!DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 156, this.topPos + 16, Constant.TextureCoordinate.BUTTON_WIDTH, Constant.TextureCoordinate.BUTTON_HEIGHT)) {
                 graphics.blit(Constant.ScreenTexture.OVERLAY, this.leftPos + 156, this.topPos + 16, Constant.TextureCoordinate.BUTTON_GREEN_X, Constant.TextureCoordinate.BUTTON_GREEN_Y, Constant.TextureCoordinate.BUTTON_WIDTH, Constant.TextureCoordinate.BUTTON_HEIGHT);
             } else {
                 graphics.blit(Constant.ScreenTexture.OVERLAY, this.leftPos + 156, this.topPos + 16, Constant.TextureCoordinate.BUTTON_GREEN_HOVER_X, Constant.TextureCoordinate.BUTTON_GREEN_HOVER_Y, Constant.TextureCoordinate.BUTTON_WIDTH, Constant.TextureCoordinate.BUTTON_HEIGHT);
             }
             graphics.drawString(this.font, Component.translatable(Translations.Ui.BUBBLE_VISIBLE), this.leftPos + 60, this.topPos + 18, ChatFormatting.GREEN.getColor(), false);
         }
-        if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 158, this.topPos + 59, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
+
+        if (!DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 158, this.topPos + 59, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
+            graphics.blit(Constant.ScreenTexture.OVERLAY, this.leftPos + 158, this.topPos + 59, Constant.TextureCoordinate.ARROW_UP_X, Constant.TextureCoordinate.ARROW_UP_Y, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT);
+        } else {
             graphics.blit(Constant.ScreenTexture.OVERLAY, this.leftPos + 158, this.topPos + 59, Constant.TextureCoordinate.ARROW_UP_HOVER_X, Constant.TextureCoordinate.ARROW_UP_HOVER_Y, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT);
         }
-        if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 158, this.topPos + 69, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
+        if (!DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 158, this.topPos + 69, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
+            graphics.blit(Constant.ScreenTexture.OVERLAY, this.leftPos + 158, this.topPos + 69, Constant.TextureCoordinate.ARROW_DOWN_X, Constant.TextureCoordinate.ARROW_DOWN_Y, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT);
+        } else {
             graphics.blit(Constant.ScreenTexture.OVERLAY, this.leftPos + 158, this.topPos + 69, Constant.TextureCoordinate.ARROW_DOWN_HOVER_X, Constant.TextureCoordinate.ARROW_DOWN_HOVER_Y, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT);
         }
 

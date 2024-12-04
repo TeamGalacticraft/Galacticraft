@@ -118,6 +118,8 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(BootstrapDataProvider.create("Rocket Engines", GCRocketParts::bootstrapEngine));
         pack.addProvider(BootstrapDataProvider.create("Rocket Upgrades", GCRocketParts::bootstrapUpgrade));
 
+        pack.addProvider(GCOxygenBlockProvider::new);
+
         // models
         pack.addProvider(GCModelProvider::new);
     }

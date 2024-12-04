@@ -1,0 +1,4 @@
+{
+  "machinelib:generate": "machinelib:single",
+  "data": "galacticraft:block/oxygen_collector"
+}

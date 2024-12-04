@@ -1,6 +1,9 @@
 {
-  "machinelib:generate": "machinelib:front_face",
-  "sprites": {
-    "sprite": "galacticraft:block/energy_storage_module_0"
+  "machinelib:generate": "machinelib:axis",
+  "data": {
+    "front": "galacticraft:block/energy_storage_module_0",
+    "back": "galacticraft:block/energy_storage_module_0",
+    "base": "galacticraft:block/machine",
+    "side": "galacticraft:block/machine_side"
   }
 }

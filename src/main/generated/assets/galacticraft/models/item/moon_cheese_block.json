@@ -1,6 +1,3 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "galacticraft:item/moon_cheese_block"
-  }
+  "parent": "galacticraft:block/moon_cheese_block"
 }
