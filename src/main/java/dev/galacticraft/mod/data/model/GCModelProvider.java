@@ -23,6 +23,8 @@
 package dev.galacticraft.mod.data.model;
 
 import com.google.common.collect.Maps;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
@@ -50,6 +52,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Contract;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public class GCModelProvider extends FabricModelProvider {
     private static final TexturedModel.Provider DETAILED_DECORATION = TexturedModel.createDefault(GCModelProvider::detailedTexture, ModelTemplates.CUBE_BOTTOM_TOP);
@@ -106,6 +109,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.ASTEROID_ROCK);
         generator.createTrivialCube(GCBlocks.ASTEROID_ROCK_1);
         generator.createTrivialCube(GCBlocks.ASTEROID_ROCK_2);
+        generator.createTrivialCube(GCBlocks.DENSE_ICE);
 
         // VENUS NATURAL
         generator.createTrivialCube(GCBlocks.SOFT_VENUS_ROCK);
@@ -134,7 +138,6 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE);
         createLaunchPadBlock(GCBlocks.FUELING_PAD, generator);
         createLaunchPadBlock(GCBlocks.ROCKET_LAUNCH_PAD, generator);
-        generator.createNonTemplateModelBlock(GCBlocks.ROCKET_WORKBENCH);
         generator.createNonTemplateModelBlock(GCBlocks.FALLEN_METEOR);
 
         // LIGHT PANELS
@@ -161,10 +164,18 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.MOON_TIN_ORE);
         generator.createTrivialCube(GCBlocks.LUNASLATE_TIN_ORE);
 
+        generator.createTrivialCube(GCBlocks.ASTEROID_ALUMINUM_ORE);
+        generator.createTrivialCube(GCBlocks.ASTEROID_IRON_ORE);
+        generator.createTrivialCube(GCBlocks.ASTEROID_SILICON_ORE);
+
         generator.createTrivialCube(GCBlocks.ALUMINUM_ORE);
         generator.createTrivialCube(GCBlocks.DEEPSLATE_ALUMINUM_ORE);
 
         generator.createTrivialCube(GCBlocks.DESH_ORE);
+        generator.createTrivialCube(GCBlocks.MARS_COPPER_ORE);
+        generator.createTrivialCube(GCBlocks.MARS_IRON_ORE);
+        generator.createTrivialCube(GCBlocks.MARS_TIN_ORE);
+
 
         generator.createTrivialCube(GCBlocks.ILMENITE_ORE);
 
@@ -223,24 +234,25 @@ public class GCModelProvider extends FabricModelProvider {
 //        generator.createNonTemplateModelBlock(GCBlocks.CRYOGENIC_CHAMBER);
         generator.createNonTemplateModelBlock(GCBlocks.PLAYER_TRANSPORT_TUBE);
 
-        //todo gen models (not just blockstates)
-        createMachineDelegate(generator, GCBlocks.CIRCUIT_FABRICATOR);
-        createMachineDelegate(generator, GCBlocks.COMPRESSOR);
-        createMachineDelegate(generator, GCBlocks.ELECTRIC_COMPRESSOR);
-        createMachineDelegate(generator, GCBlocks.COAL_GENERATOR);
+        createMachineDelegateFrontFace(generator, GCBlocks.CIRCUIT_FABRICATOR);
+        createMachineDelegateFrontFace(generator, GCBlocks.COMPRESSOR);
+        createMachineDelegateFrontFace(generator, GCBlocks.ELECTRIC_COMPRESSOR);
+        createMachineDelegateFrontFace(generator, GCBlocks.COAL_GENERATOR);
+        createMachineDelegateFrontFace(generator, GCBlocks.ROCKET_WORKBENCH, "refinery_front", "machine_side"); //Todo not sure if its supposed to be a multiblock model?
         createMachineDelegate(generator, GCBlocks.BASIC_SOLAR_PANEL);
         createMachineDelegate(generator, GCBlocks.ADVANCED_SOLAR_PANEL);
-        createMachineDelegate(generator, GCBlocks.ENERGY_STORAGE_MODULE);
-        createMachineDelegate(generator, GCBlocks.ELECTRIC_FURNACE);
-        createMachineDelegate(generator, GCBlocks.ELECTRIC_ARC_FURNACE);
-        createMachineDelegate(generator, GCBlocks.REFINERY);
-        createMachineDelegate(generator, GCBlocks.OXYGEN_COLLECTOR);
-        createMachineDelegate(generator, GCBlocks.OXYGEN_SEALER);
-        createMachineDelegate(generator, GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR);
-        createMachineDelegate(generator, GCBlocks.OXYGEN_DECOMPRESSOR);
-        createMachineDelegate(generator, GCBlocks.OXYGEN_COMPRESSOR);
-        createMachineDelegate(generator, GCBlocks.OXYGEN_STORAGE_MODULE);
-        createMachineDelegate(generator, GCBlocks.FUEL_LOADER);
+        createMachineDelegateFrontFace(generator, GCBlocks.ENERGY_STORAGE_MODULE, "energy_storage_module_0");
+        createMachineDelegateFrontFace(generator, GCBlocks.ELECTRIC_FURNACE);
+        createMachineDelegateFrontFace(generator, GCBlocks.ELECTRIC_ARC_FURNACE);
+        createMachineDelegateZAxis(generator, GCBlocks.REFINERY, "refinery_front", "refinery_back");
+        createMachineDelegateSingle(generator, GCBlocks.OXYGEN_COLLECTOR, "oxygen_collector");
+        createMachineDelegateColumn(generator, GCBlocks.OXYGEN_SEALER, "oxygen_sealer", "oxygen_sealer_top", "machine", "machine_side"); //column with particle
+        createMachineDelegateSingle(generator, GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, "oxygen_bubble_distributor");
+        createMachineDelegateZAxis(generator, GCBlocks.OXYGEN_DECOMPRESSOR, "oxygen_decompressor", "oxygen_decompressor_back");
+        createMachineDelegateZAxis(generator, GCBlocks.OXYGEN_COMPRESSOR, "oxygen_compressor", "oxygen_compressor_back");
+        createMachineDelegateZAxis(generator, GCBlocks.FOOD_CANNER, "food_canner", "food_canner_back");
+        createMachineDelegateZAxis(generator, GCBlocks.OXYGEN_STORAGE_MODULE, "oxygen_storage_model_8");
+        createMachineDelegateZAxis(generator, GCBlocks.FUEL_LOADER, "fuel_loader_controls");
 
         generator.createNonTemplateModelBlock(GCBlocks.CRUDE_OIL);
         generator.createNonTemplateModelBlock(GCBlocks.FUEL);
@@ -248,7 +260,6 @@ public class GCModelProvider extends FabricModelProvider {
 
         generator.createTrivialCube(GCBlocks.AIR_LOCK_FRAME);
         this.createAirLockController(generator);
-        generator.createNonTemplateModelBlock(GCBlocks.AIR_LOCK_SEAL);
 
         var para = MultiPartGenerator.multiPart(GCBlocks.PARACHEST);
         GCBlocks.PARACHEST.getStateDefinition().getPossibleStates().forEach(state -> {
@@ -335,8 +346,121 @@ public class GCModelProvider extends FabricModelProvider {
         return resourceLocation.withPrefix("machine/");
     }
 
-    private static void createMachineDelegate(BlockModelGenerators generator, Block block) { //todo: look into why we need this prefix
+    private static void createMachineDelegateFrontFace(BlockModelGenerators generator, Block block) {
+        JsonObject customJson = new JsonObject();
+        customJson.addProperty("machinelib:generate", "machinelib:front_face");
+
+        JsonObject sprites = new JsonObject();
+        sprites.addProperty("sprite", getMachineModelLocation(block).toString().replace("machine", "block"));
+
+        customJson.add("sprites", sprites);
+        Supplier<JsonElement> jsonSupplier = () -> customJson;
+        generator.modelOutput.accept(getMachineModelLocation(block), jsonSupplier);
         generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block, getMachineModelLocation(block)));
+    }
+
+    private static void createMachineDelegate(BlockModelGenerators generator, Block block) {
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block, getMachineModelLocation(block)));
+    }
+
+    private static void createMachineDelegateFrontFace(BlockModelGenerators generator, Block block, String id) {
+        JsonObject customJson = new JsonObject();
+        customJson.addProperty("machinelib:generate", "machinelib:front_face");
+
+        JsonObject sprites = new JsonObject();
+        sprites.addProperty("sprite", "galacticraft:block/" + id);
+
+        customJson.add("sprites", sprites);
+        Supplier<JsonElement> jsonSupplier = () -> customJson;
+        generator.modelOutput.accept(getMachineModelLocation(block), jsonSupplier);
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block, getMachineModelLocation(block)));
+    }
+
+    private static void createMachineDelegateFrontFace(BlockModelGenerators generator, Block block, String id, String sides) {
+        JsonObject customJson = new JsonObject();
+        customJson.addProperty("machinelib:generate", "machinelib:front_face");
+
+        JsonObject sprites = new JsonObject();
+        sprites.addProperty("sprite", "galacticraft:block/" + id);
+        customJson.add("sprites", sprites);
+        JsonObject textures = new JsonObject();
+        textures.addProperty("up", "galacticraft:block/" + sides);
+        textures.addProperty("down", "galacticraft:block/" + sides);
+        textures.addProperty("north", "galacticraft:block/" + sides);
+        textures.addProperty("east", "galacticraft:block/" + sides);
+        textures.addProperty("south", "galacticraft:block/" + sides);
+        textures.addProperty("west", "galacticraft:block/" + sides);
+        textures.addProperty("particle", "galacticraft:block/" + sides);
+        customJson.add("textures", textures);
+        Supplier<JsonElement> jsonSupplier = () -> customJson;
+        generator.modelOutput.accept(getMachineModelLocation(block), jsonSupplier);
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block, getMachineModelLocation(block)));
+    }
+
+    private static void createMachineDelegateZAxis(BlockModelGenerators generator, Block block, String id) {
+        JsonObject customJson = new JsonObject();
+        customJson.addProperty("machinelib:generate", "machinelib:z_axis");
+
+        JsonObject sprites = new JsonObject();
+        sprites.addProperty("front", "galacticraft:block/" + id);
+        sprites.addProperty("back", "galacticraft:block/" + id);
+        sprites.addProperty("sided", false);
+
+
+        customJson.add("sprites", sprites);
+        Supplier<JsonElement> jsonSupplier = () -> customJson;
+        generator.modelOutput.accept(getMachineModelLocation(block), jsonSupplier);
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block, getMachineModelLocation(block)));
+    }
+
+    private static void createMachineDelegateZAxis(BlockModelGenerators generator, Block block, String id, String id2) {
+        JsonObject customJson = new JsonObject();
+        customJson.addProperty("machinelib:generate", "machinelib:z_axis");
+
+        JsonObject sprites = new JsonObject();
+        sprites.addProperty("front", "galacticraft:block/" + id);
+        sprites.addProperty("back", "galacticraft:block/" + id2);
+        sprites.addProperty("sided", true);
+
+
+        customJson.add("sprites", sprites);
+        Supplier<JsonElement> jsonSupplier = () -> customJson;
+        generator.modelOutput.accept(getMachineModelLocation(block), jsonSupplier);
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block, getMachineModelLocation(block)));
+    }
+
+    private static void createMachineDelegateSingle(BlockModelGenerators generator, Block block, String id) {
+        JsonObject customJson = new JsonObject();
+        customJson.addProperty("machinelib:generate", "machinelib:single");
+
+        JsonObject sprites = new JsonObject();
+        sprites.addProperty("sprite", "galacticraft:block/" + id);
+        sprites.addProperty("particle", "galacticraft:block/" + id);
+
+        customJson.add("sprites", sprites);
+        Supplier<JsonElement> jsonSupplier = () -> customJson;
+        generator.modelOutput.accept(getMachineModelLocation(block), jsonSupplier);
+        generator.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block, getMachineModelLocation(block)));
+    }
+
+    private static void createMachineDelegateColumn(BlockModelGenerators generator, Block block, String id, String top, String bottom, String side) {
+        JsonObject customJson = new JsonObject();
+        customJson.addProperty("machinelib:generate", "galacticraft:" + id);
+
+        JsonObject sprites = new JsonObject();
+        sprites.addProperty("top", "galacticraft:block/" + top);
+        customJson.add("sprites", sprites);
+        JsonObject textures = new JsonObject();
+        textures.addProperty("up", "galacticraft:block/" + top);
+        textures.addProperty("down", "galacticraft:block/" + bottom);
+        textures.addProperty("north", "galacticraft:block/" + side);
+        textures.addProperty("east", "galacticraft:block/" + side);
+        textures.addProperty("south", "galacticraft:block/" + side);
+        textures.addProperty("west", "galacticraft:block/" + side);
+        textures.addProperty("particle", "galacticraft:block/" + bottom);
+        customJson.add("textures", textures);
+        Supplier<JsonElement> jsonSupplier = () -> customJson;
+        generator.modelOutput.accept(getMachineModelLocation(block), jsonSupplier);
     }
 
     @Override
@@ -415,12 +539,6 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.BEEF_PATTY, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.CHEESEBURGER, ModelTemplates.FLAT_ITEM);
 
-        generator.generateFlatItem(GCItems.CANNED_DEHYDRATED_APPLE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.CANNED_DEHYDRATED_CARROT, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.CANNED_DEHYDRATED_MELON, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.CANNED_DEHYDRATED_POTATO, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.CANNED_BEEF, ModelTemplates.FLAT_ITEM);
-
         generator.generateFlatItem(GCItems.NOSE_CONE, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.HEAVY_NOSE_CONE, "_joined", ModelTemplates.FLAT_ITEM);
 
@@ -441,6 +559,7 @@ public class GCModelProvider extends FabricModelProvider {
                 generator.generateArmorTrims(armorItem);
             }
         }
+
 
         generator.generateFlatItem(GCItems.SENSOR_GLASSES, ModelTemplates.FLAT_ITEM);
 
