@@ -24,6 +24,7 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
@@ -107,10 +108,13 @@ public class GCCreativeModeTabs {
                 output.accept(SHIELD_CONTROLLER);
 
                 // ROCKETS
-                output.accept(ROCKET);
+                var tier1 = new ItemStack(ROCKET);
+                tier1.set(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1);
+                output.accept(tier1);
 
                 var creativeRocket = new ItemStack(ROCKET);
                 creativeRocket.set(GCDataComponents.CREATIVE, true);
+                creativeRocket.set(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1);
                 output.accept(creativeRocket);
 
                 // MATERIALS

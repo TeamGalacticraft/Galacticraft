@@ -41,7 +41,7 @@ public interface Rocket extends Dockable {
 
     void setLaunchStage(LaunchStage stage);
 
-    @NotNull RocketData getData();
+    @NotNull RocketData getRocketData();
 
     @Nullable Holder<RocketCone<?, ?>> cone();
 

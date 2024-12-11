@@ -44,23 +44,23 @@ import java.util.UUID;
 public record RocketSpawnPacket(EntityType<?> eType, int id, UUID uuid, double x, double y, double z, float xRot, float yRot, RocketData data) implements S2CPayload {
     public static final StreamCodec<RegistryFriendlyByteBuf, RocketSpawnPacket> STREAM_CODEC = StreamCodecs.composite(
             ByteBufCodecs.registry(Registries.ENTITY_TYPE),
-            p -> p.eType,
+            RocketSpawnPacket::eType,
             ByteBufCodecs.VAR_INT,
-            p -> p.id,
+            RocketSpawnPacket::id,
             UUIDUtil.STREAM_CODEC,
-            p -> p.uuid,
+            RocketSpawnPacket::uuid,
             ByteBufCodecs.DOUBLE,
-            p -> p.x,
+            RocketSpawnPacket::x,
             ByteBufCodecs.DOUBLE,
-            p -> p.y,
+            RocketSpawnPacket::y,
             ByteBufCodecs.DOUBLE,
-            p -> p.z,
+            RocketSpawnPacket::z,
             ByteBufCodecs.FLOAT,
-            p -> p.xRot,
+            RocketSpawnPacket::xRot,
             ByteBufCodecs.FLOAT,
-            p -> p.yRot,
+            RocketSpawnPacket::yRot,
             RocketData.STREAM_CODEC,
-            p -> p.data,
+            RocketSpawnPacket::data,
             RocketSpawnPacket::new
     );
 

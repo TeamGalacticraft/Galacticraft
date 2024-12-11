@@ -56,6 +56,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class RocketWorkbenchMenu extends AbstractContainerMenu implements VariableSizedContainer.Listener {
     public static final int SPACING = 2;
@@ -204,8 +205,8 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         );
     }
 
-    private static <T> @Nullable EitherHolder<T> maybeHolder(ResourceKey<Registry<T>> key, @Nullable ResourceLocation id) {
-        return id == null ? null : new EitherHolder<>(ResourceKey.create(key, id));
+    private static <T> Optional<EitherHolder<T>> maybeHolder(ResourceKey<Registry<T>> key, @Nullable ResourceLocation id) {
+        return id == null ? Optional.empty() : Optional.of(new EitherHolder<>(ResourceKey.create(key, id)));
     }
 
     @Override

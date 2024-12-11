@@ -25,8 +25,12 @@ package dev.galacticraft.mod.client.render.item;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.RocketData;
+import dev.galacticraft.api.rocket.RocketPrefabs;
+import dev.galacticraft.api.rocket.part.RocketBooster;
+import dev.galacticraft.api.rocket.part.RocketEngine;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
@@ -40,12 +44,14 @@ import net.minecraft.world.item.EitherHolder;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.Optional;
+
 public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
     private final RocketEntity rocket = new RocketEntity(GCEntityTypes.ROCKET, null); // Fake rocket entity for rendering
 
     @Override
     public void render(ItemStack stack, ItemDisplayContext mode, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
-        RocketData data = RocketData.fromPatch(stack.getComponentsPatch());
+        RocketData data = stack.has(GCDataComponents.ROCKET_DATA) ? stack.get(GCDataComponents.ROCKET_DATA) : RocketPrefabs.MISSING;
         rocket.setLevel(Minecraft.getInstance().level);
         rocket.setData(data);
         rocket.setOldPosAndRot();
@@ -80,46 +86,42 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
         }
         RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
         matrices.translate(0.0D, -1.75D, 0.0D);
-        EitherHolder<? extends RocketPart<?, ?>> part = data.engine();
-        if (part != null) {
+
+        data.engine().ifPresent(part -> {
             matrices.pushPose();
             RocketPartRendererRegistry.INSTANCE.getRenderer(part.key()).render(level, matrices, rocket, vertexConsumers, 0, light, overlay);
             matrices.popPose();
-        }
+        });
 
         matrices.translate(0.0D, 0.5, 0.0D);
 
-        part = data.booster();
-        if (part != null) {
+        data.booster().ifPresent(part -> {
             matrices.pushPose();
             RocketPartRendererRegistry.INSTANCE.getRenderer(part.key()).render(level, matrices, rocket, vertexConsumers, 0, light, overlay);
             matrices.popPose();
-        }
+        });
 
-        part = data.fin();
-        if (part != null) {
+        data.fin().ifPresent(part -> {
             matrices.pushPose();
             RocketPartRendererRegistry.INSTANCE.getRenderer(part.key()).render(level, matrices, rocket, vertexConsumers, 0, light, overlay);
             matrices.popPose();
-        }
+        });
 
         matrices.translate(0.0D, 1.0D, 0.0D);
 
-        part = data.body();
-        if (part != null) {
+        data.body().ifPresent(part -> {
             matrices.pushPose();
             RocketPartRendererRegistry.INSTANCE.getRenderer(part.key()).render(level, matrices, rocket, vertexConsumers, 0, light, overlay);
             matrices.popPose();
-        }
+        });
 
         matrices.translate(0.0D, 1.75, 0.0D);
 
-        part = data.cone();
-        if (part != null) {
+        data.cone().ifPresent(part -> {
             matrices.pushPose();
             RocketPartRendererRegistry.INSTANCE.getRenderer(part.key()).render(level, matrices, rocket, vertexConsumers, 0, light, overlay);
             matrices.popPose();
-        }
+        });
 
         matrices.popPose();
     }

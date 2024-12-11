@@ -61,7 +61,7 @@ public class BakedModelItemRocketPartRenderer implements RocketPartRenderer {
         if (this.model != null) {
             PoseStack.Pose entry = matrices.last();
             VertexConsumer consumer = vertices.getBuffer(layer);
-            RocketData data = rocket.getData();
+            RocketData data = rocket.getRocketData();
             Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(entry, consumer, null, model,
                     data.red() / 255f, data.blue() / 255f, data.green() / 255f, light, overlay);
         }

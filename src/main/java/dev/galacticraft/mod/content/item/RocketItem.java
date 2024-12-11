@@ -24,6 +24,7 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.rocket.RocketData;
+import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartTypes;
 import dev.galacticraft.mod.content.GCBlocks;
@@ -62,7 +63,8 @@ public class RocketItem extends Item {
 
             if (context.getLevel() instanceof ServerLevel) {
                 RocketEntity rocket = new RocketEntity(GCEntityTypes.ROCKET, context.getLevel());
-                RocketData data = RocketData.fromPatch(context.getItemInHand().getComponentsPatch());
+                ItemStack held = context.getItemInHand();
+                RocketData data = held.has(GCDataComponents.ROCKET_DATA) ? held.get(GCDataComponents.ROCKET_DATA) : RocketPrefabs.TIER_1;
                 rocket.setData(data);
                 rocket.setPad(pad);
                 rocket.setOldPosAndRot();
@@ -94,14 +96,14 @@ public class RocketItem extends Item {
             tooltip.add(Component.literal("Creative Only").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
         }
         if (Screen.hasShiftDown()) {
-            RocketData data = RocketData.fromPatch(stack.getComponentsPatch());
+            RocketData data = stack.has(GCDataComponents.ROCKET_DATA) ? stack.get(GCDataComponents.ROCKET_DATA) : RocketPrefabs.MISSING;
             tooltip.add(Component.translatable(Translations.Ui.COLOR).append(Component.literal(": #" + Integer.toHexString(data.color())).withColor(data.color())));
-            if (data.cone() != null) tooltip.add(RocketPartTypes.CONE.name.copy().append(" ").append(RocketPart.getName(data.cone().key())).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
-            if (data.body() != null) tooltip.add(RocketPartTypes.BODY.name.copy().append(" ").append(RocketPart.getName(data.body().key())).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
-            if (data.fin() != null) tooltip.add(RocketPartTypes.FIN.name.copy().append(" ").append(RocketPart.getName(data.fin().key())).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
-            if (data.booster() != null) tooltip.add(RocketPartTypes.BOOSTER.name.copy().append(" ").append(RocketPart.getName(data.booster().key())).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
-            if (data.engine() != null) tooltip.add(RocketPartTypes.ENGINE.name.copy().append(" ").append(RocketPart.getName(data.engine().key())).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
-            if (data.upgrade() != null) tooltip.add(RocketPartTypes.UPGRADE.name.copy().append(" ").append(RocketPart.getName(data.upgrade().key())).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+            if (data.cone().isPresent()) tooltip.add(RocketPartTypes.CONE.name.copy().append(" ").append(RocketPart.getName(data.cone().get().key())).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+            if (data.body().isPresent()) tooltip.add(RocketPartTypes.BODY.name.copy().append(" ").append(RocketPart.getName(data.body().get().key())).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+            if (data.fin().isPresent()) tooltip.add(RocketPartTypes.FIN.name.copy().append(" ").append(RocketPart.getName(data.fin().get().key())).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+            if (data.booster().isPresent()) tooltip.add(RocketPartTypes.BOOSTER.name.copy().append(" ").append(RocketPart.getName(data.booster().get().key())).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+            if (data.engine().isPresent()) tooltip.add(RocketPartTypes.ENGINE.name.copy().append(" ").append(RocketPart.getName(data.engine().get().key())).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
+            if (data.upgrade().isPresent()) tooltip.add(RocketPartTypes.UPGRADE.name.copy().append(" ").append(RocketPart.getName(data.upgrade().get().key())).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         } else {
             tooltip.add(Component.translatable(Translations.Tooltip.PRESS_SHIFT).setStyle(Style.EMPTY.withColor(ChatFormatting.GRAY)));
         }
