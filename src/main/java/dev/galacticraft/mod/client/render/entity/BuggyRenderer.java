@@ -26,7 +26,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.model.GCBakedModel;
+import dev.galacticraft.mod.client.model.GCModel;
 import dev.galacticraft.mod.client.model.GCModelLoader;
 import dev.galacticraft.mod.client.model.GCModelState;
 import dev.galacticraft.mod.client.model.GCRenderTypes;
@@ -50,7 +50,7 @@ public class BuggyRenderer extends EntityRenderer<Buggy> {
     public static final GCModelState CARGO_MID = new GCModelState("CargoMid");
     public static final GCModelState CARGO_RIGHT = new GCModelState("CargoRight");
 
-    private GCBakedModel buggyModel;
+    private GCModel buggyModel;
 
     public BuggyRenderer(EntityRendererProvider.Context context) {
         super(context);

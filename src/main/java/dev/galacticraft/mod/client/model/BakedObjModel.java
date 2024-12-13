@@ -22,70 +22,77 @@
 
 package dev.galacticraft.mod.client.model;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import de.javagl.obj.*;
-import dev.galacticraft.mod.client.model.types.ObjModel;
+import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
+import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Supplier;
 
-/**
- * A Model rendered via a VBO.
- */
-public class BakedObjModel implements GCBakedModel {
-    private final Obj obj;
-    private final List<ObjModel.BakedMaterial> materials;
-
-    public BakedObjModel(Obj obj, List<ObjModel.BakedMaterial> materials) {
-        this.obj = ObjUtils.convertToRenderable(obj);
-        this.materials = materials;
+public record BakedObjModel(Mesh mesh, List<BakedQuad> legacyQuads, TextureAtlasSprite particle) implements BakedModel {
+    @Override
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, RandomSource randomSource) {
+        return legacyQuads();
     }
 
     @Override
-    public void render(PoseStack modelStack, @Nullable GCModelState state, VertexConsumer consumer, int light, int overlay, int color) {
-        ObjModel.BakedMaterial lastMaterial = null;
-        if (state == null) {
-            for (int index = 0; index < obj.getNumFaces(); index++) {
-                ObjFace face = obj.getFace(index);
-                lastMaterial = renderFace(lastMaterial, face, consumer, modelStack, light, overlay, color);
-            }
-        } else {
-            ObjGroup group = obj.getGroup(state.getName());
-            for (int index = 0; index < group.getNumFaces(); index++) {
-                ObjFace face = group.getFace(index);
-                lastMaterial = renderFace(lastMaterial, face, consumer, modelStack, light, overlay, color);
-            }
-        }
-    }
-
-    protected ObjModel.BakedMaterial renderFace(ObjModel.BakedMaterial lastMaterial, ObjFace face, VertexConsumer consumer, PoseStack matrices, int light, int overlay, int color) {
-        ObjModel.BakedMaterial material = findMaterial(this.obj.getActivatedMaterialGroupName(face), lastMaterial);
-        consumer = (material != null ? material.sprite() : GCModelLoader.INSTANCE.getDefaultSprite()).wrap(consumer);
-        PoseStack.Pose last = matrices.last();
-        for (int vtx = 0; vtx < face.getNumVertices(); vtx++) {
-            FloatTuple pos = obj.getVertex(face.getVertexIndex(vtx));
-            consumer.addVertex(last.pose(), pos.getX(), pos.getY(), pos.getZ());
-            consumer.setColor(color);
-            FloatTuple uv = obj.getTexCoord(face.getTexCoordIndex(vtx));
-            consumer.setUv(uv.getX(), 1 - uv.getY());
-
-            consumer.setOverlay(overlay);
-            consumer.setLight(light);
-            FloatTuple normals = obj.getNormal(face.getNormalIndex(vtx));
-            consumer.setNormal(last, normals.getX(), normals.getY(), normals.getZ());
-        }
-
-        return material;
-    }
-
-    protected ObjModel.BakedMaterial findMaterial(String name, ObjModel.BakedMaterial lastMaterial) {
-        for (ObjModel.BakedMaterial material : materials)
-            if (material.material().getName().equals(name))
-                return material;
-        return lastMaterial;
+    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
+        this.mesh.outputTo(context.getEmitter());
     }
 
     @Override
-    public void close() {}
+    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
+        this.mesh.outputTo(context.getEmitter());
+    }
+
+    @Override
+    public boolean isVanillaAdapter() {
+        return false;
+    }
+
+    @Override
+    public boolean useAmbientOcclusion() {
+        return false;
+    }
+
+    @Override
+    public boolean isGui3d() {
+        return false;
+    }
+
+    @Override
+    public boolean usesBlockLight() {
+        return false;
+    }
+
+    @Override
+    public boolean isCustomRenderer() {
+        return false;
+    }
+
+    @Override
+    public TextureAtlasSprite getParticleIcon() {
+        return particle();
+    }
+
+    @Override
+    public ItemTransforms getTransforms() {
+        return null;
+    }
+
+    @Override
+    public ItemOverrides getOverrides() {
+        return null;
+    }
 }

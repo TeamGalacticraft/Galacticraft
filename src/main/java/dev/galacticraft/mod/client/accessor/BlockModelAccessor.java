@@ -20,20 +20,14 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.model;
+package dev.galacticraft.mod.client.accessor;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import org.jetbrains.annotations.Nullable;
+import de.javagl.obj.Mtl;
+import de.javagl.obj.Obj;
+import dev.galacticraft.mod.client.model.types.UnbakedObjModel;
 
-public class GCMissingModel implements GCModel {
-    @Override
-    public void render(PoseStack modelStack, @Nullable GCModelState state, VertexConsumer consumer, int light, int overlay, int color) {
+import java.util.List;
 
-    }
-
-    @Override
-    public void close() {
-
-    }
+public interface BlockModelAccessor {
+    void galacticraft$setObjData(UnbakedObjModel obj);
 }

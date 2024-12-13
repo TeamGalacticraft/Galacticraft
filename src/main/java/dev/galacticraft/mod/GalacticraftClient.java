@@ -31,7 +31,7 @@ import dev.galacticraft.mod.client.model.GCModelLoader;
 import dev.galacticraft.mod.client.model.GCRenderTypes;
 import dev.galacticraft.mod.client.model.sprite.OxygenSealerTextureProvider;
 import dev.galacticraft.mod.client.model.sprite.SolarPanelTextureProvider;
-import dev.galacticraft.mod.client.model.types.ObjModel;
+import dev.galacticraft.mod.client.model.types.UnbakedObjModel;
 import dev.galacticraft.mod.client.network.GCClientPacketReceiver;
 import dev.galacticraft.mod.client.particle.*;
 import dev.galacticraft.mod.client.render.block.entity.GCBlockEntityRenderer;
@@ -197,7 +197,7 @@ public class GalacticraftClient implements ClientModInitializer {
         helper.registerReloadListener(GCModelLoader.INSTANCE);
         helper.registerReloadListener(GCResourceReloadListener.INSTANCE);
 
-        GCModelLoader.registerModelType(ObjModel.TYPE);
+        GCModelLoader.registerModelType(UnbakedObjModel.TYPE);
 
         GCDimensionEffects.register();
     }

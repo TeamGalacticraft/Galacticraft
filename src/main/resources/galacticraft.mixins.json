@@ -30,6 +30,8 @@
     "client.AbstractClientPlayerMixin",
     "client.AlphaWarningTitleScreenMixin",
     "client.AnimalModelAgeableListModel",
+    "client.BlockModelMixin",
+    "client.BlockModelMixin$DeserializerMixin",
     "client.CameraMixin",
     "client.ClientLevelMixin",
     "client.FogRendererMixin",

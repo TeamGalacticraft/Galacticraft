@@ -24,10 +24,12 @@ package dev.galacticraft.mod.client.render.block.entity;
 
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+
 public class GCBlockEntityRenderer {
     public static void register() {
-        BlockEntityRendererRegistry.register(GCBlockEntityTypes.BASIC_SOLAR_PANEL, BasicSolarPanelBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.register(GCBlockEntityTypes.ADVANCED_SOLAR_PANEL, AdvancedSolarPanelBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.register(GCBlockEntityTypes.GLASS_FLUID_PIPE, FluidPipeBlockEntityRenderer::new);
+        BlockEntityRenderers.register(GCBlockEntityTypes.BASIC_SOLAR_PANEL, BasicSolarPanelBlockEntityRenderer::new);
+        BlockEntityRenderers.register(GCBlockEntityTypes.ADVANCED_SOLAR_PANEL, AdvancedSolarPanelBlockEntityRenderer::new);
+        BlockEntityRenderers.register(GCBlockEntityTypes.GLASS_FLUID_PIPE, FluidPipeBlockEntityRenderer::new);
     }
 }

@@ -25,7 +25,7 @@ package dev.galacticraft.mod.client.render.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.model.GCBakedModel;
+import dev.galacticraft.mod.client.model.GCModel;
 import dev.galacticraft.mod.client.model.GCModelLoader;
 import dev.galacticraft.mod.client.model.GCRenderTypes;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
@@ -46,7 +46,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
     private static final ResourceLocation MODEL = Constant.id("models/misc/sphere.json");
     public static final ResourceLocation TEXTURE = Constant.id("textures/model/sphere.png");
-    public static GCBakedModel bubbleModel;
+    public static GCModel bubbleModel;
 
     public BubbleEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
