@@ -332,6 +332,7 @@ public class GCBlocks {
         FlammableBlockRegistry.getDefaultInstance().add(CRUDE_OIL, 60, 100);
         FlammableBlockRegistry.getDefaultInstance().add(CAVERNOUS_VINES, 15, 60);
         FlammableBlockRegistry.getDefaultInstance().add(CAVERNOUS_VINES_PLANT, 15, 60);
+        FlattenableBlockRegistry.register(MOON_TURF, MOON_DIRT_PATH.defaultBlockState());
         FlattenableBlockRegistry.register(MOON_DIRT, MOON_DIRT_PATH.defaultBlockState());
     }
 
