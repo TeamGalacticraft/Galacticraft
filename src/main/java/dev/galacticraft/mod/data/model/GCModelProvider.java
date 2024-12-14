@@ -251,11 +251,13 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createNonTemplateModelBlock(GCBlocks.AIR_LOCK_SEAL);
 
         var para = MultiPartGenerator.multiPart(GCBlocks.PARACHEST);
-        GCBlocks.PARACHEST.getStateDefinition().getPossibleStates().forEach(state -> {
-            para.with(Condition.condition().term(ParaChestBlock.FACING, state.getValue(ParaChestBlock.FACING))/*.term(ParaChestBlock.COLOR, state.getValue(ParaChestBlock.COLOR))*/, Variant.variant()
-                    .with(VariantProperties.Y_ROT, getRotationFromDirection(state.getValue(ParaChestBlock.FACING)))
+        Direction.Plane.HORIZONTAL.forEach(state -> {
+            para.with(Condition.condition().term(ParaChestBlock.FACING, state), Variant.variant()
+                    .with(VariantProperties.Y_ROT, getRotationFromDirection(state))
                     .with(VariantProperties.MODEL, ResourceLocation.parse("galacticraft:block/parachest/parachest")));
-            para.with(Condition.condition().term(ParaChestBlock.COLOR, state.getValue(ParaChestBlock.COLOR)), Variant.variant()
+        });
+        GCBlocks.PARACHEST.getStateDefinition().getPossibleStates().forEach(state -> {
+            para.with(Condition.condition().term(ParaChestBlock.FACING, state.getValue(ParaChestBlock.FACING)).term(ParaChestBlock.COLOR, state.getValue(ParaChestBlock.COLOR)), Variant.variant()
                     .with(VariantProperties.Y_ROT, getRotationFromDirection(state.getValue(ParaChestBlock.FACING)))
                     .with(VariantProperties.MODEL, ResourceLocation.parse("galacticraft:block/parachest/" + state.getValue(ParaChestBlock.COLOR) + "_chute")));
         });

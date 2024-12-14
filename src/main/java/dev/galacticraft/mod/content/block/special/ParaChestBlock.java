@@ -50,6 +50,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -64,7 +65,8 @@ public class ParaChestBlock extends GCBlock implements EntityBlock {
 
     public ParaChestBlock(Properties properties) {
         super(properties);
-        registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH));
+        registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH)
+            .setValue(COLOR, DyeColor.WHITE));
     }
 
     @Override
@@ -80,19 +82,27 @@ public class ParaChestBlock extends GCBlock implements EntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {
-        return this.defaultBlockState().setValue(FACING, blockPlaceContext.getHorizontalDirection());
+        BlockState blockState = this.defaultBlockState()
+            .setValue(FACING, blockPlaceContext.getHorizontalDirection());
+
+        ItemStack itemStack = blockPlaceContext.getItemInHand();
+        if (!itemStack.isEmpty()) {
+            blockState = blockState.setValue(COLOR, itemStack.getComponents().getOrDefault(DataComponents.BASE_COLOR, DyeColor.WHITE));
+        }
+        return blockState;
     }
 
     @Override
     public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide && !player.isCreative()) {
             ItemStack parachest = new ItemStack(this);
-            parachest.set(DataComponents.BLOCK_STATE, BlockItemStateProperties.EMPTY.with(COLOR, blockState.getValue(COLOR)));
-            ItemEntity itemEntity = new ItemEntity(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), parachest);
+            parachest.set(DataComponents.BASE_COLOR, blockState.getValue(COLOR));
+            Vec3 pos = blockPos.getCenter();
+            ItemEntity itemEntity = new ItemEntity(level, pos.x, pos.y, pos.z, parachest);
             itemEntity.setDefaultPickUpDelay();
             level.addFreshEntity(itemEntity);
         }
-        return super.playerWillDestroy(level, blockPos, blockState, player);
+        return null;
     }
 
     @Override
