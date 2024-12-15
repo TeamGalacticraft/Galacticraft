@@ -178,9 +178,7 @@ public class VariableSizedContainer implements Container {
         tag.putInt("TargetSize", this.targetSize);
         ListTag list = new ListTag();
         for (ItemStack stack : this.stacks) {
-            CompoundTag item = new CompoundTag();
-            stack.save(provider, item);
-            list.add(item);
+            list.add(stack.saveOptional(provider));
         }
         tag.put("Items", list);
         return tag;
