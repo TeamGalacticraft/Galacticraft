@@ -47,6 +47,7 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.block.environment.FallenMeteorBlock;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.events.ClientEventHandler;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
@@ -60,6 +61,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
@@ -72,11 +74,25 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluids;
+
+import java.util.*;
+import java.util.List;
+
+import static dev.galacticraft.mod.content.item.CannedFoodItem.registerCan;
+import static dev.galacticraft.mod.content.item.GCItems.CANNED_FOOD_ITEMS;
+import static dev.galacticraft.mod.util.TextureUtils.getAverageColor;
 
 @Environment(EnvType.CLIENT)
 public class GalacticraftClient implements ClientModInitializer {
+
+    private boolean colorsInitialized = false;
+
     @Override
     public void onInitializeClient() {
         long startInitTime = System.currentTimeMillis();
@@ -96,6 +112,7 @@ public class GalacticraftClient implements ClientModInitializer {
         MenuScreens.register(GCMenuTypes.ENERGY_STORAGE_MODULE, EnergyStorageModuleScreen::new);
         MenuScreens.register(GCMenuTypes.OXYGEN_COLLECTOR, OxygenCollectorScreen::new);
         MenuScreens.register(GCMenuTypes.OXYGEN_COMPRESSOR, OxygenCompressorScreen::new);
+        MenuScreens.register(GCMenuTypes.FOOD_CANNER, FoodCannerScreen::new);
         MenuScreens.register(GCMenuTypes.OXYGEN_DECOMPRESSOR, OxygenDecompressorScreen::new);
         MenuScreens.register(GCMenuTypes.PLAYER_INV_GC, GCPlayerInventoryScreen::new);
         MenuScreens.register(GCMenuTypes.OXYGEN_BUBBLE_DISTRIBUTOR, OxygenBubbleDistributorScreen::new);
@@ -179,11 +196,56 @@ public class GalacticraftClient implements ClientModInitializer {
         LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
 
         });
-
+        GCRenderTypes.init();
+        //couldn't be bothered finding a better way to get the texture of the items so overrides exists now
+        List<String[]> nameOverride = new ArrayList<>();
+        nameOverride.add(new String[]{"enchanted_golden_apple", "golden_apple"});
+        nameOverride.add(new String[]{"air", "lime_dye"});
         ModelLoadingPlugin.register(GCModelLoader.INSTANCE);
 
-        GCRenderTypes.init();
 
+        //Todo: make fix for the color of the labels based of component nbt
+//        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+//            if (!colorsInitialized)
+//            {
+//                if (client.player != null && client.level != null)
+//                {
+//                    CANNED_FOOD_ITEMS.forEach(cannedFoodItem -> {
+//                        Optional<ItemStack> cannedItem = CannedFoodItem.getContents(cannedFoodItem.getDefaultInstance()).stream().findFirst();
+//                        if (cannedItem.isPresent()) {
+//                            String nameComponent = cannedItem.toString();
+//                            String itemName = extractInsideBrackets(nameComponent);
+//                            assert itemName != null;
+//                            String[] parts = itemName.split(":");
+//                            String namespace = parts[0];
+//                            String item = parts[1];
+//                            for (String[] element: nameOverride)
+//                            {
+//                                if (parts[1].equals(element[0]))
+//                                {
+//                                    item = element[1];
+//                                }
+//                            }
+//                            ResourceLocation textureLocation = new ResourceLocation(namespace, "textures/item/" + item + ".png");
+//                            int avgColor = getAverageColor(textureLocation);
+//                            cannedFoodItem.setColor(avgColor);
+//                        }
+//                    });
+//                    colorsInitialized = true;
+//                }
+//            }
+//        });
+        //For every edible food create a creative item of that canned food type
+        for (Item item : BuiltInRegistries.ITEM)
+        {
+            if (item.components().has(DataComponents.FOOD))
+            {
+                if (!(item instanceof CannedFoodItem))
+                {
+                    registerCan(item.getDefaultInstance());
+                }
+            }
+        }
         Constant.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 
@@ -200,5 +262,14 @@ public class GalacticraftClient implements ClientModInitializer {
         GCModelLoader.registerModelType(UnbakedObjModel.TYPE);
 
         GCDimensionEffects.register();
+    }
+
+    public static String extractInsideBrackets(String input) {
+        int startIndex = input.indexOf('{');
+        int endIndex = input.indexOf('}');
+        if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+            return input.substring(startIndex + 1, endIndex);
+        }
+        return null;
     }
 }
