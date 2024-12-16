@@ -271,6 +271,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.MARS_COBBLESTONE
                 );
 
+        this.tag(BlockTags.MINEABLE_WITH_AXE).add(GCBlocks.PARACHEST);
+
         this.tag(BlockTags.MINEABLE_WITH_SHOVEL)
                 .add(
                         GCBlocks.MOON_TURF,
