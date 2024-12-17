@@ -143,6 +143,15 @@
       }
     ]
   },
+  "entity.throwable_meteor_chunk.throw": {
+    "subtitle": "subtitles.galacticraft.entity.throwable_meteor_chunk.throw",
+    "sounds": [
+      {
+        "name": "minecraft:random/bow",
+        "stream": false
+      }
+    ]
+  },
   "ambience.singledrip": {
     "sounds": [
       "galacticraft:ambience/singledrip1",

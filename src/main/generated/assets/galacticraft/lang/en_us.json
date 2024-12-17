@@ -543,6 +543,7 @@
   "smithing_template.galacticraft.titanium_upgrade.ingredients": "Compressed Titanium",
   "star.galacticraft.sol": "Sol",
   "star.galacticraft.sol.description": "",
+  "subtitles.galacticraft.entity.throwable_meteor_chunk.throw": "Meteor Chunk flies",
   "tooltip.galacticraft.creative_only": "Creative Only",
   "tooltip.galacticraft.energy_remaining": "Energy Remaining: %s",
   "tooltip.galacticraft.glowstone_lantern": "Glowstone Lanterns are best used to light areas when there is no oxygen for lanterns to burn.",

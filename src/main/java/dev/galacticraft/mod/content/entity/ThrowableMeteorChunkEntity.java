@@ -74,10 +74,10 @@ public class ThrowableMeteorChunkEntity extends ThrowableItemProjectile {
 
     @Override
     protected Item getDefaultItem() {
-        if (this.entityData.get(HOT)) {
-            return GCItems.HOT_THROWABLE_METEOR_CHUNK;
-        } else {
+        if (this.entityData == null || !this.entityData.get(HOT)) {
             return GCItems.THROWABLE_METEOR_CHUNK;
+        } else {
+            return GCItems.HOT_THROWABLE_METEOR_CHUNK;
         }
     }
 
