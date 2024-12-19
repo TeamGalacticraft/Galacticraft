@@ -185,12 +185,12 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
         if (level.isClientSide()) return InteractionResult.CONSUME;
 
         if(player.getCryogenicChamberCooldown() == 0) {
-            player.beginCyroSleep();
+            player.beginCryoSleep();
 
             player.startSleepInBed(basePos).ifLeft(problem -> {
                 if (problem.getMessage() != null) player.displayClientMessage(problem.getMessage(), true);
 
-                player.endCyroSleep();
+                player.endCryoSleep();
             });
         } else {
             player.displayClientMessage(Component.literal("The chamber is way to hot right now! It needs " + player.getCryogenicChamberCooldown() + " seconds to cool down before I sleep again."), false);
