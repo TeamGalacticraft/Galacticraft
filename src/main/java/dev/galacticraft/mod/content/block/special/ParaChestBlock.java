@@ -93,19 +93,6 @@ public class ParaChestBlock extends GCBlock implements EntityBlock {
     }
 
     @Override
-    public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
-        if (!level.isClientSide && !player.isCreative()) {
-            ItemStack parachest = new ItemStack(this);
-            parachest.set(DataComponents.BASE_COLOR, blockState.getValue(COLOR));
-            Vec3 pos = blockPos.getCenter();
-            ItemEntity itemEntity = new ItemEntity(level, pos.x, pos.y, pos.z, parachest);
-            itemEntity.setDefaultPickUpDelay();
-            level.addFreshEntity(itemEntity);
-        }
-        return null;
-    }
-
-    @Override
     public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
         if (!blockState.is(blockState2.getBlock())) {
             BlockEntity blockEntity = level.getBlockEntity(blockPos);
