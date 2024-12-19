@@ -50,6 +50,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -64,7 +65,8 @@ public class ParaChestBlock extends GCBlock implements EntityBlock {
 
     public ParaChestBlock(Properties properties) {
         super(properties);
-        registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH));
+        registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH)
+            .setValue(COLOR, DyeColor.WHITE));
     }
 
     @Override
@@ -80,19 +82,14 @@ public class ParaChestBlock extends GCBlock implements EntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {
-        return this.defaultBlockState().setValue(FACING, blockPlaceContext.getHorizontalDirection());
-    }
+        BlockState blockState = this.defaultBlockState()
+            .setValue(FACING, blockPlaceContext.getHorizontalDirection());
 
-    @Override
-    public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
-        if (!level.isClientSide) {
-            ItemStack parachest = new ItemStack(this);
-            parachest.set(DataComponents.BLOCK_STATE, BlockItemStateProperties.EMPTY.with(COLOR, blockState.getValue(COLOR)));
-            ItemEntity itemEntity = new ItemEntity(level, blockPos.getX(), blockPos.getY(), blockPos.getZ(), parachest);
-            itemEntity.setDefaultPickUpDelay();
-            level.addFreshEntity(itemEntity);
+        ItemStack itemStack = blockPlaceContext.getItemInHand();
+        if (!itemStack.isEmpty()) {
+            blockState = blockState.setValue(COLOR, itemStack.getComponents().getOrDefault(DataComponents.BASE_COLOR, DyeColor.WHITE));
         }
-        return super.playerWillDestroy(level, blockPos, blockState, player);
+        return blockState;
     }
 
     @Override
