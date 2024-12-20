@@ -1,21 +1,6 @@
 {
   "parent": "galacticraft:block/cryogenic_chamber",
   "display": {
-    "thirdperson_righthand": {
-      "rotation": [75, 45, 0],
-      "translation": [1, 1.5, 2],
-      "scale": [0.375, 0.375, 0.375]
-    },
-    "firstperson_righthand": {
-      "rotation": [1, 135, 0],
-      "translation": [0, 1.5, 0],
-      "scale": [0.4, 0.4, 0.4]
-    },
-    "firstperson_lefthand": {
-      "rotation": [0, 135, 0],
-      "translation": [0, 1.5, 0],
-      "scale": [0.4, 0.4, 0.4]
-    },
     "gui": {
       "rotation": [30, 135, 0],
       "translation": [0, 0, 0],
@@ -23,6 +8,20 @@
     },
     "fixed": {
       "translation": [0, 0, 0],
+      "scale": [0.333, 0.333, 0.333]
+    },
+    "ground": {
+      "translation": [0, 6, 0],
+      "scale": [0.25, 0.25, 0.25]
+    },
+    "thirdperson_righthand": {
+      "rotation": [75, 45, 0],
+      "translation": [1, 1.5, 2],
+      "scale": [0.375, 0.375, 0.375]
+    },
+    "firstperson_righthand": {
+      "rotation": [0, 135, 0],
+      "translation": [0, 1.5, 0],
       "scale": [0.4, 0.4, 0.4]
     }
   }
