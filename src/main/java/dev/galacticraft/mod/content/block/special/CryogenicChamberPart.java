@@ -52,6 +52,8 @@ import java.util.ArrayList;
 public class CryogenicChamberPart extends BaseEntityBlock {
     public static final MapCodec<CryogenicChamberPart> CODEC = simpleCodec(CryogenicChamberPart::new);
     public static final BooleanProperty TOP = BooleanProperty.create("top");
+    protected static final VoxelShape SHAPE_TOP = Shapes.box(0.0, -2.0, 0.0, 1.0, 1.0, 1.0);
+    protected static final VoxelShape SHAPE_MID = Shapes.box(0.0, -1.0, 0.0, 1.0, 2.0, 1.0);
 
     public CryogenicChamberPart(Properties properties) {
         super(properties);
@@ -86,11 +88,7 @@ public class CryogenicChamberPart extends BaseEntityBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
-        if (state.getValue(TOP)) {
-            return Shapes.box(0.0, -2.0, 0.0, 1.0, 1.0, 1.0);
-        } else {
-            return Shapes.box(0.0, -1.0, 0.0, 1.0, 2.0, 1.0);
-        }
+        return state.getValue(TOP) ? SHAPE_TOP : SHAPE_MID;
     }
 
     @Override
