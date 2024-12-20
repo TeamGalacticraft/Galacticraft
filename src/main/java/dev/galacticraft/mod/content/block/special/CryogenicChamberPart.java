@@ -85,6 +85,15 @@ public class CryogenicChamberPart extends BaseEntityBlock {
     }
 
     @Override
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
+        if (state.getValue(TOP)) {
+            return Shapes.box(0.0, -2.0, 0.0, 1.0, 1.0, 1.0);
+        } else {
+            return Shapes.box(0.0, -1.0, 0.0, 1.0, 2.0, 1.0);
+        }
+    }
+
+    @Override
     public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
         var partBE = level.getBlockEntity(blockPos);
         var be = (CryogenicChamberPartBlockEntity) partBE;

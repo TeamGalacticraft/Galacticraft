@@ -95,7 +95,7 @@ public class GCEventHandlers {
 
     public static void onWakeFromCryoSleep(LivingEntity entity, BlockPos sleepingPos) {
         if (!entity.level().isClientSide() && entity.isInCryoSleep()) {
-            entity.endCyroSleep();
+            entity.endCryoSleep();
         }
     }
 
