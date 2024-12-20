@@ -46,6 +46,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
@@ -61,11 +62,12 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
     public static final MapCodec<CryogenicChamberBlock> CODEC = simpleCodec(CryogenicChamberBlock::new);
     private static final List<BlockPos> PARTS = List.of(new BlockPos(0, 1, 0), new BlockPos(0, 2, 0));
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty OCCUPIED = BooleanProperty.create("occupied");
     protected static final VoxelShape SHAPE = Shapes.box(0.0, 0.0, 0.0, 1.0, 3.0, 1.0);
 
     public CryogenicChamberBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(OCCUPIED, false));
     }
 
     @Override
@@ -91,7 +93,7 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, OCCUPIED);
     }
 
     @Override
@@ -155,15 +157,15 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
     }
 
     @Override
-    public void wasExploded(Level world, BlockPos pos, Explosion explosion) {
-        for (BlockPos part : this.getOtherParts(world.getBlockState(pos))) {
+    public void wasExploded(Level level, BlockPos pos, Explosion explosion) {
+        for (BlockPos part : this.getOtherParts(level.getBlockState(pos))) {
             part = pos.immutable().offset(part);
-            if (!(world.getBlockEntity(part) instanceof MultiBlockPart)) {
+            if (!(level.getBlockEntity(part) instanceof MultiBlockPart)) {
                 continue;
             }
-            world.removeBlock(part, false);
+            level.removeBlock(part, false);
         }
-        super.wasExploded(world, pos, explosion);
+        super.wasExploded(level, pos, explosion);
     }
 
     @Override
@@ -191,8 +193,11 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
     public InteractionResult multiBlockUseWithoutItem(BlockState baseState, Level level, BlockPos basePos, Player player) {
         if (level.isClientSide()) return InteractionResult.CONSUME;
 
-        if(player.getCryogenicChamberCooldown() == 0) {
+        if (baseState.getValue(OCCUPIED)) {
+            player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_OCCUPIED), true);
+        } else if (player.getCryogenicChamberCooldown() == 0) {
             player.beginCryoSleep();
+            level.setBlockAndUpdate(basePos, baseState.setValue(OCCUPIED, true));
 
             player.startSleepInBed(basePos).ifLeft(problem -> {
                 switch(problem) {
@@ -207,6 +212,7 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
                 }
 
                 player.endCryoSleep();
+                level.setBlockAndUpdate(basePos, baseState.setValue(OCCUPIED, false));
             });
         } else {
             player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_HOT, player.getCryogenicChamberCooldown()), false);

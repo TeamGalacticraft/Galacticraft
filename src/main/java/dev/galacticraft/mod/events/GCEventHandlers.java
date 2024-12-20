@@ -94,8 +94,11 @@ public class GCEventHandlers {
     }
 
     public static void onWakeFromCryoSleep(LivingEntity entity, BlockPos sleepingPos) {
-        if (!entity.level().isClientSide() && entity.isInCryoSleep()) {
+        Level level = entity.level();
+        if (!level.isClientSide() && entity.isInCryoSleep()) {
             entity.endCryoSleep();
+            BlockState baseState = level.getBlockState(sleepingPos);
+            level.setBlockAndUpdate(sleepingPos, baseState.setValue(CryogenicChamberBlock.OCCUPIED, false));
         }
     }
 
