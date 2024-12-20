@@ -36,7 +36,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Player.BedSleepingProblem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -197,10 +196,10 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
 
             player.startSleepInBed(basePos).ifLeft(problem -> {
                 switch(problem) {
-                    case BedSleepingProblem.OBSTRUCTED:
+                    case Player.BedSleepingProblem.OBSTRUCTED:
                         player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_OBSTRUCTED), true);
                         break;
-                    case BedSleepingProblem.TOO_FAR_AWAY:
+                    case Player.BedSleepingProblem.TOO_FAR_AWAY:
                         player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_TOO_FAR_AWAY), true);
                         break;
                     default:
