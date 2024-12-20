@@ -83,6 +83,11 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
     }
 
     @Override
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
+        return Shapes.box(0.0, 0.0, 0.0, 1.0, 3.0, 1.0);
+    }
+
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
