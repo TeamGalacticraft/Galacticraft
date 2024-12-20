@@ -1,9 +1,22 @@
 {
   "variants": {
-    "top=true": { "model": "galacticraft:block/invisible_machine"},
-    "facing=north,top=false": { "model": "galacticraft:block/cryogenic_chamber"},
-    "facing=east,top=false":  { "model": "galacticraft:block/cryogenic_chamber", "y": 90 },
-    "facing=west,top=false":  { "model": "galacticraft:block/cryogenic_chamber", "y": 270 },
-    "facing=south,top=false": { "model": "galacticraft:block/cryogenic_chamber", "y": 180 }
+    "top=true": {
+      "model": "galacticraft:block/invisible_machine"
+    },
+    "facing=north,top=false": {
+      "model": "galacticraft:block/cryogenic_chamber"
+    },
+    "facing=east,top=false":  {
+      "model": "galacticraft:block/cryogenic_chamber",
+      "y": 90
+    },
+    "facing=west,top=false":  {
+      "model": "galacticraft:block/cryogenic_chamber",
+      "y": 270
+    },
+    "facing=south,top=false": {
+      "model": "galacticraft:block/cryogenic_chamber",
+      "y": 180
+    }
   }
 }
