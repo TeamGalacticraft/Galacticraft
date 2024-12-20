@@ -25,6 +25,7 @@ package dev.galacticraft.mod.content.block.special;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.block.GCBlock;
+import dev.galacticraft.mod.content.block.entity.ParaChestBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;

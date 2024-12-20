@@ -24,8 +24,8 @@ package dev.galacticraft.mod.content.entity;
 
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
+import dev.galacticraft.mod.content.block.entity.ParaChestBlockEntity;
 import dev.galacticraft.mod.content.block.special.ParaChestBlock;
-import dev.galacticraft.mod.content.block.special.ParaChestBlockEntity;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
