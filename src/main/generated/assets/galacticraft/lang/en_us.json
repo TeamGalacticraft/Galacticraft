@@ -269,6 +269,8 @@
   "category.recipe_viewer.compressing": "Compressing",
   "chat.galacticraft.bed_fail": "Uh oh, what if the oxygen runs out when I am asleep? I'll need a Cryogenic Chamber to sleep in space!",
   "chat.galacticraft.chamber_hot": "The chamber is way too hot right now! It needs %s seconds to cool down before I sleep again.",
+  "chat.galacticraft.chamber_obstructed": "This cryogenic chamber is obstructed",
+  "chat.galacticraft.chamber_too_far_away": "You may not rest now; the cryogenic chamber is too far away",
   "chat.galacticraft.rocket.warning": "Press again to launch.",
   "commands.galacticraft.debug.registry.dump": "Dumped: %s",
   "commands.galacticraft.debug.registry.id": "%s - %s: %s",

@@ -129,6 +129,8 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(Chat.BED_FAIL, "Uh oh, what if the oxygen runs out when I am asleep? I'll need a Cryogenic Chamber to sleep in space!");
         this.add(Chat.CHAMBER_HOT, "The chamber is way too hot right now! It needs %s seconds to cool down before I sleep again.");
+        this.add(Chat.CHAMBER_OBSTRUCTED, "This cryogenic chamber is obstructed");
+        this.add(Chat.CHAMBER_TOO_FAR_AWAY, "You may not rest now; the cryogenic chamber is too far away");
         this.add(Chat.ROCKET_WARNING, "Press again to launch.");
 
         this.add(RegistryDebug.DUMP, "Dumped: %s");
