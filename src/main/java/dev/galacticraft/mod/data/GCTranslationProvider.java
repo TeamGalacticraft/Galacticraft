@@ -295,7 +295,7 @@ public class GCTranslationProvider extends TranslationProvider {
 
         // MULTIBLOCK PARTS
         this.block(GCBlocks.SOLAR_PANEL_PART, "Solar Panel");
-        this.block(GCBlocks.CRYOGENIC_CHAMBER_PART, "Cryogenic Chamber Part");
+        this.block(GCBlocks.CRYOGENIC_CHAMBER_PART, "Cryogenic Chamber");
 
         // MISC MACHINES
         this.block(GCBlocks.CRYOGENIC_CHAMBER, "Cryogenic Chamber");
