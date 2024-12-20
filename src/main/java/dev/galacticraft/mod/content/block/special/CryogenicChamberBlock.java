@@ -28,6 +28,7 @@ import dev.galacticraft.mod.api.block.MultiBlockPart;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.CryogenicChamberBlockEntity;
 import dev.galacticraft.mod.particle.GCParticleTypes;
+import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -198,7 +199,7 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
                 player.endCryoSleep();
             });
         } else {
-            player.displayClientMessage(Component.literal("The chamber is way to hot right now! It needs " + player.getCryogenicChamberCooldown() + " seconds to cool down before I sleep again."), false);
+            player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_HOT, player.getCryogenicChamberCooldown()), false);
         }
 
         return InteractionResult.SUCCESS;
