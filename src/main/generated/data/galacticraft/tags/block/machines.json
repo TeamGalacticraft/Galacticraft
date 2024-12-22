@@ -15,7 +15,9 @@
     "galacticraft:oxygen_bubble_distributor",
     "galacticraft:oxygen_decompressor",
     "galacticraft:oxygen_compressor",
+    "galacticraft:food_canner",
     "galacticraft:oxygen_storage_module",
-    "galacticraft:fuel_loader"
+    "galacticraft:fuel_loader",
+    "galacticraft:rocket_workbench"
   ]
 }
