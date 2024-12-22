@@ -28,6 +28,7 @@ import dev.galacticraft.mod.util.Translations;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -43,6 +44,11 @@ public class HotThrowableMeteorChunkItem extends ThrowableMeteorChunkItem {
 
     public HotThrowableMeteorChunkItem(Properties settings) {
         super(settings);
+    }
+
+    @Override
+    public boolean allowComponentsUpdateAnimation(Player player, InteractionHand hand, ItemStack oldStack, ItemStack newStack) {
+        return oldStack.getItem() != newStack.getItem();
     }
 
     @Override
