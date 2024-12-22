@@ -40,9 +40,7 @@
     "client.LivingEntityRendererMixin",
     "client.LocalPlayerMixin",
     "client.MinecraftMixin",
-    "client.PauseMenuScreenMixin",
-    "client.VillagerModelMixin",
-    "client.VillagerRendererMixin"
+    "client.PauseMenuScreenMixin"
   ],
   "minVersion": "0.8.0",
   "injectors": {

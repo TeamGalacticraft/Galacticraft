@@ -573,26 +573,27 @@ public interface Constant {
     }
 
     interface Entity {
+        String MOON_VILLAGER = "moon_villager";
         String EVOLVED_ZOMBIE = "evolved_zombie";
         String EVOLVED_CREEPER = "evolved_creeper";
+        String EVOLVED_SKELETON = "evolved_skeleton";
+        String EVOLVED_SPIDER = "evolved_spider";
+        String EVOLVED_PILLAGER = "evolved_pillager";
+        String EVOLVED_EVOKER = "evolved_evoker";
+        String EVOLVED_VINDICATOR = "evolved_vindicator";
         String T1_ROCKET = "t1_rocket";
         String ROCKET = "rocket";
         String LANDER = "lander";
         String BUGGY = "buggy";
         String PARACHEST = "parachest";
         String BUBBLE = "bubble";
-        String EVOLVED_SKELETON = "evolved_skeleton";
-        String EVOLVED_SPIDER = "evolved_spider";
-        String EVOLVED_PILLAGER = "evolved_pillager";
-        String EVOLVED_EVOKER = "evolved_evoker";
-        String EVOLVED_VINDICATOR = "evolved_vindicator";
-        String EVOLVED_SKELETON_BOSS = "evolved_skeleton_boss";
         String GREY = "grey";
         String ARCH_GREY = "arch_grey";
         String RUMBLER = "rumbler";
         String OLI_GRUB = "oli_grub";
         String COMET_CUBE = "comet_cube";
         String GAZER = "gazer";
+        String EVOLVED_SKELETON_BOSS = "evolved_skeleton_boss";
     }
 
     interface EntityTexture {
