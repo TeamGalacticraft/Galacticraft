@@ -30,9 +30,7 @@ import dev.galacticraft.mod.content.entity.boss.SkeletonBoss;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -44,87 +42,87 @@ public class GCEntityTypes {
             .eyeHeight(1.62F)
             .clientTrackingRange(10)
             .build());
-    public static final EntityType<EvolvedZombieEntity> EVOLVED_ZOMBIE = ENTITIES.register(Entity.EVOLVED_ZOMBIE, FabricEntityTypeBuilder.create(MobCategory.MONSTER, EvolvedZombieEntity::new)
-            .dimensions(EntityDimensions.fixed(0.6F, 1.95F))
+    public static final EntityType<EvolvedZombieEntity> EVOLVED_ZOMBIE = ENTITIES.register(Entity.EVOLVED_ZOMBIE, EntityType.Builder.of(EvolvedZombieEntity::new, MobCategory.MONSTER)
+            .sized(0.6F, 1.95F)
             .build());
-    public static final EntityType<EvolvedCreeperEntity> EVOLVED_CREEPER =  ENTITIES.register(Entity.EVOLVED_CREEPER, FabricEntityTypeBuilder.create(MobCategory.MONSTER, EvolvedCreeperEntity::new)
-            .dimensions(EntityDimensions.scalable(0.65F, 1.8F))
+    public static final EntityType<EvolvedCreeperEntity> EVOLVED_CREEPER =  ENTITIES.register(Entity.EVOLVED_CREEPER, EntityType.Builder.of(EvolvedCreeperEntity::new, MobCategory.MONSTER)
+            .sized(0.65F, 1.8F)
             .build());
-    public static final EntityType<EvolvedSkeletonEntity> EVOLVED_SKELETON = ENTITIES.register(Entity.EVOLVED_SKELETON, FabricEntityTypeBuilder.create(MobCategory.MONSTER, EvolvedSkeletonEntity::new)
-            .dimensions(EntityDimensions.fixed(0.6F, 1.99F))
+    public static final EntityType<EvolvedSkeletonEntity> EVOLVED_SKELETON = ENTITIES.register(Entity.EVOLVED_SKELETON, EntityType.Builder.of(EvolvedSkeletonEntity::new, MobCategory.MONSTER)
+            .sized(0.6F, 1.99F)
             .build());
-    public static final EntityType<EvolvedSpiderEntity> EVOLVED_SPIDER = ENTITIES.register(Entity.EVOLVED_SPIDER, FabricEntityTypeBuilder.create(MobCategory.MONSTER, EvolvedSpiderEntity::new)
-            .dimensions(EntityDimensions.fixed(1.4F, 0.9F))
+    public static final EntityType<EvolvedSpiderEntity> EVOLVED_SPIDER = ENTITIES.register(Entity.EVOLVED_SPIDER, EntityType.Builder.of(EvolvedSpiderEntity::new, MobCategory.MONSTER)
+            .sized(1.4F, 0.9F)
             .build());
-    public static final EntityType<EvolvedPillagerEntity> EVOLVED_PILLAGER = ENTITIES.register(Entity.EVOLVED_PILLAGER, FabricEntityTypeBuilder.create(MobCategory.MONSTER, EvolvedPillagerEntity::new)
-            .dimensions(EntityDimensions.fixed(0.6F, 1.95F))
+    public static final EntityType<EvolvedPillagerEntity> EVOLVED_PILLAGER = ENTITIES.register(Entity.EVOLVED_PILLAGER, EntityType.Builder.of(EvolvedPillagerEntity::new, MobCategory.MONSTER)
+            .sized(0.6F, 1.95F)
             .build());
-    public static final EntityType<EvolvedEvokerEntity> EVOLVED_EVOKER = ENTITIES.register(Entity.EVOLVED_EVOKER, FabricEntityTypeBuilder.create(MobCategory.MONSTER, EvolvedEvokerEntity::new)
-            .dimensions(EntityDimensions.fixed(0.6F, 1.95F))
+    public static final EntityType<EvolvedEvokerEntity> EVOLVED_EVOKER = ENTITIES.register(Entity.EVOLVED_EVOKER, EntityType.Builder.of(EvolvedEvokerEntity::new, MobCategory.MONSTER)
+            .sized(0.6F, 1.95F)
             .build());
-    public static final EntityType<EvolvedVindicatorEntity> EVOLVED_VINDICATOR = ENTITIES.register(Entity.EVOLVED_VINDICATOR, FabricEntityTypeBuilder.create(MobCategory.MONSTER, EvolvedVindicatorEntity::new)
-            .dimensions(EntityDimensions.fixed(0.6F, 1.95F))
+    public static final EntityType<EvolvedVindicatorEntity> EVOLVED_VINDICATOR = ENTITIES.register(Entity.EVOLVED_VINDICATOR, EntityType.Builder.of(EvolvedVindicatorEntity::new, MobCategory.MONSTER)
+            .sized(0.6F, 1.95F)
             .build());
-    public static final EntityType<GazerEntity> GAZER = ENTITIES.register(Entity.GAZER, FabricEntityTypeBuilder.create(MobCategory.MONSTER, GazerEntity::new)
-            .dimensions(EntityDimensions.fixed(2F, 3.0F))
+    public static final EntityType<GazerEntity> GAZER = ENTITIES.register(Entity.GAZER, EntityType.Builder.of(GazerEntity::new, MobCategory.MONSTER)
+            .sized(2F, 3.0F)
             .build());
-    public static final EntityType<RumblerEntity> RUMBLER = ENTITIES.register(Entity.RUMBLER, FabricEntityTypeBuilder.create(MobCategory.MONSTER, RumblerEntity::new)
-            .dimensions(EntityDimensions.fixed(1.0F, 1.55F))
+    public static final EntityType<RumblerEntity> RUMBLER = ENTITIES.register(Entity.RUMBLER, EntityType.Builder.of(RumblerEntity::new, MobCategory.MONSTER)
+            .sized(1.0F, 1.55F)
             .build());
-    public static final EntityType<CometCubeEntity> COMET_CUBE = ENTITIES.register(Entity.COMET_CUBE, FabricEntityTypeBuilder.create(MobCategory.MONSTER, CometCubeEntity::new)
-            .dimensions(EntityDimensions.fixed(1.0F, 1.55F))
+    public static final EntityType<CometCubeEntity> COMET_CUBE = ENTITIES.register(Entity.COMET_CUBE, EntityType.Builder.of(CometCubeEntity::new, MobCategory.MONSTER)
+            .sized(1.0F, 1.55F)
             .build());
-    public static final EntityType<OliGrubEntity> OLI_GRUB = ENTITIES.register(Entity.OLI_GRUB, FabricEntityTypeBuilder.create(MobCategory.CREATURE, OliGrubEntity::new)
-            .dimensions(EntityDimensions.fixed(1.0F, 1.55F))
+    public static final EntityType<OliGrubEntity> OLI_GRUB = ENTITIES.register(Entity.OLI_GRUB, EntityType.Builder.of(OliGrubEntity::new, MobCategory.CREATURE)
+            .sized(1.0F, 1.55F)
             .build());
-    public static final EntityType<GreyEntity> GREY = ENTITIES.register(Entity.GREY, FabricEntityTypeBuilder.create(MobCategory.CREATURE, GreyEntity::new)
-            .dimensions(EntityDimensions.fixed(0.6F, 1.55F))
+    public static final EntityType<GreyEntity> GREY = ENTITIES.register(Entity.GREY, EntityType.Builder.of(GreyEntity::new, MobCategory.CREATURE)
+            .sized(0.6F, 1.55F)
             .build());
-    public static final EntityType<ArchGreyEntity> ARCH_GREY = ENTITIES.register(Entity.ARCH_GREY, FabricEntityTypeBuilder.create(MobCategory.CREATURE, ArchGreyEntity::new)
-            .dimensions(EntityDimensions.fixed(0.6F, 1.55F))
+    public static final EntityType<ArchGreyEntity> ARCH_GREY = ENTITIES.register(Entity.ARCH_GREY, EntityType.Builder.of(ArchGreyEntity::new, MobCategory.CREATURE)
+            .sized(0.6F, 1.55F)
             .build());
 
-    public static final EntityType<BubbleEntity> BUBBLE = ENTITIES.register(Entity.BUBBLE, FabricEntityTypeBuilder.create(MobCategory.MISC, BubbleEntity::new)
+    public static final EntityType<BubbleEntity> BUBBLE = ENTITIES.register(Entity.BUBBLE, EntityType.Builder.of(BubbleEntity::new, MobCategory.MISC)
             .fireImmune()
-            .dimensions(EntityDimensions.fixed(0, 0))
-            .disableSaving()
-            .disableSummon()
+            .sized(0, 0)
+            .noSave()
+            .noSummon()
             .build());
-    public static final EntityType<RocketEntity> ROCKET = ENTITIES.register(Entity.ROCKET, FabricEntityTypeBuilder.create(MobCategory.MISC, RocketEntity::new)
-            .trackRangeBlocks(32)
-            .trackedUpdateRate(2)
-            .forceTrackedVelocityUpdates(false)
-            .dimensions(EntityDimensions.fixed(2.3F, 5.25F))
+    public static final EntityType<RocketEntity> ROCKET = ENTITIES.register(Entity.ROCKET, EntityType.Builder.of(RocketEntity::new, MobCategory.MISC)
+            .clientTrackingRange(32)
+            .updateInterval(2)
+            .alwaysUpdateVelocity(false)
+            .sized(2.3F, 5.25F)
             .build()); //PLAYER VALUES
-    public static final EntityType<LanderEntity> LANDER = ENTITIES.register(Entity.LANDER, FabricEntityTypeBuilder.<LanderEntity>create(MobCategory.MISC, LanderEntity::new)
-            .trackRangeBlocks(32)
-            .dimensions(EntityDimensions.fixed(2.5F, 4F))
+    public static final EntityType<LanderEntity> LANDER = ENTITIES.register(Entity.LANDER, EntityType.Builder.<LanderEntity>of(LanderEntity::new, MobCategory.MISC)
+            .clientTrackingRange(32)
+            .sized(2.5F, 4F)
             .fireImmune()
-            .disableSummon()
+            .noSummon()
             .build());
-    public static final EntityType<Buggy> BUGGY = ENTITIES.register(Entity.BUGGY, FabricEntityTypeBuilder.create(MobCategory.MISC, Buggy::new)
-            .trackRangeBlocks(150)
-            .trackedUpdateRate(5)
-            .forceTrackedVelocityUpdates(true)
-            .dimensions(EntityDimensions.scalable(1.4F, 0.6F))
+    public static final EntityType<Buggy> BUGGY = ENTITIES.register(Entity.BUGGY, EntityType.Builder.of(Buggy::new, MobCategory.MISC)
+            .clientTrackingRange(150)
+            .updateInterval(5)
+            .alwaysUpdateVelocity(true)
+            .sized(1.4F, 0.6F)
             .fireImmune()
             .build());
-    public static final EntityType<ParachestEntity> PARACHEST = ENTITIES.register(Entity.PARACHEST, FabricEntityTypeBuilder.<ParachestEntity>create(MobCategory.MISC, ParachestEntity::new)
-            .trackRangeBlocks(150)
-            .trackedUpdateRate(5)
-            .dimensions(EntityDimensions.fixed(1.0F, 1.0F))
+    public static final EntityType<ParachestEntity> PARACHEST = ENTITIES.register(Entity.PARACHEST, EntityType.Builder.<ParachestEntity>of(ParachestEntity::new, MobCategory.MISC)
+            .clientTrackingRange(150)
+            .updateInterval(5)
+            .sized(1.0F, 1.0F)
             .build());
 
-    public static final EntityType<ThrowableMeteorChunkEntity> THROWABLE_METEOR_CHUNK = ENTITIES.register(Constant.Item.THROWABLE_METEOR_CHUNK, FabricEntityTypeBuilder.<ThrowableMeteorChunkEntity>create(MobCategory.MISC, ThrowableMeteorChunkEntity::new)
-            .dimensions(EntityDimensions.fixed(0.25F, 0.25F))
+    public static final EntityType<ThrowableMeteorChunkEntity> THROWABLE_METEOR_CHUNK = ENTITIES.register(Constant.Item.THROWABLE_METEOR_CHUNK, EntityType.Builder.<ThrowableMeteorChunkEntity>of(ThrowableMeteorChunkEntity::new, MobCategory.MISC)
+            .sized(0.25F, 0.25F)
             .build());
     // Bosses
-    public static final EntityType<SkeletonBoss> SKELETON_BOSS = ENTITIES.register(Entity.EVOLVED_SKELETON_BOSS, FabricEntityTypeBuilder.create(MobCategory.MONSTER, SkeletonBoss::new)
-            .dimensions(EntityDimensions.fixed(1.5F, 4.0F))
+    public static final EntityType<SkeletonBoss> SKELETON_BOSS = ENTITIES.register(Entity.EVOLVED_SKELETON_BOSS, EntityType.Builder.of(SkeletonBoss::new, MobCategory.MONSTER)
+            .sized(1.5F, 4.0F)
             .fireImmune()
-            .trackRangeBlocks(80)
-            .trackedUpdateRate(3)
-            .forceTrackedVelocityUpdates(true)
+            .clientTrackingRange(80)
+            .updateInterval(3)
+            .alwaysUpdateVelocity(true)
             .build());
 
     public static void register() {
