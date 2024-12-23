@@ -286,16 +286,7 @@ public class GCModelProvider extends FabricModelProvider {
         this.createAirLockController(generator);
         generator.createNonTemplateModelBlock(GCBlocks.AIR_LOCK_SEAL);
 
-        var para = MultiPartGenerator.multiPart(GCBlocks.PARACHEST);
-        GCBlocks.PARACHEST.getStateDefinition().getPossibleStates().forEach(state -> {
-            para.with(Condition.condition().term(ParaChestBlock.FACING, state.getValue(ParaChestBlock.FACING))/*.term(ParaChestBlock.COLOR, state.getValue(ParaChestBlock.COLOR))*/, Variant.variant()
-                    .with(VariantProperties.Y_ROT, getRotationFromDirection(state.getValue(ParaChestBlock.FACING)))
-                    .with(VariantProperties.MODEL, ResourceLocation.parse("galacticraft:block/parachest/parachest")));
-            para.with(Condition.condition().term(ParaChestBlock.COLOR, state.getValue(ParaChestBlock.COLOR)), Variant.variant()
-                    .with(VariantProperties.Y_ROT, getRotationFromDirection(state.getValue(ParaChestBlock.FACING)))
-                    .with(VariantProperties.MODEL, ResourceLocation.parse("galacticraft:block/parachest/" + state.getValue(ParaChestBlock.COLOR) + "_chute")));
-        });
-        generator.blockStateOutput.accept(para);
+        this.createParaChests(generator);
     }
 
     private static void createFullCubeActiveMachine(BlockModelGenerators generator, Block block) {
@@ -381,6 +372,21 @@ public class GCModelProvider extends FabricModelProvider {
         var block = GCBlocks.AIR_LOCK_CONTROLLER;
         var textureMapping = TextureMapping.column(TextureMapping.getBlockTexture(block), TextureMapping.getBlockTexture(GCBlocks.AIR_LOCK_FRAME));
         generator.createTrivialBlock(block, textureMapping, ModelTemplates.CUBE_COLUMN);
+    }
+
+    private void createParaChests(BlockModelGenerators generator) {
+        var para = MultiPartGenerator.multiPart(GCBlocks.PARACHEST);
+        Direction.Plane.HORIZONTAL.forEach(state -> {
+            para.with(Condition.condition().term(ParaChestBlock.FACING, state), Variant.variant()
+                    .with(VariantProperties.Y_ROT, getRotationFromDirection(state))
+                    .with(VariantProperties.MODEL, ResourceLocation.parse("galacticraft:block/parachest/parachest")));
+        });
+        GCBlocks.PARACHEST.getStateDefinition().getPossibleStates().forEach(state -> {
+            para.with(Condition.condition().term(ParaChestBlock.FACING, state.getValue(ParaChestBlock.FACING)).term(ParaChestBlock.COLOR, state.getValue(ParaChestBlock.COLOR)), Variant.variant()
+                    .with(VariantProperties.Y_ROT, getRotationFromDirection(state.getValue(ParaChestBlock.FACING)))
+                    .with(VariantProperties.MODEL, ResourceLocation.parse("galacticraft:block/parachest/" + state.getValue(ParaChestBlock.COLOR) + "_chute")));
+        });
+        generator.blockStateOutput.accept(para);
     }
 
     private void createGlassFluidPipeAndWalkway(BlockModelGenerators generator) {
