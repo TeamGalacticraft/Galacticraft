@@ -27,6 +27,8 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -35,12 +37,18 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
+import java.util.Objects;
 
 public class HotThrowableMeteorChunkItem extends ThrowableMeteorChunkItem {
     public static int MAX_TICKS = 45 * 20;
 
     public HotThrowableMeteorChunkItem(Properties settings) {
         super(settings);
+    }
+
+    @Override
+    public boolean allowComponentsUpdateAnimation(Player player, InteractionHand hand, ItemStack oldStack, ItemStack newStack) {
+        return oldStack.getItem() != newStack.getItem();
     }
 
     @Override
@@ -61,12 +69,7 @@ public class HotThrowableMeteorChunkItem extends ThrowableMeteorChunkItem {
             return;
 
         Integer i = stack.get(GCDataComponents.TICKS_UNTIL_COOL);
-        int ticks;
-        if (i == null) {
-            ticks = MAX_TICKS;
-        } else {
-            ticks = i;
-        }
+        int ticks = Objects.requireNonNullElse(i, MAX_TICKS);
 
         if (ticks == 0) {
             if (entity instanceof Player player) {
@@ -77,6 +80,8 @@ public class HotThrowableMeteorChunkItem extends ThrowableMeteorChunkItem {
                 Inventory inventory = player.getInventory();
                 inventory.setItem(slotId, new ItemStack(GCItems.THROWABLE_METEOR_CHUNK, stack.getCount()));
                 inventory.setChanged();
+
+                player.playSound(SoundEvents.GENERIC_EXTINGUISH_FIRE, 0.7F, 1.6F + (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.4F); // Entity::playEntityOnFireExtinguishedSound()
             }
         }
         stack.set(GCDataComponents.TICKS_UNTIL_COOL, ticks - 1);

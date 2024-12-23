@@ -1,8 +1,0 @@
-{
-  "machinelib:generate": "machinelib:simple",
-  "data": {
-    "front": "galacticraft:block/electric_furnace",
-    "base": "galacticraft:block/machine",
-    "side": "galacticraft:block/machine_side"
-  }
-}

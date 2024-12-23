@@ -280,6 +280,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.MOON_DIRT_PATH
                 );
 
+
         this.tag(BlockTags.NEEDS_STONE_TOOL)
                 .add(
                         GCBlocks.IRON_GRATING,
@@ -294,20 +295,33 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.LUNASLATE_TIN_ORE,
                         GCBlocks.ALUMINUM_ORE,
                         GCBlocks.DEEPSLATE_ALUMINUM_ORE,
-                        GCBlocks.GALENA_ORE
+                        GCBlocks.GALENA_ORE,
+                        GCBlocks.RAW_TIN_BLOCK,
+                        GCBlocks.TIN_BLOCK,
+                        GCBlocks.RAW_ALUMINUM_BLOCK,
+                        GCBlocks.ALUMINUM_BLOCK,
+                        GCBlocks.RAW_LEAD_BLOCK,
+                        GCBlocks.LEAD_BLOCK,
+                        GCBlocks.RAW_METEORIC_IRON_BLOCK,
+                        GCBlocks.METEORIC_IRON_BLOCK
                 );
 
         this.tag(BlockTags.NEEDS_IRON_TOOL)
                 .add(
                         GCBlocks.SILICON_ORE,
                         GCBlocks.DEEPSLATE_SILICON_ORE,
-                        GCBlocks.FALLEN_METEOR
+                        GCBlocks.FALLEN_METEOR,
+                        GCBlocks.SILICON_BLOCK
                 );
 
         this.tag(BlockTags.NEEDS_DIAMOND_TOOL)
                 .add(
                         GCBlocks.DESH_ORE,
-                        GCBlocks.ILMENITE_ORE
+                        GCBlocks.ILMENITE_ORE,
+                        GCBlocks.RAW_DESH_BLOCK,
+                        GCBlocks.DESH_BLOCK,
+                        GCBlocks.RAW_TITANIUM_BLOCK,
+                        GCBlocks.TITANIUM_BLOCK
                 );
 
         this.tag(BlockTags.DRAGON_IMMUNE)
