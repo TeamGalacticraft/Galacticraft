@@ -48,6 +48,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
 public class GCEventHandlers {
@@ -61,9 +62,12 @@ public class GCEventHandlers {
     }
 
     public static InteractionResult allowCryogenicSleep(LivingEntity entity, BlockPos sleepingPos, BlockState state, boolean vanillaResult) {
-        return entity.isInCryoSleep()
-                ? InteractionResult.SUCCESS
-                : InteractionResult.PASS;
+        if (state.getBlock() instanceof CryogenicChamberBlock) {
+            return entity.isInCryoSleep()
+                    ? InteractionResult.SUCCESS
+                    : InteractionResult.PASS;
+        }
+        return InteractionResult.PASS;
     }
 
     public static Direction changeSleepPosition(LivingEntity entity, BlockPos sleepingPos, @Nullable Direction sleepingDirection) {
@@ -94,8 +98,13 @@ public class GCEventHandlers {
     }
 
     public static void onWakeFromCryoSleep(LivingEntity entity, BlockPos sleepingPos) {
-        if (!entity.level().isClientSide() && entity.isInCryoSleep()) {
-            entity.endCyroSleep();
+        Level level = entity.level();
+        if (!level.isClientSide() && entity.isInCryoSleep()) {
+            entity.endCryoSleep();
+            BlockState baseState = level.getBlockState(sleepingPos);
+            if (baseState.getBlock() instanceof CryogenicChamberBlock) {
+                level.setBlockAndUpdate(sleepingPos, baseState.setValue(BlockStateProperties.OCCUPIED, false));
+            }
         }
     }
 
