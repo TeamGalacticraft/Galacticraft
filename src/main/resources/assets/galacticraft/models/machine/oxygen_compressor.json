@@ -1,9 +1,0 @@
-{
-  "machinelib:generate": "machinelib:axis",
-  "data": {
-    "front": "galacticraft:block/oxygen_compressor",
-    "back": "galacticraft:block/oxygen_compressor_back",
-    "base": "galacticraft:block/machine",
-    "side": "galacticraft:block/machine_side"
-  }
-}

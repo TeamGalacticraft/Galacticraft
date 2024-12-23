@@ -45,7 +45,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
+public class EnergyStorageModuleBlockEntity extends ResourceStorageBlockEntity {
     public static final int CHARGE_SELF_SLOT = 0;
     public static final int CHARGE_ITEM_SLOT = 1;
 
@@ -92,5 +92,10 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity {
                 player,
                 this
         );
+    }
+
+    @Override
+    protected int calculateAmount() {
+        return (int) (this.energyStorage().getAmount() * 8 / this.energyStorage().getCapacity());
     }
 }

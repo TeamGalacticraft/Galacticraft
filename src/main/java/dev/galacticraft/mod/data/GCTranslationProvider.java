@@ -55,6 +55,13 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.ASTEROID_ROCK_1, "Asteroid Rock");
         this.block(GCBlocks.ASTEROID_ROCK_2, "Asteroid Rock");
 
+        this.block(GCBlocks.RAW_METEORIC_IRON_BLOCK, "Block of Raw Meteoric Iron");
+        this.block(GCBlocks.RAW_DESH_BLOCK, "Block of Raw Desh");
+        this.block(GCBlocks.RAW_ALUMINUM_BLOCK, "Block of Raw Aluminum");
+        this.block(GCBlocks.RAW_TIN_BLOCK, "Block of Raw Tin");
+        this.block(GCBlocks.RAW_TITANIUM_BLOCK, "Block of Raw Titanium");
+        this.block(GCBlocks.RAW_LEAD_BLOCK, "Block of Raw Lead");
+
         this.block(GCBlocks.DASHED_LIGHT_PANEL, "Light Panel (Dashed)");
         this.block(GCBlocks.DIAGONAL_LIGHT_PANEL, "Light Panel (Diagonal)");
         this.block(GCBlocks.LINEAR_LIGHT_PANEL, "Light Panel (Linear)");
@@ -68,8 +75,6 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, "Bubble Distributor");
         this.block(GCBlocks.SOLAR_PANEL_PART, "Solar Panel");
 
-        this.block(GCBlocks.SCORCHED_VENUS_ROCK, "Scorched Rock");
-
         this.block(GCBlocks.CLEAR_VACUUM_GLASS, "Vacuum Glass (Clear)");
         this.block(GCBlocks.STRONG_VACUUM_GLASS, "Vacuum Glass (Strong)");
 
@@ -78,23 +83,23 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.UNLIT_TORCH, "Unlit Torch");
         this.block(GCBlocks.UNLIT_WALL_TORCH, "Unlit Torch");
 
-        this.block(GCBlocks.CANDLE_MOON_CHEESE_WHEEL, "Block of Cheese with Candle");
-        this.block(GCBlocks.WHITE_CANDLE_MOON_CHEESE_WHEEL, "Block of Cheese with White Candle");
-        this.block(GCBlocks.ORANGE_CANDLE_MOON_CHEESE_WHEEL, "Block of Cheese with Orange Candle");
-        this.block(GCBlocks.MAGENTA_CANDLE_MOON_CHEESE_WHEEL, "Block of Cheese with Magenta Candle");
-        this.block(GCBlocks.LIGHT_BLUE_CANDLE_MOON_CHEESE_WHEEL, "Block of Cheese with Light Blue Candle");
-        this.block(GCBlocks.YELLOW_CANDLE_MOON_CHEESE_WHEEL, "Block of Cheese with Yellow Candle");
-        this.block(GCBlocks.LIME_CANDLE_MOON_CHEESE_WHEEL, "Block of Cheese with Lime Candle");
-        this.block(GCBlocks.PINK_CANDLE_MOON_CHEESE_WHEEL, "Block of Cheese with Pink Candle");
-        this.block(GCBlocks.GRAY_CANDLE_MOON_CHEESE_WHEEL, "Block of Cheese with Gray Candle");
-        this.block(GCBlocks.LIGHT_GRAY_CANDLE_MOON_CHEESE_WHEEL, "Block of Cheese with Light Gray Candle");
-        this.block(GCBlocks.CYAN_CANDLE_MOON_CHEESE_WHEEL, "Block of Cheese with Cyan Candle");
-        this.block(GCBlocks.PURPLE_CANDLE_MOON_CHEESE_WHEEL, "Block of Cheese with Purple Candle");
-        this.block(GCBlocks.BLUE_CANDLE_MOON_CHEESE_WHEEL, "Block of Cheese with Blue Candle");
-        this.block(GCBlocks.BROWN_CANDLE_MOON_CHEESE_WHEEL, "Block of Cheese with Brown Candle");
-        this.block(GCBlocks.GREEN_CANDLE_MOON_CHEESE_WHEEL, "Block of Cheese with Green Candle");
-        this.block(GCBlocks.RED_CANDLE_MOON_CHEESE_WHEEL, "Block of Cheese with Red Candle");
-        this.block(GCBlocks.BLACK_CANDLE_MOON_CHEESE_WHEEL, "Block of Cheese with Black Candle");
+        this.block(GCBlocks.CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Candle");
+        this.block(GCBlocks.WHITE_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with White Candle");
+        this.block(GCBlocks.ORANGE_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Orange Candle");
+        this.block(GCBlocks.MAGENTA_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Magenta Candle");
+        this.block(GCBlocks.LIGHT_BLUE_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Light Blue Candle");
+        this.block(GCBlocks.YELLOW_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Yellow Candle");
+        this.block(GCBlocks.LIME_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Lime Candle");
+        this.block(GCBlocks.PINK_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Pink Candle");
+        this.block(GCBlocks.GRAY_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Gray Candle");
+        this.block(GCBlocks.LIGHT_GRAY_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Light Gray Candle");
+        this.block(GCBlocks.CYAN_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Cyan Candle");
+        this.block(GCBlocks.PURPLE_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Purple Candle");
+        this.block(GCBlocks.BLUE_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Blue Candle");
+        this.block(GCBlocks.BROWN_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Brown Candle");
+        this.block(GCBlocks.GREEN_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Green Candle");
+        this.block(GCBlocks.RED_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Red Candle");
+        this.block(GCBlocks.BLACK_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Black Candle");
 
         this.entity(GCEntityTypes.THROWABLE_METEOR_CHUNK, "Meteor Chunk");
 
@@ -103,7 +108,6 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.GROUND_BEEF, "Raw Beef Patty");
         this.item(GCItems.TIER_2_HEAVY_DUTY_PLATE, "Thick Heavy Plating");
         this.item(GCItems.TIER_3_HEAVY_DUTY_PLATE, "Reinforced Heavy Plating");
-        this.item(GCItems.RAW_DESH, "Unrefined Desh");
         this.item(GCItems.THERMAL_PADDING_HELMET, "Thermal Padding Helm");
         this.item(GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
         this.item(GCItems.PARACHUTE.get(DyeColor.WHITE), "Parachute");
