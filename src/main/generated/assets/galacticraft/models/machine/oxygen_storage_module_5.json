@@ -1,0 +1,7 @@
+{
+  "data": {
+    "back": "galacticraft:block/oxygen_storage_module_5",
+    "front": "galacticraft:block/oxygen_storage_module_5"
+  },
+  "machinelib:type": "machine"
+}

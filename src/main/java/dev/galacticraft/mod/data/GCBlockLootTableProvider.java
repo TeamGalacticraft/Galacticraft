@@ -24,6 +24,7 @@ package dev.galacticraft.mod.data;
 
 import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.block.special.ParaChestBlock;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -31,10 +32,12 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
@@ -44,6 +47,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.functions.SetComponentsFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
@@ -282,7 +286,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         this.add(GCBlocks.AIR_LOCK_SEAL, noDrop());
 
-        dropSelf(GCBlocks.PARACHEST);
+        this.add(GCBlocks.PARACHEST, createParaChestDrop(GCBlocks.PARACHEST));
     }
 
     private LootTable.Builder createLaunchPadTable(Block block) {
@@ -322,5 +326,17 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
                                 this.applyExplosionDecay(block, LootItem.lootTableItem(item).apply(SetItemCountFunction.setCount(ConstantValue.exactly(2.0F))))
                         )
         );
+    }
+
+    private LootTable.Builder createParaChestDrop(Block block) {
+        LootPool.Builder pool = LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F));
+        for (DyeColor color : DyeColor.values()) {
+            pool.add(LootItem.lootTableItem(block)
+                    .apply(SetComponentsFunction.setComponent(DataComponents.BASE_COLOR, color))
+                    .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+                            .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(ParaChestBlock.COLOR, color)
+            )));
+        }
+        return LootTable.lootTable().withPool(this.applyExplosionCondition(block, pool));
     }
 }

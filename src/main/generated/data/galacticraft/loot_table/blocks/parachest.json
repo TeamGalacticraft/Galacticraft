@@ -11,6 +11,338 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraft:parachest",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "white"
+              }
+            }
+          ],
+          "functions": [
+            {
+              "components": {
+                "minecraft:base_color": "white"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "galacticraft:parachest"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraft:parachest",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "orange"
+              }
+            }
+          ],
+          "functions": [
+            {
+              "components": {
+                "minecraft:base_color": "orange"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "galacticraft:parachest"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraft:parachest",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "magenta"
+              }
+            }
+          ],
+          "functions": [
+            {
+              "components": {
+                "minecraft:base_color": "magenta"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "galacticraft:parachest"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraft:parachest",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "light_blue"
+              }
+            }
+          ],
+          "functions": [
+            {
+              "components": {
+                "minecraft:base_color": "light_blue"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "galacticraft:parachest"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraft:parachest",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "yellow"
+              }
+            }
+          ],
+          "functions": [
+            {
+              "components": {
+                "minecraft:base_color": "yellow"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "galacticraft:parachest"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraft:parachest",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "lime"
+              }
+            }
+          ],
+          "functions": [
+            {
+              "components": {
+                "minecraft:base_color": "lime"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "galacticraft:parachest"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraft:parachest",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "pink"
+              }
+            }
+          ],
+          "functions": [
+            {
+              "components": {
+                "minecraft:base_color": "pink"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "galacticraft:parachest"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraft:parachest",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "gray"
+              }
+            }
+          ],
+          "functions": [
+            {
+              "components": {
+                "minecraft:base_color": "gray"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "galacticraft:parachest"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraft:parachest",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "light_gray"
+              }
+            }
+          ],
+          "functions": [
+            {
+              "components": {
+                "minecraft:base_color": "light_gray"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "galacticraft:parachest"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraft:parachest",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "cyan"
+              }
+            }
+          ],
+          "functions": [
+            {
+              "components": {
+                "minecraft:base_color": "cyan"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "galacticraft:parachest"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraft:parachest",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "purple"
+              }
+            }
+          ],
+          "functions": [
+            {
+              "components": {
+                "minecraft:base_color": "purple"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "galacticraft:parachest"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraft:parachest",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "blue"
+              }
+            }
+          ],
+          "functions": [
+            {
+              "components": {
+                "minecraft:base_color": "blue"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "galacticraft:parachest"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraft:parachest",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "brown"
+              }
+            }
+          ],
+          "functions": [
+            {
+              "components": {
+                "minecraft:base_color": "brown"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "galacticraft:parachest"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraft:parachest",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "green"
+              }
+            }
+          ],
+          "functions": [
+            {
+              "components": {
+                "minecraft:base_color": "green"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "galacticraft:parachest"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraft:parachest",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "red"
+              }
+            }
+          ],
+          "functions": [
+            {
+              "components": {
+                "minecraft:base_color": "red"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
+          "name": "galacticraft:parachest"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraft:parachest",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "black"
+              }
+            }
+          ],
+          "functions": [
+            {
+              "components": {
+                "minecraft:base_color": "black"
+              },
+              "function": "minecraft:set_components"
+            }
+          ],
           "name": "galacticraft:parachest"
         }
       ],
