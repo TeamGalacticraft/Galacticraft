@@ -1,0 +1,9 @@
+{
+  "data": {
+    "back": "galacticraft:block/refinery_back",
+    "front": "galacticraft:block/refinery_front",
+    "left": "galacticraft:block/machine_side",
+    "right": "galacticraft:block/machine_side"
+  },
+  "machinelib:type": "machine"
+}

@@ -1,6 +1,30 @@
 {
   "variants": {
-    "": {
+    "amount=0": {
+      "model": "galacticraft:machine/oxygen_storage_module_0"
+    },
+    "amount=1": {
+      "model": "galacticraft:machine/oxygen_storage_module_1"
+    },
+    "amount=2": {
+      "model": "galacticraft:machine/oxygen_storage_module_2"
+    },
+    "amount=3": {
+      "model": "galacticraft:machine/oxygen_storage_module_3"
+    },
+    "amount=4": {
+      "model": "galacticraft:machine/oxygen_storage_module_4"
+    },
+    "amount=5": {
+      "model": "galacticraft:machine/oxygen_storage_module_5"
+    },
+    "amount=6": {
+      "model": "galacticraft:machine/oxygen_storage_module_6"
+    },
+    "amount=7": {
+      "model": "galacticraft:machine/oxygen_storage_module_7"
+    },
+    "amount=8": {
       "model": "galacticraft:machine/oxygen_storage_module"
     }
   }

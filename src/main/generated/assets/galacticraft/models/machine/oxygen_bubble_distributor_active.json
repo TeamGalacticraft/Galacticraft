@@ -1,0 +1,12 @@
+{
+  "data": {
+    "back": "galacticraft:block/oxygen_bubble_distributor_active",
+    "bottom": "galacticraft:block/oxygen_bubble_distributor_active",
+    "front": "galacticraft:block/oxygen_bubble_distributor_active",
+    "left": "galacticraft:block/oxygen_bubble_distributor_active",
+    "particle": "galacticraft:block/oxygen_bubble_distributor_active",
+    "right": "galacticraft:block/oxygen_bubble_distributor_active",
+    "top": "galacticraft:block/oxygen_bubble_distributor_active"
+  },
+  "machinelib:type": "machine"
+}

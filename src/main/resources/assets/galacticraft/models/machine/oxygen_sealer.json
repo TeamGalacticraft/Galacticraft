@@ -1,9 +1,0 @@
-{
-  "machinelib:generate": "galacticraft:oxygen_sealer",
-  "data": {
-    "inactive": "galacticraft:block/oxygen_sealer_top",
-    "active": "galacticraft:block/oxygen_sealer_top_active",
-    "base": "galacticraft:block/machine",
-    "side": "galacticraft:block/machine_side"
-  }
-}

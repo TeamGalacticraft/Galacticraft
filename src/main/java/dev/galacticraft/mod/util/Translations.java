@@ -47,6 +47,10 @@ public interface Translations {
         String ROCKET_WARNING = "chat.galacticraft.rocket.warning";
     }
 
+    interface Subtitles {
+        String THROW_METEOR_CHUNK = "subtitles.galacticraft.entity.throwable_meteor_chunk.throw";
+    }
+
     interface RegistryDebug {
         String DUMP = "commands.galacticraft.debug.registry.dump";
         String ID = "commands.galacticraft.debug.registry.id";

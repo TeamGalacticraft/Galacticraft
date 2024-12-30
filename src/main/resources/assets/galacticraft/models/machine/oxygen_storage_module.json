@@ -1,9 +1,0 @@
-{
-  "machinelib:generate": "machinelib:axis",
-  "data": {
-    "front": "galacticraft:block/oxygen_storage_module_8",
-    "back": "galacticraft:block/oxygen_storage_module_8",
-    "base": "galacticraft:block/machine",
-    "side": "galacticraft:block/machine"
-  }
-}

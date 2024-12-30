@@ -1,0 +1,24 @@
+{
+  "any": {
+    "both": "galacticraft:block/machine_any_both",
+    "input": "galacticraft:block/machine_any_input",
+    "output": "galacticraft:block/machine_any_output"
+  },
+  "base": "galacticraft:block/machine",
+  "energy": {
+    "both": "galacticraft:block/machine_energy_both",
+    "input": "galacticraft:block/machine_energy_input",
+    "output": "galacticraft:block/machine_energy_output"
+  },
+  "fluid": {
+    "both": "galacticraft:block/machine_fluid_both",
+    "input": "galacticraft:block/machine_fluid_input",
+    "output": "galacticraft:block/machine_fluid_output"
+  },
+  "item": {
+    "both": "galacticraft:block/machine_item_both",
+    "input": "galacticraft:block/machine_item_input",
+    "output": "galacticraft:block/machine_item_output"
+  },
+  "machinelib:type": "base"
+}

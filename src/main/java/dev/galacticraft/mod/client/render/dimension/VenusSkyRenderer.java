@@ -148,7 +148,8 @@ public class VenusSkyRenderer implements DimensionRenderingRegistry.SkyRenderer 
     public void render(WorldRenderContext context) {
         ClientLevel level = context.world();
         float partialTicks = context.tickCounter().getRealtimeDeltaTicks();
-        PoseStack poseStack = context.matrixStack();
+        PoseStack poseStack = new PoseStack();
+        poseStack.mulPose(context.positionMatrix());
         Vec3 vec3 = level.getSkyColor(context.camera().getPosition(), partialTicks);
         float f1 = (float) vec3.x;
         float f2 = (float) vec3.y;
