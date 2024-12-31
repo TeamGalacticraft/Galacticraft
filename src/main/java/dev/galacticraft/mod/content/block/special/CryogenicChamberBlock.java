@@ -34,6 +34,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.TickRateManager;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -64,6 +65,7 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty OCCUPIED = BlockStateProperties.OCCUPIED;
     private static final VoxelShape SHAPE = Shapes.box(0, 0, 0, 1, 3, 1);
+    public static final TickRateManager TICKS = new TickRateManager();
 
     public CryogenicChamberBlock(Properties properties) {
         super(properties);
@@ -214,7 +216,7 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
                 level.setBlockAndUpdate(basePos, baseState.setValue(OCCUPIED, false));
             });
         } else {
-            player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_HOT, player.getCryogenicChamberCooldown()), false);
+            player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_HOT, (int)(player.getCryogenicChamberCooldown() / TICKS.tickrate())), false);
         }
 
         return InteractionResult.SUCCESS;
