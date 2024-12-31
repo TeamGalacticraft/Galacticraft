@@ -194,7 +194,7 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
 
         if (baseState.getValue(OCCUPIED).booleanValue()) {
             player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_OCCUPIED), true);
-        } else if (player.getCryogenicChamberCooldown() == 0) {
+        } else if (player.isCreative() || player.getCryogenicChamberCooldown() == 0) {
             player.beginCryoSleep();
             level.setBlockAndUpdate(basePos, baseState.setValue(OCCUPIED, true));
 
