@@ -52,8 +52,8 @@ import java.util.ArrayList;
 public class CryogenicChamberPart extends BaseEntityBlock {
     public static final MapCodec<CryogenicChamberPart> CODEC = simpleCodec(CryogenicChamberPart::new);
     public static final BooleanProperty TOP = BooleanProperty.create("top");
-    protected static final VoxelShape SHAPE_TOP = Shapes.box(0.0, -2.0, 0.0, 1.0, 1.0, 1.0);
-    protected static final VoxelShape SHAPE_MID = Shapes.box(0.0, -1.0, 0.0, 1.0, 2.0, 1.0);
+    private static final VoxelShape SHAPE_TOP = Shapes.box(0, -2, 0, 1, 1, 1);
+    private static final VoxelShape SHAPE_MID = Shapes.box(0, -1, 0, 1, 2, 1);
 
     public CryogenicChamberPart(Properties properties) {
         super(properties);

@@ -63,7 +63,7 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
     private static final List<BlockPos> PARTS = List.of(new BlockPos(0, 1, 0), new BlockPos(0, 2, 0));
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty OCCUPIED = BlockStateProperties.OCCUPIED;
-    protected static final VoxelShape SHAPE = Shapes.box(0.0, 0.0, 0.0, 1.0, 3.0, 1.0);
+    private static final VoxelShape SHAPE = Shapes.box(0, 0, 0, 1, 3, 1);
 
     public CryogenicChamberBlock(Properties properties) {
         super(properties);
