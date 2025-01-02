@@ -595,7 +595,7 @@
   "ui.galacticraft.giant_leap": "Taking one giant leap",
   "ui.galacticraft.machine.collecting": "Collecting: %s/s",
   "ui.galacticraft.machine.current_oxygen": "Oxygen: %s",
-  "ui.galacticraft.machine.gj_per_t": "%sGj/t",
+  "ui.galacticraft.machine.gj_per_t": "%s gJ/t",
   "ui.galacticraft.machine.max_oxygen": "Maximum Oxygen: %s",
   "ui.galacticraft.machine.solar_panel.atmospheric_interference": "Atmospheric Interference: %s",
   "ui.galacticraft.machine.solar_panel.blocked": "Blocked",
