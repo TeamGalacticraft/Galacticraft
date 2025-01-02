@@ -77,7 +77,7 @@ public class SolarPanelPartBlock extends BaseEntityBlock {
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter blockView, BlockPos pos, CollisionContext context) {
         var block = blockView.getBlockState(pos.below()).getBlock();
-        if (block instanceof MultiBlockBase) {
+        if (block == GCBlocks.BASIC_SOLAR_PANEL || block == GCBlocks.ADVANCED_SOLAR_PANEL) {
             return POLE_SHAPE;
         }
         for (int i = 0; i < 9; i++) {

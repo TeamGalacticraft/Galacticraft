@@ -26,6 +26,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import dev.galacticraft.mod.content.block.entity.machine.AdvancedSolarPanelBlockEntity;
@@ -71,35 +72,39 @@ public class AdvancedSolarPanelBlockEntityRenderer implements BlockEntityRendere
         matrices.pushPose();
         matrices.translate(0.5F, 1.0F, 0.5F);
         RenderSystem.setShaderTexture(0, AdvancedSolarPanelBlockEntityRenderer.TEXTURE);
-        this.render(matrices, vertexConsumers.getBuffer(RenderType.entityCutout(TEXTURE)), light, overlay, blockEntity.getLevel(), tickDelta, blockEntity.nightCollection());
+        this.render(matrices, vertexConsumers.getBuffer(RenderType.entityCutout(TEXTURE)), light, overlay, blockEntity.getLevel(), tickDelta, blockEntity.getBlockState().getValue(MachineBlock.ACTIVE), blockEntity.nightCollection());
         matrices.popPose();
     }
 
-    public void render(PoseStack matrices, VertexConsumer vertexConsumer, int light, int overlay, Level world, float tickDelta, boolean nightCollection) {
+    public void render(PoseStack matrices, VertexConsumer vertexConsumer, int light, int overlay, Level world, float tickDelta, boolean active, boolean nightCollection) {
         this.pole.render(matrices, vertexConsumer, light, overlay);
         matrices.translate(0.0F, 1.5F, 0.0F);
 
-        // Angle in radians - 0 noon, pi/2 sunset, pi midnight, 3pi/2 sunrise
-        float angle = world.getSunAngle(tickDelta);
+        float angle = NOON;
 
-        if (angle > DUSK && angle < DAWN) {
-            if (nightCollection) {
-                angle -= Math.PI;
-            } else {
-                angle = NOON;
-            }
-        } else if ((angle > SUNSET && angle <= DUSK) || (angle >= DAWN && angle < SUNRISE)) {
-            if (nightCollection) {
+        if (active) {
+            // Angle in radians - 0 noon, pi/2 sunset, pi midnight, 3pi/2 sunrise
+            angle = world.getSunAngle(tickDelta);
+
+            if (angle > DUSK && angle < DAWN) {
+                if (nightCollection) {
+                    angle -= Math.PI;
+                } else {
+                    angle = NOON;
+                }
+            } else if ((angle > SUNSET && angle <= DUSK) || (angle >= DAWN && angle < SUNRISE)) {
+                if (nightCollection) {
+                    angle = -MAX;
+                } else {
+                    angle = NOON;
+                }
+            } else if (angle >= SUNRISE && angle < MIN) {
                 angle = -MAX;
-            } else {
-                angle = NOON;
+            } else if (angle <= SUNSET && angle > MAX) {
+                angle = MAX;
+            } else if (angle >= SUNRISE) {
+                angle -= 2 * Math.PI;
             }
-        } else if (angle >= SUNRISE && angle < MIN) {
-            angle = -MAX;
-        } else if (angle <= SUNSET && angle > MAX) {
-            angle = MAX;
-        } else if (angle >= SUNRISE) {
-            angle -= 2 * Math.PI;
         }
 
         float diff = angle - this.tilt;
