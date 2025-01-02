@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.api.block.entity;
 
+import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
@@ -103,5 +104,10 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
     @Override
     public long getCurrentEnergyGeneration() {
         return this.currentEnergyGeneration;
+    }
+
+    @Override
+    public boolean isActive() {
+        return this.getBlockState().getValue(MachineBlock.ACTIVE);
     }
 }

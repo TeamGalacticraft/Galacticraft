@@ -26,7 +26,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import dev.galacticraft.mod.content.block.entity.machine.AdvancedSolarPanelBlockEntity;
@@ -72,7 +71,7 @@ public class AdvancedSolarPanelBlockEntityRenderer implements BlockEntityRendere
         matrices.pushPose();
         matrices.translate(0.5F, 1.0F, 0.5F);
         RenderSystem.setShaderTexture(0, AdvancedSolarPanelBlockEntityRenderer.TEXTURE);
-        this.render(matrices, vertexConsumers.getBuffer(RenderType.entityCutout(TEXTURE)), light, overlay, blockEntity.getLevel(), tickDelta, blockEntity.getBlockState().getValue(MachineBlock.ACTIVE), blockEntity.nightCollection());
+        this.render(matrices, vertexConsumers.getBuffer(RenderType.entityCutout(TEXTURE)), light, overlay, blockEntity.getLevel(), tickDelta, blockEntity.isActive(), blockEntity.nightCollection());
         matrices.popPose();
     }
 
