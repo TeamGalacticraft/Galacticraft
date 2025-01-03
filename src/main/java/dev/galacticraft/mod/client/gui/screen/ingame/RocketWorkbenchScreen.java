@@ -135,8 +135,8 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
 
     private final RocketEntity entity;
 
-    public RocketWorkbenchScreen(RocketWorkbenchMenu menu, Inventory inventory, Component component) {
-        super(menu, inventory, component);
+    public RocketWorkbenchScreen(RocketWorkbenchMenu menu, Inventory inventory, Component title) {
+        super(menu, inventory, title);
         this.setOpenTab(Tab.CONE);
         this.entity = new RocketEntity(GCEntityTypes.ROCKET, menu.workbench.getLevel());
         this.inventoryLabelX = this.inventoryLabelY = Integer.MAX_VALUE;
