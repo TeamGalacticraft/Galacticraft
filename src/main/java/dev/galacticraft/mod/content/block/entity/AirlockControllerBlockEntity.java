@@ -392,7 +392,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
 
     @Override
     public Component getDisplayName() {
-        return Component.literal(ownerName + "'s Air Lock Controller");
+        return Component.literal(ownerName + "'s Airlock Controller");
     }
 
     @Override
