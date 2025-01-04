@@ -40,6 +40,10 @@ public interface Translations {
 
     interface Chat {
         String BED_FAIL = "chat.galacticraft.bed_fail";
+        String CHAMBER_HOT = "chat.galacticraft.chamber_hot";
+        String CHAMBER_OBSTRUCTED = "chat.galacticraft.chamber_obstructed";
+        String CHAMBER_OCCUPIED = "chat.galacticraft.chamber_occupied";
+        String CHAMBER_TOO_FAR_AWAY = "chat.galacticraft.chamber_too_far_away";
         String ROCKET_WARNING = "chat.galacticraft.rocket.warning";
     }
 
