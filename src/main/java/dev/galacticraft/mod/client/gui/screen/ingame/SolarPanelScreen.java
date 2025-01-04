@@ -159,6 +159,7 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
 
     @Override
     public void appendEnergyTooltip(List<Component> list) {
+        super.appendEnergyTooltip(list);
         if (this.menu.state.isActive()) {
             list.add(Component.translatable(Translations.Ui.GJT, this.menu.getCurrentEnergyGeneration()).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
         }

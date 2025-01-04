@@ -240,7 +240,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
                     entity.setDeltaMovement(Vec3.ZERO);
                     entity.setPos(entity.getX(), this.getY() + 2.25, entity.getZ());
                 }
-                this.level().explode(this, this.getX(), this.getY(), this.getZ(), 12, true, Level.ExplosionInteraction.MOB);
+                this.level().explode(this, this.getX(), this.getY(), this.getZ(), 12, false, Level.ExplosionInteraction.MOB);
 
                 discard();
             }
