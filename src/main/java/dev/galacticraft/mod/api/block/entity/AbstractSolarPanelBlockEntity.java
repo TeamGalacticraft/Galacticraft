@@ -74,12 +74,15 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
         MachineStatus status = null;
         double multiplier = blocked == 0 ? 1 : (9.0 - this.blocked) / 9.0;
         if (this.blocked > 1) status = GCMachineStatuses.PARTIALLY_BLOCKED;
-        if (level.isRaining() || level.isThundering()) {
+        if (level.isThundering()) {
+            if (status == null) status = GCMachineStatuses.RAIN;
+            multiplier *= 0.25;
+        } else if (level.isRaining()) {
             if (status == null) status = GCMachineStatuses.RAIN;
             multiplier *= 0.5;
         }
-        if (!level.isDay()) status = GCMachineStatuses.NIGHT;
         long time = level.getDayTime() % 24000;
+        if (time > 12000) status = GCMachineStatuses.NIGHT;
         if (time > 6000) time = 12000L - time;
 
         profiler.push("transaction");
@@ -104,10 +107,5 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
     @Override
     public long getCurrentEnergyGeneration() {
         return this.currentEnergyGeneration;
-    }
-
-    @Override
-    public boolean isActive() {
-        return this.getBlockState().getValue(MachineBlock.ACTIVE);
     }
 }
