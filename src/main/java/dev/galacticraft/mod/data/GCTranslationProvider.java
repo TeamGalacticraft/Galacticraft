@@ -825,6 +825,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.COLOR, "Color");
 
         this.add(Ui.AIRLOCK_REDSTONE_SIGNAL, "Opens on Redstone Signal");
+        this.add(Ui.AIRLOCK_OWNER, "%s's Airlock Controller");
         this.add(Ui.ALPHA_WARNING_1, "Galacticraft is currently in ALPHA.");
         this.add(Ui.ALPHA_WARNING_2, "Please report all issues you find.");
         this.add(Ui.ALPHA_WARNING_3, "Press [ESC] or click to continue.");

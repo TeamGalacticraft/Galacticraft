@@ -290,6 +290,7 @@ public interface Translations {
         String COLOR = "ui.galacticraft.color";
 
         String AIRLOCK_REDSTONE_SIGNAL = "ui.galacticraft.airlock.redstone_signal";
+        String AIRLOCK_OWNER = "ui.galacticraft.airlock.owner";
         String ALPHA_WARNING_1 = "ui.galacticraft.alpha_warning.content1";
         String ALPHA_WARNING_2 = "ui.galacticraft.alpha_warning.content2";
         String ALPHA_WARNING_3 = "ui.galacticraft.alpha_warning.content3";
