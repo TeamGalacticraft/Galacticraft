@@ -33,6 +33,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -57,12 +58,12 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
     }
 
     @Override
-    public void beginCyroSleep() {
+    public void beginCryoSleep() {
         this.entityData.set(IS_IN_CRYO_SLEEP_ID, true);
     }
 
     @Override
-    public void endCyroSleep() {
+    public void endCryoSleep() {
         this.entityData.set(IS_IN_CRYO_SLEEP_ID, false);
     }
 
@@ -106,7 +107,8 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
     @Inject(method = "setPosToBed", at = @At("HEAD"), cancellable = true)
     private void gc$setCryoSleepPos(BlockPos blockPos, CallbackInfo ci) {
         if (isInCryoSleep()) {
-            this.setPos(blockPos.getX(), blockPos.getY() + 1F, blockPos.getZ());
+            Vec3 pos = blockPos.getBottomCenter();
+            this.setPos(pos.x, pos.y + 1F, pos.z);
             ci.cancel();
         }
     }

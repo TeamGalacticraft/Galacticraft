@@ -24,11 +24,11 @@ package dev.galacticraft.mod.accessor;
 
 public interface CryogenicAccessor {
 
-    default void beginCyroSleep() {
+    default void beginCryoSleep() {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default void endCyroSleep() {
+    default void endCryoSleep() {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
