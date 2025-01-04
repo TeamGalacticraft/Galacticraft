@@ -631,6 +631,7 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(DimensionTp.SUCCESS_MULTIPLE, "Teleported %s entities to %s");
         this.add(DimensionTp.SUCCESS_SINGLE, "Teleported to %s");
+        this.add(DimensionTp.INVALID_PACKET, "Invalid planet teleport packet received.");
 
         this.add(GcHouston.IN_OTHER_DIMENSION, "We cannot locate your signal! Are you sure you're in space?");
         this.add(GcHouston.CONFIRMATION, "Er, Houston, we have a problem... (Run this command again to confirm teleport)");

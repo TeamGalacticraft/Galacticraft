@@ -69,6 +69,7 @@ public interface Translations {
     interface DimensionTp {
         String SUCCESS_MULTIPLE = "commands.galacticraft.dimensiontp.success.multiple";
         String SUCCESS_SINGLE = "commands.galacticraft.dimensiontp.success.single";
+        String INVALID_PACKET = "disconnect.galacticraft.dimensiontp.invalidPacket";
     }
 
     interface GcHouston {
