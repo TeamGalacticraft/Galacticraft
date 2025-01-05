@@ -214,6 +214,7 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
 
                 player.endCryoSleep();
                 level.setBlockAndUpdate(basePos, baseState.setValue(OCCUPIED, false));
+                player.setYRot(baseState.getValue(CryogenicChamberBlock.FACING).toYRot());
             });
         } else {
             player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_HOT, (int)(player.getCryogenicChamberCooldown() / TICKS.tickrate())), false);

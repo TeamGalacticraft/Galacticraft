@@ -104,13 +104,15 @@ public class GCEventHandlers {
             entity.endCryoSleep();
             BlockPos basePos = sleepingPos.below();
             BlockState baseState = level.getBlockState(basePos);
+            float angle = 0.0F;
             if (baseState.getBlock() instanceof CryogenicChamberBlock) {
                 level.setBlockAndUpdate(basePos, baseState.setValue(BlockStateProperties.OCCUPIED, false));
+                angle = baseState.getValue(CryogenicChamberBlock.FACING).toYRot();
+                entity.setYRot(angle);
             }
 
             ServerPlayer serverPlayer = (ServerPlayer) entity;
             if (!(serverPlayer.getRespawnDimension() == level.dimension() && basePos.equals(serverPlayer.getRespawnPosition()))) {
-                float angle = baseState.getValue(CryogenicChamberBlock.FACING).toYRot();
                 boolean forceRespawn = false;
                 serverPlayer.setRespawnPosition(level.dimension(), basePos, angle, forceRespawn, true);
             }
