@@ -9,6 +9,7 @@
     "BlockBehaviourMixin",
     "BucketItemAccessor",
     "BucketItemMixin",
+    "DimensionTransitionMixin",
     "DimensionTypeMixin",
     "EntityMixin",
     "FlowingFluidMixin",
