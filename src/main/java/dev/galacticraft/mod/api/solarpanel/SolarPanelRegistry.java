@@ -44,13 +44,14 @@ public class SolarPanelRegistry {
             new LightSource(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_SUN).setStyle(Constant.Text.Color.YELLOW_STYLE), 1.0, 1.0),
             new LightSource(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_MOON).setStyle(Constant.Text.Color.GRAY_STYLE), 0.07, 1.0),
             new LightSource(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_RAIN).setStyle(Constant.Text.Color.BLUE_STYLE), 1.0, 2.0),
+            new LightSource(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_THUNDER).setStyle(Constant.Text.Color.DARK_GRAY_STYLE), 1.0, 10.0),
             new LightSource(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_NONE).setStyle(Constant.Text.Color.WHITE_STYLE), 0.0, 1.0));
     private static final Map<ResourceKey<Level>, WorldLightSources> LIGHT_SOURCES = new HashMap<>();
     private static final Map<BlockEntityType<? extends SolarPanel>, ResourceLocation> SOLAR_PANEL_TEXTURES = new HashMap<>();
 
     public static void registerLightSources(ResourceKey<Level> key, WorldLightSources source) {
         if (LIGHT_SOURCES.put(key, source) != null) {
-            Constant.LOGGER.warn("Replacing ligt source for {}", key.location().toString());
+            Constant.LOGGER.warn("Replacing light source for {}", key.location().toString());
         }
     }
 

@@ -24,5 +24,5 @@ package dev.galacticraft.mod.api.solarpanel;
 
 import net.minecraft.resources.ResourceLocation;
 
-public record WorldLightSources(ResourceLocation texture, LightSource day, LightSource night, LightSource overcast, LightSource missing) {
+public record WorldLightSources(ResourceLocation texture, LightSource day, LightSource night, LightSource overcast, LightSource stormy, LightSource missing) {
 }

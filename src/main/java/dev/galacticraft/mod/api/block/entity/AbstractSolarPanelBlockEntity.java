@@ -75,8 +75,8 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
         double multiplier = blocked == 0 ? 1 : (9.0 - this.blocked) / 9.0;
         if (this.blocked > 1) status = GCMachineStatuses.PARTIALLY_BLOCKED;
         if (level.isThundering()) {
-            if (status == null) status = GCMachineStatuses.RAIN;
-            multiplier *= 0.25;
+            if (status == null) status = GCMachineStatuses.THUNDER;
+            multiplier *= 0.1;
         } else if (level.isRaining()) {
             if (status == null) status = GCMachineStatuses.RAIN;
             multiplier *= 0.5;
@@ -101,7 +101,11 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
 
     @Override
     public SolarPanelSource getSource() {
-        return this.level.dimensionType().hasCeiling() ? SolarPanelSource.NO_LIGHT_SOURCE : this.level.isDay() ? this.level.isRaining() || this.level.isThundering() ? SolarPanelSource.OVERCAST : SolarPanelSource.DAY : SolarPanelSource.NIGHT;
+        if (this.level.dimensionType().hasCeiling()) return SolarPanelSource.NO_LIGHT_SOURCE;
+        if ((level.getDayTime() % 24000) > 12000) return SolarPanelSource.NIGHT;
+        if (this.level.isThundering()) return SolarPanelSource.STORMY;
+        if (this.level.isRaining()) return SolarPanelSource.OVERCAST;
+        return SolarPanelSource.DAY;
     }
 
     @Override

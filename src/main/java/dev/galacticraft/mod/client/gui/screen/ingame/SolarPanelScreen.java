@@ -45,10 +45,10 @@ import java.util.List;
 public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, Menu extends SolarPanelMenu<Machine>> extends MachineScreen<Machine, Menu> {
     private static final int DAY_SOURCE_U = 0;
     private static final int DAY_SOURCE_V = 0;
-    private static final int OVERCAST_SOURCE_U = 32;
-    private static final int OVERCAST_SOURCE_V = 32;
     private static final int NIGHT_SOURCE_U = 32;
     private static final int NIGHT_SOURCE_V = 0;
+    private static final int OVERCAST_SOURCE_U = 32;
+    private static final int OVERCAST_SOURCE_V = 32;
     private static final int MISSING_SOURCE_U = 0;
     private static final int MISSING_SOURCE_V = 32;
 
@@ -70,8 +70,9 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
     private static final int SOLAR_PANEL_HEIGHT = 16;
 
     private static final Component DAY = Component.translatable(Translations.SolarPanel.DAY).setStyle(Constant.Text.Color.YELLOW_STYLE);
-    private static final Component OVERCAST = Component.translatable(Translations.SolarPanel.OVERCAST).setStyle(Constant.Text.Color.GRAY_STYLE);
-    private static final Component NIGHT = Component.translatable(Translations.SolarPanel.NIGHT).setStyle(Constant.Text.Color.BLUE_STYLE);
+    private static final Component NIGHT = Component.translatable(Translations.SolarPanel.NIGHT).setStyle(Constant.Text.Color.GRAY_STYLE);
+    private static final Component OVERCAST = Component.translatable(Translations.SolarPanel.OVERCAST).setStyle(Constant.Text.Color.BLUE_STYLE);
+    private static final Component STORMY = Component.translatable(Translations.SolarPanel.STORMY).setStyle(Constant.Text.Color.DARK_GRAY_STYLE);
     private static final Component BLOCKED = Component.translatable(Translations.SolarPanel.BLOCKED).setStyle(Constant.Text.Color.DARK_RED_STYLE);
     private static final Component MISSING_SOURCE = Component.translatable(Translations.SolarPanel.MISSING_SOURCE).setStyle(Constant.Text.Color.WHITE_STYLE);
 
@@ -90,8 +91,8 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 switch (this.menu.getSource()) {
-                    case DAY -> drawNormal(graphics, x, y, SOLAR_PANEL_U, SOLAR_PANEL_V);
-                    case NIGHT, OVERCAST -> drawNormal(graphics, x, y, SOLAR_PANEL_NIGHT_U, SOLAR_PANEL_NIGHT_V);
+                    case DAY, OVERCAST -> drawNormal(graphics, x, y, SOLAR_PANEL_U, SOLAR_PANEL_V);
+                    case NIGHT, STORMY -> drawNormal(graphics, x, y, SOLAR_PANEL_NIGHT_U, SOLAR_PANEL_NIGHT_V);
                     case NO_LIGHT_SOURCE -> graphics.blit(this.solarPanelTexture, this.leftPos + SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, this.topPos + SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, 0, SOLAR_PANEL_BLOCKED_U, SOLAR_PANEL_BLOCKED_V, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT, 32, 32);
                 }
                 if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, this.topPos + SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT)) {
@@ -106,7 +107,7 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
         switch (this.menu.getSource()) {
             case DAY -> graphics.blit(this.lightSource.texture(), this.leftPos + LIGHT_SOURCE_X, this.topPos + LIGHT_SOURCE_Y, DAY_SOURCE_U, DAY_SOURCE_V, LIGHT_SOURCE_WIDTH, LIGHT_SOURCE_HEIGHT, 64, 64);
             case NIGHT -> graphics.blit(this.lightSource.texture(), this.leftPos + LIGHT_SOURCE_X, this.topPos + LIGHT_SOURCE_Y, NIGHT_SOURCE_U, NIGHT_SOURCE_V, LIGHT_SOURCE_WIDTH, LIGHT_SOURCE_HEIGHT, 64, 64);
-            case OVERCAST -> graphics.blit(this.lightSource.texture(), this.leftPos + LIGHT_SOURCE_X, this.topPos + LIGHT_SOURCE_Y, OVERCAST_SOURCE_U, OVERCAST_SOURCE_V, LIGHT_SOURCE_WIDTH, LIGHT_SOURCE_HEIGHT, 64, 64);
+            case OVERCAST, STORMY -> graphics.blit(this.lightSource.texture(), this.leftPos + LIGHT_SOURCE_X, this.topPos + LIGHT_SOURCE_Y, OVERCAST_SOURCE_U, OVERCAST_SOURCE_V, LIGHT_SOURCE_WIDTH, LIGHT_SOURCE_HEIGHT, 64, 64);
             case NO_LIGHT_SOURCE -> graphics.blit(this.lightSource.texture(), this.leftPos + LIGHT_SOURCE_X, this.topPos + LIGHT_SOURCE_Y, MISSING_SOURCE_U, MISSING_SOURCE_V, LIGHT_SOURCE_WIDTH, LIGHT_SOURCE_HEIGHT, 64, 64);
         }
     }
@@ -125,6 +126,7 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
                         switch (this.menu.getSource()){
                             case DAY -> graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.Color.GRAY_STYLE).append(DAY), mouseX, mouseY);
                             case OVERCAST -> graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.Color.GRAY_STYLE).append(OVERCAST), mouseX, mouseY);
+                            case STORMY -> graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.Color.GRAY_STYLE).append(STORMY), mouseX, mouseY);
                             case NIGHT -> graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.Color.GRAY_STYLE).append(NIGHT), mouseX, mouseY);
                             case NO_LIGHT_SOURCE -> graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.Color.GRAY_STYLE).append(MISSING_SOURCE), mouseX, mouseY);
                         }
@@ -139,6 +141,7 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
             LightSource source = switch (this.menu.getSource()) {
                 case DAY -> this.lightSource.day();
                 case OVERCAST -> this.lightSource.overcast();
+                case STORMY -> this.lightSource.stormy();
                 case NIGHT -> this.lightSource.night();
                 case NO_LIGHT_SOURCE -> this.lightSource.missing();
             };

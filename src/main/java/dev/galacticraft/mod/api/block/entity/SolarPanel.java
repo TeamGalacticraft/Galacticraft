@@ -39,6 +39,7 @@ public interface SolarPanel {
         DAY,
         NIGHT,
         OVERCAST,
+        STORMY,
         NO_LIGHT_SOURCE
     }
 }
