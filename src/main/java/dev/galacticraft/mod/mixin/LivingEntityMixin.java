@@ -107,8 +107,10 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
     @Inject(method = "setPosToBed", at = @At("HEAD"), cancellable = true)
     private void gc$setCryoSleepPos(BlockPos blockPos, CallbackInfo ci) {
         if (isInCryoSleep()) {
-            Vec3 pos = blockPos.getBottomCenter();
-            this.setPos(pos.x, pos.y + 1F, pos.z);
+            Vec3 pos = blockPos.below().getBottomCenter();
+            this.setPos(pos.x, pos.y, pos.z);
+            this.setDeltaMovement(Vec3.ZERO);
+            this.hasImpulse = false;
             ci.cancel();
         }
     }

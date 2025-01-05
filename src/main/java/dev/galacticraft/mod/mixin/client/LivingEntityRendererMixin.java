@@ -79,6 +79,7 @@ public abstract class LivingEntityRendererMixin {
         if (entity.isInCryoSleep()) {
             Direction direction = entity.getBedOrientation();
             float j = direction != null ? sleepDirectionToRotationCryo(direction) : bodyYaw;
+            pose.translate(0, 0.82F, 0);
             pose.mulPose(Axis.YP.rotationDegrees(j));
             ci.cancel();
         }
