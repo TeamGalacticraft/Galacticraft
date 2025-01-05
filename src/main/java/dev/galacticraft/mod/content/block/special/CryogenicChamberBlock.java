@@ -200,7 +200,7 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
             player.beginCryoSleep();
             level.setBlockAndUpdate(basePos, baseState.setValue(OCCUPIED, true));
 
-            player.startSleepInBed(basePos).ifLeft(problem -> {
+            player.startSleepInBed(basePos.above()).ifLeft(problem -> {
                 switch(problem) {
                     case Player.BedSleepingProblem.OBSTRUCTED:
                         player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_OBSTRUCTED), true);
