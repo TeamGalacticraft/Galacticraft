@@ -37,6 +37,7 @@ import net.minecraft.world.level.portal.DimensionTransition;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -52,11 +53,25 @@ public abstract class DimensionTransitionMixin {
             boolean respawnForced = serverPlayer.isRespawnForced();
             ServerLevel serverLevel = serverPlayer.server.getLevel(serverPlayer.getRespawnDimension());
             if (serverLevel != null && blockPos != null) {
-                BlockState blockState = serverLevel.getBlockState(blockPos);
-                if (blockState.getBlock() instanceof CryogenicChamberBlock) {
+                if (gc$canRespawn(serverLevel, blockPos)) {
                     cir.setReturnValue(new DimensionTransition(serverLevel, blockPos.getBottomCenter(), Vec3.ZERO, yaw, 0.0f, postDimensionTransition));
                 }
             }
         }
+    }
+
+    @Unique
+    private static boolean gc$canRespawn(Level level, BlockPos blockPos) {
+        BlockState baseState = level.getBlockState(blockPos);
+        if (baseState.getBlock() instanceof CryogenicChamberBlock) {
+            Direction direction = baseState.getValue(CryogenicChamberBlock.FACING);
+            return gc$freeAt(level, blockPos.relative(direction)) && gc$freeAt(level, blockPos.above().relative(direction));
+        }
+        return false;
+    }
+
+    @Unique
+    private static boolean gc$freeAt(Level level, BlockPos blockPos) {
+        return !level.getBlockState(blockPos).isSuffocating(level, blockPos);
     }
 }
