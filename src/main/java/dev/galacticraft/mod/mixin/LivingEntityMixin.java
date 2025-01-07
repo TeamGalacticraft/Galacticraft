@@ -22,17 +22,23 @@
 
 package dev.galacticraft.mod.mixin;
 
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.CryogenicAccessor;
 import dev.galacticraft.mod.tag.GCTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -42,9 +48,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
+    @Shadow public abstract double getAttributeValue(Holder<Attribute> holder);
+
     @Unique
     @SuppressWarnings("WrongEntityDataParameterClass")
     private static final EntityDataAccessor<Boolean> IS_IN_CRYO_SLEEP_ID = SynchedEntityData.defineId(
@@ -119,6 +128,19 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
     private void gc$preventMovement(CallbackInfo ci) {
         if (isInCryoSleep())
             ci.cancel();
+    }
+
+    @Inject(method = "calculateFallDamage", at = @At(value = "HEAD"), cancellable = true)
+    protected void calculateFallDamage(float f, float f2, CallbackInfoReturnable<Integer> cir) {
+        if (this.getType().is(EntityTypeTags.FALL_DAMAGE_IMMUNE)) {
+            cir.setReturnValue(0);
+            return;
+        }
+        Holder<CelestialBody<?, ?>> holder = this.level().galacticraft$getCelestialBody();
+        float gravity = (float)(holder != null ? holder.value().gravity() : 1.0d);
+        float f3 = (float)this.getAttributeValue(Attributes.SAFE_FALL_DISTANCE);
+        float f4 = f - f3 / gravity;
+        cir.setReturnValue(Mth.ceil((double)(f4 * f2 * gravity) * this.getAttributeValue(Attributes.FALL_DAMAGE_MULTIPLIER)));
     }
 
     @Redirect(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isFallFlying()Z"))
