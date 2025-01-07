@@ -29,6 +29,7 @@ import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.api.item.OxygenGear;
 import dev.galacticraft.api.item.OxygenMask;
 import dev.galacticraft.impl.internal.fabric.GalacticraftAPI;
+import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.Galacticraft;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -37,9 +38,13 @@ import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -67,10 +72,34 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     }
 
     @Shadow protected abstract int increaseAirSupply(int air);
+    @Shadow protected abstract int decreaseAirSupply(int air);
+
+    @Inject(method = "baseTick", at = @At(value = "HEAD"))
+    private void galacticraft_oxygenCheck(CallbackInfo ci) {
+        LivingEntity entity = ((LivingEntity) (Object) this);
+        if (entity.isAlive()) {
+            if (!entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(entity.getEyeHeight(entity.getPose()))))) {
+                if (!entity.canBreatheUnderwater() && (!(entity instanceof Player) || !((Player)entity).getAbilities().invulnerable)) {
+                    entity.setAirSupply(this.decreaseAirSupply(entity.getAirSupply()));
+                    if (entity.getAirSupply() == -20) {
+                        entity.setAirSupply(0);
+                        entity.hurt(new DamageSource(entity.level().registryAccess()
+                                .registryOrThrow(Registries.DAMAGE_TYPE)
+                                .getHolderOrThrow(GCDamageTypes.SUFFOCATION)), 2.0f);
+                    }
+                }
+            }
+        }
+    }
 
     @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z", ordinal = 0))
     private boolean galacticraft_testForBreathability(LivingEntity entity, TagKey<Fluid> tag) {
         return entity.isEyeInFluid(tag) || !entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(entity.getPose()))));
+    }
+
+    @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;canBreatheUnderwater()Z"))
+    private boolean galacticraft_suffocationDamage(LivingEntity entity) {
+        return entity.canBreatheUnderwater() || !entity.isEyeInFluid(FluidTags.WATER);
     }
 
     @Inject(method = "tick", at = @At(value = "RETURN"))

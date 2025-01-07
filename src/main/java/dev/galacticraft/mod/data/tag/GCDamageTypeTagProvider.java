@@ -20,26 +20,26 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity.damage;
+package dev.galacticraft.mod.data.tag;
 
-import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstrapContext;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.damagesource.DamageEffects;
-import net.minecraft.world.damagesource.DamageScaling;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageType;
 
-public class GCDamageTypes {
-    public static final ResourceKey<DamageType> OIL_BOOM = Constant.key(Registries.DAMAGE_TYPE, "oil_boom");
-    public static final ResourceKey<DamageType> VINE_POISON = Constant.key(Registries.DAMAGE_TYPE, "vine_poison");
-    public static final ResourceKey<DamageType> SUFFOCATION = Constant.key(Registries.DAMAGE_TYPE, "suffocation");
-    public static final ResourceKey<DamageType> SULFURIC_ACID = Constant.key(Registries.DAMAGE_TYPE, "sulfuric_acid");
+import java.util.concurrent.CompletableFuture;
 
-    public static void bootstrapRegistries(BootstrapContext<DamageType> context) {
-        context.register(OIL_BOOM, new DamageType("oil_boom", DamageScaling.ALWAYS, 0.1f));
-        context.register(VINE_POISON, new DamageType("vine_poison", 0.0f));
-        context.register(SUFFOCATION, new DamageType("suffocation", 0.0f, DamageEffects.DROWNING));
-        context.register(SULFURIC_ACID, new DamageType("sulfuric_acid", 0.0f));
+public class GCDamageTypeTagProvider extends FabricTagProvider<DamageType> {
+    public GCDamageTypeTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture) {
+        super(output, Registries.DAMAGE_TYPE, completableFuture);
+    }
+
+    @Override
+    protected void addTags(HolderLookup.Provider arg) {
+        this.tag(DamageTypeTags.NO_IMPACT)
+                .add(GCDamageTypes.SUFFOCATION);
     }
 }

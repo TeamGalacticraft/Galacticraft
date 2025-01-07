@@ -78,6 +78,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(GCBannerTagProvider::new);
         pack.addProvider(GCBiomeTagProvider::new);
         pack.addProvider(GCBlockTagProvider::new);
+        pack.addProvider(GCDamageTypeTagProvider::new);
         pack.addProvider(GCDimensionTagProvider::new);
         pack.addProvider(GCEntityTypeTagProvider::new);
         pack.addProvider(GCFluidTagProvider::new);
