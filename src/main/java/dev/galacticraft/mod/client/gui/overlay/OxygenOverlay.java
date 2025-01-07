@@ -45,9 +45,10 @@ public class OxygenOverlay {
             if (body != null && !body.value().atmosphere().breathable()) {
                 Container inv = mc.player.galacticraft$getOxygenTanks();
                 final int y = 4;
-                for (int i = 0; i < inv.getContainerSize(); i++) {
-                    Storage<FluidVariant> storage = ContainerItemContext.withConstant(inv.getItem(i)).find(FluidStorage.ITEM);
-                    int x = mc.getWindow().getGuiScaledWidth() - ((Constant.TextureCoordinate.OVERLAY_WIDTH + y) * (i + 1));
+                final int n = inv.getContainerSize();
+                for (int i = n; i > 0; i--) {
+                    Storage<FluidVariant> storage = ContainerItemContext.withConstant(inv.getItem(n - i)).find(FluidStorage.ITEM);
+                    int x = mc.getWindow().getGuiScaledWidth() - ((Constant.TextureCoordinate.OVERLAY_WIDTH + y) * i);
 
                     int outline = 0x99FFFFFF;
 
