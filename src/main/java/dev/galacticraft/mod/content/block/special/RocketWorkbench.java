@@ -25,6 +25,7 @@ package dev.galacticraft.mod.content.block.special;
 import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -60,6 +61,17 @@ public class RocketWorkbench extends BaseEntityBlock {
             }
         }
         return InteractionResult.CONSUME;
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.getBlock() != newState.getBlock()) {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof RocketWorkbenchBlockEntity workbench) {
+                Containers.dropContents(level, pos, workbench.inventory);
+                Containers.dropContents(level, pos, workbench.output);
+            }
+        }
     }
 
     @Nullable

@@ -49,6 +49,7 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.Slot;
@@ -105,7 +106,8 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
     private static final int RECIPE_HEIGHT = 25;
 
     private static final int BASE_UI_WIDTH = 248;
-    private static final int MAIN_UI_WIDTH = 177;
+    private static final int MAIN_UI_WIDTH = 176;
+    private static final int PREVIEW_UI_WIDTH = 72;
     private static final int BASE_UI_HEIGHT = 245;
     private static final int CAP_HEIGHT = 4;
     private static final int HEIGHT_EXT_U = BASE_UI_WIDTH;
@@ -137,21 +139,16 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
 
     public RocketWorkbenchScreen(RocketWorkbenchMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
-        this.setOpenTab(Tab.CONE);
+//        this.setOpenTab(Tab.CONE);
         this.entity = new RocketEntity(GCEntityTypes.ROCKET, menu.workbench.getLevel());
         this.inventoryLabelX = this.inventoryLabelY = Integer.MAX_VALUE;
     }
 
     @Override
     protected void init() {
-        this.imageWidth = BASE_UI_WIDTH;
+        this.imageWidth = MAIN_UI_WIDTH;
         this.imageHeight = BASE_UI_HEIGHT + CAP_HEIGHT + this.menu.additionalHeight;
         super.init();
-    }
-
-    @Override
-    public void onClose() {
-        super.onClose();
     }
 
     @Override
@@ -171,16 +168,13 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
         }
 
         this.entity.setData(this.menu.createData());
-
-        this.entity.setXRot(0.0f);
-        this.entity.setYRot(90.0f - 20.0f);
     }
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float delta, int mouseX, int mouseY) {
         this.inventoryLabelY = this.imageHeight - 96 + this.menu.additionalHeight;
 
-        drawSelection(guiGraphics, mouseX, mouseY, delta);
+//        drawSelection(guiGraphics, mouseX, mouseY, delta);
 
         try (Graphics graphics = Graphics.managed(guiGraphics, this.font)) {
             try (Graphics.Texture texture = graphics.texture(Constant.ScreenTexture.ROCKET_WORKBENCH_SCREEN, 512, 256)) {
@@ -206,161 +200,170 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
     @Override
     public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
+        this.entity.setYRot(this.entity.getYRot() + delta);
         this.renderTooltip(context, mouseX, mouseY);
     }
 
+//    @Override
+//    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+//        return super.mouseClicked(mouseX, mouseY, button) | clickSelection(mouseX, mouseY, button);
+//    }
+
+//    public boolean clickSelection(double mouseX, double mouseY, int button) {
+//        mouseX -= this.leftPos - SELECTION_SCREEN_WIDTH - SCREEN_SPACING;
+//        mouseY -= this.topPos;
+//
+//        {
+//            int y = 4;
+//            for (Tab tab : Tab.values()) {
+//                if (tab == Tab.COLOR) continue;
+//                if (tab != this.openTab) {
+//                    if (mouseIn(mouseX, mouseY, -TAB_WIDTH, y, TAB_WIDTH, TAB_HEIGHT)) {
+//                        this.setOpenTab(tab);
+//                        return true;
+//                    }
+//                }
+//                y += TAB_SPACING + TAB_HEIGHT;
+//            }
+//        }
+//
+//        if (this.openTab != Tab.COLOR) {
+//            assert this.recipes != null;
+//            int i = this.page * 5 * 7;
+//            for (int y = 0; y < 7; y++) {
+//                for (int x = 0; x < 5; x++) {
+//                    if (mouseIn(mouseX, mouseY, 11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, RECIPE_WIDTH, RECIPE_HEIGHT)) {
+//                        if (i < this.recipes.size()) {
+//                            if (button == GLFW.GLFW_MOUSE_BUTTON_1) {
+//                                Holder.Reference<? extends RocketPart<?, ?>> ref = this.recipes.get(i);
+//                                this.getSelection().setSelection(ref != null ? ref.key().location() : null);
+//                                ClientPlayNetworking.send(new SelectPartPayload(this.openTab.type, ref != null ? ref.key().location() : null));
+//                                return true;
+//                            } else if (button == GLFW.GLFW_MOUSE_BUTTON_2) {
+//                                //todo
+//                                return true;
+//                            }
+//                        }
+//                    }
+//                    ++i;
+//                }
+//            }
+//        } else {
+//
+//        }
+//        return false;
+//    }
+
+
+//    private void setOpenTab(Tab openTab) {
+//        this.openTab = openTab;
+//        this.page = 0;
+//
+//        if (openTab != Tab.COLOR) {
+//            RocketWorkbenchMenu.RecipeCollection recipes = getRecipes();
+//            List<Holder.Reference<? extends RocketPart<?, ?>>> joined = new ArrayList<>(recipes.getCraftable().size() + recipes.getUncraftable().size() + 1);
+//            joined.add(null);
+//            joined.addAll(recipes.getCraftable());
+//            joined.addAll(recipes.getUncraftable());
+//            this.recipes = joined;
+//        } else {
+//            this.recipes = null;
+//        }
+//    }
+
+//    private void drawSelection(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+//        PoseStack pose = guiGraphics.pose();
+//        pose.pushPose();
+//        pose.translate(this.leftPos - SELECTION_SCREEN_WIDTH - SCREEN_SPACING, this.topPos, 0);
+//        mouseX -= this.leftPos - SELECTION_SCREEN_WIDTH - SCREEN_SPACING;
+//        mouseY -= this.topPos;
+//
+//        int size = this.recipes != null ? this.recipes.size() : 0;
+//        try (Graphics graphics = Graphics.managed(guiGraphics, this.font)) {
+//            try (Graphics.Texture texture = graphics.texture(Constant.ScreenTexture.ROCKET_SELECTION, 256, 256)) {
+//                texture.blit(0, 0, 0, 0, SELECTION_SCREEN_WIDTH, SELECTION_SCREEN_HEIGHT);
+//
+//                {
+//                    int y = 4;
+//                    for (Tab tab : Tab.values()) {
+//                        if (tab == Tab.COLOR) continue;
+//                        if (tab == this.openTab) {
+//                            texture.blit(-(TAB_SELECTED_WIDTH - 3), y, TAB_SELECTED_U, TAB_SELECTED_V, TAB_SELECTED_WIDTH, TAB_HEIGHT);
+//                        } else {
+//                            texture.blit(-TAB_WIDTH, y, TAB_U, TAB_V, TAB_WIDTH, TAB_HEIGHT);
+//                        }
+//                        y += TAB_SPACING + TAB_HEIGHT;
+//                    }
+//                }
+//
+//                if (this.openTab != Tab.COLOR) {
+//                    assert this.recipes != null;
+//                    final int pages = Math.floorDiv(size, RECIPES_PER_PAGE) + size % RECIPES_PER_PAGE == 0 ? 0 : 1;
+//
+//                    if (this.page >= pages) {
+//                        this.page = 0;
+//                    }
+//                    int i = this.page * 5 * 7;
+//                    for (int y = 0; y < 7 && i < size; y++) {
+//                        for (int x = 0; x < 5 && i < size; x++) {
+//                            Holder.Reference<? extends RocketPart<?, ?>> part = this.recipes.get(i);
+//                            int uOffset = isCraftable(part) ? RECIPE_CRAFTABLE_U : RECIPE_UNCRAFTABLE_U;
+//                            int vOffset = Objects.equals(this.getSelection().selection, part == null ? null : part.key().location()) ? RECIPE_SELECTED_V : RECIPE_V;
+//                            texture.blit(11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, uOffset, vOffset, RECIPE_WIDTH, RECIPE_HEIGHT);
+//                            if (part != null && mouseIn(mouseX, mouseY, 11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, RECIPE_WIDTH, RECIPE_HEIGHT)) {
+//                                setTooltipForNextRenderPass(RocketPart.getName(part.key()));
+//                            }
+//                            i++;
+//                        }
+//                    }
+//                } else {
+//                    //todo color
+//                }
+//            }
+//        }
+//
+//        {
+//            int y = 8;
+//            for (Tab tab : Tab.values()) {
+//                if (tab == Tab.COLOR) {
+
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return super.mouseClicked(mouseX, mouseY, button) | clickSelection(mouseX, mouseY, button);
+    protected boolean hasClickedOutside(double mouseX, double mouseY, int left, int top, int button) {
+        return mouseX < (double)left || mouseY < (double)top || mouseX >= (double)(left + this.imageWidth + PREVIEW_UI_WIDTH) || mouseY >= (double)(top + this.imageHeight);
     }
 
-    public boolean clickSelection(double mouseX, double mouseY, int button) {
-        mouseX -= this.leftPos - SELECTION_SCREEN_WIDTH - SCREEN_SPACING;
-        mouseY -= this.topPos;
-
-        {
-            int y = 4;
-            for (Tab tab : Tab.values()) {
-                if (tab == Tab.COLOR) continue;
-                if (tab != this.openTab) {
-                    if (mouseIn(mouseX, mouseY, -TAB_WIDTH, y, TAB_WIDTH, TAB_HEIGHT)) {
-                        this.setOpenTab(tab);
-                        return true;
-                    }
-                }
-                y += TAB_SPACING + TAB_HEIGHT;
-            }
-        }
-
-        if (this.openTab != Tab.COLOR) {
-            assert this.recipes != null;
-            int i = this.page * 5 * 7;
-            for (int y = 0; y < 7; y++) {
-                for (int x = 0; x < 5; x++) {
-                    if (mouseIn(mouseX, mouseY, 11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, RECIPE_WIDTH, RECIPE_HEIGHT)) {
-                        if (i < this.recipes.size()) {
-                            if (button == GLFW.GLFW_MOUSE_BUTTON_1) {
-                                Holder.Reference<? extends RocketPart<?, ?>> ref = this.recipes.get(i);
-                                this.getSelection().setSelection(ref != null ? ref.key().location() : null);
-                                ClientPlayNetworking.send(new SelectPartPayload(this.openTab.type, ref != null ? ref.key().location() : null));
-                                return true;
-                            } else if (button == GLFW.GLFW_MOUSE_BUTTON_2) {
-                                //todo
-                                return true;
-                            }
-                        }
-                    }
-                    ++i;
-                }
-            }
-        } else {
-
-        }
-        return false;
-    }
+    ////                    graphics.renderFakeItem(new ItemStack(Items.RED_DYE), -TAB_WIDTH + TAB_ICON_OFFSET, y);
+//                    continue;
+//                } else {
+//                    guiGraphics.pose().translate(0, 0, 100);
+//                    RocketPartRendererRegistry.INSTANCE.getRenderer(tab.part).renderGUI(guiGraphics, -TAB_WIDTH + TAB_ICON_OFFSET, y, mouseX, mouseY, delta);
+//                    guiGraphics.pose().translate(0, 0, -100);
+//                }
+//                y += TAB_SPACING + TAB_HEIGHT;
+//            }
+//        }
+//        if (this.openTab != Tab.COLOR) {
+//            assert this.recipes != null;
+//
+//            int i = this.page * 5 * 7;
+//            for (int y = 0; y < 7 && i < size; y++) {
+//                for (int x = 0; x < 5 && i < size; x++) {
+//                    Holder.Reference<? extends RocketPart<?, ?>> recipe = this.recipes.get(i);
+//                    if (recipe != null) {
+//                        RocketPartRenderer renderer = RocketPartRendererRegistry.INSTANCE.getRenderer(recipe.key());
+//                        renderer.renderGUI(guiGraphics, 15 + x * RECIPE_WIDTH, 33 + y * RECIPE_HEIGHT, mouseX, mouseY, delta);
+//                    }
+//                    i++;
+//                }
+//            }
+//        } else {
+//
+//        }
+//        guiGraphics.drawString(this.font, this.openTab.name, 12, 14, 0xEEEEEE, true);
+//        pose.popPose();
+//    }
 
 
-    private void setOpenTab(Tab openTab) {
-        this.openTab = openTab;
-        this.page = 0;
-
-        if (openTab != Tab.COLOR) {
-            RocketWorkbenchMenu.RecipeCollection recipes = getRecipes();
-            List<Holder.Reference<? extends RocketPart<?, ?>>> joined = new ArrayList<>(recipes.getCraftable().size() + recipes.getUncraftable().size() + 1);
-            joined.add(null);
-            joined.addAll(recipes.getCraftable());
-            joined.addAll(recipes.getUncraftable());
-            this.recipes = joined;
-        } else {
-            this.recipes = null;
-        }
-    }
-
-    private void drawSelection(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
-        PoseStack pose = guiGraphics.pose();
-        pose.pushPose();
-        pose.translate(this.leftPos - SELECTION_SCREEN_WIDTH - SCREEN_SPACING, this.topPos, 0);
-        mouseX -= this.leftPos - SELECTION_SCREEN_WIDTH - SCREEN_SPACING;
-        mouseY -= this.topPos;
-
-        int size = this.recipes != null ? this.recipes.size() : 0;
-        try (Graphics graphics = Graphics.managed(guiGraphics, this.font)) {
-            try (Graphics.Texture texture = graphics.texture(Constant.ScreenTexture.ROCKET_SELECTION, 256, 256)) {
-                texture.blit(0, 0, 0, 0, SELECTION_SCREEN_WIDTH, SELECTION_SCREEN_HEIGHT);
-
-                {
-                    int y = 4;
-                    for (Tab tab : Tab.values()) {
-                        if (tab == Tab.COLOR) continue;
-                        if (tab == this.openTab) {
-                            texture.blit(-(TAB_SELECTED_WIDTH - 3), y, TAB_SELECTED_U, TAB_SELECTED_V, TAB_SELECTED_WIDTH, TAB_HEIGHT);
-                        } else {
-                            texture.blit(-TAB_WIDTH, y, TAB_U, TAB_V, TAB_WIDTH, TAB_HEIGHT);
-                        }
-                        y += TAB_SPACING + TAB_HEIGHT;
-                    }
-                }
-
-                if (this.openTab != Tab.COLOR) {
-                    assert this.recipes != null;
-                    final int pages = Math.floorDiv(size, RECIPES_PER_PAGE) + size % RECIPES_PER_PAGE == 0 ? 0 : 1;
-
-                    if (this.page >= pages) {
-                        this.page = 0;
-                    }
-                    int i = this.page * 5 * 7;
-                    for (int y = 0; y < 7 && i < size; y++) {
-                        for (int x = 0; x < 5 && i < size; x++) {
-                            Holder.Reference<? extends RocketPart<?, ?>> part = this.recipes.get(i);
-                            int uOffset = isCraftable(part) ? RECIPE_CRAFTABLE_U : RECIPE_UNCRAFTABLE_U;
-                            int vOffset = Objects.equals(this.getSelection().selection, part == null ? null : part.key().location()) ? RECIPE_SELECTED_V : RECIPE_V;
-                            texture.blit(11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, uOffset, vOffset, RECIPE_WIDTH, RECIPE_HEIGHT);
-                            if (part != null && mouseIn(mouseX, mouseY, 11 + x * RECIPE_WIDTH, 29 + y * RECIPE_HEIGHT, RECIPE_WIDTH, RECIPE_HEIGHT)) {
-                                setTooltipForNextRenderPass(RocketPart.getName(part.key()));
-                            }
-                            i++;
-                        }
-                    }
-                } else {
-                    //todo color
-                }
-            }
-        }
-
-        {
-            int y = 8;
-            for (Tab tab : Tab.values()) {
-                if (tab == Tab.COLOR) {
-//                    graphics.renderFakeItem(new ItemStack(Items.RED_DYE), -TAB_WIDTH + TAB_ICON_OFFSET, y);
-                    continue;
-                } else {
-                    guiGraphics.pose().translate(0, 0, 100);
-                    RocketPartRendererRegistry.INSTANCE.getRenderer(tab.part).renderGUI(guiGraphics, -TAB_WIDTH + TAB_ICON_OFFSET, y, mouseX, mouseY, delta);
-                    guiGraphics.pose().translate(0, 0, -100);
-                }
-                y += TAB_SPACING + TAB_HEIGHT;
-            }
-        }
-        if (this.openTab != Tab.COLOR) {
-            assert this.recipes != null;
-
-            int i = this.page * 5 * 7;
-            for (int y = 0; y < 7 && i < size; y++) {
-                for (int x = 0; x < 5 && i < size; x++) {
-                    Holder.Reference<? extends RocketPart<?, ?>> recipe = this.recipes.get(i);
-                    if (recipe != null) {
-                        RocketPartRenderer renderer = RocketPartRendererRegistry.INSTANCE.getRenderer(recipe.key());
-                        renderer.renderGUI(guiGraphics, 15 + x * RECIPE_WIDTH, 33 + y * RECIPE_HEIGHT, mouseX, mouseY, delta);
-                    }
-                    i++;
-                }
-            }
-        } else {
-            
-        }
-        guiGraphics.drawString(this.font, this.openTab.name, 12, 14, 0xEEEEEE, true);
-        pose.popPose();
-    }
 
     public static void renderEntityInInventory(
             GuiGraphics guiGraphics, double x, double y, int scale, Quaternionf pose, @Nullable Quaternionf cameraOrientation, RocketEntity entity
@@ -384,35 +387,35 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
         Lighting.setupFor3DItems();
     }
 
-    private boolean isCraftable(Holder.Reference<? extends RocketPart<?, ?>> recipe) {
-        return recipe == null || this.getRecipes().getCraftable().contains(recipe);
-    }
+//    private boolean isCraftable(Holder.Reference<? extends RocketPart<?, ?>> recipe) {
+//        return recipe == null || this.getRecipes().getCraftable().contains(recipe);
+//    }
 
-    private static boolean mouseIn(double mouseX, double mouseY, int x, int y, int width, int height) {
-        return mouseX >= x && mouseY >= y && mouseX <= x + width && mouseY <= y + height;
-    }
+//    private static boolean mouseIn(double mouseX, double mouseY, int x, int y, int width, int height) {
+//        return mouseX >= x && mouseY >= y && mouseX <= x + width && mouseY <= y + height;
+//    }
 
-    private RocketWorkbenchBlockEntity.RecipeSelection getSelection() {
-        return switch (openTab.type) {
-            case CONE -> this.menu.cone;
-            case BODY -> this.menu.body;
-            case FIN -> this.menu.fins;
-            case BOOSTER -> this.menu.booster;
-            case ENGINE -> this.menu.engine;
-            case UPGRADE -> this.menu.upgrade;
-        };
-    }
+//    private RocketWorkbenchBlockEntity.RecipeSelection getSelection() {
+//        return switch (openTab.type) {
+//            case CONE -> this.menu.cone;
+//            case BODY -> this.menu.body;
+//            case FIN -> this.menu.fins;
+//            case BOOSTER -> this.menu.booster;
+//            case ENGINE -> this.menu.engine;
+//            case UPGRADE -> this.menu.upgrade;
+//        };
+//    }
 
-    private RocketWorkbenchMenu.RecipeCollection getRecipes() {
-        return switch (openTab.type) {
-            case CONE -> this.menu.coneRecipes;
-            case BODY -> this.menu.bodyRecipes;
-            case FIN -> this.menu.finsRecipes;
-            case BOOSTER -> this.menu.boosterRecipes;
-            case ENGINE -> this.menu.engineRecipes;
-            case UPGRADE -> this.menu.upgradeRecipes;
-        };
-    }
+//    private RocketWorkbenchMenu.RecipeCollection getRecipes() {
+//        return switch (openTab.type) {
+//            case CONE -> this.menu.coneRecipes;
+//            case BODY -> this.menu.bodyRecipes;
+//            case FIN -> this.menu.finsRecipes;
+//            case BOOSTER -> this.menu.boosterRecipes;
+//            case ENGINE -> this.menu.engineRecipes;
+//            case UPGRADE -> this.menu.upgradeRecipes;
+//        };
+//    }
 
     private enum Tab {
         CONE(RocketPartTypes.CONE, GCRocketParts.TIER_1_CONE, Component.translatable(Translations.Ui.CONE)),

@@ -109,6 +109,34 @@ public class RocketRecipe implements Recipe<RecipeInput> {
         return this.group;
     }
 
+    public ItemStack result() {
+        return result;
+    }
+
+    public Ingredient cone() {
+        return cone;
+    }
+
+    public Ingredient engine() {
+        return engine;
+    }
+
+    public Ingredient body() {
+        return body;
+    }
+
+    public Ingredient fins() {
+        return fins;
+    }
+
+    public Ingredient boosters() {
+        return boosters;
+    }
+
+    public int bodyHeight() {
+        return bodyHeight;
+    }
+
     public static class Serializer implements RecipeSerializer<RocketRecipe> {
         public static final Serializer INSTANCE = new Serializer();
 

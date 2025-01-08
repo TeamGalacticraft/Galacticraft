@@ -27,13 +27,16 @@ import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
+import dev.galacticraft.mod.recipe.RocketRecipe;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -43,6 +46,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -65,23 +70,28 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
 
     public byte[] color = new byte[4];
 
+    // Using a VariableSizedContainer here to support different recipes in the future
+    public final VariableSizedContainer inventory = new VariableSizedContainer(14);
+
     public RocketWorkbenchBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.ROCKET_WORKBENCH, pos, state);
+        this.inventory.addListener(this);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registryLookup) {
+        super.saveAdditional(tag, registryLookup);
 
-        ListTag tag1 = this.output.createTag(provider);
-        if (!tag1.isEmpty()) tag.put("Output", tag1.get(0));
-        tag.put("Cone", this.cone.toTag(provider));
-        tag.put("Body", this.body.toTag(provider));
-        tag.put("Fins", this.fins.toTag(provider));
-        tag.put("Booster", this.booster.toTag(provider));
-        tag.put("Engine", this.engine.toTag(provider));
-        tag.put("Upgrade", this.upgrade.toTag(provider));
+        ListTag outputTag = this.output.createTag(registryLookup);
+        if (!outputTag.isEmpty()) tag.put("Output", outputTag.getFirst());
+        tag.put("Cone", this.cone.toTag(registryLookup));
+        tag.put("Body", this.body.toTag(registryLookup));
+        tag.put("Fins", this.fins.toTag(registryLookup));
+        tag.put("Booster", this.booster.toTag(registryLookup));
+        tag.put("Engine", this.engine.toTag(registryLookup));
+        tag.put("Upgrade", this.upgrade.toTag(registryLookup));
         tag.putByteArray("Color", this.color);
+        tag.put("Inventory", this.inventory.toTag(registryLookup));
     }
 
     @Override
@@ -99,6 +109,21 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
         this.engine.readTag(tag.getCompound("Engine"), registryLookup);
         this.upgrade.readTag(tag.getCompound("Upgrade"), registryLookup);
         this.color = tag.getByteArray("Color");
+        this.inventory.readTag(tag.getCompound("Inventory"), registryLookup);
+    }
+
+//    private static RecipeHolder<RocketRecipe> lookUpRecipe(ResourceLocation id, HolderLookup.Provider registryLookup) {
+//        RocketRecipe recipe = (RocketRecipe) registryLookup.lookupOrThrow(Registries.RECIPE).get(ResourceKey.create(Registries.RECIPE, id)).get().value();
+//        return new RecipeHolder<>(id, recipe);
+//    }
+
+    public void resizeInventory(int newSize) {
+        if (newSize >= this.inventory.getTargetSize()) {
+            this.inventory.resize(newSize);
+        } else {
+            // TODO drop excess items
+            this.inventory.resize(newSize);
+        }
     }
 
     @Override
@@ -186,8 +211,8 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
             }
         }
 
-        public @Nullable ResourceKey<P> getSelectionKey() {
-            return this.selection == null ? null : ResourceKey.create(this.key, this.selection);
-        }
+//        public @Nullable ResourceKey<P> getSelectionKey() {
+//            return this.selection == null ? null : ResourceKey.create(this.key, this.selection);
+//        }
     }
 }

@@ -76,7 +76,9 @@ public class RocketResultSlot extends Slot {
 
     @Override
     public void onTake(Player player, ItemStack stack) {
+        super.onTake(player, stack);
         this.checkTakeAchievements(stack);
+        this.menu.workbench.inventory.clearContent();
         for (int i = 0; i < this.menu.cone.inventory.getTargetSize(); i++) {
             this.menu.cone.inventory.removeItem(i, 1);
         }
