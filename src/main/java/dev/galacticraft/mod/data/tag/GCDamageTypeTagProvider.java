@@ -49,7 +49,9 @@ public class GCDamageTypeTagProvider extends FabricTagProvider<DamageType> {
                 .add(GCDamageTypes.SUFFOCATION);
                 
         this.tag(DamageTypeTags.NO_IMPACT)
-                .add(GCDamageTypes.SUFFOCATION);
+                .add(GCDamageTypes.VINE_POISON)
+                .add(GCDamageTypes.SUFFOCATION)
+                .add(GCDamageTypes.SULFURIC_ACID);
                 
         this.tag(DamageTypeTags.NO_KNOCKBACK)
                 .add(GCDamageTypes.VINE_POISON)
