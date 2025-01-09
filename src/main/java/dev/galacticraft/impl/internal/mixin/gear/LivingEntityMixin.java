@@ -79,7 +79,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
         LivingEntity entity = ((LivingEntity) (Object) this);
         if (entity.isAlive()) {
             if (!entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(entity.getEyeHeight(entity.getPose()))))) {
-                if (!entity.canBreatheUnderwater() && (!(entity instanceof Player) || !((Player)entity).getAbilities().invulnerable)) {
+                if (!entity.isEyeInFluid(FluidTags.WATER) && (!(entity instanceof Player) || !((Player)entity).getAbilities().invulnerable)) {
                     entity.setAirSupply(this.decreaseAirSupply(entity.getAirSupply()));
                     if (entity.getAirSupply() == -20) {
                         entity.setAirSupply(0);
