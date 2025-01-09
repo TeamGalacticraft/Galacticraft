@@ -40,6 +40,8 @@ import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static dev.galacticraft.mod.util.Translations.*;
 
@@ -638,10 +640,14 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(GcHouston.IN_OVERWORLD, "I don't need to be rescued!");
         this.add(GcHouston.SUCCESS, "You have been rescued. Better luck next time...");
 
-        this.deathBy(GCDamageTypes.OIL_BOOM, "%s tried to put out fire with a very flammable material");
-        this.deathBy(GCDamageTypes.SUFFOCATION, "%s died from lack of oxygen");
-        this.deathBy(GCDamageTypes.SULFURIC_ACID, "%s succumbed to sulfuric acid");
-        this.deathBy(GCDamageTypes.VINE_POISON, "%s succumbed to the poison of some vines");
+        this.deathBy(GCDamageTypes.OIL_BOOM, "%s tried to put out fire with a very flammable material",
+                "%s tried to put out fire with a very flammable material while trying to escape %s");
+        this.deathBy(GCDamageTypes.SUFFOCATION, "%s died from lack of oxygen",
+                "%s ran out of oxygen while trying to escape %s");
+        this.deathBy(GCDamageTypes.SULFURIC_ACID, "%s was dissolved by sulfuric acid",
+                "%s was dissolved by sulfuric acid while trying to escape %s");
+        this.deathBy(GCDamageTypes.VINE_POISON, "%s succumbed to the poison of some vines",
+                "%s succumbed to the poison of some vines while trying to escape %s");
 
         this.add(Boss.SKELETON_BOSS_DESPAWN, "Boss despawned, don't leave the boss room while fighting! Re-enter room to respawn boss.");
     }
@@ -878,6 +884,13 @@ public class GCTranslationProvider extends TranslationProvider {
     protected void deathBy(ResourceKey<DamageType> key, String translation) {
         if (!translation.contains("%s")) throw new IllegalArgumentException("Death message must contain %s");
         this.add("death.attack." + key.location().getPath(), translation);
+    }
+
+    protected void deathBy(ResourceKey<DamageType> key, String translation, String playerTranslation) {
+        this.deathBy(key, translation);
+        Matcher matcher = Pattern.compile("%s").matcher(playerTranslation);
+        if (matcher.results().count() < 2) throw new IllegalArgumentException(".player death message must contain two instances of %s");
+        this.add("death.attack." + key.location().getPath() + ".player", playerTranslation);
     }
 
     protected void rocketPart(ResourceKey<? extends RocketPart<?, ?>> key, String translation) {
