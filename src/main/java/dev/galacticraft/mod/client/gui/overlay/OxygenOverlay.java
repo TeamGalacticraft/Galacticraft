@@ -35,6 +35,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Holder;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.Container;
 
 public class OxygenOverlay {
@@ -42,15 +43,15 @@ public class OxygenOverlay {
         Minecraft mc = Minecraft.getInstance();
         if (mc.level != null && mc.player != null && !mc.player.isSpectator()) {
             Holder<CelestialBody<?, ?>> body = mc.level.galacticraft$getCelestialBody();
-            if (body != null && !body.value().atmosphere().breathable()) {
+            boolean nonBreathable = body != null && !body.value().atmosphere().breathable();
+            if (mc.player.galacticraft$hasMaskAndGear() || nonBreathable) {
                 Container inv = mc.player.galacticraft$getOxygenTanks();
+                final int outline = 0x99FFFFFF;
                 final int y = 4;
                 final int n = inv.getContainerSize();
                 for (int i = n; i > 0; i--) {
                     Storage<FluidVariant> storage = ContainerItemContext.withConstant(inv.getItem(n - i)).find(FluidStorage.ITEM);
                     int x = mc.getWindow().getGuiScaledWidth() - ((Constant.TextureCoordinate.OVERLAY_WIDTH + y) * i);
-
-                    int outline = 0x99FFFFFF;
 
                     long amount = 0;
                     long capacity = 1;

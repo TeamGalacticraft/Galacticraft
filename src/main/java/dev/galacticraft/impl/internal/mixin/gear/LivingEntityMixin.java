@@ -120,20 +120,20 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
             ci.setReturnValue(this.increaseAirSupply(air));
         }
 
-        boolean mask = false;
-        boolean gear = false;
-        for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
-            Item item = this.galacticraft$getAccessories().getItem(i).getItem();
-            if (!mask && item instanceof OxygenMask) {
-                mask = true;
-                if (gear) break;
-            } else if (!gear && item instanceof OxygenGear) {
-                gear = true;
-                if (mask) break;
-            }
-        }
+        // boolean mask = false;
+        // boolean gear = false;
+        // for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
+        //     Item item = this.galacticraft$getAccessories().getItem(i).getItem();
+        //     if (!mask && item instanceof OxygenMask) {
+        //         mask = true;
+        //         if (gear) break;
+        //     } else if (!gear && item instanceof OxygenGear) {
+        //         gear = true;
+        //         if (mask) break;
+        //     }
+        // }
 
-        if (mask && gear) {
+        if (this.galacticraft$hasMaskAndGear()) {
             InventoryStorage tankInv = InventoryStorage.of(galacticraft$getOxygenTanks(), null);
             for (int i = 0; i < tankInv.getSlotCount(); i++) {
                 Storage<FluidVariant> storage = ContainerItemContext.ofSingleSlot(tankInv.getSlot(i)).find(FluidStorage.ITEM);
