@@ -326,22 +326,22 @@ public class GCItems {
     public static final Item HOT_THROWABLE_METEOR_CHUNK = new HotThrowableMeteorChunkItem(new Item.Properties().stacksTo(16));
 
     // ARMOR
-    public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties());
-    public static final Item HEAVY_DUTY_CHESTPLATE = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.CHESTPLATE, new Item.Properties());
-    public static final Item HEAVY_DUTY_LEGGINGS = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.LEGGINGS, new Item.Properties());
-    public static final Item HEAVY_DUTY_BOOTS = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.BOOTS, new Item.Properties());
+    public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1));
+    public static final Item HEAVY_DUTY_CHESTPLATE = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1));
+    public static final Item HEAVY_DUTY_LEGGINGS = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1));
+    public static final Item HEAVY_DUTY_BOOTS = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1));
 
-    public static final Item DESH_HELMET = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.HELMET, new Item.Properties());
-    public static final Item DESH_CHESTPLATE = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.CHESTPLATE, new Item.Properties());
-    public static final Item DESH_LEGGINGS = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.LEGGINGS, new Item.Properties());
-    public static final Item DESH_BOOTS = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.BOOTS, new Item.Properties());
+    public static final Item DESH_HELMET = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1));
+    public static final Item DESH_CHESTPLATE = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1));
+    public static final Item DESH_LEGGINGS = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1));
+    public static final Item DESH_BOOTS = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1));
 
-    public static final Item TITANIUM_HELMET = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.HELMET, new Item.Properties());
-    public static final Item TITANIUM_CHESTPLATE = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.CHESTPLATE, new Item.Properties());
-    public static final Item TITANIUM_LEGGINGS = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.LEGGINGS, new Item.Properties());
-    public static final Item TITANIUM_BOOTS = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.BOOTS, new Item.Properties());
+    public static final Item TITANIUM_HELMET = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1));
+    public static final Item TITANIUM_CHESTPLATE = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1));
+    public static final Item TITANIUM_LEGGINGS = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1));
+    public static final Item TITANIUM_BOOTS = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1));
 
-    public static final Item SENSOR_GLASSES = new ArmorItem(GCArmorMaterials.SENSOR_GLASSES, ArmorItem.Type.HELMET, new Item.Properties());
+    public static final Item SENSOR_GLASSES = new ArmorItem(GCArmorMaterials.SENSOR_GLASSES, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1));
 
     // TOOLS + WEAPONS
     public static final Item HEAVY_DUTY_SWORD = new BrittleSwordItem(GCTiers.STEEL, new Item.Properties().attributes(SwordItem.createAttributes(GCTiers.STEEL, 3, -2.4F)));
