@@ -252,7 +252,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .define('D', GCItems.DESH_INGOT)
                 .define('S', GCItems.DESH_STICK)
                 .pattern("D")
-                .pattern("S")
+                .pattern("D")
                 .pattern("S")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
                 .save(output);
@@ -279,11 +279,11 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
         simpleCookingRecipe(output, "blasting", RecipeSerializer.BLASTING_RECIPE, BlastingRecipe::new, 100, GCItems.THROWABLE_METEOR_CHUNK, GCItems.HOT_THROWABLE_METEOR_CHUNK, 0.7F);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.STANDARD_WRENCH)
-                .define('B', GCItems.COMPRESSED_BRONZE)
+                .define('A', GCItems.COMPRESSED_ALUMINUM)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .pattern("  S")
-                .pattern(" B ")
-                .pattern("B  ")
+                .pattern(" A ")
+                .pattern("A  ")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .save(output);
     }
