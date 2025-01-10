@@ -570,6 +570,13 @@ public interface Constant {
         String OXYGEN_MASK = "slot/oxygen_mask";
         String OXYGEN_GEAR = "slot/oxygen_gear";
         String OXYGEN_TANK = "slot/oxygen_tank";
+
+        ResourceLocation ROCKET_CONE = id("slot/rocket_cone");
+        ResourceLocation ROCKET_PLATING = id("slot/rocket_plating");
+        ResourceLocation ROCKET_BOOSTER = id("slot/rocket_booster");
+        ResourceLocation ROCKET_FIN = id("slot/rocket_fin");
+        ResourceLocation ROCKET_ENGINE = id("slot/rocket_engine");
+        ResourceLocation CHEST = id("slot/chest");
     }
 
     interface Entity {

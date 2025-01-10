@@ -42,7 +42,6 @@ public class GCPackets {
         PayloadTypeRegistry.playC2S().register(BubbleMaxPayload.TYPE, BubbleMaxPayload.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(BubbleVisibilityPayload.TYPE, BubbleVisibilityPayload.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(PlanetTeleportPayload.TYPE, PlanetTeleportPayload.STREAM_CODEC);
-        PayloadTypeRegistry.playC2S().register(SelectPartPayload.TYPE, SelectPartPayload.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(OpenGcInventoryPayload.TYPE, OpenGcInventoryPayload.STREAM_CODEC);
     }
 }
