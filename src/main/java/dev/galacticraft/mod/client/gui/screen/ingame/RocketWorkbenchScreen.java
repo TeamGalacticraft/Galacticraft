@@ -44,8 +44,8 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
 public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkbenchMenu> implements VariableSizedContainer.Listener {
-    private static final int NORMAL_SLOT_U = 452;
-    private static final int NORMAL_SLOT_V = 0;
+    private static final int NORMAL_SLOT_U = 7;
+    private static final int NORMAL_SLOT_V = 224;
     private static final int NORMAL_SLOT_SIZE = 18;
 
     private static final int UI_WIDTH = 248;
@@ -101,7 +101,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
         this.inventoryLabelY = this.imageHeight - 96 + this.menu.additionalHeight;
 
         try (Graphics graphics = Graphics.managed(guiGraphics, this.font)) {
-            try (Graphics.Texture texture = graphics.texture(Constant.ScreenTexture.ROCKET_WORKBENCH_SCREEN, 512, 256)) {
+            try (Graphics.Texture texture = graphics.texture(Constant.ScreenTexture.ROCKET_WORKBENCH_SCREEN, 256, 256)) {
                 texture.blit(this.leftPos, this.topPos, 0, 0, UI_WIDTH, UI_HEIGHT);
 
                 for (Slot slot : this.menu.slots) {
