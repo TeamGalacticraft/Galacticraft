@@ -562,6 +562,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.entity(GCEntityTypes.GREY, "Grey");
         this.entity(GCEntityTypes.LANDER, "Lander");
         this.entity(GCEntityTypes.MOON_VILLAGER, "Moon Villager");
+        this.add(GCEntityTypes.MOON_VILLAGER.getDescriptionId() + ".none", "Moon Villager");
         this.entity(GCEntityTypes.OLI_GRUB, "Oli Grub");
         this.entity(GCEntityTypes.PARACHEST, "Parachest");
         this.entity(GCEntityTypes.ROCKET, "Rocket");
