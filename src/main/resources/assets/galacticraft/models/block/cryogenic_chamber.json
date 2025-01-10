@@ -52,9 +52,9 @@
 			"from": [ 1, 15, 4 ],
 			"to": [ 15, 18, 8 ],
 			"faces": {
-				"north": { "uv": [6.5, 0.75, 8.25, 0.75], "texture": "#cryo_chamber" },
-				"east": { "uv": [6, 0.75, 6.5, 0.75], "texture": "#cryo_chamber" },
-				"west": { "uv": [8.25, 0.75, 8.75, 0.75], "texture": "#cryo_chamber" }
+				"north": { "uv": [6.5, 0.5, 8.25, 0.875], "texture": "#cryo_chamber" },
+				"east": { "uv": [6, 0.5, 6.5, 0.875], "texture": "#cryo_chamber" },
+				"west": { "uv": [8.25, 0.5, 8.75, 0.875], "texture": "#cryo_chamber" }
 			}
 		}
 	]
