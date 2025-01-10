@@ -41,9 +41,9 @@ import net.minecraft.world.Container;
 public class OxygenOverlay {
     public static void onHudRender(GuiGraphics graphics, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.level != null && mc.player != null && !mc.player.isSpectator()) {
+        if (!mc.options.hideGui && mc.level != null && mc.player != null && !mc.player.isSpectator()) {
             Holder<CelestialBody<?, ?>> body = mc.level.galacticraft$getCelestialBody();
-            boolean nonBreathable = body != null && !body.value().atmosphere().breathable();
+            boolean nonBreathable = (body != null) && !body.value().atmosphere().breathable();
             if (mc.player.galacticraft$hasMaskAndGear() || nonBreathable) {
                 Container inv = mc.player.galacticraft$getOxygenTanks();
                 final int outline = 0x99FFFFFF;
