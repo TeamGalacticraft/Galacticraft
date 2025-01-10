@@ -25,37 +25,26 @@ package dev.galacticraft.mod.screen;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.component.GCDataComponents;
-import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.RocketPrefabs;
-import dev.galacticraft.api.rocket.part.*;
-import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import dev.galacticraft.mod.recipe.RocketRecipe;
-import dev.galacticraft.mod.util.StreamCodecs;
 import dev.galacticraft.mod.world.inventory.RocketResultSlot;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerListener;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.EitherHolder;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
@@ -71,13 +60,6 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
 
     public static final int SCREEN_CENTER_BASE_X = 88;
     public static final int SCREEN_CENTER_BASE_Y = 158;
-
-    public final RecipeCollection coneRecipes;
-    public final RecipeCollection bodyRecipes;
-    public final RecipeCollection finsRecipes;
-    public final RecipeCollection boosterRecipes;
-    public final RecipeCollection engineRecipes;
-    public final RecipeCollection upgradeRecipes;
 
     public final RocketWorkbenchBlockEntity workbench;
     public RecipeHolder<RocketRecipe> recipe;
@@ -109,29 +91,10 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         this.workbench.ingredients.addListener(this);
         this.workbench.chests.addListener(this);
 
-        RegistryAccess registryAccess = playerInventory.player.level().registryAccess();
-        this.coneRecipes = new RecipeCollection(registryAccess.registryOrThrow(RocketRegistries.ROCKET_CONE));
-        this.bodyRecipes = new RecipeCollection(registryAccess.registryOrThrow(RocketRegistries.ROCKET_BODY));
-        this.finsRecipes = new RecipeCollection(registryAccess.registryOrThrow(RocketRegistries.ROCKET_FIN));
-        this.boosterRecipes = new RecipeCollection(registryAccess.registryOrThrow(RocketRegistries.ROCKET_BOOSTER));
-        this.engineRecipes = new RecipeCollection(registryAccess.registryOrThrow(RocketRegistries.ROCKET_ENGINE));
-        this.upgradeRecipes = new RecipeCollection(registryAccess.registryOrThrow(RocketRegistries.ROCKET_UPGRADE));
-
-        StackedContents contents = new StackedContents();
-        playerInventory.fillStackedContents(contents);
-        this.coneRecipes.calculateCraftable(contents);
-        this.bodyRecipes.calculateCraftable(contents);
-        this.finsRecipes.calculateCraftable(contents);
-        this.boosterRecipes.calculateCraftable(contents);
-        this.engineRecipes.calculateCraftable(contents);
-        this.upgradeRecipes.calculateCraftable(contents);
-
         this.recipe = (RecipeHolder<RocketRecipe>) playerInventory.player.level().getRecipeManager().byKey(Constant.id("rocket/rocket")).get();
         this.recipeSize = this.recipe.value().getIngredients().size();
         this.addSlots();
         this.workbench.resizeInventory(this.recipeSize);
-
-//        this.onSizeChanged();
     }
 
     protected void addSlots() {
@@ -267,10 +230,6 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         );
     }
 
-    private static <T> Optional<EitherHolder<T>> previewPart(boolean present, ResourceKey<Registry<T>> key, Optional<EitherHolder<T>> part) {
-        return present ? part : Optional.empty();
-    }
-
     @Override
     public boolean stillValid(Player player) {
         return Container.stillValidBlockEntity(this.workbench, player);
@@ -315,40 +274,6 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         this.onItemChanged();
     }
 
-    public static class RecipeCollection {
-        private final Registry<? extends RocketPart<?, ?>> recipes;
-        private final List<Holder.Reference<? extends RocketPart<?, ?>>> uncraftable = new ArrayList<>();
-        private final List<Holder.Reference<? extends RocketPart<?, ?>>> craftable = new ArrayList<>();
-
-        public RecipeCollection(Registry<? extends RocketPart<?, ?>> recipes) {
-            this.recipes = recipes;
-        }
-
-        public List<Holder.Reference<? extends RocketPart<?, ?>>> getCraftable() {
-            return craftable;
-        }
-
-        public List<Holder.Reference<? extends RocketPart<?, ?>>> getUncraftable() {
-            return uncraftable;
-        }
-
-        public void calculateCraftable(StackedContents contents) {
-            this.craftable.clear();
-            this.uncraftable.clear();
-
-            this.recipes.holders().forEach(holder -> {
-                RocketPartRecipe<?, ?> recipe = holder.value().getRecipe();
-                if (recipe != null) {
-                    if (contents.canCraft(recipe, null)) {
-                        this.craftable.add(holder);
-                    } else {
-                        this.uncraftable.add(holder);
-                    }
-                }
-            });
-        }
-    }
-
     private static class FilteredSlot extends Slot {
         private final Predicate<ItemStack> filter;
         private Pair<ResourceLocation, ResourceLocation> background;
@@ -380,7 +305,6 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
     }
 
     public record OpeningData(BlockPos pos) {
-        private static final StreamCodec<ByteBuf, ResourceLocation> OPT_ID = StreamCodecs.ofNullable(ResourceLocation.STREAM_CODEC);
         public static final StreamCodec<ByteBuf, OpeningData> CODEC = BlockPos.STREAM_CODEC.map(OpeningData::new, OpeningData::pos);
     }
 }

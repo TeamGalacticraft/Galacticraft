@@ -70,7 +70,7 @@ public class RocketWorkbench extends BaseEntityBlock {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof RocketWorkbenchBlockEntity workbench) {
                 Containers.dropContents(level, pos, workbench.ingredients);
-                Containers.dropContents(level, pos, workbench.output);
+                Containers.dropContents(level, pos, workbench.chests);
             }
         }
     }

@@ -38,7 +38,6 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
@@ -61,8 +60,6 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
     public static final int PANEL_Y = 20;
     public static final int PANEL_WIDTH = 72;
     public static final int PANEL_HEIGHT = 149;
-
-    private int timesInventoryChanged;
 
     private final RocketEntity entity;
 
@@ -97,23 +94,6 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
     public void removed() {
         super.removed();
         this.menu.workbench.ingredients.removeListener(this);
-    }
-
-    @Override
-    protected void containerTick() {
-        super.containerTick();
-        if (this.timesInventoryChanged != this.menu.playerInventory.getTimesChanged()) {
-            this.timesInventoryChanged = this.menu.playerInventory.getTimesChanged();
-
-            StackedContents contents = new StackedContents();
-            this.menu.playerInventory.fillStackedContents(contents);
-            this.menu.coneRecipes.calculateCraftable(contents);
-            this.menu.bodyRecipes.calculateCraftable(contents);
-            this.menu.finsRecipes.calculateCraftable(contents);
-            this.menu.boosterRecipes.calculateCraftable(contents);
-            this.menu.engineRecipes.calculateCraftable(contents);
-            this.menu.upgradeRecipes.calculateCraftable(contents);
-        }
     }
 
     @Override
