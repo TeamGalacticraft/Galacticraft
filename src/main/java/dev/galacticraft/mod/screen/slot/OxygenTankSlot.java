@@ -43,7 +43,7 @@ public class OxygenTankSlot extends AccessorySlot {
     private static final ResourceFilter<Item> FILTER = ResourceFilters.canExtractFluid(Gases.OXYGEN);
 
     public OxygenTankSlot(Container inventory, int index, int x, int y) {
-        super(inventory, index, x, y, OxygenTank.class, Constant.id(Constant.SlotSprite.OXYGEN_TANK));
+        super(inventory, index, x, y, OxygenTank.class, Constant.SlotSprite.OXYGEN_TANK);
     }
 
     @Override

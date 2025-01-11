@@ -43,10 +43,10 @@ import org.jetbrains.annotations.Nullable;
 
 public class GCPlayerInventoryMenu extends AbstractContainerMenu {
     private static final ResourceLocation[] EMPTY_ARMOR_SLOT_IDS = new ResourceLocation[]{
-            Constant.id(Constant.SlotSprite.THERMAL_BOOTS),
-            Constant.id(Constant.SlotSprite.THERMAL_PANTS),
-            Constant.id(Constant.SlotSprite.THERMAL_CHEST),
-            Constant.id(Constant.SlotSprite.THERMAL_HEAD)
+            Constant.SlotSprite.THERMAL_BOOTS,
+            Constant.SlotSprite.THERMAL_PANTS,
+            Constant.SlotSprite.THERMAL_CHEST,
+            Constant.SlotSprite.THERMAL_HEAD
     };
     private static final EquipmentSlot[] EQUIPMENT_SLOT_ORDER = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     public static final int OXYGEN_TANK_1_SLOT = 4;
@@ -91,8 +91,8 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
         this.addSlot(new OxygenTankSlot(inventory, OXYGEN_TANK_1_SLOT, 80, 8 + 2 * 18));
         this.addSlot(new OxygenTankSlot(inventory, OXYGEN_TANK_2_SLOT, 80, 8 + 3 * 18));
 
-        this.addSlot(new AccessorySlot(inventory, 6, 80, 8, OxygenMask.class, Constant.id(Constant.SlotSprite.OXYGEN_MASK)));
-        this.addSlot(new AccessorySlot(inventory, 7, 80, 8 + 18, OxygenGear.class, Constant.id(Constant.SlotSprite.OXYGEN_GEAR)));
+        this.addSlot(new AccessorySlot(inventory, 6, 80, 8, OxygenMask.class, Constant.SlotSprite.OXYGEN_MASK));
+        this.addSlot(new AccessorySlot(inventory, 7, 80, 8 + 18, OxygenGear.class, Constant.SlotSprite.OXYGEN_GEAR));
 
         this.addSlot(new AccessorySlot(inventory, 8, 80 + 18, 8, FrequencyModule.class, null));
         this.addSlot(new AccessorySlot(inventory, 9, 80 + 18, 8 + 18, Parachute.class, null));

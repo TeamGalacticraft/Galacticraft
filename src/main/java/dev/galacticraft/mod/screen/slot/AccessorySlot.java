@@ -39,7 +39,7 @@ public class AccessorySlot extends Slot {
 
     public AccessorySlot(Container inventory, int index, int x, int y, Class<? extends Accessory> clazz, ResourceLocation icon) {
         super(inventory, index, x, y);
-        this.stackPredicate = itemStack -> itemStack.getItem() instanceof clazz;
+        this.stackPredicate = itemStack -> clazz.isInstance(itemStack.getItem());
         this.icon = (icon != null) ? Pair.of(InventoryMenu.BLOCK_ATLAS, icon) : null;
     }
 
