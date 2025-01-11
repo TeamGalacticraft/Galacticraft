@@ -45,7 +45,7 @@ public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe
 
     public JEIFabricationCategory(IGuiHelper helper) {
         this.icon = helper.createDrawableItemStack(new ItemStack(GCBlocks.CIRCUIT_FABRICATOR));
-        this.background = helper.createDrawable(Constant.ScreenTexture.RECIPE_VEIWER_DISPLAY_TEXTURE, 0, 0, 162, 82);
+        this.background = helper.createDrawable(Constant.ScreenTexture.RECIPE_VIEWER_DISPLAY_TEXTURE, 0, 0, 162, 82);
     }
 
     @Override

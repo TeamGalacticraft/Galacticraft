@@ -559,7 +559,7 @@ public interface Constant {
         ResourceLocation DEFAULT_LIGHT_SOURCES = id("textures/solar_panel/default_light_sources.png");
         ResourceLocation MOON_LIGHT_SOURCES = id("textures/solar_panel/moon_light_sources.png");
 
-        ResourceLocation RECIPE_VEIWER_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
+        ResourceLocation RECIPE_VIEWER_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
     }
 
     interface SlotSprite {
