@@ -43,6 +43,7 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.monster.Zombie;
 import org.jetbrains.annotations.Nullable;
 
 public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> extends RenderLayer<T, M> {
@@ -101,10 +102,18 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
     @Override
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
-        if (mask != null) {
-            mask.yRot = headYaw * (float) (Math.PI / 180.0);
-            mask.xRot = headPitch * (float) (Math.PI / 180.0);
-            mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+        if ((Entity)entity instanceof Zombie) {
+            Zombie zombie = (Zombie) entity;
+            if (zombie.isBaby()) {
+                matrices.scale(0.75F, 0.75F, 0.75F);
+                matrices.translate(0.0F, 1.0F, 0.0F);
+            }
+        }
+
+        if (this.mask != null) {
+            this.mask.yRot = headYaw * (float) (Math.PI / 180.0);
+            this.mask.xRot = headPitch * (float) (Math.PI / 180.0);
+            this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
 
         if (this.tank != null) {
