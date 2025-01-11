@@ -408,7 +408,7 @@ public class GCItems {
     public static final Item LARGE_OXYGEN_TANK = new OxygenTankItem(new Item.Properties(), 1620 * 30); //48600 ticks
     public static final Item INFINITE_OXYGEN_TANK = new InfiniteOxygenTankItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
 
-    public static final Item SHIELD_CONTROLLER = new AccessoryItem(new Item.Properties());
+    public static final Item SHIELD_CONTROLLER = new ShieldControllerItem(new Item.Properties());
     public static final Item FREQUENCY_MODULE = new FrequencyModuleItem(new Item.Properties());
 
     public static final Item THERMAL_PADDING_HELMET = new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.HELMET);

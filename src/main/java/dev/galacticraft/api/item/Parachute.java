@@ -20,17 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.item;
+package dev.galacticraft.api.item;
 
-import dev.galacticraft.api.item.FrequencyModule;
-
-public class FrequencyModuleItem extends AccessoryItem implements FrequencyModule {
-    public FrequencyModuleItem(Properties settings) {
-        super(settings);
-    }
-
-    @Override
-    public boolean enablesHearing() {
-        return true;
-    }
+public interface Parachute extends Accessory {
 }

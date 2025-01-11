@@ -20,21 +20,34 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.item;
+package dev.galacticraft.mod.screen.slot;
 
-import dev.galacticraft.api.item.Parachute;
-import net.minecraft.world.item.DyeColor;
+import com.mojang.datafixers.util.Pair;
+import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.api.item.Accessory;
+import dev.galacticraft.api.item.OxygenTank;
+import dev.galacticraft.machinelib.api.filter.ResourceFilter;
+import dev.galacticraft.machinelib.api.filter.ResourceFilters;
+import dev.galacticraft.mod.Constant;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
-public class ParachuteItem extends AccessoryItem implements Parachute {
-    private final DyeColor color;
+import java.util.function.Predicate;
 
-    public ParachuteItem(DyeColor color, Properties properties) {
-        super(properties);
-        this.color = color;
+public class OxygenTankSlot extends AccessorySlot {
+    private static final ResourceFilter<Item> FILTER = ResourceFilters.canExtractFluid(Gases.OXYGEN);
+
+    public OxygenTankSlot(Container inventory, int index, int x, int y) {
+        super(inventory, index, x, y, OxygenTank.class, Constant.id(Constant.SlotSprite.OXYGEN_TANK));
     }
 
-    public DyeColor getColor() {
-        return color;
+    @Override
+    public boolean mayPlace(ItemStack stack) {
+        return FILTER.test(stack.getItem(), stack.getComponentsPatch());
     }
 }

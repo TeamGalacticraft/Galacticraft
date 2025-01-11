@@ -24,13 +24,11 @@ package dev.galacticraft.mod.screen;
 
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.gas.Gases;
-import dev.galacticraft.machinelib.api.filter.ResourceFilter;
-import dev.galacticraft.machinelib.api.filter.ResourceFilters;
+import dev.galacticraft.api.item.*;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.item.OxygenGearItem;
-import dev.galacticraft.mod.content.item.OxygenMaskItem;
 import dev.galacticraft.mod.content.item.ThermalArmorItem;
 import dev.galacticraft.mod.screen.slot.AccessorySlot;
+import dev.galacticraft.mod.screen.slot.OxygenTankSlot;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -93,14 +91,13 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
         this.addSlot(new OxygenTankSlot(inventory, OXYGEN_TANK_1_SLOT, 80, 8 + 2 * 18));
         this.addSlot(new OxygenTankSlot(inventory, OXYGEN_TANK_2_SLOT, 80, 8 + 3 * 18));
 
-        this.addSlot(new AccessorySlot(inventory, 6, 80, 8, OxygenMaskItem.class, Constant.id(Constant.SlotSprite.OXYGEN_MASK)));
-        this.addSlot(new AccessorySlot(inventory, 7, 80, 8 + 18, OxygenGearItem.class, Constant.id(Constant.SlotSprite.OXYGEN_GEAR)));
+        this.addSlot(new AccessorySlot(inventory, 6, 80, 8, OxygenMask.class, Constant.id(Constant.SlotSprite.OXYGEN_MASK)));
+        this.addSlot(new AccessorySlot(inventory, 7, 80, 8 + 18, OxygenGear.class, Constant.id(Constant.SlotSprite.OXYGEN_GEAR)));
 
-        int accessorySlot = 0;
-        for (int i = 8; i < 12; i++) {
-            this.addSlot(new AccessorySlot(inventory, i, 80 + 18, 8 + accessorySlot * 18));
-            accessorySlot++;
-        }
+        this.addSlot(new AccessorySlot(inventory, 8, 80 + 18, 8, FrequencyModule.class, null));
+        this.addSlot(new AccessorySlot(inventory, 9, 80 + 18, 8 + 18, Parachute.class, null));
+        this.addSlot(new AccessorySlot(inventory, 10, 80 + 18, 8 + 2 * 18, ShieldController.class, null));
+        this.addSlot(new AccessorySlot(inventory, 11, 80 + 18, 8 + 3 * 18, null, null));
 
         // Player main inv
         for (int slotY = 0; slotY < 3; ++slotY) {
@@ -129,29 +126,6 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(Player player) {
         return player.getUUID().equals(this.player.getUUID());
-    }
-
-    private static class OxygenTankSlot extends Slot {
-        private static final ResourceFilter<Item> FILTER = ResourceFilters.canExtractFluid(Gases.OXYGEN);
-        public OxygenTankSlot(Container gearInventory, int slotId, int x, int y) {
-            super(gearInventory, slotId, x, y);
-        }
-
-        @Override
-        public boolean mayPlace(ItemStack stack) {
-            return FILTER.test(stack.getItem(), stack.getComponentsPatch());
-        }
-
-        @Override
-        public int getMaxStackSize() {
-            return 1;
-        }
-
-        @Nullable
-        @Override
-        public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-            return Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.id(Constant.SlotSprite.OXYGEN_TANK));
-        }
     }
 
     @Override

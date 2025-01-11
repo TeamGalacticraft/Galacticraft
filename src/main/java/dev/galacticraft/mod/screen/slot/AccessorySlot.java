@@ -39,8 +39,8 @@ public class AccessorySlot extends Slot {
 
     public AccessorySlot(Container inventory, int index, int x, int y, Class<? extends Accessory> clazz, ResourceLocation icon) {
         super(inventory, index, x, y);
-        this.stackPredicate = itemStack -> itemStack.getItem().getClass().equals(clazz);
-        this.icon = Pair.of(InventoryMenu.BLOCK_ATLAS, icon);
+        this.stackPredicate = itemStack -> itemStack.getItem() instanceof clazz;
+        this.icon = (icon != null) ? Pair.of(InventoryMenu.BLOCK_ATLAS, icon) : null;
     }
 
     public AccessorySlot(Container inventory, int index, int x, int y) {
@@ -58,5 +58,10 @@ public class AccessorySlot extends Slot {
     @Override
     public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
         return this.icon;
+    }
+    
+    @Override
+    public int getMaxStackSize() {
+        return 1;
     }
 }

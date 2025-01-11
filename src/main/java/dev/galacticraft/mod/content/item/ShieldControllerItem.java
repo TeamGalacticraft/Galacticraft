@@ -22,15 +22,10 @@
 
 package dev.galacticraft.mod.content.item;
 
-import dev.galacticraft.api.item.FrequencyModule;
+import dev.galacticraft.api.item.ShieldController;
 
-public class FrequencyModuleItem extends AccessoryItem implements FrequencyModule {
-    public FrequencyModuleItem(Properties settings) {
+public class ShieldControllerItem extends AccessoryItem implements ShieldController {
+    public ShieldControllerItem(Properties settings) {
         super(settings);
-    }
-
-    @Override
-    public boolean enablesHearing() {
-        return true;
     }
 }

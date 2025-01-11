@@ -570,6 +570,9 @@ public interface Constant {
         String OXYGEN_MASK = "slot/oxygen_mask";
         String OXYGEN_GEAR = "slot/oxygen_gear";
         String OXYGEN_TANK = "slot/oxygen_tank";
+        String FREQUENCY_MODULE = "slot/frequency_module";
+        String PARACHUTE = "slot/parachute";
+        String SHIELD_CONTROLLER = "slot/shield_controller";
     }
 
     interface Entity {
