@@ -57,7 +57,7 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
         this.addSlot(new OxygenTankSlot(inventory, 80, 8 + 3 * 18, AccessoryType.OXYGEN_TANK_2.getSlot()));
 
         this.addSlot(new AccessorySlot(inventory, 80 + 18, 8 + 0 * 18, AccessoryType.FREQUENCY_MODULE, null));
-        this.addSlot(new AccessorySlot(inventory, 80 + 18, 8 + 1 * 18, AccessoryType.PARACHUTE, null));
+        this.addSlot(new AccessorySlot(inventory, 80 + 18, 8 + 1 * 18, AccessoryType.PARACHUTE, Constant.SlotSprite.PARACHUTE));
         this.addSlot(new AccessorySlot(inventory, 80 + 18, 8 + 2 * 18, AccessoryType.SHIELD_CONTROLLER, null));
         this.addSlot(new AccessorySlot(inventory, 80 + 18, 8 + 3 * 18, AccessoryType.ACCESSORY.getSlot()));
 
