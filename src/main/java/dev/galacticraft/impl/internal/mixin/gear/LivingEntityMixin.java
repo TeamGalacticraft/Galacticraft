@@ -26,8 +26,7 @@ import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.item.Accessory;
-import dev.galacticraft.api.item.OxygenGear;
-import dev.galacticraft.api.item.OxygenMask;
+import dev.galacticraft.api.item.Accessory.AccessoryType;
 import dev.galacticraft.impl.internal.fabric.GalacticraftAPI;
 import dev.galacticraft.mod.Galacticraft;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -95,10 +94,10 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
         boolean gear = false;
         for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
             Item item = this.galacticraft$getAccessories().getItem(i).getItem();
-            if (!mask && item instanceof OxygenMask) {
+            if (!mask && item instanceof Accessory accessory && accessory.getType() == AccessoryType.OXYGEN_MASK) {
                 mask = true;
                 if (gear) break;
-            } else if (!gear && item instanceof OxygenGear) {
+            } else if (!gear && item instanceof Accessory accessory && accessory.getType() == AccessoryType.OXYGEN_GEAR) {
                 gear = true;
                 if (mask) break;
             }

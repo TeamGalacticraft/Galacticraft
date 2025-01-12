@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.component.GCDataComponents;
+import dev.galacticraft.api.item.Accessory.AccessoryType;
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
@@ -398,23 +399,23 @@ public class GCItems {
     public static final Item SULFURIC_ACID_BUCKET = new BucketItem(GCFluids.SULFURIC_ACID, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1));
 
     //GALACTICRAFT INVENTORY
-    public static final GCRegistry.ColorSet<ParachuteItem> PARACHUTE = ITEMS.registerColored(Constant.Item.PARACHUTE, color -> new ParachuteItem(color, new Item.Properties().stacksTo(1)));
+    public static final GCRegistry.ColorSet<ParachuteItem> PARACHUTE = ITEMS.registerColored(Constant.Item.PARACHUTE, color -> new ParachuteItem(color, new Item.Properties()));
 
-    public static final Item OXYGEN_MASK = new OxygenMaskItem(new Item.Properties());
-    public static final Item OXYGEN_GEAR = new OxygenGearItem(new Item.Properties());
+    public static final Item OXYGEN_MASK = new AccessoryItem(new Item.Properties(), AccessoryType.OXYGEN_MASK);
+    public static final Item OXYGEN_GEAR = new AccessoryItem(new Item.Properties(), AccessoryType.OXYGEN_GEAR);
 
     public static final Item SMALL_OXYGEN_TANK = new OxygenTankItem(new Item.Properties(), 1620 * 10); // 16200 ticks
     public static final Item MEDIUM_OXYGEN_TANK = new OxygenTankItem(new Item.Properties(), 1620 * 20); //32400 ticks
     public static final Item LARGE_OXYGEN_TANK = new OxygenTankItem(new Item.Properties(), 1620 * 30); //48600 ticks
-    public static final Item INFINITE_OXYGEN_TANK = new InfiniteOxygenTankItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
+    public static final Item INFINITE_OXYGEN_TANK = new InfiniteOxygenTankItem(new Item.Properties().rarity(Rarity.EPIC));
 
-    public static final Item SHIELD_CONTROLLER = new ShieldControllerItem(new Item.Properties());
-    public static final Item FREQUENCY_MODULE = new FrequencyModuleItem(new Item.Properties());
+    public static final Item SHIELD_CONTROLLER = new AccessoryItem(new Item.Properties(), AccessoryType.SHIELD_CONTROLLER);
+    public static final Item FREQUENCY_MODULE = new AccessoryItem(new Item.Properties(), AccessoryType.FREQUENCY_MODULE);
 
-    public static final Item THERMAL_PADDING_HELMET = new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.HELMET);
-    public static final Item THERMAL_PADDING_CHESTPIECE = new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.CHESTPLATE);
-    public static final Item THERMAL_PADDING_LEGGINGS = new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.LEGGINGS);
-    public static final Item THERMAL_PADDING_BOOTS = new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.BOOTS);
+    public static final Item THERMAL_PADDING_HELMET = new AccessoryItem(new Item.Properties(), AccessoryType.THERMAL_HEAD);
+    public static final Item THERMAL_PADDING_CHESTPIECE = new AccessoryItem(new Item.Properties(), AccessoryType.THERMAL_CHEST);
+    public static final Item THERMAL_PADDING_LEGGINGS = new AccessoryItem(new Item.Properties(), AccessoryType.THERMAL_PANTS);
+    public static final Item THERMAL_PADDING_BOOTS = new AccessoryItem(new Item.Properties(), AccessoryType.THERMAL_BOOTS);
     // Vehicles
     public static final Item BUGGY = ITEMS.register(Constant.Item.BUGGY, new BuggyItem(new Item.Properties().stacksTo(1)));
     public static final Item ROCKET = ITEMS.register(Constant.Item.ROCKET, new RocketItem(new Item.Properties()

@@ -25,7 +25,6 @@ package dev.galacticraft.mod.screen.slot;
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.item.Accessory;
-import dev.galacticraft.api.item.OxygenTank;
 import dev.galacticraft.machinelib.api.filter.ResourceFilter;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.mod.Constant;
@@ -35,19 +34,27 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Predicate;
-
-public class OxygenTankSlot extends AccessorySlot {
+public class OxygenTankSlot extends Slot {
     private static final ResourceFilter<Item> FILTER = ResourceFilters.canExtractFluid(Gases.OXYGEN);
+    private final Pair<ResourceLocation, ResourceLocation> icon = Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.OXYGEN_TANK);
 
-    public OxygenTankSlot(Container inventory, int index, int x, int y) {
-        super(inventory, index, x, y, OxygenTank.class, Constant.SlotSprite.OXYGEN_TANK);
+    public OxygenTankSlot(Container inventory, int x, int y, int index) {
+        super(inventory, index, x, y);
     }
 
     @Override
     public boolean mayPlace(ItemStack stack) {
         return FILTER.test(stack.getItem(), stack.getComponentsPatch());
+    }
+
+    @Override
+    public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
+        return this.icon;
+    }
+    
+    @Override
+    public int getMaxStackSize() {
+        return 1;
     }
 }

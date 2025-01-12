@@ -24,6 +24,7 @@ package dev.galacticraft.mod.screen.slot;
 
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.item.Accessory;
+import dev.galacticraft.api.item.Accessory.AccessoryType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -37,15 +38,15 @@ public class AccessorySlot extends Slot {
     private final Predicate<ItemStack> stackPredicate;
     private final Pair<ResourceLocation, ResourceLocation> icon;
 
-    public AccessorySlot(Container inventory, int index, int x, int y, Class<? extends Accessory> clazz, ResourceLocation icon) {
-        super(inventory, index, x, y);
-        this.stackPredicate = itemStack -> clazz.isInstance(itemStack.getItem());
+    public AccessorySlot(Container inventory, int x, int y, AccessoryType accessoryType, ResourceLocation icon) {
+        super(inventory, accessoryType.getSlot(), x, y);
+        this.stackPredicate = itemStack -> itemStack.getItem() instanceof Accessory accessory && accessory.getSlot() == accessoryType.getSlot();
         this.icon = (icon != null) ? Pair.of(InventoryMenu.BLOCK_ATLAS, icon) : null;
     }
 
-    public AccessorySlot(Container inventory, int index, int x, int y) {
+    public AccessorySlot(Container inventory, int x, int y, int index) {
         super(inventory, index, x, y);
-        this.stackPredicate = itemStack -> itemStack.getItem() instanceof Accessory;
+        this.stackPredicate = itemStack -> false;
         this.icon = null;
     }
 

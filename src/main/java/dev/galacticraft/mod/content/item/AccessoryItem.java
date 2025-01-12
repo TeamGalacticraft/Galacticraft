@@ -33,30 +33,29 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class AccessoryItem extends Item implements Accessory {
-    public AccessoryItem(Properties settings) {
+    public AccessoryType accessoryType;
+
+    public AccessoryItem(Properties settings, AccessoryType accessoryType) {
         super(settings.stacksTo(1));
+        this.accessoryType = accessoryType;
     }
 
-    @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
-        Container inv = user.galacticraft$getAccessories();
-        boolean alreadyEquipped = false;
-        int minAcceptableSlot = -1;
-        ItemStack copy = user.getItemInHand(hand).copy();
-        for (int i = 0; i < inv.getContainerSize(); i++) {
-            if (inv.getItem(i).getItem() == this) {
-                alreadyEquipped = true;
-                break;
-            } else {
-                if (minAcceptableSlot == -1 && inv.getItem(i).isEmpty() && inv.canPlaceItem(i, copy)) {
-                    minAcceptableSlot = i;
-                }
-            }
-        }
-        if (!alreadyEquipped && minAcceptableSlot != -1) {
-            inv.setItem(minAcceptableSlot, copy);
+    public AccessoryType getType() {
+        return this.accessoryType;
+    }
+
+    public int getSlot() {
+        return this.accessoryType.getSlot();
+    }
+
+    @Override //should sync with server
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+        Container inv = player.galacticraft$getGearInv();
+        ItemStack itemStack = inv.getItem(this.getSlot());
+        if (itemStack.isEmpty()) {
+            inv.setItem(this.getSlot(), player.getItemInHand(hand));
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, ItemStack.EMPTY);
         }
-        return super.use(world, user, hand);
+        return super.use(world, player, hand);
     }
 }

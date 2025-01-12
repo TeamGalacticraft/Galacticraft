@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content.item;
 
-import dev.galacticraft.api.item.OxygenTank;
+import dev.galacticraft.api.item.Accessory.AccessoryType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -44,11 +44,11 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class OxygenTankItem extends AccessoryItem implements OxygenTank {
+public class OxygenTankItem extends AccessoryItem {
     public final long capacity;
 
     public OxygenTankItem(Properties settings, int capacity) {
-        super(settings.durability(capacity));
+        super(settings.durability(capacity), AccessoryType.OXYGEN_TANK_1);
         this.capacity = capacity;
     }
 

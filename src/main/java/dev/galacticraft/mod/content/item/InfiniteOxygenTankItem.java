@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.content.item;
 
 import com.google.common.collect.Iterators;
+import dev.galacticraft.api.item.Accessory.AccessoryType;
 import dev.galacticraft.api.gas.Gases;
-import dev.galacticraft.api.item.OxygenTank;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.util.ColorUtil;
 import dev.galacticraft.mod.util.Translations;
@@ -50,9 +50,9 @@ import net.minecraft.world.level.Level;
 import java.util.Iterator;
 import java.util.List;
 
-public class InfiniteOxygenTankItem extends AccessoryItem implements OxygenTank, Storage<FluidVariant>, StorageView<FluidVariant> {
+public class InfiniteOxygenTankItem extends AccessoryItem implements Storage<FluidVariant>, StorageView<FluidVariant> {
     public InfiniteOxygenTankItem(Properties settings) {
-        super(settings);
+        super(settings, AccessoryType.OXYGEN_TANK_1);
     }
 
     @Override
