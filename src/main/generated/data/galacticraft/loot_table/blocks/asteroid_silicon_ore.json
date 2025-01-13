@@ -40,7 +40,7 @@
                   "function": "minecraft:explosion_decay"
                 }
               ],
-              "name": "galacticraft:raw_silicon"
+              "name": "galacticraft:silicon"
             }
           ]
         }

@@ -1,8 +1,8 @@
 {
-  "machinelib:generate": "machinelib:simple",
   "data": {
-    "front": "galacticraft:block/electric_compressor",
     "base": "galacticraft:block/machine",
+    "front": "galacticraft:block/electric_compressor",
     "side": "galacticraft:block/machine_side"
-  }
+  },
+  "machinelib:generate": "machinelib:simple"
 }

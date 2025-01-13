@@ -1,9 +1,0 @@
-{
-  "machinelib:generate": "machinelib:axis",
-  "data": {
-    "front": "galacticraft:block/refinery_front",
-    "back": "galacticraft:block/refinery_back",
-    "base": "galacticraft:block/machine",
-    "side": "galacticraft:block/machine_side"
-  }
-}

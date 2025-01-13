@@ -1,8 +1,8 @@
 {
-  "machinelib:generate": "machinelib:simple",
   "data": {
-    "front": "galacticraft:block/coal_generator",
     "base": "galacticraft:block/machine",
+    "front": "galacticraft:block/coal_generator",
     "side": "galacticraft:block/machine_side"
-  }
+  },
+  "machinelib:generate": "machinelib:simple"
 }

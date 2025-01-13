@@ -1,8 +1,8 @@
 {
-  "machinelib:generate": "machinelib:front_face",
-  "sprites": {
+  "data": {
     "sprite": "galacticraft:block/refinery_front"
   },
+  "machinelib:generate": "machinelib:front_face",
   "textures": {
     "down": "galacticraft:block/machine_side",
     "east": "galacticraft:block/machine_side",

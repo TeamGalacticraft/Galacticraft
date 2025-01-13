@@ -1,4 +1,4 @@
 {
-  "machinelib:generate": "machinelib:single",
-  "data": "galacticraft:block/oxygen_bubble_distributor"
+  "data": "galacticraft:block/oxygen_bubble_distributor",
+  "machinelib:generate": "machinelib:single"
 }

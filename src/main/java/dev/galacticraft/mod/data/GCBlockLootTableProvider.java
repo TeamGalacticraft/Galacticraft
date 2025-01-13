@@ -202,7 +202,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         this.add(GCBlocks.ASTEROID_ALUMINUM_ORE, this.createOreDrop(GCBlocks.ASTEROID_ALUMINUM_ORE, GCItems.RAW_ALUMINUM));
         this.add(GCBlocks.ASTEROID_IRON_ORE, this.createOreDrop(GCBlocks.ASTEROID_IRON_ORE, Items.RAW_IRON));
-        this.add(GCBlocks.ASTEROID_SILICON_ORE, this.createOreDrop(GCBlocks.ASTEROID_SILICON_ORE, GCItems.RAW_SILICON));
+        this.add(GCBlocks.ASTEROID_SILICON_ORE, this.createOreDrop(GCBlocks.ASTEROID_SILICON_ORE, GCItems.SILICON));
 
         this.add(GCBlocks.MARS_COPPER_ORE, this.createOreDrop(GCBlocks.MARS_COPPER_ORE, Items.RAW_COPPER));
         this.add(GCBlocks.MARS_TIN_ORE, this.createOreDrop(GCBlocks.MARS_TIN_ORE, GCItems.RAW_TIN));

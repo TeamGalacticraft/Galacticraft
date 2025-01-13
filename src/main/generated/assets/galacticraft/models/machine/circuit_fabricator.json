@@ -1,8 +1,8 @@
 {
-  "machinelib:generate": "machinelib:simple",
   "data": {
-    "front": "galacticraft:block/circuit_fabricator",
     "base": "galacticraft:block/machine",
+    "front": "galacticraft:block/circuit_fabricator",
     "side": "galacticraft:block/machine_side"
-  }
+  },
+  "machinelib:generate": "machinelib:simple"
 }
