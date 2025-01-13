@@ -30,6 +30,7 @@ import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
@@ -54,6 +55,7 @@ public class GCTranslationProvider extends TranslationProvider {
     protected void generateTranslations(HolderLookup.@NotNull Provider registries) {
         this.generateBlockTranslations();
         this.generateItemTranslations();
+        this.generateTagTranslations();
         this.generateGasTranslations();
         this.generateEntityTranslations();
         this.generateCelestialBodyTranslations();
@@ -523,6 +525,20 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.MOON_BUGGY_SCHEMATIC, "Moon Buggy Schematic");
         this.item(GCItems.TIER_3_ROCKET_SCHEMATIC, "Tier 3 Rocket Schematic");
         this.item(GCItems.ASTRO_MINER_SCHEMATIC, "Astro Miner Schematic");
+    }
+
+    protected void generateTagTranslations() {
+        this.tag(GCTags.ALUMINUM_INGOTS, "Aluminum Ingot");
+        this.tag(GCTags.RAW_ALUMINUM_ORES, "Raw Aluminum");
+        this.tag(GCTags.LEAD_INGOTS, "Lead Ingot");
+        this.tag(GCTags.RAW_LEAD_ORES, "Raw Lead");
+        this.tag(GCTags.SILICONS, "Silicon");
+        this.tag(GCTags.STEEL_INGOTS, "Steel Ingot");
+        this.tag(GCTags.TIN_INGOTS, "Tin Ingot");
+        this.tag(GCTags.RAW_TIN_ORES, "Raw Tin");
+        this.tag(GCTags.COMPRESSED_STEEL, "Compressed Steel");
+        this.tag(GCTags.COMPRESSED_IRON, "Compressed Iron");
+        this.tag(GCTags.COMPRESSED_TIN, "Compressed Tin");
     }
 
     protected void generateGasTranslations() {
