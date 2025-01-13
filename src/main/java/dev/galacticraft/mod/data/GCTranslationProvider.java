@@ -528,17 +528,17 @@ public class GCTranslationProvider extends TranslationProvider {
     }
 
     protected void generateTagTranslations() {
-        this.tag(GCTags.ALUMINUM_INGOTS, "Aluminum Ingot");
+        this.tag(GCTags.ALUMINUM_INGOTS, "Aluminum Ingots");
         this.tag(GCTags.RAW_ALUMINUM_ORES, "Raw Aluminum");
-        this.tag(GCTags.LEAD_INGOTS, "Lead Ingot");
+        this.tag(GCTags.LEAD_INGOTS, "Lead Ingots");
         this.tag(GCTags.RAW_LEAD_ORES, "Raw Lead");
         this.tag(GCTags.SILICONS, "Silicon");
-        this.tag(GCTags.STEEL_INGOTS, "Steel Ingot");
-        this.tag(GCTags.TIN_INGOTS, "Tin Ingot");
+        this.tag(GCTags.STEEL_INGOTS, "Steel Ingots");
+        this.tag(GCTags.TIN_INGOTS, "Tin Ingots");
         this.tag(GCTags.RAW_TIN_ORES, "Raw Tin");
-        this.tag(GCTags.COMPRESSED_STEEL, "Compressed Steel");
-        this.tag(GCTags.COMPRESSED_IRON, "Compressed Iron");
-        this.tag(GCTags.COMPRESSED_TIN, "Compressed Tin");
+        this.tag(GCTags.COMPRESSED_STEEL, "Steel Plates");
+        this.tag(GCTags.COMPRESSED_IRON, "Iron Plates");
+        this.tag(GCTags.COMPRESSED_TIN, "Tin Plates");
     }
 
     protected void generateGasTranslations() {
