@@ -195,11 +195,19 @@ public class GCItems {
 
     // COMPACT MINERAL BLOCKS
     public static final Item SILICON_BLOCK = new BlockItem(GCBlocks.SILICON_BLOCK, new Item.Properties());
+    public static final Item LUNAR_SAPPHIRE_BLOCK = new BlockItem(GCBlocks.LUNAR_SAPPHIRE_BLOCK, new Item.Properties());
     public static final Item METEORIC_IRON_BLOCK = new BlockItem(GCBlocks.METEORIC_IRON_BLOCK, new Item.Properties());
     public static final Item DESH_BLOCK = new BlockItem(GCBlocks.DESH_BLOCK, new Item.Properties());
-    public static final Item TITANIUM_BLOCK = new BlockItem(GCBlocks.TITANIUM_BLOCK, new Item.Properties());
     public static final Item LEAD_BLOCK = new BlockItem(GCBlocks.LEAD_BLOCK, new Item.Properties());
-    public static final Item LUNAR_SAPPHIRE_BLOCK = new BlockItem(GCBlocks.LUNAR_SAPPHIRE_BLOCK, new Item.Properties());
+    public static final Item ALUMINUM_BLOCK = new BlockItem(GCBlocks.ALUMINUM_BLOCK, new Item.Properties());
+    public static final Item TIN_BLOCK = new BlockItem(GCBlocks.TIN_BLOCK, new Item.Properties());
+    public static final Item TITANIUM_BLOCK = new BlockItem(GCBlocks.TITANIUM_BLOCK, new Item.Properties());
+    public static final Item RAW_METEORIC_IRON_BLOCK = new BlockItem(GCBlocks.RAW_METEORIC_IRON_BLOCK, new Item.Properties());
+    public static final Item RAW_DESH_BLOCK = new BlockItem(GCBlocks.RAW_DESH_BLOCK, new Item.Properties());
+    public static final Item RAW_LEAD_BLOCK = new BlockItem(GCBlocks.RAW_LEAD_BLOCK, new Item.Properties());
+    public static final Item RAW_ALUMINUM_BLOCK = new BlockItem(GCBlocks.RAW_ALUMINUM_BLOCK, new Item.Properties());
+    public static final Item RAW_TIN_BLOCK = new BlockItem(GCBlocks.RAW_TIN_BLOCK, new Item.Properties());
+    public static final Item RAW_TITANIUM_BLOCK = new BlockItem(GCBlocks.RAW_TITANIUM_BLOCK, new Item.Properties());
 
     // MOON VILLAGER SPECIAL
     public static final Item LUNAR_CARTOGRAPHY_TABLE = new BlockItem(GCBlocks.LUNAR_CARTOGRAPHY_TABLE, new Item.Properties());
@@ -585,9 +593,17 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.SILICON_BLOCK), SILICON_BLOCK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.METEORIC_IRON_BLOCK), METEORIC_IRON_BLOCK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DESH_BLOCK), DESH_BLOCK);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.TITANIUM_BLOCK), TITANIUM_BLOCK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.LEAD_BLOCK), LEAD_BLOCK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ALUMINUM_BLOCK), ALUMINUM_BLOCK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.TIN_BLOCK), TIN_BLOCK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.TITANIUM_BLOCK), TITANIUM_BLOCK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.LUNAR_SAPPHIRE_BLOCK), LUNAR_SAPPHIRE_BLOCK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.RAW_METEORIC_IRON_BLOCK), RAW_METEORIC_IRON_BLOCK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.RAW_DESH_BLOCK), RAW_DESH_BLOCK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.RAW_LEAD_BLOCK), RAW_LEAD_BLOCK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.RAW_ALUMINUM_BLOCK), RAW_ALUMINUM_BLOCK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.RAW_TIN_BLOCK), RAW_TIN_BLOCK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.RAW_TITANIUM_BLOCK), RAW_TITANIUM_BLOCK);
 
         // MOON VILLAGER SPECIAL
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.LUNAR_CARTOGRAPHY_TABLE), LUNAR_CARTOGRAPHY_TABLE);

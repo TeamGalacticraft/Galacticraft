@@ -1,27 +1,27 @@
 {
   "values": [
     {
-      "id": "#c:ores/silicon",
+      "id": "#c:nuggets/meteoric_iron",
       "required": false
     },
     {
-      "id": "#c:ores/desh",
+      "id": "#c:nuggets/desh",
       "required": false
     },
     {
-      "id": "#c:ores/lead",
+      "id": "#c:nuggets/lead",
       "required": false
     },
     {
-      "id": "#c:ores/aluminum",
+      "id": "#c:nuggets/aluminum",
       "required": false
     },
     {
-      "id": "#c:ores/tin",
+      "id": "#c:nuggets/tin",
       "required": false
     },
     {
-      "id": "#c:ores/titanium",
+      "id": "#c:nuggets/titanium",
       "required": false
     }
   ]

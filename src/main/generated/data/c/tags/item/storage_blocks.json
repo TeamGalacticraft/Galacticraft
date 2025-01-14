@@ -1,0 +1,56 @@
+{
+  "values": [
+    {
+      "id": "#c:storage_blocks/silicon",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/meteoric_iron",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/desh",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/lead",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/aluminum",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/tin",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/titanium",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_meteoric_iron",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_desh",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_lead",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_aluminum",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_tin",
+      "required": false
+    },
+    {
+      "id": "#c:storage_blocks/raw_titanium",
+      "required": false
+    }
+  ]
+}

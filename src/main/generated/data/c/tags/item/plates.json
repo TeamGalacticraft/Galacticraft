@@ -1,0 +1,40 @@
+{
+  "values": [
+    {
+      "id": "#c:plates/meteoric_iron",
+      "required": false
+    },
+    {
+      "id": "#c:plates/desh",
+      "required": false
+    },
+    {
+      "id": "#c:plates/aluminum",
+      "required": false
+    },
+    {
+      "id": "#c:plates/tin",
+      "required": false
+    },
+    {
+      "id": "#c:plates/titanium",
+      "required": false
+    },
+    {
+      "id": "#c:plates/bronze",
+      "required": false
+    },
+    {
+      "id": "#c:plates/copper",
+      "required": false
+    },
+    {
+      "id": "#c:plates/steel",
+      "required": false
+    },
+    {
+      "id": "#c:plates/iron",
+      "required": false
+    }
+  ]
+}

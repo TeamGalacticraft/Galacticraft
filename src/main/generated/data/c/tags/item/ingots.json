@@ -1,27 +1,27 @@
 {
   "values": [
     {
-      "id": "#c:ores/silicon",
+      "id": "#c:ingots/meteoric_iron",
       "required": false
     },
     {
-      "id": "#c:ores/desh",
+      "id": "#c:ingots/desh",
       "required": false
     },
     {
-      "id": "#c:ores/lead",
+      "id": "#c:ingots/lead",
       "required": false
     },
     {
-      "id": "#c:ores/aluminum",
+      "id": "#c:ingots/aluminum",
       "required": false
     },
     {
-      "id": "#c:ores/tin",
+      "id": "#c:ingots/tin",
       "required": false
     },
     {
-      "id": "#c:ores/titanium",
+      "id": "#c:ingots/titanium",
       "required": false
     }
   ]
