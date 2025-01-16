@@ -83,6 +83,11 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.HEAVY_DUTY_BOOTS)
                 .add(GCItems.DESH_BOOTS)
                 .add(GCItems.TITANIUM_BOOTS);
+        this.tag(ItemTags.FREEZE_IMMUNE_WEARABLES)
+                .add(GCItems.THERMAL_PADDING_BOOTS)
+                .add(GCItems.THERMAL_PADDING_LEGGINGS)
+                .add(GCItems.THERMAL_PADDING_CHESTPIECE)
+                .add(GCItems.THERMAL_PADDING_HELMET);
 
         this.tag(ItemTags.CREEPER_DROP_MUSIC_DISCS); //fixme
         //        "galacticraft:legacy_music_disc_mars",
@@ -268,11 +273,20 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .addTag(GCItemTags.COMPRESSED_DESH)
                 .addTag(GCItemTags.COMPRESSED_TITANIUM);
 
-        this.tag(ConventionalItemTags.GEMS)
+        this.tag(GCItemTags.CANISTERS)
+                .add(GCItems.COPPER_CANISTER)
+                .add(GCItems.TIN_CANISTER);
+
+        this.tag(GCItemTags.LUNAR_SAPPHIRES)
+                .add(GCItems.LUNAR_SAPPHIRE);
+        this.tag(GCItemTags.OLIVINE_SHARDS)
                 .add(GCItems.OLIVINE_SHARD);
+        this.tag(ConventionalItemTags.GEMS)
+                .addTag(GCItemTags.LUNAR_SAPPHIRES)
+                .addTag(GCItemTags.OLIVINE_SHARDS);
 
         this.tag(ConventionalItemTags.CLUSTERS)
-                .add(GCBlocks.OLIVINE_CLUSTER.asItem());
+                .add(GCItems.OLIVINE_CLUSTER);
 
         this.tag(ConventionalItemTags.FRUIT_FOODS)
                 .add(GCItems.CANNED_DEHYDRATED_APPLE)

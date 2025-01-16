@@ -29,19 +29,19 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
 public class GCBlockTags {
-    public static final TagKey<Block> INFINIBURN_MOON = TagKey.create(Registries.BLOCK, Constant.id("infiniburn_moon"));
-    public static final TagKey<Block> INFINIBURN_VENUS = TagKey.create(Registries.BLOCK, Constant.id("infiniburn_venus"));
-    public static final TagKey<Block> BASE_STONE_MOON = TagKey.create(Registries.BLOCK, Constant.id("base_stone_moon"));
-    public static final TagKey<Block> MOON_CARVER_REPLACEABLES = TagKey.create(Registries.BLOCK, Constant.id("moon_carver_replaceables"));
-    public static final TagKey<Block> MOON_CRATER_CARVER_REPLACEABLES = TagKey.create(Registries.BLOCK, Constant.id("moon_crater_carver_replaceables"));
-    public static final TagKey<Block> MOON_STONE_ORE_REPLACEABLES = TagKey.create(Registries.BLOCK, Constant.id("moon_stone_ore_replaceables"));
-    public static final TagKey<Block> MOON_BASALT_ORE_REPLACEABLES = TagKey.create(Registries.BLOCK, Constant.id("moon_basalt_ore_replaceables"));
-    public static final TagKey<Block> LUNASLATE_ORE_REPLACEABLES = TagKey.create(Registries.BLOCK, Constant.id("lunaslate_ore_replaceables"));
-    public static final TagKey<Block> MARS_ROCK_ORE_REPLACEABLES = TagKey.create(Registries.BLOCK, Constant.id("mars_rock_ore_replaceables"));
-    public static final TagKey<Block> ASTEROID_ROCK_ORE_REPLACEABLES = TagKey.create(Registries.BLOCK, Constant.id("asteroid_rock_ore_replaceables"));
-    public static final TagKey<Block> VENUS_ROCK_ORE_REPLACEABLES = TagKey.create(Registries.BLOCK, Constant.id("venus_rock_ore_replaceables"));
-    public static final TagKey<Block> MACHINES = TagKey.create(Registries.BLOCK, Constant.id("machines"));
-    public static final TagKey<Block> FOOTPRINTS = TagKey.create(Registries.BLOCK, Constant.id("footprints"));
+    public static final TagKey<Block> INFINIBURN_MOON = galacticraftTag("infiniburn_moon");
+    public static final TagKey<Block> INFINIBURN_VENUS = galacticraftTag("infiniburn_venus");
+    public static final TagKey<Block> BASE_STONE_MOON = galacticraftTag("base_stone_moon");
+    public static final TagKey<Block> MOON_CARVER_REPLACEABLES = galacticraftTag("moon_carver_replaceables");
+    public static final TagKey<Block> MOON_CRATER_CARVER_REPLACEABLES = galacticraftTag("moon_crater_carver_replaceables");
+    public static final TagKey<Block> MOON_STONE_ORE_REPLACEABLES = galacticraftTag("moon_stone_ore_replaceables");
+    public static final TagKey<Block> MOON_BASALT_ORE_REPLACEABLES = galacticraftTag("moon_basalt_ore_replaceables");
+    public static final TagKey<Block> LUNASLATE_ORE_REPLACEABLES = galacticraftTag("lunaslate_ore_replaceables");
+    public static final TagKey<Block> MARS_ROCK_ORE_REPLACEABLES = galacticraftTag("mars_rock_ore_replaceables");
+    public static final TagKey<Block> ASTEROID_ROCK_ORE_REPLACEABLES = galacticraftTag("asteroid_rock_ore_replaceables");
+    public static final TagKey<Block> VENUS_ROCK_ORE_REPLACEABLES = galacticraftTag("venus_rock_ore_replaceables");
+    public static final TagKey<Block> MACHINES = galacticraftTag("machines");
+    public static final TagKey<Block> FOOTPRINTS = galacticraftTag("footprints");
 
     public static final TagKey<Block> SILICON_ORES = commonTag("ores/silicon");
     public static final TagKey<Block> METEORIC_IRON_ORES = commonTag("ores/meteoric_iron");
@@ -71,6 +71,10 @@ public class GCBlockTags {
 
     public static TagKey<Block> commonTag(String path) {
         return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, path));
+    }
+
+    public static TagKey<Block> galacticraftTag(String path) {
+        return TagKey.create(Registries.BLOCK, Constant.id(path));
     }
 
     public static void register() {

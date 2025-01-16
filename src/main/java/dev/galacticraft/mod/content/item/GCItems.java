@@ -61,6 +61,7 @@ public class GCItems {
     public static final Item MOON_DIRT = new BlockItem(GCBlocks.MOON_DIRT, new Item.Properties());
     public static final Item MOON_DIRT_PATH = new BlockItem(GCBlocks.MOON_DIRT_PATH, new Item.Properties());
     public static final Item MOON_SURFACE_ROCK = new BlockItem(GCBlocks.MOON_SURFACE_ROCK, new Item.Properties());
+    public static final Item MOON_DUNGEON_BRICK = new BlockItem(GCBlocks.MOON_DUNGEON_BRICK, new Item.Properties());
 
     public static final Item MOON_ROCK = new BlockItem(GCBlocks.MOON_ROCK, new Item.Properties());
     public static final Item MOON_ROCK_SLAB = new BlockItem(GCBlocks.MOON_ROCK_SLAB, new Item.Properties());
@@ -246,6 +247,7 @@ public class GCItems {
     public static final Item OXYGEN_STORAGE_MODULE = new BlockItem(GCBlocks.OXYGEN_STORAGE_MODULE, new Item.Properties());
     public static final Item FUEL_LOADER = new BlockItem(GCBlocks.FUEL_LOADER, new Item.Properties());
     public static final Item ROCKET_WORKBENCH = new BlockItem(GCBlocks.ROCKET_WORKBENCH, new Item.Properties());
+    public static final Item PARACHEST = new BlockItem(GCBlocks.PARACHEST, new Item.Properties());
     // === END BLOCKS ===
     
     // MATERIALS
@@ -464,6 +466,7 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_DIRT), MOON_DIRT);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_DIRT_PATH), MOON_DIRT_PATH);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_SURFACE_ROCK), MOON_SURFACE_ROCK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_DUNGEON_BRICK), MOON_DUNGEON_BRICK);
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_ROCK), MOON_ROCK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_ROCK_SLAB), MOON_ROCK_SLAB);
@@ -645,6 +648,7 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.FUEL_LOADER), FUEL_LOADER);
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ROCKET_WORKBENCH), ROCKET_WORKBENCH);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.PARACHEST), PARACHEST);
         // === END BLOCKS ===
 
         // MATERIALS

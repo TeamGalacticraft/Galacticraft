@@ -107,7 +107,7 @@ public class GCBlocks {
     public static final Block MOON_DIRT = BLOCKS.register(Constant.Block.MOON_DIRT, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).strength(0.5F, 0.5F).sound(SoundType.GRAVEL)));
     public static final Block MOON_DIRT_PATH = BLOCKS.register(Constant.Block.MOON_DIRT_PATH, new MoonDirtPathBlock(BlockBehaviour.Properties.ofFullCopy(MOON_DIRT).strength(0.5F, 0.5F)));
     public static final Block MOON_SURFACE_ROCK = BLOCKS.register(Constant.Block.MOON_SURFACE_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F).requiresCorrectToolForDrops()));
-    public static final Block MOON_DUNGEON_BRICK = BLOCKS.registerWithItem(Constant.Block.MOON_DUNGEON_BRICK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 2.5F).requiresCorrectToolForDrops()));
+    public static final Block MOON_DUNGEON_BRICK = BLOCKS.register(Constant.Block.MOON_DUNGEON_BRICK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 2.5F).requiresCorrectToolForDrops()));
 
     public static final Block MOON_ROCK = BLOCKS.register(Constant.Block.MOON_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F).requiresCorrectToolForDrops()));
     public static final Block MOON_ROCK_SLAB = BLOCKS.register(Constant.Block.MOON_ROCK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(MOON_ROCK).strength(2.5F, 6.0F)));
@@ -206,7 +206,7 @@ public class GCBlocks {
     public static final Block FUELING_PAD = BLOCKS.register(Constant.Block.FUELING_PAD, new FuelPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 10.0F).requiresCorrectToolForDrops()));
     public static final Block ROCKET_LAUNCH_PAD = BLOCKS.register(Constant.Block.ROCKET_LAUNCH_PAD, new LaunchPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 10.0F).requiresCorrectToolForDrops()));
     public static final Block ROCKET_WORKBENCH = BLOCKS.register(Constant.Block.ROCKET_WORKBENCH, new RocketWorkbench(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F)));
-    public static final Block PARACHEST = BLOCKS.registerWithItem(Constant.Block.PARACHEST, new ParaChestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST)));
+    public static final Block PARACHEST = BLOCKS.register(Constant.Block.PARACHEST, new ParaChestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST)));
 
     // LIGHT PANELS
     public static final Block SQUARE_LIGHT_PANEL = BLOCKS.register(Constant.Block.SQUARE_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)));
