@@ -1,28 +1,10 @@
 {
   "values": [
-    {
-      "id": "#c:ingots/meteoric_iron",
-      "required": false
-    },
-    {
-      "id": "#c:ingots/desh",
-      "required": false
-    },
-    {
-      "id": "#c:ingots/lead",
-      "required": false
-    },
-    {
-      "id": "#c:ingots/aluminum",
-      "required": false
-    },
-    {
-      "id": "#c:ingots/tin",
-      "required": false
-    },
-    {
-      "id": "#c:ingots/titanium",
-      "required": false
-    }
+    "#c:ingots/tin",
+    "#c:ingots/aluminum",
+    "#c:ingots/meteoric_iron",
+    "#c:ingots/desh",
+    "#c:ingots/lead",
+    "#c:ingots/titanium"
   ]
 }

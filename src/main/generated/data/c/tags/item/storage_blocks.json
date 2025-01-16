@@ -1,56 +1,19 @@
 {
   "values": [
-    {
-      "id": "#c:storage_blocks/silicon",
-      "required": false
-    },
-    {
-      "id": "#c:storage_blocks/meteoric_iron",
-      "required": false
-    },
-    {
-      "id": "#c:storage_blocks/desh",
-      "required": false
-    },
-    {
-      "id": "#c:storage_blocks/lead",
-      "required": false
-    },
-    {
-      "id": "#c:storage_blocks/aluminum",
-      "required": false
-    },
-    {
-      "id": "#c:storage_blocks/tin",
-      "required": false
-    },
-    {
-      "id": "#c:storage_blocks/titanium",
-      "required": false
-    },
-    {
-      "id": "#c:storage_blocks/raw_meteoric_iron",
-      "required": false
-    },
-    {
-      "id": "#c:storage_blocks/raw_desh",
-      "required": false
-    },
-    {
-      "id": "#c:storage_blocks/raw_lead",
-      "required": false
-    },
-    {
-      "id": "#c:storage_blocks/raw_aluminum",
-      "required": false
-    },
-    {
-      "id": "#c:storage_blocks/raw_tin",
-      "required": false
-    },
-    {
-      "id": "#c:storage_blocks/raw_titanium",
-      "required": false
-    }
+    "#c:storage_blocks/silicon",
+    "#c:storage_blocks/tin",
+    "#c:storage_blocks/aluminum",
+    "#c:storage_blocks/meteoric_iron",
+    "#c:storage_blocks/olivine",
+    "#c:storage_blocks/lunar_sapphire",
+    "#c:storage_blocks/desh",
+    "#c:storage_blocks/lead",
+    "#c:storage_blocks/titanium",
+    "#c:storage_blocks/raw_tin",
+    "#c:storage_blocks/raw_aluminum",
+    "#c:storage_blocks/raw_meteoric_iron",
+    "#c:storage_blocks/raw_desh",
+    "#c:storage_blocks/raw_lead",
+    "#c:storage_blocks/raw_titanium"
   ]
 }

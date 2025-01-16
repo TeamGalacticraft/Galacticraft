@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.data.tag;
 
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCEntityTypeTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -39,7 +39,7 @@ public class GCEntityTypeTagProvider extends IntrinsicHolderTagsProvider<EntityT
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
-        tag(GCTags.HAS_FOOTPRINTS)
+        this.tag(GCEntityTypeTags.HAS_FOOTPRINTS)
                 .add(EntityType.PLAYER);
     }
 }

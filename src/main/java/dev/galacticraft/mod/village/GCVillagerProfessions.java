@@ -24,7 +24,7 @@ package dev.galacticraft.mod.village;
 
 import com.google.common.collect.ImmutableSet;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCStructureTags;
 import dev.galacticraft.mod.world.poi.GCPointOfInterestTypes;
 import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.minecraft.core.Registry;
@@ -58,7 +58,7 @@ public class GCVillagerProfessions {
         });
         TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 2, factories -> {
             factories.add(new VillagerTrades.EmeraldForItems(Items.GLASS_PANE, 11, 16, 10));
-            factories.add(new VillagerTrades.TreasureMapForEmeralds(13, GCTags.MOON_RUINS, "filled_map.moon_ruins", MapDecorationTypes.RED_X, 12, 5));
+            factories.add(new VillagerTrades.TreasureMapForEmeralds(13, GCStructureTags.MOON_RUINS, "filled_map.moon_ruins", MapDecorationTypes.RED_X, 12, 5));
         });
         TradeOfferHelper.registerVillagerOffers(LUNAR_CARTOGRAPHER, 3, factories -> {
             factories.add(new VillagerTrades.EmeraldForItems(Items.COMPASS, 1, 12, 20));

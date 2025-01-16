@@ -190,12 +190,17 @@ public class GCItems {
 
     public static final Item GALENA_ORE = new BlockItem(GCBlocks.GALENA_ORE, new Item.Properties());
 
+    public static final Item OLIVINE_CLUSTER = new BlockItem(GCBlocks.OLIVINE_CLUSTER, new Item.Properties());
+    public static final Item OLIVINE_BASALT = new BlockItem(GCBlocks.OLIVINE_BASALT, new Item.Properties());
+    public static final Item RICH_OLIVINE_BASALT = new BlockItem(GCBlocks.RICH_OLIVINE_BASALT, new Item.Properties());
+
     // CHEESE BLOCK
     public static final Item MOON_CHEESE_WHEEL = new BlockItem(GCBlocks.MOON_CHEESE_WHEEL, new Item.Properties());
 
     // COMPACT MINERAL BLOCKS
     public static final Item SILICON_BLOCK = new BlockItem(GCBlocks.SILICON_BLOCK, new Item.Properties());
     public static final Item LUNAR_SAPPHIRE_BLOCK = new BlockItem(GCBlocks.LUNAR_SAPPHIRE_BLOCK, new Item.Properties());
+    public static final Item OLIVINE_BLOCK = new BlockItem(GCBlocks.OLIVINE_BLOCK, new Item.Properties());
     public static final Item METEORIC_IRON_BLOCK = new BlockItem(GCBlocks.METEORIC_IRON_BLOCK, new Item.Properties());
     public static final Item DESH_BLOCK = new BlockItem(GCBlocks.DESH_BLOCK, new Item.Properties());
     public static final Item LEAD_BLOCK = new BlockItem(GCBlocks.LEAD_BLOCK, new Item.Properties());
@@ -585,6 +590,10 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ILMENITE_ORE), ILMENITE_ORE);
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.GALENA_ORE), GALENA_ORE);
+        
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.OLIVINE_CLUSTER), OLIVINE_CLUSTER);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.OLIVINE_BASALT), OLIVINE_BASALT);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.RICH_OLIVINE_BASALT), RICH_OLIVINE_BASALT);
 
         // CHEESE BLOCK
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_CHEESE_WHEEL), MOON_CHEESE_WHEEL);
@@ -598,6 +607,7 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.TIN_BLOCK), TIN_BLOCK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.TITANIUM_BLOCK), TITANIUM_BLOCK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.LUNAR_SAPPHIRE_BLOCK), LUNAR_SAPPHIRE_BLOCK);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.OLIVINE_BLOCK), OLIVINE_BLOCK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.RAW_METEORIC_IRON_BLOCK), RAW_METEORIC_IRON_BLOCK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.RAW_DESH_BLOCK), RAW_DESH_BLOCK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.RAW_LEAD_BLOCK), RAW_LEAD_BLOCK);

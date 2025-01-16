@@ -25,7 +25,7 @@ package dev.galacticraft.mod.data.tag;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCBlockTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
@@ -46,28 +46,23 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        this.tag(GCTags.INFINIBURN_MOON)
+        this.tag(GCBlockTags.INFINIBURN_MOON)
                 .add(GCBlocks.MOON_BASALT_BRICK);
-        this.tag(GCTags.BASE_STONE_MOON)
+        this.tag(GCBlockTags.BASE_STONE_MOON)
                 .add(GCBlocks.MOON_ROCK);
-        this.tag(GCTags.MOON_CARVER_REPLACEABLES)
+        this.tag(GCBlockTags.MOON_CARVER_REPLACEABLES)
                 .add(GCBlocks.MOON_ROCK)
                 .add(GCBlocks.MOON_SURFACE_ROCK)
                 .add(GCBlocks.MOON_BASALT)
                 .add(GCBlocks.MOON_DIRT)
                 .add(GCBlocks.MOON_TURF);
-        this.tag(GCTags.MOON_CRATER_CARVER_REPLACEABLES)
+        this.tag(GCBlockTags.MOON_CRATER_CARVER_REPLACEABLES)
                 .add(GCBlocks.MOON_ROCK)
                 .add(GCBlocks.MOON_SURFACE_ROCK)
                 .add(GCBlocks.MOON_BASALT)
                 .add(GCBlocks.MOON_DIRT)
                 .add(GCBlocks.MOON_TURF);
-        this.tag(GCTags.MOON_STONE_ORE_REPLACABLES)
-                .add(GCBlocks.MOON_ROCK);
-                // .add(GCBlocks.MOON_BASALT);
-        this.tag(GCTags.LUNASLATE_ORE_REPLACABLES)
-                .add(GCBlocks.LUNASLATE);
-        this.tag(GCTags.MACHINES)
+        this.tag(GCBlockTags.MACHINES)
                 .add(
                         GCBlocks.CIRCUIT_FABRICATOR,
                         GCBlocks.COMPRESSOR,
@@ -170,7 +165,45 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 GCBlocks.GALENA_ORE
         };
 
-        this.tag(ConventionalBlockTags.ORES).add(ores);
+        this.tag(GCBlockTags.MOON_STONE_ORE_REPLACEABLES)
+                .add(GCBlocks.MOON_ROCK);
+        this.tag(GCBlockTags.MOON_BASALT_ORE_REPLACEABLES)
+                .add(GCBlocks.MOON_BASALT);
+        this.tag(GCBlockTags.LUNASLATE_ORE_REPLACEABLES)
+                .add(GCBlocks.LUNASLATE);
+        this.tag(GCBlockTags.MARS_ROCK_ORE_REPLACEABLES)
+                .add(GCBlocks.MARS_SUB_SURFACE_ROCK);
+        this.tag(GCBlockTags.ASTEROID_ROCK_ORE_REPLACEABLES)
+                .add(GCBlocks.ASTEROID_ROCK);
+        this.tag(GCBlockTags.VENUS_ROCK_ORE_REPLACEABLES)
+                .add(GCBlocks.HARD_VENUS_ROCK);
+
+        this.tag(BlockTags.COPPER_ORES)
+                .add(GCBlocks.MOON_COPPER_ORE, GCBlocks.LUNASLATE_COPPER_ORE);
+        this.tag(GCBlockTags.SILICON_ORES)
+                .add(GCBlocks.SILICON_ORE, GCBlocks.DEEPSLATE_SILICON_ORE);
+        this.tag(GCBlockTags.TIN_ORES)
+                .add(GCBlocks.TIN_ORE, GCBlocks.DEEPSLATE_TIN_ORE, GCBlocks.MOON_TIN_ORE, GCBlocks.LUNASLATE_TIN_ORE);
+        this.tag(GCBlockTags.ALUMINUM_ORES)
+                .add(GCBlocks.ALUMINUM_ORE, GCBlocks.DEEPSLATE_ALUMINUM_ORE);
+        this.tag(GCBlockTags.METEORIC_IRON_ORES)
+                .add(GCBlocks.FALLEN_METEOR);
+        this.tag(GCBlockTags.OLIVINE_ORES)
+                .add(GCBlocks.OLIVINE_BASALT, GCBlocks.RICH_OLIVINE_BASALT);
+        this.tag(GCBlockTags.DESH_ORES)
+                .add(GCBlocks.DESH_ORE);
+        this.tag(GCBlockTags.LEAD_ORES)
+                .add(GCBlocks.GALENA_ORE);
+        this.tag(GCBlockTags.TITANIUM_ORES)
+                .add(GCBlocks.ILMENITE_ORE);
+        this.tag(ConventionalBlockTags.ORES)
+                .addTag(GCBlockTags.SILICON_ORES)
+                .addTag(GCBlockTags.TIN_ORES)
+                .addTag(GCBlockTags.ALUMINUM_ORES)
+                .addTag(GCBlockTags.METEORIC_IRON_ORES)
+                .addTag(GCBlockTags.DESH_ORES)
+                .addTag(GCBlockTags.LEAD_ORES)
+                .addTag(GCBlockTags.TITANIUM_ORES);
 
         var clusters = new Block[] {
                 GCBlocks.OLIVINE_CLUSTER
@@ -179,7 +212,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         this.tag(ConventionalBlockTags.CLUSTERS).add(clusters);
 
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
-                .forceAddTag(GCTags.MACHINES)
+                .forceAddTag(GCBlockTags.MACHINES)
                 .add(ores)
                 .add(clusters)
                 .add(slab)
@@ -365,11 +398,11 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .listElementIds()
                 .forEach(replaceableTagAppender::add);
 
-        tag(GCTags.FOOTPRINTS)
+        this.tag(GCBlockTags.FOOTPRINTS)
                 .add(GCBlocks.MOON_TURF);
     }
 
     protected FabricTagProvider<Block>.FabricTagBuilder tag(TagKey<Block> tag) {
-        return getOrCreateTagBuilder(tag);
+        return this.getOrCreateTagBuilder(tag);
     }
 }

@@ -27,7 +27,7 @@ import dev.galacticraft.mod.api.data.recipe.ShapedCompressorRecipeBuilder;
 import dev.galacticraft.mod.api.data.recipe.ShapelessCompressorRecipeBuilder;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
@@ -315,8 +315,8 @@ public class GCMachineRecipes extends FabricRecipeProvider {
         // Compressor
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_ALUMINUM)
                 .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItems.ALUMINUM_INGOT))
-                .requires(GCTags.ALUMINUM_INGOTS)
-                .requires(GCTags.ALUMINUM_INGOTS)
+                .requires(GCItemTags.ALUMINUM_INGOTS)
+                .requires(GCItemTags.ALUMINUM_INGOTS)
                 .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_BRONZE)
                 .requires(GCItems.COMPRESSED_COPPER)
@@ -346,13 +346,13 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .requires(ConventionalItemTags.COAL)
                 .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_STEEL)
-                .requires(GCTags.STEEL_INGOTS)
-                .requires(GCTags.STEEL_INGOTS)
+                .requires(GCItemTags.STEEL_INGOTS)
+                .requires(GCItemTags.STEEL_INGOTS)
                 .save(output, BuiltInRegistries.ITEM.getKey(GCItems.COMPRESSED_STEEL).withSuffix("_from_ingots"));
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_TIN)
                 .unlockedBy(getHasName(GCItems.TIN_INGOT), has(GCItems.TIN_INGOT))
-                .requires(GCTags.TIN_INGOTS)
-                .requires(GCTags.TIN_INGOTS)
+                .requires(GCItemTags.TIN_INGOTS)
+                .requires(GCItemTags.TIN_INGOTS)
                 .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_TITANIUM)
                 .unlockedBy(getHasName(GCItems.TITANIUM_INGOT), has(GCItems.TITANIUM_INGOT))

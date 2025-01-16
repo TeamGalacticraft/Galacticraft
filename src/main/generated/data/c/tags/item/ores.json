@@ -1,28 +1,12 @@
 {
   "values": [
-    {
-      "id": "#c:ores/silicon",
-      "required": false
-    },
-    {
-      "id": "#c:ores/desh",
-      "required": false
-    },
-    {
-      "id": "#c:ores/lead",
-      "required": false
-    },
-    {
-      "id": "#c:ores/aluminum",
-      "required": false
-    },
-    {
-      "id": "#c:ores/tin",
-      "required": false
-    },
-    {
-      "id": "#c:ores/titanium",
-      "required": false
-    }
+    "#c:ores/silicon",
+    "#c:ores/tin",
+    "#c:ores/aluminum",
+    "#c:ores/meteoric_iron",
+    "#c:ores/olivine",
+    "#c:ores/desh",
+    "#c:ores/lead",
+    "#c:ores/titanium"
   ]
 }

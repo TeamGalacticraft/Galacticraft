@@ -241,9 +241,9 @@ public class GCBlocks {
 
     public static final Block GALENA_ORE = BLOCKS.register(Constant.Block.GALENA_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 5.0F, false)));
 
-    public static final Block OLIVINE_CLUSTER = BLOCKS.registerWithItem(Constant.Block.OLIVINE_CLUSTER, new OlivineClusterBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.AMETHYST_CLUSTER).mapColor(MapColor.COLOR_LIGHT_GREEN)));
-    public static final Block OLIVINE_BASALT = BLOCKS.registerWithItem(Constant.Block.OLIVINE_BASALT, new Block(BlockBehaviour.Properties.ofFullCopy(MOON_BASALT).strength(3.5F, 6.0F)));
-    public static final Block RICH_OLIVINE_BASALT = BLOCKS.registerWithItem(Constant.Block.RICH_OLIVINE_BASALT, new Block(BlockBehaviour.Properties.ofFullCopy(OLIVINE_BASALT)));
+    public static final Block OLIVINE_CLUSTER = BLOCKS.register(Constant.Block.OLIVINE_CLUSTER, new OlivineClusterBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.AMETHYST_CLUSTER).mapColor(MapColor.COLOR_LIGHT_GREEN)));
+    public static final Block OLIVINE_BASALT = BLOCKS.register(Constant.Block.OLIVINE_BASALT, new Block(BlockBehaviour.Properties.ofFullCopy(MOON_BASALT).strength(3.5F, 6.0F)));
+    public static final Block RICH_OLIVINE_BASALT = BLOCKS.register(Constant.Block.RICH_OLIVINE_BASALT, new Block(BlockBehaviour.Properties.ofFullCopy(OLIVINE_BASALT)));
 
     // CHEESE BLOCKS
     public static final Block MOON_CHEESE_WHEEL = BLOCKS.register(Constant.Block.MOON_CHEESE_WHEEL, new MoonCheeseWheel(BlockBehaviour.Properties.of().forceSolidOn().strength(0.5F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY)));
@@ -274,7 +274,7 @@ public class GCBlocks {
     public static final Block TITANIUM_BLOCK = BLOCKS.register(Constant.Block.TITANIUM_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
     public static final Block LEAD_BLOCK = BLOCKS.register(Constant.Block.LEAD_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
     public static final Block LUNAR_SAPPHIRE_BLOCK = BLOCKS.register(Constant.Block.LUNAR_SAPPHIRE_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(5.0F, 6.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));
-    public static final Block OLIVINE_BLOCK = BLOCKS.registerWithItem(Constant.Block.OLIVINE_BLOCK, new RotatedPillarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).strength(1.5F, 1.5F).sound(SoundType.AMETHYST).requiresCorrectToolForDrops()));
+    public static final Block OLIVINE_BLOCK = BLOCKS.register(Constant.Block.OLIVINE_BLOCK, new RotatedPillarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).strength(1.5F, 1.5F).sound(SoundType.AMETHYST).requiresCorrectToolForDrops()));
     public static final Block RAW_METEORIC_IRON_BLOCK = BLOCKS.register(Constant.Block.RAW_METEORIC_IRON_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));
     public static final Block RAW_DESH_BLOCK = BLOCKS.register(Constant.Block.RAW_DESH_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));
     public static final Block RAW_ALUMINUM_BLOCK = BLOCKS.register(Constant.Block.RAW_ALUMINUM_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));

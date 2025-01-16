@@ -1,28 +1,10 @@
 {
   "values": [
-    {
-      "id": "#c:nuggets/meteoric_iron",
-      "required": false
-    },
-    {
-      "id": "#c:nuggets/desh",
-      "required": false
-    },
-    {
-      "id": "#c:nuggets/lead",
-      "required": false
-    },
-    {
-      "id": "#c:nuggets/aluminum",
-      "required": false
-    },
-    {
-      "id": "#c:nuggets/tin",
-      "required": false
-    },
-    {
-      "id": "#c:nuggets/titanium",
-      "required": false
-    }
+    "#c:nuggets/tin",
+    "#c:nuggets/aluminum",
+    "#c:nuggets/meteoric_iron",
+    "#c:nuggets/desh",
+    "#c:nuggets/lead",
+    "#c:nuggets/titanium"
   ]
 }

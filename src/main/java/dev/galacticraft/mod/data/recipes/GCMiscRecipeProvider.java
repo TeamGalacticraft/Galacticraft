@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.data.recipes;
 
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
@@ -68,8 +68,8 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_CONCENTRATOR)
-                .define('Z', GCTags.COMPRESSED_STEEL)
-                .define('W', GCTags.COMPRESSED_TIN)
+                .define('Z', GCItemTags.COMPRESSED_STEEL)
+                .define('W', GCItemTags.COMPRESSED_TIN)
                 .define('Y', GCItems.TIN_CANISTER)
                 .define('X', GCItems.OXYGEN_VENT)
                 .pattern("ZWZ")
@@ -277,7 +277,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.TIN_CANISTER, 2)
-                .define('X', GCTags.TIN_INGOTS)
+                .define('X', GCItemTags.TIN_INGOTS)
                 .pattern("X X")
                 .pattern("X X")
                 .pattern("XXX")
@@ -328,7 +328,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BEAM_CORE)
                 .define('R', ConventionalItemTags.REDSTONE_DUSTS)
-                .define('I', GCTags.COMPRESSED_IRON)
+                .define('I', GCItemTags.COMPRESSED_IRON)
                 .define('G', ConventionalItemTags.GLASS_PANES)
                 .pattern("RIR")
                 .pattern("IGI")

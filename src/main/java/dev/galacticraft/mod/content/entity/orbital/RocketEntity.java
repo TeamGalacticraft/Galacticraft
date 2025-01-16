@@ -45,7 +45,7 @@ import dev.galacticraft.mod.network.s2c.OpenCelestialScreenPayload;
 import dev.galacticraft.mod.network.s2c.RocketSpawnPacket;
 import dev.galacticraft.mod.particle.EntityParticleOption;
 import dev.galacticraft.mod.particle.GCParticleTypes;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCFluidTags;
 import dev.galacticraft.mod.util.FluidUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -442,7 +442,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                     this.setSpeed(0.0f);
                 }
             } else if (getLaunchStage() == LaunchStage.LAUNCHED) {
-                if (!debugMode && (isTankEmpty() || !this.getTank().getResource().getFluid().is(GCTags.FUEL)) && FabricLoader.getInstance().isDevelopmentEnvironment()) {
+                if (!debugMode && (isTankEmpty() || !this.getTank().getResource().getFluid().is(GCFluidTags.FUEL)) && FabricLoader.getInstance().isDevelopmentEnvironment()) {
                     this.setLaunchStage(LaunchStage.FAILED);
                 } else {
                     try (Transaction t = Transaction.openOuter()) {

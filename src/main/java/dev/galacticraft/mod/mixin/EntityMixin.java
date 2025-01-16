@@ -25,7 +25,10 @@ package dev.galacticraft.mod.mixin;
 import dev.galacticraft.mod.accessor.EntityAccessor;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.misc.footprint.Footprint;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCBlockTags;
+import dev.galacticraft.mod.tag.GCDimensionTypeTags;
+import dev.galacticraft.mod.tag.GCEntityTypeTags;
+import dev.galacticraft.mod.tag.GCFluidTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.Registries;
@@ -136,14 +139,14 @@ public abstract class EntityMixin implements EntityAccessor {
 
     @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At("TAIL"))
     private void checkWaterStateGC(CallbackInfo ci) {
-        if (this.updateFluidHeightAndDoFluidPushing(GCTags.OIL, 0.0028d) || this.updateFluidHeightAndDoFluidPushing(GCTags.FUEL, 0.0028d)) {
+        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028d) || this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.0028d)) {
             if (this.isOnFire()) {
                 level.explode(level.getEntity(id), position.x, position.y, position.z, 0f, Level.ExplosionInteraction.NONE);
                 if ((this.isAlwaysTicking() && !level.getPlayerByUUID(uuid).isCreative()) || !this.isInvulnerable()) {
                     this.hurt(new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.OIL_BOOM)), 20.0f);
                 }
             }
-        } else if (this.updateFluidHeightAndDoFluidPushing(GCTags.SULFURIC_ACID, 0.0028d)) {
+        } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.0028d)) {
             // The entity enter an acid fluid, this entity need to take damage
             if ((this.isAlwaysTicking() && !level.getPlayerByUUID(uuid).isCreative()) || !this.isInvulnerable()) {
                 this.hurt(new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE)
@@ -155,7 +158,7 @@ public abstract class EntityMixin implements EntityAccessor {
     // GC 4 ticks footprints on the client and server, however we will just do it on the server
     @Inject(method = "move", at = @At("HEAD"))
     private void tickFootprints(MoverType type, Vec3 motion, CallbackInfo ci) {
-        if (!getType().is(GCTags.HAS_FOOTPRINTS))
+        if (!getType().is(GCEntityTypeTags.HAS_FOOTPRINTS))
             return;
         double motionSqrd = Mth.lengthSquared(motion.x, motion.z);
 
@@ -163,7 +166,7 @@ public abstract class EntityMixin implements EntityAccessor {
         boolean isFlying = false;
         if ((Object) this instanceof Player player)
             isFlying = player.getAbilities().flying;
-        if (motionSqrd > 0.001 && this.level.dimensionTypeRegistration().is(GCTags.FOOTPRINTS_DIMENSIONS) && getVehicle() == null && !isFlying) {
+        if (motionSqrd > 0.001 && this.level.dimensionTypeRegistration().is(GCDimensionTypeTags.FOOTPRINTS_DIMENSIONS) && getVehicle() == null && !isFlying) {
             int iPosX = Mth.floor(getX());
             int iPosY = Mth.floor(getY() - 0.05);
             int iPosZ = Mth.floor(getZ());
@@ -171,7 +174,7 @@ public abstract class EntityMixin implements EntityAccessor {
             BlockState state = this.level.getBlockState(pos1);
 
             // If the block below is the moon block
-            if (state.is(GCTags.FOOTPRINTS)) {
+            if (state.is(GCBlockTags.FOOTPRINTS)) {
                 // If it has been long enough since the last step
                 if (galacticraft$getDistanceSinceLastStep() > 0.35) {
                     Vector3d pos = new Vector3d(getX(), getY(), getZ());

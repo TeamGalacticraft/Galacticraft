@@ -22,7 +22,7 @@
 
 package dev.galacticraft.impl.internal.mixin;
 
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCDimensionTypeTags;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelTimeAccess;
@@ -43,7 +43,7 @@ public interface LevelTimeAccessMixin extends LevelTimeAccess {
         var dimensionTypeRegistry = registryAccess().registryOrThrow(Registries.DIMENSION_TYPE);
         if (this instanceof Level level) {
             var holder = level.galacticraft$getCelestialBody();
-            if (holder != null && dimensionTypeRegistry.getHolder(dimensionTypeRegistry.getId(dimensionType())).map(reference -> reference.is(GCTags.SPACE)).orElse(false)) {
+            if (holder != null && dimensionTypeRegistry.getHolder(dimensionTypeRegistry.getId(dimensionType())).map(reference -> reference.is(GCDimensionTypeTags.SPACE)).orElse(false)) {
                 long worldTime = this.dayTime();
                 long dayLength = holder.value().dayLength();
                 int j = (int) (worldTime % dayLength);

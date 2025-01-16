@@ -24,7 +24,7 @@ package dev.galacticraft.mod.data.tag;
 
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.content.GCFluids;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCFluidTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
@@ -38,18 +38,18 @@ public class GCFluidTagProvider extends FabricTagProvider.FluidTagProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
-        this.getOrCreateTagBuilder(GCTags.OIL)
+        this.getOrCreateTagBuilder(GCFluidTags.OIL)
                 .add(GCFluids.CRUDE_OIL)
                 .add(GCFluids.FLOWING_CRUDE_OIL);
-        this.getOrCreateTagBuilder(GCTags.FUEL)
+        this.getOrCreateTagBuilder(GCFluidTags.FUEL)
                 .add(GCFluids.FUEL)
                 .add(GCFluids.FLOWING_FUEL);
-        this.getOrCreateTagBuilder(GCTags.SULFURIC_ACID)
+        this.getOrCreateTagBuilder(GCFluidTags.SULFURIC_ACID)
                 .add(GCFluids.SULFURIC_ACID)
                 .add(GCFluids.FLOWING_SULFURIC_ACID);
-        this.getOrCreateTagBuilder(GCTags.LIQUID_OXYGEN)
+        this.getOrCreateTagBuilder(GCFluidTags.LIQUID_OXYGEN)
                 .add(GCFluids.LIQUID_OXYGEN);
-        this.getOrCreateTagBuilder(GCTags.OXYGEN)
+        this.getOrCreateTagBuilder(GCFluidTags.OXYGEN)
                 .add(Gases.OXYGEN);
     }
 }
