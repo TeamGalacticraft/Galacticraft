@@ -79,6 +79,11 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.TITANIUM_CHESTPLATE)
                 .add(GCItems.TITANIUM_LEGGINGS)
                 .add(GCItems.TITANIUM_BOOTS);
+        tag(ItemTags.FREEZE_IMMUNE_WEARABLES)
+                .add(GCItems.THERMAL_PADDING_BOOTS)
+                .add(GCItems.THERMAL_PADDING_LEGGINGS)
+                .add(GCItems.THERMAL_PADDING_CHESTPIECE)
+                .add(GCItems.THERMAL_PADDING_HELMET);
 
         tag(GCTags.ALUMINUM_INGOTS)
                 .add(GCItems.ALUMINUM_INGOT);
