@@ -24,8 +24,8 @@ package dev.galacticraft.mod.content.entity;
 
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
-import dev.galacticraft.mod.content.block.entity.ParaChestBlockEntity;
-import dev.galacticraft.mod.content.block.special.ParaChestBlock;
+import dev.galacticraft.mod.content.block.entity.ParachestBlockEntity;
+import dev.galacticraft.mod.content.block.special.ParachestBlock;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
@@ -172,11 +172,11 @@ public class ParachestEntity extends Entity {
     }
 
     private boolean placeChest(BlockPos pos) {
-        if (this.level().setBlock(pos, GCBlocks.PARACHEST.defaultBlockState().setValue(ParaChestBlock.COLOR, this.getColor()), Block.UPDATE_ALL)) {
+        if (this.level().setBlock(pos, GCBlocks.PARACHEST.defaultBlockState().setValue(ParachestBlock.COLOR, this.getColor()), Block.UPDATE_ALL)) {
             if (this.cargo != null) {
                 final BlockEntity te = this.level().getBlockEntity(pos);
 
-                if (te instanceof ParaChestBlockEntity chest) {
+                if (te instanceof ParachestBlockEntity chest) {
                     chest.setItems(NonNullList.withSize(this.cargo.size() + 1, ItemStack.EMPTY));
 
                     Collections.copy(chest.getItems(), this.cargo);

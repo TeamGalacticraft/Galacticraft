@@ -47,7 +47,7 @@ public class OverworldCelestialTeleporterType<Config extends CelestialTeleporter
     @Override
     public void onEnterAtmosphere(ServerLevel level, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody, Config config) {
         if (body.config() instanceof PlanetConfig planetConfig) {
-            var chestSpawn = planetConfig.celestialHandler().getParaChestSpawnLocation(player.serverLevel(), player, player.getRandom());
+            var chestSpawn = planetConfig.celestialHandler().getParachestSpawnLocation(player.serverLevel(), player, player.getRandom());
             if (chestSpawn != null) {
                 Container gearInv = player.galacticraft$getGearInv();
                 DyeColor color = DyeColor.WHITE;
