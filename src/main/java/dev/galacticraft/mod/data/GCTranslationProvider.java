@@ -481,6 +481,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.PARACHUTE.get(DyeColor.PINK), "Pink Parachute");
         this.item(GCItems.PARACHUTE.get(DyeColor.GRAY), "Gray Parachute");
         this.item(GCItems.PARACHUTE.get(DyeColor.LIGHT_GRAY), "Light Gray Parachute");
+        this.item(GCItems.PARACHUTE.get(DyeColor.CYAN), "Cyan Parachute");
         this.item(GCItems.PARACHUTE.get(DyeColor.PURPLE), "Purple Parachute");
         this.item(GCItems.PARACHUTE.get(DyeColor.BLUE), "Blue Parachute");
         this.item(GCItems.PARACHUTE.get(DyeColor.BROWN), "Brown Parachute");
