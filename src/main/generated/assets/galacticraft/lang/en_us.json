@@ -554,6 +554,8 @@
   "smithing_template.galacticraft.titanium_upgrade.ingredients": "Compressed Titanium",
   "star.galacticraft.sol": "Sol",
   "star.galacticraft.sol.description": "",
+  "stat.galacticraft.interact_with_rocket_workbench": "Interactions with Rocket Workbench",
+  "stat.galacticraft.open_parachest": "Parachests Opened",
   "subtitles.galacticraft.entity.throwable_meteor_chunk.throw": "Meteor Chunk flies",
   "tag.item.c.gems.silicon": "Silicon",
   "tag.item.c.ingots.aluminum": "Aluminum Ingots",

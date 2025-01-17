@@ -27,6 +27,7 @@ import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCRocketParts;
+import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -70,6 +71,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.generateMachineStatusTranslations();
         this.generateCelestialSelectionTranslations();
         this.generateUiTranslations();
+        this.generateStatsTranslations();
 
         // Tabs in the creative inventory
         this.add(ItemGroup.BLOCKS, "Galacticraft Blocks");
@@ -882,6 +884,11 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.GIANT_LEAP, "Taking one giant leap");
         this.add(Ui.PREPARE_FOR_ENTRY, "Prepare for entry!");
         this.add(Ui.TRAVELLING_TO, "Traveling to: ");
+    }
+
+    protected void generateStatsTranslations() {
+        this.stat(GCStats.OPEN_PARACHEST, "Parachests Opened");
+        this.stat(GCStats.INTERACT_WITH_ROCKET_WORKBENCH, "Interactions with Rocket Workbench");
     }
 
     protected void decorationSet(DecorationSet decoSet, String translation) {
