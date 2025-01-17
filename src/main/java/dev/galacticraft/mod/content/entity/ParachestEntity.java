@@ -55,18 +55,23 @@ public class ParachestEntity extends Entity {
     public NonNullList<ItemStack> cargo;
     public long fuelLevel;
     private boolean placedChest;
-    public DyeColor color = DyeColor.WHITE;
+    private DyeColor color = DyeColor.WHITE;
 
-    public ParachestEntity(EntityType<?> entityType, Level level, NonNullList<ItemStack> cargo, long fuelLevel) {
+    public ParachestEntity(EntityType<?> entityType, Level level, NonNullList<ItemStack> cargo, DyeColor color, long fuelLevel) {
         this(entityType, level);
         this.cargo = NonNullList.withSize(cargo.size(), ItemStack.EMPTY);
         Collections.copy(this.cargo, cargo);
         this.placedChest = false;
         this.fuelLevel = fuelLevel;
+        this.color = color;
     }
 
     public ParachestEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
+    }
+
+    public DyeColor getColor() {
+        return DyeColor.byId(this.entityData.get(COLOR));
     }
 
     @Override
@@ -167,7 +172,7 @@ public class ParachestEntity extends Entity {
     }
 
     private boolean placeChest(BlockPos pos) {
-        if (this.level().setBlock(pos, GCBlocks.PARACHEST.defaultBlockState().setValue(ParaChestBlock.COLOR, DyeColor.byId(this.entityData.get(COLOR))), Block.UPDATE_ALL)) {
+        if (this.level().setBlock(pos, GCBlocks.PARACHEST.defaultBlockState().setValue(ParaChestBlock.COLOR, this.getColor()), Block.UPDATE_ALL)) {
             if (this.cargo != null) {
                 final BlockEntity te = this.level().getBlockEntity(pos);
 
