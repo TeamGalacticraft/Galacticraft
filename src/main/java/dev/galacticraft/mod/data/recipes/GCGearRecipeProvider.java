@@ -166,14 +166,6 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern(" W")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_AXE)
-                .define('S', GCItems.COMPRESSED_STEEL)
-                .define('W', Items.STICK)
-                .pattern("SS")
-                .pattern("WS")
-                .pattern("W ")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
-                .save(output, Constant.id("heavy_duty_axe_flipped"));
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_HOE)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('W', Items.STICK)
@@ -182,14 +174,6 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern(" W")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_HOE)
-                .define('S', GCItems.COMPRESSED_STEEL)
-                .define('W', Items.STICK)
-                .pattern("SS")
-                .pattern("W ")
-                .pattern("W ")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
-                .save(output, Constant.id("heavy_duty_hoe_flipped"));
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_SWORD)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('W', Items.STICK)
@@ -224,14 +208,6 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern(" S")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.DESH_AXE)
-                .define('D', GCItems.DESH_INGOT)
-                .define('S', GCItems.DESH_STICK)
-                .pattern("DD")
-                .pattern("SD")
-                .pattern("S ")
-                .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
-                .save(output, Constant.id("desh_axe_flipped"));
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.DESH_HOE)
                 .define('D', GCItems.DESH_INGOT)
                 .define('S', GCItems.DESH_STICK)
@@ -240,14 +216,6 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern(" S")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.DESH_HOE)
-                .define('D', GCItems.DESH_INGOT)
-                .define('S', GCItems.DESH_STICK)
-                .pattern("DD")
-                .pattern("S ")
-                .pattern("S ")
-                .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
-                .save(output, Constant.id("desh_hoe_flipped"));
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.DESH_SWORD)
                 .define('D', GCItems.DESH_INGOT)
                 .define('S', GCItems.DESH_STICK)
