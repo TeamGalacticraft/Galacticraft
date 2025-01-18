@@ -8,6 +8,7 @@
     "#c:plates/aluminum",
     "#c:plates/meteoric_iron",
     "#c:plates/desh",
-    "#c:plates/titanium"
+    "#c:plates/titanium",
+    "#c:plates/heavy_duty"
   ]
 }

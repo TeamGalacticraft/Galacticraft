@@ -29,6 +29,18 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
 public class GCItemTags {
+    public static final TagKey<Item> WRENCHES = commonTag("wrenches");
+
+    public static final TagKey<Item> ACCESSORIES = galacticraftTag("accessories");
+    public static final TagKey<Item> OXYGEN_MASKS = galacticraftTag("accessories/oxygen_mask");
+    public static final TagKey<Item> OXYGEN_GEAR = galacticraftTag("accessories/oxygen_gear");
+    public static final TagKey<Item> OXYGEN_TANKS = galacticraftTag("accessories/oxygen_tank");
+    public static final TagKey<Item> PARACHUTES = galacticraftTag("accessories/parachute");
+    public static final TagKey<Item> FREQUENCY_MODULES = galacticraftTag("accessories/frequency_module");
+    public static final TagKey<Item> SHIELD_CONTROLLERS = galacticraftTag("accessories/shield_controller");
+    
+    public static final TagKey<Item> BATTERIES = commonTag("batteries");
+
     public static final TagKey<Item> SILICONS = commonTag("silicon");
     public static final TagKey<Item> OLIVINE_SHARDS = commonTag("gems/olivine");
     public static final TagKey<Item> LUNAR_SAPPHIRES = commonTag("gems/lunar_sapphire");
@@ -91,11 +103,26 @@ public class GCItemTags {
     public static final TagKey<Item> COMPRESSED_COPPER = commonTag("plates/copper");
     public static final TagKey<Item> COMPRESSED_STEEL = commonTag("plates/steel");
     public static final TagKey<Item> COMPRESSED_IRON = commonTag("plates/iron");
+    public static final TagKey<Item> HEAVY_DUTY_PLATES = commonTag("plates/heavy_duty");
+    public static final TagKey<Item> TIER_1_HEAVY_DUTY_PLATES = commonTag("plates/heavy_duty/tier_1");
+    public static final TagKey<Item> TIER_2_HEAVY_DUTY_PLATES = commonTag("plates/heavy_duty/tier_2");
+    public static final TagKey<Item> TIER_3_HEAVY_DUTY_PLATES = commonTag("plates/heavy_duty/tier_3");
+
+    public static final TagKey<Item> STEEL_RODS = commonTag("rods/steel");
+    public static final TagKey<Item> DESH_RODS = commonTag("rods/desh");
 
     public static final TagKey<Item> CANISTERS = commonTag("canisters");
+    public static final TagKey<Item> COPPER_CANISTERS = commonTag("canisters/copper");
+    public static final TagKey<Item> TIN_CANISTERS = commonTag("canisters/tin");
+    
+    public static final TagKey<Item> SOLAR_DUSTS = commonTag("dusts/solar");
 
     public static final TagKey<Item> CHEESE_FOODS = commonTag("foods/cheese");
     public static final TagKey<Item> CANNED_FOODS = commonTag("foods/canned");
+
+    public static final TagKey<Item> OIL_BUCKETS = commonTag("buckets/oil");
+    public static final TagKey<Item> FUEL_BUCKETS = commonTag("buckets/fuel");
+    public static final TagKey<Item> SULFURIC_ACID_BUCKETS = commonTag("buckets/sulfuric_acid");
 
     public static TagKey<Item> commonTag(String path) {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, path));

@@ -43,6 +43,10 @@ public class GCBlockTags {
     public static final TagKey<Block> MACHINES = galacticraftTag("machines");
     public static final TagKey<Block> FOOTPRINTS = galacticraftTag("footprints");
 
+    public static final TagKey<Block> SLABS = galacticraftTag("slabs");
+    public static final TagKey<Block> STAIRS = galacticraftTag("stairs");
+    public static final TagKey<Block> WALLS = galacticraftTag("walls");
+
     public static final TagKey<Block> SILICON_ORES = commonTag("ores/silicon");
     public static final TagKey<Block> METEORIC_IRON_ORES = commonTag("ores/meteoric_iron");
     public static final TagKey<Block> OLIVINE_ORES = commonTag("ores/olivine");

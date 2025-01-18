@@ -89,6 +89,53 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.THERMAL_PADDING_CHESTPIECE)
                 .add(GCItems.THERMAL_PADDING_HELMET);
 
+        this.tag(GCItemTags.WRENCHES)
+                .add(GCItems.STANDARD_WRENCH);
+
+        this.tag(GCItemTags.OXYGEN_MASKS)
+                .add(GCItems.OXYGEN_MASK);
+        this.tag(GCItemTags.OXYGEN_GEAR)
+                .add(GCItems.OXYGEN_GEAR);
+        this.tag(GCItemTags.OXYGEN_TANKS)
+                .add(GCItems.SMALL_OXYGEN_TANK)
+                .add(GCItems.MEDIUM_OXYGEN_TANK)
+                .add(GCItems.LARGE_OXYGEN_TANK)
+                .add(GCItems.INFINITE_OXYGEN_TANK);
+
+        this.tag(GCItemTags.PARACHUTES)
+                .add(GCItems.PARACHUTE.get(DyeColor.WHITE))
+                .add(GCItems.PARACHUTE.get(DyeColor.ORANGE))
+                .add(GCItems.PARACHUTE.get(DyeColor.MAGENTA))
+                .add(GCItems.PARACHUTE.get(DyeColor.LIGHT_BLUE))
+                .add(GCItems.PARACHUTE.get(DyeColor.YELLOW))
+                .add(GCItems.PARACHUTE.get(DyeColor.LIME))
+                .add(GCItems.PARACHUTE.get(DyeColor.PINK))
+                .add(GCItems.PARACHUTE.get(DyeColor.GRAY))
+                .add(GCItems.PARACHUTE.get(DyeColor.LIGHT_GRAY))
+                .add(GCItems.PARACHUTE.get(DyeColor.CYAN))
+                .add(GCItems.PARACHUTE.get(DyeColor.PURPLE))
+                .add(GCItems.PARACHUTE.get(DyeColor.BLUE))
+                .add(GCItems.PARACHUTE.get(DyeColor.BROWN))
+                .add(GCItems.PARACHUTE.get(DyeColor.GREEN))
+                .add(GCItems.PARACHUTE.get(DyeColor.RED))
+                .add(GCItems.PARACHUTE.get(DyeColor.BLACK));
+
+        this.tag(GCItemTags.FREQUENCY_MODULES)
+                .add(GCItems.FREQUENCY_MODULE);
+        this.tag(GCItemTags.SHIELD_CONTROLLERS)
+                .add(GCItems.SHIELD_CONTROLLER);
+        this.tag(GCItemTags.ACCESSORIES)
+                .addTag(GCItemTags.OXYGEN_MASKS)
+                .addTag(GCItemTags.OXYGEN_GEAR)
+                .addTag(GCItemTags.OXYGEN_TANKS)
+                .addTag(GCItemTags.PARACHUTES)
+                .addTag(GCItemTags.FREQUENCY_MODULES)
+                .addTag(GCItemTags.SHIELD_CONTROLLERS);
+
+        this.tag(GCItemTags.BATTERIES)
+                .add(GCItems.BATTERY)
+                .add(GCItems.INFINITE_BATTERY);
+
         this.tag(ItemTags.CREEPER_DROP_MUSIC_DISCS); //fixme
         //        "galacticraft:legacy_music_disc_mars",
         //        "galacticraft:legacy_music_disc_mimas",
@@ -262,6 +309,16 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.COMPRESSED_DESH);
         this.tag(GCItemTags.COMPRESSED_TITANIUM)
                 .add(GCItems.COMPRESSED_TITANIUM);
+        this.tag(GCItemTags.TIER_1_HEAVY_DUTY_PLATES)
+                .add(GCItems.TIER_1_HEAVY_DUTY_PLATE);
+        this.tag(GCItemTags.TIER_2_HEAVY_DUTY_PLATES)
+                .add(GCItems.TIER_2_HEAVY_DUTY_PLATE);
+        this.tag(GCItemTags.TIER_3_HEAVY_DUTY_PLATES)
+                .add(GCItems.TIER_3_HEAVY_DUTY_PLATE);
+        this.tag(GCItemTags.HEAVY_DUTY_PLATES)
+                .addTag(GCItemTags.TIER_1_HEAVY_DUTY_PLATES)
+                .addTag(GCItemTags.TIER_2_HEAVY_DUTY_PLATES)
+                .addTag(GCItemTags.TIER_3_HEAVY_DUTY_PLATES);
         this.tag(GCItemTags.PLATES)
                 .addTag(GCItemTags.COMPRESSED_COPPER)
                 .addTag(GCItemTags.COMPRESSED_BRONZE)
@@ -271,11 +328,24 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .addTag(GCItemTags.COMPRESSED_ALUMINUM)
                 .addTag(GCItemTags.COMPRESSED_METEORIC_IRON)
                 .addTag(GCItemTags.COMPRESSED_DESH)
-                .addTag(GCItemTags.COMPRESSED_TITANIUM);
+                .addTag(GCItemTags.COMPRESSED_TITANIUM)
+                .addTag(GCItemTags.HEAVY_DUTY_PLATES);
 
-        this.tag(GCItemTags.CANISTERS)
-                .add(GCItems.COPPER_CANISTER)
+        this.tag(GCItemTags.STEEL_RODS)
+                .add(GCItems.STEEL_POLE);
+        this.tag(GCItemTags.DESH_RODS)
+                .add(GCItems.DESH_STICK);
+        this.tag(ConventionalItemTags.RODS)
+                .addTag(GCItemTags.STEEL_RODS)
+                .addTag(GCItemTags.DESH_RODS);
+
+        this.tag(GCItemTags.COPPER_CANISTERS)
+                .add(GCItems.COPPER_CANISTER);
+        this.tag(GCItemTags.TIN_CANISTERS)
                 .add(GCItems.TIN_CANISTER);
+        this.tag(GCItemTags.CANISTERS)
+                .addTag(GCItemTags.COPPER_CANISTERS)
+                .addTag(GCItemTags.TIN_CANISTERS);
 
         this.tag(GCItemTags.LUNAR_SAPPHIRES)
                 .add(GCItems.LUNAR_SAPPHIRE);
@@ -287,6 +357,11 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         this.tag(ConventionalItemTags.CLUSTERS)
                 .add(GCItems.OLIVINE_CLUSTER);
+
+        this.tag(GCItemTags.SOLAR_DUSTS)
+                .add(GCItems.SOLAR_DUST);
+        this.tag(ConventionalItemTags.DUSTS)
+                .addTag(GCItemTags.SOLAR_DUSTS);
 
         this.tag(ConventionalItemTags.FRUIT_FOODS)
                 .add(GCItems.CANNED_DEHYDRATED_APPLE)
@@ -334,12 +409,25 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         this.tag(ConventionalItemTags.PINK_DYED).add(GCItems.PARACHUTE.get(DyeColor.PINK));
         this.tag(ConventionalItemTags.GRAY_DYED).add(GCItems.PARACHUTE.get(DyeColor.GRAY));
         this.tag(ConventionalItemTags.LIGHT_GRAY_DYED).add(GCItems.PARACHUTE.get(DyeColor.LIGHT_GRAY));
+        this.tag(ConventionalItemTags.CYAN_DYED).add(GCItems.PARACHUTE.get(DyeColor.CYAN));
         this.tag(ConventionalItemTags.PURPLE_DYED).add(GCItems.PARACHUTE.get(DyeColor.PURPLE));
         this.tag(ConventionalItemTags.BLUE_DYED).add(GCItems.PARACHUTE.get(DyeColor.BLUE));
         this.tag(ConventionalItemTags.BROWN_DYED).add(GCItems.PARACHUTE.get(DyeColor.BROWN));
         this.tag(ConventionalItemTags.GREEN_DYED).add(GCItems.PARACHUTE.get(DyeColor.GREEN));
         this.tag(ConventionalItemTags.RED_DYED).add(GCItems.PARACHUTE.get(DyeColor.RED));
         this.tag(ConventionalItemTags.BLACK_DYED).add(GCItems.PARACHUTE.get(DyeColor.BLACK));
+
+        this.tag(GCItemTags.OIL_BUCKETS).add(GCItems.CRUDE_OIL_BUCKET);
+        this.tag(GCItemTags.FUEL_BUCKETS).add(GCItems.FUEL_BUCKET);
+        this.tag(GCItemTags.SULFURIC_ACID_BUCKETS).add(GCItems.SULFURIC_ACID_BUCKET);
+        this.tag(ConventionalItemTags.BUCKETS)
+                .addTag(GCItemTags.OIL_BUCKETS)
+                .addTag(GCItemTags.FUEL_BUCKETS)
+                .addTag(GCItemTags.SULFURIC_ACID_BUCKETS);
+
+        this.tag(ConventionalItemTags.PLAYER_WORKSTATIONS_FURNACES)
+                .add(GCItems.ELECTRIC_FURNACE)
+                .add(GCItems.ELECTRIC_ARC_FURNACE);
     }
 
     protected FabricTagProvider<Item>.FabricTagBuilder tag(TagKey<Item> tag) {

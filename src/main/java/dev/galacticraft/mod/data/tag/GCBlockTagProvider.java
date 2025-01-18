@@ -137,15 +137,13 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         List<GCBlockRegistry.DecorationSet> decorations = GCBlocks.BLOCKS.getDecorations();
 
-        var slabBuilder = this.tag(BlockTags.SLABS)
-                .add(slab);
+        this.tag(BlockTags.SLABS).addTag(GCBlockTags.SLABS);
+        this.tag(BlockTags.STAIRS).addTag(GCBlockTags.STAIRS);
+        this.tag(BlockTags.WALLS).addTag(GCBlockTags.WALLS);
 
-
-        var stairsBuilder = this.tag(BlockTags.STAIRS)
-                .add(stairs);
-
-        var wallBuilder = this.tag(BlockTags.WALLS)
-                .add(wall);
+        var slabBuilder = this.tag(GCBlockTags.SLABS).add(slab);
+        var stairsBuilder = this.tag(GCBlockTags.STAIRS).add(stairs);
+        var wallBuilder = this.tag(GCBlockTags.WALLS).add(wall);
 
         for (GCBlockRegistry.DecorationSet decorationSet : decorations) {
             slabBuilder.add(decorationSet.slab(), decorationSet.detailedSlab());
@@ -391,6 +389,10 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.RED_CANDLE_MOON_CHEESE_WHEEL,
                         GCBlocks.BLACK_CANDLE_MOON_CHEESE_WHEEL
                 );
+
+        // this.tag(ConventionalBlockTags.PLAYER_WORKSTATIONS_FURNACES)
+        //         .add(GCBlocks.ELECTRIC_FURNACE)
+        //         .add(GCBlocks.ELECTRIC_ARC_FURNACE);
 
         var replaceableTagAppender = this.tag(BlockTags.REPLACEABLE);
         provider.lookupOrThrow(Registries.BLOCK)
