@@ -46,6 +46,17 @@ public class GCBlockTags {
     public static final TagKey<Block> SLABS = galacticraftTag("slabs");
     public static final TagKey<Block> STAIRS = galacticraftTag("stairs");
     public static final TagKey<Block> WALLS = galacticraftTag("walls");
+    
+    public static final TagKey<Block> DECORATION_BLOCKS = galacticraftTag("decoration_blocks");
+    public static final TagKey<Block> ALUMINUM_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/aluminum");
+    public static final TagKey<Block> BRONZE_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/bronze");
+    public static final TagKey<Block> COPPER_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/copper");
+    public static final TagKey<Block> IRON_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/iron");
+    public static final TagKey<Block> METEORIC_IRON_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/meteoric_iron");
+    public static final TagKey<Block> STEEL_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/steel");
+    public static final TagKey<Block> TIN_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/tin");
+    public static final TagKey<Block> TITANIUM_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/titanium");
+    public static final TagKey<Block> DARK_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/dark");
 
     public static final TagKey<Block> SILICON_ORES = commonTag("ores/silicon");
     public static final TagKey<Block> METEORIC_IRON_ORES = commonTag("ores/meteoric_iron");

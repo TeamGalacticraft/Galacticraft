@@ -37,6 +37,8 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 
 public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
@@ -137,6 +139,18 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         List<GCBlockRegistry.DecorationSet> decorations = GCBlocks.BLOCKS.getDecorations();
 
+        Map<String, TagKey<Block>> decoTags = new HashMap<>();
+ 
+        decoTags.put("aluminum_decoration", GCBlockTags.ALUMINUM_DECORATION_BLOCKS);
+        decoTags.put("bronze_decoration", GCBlockTags.BRONZE_DECORATION_BLOCKS);
+        decoTags.put("copper_decoration", GCBlockTags.COPPER_DECORATION_BLOCKS);
+        decoTags.put("iron_decoration", GCBlockTags.IRON_DECORATION_BLOCKS);
+        decoTags.put("meteoric_iron_decoration", GCBlockTags.METEORIC_IRON_DECORATION_BLOCKS);
+        decoTags.put("steel_decoration", GCBlockTags.STEEL_DECORATION_BLOCKS);
+        decoTags.put("tin_decoration", GCBlockTags.TIN_DECORATION_BLOCKS);
+        decoTags.put("titanium_decoration", GCBlockTags.TITANIUM_DECORATION_BLOCKS);
+        decoTags.put("dark_decoration", GCBlockTags.DARK_DECORATION_BLOCKS);
+
         this.tag(BlockTags.SLABS).addTag(GCBlockTags.SLABS);
         this.tag(BlockTags.STAIRS).addTag(GCBlockTags.STAIRS);
         this.tag(BlockTags.WALLS).addTag(GCBlockTags.WALLS);
@@ -145,11 +159,29 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         var stairsBuilder = this.tag(GCBlockTags.STAIRS).add(stairs);
         var wallBuilder = this.tag(GCBlockTags.WALLS).add(wall);
 
+        String decoSetId;
         for (GCBlockRegistry.DecorationSet decorationSet : decorations) {
             slabBuilder.add(decorationSet.slab(), decorationSet.detailedSlab());
             stairsBuilder.add(decorationSet.stairs(), decorationSet.detailedStairs());
             wallBuilder.add(decorationSet.wall(), decorationSet.detailedWall());
+
+            decoSetId = decorationSet.block().getDescriptionId();
+            decoSetId = decoSetId.substring(decoSetId.lastIndexOf(".") + 1);
+            this.tag(decoTags.get(decoSetId))
+                .add(decorationSet.block(), decorationSet.slab(), decorationSet.stairs(), decorationSet.wall())
+                .add(decorationSet.detailedBlock(), decorationSet.detailedSlab(), decorationSet.detailedStairs(), decorationSet.detailedWall());
         }
+
+        this.tag(GCBlockTags.DECORATION_BLOCKS)
+                .addTag(GCBlockTags.ALUMINUM_DECORATION_BLOCKS)
+                .addTag(GCBlockTags.BRONZE_DECORATION_BLOCKS)
+                .addTag(GCBlockTags.COPPER_DECORATION_BLOCKS)
+                .addTag(GCBlockTags.IRON_DECORATION_BLOCKS)
+                .addTag(GCBlockTags.METEORIC_IRON_DECORATION_BLOCKS)
+                .addTag(GCBlockTags.STEEL_DECORATION_BLOCKS)
+                .addTag(GCBlockTags.TIN_DECORATION_BLOCKS)
+                .addTag(GCBlockTags.TITANIUM_DECORATION_BLOCKS)
+                .addTag(GCBlockTags.DARK_DECORATION_BLOCKS);
 
         // ORE MINING TAGS
         var ores = new Block[] {
