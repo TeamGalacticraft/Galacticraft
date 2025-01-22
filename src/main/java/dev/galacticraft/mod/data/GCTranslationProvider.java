@@ -637,6 +637,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(GcHouston.IN_OVERWORLD, "I don't need to be rescued!");
         this.add(GcHouston.SUCCESS, "You have been rescued. Better luck next time...");
 
+        this.deathBy(GCDamageTypes.CRASH_LANDING, "%s came in too hot");
         this.deathBy(GCDamageTypes.OIL_BOOM, "%s tried to put out fire with a very flammable material");
         this.deathBy(GCDamageTypes.SUFFOCATION, "%s died from lack of oxygen");
         this.deathBy(GCDamageTypes.SULFURIC_ACID, "%s succumbed to sulfuric acid");
