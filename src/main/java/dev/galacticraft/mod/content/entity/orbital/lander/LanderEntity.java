@@ -197,9 +197,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
 
         if (!entities.isEmpty()) {
             for (Entity entity : entities) {
-                if (!this.getPassengers().contains(entity)) {
-                    push(entity);
-                }
+                push(entity);
             }
         }
     }
