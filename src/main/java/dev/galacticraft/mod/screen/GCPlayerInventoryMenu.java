@@ -26,6 +26,7 @@ import dev.galacticraft.api.item.Accessory.AccessoryType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.screen.slot.AccessorySlot;
 import dev.galacticraft.mod.screen.slot.OxygenTankSlot;
+import dev.galacticraft.mod.tag.GCTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -51,14 +52,14 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
         this.addSlot(new AccessorySlot(inventory, 8, 8 + 2 * 18, AccessoryType.THERMAL_PANTS, Constant.SlotSprite.THERMAL_PANTS));
         this.addSlot(new AccessorySlot(inventory, 8, 8 + 3 * 18, AccessoryType.THERMAL_BOOTS, Constant.SlotSprite.THERMAL_BOOTS));
 
-        this.addSlot(new AccessorySlot(inventory, 80, 8 + 0 * 18, AccessoryType.OXYGEN_MASK, Constant.SlotSprite.OXYGEN_MASK));
-        this.addSlot(new AccessorySlot(inventory, 80, 8 + 1 * 18, AccessoryType.OXYGEN_GEAR, Constant.SlotSprite.OXYGEN_GEAR));
+        this.addSlot(new AccessorySlot(inventory, 80, 8 + 0 * 18, AccessoryType.OXYGEN_MASK, GCTags.OXYGEN_MASKS, Constant.SlotSprite.OXYGEN_MASK));
+        this.addSlot(new AccessorySlot(inventory, 80, 8 + 1 * 18, AccessoryType.OXYGEN_GEAR, GCTags.OXYGEN_GEAR, Constant.SlotSprite.OXYGEN_GEAR));
         this.addSlot(new OxygenTankSlot(inventory, 80, 8 + 2 * 18, AccessoryType.OXYGEN_TANK_1.getSlot()));
         this.addSlot(new OxygenTankSlot(inventory, 80, 8 + 3 * 18, AccessoryType.OXYGEN_TANK_2.getSlot()));
 
-        this.addSlot(new AccessorySlot(inventory, 80 + 18, 8 + 0 * 18, AccessoryType.FREQUENCY_MODULE, null));
-        this.addSlot(new AccessorySlot(inventory, 80 + 18, 8 + 1 * 18, AccessoryType.PARACHUTE, Constant.SlotSprite.PARACHUTE));
-        this.addSlot(new AccessorySlot(inventory, 80 + 18, 8 + 2 * 18, AccessoryType.SHIELD_CONTROLLER, null));
+        this.addSlot(new AccessorySlot(inventory, 80 + 18, 8 + 0 * 18, AccessoryType.FREQUENCY_MODULE, GCTags.FREQUENCY_MODULES, null));
+        this.addSlot(new AccessorySlot(inventory, 80 + 18, 8 + 1 * 18, AccessoryType.PARACHUTE, GCTags.PARACHUTES, Constant.SlotSprite.PARACHUTE));
+        this.addSlot(new AccessorySlot(inventory, 80 + 18, 8 + 2 * 18, AccessoryType.SHIELD_CONTROLLER, GCTags.SHIELD_CONTROLLERS, null));
         this.addSlot(new AccessorySlot(inventory, 80 + 18, 8 + 3 * 18, AccessoryType.ACCESSORY.getSlot()));
 
         // Player main inv

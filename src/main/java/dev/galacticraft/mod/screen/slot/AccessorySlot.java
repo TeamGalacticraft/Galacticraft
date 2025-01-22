@@ -26,9 +26,11 @@ import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.api.item.Accessory.AccessoryType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,6 +39,12 @@ import java.util.function.Predicate;
 public class AccessorySlot extends Slot {
     private final Predicate<ItemStack> stackPredicate;
     private final Pair<ResourceLocation, ResourceLocation> icon;
+
+    public AccessorySlot(Container inventory, int x, int y, AccessoryType accessoryType, TagKey<Item> tag, ResourceLocation icon) {
+        super(inventory, accessoryType.getSlot(), x, y);
+        this.stackPredicate = itemStack -> itemStack.is(tag);
+        this.icon = (icon != null) ? Pair.of(InventoryMenu.BLOCK_ATLAS, icon) : null;
+    }
 
     public AccessorySlot(Container inventory, int x, int y, AccessoryType accessoryType, ResourceLocation icon) {
         super(inventory, accessoryType.getSlot(), x, y);

@@ -51,9 +51,9 @@ public class AccessoryItem extends Item implements Accessory {
     @Override //should sync with server
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         Container inv = player.galacticraft$getGearInv();
-        ItemStack itemStack = inv.getItem(this.getSlot());
-        if (itemStack.isEmpty()) {
-            inv.setItem(this.getSlot(), player.getItemInHand(hand));
+        int slot = this.getSlot();
+        if (inv.getItem(slot).isEmpty()) {
+            inv.setItem(slot, player.getItemInHand(hand));
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, ItemStack.EMPTY);
         }
         return super.use(world, player, hand);
