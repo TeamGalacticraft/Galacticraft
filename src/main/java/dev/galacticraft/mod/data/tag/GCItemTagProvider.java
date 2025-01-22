@@ -86,6 +86,14 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.THERMAL_PADDING_CHESTPIECE)
                 .add(GCItems.THERMAL_PADDING_HELMET);
 
+        tag(GCTags.THERMAL_HEAD)
+                .add(GCItems.THERMAL_PADDING_HELMET);
+        tag(GCTags.THERMAL_CHEST)
+                .add(GCItems.THERMAL_PADDING_CHESTPIECE);
+        tag(GCTags.THERMAL_PANTS)
+                .add(GCItems.THERMAL_PADDING_LEGGINGS);
+        tag(GCTags.THERMAL_BOOTS)
+                .add(GCItems.THERMAL_PADDING_BOOTS);
         tag(GCTags.OXYGEN_MASKS)
                 .add(GCItems.OXYGEN_MASK);
         tag(GCTags.OXYGEN_GEAR)
@@ -112,7 +120,6 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.PARACHUTE.get(DyeColor.GREEN))
                 .add(GCItems.PARACHUTE.get(DyeColor.RED))
                 .add(GCItems.PARACHUTE.get(DyeColor.BLACK));
-                
         tag(GCTags.FREQUENCY_MODULES)
                 .add(GCItems.FREQUENCY_MODULE);
         tag(GCTags.SHIELD_CONTROLLERS)

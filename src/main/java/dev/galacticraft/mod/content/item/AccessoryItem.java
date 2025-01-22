@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.item.Accessory;
+import dev.galacticraft.mod.content.GCAccessorySlots;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -33,28 +34,19 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class AccessoryItem extends Item implements Accessory {
-    public AccessoryType accessoryType;
-
-    public AccessoryItem(Properties settings, AccessoryType accessoryType) {
+    public AccessoryItem(Properties settings) {
         super(settings.stacksTo(1));
-        this.accessoryType = accessoryType;
-    }
-
-    public AccessoryType getType() {
-        return this.accessoryType;
-    }
-
-    public int getSlot() {
-        return this.accessoryType.getSlot();
     }
 
     @Override //should sync with server
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         Container inv = player.galacticraft$getGearInv();
-        int slot = this.getSlot();
-        if (inv.getItem(slot).isEmpty()) {
-            inv.setItem(slot, player.getItemInHand(hand));
-            return new InteractionResultHolder<>(InteractionResult.SUCCESS, ItemStack.EMPTY);
+        ItemStack itemStack = player.getItemInHand(hand);
+        for (int slot = 0; slot < inv.getContainerSize(); ++slot) {
+            if (inv.getItem(slot).isEmpty() && itemStack.is(GCAccessorySlots.SLOT_TAGS.get(slot))) {
+                inv.setItem(slot, itemStack);
+                return new InteractionResultHolder<>(InteractionResult.SUCCESS, ItemStack.EMPTY);
+            }
         }
         return super.use(world, player, hand);
     }

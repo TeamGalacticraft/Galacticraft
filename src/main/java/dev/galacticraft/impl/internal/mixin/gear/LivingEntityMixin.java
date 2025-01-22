@@ -26,7 +26,6 @@ import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.item.Accessory;
-import dev.galacticraft.api.item.Accessory.AccessoryType;
 import dev.galacticraft.impl.internal.fabric.GalacticraftAPI;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.tag.GCTags;

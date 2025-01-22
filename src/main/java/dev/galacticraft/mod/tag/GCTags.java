@@ -59,12 +59,17 @@ public class GCTags {
     public static final TagKey<Biome> MOON_RUINS_HAS_STRUCTURE = TagKey.create(Registries.BIOME, Constant.id("has_structure/moon_ruins"));
     public static final TagKey<Biome> MOON_BOSS_HAS_STRUCTURE = TagKey.create(Registries.BIOME, Constant.id("has_structure/moon_boss"));
 
+    public static final TagKey<Item> THERMAL_HEAD = galacticraftTag("thermal/head");
+    public static final TagKey<Item> THERMAL_CHEST = galacticraftTag("thermal/chest");
+    public static final TagKey<Item> THERMAL_PANTS = galacticraftTag("thermal/pants");
+    public static final TagKey<Item> THERMAL_BOOTS = galacticraftTag("thermal/boots");
     public static final TagKey<Item> OXYGEN_MASKS = galacticraftTag("accessories/oxygen_mask");
     public static final TagKey<Item> OXYGEN_GEAR = galacticraftTag("accessories/oxygen_gear");
     public static final TagKey<Item> OXYGEN_TANKS = galacticraftTag("accessories/oxygen_tank");
     public static final TagKey<Item> PARACHUTES = galacticraftTag("accessories/parachute");
     public static final TagKey<Item> FREQUENCY_MODULES = galacticraftTag("accessories/frequency_module");
     public static final TagKey<Item> SHIELD_CONTROLLERS = galacticraftTag("accessories/shield_controller");
+    public static final TagKey<Item> MISC_ACCESSORIES = galacticraftTag("accessories/misc");
 
     public static final TagKey<Item> ALUMINUM_INGOTS = commonTag("ingots/aluminum");
     public static final TagKey<Item> RAW_ALUMINUM_ORES = commonTag("raw_materials/aluminum");

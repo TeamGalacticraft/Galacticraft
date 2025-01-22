@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.item;
 
 import com.google.common.collect.Iterators;
-import dev.galacticraft.api.item.Accessory.AccessoryType;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.util.ColorUtil;
@@ -52,7 +51,7 @@ import java.util.List;
 
 public class InfiniteOxygenTankItem extends AccessoryItem implements Storage<FluidVariant>, StorageView<FluidVariant> {
     public InfiniteOxygenTankItem(Properties settings) {
-        super(settings, AccessoryType.OXYGEN_TANK_1);
+        super(settings);
     }
 
     @Override
@@ -138,18 +137,5 @@ public class InfiniteOxygenTankItem extends AccessoryItem implements Storage<Flu
     @Override
     public Iterator<StorageView<FluidVariant>> iterator() {
         return Iterators.singletonIterator(this);
-    }
-
-    @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
-        ItemStack copy = user.getItemInHand(hand).copy();
-        try (Transaction transaction = Transaction.openOuter()) {
-            long l = InventoryStorage.of(user.galacticraft$getOxygenTanks(), null).insert(ItemVariant.of(copy), copy.getCount(), transaction);
-            if (l == copy.getCount()) {
-                transaction.commit();
-                return new InteractionResultHolder<>(InteractionResult.SUCCESS, ItemStack.EMPTY);
-            }
-        }
-        return super.use(world, user, hand);
     }
 }

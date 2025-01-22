@@ -25,44 +25,10 @@ package dev.galacticraft.api.item;
 import net.minecraft.world.entity.LivingEntity;
 
 public interface Accessory {
-    default AccessoryType getType() {
-        return AccessoryType.ACCESSORY;
-    }
-
-    default int getSlot() {
-        return AccessoryType.ACCESSORY.getSlot();
-    }
-
     default boolean enablesHearing() {
         return false;
     }
 
     default void tick(LivingEntity entity) {
-
-    }
-
-    enum AccessoryType {
-        THERMAL_HEAD(0),
-        THERMAL_CHEST(1),
-        THERMAL_PANTS(2),
-        THERMAL_BOOTS(3),
-        OXYGEN_MASK(6),
-        OXYGEN_GEAR(7),
-        OXYGEN_TANK_1(4),
-        OXYGEN_TANK_2(5),
-        FREQUENCY_MODULE(8),
-        PARACHUTE(9),
-        SHIELD_CONTROLLER(10),
-        ACCESSORY(11);
-
-        private final int slot;
-
-        AccessoryType(int slot) {
-            this.slot = slot;
-        }
-
-        public int getSlot() {
-            return this.slot;
-        }
     }
 }

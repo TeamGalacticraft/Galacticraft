@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.content.item;
 
-import dev.galacticraft.api.item.Accessory.AccessoryType;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -31,7 +30,7 @@ public class ParachuteItem extends AccessoryItem {
     private final DyeColor color;
 
     public ParachuteItem(DyeColor color, Properties properties) {
-        super(properties, AccessoryType.PARACHUTE);
+        super(properties);
         this.color = color;
     }
 
