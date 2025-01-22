@@ -29,7 +29,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
 public class GCItemTags {
-    public static final TagKey<Item> WRENCHES = commonTag("wrenches");
+    public static final TagKey<Item> WRENCHES = commonTag("tools/wrench");
 
     public static final TagKey<Item> ACCESSORIES = galacticraftTag("accessories");
     public static final TagKey<Item> OXYGEN_MASKS = galacticraftTag("accessories/oxygen_mask");
