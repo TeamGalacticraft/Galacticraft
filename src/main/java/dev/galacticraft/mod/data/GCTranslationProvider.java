@@ -870,20 +870,18 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.CURRENT_OXYGEN, "Oxygen: %s");
         this.add(Ui.GJT, "%s gJ/t");
         this.add(Ui.MAX_OXYGEN, "Maximum Oxygen: %s");
-        this.add(Ui.MACHINE_STATUS, "Status: ");
+        this.add(Ui.MACHINE_STATUS, "Status: %s");
         this.add(Ui.OXYGEN_TANK_LEVEL, "Oxygen Tank %s: %s/%s");
-        this.add(Ui.ROCKET_FUEL, "Fuel: ");
+        this.add(Ui.ROCKET_FUEL, "Fuel:");
         this.add(Ui.ROCKET_FULL, "% full");
         this.add(Ui.ROCKET_NO_FUEL, "No fuel");
-        this.add(Ui.LANDER_VELOCITY, "Entry Velocity");
-        this.add(Ui.LANDER_VELOCITYU, "m/s");
-        this.add(Ui.LANDER_WARNING_2, "Hold \"");
-        this.add(Ui.LANDER_WARNING_3, "\" to slow down!");
         this.add(Ui.LANDER_WARNING, "WARNING!");
+        this.add(Ui.LANDER_CONTROLS, "Hold \"%s\" to slow down!");
+        this.add(Ui.LANDER_VELOCITY, "Entry Velocity: %s m/s");
         this.add(Ui.SMALL_STEP, "Taking one small step");
         this.add(Ui.GIANT_LEAP, "Taking one giant leap");
         this.add(Ui.PREPARE_FOR_ENTRY, "Prepare for entry!");
-        this.add(Ui.TRAVELLING_TO, "Traveling to: ");
+        this.add(Ui.TRAVELING_TO, "Traveling to: %s");
     }
 
     protected void generateStatsTranslations() {
