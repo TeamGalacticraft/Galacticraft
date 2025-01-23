@@ -54,10 +54,8 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
             matrices.translate((entity.level().random.nextDouble() - 0.5D) * 0.1D, 0, (entity.level().random.nextDouble() - 0.5D) * 0.1D);
         }
         matrices.translate(0.5D, 0, 0.5D);
-        float yRot = entity.getViewYRot(partialTick);
-        matrices.mulPose(Axis.YP.rotationDegrees(180.0F - yRot));
+        matrices.mulPose(Axis.YN.rotationDegrees(entity.getViewYRot(partialTick)));
         matrices.mulPose(Axis.ZN.rotationDegrees(entity.getViewXRot(partialTick)));
-        matrices.mulPose(Axis.YN.rotationDegrees(yRot));
         matrices.translate(0, 0.25D, 0);
 
         float wobbleTicks = (float) entity.getHurtTime() - partialTick;

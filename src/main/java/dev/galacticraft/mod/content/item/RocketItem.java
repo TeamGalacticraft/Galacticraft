@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.RocketPrefabs;
@@ -39,11 +40,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 
@@ -54,31 +57,35 @@ public class RocketItem extends Item {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        if (!context.getLevel().isClientSide && context.getLevel().getBlockState(context.getClickedPos()).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD
-                && context.getLevel().getBlockState(context.getClickedPos()).getValue(AbstractLaunchPad.PART) != AbstractLaunchPad.Part.NONE) {
-            BlockPos pos = new BlockPos(context.getClickedPos()).offset(AbstractLaunchPad.partToCenterPos(context.getLevel().getBlockState(context.getClickedPos()).getValue(AbstractLaunchPad.PART)));
-            assert context.getLevel().getBlockState(pos).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD;
-            LaunchPadBlockEntity pad = (LaunchPadBlockEntity) context.getLevel().getBlockEntity(pos);
+        Level level = context.getLevel();
+        BlockPos clickedPos = context.getClickedPos();
+        if (!level.isClientSide && level.getBlockState(clickedPos).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD
+                && level.getBlockState(clickedPos).getValue(AbstractLaunchPad.PART) != AbstractLaunchPad.Part.NONE) {
+            BlockPos pos = new BlockPos(clickedPos).offset(AbstractLaunchPad.partToCenterPos(level.getBlockState(clickedPos).getValue(AbstractLaunchPad.PART)));
+            assert level.getBlockState(pos).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD;
+            LaunchPadBlockEntity pad = (LaunchPadBlockEntity) level.getBlockEntity(pos);
             if (pad.hasDockedEntity()) return InteractionResult.FAIL;
 
-            if (context.getLevel() instanceof ServerLevel) {
-                RocketEntity rocket = new RocketEntity(GCEntityTypes.ROCKET, context.getLevel());
+            if (level instanceof ServerLevel) {
+                RocketEntity rocket = new RocketEntity(GCEntityTypes.ROCKET, level);
+                Player player = context.getPlayer();
                 ItemStack held = context.getItemInHand();
                 RocketData data = held.has(GCDataComponents.ROCKET_DATA) ? held.get(GCDataComponents.ROCKET_DATA) : RocketPrefabs.TIER_1;
                 rocket.setData(data);
                 rocket.setPad(pad);
                 rocket.setOldPosAndRot();
                 rocket.absMoveTo(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
-                boolean creative = context.getItemInHand().getComponents().getOrDefault(GCDataComponents.CREATIVE, false);
+                rocket.absRotateTo(player.getDirection().toYRot(), 0.0F);
+                boolean creative = held.getComponents().getOrDefault(GCDataComponents.CREATIVE, false);
                 if (creative) {
                     rocket.setFuel(Long.MAX_VALUE);
                 }
-                context.getLevel().addFreshEntity(rocket);
+                level.addFreshEntity(rocket);
 
-                if (!context.getPlayer().isCreative()) {
-                    ItemStack stack = context.getPlayer().getItemInHand(context.getHand()).copy();
+                if (!player.isCreative()) {
+                    ItemStack stack = held.copy();
                     stack.shrink(1);
-                    context.getPlayer().setItemInHand(context.getHand(), stack);
+                    player.setItemInHand(context.getHand(), stack);
                 }
                 pad.setDockedEntity(rocket);
             }
