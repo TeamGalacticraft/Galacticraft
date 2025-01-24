@@ -46,9 +46,9 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
@@ -143,11 +143,12 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
         cir.setReturnValue(Mth.ceil((double)(f4 * f2 * gravity) * this.getAttributeValue(Attributes.FALL_DAMAGE_MULTIPLIER)));
     }
 
-    @Redirect(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isFallFlying()Z"))
-    private boolean gc$canStartFallFlying(LivingEntity entity) {
+    @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isFallFlying()Z"))
+    private boolean gc$canStartFallFlying(boolean original) {
+        LivingEntity entity = (LivingEntity) (Object) this;
         if (entity.level().galacticraft$hasDimensionTypeTag(GCTags.VACUUM)) {
             return false;
         }
-        return entity.isFallFlying();
+        return original;
     }
 }

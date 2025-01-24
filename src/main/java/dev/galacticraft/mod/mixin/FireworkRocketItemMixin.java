@@ -23,12 +23,14 @@
 package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.mod.tag.GCTags;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FireworkRocketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 
 @Mixin(FireworkRocketItem.class)
 public abstract class FireworkRocketItemMixin extends Item {
@@ -36,11 +38,11 @@ public abstract class FireworkRocketItemMixin extends Item {
         super(null);
     }
 
-    @Redirect(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isFallFlying()Z"))
-    private boolean gc$useFireworkInVacuum(Player player) {
-        if (player.level().galacticraft$hasDimensionTypeTag(GCTags.VACUUM)) {
+    @ModifyExpressionValue(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isFallFlying()Z"))
+    private boolean gc$useFireworkInVacuum(boolean original, Level level, Player player, InteractionHand interactionHand) {
+        if (level.galacticraft$hasDimensionTypeTag(GCTags.VACUUM)) {
             return false;
         }
-        return player.isFallFlying();
+        return original;
     }
 }
