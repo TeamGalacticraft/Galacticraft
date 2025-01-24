@@ -42,13 +42,14 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
     protected int blocked = 0;
     public long currentEnergyGeneration = 0;
     private final EnergySource energySource = new EnergySource(this);
+    private long dayLength = 24000;
 
     public AbstractSolarPanelBlockEntity(BlockEntityType<? extends AbstractSolarPanelBlockEntity> type, BlockPos pos, BlockState state, StorageSpec spec) {
         super(type, pos, state, spec);
     }
 
     @Override
-    public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+    public void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("charge");
         this.drainPowerToSlot(CHARGE_SLOT);
         profiler.popPush("blockage");
@@ -56,10 +57,14 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
         for (int x = -1; x < 2; x++) { //todo: cache?
             for (int z = -1; z < 2; z++) {
                 //noinspection AssignmentUsedAsCondition
-                if (this.blockage[(z + 1) * 3 + (x + 1)] = !world.canSeeSky(pos.offset(x, 2, z))) {
+                if (this.blockage[(z + 1) * 3 + (x + 1)] = !level.canSeeSky(pos.offset(x, 2, z))) {
                     this.blocked++;
                 }
             }
+        }
+        var holder = level.galacticraft$getCelestialBody();
+        if (holder != null) {
+            dayLength = holder.value().dayLength();
         }
         profiler.pop();
     }
@@ -81,9 +86,9 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
             if (status == null) status = GCMachineStatuses.RAIN;
             multiplier *= 0.5;
         }
-        long time = level.getDayTime() % 24000;
-        if (time > 12000) status = GCMachineStatuses.NIGHT;
-        if (time > 6000) time = 12000L - time;
+        long time = level.getDayTime() % this.dayLength;
+        if (time > this.dayLength / 2) status = GCMachineStatuses.NIGHT;
+        if (time > this.dayLength / 4) time = (long) (this.dayLength / 2) - time;
 
         profiler.push("transaction");
         this.currentEnergyGeneration = calculateEnergyProduction(time, multiplier);
@@ -102,7 +107,7 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
     @Override
     public SolarPanelSource getSource() {
         if (this.level.dimensionType().hasCeiling()) return SolarPanelSource.NO_LIGHT_SOURCE;
-        if ((level.getDayTime() % 24000) > 12000) return SolarPanelSource.NIGHT;
+        if ((this.level.getDayTime() % this.dayLength) > this.dayLength / 2) return SolarPanelSource.NIGHT;
         if (this.level.isThundering()) return SolarPanelSource.STORMY;
         if (this.level.isRaining()) return SolarPanelSource.OVERCAST;
         return SolarPanelSource.DAY;

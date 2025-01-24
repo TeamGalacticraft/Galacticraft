@@ -53,7 +53,12 @@ public class EvolvedPillagerSpawner implements CustomSpawner {
             return 0;
          } else {
             this.ticksUntilNextSpawn += 10000 + random.nextInt(1000);
-            long l = world.getDayTime() / 24000L;
+            long dayLength = 24000;
+            var holder = world.galacticraft$getCelestialBody();
+            if (holder != null) {
+                  dayLength = holder.value().dayLength();
+            }
+            long l = world.getDayTime() / dayLength;
             if (l >= 5L && world.isDay()) {
                if (random.nextInt(5) != 0) {
                   return 0;
