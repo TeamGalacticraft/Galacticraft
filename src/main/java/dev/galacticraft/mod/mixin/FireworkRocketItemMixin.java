@@ -20,20 +20,27 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.api.accessor;
+package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import net.minecraft.core.Holder;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.dimension.DimensionType;
-import org.jetbrains.annotations.Nullable;
+import dev.galacticraft.mod.tag.GCTags;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.FireworkRocketItem;
+import net.minecraft.world.item.Item;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
-public interface LevelBodyAccessor {
-    default @Nullable Holder<CelestialBody<?, ?>> galacticraft$getCelestialBody() {
-        throw new RuntimeException("This should be overridden by mixin!");
+@Mixin(FireworkRocketItem.class)
+public abstract class FireworkRocketItemMixin extends Item {
+    FireworkRocketItemMixin() {
+        super(null);
     }
 
-    default boolean galacticraft$hasDimensionTypeTag(TagKey<DimensionType> tag) {
-        throw new RuntimeException("This should be overridden by mixin!");
+    @Redirect(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isFallFlying()Z"))
+    private boolean gc$useFireworkInVacuum(Player player) {
+        if (player.level().galacticraft$hasDimensionTypeTag(GCTags.VACUUM)) {
+            return false;
+        }
+        return player.isFallFlying();
     }
 }

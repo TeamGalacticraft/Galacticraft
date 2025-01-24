@@ -11,6 +11,7 @@
     "BucketItemMixin",
     "DimensionTypeMixin",
     "EntityMixin",
+    "FireworkRocketItemMixin",
     "FlowingFluidMixin",
     "GiveCommandMixin",
     "ItemEntityMixin",

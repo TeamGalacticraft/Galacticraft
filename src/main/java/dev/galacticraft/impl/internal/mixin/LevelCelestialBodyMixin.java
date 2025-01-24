@@ -27,8 +27,11 @@ import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.DimensionType;
@@ -65,5 +68,12 @@ public class LevelCelestialBodyMixin implements LevelBodyAccessor {
     @Override
     public @Nullable Holder<CelestialBody<?, ?>> galacticraft$getCelestialBody() {
         return this.celestialBody;
+    }
+
+    @Override
+    public boolean galacticraft$hasDimensionTypeTag(TagKey<DimensionType> tag) {
+        Level level = (Level) (Object) this;
+        Registry<DimensionType> dimensionTypeRegistry = level.registryAccess().registryOrThrow(Registries.DIMENSION_TYPE);
+        return dimensionTypeRegistry.getHolder(dimensionTypeRegistry.getId(level.dimensionType())).map(reference -> reference.is(tag)).orElse(false);
     }
 }

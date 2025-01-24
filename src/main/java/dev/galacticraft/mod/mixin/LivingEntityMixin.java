@@ -24,6 +24,7 @@ package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.CryogenicAccessor;
+import dev.galacticraft.mod.tag.GCTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -39,6 +40,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
@@ -117,5 +119,13 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
     private void gc$preventMovement(CallbackInfo ci) {
         if (isInCryoSleep())
             ci.cancel();
+    }
+
+    @Redirect(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isFallFlying()Z"))
+    private boolean gc$canStartFallFlying(LivingEntity entity) {
+        if (entity.level().galacticraft$hasDimensionTypeTag(GCTags.VACUUM)) {
+            return false;
+        }
+        return entity.isFallFlying();
     }
 }
