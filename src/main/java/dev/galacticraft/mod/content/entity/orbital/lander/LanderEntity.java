@@ -172,7 +172,6 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
                 Player player = level.getNearestPlayer(this, 5);
 
                 if (player != null && player.getVehicle() == null) {
-                    player.absRotateTo(-90.0f, 45.0f);
                     player.startRiding(this);
                 }
             }
@@ -237,7 +236,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
 
     public void onGroundHit() {
         if (!level().isClientSide) {
-            if (Math.abs(this.lastDeltaY) > 2.0D) {
+            if (Math.abs(this.lastDeltaY) > Constant.Landing.SAFE_VELOCITY) {
                 for (Entity entity : this.getPassengers()) {
                     entity.removeVehicle();
                     if (entity instanceof ServerPlayer player) {
@@ -253,7 +252,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
                         this.getX(),
                         this.getY(),
                         this.getZ(),
-                        12,
+                        (int) Mth.ceil(Constant.Landing.EXPLOSION_SCALE * Math.abs(this.lastDeltaY)),
                         false,
                         Level.ExplosionInteraction.MOB
                 );

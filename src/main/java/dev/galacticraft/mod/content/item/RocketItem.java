@@ -75,7 +75,7 @@ public class RocketItem extends Item {
                 rocket.setPad(pad);
                 rocket.setOldPosAndRot();
                 rocket.absMoveTo(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
-                rocket.absRotateTo(player.getDirection().toYRot(), 0.0F);
+                rocket.absRotateTo(180.0F + player.getDirection().toYRot(), 0.0F);
                 boolean creative = held.getComponents().getOrDefault(GCDataComponents.CREATIVE, false);
                 if (creative) {
                     rocket.setFuel(Long.MAX_VALUE);

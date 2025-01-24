@@ -26,6 +26,9 @@ import dev.galacticraft.api.entity.IgnoreShift;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.accessor.ServerPlayerAccessor;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
+import dev.galacticraft.mod.content.entity.orbital.AdvancedVehicle;
+import net.minecraft.client.CameraType;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -106,8 +109,11 @@ public abstract class ServerPlayerMixin extends LivingEntityMixin implements Ser
     @Inject(method = "stopRiding", at = @At("HEAD"), cancellable = true)
     private void canStopRiding(CallbackInfo ci) {
         Entity vehicle = getVehicle();
-        if (isRideTick && vehicle instanceof IgnoreShift ignoreShift && ignoreShift.shouldIgnoreShiftExit())
+        if (isRideTick && vehicle instanceof IgnoreShift ignoreShift && ignoreShift.shouldIgnoreShiftExit()) {
             ci.cancel();
+        } else if (vehicle instanceof AdvancedVehicle) {
+            Minecraft.getInstance().options.setCameraType(CameraType.FIRST_PERSON);
+        }
     }
 
     @Inject(method = "bedBlocked", at = @At(value = "HEAD"), cancellable = true)

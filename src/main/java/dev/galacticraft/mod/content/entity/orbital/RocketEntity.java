@@ -335,7 +335,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
         if (this.getPassengers().isEmpty()) {
-            player.absRotateTo(180.0F + this.getYRot(), this.getXRot());
+            player.absRotateTo(this.getYRot(), this.getXRot());
             player.startRiding(this);
             Minecraft.getInstance().options.setCameraType(CameraType.THIRD_PERSON_FRONT);
             return InteractionResult.SUCCESS;

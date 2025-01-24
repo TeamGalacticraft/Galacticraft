@@ -764,6 +764,11 @@ public interface Constant {
         long T2_MACHINE_ENERGY_USAGE = 200;
     }
 
+    interface Landing {
+        double SAFE_VELOCITY = 1.0D; // ticks per second
+        double EXPLOSION_SCALE = 4.0D;
+    }
+
     @ApiStatus.Internal
     interface Misc {
         ResourceLocation INVALID = Constant.id("invalid");
