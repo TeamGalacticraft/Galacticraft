@@ -61,9 +61,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements GearInventoryProvider {
@@ -92,14 +92,16 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
         }
     }
 
-    @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z", ordinal = 0))
-    private boolean galacticraft_testForBreathability(LivingEntity entity, TagKey<Fluid> tag) {
-        return entity.isEyeInFluid(tag) || !entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(entity.getPose()))));
+    @ModifyExpressionValue(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z", ordinal = 0))
+    private boolean galacticraft_testForBreathability(boolean original) {
+        LivingEntity entity = (LivingEntity) (Object) this;
+        return original || !entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(entity.getPose()))));
     }
 
-    @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;canBreatheUnderwater()Z"))
-    private boolean galacticraft_suffocationDamage(LivingEntity entity) {
-        return entity.canBreatheUnderwater() || !entity.isEyeInFluid(FluidTags.WATER);
+    @ModifyExpressionValue(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;canBreatheUnderwater()Z"))
+    private boolean galacticraft_suffocationDamage(boolean original) {
+        LivingEntity entity = (LivingEntity) (Object) this;
+        return original || !entity.isEyeInFluid(FluidTags.WATER);
     }
 
     @Inject(method = "tick", at = @At(value = "RETURN"))
