@@ -22,8 +22,10 @@
 
 package dev.galacticraft.api.accessor;
 
+import dev.galacticraft.mod.tag.GCTags;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
 
 public interface GearInventoryProvider {
     default Container galacticraft$getGearInv() {
@@ -40,6 +42,22 @@ public interface GearInventoryProvider {
 
     default Container galacticraft$getAccessories() {
         throw new RuntimeException("This should be overridden by mixin!");
+    }
+
+    default boolean galacticraft$hasMaskAndGear() {
+        boolean mask = false;
+        boolean gear = false;
+        for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
+            ItemStack itemStack = this.galacticraft$getAccessories().getItem(i);
+            if (!mask && itemStack.is(GCTags.OXYGEN_MASKS)) {
+                mask = true;
+                if (gear) break;
+            } else if (!gear && itemStack.is(GCTags.OXYGEN_GEAR)) {
+                gear = true;
+                if (mask) break;
+            }
+        }
+        return mask && gear;
     }
 
     default void galacticraft$writeGearToNbt(CompoundTag tag) {

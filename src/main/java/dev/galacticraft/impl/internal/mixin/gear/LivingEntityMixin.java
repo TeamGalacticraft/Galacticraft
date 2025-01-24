@@ -28,7 +28,6 @@ import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.impl.internal.fabric.GalacticraftAPI;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -91,20 +90,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
             cir.setReturnValue(this.increaseAirSupply(air));
         }
 
-        boolean mask = false;
-        boolean gear = false;
-        for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
-            ItemStack item = this.galacticraft$getAccessories().getItem(i);
-            if (!mask && item.is(GCTags.OXYGEN_MASKS)) {
-                mask = true;
-                if (gear) break;
-            } else if (!gear && item.is(GCTags.OXYGEN_GEAR)) {
-                gear = true;
-                if (mask) break;
-            }
-        }
-
-        if (mask && gear) {
+        if (this.galacticraft$hasMaskAndGear()) {
             InventoryStorage tankInv = InventoryStorage.of(galacticraft$getOxygenTanks(), null);
             for (int i = 0; i < tankInv.getSlotCount(); i++) {
                 Storage<FluidVariant> storage = ContainerItemContext.ofSingleSlot(tankInv.getSlot(i)).find(FluidStorage.ITEM);
