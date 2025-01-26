@@ -563,13 +563,14 @@ public interface Constant {
     }
 
     interface SlotSprite {
-        String THERMAL_HEAD = "slot/thermal_helmet";
-        String THERMAL_CHEST = "slot/thermal_chestpiece";
-        String THERMAL_PANTS = "slot/thermal_leggings";
-        String THERMAL_BOOTS = "slot/thermal_boots";
-        String OXYGEN_MASK = "slot/oxygen_mask";
-        String OXYGEN_GEAR = "slot/oxygen_gear";
-        String OXYGEN_TANK = "slot/oxygen_tank";
+        ResourceLocation ENERGY = id("slot/energy");
+        ResourceLocation THERMAL_HEAD = id("slot/thermal_helmet");
+        ResourceLocation THERMAL_CHEST = id("slot/thermal_chestpiece");
+        ResourceLocation THERMAL_PANTS = id("slot/thermal_leggings");
+        ResourceLocation THERMAL_BOOTS = id("slot/thermal_boots");
+        ResourceLocation OXYGEN_MASK = id("slot/oxygen_mask");
+        ResourceLocation OXYGEN_GEAR = id("slot/oxygen_gear");
+        ResourceLocation OXYGEN_TANK = id("slot/oxygen_tank");
     }
 
     interface Entity {

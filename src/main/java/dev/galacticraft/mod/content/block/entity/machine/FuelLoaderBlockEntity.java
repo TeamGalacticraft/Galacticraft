@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
+import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
@@ -33,6 +34,7 @@ import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.entity.Dockable;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
@@ -55,6 +57,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -69,7 +72,8 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
             MachineItemStorage.spec(
                     ItemResourceSlot.builder(TransferType.TRANSFER)
                             .pos(8, 62)
-                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
+                            .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.TRANSFER)
                             .pos(80, 62)
                             .filter(ResourceFilters.canExtractFluid(GCFluids.FUEL)) // fixme: fuel tag?,

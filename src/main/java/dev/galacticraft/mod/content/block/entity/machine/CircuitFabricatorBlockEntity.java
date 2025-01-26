@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
+import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.compat.vanilla.RecipeHelper;
@@ -35,6 +36,7 @@ import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -53,6 +55,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -71,7 +74,8 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
             MachineItemStorage.spec(
                     ItemResourceSlot.builder(TransferType.TRANSFER)
                             .pos(8, 70)
-                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
+                            .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(31, 15)
                             .filter(ResourceFilters.itemTag(ConventionalItemTags.DIAMOND_GEMS)),

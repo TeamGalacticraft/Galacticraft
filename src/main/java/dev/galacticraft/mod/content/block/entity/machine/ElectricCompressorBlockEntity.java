@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
+import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.compat.vanilla.RecipeHelper;
@@ -35,6 +36,7 @@ import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
@@ -50,6 +52,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,8 +67,9 @@ public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity
     public static final StorageSpec SPEC = StorageSpec.of(
             MachineItemStorage.builder()
                     .add(ItemResourceSlot.builder(TransferType.TRANSFER)
-                            .pos(8, 61)
+                            .pos(8, 62)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
+                            .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY))
                     )
                     .add3x3Grid(TransferType.INPUT, 30, 17)
                     .add(ItemResourceSlot.builder(TransferType.OUTPUT)

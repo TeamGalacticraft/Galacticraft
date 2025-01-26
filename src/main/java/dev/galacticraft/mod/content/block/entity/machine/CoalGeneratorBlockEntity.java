@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
@@ -50,6 +51,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
@@ -71,9 +73,10 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
             MachineItemStorage.spec(
                     ItemResourceSlot.builder(TransferType.TRANSFER)
                             .pos(8, 62)
-                            .filter(ResourceFilters.CAN_INSERT_ENERGY),
+                            .filter(ResourceFilters.CAN_INSERT_ENERGY)
+                            .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(71, 53)
+                            .pos(80, 47)
                             .filter((item, tag) -> CoalGeneratorBlockEntity.FUEL_MAP.containsKey(item))
             ),
             MachineEnergyStorage.spec(

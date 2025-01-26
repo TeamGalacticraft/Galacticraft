@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
+import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
@@ -30,6 +31,7 @@ import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.AbstractSolarPanelBlockEntity;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
@@ -38,6 +40,7 @@ import dev.galacticraft.mod.screen.SolarPanelMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,6 +50,7 @@ public class BasicSolarPanelBlockEntity extends AbstractSolarPanelBlockEntity {
                     ItemResourceSlot.builder(TransferType.TRANSFER)
                             .pos(8, 62)
                             .filter(ResourceFilters.CAN_INSERT_ENERGY)
+                            .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY))
             ),
             MachineEnergyStorage.spec(
                     Galacticraft.CONFIG.machineEnergyStorageSize(),

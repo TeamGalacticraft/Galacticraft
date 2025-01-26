@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
+import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
@@ -34,6 +35,7 @@ import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
@@ -46,6 +48,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,13 +67,14 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     private static final StorageSpec SPEC = StorageSpec.of(
             MachineItemStorage.spec(
                     ItemResourceSlot.builder(TransferType.TRANSFER)
-                            .pos(8, 7)
-                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
+                            .pos(8, 62)
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
+                            .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.TRANSFER)
-                            .pos(123, 7)
+                            .pos(125, 62)
                             .filter(ResourceFilters.canExtractFluid(GCFluids.CRUDE_OIL)), // fixme: tag?,
                     ItemResourceSlot.builder(TransferType.TRANSFER)
-                            .pos(153, 7)
+                            .pos(152, 62)
                             .filter(ResourceFilters.canInsertFluid(GCFluids.FUEL)) // fixme: tag?
             ),
             MachineEnergyStorage.spec(
@@ -80,11 +84,11 @@ public class RefineryBlockEntity extends MachineBlockEntity {
             ),
             MachineFluidStorage.spec(
                     FluidResourceSlot.builder(TransferType.INPUT)
-                            .pos(123, 29)
+                            .pos(125, 8)
                             .capacity(RefineryBlockEntity.MAX_CAPACITY)
                             .filter(ResourceFilters.ofResource(GCFluids.CRUDE_OIL)),
                     FluidResourceSlot.builder(TransferType.OUTPUT)
-                            .pos(153, 29)
+                            .pos(152, 8)
                             .capacity(RefineryBlockEntity.MAX_CAPACITY)
                             .filter(ResourceFilters.ofResource(GCFluids.FUEL))
             )

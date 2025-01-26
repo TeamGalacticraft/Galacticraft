@@ -35,8 +35,8 @@ import net.minecraft.world.entity.player.Inventory;
 
 @Environment(EnvType.CLIENT)
 public class CoalGeneratorScreen extends MachineScreen<CoalGeneratorBlockEntity, CoalGeneratorMenu> {
-    private static final int FIRE_X = 72;
-    private static final int FIRE_Y = 37;
+    private static final int FIRE_X = 80;
+    private static final int FIRE_Y = 30;
     private static final int FIRE_U = 176;
     private static final int FIRE_V = 0;
     private static final int FIRE_WIDTH = 14;
