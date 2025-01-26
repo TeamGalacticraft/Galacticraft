@@ -76,7 +76,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
                             .filter(ResourceFilters.CAN_INSERT_ENERGY)
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(80, 47)
+                            .pos(80, 44)
                             .filter((item, tag) -> CoalGeneratorBlockEntity.FUEL_MAP.containsKey(item))
             ),
             MachineEnergyStorage.spec(

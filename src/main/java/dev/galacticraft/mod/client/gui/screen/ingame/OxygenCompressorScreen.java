@@ -42,7 +42,7 @@ public class OxygenCompressorScreen extends MachineScreen<OxygenCompressorBlockE
     @Override
     protected void init() {
         super.init();
-        this.titleLabelX += 18;
+        this.titleLabelX += 20;
     }
 
     @Override

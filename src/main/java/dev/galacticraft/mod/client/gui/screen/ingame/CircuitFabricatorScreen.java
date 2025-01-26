@@ -113,7 +113,7 @@ public class CircuitFabricatorScreen extends MachineScreen<CircuitFabricatorBloc
                             DrawableUtil.drawProgressTexture(matrices, this.leftPos + QUATERNARY_PROGRESS_X, this.topPos + QUATERNARY_PROGRESS_Y, QUATERNARY_PROGRESS_U, QUATERNARY_PROGRESS_V, PROGRESS_SIZE, Math.min(14, progress - (24 + 19 + 18 + 17 + 3)));
                         }
                         if (progress > 24 + 19 + 18 + 44 + 3) {
-                            DrawableUtil.drawProgressTexture(matrices, this.leftPos + QUINARY_PROGRESS_X, (float) (this.topPos + QUINARY_PROGRESS_Y - Math.floor(Math.min(QUINARY_PROGRESS_HEIGHT, progress - (24 + 19 + 18 + 44 + 3)))), QUINARY_PROGRESS_U, QUINARY_PROGRESS_V, PROGRESS_SIZE, Math.min(19, progress - (24 + 19 + 18 + 44 + 3)));
+                            DrawableUtil.drawProgressTexture(matrices, this.leftPos + QUINARY_PROGRESS_X, (float) (this.topPos + QUINARY_PROGRESS_Y - Math.min(QUINARY_PROGRESS_HEIGHT, progress - (24 + 19 + 18 + 44 + 3))), QUINARY_PROGRESS_U, QUINARY_PROGRESS_V, PROGRESS_SIZE, Math.min(19, progress - (24 + 19 + 18 + 44 + 3)));
                         }
                         if (progress > 24 + 19 + 18 + 65) {
                             DrawableUtil.drawProgressTexture(matrices, this.leftPos + SENARY_PROGRESS_X, this.topPos + SENARY_PROGRESS_Y, SENARY_PROGRESS_U, SENARY_PROGRESS_V, PROGRESS_SIZE, progress - (24 + 19 + 18 + 65));
