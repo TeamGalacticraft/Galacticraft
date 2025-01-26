@@ -75,7 +75,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.TRANSFER)
-                            .pos(80, 62)
+                            .pos(44, 35)
                             .filter(ResourceFilters.canExtractFluid(GCFluids.FUEL)) // fixme: fuel tag?,
             ),
             MachineEnergyStorage.spec(
