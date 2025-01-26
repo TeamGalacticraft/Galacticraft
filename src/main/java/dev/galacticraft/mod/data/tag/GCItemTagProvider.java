@@ -80,12 +80,13 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.TITANIUM_CHESTPLATE)
                 .add(GCItems.TITANIUM_LEGGINGS)
                 .add(GCItems.TITANIUM_BOOTS);
+
+        // Thermal armor
         tag(ItemTags.FREEZE_IMMUNE_WEARABLES)
                 .add(GCItems.THERMAL_PADDING_BOOTS)
                 .add(GCItems.THERMAL_PADDING_LEGGINGS)
                 .add(GCItems.THERMAL_PADDING_CHESTPIECE)
                 .add(GCItems.THERMAL_PADDING_HELMET);
-
         tag(GCTags.THERMAL_HEAD)
                 .add(GCItems.THERMAL_PADDING_HELMET);
         tag(GCTags.THERMAL_CHEST)
@@ -94,6 +95,8 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.THERMAL_PADDING_LEGGINGS);
         tag(GCTags.THERMAL_BOOTS)
                 .add(GCItems.THERMAL_PADDING_BOOTS);
+
+        // Oxygen equipment
         tag(GCTags.OXYGEN_MASKS)
                 .add(GCItems.OXYGEN_MASK);
         tag(GCTags.OXYGEN_GEAR)
@@ -103,6 +106,8 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.MEDIUM_OXYGEN_TANK)
                 .add(GCItems.LARGE_OXYGEN_TANK)
                 .add(GCItems.INFINITE_OXYGEN_TANK);
+
+        // Other accessories
         tag(GCTags.PARACHUTES)
                 .add(GCItems.PARACHUTE.get(DyeColor.WHITE))
                 .add(GCItems.PARACHUTE.get(DyeColor.ORANGE))
@@ -124,6 +129,16 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.FREQUENCY_MODULE);
         tag(GCTags.SHIELD_CONTROLLERS)
                 .add(GCItems.SHIELD_CONTROLLER);
+        tag(GCTags.ACCESSORIES)
+                .addTag(GCTags.FREQUENCY_MODULES)
+                .addTag(GCTags.PARACHUTES)
+                .addTag(GCTags.SHIELD_CONTROLLERS);
+
+        // Accessory slots
+        tag(GCTags.ACCESSORY_SLOT_1).addTag(GCTags.FREQUENCY_MODULES);
+        tag(GCTags.ACCESSORY_SLOT_2).addTag(GCTags.PARACHUTES);
+        tag(GCTags.ACCESSORY_SLOT_3).addTag(GCTags.SHIELD_CONTROLLERS);
+        tag(GCTags.ACCESSORY_SLOT_4).addTag(GCTags.ACCESSORIES);
 
         tag(GCTags.ALUMINUM_INGOTS)
                 .add(GCItems.ALUMINUM_INGOT);
