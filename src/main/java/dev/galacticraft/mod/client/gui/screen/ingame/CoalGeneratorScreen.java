@@ -45,7 +45,6 @@ public class CoalGeneratorScreen extends MachineScreen<CoalGeneratorBlockEntity,
 
     public CoalGeneratorScreen(CoalGeneratorMenu handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.COAL_GENERATOR_SCREEN);
-        this.imageHeight = 176;
     }
 
     @Override

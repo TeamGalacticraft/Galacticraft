@@ -48,8 +48,8 @@ public class OxygenStorageModuleScreen extends MachineScreen<OxygenStorageModule
 
         Component currentOxygen = Component.translatable(Translations.Ui.CURRENT_OXYGEN, this.menu.fluidStorage.slot(OxygenStorageModuleBlockEntity.OXYGEN_TANK).getAmount());
         Component maxOxygen = Component.translatable(Translations.Ui.MAX_OXYGEN, this.menu.fluidStorage.slot(OxygenStorageModuleBlockEntity.OXYGEN_TANK).getCapacity());
-        graphics.drawString(this.font, currentOxygen, (this.width - this.font.width(currentOxygen)) / 2, this.topPos + 25, ChatFormatting.DARK_GRAY.getColor(), false);
-        graphics.drawString(this.font, maxOxygen, (this.width - this.font.width(maxOxygen)) / 2, this.topPos + 40, ChatFormatting.DARK_GRAY.getColor(), false);
+        graphics.drawString(this.font, currentOxygen, this.leftPos + (this.imageWidth - this.font.width(currentOxygen)) / 2, this.topPos + 25, ChatFormatting.DARK_GRAY.getColor(), false);
+        graphics.drawString(this.font, maxOxygen, this.leftPos + (this.imageWidth - this.font.width(maxOxygen)) / 2, this.topPos + 40, ChatFormatting.DARK_GRAY.getColor(), false);
     }
 
     private void drawOxygenBufferBar(GuiGraphics graphics) {

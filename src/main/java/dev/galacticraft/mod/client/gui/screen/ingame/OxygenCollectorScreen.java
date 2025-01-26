@@ -39,7 +39,6 @@ import net.minecraft.world.entity.player.Inventory;
 public class OxygenCollectorScreen extends MachineScreen<OxygenCollectorBlockEntity, OxygenCollectorMenu> {
     public OxygenCollectorScreen(OxygenCollectorMenu handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.OXYGEN_COLLECTOR_SCREEN);
-        this.imageHeight = 181;
     }
 
     @Override

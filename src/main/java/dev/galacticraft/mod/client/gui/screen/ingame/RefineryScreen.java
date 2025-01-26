@@ -35,7 +35,6 @@ import net.minecraft.world.entity.player.Inventory;
 public class RefineryScreen extends MachineScreen<RefineryBlockEntity, MachineMenu<RefineryBlockEntity>> {
     public RefineryScreen(MachineMenu<RefineryBlockEntity> handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.REFINERY_SCREEN);
-        this.imageHeight = 176;
         this.capacitorX = 8;
         this.capacitorY = 8;
     }
