@@ -73,25 +73,25 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
     private static final StorageSpec SPEC = StorageSpec.of(
             MachineItemStorage.spec(
                     ItemResourceSlot.builder(TransferType.TRANSFER)
-                            .pos(8, 70)
+                            .pos(8, 72)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(31, 15)
+                            .pos(31, 17)
                             .filter(ResourceFilters.itemTag(ConventionalItemTags.DIAMOND_GEMS)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(62, 45)
+                            .pos(62, 47)
                             .filter(ResourceFilters.ofResource(GCItems.SILICON)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(62, 63)
+                            .pos(62, 65)
                             .filter(ResourceFilters.ofResource(GCItems.SILICON)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(107, 70)
+                            .pos(107, 72)
                             .filter(ResourceFilters.ofResource(Items.REDSTONE)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(134, 15),
+                            .pos(134, 17),
                     ItemResourceSlot.builder(TransferType.OUTPUT)
-                            .pos(152, 70)
+                            .pos(152, 72)
             ),
             MachineEnergyStorage.spec(
                     Galacticraft.CONFIG.machineEnergyStorageSize(),
