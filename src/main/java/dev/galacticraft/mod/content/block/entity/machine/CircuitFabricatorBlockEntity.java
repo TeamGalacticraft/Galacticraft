@@ -78,16 +78,20 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(31, 17)
-                            .filter(ResourceFilters.itemTag(ConventionalItemTags.DIAMOND_GEMS)),
+                            .filter(ResourceFilters.itemTag(ConventionalItemTags.DIAMOND_GEMS))
+                            .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.DIAMOND)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(62, 47)
-                            .filter(ResourceFilters.ofResource(GCItems.SILICON)),
+                            .filter(ResourceFilters.ofResource(GCItems.SILICON))
+                            .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.SILICON)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(62, 65)
-                            .filter(ResourceFilters.ofResource(GCItems.SILICON)),
+                            .filter(ResourceFilters.ofResource(GCItems.SILICON))
+                            .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.SILICON)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(107, 72)
-                            .filter(ResourceFilters.ofResource(Items.REDSTONE)),
+                            .filter(ResourceFilters.ofResource(Items.REDSTONE))
+                            .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.DUST)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(134, 17),
                     ItemResourceSlot.builder(TransferType.OUTPUT)

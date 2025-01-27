@@ -564,6 +564,9 @@ public interface Constant {
 
     interface SlotSprite {
         ResourceLocation ENERGY = id("slot/energy");
+        ResourceLocation DIAMOND = id("slot/diamond");
+        ResourceLocation DUST = id("slot/dust");
+        ResourceLocation SILICON = id("slot/silicon");
         ResourceLocation THERMAL_HEAD = id("slot/thermal_helmet");
         ResourceLocation THERMAL_CHEST = id("slot/thermal_chestpiece");
         ResourceLocation THERMAL_PANTS = id("slot/thermal_leggings");
