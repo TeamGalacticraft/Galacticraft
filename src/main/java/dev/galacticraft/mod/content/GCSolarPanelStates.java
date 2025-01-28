@@ -20,9 +20,23 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.api.solarpanel;
+package dev.galacticraft.mod.content;
 
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.block.entity.SolarPanel.SolarPanelSource;
 import net.minecraft.resources.ResourceLocation;
 
-public record WorldLightSources(ResourceLocation texture, LightSource day, LightSource night, LightSource overcast, LightSource stormy, LightSource missing) {
+import java.util.HashMap;
+import java.util.Map;
+
+public class GCSolarPanelStates {
+    public static final Map<SolarPanelSource, ResourceLocation> DEFAULT_SOLAR_PANELS = new HashMap<SolarPanelSource, ResourceLocation>();
+
+    public static void register() {
+        DEFAULT_SOLAR_PANELS.put(SolarPanelSource.DAY, Constant.ScreenTexture.SOLAR_PANEL_DAY);
+        DEFAULT_SOLAR_PANELS.put(SolarPanelSource.NIGHT, Constant.ScreenTexture.SOLAR_PANEL_NIGHT);
+        DEFAULT_SOLAR_PANELS.put(SolarPanelSource.OVERCAST, Constant.ScreenTexture.SOLAR_PANEL_DAY);
+        DEFAULT_SOLAR_PANELS.put(SolarPanelSource.STORMY, Constant.ScreenTexture.SOLAR_PANEL_NIGHT);
+        DEFAULT_SOLAR_PANELS.put(SolarPanelSource.NO_LIGHT_SOURCE, Constant.ScreenTexture.SOLAR_PANEL_BLOCKED);
+    }
 }

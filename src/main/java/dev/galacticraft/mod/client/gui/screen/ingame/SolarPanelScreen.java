@@ -24,13 +24,14 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.machinelib.client.api.util.GraphicsUtil;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
+import dev.galacticraft.mod.api.block.entity.SolarPanel.SolarPanelSource;
 import dev.galacticraft.mod.api.solarpanel.LightSource;
 import dev.galacticraft.mod.api.solarpanel.SolarPanelRegistry;
-import dev.galacticraft.mod.api.solarpanel.WorldLightSources;
 import dev.galacticraft.mod.screen.SolarPanelMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
 import dev.galacticraft.mod.util.Translations;
@@ -41,24 +42,9 @@ import net.minecraft.world.entity.player.Inventory;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, Menu extends SolarPanelMenu<Machine>> extends MachineScreen<Machine, Menu> {
-    private static final int DAY_SOURCE_U = 0;
-    private static final int DAY_SOURCE_V = 0;
-    private static final int NIGHT_SOURCE_U = 32;
-    private static final int NIGHT_SOURCE_V = 0;
-    private static final int OVERCAST_SOURCE_U = 32;
-    private static final int OVERCAST_SOURCE_V = 32;
-    private static final int MISSING_SOURCE_U = 0;
-    private static final int MISSING_SOURCE_V = 32;
-
-    private static final int SOLAR_PANEL_U = 0;
-    private static final int SOLAR_PANEL_V = 0;
-    private static final int SOLAR_PANEL_NIGHT_U = 0;
-    private static final int SOLAR_PANEL_NIGHT_V = 16;
-    private static final int SOLAR_PANEL_BLOCKED_U = 16;
-    private static final int SOLAR_PANEL_BLOCKED_V = 0;
-
     private static final int LIGHT_SOURCE_X = 128;
     private static final int LIGHT_SOURCE_Y = 25;
     private static final int LIGHT_SOURCE_WIDTH = 32;
@@ -76,13 +62,13 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
     private static final Component BLOCKED = Component.translatable(Translations.SolarPanel.BLOCKED).setStyle(Constant.Text.Color.DARK_RED_STYLE);
     private static final Component MISSING_SOURCE = Component.translatable(Translations.SolarPanel.MISSING_SOURCE).setStyle(Constant.Text.Color.WHITE_STYLE);
 
-    private final ResourceLocation solarPanelTexture;
-    private final WorldLightSources lightSource;
+    private final Map<SolarPanelSource, ResourceLocation> solarPanelTextures;
+    private final Map<SolarPanelSource, LightSource> lightSources;
 
     public SolarPanelScreen(Menu menu, Inventory inv, Component title) {
         super(menu, title, Constant.ScreenTexture.SOLAR_PANEL_SCREEN);
-        this.solarPanelTexture = SolarPanelRegistry.getSolarPanelTexture(menu.be.getType());
-        this.lightSource = SolarPanelRegistry.getLightSource(this.menu.playerInventory.player.level().dimension());
+        this.solarPanelTextures = SolarPanelRegistry.getSolarPanelTextures(menu.be.getType());
+        this.lightSources = SolarPanelRegistry.getLightSources(this.menu.playerInventory.player.level().dimension());
     }
 
     @Override
@@ -90,11 +76,7 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
         super.renderMachineBackground(graphics, mouseX, mouseY, delta);
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
-                switch (this.menu.getSource()) {
-                    case DAY, OVERCAST -> drawNormal(graphics, x, y, SOLAR_PANEL_U, SOLAR_PANEL_V);
-                    case NIGHT, STORMY -> drawNormal(graphics, x, y, SOLAR_PANEL_NIGHT_U, SOLAR_PANEL_NIGHT_V);
-                    case NO_LIGHT_SOURCE -> graphics.blit(this.solarPanelTexture, this.leftPos + SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, this.topPos + SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, 0, SOLAR_PANEL_BLOCKED_U, SOLAR_PANEL_BLOCKED_V, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT, 32, 32);
-                }
+                drawNormal(graphics, this.solarPanelTextures.get(this.menu.getSource()), x, y);
                 if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, this.topPos + SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT)) {
                     RenderSystem.disableDepthTest();
                     RenderSystem.colorMask(true, true, true, false);
@@ -104,12 +86,7 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
                 }
             }
         }
-        switch (this.menu.getSource()) {
-            case DAY -> graphics.blit(this.lightSource.texture(), this.leftPos + LIGHT_SOURCE_X, this.topPos + LIGHT_SOURCE_Y, DAY_SOURCE_U, DAY_SOURCE_V, LIGHT_SOURCE_WIDTH, LIGHT_SOURCE_HEIGHT, 64, 64);
-            case NIGHT -> graphics.blit(this.lightSource.texture(), this.leftPos + LIGHT_SOURCE_X, this.topPos + LIGHT_SOURCE_Y, NIGHT_SOURCE_U, NIGHT_SOURCE_V, LIGHT_SOURCE_WIDTH, LIGHT_SOURCE_HEIGHT, 64, 64);
-            case OVERCAST, STORMY -> graphics.blit(this.lightSource.texture(), this.leftPos + LIGHT_SOURCE_X, this.topPos + LIGHT_SOURCE_Y, OVERCAST_SOURCE_U, OVERCAST_SOURCE_V, LIGHT_SOURCE_WIDTH, LIGHT_SOURCE_HEIGHT, 64, 64);
-            case NO_LIGHT_SOURCE -> graphics.blit(this.lightSource.texture(), this.leftPos + LIGHT_SOURCE_X, this.topPos + LIGHT_SOURCE_Y, MISSING_SOURCE_U, MISSING_SOURCE_V, LIGHT_SOURCE_WIDTH, LIGHT_SOURCE_HEIGHT, 64, 64);
-        }
+        graphics.blit(this.lightSources.get(this.menu.getSource()).location(), this.leftPos + LIGHT_SOURCE_X, this.topPos + LIGHT_SOURCE_Y, 0, 0, LIGHT_SOURCE_WIDTH, LIGHT_SOURCE_HEIGHT, 32, 32);
     }
 
     @Override
@@ -138,13 +115,7 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
 
         if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + LIGHT_SOURCE_X, this.topPos + LIGHT_SOURCE_Y, LIGHT_SOURCE_WIDTH, LIGHT_SOURCE_HEIGHT)) {
             List<Component> tooltip = new LinkedList<>();
-            LightSource source = switch (this.menu.getSource()) {
-                case DAY -> this.lightSource.day();
-                case OVERCAST -> this.lightSource.overcast();
-                case STORMY -> this.lightSource.stormy();
-                case NIGHT -> this.lightSource.night();
-                case NO_LIGHT_SOURCE -> this.lightSource.missing();
-            };
+            LightSource source = this.lightSources.get(this.menu.getSource());
             tooltip.add(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE).setStyle(Constant.Text.Color.AQUA_STYLE).append(source.name()));
             tooltip.add(Component.translatable(Translations.SolarPanel.STRENGTH, source.strength()).setStyle(Constant.Text.Color.GREEN_STYLE));
             tooltip.add(Component.translatable(Translations.SolarPanel.ATMOSPHERIC_INTERFERENCE, source.atmosphericInterference()).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
@@ -152,12 +123,11 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
         }
     }
 
-    private void drawNormal(GuiGraphics graphics, int x, int y, int normalU, int normalV) {
+    private void drawNormal(GuiGraphics graphics, ResourceLocation normal, int x, int y) {
         if (this.menu.getBlockage()[y * 3 + x]) {
-            graphics.blit(this.solarPanelTexture, this.leftPos + SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, this.topPos + SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, 0, SOLAR_PANEL_BLOCKED_U, SOLAR_PANEL_BLOCKED_V, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT, 32, 32);
-        } else {
-            graphics.blit(this.solarPanelTexture, this.leftPos + SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, this.topPos + SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, 0, normalU, normalV, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT, 32, 32);
+            normal = this.solarPanelTextures.get(SolarPanelSource.NO_LIGHT_SOURCE);
         }
+        graphics.blit(normal, this.leftPos + SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, this.topPos + SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, 0, 0, 0, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT, 16, 16);
     }
 
     @Override
