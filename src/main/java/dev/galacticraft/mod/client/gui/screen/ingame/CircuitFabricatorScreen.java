@@ -77,6 +77,7 @@ public class CircuitFabricatorScreen extends MachineScreen<CircuitFabricatorBloc
     public CircuitFabricatorScreen(RecipeMachineMenu<RecipeInput, FabricationRecipe, CircuitFabricatorBlockEntity> handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
         this.imageHeight = 176;
+        this.imageWidth = 176;
 
         this.capacitorX = 8;
         this.capacitorY = 17;
