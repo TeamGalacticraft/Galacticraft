@@ -558,8 +558,40 @@ public interface Constant {
         ResourceLocation DEFAULT_SOLAR_PANELS = id("textures/solar_panel/default_solar_panels.png");
         ResourceLocation DEFAULT_LIGHT_SOURCES = id("textures/solar_panel/default_light_sources.png");
         ResourceLocation MOON_LIGHT_SOURCES = id("textures/solar_panel/moon_light_sources.png");
+    }
 
-        ResourceLocation RECIPE_VEIWER_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
+    interface RecipeViewer {
+        ResourceLocation RECIPE_VIEWER_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
+
+        int CIRCUIT_FABRICATOR_U = 0;
+        int CIRCUIT_FABRICATOR_V = 0;
+        int CIRCUIT_FABRICATOR_WIDTH = 139;
+        int CIRCUIT_FABRICATOR_HEIGHT = 73;
+
+        int DIAMOND_X = 1;
+        int DIAMOND_Y = 1;
+        int SILICON_X_1 = 32;
+        int SILICON_Y_1 = 31;
+        int SILICON_X_2 = 32;
+        int SILICON_Y_2 = 49;
+        int REDSTONE_X = 77;
+        int REDSTONE_Y = 56;
+        int INGREDIENT_X = 104;
+        int INGREDIENT_Y = 1;
+        int WAFER_X = 122;
+        int WAFER_Y = 56;
+
+        int COMPRESSOR_U = 0;
+        int COMPRESSOR_V = 74;
+        int COMPRESSOR_WIDTH = 148;
+        int COMPRESSOR_HEIGHT = 54;
+
+        int FIRE_X = 67;
+        int FIRE_Y = 9;
+        int FUEL_X = 67;
+        int FUEL_Y = 31;
+        int COMPRESSED_X = 127;
+        int COMPRESSED_Y = 20;
     }
 
     interface SlotSprite {

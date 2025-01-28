@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class DefaultFabricationDisplay extends BasicDisplay {
+    private int processingTime = 300;
 
     protected DefaultFabricationDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location) {
         super(inputs, outputs, location);
@@ -47,8 +48,12 @@ public class DefaultFabricationDisplay extends BasicDisplay {
 
     public DefaultFabricationDisplay(@Nullable RecipeHolder<FabricationRecipe> recipe) {
         super(getInputs(recipe), recipe == null ? Collections.emptyList() : Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(registryAccess()))));
+        this.processingTime = recipe.value().getProcessingTime();
     }
 
+    public int getProcessingTime() {
+        return this.processingTime;
+    }
 
     public static DefaultFabricationDisplay createRaw(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location) {
         return new DefaultFabricationDisplay(inputs, outputs, location);

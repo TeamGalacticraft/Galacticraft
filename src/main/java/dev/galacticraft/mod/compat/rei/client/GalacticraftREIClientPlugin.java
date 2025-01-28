@@ -61,9 +61,6 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
         registry.addWorkstations(BuiltinPlugin.BLASTING, EntryStacks.of(GCBlocks.ELECTRIC_ARC_FURNACE));
         registry.addWorkstations(BuiltinPlugin.SMELTING, EntryStacks.of(GCBlocks.ELECTRIC_FURNACE));
         registry.addWorkstations(BuiltinPlugin.FUEL, EntryStacks.of(GCBlocks.COMPRESSOR));
-
-        registry.setPlusButtonArea(GalacticraftREIServerPlugin.CIRCUIT_FABRICATION, bounds -> new Rectangle(bounds.getMinX() + 8, bounds.getMaxY() - 16, 10, 10));
-        registry.setPlusButtonArea(GalacticraftREIServerPlugin.COMPRESSING, bounds -> new Rectangle(bounds.getMaxX() - 16, bounds.getMaxY() - 16, 10, 10));
     }
 
     @Override
