@@ -72,10 +72,12 @@ public class RefineryBlockEntity extends MachineBlockEntity {
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.TRANSFER)
                             .pos(125, 62)
-                            .filter(ResourceFilters.canExtractFluid(GCFluids.CRUDE_OIL)), // fixme: tag?,
+                            .filter(ResourceFilters.canExtractFluid(GCFluids.CRUDE_OIL)) // fixme: tag?,
+                            .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.BUCKET)),
                     ItemResourceSlot.builder(TransferType.TRANSFER)
                             .pos(152, 62)
                             .filter(ResourceFilters.canInsertFluid(GCFluids.FUEL)) // fixme: tag?
+                            .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.BUCKET))
             ),
             MachineEnergyStorage.spec(
                     Galacticraft.CONFIG.machineEnergyStorageSize(),

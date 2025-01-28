@@ -564,6 +564,7 @@ public interface Constant {
 
     interface SlotSprite {
         ResourceLocation ENERGY = id("slot/energy");
+        ResourceLocation BUCKET = id("slot/bucket");
         ResourceLocation DIAMOND = ResourceLocation.withDefaultNamespace("item/empty_slot_diamond");
         ResourceLocation DUST = ResourceLocation.withDefaultNamespace("item/empty_slot_redstone_dust");
         ResourceLocation SILICON = id("slot/silicon");

@@ -77,6 +77,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
                     ItemResourceSlot.builder(TransferType.TRANSFER)
                             .pos(44, 35)
                             .filter(ResourceFilters.canExtractFluid(GCFluids.FUEL)) // fixme: fuel tag?,
+                            .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.BUCKET))
             ),
             MachineEnergyStorage.spec(
                     Galacticraft.CONFIG.machineEnergyStorageSize(),
