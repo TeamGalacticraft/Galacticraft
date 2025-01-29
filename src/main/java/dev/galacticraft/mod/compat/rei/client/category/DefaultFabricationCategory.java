@@ -85,7 +85,7 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
         widgets.add(Widgets.createSlot(new Point(startPoint.x + SILICON_X_1, startPoint.y + SILICON_Y_1)).entries(recipeDisplay.getInputEntries().get(1)));
         widgets.add(Widgets.createSlot(new Point(startPoint.x + SILICON_X_2, startPoint.y + SILICON_Y_2)).entries(recipeDisplay.getInputEntries().get(2)));
         widgets.add(Widgets.createSlot(new Point(startPoint.x + REDSTONE_X, startPoint.y + REDSTONE_Y)).entries(recipeDisplay.getInputEntries().get(3)));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + INGREDIENT_X, startPoint.y + INGREDIENT_Y)).markOutput().entries(recipeDisplay.getInputEntries().get(4)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + INGREDIENT_X, startPoint.y + INGREDIENT_Y)).entries(recipeDisplay.getInputEntries().get(4)));
 
         widgets.add(Widgets.createSlot(new Point(startPoint.x + WAFER_X, startPoint.y + WAFER_Y)).markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
         return widgets;
