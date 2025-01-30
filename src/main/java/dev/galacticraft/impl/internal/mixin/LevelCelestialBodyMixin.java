@@ -38,6 +38,7 @@ import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.storage.WritableLevelData;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -46,9 +47,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.function.Supplier;
 
 @Mixin(value = Level.class, priority = 100) // apply before oxygen level mixin
-public class LevelCelestialBodyMixin implements LevelBodyAccessor {
+public abstract class LevelCelestialBodyMixin implements LevelBodyAccessor {
     @Unique
     private Holder<CelestialBody<? ,?>> celestialBody = null;
+
+    @Shadow public abstract RegistryAccess registryAccess();
+
+    @Shadow public abstract DimensionType dimensionType();
 
     @Inject(method = "<init>(Lnet/minecraft/world/level/storage/WritableLevelData;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/core/RegistryAccess;Lnet/minecraft/core/Holder;Ljava/util/function/Supplier;ZZJI)V", at = @At("RETURN"))
     private void init(WritableLevelData writableLevelData,
@@ -72,8 +77,7 @@ public class LevelCelestialBodyMixin implements LevelBodyAccessor {
 
     @Override
     public boolean galacticraft$hasDimensionTypeTag(TagKey<DimensionType> tag) {
-        Level level = (Level) (Object) this;
-        Registry<DimensionType> dimensionTypeRegistry = level.registryAccess().registryOrThrow(Registries.DIMENSION_TYPE);
-        return dimensionTypeRegistry.getHolder(dimensionTypeRegistry.getId(level.dimensionType())).map(reference -> reference.is(tag)).orElse(false);
+        Registry<DimensionType> dimensionTypeRegistry = this.registryAccess().registryOrThrow(Registries.DIMENSION_TYPE);
+        return dimensionTypeRegistry.getHolder(dimensionTypeRegistry.getId(this.dimensionType())).map(reference -> reference.is(tag)).orElse(false);
     }
 }

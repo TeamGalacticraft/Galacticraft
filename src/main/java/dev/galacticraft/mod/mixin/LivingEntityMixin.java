@@ -46,6 +46,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
@@ -145,9 +146,20 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
 
     @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isFallFlying()Z"))
     private boolean gc$canStartFallFlying(boolean original) {
-        LivingEntity entity = (LivingEntity) (Object) this;
-        if (entity.level().galacticraft$hasDimensionTypeTag(GCTags.VACUUM)) {
+        Holder<CelestialBody<?, ?>> holder = this.level().galacticraft$getCelestialBody();
+        if (holder != null && holder.value().atmosphere().pressure() < 0.1) {
+            // Don't enter flying mode if the pressure is less than 10% of Earth's atmosphere
             return false;
+        }
+        return original;
+    }
+
+    @ModifyArg(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V", ordinal = 6), index = 0)
+    private Vec3 gc$adjustAtmosphericDrag(Vec3 original) {
+        Holder<CelestialBody<?, ?>> holder = this.level().galacticraft$getCelestialBody();
+        if (holder != null) {
+            float drag = holder.value().atmosphere().pressure() / 2000.0F;
+            return original.multiply(1.0F - drag, 1.0F - drag * 2.0F, 1.0F - drag);
         }
         return original;
     }
