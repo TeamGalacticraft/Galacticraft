@@ -714,7 +714,7 @@ public interface Constant {
         String ROCKET = "rocket";
         String PARACHEST = "parachest";
         String BUGGY_BENCH = "buggy_bench";
-        String TIER_1_ROCKET = "tirer_1_rocket";
+        String TIER_1_ROCKET = "tier_1_rocket";
     }
 
     interface LootTable {
