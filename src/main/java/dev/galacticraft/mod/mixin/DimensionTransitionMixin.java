@@ -42,11 +42,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class DimensionTransitionMixin {
     @Inject(method = "missingRespawnBlock", at = @At(value = "HEAD"), cancellable = true)
     private static void findRespawnAndUseCryoChamber(ServerLevel overworld, Entity entity, DimensionTransition.PostDimensionTransition postDimensionTransition, CallbackInfoReturnable<DimensionTransition> cir) {
-        if (entity instanceof ServerPlayer) {
-            ServerPlayer serverPlayer = (ServerPlayer) entity;
+        if (entity instanceof ServerPlayer serverPlayer) {
             BlockPos blockPos = serverPlayer.getRespawnPosition();
             float yaw = serverPlayer.getRespawnAngle();
-            boolean respawnForced = serverPlayer.isRespawnForced();
             ServerLevel serverLevel = serverPlayer.server.getLevel(serverPlayer.getRespawnDimension());
             if (serverLevel != null && blockPos != null) {
                 if (gc$canRespawn(serverLevel, blockPos)) {
