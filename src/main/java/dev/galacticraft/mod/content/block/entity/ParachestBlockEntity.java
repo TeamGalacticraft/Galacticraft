@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.entity;
 
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.entity.ScalableFuelLevel;
 import dev.galacticraft.mod.screen.ParachestMenu;
@@ -77,7 +78,7 @@ public class ParachestBlockEntity extends RandomizableContainerBlockEntity imple
 
     @Override
     protected Component getDefaultName() {
-        return Component.literal("Parachest");
+        return Component.translatable(GCBlocks.PARACHEST.getDescriptionId());
     }
 
     @Override

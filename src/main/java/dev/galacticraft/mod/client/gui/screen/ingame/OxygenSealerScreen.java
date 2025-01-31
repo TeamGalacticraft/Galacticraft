@@ -46,6 +46,6 @@ public class OxygenSealerScreen extends MachineScreen<OxygenSealerBlockEntity, M
         super.renderForeground(graphics, mouseX, mouseY, delta);
 
         MachineStatus status = this.menu.state.getStatus();
-        graphics.drawString(this.font, Component.translatable(Translations.Ui.MACHINE_STATUS).append(status != null ? status.getText() : Component.empty()), this.leftPos + 50, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
+        graphics.drawString(this.font, Component.translatable(Translations.Ui.MACHINE_STATUS, status != null ? status.getText() : Component.empty()), this.leftPos + 50, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
     }
 }

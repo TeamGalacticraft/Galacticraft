@@ -42,7 +42,7 @@ public class JEICompressingCategory implements IRecipeCategory<CompressingRecipe
 
     public JEICompressingCategory(IGuiHelper helper) {
         this.icon = helper.createDrawableItemStack(new ItemStack(GCBlocks.COMPRESSOR));
-        this.background = helper.createDrawable(Constant.ScreenTexture.RECIPE_VEIWER_DISPLAY_TEXTURE, 0, 83, 137, 157);
+        this.background = helper.createDrawable(Constant.ScreenTexture.RECIPE_VIEWER_DISPLAY_TEXTURE, 0, 83, 137, 157);
     }
 
     @Override
