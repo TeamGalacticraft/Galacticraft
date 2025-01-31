@@ -26,10 +26,12 @@ import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCRegistry;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.util.Translations;
+import net.fabricmc.fabric.api.item.v1.FabricItem;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -439,6 +441,22 @@ public class GCItems {
     public static final Item TIER_3_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties());
     public static final Item ASTRO_MINER_SCHEMATIC = new SchematicItem(new Item.Properties());
 
+    // SPAWN EGGS
+    public static final Item MOON_VILLAGER_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.MOON_VILLAGER, 0x74a3cf, 0xba2500, new Item.Properties());
+    public static final Item EVOLVED_ZOMBIE_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_ZOMBIE, 0x00afaf, 0x463aa5, new Item.Properties());
+    public static final Item EVOLVED_CREEPER_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_CREEPER, 0x0da70b, 0xa8d0d9, new Item.Properties());
+    public static final Item EVOLVED_SKELETON_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_SKELETON, 0xc1c1c1, 0xff9600, new Item.Properties());
+    public static final Item EVOLVED_SPIDER_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_SPIDER, 0x342d27, 0x5aff0e, new Item.Properties());
+    public static final Item EVOLVED_PILLAGER_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_PILLAGER, 0x532f36, 0x264747, new Item.Properties());
+    public static final Item EVOLVED_EVOKER_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_EVOKER, 0x1e1c1a, 0xd3cf99, new Item.Properties());
+    public static final Item EVOLVED_VINDICATOR_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_VINDICATOR, 0x3f3b37, 0x275e61, new Item.Properties());
+    public static final Item GAZER_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.GAZER, 0xdbdddb, 0x5c5c5c, new Item.Properties());
+    public static final Item RUMBLER_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.RUMBLER, 0x5c5c5c, 0x36383e, new Item.Properties());
+    public static final Item COMET_CUBE_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.COMET_CUBE, 0xd5d8d8, 0x92b9fe, new Item.Properties());
+    public static final Item OLI_GRUB_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.OLI_GRUB, 0xd4dd7e, 0xa4bf63, new Item.Properties());
+    public static final Item GREY_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.GREY, 0x656463, 0x769e41, new Item.Properties());
+    public static final Item ARCH_GREY_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.ARCH_GREY, 0x656463, 0x2d8563, new Item.Properties());
+
     public static Item registerItem(String id, Item item) {
         return Registry.register(BuiltInRegistries.ITEM, Constant.id(id), item);
     }
@@ -775,6 +793,23 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.MOON_BUGGY_SCHEMATIC), MOON_BUGGY_SCHEMATIC);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.TIER_3_ROCKET_SCHEMATIC), TIER_3_ROCKET_SCHEMATIC);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.ASTRO_MINER_SCHEMATIC), ASTRO_MINER_SCHEMATIC);
+
+        // SPAWN EGGS
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.MOON_VILLAGER), MOON_VILLAGER_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.EVOLVED_ZOMBIE), EVOLVED_ZOMBIE_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.EVOLVED_CREEPER), EVOLVED_CREEPER_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.EVOLVED_SKELETON), EVOLVED_SKELETON_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.EVOLVED_SPIDER), EVOLVED_SPIDER_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.EVOLVED_PILLAGER), EVOLVED_PILLAGER_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.EVOLVED_EVOKER), EVOLVED_EVOKER_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.EVOLVED_VINDICATOR), EVOLVED_VINDICATOR_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.GAZER), GAZER_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.RUMBLER), RUMBLER_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.COMET_CUBE), COMET_CUBE_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.OLI_GRUB), OLI_GRUB_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.GREY), GREY_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.ARCH_GREY), ARCH_GREY_SPAWN_EGG);
+
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.AIR_LOCK_FRAME), AIR_LOCK_FRAME);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.AIR_LOCK_CONTROLLER), AIR_LOCK_CONTROLLER);
