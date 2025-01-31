@@ -624,7 +624,6 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.OLI_GRUB_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
         generator.generateFlatItem(GCItems.GREY_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
         generator.generateFlatItem(GCItems.ARCH_GREY_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
-        // generator.generateFlatItem(GCItems.SKELETON_BOSS_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
     }
 
     @Contract("_ -> new")

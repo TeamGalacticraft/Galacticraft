@@ -456,7 +456,6 @@ public class GCItems {
     public static final Item OLI_GRUB_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.OLI_GRUB, 0xd4dd7e, 0xa4bf63, new Item.Properties());
     public static final Item GREY_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.GREY, 0x656463, 0x769e41, new Item.Properties());
     public static final Item ARCH_GREY_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.ARCH_GREY, 0x656463, 0x2d8563, new Item.Properties());
-    // public static final Item SKELETON_BOSS_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.SKELETON_BOSS, 0xc141414, 0x4d72a0, new Item.Properties());
 
     public static Item registerItem(String id, Item item) {
         return Registry.register(BuiltInRegistries.ITEM, Constant.id(id), item);
@@ -810,7 +809,6 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.OLI_GRUB), OLI_GRUB_SPAWN_EGG);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.GREY), GREY_SPAWN_EGG);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.ARCH_GREY), ARCH_GREY_SPAWN_EGG);
-        // Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.SKELETON_BOSS), SKELETON_BOSS_SPAWN_EGG);
 
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.AIR_LOCK_FRAME), AIR_LOCK_FRAME);

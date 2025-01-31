@@ -537,7 +537,6 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.OLI_GRUB_SPAWN_EGG, "Oli Grub Spawn Egg");
         this.item(GCItems.GREY_SPAWN_EGG, "Grey Spawn Egg");
         this.item(GCItems.ARCH_GREY_SPAWN_EGG, "Arch Grey Spawn Egg");
-        // this.item(GCItems.SKELETON_BOSS_SPAWN_EGG, "Evolved Skeleton Boss Spawn Egg");
     }
 
     protected void generateGasTranslations() {

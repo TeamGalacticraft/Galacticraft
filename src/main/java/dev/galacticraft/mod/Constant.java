@@ -611,7 +611,6 @@ public interface Constant {
         String OLI_GRUB = "oli_grub_spawn_egg";
         String COMET_CUBE = "comet_cube_spawn_egg";
         String GAZER = "gazer_spawn_egg";
-        // String SKELETON_BOSS = "evolved_skeleton_boss_spawn_egg";
     }
 
     interface EntityTexture {

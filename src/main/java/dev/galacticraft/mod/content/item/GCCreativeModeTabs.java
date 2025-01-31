@@ -508,7 +508,6 @@ public class GCCreativeModeTabs {
             content.addAfter(ItemStack.EMPTY, OLI_GRUB_SPAWN_EGG);
             content.addAfter(ItemStack.EMPTY, GREY_SPAWN_EGG);
             content.addAfter(ItemStack.EMPTY, ARCH_GREY_SPAWN_EGG);
-            // content.addAfter(ItemStack.EMPTY, SKELETON_BOSS_SPAWN_EGG);
         });
     }
 
