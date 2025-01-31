@@ -27,6 +27,7 @@ import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCRocketParts;
+import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -70,6 +71,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.generateMachineStatusTranslations();
         this.generateCelestialSelectionTranslations();
         this.generateUiTranslations();
+        this.generateStatsTranslations();
 
         // Tabs in the creative inventory
         this.add(ItemGroup.BLOCKS, "Galacticraft Blocks");
@@ -481,6 +483,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.PARACHUTE.get(DyeColor.PINK), "Pink Parachute");
         this.item(GCItems.PARACHUTE.get(DyeColor.GRAY), "Gray Parachute");
         this.item(GCItems.PARACHUTE.get(DyeColor.LIGHT_GRAY), "Light Gray Parachute");
+        this.item(GCItems.PARACHUTE.get(DyeColor.CYAN), "Cyan Parachute");
         this.item(GCItems.PARACHUTE.get(DyeColor.PURPLE), "Purple Parachute");
         this.item(GCItems.PARACHUTE.get(DyeColor.BLUE), "Blue Parachute");
         this.item(GCItems.PARACHUTE.get(DyeColor.BROWN), "Brown Parachute");
@@ -528,17 +531,17 @@ public class GCTranslationProvider extends TranslationProvider {
     }
 
     protected void generateTagTranslations() {
-        // this.tag(GCItemTags.ALUMINUM_INGOTS, "Aluminum Ingots");
-        // this.tag(GCItemTags.RAW_ALUMINUM_ORES, "Raw Aluminum");
-        // this.tag(GCItemTags.LEAD_INGOTS, "Lead Ingots");
-        // this.tag(GCItemTags.RAW_LEAD_ORES, "Raw Lead");
-        // this.tag(GCItemTags.SILICONS, "Silicon");
-        // this.tag(GCItemTags.STEEL_INGOTS, "Steel Ingots");
-        // this.tag(GCItemTags.TIN_INGOTS, "Tin Ingots");
-        // this.tag(GCItemTags.RAW_TIN_ORES, "Raw Tin");
-        // this.tag(GCItemTags.COMPRESSED_STEEL, "Steel Plates");
-        // this.tag(GCItemTags.COMPRESSED_IRON, "Iron Plates");
-        // this.tag(GCItemTags.COMPRESSED_TIN, "Tin Plates");
+        this.tag(GCItemTags.ALUMINUM_INGOTS, "Aluminum Ingots");
+        this.tag(GCItemTags.RAW_ALUMINUM, "Raw Aluminum");
+        this.tag(GCItemTags.LEAD_INGOTS, "Lead Ingots");
+        this.tag(GCItemTags.RAW_LEAD, "Raw Lead");
+        this.tag(GCItemTags.SILICONS, "Silicon");
+        this.tag(GCItemTags.STEEL_INGOTS, "Steel Ingots");
+        this.tag(GCItemTags.TIN_INGOTS, "Tin Ingots");
+        this.tag(GCItemTags.RAW_TIN, "Raw Tin");
+        this.tag(GCItemTags.COMPRESSED_STEEL, "Steel Plates");
+        this.tag(GCItemTags.COMPRESSED_IRON, "Iron Plates");
+        this.tag(GCItemTags.COMPRESSED_TIN, "Tin Plates");
     }
 
     protected void generateGasTranslations() {
@@ -867,20 +870,23 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.CURRENT_OXYGEN, "Oxygen: %s");
         this.add(Ui.GJT, "%s gJ/t");
         this.add(Ui.MAX_OXYGEN, "Maximum Oxygen: %s");
-        this.add(Ui.MACHINE_STATUS, "Status: ");
+        this.add(Ui.MACHINE_STATUS, "Status: %s");
         this.add(Ui.OXYGEN_TANK_LEVEL, "Oxygen Tank %s: %s/%s");
-        this.add(Ui.ROCKET_FUEL, "Fuel: ");
+        this.add(Ui.ROCKET_FUEL, "Fuel:");
         this.add(Ui.ROCKET_FULL, "% full");
         this.add(Ui.ROCKET_NO_FUEL, "No fuel");
-        this.add(Ui.LANDER_VELOCITY, "Entry Velocity");
-        this.add(Ui.LANDER_VELOCITYU, "m/s");
-        this.add(Ui.LANDER_WARNING_2, "Hold \"");
-        this.add(Ui.LANDER_WARNING_3, "\" to slow down!");
         this.add(Ui.LANDER_WARNING, "WARNING!");
+        this.add(Ui.LANDER_CONTROLS, "Hold \"%s\" to slow down!");
+        this.add(Ui.LANDER_VELOCITY, "Entry Velocity: %s m/s");
         this.add(Ui.SMALL_STEP, "Taking one small step");
         this.add(Ui.GIANT_LEAP, "Taking one giant leap");
         this.add(Ui.PREPARE_FOR_ENTRY, "Prepare for entry!");
-        this.add(Ui.TRAVELLING_TO, "Traveling to: ");
+        this.add(Ui.TRAVELING_TO, "Traveling to: %s");
+    }
+
+    protected void generateStatsTranslations() {
+        this.stat(GCStats.OPEN_PARACHEST, "Parachests Opened");
+        this.stat(GCStats.INTERACT_WITH_ROCKET_WORKBENCH, "Interactions with Rocket Workbench");
     }
 
     protected void decorationSet(DecorationSet decoSet, String translation) {

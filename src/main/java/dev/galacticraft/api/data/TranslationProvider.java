@@ -108,6 +108,10 @@ public abstract class TranslationProvider implements DataProvider {
         this.add(((TranslatableContents)enchantment.description().getContents()).getKey(), translation);
     }
 
+    protected void stat(ResourceLocation id, String translation) {
+        this.add(id.toLanguageKey("stat"), translation);
+    }
+
     protected <T> void addDefaulted(Holder.Reference<T> reference) {
         ResourceKey<T> key = reference.key();
         this.add(getBaseKey(key.registry()) + '.' + key.location().toLanguageKey(), createDefaulted(key.location()));
