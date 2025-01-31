@@ -28,8 +28,10 @@ import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.util.EnergySource;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -62,7 +64,7 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
                 }
             }
         }
-        var holder = level.galacticraft$getCelestialBody();
+        Holder<CelestialBody<?, ?>> holder = level.galacticraft$getCelestialBody();
         if (holder != null) {
             dayLength = holder.value().dayLength();
         }
@@ -87,6 +89,7 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
             multiplier *= 0.5;
         }
         long time = level.getDayTime() % this.dayLength;
+        // Don't use this.isDay() because it returns false when it is thundering
         if (time > this.dayLength / 2) status = GCMachineStatuses.NIGHT;
         if (time > this.dayLength / 4) time = (long) (this.dayLength / 2) - time;
 
@@ -107,6 +110,7 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
     @Override
     public SolarPanelSource getSource() {
         if (this.level.dimensionType().hasCeiling()) return SolarPanelSource.NO_LIGHT_SOURCE;
+        // Don't use this.isDay() because it returns false when it is thundering
         if ((this.level.getDayTime() % this.dayLength) > this.dayLength / 2) return SolarPanelSource.NIGHT;
         if (this.level.isThundering()) return SolarPanelSource.STORMY;
         if (this.level.isRaining()) return SolarPanelSource.OVERCAST;
