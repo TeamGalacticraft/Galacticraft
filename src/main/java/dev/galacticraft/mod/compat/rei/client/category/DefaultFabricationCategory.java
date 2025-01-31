@@ -66,7 +66,7 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
 
         List<Widget> widgets = new LinkedList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(Widgets.createTexturedWidget(Constant.ScreenTexture.RECIPE_VEIWER_DISPLAY_TEXTURE, new Rectangle(startPoint.x, startPoint.y, 162, 82)));
+        widgets.add(Widgets.createTexturedWidget(Constant.ScreenTexture.RECIPE_VIEWER_DISPLAY_TEXTURE, new Rectangle(startPoint.x, startPoint.y, 162, 82)));
 
         // Diamond ingredients
         // Silicon

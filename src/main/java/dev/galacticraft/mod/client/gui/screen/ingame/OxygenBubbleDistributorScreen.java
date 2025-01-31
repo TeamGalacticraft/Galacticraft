@@ -112,7 +112,7 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
         textField.setValue(String.valueOf(this.menu.targetSize));
 
         MachineStatus status = this.menu.state.getStatus();
-        graphics.drawString(this.font, Component.translatable(Translations.Ui.MACHINE_STATUS).append(status != null ? status.getText() : Component.empty()), this.leftPos + 60, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
+        graphics.drawString(this.font, Component.translatable(Translations.Ui.MACHINE_STATUS, status != null ? status.getText() : Component.empty()), this.leftPos + 60, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
 
         this.textField.render(graphics, mouseX, mouseY, delta);
 

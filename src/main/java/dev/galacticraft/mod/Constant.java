@@ -559,7 +559,7 @@ public interface Constant {
         ResourceLocation DEFAULT_LIGHT_SOURCES = id("textures/solar_panel/default_light_sources.png");
         ResourceLocation MOON_LIGHT_SOURCES = id("textures/solar_panel/moon_light_sources.png");
 
-        ResourceLocation RECIPE_VEIWER_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
+        ResourceLocation RECIPE_VIEWER_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
     }
 
     interface SlotSprite {
@@ -598,6 +598,23 @@ public interface Constant {
         String COMET_CUBE = "comet_cube";
         String GAZER = "gazer";
         String EVOLVED_SKELETON_BOSS = "evolved_skeleton_boss";
+    }
+
+    interface SpawnEgg {
+        String MOON_VILLAGER = "moon_villager_spawn_egg";
+        String EVOLVED_ZOMBIE = "evolved_zombie_spawn_egg";
+        String EVOLVED_CREEPER = "evolved_creeper_spawn_egg";
+        String EVOLVED_SKELETON = "evolved_skeleton_spawn_egg";
+        String EVOLVED_SPIDER = "evolved_spider_spawn_egg";
+        String EVOLVED_PILLAGER = "evolved_pillager_spawn_egg";
+        String EVOLVED_EVOKER = "evolved_evoker_spawn_egg";
+        String EVOLVED_VINDICATOR = "evolved_vindicator_spawn_egg";
+        String GREY = "grey_spawn_egg";
+        String ARCH_GREY = "arch_grey_spawn_egg";
+        String RUMBLER = "rumbler_spawn_egg";
+        String OLI_GRUB = "oli_grub_spawn_egg";
+        String COMET_CUBE = "comet_cube_spawn_egg";
+        String GAZER = "gazer_spawn_egg";
     }
 
     interface EntityTexture {
@@ -686,7 +703,7 @@ public interface Constant {
         String ROCKET = "rocket";
         String PARACHEST = "parachest";
         String BUGGY_BENCH = "buggy_bench";
-        String TIER_1_ROCKET = "tirer_1_rocket";
+        String TIER_1_ROCKET = "tier_1_rocket";
     }
 
     interface LootTable {

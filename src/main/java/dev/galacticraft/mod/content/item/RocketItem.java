@@ -93,7 +93,7 @@ public class RocketItem extends Item {
 
         boolean creative = stack.getComponents().getOrDefault(GCDataComponents.CREATIVE, false);
         if (creative) {
-            tooltip.add(Component.literal("Creative Only").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+            tooltip.add(Component.translatable(Translations.Tooltip.CREATIVE_ONLY).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
         }
         if (Screen.hasShiftDown()) {
             RocketData data = stack.has(GCDataComponents.ROCKET_DATA) ? stack.get(GCDataComponents.ROCKET_DATA) : RocketPrefabs.MISSING;
