@@ -72,7 +72,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 i++;
                 continue;
             }
-            if (data.visiablePredicate().test(Minecraft.getInstance().player)) {
+            if (data.visiblePredicate().test(Minecraft.getInstance().player)) {
                 if (isCoordinateBetween((int) Math.floor(mouseX), this.leftPos + (30 * i), this.leftPos + (29 * (i + 1)))
                         && isCoordinateBetween((int) Math.floor(mouseY), this.topPos - 26, this.topPos)) {
                     data.onClick().run();
@@ -107,7 +107,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 i++;
                 continue;
             }
-            if (data.visiablePredicate().test(Minecraft.getInstance().player)) {
+            if (data.visiblePredicate().test(Minecraft.getInstance().player)) {
                 if (i == 0)
                     graphics.blit(texture, this.leftPos, this.topPos - 29, 0, 32, 27, 63);
                 else
@@ -136,7 +136,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 i++;
                 continue;
             }
-            if (data.visiablePredicate().test(Minecraft.getInstance().player)) {
+            if (data.visiblePredicate().test(Minecraft.getInstance().player)) {
                 graphics.renderItem(data.icon(), (this.leftPos + 6) + (28 * i) + 1, this.topPos - 20);
                 i++;
             }

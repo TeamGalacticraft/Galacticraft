@@ -45,12 +45,12 @@ public class BaseWidget extends Widget {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         Lighting.setupForFlatItems();
-        graphics.blit(Constant.ScreenTexture.RECIPE_VEIWER_DISPLAY_TEXTURE, this.startPoint.x, this.startPoint.y, 0, 83, 137, 157);
+        graphics.blit(Constant.ScreenTexture.RECIPE_VIEWER_DISPLAY_TEXTURE, this.startPoint.x, this.startPoint.y, 0, 83, 137, 157);
 
         int height = Mth.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D);
-        graphics.blit(Constant.ScreenTexture.RECIPE_VEIWER_DISPLAY_TEXTURE, this.startPoint.x + 2, this.startPoint.y + 21 + (14 - height), 82, 77 + (14 - height), 14, height);
+        graphics.blit(Constant.ScreenTexture.RECIPE_VIEWER_DISPLAY_TEXTURE, this.startPoint.x + 2, this.startPoint.y + 21 + (14 - height), 82, 77 + (14 - height), 14, height);
         int width = Mth.ceil((double) (System.currentTimeMillis() / 250L) % 24.0D);
-        graphics.blit(Constant.ScreenTexture.RECIPE_VEIWER_DISPLAY_TEXTURE, this.startPoint.x + 24, this.startPoint.y + 18, 82, 91, width, 17);
+        graphics.blit(Constant.ScreenTexture.RECIPE_VIEWER_DISPLAY_TEXTURE, this.startPoint.x + 24, this.startPoint.y + 18, 82, 91, width, 17);
     }
 
     @Override
