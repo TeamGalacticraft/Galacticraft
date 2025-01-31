@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class DefaultCelestialHandler implements CelestialHandler {
     @Override
-    public @Nullable Vec3 getParaChestSpawnLocation(Level world, Player player, RandomSource rand) {
+    public @Nullable Vec3 getParachestSpawnLocation(Level world, Player player, RandomSource rand) {
         return null;
     }
 
