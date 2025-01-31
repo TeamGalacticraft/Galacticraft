@@ -74,19 +74,17 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     @Shadow protected abstract int increaseAirSupply(int air);
     @Shadow protected abstract int decreaseAirSupply(int air);
 
-    @Inject(method = "baseTick", at = @At(value = "HEAD"))
+    @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"))
     private void galacticraft_oxygenCheck(CallbackInfo ci) {
         LivingEntity entity = ((LivingEntity) (Object) this);
-        if (entity.isAlive()) {
-            if (!entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(entity.getEyeHeight(entity.getPose()))))) {
-                if (!entity.isEyeInFluid(FluidTags.WATER) && (!(entity instanceof Player) || !((Player)entity).getAbilities().invulnerable)) {
-                    entity.setAirSupply(this.decreaseAirSupply(entity.getAirSupply()));
-                    if (entity.getAirSupply() == -20) {
-                        entity.setAirSupply(0);
-                        entity.hurt(new DamageSource(entity.level().registryAccess()
-                                .registryOrThrow(Registries.DAMAGE_TYPE)
-                                .getHolderOrThrow(GCDamageTypes.SUFFOCATION)), 2.0f);
-                    }
+        if (!entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(entity.getEyeHeight(entity.getPose()))))) {
+            if (!entity.isEyeInFluid(FluidTags.WATER) && (!(entity instanceof Player player) || !player.getAbilities().invulnerable)) {
+                entity.setAirSupply(this.decreaseAirSupply(entity.getAirSupply()));
+                if (entity.getAirSupply() == -20) {
+                    entity.setAirSupply(0);
+                    entity.hurt(new DamageSource(entity.level().registryAccess()
+                            .registryOrThrow(Registries.DAMAGE_TYPE)
+                            .getHolderOrThrow(GCDamageTypes.SUFFOCATION)), 2.0f);
                 }
             }
         }
@@ -100,8 +98,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
 
     @ModifyExpressionValue(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;canBreatheUnderwater()Z"))
     private boolean galacticraft_suffocationDamage(boolean original) {
-        LivingEntity entity = (LivingEntity) (Object) this;
-        return original || !entity.isEyeInFluid(FluidTags.WATER);
+        return original || !this.isEyeInFluid(FluidTags.WATER);
     }
 
     @Inject(method = "tick", at = @At(value = "RETURN"))
