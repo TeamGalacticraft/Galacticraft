@@ -57,7 +57,7 @@ public class AirlockControllerScreen extends AbstractContainerScreen<AirlockCont
 
     @Override
     protected void renderLabels(GuiGraphics graphics, int i, int j) {
-        graphics.drawString(this.font, Component.literal(Minecraft.getInstance().player.getGameProfile().getName() + "'s Airlock Controller"), this.titleLabelX, this.titleLabelY, 4210752, false);
+        graphics.drawString(this.font, Component.translatable(Translations.Ui.AIRLOCK_OWNER, Minecraft.getInstance().player.getGameProfile().getName()), this.titleLabelX, this.titleLabelY, 4210752, false);
     }
 
     @Override

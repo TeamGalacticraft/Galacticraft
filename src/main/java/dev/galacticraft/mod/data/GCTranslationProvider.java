@@ -27,9 +27,11 @@ import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCRocketParts;
+import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
@@ -40,6 +42,8 @@ import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static dev.galacticraft.mod.util.Translations.*;
 
@@ -52,6 +56,7 @@ public class GCTranslationProvider extends TranslationProvider {
     protected void generateTranslations(HolderLookup.@NotNull Provider registries) {
         this.generateBlockTranslations();
         this.generateItemTranslations();
+        this.generateTagTranslations();
         this.generateGasTranslations();
         this.generateEntityTranslations();
         this.generateCelestialBodyTranslations();
@@ -66,6 +71,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.generateMachineStatusTranslations();
         this.generateCelestialSelectionTranslations();
         this.generateUiTranslations();
+        this.generateStatsTranslations();
 
         // Tabs in the creative inventory
         this.add(ItemGroup.BLOCKS, "Galacticraft Blocks");
@@ -477,6 +483,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.PARACHUTE.get(DyeColor.PINK), "Pink Parachute");
         this.item(GCItems.PARACHUTE.get(DyeColor.GRAY), "Gray Parachute");
         this.item(GCItems.PARACHUTE.get(DyeColor.LIGHT_GRAY), "Light Gray Parachute");
+        this.item(GCItems.PARACHUTE.get(DyeColor.CYAN), "Cyan Parachute");
         this.item(GCItems.PARACHUTE.get(DyeColor.PURPLE), "Purple Parachute");
         this.item(GCItems.PARACHUTE.get(DyeColor.BLUE), "Blue Parachute");
         this.item(GCItems.PARACHUTE.get(DyeColor.BROWN), "Brown Parachute");
@@ -523,6 +530,20 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.ASTRO_MINER_SCHEMATIC, "Astro Miner Schematic");
     }
 
+    protected void generateTagTranslations() {
+        this.tag(GCTags.ALUMINUM_INGOTS, "Aluminum Ingots");
+        this.tag(GCTags.RAW_ALUMINUM_ORES, "Raw Aluminum");
+        this.tag(GCTags.LEAD_INGOTS, "Lead Ingots");
+        this.tag(GCTags.RAW_LEAD_ORES, "Raw Lead");
+        this.tag(GCTags.SILICONS, "Silicon");
+        this.tag(GCTags.STEEL_INGOTS, "Steel Ingots");
+        this.tag(GCTags.TIN_INGOTS, "Tin Ingots");
+        this.tag(GCTags.RAW_TIN_ORES, "Raw Tin");
+        this.tag(GCTags.COMPRESSED_STEEL, "Steel Plates");
+        this.tag(GCTags.COMPRESSED_IRON, "Iron Plates");
+        this.tag(GCTags.COMPRESSED_TIN, "Tin Plates");
+    }
+
     protected void generateGasTranslations() {
         this.add(Gas.ARGON, "Argon");
         this.add(Gas.CARBON_DIOXIDE, "Carbon Dioxide");
@@ -560,6 +581,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.entity(GCEntityTypes.GREY, "Grey");
         this.entity(GCEntityTypes.LANDER, "Lander");
         this.entity(GCEntityTypes.MOON_VILLAGER, "Moon Villager");
+        this.add(GCEntityTypes.MOON_VILLAGER.getDescriptionId() + ".none", "Moon Villager");
         this.entity(GCEntityTypes.OLI_GRUB, "Oli Grub");
         this.entity(GCEntityTypes.PARACHEST, "Parachest");
         this.entity(GCEntityTypes.ROCKET, "Rocket");
@@ -631,6 +653,7 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(DimensionTp.SUCCESS_MULTIPLE, "Teleported %s entities to %s");
         this.add(DimensionTp.SUCCESS_SINGLE, "Teleported to %s");
+        this.add(DimensionTp.INVALID_PACKET, "Invalid planet teleport packet received.");
 
         this.add(GcHouston.IN_OTHER_DIMENSION, "We cannot locate your signal! Are you sure you're in space?");
         this.add(GcHouston.CONFIRMATION, "Er, Houston, we have a problem... (Run this command again to confirm teleport)");
@@ -638,10 +661,14 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(GcHouston.SUCCESS, "You have been rescued. Better luck next time...");
 
         this.deathBy(GCDamageTypes.CRASH_LANDING, "%s came in too hot");
-        this.deathBy(GCDamageTypes.OIL_BOOM, "%s tried to put out fire with a very flammable material");
-        this.deathBy(GCDamageTypes.SUFFOCATION, "%s died from lack of oxygen");
-        this.deathBy(GCDamageTypes.SULFURIC_ACID, "%s succumbed to sulfuric acid");
-        this.deathBy(GCDamageTypes.VINE_POISON, "%s succumbed to the poison of some vines");
+        this.deathBy(GCDamageTypes.OIL_BOOM, "%s tried to put out fire with a very flammable material",
+                "%s tried to put out fire with a very flammable material while trying to escape %s");
+        this.deathBy(GCDamageTypes.SUFFOCATION, "%s died from lack of oxygen",
+                "%s ran out of oxygen while trying to escape %s");
+        this.deathBy(GCDamageTypes.SULFURIC_ACID, "%s was dissolved by sulfuric acid",
+                "%s was dissolved by sulfuric acid while trying to escape %s");
+        this.deathBy(GCDamageTypes.VINE_POISON, "%s succumbed to the poison of some vines",
+                "%s succumbed to the poison of some vines while trying to escape %s");
 
         this.add(Boss.SKELETON_BOSS_DESPAWN, "Boss despawned, don't leave the boss room while fighting! Re-enter room to respawn boss.");
     }
@@ -830,6 +857,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.COLOR, "Color");
 
         this.add(Ui.AIRLOCK_REDSTONE_SIGNAL, "Opens on Redstone Signal");
+        this.add(Ui.AIRLOCK_OWNER, "%s's Airlock Controller");
         this.add(Ui.ALPHA_WARNING_1, "Galacticraft is currently in ALPHA.");
         this.add(Ui.ALPHA_WARNING_2, "Please report all issues you find.");
         this.add(Ui.ALPHA_WARNING_3, "Press [ESC] or click to continue.");
@@ -843,20 +871,23 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.CURRENT_OXYGEN, "Oxygen: %s");
         this.add(Ui.GJT, "%s gJ/t");
         this.add(Ui.MAX_OXYGEN, "Maximum Oxygen: %s");
-        this.add(Ui.MACHINE_STATUS, "Status: ");
+        this.add(Ui.MACHINE_STATUS, "Status: %s");
         this.add(Ui.OXYGEN_TANK_LEVEL, "Oxygen Tank %s: %s/%s");
-        this.add(Ui.ROCKET_FUEL, "Fuel: ");
+        this.add(Ui.ROCKET_FUEL, "Fuel:");
         this.add(Ui.ROCKET_FULL, "% full");
         this.add(Ui.ROCKET_NO_FUEL, "No fuel");
-        this.add(Ui.LANDER_VELOCITY, "Entry Velocity");
-        this.add(Ui.LANDER_VELOCITYU, "m/s");
-        this.add(Ui.LANDER_WARNING_2, "Hold \"");
-        this.add(Ui.LANDER_WARNING_3, "\" to slow down!");
         this.add(Ui.LANDER_WARNING, "WARNING!");
+        this.add(Ui.LANDER_CONTROLS, "Hold \"%s\" to slow down!");
+        this.add(Ui.LANDER_VELOCITY, "Entry Velocity: %s m/s");
         this.add(Ui.SMALL_STEP, "Taking one small step");
         this.add(Ui.GIANT_LEAP, "Taking one giant leap");
         this.add(Ui.PREPARE_FOR_ENTRY, "Prepare for entry!");
-        this.add(Ui.TRAVELLING_TO, "Traveling to: ");
+        this.add(Ui.TRAVELING_TO, "Traveling to: %s");
+    }
+
+    protected void generateStatsTranslations() {
+        this.stat(GCStats.OPEN_PARACHEST, "Parachests Opened");
+        this.stat(GCStats.INTERACT_WITH_ROCKET_WORKBENCH, "Interactions with Rocket Workbench");
     }
 
     protected void decorationSet(DecorationSet decoSet, String translation) {
@@ -877,6 +908,13 @@ public class GCTranslationProvider extends TranslationProvider {
     protected void deathBy(ResourceKey<DamageType> key, String translation) {
         if (!translation.contains("%s")) throw new IllegalArgumentException("Death message must contain %s");
         this.add("death.attack." + key.location().getPath(), translation);
+    }
+
+    protected void deathBy(ResourceKey<DamageType> key, String translation, String playerTranslation) {
+        this.deathBy(key, translation);
+        Matcher matcher = Pattern.compile("%s").matcher(playerTranslation);
+        if (matcher.results().count() < 2) throw new IllegalArgumentException(".player death message must contain two instances of %s");
+        this.add("death.attack." + key.location().getPath() + ".player", playerTranslation);
     }
 
     protected void rocketPart(ResourceKey<? extends RocketPart<?, ?>> key, String translation) {
