@@ -235,10 +235,6 @@ public class GCModelProvider extends FabricModelProvider {
         //todo gen models (not just blockstates)
         MachineModelGenerator.setupMachineBaseTextures(generator, Constant.MOD_ID, MachineTextureBase.prefixed(Constant.MOD_ID, "block/machine"));
 
-        createTrivialFrontFaceMachine(generator, GCBlocks.CIRCUIT_FABRICATOR);
-        createTrivialFrontFaceMachine(generator, GCBlocks.COAL_GENERATOR);
-        createTrivialFrontFaceMachine(generator, GCBlocks.COMPRESSOR);
-        createTrivialFrontFaceMachine(generator, GCBlocks.ELECTRIC_COMPRESSOR);
         createTrivialFrontFaceMachine(generator, GCBlocks.ELECTRIC_ARC_FURNACE);
         createTrivialFrontFaceMachine(generator, GCBlocks.ELECTRIC_FURNACE);
 
@@ -263,6 +259,50 @@ public class GCModelProvider extends FabricModelProvider {
 
         createResourceStorageBlock(generator, GCBlocks.OXYGEN_STORAGE_MODULE);
         createResourceStorageBlock(generator, GCBlocks.ENERGY_STORAGE_MODULE);
+
+        createActiveMachine(generator, GCBlocks.CIRCUIT_FABRICATOR,
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/circuit_fabricator_active")
+                        .build(),
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/circuit_fabricator")
+                        .build()
+        );
+
+        createActiveMachine(generator, GCBlocks.COAL_GENERATOR,
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/coal_generator_active")
+                        .build(),
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/coal_generator")
+                        .build()
+        );
+
+        createActiveMachine(generator, GCBlocks.COMPRESSOR,
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/compressor_active")
+                        .build(),
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/compressor")
+                        .build()
+        );
+
+        createActiveMachine(generator, GCBlocks.ELECTRIC_COMPRESSOR,
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/electric_compressor_active")
+                        .build(),
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/electric_compressor")
+                        .build()
+        );
 
         createActiveMachine(generator, GCBlocks.OXYGEN_SEALER,
                 TextureProvider.builder(Constant.MOD_ID)
