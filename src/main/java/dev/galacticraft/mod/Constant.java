@@ -560,6 +560,29 @@ public interface Constant {
         ResourceLocation SOLAR_PANEL_BLOCKED = id("textures/gui/solar_panel/blocked.png");
     }
 
+    interface CelestialBody {
+        ResourceLocation SOL = id("textures/gui/celestialbodies/sol.png");
+        ResourceLocation SOL_OVERCAST = id("textures/gui/celestialbodies/sol_overcast.png");
+        ResourceLocation SOL_FROM_MOON = id("textures/gui/celestialbodies/sol_from_moon.png");
+        ResourceLocation MERCURY = id("textures/gui/celestialbodies/mercury.png");
+        ResourceLocation VENUS = id("textures/gui/celestialbodies/venus.png");
+        ResourceLocation EARTH = id("textures/gui/celestialbodies/earth.png");
+        ResourceLocation SPACE_STATION = id("textures/gui/celestialbodies/space_station.png");
+        ResourceLocation MOON = id("textures/gui/celestialbodies/moon.png");
+        ResourceLocation MARS = id("textures/gui/celestialbodies/mars.png");
+        ResourceLocation ASTEROID = id("textures/gui/celestialbodies/asteroid.png");
+        ResourceLocation SATURN = id("textures/gui/celestialbodies/saturn.png");
+        ResourceLocation SATURN_RINGS = id("textures/gui/celestialbodies/saturn_rings.png");
+        ResourceLocation JUPITER = id("textures/gui/celestialbodies/jupiter.png");
+        ResourceLocation CALLISTO = id("textures/gui/celestialbodies/callisto.png");
+        ResourceLocation EUROPA = id("textures/gui/celestialbodies/europa.png");
+        ResourceLocation GANYMEDE = id("textures/gui/celestialbodies/ganymede.png");
+        ResourceLocation IO = id("textures/gui/celestialbodies/io.png");
+        ResourceLocation URANUS = id("textures/gui/celestialbodies/uranus.png");
+        ResourceLocation URANUS_RINGS = id("textures/gui/celestialbodies/uranus_rings.png");
+        ResourceLocation NEPTUNE = id("textures/gui/celestialbodies/neptune.png");
+    }
+
     interface RecipeViewer {
         ResourceLocation RECIPE_VIEWER_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
 
@@ -592,29 +615,6 @@ public interface Constant {
         int FUEL_Y = 31;
         int COMPRESSED_X = 127;
         int COMPRESSED_Y = 20;
-    }
-
-    interface CelestialBody {
-        ResourceLocation SOL = id("textures/gui/celestialbodies/sol.png");
-        ResourceLocation SOL_OVERCAST = id("textures/gui/celestialbodies/sol_overcast.png");
-        ResourceLocation SOL_FROM_MOON = id("textures/gui/celestialbodies/sol_from_moon.png");
-        ResourceLocation MERCURY = id("textures/gui/celestialbodies/mercury.png");
-        ResourceLocation VENUS = id("textures/gui/celestialbodies/venus.png");
-        ResourceLocation EARTH = id("textures/gui/celestialbodies/earth.png");
-        ResourceLocation SPACE_STATION = id("textures/gui/celestialbodies/space_station.png");
-        ResourceLocation MOON = id("textures/gui/celestialbodies/moon.png");
-        ResourceLocation MARS = id("textures/gui/celestialbodies/mars.png");
-        ResourceLocation ASTEROID = id("textures/gui/celestialbodies/asteroid.png");
-        ResourceLocation SATURN = id("textures/gui/celestialbodies/saturn.png");
-        ResourceLocation SATURN_RINGS = id("textures/gui/celestialbodies/saturn_rings.png");
-        ResourceLocation JUPITER = id("textures/gui/celestialbodies/jupiter.png");
-        ResourceLocation CALLISTO = id("textures/gui/celestialbodies/callisto.png");
-        ResourceLocation EUROPA = id("textures/gui/celestialbodies/europa.png");
-        ResourceLocation GANYMEDE = id("textures/gui/celestialbodies/ganymede.png");
-        ResourceLocation IO = id("textures/gui/celestialbodies/io.png");
-        ResourceLocation URANUS = id("textures/gui/celestialbodies/uranus.png");
-        ResourceLocation URANUS_RINGS = id("textures/gui/celestialbodies/uranus_rings.png");
-        ResourceLocation NEPTUNE = id("textures/gui/celestialbodies/neptune.png");
     }
 
     interface SlotSprite {
