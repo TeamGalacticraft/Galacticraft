@@ -61,7 +61,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class FallenMeteorBlock extends FallingBlock implements SimpleWaterloggedBlock {
     public static final MapCodec<FallenMeteorBlock> CODEC = simpleCodec(FallenMeteorBlock::new);
-    private static final VoxelShape SHAPE = box(3, 1, 3, 13, 11, 13);
+    private static final VoxelShape SHAPE = box(3, 0, 3, 13, 10, 13);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final IntegerProperty HEAT = IntegerProperty.create("heat", 0, 5);
 
