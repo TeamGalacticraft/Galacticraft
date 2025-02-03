@@ -24,17 +24,20 @@ package dev.galacticraft.mod.mixin.client;
 
 import com.mojang.authlib.GameProfile;
 import dev.galacticraft.mod.content.entity.ControllableEntity;
+import dev.galacticraft.mod.content.entity.orbital.AdvancedVehicle;
 import dev.galacticraft.mod.content.item.RocketItem;
 import dev.galacticraft.mod.network.c2s.ControlEntityPayload;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
@@ -92,5 +95,13 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer {
     @Inject(method = "move", at = @At("TAIL"))
     private void gc$footprints(MoverType type, Vec3 motion, CallbackInfo ci) {
 
+    }
+
+    @Inject(method = "removeVehicle", at = @At("HEAD"), cancellable = true)
+    private void gc$exitAdvancedVehicle(CallbackInfo ci) {
+        Entity vehicle = getVehicle();
+        if (vehicle instanceof AdvancedVehicle) {
+            this.minecraft.options.setCameraType(CameraType.FIRST_PERSON);
+        }
     }
 }
