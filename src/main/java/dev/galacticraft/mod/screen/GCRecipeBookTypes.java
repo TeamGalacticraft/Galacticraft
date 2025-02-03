@@ -20,22 +20,11 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.recipe;
+package dev.galacticraft.mod.screen;
 
-import net.minecraft.world.item.crafting.CraftingInput;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.inventory.RecipeBookType;
 
-public interface CompressingRecipe extends Recipe<CraftingInput> {
-    @Override
-    default RecipeType<? extends CompressingRecipe> getType() {
-        return GCRecipes.COMPRESSING_TYPE;
-    }
-
-    @Override
-    default boolean isSpecial() {
-        return true;
-    }
-
-    int getTime();
+public class GCRecipeBookTypes {
+    public static final RecipeBookType COMPRESSOR = RecipeBookType.valueOf("COMPRESSOR");
+    public static final RecipeBookType CIRCUIT_FABRICATOR = RecipeBookType.valueOf("CIRCUIT_FABRICATOR");
 }
