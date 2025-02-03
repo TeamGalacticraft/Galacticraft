@@ -69,6 +69,7 @@ public interface Translations {
     interface DimensionTp {
         String SUCCESS_MULTIPLE = "commands.galacticraft.dimensiontp.success.multiple";
         String SUCCESS_SINGLE = "commands.galacticraft.dimensiontp.success.single";
+        String INVALID_PACKET = "disconnect.galacticraft.dimensiontp.invalidPacket";
     }
 
     interface GcHouston {
@@ -294,6 +295,7 @@ public interface Translations {
         String COLOR = "ui.galacticraft.color";
 
         String AIRLOCK_REDSTONE_SIGNAL = "ui.galacticraft.airlock.redstone_signal";
+        String AIRLOCK_OWNER = "ui.galacticraft.airlock.owner";
         String ALPHA_WARNING_1 = "ui.galacticraft.alpha_warning.content1";
         String ALPHA_WARNING_2 = "ui.galacticraft.alpha_warning.content2";
         String ALPHA_WARNING_3 = "ui.galacticraft.alpha_warning.content3";
@@ -313,16 +315,14 @@ public interface Translations {
         String ROCKET_FUEL = "ui.galacticraft.rocket.fuel";
         String ROCKET_FULL = "ui.galacticraft.rocket.full";
         String ROCKET_NO_FUEL = "ui.galacticraft.rocket.no_fuel";
-        String LANDER_VELOCITY = "ui.lander.velocity";
-        String LANDER_VELOCITYU = "ui.lander.velocityu";
-        String LANDER_WARNING_2 = "ui.lander.warning2";
-        String LANDER_WARNING_3 = "ui.lander.warning3";
-        String LANDER_WARNING = "ui.warning";
+        String LANDER_WARNING = "ui.galacticraft.lander.warning";
+        String LANDER_CONTROLS = "ui.galacticraft.lander.controls";
+        String LANDER_VELOCITY = "ui.galacticraft.lander.velocity";
 
         String SMALL_STEP = "ui.galacticraft.small_step";
         String GIANT_LEAP = "ui.galacticraft.giant_leap";
         String PREPARE_FOR_ENTRY = "ui.galacticraft.prepare_for_entry";
-        String TRAVELLING_TO = "ui.galacticraft.travelling_to";
+        String TRAVELING_TO = "ui.galacticraft.traveling_to";
     }
 
     interface Boss {

@@ -20,20 +20,11 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.api.client.tabs;
+package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.impl.internal.client.tabs.InventoryTabRegistryImpl;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.RecipeBookType;
 
-import java.util.function.Predicate;
-
-public interface InventoryTabRegistry {
-    InventoryTabRegistry INSTANCE = InventoryTabRegistryImpl.INSTANCE;
-    void register(ItemStack icon, Runnable onClick, Predicate<Player> visiblePredicate, Class<? extends AbstractContainerMenu> clazz);
-
-    default void register(ItemStack icon, Runnable onClick, Class<? extends AbstractContainerMenu> clazz) {
-        register(icon, onClick, player -> true, clazz);
-    }
+public class GCRecipeBookTypes {
+    public static final RecipeBookType COMPRESSOR = RecipeBookType.valueOf("COMPRESSOR");
+    public static final RecipeBookType CIRCUIT_FABRICATOR = RecipeBookType.valueOf("CIRCUIT_FABRICATOR");
 }

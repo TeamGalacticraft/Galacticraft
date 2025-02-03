@@ -52,6 +52,6 @@ public class OxygenCollectorScreen extends MachineScreen<OxygenCollectorBlockEnt
         super.renderMachineBackground(graphics, mouseX, mouseY, delta);
         graphics.drawString(this.font, Component.translatable(Translations.Ui.COLLECTING, this.menu.collectionAmount).getString(), this.leftPos + 55, this.topPos + 56, ChatFormatting.DARK_GRAY.getColor(), false);
         MachineStatus status = this.menu.state.getStatus();
-        graphics.drawString(this.font, Component.translatable(Translations.Ui.MACHINE_STATUS).append(status != null ? status.getText() : Component.empty()), this.leftPos + 32, this.topPos + 66, ChatFormatting.DARK_GRAY.getColor(), false);
+        graphics.drawString(this.font, Component.translatable(Translations.Ui.MACHINE_STATUS, status != null ? status.getText() : Component.empty()), this.leftPos + 32, this.topPos + 66, ChatFormatting.DARK_GRAY.getColor(), false);
     }
 }

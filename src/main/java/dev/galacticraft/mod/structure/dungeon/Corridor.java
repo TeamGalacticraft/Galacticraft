@@ -65,7 +65,7 @@ public class Corridor extends SizedPiece {
                                 continue;
                             } else if (this.getDirection().getAxis() == Direction.Axis.X && (x + 1) % 4 == 0 && (z == 1 || z == this.boundingBox.getZSpan() - 2)) {
                                 this.placeBlock(worldIn,
-                                        GCBlocks.UNLIT_WALL_TORCH.defaultBlockState().setValue(WallTorchBlock.FACING, z == 1 ? Direction.NORTH.getOpposite() : Direction.SOUTH.getOpposite()), x, y, z,
+                                        GCBlocks.UNLIT_WALL_TORCH.defaultBlockState().setValue(WallTorchBlock.FACING, z == 1 ? Direction.SOUTH.getOpposite() : Direction.NORTH.getOpposite()), x, y, z,
                                         this.boundingBox);
                                 continue;
                             }

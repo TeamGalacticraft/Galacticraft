@@ -2,8 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "galacticraft:compressed_bronze"
+    "A": {
+      "item": "galacticraft:compressed_aluminum"
     },
     "S": {
       "item": "galacticraft:compressed_steel"
@@ -11,8 +11,8 @@
   },
   "pattern": [
     "  S",
-    " B ",
-    "B  "
+    " A ",
+    "A  "
   ],
   "result": {
     "count": 1,
