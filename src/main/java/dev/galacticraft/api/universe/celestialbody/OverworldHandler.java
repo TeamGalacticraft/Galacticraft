@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class OverworldHandler implements CelestialHandler {
     @Override
-    public @Nullable Vec3 getParaChestSpawnLocation(Level world, Player player, RandomSource rand) {
+    public @Nullable Vec3 getParachestSpawnLocation(Level world, Player player, RandomSource rand) {
         final double x = (rand.nextDouble() * 2 - 1.0D) * 5.0D;
         final double z = (rand.nextDouble() * 2 - 1.0D) * 5.0D;
 

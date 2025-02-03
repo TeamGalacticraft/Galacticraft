@@ -25,7 +25,7 @@ package dev.galacticraft.mod.content.block.special;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.block.GCBlock;
-import dev.galacticraft.mod.content.block.entity.ParaChestBlockEntity;
+import dev.galacticraft.mod.content.block.entity.ParachestBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -58,14 +58,14 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class ParaChestBlock extends GCBlock implements EntityBlock {
+public class ParachestBlock extends GCBlock implements EntityBlock {
     public static final String COLOR_TAG = "color";
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
 
     protected static final VoxelShape AABB = Block.box(1.0, 0.0, 1.0, 15.0, 14.0, 15.0);
 
-    public ParaChestBlock(Properties properties) {
+    public ParachestBlock(Properties properties) {
         super(properties);
         registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH)
             .setValue(COLOR, DyeColor.WHITE));
@@ -131,14 +131,14 @@ public class ParaChestBlock extends GCBlock implements EntityBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new ParaChestBlockEntity(blockPos, blockState);
+        return new ParachestBlockEntity(blockPos, blockState);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return level.isClientSide ? null : type == GCBlockEntityTypes.PARACHEST ? (level1, blockPos, blockState, blockEntity) -> {
-            ((ParaChestBlockEntity) blockEntity).tick();
+            ((ParachestBlockEntity) blockEntity).tick();
         } : null;
     }
 }

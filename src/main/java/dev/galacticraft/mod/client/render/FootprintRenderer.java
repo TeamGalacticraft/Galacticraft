@@ -58,6 +58,7 @@ public class FootprintRenderer {
         }
 
         if (footprintsToDraw.isEmpty()) {
+            context.profiler().pop();
             return;
         }
 
@@ -127,6 +128,7 @@ public class FootprintRenderer {
 //            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightMapSaveX, lightMapSaveY);
 //        }
 
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         poseStack.popPose();
         context.profiler().pop();
     }

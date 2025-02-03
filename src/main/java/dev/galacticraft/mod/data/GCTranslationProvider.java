@@ -528,6 +528,22 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.MOON_BUGGY_SCHEMATIC, "Moon Buggy Schematic");
         this.item(GCItems.TIER_3_ROCKET_SCHEMATIC, "Tier 3 Rocket Schematic");
         this.item(GCItems.ASTRO_MINER_SCHEMATIC, "Astro Miner Schematic");
+
+        // SPAWN EGGS
+        this.item(GCItems.MOON_VILLAGER_SPAWN_EGG, "Moon Villager Spawn Egg");
+        this.item(GCItems.EVOLVED_ZOMBIE_SPAWN_EGG, "Evolved Zombie Spawn Egg");
+        this.item(GCItems.EVOLVED_CREEPER_SPAWN_EGG, "Evolved Creeper Spawn Egg");
+        this.item(GCItems.EVOLVED_SKELETON_SPAWN_EGG, "Evolved Skeleton Spawn Egg");
+        this.item(GCItems.EVOLVED_SPIDER_SPAWN_EGG, "Evolved Spider Spawn Egg");
+        this.item(GCItems.EVOLVED_PILLAGER_SPAWN_EGG, "Evolved Pillager Spawn Egg");
+        this.item(GCItems.EVOLVED_EVOKER_SPAWN_EGG, "Evolved Evoker Spawn Egg");
+        this.item(GCItems.EVOLVED_VINDICATOR_SPAWN_EGG, "Evolved Vindicator Spawn Egg");
+        this.item(GCItems.GAZER_SPAWN_EGG, "Gazer Spawn Egg");
+        this.item(GCItems.RUMBLER_SPAWN_EGG, "Rumbler Spawn Egg");
+        this.item(GCItems.COMET_CUBE_SPAWN_EGG, "Comet Cube Spawn Egg");
+        this.item(GCItems.OLI_GRUB_SPAWN_EGG, "Oli Grub Spawn Egg");
+        this.item(GCItems.GREY_SPAWN_EGG, "Grey Spawn Egg");
+        this.item(GCItems.ARCH_GREY_SPAWN_EGG, "Arch Grey Spawn Egg");
     }
 
     protected void generateTagTranslations() {

@@ -596,6 +596,23 @@ public interface Constant {
         String EVOLVED_SKELETON_BOSS = "evolved_skeleton_boss";
     }
 
+    interface SpawnEgg {
+        String MOON_VILLAGER = "moon_villager_spawn_egg";
+        String EVOLVED_ZOMBIE = "evolved_zombie_spawn_egg";
+        String EVOLVED_CREEPER = "evolved_creeper_spawn_egg";
+        String EVOLVED_SKELETON = "evolved_skeleton_spawn_egg";
+        String EVOLVED_SPIDER = "evolved_spider_spawn_egg";
+        String EVOLVED_PILLAGER = "evolved_pillager_spawn_egg";
+        String EVOLVED_EVOKER = "evolved_evoker_spawn_egg";
+        String EVOLVED_VINDICATOR = "evolved_vindicator_spawn_egg";
+        String GREY = "grey_spawn_egg";
+        String ARCH_GREY = "arch_grey_spawn_egg";
+        String RUMBLER = "rumbler_spawn_egg";
+        String OLI_GRUB = "oli_grub_spawn_egg";
+        String COMET_CUBE = "comet_cube_spawn_egg";
+        String GAZER = "gazer_spawn_egg";
+    }
+
     interface EntityTexture {
         String GREY = "textures/entity/grey.png";
         String ARCH_GREY = "textures/entity/arch_grey.png";

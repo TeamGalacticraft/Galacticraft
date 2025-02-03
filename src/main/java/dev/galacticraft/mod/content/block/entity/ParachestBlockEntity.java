@@ -52,13 +52,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
-public class ParaChestBlockEntity extends RandomizableContainerBlockEntity implements SidedStorageBlockEntity, ExtendedScreenHandlerFactory<ParachestMenu.OpeningData>, ScalableFuelLevel {
+public class ParachestBlockEntity extends RandomizableContainerBlockEntity implements SidedStorageBlockEntity, ExtendedScreenHandlerFactory<ParachestMenu.OpeningData>, ScalableFuelLevel {
 
     public final SingleFluidStorage tank = SingleFluidStorage.withFixedCapacity(FluidConstants.BUCKET * 5, () -> {
     });
     private NonNullList<ItemStack> inventory = NonNullList.withSize(3, ItemStack.EMPTY);
 
-    public ParaChestBlockEntity(BlockPos blockPos, BlockState blockState) {
+    public ParachestBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(GCBlockEntityTypes.PARACHEST, blockPos, blockState);
     }
 
