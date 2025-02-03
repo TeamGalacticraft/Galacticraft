@@ -362,7 +362,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
                     {
                         assert this.minecraft != null;
                         assert this.minecraft.player != null;
-                        if (recipe.test(this.minecraft.player.getInventory()) || this.minecraft.player.getAbilities().instabuild)
+                        if (recipe.test(this.minecraft.player.getInventory()) || this.minecraft.player.isCreative())
                         {
 //                            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_BIND_SPACE_STATION_ID, GCCoreUtil.getWorld(this.minecraft.level), new Object[]{this.selectedBody.getWorld()}));
                             ClientPlayNetworking.send(new SatelliteCreationPayload(celestialBodies.getHolderOrThrow(celestialBodies.getResourceKey(this.selectedBody).get())));
