@@ -71,7 +71,7 @@ public class GCBlockEntityTypes {
     // ROCKETS
     public static final BlockEntityType<LaunchPadBlockEntity> LAUNCH_PAD = BlockEntityType.Builder.of(LaunchPadBlockEntity::new, GCBlocks.ROCKET_LAUNCH_PAD, GCBlocks.FUELING_PAD).build();
     public static final BlockEntityType<FuelLoaderBlockEntity> FUEL_LOADER = BlockEntityType.Builder.of(FuelLoaderBlockEntity::new, GCBlocks.FUEL_LOADER).build();
-    public static final BlockEntityType<ParaChestBlockEntity> PARACHEST = BlockEntityType.Builder.of(ParaChestBlockEntity::new, GCBlocks.PARACHEST).build();
+    public static final BlockEntityType<ParachestBlockEntity> PARACHEST = BlockEntityType.Builder.of(ParachestBlockEntity::new, GCBlocks.PARACHEST).build();
 
     // MISC
     public static final BlockEntityType<SolarPanelPartBlockEntity> SOLAR_PANEL_PART = BlockEntityType.Builder.of(SolarPanelPartBlockEntity::new, GCBlocks.SOLAR_PANEL_PART).build();

@@ -338,11 +338,10 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
 
         CelestialBody<?, ?> selectedParent = this.selectedParent;
 
-        if (this.selectedBody != null) {
-            selectedParent = this.selectedBody.parent().value();
-        }
-        if (this.selectedBody == null) {
+        if (this.selectedBody == null || this.selectedBody.parent() == null) {
             selectedParent = celestialBodies.get(Constant.id("sol"));
+        } else {
+            selectedParent = this.selectedBody.parent().value();
         }
 
         if (this.selectedParent != selectedParent) {

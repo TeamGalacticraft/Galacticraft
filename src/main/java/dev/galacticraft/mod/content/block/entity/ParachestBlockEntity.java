@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.entity;
 
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.entity.ScalableFuelLevel;
 import dev.galacticraft.mod.screen.ParachestMenu;
@@ -51,13 +52,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
-public class ParaChestBlockEntity extends RandomizableContainerBlockEntity implements SidedStorageBlockEntity, ExtendedScreenHandlerFactory<ParachestMenu.OpeningData>, ScalableFuelLevel {
+public class ParachestBlockEntity extends RandomizableContainerBlockEntity implements SidedStorageBlockEntity, ExtendedScreenHandlerFactory<ParachestMenu.OpeningData>, ScalableFuelLevel {
 
     public final SingleFluidStorage tank = SingleFluidStorage.withFixedCapacity(FluidConstants.BUCKET * 5, () -> {
     });
     private NonNullList<ItemStack> inventory = NonNullList.withSize(3, ItemStack.EMPTY);
 
-    public ParaChestBlockEntity(BlockPos blockPos, BlockState blockState) {
+    public ParachestBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(GCBlockEntityTypes.PARACHEST, blockPos, blockState);
     }
 
@@ -77,7 +78,7 @@ public class ParaChestBlockEntity extends RandomizableContainerBlockEntity imple
 
     @Override
     protected Component getDefaultName() {
-        return Component.literal("Parachest");
+        return Component.translatable(GCBlocks.PARACHEST.getDescriptionId());
     }
 
     @Override

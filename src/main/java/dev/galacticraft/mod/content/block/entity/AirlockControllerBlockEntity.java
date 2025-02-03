@@ -25,6 +25,7 @@ package dev.galacticraft.mod.content.block.entity;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.screen.AirlockControllerMenu;
+import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -392,7 +393,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
 
     @Override
     public Component getDisplayName() {
-        return Component.literal(ownerName + "'s Airlock Controller");
+        return Component.translatable(Translations.Ui.AIRLOCK_OWNER, ownerName);
     }
 
     @Override

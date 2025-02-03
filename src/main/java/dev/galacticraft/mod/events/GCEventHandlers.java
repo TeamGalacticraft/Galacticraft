@@ -113,7 +113,7 @@ public class GCEventHandlers {
             player.galacticraft$closeCelestialScreen();
             ((CelestialTeleporter) landable.teleporter(body.config()).value()).onEnterAtmosphere(server.getLevel(landable.world(body.config())), player, body, fromBody);
         } else {
-            player.connection.disconnect(Component.literal("Invalid planet teleport packet received."));
+            player.connection.disconnect(Component.translatable(Translations.DimensionTp.INVALID_PACKET));
         }
     }
 
