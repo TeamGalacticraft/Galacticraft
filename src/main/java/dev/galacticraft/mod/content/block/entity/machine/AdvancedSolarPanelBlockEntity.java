@@ -47,7 +47,7 @@ import org.jetbrains.annotations.Nullable;
 public class AdvancedSolarPanelBlockEntity extends AbstractSolarPanelBlockEntity {
     private static final StorageSpec STORAGE_SPEC = StorageSpec.of(
             MachineItemStorage.spec(
-                    ItemResourceSlot.builder(TransferType.TRANSFER)
+                    ItemResourceSlot.builder(TransferType.PROCESSING)
                             .pos(8, 62)
                             .filter(ResourceFilters.CAN_INSERT_ENERGY)
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY))

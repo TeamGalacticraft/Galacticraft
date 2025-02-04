@@ -75,7 +75,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
                             .pos(8, 62)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
-                    ItemResourceSlot.builder(TransferType.TRANSFER)
+                    ItemResourceSlot.builder(TransferType.PROCESSING)
                             .pos(31, 62)
                             .filter(ResourceFilters.canExtractFluid(Gases.OXYGEN))
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.OXYGEN_TANK))

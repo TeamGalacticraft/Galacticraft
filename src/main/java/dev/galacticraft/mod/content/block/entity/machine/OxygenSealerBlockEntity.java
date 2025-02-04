@@ -79,7 +79,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
                             .pos(8, 62)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
-                    ItemResourceSlot.builder(TransferType.TRANSFER) // todo: drop for decompressor?
+                    ItemResourceSlot.builder(TransferType.PROCESSING) // todo: drop for decompressor?
                             .pos(31, 62)
                             .filter(ResourceFilters.canExtractFluid(Gases.OXYGEN))
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.OXYGEN_TANK))
