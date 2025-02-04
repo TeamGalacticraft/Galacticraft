@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
+    "active=false": {
       "model": "galacticraft:machine/coal_generator"
+    },
+    "active=true": {
+      "model": "galacticraft:machine/coal_generator_active"
     }
   }
 }

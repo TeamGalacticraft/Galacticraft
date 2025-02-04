@@ -1,6 +1,33 @@
 {
   "variants": {
-    "": {
+    "amount=0": {
+      "model": "galacticraft:machine/fuel_loader_0"
+    },
+    "amount=1": {
+      "model": "galacticraft:machine/fuel_loader_1"
+    },
+    "amount=2": {
+      "model": "galacticraft:machine/fuel_loader_2"
+    },
+    "amount=3": {
+      "model": "galacticraft:machine/fuel_loader_3"
+    },
+    "amount=4": {
+      "model": "galacticraft:machine/fuel_loader_4"
+    },
+    "amount=5": {
+      "model": "galacticraft:machine/fuel_loader_5"
+    },
+    "amount=6": {
+      "model": "galacticraft:machine/fuel_loader_6"
+    },
+    "amount=7": {
+      "model": "galacticraft:machine/fuel_loader_7"
+    },
+    "amount=8": {
+      "model": "galacticraft:machine/fuel_loader_8"
+    },
+    "amount=9": {
       "model": "galacticraft:machine/fuel_loader"
     }
   }

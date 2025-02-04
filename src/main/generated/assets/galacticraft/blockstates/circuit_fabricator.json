@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
+    "active=false": {
       "model": "galacticraft:machine/circuit_fabricator"
+    },
+    "active=true": {
+      "model": "galacticraft:machine/circuit_fabricator_active"
     }
   }
 }

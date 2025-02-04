@@ -40,10 +40,12 @@ import dev.galacticraft.mod.api.entity.Dockable;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
+import dev.galacticraft.mod.content.block.machine.FuelLoaderBlock;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlockEntity;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.FuelLoaderMenu;
+import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -54,6 +56,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -67,6 +70,8 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     public static final int CHARGE_SLOT = 0;
     public static final int FUEL_INPUT_SLOT = 1;
     public static final int FUEL_TANK = 0;
+    public static final int NUM_BUCKETS = 50;
+    public static final long MAX_FUEL = FluidUtil.bucketsToDroplets(NUM_BUCKETS);
 
     private static final StorageSpec SPEC = StorageSpec.of(
             MachineItemStorage.spec(
@@ -87,12 +92,13 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
             MachineFluidStorage.spec(
                     FluidResourceSlot.builder(TransferType.INPUT)
                             .hidden()
-                            .capacity(FluidConstants.BUCKET * 50)
+                            .capacity(FluidConstants.BUCKET * NUM_BUCKETS)
                             .filter(ResourceFilters.ofResource(GCFluids.FUEL)) // fixme: tag?
             )
         );
 
     private BlockPos connectionPos = BlockPos.ZERO;
+    private int amount = 0;
     public Dockable linkedRocket = null;
     private Direction check = null;
 
@@ -103,6 +109,21 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     @NotNull
     public BlockPos getConnectionPos() {
         return this.connectionPos;
+    }
+
+    protected int calculateAmount() {
+        return Mth.clamp((int) (this.fluidStorage().slot(FUEL_TANK).getAmount() * 10 / MAX_FUEL), 0, 9);
+    }
+
+    @Override
+    public void setChanged() {
+        super.setChanged();
+
+        int newAmount = this.calculateAmount();
+        if (this.amount != newAmount && this.level != null && !this.level.isClientSide) {
+            this.amount = newAmount;
+            this.level.setBlock(this.worldPosition, this.level.getBlockState(this.worldPosition).setValue(FuelLoaderBlock.AMOUNT, this.amount), 2);
+        }
     }
 
     @Override
