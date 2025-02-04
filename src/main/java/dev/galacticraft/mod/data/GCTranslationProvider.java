@@ -399,9 +399,9 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.AMBIENT_THERMAL_CONTROLLER, "Ambient Thermal Controller");
 
         // FOOD
-        this.item(GCItems.CHEESE_CURD, "Cheese Curd");
+        this.item(GCItems.MOON_CHEESE_CURD, "Moon Cheese Curd");
 
-        this.item(GCItems.CHEESE_SLICE, "Cheese Slice");
+        this.item(GCItems.MOON_CHEESE_SLICE, "Moon Cheese Slice");
         this.item(GCItems.BURGER_BUN, "Burger Bun");
         this.item(GCItems.GROUND_BEEF, "Raw Beef Patty");
         this.item(GCItems.BEEF_PATTY, "Cooked Beef Patty");

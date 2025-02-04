@@ -396,8 +396,8 @@ public interface Constant {
         String AMBIENT_THERMAL_CONTROLLER = "ambient_thermal_controller";
         String LIQUID_CANISTER = "liquid_canister";
         //FOOD
-        String CHEESE_CURD = "cheese_curd";
-        String CHEESE_SLICE = "cheese_slice";
+        String MOON_CHEESE_CURD = "moon_cheese_curd";
+        String MOON_CHEESE_SLICE = "moon_cheese_slice";
         String BURGER_BUN = "burger_bun";
         String GROUND_BEEF = "ground_beef";
         String BEEF_PATTY = "beef_patty";

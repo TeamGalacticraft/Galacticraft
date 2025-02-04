@@ -304,9 +304,9 @@ public class GCItems {
     public static final Item AMBIENT_THERMAL_CONTROLLER = new Item(new Item.Properties());
     
     // FOOD
-    public static final Item CHEESE_CURD = new Item(new Item.Properties().food(GCFoodComponent.CHEESE_CURD));
+    public static final Item MOON_CHEESE_CURD = new Item(new Item.Properties().food(GCFoodComponent.MOON_CHEESE_CURD));
     
-    public static final Item CHEESE_SLICE = ITEMS.register(Constant.Item.CHEESE_SLICE, new Item(new Item.Properties().food(GCFoodComponent.CHEESE_SLICE)));
+    public static final Item MOON_CHEESE_SLICE = ITEMS.register(Constant.Item.MOON_CHEESE_SLICE, new Item(new Item.Properties().food(GCFoodComponent.MOON_CHEESE_SLICE)));
     public static final Item BURGER_BUN = ITEMS.register(Constant.Item.BURGER_BUN, new Item(new Item.Properties().food(GCFoodComponent.BURGER_BUN)));
     public static final Item GROUND_BEEF = ITEMS.register(Constant.Item.GROUND_BEEF, new Item(new Item.Properties().food(GCFoodComponent.GROUND_BEEF)));
     public static final Item BEEF_PATTY = ITEMS.register(Constant.Item.BEEF_PATTY, new Item(new Item.Properties().food(GCFoodComponent.BEEF_PATTY)));
@@ -702,7 +702,7 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.AMBIENT_THERMAL_CONTROLLER), AMBIENT_THERMAL_CONTROLLER);
 
         // FOOD
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CHEESE_CURD), CHEESE_CURD);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.MOON_CHEESE_CURD), MOON_CHEESE_CURD);
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_DEHYDRATED_APPLE), CANNED_DEHYDRATED_APPLE);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_DEHYDRATED_CARROT), CANNED_DEHYDRATED_CARROT);

@@ -339,8 +339,8 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
         // Food
         cookingRecipes(output, 100, GCItems.GROUND_BEEF, GCItems.BEEF_PATTY, 1.0F);
 
-//        SimpleCookingRecipeBuilder.smelting(Ingredient.of(GCBlocks.CHEESE_ORE), RecipeCategory.FOOD, GCItems.CHEESE_CURD, 0.35F, 200)
-//                .unlockedBy(getHasName(GCBlocks.CHEESE_ORE), has(GCBlocks.CHEESE_ORE))
+//        SimpleCookingRecipeBuilder.smelting(Ingredient.of(GCBlocks.MOON_CHEESE_ORE), RecipeCategory.FOOD, GCItems.MOON_CHEESE_CURD, 0.35F, 200)
+//                .unlockedBy(getHasName(GCBlocks.MOON_CHEESE_ORE), has(GCBlocks.MOON_CHEESE_ORE))
 //                .save(result);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.BURGER_BUN, 2)
@@ -357,24 +357,24 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CHEESEBURGER)
-                .requires(GCItems.CHEESE_SLICE)
+                .requires(GCItems.MOON_CHEESE_SLICE)
                 .requires(GCItems.BEEF_PATTY)
                 .requires(GCItems.BURGER_BUN)
                 .unlockedBy(getHasName(GCItems.GROUND_BEEF), has(GCItems.GROUND_BEEF))
                 .save(output);
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CHEESE_SLICE, 6)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.MOON_CHEESE_SLICE, 6)
                 .requires(GCItems.MOON_CHEESE_WHEEL)
                 .unlockedBy(getHasName(GCItems.MOON_CHEESE_WHEEL), has(GCItems.MOON_CHEESE_WHEEL))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.FOOD, GCItems.MOON_CHEESE_WHEEL)
-                .define('C', GCItems.CHEESE_CURD)
+                .define('C', GCItems.MOON_CHEESE_CURD)
                 .define('M', Items.MILK_BUCKET)
                 .pattern("CCC")
                 .pattern("CMC")
                 .pattern("CCC")
-                .unlockedBy(getHasName(GCItems.CHEESE_CURD), has(GCItems.CHEESE_CURD))
+                .unlockedBy(getHasName(GCItems.MOON_CHEESE_CURD), has(GCItems.MOON_CHEESE_CURD))
                 .save(output);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CANNED_DEHYDRATED_APPLE)
