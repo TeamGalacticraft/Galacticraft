@@ -68,6 +68,7 @@ public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity
             MachineItemStorage.builder()
                     .add(ItemResourceSlot.builder(TransferType.TRANSFER)
                             .pos(8, 62)
+                            .capacity(1)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY))
                     )

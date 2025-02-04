@@ -68,14 +68,17 @@ public class RefineryBlockEntity extends MachineBlockEntity {
             MachineItemStorage.spec(
                     ItemResourceSlot.builder(TransferType.TRANSFER)
                             .pos(8, 62)
+                            .capacity(1)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.PROCESSING)
                             .pos(125, 62)
+                            .capacity(1)
                             .filter(ResourceFilters.canExtractFluid(GCFluids.CRUDE_OIL)) // fixme: tag?,
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.BUCKET)),
                     ItemResourceSlot.builder(TransferType.PROCESSING)
                             .pos(152, 62)
+                            .capacity(1)
                             .filter(ResourceFilters.canInsertFluid(GCFluids.FUEL)) // fixme: tag?
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.BUCKET))
             ),

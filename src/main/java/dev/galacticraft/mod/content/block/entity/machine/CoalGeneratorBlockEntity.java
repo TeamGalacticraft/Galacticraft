@@ -73,6 +73,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
             MachineItemStorage.spec(
                     ItemResourceSlot.builder(TransferType.PROCESSING)
                             .pos(8, 62)
+                            .capacity(1)
                             .filter(ResourceFilters.CAN_INSERT_ENERGY)
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.INPUT)

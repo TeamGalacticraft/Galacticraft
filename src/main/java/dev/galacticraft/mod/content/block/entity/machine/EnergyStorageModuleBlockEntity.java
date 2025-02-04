@@ -56,10 +56,12 @@ public class EnergyStorageModuleBlockEntity extends ResourceStorageBlockEntity {
             MachineItemStorage.spec(
                     ItemResourceSlot.builder(TransferType.PROCESSING)
                             .pos(102, 48)
+                            .capacity(1)
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.PROCESSING)
                             .pos(102, 24)
+                            .capacity(1)
                             .filter(ResourceFilters.CAN_INSERT_ENERGY)
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY))
             ),
