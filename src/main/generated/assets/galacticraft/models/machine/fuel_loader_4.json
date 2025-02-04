@@ -1,0 +1,7 @@
+{
+  "data": {
+    "back": "galacticraft:block/fuel_loader_4",
+    "front": "galacticraft:block/fuel_loader_4"
+  },
+  "machinelib:type": "machine"
+}

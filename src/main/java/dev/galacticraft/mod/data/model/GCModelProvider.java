@@ -32,6 +32,7 @@ import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.decoration.IronGratingBlock;
 import dev.galacticraft.mod.content.block.environment.CavernousVines;
+import dev.galacticraft.mod.content.block.machine.FuelLoaderBlock;
 import dev.galacticraft.mod.content.block.machine.ResourceStorageBlock;
 import dev.galacticraft.mod.content.block.special.ParachestBlock;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
@@ -248,11 +249,7 @@ public class GCModelProvider extends FabricModelProvider {
                 .build()
         );
 
-        MachineModelGenerator.createTrivialMachine(generator, GCBlocks.FUEL_LOADER, TextureProvider.builder(Constant.MOD_ID)
-                .front("block/fuel_loader_controls")
-                .back("block/fuel_loader_controls")
-                .build()
-        );
+        createFuelLoader(generator, GCBlocks.FUEL_LOADER);
 
         createOxygenCompressor(generator, GCBlocks.OXYGEN_COMPRESSOR);
         createOxygenCompressor(generator, GCBlocks.OXYGEN_DECOMPRESSOR);
@@ -334,6 +331,20 @@ public class GCModelProvider extends FabricModelProvider {
                 TextureProvider.all(TextureMapping.getBlockTexture(block, "_active")),
                 TextureProvider.all(TextureMapping.getBlockTexture(block))
         );
+    }
+
+    private static void createFuelLoader(BlockModelGenerators generator, Block block) {
+        ResourceLocation[] ids = new ResourceLocation[10];
+        for (int i = 0; i < 10; i++) {
+            ids[i] = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block, i == 9 ? "" : "_" + i), TextureProvider.builder(Constant.MOD_ID)
+                    .front(TextureMapping.getBlockTexture(block, "_" + i))
+                    .back(TextureMapping.getBlockTexture(block, "_" + i))
+                    .build()
+            );
+        }
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(FuelLoaderBlock.AMOUNT)
+                .generate(i -> Variant.variant().with(VariantProperties.MODEL, ids[i])
+        )));
     }
 
     private static void createResourceStorageBlock(BlockModelGenerators generator, Block block) {
