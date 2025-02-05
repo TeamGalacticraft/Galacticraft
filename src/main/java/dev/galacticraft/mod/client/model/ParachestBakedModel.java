@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.model;
 
-import dev.galacticraft.mod.content.block.special.ParaChestBlock;
+import dev.galacticraft.mod.content.block.special.ParachestBlock;
 import net.fabricmc.fabric.api.renderer.v1.model.WrapperBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -46,28 +46,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class ParaChestBakedModel implements BakedModel, WrapperBakedModel {
-    private final ParaChestOverride itemOverride;
+public class ParachestBakedModel implements BakedModel, WrapperBakedModel {
+    private final ParachestOverride itemOverride;
     private final BakedModel parent;
     private final Map<DyeColor, BakedModel> bakedChutes;
     private final DyeColor defaultColor;
 
-    public ParaChestBakedModel(BakedModel parent, Map<DyeColor, BakedModel> bakedChutes) {
+    public ParachestBakedModel(BakedModel parent, Map<DyeColor, BakedModel> bakedChutes) {
         this(parent, bakedChutes, DyeColor.WHITE);
     }
 
-    public ParaChestBakedModel(BakedModel parent, Map<DyeColor, BakedModel> bakedChutes, DyeColor defaultColor) {
+    public ParachestBakedModel(BakedModel parent, Map<DyeColor, BakedModel> bakedChutes, DyeColor defaultColor) {
         this.parent = parent;
         this.bakedChutes = bakedChutes;
         this.defaultColor = defaultColor;
-        this.itemOverride = new ParaChestOverride();
+        this.itemOverride = new ParachestOverride();
     }
 
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState blockState, @Nullable Direction direction, RandomSource randomSource) {
         List<BakedQuad> quads = new ArrayList<>(parent.getQuads(blockState, direction, randomSource));
         if (blockState != null)
-            quads.addAll(bakedChutes.get(blockState.getValue(ParaChestBlock.COLOR)).getQuads(blockState, direction, randomSource));
+            quads.addAll(bakedChutes.get(blockState.getValue(ParachestBlock.COLOR)).getQuads(blockState, direction, randomSource));
         else
             quads.addAll(bakedChutes.get(defaultColor).getQuads(blockState, direction, randomSource));
         return quads;
@@ -124,8 +124,8 @@ public class ParaChestBakedModel implements BakedModel, WrapperBakedModel {
         return parent;
     }
 
-    public class ParaChestOverride extends ItemOverrides {
-        public ParaChestOverride() {
+    public class ParachestOverride extends ItemOverrides {
+        public ParachestOverride() {
             super(null, null, Collections.emptyList());
         }
 
@@ -134,9 +134,9 @@ public class ParaChestBakedModel implements BakedModel, WrapperBakedModel {
         public BakedModel resolve(BakedModel model, ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed) {
             DyeColor dyeColor = stack.get(DataComponents.BASE_COLOR);
             if (dyeColor != null) {
-                return new ParaChestBakedModel(ParaChestBakedModel.this.parent, ParaChestBakedModel.this.bakedChutes, dyeColor);
+                return new ParachestBakedModel(ParachestBakedModel.this.parent, ParachestBakedModel.this.bakedChutes, dyeColor);
             }
-            return ParaChestBakedModel.this.parent.getOverrides().resolve(model, stack, level, entity, seed);
+            return ParachestBakedModel.this.parent.getOverrides().resolve(model, stack, level, entity, seed);
         }
     }
 }

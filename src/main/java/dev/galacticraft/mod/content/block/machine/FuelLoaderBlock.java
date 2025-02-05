@@ -36,15 +36,18 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.NotNull;
 
 public class FuelLoaderBlock extends MachineBlock {
     public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
+    public static final Property<Integer> AMOUNT = IntegerProperty.create("amount", 0, 9);
     private static final MapCodec<FuelLoaderBlock> CODEC = simpleCodec(FuelLoaderBlock::new);
 
     public FuelLoaderBlock(Properties settings) {
         super(settings);
-        registerDefaultState(getStateDefinition().any().setValue(CONNECTED, false));
+        registerDefaultState(getStateDefinition().any().setValue(CONNECTED, false).setValue(AMOUNT, 0));
     }
 
     @Override
@@ -60,7 +63,7 @@ public class FuelLoaderBlock extends MachineBlock {
     @Override
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
         super.createBlockStateDefinition(stateBuilder);
-        stateBuilder.add(CONNECTED);
+        stateBuilder.add(CONNECTED).add(AMOUNT);
     }
 
     @Override

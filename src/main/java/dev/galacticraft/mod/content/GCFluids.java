@@ -55,25 +55,25 @@ public class GCFluids {
     public static void registerFluidVariantAttributes() {
         FluidVariantAttributes.register(CRUDE_OIL, new GCFluidAttribute(
                 Component.translatable(GCBlocks.CRUDE_OIL.getDescriptionId())
-                        .setStyle(Constant.Text.Color.DARK_GRAY_STYLE),
+                        .setStyle(Constant.Text.DARK_GRAY_STYLE),
                 FluidConstants.LAVA_VISCOSITY,
                 false
         ));
         FluidVariantAttributes.register(FUEL, new GCFluidAttribute(
                 Component.translatable(GCBlocks.FUEL.getDescriptionId())
-                        .setStyle(Constant.Text.Color.YELLOW_STYLE),
+                        .setStyle(Constant.Text.YELLOW_STYLE),
                 2000,
                 false
         ));
         FluidVariantAttributes.register(SULFURIC_ACID, new GCFluidAttribute(
                 Component.translatable(GCBlocks.SULFURIC_ACID.getDescriptionId())
-                        .setStyle(Constant.Text.Color.YELLOW_STYLE),
+                        .setStyle(Constant.Text.YELLOW_STYLE),
                 FluidConstants.LAVA_VISCOSITY,
                 false
         ));
         FluidVariantAttributes.register(LIQUID_OXYGEN, new GCFluidAttribute(
                 Component.translatable("block.galacticraft.oxygen")
-                        .setStyle(Constant.Text.Color.AQUA_STYLE),
+                        .setStyle(Constant.Text.AQUA_STYLE),
                 500,
                 true
         ));

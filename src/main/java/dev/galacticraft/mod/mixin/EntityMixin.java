@@ -139,16 +139,18 @@ public abstract class EntityMixin implements EntityAccessor {
 
     @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At("TAIL"))
     private void checkWaterStateGC(CallbackInfo ci) {
+        Player player = level.getPlayerByUUID(uuid);
+        boolean isCreative = (player != null) && player.isCreative();
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028d) || this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.0028d)) {
             if (this.isOnFire()) {
                 level.explode(level.getEntity(id), position.x, position.y, position.z, 0f, Level.ExplosionInteraction.NONE);
-                if ((this.isAlwaysTicking() && !level.getPlayerByUUID(uuid).isCreative()) || !this.isInvulnerable()) {
+                if ((this.isAlwaysTicking() && !isCreative) || !this.isInvulnerable()) {
                     this.hurt(new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.OIL_BOOM)), 20.0f);
                 }
             }
         } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.0028d)) {
             // The entity enter an acid fluid, this entity need to take damage
-            if ((this.isAlwaysTicking() && !level.getPlayerByUUID(uuid).isCreative()) || !this.isInvulnerable()) {
+            if ((this.isAlwaysTicking() && !isCreative) || !this.isInvulnerable()) {
                 this.hurt(new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE)
                         .getHolderOrThrow(GCDamageTypes.SULFURIC_ACID)), 2.0f);
             }
