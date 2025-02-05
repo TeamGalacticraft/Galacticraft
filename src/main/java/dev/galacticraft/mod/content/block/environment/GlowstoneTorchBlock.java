@@ -23,9 +23,8 @@
 package dev.galacticraft.mod.content.block.environment;
 
 import com.mojang.serialization.MapCodec;
-import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.util.TooltipUtil;
 import dev.galacticraft.mod.util.Translations;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
@@ -51,13 +50,8 @@ public class GlowstoneTorchBlock extends TorchBlock {
 
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag options) {
+        TooltipUtil.appendLshiftTooltip(Translations.Tooltip.GLOWSTONE_TORCH, tooltip);
         super.appendHoverText(stack, context, tooltip, options);
-
-        if (Screen.hasShiftDown()) {
-            tooltip.add(Component.translatable(Translations.Tooltip.GLOWSTONE_TORCH).setStyle(Constant.Text.Color.GRAY_STYLE));
-        } else {
-            tooltip.add(Component.translatable(Translations.Tooltip.PRESS_SHIFT).setStyle(Constant.Text.Color.GRAY_STYLE));
-        }
     }
 
     @Override

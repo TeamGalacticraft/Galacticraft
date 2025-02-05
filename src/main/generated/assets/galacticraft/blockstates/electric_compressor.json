@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
+    "active=false": {
       "model": "galacticraft:machine/electric_compressor"
+    },
+    "active=true": {
+      "model": "galacticraft:machine/electric_compressor_active"
     }
   }
 }
