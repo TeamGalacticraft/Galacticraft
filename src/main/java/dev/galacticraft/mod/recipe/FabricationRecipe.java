@@ -92,6 +92,11 @@ public class FabricationRecipe implements Recipe<RecipeInput> {
         return this.time;
     }
 
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
     public static class Serializer implements RecipeSerializer<FabricationRecipe> {
         public static final Serializer INSTANCE = new Serializer();
         public static final MapCodec<FabricationRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(

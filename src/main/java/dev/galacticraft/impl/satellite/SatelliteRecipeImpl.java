@@ -45,15 +45,19 @@ public class SatelliteRecipeImpl implements SatelliteRecipe {
 
     @Override
     public boolean test(@NotNull Container inventory) {
-        IntList slotModifiers = new IntArrayList(inventory.getContainerSize());
+        int invSize = inventory.getContainerSize();
+        if (invSize == 0) return false;
+        
+        IntArrayList slotModifiers = new IntArrayList();
+        slotModifiers.size(invSize);
 
         for (Int2ObjectMap.Entry<Ingredient> ingredient : this.ingredients.int2ObjectEntrySet()) {
             int amount = ingredient.getIntKey();
-            for (int i = 0; i < inventory.getContainerSize(); i++) {
+            for (int i = 0; i < invSize; i++) {
                 ItemStack stack = inventory.getItem(i);
                 if (ingredient.getValue().test(stack)) {
                     amount -= (stack.getCount() - slotModifiers.getInt(i));
-                    slotModifiers.set(i, slotModifiers.getInt(i) + (stack.getCount() - slotModifiers.getInt(i)) - Math.min(amount, 0));
+                    slotModifiers.set(i, stack.getCount() - Math.min(amount, 0));
                     if (amount <= 0) break;
                 }
             }
