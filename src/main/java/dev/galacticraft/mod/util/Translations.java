@@ -167,6 +167,7 @@ public interface Translations {
         String PRESS_SHIFT = "tooltip.galacticraft.press_shift";
         String STANDARD_WRENCH = "tooltip.galacticraft.standard_wrench";
         String TIME_UNTIL_COOL = "tooltip.galacticraft.time_until_cool";
+        String SECONDS_UNIT = "tooltip.galacticraft.seconds_unit";
     }
 
     interface Gas {
