@@ -63,8 +63,8 @@ public class InfiniteOxygenTankItem extends Item implements Storage<FluidVariant
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
-        tooltip.add(Component.translatable(Translations.Tooltip.OXYGEN_REMAINING, Component.translatable(Translations.Tooltip.INFINITE).setStyle(Style.EMPTY.withColor(ColorUtil.getRainbow(15000)))));
-        TooltipUtil.appendCreativeTooltip(tooltip, Constant.Text.Color.LIGHT_PURPLE_STYLE);
+        TooltipUtil.appendInfiniteCapacityTooltip(Translations.Tooltip.OXYGEN_REMAINING, tooltip);
+        TooltipUtil.appendCreativeTooltip(tooltip, Constant.Text.LIGHT_PURPLE_STYLE);
         super.appendHoverText(stack, context, tooltip, type);
     }
 

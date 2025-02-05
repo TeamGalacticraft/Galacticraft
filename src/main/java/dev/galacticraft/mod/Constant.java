@@ -707,27 +707,33 @@ public interface Constant {
     }
 
     interface Text {
-        interface Color {
-            Style DARK_GRAY_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_GRAY);
-            Style GOLD_STYLE = Style.EMPTY.withColor(ChatFormatting.GOLD);
-            Style GREEN_STYLE = Style.EMPTY.withColor(ChatFormatting.GREEN);
-            Style RED_STYLE = Style.EMPTY.withColor(ChatFormatting.RED);
-            Style BLUE_STYLE = Style.EMPTY.withColor(ChatFormatting.BLUE);
-            Style AQUA_STYLE = Style.EMPTY.withColor(ChatFormatting.AQUA);
-            Style GRAY_STYLE = Style.EMPTY.withColor(ChatFormatting.GRAY);
-            Style DARK_RED_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_RED);
-            Style LIGHT_PURPLE_STYLE = Style.EMPTY.withColor(ChatFormatting.LIGHT_PURPLE);
-            Style YELLOW_STYLE = Style.EMPTY.withColor(ChatFormatting.YELLOW);
-            Style WHITE_STYLE = Style.EMPTY.withColor(ChatFormatting.WHITE);
-            Style DARK_BLUE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_BLUE);
+        Style DARK_GRAY_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_GRAY);
+        Style GOLD_STYLE = Style.EMPTY.withColor(ChatFormatting.GOLD);
+        Style GREEN_STYLE = Style.EMPTY.withColor(ChatFormatting.GREEN);
+        Style RED_STYLE = Style.EMPTY.withColor(ChatFormatting.RED);
+        Style BLUE_STYLE = Style.EMPTY.withColor(ChatFormatting.BLUE);
+        Style AQUA_STYLE = Style.EMPTY.withColor(ChatFormatting.AQUA);
+        Style GRAY_STYLE = Style.EMPTY.withColor(ChatFormatting.GRAY);
+        Style DARK_RED_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_RED);
+        Style LIGHT_PURPLE_STYLE = Style.EMPTY.withColor(ChatFormatting.LIGHT_PURPLE);
+        Style YELLOW_STYLE = Style.EMPTY.withColor(ChatFormatting.YELLOW);
+        Style WHITE_STYLE = Style.EMPTY.withColor(ChatFormatting.WHITE);
+        Style DARK_BLUE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_BLUE);
 
-            static int getStorageLevelColor(double scale) {
-                return ((int) (255 * scale) << 16) + (((int) (255 * (1.0 - scale))) << 8);
-            }
+        static int getStorageLevelColor(double scale) {
+            return ((int) (255 * scale) << 16) + (((int) (255 * (1.0 - scale))) << 8);
+        }
 
-            static Style getStorageLevelStyle(double scale) {
-                return Style.EMPTY.withColor(TextColor.fromRgb(getStorageLevelColor(scale)));
-            }
+        static Style getStorageLevelStyle(double scale) {
+            return Style.EMPTY.withColor(TextColor.fromRgb(getStorageLevelColor(scale)));
+        }
+
+        static int getCoolingColor(double scale) {
+            return (255 << 16) + (((int) (255 * 0.75 * (1.0 - scale))) << 8);
+        }
+
+        static Style getCoolingStyle(double scale) {
+            return Style.EMPTY.withColor(TextColor.fromRgb(getCoolingColor(scale)));
         }
     }
 

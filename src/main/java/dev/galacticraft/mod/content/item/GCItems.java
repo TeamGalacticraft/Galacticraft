@@ -368,9 +368,9 @@ public class GCItems {
 
     // SMITHING TEMPLATES
     public static final Item TITANTIUM_UPGRADE_SMITHING_TEMPLATE = new SmithingTemplateItem(
-            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_APPLIES_TO).withStyle(Constant.Text.Color.BLUE_STYLE),
-            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_INGREDIENTS).withStyle(Constant.Text.Color.BLUE_STYLE),
-            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_DESCRIPTION).withStyle(Constant.Text.Color.GRAY_STYLE),
+            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_APPLIES_TO).withStyle(Constant.Text.BLUE_STYLE),
+            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_INGREDIENTS).withStyle(Constant.Text.BLUE_STYLE),
+            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_DESCRIPTION).withStyle(Constant.Text.GRAY_STYLE),
             Component.translatable(Translations.Misc.UPGRADE_TITANIUM_BASE_SLOT_DESCRIPTION),
             Component.translatable(Translations.Misc.UPGRADE_TITANIUM_ADDITIONS_SLOT_DESCRIPTON),
             List.of(ResourceLocation.withDefaultNamespace("item/empty_armor_slot_helmet"),

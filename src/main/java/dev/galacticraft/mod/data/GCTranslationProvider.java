@@ -736,7 +736,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Tooltip.OXYGEN_REMAINING, "Oxygen Remaining: %s");
         this.add(Tooltip.PRESS_SHIFT, "Press LSHIFT for more information.");
         this.add(Tooltip.STANDARD_WRENCH, "Most Galacticraft machines can be rotated by right-clicking with the Standard Wrench.");
-        this.add(Tooltip.TIME_UNTIL_COOL, "Time Until Cool: %ss");
+        this.add(Tooltip.TIME_UNTIL_COOL, "Time Until Cool: %s");
+        this.add(Tooltip.SECONDS_UNIT, "%ss");
     }
 
     protected void generateConfigTranslations() {
