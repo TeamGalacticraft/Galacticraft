@@ -48,8 +48,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
@@ -131,17 +131,22 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
             ci.cancel();
     }
 
-    @Inject(method = "calculateFallDamage", at = @At(value = "HEAD"), cancellable = true)
-    protected void calculateFallDamage(float f, float f2, CallbackInfoReturnable<Integer> cir) {
-        if (this.getType().is(EntityTypeTags.FALL_DAMAGE_IMMUNE)) {
-            cir.setReturnValue(0);
-            return;
+    @ModifyReturnValue(method = "getAttributeValue", at = @At(value = "RETURN"))
+    private double gc$adjustSafeFallDistance(double original, Holder<Attribute> attribute) {
+        if (attribute == Attributes.SAFE_FALL_DISTANCE) {
+            Holder<CelestialBody<?, ?>> holder = this.level().galacticraft$getCelestialBody();
+            if (holder != null) {
+                double gravity = holder.value().gravity();
+                return gravity > 0 ? original / gravity : original;
+            }
         }
+        return original;
+    }
+
+    @ModifyArg(method = "calculateFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;ceil(D)I"), index = 0)
+    protected double gc$adjustFallDamage(double original) {
         Holder<CelestialBody<?, ?>> holder = this.level().galacticraft$getCelestialBody();
-        float gravity = (float)(holder != null ? holder.value().gravity() : 1.0d);
-        float f3 = (float)this.getAttributeValue(Attributes.SAFE_FALL_DISTANCE);
-        float f4 = f - f3 / gravity;
-        cir.setReturnValue(Mth.ceil((double)(f4 * f2 * gravity) * this.getAttributeValue(Attributes.FALL_DAMAGE_MULTIPLIER)));
+        return holder != null ? original * holder.value().gravity() : original;
     }
 
     @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isFallFlying()Z"))
