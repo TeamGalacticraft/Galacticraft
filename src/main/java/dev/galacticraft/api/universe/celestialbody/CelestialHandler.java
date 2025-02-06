@@ -47,7 +47,7 @@ public interface CelestialHandler {
      *         the world with. Return null for no spawn
      */
     @Nullable
-    Vec3 getParaChestSpawnLocation(Level world, Player player, RandomSource rand);
+    Vec3 getParachestSpawnLocation(Level world, Player player, RandomSource rand);
 
     /**
      * This method is used to determine if a player will open parachute upon

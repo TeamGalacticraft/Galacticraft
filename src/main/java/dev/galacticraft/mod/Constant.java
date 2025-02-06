@@ -558,8 +558,40 @@ public interface Constant {
         ResourceLocation DEFAULT_SOLAR_PANELS = id("textures/solar_panel/default_solar_panels.png");
         ResourceLocation DEFAULT_LIGHT_SOURCES = id("textures/solar_panel/default_light_sources.png");
         ResourceLocation MOON_LIGHT_SOURCES = id("textures/solar_panel/moon_light_sources.png");
+    }
 
-        ResourceLocation RECIPE_VEIWER_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
+    interface RecipeViewer {
+        ResourceLocation RECIPE_VIEWER_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
+
+        int CIRCUIT_FABRICATOR_U = 0;
+        int CIRCUIT_FABRICATOR_V = 0;
+        int CIRCUIT_FABRICATOR_WIDTH = 139;
+        int CIRCUIT_FABRICATOR_HEIGHT = 73;
+
+        int DIAMOND_X = 1;
+        int DIAMOND_Y = 1;
+        int SILICON_X_1 = 32;
+        int SILICON_Y_1 = 31;
+        int SILICON_X_2 = 32;
+        int SILICON_Y_2 = 49;
+        int REDSTONE_X = 77;
+        int REDSTONE_Y = 56;
+        int INGREDIENT_X = 104;
+        int INGREDIENT_Y = 1;
+        int WAFER_X = 122;
+        int WAFER_Y = 56;
+
+        int COMPRESSOR_U = 0;
+        int COMPRESSOR_V = 74;
+        int COMPRESSOR_WIDTH = 148;
+        int COMPRESSOR_HEIGHT = 54;
+
+        int FIRE_X = 67;
+        int FIRE_Y = 9;
+        int FUEL_X = 67;
+        int FUEL_Y = 31;
+        int COMPRESSED_X = 127;
+        int COMPRESSED_Y = 20;
     }
 
     interface SlotSprite {
@@ -594,6 +626,23 @@ public interface Constant {
         String COMET_CUBE = "comet_cube";
         String GAZER = "gazer";
         String EVOLVED_SKELETON_BOSS = "evolved_skeleton_boss";
+    }
+
+    interface SpawnEgg {
+        String MOON_VILLAGER = "moon_villager_spawn_egg";
+        String EVOLVED_ZOMBIE = "evolved_zombie_spawn_egg";
+        String EVOLVED_CREEPER = "evolved_creeper_spawn_egg";
+        String EVOLVED_SKELETON = "evolved_skeleton_spawn_egg";
+        String EVOLVED_SPIDER = "evolved_spider_spawn_egg";
+        String EVOLVED_PILLAGER = "evolved_pillager_spawn_egg";
+        String EVOLVED_EVOKER = "evolved_evoker_spawn_egg";
+        String EVOLVED_VINDICATOR = "evolved_vindicator_spawn_egg";
+        String GREY = "grey_spawn_egg";
+        String ARCH_GREY = "arch_grey_spawn_egg";
+        String RUMBLER = "rumbler_spawn_egg";
+        String OLI_GRUB = "oli_grub_spawn_egg";
+        String COMET_CUBE = "comet_cube_spawn_egg";
+        String GAZER = "gazer_spawn_egg";
     }
 
     interface EntityTexture {
@@ -682,7 +731,7 @@ public interface Constant {
         String ROCKET = "rocket";
         String PARACHEST = "parachest";
         String BUGGY_BENCH = "buggy_bench";
-        String TIER_1_ROCKET = "tirer_1_rocket";
+        String TIER_1_ROCKET = "tier_1_rocket";
     }
 
     interface LootTable {
@@ -690,27 +739,33 @@ public interface Constant {
     }
 
     interface Text {
-        interface Color {
-            Style DARK_GRAY_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_GRAY);
-            Style GOLD_STYLE = Style.EMPTY.withColor(ChatFormatting.GOLD);
-            Style GREEN_STYLE = Style.EMPTY.withColor(ChatFormatting.GREEN);
-            Style RED_STYLE = Style.EMPTY.withColor(ChatFormatting.RED);
-            Style BLUE_STYLE = Style.EMPTY.withColor(ChatFormatting.BLUE);
-            Style AQUA_STYLE = Style.EMPTY.withColor(ChatFormatting.AQUA);
-            Style GRAY_STYLE = Style.EMPTY.withColor(ChatFormatting.GRAY);
-            Style DARK_RED_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_RED);
-            Style LIGHT_PURPLE_STYLE = Style.EMPTY.withColor(ChatFormatting.LIGHT_PURPLE);
-            Style YELLOW_STYLE = Style.EMPTY.withColor(ChatFormatting.YELLOW);
-            Style WHITE_STYLE = Style.EMPTY.withColor(ChatFormatting.WHITE);
-            Style DARK_BLUE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_BLUE);
+        Style DARK_GRAY_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_GRAY);
+        Style GOLD_STYLE = Style.EMPTY.withColor(ChatFormatting.GOLD);
+        Style GREEN_STYLE = Style.EMPTY.withColor(ChatFormatting.GREEN);
+        Style RED_STYLE = Style.EMPTY.withColor(ChatFormatting.RED);
+        Style BLUE_STYLE = Style.EMPTY.withColor(ChatFormatting.BLUE);
+        Style AQUA_STYLE = Style.EMPTY.withColor(ChatFormatting.AQUA);
+        Style GRAY_STYLE = Style.EMPTY.withColor(ChatFormatting.GRAY);
+        Style DARK_RED_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_RED);
+        Style LIGHT_PURPLE_STYLE = Style.EMPTY.withColor(ChatFormatting.LIGHT_PURPLE);
+        Style YELLOW_STYLE = Style.EMPTY.withColor(ChatFormatting.YELLOW);
+        Style WHITE_STYLE = Style.EMPTY.withColor(ChatFormatting.WHITE);
+        Style DARK_BLUE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_BLUE);
 
-            static int getStorageLevelColor(double scale) {
-                return ((int) (255 * scale) << 16) + (((int) (255 * (1.0 - scale))) << 8);
-            }
+        static int getStorageLevelColor(double scale) {
+            return ((int) (255 * scale) << 16) + (((int) (255 * (1.0 - scale))) << 8);
+        }
 
-            static Style getStorageLevelStyle(double scale) {
-                return Style.EMPTY.withColor(TextColor.fromRgb(getStorageLevelColor(scale)));
-            }
+        static Style getStorageLevelStyle(double scale) {
+            return Style.EMPTY.withColor(TextColor.fromRgb(getStorageLevelColor(scale)));
+        }
+
+        static int getCoolingColor(double scale) {
+            return (255 << 16) + (((int) (255 * 0.75 * (1.0 - scale))) << 8);
+        }
+
+        static Style getCoolingStyle(double scale) {
+            return Style.EMPTY.withColor(TextColor.fromRgb(getCoolingColor(scale)));
         }
     }
 

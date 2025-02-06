@@ -69,11 +69,11 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
     private static final int SOLAR_PANEL_WIDTH = 16;
     private static final int SOLAR_PANEL_HEIGHT = 16;
 
-    private static final Component DAY = Component.translatable(Translations.SolarPanel.DAY).setStyle(Constant.Text.Color.YELLOW_STYLE);
-    private static final Component OVERCAST = Component.translatable(Translations.SolarPanel.OVERCAST).setStyle(Constant.Text.Color.GRAY_STYLE);
-    private static final Component NIGHT = Component.translatable(Translations.SolarPanel.NIGHT).setStyle(Constant.Text.Color.BLUE_STYLE);
-    private static final Component BLOCKED = Component.translatable(Translations.SolarPanel.BLOCKED).setStyle(Constant.Text.Color.DARK_RED_STYLE);
-    private static final Component MISSING_SOURCE = Component.translatable(Translations.SolarPanel.MISSING_SOURCE).setStyle(Constant.Text.Color.WHITE_STYLE);
+    private static final Component DAY = Component.translatable(Translations.SolarPanel.DAY).setStyle(Constant.Text.YELLOW_STYLE);
+    private static final Component OVERCAST = Component.translatable(Translations.SolarPanel.OVERCAST).setStyle(Constant.Text.GRAY_STYLE);
+    private static final Component NIGHT = Component.translatable(Translations.SolarPanel.NIGHT).setStyle(Constant.Text.BLUE_STYLE);
+    private static final Component BLOCKED = Component.translatable(Translations.SolarPanel.BLOCKED).setStyle(Constant.Text.DARK_RED_STYLE);
+    private static final Component MISSING_SOURCE = Component.translatable(Translations.SolarPanel.MISSING_SOURCE).setStyle(Constant.Text.WHITE_STYLE);
 
     private final ResourceLocation solarPanelTexture;
     private final WorldLightSources lightSource;
@@ -120,13 +120,13 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
                     GraphicsUtil.highlightElement(graphics, this.leftPos, this.topPos, SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT, 0x80ffffff);
 
                     if (this.menu.getBlockage()[y * 3 + x]) {
-                        graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.Color.GRAY_STYLE).append(BLOCKED), mouseX, mouseY);
+                        graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.GRAY_STYLE).append(BLOCKED), mouseX, mouseY);
                     } else {
                         switch (this.menu.getSource()){
-                            case DAY -> graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.Color.GRAY_STYLE).append(DAY), mouseX, mouseY);
-                            case OVERCAST -> graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.Color.GRAY_STYLE).append(OVERCAST), mouseX, mouseY);
-                            case NIGHT -> graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.Color.GRAY_STYLE).append(NIGHT), mouseX, mouseY);
-                            case NO_LIGHT_SOURCE -> graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.Color.GRAY_STYLE).append(MISSING_SOURCE), mouseX, mouseY);
+                            case DAY -> graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.GRAY_STYLE).append(DAY), mouseX, mouseY);
+                            case OVERCAST -> graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.GRAY_STYLE).append(OVERCAST), mouseX, mouseY);
+                            case NIGHT -> graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.GRAY_STYLE).append(NIGHT), mouseX, mouseY);
+                            case NO_LIGHT_SOURCE -> graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.GRAY_STYLE).append(MISSING_SOURCE), mouseX, mouseY);
                         }
                     }
                     return;
@@ -142,9 +142,9 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
                 case NIGHT -> this.lightSource.night();
                 case NO_LIGHT_SOURCE -> this.lightSource.missing();
             };
-            tooltip.add(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE).setStyle(Constant.Text.Color.AQUA_STYLE).append(source.name()));
-            tooltip.add(Component.translatable(Translations.SolarPanel.STRENGTH, source.strength()).setStyle(Constant.Text.Color.GREEN_STYLE));
-            tooltip.add(Component.translatable(Translations.SolarPanel.ATMOSPHERIC_INTERFERENCE, source.atmosphericInterference()).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
+            tooltip.add(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE).setStyle(Constant.Text.AQUA_STYLE).append(source.name()));
+            tooltip.add(Component.translatable(Translations.SolarPanel.STRENGTH, source.strength()).setStyle(Constant.Text.GREEN_STYLE));
+            tooltip.add(Component.translatable(Translations.SolarPanel.ATMOSPHERIC_INTERFERENCE, source.atmosphericInterference()).setStyle(Constant.Text.LIGHT_PURPLE_STYLE));
             graphics.renderComponentTooltip(this.font, tooltip, mouseX, mouseY);
         }
     }
@@ -161,7 +161,7 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
     public void appendEnergyTooltip(List<Component> list) {
         super.appendEnergyTooltip(list);
         if (this.menu.state.isActive()) {
-            list.add(Component.translatable(Translations.Ui.GJT, this.menu.getCurrentEnergyGeneration()).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
+            list.add(Component.translatable(Translations.Ui.GJT, this.menu.getCurrentEnergyGeneration()).setStyle(Constant.Text.LIGHT_PURPLE_STYLE));
         }
     }
 }
