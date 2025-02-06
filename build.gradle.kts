@@ -108,6 +108,7 @@ loom {
         getByName("client") {
             name("Minecraft Client")
             source(sourceSets.test.get())
+            property("fabric-tag-conventions-v2.missingTagTranslationWarning", "VERBOSE")
         }
 
         getByName("server") {

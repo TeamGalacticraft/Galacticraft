@@ -32,8 +32,9 @@ import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.decoration.IronGratingBlock;
 import dev.galacticraft.mod.content.block.environment.CavernousVines;
+import dev.galacticraft.mod.content.block.machine.FuelLoaderBlock;
 import dev.galacticraft.mod.content.block.machine.ResourceStorageBlock;
-import dev.galacticraft.mod.content.block.special.ParaChestBlock;
+import dev.galacticraft.mod.content.block.special.ParachestBlock;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -235,10 +236,6 @@ public class GCModelProvider extends FabricModelProvider {
         //todo gen models (not just blockstates)
         MachineModelGenerator.setupMachineBaseTextures(generator, Constant.MOD_ID, MachineTextureBase.prefixed(Constant.MOD_ID, "block/machine"));
 
-        createTrivialFrontFaceMachine(generator, GCBlocks.CIRCUIT_FABRICATOR);
-        createTrivialFrontFaceMachine(generator, GCBlocks.COAL_GENERATOR);
-        createTrivialFrontFaceMachine(generator, GCBlocks.COMPRESSOR);
-        createTrivialFrontFaceMachine(generator, GCBlocks.ELECTRIC_COMPRESSOR);
         createTrivialFrontFaceMachine(generator, GCBlocks.ELECTRIC_ARC_FURNACE);
         createTrivialFrontFaceMachine(generator, GCBlocks.ELECTRIC_FURNACE);
 
@@ -252,17 +249,57 @@ public class GCModelProvider extends FabricModelProvider {
                 .build()
         );
 
-        MachineModelGenerator.createTrivialMachine(generator, GCBlocks.FUEL_LOADER, TextureProvider.builder(Constant.MOD_ID)
-                .front("block/fuel_loader_controls")
-                .back("block/fuel_loader_controls")
-                .build()
-        );
+        createFuelLoader(generator, GCBlocks.FUEL_LOADER);
 
         createOxygenCompressor(generator, GCBlocks.OXYGEN_COMPRESSOR);
         createOxygenCompressor(generator, GCBlocks.OXYGEN_DECOMPRESSOR);
 
         createResourceStorageBlock(generator, GCBlocks.OXYGEN_STORAGE_MODULE);
         createResourceStorageBlock(generator, GCBlocks.ENERGY_STORAGE_MODULE);
+
+        createActiveMachine(generator, GCBlocks.CIRCUIT_FABRICATOR,
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/circuit_fabricator_active")
+                        .build(),
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/circuit_fabricator")
+                        .build()
+        );
+
+        createActiveMachine(generator, GCBlocks.COAL_GENERATOR,
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/coal_generator_active")
+                        .build(),
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/coal_generator")
+                        .build()
+        );
+
+        createActiveMachine(generator, GCBlocks.COMPRESSOR,
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/compressor_active")
+                        .build(),
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/compressor")
+                        .build()
+        );
+
+        createActiveMachine(generator, GCBlocks.ELECTRIC_COMPRESSOR,
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/electric_compressor_active")
+                        .build(),
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/electric_compressor")
+                        .build()
+        );
 
         createActiveMachine(generator, GCBlocks.OXYGEN_SEALER,
                 TextureProvider.builder(Constant.MOD_ID)
@@ -286,7 +323,7 @@ public class GCModelProvider extends FabricModelProvider {
         this.createAirLockController(generator);
         generator.createNonTemplateModelBlock(GCBlocks.AIR_LOCK_SEAL);
 
-        this.createParaChests(generator);
+        this.createParachests(generator);
     }
 
     private static void createFullCubeActiveMachine(BlockModelGenerators generator, Block block) {
@@ -294,6 +331,20 @@ public class GCModelProvider extends FabricModelProvider {
                 TextureProvider.all(TextureMapping.getBlockTexture(block, "_active")),
                 TextureProvider.all(TextureMapping.getBlockTexture(block))
         );
+    }
+
+    private static void createFuelLoader(BlockModelGenerators generator, Block block) {
+        ResourceLocation[] ids = new ResourceLocation[10];
+        for (int i = 0; i < 10; i++) {
+            ids[i] = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block, i == 9 ? "" : "_" + i), TextureProvider.builder(Constant.MOD_ID)
+                    .front(TextureMapping.getBlockTexture(block, "_" + i))
+                    .back(TextureMapping.getBlockTexture(block, "_" + i))
+                    .build()
+            );
+        }
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(FuelLoaderBlock.AMOUNT)
+                .generate(i -> Variant.variant().with(VariantProperties.MODEL, ids[i])
+        )));
     }
 
     private static void createResourceStorageBlock(BlockModelGenerators generator, Block block) {
@@ -339,7 +390,7 @@ public class GCModelProvider extends FabricModelProvider {
     private static void createSolarPanel(BlockModelGenerators generator, Block block) {
         MachineModelGenerator.createTrivialMachine(generator, block, TextureProvider.builder(Constant.MOD_ID)
                 .sides("block/machine_side")
-                .top("block/solar_panel")
+                .topOverride("block/solar_panel")
                 .front(TextureMapping.getBlockTexture(block))
                 .build()
         );
@@ -374,17 +425,17 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialBlock(block, textureMapping, ModelTemplates.CUBE_COLUMN);
     }
 
-    private void createParaChests(BlockModelGenerators generator) {
+    private void createParachests(BlockModelGenerators generator) {
         var para = MultiPartGenerator.multiPart(GCBlocks.PARACHEST);
         Direction.Plane.HORIZONTAL.forEach(state -> {
-            para.with(Condition.condition().term(ParaChestBlock.FACING, state), Variant.variant()
+            para.with(Condition.condition().term(ParachestBlock.FACING, state), Variant.variant()
                     .with(VariantProperties.Y_ROT, getRotationFromDirection(state))
                     .with(VariantProperties.MODEL, ResourceLocation.parse("galacticraft:block/parachest/parachest")));
         });
         GCBlocks.PARACHEST.getStateDefinition().getPossibleStates().forEach(state -> {
-            para.with(Condition.condition().term(ParaChestBlock.FACING, state.getValue(ParaChestBlock.FACING)).term(ParaChestBlock.COLOR, state.getValue(ParaChestBlock.COLOR)), Variant.variant()
-                    .with(VariantProperties.Y_ROT, getRotationFromDirection(state.getValue(ParaChestBlock.FACING)))
-                    .with(VariantProperties.MODEL, ResourceLocation.parse("galacticraft:block/parachest/" + state.getValue(ParaChestBlock.COLOR) + "_chute")));
+            para.with(Condition.condition().term(ParachestBlock.FACING, state.getValue(ParachestBlock.FACING)).term(ParachestBlock.COLOR, state.getValue(ParachestBlock.COLOR)), Variant.variant()
+                    .with(VariantProperties.Y_ROT, getRotationFromDirection(state.getValue(ParachestBlock.FACING)))
+                    .with(VariantProperties.MODEL, ResourceLocation.parse("galacticraft:block/parachest/" + state.getValue(ParachestBlock.COLOR) + "_chute")));
         });
         generator.blockStateOutput.accept(para);
     }
@@ -505,9 +556,9 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.AMBIENT_THERMAL_CONTROLLER, ModelTemplates.FLAT_ITEM);
 
         // FOOD
-        generator.generateFlatItem(GCItems.CHEESE_CURD, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.MOON_CHEESE_CURD, ModelTemplates.FLAT_ITEM);
 
-        generator.generateFlatItem(GCItems.CHEESE_SLICE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.MOON_CHEESE_SLICE, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.BURGER_BUN, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.GROUND_BEEF, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.BEEF_PATTY, ModelTemplates.FLAT_ITEM);
@@ -608,6 +659,22 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.MOON_BUGGY_SCHEMATIC, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.TIER_3_ROCKET_SCHEMATIC, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.ASTRO_MINER_SCHEMATIC, ModelTemplates.FLAT_ITEM);
+
+        // SPAWN EGGS
+        generator.generateFlatItem(GCItems.MOON_VILLAGER_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
+        generator.generateFlatItem(GCItems.EVOLVED_ZOMBIE_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
+        generator.generateFlatItem(GCItems.EVOLVED_CREEPER_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
+        generator.generateFlatItem(GCItems.EVOLVED_SKELETON_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
+        generator.generateFlatItem(GCItems.EVOLVED_SPIDER_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
+        generator.generateFlatItem(GCItems.EVOLVED_PILLAGER_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
+        generator.generateFlatItem(GCItems.EVOLVED_EVOKER_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
+        generator.generateFlatItem(GCItems.EVOLVED_VINDICATOR_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
+        generator.generateFlatItem(GCItems.GAZER_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
+        generator.generateFlatItem(GCItems.RUMBLER_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
+        generator.generateFlatItem(GCItems.COMET_CUBE_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
+        generator.generateFlatItem(GCItems.OLI_GRUB_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
+        generator.generateFlatItem(GCItems.GREY_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
+        generator.generateFlatItem(GCItems.ARCH_GREY_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
     }
 
     @Contract("_ -> new")

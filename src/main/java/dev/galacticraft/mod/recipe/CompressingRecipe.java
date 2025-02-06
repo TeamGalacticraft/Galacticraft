@@ -32,5 +32,10 @@ public interface CompressingRecipe extends Recipe<CraftingInput> {
         return GCRecipes.COMPRESSING_TYPE;
     }
 
+    @Override
+    default boolean isSpecial() {
+        return true;
+    }
+
     int getTime();
 }

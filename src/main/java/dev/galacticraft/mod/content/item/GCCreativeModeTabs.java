@@ -31,6 +31,7 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.storage.PlaceholderItemStorage;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -40,6 +41,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
@@ -183,9 +185,9 @@ public class GCCreativeModeTabs {
                 output.accept(AMBIENT_THERMAL_CONTROLLER);
 
                 // FOOD
-                output.accept(CHEESE_CURD);
+                output.accept(MOON_CHEESE_CURD);
 
-                output.accept(CHEESE_SLICE);
+                output.accept(MOON_CHEESE_SLICE);
                 output.accept(BURGER_BUN);
                 output.accept(GROUND_BEEF);
                 output.accept(BEEF_PATTY);
@@ -490,9 +492,29 @@ public class GCCreativeModeTabs {
                 output.accept(FUEL_LOADER);
             }).build();
 
+    public static void registerSpawnEggs() {
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.SPAWN_EGGS).register(content -> {
+            content.addAfter(ItemStack.EMPTY, MOON_VILLAGER_SPAWN_EGG);
+            content.addAfter(ItemStack.EMPTY, EVOLVED_ZOMBIE_SPAWN_EGG);
+            content.addAfter(ItemStack.EMPTY, EVOLVED_CREEPER_SPAWN_EGG);
+            content.addAfter(ItemStack.EMPTY, EVOLVED_SKELETON_SPAWN_EGG);
+            content.addAfter(ItemStack.EMPTY, EVOLVED_SPIDER_SPAWN_EGG);
+            content.addAfter(ItemStack.EMPTY, EVOLVED_PILLAGER_SPAWN_EGG);
+            content.addAfter(ItemStack.EMPTY, EVOLVED_EVOKER_SPAWN_EGG);
+            content.addAfter(ItemStack.EMPTY, EVOLVED_VINDICATOR_SPAWN_EGG);
+            content.addAfter(ItemStack.EMPTY, GAZER_SPAWN_EGG);
+            content.addAfter(ItemStack.EMPTY, RUMBLER_SPAWN_EGG);
+            content.addAfter(ItemStack.EMPTY, COMET_CUBE_SPAWN_EGG);
+            content.addAfter(ItemStack.EMPTY, OLI_GRUB_SPAWN_EGG);
+            content.addAfter(ItemStack.EMPTY, GREY_SPAWN_EGG);
+            content.addAfter(ItemStack.EMPTY, ARCH_GREY_SPAWN_EGG);
+        });
+    }
+
     public static void register() {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Item.ITEM_GROUP), ITEMS_GROUP);
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Block.ITEM_GROUP_BLOCKS), BLOCKS_GROUP);
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Block.ITEM_GROUP_MACHINES), MACHINES_GROUP);
+        registerSpawnEggs();
     }
 }

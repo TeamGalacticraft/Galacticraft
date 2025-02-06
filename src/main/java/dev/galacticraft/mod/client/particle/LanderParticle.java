@@ -93,7 +93,7 @@ public class LanderParticle extends TextureSheetParticle {
             this.zd *= 1.1D;
         }
 
-        this.quadSize *= 0.9599999785423279D;
+        this.quadSize *= 0.95999998F;
 
         this.xd *= 0.9599999785423279D;
         this.yd *= 0.9599999785423279D;
