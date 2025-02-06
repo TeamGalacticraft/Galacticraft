@@ -390,7 +390,7 @@ public class GCModelProvider extends FabricModelProvider {
     private static void createSolarPanel(BlockModelGenerators generator, Block block) {
         MachineModelGenerator.createTrivialMachine(generator, block, TextureProvider.builder(Constant.MOD_ID)
                 .sides("block/machine_side")
-                .top("block/solar_panel")
+                .topOverride("block/solar_panel")
                 .front(TextureMapping.getBlockTexture(block))
                 .build()
         );
