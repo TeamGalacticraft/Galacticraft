@@ -186,12 +186,12 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.SINGLE_SOLAR_MODULE, 2)
                 .define('G', ConventionalItemTags.GLASS_BLOCKS)
-                .define('S', GCItems.SOLAR_ARRAY_WAFER)
+                .define('S', GCItems.BLUE_SOLAR_WAFER)
                 .define('W', GCItems.ALUMINUM_WIRE)
                 .pattern("GGG")
                 .pattern("SSS")
                 .pattern("WWW")
-                .unlockedBy(getHasName(GCItems.SOLAR_ARRAY_WAFER), has(GCItems.SOLAR_ARRAY_WAFER))
+                .unlockedBy(getHasName(GCItems.BLUE_SOLAR_WAFER), has(GCItems.BLUE_SOLAR_WAFER))
                 .save(output);
 
 
