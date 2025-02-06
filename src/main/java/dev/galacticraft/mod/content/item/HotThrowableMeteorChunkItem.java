@@ -24,6 +24,7 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.util.TooltipUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -58,8 +59,9 @@ public class HotThrowableMeteorChunkItem extends ThrowableMeteorChunkItem {
         if (maybeTicks != null) {
             int ticksUntilCool = maybeTicks;
             double secondsUntilCool = ticksUntilCool / 20.0;
-            Style style = Constant.Text.Color.getStorageLevelStyle(1.0 - (double)ticksUntilCool/(double)MAX_TICKS);
-            tooltip.add(Component.translatable(Translations.Tooltip.TIME_UNTIL_COOL, String.format("%.1f", secondsUntilCool)).setStyle(style));
+            Style style = Constant.Text.getCoolingStyle((double)ticksUntilCool/(double)MAX_TICKS);
+            Component remaining = Component.translatable(Translations.Tooltip.SECONDS_UNIT, String.format("%.1f", secondsUntilCool)).setStyle(style);
+            TooltipUtil.appendLabeledTooltip(Translations.Tooltip.TIME_UNTIL_COOL, remaining, tooltip);
         }
     }
 

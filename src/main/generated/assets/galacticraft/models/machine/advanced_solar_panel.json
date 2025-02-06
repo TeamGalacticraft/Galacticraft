@@ -4,7 +4,7 @@
     "front": "galacticraft:block/advanced_solar_panel",
     "left": "galacticraft:block/machine_side",
     "right": "galacticraft:block/machine_side",
-    "top": "galacticraft:block/solar_panel"
+    "top_item_override": "galacticraft:block/solar_panel"
   },
   "machinelib:type": "machine"
 }

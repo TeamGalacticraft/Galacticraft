@@ -185,9 +185,9 @@ public class GCCreativeModeTabs {
                 output.accept(AMBIENT_THERMAL_CONTROLLER);
 
                 // FOOD
-                output.accept(CHEESE_CURD);
+                output.accept(MOON_CHEESE_CURD);
 
-                output.accept(CHEESE_SLICE);
+                output.accept(MOON_CHEESE_SLICE);
                 output.accept(BURGER_BUN);
                 output.accept(GROUND_BEEF);
                 output.accept(BEEF_PATTY);
