@@ -56,8 +56,6 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.CameraType;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
@@ -337,7 +335,6 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         if (this.getPassengers().isEmpty()) {
             player.absRotateTo(this.getYRot(), this.getXRot());
             player.startRiding(this);
-            Minecraft.getInstance().options.setCameraType(CameraType.THIRD_PERSON_FRONT);
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.FAIL;

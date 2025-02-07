@@ -25,6 +25,8 @@ package dev.galacticraft.mod.mixin.client;
 import com.mojang.authlib.GameProfile;
 import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.content.entity.orbital.AdvancedVehicle;
+import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import dev.galacticraft.mod.content.entity.orbital.lander.AbstractLanderEntity;
 import dev.galacticraft.mod.content.item.RocketItem;
 import dev.galacticraft.mod.network.c2s.ControlEntityPayload;
 import net.fabricmc.api.EnvType;
@@ -95,6 +97,15 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer {
     @Inject(method = "move", at = @At("TAIL"))
     private void gc$footprints(MoverType type, Vec3 motion, CallbackInfo ci) {
 
+    }
+
+    @Inject(method = "startRiding", at = @At("TAIL"), cancellable = true)
+    private void gc$enterAdvancedVehicle(Entity vehicle, boolean bl, CallbackInfoReturnable<Boolean> cir) {
+        if (vehicle instanceof RocketEntity) {
+            this.minecraft.options.setCameraType(CameraType.THIRD_PERSON_FRONT);
+        } else if (vehicle instanceof AbstractLanderEntity) {
+            this.minecraft.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+        }
     }
 
     @Inject(method = "removeVehicle", at = @At("HEAD"), cancellable = true)

@@ -45,8 +45,6 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.base.SingleFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.minecraft.client.CameraType;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.Registries;
@@ -106,7 +104,6 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
         }
 
         moveTo(player.getX(), player.getY(), player.getZ(), 0, 0);
-        Minecraft.getInstance().options.setCameraType(CameraType.THIRD_PERSON_BACK);
     }
 
     @Override
