@@ -106,8 +106,9 @@ public abstract class ServerPlayerMixin extends LivingEntityMixin implements Ser
     @Inject(method = "stopRiding", at = @At("HEAD"), cancellable = true)
     private void canStopRiding(CallbackInfo ci) {
         Entity vehicle = getVehicle();
-        if (isRideTick && vehicle instanceof IgnoreShift ignoreShift && ignoreShift.shouldIgnoreShiftExit())
+        if (isRideTick && vehicle instanceof IgnoreShift ignoreShift && ignoreShift.shouldIgnoreShiftExit()) {
             ci.cancel();
+        }
     }
 
     @Inject(method = "bedBlocked", at = @At(value = "HEAD"), cancellable = true)

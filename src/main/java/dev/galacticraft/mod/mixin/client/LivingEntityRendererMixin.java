@@ -65,10 +65,7 @@ public abstract class LivingEntityRendererMixin {
             if (entity.getVehicle() instanceof RocketEntity rocket) {
                 double rotationOffset = -0.5F;
                 pose.translate(0, -rotationOffset, 0);
-                float anglePitch = rocket.xRotO;
-                float angleYaw = rocket.yRotO;
-                pose.mulPose(Axis.YN.rotationDegrees(angleYaw));
-                pose.mulPose(Axis.ZP.rotationDegrees(anglePitch));
+                pose.mulPose(Axis.ZP.rotationDegrees(rocket.getXRot()));
                 pose.translate(0, rotationOffset, 0);
             }
         }

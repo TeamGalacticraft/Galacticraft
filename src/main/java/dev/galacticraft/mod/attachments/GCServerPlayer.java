@@ -40,7 +40,7 @@ public class GCServerPlayer {
     public static final Codec<GCServerPlayer> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             RocketData.CODEC.optionalFieldOf("rocket_data").forGetter(o -> Optional.ofNullable(o.rocketData)),
             Codec.LONG.fieldOf("fuel").forGetter(GCServerPlayer::getFuel),
-            ItemStack.CODEC.listOf().fieldOf("rocket_stacks").forGetter(GCServerPlayer::getRocketStacks)
+            ItemStack.OPTIONAL_CODEC.listOf().fieldOf("rocket_stacks").forGetter(GCServerPlayer::getRocketStacks)
     ).apply(instance, (data, fuel, stacks) -> new GCServerPlayer(data.orElse(null), fuel, stacks)));
 
     public static GCServerPlayer get(ServerPlayer player) {

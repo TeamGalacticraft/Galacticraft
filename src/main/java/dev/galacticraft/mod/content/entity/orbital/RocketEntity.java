@@ -327,13 +327,13 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
     @Override
     public InteractionResult interactAt(Player player, Vec3 vec3d, InteractionHand hand) {
-        player.startRiding(this);
-        return InteractionResult.SUCCESS;
+        return interact(player, hand);
     }
 
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
         if (this.getPassengers().isEmpty()) {
+            player.absRotateTo(this.getYRot(), this.getXRot());
             player.startRiding(this);
             return InteractionResult.SUCCESS;
         }
