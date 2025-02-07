@@ -112,16 +112,15 @@ public abstract class ServerPlayerMixin extends LivingEntityMixin implements Ser
     }
 
     @Inject(method = "bedBlocked", at = @At(value = "HEAD"), cancellable = true)
-    private void checkIfCryoBedBlocked(BlockPos blockPos, Direction direction, CallbackInfoReturnable<Boolean> cir){
-        if(this.level().getBlockState(blockPos).getBlock() instanceof CryogenicChamberBlock){
-            BlockPos blockPos2 = blockPos.relative(direction);
-
-            cir.setReturnValue(!this.gc$freeAt(blockPos2) || !this.gc$freeAt(blockPos2.above()));
+    private void checkIfCryoBedBlocked(BlockPos sleepingPos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
+        BlockPos basePos = sleepingPos.below();
+        if (this.level().getBlockState(basePos).getBlock() instanceof CryogenicChamberBlock){
+            cir.setReturnValue(!this.gc$freeAt(basePos.relative(direction)) || !this.gc$freeAt(sleepingPos.relative(direction)));
         }
     }
 
     @Unique
-    private boolean gc$freeAt(BlockPos blockPos){
+    private boolean gc$freeAt(BlockPos blockPos) {
         return !this.level().getBlockState(blockPos).isSuffocating(this.level(), blockPos);
     }
 }
