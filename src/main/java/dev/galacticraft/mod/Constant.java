@@ -782,7 +782,7 @@ public interface Constant {
     }
 
     interface Landing {
-        double SAFE_VELOCITY = 1.0D; // ticks per second
+        double SAFE_VELOCITY = 1.0D; // meters per tick (~1/20 second)
         double EXPLOSION_SCALE = 4.0D;
     }
 
