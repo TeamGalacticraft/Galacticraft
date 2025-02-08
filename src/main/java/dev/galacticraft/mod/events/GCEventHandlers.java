@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
+import dev.galacticraft.mod.content.block.special.CryogenicChamberPart;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.network.s2c.FootprintRemovedPacket;
 import dev.galacticraft.mod.util.Translations;
@@ -62,7 +63,7 @@ public class GCEventHandlers {
     }
 
     public static InteractionResult allowCryogenicSleep(LivingEntity entity, BlockPos sleepingPos, BlockState state, boolean vanillaResult) {
-        if (state.getBlock() instanceof CryogenicChamberBlock) {
+        if (state.getBlock() instanceof CryogenicChamberPart && !state.getValue(CryogenicChamberPart.TOP)) {
             return entity.isInCryoSleep()
                     ? InteractionResult.SUCCESS
                     : InteractionResult.PASS;
@@ -74,7 +75,7 @@ public class GCEventHandlers {
         if (entity.isInCryoSleep()) {
             BlockState state = entity.level().getBlockState(sleepingPos);
 
-            if (state.getBlock() instanceof CryogenicChamberBlock) return state.getValue(CryogenicChamberBlock.FACING);
+            if (state.getBlock() instanceof CryogenicChamberPart) return state.getValue(CryogenicChamberBlock.FACING);
         }
 
         return sleepingDirection;
@@ -101,9 +102,19 @@ public class GCEventHandlers {
         Level level = entity.level();
         if (!level.isClientSide() && entity.isInCryoSleep()) {
             entity.endCryoSleep();
-            BlockState baseState = level.getBlockState(sleepingPos);
+            BlockPos basePos = sleepingPos.below();
+            BlockState baseState = level.getBlockState(basePos);
+            float angle = 0.0F;
             if (baseState.getBlock() instanceof CryogenicChamberBlock) {
-                level.setBlockAndUpdate(sleepingPos, baseState.setValue(BlockStateProperties.OCCUPIED, false));
+                level.setBlockAndUpdate(basePos, baseState.setValue(BlockStateProperties.OCCUPIED, false));
+                angle = baseState.getValue(CryogenicChamberBlock.FACING).toYRot();
+                entity.setYRot(angle);
+            }
+
+            ServerPlayer serverPlayer = (ServerPlayer) entity;
+            if (!(serverPlayer.getRespawnDimension() == level.dimension() && basePos.equals(serverPlayer.getRespawnPosition()))) {
+                boolean forceRespawn = false;
+                serverPlayer.setRespawnPosition(level.dimension(), basePos, angle, forceRespawn, true);
             }
         }
     }

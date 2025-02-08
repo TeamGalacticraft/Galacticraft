@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -64,13 +64,22 @@ public class GCResourceReloadListener implements SimpleSynchronousResourceReload
         WireWalkwayBakedModel.invalidate();
         PipeBakedModel.invalidate();
         FluidPipeWalkwayBakedModel.invalidate();
-        FluidRenderHandler oil = (view, pos, state) -> new TextureAtlasSprite[]{atlas.apply(Constant.id("block/crude_oil_still")), atlas.apply(Constant.id("block/crude_oil_flowing"))};
-        FluidRenderHandler fuel = (view, pos, state) -> new TextureAtlasSprite[]{atlas.apply(Constant.id("block/fuel_still")), atlas.apply(Constant.id("block/fuel_flowing"))};
+        FluidRenderHandler oil = (view, pos, state) -> new TextureAtlasSprite[]{
+                atlas.apply(Constant.id("block/fluid/crude_oil_still")), 
+                atlas.apply(Constant.id("block/fluid/crude_oil_flowing"))
+        };
+        FluidRenderHandler fuel = (view, pos, state) -> new TextureAtlasSprite[]{
+                atlas.apply(Constant.id("block/fluid/fuel_still")), 
+                atlas.apply(Constant.id("block/fluid/fuel_flowing"))
+        };
         FluidRenderHandler sulfuricAcid = (view, pos, state) -> new TextureAtlasSprite[]{
                 atlas.apply(Constant.id("block/fluid/sulfuric_acid_still")),
                 atlas.apply(Constant.id("block/fluid/sulfuric_acid_flowing"))
         };
-        FluidRenderHandler oxygen = (view, pos, state) -> new TextureAtlasSprite[]{atlas.apply(Constant.id("block/oxygen")), atlas.apply(Constant.id("block/oxygen"))};
+        FluidRenderHandler oxygen = (view, pos, state) -> new TextureAtlasSprite[]{
+                atlas.apply(Constant.id("block/fluid/oxygen")), 
+                atlas.apply(Constant.id("block/fluid/oxygen"))
+        };
 
         FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.CRUDE_OIL, oil);
         FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FLOWING_CRUDE_OIL, oil);

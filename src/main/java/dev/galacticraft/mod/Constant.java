@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -396,8 +396,8 @@ public interface Constant {
         String AMBIENT_THERMAL_CONTROLLER = "ambient_thermal_controller";
         String LIQUID_CANISTER = "liquid_canister";
         //FOOD
-        String CHEESE_CURD = "cheese_curd";
-        String CHEESE_SLICE = "cheese_slice";
+        String MOON_CHEESE_CURD = "moon_cheese_curd";
+        String MOON_CHEESE_SLICE = "moon_cheese_slice";
         String BURGER_BUN = "burger_bun";
         String GROUND_BEEF = "ground_beef";
         String BEEF_PATTY = "beef_patty";
@@ -840,6 +840,11 @@ public interface Constant {
     interface Energy {
         long T1_MACHINE_ENERGY_USAGE = 100; // TODO: adjust these later
         long T2_MACHINE_ENERGY_USAGE = 200;
+    }
+
+    interface Landing {
+        double SAFE_VELOCITY = 1.0D; // meters per tick (~1/20 second)
+        double EXPLOSION_SCALE = 4.0D;
     }
 
     @ApiStatus.Internal

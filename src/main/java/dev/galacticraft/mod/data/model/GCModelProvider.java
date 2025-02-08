@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -390,7 +390,7 @@ public class GCModelProvider extends FabricModelProvider {
     private static void createSolarPanel(BlockModelGenerators generator, Block block) {
         MachineModelGenerator.createTrivialMachine(generator, block, TextureProvider.builder(Constant.MOD_ID)
                 .sides("block/machine_side")
-                .top("block/solar_panel")
+                .topOverride("block/solar_panel")
                 .front(TextureMapping.getBlockTexture(block))
                 .build()
         );
@@ -556,9 +556,9 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.AMBIENT_THERMAL_CONTROLLER, ModelTemplates.FLAT_ITEM);
 
         // FOOD
-        generator.generateFlatItem(GCItems.CHEESE_CURD, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.MOON_CHEESE_CURD, ModelTemplates.FLAT_ITEM);
 
-        generator.generateFlatItem(GCItems.CHEESE_SLICE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.MOON_CHEESE_SLICE, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.BURGER_BUN, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.GROUND_BEEF, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.BEEF_PATTY, ModelTemplates.FLAT_ITEM);

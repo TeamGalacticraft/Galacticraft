@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -85,9 +88,13 @@ public class ThrowableMeteorChunkEntity extends ThrowableItemProjectile {
     public void tick() {
         super.tick();
         if (this.isInWater() && this.entityData.get(HOT)) {
+            Level level = this.level();
             this.setItem(new ItemStack(GCItems.THROWABLE_METEOR_CHUNK));
             this.entityData.set(HOT, false);
             this.playEntityOnFireExtinguishedSound();
+            for (int i = 0; i < 4; i++) {
+                level.addParticle(ParticleTypes.WHITE_SMOKE, true, this.getX() + level.random.nextDouble() - 0.5, Mth.ceil(this.getY()), this.getZ() + level.random.nextDouble() - 0.5, 0.0D, 0.0D, 0.0D);
+            }
         }
     }
 
