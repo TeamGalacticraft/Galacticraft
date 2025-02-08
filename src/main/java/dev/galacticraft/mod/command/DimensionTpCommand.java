@@ -84,10 +84,10 @@ public class DimensionTpCommand {
 
         if (success > 0) {
             if (success == 1) {
-                context.getSource().sendSuccess(() -> Component.translatable(Translations.DimensionTp.SUCCESS_SINGLE, level.dimension().location()), true);
+                context.getSource().sendSuccess(() -> Component.translatable(Translations.DimensionTp.SUCCESS_SINGLE, level.dimension().location().toString()), true);
             } else {
                 int tmp = success;
-                context.getSource().sendSuccess(() -> Component.translatable(Translations.DimensionTp.SUCCESS_MULTIPLE, tmp, level.dimension().location()), true);
+                context.getSource().sendSuccess(() -> Component.translatable(Translations.DimensionTp.SUCCESS_MULTIPLE, tmp, level.dimension().location().toString()), true);
             }
             return success;
         }
