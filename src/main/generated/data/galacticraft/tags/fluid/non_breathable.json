@@ -1,0 +1,11 @@
+{
+  "values": [
+    {
+      "id": "#minecraft:water",
+      "required": false
+    },
+    "#c:oil",
+    "#c:fuel",
+    "#c:sulfuric_acid"
+  ]
+}
