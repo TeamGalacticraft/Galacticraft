@@ -120,7 +120,9 @@ public class EntranceCrater extends SizedPiece {
                             state = state.rotate(rotation);
                         }
 
-                        worldIn.setBlock(blockpos, state, Block.UPDATE_CLIENTS);
+                        if (structureBoundingBoxIn.isInside(blockpos)) {
+                            worldIn.setBlock(blockpos, state, Block.UPDATE_CLIENTS);
+                        }
 //                        this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), i + range, j, k + range, boundingBox);
                         helper++;
                     }
