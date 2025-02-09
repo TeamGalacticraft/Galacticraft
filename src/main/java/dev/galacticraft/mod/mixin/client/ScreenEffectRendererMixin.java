@@ -55,9 +55,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ScreenEffectRenderer.class)
 public class ScreenEffectRendererMixin {
-    private static final ResourceLocation OIL_LOCATION = Constant.id("textures/misc/underoil.png");
-    private static final ResourceLocation FUEL_LOCATION = Constant.id("textures/misc/underfuel.png");
-    private static final ResourceLocation ACID_LOCATION = Constant.id("textures/misc/underacid.png");
+    private static final ResourceLocation OIL_LOCATION = Constant.id("textures/misc/crude_oil_overlay.png");
+    private static final ResourceLocation FUEL_LOCATION = Constant.id("textures/misc/fuel_overlay.png");
+    private static final ResourceLocation ACID_LOCATION = Constant.id("textures/misc/sulfuric_acid_overlay.png");
 
     @Inject(method = "renderScreenEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"), cancellable = true)
     private static void gc$fluidOverlays(Minecraft minecraft, PoseStack poseStack, CallbackInfo ci) {
