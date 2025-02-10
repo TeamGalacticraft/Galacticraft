@@ -45,13 +45,13 @@ import java.util.List;
 import java.util.Map;
 
 public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, Menu extends SolarPanelMenu<Machine>> extends MachineScreen<Machine, Menu> {
-    private static final int LIGHT_SOURCE_X = 128;
-    private static final int LIGHT_SOURCE_Y = 25;
+    private static final int LIGHT_SOURCE_X = 120;
+    private static final int LIGHT_SOURCE_Y = 30;
     private static final int LIGHT_SOURCE_WIDTH = 32;
     private static final int LIGHT_SOURCE_HEIGHT = 32;
 
-    private static final int SOLAR_PANEL_X = 38;
-    private static final int SOLAR_PANEL_Y = 17;
+    private static final int SOLAR_PANEL_X = 46;
+    private static final int SOLAR_PANEL_Y = 22;
     private static final int SOLAR_PANEL_WIDTH = 16;
     private static final int SOLAR_PANEL_HEIGHT = 16;
 
