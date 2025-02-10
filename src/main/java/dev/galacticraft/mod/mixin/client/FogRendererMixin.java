@@ -30,6 +30,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -37,6 +38,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import com.llamalad7.mixinextras.sugar.Local;
 
 @Mixin(FogRenderer.class)
 public class FogRendererMixin {
@@ -68,27 +70,31 @@ public class FogRendererMixin {
     }
 
     @ModifyArg(method = "setupFog", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderFogStart(F)V", remap = false), index = 0)
-    private static float gc$setShaderFogStart(float start) {
-        Player player = Minecraft.getInstance().player;
-        if (player.isEyeInFluid(GCTags.OIL)) {
-            return -8.0F;
-        } else if (player.isEyeInFluid(GCTags.FUEL)) {
-            return -8.0F;
-        } else if (player.isEyeInFluid(GCTags.SULFURIC_ACID)) {
-            return -8.0F;
+    private static float gc$setShaderFogStart(float start, @Local FogType fogType) {
+        if (fogType != FogType.NONE) {
+            Player player = Minecraft.getInstance().player;
+            if (player.isEyeInFluid(GCTags.OIL)) {
+                return -8.0F;
+            } else if (player.isEyeInFluid(GCTags.FUEL)) {
+                return -8.0F;
+            } else if (player.isEyeInFluid(GCTags.SULFURIC_ACID)) {
+                return -8.0F;
+            }
         }
         return start;
     }
 
     @ModifyArg(method = "setupFog", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderFogEnd(F)V", remap = false), index = 0)
-    private static float gc$setShaderFogEnd(float end) {
-        Player player = Minecraft.getInstance().player;
-        if (player.isEyeInFluid(GCTags.OIL)) {
-            return 8.0F;
-        } else if (player.isEyeInFluid(GCTags.FUEL)) {
-            return 12.0F;
-        } else if (player.isEyeInFluid(GCTags.SULFURIC_ACID)) {
-            return 12.0F;
+    private static float gc$setShaderFogEnd(float end, @Local FogType fogType) {
+        if (fogType != FogType.NONE) {
+            Player player = Minecraft.getInstance().player;
+            if (player.isEyeInFluid(GCTags.OIL)) {
+                return 8.0F;
+            } else if (player.isEyeInFluid(GCTags.FUEL)) {
+                return 12.0F;
+            } else if (player.isEyeInFluid(GCTags.SULFURIC_ACID)) {
+                return 12.0F;
+            }
         }
         return end;
     }
