@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -676,6 +676,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(GcHouston.IN_OVERWORLD, "I don't need to be rescued!");
         this.add(GcHouston.SUCCESS, "You have been rescued. Better luck next time...");
 
+        this.deathBy(GCDamageTypes.CRASH_LANDING, "%s came in too hot");
         this.deathBy(GCDamageTypes.OIL_BOOM, "%s tried to put out fire with a very flammable material",
                 "%s tried to put out fire with a very flammable material while trying to escape %s");
         this.deathBy(GCDamageTypes.SUFFOCATION, "%s died from lack of oxygen",

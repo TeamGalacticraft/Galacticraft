@@ -323,6 +323,7 @@
   "config.galacticraft.player.lifesupport.oxygen_consumption_rate": "Oxygen Consumption Rate/t",
   "config.galacticraft.reset": "Reset",
   "config.galacticraft.title": "Galacticraft Config",
+  "death.attack.crash_landing": "%s came in too hot",
   "death.attack.oil_boom": "%s tried to put out fire with a very flammable material",
   "death.attack.oil_boom.player": "%s tried to put out fire with a very flammable material while trying to escape %s",
   "death.attack.suffocation": "%s died from lack of oxygen",

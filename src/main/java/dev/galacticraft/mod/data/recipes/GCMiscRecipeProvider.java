@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -223,13 +223,13 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
 
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BATTERY)
-                .define('T', GCItems.COMPRESSED_TIN)
+                .define('T', GCItems.COMPRESSED_ALUMINUM)
                 .define('R', ConventionalItemTags.REDSTONE_DUSTS)
                 .define('C', ConventionalItemTags.COAL)
                 .pattern(" T ")
                 .pattern("TRT")
                 .pattern("TCT")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_TIN), has(GCItems.COMPRESSED_TIN))
+                .unlockedBy(getHasName(GCItems.COMPRESSED_ALUMINUM), has(GCItems.COMPRESSED_ALUMINUM))
                 .save(output);
 
 
