@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,12 +31,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 
 @Environment(EnvType.CLIENT)
 public class CoalGeneratorScreen extends MachineScreen<CoalGeneratorBlockEntity, CoalGeneratorMenu> {
-    private static final int FIRE_X = 72;
-    private static final int FIRE_Y = 37;
+    private static final int FIRE_X = 80;
+    private static final int FIRE_Y = 27;
     private static final int FIRE_U = 176;
     private static final int FIRE_V = 0;
     private static final int FIRE_WIDTH = 14;
@@ -44,15 +45,15 @@ public class CoalGeneratorScreen extends MachineScreen<CoalGeneratorBlockEntity,
 
     public CoalGeneratorScreen(CoalGeneratorMenu handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.COAL_GENERATOR_SCREEN);
-        this.imageHeight = 176;
     }
 
     @Override
     protected void renderMachineBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.renderMachineBackground(graphics, mouseX, mouseY, delta);
         if (this.menu.getFuelLength() > 0) {
-            double scale = 1.0 - ((double)this.menu.getFuelTime()) / (double)this.menu.getFuelLength();
-            DrawableUtil.drawProgressTexture(graphics.pose(), this.leftPos + FIRE_X, this.topPos + FIRE_Y + FIRE_HEIGHT - (float) (FIRE_HEIGHT * scale), 0, FIRE_U, FIRE_V + FIRE_HEIGHT - (float) (FIRE_HEIGHT * scale), FIRE_WIDTH, (float) (FIRE_HEIGHT * scale));
+            float scale = 1.0F - (float)this.menu.getFuelTime() / (float)this.menu.getFuelLength();
+            int height = Mth.ceil((FIRE_HEIGHT - 1) * scale) + 1;
+            DrawableUtil.drawProgressTexture(graphics.pose(), this.leftPos + FIRE_X, this.topPos + FIRE_Y + FIRE_HEIGHT - height, 0, FIRE_U, FIRE_V + FIRE_HEIGHT - height, FIRE_WIDTH, height);
         }
     }
 }

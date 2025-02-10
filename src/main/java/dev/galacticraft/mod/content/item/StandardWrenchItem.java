@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,10 +22,9 @@
 
 package dev.galacticraft.mod.content.item;
 
-import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.util.TooltipUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.Util;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -92,12 +91,8 @@ public class StandardWrenchItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
-        super.appendHoverText(stack, context, tooltip, type);
-        if (Screen.hasShiftDown()) {
-            tooltip.add(Component.translatable(Translations.Tooltip.STANDARD_WRENCH).setStyle(Constant.Text.Color.GRAY_STYLE));
-        } else {
-            tooltip.add(Component.translatable(Translations.Tooltip.PRESS_SHIFT).setStyle(Constant.Text.Color.GRAY_STYLE));
-        }
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag options) {
+        TooltipUtil.appendLshiftTooltip(Translations.Tooltip.STANDARD_WRENCH, tooltip);
+        super.appendHoverText(stack, context, tooltip, options);
     }
 }

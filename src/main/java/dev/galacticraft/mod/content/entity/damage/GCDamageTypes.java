@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,12 +30,14 @@ import net.minecraft.world.damagesource.DamageScaling;
 import net.minecraft.world.damagesource.DamageType;
 
 public class GCDamageTypes {
+    public static final ResourceKey<DamageType> CRASH_LANDING = Constant.key(Registries.DAMAGE_TYPE, "crash_landing");
     public static final ResourceKey<DamageType> OIL_BOOM = Constant.key(Registries.DAMAGE_TYPE, "oil_boom");
     public static final ResourceKey<DamageType> VINE_POISON = Constant.key(Registries.DAMAGE_TYPE, "vine_poison");
     public static final ResourceKey<DamageType> SUFFOCATION = Constant.key(Registries.DAMAGE_TYPE, "suffocation");
     public static final ResourceKey<DamageType> SULFURIC_ACID = Constant.key(Registries.DAMAGE_TYPE, "sulfuric_acid");
 
     public static void bootstrapRegistries(BootstrapContext<DamageType> context) {
+        context.register(CRASH_LANDING, new DamageType("crash_landing", DamageScaling.ALWAYS, 0.1f));
         context.register(OIL_BOOM, new DamageType("oil_boom", DamageScaling.ALWAYS, 0.1f));
         context.register(VINE_POISON, new DamageType("vine_poison", 0.0f));
         context.register(SUFFOCATION, new DamageType("suffocation", 0.0f));

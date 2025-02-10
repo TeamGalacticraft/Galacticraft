@@ -1,7 +1,8 @@
 {
   "variants": {
-    "": {
-      "model": "galacticraft:block/invisible_machine"
-    }
+    "facing=north": { "model": "galacticraft:block/cryogenic_chamber_bottom"},
+    "facing=east":  { "model": "galacticraft:block/cryogenic_chamber_bottom", "y": 90 },
+    "facing=west":  { "model": "galacticraft:block/cryogenic_chamber_bottom", "y": 270 },
+    "facing=south": { "model": "galacticraft:block/cryogenic_chamber_bottom", "y": 180 }
   }
 }

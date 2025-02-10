@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_solar_array_wafer": {
+    "has_blue_solar_wafer": {
       "conditions": {
         "items": [
           {
-            "items": "galacticraft:solar_array_wafer"
+            "items": "galacticraft:blue_solar_wafer"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_solar_array_wafer"
+      "has_blue_solar_wafer"
     ]
   ],
   "rewards": {

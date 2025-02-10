@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -107,8 +107,10 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
     @Inject(method = "setPosToBed", at = @At("HEAD"), cancellable = true)
     private void gc$setCryoSleepPos(BlockPos blockPos, CallbackInfo ci) {
         if (isInCryoSleep()) {
-            Vec3 pos = blockPos.getBottomCenter();
-            this.setPos(pos.x, pos.y + 1F, pos.z);
+            Vec3 pos = blockPos.below().getBottomCenter();
+            this.setPos(pos.x, pos.y, pos.z);
+            this.setDeltaMovement(Vec3.ZERO);
+            this.hasImpulse = false;
             ci.cancel();
         }
     }

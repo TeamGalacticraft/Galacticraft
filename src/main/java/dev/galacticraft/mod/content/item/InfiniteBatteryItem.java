@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.util.ColorUtil;
+import dev.galacticraft.mod.util.TooltipUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.network.chat.Component;
@@ -49,8 +50,8 @@ public class InfiniteBatteryItem extends Item implements EnergyStorage {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
-        tooltip.add(Component.translatable(Translations.Tooltip.ENERGY_REMAINING, Component.translatable(Translations.Tooltip.INFINITE).setStyle(Style.EMPTY.withColor(ColorUtil.getRainbow(15000)))));
-        tooltip.add(Component.translatable(Translations.Tooltip.CREATIVE_ONLY).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
+        TooltipUtil.appendInfiniteCapacityTooltip(Translations.Tooltip.ENERGY_REMAINING, tooltip);
+        TooltipUtil.appendCreativeTooltip(tooltip, Constant.Text.LIGHT_PURPLE_STYLE);
         super.appendHoverText(stack, context, tooltip, type);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -304,9 +304,9 @@ public class GCItems {
     public static final Item AMBIENT_THERMAL_CONTROLLER = new Item(new Item.Properties());
     
     // FOOD
-    public static final Item CHEESE_CURD = new Item(new Item.Properties().food(GCFoodComponent.CHEESE_CURD));
+    public static final Item MOON_CHEESE_CURD = new Item(new Item.Properties().food(GCFoodComponent.MOON_CHEESE_CURD));
     
-    public static final Item CHEESE_SLICE = ITEMS.register(Constant.Item.CHEESE_SLICE, new Item(new Item.Properties().food(GCFoodComponent.CHEESE_SLICE)));
+    public static final Item MOON_CHEESE_SLICE = ITEMS.register(Constant.Item.MOON_CHEESE_SLICE, new Item(new Item.Properties().food(GCFoodComponent.MOON_CHEESE_SLICE)));
     public static final Item BURGER_BUN = ITEMS.register(Constant.Item.BURGER_BUN, new Item(new Item.Properties().food(GCFoodComponent.BURGER_BUN)));
     public static final Item GROUND_BEEF = ITEMS.register(Constant.Item.GROUND_BEEF, new Item(new Item.Properties().food(GCFoodComponent.GROUND_BEEF)));
     public static final Item BEEF_PATTY = ITEMS.register(Constant.Item.BEEF_PATTY, new Item(new Item.Properties().food(GCFoodComponent.BEEF_PATTY)));
@@ -328,22 +328,22 @@ public class GCItems {
     public static final Item HOT_THROWABLE_METEOR_CHUNK = new HotThrowableMeteorChunkItem(new Item.Properties().stacksTo(16));
 
     // ARMOR
-    public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties());
-    public static final Item HEAVY_DUTY_CHESTPLATE = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.CHESTPLATE, new Item.Properties());
-    public static final Item HEAVY_DUTY_LEGGINGS = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.LEGGINGS, new Item.Properties());
-    public static final Item HEAVY_DUTY_BOOTS = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.BOOTS, new Item.Properties());
+    public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1));
+    public static final Item HEAVY_DUTY_CHESTPLATE = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1));
+    public static final Item HEAVY_DUTY_LEGGINGS = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1));
+    public static final Item HEAVY_DUTY_BOOTS = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1));
 
-    public static final Item DESH_HELMET = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.HELMET, new Item.Properties());
-    public static final Item DESH_CHESTPLATE = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.CHESTPLATE, new Item.Properties());
-    public static final Item DESH_LEGGINGS = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.LEGGINGS, new Item.Properties());
-    public static final Item DESH_BOOTS = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.BOOTS, new Item.Properties());
+    public static final Item DESH_HELMET = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1));
+    public static final Item DESH_CHESTPLATE = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1));
+    public static final Item DESH_LEGGINGS = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1));
+    public static final Item DESH_BOOTS = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1));
 
-    public static final Item TITANIUM_HELMET = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.HELMET, new Item.Properties());
-    public static final Item TITANIUM_CHESTPLATE = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.CHESTPLATE, new Item.Properties());
-    public static final Item TITANIUM_LEGGINGS = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.LEGGINGS, new Item.Properties());
-    public static final Item TITANIUM_BOOTS = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.BOOTS, new Item.Properties());
+    public static final Item TITANIUM_HELMET = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1));
+    public static final Item TITANIUM_CHESTPLATE = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1));
+    public static final Item TITANIUM_LEGGINGS = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1));
+    public static final Item TITANIUM_BOOTS = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1));
 
-    public static final Item SENSOR_GLASSES = new ArmorItem(GCArmorMaterials.SENSOR_GLASSES, ArmorItem.Type.HELMET, new Item.Properties());
+    public static final Item SENSOR_GLASSES = new ArmorItem(GCArmorMaterials.SENSOR_GLASSES, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1));
 
     // TOOLS + WEAPONS
     public static final Item HEAVY_DUTY_SWORD = new BrittleSwordItem(GCTiers.STEEL, new Item.Properties().attributes(SwordItem.createAttributes(GCTiers.STEEL, 3, -2.4F)));
@@ -368,9 +368,9 @@ public class GCItems {
 
     // SMITHING TEMPLATES
     public static final Item TITANTIUM_UPGRADE_SMITHING_TEMPLATE = new SmithingTemplateItem(
-            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_APPLIES_TO),
-            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_INGREDIENTS),
-            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_DESCRIPTION),
+            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_APPLIES_TO).withStyle(Constant.Text.BLUE_STYLE),
+            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_INGREDIENTS).withStyle(Constant.Text.BLUE_STYLE),
+            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_DESCRIPTION).withStyle(Constant.Text.GRAY_STYLE),
             Component.translatable(Translations.Misc.UPGRADE_TITANIUM_BASE_SLOT_DESCRIPTION),
             Component.translatable(Translations.Misc.UPGRADE_TITANIUM_ADDITIONS_SLOT_DESCRIPTON),
             List.of(ResourceLocation.withDefaultNamespace("item/empty_armor_slot_helmet"),
@@ -702,7 +702,7 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.AMBIENT_THERMAL_CONTROLLER), AMBIENT_THERMAL_CONTROLLER);
 
         // FOOD
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CHEESE_CURD), CHEESE_CURD);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.MOON_CHEESE_CURD), MOON_CHEESE_CURD);
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_DEHYDRATED_APPLE), CANNED_DEHYDRATED_APPLE);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_DEHYDRATED_CARROT), CANNED_DEHYDRATED_CARROT);

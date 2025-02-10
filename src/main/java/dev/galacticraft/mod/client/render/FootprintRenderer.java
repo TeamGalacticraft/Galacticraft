@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -58,6 +58,7 @@ public class FootprintRenderer {
         }
 
         if (footprintsToDraw.isEmpty()) {
+            context.profiler().pop();
             return;
         }
 
@@ -127,6 +128,7 @@ public class FootprintRenderer {
 //            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightMapSaveX, lightMapSaveY);
 //        }
 
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         poseStack.popPose();
         context.profiler().pop();
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -65,7 +65,7 @@ public class Corridor extends SizedPiece {
                                 continue;
                             } else if (this.getDirection().getAxis() == Direction.Axis.X && (x + 1) % 4 == 0 && (z == 1 || z == this.boundingBox.getZSpan() - 2)) {
                                 this.placeBlock(worldIn,
-                                        GCBlocks.UNLIT_WALL_TORCH.defaultBlockState().setValue(WallTorchBlock.FACING, z == 1 ? Direction.NORTH.getOpposite() : Direction.SOUTH.getOpposite()), x, y, z,
+                                        GCBlocks.UNLIT_WALL_TORCH.defaultBlockState().setValue(WallTorchBlock.FACING, z == 1 ? Direction.SOUTH.getOpposite() : Direction.NORTH.getOpposite()), x, y, z,
                                         this.boundingBox);
                                 continue;
                             }

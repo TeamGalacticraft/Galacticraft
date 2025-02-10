@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,22 +23,44 @@
 package dev.galacticraft.mod.content;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.block.entity.SolarPanel.SolarPanelSource;
 import dev.galacticraft.mod.api.solarpanel.LightSource;
 import dev.galacticraft.mod.api.solarpanel.SolarPanelRegistry;
-import dev.galacticraft.mod.api.solarpanel.WorldLightSources;
 import dev.galacticraft.mod.util.Translations;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class GCLightSources {
-    private static final WorldLightSources MOON = new WorldLightSources(
-            Constant.ScreenTexture.MOON_LIGHT_SOURCES,
-            new LightSource(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_SUN).setStyle(Constant.Text.Color.YELLOW_STYLE), 1.0, 1.0),
-            new LightSource(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_EARTH).setStyle(Constant.Text.Color.GREEN_STYLE), 0.07, 1.0),
-            new LightSource(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_NONE).setStyle(Constant.Text.Color.BLUE_STYLE), 0.0, 1.0),
-            new LightSource(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_NONE).setStyle(Constant.Text.Color.WHITE_STYLE), 0.0, 1.0));
+    public static final Map<SolarPanelSource, LightSource> DEFAULT_LIGHT_SOURCES = new HashMap<SolarPanelSource, LightSource>();
+    public static final Map<SolarPanelSource, LightSource> MOON_LIGHT_SOURCES = new HashMap<SolarPanelSource, LightSource>();
 
     public static void register() {
-        SolarPanelRegistry.registerLightSources(GCDimensions.MOON, MOON);
+        DEFAULT_LIGHT_SOURCES.put(SolarPanelSource.DAY,
+                new LightSource(Constant.CelestialBody.SOL, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_SUN).setStyle(Constant.Text.YELLOW_STYLE), 1.0, 1.0));
+        DEFAULT_LIGHT_SOURCES.put(SolarPanelSource.NIGHT,
+                new LightSource(Constant.CelestialBody.MOON, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_MOON).setStyle(Constant.Text.GRAY_STYLE), 0.07, 1.0));
+        DEFAULT_LIGHT_SOURCES.put(SolarPanelSource.OVERCAST,
+                new LightSource(Constant.CelestialBody.SOL_OVERCAST, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_RAIN).setStyle(Constant.Text.BLUE_STYLE), 1.0, 2.0));
+        DEFAULT_LIGHT_SOURCES.put(SolarPanelSource.STORMY,
+                new LightSource(Constant.CelestialBody.SOL_OVERCAST, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_THUNDER).setStyle(Constant.Text.DARK_GRAY_STYLE), 1.0, 10.0));
+        DEFAULT_LIGHT_SOURCES.put(SolarPanelSource.NO_LIGHT_SOURCE, 
+                new LightSource(null, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_NONE).setStyle(Constant.Text.WHITE_STYLE), 0.0, 1.0));
+
+        MOON_LIGHT_SOURCES.put(SolarPanelSource.DAY,
+                new LightSource(Constant.CelestialBody.SOL_FROM_MOON, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_SUN).setStyle(Constant.Text.YELLOW_STYLE), 1.0, 1.0));
+        MOON_LIGHT_SOURCES.put(SolarPanelSource.NIGHT,
+                new LightSource(Constant.CelestialBody.EARTH, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_EARTH).setStyle(Constant.Text.GREEN_STYLE), 0.07, 1.0));
+        MOON_LIGHT_SOURCES.put(SolarPanelSource.OVERCAST,
+                new LightSource(null, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_NONE).setStyle(Constant.Text.BLUE_STYLE), 0.0, 1.0));
+        MOON_LIGHT_SOURCES.put(SolarPanelSource.STORMY,
+                new LightSource(null, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_NONE).setStyle(Constant.Text.DARK_GRAY_STYLE), 0.0, 1.0));
+        MOON_LIGHT_SOURCES.put(SolarPanelSource.NO_LIGHT_SOURCE, 
+                new LightSource(null, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_NONE).setStyle(Constant.Text.WHITE_STYLE), 0.0, 1.0));
+
+        SolarPanelRegistry.registerLightSources(GCDimensions.MOON, MOON_LIGHT_SOURCES);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -120,7 +120,7 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
         this.textField.setY(this.topPos + 59);
 
         if (this.menu.state.isActive()) {
-            graphics.drawString(this.font, Component.translatable(Translations.Ui.BUBBLE_CURRENT_SIZE, FORMAT.format(this.menu.size)).setStyle(Constant.Text.Color.DARK_GRAY_STYLE), this.leftPos + 60, this.topPos + 42, ChatFormatting.DARK_GRAY.getColor(), false);
+            graphics.drawString(this.font, Component.translatable(Translations.Ui.BUBBLE_CURRENT_SIZE, FORMAT.format(this.menu.size)).setStyle(Constant.Text.DARK_GRAY_STYLE), this.leftPos + 60, this.topPos + 42, ChatFormatting.DARK_GRAY.getColor(), false);
         }
     }
 
