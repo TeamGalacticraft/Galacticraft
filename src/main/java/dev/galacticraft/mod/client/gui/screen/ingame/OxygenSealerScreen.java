@@ -42,6 +42,12 @@ public class OxygenSealerScreen extends MachineScreen<OxygenSealerBlockEntity, M
     }
 
     @Override
+    protected void init() {
+        super.init();
+        this.titleLabelX += 20;
+    }
+
+    @Override
     protected void renderForeground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.renderForeground(graphics, mouseX, mouseY, delta);
 

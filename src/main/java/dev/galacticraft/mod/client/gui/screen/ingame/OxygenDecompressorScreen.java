@@ -49,10 +49,8 @@ public class OxygenDecompressorScreen extends MachineScreen<OxygenDecompressorBl
     protected void renderMachineBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.renderMachineBackground(graphics, mouseX, mouseY, delta);
         if (this.menu.state.isActive()) {
-            double height = (int) (System.currentTimeMillis() % 2250);
-            if (height == 0) return; //prevent dividing by zero
-            height /= 125.0;
-            DrawableUtil.drawProgressTexture(graphics.pose(), this.leftPos + 82, this.topPos + 46, 176, 0, 11, (float)height);
+            int height = (int) (System.currentTimeMillis() % 2250) / 125;
+            DrawableUtil.drawProgressTexture(graphics.pose(), this.leftPos + 82, this.topPos + 46, 176, 0, 11, height);
         }
     }
 }
