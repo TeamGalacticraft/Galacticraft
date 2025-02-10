@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.api.solarpanel;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
-public record LightSource(Component name, double strength, double atmosphericInterference) {
+public record LightSource(ResourceLocation location, Component name, double strength, double atmosphericInterference) {
 }

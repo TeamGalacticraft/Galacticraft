@@ -94,6 +94,7 @@ public class Galacticraft implements ModInitializer {
         MoonVillagerTypes.register();
         GCVillagerProfessions.register();
         GCMachineStatuses.register();
+        GCSolarPanelStates.register();
         GCTeleporterTypes.register();
         GCStats.register();
         GCCelestialHandlers.register();

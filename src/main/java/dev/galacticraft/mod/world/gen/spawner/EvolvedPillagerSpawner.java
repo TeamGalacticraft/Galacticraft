@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.world.gen.spawner;
 
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -53,7 +54,9 @@ public class EvolvedPillagerSpawner implements CustomSpawner {
             return 0;
          } else {
             this.ticksUntilNextSpawn += 10000 + random.nextInt(1000);
-            long l = world.getDayTime() / 24000L;
+            Holder<CelestialBody<?, ?>> holder = world.galacticraft$getCelestialBody();
+            long dayLength = holder != null ? holder.value().dayLength() : 24000;
+            long l = world.getDayTime() / dayLength;
             if (l >= 5L && world.isDay()) {
                if (random.nextInt(5) != 0) {
                   return 0;

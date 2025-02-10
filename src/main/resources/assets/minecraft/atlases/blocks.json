@@ -7,7 +7,7 @@
     },
     {
       "type": "directory",
-      "source": "slot",
+      "source": "gui/slot",
       "prefix": "slot/"
     },
     {

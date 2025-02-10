@@ -33,6 +33,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.crafting.CraftingInput;
 
@@ -41,7 +42,7 @@ public class ElectricCompressorScreen extends MachineScreen<ElectricCompressorBl
     private static final int PROGRESS_U = 177;
     private static final int PROGRESS_V = 0;
     private static final int PROGRESS_X = 87;
-    private static final int PROGRESS_Y = 28;
+    private static final int PROGRESS_Y = 27;
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
 
@@ -56,9 +57,9 @@ public class ElectricCompressorScreen extends MachineScreen<ElectricCompressorBl
     }
 
     protected void drawCraftProgressBar(GuiGraphics graphics) {
-        float progressScale = (((float)this.menu.getProgress()) / ((float)this.menu.getMaxProgress()));
-
+        float progressScale = (float)this.menu.getProgress() / (float)this.menu.getMaxProgress();
+        int width = Mth.ceil(PROGRESS_WIDTH * progressScale);
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
-        DrawableUtil.drawProgressTexture(graphics.pose(), this.leftPos + PROGRESS_X, this.topPos + PROGRESS_Y, PROGRESS_U, PROGRESS_V, (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
+        DrawableUtil.drawProgressTexture(graphics.pose(), this.leftPos + PROGRESS_X, this.topPos + PROGRESS_Y, PROGRESS_U, PROGRESS_V, width, PROGRESS_HEIGHT);
     }
 }
