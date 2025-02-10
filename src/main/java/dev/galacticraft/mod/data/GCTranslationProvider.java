@@ -810,9 +810,11 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(SolarPanel.LIGHT_SOURCE_MOON, "Moon");
         this.add(SolarPanel.LIGHT_SOURCE_EARTH, "Earth");
         this.add(SolarPanel.LIGHT_SOURCE_NONE, "Unknown");
-        this.add(SolarPanel.LIGHT_SOURCE_RAIN, "Rain");
+        this.add(SolarPanel.LIGHT_SOURCE_RAIN, "Sun (Overcast)");
         this.add(SolarPanel.LIGHT_SOURCE_SUN, "Sun");
+        this.add(SolarPanel.LIGHT_SOURCE_THUNDER, "Sun (Stormy)");
         this.add(SolarPanel.STATUS, "Status: ");
+        this.add(SolarPanel.STORMY, "Stormy");
         this.add(SolarPanel.STRENGTH, "Strength: %s");
     }
 
@@ -838,6 +840,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(MachineStatus.OXYGEN_TANK_FULL, "Oxygen Tank Full");
         this.add(MachineStatus.PARTIALLY_BLOCKED, "Partially Blocked");
         this.add(MachineStatus.RAIN, "Rain");
+        this.add(MachineStatus.THUNDER, "Thunder");
         this.add(MachineStatus.SEALED, "Sealed");
         this.add(MachineStatus.WARMING_UP, "Warming Up");
         this.add(MachineStatus.NOT_ENOUGH_FUEL, "Not Enough Fuel");
