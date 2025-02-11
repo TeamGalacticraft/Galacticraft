@@ -24,7 +24,6 @@ package dev.galacticraft.mod.compat.rei.client;
 
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.machinelib.impl.Constant.TextureCoordinate;
-import dev.galacticraft.mod.client.gui.screen.ingame.RocketWorkbenchScreen;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultCompressingCategory;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultFabricationCategory;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
@@ -92,8 +91,6 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
             areas.add(new Rectangle(provider.getX() + provider.getImageWidth(), provider.getY(), TextureCoordinate.TAB_WIDTH, TextureCoordinate.TAB_HEIGHT * 2));
             return areas;
         });
-
-        zones.register(RocketWorkbenchScreen.class, screen -> List.of(new Rectangle(screen.panelX(), screen.panelY(), RocketWorkbenchScreen.PANEL_WIDTH, RocketWorkbenchScreen.PANEL_HEIGHT)));
     }
 
     @Override

@@ -65,8 +65,6 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
     public RecipeHolder<RocketRecipe> recipe;
     protected int recipeSize;
 
-    public int additionalHeight = 0;
-
     public final Inventory playerInventory;
 
     private boolean coneComplete;
@@ -101,57 +99,58 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         RocketRecipe recipe = this.recipe.value();
         int bodyHeight = this.recipe.value().bodyHeight();
         int y = this.coneY();
+        int centerX = SCREEN_CENTER_BASE_X - 36;
 
         // Cone
-        this.coneSlot = this.addSlot(new FilteredSlot(this.workbench.ingredients, 0, SCREEN_CENTER_BASE_X - 8, y, recipe.cone()).withBackground(Constant.SlotSprite.ROCKET_CONE));
+        this.coneSlot = this.addSlot(new FilteredSlot(this.workbench.ingredients, 0, centerX - 8, y, recipe.cone()).withBackground(Constant.SlotSprite.ROCKET_CONE));
 
         // Body
         this.bodySlots = new ArrayList<>();
         int nextSlot = 1;
         for (int i = 0; i < bodyHeight; i++) {
-            this.bodySlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, SCREEN_CENTER_BASE_X - 17, 18 + 18*i + y, recipe.body()).withBackground(Constant.SlotSprite.ROCKET_PLATING)));
-            this.bodySlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot + 1, SCREEN_CENTER_BASE_X + 1, 18 + 18*i + y, recipe.body()).withBackground(Constant.SlotSprite.ROCKET_PLATING)));
+            this.bodySlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, centerX - 17, 18 + 18*i + y, recipe.body()).withBackground(Constant.SlotSprite.ROCKET_PLATING)));
+            this.bodySlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot + 1, centerX + 1, 18 + 18*i + y, recipe.body()).withBackground(Constant.SlotSprite.ROCKET_PLATING)));
             nextSlot += 2;
         }
 
         // Boosters
         this.boosterSlots = new ArrayList<>();
         if (!recipe.boosters().isEmpty()) {
-            this.boosterSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, SCREEN_CENTER_BASE_X - 35, 18 * bodyHeight - 18 + y, recipe.boosters()).withBackground(Constant.SlotSprite.ROCKET_BOOSTER)));
-            this.boosterSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot + 1, SCREEN_CENTER_BASE_X + 19, 18 * bodyHeight - 18 + y, recipe.boosters()).withBackground(Constant.SlotSprite.ROCKET_BOOSTER)));
+            this.boosterSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, centerX - 35, 18 * bodyHeight - 18 + y, recipe.boosters()).withBackground(Constant.SlotSprite.ROCKET_BOOSTER)));
+            this.boosterSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot + 1, centerX + 19, 18 * bodyHeight - 18 + y, recipe.boosters()).withBackground(Constant.SlotSprite.ROCKET_BOOSTER)));
             nextSlot += 2;
         }
 
         // Left fins
         this.finSlots = new ArrayList<>();
-        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, SCREEN_CENTER_BASE_X - 35, 18*bodyHeight + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN)));
-        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot + 1, SCREEN_CENTER_BASE_X - 35, 18*bodyHeight + 18 + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN)));
+        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, centerX - 35, 18*bodyHeight + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN)));
+        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot + 1, centerX - 35, 18*bodyHeight + 18 + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN)));
         nextSlot += 2;
 
         // Right fins
-        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, SCREEN_CENTER_BASE_X + 19, 18*bodyHeight + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN)));
-        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot + 1, SCREEN_CENTER_BASE_X + 19, 18*bodyHeight + 18 + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN)));
+        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, centerX + 19, 18*bodyHeight + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN)));
+        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot + 1, centerX + 19, 18*bodyHeight + 18 + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN)));
         nextSlot += 2;
 
         // Engine
-        this.engineSlot = this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, SCREEN_CENTER_BASE_X - 8, 18*bodyHeight + 18 + y, recipe.engine()).withBackground(Constant.SlotSprite.ROCKET_ENGINE));
+        this.engineSlot = this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, centerX - 8, 18*bodyHeight + 18 + y, recipe.engine()).withBackground(Constant.SlotSprite.ROCKET_ENGINE));
 
         // Chest
-        this.addSlot(new FilteredSlot(this.workbench.chests, 0, 151, 9, stack -> this.workbench.chests.canPlaceItem(0, stack)).withBackground(Constant.SlotSprite.CHEST));
+        this.addSlot(new FilteredSlot(this.workbench.chests, 0, 44, 140, stack -> this.workbench.chests.canPlaceItem(0, stack)).withBackground(Constant.SlotSprite.CHEST));
 
         // Output
-        this.addSlot(new RocketResultSlot(this, this.workbench.output, 0, 203, 136 + this.additionalHeight));
+        this.addSlot(new RocketResultSlot(this, this.workbench.output, 0, 125, 135));
 
         // Player inventory
         for (int row = 0; row < 3; ++row) {
             for (int column = 0; column < 9; ++column) {
-                this.addSlot(new Slot(this.playerInventory, column + row * 9 + 9, column * 18 + 8, row * 18 + 167 + this.additionalHeight));
+                this.addSlot(new Slot(this.playerInventory, column + row * 9 + 9, column * 18 + 8, row * 18 + 167));
             }
         }
 
         // Player hotbar
         for (int column = 0; column < 9; ++column) {
-            this.addSlot(new Slot(this.playerInventory, column, column * 18 + 8, 225 + this.additionalHeight));
+            this.addSlot(new Slot(this.playerInventory, column, column * 18 + 8, 225));
         }
     }
 

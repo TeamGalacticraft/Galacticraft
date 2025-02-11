@@ -52,14 +52,8 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
     private static final int MAIN_UI_WIDTH = 176;
     private static final int UI_HEIGHT = 249;
 
-    private static final int ROCKET_PREVIEW_X = 209;
+    private static final int ROCKET_PREVIEW_X = 133;
     private static final int ROCKET_PREVIEW_Y = 100;
-
-    // Rocket preview/output panel
-    public static final int PANEL_X = 176;
-    public static final int PANEL_Y = 20;
-    public static final int PANEL_WIDTH = 72;
-    public static final int PANEL_HEIGHT = 149;
 
     private final RocketEntity entity;
 
@@ -98,7 +92,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float delta, int mouseX, int mouseY) {
-        this.inventoryLabelY = this.imageHeight - 96 + this.menu.additionalHeight;
+        this.inventoryLabelY = this.imageHeight - 96;
 
         try (Graphics graphics = Graphics.managed(guiGraphics, this.font)) {
             try (Graphics.Texture texture = graphics.texture(Constant.ScreenTexture.ROCKET_WORKBENCH_SCREEN, 256, 256)) {
@@ -120,14 +114,6 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
         super.render(context, mouseX, mouseY, delta);
         this.entity.setYRot(this.entity.getYRot() + delta);
         this.renderTooltip(context, mouseX, mouseY);
-    }
-
-    public int panelX() {
-        return this.leftPos + PANEL_X;
-    }
-
-    public int panelY() {
-        return this.topPos + PANEL_Y;
     }
 
     @Override
