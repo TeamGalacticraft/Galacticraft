@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,10 +22,28 @@
 
 package dev.galacticraft.mod.content.block.special;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class TransportTube extends Block {
+    private static final VoxelShape NORTH = Block.box(0, 0, 14, 16, 16, 16);
+    private static final VoxelShape SOUTH = Block.box(0, 0, 0, 16, 16, 2);
+    private static final VoxelShape EAST = Block.box(14, 0, 0, 16, 16, 16);
+    private static final VoxelShape WEST = Block.box(0, 0, 0, 2, 16, 16);
+    private static final VoxelShape SHAPE = Shapes.or(NORTH, SOUTH, EAST, WEST);
+
     public TransportTube(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
+        return SHAPE;
     }
 }

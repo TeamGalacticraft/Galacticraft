@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.events.GCEventHandlers;
+import dev.galacticraft.mod.util.Translations;
 import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.Holder;
@@ -50,7 +51,7 @@ public record PlanetTeleportPayload(ResourceLocation id) implements C2SPayload {
             if (body == null) body = context.server().registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).get(id);
             GCEventHandlers.onPlayerChangePlanets(context.server(), context.player(), body, fromBody.value());
         } else {
-            context.player().connection.disconnect(Component.literal("Invalid planet teleport packet received."));
+            context.player().connection.disconnect(Component.translatable(Translations.DimensionTp.INVALID_PACKET));
         }
     }
 

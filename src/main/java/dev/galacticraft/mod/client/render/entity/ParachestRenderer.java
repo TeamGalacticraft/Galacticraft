@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ParachestRenderer extends EntityRenderer<ParachestEntity> {
 
-    public static final ResourceLocation TEXTURE = Constant.id("textures/model/parachest.png");
+    public static final ResourceLocation TEXTURE = Constant.id("textures/block/parachest.png");
 
     public ParachestModel parachute;
     private ModelPart chest;
@@ -48,20 +48,19 @@ public class ParachestRenderer extends EntityRenderer<ParachestEntity> {
         this.shadowRadius = 1F;
         this.chest = context.bakeLayer(ModelLayers.CHEST);
         this.parachute = new ParachestModel(context.bakeLayer(GCEntityModelLayer.PARACHEST));
-
     }
-
-
 
     @Override
     public void render(ParachestEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         this.parachute.setupAnim(entity, 0F, 0F, 0F, 0F, 0F);
+        poseStack.translate(-0.5F, 0F, -0.5F);
         this.chest.render(poseStack, buffer.getBuffer(RenderType.entityCutoutNoCull(TEXTURE)), packedLight, OverlayTexture.NO_OVERLAY);
+        poseStack.translate(-0.0625F, 0F, 0.375F);
         this.parachute.renderToBuffer(poseStack, buffer.getBuffer(RenderType.entityCutoutNoCull(getTextureLocation(entity))), packedLight, OverlayTexture.NO_OVERLAY);
     }
 
     @Override
     public ResourceLocation getTextureLocation(ParachestEntity entity) {
-        return Constant.id("textures/model/parachute/" + entity.color.getName() + ".png");
+        return Constant.id("textures/model/parachute/" + entity.getColor().getName() + ".png");
     }
 }

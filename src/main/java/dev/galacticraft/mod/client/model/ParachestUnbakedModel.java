@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -55,6 +55,6 @@ public record ParachestUnbakedModel(UnbakedModel parentModel, Map<DyeColor, Unba
         chutes.forEach((color, unbakedModel) -> {
             bakedChutes.put(color, unbakedModel.bake(baker, textureGetter, state));
         });
-        return new ParaChestBakedModel(parentModel.bake(baker, textureGetter, state), bakedChutes);
+        return new ParachestBakedModel(parentModel.bake(baker, textureGetter, state), bakedChutes);
     }
 }

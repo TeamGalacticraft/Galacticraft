@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,10 +42,16 @@ public class OxygenSealerScreen extends MachineScreen<OxygenSealerBlockEntity, M
     }
 
     @Override
+    protected void init() {
+        super.init();
+        this.titleLabelX += 20;
+    }
+
+    @Override
     protected void renderForeground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.renderForeground(graphics, mouseX, mouseY, delta);
 
         MachineStatus status = this.menu.state.getStatus();
-        graphics.drawString(this.font, Component.translatable(Translations.Ui.MACHINE_STATUS).append(status != null ? status.getText() : Component.empty()), this.leftPos + 50, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
+        graphics.drawString(this.font, Component.translatable(Translations.Ui.MACHINE_STATUS, status != null ? status.getText() : Component.empty()), this.leftPos + 50, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.compat.jei.category;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.jei.GCJEIRecipeTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
@@ -37,12 +36,14 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
+import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+
 public class JEICompressingCategory implements IRecipeCategory<CompressingRecipe> {
     private final IDrawable icon, background;
 
     public JEICompressingCategory(IGuiHelper helper) {
         this.icon = helper.createDrawableItemStack(new ItemStack(GCBlocks.COMPRESSOR));
-        this.background = helper.createDrawable(Constant.ScreenTexture.RECIPE_VEIWER_DISPLAY_TEXTURE, 0, 83, 137, 157);
+        this.background = helper.createDrawable(RECIPE_VIEWER_DISPLAY_TEXTURE, COMPRESSOR_U, COMPRESSOR_V, COMPRESSOR_HEIGHT, COMPRESSOR_WIDTH);
     }
 
     @Override
@@ -67,7 +68,7 @@ public class JEICompressingCategory implements IRecipeCategory<CompressingRecipe
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, CompressingRecipe recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 120, 21)
+        builder.addSlot(RecipeIngredientRole.OUTPUT, COMPRESSED_X, COMPRESSED_Y)
                 .addItemStack(recipe.getResultItem(null)); //fixme
     }
 }

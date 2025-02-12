@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
+import dev.galacticraft.mod.content.block.special.CryogenicChamberPart;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.network.s2c.FootprintRemovedPacket;
 import dev.galacticraft.mod.util.Translations;
@@ -48,6 +49,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
 public class GCEventHandlers {
@@ -61,16 +63,19 @@ public class GCEventHandlers {
     }
 
     public static InteractionResult allowCryogenicSleep(LivingEntity entity, BlockPos sleepingPos, BlockState state, boolean vanillaResult) {
-        return entity.isInCryoSleep()
-                ? InteractionResult.SUCCESS
-                : InteractionResult.PASS;
+        if (state.getBlock() instanceof CryogenicChamberPart && !state.getValue(CryogenicChamberPart.TOP)) {
+            return entity.isInCryoSleep()
+                    ? InteractionResult.SUCCESS
+                    : InteractionResult.PASS;
+        }
+        return InteractionResult.PASS;
     }
 
     public static Direction changeSleepPosition(LivingEntity entity, BlockPos sleepingPos, @Nullable Direction sleepingDirection) {
         if (entity.isInCryoSleep()) {
             BlockState state = entity.level().getBlockState(sleepingPos);
 
-            if (state.getBlock() instanceof CryogenicChamberBlock) return state.getValue(CryogenicChamberBlock.FACING);
+            if (state.getBlock() instanceof CryogenicChamberPart) return state.getValue(CryogenicChamberBlock.FACING);
         }
 
         return sleepingDirection;
@@ -94,8 +99,23 @@ public class GCEventHandlers {
     }
 
     public static void onWakeFromCryoSleep(LivingEntity entity, BlockPos sleepingPos) {
-        if (!entity.level().isClientSide() && entity.isInCryoSleep()) {
-            entity.endCyroSleep();
+        Level level = entity.level();
+        if (!level.isClientSide() && entity.isInCryoSleep()) {
+            entity.endCryoSleep();
+            BlockPos basePos = sleepingPos.below();
+            BlockState baseState = level.getBlockState(basePos);
+            float angle = 0.0F;
+            if (baseState.getBlock() instanceof CryogenicChamberBlock) {
+                level.setBlockAndUpdate(basePos, baseState.setValue(BlockStateProperties.OCCUPIED, false));
+                angle = baseState.getValue(CryogenicChamberBlock.FACING).toYRot();
+                entity.setYRot(angle);
+            }
+
+            ServerPlayer serverPlayer = (ServerPlayer) entity;
+            if (!(serverPlayer.getRespawnDimension() == level.dimension() && basePos.equals(serverPlayer.getRespawnPosition()))) {
+                boolean forceRespawn = false;
+                serverPlayer.setRespawnPosition(level.dimension(), basePos, angle, forceRespawn, true);
+            }
         }
     }
 
@@ -104,7 +124,7 @@ public class GCEventHandlers {
             player.galacticraft$closeCelestialScreen();
             ((CelestialTeleporter) landable.teleporter(body.config()).value()).onEnterAtmosphere(server.getLevel(landable.world(body.config())), player, body, fromBody);
         } else {
-            player.connection.disconnect(Component.literal("Invalid planet teleport packet received."));
+            player.connection.disconnect(Component.translatable(Translations.DimensionTp.INVALID_PACKET));
         }
     }
 

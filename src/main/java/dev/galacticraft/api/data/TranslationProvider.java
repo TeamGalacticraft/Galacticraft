@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
@@ -84,11 +85,15 @@ public abstract class TranslationProvider implements DataProvider {
     }
 
     protected void biome(ResourceLocation id, String translation) {
-        this.add("biome." + id.toLanguageKey(), translation);
+        this.add(id.toLanguageKey("biome"), translation);
     }
 
     protected void item(Item item, String translation) {
         this.add(item.getDescriptionId(), translation);
+    }
+
+    protected void tag(TagKey<?> tag, String translation) {
+        this.add(tag.location().toLanguageKey("tag.item").replace("/", "."), translation);
     }
 
     protected void entity(EntityType<?> entity, String translation) {
@@ -101,6 +106,10 @@ public abstract class TranslationProvider implements DataProvider {
 
     protected void enchantment(Enchantment enchantment, String translation) {
         this.add(((TranslatableContents)enchantment.description().getContents()).getKey(), translation);
+    }
+
+    protected void stat(ResourceLocation id, String translation) {
+        this.add(id.toLanguageKey("stat"), translation);
     }
 
     protected <T> void addDefaulted(Holder.Reference<T> reference) {

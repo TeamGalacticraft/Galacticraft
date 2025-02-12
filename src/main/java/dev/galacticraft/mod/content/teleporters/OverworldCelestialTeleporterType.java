@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -47,24 +47,23 @@ public class OverworldCelestialTeleporterType<Config extends CelestialTeleporter
     @Override
     public void onEnterAtmosphere(ServerLevel level, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody, Config config) {
         if (body.config() instanceof PlanetConfig planetConfig) {
-            var chestSpawn = planetConfig.celestialHandler().getParaChestSpawnLocation(player.serverLevel(), player, player.getRandom());
+            var chestSpawn = planetConfig.celestialHandler().getParachestSpawnLocation(player.serverLevel(), player, player.getRandom());
             if (chestSpawn != null) {
-                var gcPlayer = GCServerPlayer.get(player);
-                var rocketInv = gcPlayer.getRocketStacks();
-                ParachestEntity chest = new ParachestEntity(GCEntityTypes.PARACHEST, level, rocketInv, gcPlayer.getFuel());
-                rocketInv.clear();
-
-                chest.setPos(chestSpawn);
-
                 Container gearInv = player.galacticraft$getGearInv();
                 DyeColor color = DyeColor.WHITE;
                 for (int slot = 0; slot < gearInv.getContainerSize(); slot++) {
-                    if (player.galacticraft$getGearInv().getItem(slot).getItem() instanceof ParachuteItem parachute) {
+                    if (gearInv.getItem(slot).getItem() instanceof ParachuteItem parachute) {
                         color = parachute.getColor();
                         break;
                     }
                 }
-                chest.color = color;
+                
+                var gcPlayer = GCServerPlayer.get(player);
+                var rocketInv = gcPlayer.getRocketStacks();
+                ParachestEntity chest = new ParachestEntity(GCEntityTypes.PARACHEST, level, rocketInv, color, gcPlayer.getFuel());
+                rocketInv.clear();
+
+                chest.setPos(chestSpawn);
 
                 level.addFreshEntity(chest);
             }

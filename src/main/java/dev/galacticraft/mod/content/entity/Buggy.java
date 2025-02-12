@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -160,7 +160,7 @@ public class Buggy extends GCVehicle implements ContainerListener, ControllableE
         super.tick();
         if (this.level().isClientSide) {
             Vec3 delta = getDeltaMovement();
-            this.wheelRotationX += Math.sqrt(delta.x * delta.x + delta.z * delta.z) * 150.0F * (this.speed < 0 ? 1 : -1);
+            this.wheelRotationX += (float)Math.sqrt(delta.x * delta.x + delta.z * delta.z) * 150.0F * (this.speed < 0 ? 1 : -1);
             this.wheelRotationX %= 360;
             this.wheelRotationZ = Math.max(-30.0F, Math.min(30.0F, this.wheelRotationZ * 0.9F));
         }

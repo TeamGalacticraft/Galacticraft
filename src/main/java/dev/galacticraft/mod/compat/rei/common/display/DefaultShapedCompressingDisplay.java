@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,8 +34,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class DefaultShapedCompressingDisplay implements DefaultCompressingDisplay {
-    protected List<EntryIngredient> input;
-    protected List<EntryIngredient> output;
+    private final List<EntryIngredient> input;
+    private final List<EntryIngredient> output;
+    private int processingTime = 200;
 
     public DefaultShapedCompressingDisplay(List<EntryIngredient> input, List<EntryIngredient> output) {
         this.input = input;
@@ -50,6 +51,7 @@ public class DefaultShapedCompressingDisplay implements DefaultCompressingDispla
             }
         });
         this.output = Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(BasicDisplay.registryAccess())));
+        this.processingTime = recipe.value().getTime();
     }
 
     @Override
@@ -67,4 +69,8 @@ public class DefaultShapedCompressingDisplay implements DefaultCompressingDispla
         return output;
     }
 
+    @Override
+    public int getProcessingTime() {
+        return processingTime;
+    }
 }

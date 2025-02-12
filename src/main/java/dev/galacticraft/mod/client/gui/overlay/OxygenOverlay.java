@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,21 +35,23 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Holder;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.Container;
 
 public class OxygenOverlay {
     public static void onHudRender(GuiGraphics graphics, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.level != null && mc.player != null && !mc.player.isSpectator()) {
+        if (!mc.options.hideGui && mc.level != null && mc.player != null && !mc.player.isSpectator()) {
             Holder<CelestialBody<?, ?>> body = mc.level.galacticraft$getCelestialBody();
-            if (body != null && !body.value().atmosphere().breathable()) {
+            boolean nonBreathable = (body != null) && !body.value().atmosphere().breathable();
+            if (mc.player.galacticraft$hasMaskAndGear() || nonBreathable) {
                 Container inv = mc.player.galacticraft$getOxygenTanks();
+                final int outline = 0x99FFFFFF;
                 final int y = 4;
-                for (int i = 0; i < inv.getContainerSize(); i++) {
-                    Storage<FluidVariant> storage = ContainerItemContext.withConstant(inv.getItem(i)).find(FluidStorage.ITEM);
-                    int x = mc.getWindow().getGuiScaledWidth() - ((Constant.TextureCoordinate.OVERLAY_WIDTH + y) * (i + 1));
-
-                    int outline = 0x99FFFFFF;
+                final int n = inv.getContainerSize();
+                for (int i = n; i > 0; i--) {
+                    Storage<FluidVariant> storage = ContainerItemContext.withConstant(inv.getItem(n - i)).find(FluidStorage.ITEM);
+                    int x = mc.getWindow().getGuiScaledWidth() - ((Constant.TextureCoordinate.OVERLAY_WIDTH + y) * i);
 
                     long amount = 0;
                     long capacity = 1;

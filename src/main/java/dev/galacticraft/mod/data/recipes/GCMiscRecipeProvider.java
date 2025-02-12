@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -186,12 +186,12 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.SINGLE_SOLAR_MODULE, 2)
                 .define('G', ConventionalItemTags.GLASS_BLOCKS)
-                .define('S', GCItems.SOLAR_ARRAY_WAFER)
+                .define('S', GCItems.BLUE_SOLAR_WAFER)
                 .define('W', GCItems.ALUMINUM_WIRE)
                 .pattern("GGG")
                 .pattern("SSS")
                 .pattern("WWW")
-                .unlockedBy(getHasName(GCItems.SOLAR_ARRAY_WAFER), has(GCItems.SOLAR_ARRAY_WAFER))
+                .unlockedBy(getHasName(GCItems.BLUE_SOLAR_WAFER), has(GCItems.BLUE_SOLAR_WAFER))
                 .save(output);
 
 
@@ -223,13 +223,13 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
 
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BATTERY)
-                .define('T', GCItems.COMPRESSED_TIN)
+                .define('T', GCItems.COMPRESSED_ALUMINUM)
                 .define('R', ConventionalItemTags.REDSTONE_DUSTS)
                 .define('C', ConventionalItemTags.COAL)
                 .pattern(" T ")
                 .pattern("TRT")
                 .pattern("TCT")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_TIN), has(GCItems.COMPRESSED_TIN))
+                .unlockedBy(getHasName(GCItems.COMPRESSED_ALUMINUM), has(GCItems.COMPRESSED_ALUMINUM))
                 .save(output);
 
 
@@ -339,8 +339,8 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
         // Food
         cookingRecipes(output, 100, GCItems.GROUND_BEEF, GCItems.BEEF_PATTY, 1.0F);
 
-//        SimpleCookingRecipeBuilder.smelting(Ingredient.of(GCBlocks.CHEESE_ORE), RecipeCategory.FOOD, GCItems.CHEESE_CURD, 0.35F, 200)
-//                .unlockedBy(getHasName(GCBlocks.CHEESE_ORE), has(GCBlocks.CHEESE_ORE))
+//        SimpleCookingRecipeBuilder.smelting(Ingredient.of(GCBlocks.MOON_CHEESE_ORE), RecipeCategory.FOOD, GCItems.MOON_CHEESE_CURD, 0.35F, 200)
+//                .unlockedBy(getHasName(GCBlocks.MOON_CHEESE_ORE), has(GCBlocks.MOON_CHEESE_ORE))
 //                .save(result);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.BURGER_BUN, 2)
@@ -357,24 +357,24 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CHEESEBURGER)
-                .requires(GCItems.CHEESE_SLICE)
+                .requires(GCItems.MOON_CHEESE_SLICE)
                 .requires(GCItems.BEEF_PATTY)
                 .requires(GCItems.BURGER_BUN)
                 .unlockedBy(getHasName(GCItems.GROUND_BEEF), has(GCItems.GROUND_BEEF))
                 .save(output);
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CHEESE_SLICE, 6)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.MOON_CHEESE_SLICE, 6)
                 .requires(GCItems.MOON_CHEESE_WHEEL)
                 .unlockedBy(getHasName(GCItems.MOON_CHEESE_WHEEL), has(GCItems.MOON_CHEESE_WHEEL))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.FOOD, GCItems.MOON_CHEESE_WHEEL)
-                .define('C', GCItems.CHEESE_CURD)
+                .define('C', GCItems.MOON_CHEESE_CURD)
                 .define('M', Items.MILK_BUCKET)
                 .pattern("CCC")
                 .pattern("CMC")
                 .pattern("CCC")
-                .unlockedBy(getHasName(GCItems.CHEESE_CURD), has(GCItems.CHEESE_CURD))
+                .unlockedBy(getHasName(GCItems.MOON_CHEESE_CURD), has(GCItems.MOON_CHEESE_CURD))
                 .save(output);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CANNED_DEHYDRATED_APPLE)

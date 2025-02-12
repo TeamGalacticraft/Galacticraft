@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,7 @@ import dev.galacticraft.mod.content.block.entity.machine.ElectricFurnaceBlockEnt
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
@@ -49,9 +50,9 @@ public class ElectricFurnaceScreen extends MachineScreen<ElectricFurnaceBlockEnt
     protected void renderMachineBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.renderMachineBackground(graphics, mouseX, mouseY, delta);
         if (this.menu.getMaxProgress() > 0 && this.menu.getProgress() != 0) {
-            double scale = ((double)menu.getProgress()) / ((double)menu.getMaxProgress());
-
-            DrawableUtil.drawProgressTexture(graphics.pose(), this.leftPos + ARROW_X, this.topPos + ARROW_Y, ARROW_U, ARROW_V, (float)(((double)ARROW_WIDTH) * scale), ARROW_HEIGHT);
+            float scale = (float)menu.getProgress() / (float)menu.getMaxProgress();
+            int width = Mth.ceil(ARROW_WIDTH * scale);
+            DrawableUtil.drawProgressTexture(graphics.pose(), this.leftPos + ARROW_X, this.topPos + ARROW_Y, ARROW_U, ARROW_V, width, ARROW_HEIGHT);
         }
     }
 }

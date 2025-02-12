@@ -1,0 +1,9 @@
+{
+  "data": {
+    "back": "galacticraft:block/machine_side",
+    "front": "galacticraft:block/coal_generator_active",
+    "left": "galacticraft:block/machine_side",
+    "right": "galacticraft:block/machine_side"
+  },
+  "machinelib:type": "machine"
+}

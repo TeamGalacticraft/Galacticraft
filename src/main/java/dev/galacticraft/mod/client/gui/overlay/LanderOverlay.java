@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,9 +31,12 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.FastColor;
+import net.minecraft.world.TickRateManager;
 
 public class LanderOverlay {
+    public static final TickRateManager TICKS = new TickRateManager();
     private static long tickCount;
+
     public static void onRenderHud(GuiGraphics graphics, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         final Window scaledresolution = mc.getWindow();
@@ -48,20 +51,18 @@ public class LanderOverlay {
                 graphics.drawString(mc.font, Component.translatable(Translations.Ui.LANDER_WARNING), width / 4 - mc.font.width(Component.translatable(Translations.Ui.LANDER_WARNING)) / 2, height / 8 - 20,
                         FastColor.ARGB32.color(255, 255, 0, 0), false);
                 final int alpha = (int) (200 * (Math.sin(tickCount) * 0.5F + 0.5F)) + 5;
-                final MutableComponent press1 = Component.translatable(Translations.Ui.LANDER_WARNING_2);
-                final MutableComponent press2 = Component.translatable(Translations.Ui.LANDER_WARNING_3);
-                graphics.drawString(mc.font, press1.copy().append(mc.options.keyJump.getTranslatedKeyMessage()).append(press2),
-                        width / 4 - mc.font.width(press1.copy().append(mc.options.keyJump.getTranslatedKeyMessage()).append(press2)) / 2, height / 8,
+                final Component press_key = Component.translatable(Translations.Ui.LANDER_CONTROLS, mc.options.keyJump.getTranslatedKeyMessage());
+                graphics.drawString(mc.font, press_key,
+                        width / 4 - mc.font.width(press_key) / 2, height / 8,
                         FastColor.ARGB32.color(alpha, alpha, alpha, alpha), false);
             }
 
             graphics.pose().popPose();
 
             if (mc.player.getVehicle().getDeltaMovement().y() != 0.0D) {
-                Component string = Component.translatable(Translations.Ui.LANDER_VELOCITY).append(": " + Math.round(mc.player.getVehicle().getDeltaMovement().y() * 1000) / 100.0D + " ")
-                        .append(Component.translatable(Translations.Ui.LANDER_VELOCITYU));
-                int color =
-                        FastColor.ARGB32.color(255, (int) Math.floor(Math.abs(motionY) * 51.0D), 255 - (int) Math.floor(Math.abs(motionY) * 51.0D), 0);
+                final Component string = Component.translatable(Translations.Ui.LANDER_VELOCITY, String.format("%.2f", mc.player.getVehicle().getDeltaMovement().y() * TICKS.tickrate()));
+                final int red = Math.min((int) Math.floor(Math.abs(motionY) * 85.0D), 255);
+                final int color = FastColor.ARGB32.color(255, red, 255 - red, 0);
                 graphics.drawString(mc.font, string, width / 2 - mc.font.width(string) / 2, height / 3, color, false);
             }
         }

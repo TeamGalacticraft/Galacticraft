@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class DefaultCelestialHandler implements CelestialHandler {
     @Override
-    public @Nullable Vec3 getParaChestSpawnLocation(Level world, Player player, RandomSource rand) {
+    public @Nullable Vec3 getParachestSpawnLocation(Level world, Player player, RandomSource rand) {
         return null;
     }
 

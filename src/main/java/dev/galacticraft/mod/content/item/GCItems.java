@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,10 +26,12 @@ import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCRegistry;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.util.Translations;
+import net.fabricmc.fabric.api.item.v1.FabricItem;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -302,9 +304,9 @@ public class GCItems {
     public static final Item AMBIENT_THERMAL_CONTROLLER = new Item(new Item.Properties());
     
     // FOOD
-    public static final Item CHEESE_CURD = new Item(new Item.Properties().food(GCFoodComponent.CHEESE_CURD));
+    public static final Item MOON_CHEESE_CURD = new Item(new Item.Properties().food(GCFoodComponent.MOON_CHEESE_CURD));
     
-    public static final Item CHEESE_SLICE = ITEMS.register(Constant.Item.CHEESE_SLICE, new Item(new Item.Properties().food(GCFoodComponent.CHEESE_SLICE)));
+    public static final Item MOON_CHEESE_SLICE = ITEMS.register(Constant.Item.MOON_CHEESE_SLICE, new Item(new Item.Properties().food(GCFoodComponent.MOON_CHEESE_SLICE)));
     public static final Item BURGER_BUN = ITEMS.register(Constant.Item.BURGER_BUN, new Item(new Item.Properties().food(GCFoodComponent.BURGER_BUN)));
     public static final Item GROUND_BEEF = ITEMS.register(Constant.Item.GROUND_BEEF, new Item(new Item.Properties().food(GCFoodComponent.GROUND_BEEF)));
     public static final Item BEEF_PATTY = ITEMS.register(Constant.Item.BEEF_PATTY, new Item(new Item.Properties().food(GCFoodComponent.BEEF_PATTY)));
@@ -326,22 +328,22 @@ public class GCItems {
     public static final Item HOT_THROWABLE_METEOR_CHUNK = new HotThrowableMeteorChunkItem(new Item.Properties().stacksTo(16));
 
     // ARMOR
-    public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties());
-    public static final Item HEAVY_DUTY_CHESTPLATE = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.CHESTPLATE, new Item.Properties());
-    public static final Item HEAVY_DUTY_LEGGINGS = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.LEGGINGS, new Item.Properties());
-    public static final Item HEAVY_DUTY_BOOTS = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.BOOTS, new Item.Properties());
+    public static final Item HEAVY_DUTY_HELMET = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1));
+    public static final Item HEAVY_DUTY_CHESTPLATE = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1));
+    public static final Item HEAVY_DUTY_LEGGINGS = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1));
+    public static final Item HEAVY_DUTY_BOOTS = new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1));
 
-    public static final Item DESH_HELMET = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.HELMET, new Item.Properties());
-    public static final Item DESH_CHESTPLATE = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.CHESTPLATE, new Item.Properties());
-    public static final Item DESH_LEGGINGS = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.LEGGINGS, new Item.Properties());
-    public static final Item DESH_BOOTS = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.BOOTS, new Item.Properties());
+    public static final Item DESH_HELMET = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1));
+    public static final Item DESH_CHESTPLATE = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1));
+    public static final Item DESH_LEGGINGS = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1));
+    public static final Item DESH_BOOTS = new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1));
 
-    public static final Item TITANIUM_HELMET = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.HELMET, new Item.Properties());
-    public static final Item TITANIUM_CHESTPLATE = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.CHESTPLATE, new Item.Properties());
-    public static final Item TITANIUM_LEGGINGS = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.LEGGINGS, new Item.Properties());
-    public static final Item TITANIUM_BOOTS = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.BOOTS, new Item.Properties());
+    public static final Item TITANIUM_HELMET = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1));
+    public static final Item TITANIUM_CHESTPLATE = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1));
+    public static final Item TITANIUM_LEGGINGS = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1));
+    public static final Item TITANIUM_BOOTS = new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1));
 
-    public static final Item SENSOR_GLASSES = new ArmorItem(GCArmorMaterials.SENSOR_GLASSES, ArmorItem.Type.HELMET, new Item.Properties());
+    public static final Item SENSOR_GLASSES = new ArmorItem(GCArmorMaterials.SENSOR_GLASSES, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1));
 
     // TOOLS + WEAPONS
     public static final Item HEAVY_DUTY_SWORD = new BrittleSwordItem(GCTiers.STEEL, new Item.Properties().attributes(SwordItem.createAttributes(GCTiers.STEEL, 3, -2.4F)));
@@ -366,9 +368,9 @@ public class GCItems {
 
     // SMITHING TEMPLATES
     public static final Item TITANTIUM_UPGRADE_SMITHING_TEMPLATE = new SmithingTemplateItem(
-            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_APPLIES_TO),
-            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_INGREDIENTS),
-            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_DESCRIPTION),
+            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_APPLIES_TO).withStyle(Constant.Text.BLUE_STYLE),
+            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_INGREDIENTS).withStyle(Constant.Text.BLUE_STYLE),
+            Component.translatable(Translations.Misc.UPGRADE_TITANIUM_DESCRIPTION).withStyle(Constant.Text.GRAY_STYLE),
             Component.translatable(Translations.Misc.UPGRADE_TITANIUM_BASE_SLOT_DESCRIPTION),
             Component.translatable(Translations.Misc.UPGRADE_TITANIUM_ADDITIONS_SLOT_DESCRIPTON),
             List.of(ResourceLocation.withDefaultNamespace("item/empty_armor_slot_helmet"),
@@ -438,6 +440,22 @@ public class GCItems {
     public static final Item MOON_BUGGY_SCHEMATIC = new SchematicItem(new Item.Properties());
     public static final Item TIER_3_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties());
     public static final Item ASTRO_MINER_SCHEMATIC = new SchematicItem(new Item.Properties());
+
+    // SPAWN EGGS
+    public static final Item MOON_VILLAGER_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.MOON_VILLAGER, 0x74a3cf, 0xba2500, new Item.Properties());
+    public static final Item EVOLVED_ZOMBIE_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_ZOMBIE, 0x00afaf, 0x463aa5, new Item.Properties());
+    public static final Item EVOLVED_CREEPER_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_CREEPER, 0x0da70b, 0xa8d0d9, new Item.Properties());
+    public static final Item EVOLVED_SKELETON_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_SKELETON, 0xc1c1c1, 0xff9600, new Item.Properties());
+    public static final Item EVOLVED_SPIDER_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_SPIDER, 0x342d27, 0x5aff0e, new Item.Properties());
+    public static final Item EVOLVED_PILLAGER_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_PILLAGER, 0x532f36, 0x264747, new Item.Properties());
+    public static final Item EVOLVED_EVOKER_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_EVOKER, 0x1e1c1a, 0xd3cf99, new Item.Properties());
+    public static final Item EVOLVED_VINDICATOR_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_VINDICATOR, 0x3f3b37, 0x275e61, new Item.Properties());
+    public static final Item GAZER_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.GAZER, 0xdbdddb, 0x5c5c5c, new Item.Properties());
+    public static final Item RUMBLER_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.RUMBLER, 0x5c5c5c, 0x36383e, new Item.Properties());
+    public static final Item COMET_CUBE_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.COMET_CUBE, 0xd5d8d8, 0x92b9fe, new Item.Properties());
+    public static final Item OLI_GRUB_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.OLI_GRUB, 0xd4dd7e, 0xa4bf63, new Item.Properties());
+    public static final Item GREY_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.GREY, 0x656463, 0x769e41, new Item.Properties());
+    public static final Item ARCH_GREY_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.ARCH_GREY, 0x656463, 0x2d8563, new Item.Properties());
 
     public static Item registerItem(String id, Item item) {
         return Registry.register(BuiltInRegistries.ITEM, Constant.id(id), item);
@@ -684,7 +702,7 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.AMBIENT_THERMAL_CONTROLLER), AMBIENT_THERMAL_CONTROLLER);
 
         // FOOD
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CHEESE_CURD), CHEESE_CURD);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.MOON_CHEESE_CURD), MOON_CHEESE_CURD);
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_DEHYDRATED_APPLE), CANNED_DEHYDRATED_APPLE);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_DEHYDRATED_CARROT), CANNED_DEHYDRATED_CARROT);
@@ -775,6 +793,23 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.MOON_BUGGY_SCHEMATIC), MOON_BUGGY_SCHEMATIC);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.TIER_3_ROCKET_SCHEMATIC), TIER_3_ROCKET_SCHEMATIC);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.ASTRO_MINER_SCHEMATIC), ASTRO_MINER_SCHEMATIC);
+
+        // SPAWN EGGS
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.MOON_VILLAGER), MOON_VILLAGER_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.EVOLVED_ZOMBIE), EVOLVED_ZOMBIE_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.EVOLVED_CREEPER), EVOLVED_CREEPER_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.EVOLVED_SKELETON), EVOLVED_SKELETON_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.EVOLVED_SPIDER), EVOLVED_SPIDER_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.EVOLVED_PILLAGER), EVOLVED_PILLAGER_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.EVOLVED_EVOKER), EVOLVED_EVOKER_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.EVOLVED_VINDICATOR), EVOLVED_VINDICATOR_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.GAZER), GAZER_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.RUMBLER), RUMBLER_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.COMET_CUBE), COMET_CUBE_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.OLI_GRUB), OLI_GRUB_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.GREY), GREY_SPAWN_EGG);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.SpawnEgg.ARCH_GREY), ARCH_GREY_SPAWN_EGG);
+
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.AIR_LOCK_FRAME), AIR_LOCK_FRAME);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.AIR_LOCK_CONTROLLER), AIR_LOCK_CONTROLLER);

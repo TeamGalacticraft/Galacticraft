@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,10 +40,10 @@ public class LanderCelestialTeleporterType<Config extends CelestialTeleporterCon
 
     @Override
     public void onEnterAtmosphere(ServerLevel level, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody, Config config) {
+        player.teleportTo(level, player.getX(), 1100, player.getZ(), -90.0F, 45.0F);
         LanderEntity lander = new LanderEntity(player);
         level.addFreshEntity(lander);
         lander.setPos(player.getX(), 1100, player.getZ());
-        player.teleportTo(level, player.getX(), 1100, player.getZ(), player.getYRot(), player.getXRot());
         player.startRiding(lander, true);
     }
 }

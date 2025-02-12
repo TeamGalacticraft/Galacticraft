@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -93,10 +93,12 @@ public class GCEntityTypes {
             .updateInterval(2)
             .alwaysUpdateVelocity(false)
             .sized(2.3F, 5.25F)
+            .eyeHeight(2.525F)
             .build()); //PLAYER VALUES
     public static final EntityType<LanderEntity> LANDER = ENTITIES.register(Entity.LANDER, EntityType.Builder.<LanderEntity>of(LanderEntity::new, MobCategory.MISC)
             .clientTrackingRange(32)
             .sized(2.5F, 4F)
+            .eyeHeight(2.625F)
             .fireImmune()
             .noSummon()
             .build());

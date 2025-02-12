@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -106,21 +106,21 @@ public abstract class ServerPlayerMixin extends LivingEntityMixin implements Ser
     @Inject(method = "stopRiding", at = @At("HEAD"), cancellable = true)
     private void canStopRiding(CallbackInfo ci) {
         Entity vehicle = getVehicle();
-        if (isRideTick && vehicle instanceof IgnoreShift ignoreShift && ignoreShift.shouldIgnoreShiftExit())
+        if (isRideTick && vehicle instanceof IgnoreShift ignoreShift && ignoreShift.shouldIgnoreShiftExit()) {
             ci.cancel();
+        }
     }
 
     @Inject(method = "bedBlocked", at = @At(value = "HEAD"), cancellable = true)
-    private void checkIfCryoBedBlocked(BlockPos blockPos, Direction direction, CallbackInfoReturnable<Boolean> cir){
-        if(this.level().getBlockState(blockPos).getBlock() instanceof CryogenicChamberBlock){
-            BlockPos blockPos2 = blockPos.relative(direction);
-
-            cir.setReturnValue(!this.gc$freeAt(blockPos2) || !this.gc$freeAt(blockPos2.above()));
+    private void checkIfCryoBedBlocked(BlockPos sleepingPos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
+        BlockPos basePos = sleepingPos.below();
+        if (this.level().getBlockState(basePos).getBlock() instanceof CryogenicChamberBlock){
+            cir.setReturnValue(!this.gc$freeAt(basePos.relative(direction)) || !this.gc$freeAt(sleepingPos.relative(direction)));
         }
     }
 
     @Unique
-    private boolean gc$freeAt(BlockPos blockPos){
+    private boolean gc$freeAt(BlockPos blockPos) {
         return !this.level().getBlockState(blockPos).isSuffocating(this.level(), blockPos);
     }
 }

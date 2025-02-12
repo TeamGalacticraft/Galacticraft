@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.compat.jei.category;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.jei.GCJEIRecipeTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -39,13 +38,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
+import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+
 public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe> {
 
     private final IDrawable icon, background;
 
     public JEIFabricationCategory(IGuiHelper helper) {
         this.icon = helper.createDrawableItemStack(new ItemStack(GCBlocks.CIRCUIT_FABRICATOR));
-        this.background = helper.createDrawable(Constant.ScreenTexture.RECIPE_VEIWER_DISPLAY_TEXTURE, 0, 0, 162, 82);
+        this.background = helper.createDrawable(RECIPE_VIEWER_DISPLAY_TEXTURE, CIRCUIT_FABRICATOR_U, CIRCUIT_FABRICATOR_V, CIRCUIT_FABRICATOR_WIDTH, CIRCUIT_FABRICATOR_HEIGHT);
     }
 
     @Override
@@ -70,18 +71,18 @@ public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, FabricationRecipe recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 1, 1)
+        builder.addSlot(RecipeIngredientRole.INPUT, DIAMOND_X, DIAMOND_Y)
                 .addItemStack(Items.DIAMOND.getDefaultInstance());
-        builder.addSlot(RecipeIngredientRole.INPUT, 55, 47)
+        builder.addSlot(RecipeIngredientRole.INPUT, SILICON_X_1, SILICON_Y_1)
                 .addItemStack(GCItems.SILICON.getDefaultInstance());
-        builder.addSlot(RecipeIngredientRole.INPUT, 55, 65)
+        builder.addSlot(RecipeIngredientRole.INPUT, SILICON_X_2, SILICON_Y_2)
                 .addItemStack(GCItems.SILICON.getDefaultInstance());
-        builder.addSlot(RecipeIngredientRole.CATALYST, 109, 47)
+        builder.addSlot(RecipeIngredientRole.CATALYST, REDSTONE_X, REDSTONE_Y)
                 .addItemStack(Items.REDSTONE.getDefaultInstance());
-        builder.addSlot(RecipeIngredientRole.CATALYST, 127, 1)
+        builder.addSlot(RecipeIngredientRole.CATALYST, INGREDIENT_X, INGREDIENT_Y)
                 .addIngredients(recipe.getIngredients().get(0));
 
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 145, 65)
+        builder.addSlot(RecipeIngredientRole.OUTPUT, WAFER_X, WAFER_Y)
                 .addItemStack(recipe.getResultItem(null)); //fixme
     }
 }

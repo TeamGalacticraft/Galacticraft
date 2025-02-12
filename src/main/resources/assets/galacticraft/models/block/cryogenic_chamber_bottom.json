@@ -1,4 +1,5 @@
 {
+	"parent": "minecraft:block/block",
 	"texture_size": [128, 128],
 	"textures": {
 		"cryo_chamber": "galacticraft:model/cryo_chamber",

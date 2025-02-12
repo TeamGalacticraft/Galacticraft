@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -196,7 +196,9 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
     protected String getGrandparentName() {
         CelestialBody<?, ?> body = this.selectedBody;
-        if (body == null) return I18n.get(Translations.Galaxy.MILKY_WAY); //fixme
+        if (body == null || body == celestialBodies.get(Constant.id("sol"))) {
+            return I18n.get(Translations.Galaxy.MILKY_WAY); //fixme
+        }
         if (body.parent() != null) {
             if (body.parent().value().parent() != null) {
                 return I18n.get(((TranslatableContents)body.parent().value().parent().value().name().getContents()).getKey());
@@ -210,6 +212,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
     protected String parentName() {
         if (this.selectedBody == null) return I18n.get(Translations.CelestialBody.SOL); //fixme
+        if (this.selectedBody == celestialBodies.get(Constant.id("sol"))) return I18n.get(Translations.CelestialBody.SOL);
         if (this.selectedBody.parent() != null) return I18n.get(((TranslatableContents)this.selectedBody.parent().value().name().getContents()).getKey());
         return I18n.get(((TranslatableContents) this.selectedBody.galaxy().value().name().getContents()).getKey());
     }
@@ -359,7 +362,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
                     {
                         assert this.minecraft != null;
                         assert this.minecraft.player != null;
-                        if (recipe.test(this.minecraft.player.getInventory()) || this.minecraft.player.getAbilities().instabuild)
+                        if (recipe.test(this.minecraft.player.getInventory()) || this.minecraft.player.isCreative())
                         {
 //                            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_BIND_SPACE_STATION_ID, GCCoreUtil.getWorld(this.minecraft.level), new Object[]{this.selectedBody.getWorld()}));
                             ClientPlayNetworking.send(new SatelliteCreationPayload(celestialBodies.getHolderOrThrow(celestialBodies.getResourceKey(this.selectedBody).get())));
@@ -665,7 +668,11 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
                 // Grandparent frame:
                 texture.blit(LHS + 2 - 95 + scale, LHS + 14, 93, 17, GRANDPARENT_LABEL_U, GRANDPARENT_LABEL_V, GRANDPARENT_LABEL_WIDTH, GRANDPARENT_LABEL_HEIGHT, YELLOW);
-                str = planetZoomedNotMoon ? this.parentName() : this.getGrandparentName();
+                if (this.isZoomed() && this.selectedBody == celestialBodies.get(Constant.id("sol"))) {
+                    str = this.getGrandparentName();
+                } else {
+                    str = planetZoomedNotMoon ? this.parentName() : this.getGrandparentName();
+                }
                 texture.drawText(str, LHS + 7 - 95 + scale, LHS + 16, GREY3, false);
 
                 List<CelestialBody<?, ?>> children = this.getChildren(/*planetZoomedNotMoon*/this.isZoomed() ? this.selectedBody : celestialBodies.get(Constant.id("sol")));

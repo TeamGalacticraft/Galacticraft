@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,7 @@ import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.content.entity.ScalableFuelLevel;
+import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.network.s2c.ResetPerspectivePacket;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.screen.ParachestMenu;
@@ -46,11 +47,13 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
@@ -58,6 +61,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
@@ -197,9 +201,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
 
         if (!entities.isEmpty()) {
             for (Entity entity : entities) {
-                if (!this.getPassengers().contains(entity)) {
-                    push(entity);
-                }
+                push(entity);
             }
         }
     }
@@ -231,7 +233,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
 
     public void onGroundHit() {
         if (!level().isClientSide) {
-            if (Math.abs(this.lastDeltaY) > 2.0D) {
+            if (Math.abs(this.lastDeltaY) > Constant.Landing.SAFE_VELOCITY) {
                 for (Entity entity : this.getPassengers()) {
                     entity.removeVehicle();
                     if (entity instanceof ServerPlayer player) {
@@ -240,7 +242,17 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
                     entity.setDeltaMovement(Vec3.ZERO);
                     entity.setPos(entity.getX(), this.getY() + 2.25, entity.getZ());
                 }
-                this.level().explode(this, this.getX(), this.getY(), this.getZ(), 12, true, Level.ExplosionInteraction.MOB);
+                this.level().explode(
+                        this,
+                        new DamageSource(this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.CRASH_LANDING)),
+                        new ExplosionDamageCalculator(),
+                        this.getX(),
+                        this.getY(),
+                        this.getZ(),
+                        (int) Mth.ceil(Constant.Landing.EXPLOSION_SCALE * Math.abs(this.lastDeltaY)),
+                        false,
+                        Level.ExplosionInteraction.MOB
+                );
 
                 discard();
             }

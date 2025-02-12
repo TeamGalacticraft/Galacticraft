@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ package dev.galacticraft.mod.data;
 
 import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.block.special.ParaChestBlock;
+import dev.galacticraft.mod.content.block.special.ParachestBlock;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -286,7 +286,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         this.add(GCBlocks.AIR_LOCK_SEAL, noDrop());
 
-        this.add(GCBlocks.PARACHEST, createParaChestDrop(GCBlocks.PARACHEST));
+        this.add(GCBlocks.PARACHEST, createParachestDrop(GCBlocks.PARACHEST));
     }
 
     private LootTable.Builder createLaunchPadTable(Block block) {
@@ -328,13 +328,13 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         );
     }
 
-    private LootTable.Builder createParaChestDrop(Block block) {
+    private LootTable.Builder createParachestDrop(Block block) {
         LootPool.Builder pool = LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F));
         for (DyeColor color : DyeColor.values()) {
             pool.add(LootItem.lootTableItem(block)
                     .apply(SetComponentsFunction.setComponent(DataComponents.BASE_COLOR, color))
                     .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
-                            .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(ParaChestBlock.COLOR, color)
+                            .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(ParachestBlock.COLOR, color)
             )));
         }
         return LootTable.lootTable().withPool(this.applyExplosionCondition(block, pool));
