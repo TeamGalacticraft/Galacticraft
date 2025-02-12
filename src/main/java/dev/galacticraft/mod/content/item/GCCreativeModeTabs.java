@@ -438,7 +438,7 @@ public class GCCreativeModeTabs {
                 output.accept(OLIVINE_CLUSTER);
 
                 // COMPACT MINERAL BLOCKS
-                output.accept(MOON_CHEESE_WHEEL);
+                output.accept(GCItems.MOON_CHEESE_WHEEL);
                 output.accept(SILICON_BLOCK);
                 output.accept(ALUMINUM_BLOCK);
                 output.accept(METEORIC_IRON_BLOCK);
