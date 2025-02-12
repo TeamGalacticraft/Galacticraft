@@ -313,6 +313,7 @@ public interface Translations {
         String COLLECTING = "ui.galacticraft.machine.collecting";
         String CURRENT_OXYGEN = "ui.galacticraft.machine.current_oxygen";
         String GJT = "ui.galacticraft.machine.gj_per_t";
+        String MILLIBUCKETS = "ui.galacticraft.machine.millibuckets";
         String MAX_OXYGEN = "ui.galacticraft.machine.max_oxygen";
         String MACHINE_STATUS = "ui.galacticraft.machine.status";
         String OXYGEN_TANK_LEVEL = "ui.galacticraft.player_inv_screen.oxygen_tank_level";
