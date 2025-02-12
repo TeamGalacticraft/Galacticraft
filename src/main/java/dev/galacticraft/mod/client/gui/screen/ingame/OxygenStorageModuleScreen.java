@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,8 +46,10 @@ public class OxygenStorageModuleScreen extends MachineScreen<OxygenStorageModule
         super.renderMachineBackground(graphics, mouseX, mouseY, delta);
         this.drawOxygenBufferBar(graphics);
 
-        graphics.drawCenteredString(font, Component.translatable(Translations.Ui.CURRENT_OXYGEN, this.menu.fluidStorage.slot(OxygenStorageModuleBlockEntity.OXYGEN_TANK).getAmount()), width / 2, topPos + 33, ChatFormatting.DARK_GRAY.getColor());
-        graphics.drawCenteredString(font, Component.translatable(Translations.Ui.MAX_OXYGEN, this.menu.fluidStorage.slot(OxygenStorageModuleBlockEntity.OXYGEN_TANK).getCapacity()), width / 2, topPos + 45, ChatFormatting.DARK_GRAY.getColor());
+        Component currentOxygen = Component.translatable(Translations.Ui.CURRENT_OXYGEN, this.menu.fluidStorage.slot(OxygenStorageModuleBlockEntity.OXYGEN_TANK).getAmount());
+        Component maxOxygen = Component.translatable(Translations.Ui.MAX_OXYGEN, this.menu.fluidStorage.slot(OxygenStorageModuleBlockEntity.OXYGEN_TANK).getCapacity());
+        graphics.drawString(this.font, currentOxygen, this.leftPos + (this.imageWidth - this.font.width(currentOxygen)) / 2, this.topPos + 25, ChatFormatting.DARK_GRAY.getColor(), false);
+        graphics.drawString(this.font, maxOxygen, this.leftPos + (this.imageWidth - this.font.width(maxOxygen)) / 2, this.topPos + 40, ChatFormatting.DARK_GRAY.getColor(), false);
     }
 
     private void drawOxygenBufferBar(GuiGraphics graphics) {

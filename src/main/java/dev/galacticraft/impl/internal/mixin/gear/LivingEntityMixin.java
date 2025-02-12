@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,7 @@ import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.api.item.OxygenGear;
 import dev.galacticraft.api.item.OxygenMask;
 import dev.galacticraft.impl.internal.fabric.GalacticraftAPI;
+import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.Galacticraft;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -37,9 +38,13 @@ import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -56,9 +61,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements GearInventoryProvider {
@@ -67,10 +72,33 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     }
 
     @Shadow protected abstract int increaseAirSupply(int air);
+    @Shadow protected abstract int decreaseAirSupply(int air);
 
-    @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z", ordinal = 0))
-    private boolean galacticraft_testForBreathability(LivingEntity entity, TagKey<Fluid> tag) {
-        return entity.isEyeInFluid(tag) || !entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(entity.getPose()))));
+    @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"))
+    private void galacticraft_oxygenCheck(CallbackInfo ci) {
+        LivingEntity entity = ((LivingEntity) (Object) this);
+        if (!entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(entity.getEyeHeight(entity.getPose()))))) {
+            if (!entity.isEyeInFluid(FluidTags.WATER) && (!(entity instanceof Player player) || !player.getAbilities().invulnerable)) {
+                entity.setAirSupply(this.decreaseAirSupply(entity.getAirSupply()));
+                if (entity.getAirSupply() == -20) {
+                    entity.setAirSupply(0);
+                    entity.hurt(new DamageSource(entity.level().registryAccess()
+                            .registryOrThrow(Registries.DAMAGE_TYPE)
+                            .getHolderOrThrow(GCDamageTypes.SUFFOCATION)), 2.0f);
+                }
+            }
+        }
+    }
+
+    @ModifyExpressionValue(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z", ordinal = 0))
+    private boolean galacticraft_testForBreathability(boolean original) {
+        LivingEntity entity = (LivingEntity) (Object) this;
+        return original || !entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(entity.getPose()))));
+    }
+
+    @ModifyExpressionValue(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;canBreatheUnderwater()Z"))
+    private boolean galacticraft_suffocationDamage(boolean original) {
+        return original || !this.isEyeInFluid(FluidTags.WATER);
     }
 
     @Inject(method = "tick", at = @At(value = "RETURN"))
@@ -91,20 +119,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
             ci.setReturnValue(this.increaseAirSupply(air));
         }
 
-        boolean mask = false;
-        boolean gear = false;
-        for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
-            Item item = this.galacticraft$getAccessories().getItem(i).getItem();
-            if (!mask && item instanceof OxygenMask) {
-                mask = true;
-                if (gear) break;
-            } else if (!gear && item instanceof OxygenGear) {
-                gear = true;
-                if (mask) break;
-            }
-        }
-
-        if (mask && gear) {
+        if (this.galacticraft$hasMaskAndGear()) {
             InventoryStorage tankInv = InventoryStorage.of(galacticraft$getOxygenTanks(), null);
             for (int i = 0; i < tankInv.getSlotCount(); i++) {
                 Storage<FluidVariant> storage = ContainerItemContext.ofSingleSlot(tankInv.getSlot(i)).find(FluidStorage.ITEM);

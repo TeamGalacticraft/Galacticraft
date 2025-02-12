@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,17 +42,15 @@ public class OxygenCompressorScreen extends MachineScreen<OxygenCompressorBlockE
     @Override
     protected void init() {
         super.init();
-        this.titleLabelX += 18;
+        this.titleLabelX += 20;
     }
 
     @Override
     protected void renderMachineBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.renderMachineBackground(graphics, mouseX, mouseY, delta);
         if (this.menu.state.isActive()) {
-            double height = (System.currentTimeMillis() % 2250);
-            if (height == 0) return; //prevent dividing by zero
-            height /= -125.0;
-            DrawableUtil.drawProgressTexture(graphics.pose(), this.leftPos + 93, this.topPos + 64, 187, 18, -11, (float) height);
+            int height = -(int) (System.currentTimeMillis() % 2250) / 125;
+            DrawableUtil.drawProgressTexture(graphics.pose(), this.leftPos + 93, this.topPos + 64, 187, 18, -11, height);
         }
     }
 }

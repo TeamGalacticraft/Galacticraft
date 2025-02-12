@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -120,7 +120,9 @@ public class EntranceCrater extends SizedPiece {
                             state = state.rotate(rotation);
                         }
 
-                        worldIn.setBlock(blockpos, state, Block.UPDATE_CLIENTS);
+                        if (structureBoundingBoxIn.isInside(blockpos)) {
+                            worldIn.setBlock(blockpos, state, Block.UPDATE_CLIENTS);
+                        }
 //                        this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), i + range, j, k + range, boundingBox);
                         helper++;
                     }

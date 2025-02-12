@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -396,8 +396,8 @@ public interface Constant {
         String AMBIENT_THERMAL_CONTROLLER = "ambient_thermal_controller";
         String LIQUID_CANISTER = "liquid_canister";
         //FOOD
-        String CHEESE_CURD = "cheese_curd";
-        String CHEESE_SLICE = "cheese_slice";
+        String MOON_CHEESE_CURD = "moon_cheese_curd";
+        String MOON_CHEESE_SLICE = "moon_cheese_slice";
         String BURGER_BUN = "burger_bun";
         String GROUND_BEEF = "ground_beef";
         String BEEF_PATTY = "beef_patty";
@@ -543,7 +543,6 @@ public interface Constant {
         ResourceLocation ROCKET_WORKBENCH_SCREEN = id("textures/gui/rocket_workbench.png");
         ResourceLocation ROCKET_SELECTION = id("textures/gui/rocket_part_selection.png");
 
-        ResourceLocation MACHINE_CONFIG_PANELS = id("textures/gui/machine_config.png");
         ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
         ResourceLocation ROCKET_INVENTORY = id("textures/gui/rocket.png");
         ResourceLocation OVERLAY = id("textures/gui/overlay.png");
@@ -555,9 +554,32 @@ public interface Constant {
         ResourceLocation OXYGEN_STORAGE_MODULE_SCREEN = id("textures/gui/oxygen_storage_module_screen.png");
         ResourceLocation OXYGEN_SEALER_SCREEN = id("textures/gui/oxygen_sealer_screen.png");
         ResourceLocation FUEL_LOADER_SCREEN = id("textures/gui/fuel_loader_screen.png");
-        ResourceLocation DEFAULT_SOLAR_PANELS = id("textures/solar_panel/default_solar_panels.png");
-        ResourceLocation DEFAULT_LIGHT_SOURCES = id("textures/solar_panel/default_light_sources.png");
-        ResourceLocation MOON_LIGHT_SOURCES = id("textures/solar_panel/moon_light_sources.png");
+        ResourceLocation SOLAR_PANEL_DAY = id("textures/gui/solar_panel/day.png");
+        ResourceLocation SOLAR_PANEL_NIGHT = id("textures/gui/solar_panel/night.png");
+        ResourceLocation SOLAR_PANEL_BLOCKED = id("textures/gui/solar_panel/blocked.png");
+    }
+
+    interface CelestialBody {
+        ResourceLocation SOL = id("textures/gui/celestialbodies/sol.png");
+        ResourceLocation SOL_OVERCAST = id("textures/gui/celestialbodies/sol_overcast.png");
+        ResourceLocation SOL_FROM_MOON = id("textures/gui/celestialbodies/sol_from_moon.png");
+        ResourceLocation MERCURY = id("textures/gui/celestialbodies/mercury.png");
+        ResourceLocation VENUS = id("textures/gui/celestialbodies/venus.png");
+        ResourceLocation EARTH = id("textures/gui/celestialbodies/earth.png");
+        ResourceLocation SPACE_STATION = id("textures/gui/celestialbodies/space_station.png");
+        ResourceLocation MOON = id("textures/gui/celestialbodies/moon.png");
+        ResourceLocation MARS = id("textures/gui/celestialbodies/mars.png");
+        ResourceLocation ASTEROID = id("textures/gui/celestialbodies/asteroid.png");
+        ResourceLocation SATURN = id("textures/gui/celestialbodies/saturn.png");
+        ResourceLocation SATURN_RINGS = id("textures/gui/celestialbodies/saturn_rings.png");
+        ResourceLocation JUPITER = id("textures/gui/celestialbodies/jupiter.png");
+        ResourceLocation CALLISTO = id("textures/gui/celestialbodies/callisto.png");
+        ResourceLocation EUROPA = id("textures/gui/celestialbodies/europa.png");
+        ResourceLocation GANYMEDE = id("textures/gui/celestialbodies/ganymede.png");
+        ResourceLocation IO = id("textures/gui/celestialbodies/io.png");
+        ResourceLocation URANUS = id("textures/gui/celestialbodies/uranus.png");
+        ResourceLocation URANUS_RINGS = id("textures/gui/celestialbodies/uranus_rings.png");
+        ResourceLocation NEPTUNE = id("textures/gui/celestialbodies/neptune.png");
     }
 
     interface RecipeViewer {
@@ -595,13 +617,18 @@ public interface Constant {
     }
 
     interface SlotSprite {
-        String THERMAL_HEAD = "slot/thermal_helmet";
-        String THERMAL_CHEST = "slot/thermal_chestpiece";
-        String THERMAL_PANTS = "slot/thermal_leggings";
-        String THERMAL_BOOTS = "slot/thermal_boots";
-        String OXYGEN_MASK = "slot/oxygen_mask";
-        String OXYGEN_GEAR = "slot/oxygen_gear";
-        String OXYGEN_TANK = "slot/oxygen_tank";
+        ResourceLocation ENERGY = id("slot/energy");
+        ResourceLocation BUCKET = id("slot/bucket");
+        ResourceLocation DIAMOND = ResourceLocation.withDefaultNamespace("item/empty_slot_diamond");
+        ResourceLocation DUST = ResourceLocation.withDefaultNamespace("item/empty_slot_redstone_dust");
+        ResourceLocation SILICON = id("slot/silicon");
+        ResourceLocation THERMAL_HEAD = id("slot/thermal_helmet");
+        ResourceLocation THERMAL_CHEST = id("slot/thermal_chestpiece");
+        ResourceLocation THERMAL_PANTS = id("slot/thermal_leggings");
+        ResourceLocation THERMAL_BOOTS = id("slot/thermal_boots");
+        ResourceLocation OXYGEN_MASK = id("slot/oxygen_mask");
+        ResourceLocation OXYGEN_GEAR = id("slot/oxygen_gear");
+        ResourceLocation OXYGEN_TANK = id("slot/oxygen_tank");
     }
 
     interface Entity {
@@ -817,6 +844,11 @@ public interface Constant {
     interface Energy {
         long T1_MACHINE_ENERGY_USAGE = 100; // TODO: adjust these later
         long T2_MACHINE_ENERGY_USAGE = 200;
+    }
+
+    interface Landing {
+        double SAFE_VELOCITY = 1.0D; // meters per tick (~1/20 second)
+        double EXPLOSION_SCALE = 4.0D;
     }
 
     @ApiStatus.Internal

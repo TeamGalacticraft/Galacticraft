@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -143,44 +143,44 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
 
         // Heavy-Duty Tools
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_SHOVEL)
-                .define('S', GCItems.COMPRESSED_STEEL)
-                .define('W', Items.STICK)
+                .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
+                .define('S', Items.STICK)
+                .pattern("P")
                 .pattern("S")
-                .pattern("W")
-                .pattern("W")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
+                .pattern("S")
+                .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
                 .save(output);
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_PICKAXE)
-                .define('S', GCItems.COMPRESSED_STEEL)
-                .define('W', Items.STICK)
-                .pattern("SSS")
-                .pattern(" W ")
-                .pattern(" W ")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
+                .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
+                .define('S', Items.STICK)
+                .pattern("PPP")
+                .pattern(" S ")
+                .pattern(" S ")
+                .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
                 .save(output);
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_AXE)
-                .define('S', GCItems.COMPRESSED_STEEL)
-                .define('W', Items.STICK)
-                .pattern("SS")
-                .pattern("SW")
-                .pattern(" W")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
+                .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
+                .define('S', Items.STICK)
+                .pattern("PP")
+                .pattern("PS")
+                .pattern(" S")
+                .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
                 .save(output);
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_HOE)
-                .define('S', GCItems.COMPRESSED_STEEL)
-                .define('W', Items.STICK)
-                .pattern("SS")
-                .pattern(" W")
-                .pattern(" W")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
+                .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
+                .define('S', Items.STICK)
+                .pattern("PP")
+                .pattern(" S")
+                .pattern(" S")
+                .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
                 .save(output);
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_SWORD)
-                .define('S', GCItems.COMPRESSED_STEEL)
-                .define('W', Items.STICK)
+                .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
+                .define('S', Items.STICK)
+                .pattern("P")
+                .pattern("P")
                 .pattern("S")
-                .pattern("S")
-                .pattern("W")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
+                .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
                 .save(output);
 
         // Desh Tools

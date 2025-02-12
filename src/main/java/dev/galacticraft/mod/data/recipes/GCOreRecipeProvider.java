@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -52,14 +52,14 @@ public class GCOreRecipeProvider extends FabricRecipeProvider {
     @Override
     public void buildRecipes(RecipeOutput output) {
         // Ore Smelting and Blasting
-        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_ALUMINUM, GCItems.ALUMINUM_ORE, GCItems.DEEPSLATE_ALUMINUM_ORE), GCItems.ALUMINUM_INGOT, 0.7f, 100);
-        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_TIN, GCItems.TIN_ORE, GCItems.DEEPSLATE_TIN_ORE, GCItems.MOON_TIN_ORE), GCItems.TIN_INGOT, 0.7f, 100);
+        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_ALUMINUM, GCBlocks.ALUMINUM_ORE, GCBlocks.DEEPSLATE_ALUMINUM_ORE), GCItems.ALUMINUM_INGOT, 0.7f, 100);
+        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_TIN, GCBlocks.TIN_ORE, GCBlocks.DEEPSLATE_TIN_ORE, GCBlocks.MOON_TIN_ORE), GCItems.TIN_INGOT, 0.7f, 100);
         oreSmeltingAndBlasting(output, List.of(GCItems.RAW_METEORIC_IRON), GCItems.METEORIC_IRON_INGOT, 0.7f, 100);
-        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_DESH, GCItems.DESH_ORE), GCItems.DESH_INGOT, 0.7f, 100);
-        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_TITANIUM, GCItems.ILMENITE_ORE), GCItems.TITANIUM_INGOT, 0.7f, 100);
-        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_LEAD, GCItems.GALENA_ORE), GCItems.LEAD_INGOT, 0.7f, 100);
+        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_DESH, GCBlocks.DESH_ORE), GCItems.DESH_INGOT, 0.7f, 100);
+        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_TITANIUM, GCBlocks.ILMENITE_ORE), GCItems.TITANIUM_INGOT, 0.7f, 100);
+        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_LEAD, GCBlocks.GALENA_ORE), GCItems.LEAD_INGOT, 0.7f, 100);
 
-        oreSmeltingAndBlasting(output, List.of(GCItems.MOON_COPPER_ORE, GCItems.LUNASLATE_COPPER_ORE), Items.COPPER_INGOT, 0.7f, 100);
+        oreSmeltingAndBlasting(output, List.of(GCBlocks.MOON_COPPER_ORE, GCBlocks.LUNASLATE_COPPER_ORE), Items.COPPER_INGOT, 0.7f, 100);
         
         // Nuggets <-> Ingots
         nineBlockStoragePackingRecipe(output, RecipeCategory.MISC, GCItems.METEORIC_IRON_NUGGET, RecipeCategory.MISC, GCItems.METEORIC_IRON_INGOT, "meteoric_iron_ingot_from_nuggets", "meteoric_iron_ingot");
@@ -70,14 +70,14 @@ public class GCOreRecipeProvider extends FabricRecipeProvider {
         nineBlockStoragePackingRecipe(output, RecipeCategory.MISC, GCItems.TITANIUM_NUGGET, RecipeCategory.MISC, GCItems.TITANIUM_INGOT, "titanium_ingot_from_nuggets", "titanium_ingot");
 
         // Ingots <-> Blocks
-        nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.METEORIC_IRON_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.METEORIC_IRON_BLOCK, "meteoric_iron_ingot_from_block", "meteoric_iron_ingot");
-        nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.DESH_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.DESH_BLOCK, "desh_ingot_from_block", "desh_ingot");
-        nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.LEAD_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.LEAD_BLOCK, "lead_ingot_from_block", "lead_ingot");
+        nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.METEORIC_IRON_INGOT, RecipeCategory.BUILDING_BLOCKS, GCBlocks.METEORIC_IRON_BLOCK, "meteoric_iron_ingot_from_block", "meteoric_iron_ingot");
+        nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.DESH_INGOT, RecipeCategory.BUILDING_BLOCKS, GCBlocks.DESH_BLOCK, "desh_ingot_from_block", "desh_ingot");
+        nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.LEAD_INGOT, RecipeCategory.BUILDING_BLOCKS, GCBlocks.LEAD_BLOCK, "lead_ingot_from_block", "lead_ingot");
         nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.ALUMINUM_INGOT, RecipeCategory.BUILDING_BLOCKS, GCBlocks.ALUMINUM_BLOCK, "aluminum_ingot_from_block", "aluminum_ingot");
         nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.TIN_INGOT, RecipeCategory.BUILDING_BLOCKS, GCBlocks.TIN_BLOCK, "tin_ingot_from_block", "tin_ingot");
-        nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.TITANIUM_INGOT, RecipeCategory.BUILDING_BLOCKS, GCItems.TITANIUM_BLOCK, "titanium_ingot_from_block", "titanium_ingot");
-        nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.LUNAR_SAPPHIRE, RecipeCategory.BUILDING_BLOCKS, GCItems.LUNAR_SAPPHIRE_BLOCK, "lunar_sapphire_from_block", "lunar_sapphire");
-        nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.SILICON, RecipeCategory.BUILDING_BLOCKS, GCItems.SILICON_BLOCK, "silicon_from_block", "silicon");
+        nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.TITANIUM_INGOT, RecipeCategory.BUILDING_BLOCKS, GCBlocks.TITANIUM_BLOCK, "titanium_ingot_from_block", "titanium_ingot");
+        nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.LUNAR_SAPPHIRE, RecipeCategory.BUILDING_BLOCKS, GCBlocks.LUNAR_SAPPHIRE_BLOCK, "lunar_sapphire_from_block", "lunar_sapphire");
+        nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.SILICON, RecipeCategory.BUILDING_BLOCKS, GCBlocks.SILICON_BLOCK, "silicon_from_block", "silicon");
         crystalBlockStorageRecipe(output, GCItems.OLIVINE_SHARD, RecipeCategory.MISC, GCBlocks.OLIVINE_BLOCK, "olivine_block_from_shards", null);
         nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.RAW_METEORIC_IRON, RecipeCategory.BUILDING_BLOCKS, GCBlocks.RAW_METEORIC_IRON_BLOCK, "raw_meteoric_iron_from_block", "raw_meteoric_iron");
         nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.RAW_DESH, RecipeCategory.BUILDING_BLOCKS, GCBlocks.RAW_DESH_BLOCK, "raw_desh_from_block", "raw_desh");

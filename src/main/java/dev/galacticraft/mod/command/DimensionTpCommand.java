@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -84,10 +84,10 @@ public class DimensionTpCommand {
 
         if (success > 0) {
             if (success == 1) {
-                context.getSource().sendSuccess(() -> Component.translatable(Translations.DimensionTp.SUCCESS_SINGLE, level.dimension().location()), true);
+                context.getSource().sendSuccess(() -> Component.translatable(Translations.DimensionTp.SUCCESS_SINGLE, level.dimension().location().toString()), true);
             } else {
                 int tmp = success;
-                context.getSource().sendSuccess(() -> Component.translatable(Translations.DimensionTp.SUCCESS_MULTIPLE, tmp, level.dimension().location()), true);
+                context.getSource().sendSuccess(() -> Component.translatable(Translations.DimensionTp.SUCCESS_MULTIPLE, tmp, level.dimension().location().toString()), true);
             }
             return success;
         }

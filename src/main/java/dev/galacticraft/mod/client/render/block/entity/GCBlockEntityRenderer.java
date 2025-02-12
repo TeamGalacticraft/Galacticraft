@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,5 +31,6 @@ public class GCBlockEntityRenderer {
         BlockEntityRenderers.register(GCBlockEntityTypes.BASIC_SOLAR_PANEL, BasicSolarPanelBlockEntityRenderer::new);
         BlockEntityRenderers.register(GCBlockEntityTypes.ADVANCED_SOLAR_PANEL, AdvancedSolarPanelBlockEntityRenderer::new);
         BlockEntityRenderers.register(GCBlockEntityTypes.GLASS_FLUID_PIPE, FluidPipeBlockEntityRenderer::new);
+        BlockEntityRenderers.register(GCBlockEntityTypes.OXYGEN_BUBBLE_DISTRIBUTOR, BubbleDistributorRenderer::new);
     }
 }

@@ -2,17 +2,17 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "S": {
-      "item": "galacticraft:compressed_steel"
+    "P": {
+      "item": "galacticraft:heavy_plating"
     },
-    "W": {
+    "S": {
       "item": "minecraft:stick"
     }
   },
   "pattern": [
-    "SS",
-    " W",
-    " W"
+    "PP",
+    " S",
+    " S"
   ],
   "result": {
     "count": 1,

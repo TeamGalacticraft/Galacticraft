@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,6 +32,7 @@ public final class GCMachineStatuses {
     public static final MachineStatus BLOCKED = MachineStatus.create(Translations.MachineStatus.BLOCKED, ChatFormatting.RED, MachineStatus.Type.OTHER);
     public static final MachineStatus NIGHT = MachineStatus.create(Translations.MachineStatus.NIGHT, ChatFormatting.DARK_BLUE, MachineStatus.Type.PARTIALLY_WORKING);
     public static final MachineStatus RAIN = MachineStatus.create(Translations.MachineStatus.RAIN, ChatFormatting.BLUE, MachineStatus.Type.PARTIALLY_WORKING);
+    public static final MachineStatus THUNDER = MachineStatus.create(Translations.MachineStatus.THUNDER, ChatFormatting.GRAY, MachineStatus.Type.PARTIALLY_WORKING);
     public static final MachineStatus FABRICATING = MachineStatus.create(Translations.MachineStatus.FABRICATING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
     public static final MachineStatus NO_FUEL = MachineStatus.create(Translations.MachineStatus.NO_FUEL, ChatFormatting.RED, MachineStatus.Type.MISSING_ITEMS);
     public static final MachineStatus GENERATING = MachineStatus.create(Translations.MachineStatus.GENERATING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
