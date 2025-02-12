@@ -102,6 +102,7 @@ public interface Translations {
         String ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.electric_compressor_energy_consumption_rate";
         String OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_collector_energy_consumption_rate";
         String OXYGEN_SEALER_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_collector_energy_consumption_rate";
+        String OXYGEN_SEALER_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_collector_oxygen_consumption_rate";
         String MAX_SEALING_POWER = "config.galacticraft.machines.max_sealing_power";
         String REFINERY_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.refinery_energy_consumption_rate";
         String ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.electric_furnace_energy_consumption_rate";
@@ -343,6 +344,7 @@ public interface Translations {
         String GIANT_LEAP = "ui.galacticraft.giant_leap";
         String PREPARE_FOR_ENTRY = "ui.galacticraft.prepare_for_entry";
         String TRAVELING_TO = "ui.galacticraft.traveling_to";
+        String TOTAL_NUTRITION = "ui.galacticraft.total_nutrition";
     }
 
     interface Boss {

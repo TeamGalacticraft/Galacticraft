@@ -15,7 +15,7 @@
       "translate": "planet.galacticraft.asteroid.description"
     },
     "display": {
-      "type": "galacticraft:icon",
+      "type": "galacticraft:spinning_icon",
       "config": {
         "height": 16,
         "scale": 1.0,
@@ -33,14 +33,14 @@
     "position": {
       "type": "galacticraft:orbital",
       "config": {
-        "distance": 0.75,
-        "orbit_time": 0.6152793169021606,
-        "phase_shift": 2.0,
-        "planet": false
+        "distance": 1.375,
+        "orbit_time": 45.0,
+        "phase_shift": 0.0,
+        "planet": true
       }
     },
     "ring": {
-      "type": "galacticraft:default",
+      "type": "galacticraft:asteroid",
       "config": {}
     },
     "teleporter": "galacticraft:lander",

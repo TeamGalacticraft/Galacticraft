@@ -1,9 +1,9 @@
 {
   "data": {
-    "back": "galacticraft:block/food_canner_back",
-    "base": "galacticraft:block/machine",
+    "back": "galacticraft:block/machine_side",
     "front": "galacticraft:block/food_canner",
-    "side": "galacticraft:block/machine_side"
+    "left": "galacticraft:block/machine_side",
+    "right": "galacticraft:block/machine_side"
   },
-  "machinelib:generate": "machinelib:axis"
+  "machinelib:type": "machine"
 }

@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft:machine/rocket_workbench"
+      "model": "galacticraft:block/rocket_workbench"
     }
   }
 }

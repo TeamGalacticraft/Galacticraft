@@ -42,8 +42,6 @@ import org.joml.Vector3f;
 public class OxygenSealerBlock extends MachineBlock {
     private static final MapCodec<OxygenSealerBlock> CODEC = simpleCodec(OxygenSealerBlock::new);
 
-
-
     public OxygenSealerBlock(Properties settings) {
         super(settings);
     }
@@ -53,9 +51,8 @@ public class OxygenSealerBlock extends MachineBlock {
         return CODEC;
     }
 
-
     @Override
-    public @NotNull MachineBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public @Nullable MachineBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new OxygenSealerBlockEntity(pos, state);
     }
 

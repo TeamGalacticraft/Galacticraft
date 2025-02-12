@@ -580,6 +580,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
         {
             for (AsteroidData asteroidIndex : new ArrayList<AsteroidData>(this.largeAsteroids))
             {
+                if (asteroidIndex == null) return;
                 if (!asteroidIndex.isHollow)
                 {
                     continue;

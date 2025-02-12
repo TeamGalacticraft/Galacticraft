@@ -131,8 +131,8 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         // Food Tags
         tag(ConventionalItemTags.FOODS).add(
-                GCItems.CHEESE_CURD,
-                GCItems.CHEESE_SLICE,
+                GCItems.MOON_CHEESE_CURD,
+                GCItems.MOON_CHEESE_SLICE,
                 GCItems.BURGER_BUN,
                 GCItems.GROUND_BEEF,
                 GCItems.BEEF_PATTY,

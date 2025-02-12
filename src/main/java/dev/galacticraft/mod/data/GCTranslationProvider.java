@@ -400,6 +400,9 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.AMBIENT_THERMAL_CONTROLLER, "Ambient Thermal Controller");
 
         // FOOD
+        this.item(GCItems.CANNED_FOOD, "Canned ");
+        this.item(GCItems.EMPTY_CANNED_FOOD, "Empty Canned Food");
+
         this.item(GCItems.MOON_CHEESE_CURD, "Moon Cheese Curd");
 
         this.item(GCItems.MOON_CHEESE_SLICE, "Moon Cheese Slice");
@@ -470,11 +473,6 @@ public class GCTranslationProvider extends TranslationProvider {
 
         // GALACTICRAFT INVENTORY
         this.item(GCItems.PARACHUTE.get(DyeColor.WHITE), "Parachute");
-        this.item(GCItems.CANNED_FOOD, "Canned ");
-        //todo: fix the tags being in the wrong area
-        this.add("item.galacticraft.empty_canned_food", "Empty Canned Food");
-        this.add("item.galacticraft.total_nutrition", "Total Nutrition: ");
-
         this.item(GCItems.PARACHUTE.get(DyeColor.ORANGE), "Orange Parachute");
         this.item(GCItems.PARACHUTE.get(DyeColor.MAGENTA), "Magenta Parachute");
         this.item(GCItems.PARACHUTE.get(DyeColor.LIGHT_BLUE), "Light Blue Parachute");
@@ -916,6 +914,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.GIANT_LEAP, "Taking one giant leap");
         this.add(Ui.PREPARE_FOR_ENTRY, "Prepare for entry!");
         this.add(Ui.TRAVELING_TO, "Traveling to: %s");
+
+        this.add(Ui.TOTAL_NUTRITION, "Total Nutrition: ");
     }
 
     protected void generateStatsTranslations() {

@@ -26,8 +26,6 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.config.Config;
 import dev.galacticraft.mod.config.ConfigImpl;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
-import dev.galacticraft.mod.content.block.machine.OxygenSealerBlock;
-import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
@@ -65,6 +63,11 @@ public class SealerManager {
 
         Constant.LOGGER.info("Adding sealer at {} in dimension {}", pos, dimension.location());
         this.sealers.computeIfAbsent(dimension, k -> new HashMap<>()).put(pos, sealer);
+    }
+
+    public void loadSealer(OxygenSealerBlockEntity sealer, ServerLevel level) {
+        addSealer(sealer, level);
+        BlockPos pos = sealer.getBlockPos();
         recalculateSealingStatus(pos, level);
     }
 
@@ -92,13 +95,10 @@ public class SealerManager {
 
     public void recalculateSealingStatus(BlockPos sealerPos, ServerLevel level) {
         ResourceKey<Level> dimension = level.dimension();
-        if (!level.isLoaded(sealerPos)) return;
-
-        if (level.getServer() == null || !level.getServer().isReady()) {
+        if (level.getServer() == null || !level.getServer().isReady() || !level.isLoaded(sealerPos)) {
             Constant.LOGGER.info("World is not fully loaded, skipping sealing calculation");
             return;
         }
-
         // Find all powered sealers in the same dimension
         List<OxygenSealerBlockEntity> poweredSealers = new ArrayList<>();
         Map<BlockPos, OxygenSealerBlockEntity> dimensionSealers = this.sealers.get(dimension);
@@ -113,21 +113,26 @@ public class SealerManager {
         // Calculate the maximum allowed room size
         int maxRoomSize = (int) (Galacticraft.CONFIG.maxSealingPower() * poweredSealers.size());
 
+        // Calculate the maximum possible room size
+        assert dimensionSealers != null;
+        int maxPossibleRoomSize = (int) (Galacticraft.CONFIG.maxSealingPower() * dimensionSealers.size());
+
         // Perform flood fill to calculate room size from the block above the sealer
         Set<BlockPos> sealedArea = new HashSet<>();
         int roomSize = calculateRoomSize(sealerPos.offset(0, 1, 0), level, maxRoomSize, sealedArea);
-
         // Update sealing status
         boolean isSealed = roomSize <= maxRoomSize;
+
         for (OxygenSealerBlockEntity sealer : poweredSealers) {
             sealer.setSealed(isSealed);
         }
-
         // Update the sealed blocks for this dimension
         Set<BlockPos> dimensionSealedBlocks = this.sealedBlocks.computeIfAbsent(dimension, k -> new HashSet<>());
         if (isSealed) {
             dimensionSealedBlocks.addAll(sealedArea);
         } else {
+            sealedArea = new HashSet<>();
+            calculateRoomSize(sealerPos.offset(0, 1, 0), level, maxPossibleRoomSize, sealedArea);
             dimensionSealedBlocks.removeAll(sealedArea);
         }
     }

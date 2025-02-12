@@ -51,7 +51,7 @@ public final class GCMachineStatuses {
     public static final MachineStatus DECOMPRESSING = MachineStatus.create(Translations.MachineStatus.DECOMPRESSING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
     public static final MachineStatus EMPTY_OXYGEN_TANK = MachineStatus.create(Translations.MachineStatus.EMPTY_OXYGEN_TANK, ChatFormatting.RED, MachineStatus.Type.MISSING_RESOURCE);
     public static final MachineStatus ALREADY_SEALED = MachineStatus.create(Translations.MachineStatus.ALREADY_SEALED, ChatFormatting.RED, MachineStatus.Type.OTHER);
-    public static final MachineStatus AREA_TOO_LARGE = MachineStatus.create(Translations.MachineStatus.AREA_TOO_LARGE, ChatFormatting.RED, MachineStatus.Type.OTHER);
+    public static final MachineStatus AREA_TOO_LARGE = MachineStatus.create(Translations.MachineStatus.AREA_TOO_LARGE, ChatFormatting.RED, MachineStatus.Type.PARTIALLY_WORKING);
     public static final MachineStatus SEALED = MachineStatus.create(Translations.MachineStatus.SEALED, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
     public static final MachineStatus DISTRIBUTING = MachineStatus.create(Translations.MachineStatus.DISTRIBUTING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
     public static final MachineStatus LOADING = MachineStatus.create(Translations.MachineStatus.DISTRIBUTING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);

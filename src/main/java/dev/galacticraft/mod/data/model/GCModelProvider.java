@@ -265,9 +265,6 @@ public class GCModelProvider extends FabricModelProvider {
                 .build()
         );
 
-        //TODO: create food canner somewhere in here
-        //createMachineDelegateZAxis(generator, GCBlocks.FOOD_CANNER, "food_canner", "food_canner_back");
-
         createFuelLoader(generator, GCBlocks.FUEL_LOADER);
 
         createOxygenCompressor(generator, GCBlocks.OXYGEN_COMPRESSOR);
@@ -284,6 +281,17 @@ public class GCModelProvider extends FabricModelProvider {
                 TextureProvider.builder(Constant.MOD_ID)
                         .sides("block/machine_side")
                         .front("block/circuit_fabricator")
+                        .build()
+        );
+
+        createActiveMachine(generator, GCBlocks.FOOD_CANNER,
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/food_canner_active")
+                        .build(),
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/food_canner")
                         .build()
         );
 
@@ -340,7 +348,6 @@ public class GCModelProvider extends FabricModelProvider {
 
         generator.createTrivialCube(GCBlocks.AIR_LOCK_FRAME);
         this.createAirLockController(generator);
-        generator.createNonTemplateModelBlock(GCBlocks.AIR_LOCK_SEAL);
 
         this.createParachests(generator);
     }

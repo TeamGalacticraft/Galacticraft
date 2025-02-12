@@ -57,6 +57,7 @@ public class ConfigImpl implements Config {
     private long electricArcFurnaceEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
     private long oxygenCollectorEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long oxygenSealerEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
+    private long oxygenSealerOxygenConsumptionRate = 1000;
     private long maxSealingPower = 1024;
     private long foodCannerEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long refineryEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
@@ -173,6 +174,11 @@ public class ConfigImpl implements Config {
     }
 
     @Override
+    public long oxygenSealerOxygenConsumptionRate() {
+        return oxygenSealerOxygenConsumptionRate;
+    }
+
+    @Override
     public long maxSealingPower() {
         return maxSealingPower;
     }
@@ -183,6 +189,10 @@ public class ConfigImpl implements Config {
 
     public void setOxygenSealerEnergyConsumptionRate(long amount) {
         this.oxygenSealerEnergyConsumptionRate = amount;
+    }
+
+    public void setOxygenSealerOxygenConsumptionRate(long amount) {
+        this.oxygenSealerOxygenConsumptionRate = amount;
     }
 
     @Override
@@ -412,6 +422,15 @@ public class ConfigImpl implements Config {
                     config.oxygenSealerEnergyConsumptionRate())
                     .setSaveConsumer(config::setOxygenSealerEnergyConsumptionRate)
                     .setDefaultValue(10)
+                    .build()
+            );
+
+            machines.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.OXYGEN_SEALER_OXYGEN_CONSUMPTION_RATE),
+                    config.oxygenSealerOxygenConsumptionRate())
+                    .setSaveConsumer(config::setOxygenSealerOxygenConsumptionRate)
+                    .setDefaultValue(1000)
                     .build()
             );
 

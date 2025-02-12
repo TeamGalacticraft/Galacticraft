@@ -44,17 +44,11 @@ public class OxygenSealerScreen extends MachineScreen<OxygenSealerBlockEntity, O
     }
 
     @Override
-    protected void init() {
-        super.init();
-        this.titleLabelX += 20;
-    }
-
-    @Override
     protected void renderForeground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.renderForeground(graphics, mouseX, mouseY, delta);
 
         MachineStatus status = this.menu.state.getStatus();
-        graphics.drawString(this.font, Component.translatable(Translations.Ui.MACHINE_STATUS).append(status != null ? status.getText() : Component.empty()), this.leftPos + 50, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
+        graphics.drawString(this.font, Component.translatable(Translations.Ui.MACHINE_STATUS, status != null ? status.getText() : Component.empty()), this.leftPos + 50, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
         if (status != null)
         {
             if (!status.equals(GCMachineStatuses.BLOCKED)) {

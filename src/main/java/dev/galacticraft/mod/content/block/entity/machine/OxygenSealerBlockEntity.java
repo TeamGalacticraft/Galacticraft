@@ -75,8 +75,6 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     private boolean hasOxygen = false;
     private boolean blocked = false;
 
-    private boolean initialized = false;
-
     private static final StorageSpec SPEC = StorageSpec.of(
             MachineItemStorage.spec(
                     ItemResourceSlot.builder(TransferType.TRANSFER)
@@ -116,10 +114,8 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         this.sealCheckTimer = SEAL_CHECK_TIME;
         Holder<CelestialBody<?, ?>> holder = world.galacticraft$getCelestialBody();
         this.oxygenWorld = holder == null || holder.value().atmosphere().breathable();
-
-        if (!world.isClientSide && !this.initialized) {
-            SealerManager.INSTANCE.addSealer(this, Objects.requireNonNull(world.getServer()).getLevel(world.dimension()));
-            this.initialized = true;
+        if (!world.isClientSide) {
+            SealerManager.INSTANCE.addSealer(this, Objects.requireNonNull(Objects.requireNonNull(world.getServer()).getLevel(world.dimension())));
         }
     }
 
@@ -138,9 +134,9 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         if (!this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenSealerEnergyConsumptionRate())) {
             //recalculate area to avoid issues with fake oxygen
             if (this.hasEnergy) {
+                this.hasEnergy = false;
                 SealerManager.INSTANCE.recalculateSealingStatus(pos, level);
             }
-            this.hasEnergy = false;
             return MachineStatuses.NOT_ENOUGH_ENERGY;
         }
         this.hasEnergy = true;
@@ -149,9 +145,9 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         if (this.fluidStorage().slot(OXYGEN_TANK).isEmpty()) {
             //recalculate area to avoid issues with fake oxygen
             if (this.hasOxygen) {
+                this.hasOxygen = false;
                 SealerManager.INSTANCE.recalculateSealingStatus(pos, level);
             }
-            this.hasOxygen = false;
             return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
         }
         this.hasOxygen = true;
@@ -160,9 +156,9 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         {
             //recalculate area to avoid issues with fake oxygen
             if (!this.blocked) {
+                this.blocked = true;
                 SealerManager.INSTANCE.recalculateSealingStatus(pos, level);
             }
-            this.blocked = true;
             return GCMachineStatuses.BLOCKED;
         }
         this.blocked = false;
@@ -174,8 +170,11 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         }
 
         // Consume oxygen if sealed
-        if (this.isSealed && this.hasEnergy && this.hasOxygen) {
+        if (this.hasOxygen) {
             this.consumeOxygen();
+        }
+        if (this.hasEnergy) {
+            this.consumeEnergy();
         }
 
         if (this.isSealed) {
@@ -195,7 +194,6 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         super.setRemoved();
         if (this.level != null && !this.level.isClientSide) {
             SealerManager.INSTANCE.removeSealer(this, (ServerLevel) this.level);
-            this.initialized = false;
         }
     }
 
@@ -205,18 +203,11 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         return new OxygenSealerMenu(syncId, player, this);
     }
 
-    private boolean checkEnergy() {
-        return this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenSealerEnergyConsumptionRate());
-    }
-
-    private boolean checkOxygen() {
-        return this.fluidStorage().slot(OXYGEN_TANK).canExtract(1000);
-    }
-
     private void consumeOxygen() {
-        long oxygenConsumed = 1000;
+        this.fluidStorage().slot(OXYGEN_TANK).extract(Galacticraft.CONFIG.oxygenSealerOxygenConsumptionRate());
+    }
 
-        this.fluidStorage().slot(OXYGEN_TANK).extract(oxygenConsumed);
+    private void consumeEnergy() {
         this.energyStorage().extract(Galacticraft.CONFIG.oxygenSealerEnergyConsumptionRate());
     }
 
@@ -242,18 +233,5 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
 
     public int getSealTickTime() {
         return this.sealCheckTimer;
-    }
-
-    @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
-        super.saveAdditional(tag, lookup);
-        tag.putInt(Constant.Nbt.PROGRESS, this.sealCheckTimer);
-    }
-
-    @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
-        super.loadAdditional(tag, lookup);
-        this.sealCheckTimer = tag.getInt(Constant.Nbt.PROGRESS);
-        if (this.sealCheckTimer < 0) this.sealCheckTimer = 0;
     }
 }
