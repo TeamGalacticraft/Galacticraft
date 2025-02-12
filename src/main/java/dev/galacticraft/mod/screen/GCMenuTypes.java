@@ -49,7 +49,7 @@ public class GCMenuTypes {
     public static final MenuType<RecipeMachineMenu<SingleRecipeInput, SmeltingRecipe, ElectricFurnaceBlockEntity>> ELECTRIC_FURNACE = SynchronizedMenuType.createSimple(RecipeMachineMenu::new);
     public static final MenuType<RecipeMachineMenu<SingleRecipeInput, BlastingRecipe, ElectricArcFurnaceBlockEntity>> ELECTRIC_ARC_FURNACE = SynchronizedMenuType.createSimple(RecipeMachineMenu::new);
 
-    public static final MenuType<MachineMenu<RefineryBlockEntity>> REFINERY = SynchronizedMenuType.create(MachineMenu::new, 86);
+    public static final MenuType<MachineMenu<RefineryBlockEntity>> REFINERY = SynchronizedMenuType.create(MachineMenu::new, 84);
 
     public static final MenuType<OxygenCollectorMenu> OXYGEN_COLLECTOR = SynchronizedMenuType.create(OxygenCollectorMenu::new);
 
