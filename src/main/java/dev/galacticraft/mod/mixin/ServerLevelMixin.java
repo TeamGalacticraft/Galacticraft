@@ -24,15 +24,11 @@ package dev.galacticraft.mod.mixin;
 
 import com.google.common.collect.ImmutableList;
 import dev.galacticraft.mod.accessor.LevelAccessor;
-import dev.galacticraft.mod.accessor.ServerLevelAccessor;
-import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
 import dev.galacticraft.mod.machine.SealerManager;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.misc.footprint.ServerFootprintManager;
-import dev.galacticraft.mod.util.Translations;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import dev.galacticraft.mod.world.gen.spawner.EvolvedPillagerSpawner;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
@@ -58,16 +54,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import javax.naming.Context;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
 @Mixin(ServerLevel.class)
-public abstract class ServerLevelMixin extends Level implements LevelAccessor, ServerLevelAccessor {
+public abstract class ServerLevelMixin extends Level implements LevelAccessor {
     @Shadow @Final @Mutable private List<CustomSpawner> customSpawners;
 
     @Shadow public abstract ServerLevel getLevel();
@@ -87,28 +79,18 @@ public abstract class ServerLevelMixin extends Level implements LevelAccessor, S
 
     @Inject(method = "sendBlockUpdated", at = @At(value = "INVOKE", target = "Ljava/util/Set;iterator()Ljava/util/Iterator;", remap = false))
     private void onBlockChanges(BlockPos pos, BlockState oldState, BlockState newState, int flags, CallbackInfo ci) {
-        System.out.println("old: " + oldState.getBlock().toString() + "new: " + newState.getBlock().toString());
-        //make sure old state and new state aren't both solid blocks
-        //if they are both solid blocks then nothing would have changed
+        // Skip if both old and new states are solid blocks
         if (oldState.isSolid() && newState.isSolid()) {
-            //nothing will have changed
             return;
         }
-        if (newState.is(BlockTags.LEAVES))
-        {
-            //oxygen collector code update?
+
+        // Check if the block is a leaf (for oxygen collection logic)
+        if (newState.is(BlockTags.LEAVES)) {
+            // Oxygen collector code update (if needed)
         }
+
+        // Notify the SealerManager about the block change
         SealerManager.INSTANCE.onBlockChange(pos, newState, this.getLevel());
-    }
-
-    @Override
-    public void addSealer(OxygenSealerBlockEntity sealer, ServerLevel world) {
-        SealerManager.INSTANCE.addSealer(sealer, world);
-    }
-
-    @Override
-    public void removeSealer(OxygenSealerBlockEntity sealer, ServerLevel world) {
-        SealerManager.INSTANCE.removeSealer(sealer, world);
     }
 
     @Inject(method = "tickChunk", at = @At("HEAD"))

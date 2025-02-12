@@ -20,29 +20,32 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.machine;
+package dev.galacticraft.mod.screen;
 
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
+import dev.galacticraft.machinelib.api.menu.MenuData;
+import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
+import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
-public class SolidCheck implements BlockCheck {
-    @Override
-    public boolean checkSolid(BlockPos block, ServerLevel world) {
-        if (Block.isShapeFullBlock(world.getBlockState(block).getShape(world, block))) {
-            return true;
-        }
-        return false;
+public class OxygenSealerMenu extends MachineMenu<OxygenSealerBlockEntity> {
+    public int sealTickTime;
+
+    public OxygenSealerMenu(int syncId, Player player, OxygenSealerBlockEntity machine) {
+        super(GCMenuTypes.OXYGEN_SEALER, syncId, player, machine);
+        this.sealTickTime = machine.getSealTickTime();
+    }
+
+    public OxygenSealerMenu(int syncId, Inventory inv, BlockPos pos) {
+        super(GCMenuTypes.OXYGEN_SEALER, syncId, inv, pos, 8, 84);
     }
 
     @Override
-    public SealerGroupings checkCalculated(BlockPos block, ServerLevel world) {
-        if (SealerManager.INSTANCE.getInsideSealerGroupings(block, world.dimensionType()) != null)
-        {
-            return SealerManager.INSTANCE.getInsideSealerGroupings(block, world.dimensionType());
-        } else if (SealerManager.INSTANCE.getOutsideSealerGroupings(block, world.dimensionType()) != null) {
-            return SealerManager.INSTANCE.getOutsideSealerGroupings(block, world.dimensionType());
-        }
-        return null;
+    public void registerData(@NotNull MenuData data) {
+        super.registerData(data);
+        data.registerInt(this.be::getSealTickTime, b -> this.sealTickTime = b);
     }
 }

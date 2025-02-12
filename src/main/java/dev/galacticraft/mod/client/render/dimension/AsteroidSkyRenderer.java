@@ -43,7 +43,7 @@ import org.lwjgl.opengl.GL11;
 public class AsteroidSkyRenderer extends SpaceSkyRenderer {
     public static final AsteroidSkyRenderer INSTANCE = new AsteroidSkyRenderer();
     private static final ResourceLocation EARTH_TEXTURE = Constant.id("textures/gui/celestialbodies/earth.png");
-    private static final ResourceLocation SUN_TEXTURE = Constant.id("textures/gui/celestialbodies/sun.png");
+    private static final ResourceLocation SUN_TEXTURE = Constant.id("textures/gui/celestialbodies/sol.png");
 
     @Override
     public void render(WorldRenderContext context) {

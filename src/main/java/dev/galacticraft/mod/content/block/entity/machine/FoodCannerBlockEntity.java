@@ -172,7 +172,7 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
             ),
             MachineEnergyStorage.spec(
                     Galacticraft.CONFIG.machineEnergyStorageSize(),
-                    Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate() * 2,
+                    Galacticraft.CONFIG.foodCannerEnergyConsumptionRate() * 2,
                     0
             )
     );

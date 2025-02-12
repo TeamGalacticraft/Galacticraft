@@ -27,6 +27,8 @@ import dev.galacticraft.api.accessor.LevelOxygenAccessor;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.impl.internal.accessor.InternalLevelOxygenAccessor;
+import dev.galacticraft.mod.machine.SealerManager;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.SectionPos;
@@ -36,6 +38,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.storage.WritableLevelData;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -51,6 +54,8 @@ public abstract class LevelMixin implements LevelOxygenAccessor, InternalLevelOx
 
     @Shadow public abstract @NotNull LevelChunk getChunk(int i, int j);
 
+    @Shadow @Final private ResourceKey<Level> dimension;
+
     @Inject(method = "<init>", at = @At("RETURN"))
     private void initializeOxygenValues(WritableLevelData writableLevelData, ResourceKey<Level> resourceKey, RegistryAccess registryAccess, Holder holder, Supplier supplier, boolean bl, boolean bl2, long l, int i, CallbackInfo ci) {
         Holder<CelestialBody<?, ?>> holder1 = ((LevelBodyAccessor) this).galacticraft$getCelestialBody();
@@ -59,6 +64,7 @@ public abstract class LevelMixin implements LevelOxygenAccessor, InternalLevelOx
 
     @Override
     public boolean isBreathable(int x, int y, int z) {
+        if (SealerManager.INSTANCE.isSealed(new BlockPos(x, y, z), this.dimension)) return true;
         if (this.validPosition(x, y, z)) {
             return this.isBreathableChunk(this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z)), x & 15, y, z & 15);
         }

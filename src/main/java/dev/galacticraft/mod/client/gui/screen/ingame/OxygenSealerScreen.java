@@ -28,6 +28,7 @@ import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
+import dev.galacticraft.mod.screen.OxygenSealerMenu;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -37,8 +38,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
 @Environment(EnvType.CLIENT)
-public class OxygenSealerScreen extends MachineScreen<OxygenSealerBlockEntity, MachineMenu<OxygenSealerBlockEntity>> {
-    public OxygenSealerScreen(MachineMenu<OxygenSealerBlockEntity> handler, Inventory inv, Component title) {
+public class OxygenSealerScreen extends MachineScreen<OxygenSealerBlockEntity, OxygenSealerMenu> {
+    public OxygenSealerScreen(OxygenSealerMenu handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.OXYGEN_SEALER_SCREEN);
     }
 
@@ -48,11 +49,13 @@ public class OxygenSealerScreen extends MachineScreen<OxygenSealerBlockEntity, M
 
         MachineStatus status = this.menu.state.getStatus();
         graphics.drawString(this.font, Component.translatable(Translations.Ui.MACHINE_STATUS).append(status != null ? status.getText() : Component.empty()), this.leftPos + 50, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
-        if (!status.equals(GCMachineStatuses.BLOCKED)) {
-            int insideArea = this.menu.be.getInsideArea();
-            int outsideArea = this.menu.be.getOutsideArea();
-            graphics.drawString(this.font, Component.literal("INSIDE AREA: ").append(String.valueOf(insideArea)), this.leftPos + 50, this.topPos + 50, ChatFormatting.DARK_GRAY.getColor(), false);
-            graphics.drawString(this.font, Component.literal("OUTSIDE AREA: ").append(String.valueOf(outsideArea)), this.leftPos + 50, this.topPos + 70, ChatFormatting.DARK_GRAY.getColor(), false);
+        if (status != null)
+        {
+            if (!status.equals(GCMachineStatuses.BLOCKED)) {
+                int sealCheckTime = this.menu.sealTickTime;
+                //TODO: make this a bar that goes down over time to match gc4's sealer screen?
+                graphics.drawString(this.font, Component.literal("Sealer Recheck: ").append(String.valueOf(sealCheckTime)), this.leftPos + 50, this.topPos + 50, ChatFormatting.YELLOW.getColor(), false);
+            }
         }
     }
 }

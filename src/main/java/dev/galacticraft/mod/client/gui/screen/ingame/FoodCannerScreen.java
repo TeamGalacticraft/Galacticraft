@@ -47,7 +47,6 @@ public class FoodCannerScreen extends MachineScreen<FoodCannerBlockEntity, FoodC
     private void drawProgressBar(PoseStack matrices) {
         if (this.menu.state.isActive()) {
             int progress = this.menu.getProgress();
-            System.out.println(progress);
             if (inBounds(progress, 1, 9))
             {
                 //transferring can

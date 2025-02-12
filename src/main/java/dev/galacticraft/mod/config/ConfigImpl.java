@@ -56,6 +56,8 @@ public class ConfigImpl implements Config {
     private long electricCompressorEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
     private long electricArcFurnaceEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
     private long oxygenCollectorEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
+    private long oxygenSealerEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
+    private long maxSealingPower = 1024;
     private long foodCannerEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long refineryEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
     private long electricFurnaceEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
@@ -165,8 +167,22 @@ public class ConfigImpl implements Config {
         return oxygenCollectorEnergyConsumptionRate;
     }
 
+    @Override
+    public long oxygenSealerEnergyConsumptionRate() {
+        return oxygenSealerEnergyConsumptionRate;
+    }
+
+    @Override
+    public long maxSealingPower() {
+        return maxSealingPower;
+    }
+
     public void setOxygenCollectorEnergyConsumptionRate(long amount) {
         this.oxygenCollectorEnergyConsumptionRate = amount;
+    }
+
+    public void setOxygenSealerEnergyConsumptionRate(long amount) {
+        this.oxygenSealerEnergyConsumptionRate = amount;
     }
 
     @Override
@@ -203,6 +219,10 @@ public class ConfigImpl implements Config {
 
     public void setMachineEnergyStorageSize(long amount) {
         this.machineEnergyStorageSize = amount;
+    }
+
+    public void setMaxSealingPower(long amount) {
+        this.maxSealingPower = amount;
     }
 
     @Override
@@ -383,6 +403,24 @@ public class ConfigImpl implements Config {
                     config.oxygenCollectorEnergyConsumptionRate())
                     .setSaveConsumer(config::setOxygenCollectorEnergyConsumptionRate)
                     .setDefaultValue(10)
+                    .build()
+            );
+
+            machines.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.OXYGEN_SEALER_ENERGY_CONSUMPTION_RATE),
+                    config.oxygenSealerEnergyConsumptionRate())
+                    .setSaveConsumer(config::setOxygenSealerEnergyConsumptionRate)
+                    .setDefaultValue(10)
+                    .build()
+            );
+
+            machines.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.MAX_SEALING_POWER),
+                    config.maxSealingPower())
+                    .setSaveConsumer(config::setMaxSealingPower)
+                    .setDefaultValue(1024)
                     .build()
             );
 
