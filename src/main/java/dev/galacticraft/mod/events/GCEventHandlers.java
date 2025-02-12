@@ -27,30 +27,43 @@ import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberPart;
+import dev.galacticraft.mod.content.item.CannedFoodItem;
+import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.machine.SealerManager;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.network.s2c.FootprintRemovedPacket;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.dimension.DimensionType;
 import org.jetbrains.annotations.Nullable;
+
+import java.awt.*;
 
 public class GCEventHandlers {
     public static void init() {
@@ -60,6 +73,31 @@ public class GCEventHandlers {
         EntitySleepEvents.ALLOW_SLEEP_TIME.register(GCEventHandlers::canCryoSleep);
         EntitySleepEvents.STOP_SLEEPING.register(GCEventHandlers::onWakeFromCryoSleep);
         ServerTickEvents.END_WORLD_TICK.register(GCEventHandlers::onWorldTick);
+        UseItemCallback.EVENT.register(GCEventHandlers::onPlayerUseItem);
+    }
+
+    private static InteractionResultHolder<ItemStack> onPlayerUseItem(Player player, Level world, InteractionHand hand) {
+        Holder<CelestialBody<?, ?>> body = world.galacticraft$getCelestialBody();
+        boolean oxygenWorld = body.value().atmosphere().breathable();
+
+        if (!oxygenWorld)
+        {
+            ItemStack itemStack = player.getItemInHand(hand);
+
+            if (itemStack.getComponents().has(DataComponents.FOOD))
+            {
+                if (itemStack.getItem() instanceof CannedFoodItem)
+                {
+                    return InteractionResultHolder.pass(itemStack);
+                } else {
+                    player.displayClientMessage(Component.literal("You cannot eat this here!").withColor(Color.RED.getRGB()), true);
+                    player.playNotifySound(SoundEvents.GENERIC_EAT, player.getSoundSource(), 1.0F, 1.0F);
+
+                    return InteractionResultHolder.fail(itemStack);
+                }
+            }
+        }
+        return InteractionResultHolder.pass(player.getItemInHand(hand));
     }
 
     public static InteractionResult allowCryogenicSleep(LivingEntity entity, BlockPos sleepingPos, BlockState state, boolean vanillaResult) {

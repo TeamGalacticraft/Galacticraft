@@ -77,6 +77,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(ItemGroup.BLOCKS, "Galacticraft Blocks");
         this.add(ItemGroup.ITEMS, "Galacticraft Items");
         this.add(ItemGroup.MACHINES, "Galacticraft Machines");
+        this.add(ItemGroup.CANNED_FOOD, "Canned Food");
 
         this.add(RecipeCategory.CIRCUIT_FABRICATOR, "Circuit Fabricating");
         this.add(RecipeCategory.COMPRESSOR, "Compressing");
@@ -122,7 +123,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.MOON_ROCK_SLAB, "Moon Rock Slab");
         this.block(GCBlocks.MOON_ROCK_STAIRS, "Moon Rock Stairs");
         this.block(GCBlocks.MOON_ROCK_WALL, "Moon Rock Wall");
-        
+
         this.block(GCBlocks.MOON_ROCK_BRICK, "Moon Rock Brick");
         this.block(GCBlocks.MOON_ROCK_BRICK_SLAB, "Moon Rock Brick Slab");
         this.block(GCBlocks.MOON_ROCK_BRICK_STAIRS, "Moon Rock Brick Stairs");
@@ -137,7 +138,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.POLISHED_MOON_ROCK_SLAB, "Polished Moon Rock Slab");
         this.block(GCBlocks.POLISHED_MOON_ROCK_STAIRS, "Polished Moon Rock Stairs");
         this.block(GCBlocks.POLISHED_MOON_ROCK_WALL, "Polished Moon Rock Wall");
-        
+
         this.block(GCBlocks.CHISELED_MOON_ROCK_BRICK, "Chiseled Moon Rock Brick");
         this.block(GCBlocks.MOON_ROCK_PILLAR, "Moon Rock Pillar");
 
@@ -145,22 +146,22 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.COBBLED_MOON_ROCK_SLAB, "Cobbled Moon Rock Slab");
         this.block(GCBlocks.COBBLED_MOON_ROCK_STAIRS, "Cobbled Moon Rock Stairs");
         this.block(GCBlocks.COBBLED_MOON_ROCK_WALL, "Cobbled Moon Rock Wall");
-        
+
         this.block(GCBlocks.LUNASLATE, "Lunaslate");
         this.block(GCBlocks.LUNASLATE_SLAB, "Lunaslate Slab");
         this.block(GCBlocks.LUNASLATE_STAIRS, "Lunaslate Stairs");
         this.block(GCBlocks.LUNASLATE_WALL, "Lunaslate Wall");
-        
+
         this.block(GCBlocks.COBBLED_LUNASLATE, "Cobbled Lunaslate");
         this.block(GCBlocks.COBBLED_LUNASLATE_SLAB, "Cobbled Lunaslate Slab");
         this.block(GCBlocks.COBBLED_LUNASLATE_STAIRS, "Cobbled Lunaslate Stairs");
         this.block(GCBlocks.COBBLED_LUNASLATE_WALL, "Cobbled Lunaslate Wall");
-        
+
         this.block(GCBlocks.MOON_BASALT, "Moon Basalt");
         this.block(GCBlocks.MOON_BASALT_SLAB, "Moon Basalt Slab");
         this.block(GCBlocks.MOON_BASALT_STAIRS, "Moon Basalt Stairs");
         this.block(GCBlocks.MOON_BASALT_WALL, "Moon Basalt Wall");
-        
+
         this.block(GCBlocks.MOON_BASALT_BRICK, "Moon Basalt Brick");
         this.block(GCBlocks.MOON_BASALT_BRICK_SLAB, "Moon Basalt Brick Slab");
         this.block(GCBlocks.MOON_BASALT_BRICK_STAIRS, "Moon Basalt Brick Stairs");
@@ -306,7 +307,7 @@ public class GCTranslationProvider extends TranslationProvider {
         // MISC MACHINES
         this.block(GCBlocks.CRYOGENIC_CHAMBER, "Cryogenic Chamber");
         this.block(GCBlocks.PLAYER_TRANSPORT_TUBE, "Player Transport Tube");
-        
+
         // MACHINES
         this.block(GCBlocks.CIRCUIT_FABRICATOR, "Circuit Fabricator");
         this.block(GCBlocks.COMPRESSOR, "Compressor");
@@ -399,6 +400,9 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.AMBIENT_THERMAL_CONTROLLER, "Ambient Thermal Controller");
 
         // FOOD
+        this.item(GCItems.CANNED_FOOD, "Canned ");
+        this.item(GCItems.EMPTY_CANNED_FOOD, "Empty Canned Food");
+
         this.item(GCItems.MOON_CHEESE_CURD, "Moon Cheese Curd");
 
         this.item(GCItems.MOON_CHEESE_SLICE, "Moon Cheese Slice");
@@ -406,12 +410,6 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.GROUND_BEEF, "Raw Beef Patty");
         this.item(GCItems.BEEF_PATTY, "Cooked Beef Patty");
         this.item(GCItems.CHEESEBURGER, "Cheeseburger");
-
-        this.item(GCItems.CANNED_DEHYDRATED_APPLE, "Canned Dehydrated Apple");
-        this.item(GCItems.CANNED_DEHYDRATED_CARROT, "Canned Dehydrated Carrot");
-        this.item(GCItems.CANNED_DEHYDRATED_MELON, "Canned Dehydrated Melon");
-        this.item(GCItems.CANNED_DEHYDRATED_POTATO, "Canned Dehydrated Potato");
-        this.item(GCItems.CANNED_BEEF, "Canned Beef");
 
         // ROCKET PLATES
         this.item(GCItems.TIER_1_HEAVY_DUTY_PLATE, "Heavy Plating");
@@ -421,7 +419,7 @@ public class GCTranslationProvider extends TranslationProvider {
         // THROWABLE METEOR CHUNKS
         this.item(GCItems.THROWABLE_METEOR_CHUNK, "Throwable Meteor Chunk");
         this.item(GCItems.HOT_THROWABLE_METEOR_CHUNK, "Hot Throwable Meteor Chunk");
-        
+
         // ARMOR
         this.item(GCItems.HEAVY_DUTY_HELMET, "Heavy Duty Helmet");
         this.item(GCItems.HEAVY_DUTY_CHESTPLATE, "Heavy Duty Chestplate");
@@ -437,7 +435,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.TITANIUM_CHESTPLATE, "Titanium Chestplate");
         this.item(GCItems.TITANIUM_LEGGINGS, "Titanium Leggings");
         this.item(GCItems.TITANIUM_BOOTS, "Titanium Boots");
-        
+
         this.item(GCItems.SENSOR_GLASSES, "Sensor Glasses");
 
         // TOOLS + WEAPONS
@@ -610,8 +608,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Galaxy.MILKY_WAY_DESCRIPTION, "");
         this.add(CelestialBody.SOL, "Sol");
         this.add(CelestialBody.SOL_DESC, "");
-        this.add(CelestialBody.ASTEROIDS, "Asteroids");
-        this.add(CelestialBody.ASTEROIDS_DESC, "");
+        this.add(CelestialBody.ASTEROID, "Asteroids");
+        this.add(CelestialBody.ASTEROID_DESC, "");
         this.add(CelestialBody.EARTH, "Earth");
         this.add(CelestialBody.EARTH_DESC, "The Overworld");
         this.add(CelestialBody.JUPITER, "Jupiter");
@@ -728,7 +726,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.blockDesc(GCBlocks.OXYGEN_STORAGE_MODULE, "Oxygen Storage Module is used to store large amounts of oxygen for later use.");
         this.blockDesc(GCBlocks.PARACHEST, "Parachests will fall from the sky after landing on certain planets/moons, such as Earth. Contains rocket, fuel, and cargo from previous launch.");
         this.blockDesc(GCBlocks.REFINERY, "Refinery will take an input of oil and energy, and output fuel used for rockets and vehicles.");
-    
+
         this.add(Tooltip.CREATIVE_ONLY, "Creative Only");
         this.add(Tooltip.ENERGY_REMAINING, "Energy Remaining: %s");
         this.add(Tooltip.GLOWSTONE_LANTERN, "Glowstone Lanterns are best used to light areas when there is no oxygen for lanterns to burn.");
@@ -760,6 +758,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.ENERGY_STORAGE_SIZE, "Default Machine Energy Storage Size");
         this.add(Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE, "Oxygen Collector Energy Consumption Rate/t");
         this.add(Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE, "Oxygen Compressor Energy Consumption Rate/t");
+        this.add(Config.FOOD_CANNER_ENERGY_CONSUMPTION_RATE, "Food Canner Energy Consumption Rate/t");
         this.add(Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE, "Oxygen Decompressor Energy Consumption Rate/t");
         this.add(Config.REFINERY_ENERGY_CONSUMPTION_RATE, "Refinery Energy Consumption Rate/t");
         this.add(Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE, "Solar Panel Energy Production Rate/t");
@@ -771,7 +770,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.PLAYER_OXYGEN_CONSUMPTION_RATE, "Oxygen Consumption Rate/t");
         this.add(Config.RESET, "Reset");
         this.add(Config.TITLE, "Galacticraft Config");
-        
+
         this.add(Keybindings.ROCKET_INVENTORY, "Open Rocket Inventory");
         this.add(Keybindings.OPEN_CELESTIAL_SCREEN, "Open Celestial Map");
     }
@@ -821,6 +820,10 @@ public class GCTranslationProvider extends TranslationProvider {
     protected void generateMachineStatusTranslations() {
         this.add(MachineStatus.ALREADY_SEALED, "Already Sealed");
         this.add(MachineStatus.AREA_TOO_LARGE, "Area Too Large");
+        this.add(MachineStatus.MISSING_EMPTY_CAN, "Missing Empty Can");
+        this.add(MachineStatus.NO_FOOD, "No Food");
+        this.add(MachineStatus.TRANSFERRING_CAN, "Transferring Can");
+        this.add(MachineStatus.CANNING, "Canning");
         this.add(MachineStatus.BLOCKED, "Blocked");
         this.add(MachineStatus.COLLECTING, "Collecting");
         this.add(MachineStatus.COMPRESSING, "Compressing");
@@ -911,6 +914,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.GIANT_LEAP, "Taking one giant leap");
         this.add(Ui.PREPARE_FOR_ENTRY, "Prepare for entry!");
         this.add(Ui.TRAVELING_TO, "Traveling to: %s");
+
+        this.add(Ui.TOTAL_NUTRITION, "Total Nutrition: ");
     }
 
     protected void generateStatsTranslations() {

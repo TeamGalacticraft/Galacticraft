@@ -23,6 +23,8 @@
 package dev.galacticraft.mod.data.model;
 
 import com.google.common.collect.Maps;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.machinelib.api.data.model.MachineModelGenerator;
 import dev.galacticraft.machinelib.client.api.model.MachineTextureBase;
@@ -52,10 +54,15 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.trialspawner.TrialSpawnerState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import org.jetbrains.annotations.Contract;
 
 import java.util.List;
+import java.util.function.Supplier;
+
+import static dev.galacticraft.machinelib.api.block.MachineBlock.ACTIVE;
 
 public class GCModelProvider extends FabricModelProvider {
     private static final TexturedModel.Provider DETAILED_DECORATION = TexturedModel.createDefault(GCModelProvider::detailedTexture, ModelTemplates.CUBE_BOTTOM_TOP);
@@ -112,6 +119,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.ASTEROID_ROCK);
         generator.createTrivialCube(GCBlocks.ASTEROID_ROCK_1);
         generator.createTrivialCube(GCBlocks.ASTEROID_ROCK_2);
+        generator.createTrivialCube(GCBlocks.DENSE_ICE);
 
         // VENUS NATURAL
         generator.createTrivialCube(GCBlocks.SOFT_VENUS_ROCK);
@@ -171,10 +179,18 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.MOON_TIN_ORE);
         generator.createTrivialCube(GCBlocks.LUNASLATE_TIN_ORE);
 
+        generator.createTrivialCube(GCBlocks.ASTEROID_ALUMINUM_ORE);
+        generator.createTrivialCube(GCBlocks.ASTEROID_IRON_ORE);
+        generator.createTrivialCube(GCBlocks.ASTEROID_SILICON_ORE);
+
         generator.createTrivialCube(GCBlocks.ALUMINUM_ORE);
         generator.createTrivialCube(GCBlocks.DEEPSLATE_ALUMINUM_ORE);
 
         generator.createTrivialCube(GCBlocks.DESH_ORE);
+        generator.createTrivialCube(GCBlocks.MARS_COPPER_ORE);
+        generator.createTrivialCube(GCBlocks.MARS_IRON_ORE);
+        generator.createTrivialCube(GCBlocks.MARS_TIN_ORE);
+
 
         generator.createTrivialCube(GCBlocks.ILMENITE_ORE);
 
@@ -268,6 +284,17 @@ public class GCModelProvider extends FabricModelProvider {
                         .build()
         );
 
+        createActiveMachine(generator, GCBlocks.FOOD_CANNER,
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/food_canner_active")
+                        .build(),
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/food_canner")
+                        .build()
+        );
+
         createActiveMachine(generator, GCBlocks.COAL_GENERATOR,
                 TextureProvider.builder(Constant.MOD_ID)
                         .sides("block/machine_side")
@@ -321,7 +348,6 @@ public class GCModelProvider extends FabricModelProvider {
 
         generator.createTrivialCube(GCBlocks.AIR_LOCK_FRAME);
         this.createAirLockController(generator);
-        generator.createNonTemplateModelBlock(GCBlocks.AIR_LOCK_SEAL);
 
         this.createParachests(generator);
     }
@@ -564,12 +590,6 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.BEEF_PATTY, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.CHEESEBURGER, ModelTemplates.FLAT_ITEM);
 
-        generator.generateFlatItem(GCItems.CANNED_DEHYDRATED_APPLE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.CANNED_DEHYDRATED_CARROT, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.CANNED_DEHYDRATED_MELON, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.CANNED_DEHYDRATED_POTATO, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.CANNED_BEEF, ModelTemplates.FLAT_ITEM);
-
         generator.generateFlatItem(GCItems.NOSE_CONE, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.HEAVY_NOSE_CONE, "_joined", ModelTemplates.FLAT_ITEM);
 
@@ -590,6 +610,7 @@ public class GCModelProvider extends FabricModelProvider {
                 generator.generateArmorTrims(armorItem);
             }
         }
+
 
         generator.generateFlatItem(GCItems.SENSOR_GLASSES, ModelTemplates.FLAT_ITEM);
 

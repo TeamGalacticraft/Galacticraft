@@ -84,8 +84,10 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR,
                         GCBlocks.OXYGEN_DECOMPRESSOR,
                         GCBlocks.OXYGEN_COMPRESSOR,
+                        GCBlocks.FOOD_CANNER,
                         GCBlocks.OXYGEN_STORAGE_MODULE,
-                        GCBlocks.FUEL_LOADER
+                        GCBlocks.FUEL_LOADER,
+                        GCBlocks.ROCKET_WORKBENCH
                 );
 
         this.tag(BlockTags.CLIMBABLE)
@@ -164,6 +166,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 GCBlocks.MOON_COPPER_ORE, GCBlocks.LUNASLATE_COPPER_ORE,
                 GCBlocks.OLIVINE_BASALT, GCBlocks.RICH_OLIVINE_BASALT,
                 GCBlocks.TIN_ORE, GCBlocks.DEEPSLATE_TIN_ORE, GCBlocks.MOON_TIN_ORE, GCBlocks.LUNASLATE_TIN_ORE,
+                GCBlocks.ASTEROID_ALUMINUM_ORE, GCBlocks.ASTEROID_IRON_ORE, GCBlocks.ASTEROID_SILICON_ORE,
                 GCBlocks.ALUMINUM_ORE, GCBlocks.DEEPSLATE_ALUMINUM_ORE,
                 GCBlocks.DESH_ORE,
                 GCBlocks.ILMENITE_ORE,
@@ -236,6 +239,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.ASTEROID_ROCK,
                         GCBlocks.ASTEROID_ROCK_1,
                         GCBlocks.ASTEROID_ROCK_2,
+                        GCBlocks.DENSE_ICE,
 
                         GCBlocks.TIN_DECORATION.block(),
                         GCBlocks.COPPER_DECORATION.block(),
@@ -293,6 +297,9 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.DEEPSLATE_TIN_ORE,
                         GCBlocks.MOON_TIN_ORE,
                         GCBlocks.LUNASLATE_TIN_ORE,
+                        GCBlocks.ASTEROID_ALUMINUM_ORE,
+                        GCBlocks.ASTEROID_IRON_ORE,
+                        GCBlocks.ASTEROID_SILICON_ORE,
                         GCBlocks.ALUMINUM_ORE,
                         GCBlocks.DEEPSLATE_ALUMINUM_ORE,
                         GCBlocks.GALENA_ORE,

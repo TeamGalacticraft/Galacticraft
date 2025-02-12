@@ -37,6 +37,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -48,6 +49,8 @@ import java.util.List;
 public class GCItems {
     public static final GCRegistry<Item> ITEMS = new GCRegistry<>(BuiltInRegistries.ITEM);
     public static final List<ItemLike> HIDDEN_ITEMS = new ArrayList<>(1);
+
+    public static final List<CannedFoodItem> CANNED_FOOD_ITEMS = new ArrayList<>();
 
     // === START BLOCKS ===
     // TORCHES
@@ -135,6 +138,7 @@ public class GCItems {
     public static final Item ASTEROID_ROCK = new BlockItem(GCBlocks.ASTEROID_ROCK, new Item.Properties());
     public static final Item ASTEROID_ROCK_1 = new BlockItem(GCBlocks.ASTEROID_ROCK_1, new Item.Properties());
     public static final Item ASTEROID_ROCK_2 = new BlockItem(GCBlocks.ASTEROID_ROCK_2, new Item.Properties());
+    public static final Item DENSE_ICE = new BlockItem(GCBlocks.DENSE_ICE, new Item.Properties());
 
     // VENUS NATURAL
     public static final Item SOFT_VENUS_ROCK = new BlockItem(GCBlocks.SOFT_VENUS_ROCK, new Item.Properties());
@@ -183,7 +187,15 @@ public class GCItems {
     public static final Item MOON_TIN_ORE = new BlockItem(GCBlocks.MOON_TIN_ORE, new Item.Properties());
     public static final Item LUNASLATE_TIN_ORE = new BlockItem(GCBlocks.LUNASLATE_TIN_ORE, new Item.Properties());
 
+    public static final Item ASTEROID_ALUMINUM_ORE = new BlockItem(GCBlocks.ASTEROID_ALUMINUM_ORE, new Item.Properties());
+    public static final Item ASTEROID_IRON_ORE = new BlockItem(GCBlocks.ASTEROID_IRON_ORE, new Item.Properties());
+    public static final Item ASTEROID_SILICON_ORE = new BlockItem(GCBlocks.ASTEROID_SILICON_ORE, new Item.Properties());
+
+
     public static final Item ALUMINUM_ORE = new BlockItem(GCBlocks.ALUMINUM_ORE, new Item.Properties());
+    public static final Item MARS_TIN_ORE = new BlockItem(GCBlocks.MARS_TIN_ORE, new Item.Properties());
+    public static final Item MARS_IRON_ORE = new BlockItem(GCBlocks.MARS_IRON_ORE, new Item.Properties());
+    public static final Item MARS_COPPER_ORE = new BlockItem(GCBlocks.MARS_COPPER_ORE, new Item.Properties());
     public static final Item DEEPSLATE_ALUMINUM_ORE = new BlockItem(GCBlocks.DEEPSLATE_ALUMINUM_ORE, new Item.Properties());
 
     public static final Item DESH_ORE = new BlockItem(GCBlocks.DESH_ORE, new Item.Properties());
@@ -232,6 +244,7 @@ public class GCItems {
     public static final Item OXYGEN_BUBBLE_DISTRIBUTOR = new BlockItem(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, new Item.Properties());
     public static final Item OXYGEN_DECOMPRESSOR = new BlockItem(GCBlocks.OXYGEN_DECOMPRESSOR, new Item.Properties());
     public static final Item OXYGEN_COMPRESSOR = new BlockItem(GCBlocks.OXYGEN_COMPRESSOR, new Item.Properties());
+    public static final Item FOOD_CANNER = new BlockItem(GCBlocks.FOOD_CANNER, new Item.Properties());
     public static final Item OXYGEN_STORAGE_MODULE = new BlockItem(GCBlocks.OXYGEN_STORAGE_MODULE, new Item.Properties());
     public static final Item FUEL_LOADER = new BlockItem(GCBlocks.FUEL_LOADER, new Item.Properties());
     public static final Item ROCKET_WORKBENCH = new BlockItem(GCBlocks.ROCKET_WORKBENCH, new Item.Properties());
@@ -311,13 +324,7 @@ public class GCItems {
     public static final Item GROUND_BEEF = ITEMS.register(Constant.Item.GROUND_BEEF, new Item(new Item.Properties().food(GCFoodComponent.GROUND_BEEF)));
     public static final Item BEEF_PATTY = ITEMS.register(Constant.Item.BEEF_PATTY, new Item(new Item.Properties().food(GCFoodComponent.BEEF_PATTY)));
     public static final Item CHEESEBURGER = ITEMS.register(Constant.Item.CHEESEBURGER, new Item(new Item.Properties().food(GCFoodComponent.CHEESEBURGER)));
-    
-    public static final Item CANNED_DEHYDRATED_APPLE = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_APPLE));
-    public static final Item CANNED_DEHYDRATED_CARROT = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_CARROT));
-    public static final Item CANNED_DEHYDRATED_MELON = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_MELON));
-    public static final Item CANNED_DEHYDRATED_POTATO = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_POTATO));
-    public static final Item CANNED_BEEF = new CannedFoodItem(new Item.Properties().food(GCFoodComponent.CANNED_BEEF));
-    
+
     // ROCKET PLATES
     public static final Item TIER_1_HEAVY_DUTY_PLATE = ITEMS.register(Constant.Item.TIER_1_HEAVY_DUTY_PLATE, new Item(new Item.Properties()));
     public static final Item TIER_2_HEAVY_DUTY_PLATE = ITEMS.register(Constant.Item.TIER_2_HEAVY_DUTY_PLATE, new Item(new Item.Properties()));
@@ -441,6 +448,9 @@ public class GCItems {
     public static final Item TIER_3_ROCKET_SCHEMATIC = new SchematicItem(new Item.Properties());
     public static final Item ASTRO_MINER_SCHEMATIC = new SchematicItem(new Item.Properties());
 
+    public static final CannedFoodItem CANNED_FOOD = new CannedFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(0).saturationModifier(0).build()).stacksTo(1));
+    public static final CannedFoodItem EMPTY_CANNED_FOOD = new CannedFoodItem(new Item.Properties().food(null).stacksTo(64));
+
     // SPAWN EGGS
     public static final Item MOON_VILLAGER_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.MOON_VILLAGER, 0x74a3cf, 0xba2500, new Item.Properties());
     public static final Item EVOLVED_ZOMBIE_SPAWN_EGG = new SpawnEggItem(GCEntityTypes.EVOLVED_ZOMBIE, 0x00afaf, 0x463aa5, new Item.Properties());
@@ -460,9 +470,11 @@ public class GCItems {
     public static Item registerItem(String id, Item item) {
         return Registry.register(BuiltInRegistries.ITEM, Constant.id(id), item);
     }
-    
+
     public static void register() {
         // === START BLOCKS ===
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.EMPTY_CANNED_FOOD), EMPTY_CANNED_FOOD);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_FOOD), CANNED_FOOD);
 
         // MOON NATURAL
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MOON_TURF), MOON_TURF);
@@ -541,6 +553,7 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ASTEROID_ROCK), ASTEROID_ROCK);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ASTEROID_ROCK_1), ASTEROID_ROCK_1);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ASTEROID_ROCK_2), ASTEROID_ROCK_2);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DENSE_ICE), DENSE_ICE);
 
         // VENUS NATURAL
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.SOFT_VENUS_ROCK), SOFT_VENUS_ROCK);
@@ -576,6 +589,10 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.STRONG_VACUUM_GLASS), STRONG_VACUUM_GLASS);
 
         // ORES
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ASTEROID_ALUMINUM_ORE), ASTEROID_ALUMINUM_ORE);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ASTEROID_IRON_ORE), ASTEROID_IRON_ORE);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ASTEROID_SILICON_ORE), ASTEROID_SILICON_ORE);
+
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.SILICON_ORE), SILICON_ORE);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DEEPSLATE_SILICON_ORE), DEEPSLATE_SILICON_ORE);
 
@@ -590,6 +607,9 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ALUMINUM_ORE), ALUMINUM_ORE);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DEEPSLATE_ALUMINUM_ORE), DEEPSLATE_ALUMINUM_ORE);
 
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MARS_IRON_ORE), MARS_IRON_ORE);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MARS_TIN_ORE), MARS_TIN_ORE);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.MARS_COPPER_ORE), MARS_COPPER_ORE);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.DESH_ORE), DESH_ORE);
 
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.ILMENITE_ORE), ILMENITE_ORE);
@@ -633,6 +653,7 @@ public class GCItems {
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR), OXYGEN_BUBBLE_DISTRIBUTOR);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.OXYGEN_DECOMPRESSOR), OXYGEN_DECOMPRESSOR);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.OXYGEN_COMPRESSOR), OXYGEN_COMPRESSOR);
+        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.FOOD_CANNER), FOOD_CANNER);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.OXYGEN_STORAGE_MODULE), OXYGEN_STORAGE_MODULE);
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Block.FUEL_LOADER), FUEL_LOADER);
 
@@ -703,12 +724,6 @@ public class GCItems {
 
         // FOOD
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.MOON_CHEESE_CURD), MOON_CHEESE_CURD);
-
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_DEHYDRATED_APPLE), CANNED_DEHYDRATED_APPLE);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_DEHYDRATED_CARROT), CANNED_DEHYDRATED_CARROT);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_DEHYDRATED_MELON), CANNED_DEHYDRATED_MELON);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_DEHYDRATED_POTATO), CANNED_DEHYDRATED_POTATO);
-        Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.CANNED_BEEF), CANNED_BEEF);
 
         // THROWABLE METEOR CHUNKS
         Registry.register(BuiltInRegistries.ITEM, Constant.id(Constant.Item.THROWABLE_METEOR_CHUNK), THROWABLE_METEOR_CHUNK);

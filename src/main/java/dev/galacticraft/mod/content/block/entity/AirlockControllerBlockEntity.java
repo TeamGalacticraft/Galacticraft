@@ -27,6 +27,7 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.screen.AirlockControllerMenu;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -40,6 +41,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
+
+import static dev.galacticraft.mod.content.block.special.AirlockSealBlock.FACING;
 
 public class AirlockControllerBlockEntity extends BlockEntity implements MenuProvider {
     public boolean redstoneActivation;
@@ -64,7 +67,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
         super(GCBlockEntityTypes.AIRLOCK_CONTROLLER, blockPos, blockState);
     }
 
-    
+
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, AirlockControllerBlockEntity blockEntity) {
         blockEntity.tick();
     }
@@ -171,6 +174,8 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
         int y = (this.lastProtocol.maxY + this.lastProtocol.minY) / 2;
         int z = (this.lastProtocol.maxZ + this.lastProtocol.minZ) / 2;
 
+        boolean facingNorth = (this.lastProtocol.maxX - this.lastProtocol.minX) == 0;
+
         if (!this.getLevel().getBlockState(new BlockPos(x, y, z)).is(GCBlocks.AIR_LOCK_SEAL))
         {
 //            this.getLevel().playSound(null, x, y, z, GCSounds.openAirLock, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -187,7 +192,13 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                         BlockPos pos = new BlockPos(x, y, z);
                         if (this.getLevel().getBlockState(pos).isAir())
                         {
-                            this.getLevel().setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState(), 3);
+                            if (facingNorth)
+                            {
+                                this.getLevel().setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.EAST), 3);
+                            }else
+                            {
+                                this.getLevel().setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.NORTH), 3);
+                            }
                         }
                     }
                 }
@@ -203,7 +214,13 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                         BlockPos pos = new BlockPos(x, y, z);
                         if (this.getLevel().getBlockState(pos).isAir())
                         {
-                            this.getLevel().setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState(), 3);
+                            if (facingNorth)
+                            {
+                                this.getLevel().setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.EAST), 3);
+                            }else
+                            {
+                                this.getLevel().setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.NORTH), 3);
+                            }
                         }
                     }
                 }
@@ -216,7 +233,13 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                         BlockPos pos = new BlockPos(x, y, z);
                         if (this.getLevel().getBlockState(pos).isAir())
                         {
-                            this.getLevel().setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState(), 3);
+                            if (facingNorth)
+                            {
+                                this.getLevel().setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.EAST), 3);
+                            }else
+                            {
+                                this.getLevel().setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.NORTH), 3);
+                            }
                         }
                     }
                 }
@@ -248,7 +271,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
         {
             if (this.protocol.minY == this.protocol.maxY && this.protocol.minX != this.protocol.maxX && this.protocol.minZ != this.protocol.maxZ)
             {
-                // First test if there is sealed air to either side
+                // First test if there is getSealed air to either side
                 for (x = this.protocol.minX + 1; x <= this.protocol.maxX - 1; x++)
                 {
                     for (z = this.protocol.minZ + 1; z <= this.protocol.maxZ - 1; z++)
@@ -277,7 +300,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                     if (sealedSide)
                         break;
                 }
-                // Now replace the airlock blocks with either air, or sealed air
+                // Now replace the airlock blocks with either air, or getSealed air
                 for (x = this.protocol.minX + 1; x <= this.protocol.maxX - 1; x++)
                 {
                     for (z = this.protocol.minZ + 1; z <= this.protocol.maxZ - 1; z++)
@@ -297,7 +320,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
         {
             if (this.lastProtocol.minX != this.lastProtocol.maxX)
             {
-                // First test if there is sealed air to either side
+                // First test if there is getSealed air to either side
                 for (x = this.lastProtocol.minX + 1; x <= this.lastProtocol.maxX - 1; x++)
                 {
                     for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++)
@@ -326,7 +349,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                     if (sealedSide)
                         break;
                 }
-                // Now replace the airlock blocks with either air, or sealed air
+                // Now replace the airlock blocks with either air, or getSealed air
                 for (x = this.lastProtocol.minX + 1; x <= this.lastProtocol.maxX - 1; x++)
                 {
                     for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++)
@@ -343,7 +366,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                 }
             } else if (this.lastProtocol.minZ != this.lastProtocol.maxZ)
             {
-                // First test if there is sealed air to either side
+                // First test if there is getSealed air to either side
                 for (z = this.lastProtocol.minZ + 1; z <= this.lastProtocol.maxZ - 1; z++)
                 {
                     for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++)
@@ -372,7 +395,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                     if (sealedSide)
                         break;
                 }
-                // Now replace the airlock blocks with either air, or sealed air
+                // Now replace the airlock blocks with either air, or getSealed air
                 for (z = this.lastProtocol.minZ + 1; z <= this.lastProtocol.maxZ - 1; z++)
                 {
                     for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++)

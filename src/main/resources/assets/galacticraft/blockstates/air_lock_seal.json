@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "facing=north": { "model": "galacticraft:block/air_lock_seal", "y":  90, "uvlock": true },
+    "facing=east":  { "model": "galacticraft:block/air_lock_seal", "uvlock": true },
+    "facing=south": { "model": "galacticraft:block/air_lock_seal", "y":  90, "uvlock": true },
+    "facing=west":  { "model": "galacticraft:block/air_lock_seal", "uvlock": true },
+    "facing=up":    { "model": "galacticraft:block/air_lock_seal", "x": 90, "uvlock": true },
+    "facing=down":  { "model": "galacticraft:block/air_lock_seal", "x": 90, "uvlock": true }
+  }
+}

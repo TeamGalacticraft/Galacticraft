@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "active=false": {
+      "model": "galacticraft:machine/food_canner"
+    },
+    "active=true": {
+      "model": "galacticraft:machine/food_canner_active"
+    }
+  }
+}

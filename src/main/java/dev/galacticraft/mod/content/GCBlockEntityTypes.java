@@ -56,6 +56,7 @@ public class GCBlockEntityTypes {
     public static final BlockEntityType<ElectricFurnaceBlockEntity> ELECTRIC_FURNACE = BlockEntityType.Builder.of(ElectricFurnaceBlockEntity::new, GCBlocks.ELECTRIC_FURNACE).build();
     public static final BlockEntityType<ElectricArcFurnaceBlockEntity> ELECTRIC_ARC_FURNACE = BlockEntityType.Builder.of(ElectricArcFurnaceBlockEntity::new, GCBlocks.ELECTRIC_ARC_FURNACE).build();
     public static final BlockEntityType<RefineryBlockEntity> REFINERY = BlockEntityType.Builder.of(RefineryBlockEntity::new, GCBlocks.REFINERY).build();
+    public static final BlockEntityType<FoodCannerBlockEntity> FOOD_CANNER = BlockEntityType.Builder.of(FoodCannerBlockEntity::new, GCBlocks.FOOD_CANNER).build();
 
     // OXYGEN MACHINES
     public static final BlockEntityType<OxygenCollectorBlockEntity> OXYGEN_COLLECTOR = BlockEntityType.Builder.of(OxygenCollectorBlockEntity::new, GCBlocks.OXYGEN_COLLECTOR).build();
@@ -104,6 +105,7 @@ public class GCBlockEntityTypes {
 
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.OXYGEN_COLLECTOR), OXYGEN_COLLECTOR);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.OXYGEN_COMPRESSOR), OXYGEN_COMPRESSOR);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.FOOD_CANNER), FOOD_CANNER);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.OXYGEN_DECOMPRESSOR), OXYGEN_DECOMPRESSOR);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.OXYGEN_SEALER), OXYGEN_SEALER);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR), OXYGEN_BUBBLE_DISTRIBUTOR);

@@ -35,6 +35,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.world.item.Items;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.DyeColor;
@@ -163,6 +164,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.ASTEROID_ROCK);
         this.dropSelf(GCBlocks.ASTEROID_ROCK_1);
         this.dropSelf(GCBlocks.ASTEROID_ROCK_2);
+        this.dropSelf(GCBlocks.DENSE_ICE);
 
         this.dropSelf(GCBlocks.SOFT_VENUS_ROCK);
         this.dropSelf(GCBlocks.HARD_VENUS_ROCK);
@@ -201,6 +203,14 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.add(GCBlocks.DEEPSLATE_TIN_ORE, this.createOreDrop(GCBlocks.DEEPSLATE_TIN_ORE, GCItems.RAW_TIN));
         this.add(GCBlocks.MOON_TIN_ORE, this.createOreDrop(GCBlocks.MOON_TIN_ORE, GCItems.RAW_TIN));
         this.add(GCBlocks.LUNASLATE_TIN_ORE, this.createOreDrop(GCBlocks.LUNASLATE_TIN_ORE, GCItems.RAW_TIN));
+
+        this.add(GCBlocks.ASTEROID_ALUMINUM_ORE, this.createOreDrop(GCBlocks.ASTEROID_ALUMINUM_ORE, GCItems.RAW_ALUMINUM));
+        this.add(GCBlocks.ASTEROID_IRON_ORE, this.createOreDrop(GCBlocks.ASTEROID_IRON_ORE, Items.RAW_IRON));
+        this.add(GCBlocks.ASTEROID_SILICON_ORE, this.createOreDrop(GCBlocks.ASTEROID_SILICON_ORE, GCItems.SILICON));
+
+        this.add(GCBlocks.MARS_COPPER_ORE, this.createOreDrop(GCBlocks.MARS_COPPER_ORE, Items.RAW_COPPER));
+        this.add(GCBlocks.MARS_TIN_ORE, this.createOreDrop(GCBlocks.MARS_TIN_ORE, GCItems.RAW_TIN));
+        this.add(GCBlocks.MARS_IRON_ORE, this.createOreDrop(GCBlocks.MARS_IRON_ORE, Items.RAW_IRON));
 
         this.add(GCBlocks.ALUMINUM_ORE, this.createOreDrop(GCBlocks.ALUMINUM_ORE, GCItems.RAW_ALUMINUM));
         this.add(GCBlocks.DEEPSLATE_ALUMINUM_ORE, this.createOreDrop(GCBlocks.ALUMINUM_ORE, GCItems.RAW_ALUMINUM));
@@ -278,6 +288,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR);
         this.dropSelf(GCBlocks.OXYGEN_DECOMPRESSOR);
         this.dropSelf(GCBlocks.OXYGEN_COMPRESSOR);
+        this.dropSelf(GCBlocks.FOOD_CANNER);
         this.dropSelf(GCBlocks.OXYGEN_STORAGE_MODULE);
         this.dropSelf(GCBlocks.FUEL_LOADER);
 

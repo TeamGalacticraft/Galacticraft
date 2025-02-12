@@ -47,6 +47,7 @@ val jeiVersion               = project.property("jei.version").toString()
 val badpacketsVersion        = project.property("badpackets.version").toString()
 val wthitVersion             = project.property("wthit.version").toString()
 val architecturyVersion      = project.property("architectury.version").toString()
+val appleskinVersion         = project.property("appleskin.version").toString()
 val objVersion               = project.property("obj.version").toString()
 
 plugins {
@@ -195,6 +196,11 @@ repositories {
             includeGroup("mezz.jei")
         }
     }
+    maven("https://maven.ryanliptak.com/") {
+        content {
+            includeGroup("squeek.appleskin")
+        }
+    }
 }
 
 configurations {
@@ -234,6 +240,7 @@ dependencies {
     "compat"("me.shedaniel.cloth:cloth-config-fabric:$clothConfigVersion")
     "compat"("mcp.mobius.waila:wthit:fabric-$wthitVersion")
     "compat"("dev.architectury:architectury-fabric:$architecturyVersion") // required for REI fluid support
+    "compat"("squeek.appleskin:appleskin-fabric:$appleskinVersion")
 
     multicompat(group = "me.shedaniel",
             api = "RoughlyEnoughItems-api-fabric",
