@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.render.entity;
+package dev.galacticraft.mod.client.render.block.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -28,55 +28,39 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.GCModel;
 import dev.galacticraft.mod.client.model.GCModelLoader;
 import dev.galacticraft.mod.client.model.GCRenderTypes;
-import dev.galacticraft.mod.client.render.block.entity.BubbleDistributorRenderer;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
-import dev.galacticraft.mod.content.entity.BubbleEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
-@Environment(EnvType.CLIENT)
-public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
-    public static final ResourceLocation TEXTURE = Constant.id("textures/model/sphere.png");
-    public static GCModel bubbleModel;
+public class BubbleDistributorRenderer implements BlockEntityRenderer<OxygenBubbleDistributorBlockEntity> {
+    public static final ResourceLocation MODEL = Constant.id("models/misc/sphere.json");
+    public final GCModel bubbleModel;
 
-    public BubbleEntityRenderer(EntityRendererProvider.Context context) {
-        super(context);
+    public BubbleDistributorRenderer(BlockEntityRendererProvider.Context context) {
+        this.bubbleModel = GCModelLoader.INSTANCE.getModel(MODEL);
+
+        if (bubbleModel == null) {
+            // TODO: possible missing model?
+            throw new IllegalStateException("Failed to load model: " + MODEL);
+        }
     }
 
     @Override
-    public void render(BubbleEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
-        if (bubbleModel == null) {
-            bubbleModel = GCModelLoader.INSTANCE.getModel(BubbleDistributorRenderer.MODEL);
-            assert bubbleModel != null;
+    public void render(OxygenBubbleDistributorBlockEntity machine, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
+        if (machine.isDisabled() || !machine.isBubbleVisible()) {
+            return;
         }
-        float size = entity.getSize();
+        double size = machine.getSize();
 
         matrices.pushPose();
         matrices.translate(0.5F, 1.0F, 0.5F);
-        matrices.scale(size, size, size);
-        VertexConsumer consumer = vertexConsumers.getBuffer(GCRenderTypes.bubble(GCRenderTypes.OBJ_ATLAS));
+        matrices.scale((float) size, (float) size, (float) size);
 
-        bubbleModel.render(matrices, null, consumer, light, OverlayTexture.NO_OVERLAY);
+        bubbleModel.render(matrices, null, vertexConsumers.getBuffer(GCRenderTypes.bubble(GCRenderTypes.OBJ_ATLAS)), light, OverlayTexture.NO_OVERLAY);
 
         matrices.popPose();
-    }
-
-    @Override
-    public boolean shouldRender(BubbleEntity entity, Frustum visibleRegion, double cameraX, double cameraY, double cameraZ) {
-        return true;
-    }
-
-    @Override
-    public ResourceLocation getTextureLocation(BubbleEntity entity) {
-        return TEXTURE;
     }
 }

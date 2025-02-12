@@ -22,27 +22,45 @@
 
 package dev.galacticraft.mod.content.entity;
 
-import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+// Not really used anymore since bubble distributors no longer create a bubble entity but this might be useful for mods or if we ever have a portable bubble
 public class BubbleEntity extends Entity {
+    public static final String TAG_SIZE = "size";
+    private static final EntityDataAccessor<Float> DATA_SIZE_ID = SynchedEntityData.defineId(BubbleEntity.class, EntityDataSerializers.FLOAT);
     public BubbleEntity(EntityType<?> type, Level world) {
         super(type, world);
     }
 
+    public float getSize() {
+        return this.entityData.get(DATA_SIZE_ID);
+    }
+
+    public void setSize(float size) {
+        this.entityData.set(DATA_SIZE_ID, size);
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(DATA_SIZE_ID, 0.0F);
+    }
+
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
+        setSize(tag.getFloat(TAG_SIZE));
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
+        tag.putFloat(TAG_SIZE, getSize());
     }
 
     @Override
@@ -108,11 +126,6 @@ public class BubbleEntity extends Entity {
     @Override
     public boolean isSpectator() {
         return false;
-    }
-
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder compositeStateBuilder) {
-
     }
 
     @Override
@@ -197,17 +210,13 @@ public class BubbleEntity extends Entity {
 
     @Override
     public boolean shouldRenderAtSqrDistance(double distance) {
-        BlockEntity entity = level().getBlockEntity(blockPosition());
-        if (entity instanceof OxygenBubbleDistributorBlockEntity machine) {
-            double d = Math.abs(machine.getSize() * 2D + 1D);
-            if (Double.isNaN(d)) {
-                d = 1.0D;
-            }
-
-            d *= 64.0D * getViewScale();
-            return distance < d * d;
+        double d = Math.abs(getSize() * 2D + 1D);
+        if (Double.isNaN(d)) {
+            d = 1.0D;
         }
-        return false;
+
+        d *= 64.0D * getViewScale();
+        return distance < d * d;
     }
 
     @Override
