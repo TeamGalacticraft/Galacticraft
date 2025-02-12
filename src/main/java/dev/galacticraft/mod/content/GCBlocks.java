@@ -244,7 +244,7 @@ public class GCBlocks {
     public static final Block RICH_OLIVINE_BASALT = BLOCKS.registerWithItem(Constant.Block.RICH_OLIVINE_BASALT, new Block(BlockBehaviour.Properties.ofFullCopy(OLIVINE_BASALT)));
 
     // CHEESE BLOCKS
-    public static final Block MOON_CHEESE_WHEEL = BLOCKS.registerWithItem(Constant.Block.MOON_CHEESE_WHEEL, new MoonCheeseWheel(BlockBehaviour.Properties.of().forceSolidOn().strength(0.5F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY)));
+    public static final Block MOON_CHEESE_WHEEL = BLOCKS.register(Constant.Block.MOON_CHEESE_WHEEL, new MoonCheeseWheel(BlockBehaviour.Properties.of().forceSolidOn().strength(0.5F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY)));
     public static final Block CANDLE_MOON_CHEESE_WHEEL = BLOCKS.register(Constant.Block.CANDLE_MOON_CHEESE_WHEEL, new CandleMoonCheeseWheel(Blocks.CANDLE, BlockBehaviour.Properties.ofFullCopy(MOON_CHEESE_WHEEL).lightLevel(litBlockEmission(3))));
     public static final Block WHITE_CANDLE_MOON_CHEESE_WHEEL = BLOCKS.register(Constant.Block.WHITE_CANDLE_MOON_CHEESE_WHEEL, new CandleMoonCheeseWheel(Blocks.WHITE_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL)));
     public static final Block ORANGE_CANDLE_MOON_CHEESE_WHEEL = BLOCKS.register(Constant.Block.ORANGE_CANDLE_MOON_CHEESE_WHEEL, new CandleMoonCheeseWheel(Blocks.ORANGE_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL)));

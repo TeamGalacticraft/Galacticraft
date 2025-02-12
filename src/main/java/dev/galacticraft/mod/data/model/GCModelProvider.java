@@ -690,7 +690,7 @@ public class GCModelProvider extends FabricModelProvider {
 
     private void createCheeseWheel(BlockModelGenerators generators) {
         var block = GCBlocks.MOON_CHEESE_WHEEL;
-        generators.createSimpleFlatItemModel(GCBlocks.MOON_CHEESE_WHEEL);
+        generators.createSimpleFlatItemModel(GCItems.MOON_CHEESE_WHEEL); // Must be from GCItems as this is a special case
         generators.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(BlockStateProperties.BITES)
                 .select(0, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block)))
                 .select(1, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_slice1")))
