@@ -136,6 +136,7 @@ public class GCModelProvider extends FabricModelProvider {
 //        //todo: generate these
         generator.skipAutoItemBlock(GCBlocks.ALUMINUM_WIRE);
         generator.skipAutoItemBlock(GCBlocks.GLASS_FLUID_PIPE);
+        generator.skipAutoItemBlock(GCBlocks.MOON_CHEESE_WHEEL);
 //        generator.delegateItemModel(GCBlocks.ALUMINUM_WIRE, ModelLocationUtils.getModelLocation(GCBlocks.ALUMINUM_WIRE, "_inventory"));
 //        generator.delegateItemModel(GCBlocks.GLASS_FLUID_PIPE, ModelLocationUtils.getModelLocation(GCBlocks.GLASS_FLUID_PIPE, "_inventory"));
 
