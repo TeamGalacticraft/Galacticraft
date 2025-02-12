@@ -1,4 +1,12 @@
 {
-  "data": "galacticraft:block/oxygen_collector",
-  "machinelib:generate": "machinelib:single"
+  "data": {
+    "back": "galacticraft:block/oxygen_collector",
+    "bottom": "galacticraft:block/oxygen_collector",
+    "front": "galacticraft:block/oxygen_collector",
+    "left": "galacticraft:block/oxygen_collector",
+    "particle": "galacticraft:block/oxygen_collector",
+    "right": "galacticraft:block/oxygen_collector",
+    "top": "galacticraft:block/oxygen_collector"
+  },
+  "machinelib:type": "machine"
 }

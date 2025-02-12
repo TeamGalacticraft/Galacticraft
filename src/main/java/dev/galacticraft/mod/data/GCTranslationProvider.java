@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,12 @@ import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCRocketParts;
+import dev.galacticraft.mod.content.GCStats;
+import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceKey;
@@ -38,6 +42,8 @@ import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static dev.galacticraft.mod.util.Translations.*;
 
@@ -48,37 +54,209 @@ public class GCTranslationProvider extends TranslationProvider {
 
     @Override
     protected void generateTranslations(HolderLookup.@NotNull Provider registries) {
+        this.generateBlockTranslations();
+        this.generateItemTranslations();
+        this.generateTagTranslations();
+        this.generateGasTranslations();
+        this.generateEntityTranslations();
+        this.generateCelestialBodyTranslations();
+        this.generateBiomeTranslations();
+        this.generateChatTranslations();
+        this.generateRocketPartTranslations();
+        this.generateSmithingTranslations();
+        this.generateTooltipTranslations();
+        this.generateConfigTranslations();
+        this.generateSpaceRaceTranslations();
+        this.generateSolarPanelTranslations();
+        this.generateMachineStatusTranslations();
+        this.generateCelestialSelectionTranslations();
+        this.generateUiTranslations();
+        this.generateStatsTranslations();
+
+        // Tabs in the creative inventory
         this.add(ItemGroup.BLOCKS, "Galacticraft Blocks");
         this.add(ItemGroup.ITEMS, "Galacticraft Items");
         this.add(ItemGroup.MACHINES, "Galacticraft Machines");
         this.add(ItemGroup.CANNED_FOOD, "Canned Food");
 
-        this.block(GCBlocks.ASTEROID_ROCK_1, "Asteroid Rock");
-        this.block(GCBlocks.ASTEROID_ROCK_2, "Asteroid Rock");
+        this.add(RecipeCategory.CIRCUIT_FABRICATOR, "Circuit Fabricating");
+        this.add(RecipeCategory.COMPRESSOR, "Compressing");
 
-        this.block(GCBlocks.DASHED_LIGHT_PANEL, "Light Panel (Dashed)");
-        this.block(GCBlocks.DIAGONAL_LIGHT_PANEL, "Light Panel (Diagonal)");
-        this.block(GCBlocks.LINEAR_LIGHT_PANEL, "Light Panel (Linear)");
-        this.block(GCBlocks.SPOTLIGHT_LIGHT_PANEL, "Light Panel (Spotlight)");
-        this.block(GCBlocks.SQUARE_LIGHT_PANEL, "Light Panel (Square)");
+        this.add(BannerPattern.ROCKET, "Rocket");
+    }
 
-        this.block(GCBlocks.MARS_SUB_SURFACE_ROCK, "Mars Sub-Surface Rock");
-
-        this.block(GCBlocks.MOON_CHEESE_WHEEL, "Moon Cheese Wheel");
-
-        this.block(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, "Bubble Distributor");
-        this.block(GCBlocks.SOLAR_PANEL_PART, "Solar Panel");
-
-        this.block(GCBlocks.SCORCHED_VENUS_ROCK, "Scorched Venus Rock");
-
-        this.block(GCBlocks.CLEAR_VACUUM_GLASS, "Vacuum Glass (Clear)");
-        this.block(GCBlocks.STRONG_VACUUM_GLASS, "Vacuum Glass (Strong)");
-
+    protected void generateBlockTranslations() {
+        // TORCHES
         this.block(GCBlocks.GLOWSTONE_TORCH, "Glowstone Torch");
         this.block(GCBlocks.GLOWSTONE_WALL_TORCH, "Glowstone Torch");
         this.block(GCBlocks.UNLIT_TORCH, "Unlit Torch");
         this.block(GCBlocks.UNLIT_WALL_TORCH, "Unlit Torch");
 
+        // LANTERNS
+        this.block(GCBlocks.GLOWSTONE_LANTERN, "Glowstone Lantern");
+        this.block(GCBlocks.UNLIT_LANTERN, "Unlit Lantern");
+
+        // FLUIDS
+        this.block(GCBlocks.CRUDE_OIL, "Crude Oil");
+        this.block(GCBlocks.FUEL, "Fuel");
+        this.block(GCBlocks.SULFURIC_ACID, "Sulfuric Acid");
+
+        // DECORATION BLOCKS
+        this.decorationSet(GCBlocks.ALUMINUM_DECORATION, "Aluminum Decoration");
+        this.decorationSet(GCBlocks.BRONZE_DECORATION, "Bronze Decoration");
+        this.decorationSet(GCBlocks.COPPER_DECORATION, "Copper Decoration");
+        this.decorationSet(GCBlocks.IRON_DECORATION, "Iron Decoration");
+        this.decorationSet(GCBlocks.METEORIC_IRON_DECORATION, "Meteoric Iron Decoration");
+        this.decorationSet(GCBlocks.STEEL_DECORATION, "Steel Decoration");
+        this.decorationSet(GCBlocks.TIN_DECORATION, "Tin Decoration");
+        this.decorationSet(GCBlocks.TITANIUM_DECORATION, "Titanium Decoration");
+        this.decorationSet(GCBlocks.DARK_DECORATION, "Dark Decoration");
+
+        // MOON NATURAL
+        this.block(GCBlocks.MOON_TURF, "Moon Turf");
+        this.block(GCBlocks.MOON_DIRT, "Moon Dirt");
+        this.block(GCBlocks.MOON_DIRT_PATH, "Moon Dirt Path");
+        this.block(GCBlocks.MOON_SURFACE_ROCK, "Moon Surface Rock");
+        this.block(GCBlocks.MOON_DUNGEON_BRICK, "Moon Dungeon Brick");
+
+        this.block(GCBlocks.MOON_ROCK, "Moon Rock");
+        this.block(GCBlocks.MOON_ROCK_SLAB, "Moon Rock Slab");
+        this.block(GCBlocks.MOON_ROCK_STAIRS, "Moon Rock Stairs");
+        this.block(GCBlocks.MOON_ROCK_WALL, "Moon Rock Wall");
+
+        this.block(GCBlocks.MOON_ROCK_BRICK, "Moon Rock Brick");
+        this.block(GCBlocks.MOON_ROCK_BRICK_SLAB, "Moon Rock Brick Slab");
+        this.block(GCBlocks.MOON_ROCK_BRICK_STAIRS, "Moon Rock Brick Stairs");
+        this.block(GCBlocks.MOON_ROCK_BRICK_WALL, "Moon Rock Brick Wall");
+
+        this.block(GCBlocks.CRACKED_MOON_ROCK_BRICK, "Cracked Moon Rock Brick");
+        this.block(GCBlocks.CRACKED_MOON_ROCK_BRICK_SLAB, "Cracked Moon Rock Brick Slab");
+        this.block(GCBlocks.CRACKED_MOON_ROCK_BRICK_STAIRS, "Cracked Moon Rock Brick Stairs");
+        this.block(GCBlocks.CRACKED_MOON_ROCK_BRICK_WALL, "Cracked Moon Rock Brick Wall");
+
+        this.block(GCBlocks.POLISHED_MOON_ROCK, "Polished Moon Rock");
+        this.block(GCBlocks.POLISHED_MOON_ROCK_SLAB, "Polished Moon Rock Slab");
+        this.block(GCBlocks.POLISHED_MOON_ROCK_STAIRS, "Polished Moon Rock Stairs");
+        this.block(GCBlocks.POLISHED_MOON_ROCK_WALL, "Polished Moon Rock Wall");
+
+        this.block(GCBlocks.CHISELED_MOON_ROCK_BRICK, "Chiseled Moon Rock Brick");
+        this.block(GCBlocks.MOON_ROCK_PILLAR, "Moon Rock Pillar");
+
+        this.block(GCBlocks.COBBLED_MOON_ROCK, "Cobbled Moon Rock");
+        this.block(GCBlocks.COBBLED_MOON_ROCK_SLAB, "Cobbled Moon Rock Slab");
+        this.block(GCBlocks.COBBLED_MOON_ROCK_STAIRS, "Cobbled Moon Rock Stairs");
+        this.block(GCBlocks.COBBLED_MOON_ROCK_WALL, "Cobbled Moon Rock Wall");
+
+        this.block(GCBlocks.LUNASLATE, "Lunaslate");
+        this.block(GCBlocks.LUNASLATE_SLAB, "Lunaslate Slab");
+        this.block(GCBlocks.LUNASLATE_STAIRS, "Lunaslate Stairs");
+        this.block(GCBlocks.LUNASLATE_WALL, "Lunaslate Wall");
+
+        this.block(GCBlocks.COBBLED_LUNASLATE, "Cobbled Lunaslate");
+        this.block(GCBlocks.COBBLED_LUNASLATE_SLAB, "Cobbled Lunaslate Slab");
+        this.block(GCBlocks.COBBLED_LUNASLATE_STAIRS, "Cobbled Lunaslate Stairs");
+        this.block(GCBlocks.COBBLED_LUNASLATE_WALL, "Cobbled Lunaslate Wall");
+
+        this.block(GCBlocks.MOON_BASALT, "Moon Basalt");
+        this.block(GCBlocks.MOON_BASALT_SLAB, "Moon Basalt Slab");
+        this.block(GCBlocks.MOON_BASALT_STAIRS, "Moon Basalt Stairs");
+        this.block(GCBlocks.MOON_BASALT_WALL, "Moon Basalt Wall");
+
+        this.block(GCBlocks.MOON_BASALT_BRICK, "Moon Basalt Brick");
+        this.block(GCBlocks.MOON_BASALT_BRICK_SLAB, "Moon Basalt Brick Slab");
+        this.block(GCBlocks.MOON_BASALT_BRICK_STAIRS, "Moon Basalt Brick Stairs");
+        this.block(GCBlocks.MOON_BASALT_BRICK_WALL, "Moon Basalt Brick Wall");
+
+        this.block(GCBlocks.CRACKED_MOON_BASALT_BRICK, "Cracked Moon Basalt Brick");
+        this.block(GCBlocks.CRACKED_MOON_BASALT_BRICK_SLAB, "Cracked Moon Basalt Brick Slab");
+        this.block(GCBlocks.CRACKED_MOON_BASALT_BRICK_STAIRS, "Cracked Moon Basalt Brick Stairs");
+        this.block(GCBlocks.CRACKED_MOON_BASALT_BRICK_WALL, "Cracked Moon Basalt Brick Wall");
+
+        this.block(GCBlocks.FALLEN_METEOR, "Fallen Meteor");
+
+        // MARS NATURAL
+        this.block(GCBlocks.MARS_SURFACE_ROCK, "Mars Surface Rock");
+        this.block(GCBlocks.MARS_SUB_SURFACE_ROCK, "Mars Sub-Surface Rock");
+
+        this.block(GCBlocks.MARS_STONE, "Mars Stone");
+        this.block(GCBlocks.MARS_STONE_SLAB, "Mars Stone Slab");
+        this.block(GCBlocks.MARS_STONE_STAIRS, "Mars Stone Stairs");
+        this.block(GCBlocks.MARS_STONE_WALL, "Mars Stone Wall");
+
+        this.block(GCBlocks.MARS_COBBLESTONE, "Mars Cobblestone");
+        this.block(GCBlocks.MARS_COBBLESTONE_SLAB, "Mars Cobblestone Slab");
+        this.block(GCBlocks.MARS_COBBLESTONE_STAIRS, "Mars Cobblestone Stairs");
+        this.block(GCBlocks.MARS_COBBLESTONE_WALL, "Mars Cobblestone Wall");
+
+        // ASTEROID NATURAL
+        this.block(GCBlocks.ASTEROID_ROCK, "Asteroid Rock");
+        this.block(GCBlocks.ASTEROID_ROCK_1, "Asteroid Rock");
+        this.block(GCBlocks.ASTEROID_ROCK_2, "Asteroid Rock");
+
+        // VENUS NATURAL
+        this.block(GCBlocks.SOFT_VENUS_ROCK, "Soft Venus Rock");
+        this.block(GCBlocks.HARD_VENUS_ROCK, "Hard Venus Rock");
+        this.block(GCBlocks.SCORCHED_VENUS_ROCK, "Scorched Venus Rock");
+        this.block(GCBlocks.VOLCANIC_ROCK, "Volcanic Rock");
+        this.block(GCBlocks.PUMICE, "Pumice");
+        this.block(GCBlocks.VAPOR_SPOUT, "Vapor Spout");
+
+        // MISC DECOR
+        this.block(GCBlocks.WALKWAY, "Walkway");
+        this.block(GCBlocks.FLUID_PIPE_WALKWAY, "Fluid Pipe Walkway");
+        this.block(GCBlocks.WIRE_WALKWAY, "Wire Walkway");
+        this.block(GCBlocks.TIN_LADDER, "Tin Ladder");
+        this.block(GCBlocks.IRON_GRATING, "Iron Grating");
+
+        // SPECIAL
+        this.block(GCBlocks.ALUMINUM_WIRE, "Aluminum Wire");
+        this.block(GCBlocks.SEALABLE_ALUMINUM_WIRE, "Sealable Aluminum Wire");
+        this.block(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE, "Heavy Sealable Aluminum Wire");
+        this.block(GCBlocks.GLASS_FLUID_PIPE, "Glass Fluid Pipe");
+        this.block(GCBlocks.FUELING_PAD, "Fueling Pad");
+        this.block(GCBlocks.ROCKET_LAUNCH_PAD, "Rocket Launch Pad");
+        this.block(GCBlocks.ROCKET_WORKBENCH, "Rocket Workbench");
+        this.block(GCBlocks.PARACHEST, "Parachest");
+
+        // LIGHT PANELS
+        this.block(GCBlocks.SQUARE_LIGHT_PANEL, "Light Panel (Square)");
+        this.block(GCBlocks.SPOTLIGHT_LIGHT_PANEL, "Light Panel (Spotlight)");
+        this.block(GCBlocks.LINEAR_LIGHT_PANEL, "Light Panel (Linear)");
+        this.block(GCBlocks.DASHED_LIGHT_PANEL, "Light Panel (Dashed)");
+        this.block(GCBlocks.DIAGONAL_LIGHT_PANEL, "Light Panel (Diagonal)");
+
+        // VACUUM GLASS
+        this.block(GCBlocks.VACUUM_GLASS, "Vacuum Glass");
+        this.block(GCBlocks.CLEAR_VACUUM_GLASS, "Vacuum Glass (Clear)");
+        this.block(GCBlocks.STRONG_VACUUM_GLASS, "Vacuum Glass (Strong)");
+
+        // ORES
+        this.block(GCBlocks.SILICON_ORE, "Silicon Ore");
+        this.block(GCBlocks.DEEPSLATE_SILICON_ORE, "Deepslate Silicon Ore");
+
+        this.block(GCBlocks.MOON_COPPER_ORE, "Moon Copper Ore");
+        this.block(GCBlocks.LUNASLATE_COPPER_ORE, "Lunaslate Copper Ore");
+
+        this.block(GCBlocks.TIN_ORE, "Tin Ore");
+        this.block(GCBlocks.DEEPSLATE_TIN_ORE, "Deepslate Tin Ore");
+        this.block(GCBlocks.MOON_TIN_ORE, "Moon Tin Ore");
+        this.block(GCBlocks.LUNASLATE_TIN_ORE, "Lunaslate Tin Ore");
+
+        this.block(GCBlocks.ALUMINUM_ORE, "Aluminum Ore");
+        this.block(GCBlocks.DEEPSLATE_ALUMINUM_ORE, "Deepslate Aluminum Ore");
+
+        this.block(GCBlocks.DESH_ORE, "Desh Ore");
+
+        this.block(GCBlocks.ILMENITE_ORE, "Ilmenite Ore");
+
+        this.block(GCBlocks.GALENA_ORE, "Galena Ore");
+
+        this.block(GCBlocks.OLIVINE_CLUSTER, "Olivine Cluster");
+        this.block(GCBlocks.OLIVINE_BASALT, "Olivine Basalt");
+        this.block(GCBlocks.RICH_OLIVINE_BASALT, "Rich Olivine Basalt");
+
+        // CHEESE BLOCKS
+        this.block(GCBlocks.MOON_CHEESE_WHEEL, "Moon Cheese Wheel");
         this.block(GCBlocks.CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Candle");
         this.block(GCBlocks.WHITE_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with White Candle");
         this.block(GCBlocks.ORANGE_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Orange Candle");
@@ -97,44 +275,386 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.RED_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Red Candle");
         this.block(GCBlocks.BLACK_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Black Candle");
 
-        this.entity(GCEntityTypes.THROWABLE_METEOR_CHUNK, "Meteor Chunk");
+        // COMPACT MINERAL BLOCKS
+        this.block(GCBlocks.SILICON_BLOCK, "Block of Silicon");
+        this.block(GCBlocks.METEORIC_IRON_BLOCK, "Block of Meteoric Iron");
+        this.block(GCBlocks.DESH_BLOCK, "Block of Desh");
+        this.block(GCBlocks.ALUMINUM_BLOCK, "Block of Aluminum");
+        this.block(GCBlocks.TIN_BLOCK, "Block of Tin");
+        this.block(GCBlocks.TITANIUM_BLOCK, "Block of Titanium");
+        this.block(GCBlocks.LEAD_BLOCK, "Block of Lead");
+        this.block(GCBlocks.LUNAR_SAPPHIRE_BLOCK, "Block of Lunar Sapphire");
+        this.block(GCBlocks.OLIVINE_BLOCK, "Block of Olivine");
+        this.block(GCBlocks.RAW_METEORIC_IRON_BLOCK, "Block of Raw Meteoric Iron");
+        this.block(GCBlocks.RAW_DESH_BLOCK, "Block of Raw Desh");
+        this.block(GCBlocks.RAW_ALUMINUM_BLOCK, "Block of Raw Aluminum");
+        this.block(GCBlocks.RAW_TIN_BLOCK, "Block of Raw Tin");
+        this.block(GCBlocks.RAW_TITANIUM_BLOCK, "Block of Raw Titanium");
+        this.block(GCBlocks.RAW_LEAD_BLOCK, "Block of Raw Lead");
 
-        this.item(GCItems.BEEF_PATTY, "Cooked Beef Patty");
-        this.item(GCItems.CRUDE_OIL_BUCKET, "Oil Bucket");
+        // MOON VILLAGER SPECIAL
+        this.block(GCBlocks.LUNAR_CARTOGRAPHY_TABLE, "Lunar Cartography Table");
+
+        // MISC WORLD GEN
+        this.block(GCBlocks.CAVERNOUS_VINES, "Cavernous Vines");
+        this.block(GCBlocks.CAVERNOUS_VINES_PLANT, "Cavernous Vines Plant");
+        this.block(GCBlocks.BOSS_SPAWNER, "Boss Spawner");
+
+        // MULTIBLOCK PARTS
+        this.block(GCBlocks.SOLAR_PANEL_PART, "Solar Panel");
+        this.block(GCBlocks.CRYOGENIC_CHAMBER_PART, "Cryogenic Chamber");
+
+        // MISC MACHINES
+        this.block(GCBlocks.CRYOGENIC_CHAMBER, "Cryogenic Chamber");
+        this.block(GCBlocks.PLAYER_TRANSPORT_TUBE, "Player Transport Tube");
+
+        // MACHINES
+        this.block(GCBlocks.CIRCUIT_FABRICATOR, "Circuit Fabricator");
+        this.block(GCBlocks.COMPRESSOR, "Compressor");
+        this.block(GCBlocks.ELECTRIC_COMPRESSOR, "Electric Compressor");
+        this.block(GCBlocks.COAL_GENERATOR, "Coal Generator");
+        this.block(GCBlocks.BASIC_SOLAR_PANEL, "Basic Solar Panel");
+        this.block(GCBlocks.ADVANCED_SOLAR_PANEL, "Advanced Solar Panel");
+        this.block(GCBlocks.ENERGY_STORAGE_MODULE, "Energy Storage Module");
+        this.block(GCBlocks.ELECTRIC_FURNACE, "Electric Furnace");
+        this.block(GCBlocks.ELECTRIC_ARC_FURNACE, "Electric Arc Furnace");
+        this.block(GCBlocks.REFINERY, "Refinery");
+        this.block(GCBlocks.OXYGEN_COLLECTOR, "Oxygen Collector");
+        this.block(GCBlocks.OXYGEN_SEALER, "Oxygen Sealer");
+        this.block(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, "Bubble Distributor");
+        this.block(GCBlocks.OXYGEN_DECOMPRESSOR, "Oxygen Decompressor");
+        this.block(GCBlocks.OXYGEN_COMPRESSOR, "Oxygen Compressor");
+        this.block(GCBlocks.OXYGEN_STORAGE_MODULE, "Oxygen Storage Module");
+        this.block(GCBlocks.FUEL_LOADER, "Fuel Loader");
+
+        this.block(GCBlocks.AIR_LOCK_CONTROLLER, "Airlock Controller");
+        this.block(GCBlocks.AIR_LOCK_FRAME, "Airlock Frame");
+        this.block(GCBlocks.AIR_LOCK_SEAL, "Airlock Seal");
+    }
+
+    protected void generateItemTranslations() {
+        // MATERIALS
+        this.item(GCItems.SILICON, "Silicon");
+
+        this.item(GCItems.RAW_METEORIC_IRON, "Raw Meteoric Iron");
+        this.item(GCItems.METEORIC_IRON_INGOT, "Meteoric Iron Ingot");
+        this.item(GCItems.METEORIC_IRON_NUGGET, "Meteoric Iron Nugget");
+        this.item(GCItems.COMPRESSED_METEORIC_IRON, "Compressed Meteoric Iron");
+
+        this.item(GCItems.OLIVINE_SHARD, "Olivine Shard");
+
+        this.item(GCItems.RAW_DESH, "Raw Desh");
+        this.item(GCItems.DESH_INGOT, "Desh Ingot");
+        this.item(GCItems.DESH_NUGGET, "Desh Nugget");
+        this.item(GCItems.COMPRESSED_DESH, "Compressed Desh");
+
+        this.item(GCItems.RAW_LEAD, "Raw Lead");
+        this.item(GCItems.LEAD_INGOT, "Lead Ingot");
+        this.item(GCItems.LEAD_NUGGET, "Lead Nugget");
+
+        this.item(GCItems.RAW_ALUMINUM, "Raw Aluminum");
+        this.item(GCItems.ALUMINUM_INGOT, "Aluminum Ingot");
+        this.item(GCItems.ALUMINUM_NUGGET, "Aluminum Nugget");
+        this.item(GCItems.COMPRESSED_ALUMINUM, "Compressed Aluminum");
+
+        this.item(GCItems.RAW_TIN, "Raw Tin");
+        this.item(GCItems.TIN_INGOT, "Tin Ingot");
+        this.item(GCItems.TIN_NUGGET, "Tin Nugget");
+        this.item(GCItems.COMPRESSED_TIN, "Compressed Tin");
+
+        this.item(GCItems.RAW_TITANIUM, "Raw Titanium");
+        this.item(GCItems.TITANIUM_INGOT, "Titanium Ingot");
+        this.item(GCItems.TITANIUM_NUGGET, "Titanium Nugget");
+        this.item(GCItems.COMPRESSED_TITANIUM, "Compressed Titanium");
+
+        this.item(GCItems.COMPRESSED_BRONZE, "Compressed Bronze");
+        this.item(GCItems.COMPRESSED_COPPER, "Compressed Copper");
+        this.item(GCItems.COMPRESSED_IRON, "Compressed Iron");
+        this.item(GCItems.COMPRESSED_STEEL, "Compressed Steel");
+
+        this.item(GCItems.LUNAR_SAPPHIRE, "Lunar Sapphire");
+        this.item(GCItems.DESH_STICK, "Desh Stick");
+        this.item(GCItems.CARBON_FRAGMENTS, "Carbon Fragments");
+        this.item(GCItems.SOLAR_DUST, "Solar Dust");
+        this.item(GCItems.BASIC_WAFER, "Basic Wafer");
+        this.item(GCItems.ADVANCED_WAFER, "Advanced Wafer");
+        this.item(GCItems.BEAM_CORE, "Beam Core");
+        this.item(GCItems.CANVAS, "Canvas");
+
+        this.item(GCItems.FLUID_MANIPULATOR, "Fluid Manipulator");
+        this.item(GCItems.OXYGEN_CONCENTRATOR, "Oxygen Concentrator");
+        this.item(GCItems.OXYGEN_FAN, "Oxygen Fan");
+        this.item(GCItems.OXYGEN_VENT, "Oxygen Vent");
+        this.item(GCItems.SENSOR_LENS, "Sensor Lens");
+        this.item(GCItems.BLUE_SOLAR_WAFER, "Blue Solar Wafer");
+        this.item(GCItems.SINGLE_SOLAR_MODULE, "Single Solar Module");
+        this.item(GCItems.FULL_SOLAR_PANEL, "Full Solar Panel");
+        this.item(GCItems.SOLAR_ARRAY_WAFER, "Solar Array Wafer");
+        this.item(GCItems.STEEL_POLE, "Steel Pole");
+        this.item(GCItems.COPPER_CANISTER, "Copper Canister");
+        this.item(GCItems.TIN_CANISTER, "Tin Canister");
+        this.item(GCItems.THERMAL_CLOTH, "Thermal Cloth");
+        this.item(GCItems.ISOTHERMAL_FABRIC, "Isothermal Fabric");
+        this.item(GCItems.ORION_DRIVE, "Orion Drive");
+        this.item(GCItems.ATMOSPHERIC_VALVE, "Atmospheric Valve");
+        this.item(GCItems.AMBIENT_THERMAL_CONTROLLER, "Ambient Thermal Controller");
+
+        // FOOD
+        this.item(GCItems.MOON_CHEESE_CURD, "Moon Cheese Curd");
+
+        this.item(GCItems.MOON_CHEESE_SLICE, "Moon Cheese Slice");
+        this.item(GCItems.BURGER_BUN, "Burger Bun");
         this.item(GCItems.GROUND_BEEF, "Raw Beef Patty");
+        this.item(GCItems.BEEF_PATTY, "Cooked Beef Patty");
+        this.item(GCItems.CHEESEBURGER, "Cheeseburger");
+
+        // ROCKET PLATES
+        this.item(GCItems.TIER_1_HEAVY_DUTY_PLATE, "Heavy Plating");
         this.item(GCItems.TIER_2_HEAVY_DUTY_PLATE, "Thick Heavy Plating");
         this.item(GCItems.TIER_3_HEAVY_DUTY_PLATE, "Reinforced Heavy Plating");
-        this.item(GCItems.RAW_DESH, "Raw Desh");
-        this.item(GCItems.THERMAL_PADDING_HELMET, "Thermal Padding Helm");
+
+        // THROWABLE METEOR CHUNKS
+        this.item(GCItems.THROWABLE_METEOR_CHUNK, "Throwable Meteor Chunk");
+        this.item(GCItems.HOT_THROWABLE_METEOR_CHUNK, "Hot Throwable Meteor Chunk");
+
+        // ARMOR
+        this.item(GCItems.HEAVY_DUTY_HELMET, "Heavy Duty Helmet");
+        this.item(GCItems.HEAVY_DUTY_CHESTPLATE, "Heavy Duty Chestplate");
+        this.item(GCItems.HEAVY_DUTY_LEGGINGS, "Heavy Duty Leggings");
+        this.item(GCItems.HEAVY_DUTY_BOOTS, "Heavy Duty Boots");
+
+        this.item(GCItems.DESH_HELMET, "Desh Helmet");
+        this.item(GCItems.DESH_CHESTPLATE, "Desh Chestplate");
+        this.item(GCItems.DESH_LEGGINGS, "Desh Leggings");
+        this.item(GCItems.DESH_BOOTS, "Desh Boots");
+
+        this.item(GCItems.TITANIUM_HELMET, "Titanium Helmet");
+        this.item(GCItems.TITANIUM_CHESTPLATE, "Titanium Chestplate");
+        this.item(GCItems.TITANIUM_LEGGINGS, "Titanium Leggings");
+        this.item(GCItems.TITANIUM_BOOTS, "Titanium Boots");
+
+        this.item(GCItems.SENSOR_GLASSES, "Sensor Glasses");
+
+        // TOOLS + WEAPONS
+        this.item(GCItems.HEAVY_DUTY_SWORD, "Heavy Duty Sword");
+        this.item(GCItems.HEAVY_DUTY_SHOVEL, "Heavy Duty Shovel");
+        this.item(GCItems.HEAVY_DUTY_PICKAXE, "Heavy Duty Pickaxe");
+        this.item(GCItems.HEAVY_DUTY_AXE, "Heavy Duty Axe");
+        this.item(GCItems.HEAVY_DUTY_HOE, "Heavy Duty Hoe");
+
+        this.item(GCItems.DESH_SWORD, "Desh Sword");
+        this.item(GCItems.DESH_SHOVEL, "Desh Shovel");
+        this.item(GCItems.DESH_PICKAXE, "Desh Pickaxe");
+        this.item(GCItems.DESH_AXE, "Desh Axe");
+        this.item(GCItems.DESH_HOE, "Desh Hoe");
+
+        this.item(GCItems.TITANIUM_SWORD, "Titanium Sword");
+        this.item(GCItems.TITANIUM_SHOVEL, "Titanium Shovel");
+        this.item(GCItems.TITANIUM_PICKAXE, "Titanium Pickaxe");
+        this.item(GCItems.TITANIUM_AXE, "Titanium Axe");
+        this.item(GCItems.TITANIUM_HOE, "Titanium Hoe");
+
+        this.item(GCItems.STANDARD_WRENCH, "Standard Wrench");
+
+        // SMITHING TEMPLATES
         this.item(GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
+
+        // BATTERIES
+        this.item(GCItems.BATTERY, "Battery");
+        this.item(GCItems.INFINITE_BATTERY, "Infinite Battery");
+
+        // FLUID BUCKETS
+        this.item(GCItems.CRUDE_OIL_BUCKET, "Oil Bucket");
+        this.item(GCItems.FUEL_BUCKET, "Fuel Bucket");
+        this.item(GCItems.SULFURIC_ACID_BUCKET, "Sulfuric Acid Bucket");
+
+        // GALACTICRAFT INVENTORY
         this.item(GCItems.PARACHUTE.get(DyeColor.WHITE), "Parachute");
         this.item(GCItems.CANNED_FOOD, "Canned ");
-
+        //todo: fix the tags being in the wrong area
         this.add("item.galacticraft.empty_canned_food", "Empty Canned Food");
         this.add("item.galacticraft.total_nutrition", "Total Nutrition: ");
 
+        this.item(GCItems.PARACHUTE.get(DyeColor.ORANGE), "Orange Parachute");
+        this.item(GCItems.PARACHUTE.get(DyeColor.MAGENTA), "Magenta Parachute");
+        this.item(GCItems.PARACHUTE.get(DyeColor.LIGHT_BLUE), "Light Blue Parachute");
+        this.item(GCItems.PARACHUTE.get(DyeColor.YELLOW), "Yellow Parachute");
+        this.item(GCItems.PARACHUTE.get(DyeColor.LIME), "Lime Parachute");
+        this.item(GCItems.PARACHUTE.get(DyeColor.PINK), "Pink Parachute");
+        this.item(GCItems.PARACHUTE.get(DyeColor.GRAY), "Gray Parachute");
+        this.item(GCItems.PARACHUTE.get(DyeColor.LIGHT_GRAY), "Light Gray Parachute");
+        this.item(GCItems.PARACHUTE.get(DyeColor.CYAN), "Cyan Parachute");
+        this.item(GCItems.PARACHUTE.get(DyeColor.PURPLE), "Purple Parachute");
+        this.item(GCItems.PARACHUTE.get(DyeColor.BLUE), "Blue Parachute");
+        this.item(GCItems.PARACHUTE.get(DyeColor.BROWN), "Brown Parachute");
+        this.item(GCItems.PARACHUTE.get(DyeColor.GREEN), "Green Parachute");
+        this.item(GCItems.PARACHUTE.get(DyeColor.RED), "Red Parachute");
+        this.item(GCItems.PARACHUTE.get(DyeColor.BLACK), "Black Parachute");
 
-        // Block Descriptions
-        this.blockDesc(GCBlocks.ADVANCED_SOLAR_PANEL, "Advanced Solar Panels collect energy from the sun, and store it for further use. Adjusts position to face the sun, to collect more electricity.");
-        this.blockDesc(GCBlocks.BASIC_SOLAR_PANEL, "Basic Solar Panels collect energy from the sun, and store it for further use. Collects most energy at mid-day (non-adjustable).");
-        this.blockDesc(GCBlocks.MOON_CHEESE_WHEEL, "Moon Cheese Wheels are created from the cheeses of the Moon, place-able and edible.");
-        this.blockDesc(GCBlocks.CIRCUIT_FABRICATOR, "Circuit Fabricator will process basic materials into silicon wafers, used for advanced machines.");
-        this.blockDesc(GCBlocks.COAL_GENERATOR, "Burns coal and charcoal for energy. The simplest but least efficient energy method.");
-        this.blockDesc(GCBlocks.COMPRESSOR, "Compressor will process ingots into their compressed equivalents.");
-        this.blockDesc(GCBlocks.ELECTRIC_COMPRESSOR, "Electric Compressor will process ingots into their compressed equivalents. Compresses two at a time, making it more effective than its predecessor.");
-        this.blockDesc(GCBlocks.ENERGY_STORAGE_MODULE, "Energy Storage Module is used to store large amounts of energy for later use.");
-        this.blockDesc(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, "Oxygen Bubble Distributor creates a bubble of air around itself. Requires oxygen and electricity.");
-        this.blockDesc(GCBlocks.OXYGEN_COLLECTOR, "Oxygen Collector will store oxygen collected from leaves in the surrounding area.");
-        this.blockDesc(GCBlocks.PARACHEST, "Parachests will fall from the sky after landing on certain planets/moons, such as Earth. Contains rocket, fuel, and cargo from previous launch.");
-        this.blockDesc(GCBlocks.REFINERY, "Refinery will take an input of oil and energy, and output fuel used for rockets and vehicles.");
+        this.item(GCItems.OXYGEN_MASK, "Oxygen Mask");
+        this.item(GCItems.OXYGEN_GEAR, "Oxygen Gear");
 
-        this.add(RecipeCategory.CIRCUIT_FABRICATOR, "Circuit Fabricating");
-        this.add(RecipeCategory.COMPRESSOR, "Compressing");
+        this.item(GCItems.SMALL_OXYGEN_TANK, "Small Oxygen Tank");
+        this.item(GCItems.MEDIUM_OXYGEN_TANK, "Medium Oxygen Tank");
+        this.item(GCItems.LARGE_OXYGEN_TANK, "Large Oxygen Tank");
+        this.item(GCItems.INFINITE_OXYGEN_TANK, "Infinite Oxygen Tank");
 
-        this.add(BannerPattern.ROCKET, "Rocket");
+        this.item(GCItems.SHIELD_CONTROLLER, "Shield Controller");
+        this.item(GCItems.FREQUENCY_MODULE, "Frequency Module");
 
-        this.add(Chat.BED_FAIL, "Uh oh, what if the oxygen runs out when I am asleep?  I'll need a Cryogenic Chamber to sleep in space!");
+        this.item(GCItems.THERMAL_PADDING_HELMET, "Thermal Padding Helm");
+        this.item(GCItems.THERMAL_PADDING_CHESTPIECE, "Thermal Padding Chestpiece");
+        this.item(GCItems.THERMAL_PADDING_LEGGINGS, "Thermal Padding Leggings");
+        this.item(GCItems.THERMAL_PADDING_BOOTS, "Thermal Padding Boots");
+
+        // VEHICLES
+        this.item(GCItems.BUGGY, "Buggy");
+        this.item(GCItems.ROCKET, "Rocket");
+
+        // ROCKET PIECES
+        this.item(GCItems.NOSE_CONE, "Nose Cone");
+        this.item(GCItems.HEAVY_NOSE_CONE, "Heavy Nose Cone");
+        this.item(GCItems.ROCKET_FIN, "Rocket Fin");
+        this.item(GCItems.ROCKET_ENGINE, "Rocket Engine");
+
+        // SCHEMATICS
+        this.item(GCItems.BASIC_ROCKET_CONE_SCHEMATIC, "Basic Rocket Cone Schematic");
+        this.item(GCItems.BASIC_ROCKET_BODY_SCHEMATIC, "Basic Rocket Body Schematic");
+        this.item(GCItems.BASIC_ROCKET_FINS_SCHEMATIC, "Basic Rocket Fins Schematic");
+        this.item(GCItems.BASIC_ROCKET_ENGINE_SCHEMATIC, "Basic Rocket Engine Schematic");
+
+        this.item(GCItems.TIER_2_ROCKET_SCHEMATIC, "Tier 2 Rocket Schematic");
+        this.item(GCItems.CARGO_ROCKET_SCHEMATIC, "Cargo Rocket Schematic");
+        this.item(GCItems.MOON_BUGGY_SCHEMATIC, "Moon Buggy Schematic");
+        this.item(GCItems.TIER_3_ROCKET_SCHEMATIC, "Tier 3 Rocket Schematic");
+        this.item(GCItems.ASTRO_MINER_SCHEMATIC, "Astro Miner Schematic");
+
+        // SPAWN EGGS
+        this.item(GCItems.MOON_VILLAGER_SPAWN_EGG, "Moon Villager Spawn Egg");
+        this.item(GCItems.EVOLVED_ZOMBIE_SPAWN_EGG, "Evolved Zombie Spawn Egg");
+        this.item(GCItems.EVOLVED_CREEPER_SPAWN_EGG, "Evolved Creeper Spawn Egg");
+        this.item(GCItems.EVOLVED_SKELETON_SPAWN_EGG, "Evolved Skeleton Spawn Egg");
+        this.item(GCItems.EVOLVED_SPIDER_SPAWN_EGG, "Evolved Spider Spawn Egg");
+        this.item(GCItems.EVOLVED_PILLAGER_SPAWN_EGG, "Evolved Pillager Spawn Egg");
+        this.item(GCItems.EVOLVED_EVOKER_SPAWN_EGG, "Evolved Evoker Spawn Egg");
+        this.item(GCItems.EVOLVED_VINDICATOR_SPAWN_EGG, "Evolved Vindicator Spawn Egg");
+        this.item(GCItems.GAZER_SPAWN_EGG, "Gazer Spawn Egg");
+        this.item(GCItems.RUMBLER_SPAWN_EGG, "Rumbler Spawn Egg");
+        this.item(GCItems.COMET_CUBE_SPAWN_EGG, "Comet Cube Spawn Egg");
+        this.item(GCItems.OLI_GRUB_SPAWN_EGG, "Oli Grub Spawn Egg");
+        this.item(GCItems.GREY_SPAWN_EGG, "Grey Spawn Egg");
+        this.item(GCItems.ARCH_GREY_SPAWN_EGG, "Arch Grey Spawn Egg");
+    }
+
+    protected void generateTagTranslations() {
+        this.tag(GCTags.ALUMINUM_INGOTS, "Aluminum Ingots");
+        this.tag(GCTags.RAW_ALUMINUM_ORES, "Raw Aluminum");
+        this.tag(GCTags.LEAD_INGOTS, "Lead Ingots");
+        this.tag(GCTags.RAW_LEAD_ORES, "Raw Lead");
+        this.tag(GCTags.SILICONS, "Silicon");
+        this.tag(GCTags.STEEL_INGOTS, "Steel Ingots");
+        this.tag(GCTags.TIN_INGOTS, "Tin Ingots");
+        this.tag(GCTags.RAW_TIN_ORES, "Raw Tin");
+        this.tag(GCTags.COMPRESSED_STEEL, "Steel Plates");
+        this.tag(GCTags.COMPRESSED_IRON, "Iron Plates");
+        this.tag(GCTags.COMPRESSED_TIN, "Tin Plates");
+    }
+
+    protected void generateGasTranslations() {
+        this.add(Gas.ARGON, "Argon");
+        this.add(Gas.CARBON_DIOXIDE, "Carbon Dioxide");
+        this.add(Gas.CARBON_MONOXIDE, "Carbon Monoxide");
+        this.add(Gas.HELIUM, "Helium");
+        this.add(Gas.HYDROGEN, "Hydrogen");
+        this.add(Gas.IODINE, "Iodine");
+        this.add(Gas.KRYPTON, "Krypton");
+        this.add(Gas.METHANE, "Methane");
+        this.add(Gas.NEON, "Neon");
+        this.add(Gas.NITROGEN, "Nitrogen");
+        this.add(Gas.NITROUS_DIOXIDE, "Nitrous Dioxide");
+        this.add(Gas.NITROUS_OXIDE, "Nitrous Oxide");
+        this.add(Gas.OXYGEN, "Oxygen");
+        this.add(Gas.OZONE, "Ozone");
+        this.add(Gas.WATER_VAPOR, "Water Vapor");
+        this.add(Gas.XENON, "Xenon");
+        this.add(Gas.HYDROGEN_DEUTERIUM_OXYGEN, "Hydrogen Deuterium Oxygen");
+    }
+
+    protected void generateEntityTranslations() {
+        this.entity(GCEntityTypes.ARCH_GREY, "Arch Grey");
+        this.entity(GCEntityTypes.BUBBLE, "Bubble");
+        this.entity(GCEntityTypes.BUGGY, "Buggy");
+        this.entity(GCEntityTypes.COMET_CUBE, "Comet Cube");
+        this.entity(GCEntityTypes.EVOLVED_CREEPER, "Evolved Creeper");
+        this.entity(GCEntityTypes.EVOLVED_EVOKER, "Evolved Evoker");
+        this.entity(GCEntityTypes.EVOLVED_PILLAGER, "Evolved Pillager");
+        this.entity(GCEntityTypes.EVOLVED_SKELETON, "Evolved Skeleton");
+        this.entity(GCEntityTypes.SKELETON_BOSS, "Evolved Skeleton Boss");
+        this.entity(GCEntityTypes.EVOLVED_SPIDER, "Evolved Spider");
+        this.entity(GCEntityTypes.EVOLVED_VINDICATOR, "Evolved Vindicator");
+        this.entity(GCEntityTypes.EVOLVED_ZOMBIE, "Evolved Zombie");
+        this.entity(GCEntityTypes.GAZER, "Gazer");
+        this.entity(GCEntityTypes.GREY, "Grey");
+        this.entity(GCEntityTypes.LANDER, "Lander");
+        this.entity(GCEntityTypes.MOON_VILLAGER, "Moon Villager");
+        this.add(GCEntityTypes.MOON_VILLAGER.getDescriptionId() + ".none", "Moon Villager");
+        this.entity(GCEntityTypes.OLI_GRUB, "Oli Grub");
+        this.entity(GCEntityTypes.PARACHEST, "Parachest");
+        this.entity(GCEntityTypes.ROCKET, "Rocket");
+        this.entity(GCEntityTypes.RUMBLER, "Rumbler");
+        this.entity(GCEntityTypes.THROWABLE_METEOR_CHUNK, "Meteor Chunk");
+    }
+
+    protected void generateCelestialBodyTranslations() {
+        this.add(Galaxy.MILKY_WAY, "Milky Way");
+        this.add(Galaxy.MILKY_WAY_DESCRIPTION, "");
+        this.add(CelestialBody.SOL, "Sol");
+        this.add(CelestialBody.SOL_DESC, "");
+        this.add(CelestialBody.ASTEROID, "Asteroids");
+        this.add(CelestialBody.ASTEROID_DESC, "");
+        this.add(CelestialBody.EARTH, "Earth");
+        this.add(CelestialBody.EARTH_DESC, "The Overworld");
+        this.add(CelestialBody.JUPITER, "Jupiter");
+        this.add(CelestialBody.JUPITER_DESC, "");
+        this.add(CelestialBody.MARS, "Mars");
+        this.add(CelestialBody.MARS_DESC, "");
+        this.add(CelestialBody.MERCURY, "Mercury");
+        this.add(CelestialBody.MERCURY_DESC, "");
+        this.add(CelestialBody.MOON, "Moon");
+        this.add(CelestialBody.MOON_DESC, "");
+        this.add(CelestialBody.NEPTUNE, "Neptune");
+        this.add(CelestialBody.NEPTUNE_DESC, "");
+        this.add(CelestialBody.SATURN, "Saturn");
+        this.add(CelestialBody.SATURN_DESC, "");
+        this.add(CelestialBody.URANUS, "Uranus");
+        this.add(CelestialBody.URANUS_DESC, "");
+        this.add(CelestialBody.VENUS, "Venus");
+        this.add(CelestialBody.VENUS_DESC, "");
+        this.add(CelestialBody.SATELLITE, "Satellite");
+        this.add(CelestialBody.SATELLITE_DESC, "");
+    }
+
+    protected void generateBiomeTranslations() {
+        this.add(GCBiomes.Moon.BASALTIC_MARE, "Basaltic Mare");
+        this.add(GCBiomes.Moon.COMET_TUNDRA, "Comet Tundra");
+        this.add(GCBiomes.Moon.LUNAR_HIGHLANDS, "Lunar Highlands");
+        this.add(GCBiomes.Moon.LUNAR_LOWLANDS, "Lunar Lowlands");
+        this.add(GCBiomes.Moon.OLIVINE_SPIKES, "Olivine Spikes");
+        this.add(GCBiomes.SPACE, "Space");
+        this.add(GCBiomes.Venus.VENUS_FLAT, "Venus Flat");
+        this.add(GCBiomes.Venus.VENUS_MOUNTAIN, "Venus Mountain");
+        this.add(GCBiomes.Venus.VENUS_VALLEY, "Venus Valley");
+    }
+
+    protected void generateChatTranslations() {
+        this.add(Chat.BED_FAIL, "Uh oh, what if the oxygen runs out when I am asleep? I'll need a Cryogenic Chamber to sleep in space!");
+        this.add(Chat.CHAMBER_HOT, "The chamber is way too hot right now! It needs %s seconds to cool down before I sleep again.");
+        this.add(Chat.CHAMBER_OBSTRUCTED, "This cryogenic chamber is obstructed");
+        this.add(Chat.CHAMBER_OCCUPIED, "This cryogenic chamber is occupied");
+        this.add(Chat.CHAMBER_TOO_FAR_AWAY, "You may not rest now; the cryogenic chamber is too far away");
         this.add(Chat.ROCKET_WARNING, "Press again to launch.");
+
+        this.add(Subtitles.THROW_METEOR_CHUNK, "Meteor Chunk flies");
 
         this.add(RegistryDebug.DUMP, "Dumped: %s");
         this.add(RegistryDebug.ID, "%s - %s: %s");
@@ -149,12 +669,79 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(DimensionTp.SUCCESS_MULTIPLE, "Teleported %s entities to %s");
         this.add(DimensionTp.SUCCESS_SINGLE, "Teleported to %s");
+        this.add(DimensionTp.INVALID_PACKET, "Invalid planet teleport packet received.");
 
         this.add(GcHouston.IN_OTHER_DIMENSION, "We cannot locate your signal! Are you sure you're in space?");
         this.add(GcHouston.CONFIRMATION, "Er, Houston, we have a problem... (Run this command again to confirm teleport)");
         this.add(GcHouston.IN_OVERWORLD, "I don't need to be rescued!");
         this.add(GcHouston.SUCCESS, "You have been rescued. Better luck next time...");
 
+        this.deathBy(GCDamageTypes.CRASH_LANDING, "%s came in too hot");
+        this.deathBy(GCDamageTypes.OIL_BOOM, "%s tried to put out fire with a very flammable material",
+                "%s tried to put out fire with a very flammable material while trying to escape %s");
+        this.deathBy(GCDamageTypes.SUFFOCATION, "%s died from lack of oxygen",
+                "%s ran out of oxygen while trying to escape %s");
+        this.deathBy(GCDamageTypes.SULFURIC_ACID, "%s was dissolved by sulfuric acid",
+                "%s was dissolved by sulfuric acid while trying to escape %s");
+        this.deathBy(GCDamageTypes.VINE_POISON, "%s succumbed to the poison of some vines",
+                "%s succumbed to the poison of some vines while trying to escape %s");
+
+        this.add(Boss.SKELETON_BOSS_DESPAWN, "Boss despawned, don't leave the boss room while fighting! Re-enter room to respawn boss.");
+    }
+
+    protected void generateRocketPartTranslations() {
+        this.rocketPart(GCRocketParts.TIER_1_BODY, "Basic Body");
+        this.rocketPart(GCRocketParts.ADVANCED_CONE, "Advanced Cone");
+        this.rocketPart(GCRocketParts.SLOPED_CONE, "Sloped Cone");
+        this.rocketPart(GCRocketParts.TIER_1_CONE, "Basic Cone");
+        this.rocketPart(GCRocketParts.TIER_1_ENGINE, "Basic Engine");
+        this.rocketPart(GCRocketParts.TIER_1_FIN, "Basic Fins");
+        this.rocketPart(GCRocketParts.STORAGE_UPGRADE, "Storage Upgrade");
+    }
+
+    protected void generateSmithingTranslations() {
+        this.add(Misc.UPGRADE_TITANIUM_ADDITIONS_SLOT_DESCRIPTON, "Add Compressed Titanium");
+        this.add(Misc.UPGRADE_TITANIUM_APPLIES_TO, "Desh Equipment");
+        this.add(Misc.UPGRADE_TITANIUM_BASE_SLOT_DESCRIPTION, "Add desh armor, weapon, or tool");
+        this.add(Misc.UPGRADE_TITANIUM_DESCRIPTION, "Titanium Upgrade");
+        this.add(Misc.UPGRADE_TITANIUM_INGREDIENTS, "Compressed Titanium");
+    }
+
+    protected void generateTooltipTranslations() {
+        // Block Descriptions
+        this.blockDesc(GCBlocks.ADVANCED_SOLAR_PANEL, "Advanced Solar Panels collect energy from the sun, and store it for further use. Adjusts position to face the sun, to collect more electricity.");
+        this.blockDesc(GCBlocks.BASIC_SOLAR_PANEL, "Basic Solar Panels collect energy from the sun, and store it for further use. Collects most energy at mid-day (non-adjustable).");
+        this.blockDesc(GCBlocks.CIRCUIT_FABRICATOR, "Circuit Fabricator will process basic materials into silicon wafers, used for advanced machines.");
+        this.blockDesc(GCBlocks.COAL_GENERATOR, "Burns coal and charcoal for energy. The simplest but least efficient energy method.");
+        this.blockDesc(GCBlocks.COMPRESSOR, "Compressor will process ingots into their compressed equivalents.");
+        this.blockDesc(GCBlocks.ELECTRIC_COMPRESSOR, "Electric Compressor will process ingots into their compressed equivalents. Compresses two at a time, making it more effective than its predecessor.");
+        this.blockDesc(GCBlocks.ELECTRIC_FURNACE, "Electric Furnace is used as a faster alternative to traditional coal furnaces.");
+        this.blockDesc(GCBlocks.ELECTRIC_ARC_FURNACE, "Electric Arc Furnace is used as a better and faster alternative to both traditional coal and electric furnaces: double output from ores!");
+        this.blockDesc(GCBlocks.ENERGY_STORAGE_MODULE, "Energy Storage Module is used to store large amounts of energy for later use.");
+        this.blockDesc(GCBlocks.FUEL_LOADER, "After being connected to a launch pad, a Fuel Loader will allow fuel to passed into the connected Rocket or other vehicle.");
+        this.blockDesc(GCBlocks.MOON_CHEESE_WHEEL, "Moon Cheese Wheels are created from the cheeses of the Moon, place-able and edible.");
+        this.blockDesc(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, "Oxygen Bubble Distributor creates a bubble of air around itself. Requires oxygen and electricity.");
+        this.blockDesc(GCBlocks.OXYGEN_DECOMPRESSOR, "Oxygen Decompressor will unload oxygen into internal storage from an oxygen tank.");
+        this.blockDesc(GCBlocks.OXYGEN_COLLECTOR, "Oxygen Collector will store oxygen collected from leaves in the surrounding area.");
+        this.blockDesc(GCBlocks.OXYGEN_COMPRESSOR, "Oxygen Compressor will load oxygen from internal storage into an oxygen tank.");
+        this.blockDesc(GCBlocks.OXYGEN_SEALER, "Oxygen Sealer will check for an enclosed space. If the space is enclosed, it will fill with breathable air.");
+        this.blockDesc(GCBlocks.OXYGEN_STORAGE_MODULE, "Oxygen Storage Module is used to store large amounts of oxygen for later use.");
+        this.blockDesc(GCBlocks.PARACHEST, "Parachests will fall from the sky after landing on certain planets/moons, such as Earth. Contains rocket, fuel, and cargo from previous launch.");
+        this.blockDesc(GCBlocks.REFINERY, "Refinery will take an input of oil and energy, and output fuel used for rockets and vehicles.");
+
+        this.add(Tooltip.CREATIVE_ONLY, "Creative Only");
+        this.add(Tooltip.ENERGY_REMAINING, "Energy Remaining: %s");
+        this.add(Tooltip.GLOWSTONE_LANTERN, "Glowstone Lanterns are best used to light areas when there is no oxygen for lanterns to burn.");
+        this.add(Tooltip.GLOWSTONE_TORCH, "Glowstone Torches are best used to light areas when there is no oxygen for wood torches to burn.");
+        this.add(Tooltip.INFINITE, "Infinite");
+        this.add(Tooltip.OXYGEN_REMAINING, "Oxygen Remaining: %s");
+        this.add(Tooltip.PRESS_SHIFT, "Press LSHIFT for more information.");
+        this.add(Tooltip.STANDARD_WRENCH, "Most Galacticraft machines can be rotated by right-clicking with the Standard Wrench.");
+        this.add(Tooltip.TIME_UNTIL_COOL, "Time Until Cool: %s");
+        this.add(Tooltip.SECONDS_UNIT, "%ss");
+    }
+
+    protected void generateConfigTranslations() {
         this.add(Config.CLIENT, "Client");
         this.add(Config.SKYBOX, "Skybox");
         this.add(Config.COMMANDS, "Commands");
@@ -186,84 +773,11 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.RESET, "Reset");
         this.add(Config.TITLE, "Galacticraft Config");
 
-        this.deathBy(GCDamageTypes.OIL_BOOM, "%s tried to put out fire with a very flammable material");
-        this.deathBy(GCDamageTypes.SUFFOCATION, "%s died from lack of oxygen");
-        this.deathBy(GCDamageTypes.SULFURIC_ACID, "%s succumbed to sulfuric acid");
-        this.deathBy(GCDamageTypes.VINE_POISON, "%s succumbed to the poison of some vines");
-
-        this.add(Galaxy.MILKY_WAY_DESCRIPTION, "");
-        this.add(Galaxy.MILKY_WAY, "Milky Way");
-
         this.add(Keybindings.ROCKET_INVENTORY, "Open Rocket Inventory");
         this.add(Keybindings.OPEN_CELESTIAL_SCREEN, "Open Celestial Map");
+    }
 
-        this.add(CelestialBody.SOL_DESC, "");
-        this.add(CelestialBody.SOL, "Sol");
-        this.add(CelestialBody.ASTEROID_DESC, "");
-        this.add(CelestialBody.ASTEROID, "Asteroid");
-        this.add(CelestialBody.EARTH_DESC, "The Overworld");
-        this.add(CelestialBody.EARTH, "Earth");
-        this.add(CelestialBody.JUPITER_DESC, "");
-        this.add(CelestialBody.JUPITER, "Jupiter");
-        this.add(CelestialBody.MARS_DESC, "");
-        this.add(CelestialBody.MARS, "Mars");
-        this.add(CelestialBody.MERCURY_DESC, "");
-        this.add(CelestialBody.MERCURY, "Mercury");
-        this.add(CelestialBody.MOON_DESC, "");
-        this.add(CelestialBody.MOON, "Moon");
-        this.add(CelestialBody.NEPTUNE_DESC, "");
-        this.add(CelestialBody.NEPTUNE, "Neptune");
-        this.add(CelestialBody.SATURN_DESC, "");
-        this.add(CelestialBody.SATURN, "Saturn");
-        this.add(CelestialBody.URANUS_DESC, "");
-        this.add(CelestialBody.URANUS, "Uranus");
-        this.add(CelestialBody.VENUS_DESC, "");
-        this.add(CelestialBody.VENUS, "Venus");
-        this.add(CelestialBody.SATELLITE, "Satellite");
-        this.add(CelestialBody.SATELLITE_DESC, "");
-
-        this.rocketPart(GCRocketParts.TIER_1_BODY, "Basic Body");
-        this.rocketPart(GCRocketParts.ADVANCED_CONE, "Advanced Cone");
-        this.rocketPart(GCRocketParts.SLOPED_CONE, "Sloped Cone");
-        this.rocketPart(GCRocketParts.TIER_1_CONE, "Basic Cone");
-        this.rocketPart(GCRocketParts.TIER_1_ENGINE, "Basic Engine");
-        this.rocketPart(GCRocketParts.TIER_1_FIN, "Basic Fins");
-        this.rocketPart(GCRocketParts.STORAGE_UPGRADE, "Storage Upgrade");
-
-        this.add(Misc.UPGRADE_TITANIUM_ADDITIONS_SLOT_DESCRIPTON, "Add Compressed Titanium");
-        this.add(Misc.UPGRADE_TITANIUM_APPLIES_TO, "Desh Equipment");
-        this.add(Misc.UPGRADE_TITANIUM_BASE_SLOT_DESCRIPTION, "Add desh armor, weapon, or tool");
-        this.add(Misc.UPGRADE_TITANIUM_DESCRIPTION, "Titanium Upgrade");
-        this.add(Misc.UPGRADE_TITANIUM_INGREDIENTS, "Compressed Titanium");
-
-        this.add(Tooltip.CREATIVE_ONLY, "Creative Only");
-        this.add(Tooltip.ENERGY_REMAINING, "Energy Remaining: %s");
-        this.add(Tooltip.GLOWSTONE_LANTERN, "Glowstone Lanterns are best used to light areas when there is no oxygen for lanterns to burn.");
-        this.add(Tooltip.GLOWSTONE_TORCH, "Glowstone Torches are best used to light areas when there is no oxygen for wood torches to burn.");
-        this.add(Tooltip.INFINITE, "Infinite");
-        this.add(Tooltip.OXYGEN_REMAINING, "Oxygen Remaining: %s");
-        this.add(Tooltip.PRESS_SHIFT, "Press LSHIFT for more info");
-        this.add(Tooltip.STANDARD_WRENCH, "Most Galacticraft machines can be rotated by right-clicking with the Standard Wrench.");
-        this.add(Tooltip.TIME_UNTIL_COOL, "Time Until Cool: %ss");
-
-        this.add(Gas.ARGON, "Argon");
-        this.add(Gas.CARBON_DIOXIDE, "Carbon Dioxide");
-        this.add(Gas.CARBON_MONOXIDE, "Carbon Monoxide");
-        this.add(Gas.HELIUM, "Helium");
-        this.add(Gas.HYDROGEN, "Hydrogen");
-        this.add(Gas.IODINE, "Iodine");
-        this.add(Gas.KRYPTON, "Krypton");
-        this.add(Gas.METHANE, "Methane");
-        this.add(Gas.NEON, "Neon");
-        this.add(Gas.NITROGEN, "Nitrogen");
-        this.add(Gas.NITROUS_DIOXIDE, "Nitrous Dioxide");
-        this.add(Gas.NITROUS_OXIDE, "Nitrous Oxide");
-        this.add(Gas.OXYGEN, "Oxygen");
-        this.add(Gas.OZONE, "Ozone");
-        this.add(Gas.WATER_VAPOR, "Water Vapor");
-        this.add(Gas.XENON, "Xenon");
-        this.add(Gas.HYDROGEN_DEUTERIUM_OXYGEN, "Hydrogen Deuterium Oxygen");
-
+    protected void generateSpaceRaceTranslations() {
         this.add(SpaceRace.SPACE_RACE_MANAGER, "Space Race Manager");
         this.add(SpaceRace.ADD_PLAYERS, "Add Player(s)");
         this.add(SpaceRace.BACK, "Back");
@@ -284,7 +798,9 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(SpaceRace.RED, "Red");
         this.add(SpaceRace.GREEN, "Green");
         this.add(SpaceRace.BLUE, "Blue");
+    }
 
+    protected void generateSolarPanelTranslations() {
         this.add(SolarPanel.ATMOSPHERIC_INTERFERENCE, "Atmospheric Interference: %s");
         this.add(SolarPanel.BLOCKED, "Blocked");
         this.add(SolarPanel.DAY, "Day");
@@ -295,11 +811,15 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(SolarPanel.LIGHT_SOURCE_MOON, "Moon");
         this.add(SolarPanel.LIGHT_SOURCE_EARTH, "Earth");
         this.add(SolarPanel.LIGHT_SOURCE_NONE, "Unknown");
-        this.add(SolarPanel.LIGHT_SOURCE_RAIN, "Rain");
+        this.add(SolarPanel.LIGHT_SOURCE_RAIN, "Sun (Overcast)");
         this.add(SolarPanel.LIGHT_SOURCE_SUN, "Sun");
+        this.add(SolarPanel.LIGHT_SOURCE_THUNDER, "Sun (Stormy)");
         this.add(SolarPanel.STATUS, "Status: ");
+        this.add(SolarPanel.STORMY, "Stormy");
         this.add(SolarPanel.STRENGTH, "Strength: %s");
+    }
 
+    protected void generateMachineStatusTranslations() {
         this.add(MachineStatus.ALREADY_SEALED, "Already Sealed");
         this.add(MachineStatus.AREA_TOO_LARGE, "Area Too Large");
         this.add(MachineStatus.MISSING_EMPTY_CAN, "Missing Empty Can");
@@ -325,12 +845,15 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(MachineStatus.OXYGEN_TANK_FULL, "Oxygen Tank Full");
         this.add(MachineStatus.PARTIALLY_BLOCKED, "Partially Blocked");
         this.add(MachineStatus.RAIN, "Rain");
+        this.add(MachineStatus.THUNDER, "Thunder");
         this.add(MachineStatus.SEALED, "Sealed");
-        this.add(MachineStatus.WARMING_UP, "Warming up");
-        this.add(MachineStatus.NOT_ENOUGH_FUEL, "Not enough fuel");
-        this.add(MachineStatus.NO_ROCKET, "No rocket");
-        this.add(MachineStatus.ROCKET_IS_FULL, "Rocket is full");
+        this.add(MachineStatus.WARMING_UP, "Warming Up");
+        this.add(MachineStatus.NOT_ENOUGH_FUEL, "Not Enough Fuel");
+        this.add(MachineStatus.NO_ROCKET, "No Rocket");
+        this.add(MachineStatus.ROCKET_IS_FULL, "Rocket Is Full");
+    }
 
+    protected void generateCelestialSelectionTranslations() {
         this.add(CelestialSelection.BACK, "Back");
         this.add(CelestialSelection.CANCEL, "Cancel");
         this.add(CelestialSelection.CATALOG, "Catalog");
@@ -354,7 +877,9 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(CelestialSelection.CLICK_AGAIN_MOONS, "Click again to zoom (view moons)");
         this.add(CelestialSelection.CLICK_AGAIN_SATELLITES, "Click again to zoom (view satellites)");
         this.add(CelestialSelection.CLICK_AGAIN_MOONS_AND_SATELLITES, "Click again to zoom (view moons & satellites)");
+    }
 
+    protected void generateUiTranslations() {
         this.add(Ui.CONE, "Cone");
         this.add(Ui.BODY, "Body");
         this.add(Ui.FINS, "Fins");
@@ -364,35 +889,49 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.COLOR, "Color");
 
         this.add(Ui.AIRLOCK_REDSTONE_SIGNAL, "Opens on Redstone Signal");
+        this.add(Ui.AIRLOCK_OWNER, "%s's Airlock Controller");
         this.add(Ui.ALPHA_WARNING_1, "Galacticraft is currently in ALPHA.");
         this.add(Ui.ALPHA_WARNING_2, "Please report all issues you find.");
         this.add(Ui.ALPHA_WARNING_3, "Press [ESC] or click to continue.");
         this.add(Ui.ALPHA_WARNING_HEADER, "WARNING");
         this.add(Ui.BUBBLE_CURRENT_SIZE, "Current Size: %s");
         this.add(Ui.BUBBLE_NOT_VISIBLE, "Bubble Not Visible");
-        this.add(Ui.BUBBLE_TARGET_SIZE, "Target Size:");
+        this.add(Ui.BUBBLE_TARGET_SIZE, "Target Size: ");
         this.add(Ui.BUBBLE_VISIBLE, "Bubble Visible");
 
         this.add(Ui.COLLECTING, "Collecting: %s/s");
         this.add(Ui.CURRENT_OXYGEN, "Oxygen: %s");
-        this.add(Ui.GJT, "%sGj/t");
+        this.add(Ui.GJT, "%s gJ/t");
+        this.add(Ui.MILLIBUCKETS, "mB");
         this.add(Ui.MAX_OXYGEN, "Maximum Oxygen: %s");
-        this.add(Ui.MACHINE_STATUS, "Status: ");
+        this.add(Ui.MACHINE_STATUS, "Status: %s");
         this.add(Ui.OXYGEN_TANK_LEVEL, "Oxygen Tank %s: %s/%s");
         this.add(Ui.ROCKET_FUEL, "Fuel:");
         this.add(Ui.ROCKET_FULL, "% full");
         this.add(Ui.ROCKET_NO_FUEL, "No fuel");
-        this.add(Ui.LANDER_VELOCITY, "Entry Velocity");
-        this.add(Ui.LANDER_VELOCITYU, "m/s");
-        this.add(Ui.LANDER_WARNING_2, "Hold \"");
-        this.add(Ui.LANDER_WARNING_3, "\" to slow down!");
         this.add(Ui.LANDER_WARNING, "WARNING!");
+        this.add(Ui.LANDER_CONTROLS, "Hold \"%s\" to slow down!");
+        this.add(Ui.LANDER_VELOCITY, "Entry Velocity: %s m/s");
         this.add(Ui.SMALL_STEP, "Taking one small step");
         this.add(Ui.GIANT_LEAP, "Taking one giant leap");
         this.add(Ui.PREPARE_FOR_ENTRY, "Prepare for entry!");
-        this.add(Ui.TRAVELLING_TO, "Travelling to: ");
+        this.add(Ui.TRAVELING_TO, "Traveling to: %s");
+    }
 
-        this.add(Boss.SKELETON_BOSS_DESPAWN, "Boss despawned, don't leave the boss room while fighting! Re-enter room to respawn boss.");
+    protected void generateStatsTranslations() {
+        this.stat(GCStats.OPEN_PARACHEST, "Parachests Opened");
+        this.stat(GCStats.INTERACT_WITH_ROCKET_WORKBENCH, "Interactions with Rocket Workbench");
+    }
+
+    protected void decorationSet(DecorationSet decoSet, String translation) {
+        this.block(decoSet.block(), translation);
+        this.block(decoSet.slab(), translation + " Slab");
+        this.block(decoSet.stairs(), translation + " Stairs");
+        this.block(decoSet.wall(), translation + " Wall");
+        this.block(decoSet.detailedBlock(), "Detailed " + translation);
+        this.block(decoSet.detailedSlab(), "Detailed " + translation + " Slab");
+        this.block(decoSet.detailedStairs(), "Detailed " + translation + " Stairs");
+        this.block(decoSet.detailedWall(), "Detailed " + translation + " Wall");
     }
 
     protected void blockDesc(Block block, String translation) {
@@ -402,6 +941,13 @@ public class GCTranslationProvider extends TranslationProvider {
     protected void deathBy(ResourceKey<DamageType> key, String translation) {
         if (!translation.contains("%s")) throw new IllegalArgumentException("Death message must contain %s");
         this.add("death.attack." + key.location().getPath(), translation);
+    }
+
+    protected void deathBy(ResourceKey<DamageType> key, String translation, String playerTranslation) {
+        this.deathBy(key, translation);
+        Matcher matcher = Pattern.compile("%s").matcher(playerTranslation);
+        if (matcher.results().count() < 2) throw new IllegalArgumentException(".player death message must contain two instances of %s");
+        this.add("death.attack." + key.location().getPath() + ".player", playerTranslation);
     }
 
     protected void rocketPart(ResourceKey<? extends RocketPart<?, ?>> key, String translation) {

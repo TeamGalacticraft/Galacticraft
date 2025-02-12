@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,16 @@
 
 package dev.galacticraft.mod.api.block.entity;
 
+import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.util.EnergySource;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -41,13 +44,14 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
     protected int blocked = 0;
     public long currentEnergyGeneration = 0;
     private final EnergySource energySource = new EnergySource(this);
+    private long dayLength = 24000;
 
     public AbstractSolarPanelBlockEntity(BlockEntityType<? extends AbstractSolarPanelBlockEntity> type, BlockPos pos, BlockState state, StorageSpec spec) {
         super(type, pos, state, spec);
     }
 
     @Override
-    public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+    public void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("charge");
         this.drainPowerToSlot(CHARGE_SLOT);
         profiler.popPush("blockage");
@@ -55,10 +59,14 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
         for (int x = -1; x < 2; x++) { //todo: cache?
             for (int z = -1; z < 2; z++) {
                 //noinspection AssignmentUsedAsCondition
-                if (this.blockage[(z + 1) * 3 + (x + 1)] = !world.canSeeSky(pos.offset(x, 2, z))) {
+                if (this.blockage[(z + 1) * 3 + (x + 1)] = !level.canSeeSky(pos.offset(x, 2, z))) {
                     this.blocked++;
                 }
             }
+        }
+        Holder<CelestialBody<?, ?>> holder = level.galacticraft$getCelestialBody();
+        if (holder != null) {
+            dayLength = holder.value().dayLength();
         }
         profiler.pop();
     }
@@ -73,13 +81,17 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
         MachineStatus status = null;
         double multiplier = blocked == 0 ? 1 : (9.0 - this.blocked) / 9.0;
         if (this.blocked > 1) status = GCMachineStatuses.PARTIALLY_BLOCKED;
-        if (level.isRaining() || level.isThundering()) {
+        if (level.isThundering()) {
+            if (status == null) status = GCMachineStatuses.THUNDER;
+            multiplier *= 0.1;
+        } else if (level.isRaining()) {
             if (status == null) status = GCMachineStatuses.RAIN;
             multiplier *= 0.5;
         }
-        if (!level.isDay()) status = GCMachineStatuses.NIGHT;
-        long time = level.getDayTime() % 24000;
-        if (time > 6000) time = 12000L - time;
+        long time = level.getDayTime() % this.dayLength;
+        // Don't use this.isDay() because it returns false when it is thundering
+        if (time > this.dayLength / 2) status = GCMachineStatuses.NIGHT;
+        if (time > this.dayLength / 4) time = (long) (this.dayLength / 2) - time;
 
         profiler.push("transaction");
         this.currentEnergyGeneration = calculateEnergyProduction(time, multiplier);
@@ -97,7 +109,12 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
 
     @Override
     public SolarPanelSource getSource() {
-        return this.level.dimensionType().hasCeiling() ? SolarPanelSource.NO_LIGHT_SOURCE : this.level.isDay() ? this.level.isRaining() || this.level.isThundering() ? SolarPanelSource.OVERCAST : SolarPanelSource.DAY : SolarPanelSource.NIGHT;
+        if (this.level.dimensionType().hasCeiling()) return SolarPanelSource.NO_LIGHT_SOURCE;
+        // Don't use this.isDay() because it returns false when it is thundering
+        if ((this.level.getDayTime() % this.dayLength) > this.dayLength / 2) return SolarPanelSource.NIGHT;
+        if (this.level.isThundering()) return SolarPanelSource.STORMY;
+        if (this.level.isRaining()) return SolarPanelSource.OVERCAST;
+        return SolarPanelSource.DAY;
     }
 
     @Override

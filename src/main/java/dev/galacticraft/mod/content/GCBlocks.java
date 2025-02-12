@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -207,7 +207,7 @@ public class GCBlocks {
     public static final Block FUELING_PAD = BLOCKS.register(Constant.Block.FUELING_PAD, new FuelPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 10.0F).requiresCorrectToolForDrops()));
     public static final Block ROCKET_LAUNCH_PAD = BLOCKS.register(Constant.Block.ROCKET_LAUNCH_PAD, new LaunchPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 10.0F).requiresCorrectToolForDrops()));
     public static final Block ROCKET_WORKBENCH = BLOCKS.register(Constant.Block.ROCKET_WORKBENCH, new RocketWorkbench(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F)));
-    public static final Block PARACHEST = BLOCKS.registerWithItem(Constant.Block.PARACHEST, new ParaChestBlock(BlockBehaviour.Properties.of()));
+    public static final Block PARACHEST = BLOCKS.registerWithItem(Constant.Block.PARACHEST, new ParachestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST)));
 
     // LIGHT PANELS
     public static final Block SQUARE_LIGHT_PANEL = BLOCKS.register(Constant.Block.SQUARE_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)));
@@ -310,13 +310,13 @@ public class GCBlocks {
     public static final Block PLAYER_TRANSPORT_TUBE = BLOCKS.register(Constant.Block.PLAYER_TRANSPORT_TUBE, new TransportTube(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).noCollission()));
 
     // MACHINES
-    public static final Block CIRCUIT_FABRICATOR = BLOCKS.register(Constant.Block.CIRCUIT_FABRICATOR, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.CIRCUIT_FABRICATOR)));
-    public static final Block COMPRESSOR = BLOCKS.register(Constant.Block.COMPRESSOR, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.COMPRESSOR)));
-    public static final Block ELECTRIC_COMPRESSOR = BLOCKS.register(Constant.Block.ELECTRIC_COMPRESSOR, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.ELECTRIC_COMPRESSOR)));
+    public static final Block CIRCUIT_FABRICATOR = BLOCKS.register(Constant.Block.CIRCUIT_FABRICATOR, new ElectricGrillBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.CIRCUIT_FABRICATOR)));
+    public static final Block COMPRESSOR = BLOCKS.register(Constant.Block.COMPRESSOR, new CompressorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops().lightLevel(state -> state.getValue(CompressorBlock.ACTIVE) ? 13 : 0)));
+    public static final Block ELECTRIC_COMPRESSOR = BLOCKS.register(Constant.Block.ELECTRIC_COMPRESSOR, new ElectricGrillBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.ELECTRIC_COMPRESSOR)));
     public static final Block COAL_GENERATOR = BLOCKS.register(Constant.Block.COAL_GENERATOR, new CoalGeneratorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops().lightLevel(state -> state.getValue(CoalGeneratorBlock.ACTIVE) ? 13 : 0)));
     public static final Block BASIC_SOLAR_PANEL = BLOCKS.register(Constant.Block.BASIC_SOLAR_PANEL, SimpleMultiBlockMachineBlock.create(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.BASIC_SOLAR_PANEL), MultiBlockUtil.generateSolarPanelParts(), GCBlocks.SOLAR_PANEL_PART));
     public static final Block ADVANCED_SOLAR_PANEL = BLOCKS.register(Constant.Block.ADVANCED_SOLAR_PANEL, SimpleMultiBlockMachineBlock.create(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.ADVANCED_SOLAR_PANEL), MultiBlockUtil.generateSolarPanelParts(), GCBlocks.SOLAR_PANEL_PART));
-    public static final Block ENERGY_STORAGE_MODULE = BLOCKS.register(Constant.Block.ENERGY_STORAGE_MODULE, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.ENERGY_STORAGE_MODULE)));
+    public static final Block ENERGY_STORAGE_MODULE = BLOCKS.register(Constant.Block.ENERGY_STORAGE_MODULE, new ResourceStorageBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.ENERGY_STORAGE_MODULE)));
     public static final Block ELECTRIC_FURNACE = BLOCKS.register(Constant.Block.ELECTRIC_FURNACE, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.ELECTRIC_FURNACE)));
     public static final Block ELECTRIC_ARC_FURNACE = BLOCKS.register(Constant.Block.ELECTRIC_ARC_FURNACE, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.ELECTRIC_ARC_FURNACE)));
     public static final Block REFINERY = BLOCKS.register(Constant.Block.REFINERY, new RefineryBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
@@ -325,7 +325,7 @@ public class GCBlocks {
     public static final Block OXYGEN_BUBBLE_DISTRIBUTOR = BLOCKS.register(Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR)));
     public static final Block OXYGEN_DECOMPRESSOR = BLOCKS.register(Constant.Block.OXYGEN_DECOMPRESSOR, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.OXYGEN_DECOMPRESSOR)));
     public static final Block OXYGEN_COMPRESSOR = BLOCKS.register(Constant.Block.OXYGEN_COMPRESSOR, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.OXYGEN_COMPRESSOR)));
-    public static final Block OXYGEN_STORAGE_MODULE = BLOCKS.register(Constant.Block.OXYGEN_STORAGE_MODULE, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.OXYGEN_STORAGE_MODULE)));
+    public static final Block OXYGEN_STORAGE_MODULE = BLOCKS.register(Constant.Block.OXYGEN_STORAGE_MODULE, new ResourceStorageBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.OXYGEN_STORAGE_MODULE)));
     public static final Block FUEL_LOADER = BLOCKS.register(Constant.Block.FUEL_LOADER, new FuelLoaderBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
     public static final Block FOOD_CANNER = BLOCKS.register(Constant.Block.FOOD_CANNER, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL), Constant.id(Constant.Block.FOOD_CANNER)));
 
@@ -342,6 +342,7 @@ public class GCBlocks {
         FlammableBlockRegistry.getDefaultInstance().add(CRUDE_OIL, 60, 100);
         FlammableBlockRegistry.getDefaultInstance().add(CAVERNOUS_VINES, 15, 60);
         FlammableBlockRegistry.getDefaultInstance().add(CAVERNOUS_VINES_PLANT, 15, 60);
+        FlattenableBlockRegistry.register(MOON_TURF, MOON_DIRT_PATH.defaultBlockState());
         FlattenableBlockRegistry.register(MOON_DIRT, MOON_DIRT_PATH.defaultBlockState());
     }
 

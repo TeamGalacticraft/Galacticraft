@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,7 +43,6 @@ public class SpaceTravelScreen extends Screen {
             Translations.Ui.GIANT_LEAP,
             Translations.Ui.PREPARE_FOR_ENTRY
     };
-    private static final Component TRAVELLING_TO = Component.translatable(Translations.Ui.TRAVELLING_TO);
     private final int text;
     private String dots = ".";
     private final String planet;
@@ -80,7 +79,7 @@ public class SpaceTravelScreen extends Screen {
                 dots += '.';
             }
         }
-        graphics.drawCenteredString(this.font, TRAVELLING_TO.plainCopy().append(this.planet), this.width / 2, this.height / 2 - 40, 16777215);
+        graphics.drawCenteredString(this.font, Component.translatable(Translations.Ui.TRAVELING_TO, this.planet), this.width / 2, this.height / 2 - 40, 16777215);
         graphics.drawCenteredString(this.font, Component.translatable(POSSIBLE_TEXTS[this.text]).append(this.dots), this.width / 2, this.height / 2 - 50, 16777215);
         super.render(graphics, mouseX, mouseY, delta);
         if (minecraft.level.dimension().equals(this.target)) this.minecraft.setScreen(null);

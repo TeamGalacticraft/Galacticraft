@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,6 @@ import dev.galacticraft.mod.content.block.entity.networked.FluidPipeWalkwayBlock
 import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import dev.galacticraft.mod.content.block.entity.networked.WireWalkwayBlockEntity;
-import dev.galacticraft.mod.content.block.special.ParaChestBlockEntity;
 import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlockEntity;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -44,7 +43,7 @@ public class GCBlockEntityTypes {
 
     // WIRES, PIPES, WALKWAYS
     public static final BlockEntityType<WireBlockEntity> WIRE_T1 = BlockEntityType.Builder.of((pos, state) -> WireBlockEntity.createT1(GCBlockEntityTypes.WIRE_T1, pos, state), GCBlocks.ALUMINUM_WIRE, GCBlocks.SEALABLE_ALUMINUM_WIRE).build();
-    public static final BlockEntityType<WireBlockEntity> WIRE_T2 = BlockEntityType.Builder.of((pos, state) -> WireBlockEntity.createT2(GCBlockEntityTypes.WIRE_T2, pos, state)).build();
+    public static final BlockEntityType<WireBlockEntity> WIRE_T2 = BlockEntityType.Builder.of((pos, state) -> WireBlockEntity.createT2(GCBlockEntityTypes.WIRE_T2, pos, state), /*GCBlocks.HEAVY_ALUMINUM_WIRE,*/ GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE).build();
     public static final BlockEntityType<GlassFluidPipeBlockEntity> GLASS_FLUID_PIPE = BlockEntityType.Builder.of(GlassFluidPipeBlockEntity::new, GCBlocks.GLASS_FLUID_PIPE).build();
     public static final BlockEntityType<WalkwayBlockEntity> WALKWAY = BlockEntityType.Builder.of(WalkwayBlockEntity::new, GCBlocks.WALKWAY).build();
     public static final BlockEntityType<WireWalkwayBlockEntity> WIRE_WALKWAY = BlockEntityType.Builder.of(WireWalkwayBlockEntity::new, GCBlocks.WIRE_WALKWAY).build();
@@ -73,7 +72,7 @@ public class GCBlockEntityTypes {
     // ROCKETS
     public static final BlockEntityType<LaunchPadBlockEntity> LAUNCH_PAD = BlockEntityType.Builder.of(LaunchPadBlockEntity::new, GCBlocks.ROCKET_LAUNCH_PAD, GCBlocks.FUELING_PAD).build();
     public static final BlockEntityType<FuelLoaderBlockEntity> FUEL_LOADER = BlockEntityType.Builder.of(FuelLoaderBlockEntity::new, GCBlocks.FUEL_LOADER).build();
-    public static final BlockEntityType<ParaChestBlockEntity> PARACHEST = BlockEntityType.Builder.of(ParaChestBlockEntity::new, GCBlocks.PARACHEST).build();
+    public static final BlockEntityType<ParachestBlockEntity> PARACHEST = BlockEntityType.Builder.of(ParachestBlockEntity::new, GCBlocks.PARACHEST).build();
 
     // MISC
     public static final BlockEntityType<SolarPanelPartBlockEntity> SOLAR_PANEL_PART = BlockEntityType.Builder.of(SolarPanelPartBlockEntity::new, GCBlocks.SOLAR_PANEL_PART).build();

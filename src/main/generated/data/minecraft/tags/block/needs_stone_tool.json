@@ -10,11 +10,16 @@
     "galacticraft:deepslate_tin_ore",
     "galacticraft:moon_tin_ore",
     "galacticraft:lunaslate_tin_ore",
-    "galacticraft:asteroid_aluminum_ore",
-    "galacticraft:asteroid_iron_ore",
-    "galacticraft:asteroid_silicon_ore",
     "galacticraft:aluminum_ore",
     "galacticraft:deepslate_aluminum_ore",
-    "galacticraft:galena_ore"
+    "galacticraft:galena_ore",
+    "galacticraft:raw_tin_block",
+    "galacticraft:tin_block",
+    "galacticraft:raw_aluminum_block",
+    "galacticraft:aluminum_block",
+    "galacticraft:raw_lead_block",
+    "galacticraft:lead_block",
+    "galacticraft:raw_meteoric_iron_block",
+    "galacticraft:meteoric_iron_block"
   ]
 }

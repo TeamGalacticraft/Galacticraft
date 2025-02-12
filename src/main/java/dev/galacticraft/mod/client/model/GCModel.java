@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,25 +22,14 @@
 
 package dev.galacticraft.mod.client.model;
 
-import com.mojang.serialization.MapCodec;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Function;
-
-/**
- * A unbaked model that's designed to not be attached to a block, useful for entity rendering.
- */
-public interface GCModel {
-    GCModelType getType();
-
-    GCBakedModel bake(ResourceManager resourceManager, Function<Material, TextureAtlasSprite> spriteGetter);
-
-    interface GCModelType {
-        MapCodec<? extends GCModel> codec();
-
-        ResourceLocation getId();
+public interface GCModel extends AutoCloseable {
+    default void render(PoseStack modelStack, @Nullable GCModelState state, VertexConsumer consumer, int light, int overlay) {
+        this.render(modelStack, state, consumer, light, overlay, 0xFFFFFFFF);
     }
+
+    void render(PoseStack modelStack, @Nullable GCModelState state, VertexConsumer consumer, int light, int overlay, int color);
 }

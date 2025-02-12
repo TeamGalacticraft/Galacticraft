@@ -1,4 +1,12 @@
 {
-  "data": "galacticraft:block/oxygen_bubble_distributor",
-  "machinelib:generate": "machinelib:single"
+  "data": {
+    "back": "galacticraft:block/oxygen_bubble_distributor",
+    "bottom": "galacticraft:block/oxygen_bubble_distributor",
+    "front": "galacticraft:block/oxygen_bubble_distributor",
+    "left": "galacticraft:block/oxygen_bubble_distributor",
+    "particle": "galacticraft:block/oxygen_bubble_distributor",
+    "right": "galacticraft:block/oxygen_bubble_distributor",
+    "top": "galacticraft:block/oxygen_bubble_distributor"
+  },
+  "machinelib:type": "machine"
 }

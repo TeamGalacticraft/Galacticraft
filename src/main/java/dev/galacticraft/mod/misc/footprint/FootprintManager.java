@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +46,7 @@ public class FootprintManager {
                     List<Footprint> toRemove = new ArrayList<>();
 
                     for (Footprint footprint : footprints) {
-                        footprint.age += 20;
+                        footprint.age += (short)20;
 
                         if (footprint.age >= Footprint.MAX_AGE) {
                             toRemove.add(footprint);

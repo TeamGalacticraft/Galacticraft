@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,14 +46,14 @@ public class GalacticraftRocketPartRenderers {
     public static final ResourceLocation BOOSTER_TIER_2 = Constant.id("models/misc/rocket_thruster_tier_2.json");
 
     public static void register() {
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(DEFAULT_CONE))), Sheets::translucentCullBlockSheet));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.ADVANCED_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(ADVANCED_CONE))), Sheets::translucentCullBlockSheet));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.SLOPED_CONE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(SLOPED_CONE))), Sheets::translucentCullBlockSheet));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_BODY, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(DEFAULT_BODY))), () -> RenderType.entitySolid(Constant.id("textures/rocket/rocket.png"))));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_FIN, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(DEFAULT_FIN))), Sheets::translucentCullBlockSheet));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_ENGINE, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(DEFAULT_ENGINE))), Sheets::translucentCullBlockSheet));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_CONE, new BakedModelRocketPartRenderer(DEFAULT_CONE));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.ADVANCED_CONE, new BakedModelRocketPartRenderer(ADVANCED_CONE));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.SLOPED_CONE, new BakedModelRocketPartRenderer(SLOPED_CONE));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_BODY, new BakedModelRocketPartRenderer(DEFAULT_BODY));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_FIN, new BakedModelRocketPartRenderer(DEFAULT_FIN));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_ENGINE, new BakedModelRocketPartRenderer(DEFAULT_ENGINE));
         RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.STORAGE_UPGRADE, new BakedModelItemRocketPartRenderer(Items.CHEST.getDefaultInstance(), null));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_BOOSTER, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(BOOSTER_TIER_1))), Sheets::translucentCullBlockSheet));
-        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_2_BOOSTER, new BakedModelRocketPartRenderer(Suppliers.memoize(() -> Objects.requireNonNull(GCModelLoader.INSTANCE.getModel(BOOSTER_TIER_2))), Sheets::translucentCullBlockSheet));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_1_BOOSTER, new BakedModelRocketPartRenderer(BOOSTER_TIER_1));
+        RocketPartRendererRegistry.INSTANCE.register(GCRocketParts.TIER_2_BOOSTER, new BakedModelRocketPartRenderer(BOOSTER_TIER_2));
     }
 }

@@ -1,6 +1,135 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "galacticraft:item/cryogenic_chamber"
-  }
+	"parent": "minecraft:block/block",
+	"texture_size": [128, 128],
+	"textures": {
+		"cryo_chamber": "galacticraft:model/cryo_chamber",
+		"particle": "galacticraft:block/machine"
+	},
+	"display": {
+		"gui": {
+			"rotation": [ 30, 135, 0 ],
+			"translation": [ 0, 0, 0 ],
+			"scale": [ 0.25, 0.25, 0.25 ]
+		},
+		"fixed": {
+			"rotation": [ 0, 0, 0 ],
+			"translation": [ 0, 0, 0 ],
+			"scale": [ 0.333, 0.333, 0.333 ]
+		},
+		"ground": {
+			"rotation": [ 0, 0, 0 ],
+			"translation": [ 0, 6, 0 ],
+			"scale": [ 0.25, 0.25, 0.25 ]
+		},
+		"thirdperson_righthand": {
+			"rotation": [ 75, 45, 0 ],
+			"translation": [ 1, 1.5, 2 ],
+			"scale": [ 0.375, 0.375, 0.375 ]
+		},
+		"firstperson_righthand": {
+			"rotation": [ 0, 135, 0 ],
+			"translation": [ 0, 1.5, 0 ],
+			"scale": [ 0.40, 0.40, 0.40 ]
+		}
+	},
+	"elements": [
+		{
+			"from": [0, 16, 8],
+			"to": [16, 32, 16],
+			"faces": {
+				"north": {"uv": [1, 1, 3, 3], "texture": "#cryo_chamber"},
+				"east": {"uv": [0, 1, 1, 3], "texture": "#cryo_chamber"},
+				"south": {"uv": [4, 1, 6, 3], "texture": "#cryo_chamber"},
+				"west": {"uv": [3, 1, 4, 3], "texture": "#cryo_chamber"},
+				"up": {"uv": [1, 0, 3, 1], "texture": "#cryo_chamber"}
+			}
+		},
+		{
+			"from": [0, 16, 0],
+			"to": [16, 32, 8],
+			"faces": {
+				"north": {"uv": [1, 8, 3, 10], "texture": "#cryo_chamber"},
+				"east": {"uv": [0, 8, 1, 10], "texture": "#cryo_chamber"},
+				"west": {"uv": [3, 8, 4, 10], "texture": "#cryo_chamber"},
+				"up": {"uv": [1, 7, 3, 8], "texture": "#cryo_chamber"}
+			}
+		},
+		{
+			"from": [1, 16, 4],
+			"to": [15, 18, 8],
+			"faces": {
+				"north": {"uv": [6.5, 0.5, 8.25, 0.75], "texture": "#cryo_chamber"},
+				"east": {"uv": [6, 0.5, 6.5, 0.75], "texture": "#cryo_chamber"},
+				"west": {"uv": [8.25, 0.5, 8.75, 0.75], "texture": "#cryo_chamber"}
+			}
+		},
+		{
+			"from": [0, 0, 8],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [1, 3, 3, 5], "texture": "#cryo_chamber"},
+				"east": {"uv": [0, 3, 1, 5], "texture": "#cryo_chamber"},
+				"south": {"uv": [4, 3, 6, 5], "texture": "#cryo_chamber"},
+				"west": {"uv": [3, 3, 4, 5], "texture": "#cryo_chamber"}
+			}
+		},
+		{
+			"from": [0, 0, 0],
+			"to": [16, 16, 8],
+			"faces": {
+				"north": {"uv": [1, 10, 3, 12], "texture": "#cryo_chamber"},
+				"east": {"uv": [0, 10, 1, 12], "texture": "#cryo_chamber"},
+				"west": {"uv": [3, 10, 4, 12], "texture": "#cryo_chamber"}
+			}
+		},
+		{
+			"from": [1, 0, 4],
+			"to": [15, 3, 8],
+			"faces": {
+				"north": {"uv": [6.5, 1.75, 8.25, 2.125], "texture": "#cryo_chamber"},
+				"east": {"uv": [6, 1.75, 6.5, 2.125], "texture": "#cryo_chamber"},
+				"west": {"uv": [8.25, 1.75, 8.75, 2.125], "texture": "#cryo_chamber"}
+			}
+		},
+		{
+			"from": [1, 15, 4],
+			"to": [15, 16, 8],
+			"faces": {
+				"north": {"uv": [6.5, 0.75, 8.25, 0.875], "texture": "#cryo_chamber"},
+				"east": {"uv": [6, 0.75, 6.5, 0.875], "texture": "#cryo_chamber"},
+				"west": {"uv": [8.25, 0.75, 8.75, 0.875], "texture": "#cryo_chamber"}
+			}
+		},
+		{
+			"from": [0, -13, 8],
+			"to": [16, 0, 16],
+			"faces": {
+				"north": {"uv": [1, 5, 3, 6.625], "texture": "#cryo_chamber"},
+				"east": {"uv": [0, 5, 1, 6.625], "texture": "#cryo_chamber"},
+				"south": {"uv": [4, 5, 6, 6.625], "texture": "#cryo_chamber"},
+				"west": {"uv": [3, 5, 4, 6.625], "texture": "#cryo_chamber"}
+			}
+		},
+		{
+			"from": [0, -16, 0],
+			"to": [16, -13, 16],
+			"faces": {
+				"north": {"uv": [6, 6.625, 8, 7], "texture": "#cryo_chamber"},
+				"east": {"uv": [6, 6.625, 4, 7], "texture": "#cryo_chamber"},
+				"south": {"uv": [10, 6.625, 12, 7], "texture": "#cryo_chamber"},
+				"west": {"uv": [10, 6.625, 8, 7], "texture": "#cryo_chamber"},
+				"up": {"uv": [6, 4.625, 8, 6.625], "texture": "#cryo_chamber"},
+				"down": {"uv": [8, 6.625, 10, 4.625], "rotation": 90, "texture": "#cryo_chamber"}
+			}
+		},
+		{
+			"from": [0, -13, 0],
+			"to": [16, 0, 8],
+			"faces": {
+				"north": {"uv": [1, 12, 3, 13.625], "texture": "#cryo_chamber"},
+				"east": {"uv": [0, 12, 1, 13.625], "texture": "#cryo_chamber"},
+				"west": {"uv": [3, 12, 4, 13.625], "texture": "#cryo_chamber"}
+			}
+		}
+	]
 }

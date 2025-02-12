@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,10 +26,11 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.screen.RocketMenu;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Inventory;
 
 public class RocketInventoryScreen extends AbstractContainerScreen<RocketMenu> {
@@ -51,12 +52,13 @@ public class RocketInventoryScreen extends AbstractContainerScreen<RocketMenu> {
 
     @Override
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
-        graphics.drawString(this.font, Component.translatable(Translations.Ui.ROCKET_FUEL), 125, 15 + 3, 4210752, false);
+        final Component fuel = Component.translatable(Translations.Ui.ROCKET_FUEL);
+        graphics.drawString(this.font, fuel, 140 - this.font.width(fuel) / 2, 15 + 3, 4210752, false);
 
         final double percentage = this.menu.rocket.getScaledFuelLevel(100);
         final ChatFormatting color = percentage > 80.0D ? ChatFormatting.GREEN : percentage > 40.0D ? ChatFormatting.GOLD : ChatFormatting.RED;
-        final String str = percentage + I18n.get(Translations.Ui.ROCKET_FULL);
-        graphics.drawString(this.font, Component.literal(str).withStyle(color), 117 - str.length() / 2, 20 + 8, 4210752, false);
+        final MutableComponent text = Component.literal(String.format("%.1f", percentage)).append(Component.translatable(Translations.Ui.ROCKET_FULL));
+        graphics.drawString(this.font, text.withStyle(color), 140 - this.font.width(text) / 2, 20 + 8, 4210752, false);
     }
 
     @Override

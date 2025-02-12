@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,6 +38,7 @@ public class GCEntityModelLayer {
     public static final ModelLayerLocation SOLAR_PANEL = new ModelLayerLocation(Constant.id("solar_panel"), "main");
     public static final ModelLayerLocation LANDER = new ModelLayerLocation(Constant.id("lander"), "main");
     public static final ModelLayerLocation PARACHEST = new ModelLayerLocation(Constant.id("parachest"), "main");
+    public static final ModelLayerLocation MOON_VILLAGER = new ModelLayerLocation(Constant.id("moon_villager"), "main");
     // Bosses
     public static final ModelLayerLocation SKELETON_BOSS = new ModelLayerLocation(Constant.id("skeleton_boss"), "main");
 
@@ -50,6 +51,7 @@ public class GCEntityModelLayer {
         EntityModelLayerRegistry.registerModelLayer(ARCH_GREY, ArchGreyEntityModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(LANDER, LanderModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(PARACHEST, ParachestModel::createParachuteLayer);
+        EntityModelLayerRegistry.registerModelLayer(MOON_VILLAGER, MoonVillagerModel::createBodyLayer);
 
         EntityModelLayerRegistry.registerModelLayer(SKELETON_BOSS, EvolvedSkeletonBossModel::createBodyLayer);
 

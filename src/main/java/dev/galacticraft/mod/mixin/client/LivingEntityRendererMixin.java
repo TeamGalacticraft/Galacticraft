@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -65,10 +65,7 @@ public abstract class LivingEntityRendererMixin {
             if (entity.getVehicle() instanceof RocketEntity rocket) {
                 double rotationOffset = -0.5F;
                 pose.translate(0, -rotationOffset, 0);
-                float anglePitch = rocket.xRotO;
-                float angleYaw = rocket.yRotO;
-                pose.mulPose(Axis.YN.rotationDegrees(angleYaw));
-                pose.mulPose(Axis.ZP.rotationDegrees(anglePitch));
+                pose.mulPose(Axis.ZP.rotationDegrees(rocket.getXRot()));
                 pose.translate(0, rotationOffset, 0);
             }
         }
@@ -79,6 +76,7 @@ public abstract class LivingEntityRendererMixin {
         if (entity.isInCryoSleep()) {
             Direction direction = entity.getBedOrientation();
             float j = direction != null ? sleepDirectionToRotationCryo(direction) : bodyYaw;
+            pose.translate(0, 0.82F, 0);
             pose.mulPose(Axis.YP.rotationDegrees(j));
             ci.cancel();
         }

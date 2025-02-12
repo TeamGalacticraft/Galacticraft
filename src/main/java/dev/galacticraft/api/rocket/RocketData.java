@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,49 +46,30 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public record RocketData(@Nullable EitherHolder<RocketCone<?, ?>> cone, @Nullable EitherHolder<RocketBody<?, ?>> body,
-                         @Nullable EitherHolder<RocketFin<?, ?>> fin,
-                         @Nullable EitherHolder<RocketBooster<?, ?>> booster,
-                         @Nullable EitherHolder<RocketEngine<?, ?>> engine,
-                         @Nullable EitherHolder<RocketUpgrade<?, ?>> upgrade, int color
+public record RocketData(Optional<EitherHolder<RocketCone<?, ?>>> cone, Optional<EitherHolder<RocketBody<?, ?>>> body,
+                         Optional<EitherHolder<RocketFin<?, ?>>> fin,
+                         Optional<EitherHolder<RocketBooster<?, ?>>> booster,
+                         Optional<EitherHolder<RocketEngine<?, ?>>> engine,
+                         Optional<EitherHolder<RocketUpgrade<?, ?>>> upgrade, int color
 ) {
+    public RocketData(@Nullable EitherHolder<RocketCone<?, ?>> cone, @Nullable EitherHolder<RocketBody<?, ?>> body,
+                      @Nullable EitherHolder<RocketFin<?, ?>> fin,
+                      @Nullable EitherHolder<RocketBooster<?, ?>> booster,
+                      @Nullable EitherHolder<RocketEngine<?, ?>> engine,
+                      @Nullable EitherHolder<RocketUpgrade<?, ?>> upgrade, int color) {
+        this(Optional.ofNullable(cone), Optional.ofNullable(body), Optional.ofNullable(fin), Optional.ofNullable(booster), Optional.ofNullable(engine), Optional.ofNullable(upgrade), color);
+    }
     public static final Codec<RocketData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            RocketCone.EITHER_CODEC.fieldOf("cone").forGetter(RocketData::cone),
-            RocketBody.EITHER_CODEC.fieldOf("body").forGetter(RocketData::body),
-            RocketFin.EITHER_CODEC.fieldOf("fin").forGetter(RocketData::fin),
-            RocketBooster.EITHER_CODEC.fieldOf("booster").forGetter(RocketData::booster),
-            RocketEngine.EITHER_CODEC.fieldOf("engine").forGetter(RocketData::engine),
-            RocketUpgrade.EITHER_CODEC.fieldOf("upgrade").forGetter(RocketData::upgrade),
+            RocketCone.EITHER_CODEC.optionalFieldOf("cone").forGetter(RocketData::cone),
+            RocketBody.EITHER_CODEC.optionalFieldOf("body").forGetter(RocketData::body),
+            RocketFin.EITHER_CODEC.optionalFieldOf("fin").forGetter(RocketData::fin),
+            RocketBooster.EITHER_CODEC.optionalFieldOf("booster").forGetter(RocketData::booster),
+            RocketEngine.EITHER_CODEC.optionalFieldOf("engine").forGetter(RocketData::engine),
+            RocketUpgrade.EITHER_CODEC.optionalFieldOf("upgrade").forGetter(RocketData::upgrade),
             Codec.INT.fieldOf("color").forGetter(RocketData::color)
             ).apply(instance, RocketData::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, RocketData> STREAM_CODEC = StreamCodecs.composite(
-            RocketCone.EITHER_STREAM_CODEC,
-            RocketData::cone,
-            RocketBody.EITHER_STREAM_CODEC,
-            RocketData::body,
-            RocketFin.EITHER_STREAM_CODEC,
-            RocketData::fin,
-            RocketBooster.EITHER_STREAM_CODEC,
-            RocketData::booster,
-            RocketEngine.EITHER_STREAM_CODEC,
-            RocketData::engine,
-            RocketUpgrade.EITHER_STREAM_CODEC,
-            RocketData::upgrade,
-            ByteBufCodecs.INT,
-            RocketData::color,
-            RocketData::new
-    );
-
-    public static final RocketData DEFAULT_ROCKET = new RocketData(
-            new EitherHolder<>(GCRocketParts.TIER_1_CONE),
-            new EitherHolder<>(GCRocketParts.TIER_1_BODY),
-            new EitherHolder<>(GCRocketParts.TIER_1_FIN),
-            null,
-            new EitherHolder<>(GCRocketParts.TIER_1_ENGINE),
-            null,
-            0xFFFFFFFF
-    );
+    public static final StreamCodec<RegistryFriendlyByteBuf, RocketData> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistriesTrusted(CODEC);
 
     @Contract("_, _, _, _, _, _, _ -> new")
     static @NotNull RocketData create(int color, @Nullable Holder<RocketCone<?, ?>> cone, @Nullable Holder<RocketBody<?, ?>> body,
@@ -108,19 +89,7 @@ public record RocketData(@Nullable EitherHolder<RocketCone<?, ?>> cone, @Nullabl
     static @NotNull RocketData create(int color, @Nullable EitherHolder<RocketCone<?, ?>> cone, @Nullable EitherHolder<RocketBody<?, ?>> body,
                                       @Nullable EitherHolder<RocketFin<?, ?>> fin, @Nullable EitherHolder<RocketBooster<?, ?>> booster,
                                       @Nullable EitherHolder<RocketEngine<?, ?>> engine, @Nullable EitherHolder<RocketUpgrade<?, ?>> upgrade) {
-        return new RocketData(cone, body, fin, booster, engine, upgrade, color);
-    }
-
-    public static RocketData fromPatch(DataComponentPatch patch) {
-        return new RocketData(
-                maybeOptional(patch.get(GCDataComponents.ROCKET_CONE)),
-                maybeOptional(patch.get(GCDataComponents.ROCKET_BODY)),
-                maybeOptional(patch.get(GCDataComponents.ROCKET_FIN)),
-                maybeOptional(patch.get(GCDataComponents.ROCKET_BOOSTER)),
-                maybeOptional(patch.get(GCDataComponents.ROCKET_ENGINE)),
-                maybeOptional(patch.get(GCDataComponents.ROCKET_UPGRADE)),
-                patch.get(GCDataComponents.COLOR) != null && patch.get(GCDataComponents.COLOR).isPresent() ? patch.get(GCDataComponents.COLOR).get() : 0xFFFFFFFF
-        );
+        return new RocketData(Optional.of(cone), Optional.of(body), Optional.of(fin), Optional.of(booster), Optional.of(engine), Optional.of(upgrade), color);
     }
 
     //TODO: HSV?
@@ -146,12 +115,7 @@ public record RocketData(@Nullable EitherHolder<RocketCone<?, ?>> cone, @Nullabl
 
     public DataComponentPatch asPatch() {
         DataComponentPatch.Builder builder = DataComponentPatch.builder();
-        maybeSet(builder, GCDataComponents.ROCKET_CONE, this.cone);
-        maybeSet(builder, GCDataComponents.ROCKET_BODY, this.body);
-        maybeSet(builder, GCDataComponents.ROCKET_FIN, this.fin);
-        maybeSet(builder, GCDataComponents.ROCKET_BOOSTER, this.booster);
-        maybeSet(builder, GCDataComponents.ROCKET_ENGINE, this.engine);
-        maybeSet(builder, GCDataComponents.ROCKET_UPGRADE, this.upgrade);
+        maybeSet(builder, GCDataComponents.ROCKET_DATA, this);
         return builder.build();
     }
 
@@ -177,16 +141,16 @@ public record RocketData(@Nullable EitherHolder<RocketCone<?, ?>> cone, @Nullabl
         return false;
     }
 
-    private static <T> EitherHolder<T> maybeHolder(@Nullable Holder<T> holder) {
-        return holder == null ? null : new EitherHolder<>(holder);
+    private static <T> Optional<EitherHolder<T>> maybeHolder(@Nullable Holder<T> holder) {
+        return holder == null ? Optional.empty() : Optional.of(new EitherHolder<>(holder));
     }
 
-    private static <T> EitherHolder<T> maybeHolder(@Nullable ResourceKey<T> key) {
-        return key == null ? null : new EitherHolder<>(key);
+    private static <T> Optional<EitherHolder<T>> maybeHolder(@Nullable ResourceKey<T> key) {
+        return key == null ? Optional.empty() : Optional.of(new EitherHolder<>(key));
     }
 
-    private static <T> @Nullable Holder<T> maybeGet(@NotNull HolderLookup.Provider lookup, @Nullable EitherHolder<T> holder) {
-        return holder == null ? null : holder.unwrap(lookup).orElse(null);
+    private static <T> @Nullable Holder<T> maybeGet(@NotNull HolderLookup.Provider lookup, Optional<EitherHolder<T>> holder) {
+        return holder.isPresent() ? null : holder.get().unwrap(lookup).orElse(null);
     }
 
     private <T> void maybeSet(DataComponentPatch.Builder builder, DataComponentType<T> type, @Nullable T value) {
@@ -195,11 +159,5 @@ public record RocketData(@Nullable EitherHolder<RocketCone<?, ?>> cone, @Nullabl
         } else {
             builder.remove(type);
         }
-    }
-
-    private static <T> T maybeOptional(@Nullable Optional<T> value) {
-        // its a nullable optional value
-        //noinspection OptionalAssignedToNull
-        return value != null ? value.orElse(null) : null;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@ package dev.galacticraft.api.component;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.StreamCodecs;
@@ -40,18 +41,8 @@ import net.minecraft.world.item.EitherHolder;
 import java.util.function.UnaryOperator;
 
 public class GCDataComponents {
-    public static final DataComponentType<EitherHolder<RocketCone<?, ?>>> ROCKET_CONE = register("rocket_cone", b -> b
-            .persistent(RocketCone.EITHER_CODEC).networkSynchronized(RocketCone.EITHER_STREAM_CODEC));
-    public static final DataComponentType<EitherHolder<RocketBody<?, ?>>> ROCKET_BODY = register("rocket_body", b -> b
-            .persistent(RocketBody.EITHER_CODEC).networkSynchronized(RocketBody.EITHER_STREAM_CODEC));
-    public static final DataComponentType<EitherHolder<RocketFin<?, ?>>> ROCKET_FIN = register("rocket_fin", b -> b
-            .persistent(RocketFin.EITHER_CODEC).networkSynchronized(RocketFin.EITHER_STREAM_CODEC));
-    public static final DataComponentType<EitherHolder<RocketBooster<?, ?>>> ROCKET_BOOSTER = register("rocket_booster", b -> b
-            .persistent(RocketBooster.EITHER_CODEC).networkSynchronized(RocketBooster.EITHER_STREAM_CODEC));
-    public static final DataComponentType<EitherHolder<RocketEngine<?, ?>>> ROCKET_ENGINE = register("rocket_engine", b -> b
-            .persistent(RocketEngine.EITHER_CODEC).networkSynchronized(RocketEngine.EITHER_STREAM_CODEC));
-    public static final DataComponentType<EitherHolder<RocketUpgrade<?, ?>>> ROCKET_UPGRADE = register("rocket_upgrade", b -> b
-            .persistent(RocketUpgrade.EITHER_CODEC).networkSynchronized(RocketUpgrade.EITHER_STREAM_CODEC));
+    public static final DataComponentType<RocketData> ROCKET_DATA = register("rocket_data", b -> b
+            .persistent(RocketData.CODEC).networkSynchronized(RocketData.STREAM_CODEC));
     public static final DataComponentType<Long> AMOUNT = register("amount", b -> b
             .persistent(Codec.LONG).networkSynchronized(StreamCodecs.LONG));
     public static final DataComponentType<Integer> COLOR = register("color", b -> b

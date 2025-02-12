@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -61,7 +61,7 @@ public class BakedModelItemRocketPartRenderer implements RocketPartRenderer {
         if (this.model != null) {
             PoseStack.Pose entry = matrices.last();
             VertexConsumer consumer = vertices.getBuffer(layer);
-            RocketData data = rocket.getData();
+            RocketData data = rocket.getRocketData();
             Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(entry, consumer, null, model,
                     data.red() / 255f, data.blue() / 255f, data.green() / 255f, light, overlay);
         }

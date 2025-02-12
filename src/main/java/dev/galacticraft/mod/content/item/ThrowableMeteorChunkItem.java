@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,6 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.content.entity.ThrowableMeteorChunkEntity;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -41,16 +40,8 @@ public class ThrowableMeteorChunkItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack itemStack = player.getItemInHand(usedHand);
-        level.playSound(
-                null,
-                player.getX(),
-                player.getY(),
-                player.getZ(),
-                GCSounds.METEOR_CHUNK_THROW,
-                SoundSource.NEUTRAL,
-                0.5F,
-                0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F)
-        );
+        player.playSound(GCSounds.METEOR_CHUNK_THROW, 0.5F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
+
         if (!level.isClientSide) {
             ThrowableMeteorChunkEntity projectile = new ThrowableMeteorChunkEntity(player, level, itemStack.is(GCItems.HOT_THROWABLE_METEOR_CHUNK));
             projectile.setItem(itemStack);

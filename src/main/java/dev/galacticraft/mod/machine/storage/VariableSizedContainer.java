@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -178,9 +178,7 @@ public class VariableSizedContainer implements Container {
         tag.putInt("TargetSize", this.targetSize);
         ListTag list = new ListTag();
         for (ItemStack stack : this.stacks) {
-            CompoundTag item = new CompoundTag();
-            stack.save(provider, item);
-            list.add(item);
+            list.add(stack.saveOptional(provider));
         }
         tag.put("Items", list);
         return tag;

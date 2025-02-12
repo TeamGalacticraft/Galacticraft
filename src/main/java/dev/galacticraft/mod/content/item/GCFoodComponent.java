@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,8 @@ package dev.galacticraft.mod.content.item;
 import net.minecraft.world.food.FoodProperties;
 
 public class GCFoodComponent {
-    public static final FoodProperties CHEESE_CURD = new FoodProperties.Builder().nutrition(1).saturationModifier(0.1F).build();
-    public static final FoodProperties CHEESE_SLICE = new FoodProperties.Builder().nutrition(2).saturationModifier(0.1F).build();
+    public static final FoodProperties MOON_CHEESE_CURD = new FoodProperties.Builder().nutrition(1).saturationModifier(0.1F).build();
+    public static final FoodProperties MOON_CHEESE_SLICE = new FoodProperties.Builder().nutrition(2).saturationModifier(0.1F).build();
     public static final FoodProperties BURGER_BUN = new FoodProperties.Builder().nutrition(2).saturationModifier(0.3F).build();
     public static final FoodProperties GROUND_BEEF = new FoodProperties.Builder().nutrition(3).saturationModifier(0.6F).build();
     public static final FoodProperties BEEF_PATTY = new FoodProperties.Builder().nutrition(4).saturationModifier(0.8F).build();

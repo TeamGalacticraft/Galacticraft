@@ -1,9 +1,7 @@
 {
   "data": {
-    "back": "galacticraft:block/fuel_loader_controls",
-    "base": "galacticraft:block/machine",
-    "front": "galacticraft:block/fuel_loader_controls",
-    "side": "galacticraft:block/machine_side"
+    "back": "galacticraft:block/fuel_loader_9",
+    "front": "galacticraft:block/fuel_loader_9"
   },
-  "machinelib:generate": "machinelib:axis"
+  "machinelib:type": "machine"
 }

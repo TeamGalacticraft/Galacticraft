@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,11 @@
 package dev.galacticraft.mod;
 
 import dev.galacticraft.api.client.tabs.InventoryTabRegistry;
-import dev.galacticraft.machinelib.client.api.model.MachineModelRegistry;
-import dev.galacticraft.machinelib.client.api.model.sprite.MachineTextureBase;
 import dev.galacticraft.mod.client.GCKeyBinds;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.GCModelLoader;
 import dev.galacticraft.mod.client.model.GCRenderTypes;
-import dev.galacticraft.mod.client.model.sprite.OxygenSealerTextureProvider;
-import dev.galacticraft.mod.client.model.sprite.SolarPanelTextureProvider;
-import dev.galacticraft.mod.client.model.types.ObjModel;
+import dev.galacticraft.mod.client.model.types.UnbakedObjModel;
 import dev.galacticraft.mod.client.network.GCClientPacketReceiver;
 import dev.galacticraft.mod.client.particle.*;
 import dev.galacticraft.mod.client.render.block.entity.GCBlockEntityRenderer;
@@ -124,6 +120,7 @@ public class GalacticraftClient implements ClientModInitializer {
         MenuScreens.register(GCMenuTypes.ROCKET, RocketInventoryScreen::new);
         MenuScreens.register(GCMenuTypes.PARACHEST, ParachestScreen::new);
 
+        EntityRendererRegistry.register(GCEntityTypes.MOON_VILLAGER, MoonVillagerRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.EVOLVED_ZOMBIE, EvolvedZombieRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.EVOLVED_CREEPER, EvolvedCreeperEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.EVOLVED_SKELETON, EvolvedSkeletonEntityRenderer::new);
@@ -180,10 +177,6 @@ public class GalacticraftClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.LAUNCH_FLAME, LaunchFlameParticle.Provider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.LAUNCH_FLAME_LAUNCHED, LaunchFlameParticle.LaunchedProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.ACID_VAPOR_PARTICLE, AcidVaporParticle.Provider::new);
-
-        MachineModelRegistry.registerBase(Constant.id("base"), MachineTextureBase.prefixed(Constant.MOD_ID, "block/machine"));
-        MachineModelRegistry.register(Constant.id("solar_panel"), SolarPanelTextureProvider.CODEC);
-        MachineModelRegistry.register(Constant.id("oxygen_sealer"), OxygenSealerTextureProvider.CODEC);
 
         FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER); // Workaround for classloading order bug
 
@@ -259,7 +252,7 @@ public class GalacticraftClient implements ClientModInitializer {
         helper.registerReloadListener(GCModelLoader.INSTANCE);
         helper.registerReloadListener(GCResourceReloadListener.INSTANCE);
 
-        GCModelLoader.registerModelType(ObjModel.TYPE);
+        GCModelLoader.registerModelType(UnbakedObjModel.TYPE);
 
         GCDimensionEffects.register();
     }

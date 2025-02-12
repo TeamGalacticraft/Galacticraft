@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,7 +40,7 @@ public class GCServerPlayer {
     public static final Codec<GCServerPlayer> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             RocketData.CODEC.optionalFieldOf("rocket_data").forGetter(o -> Optional.ofNullable(o.rocketData)),
             Codec.LONG.fieldOf("fuel").forGetter(GCServerPlayer::getFuel),
-            ItemStack.CODEC.listOf().fieldOf("rocket_stacks").forGetter(GCServerPlayer::getRocketStacks)
+            ItemStack.OPTIONAL_CODEC.listOf().fieldOf("rocket_stacks").forGetter(GCServerPlayer::getRocketStacks)
     ).apply(instance, (data, fuel, stacks) -> new GCServerPlayer(data.orElse(null), fuel, stacks)));
 
     public static GCServerPlayer get(ServerPlayer player) {

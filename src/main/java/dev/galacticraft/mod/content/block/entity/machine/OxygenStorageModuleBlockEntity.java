@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,7 +45,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
+public class OxygenStorageModuleBlockEntity extends ResourceStorageBlockEntity {
     public static final int OXYGEN_TANK = 0;
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(100);
 
@@ -78,5 +78,10 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
                 player,
                 this
         );
+    }
+
+    @Override
+    protected int calculateAmount() {
+        return (int) (this.fluidStorage().slot(0).getAmount() * 8 / MAX_OXYGEN);
     }
 }

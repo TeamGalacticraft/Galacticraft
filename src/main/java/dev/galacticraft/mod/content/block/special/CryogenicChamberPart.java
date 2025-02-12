@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -52,6 +52,8 @@ import java.util.ArrayList;
 public class CryogenicChamberPart extends BaseEntityBlock {
     public static final MapCodec<CryogenicChamberPart> CODEC = simpleCodec(CryogenicChamberPart::new);
     public static final BooleanProperty TOP = BooleanProperty.create("top");
+    private static final VoxelShape SHAPE_TOP = Shapes.box(0, -2, 0, 1, 1, 1);
+    private static final VoxelShape SHAPE_MID = Shapes.box(0, -1, 0, 1, 2, 1);
 
     public CryogenicChamberPart(Properties properties) {
         super(properties);
@@ -82,6 +84,11 @@ public class CryogenicChamberPart extends BaseEntityBlock {
     @Override
     public RenderShape getRenderShape(BlockState blockState) {
         return RenderShape.MODEL;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
+        return state.getValue(TOP) ? SHAPE_TOP : SHAPE_MID;
     }
 
     @Override
@@ -189,6 +196,11 @@ public class CryogenicChamberPart extends BaseEntityBlock {
 
     @Override
     public boolean propagatesSkylightDown(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+        return true;
+    }
+    
+    @Override
+    public boolean isPossibleToRespawnInThis(BlockState blockState) {
         return true;
     }
 }

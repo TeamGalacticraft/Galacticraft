@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,7 +62,7 @@ public class GCBlockRegistry extends GCRegistry<Block> {
         WallBlock detailedDecorationWall = register("detailed_" + id + "_wall", new WallBlock(properties));
         Item.Properties itemProperties = new Item.Properties();
         BlockItem decorationItem = ITEMS.register(id, new BlockItem(decoration, itemProperties));
-        BlockItem decorationSlabItem = ITEMS.register(id + "_slab", new BlockItem(decorationStairs, itemProperties));
+        BlockItem decorationSlabItem = ITEMS.register(id + "_slab", new BlockItem(decorationSlab, itemProperties));
         BlockItem decorationStairsItem = ITEMS.register(id + "_stairs", new BlockItem(decorationStairs, itemProperties));
         BlockItem decorationWallItem = ITEMS.register(id + "_wall", new BlockItem(decorationWall, itemProperties));
         BlockItem detailedDecorationItem = ITEMS.register("detailed_" + id, new BlockItem(detailedDecoration, itemProperties));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -72,7 +72,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 i++;
                 continue;
             }
-            if (data.visiablePredicate().test(Minecraft.getInstance().player)) {
+            if (data.visiblePredicate().test(Minecraft.getInstance().player)) {
                 if (isCoordinateBetween((int) Math.floor(mouseX), this.leftPos + (30 * i), this.leftPos + (29 * (i + 1)))
                         && isCoordinateBetween((int) Math.floor(mouseY), this.topPos - 26, this.topPos)) {
                     data.onClick().run();
@@ -100,18 +100,20 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         int i = 0;
         for (InventoryTabRegistryImpl.TabData data : InventoryTabRegistryImpl.INSTANCE.TABS) {
             if (this.menu.getClass().equals(data.clazz())) {
-                if (i == 0)
-                    graphics.blit(texture, this.leftPos, this.topPos - 28, 0, 0, 29, 32);
-                else
-                    graphics.blit(texture, this.leftPos + (28 * i) + 1, this.topPos - 29, 29, 32, 56, 63);
+                if (i == 0) {
+                    graphics.blit(texture, this.leftPos, this.topPos - 28, 0.0F, 0.0F, 29, 32, 64, 64);
+                } else {
+                    graphics.blit(texture, this.leftPos + (29 * i), this.topPos - 28, 29.0F, 32.0F, 29, 32, 64, 64);
+                }
                 i++;
                 continue;
             }
-            if (data.visiablePredicate().test(Minecraft.getInstance().player)) {
-                if (i == 0)
-                    graphics.blit(texture, this.leftPos, this.topPos - 29, 0, 32, 27, 63);
-                else
-                    graphics.blit(texture, this.leftPos + (28 * i) + 1, this.topPos - 28, 29, 0, 56, 30);
+            if (data.visiblePredicate().test(Minecraft.getInstance().player)) {
+                if (i == 0) {
+                    graphics.blit(texture, this.leftPos, this.topPos - 28, 0.0F, 32.0F, 29, 32, 64, 64);
+                } else { 
+                    graphics.blit(texture, this.leftPos + (29 * i), this.topPos - 28, 29.0F, 0.0F, 29, 32, 64, 64);
+                }
                 i++;
             }
         }
@@ -136,8 +138,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 i++;
                 continue;
             }
-            if (data.visiablePredicate().test(Minecraft.getInstance().player)) {
-                graphics.renderItem(data.icon(), (this.leftPos + 6) + (28 * i) + 1, this.topPos - 20);
+            if (data.visiblePredicate().test(Minecraft.getInstance().player)) {
+                graphics.renderItem(data.icon(), (this.leftPos + 6) + (29 * i), this.topPos - 20);
                 i++;
             }
         }

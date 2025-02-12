@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -47,7 +47,7 @@ public interface CelestialHandler {
      *         the world with. Return null for no spawn
      */
     @Nullable
-    Vec3 getParaChestSpawnLocation(Level world, Player player, RandomSource rand);
+    Vec3 getParachestSpawnLocation(Level world, Player player, RandomSource rand);
 
     /**
      * This method is used to determine if a player will open parachute upon

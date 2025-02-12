@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -111,7 +111,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
     private static final int HEIGHT_EXT_U = BASE_UI_WIDTH;
 
     private static final int ROCKET_PREVIEW_X = 209;
-    private static final int ROCKET_PREVIEW_Y = 106;
+    private static final int ROCKET_PREVIEW_Y = 100;
 
     private static final int RECIPES_PER_PAGE = 35;
 
@@ -183,7 +183,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
         drawSelection(guiGraphics, mouseX, mouseY, delta);
 
         try (Graphics graphics = Graphics.managed(guiGraphics, this.font)) {
-            try (Graphics.Texture texture = graphics.texture(Constant.ScreenTexture.ROCKET_WORKBENCH_SCREEN, 512, 512)) {
+            try (Graphics.Texture texture = graphics.texture(Constant.ScreenTexture.ROCKET_WORKBENCH_SCREEN, 512, 256)) {
                 texture.blit(this.leftPos, this.topPos + this.menu.additionalHeight + CAP_HEIGHT, 0, 0, BASE_UI_WIDTH, BASE_UI_HEIGHT);
 
                 if (this.menu.additionalHeight > 0) {
@@ -200,7 +200,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
             }
         }
 
-        renderEntityInInventory(guiGraphics, this.leftPos + ROCKET_PREVIEW_X, this.topPos + ROCKET_PREVIEW_Y, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, this.entity);
+        renderEntityInInventory(guiGraphics, this.leftPos + ROCKET_PREVIEW_X, this.topPos + ROCKET_PREVIEW_Y + this.menu.additionalHeight, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, this.entity);
     }
 
     @Override
@@ -285,7 +285,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
 
         int size = this.recipes != null ? this.recipes.size() : 0;
         try (Graphics graphics = Graphics.managed(guiGraphics, this.font)) {
-            try (Graphics.Texture texture = graphics.texture(Constant.ScreenTexture.ROCKET_WORKBENCH_SCREEN, 512, 512)) {
+            try (Graphics.Texture texture = graphics.texture(Constant.ScreenTexture.ROCKET_SELECTION, 256, 256)) {
                 texture.blit(0, 0, 0, 0, SELECTION_SCREEN_WIDTH, SELECTION_SCREEN_HEIGHT);
 
                 {
@@ -331,10 +331,12 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
             int y = 8;
             for (Tab tab : Tab.values()) {
                 if (tab == Tab.COLOR) {
-                    continue;
 //                    graphics.renderFakeItem(new ItemStack(Items.RED_DYE), -TAB_WIDTH + TAB_ICON_OFFSET, y);
+                    continue;
                 } else {
+                    guiGraphics.pose().translate(0, 0, 100);
                     RocketPartRendererRegistry.INSTANCE.getRenderer(tab.part).renderGUI(guiGraphics, -TAB_WIDTH + TAB_ICON_OFFSET, y, mouseX, mouseY, delta);
+                    guiGraphics.pose().translate(0, 0, -100);
                 }
                 y += TAB_SPACING + TAB_HEIGHT;
             }

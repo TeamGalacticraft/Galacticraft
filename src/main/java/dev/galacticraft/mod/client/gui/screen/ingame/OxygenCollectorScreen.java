@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,13 +39,12 @@ import net.minecraft.world.entity.player.Inventory;
 public class OxygenCollectorScreen extends MachineScreen<OxygenCollectorBlockEntity, OxygenCollectorMenu> {
     public OxygenCollectorScreen(OxygenCollectorMenu handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.OXYGEN_COLLECTOR_SCREEN);
-        this.imageHeight = 181;
     }
 
     @Override
     protected void init() {
         super.init();
-        this.titleLabelX += 15;
+        this.titleLabelX += 20;
     }
 
     @Override
@@ -53,6 +52,6 @@ public class OxygenCollectorScreen extends MachineScreen<OxygenCollectorBlockEnt
         super.renderMachineBackground(graphics, mouseX, mouseY, delta);
         graphics.drawString(this.font, Component.translatable(Translations.Ui.COLLECTING, this.menu.collectionAmount).getString(), this.leftPos + 55, this.topPos + 56, ChatFormatting.DARK_GRAY.getColor(), false);
         MachineStatus status = this.menu.state.getStatus();
-        graphics.drawString(this.font, Component.translatable(Translations.Ui.MACHINE_STATUS).append(status != null ? status.getText() : Component.empty()), this.leftPos + 32, this.topPos + 66, ChatFormatting.DARK_GRAY.getColor(), false);
+        graphics.drawString(this.font, Component.translatable(Translations.Ui.MACHINE_STATUS, status != null ? status.getText() : Component.empty()), this.leftPos + 32, this.topPos + 66, ChatFormatting.DARK_GRAY.getColor(), false);
     }
 }

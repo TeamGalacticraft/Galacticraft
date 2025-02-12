@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,11 +28,13 @@ import dev.galacticraft.mod.api.block.MultiBlockPart;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.CryogenicChamberBlockEntity;
 import dev.galacticraft.mod.particle.GCParticleTypes;
+import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.TickRateManager;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -45,6 +47,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
@@ -60,10 +63,13 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
     public static final MapCodec<CryogenicChamberBlock> CODEC = simpleCodec(CryogenicChamberBlock::new);
     private static final List<BlockPos> PARTS = List.of(new BlockPos(0, 1, 0), new BlockPos(0, 2, 0));
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty OCCUPIED = BlockStateProperties.OCCUPIED;
+    private static final VoxelShape SHAPE = Shapes.box(0, 0, 0, 1, 3, 1);
+    public static final TickRateManager TICKS = new TickRateManager();
 
     public CryogenicChamberBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(OCCUPIED, false));
     }
 
     @Override
@@ -83,8 +89,13 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
     }
 
     @Override
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
+        return SHAPE;
+    }
+
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, OCCUPIED);
     }
 
     @Override
@@ -127,12 +138,11 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
 
     @Override
     public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
-        BlockState state = super.playerWillDestroy(level, blockPos, blockState, player);
         for (var otherPart : this.getOtherParts(blockState)) {
             otherPart = otherPart.immutable().offset(blockPos);
             level.destroyBlock(otherPart, false);
         }
-        return state;
+        return super.playerWillDestroy(level, blockPos, blockState, player);
     }
 
     @Override
@@ -148,15 +158,15 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
     }
 
     @Override
-    public void wasExploded(Level world, BlockPos pos, Explosion explosion) {
-        for (BlockPos part : this.getOtherParts(world.getBlockState(pos))) {
-            part = pos.immutable().offset(part);
-            if (!(world.getBlockEntity(part) instanceof MultiBlockPart)) {
+    public void wasExploded(Level level, BlockPos blockPos, Explosion explosion) {
+        for (BlockPos otherPart : this.getOtherParts(level.getBlockState(blockPos))) {
+            otherPart = otherPart.immutable().offset(blockPos);
+            if (!(level.getBlockEntity(otherPart) instanceof MultiBlockPart)) {
                 continue;
             }
-            world.removeBlock(part, false);
+            level.destroyBlock(otherPart, false);
         }
-        super.wasExploded(world, pos, explosion);
+        super.wasExploded(level, blockPos, explosion);
     }
 
     @Override
@@ -184,16 +194,30 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
     public InteractionResult multiBlockUseWithoutItem(BlockState baseState, Level level, BlockPos basePos, Player player) {
         if (level.isClientSide()) return InteractionResult.CONSUME;
 
-        if(player.getCryogenicChamberCooldown() == 0) {
-            player.beginCyroSleep();
+        if (baseState.getValue(OCCUPIED).booleanValue()) {
+            player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_OCCUPIED), true);
+        } else if (player.isCreative() || player.getCryogenicChamberCooldown() == 0) {
+            player.beginCryoSleep();
+            level.setBlockAndUpdate(basePos, baseState.setValue(OCCUPIED, true));
 
-            player.startSleepInBed(basePos).ifLeft(problem -> {
-                if (problem.getMessage() != null) player.displayClientMessage(problem.getMessage(), true);
+            player.startSleepInBed(basePos.above()).ifLeft(problem -> {
+                switch(problem) {
+                    case Player.BedSleepingProblem.OBSTRUCTED:
+                        player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_OBSTRUCTED), true);
+                        break;
+                    case Player.BedSleepingProblem.TOO_FAR_AWAY:
+                        player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_TOO_FAR_AWAY), true);
+                        break;
+                    default:
+                        player.displayClientMessage(problem.getMessage(), true);
+                }
 
-                player.endCyroSleep();
+                player.endCryoSleep();
+                level.setBlockAndUpdate(basePos, baseState.setValue(OCCUPIED, false));
+                player.setYRot(baseState.getValue(CryogenicChamberBlock.FACING).toYRot());
             });
         } else {
-            player.displayClientMessage(Component.literal("The chamber is way to hot right now! It needs " + player.getCryogenicChamberCooldown() + " seconds to cool down before I sleep again."), false);
+            player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_HOT, (int)(player.getCryogenicChamberCooldown() / TICKS.tickrate())), false);
         }
 
         return InteractionResult.SUCCESS;
@@ -219,6 +243,11 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
 
     @Override
     public boolean propagatesSkylightDown(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+        return true;
+    }
+    
+    @Override
+    public boolean isPossibleToRespawnInThis(BlockState blockState) {
         return true;
     }
 }

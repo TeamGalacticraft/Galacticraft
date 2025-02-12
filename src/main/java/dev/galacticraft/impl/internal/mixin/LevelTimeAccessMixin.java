@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,10 +22,14 @@
 
 package dev.galacticraft.impl.internal.mixin;
 
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.tag.GCTags;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelTimeAccess;
+import net.minecraft.world.level.dimension.DimensionType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -40,9 +44,9 @@ public interface LevelTimeAccessMixin extends LevelTimeAccess {
     @Inject(method = "getTimeOfDay", at = @At("HEAD"), cancellable = true)
     private void getGalacticTimeOfDay(float partialTicks, CallbackInfoReturnable<Float> cir) {
         // Might be worth it to make our own dimension type system?
-        var dimensionTypeRegistry = registryAccess().registryOrThrow(Registries.DIMENSION_TYPE);
+        Registry<DimensionType> dimensionTypeRegistry = registryAccess().registryOrThrow(Registries.DIMENSION_TYPE);
         if (this instanceof Level level) {
-            var holder = level.galacticraft$getCelestialBody();
+            Holder<CelestialBody<?, ?>> holder = level.galacticraft$getCelestialBody();
             if (holder != null && dimensionTypeRegistry.getHolder(dimensionTypeRegistry.getId(dimensionType())).map(reference -> reference.is(GCTags.SPACE)).orElse(false)) {
                 long worldTime = this.dayTime();
                 long dayLength = holder.value().dayLength();

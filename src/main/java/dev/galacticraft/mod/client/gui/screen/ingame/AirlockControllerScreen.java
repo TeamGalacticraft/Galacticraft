@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -57,7 +57,7 @@ public class AirlockControllerScreen extends AbstractContainerScreen<AirlockCont
 
     @Override
     protected void renderLabels(GuiGraphics graphics, int i, int j) {
-        graphics.drawString(this.font, Component.literal(Minecraft.getInstance().player.getGameProfile().getName() + "'s Air Lock Controller"), this.titleLabelX, this.titleLabelY, 4210752, false);
+        graphics.drawString(this.font, Component.translatable(Translations.Ui.AIRLOCK_OWNER, Minecraft.getInstance().player.getGameProfile().getName()), this.titleLabelX, this.titleLabelY, 4210752, false);
     }
 
     @Override

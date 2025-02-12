@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRenderer;
 import dev.galacticraft.api.rocket.entity.Rocket;
-import dev.galacticraft.mod.client.model.GCBakedModel;
+import dev.galacticraft.mod.client.model.GCModelLoader;
 import dev.galacticraft.mod.client.model.GCRenderTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -40,14 +40,15 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
-public record BakedModelRocketPartRenderer(Supplier<GCBakedModel> model,
+public record BakedModelRocketPartRenderer(ResourceLocation model,
                                            Supplier<RenderType> layer) implements RocketPartRenderer {
 
-    public BakedModelRocketPartRenderer(Supplier<GCBakedModel> model) {
+    public BakedModelRocketPartRenderer(ResourceLocation model) {
         this(model, () -> /*RenderType.entityCutoutNoCull(model.get().getParticleIcon().contents().name(), true)*/null);
     }
 
@@ -93,14 +94,14 @@ public record BakedModelRocketPartRenderer(Supplier<GCBakedModel> model,
 
     @Override
     public void render(ClientLevel world, PoseStack matrices, Rocket rocket, MultiBufferSource vertices, float partialTick, int light, int overlay) {
-        int color = rocket.getData().color();
+        int color = rocket.getRocketData().color();
 //        matrices.translate(0.5D, 0.5D, 0.5D);
 //        PoseStack.Pose entry = matrices.last();
 //        VertexConsumer vertexConsumer = vertices.getBuffer(layer.get());
 //        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
 
         VertexConsumer consumer = vertices.getBuffer(GCRenderTypes.obj(GCRenderTypes.OBJ_ATLAS));
-        this.model.get().render(matrices, null, consumer, light, overlay, color);
+        GCModelLoader.INSTANCE.getModel(this.model).render(matrices, null, consumer, light, overlay, color);
 //        Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(entry, vertexConsumer, null, this.model.get(), 1, 1, 1, light, overlay);
     }
 }

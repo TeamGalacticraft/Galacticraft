@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import org.jetbrains.annotations.Nullable;
 
-public class GCMissingModel implements GCBakedModel {
+public class GCMissingModel implements GCModel {
     @Override
     public void render(PoseStack modelStack, @Nullable GCModelState state, VertexConsumer consumer, int light, int overlay, int color) {
 

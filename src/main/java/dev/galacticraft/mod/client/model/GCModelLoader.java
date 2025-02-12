@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -64,21 +64,22 @@ import java.util.stream.Stream;
 
 public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceReloadListener {
     public static final GCModelLoader INSTANCE = new GCModelLoader();
+    public static final GCModel MISSING_MODEL = new GCMissingModel();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     public static final FileToIdConverter MODEL_LISTER = FileToIdConverter.json("models/misc");
     public static final ResourceLocation MODEL_LOADER_ID = Constant.id("model_loader");
     public static final ResourceLocation WHITE_SPRITE = Constant.id("obj/white");
-    static final Map<ResourceLocation, GCModel.GCModelType> REGISTERED_TYPES = new ConcurrentHashMap<>();
+    static final Map<ResourceLocation, GCUnbakedModel.GCModelType> REGISTERED_TYPES = new ConcurrentHashMap<>();
     public static final ResourceLocation TYPE_KEY = Constant.id("type");
-    public static final Codec<GCModel.GCModelType> MODEL_TYPE_CODEC = ResourceLocation.CODEC.flatXmap(id ->
+    public static final Codec<GCUnbakedModel.GCModelType> MODEL_TYPE_CODEC = ResourceLocation.CODEC.flatXmap(id ->
                     Optional.ofNullable(REGISTERED_TYPES.get(id))
                             .map(DataResult::success).orElseGet(() -> DataResult.error(() -> "(Galacticraft) No model type with id: " + id)),
             type -> DataResult.success(type.getId())
     );
-    public static final Codec<GCModel> MODEL_CODEC = MODEL_TYPE_CODEC.dispatch(TYPE_KEY.toString(), GCModel::getType, GCModel.GCModelType::codec);
+    public static final Codec<GCUnbakedModel> MODEL_CODEC = MODEL_TYPE_CODEC.dispatch(TYPE_KEY.toString(), GCUnbakedModel::getType, GCUnbakedModel.GCModelType::codec);
     private static final ResourceLocation PARACHEST_ITEM = Constant.id("item/parachest");
 
-    private Map<ResourceLocation, GCBakedModel> models = ImmutableMap.of();
+    private Map<ResourceLocation, GCModel> models = ImmutableMap.of();
     private AtlasSet atlases;
 
     @Override
@@ -112,20 +113,9 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
             }
             return null;
         });
-
-        pluginContext.addModels(
-                GalacticraftRocketPartRenderers.DEFAULT_CONE,
-                GalacticraftRocketPartRenderers.SLOPED_CONE,
-                GalacticraftRocketPartRenderers.ADVANCED_CONE,
-                GalacticraftRocketPartRenderers.DEFAULT_BODY,
-                GalacticraftRocketPartRenderers.DEFAULT_ENGINE,
-                GalacticraftRocketPartRenderers.DEFAULT_FIN,
-                GalacticraftRocketPartRenderers.BOOSTER_TIER_1,
-                GalacticraftRocketPartRenderers.BOOSTER_TIER_2
-        );
     }
 
-    public static void registerModelType(GCModel.GCModelType type) {
+    public static void registerModelType(GCUnbakedModel.GCModelType type) {
         REGISTERED_TYPES.put(type.getId(), type);
     }
 
@@ -142,7 +132,7 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
         TextureManager textureManager = Minecraft.getInstance().getTextureManager();
         RocketAtlasCallback.EVENT.invoker().collectAtlases(atlasMap, textureManager);
         this.atlases = new AtlasSet(atlasMap, textureManager);
-        CompletableFuture<Map<ResourceLocation, GCModel>> modelsFuture = loadModels(resourceManager, backgroundExecutor);
+        CompletableFuture<Map<ResourceLocation, GCUnbakedModel>> modelsFuture = loadModels(resourceManager, backgroundExecutor);
         Map<ResourceLocation, CompletableFuture<AtlasSet.StitchResult>> stitchResult = this.atlases.scheduleLoad(resourceManager, Minecraft.getInstance().options.mipmapLevels().get(), backgroundExecutor);
         preparationsProfiler.popPush("close_models");
         this.models.values().forEach(gcBakedModel -> {
@@ -176,8 +166,8 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
                 }, gameExecutor);
     }
 
-    private ReloadState bakeModels(ProfilerFiller profiler, Map<ResourceLocation, AtlasSet.StitchResult> preparations, Map<ResourceLocation, GCModel> models, ResourceManager resourceManager) {
-        Map<ResourceLocation, GCBakedModel> bakedModels = new HashMap<>();
+    private ReloadState bakeModels(ProfilerFiller profiler, Map<ResourceLocation, AtlasSet.StitchResult> preparations, Map<ResourceLocation, GCUnbakedModel> models, ResourceManager resourceManager) {
+        Map<ResourceLocation, GCModel> bakedModels = new HashMap<>();
         profiler.push("baking");
         Multimap<ResourceLocation, Material> missingTextures = HashMultimap.create();
         models.forEach((modelId, gcModel) -> {
@@ -213,11 +203,11 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
         return new ReloadState(bakedModels, preparations, readyForUpload);
     }
 
-    private static CompletableFuture<Map<ResourceLocation, GCModel>> loadModels(ResourceManager resourceManager, Executor executor) {
+    private static CompletableFuture<Map<ResourceLocation, GCUnbakedModel>> loadModels(ResourceManager resourceManager, Executor executor) {
         return CompletableFuture.supplyAsync(() -> MODEL_LISTER.listMatchingResources(resourceManager), executor)
                 .thenCompose(
                         map -> {
-                            List<CompletableFuture<Pair<ResourceLocation, GCModel>>> models = new ArrayList<>(map.size());
+                            List<CompletableFuture<Pair<ResourceLocation, GCUnbakedModel>>> models = new ArrayList<>(map.size());
 
                             for (Map.Entry<ResourceLocation, Resource> entry : map.entrySet()) {
                                 models.add(CompletableFuture.supplyAsync(() -> {
@@ -225,9 +215,9 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
                                     try {
                                         Reader reader = entry.getValue().openAsReader();
 
-                                        Pair<ResourceLocation, GCModel> modelPair;
+                                        Pair<ResourceLocation, GCUnbakedModel> modelPair;
                                         try {
-                                            DataResult<GCModel> model = MODEL_CODEC.parse(JsonOps.INSTANCE, GsonHelper.convertToJsonObject(GsonHelper.fromJson(GSON, reader, JsonElement.class), "top element"));
+                                            DataResult<GCUnbakedModel> model = MODEL_CODEC.parse(JsonOps.INSTANCE, GsonHelper.convertToJsonObject(GsonHelper.fromJson(GSON, reader, JsonElement.class), "top element"));
                                             if (model.error().isPresent())
                                                 return null;
                                             modelPair = Pair.of(entry.getKey(), model.getOrThrow(error -> new RuntimeException(String.format("Failed to load model: %s, %s", modelId, error))));
@@ -264,12 +254,12 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
         return List.of(RocketTextureManager.ID);
     }
 
-    public Map<ResourceLocation, GCBakedModel> getModels() {
+    public Map<ResourceLocation, GCModel> getModels() {
         return models;
     }
 
-    public GCBakedModel getModel(ResourceLocation id) {
-        return this.models.getOrDefault(id, new GCMissingModel());
+    public GCModel getModel(ResourceLocation id) {
+        return this.models.getOrDefault(id, MISSING_MODEL);
     }
 
     public AtlasSet getAtlases() {
@@ -281,7 +271,7 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
     }
 
     public record ReloadState(
-            Map<ResourceLocation, GCBakedModel> bakedModels,
+            Map<ResourceLocation, GCModel> bakedModels,
             Map<ResourceLocation, AtlasSet.StitchResult> atlasPreparations,
             CompletableFuture<Void> readyForUpload
     ) {

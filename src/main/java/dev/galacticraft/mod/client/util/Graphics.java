@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -314,15 +314,15 @@ public class Graphics implements AutoCloseable {
             Graphics.this.renderers.add(this);
         }
 
-        public void blit(int x, int y, int width, int height, int z, int u, int v) {
-            this.blit(x, y, width, height, z, u, v, width, height);
+        public void blit(int x, int y, int z, int u, int v, int width, int height) {
+            this.blit(x, y, z, width, height, u, v, width, height);
         }
 
-        public void blit(int x, int y, int width, int height, int z, int u, int v, int uWidth, int vHeight) {
+        public void blit(int x, int y, int z, int width, int height, int u, int v, int uWidth, int vHeight) {
             this.blitRaw(x, y, x + width, y + height, z, (float) u / this.textureWidth, (float) v / this.textureHeight, (float) (u + uWidth) / this.textureWidth, (float) (v + vHeight) / this.textureHeight);
         }
 
-        public void blit(float x, float y, float width, float height, float z, float u, float v, float uWidth, float vHeight) {
+        public void blit(float x, float y, float z, float width, float height, float u, float v, float uWidth, float vHeight) {
             this.blitRaw(x, y, x + width, y + height, z, u / this.textureWidth, v / this.textureHeight, (u + uWidth) / this.textureWidth, (v + vHeight) / this.textureHeight);
         }
 
@@ -337,20 +337,20 @@ public class Graphics implements AutoCloseable {
                     .addVertex(matrix, x2, y1, z).setUv(u2, v1);
         }
 
-        public void blit(int x, int y, int width, int height, int u, int v) {
-            this.blit(x, y, width, height, 0, u, v, width, height);
+        public void blit(int x, int y, int u, int v, int width, int height) {
+            this.blit(x, y, 0, width, height, u, v, width, height);
         }
 
         public void blit(int x, int y, int width, int height, int u, int v, int uWidth, int vHeight) {
-            this.blit(x, y, width, height, 0, u, v, uWidth, vHeight);
+            this.blit(x, y, 0, width, height, u, v, uWidth, vHeight);
         }
 
-        public void blit(float x, float y, float width, float height, float u, float v) {
-            this.blit(x, y, width, height, 0.0f, u, v, width, height);
+        public void blit(float x, float y, float u, float v, float width, float height) {
+            this.blit(x, y, 0.0f, width, height, u, v, width, height);
         }
 
         public void blit(float x, float y, float width, float height, float u, float v, float uWidth, float vHeight) {
-            this.blit(x, y, width, height, 0.0f, u, v, uWidth, vHeight);
+            this.blit(x, y, 0.0f, width, height, u, v, uWidth, vHeight);
         }
 
         private void ensureOpen() {

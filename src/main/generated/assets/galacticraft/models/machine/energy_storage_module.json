@@ -1,9 +1,7 @@
 {
   "data": {
-    "back": "galacticraft:block/energy_storage_module_0",
-    "base": "galacticraft:block/machine",
-    "front": "galacticraft:block/energy_storage_module_0",
-    "side": "galacticraft:block/machine_side"
+    "back": "galacticraft:block/energy_storage_module_8",
+    "front": "galacticraft:block/energy_storage_module_8"
   },
-  "machinelib:generate": "machinelib:axis"
+  "machinelib:type": "machine"
 }

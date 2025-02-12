@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -47,9 +47,9 @@ public class InventoryTabRegistryImpl implements InventoryTabRegistry {
     }
 
     @Override
-    public void register(ItemStack icon, Runnable onClick, Predicate<Player> visiablePredicate, Class<? extends AbstractContainerMenu> clazz) {
-        TABS.add(new TabData(icon, onClick, visiablePredicate, clazz));
+    public void register(ItemStack icon, Runnable onClick, Predicate<Player> visiblePredicate, Class<? extends AbstractContainerMenu> clazz) {
+        TABS.add(new TabData(icon, onClick, visiblePredicate, clazz));
     }
 
-    public record TabData(ItemStack icon, Runnable onClick, Predicate<Player> visiablePredicate, Class<? extends AbstractContainerMenu> clazz) { }
+    public record TabData(ItemStack icon, Runnable onClick, Predicate<Player> visiblePredicate, Class<? extends AbstractContainerMenu> clazz) { }
 }

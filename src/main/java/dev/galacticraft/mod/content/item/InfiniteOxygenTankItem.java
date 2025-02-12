@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ import com.google.common.collect.Iterators;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.util.ColorUtil;
+import dev.galacticraft.mod.util.TooltipUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -62,9 +63,9 @@ public class InfiniteOxygenTankItem extends Item implements Storage<FluidVariant
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
+        TooltipUtil.appendInfiniteCapacityTooltip(Translations.Tooltip.OXYGEN_REMAINING, tooltip);
+        TooltipUtil.appendCreativeTooltip(tooltip, Constant.Text.LIGHT_PURPLE_STYLE);
         super.appendHoverText(stack, context, tooltip, type);
-        tooltip.add(Component.translatable(Translations.Tooltip.OXYGEN_REMAINING, Component.translatable(Translations.Tooltip.INFINITE).setStyle(Style.EMPTY.withColor(ColorUtil.getRainbow(15000)))));
-        tooltip.add(Component.translatable(Translations.Tooltip.CREATIVE_ONLY).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
     }
 
     @Override

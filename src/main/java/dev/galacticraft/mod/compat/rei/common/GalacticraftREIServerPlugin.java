@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,30 +22,18 @@
 
 package dev.galacticraft.mod.compat.rei.common;
 
-import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultCompressingDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
-import dev.galacticraft.mod.compat.rei.common.transfer.info.FabricationMenuInfo;
-import dev.galacticraft.mod.compat.rei.common.transfer.info.SimpleMachineMenuInfo;
-import dev.galacticraft.mod.content.block.entity.machine.CompressorBlockEntity;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.DisplaySerializerRegistry;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.plugins.REIServerPlugin;
-import me.shedaniel.rei.api.common.transfer.info.MenuInfoRegistry;
-import me.shedaniel.rei.api.common.transfer.info.simple.SimpleMenuInfoProvider;
 
 public class GalacticraftREIServerPlugin implements REIServerPlugin {
     public static final CategoryIdentifier<DefaultFabricationDisplay> CIRCUIT_FABRICATION = CategoryIdentifier.of(Constant.MOD_ID, "plugins/circuit_fabricator");
     public static final CategoryIdentifier<DefaultCompressingDisplay> COMPRESSING = CategoryIdentifier.of(Constant.MOD_ID, "plugins/compressing");
 //    public static final CategoryIdentifier<DefaultCompressingDisplay> COAL_GENERATOR_FUEL = CategoryIdentifier.of(Constant.MOD_ID, "plugins/coal_generator_fuel");
-
-    @Override
-    public void registerMenuInfo(MenuInfoRegistry registry) {
-        registry.register(COMPRESSING, RecipeMachineMenu.class, SimpleMenuInfoProvider.of(d -> new SimpleMachineMenuInfo<>(3, 3, CompressorBlockEntity.OUTPUT_SLOT, d)));
-        registry.register(CIRCUIT_FABRICATION, RecipeMachineMenu.class, SimpleMenuInfoProvider.of(FabricationMenuInfo::new));
-    }
 
     @Override
     public void registerDisplaySerializer(DisplaySerializerRegistry registry) {

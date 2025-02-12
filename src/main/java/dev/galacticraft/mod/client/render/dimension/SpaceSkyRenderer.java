@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,7 +41,7 @@ public class SpaceSkyRenderer implements DimensionRenderingRegistry.SkyRenderer 
         matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks()) * 360.0f));
         matrices.mulPose(Axis.YP.rotationDegrees(-19.0F));
 
-        this.starManager.render(context.matrixStack(), context.projectionMatrix(), context.world(), context.tickCounter().getRealtimeDeltaTicks());
+        this.starManager.render(matrices, context.projectionMatrix(), context.world(), context.tickCounter().getRealtimeDeltaTicks());
 
         matrices.popPose();
         context.profiler().pop();

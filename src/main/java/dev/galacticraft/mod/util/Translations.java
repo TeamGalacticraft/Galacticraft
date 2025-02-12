@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,7 +42,15 @@ public interface Translations {
 
     interface Chat {
         String BED_FAIL = "chat.galacticraft.bed_fail";
+        String CHAMBER_HOT = "chat.galacticraft.chamber_hot";
+        String CHAMBER_OBSTRUCTED = "chat.galacticraft.chamber_obstructed";
+        String CHAMBER_OCCUPIED = "chat.galacticraft.chamber_occupied";
+        String CHAMBER_TOO_FAR_AWAY = "chat.galacticraft.chamber_too_far_away";
         String ROCKET_WARNING = "chat.galacticraft.rocket.warning";
+    }
+
+    interface Subtitles {
+        String THROW_METEOR_CHUNK = "subtitles.galacticraft.entity.throwable_meteor_chunk.throw";
     }
 
     interface RegistryDebug {
@@ -63,6 +71,7 @@ public interface Translations {
     interface DimensionTp {
         String SUCCESS_MULTIPLE = "commands.galacticraft.dimensiontp.success.multiple";
         String SUCCESS_SINGLE = "commands.galacticraft.dimensiontp.success.single";
+        String INVALID_PACKET = "disconnect.galacticraft.dimensiontp.invalidPacket";
     }
 
     interface GcHouston {
@@ -169,6 +178,7 @@ public interface Translations {
         String PRESS_SHIFT = "tooltip.galacticraft.press_shift";
         String STANDARD_WRENCH = "tooltip.galacticraft.standard_wrench";
         String TIME_UNTIL_COOL = "tooltip.galacticraft.time_until_cool";
+        String SECONDS_UNIT = "tooltip.galacticraft.seconds_unit";
     }
 
     interface Gas {
@@ -221,11 +231,13 @@ public interface Translations {
         String MISSING_SOURCE = "ui.galacticraft.machine.solar_panel.missing_source";
         String NIGHT = "ui.galacticraft.machine.solar_panel.night";
         String OVERCAST = "ui.galacticraft.machine.solar_panel.overcast";
+        String STORMY = "ui.galacticraft.machine.solar_panel.stormy";
         String LIGHT_SOURCE = "ui.galacticraft.machine.solar_panel.source";
         String LIGHT_SOURCE_MOON = "ui.galacticraft.machine.solar_panel.source.moon";
         String LIGHT_SOURCE_EARTH = "ui.galacticraft.machine.solar_panel.source.earth";
         String LIGHT_SOURCE_NONE = "ui.galacticraft.machine.solar_panel.source.none";
         String LIGHT_SOURCE_RAIN = "ui.galacticraft.machine.solar_panel.source.rain";
+        String LIGHT_SOURCE_THUNDER = "ui.galacticraft.machine.solar_panel.source.thunder";
         String LIGHT_SOURCE_SUN = "ui.galacticraft.machine.solar_panel.source.sun";
         String STATUS = "ui.galacticraft.machine.solar_panel.status";
         String STRENGTH = "ui.galacticraft.machine.solar_panel.strength";
@@ -257,6 +269,7 @@ public interface Translations {
         String OXYGEN_TANK_FULL = "ui.galacticraft.status.oxygen_tank_full";
         String PARTIALLY_BLOCKED = "ui.galacticraft.status.partially_blocked";
         String RAIN = "ui.galacticraft.status.rain";
+        String THUNDER = "ui.galacticraft.status.thunder";
         String SEALED = "ui.galacticraft.status.sealed";
         String WARMING_UP = "ui.galacticraft.status.warming_up";
         String NOT_ENOUGH_FUEL = "ui.galacticraft.status.not_enough_fuel";
@@ -301,6 +314,7 @@ public interface Translations {
         String COLOR = "ui.galacticraft.color";
 
         String AIRLOCK_REDSTONE_SIGNAL = "ui.galacticraft.airlock.redstone_signal";
+        String AIRLOCK_OWNER = "ui.galacticraft.airlock.owner";
         String ALPHA_WARNING_1 = "ui.galacticraft.alpha_warning.content1";
         String ALPHA_WARNING_2 = "ui.galacticraft.alpha_warning.content2";
         String ALPHA_WARNING_3 = "ui.galacticraft.alpha_warning.content3";
@@ -314,22 +328,21 @@ public interface Translations {
         String COLLECTING = "ui.galacticraft.machine.collecting";
         String CURRENT_OXYGEN = "ui.galacticraft.machine.current_oxygen";
         String GJT = "ui.galacticraft.machine.gj_per_t";
+        String MILLIBUCKETS = "ui.galacticraft.machine.millibuckets";
         String MAX_OXYGEN = "ui.galacticraft.machine.max_oxygen";
         String MACHINE_STATUS = "ui.galacticraft.machine.status";
         String OXYGEN_TANK_LEVEL = "ui.galacticraft.player_inv_screen.oxygen_tank_level";
         String ROCKET_FUEL = "ui.galacticraft.rocket.fuel";
         String ROCKET_FULL = "ui.galacticraft.rocket.full";
         String ROCKET_NO_FUEL = "ui.galacticraft.rocket.no_fuel";
-        String LANDER_VELOCITY = "ui.lander.velocity";
-        String LANDER_VELOCITYU = "ui.lander.velocityu";
-        String LANDER_WARNING_2 = "ui.lander.warning2";
-        String LANDER_WARNING_3 = "ui.lander.warning3";
-        String LANDER_WARNING = "ui.warning";
+        String LANDER_WARNING = "ui.galacticraft.lander.warning";
+        String LANDER_CONTROLS = "ui.galacticraft.lander.controls";
+        String LANDER_VELOCITY = "ui.galacticraft.lander.velocity";
 
         String SMALL_STEP = "ui.galacticraft.small_step";
         String GIANT_LEAP = "ui.galacticraft.giant_leap";
         String PREPARE_FOR_ENTRY = "ui.galacticraft.prepare_for_entry";
-        String TRAVELLING_TO = "ui.galacticraft.travelling_to";
+        String TRAVELING_TO = "ui.galacticraft.traveling_to";
     }
 
     interface Boss {

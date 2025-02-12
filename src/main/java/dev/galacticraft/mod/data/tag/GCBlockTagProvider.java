@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -275,12 +275,15 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.MARS_COBBLESTONE
                 );
 
+        this.tag(BlockTags.MINEABLE_WITH_AXE).add(GCBlocks.PARACHEST);
+
         this.tag(BlockTags.MINEABLE_WITH_SHOVEL)
                 .add(
                         GCBlocks.MOON_TURF,
                         GCBlocks.MOON_DIRT,
                         GCBlocks.MOON_DIRT_PATH
                 );
+
 
         this.tag(BlockTags.NEEDS_STONE_TOOL)
                 .add(
@@ -299,20 +302,33 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.ASTEROID_SILICON_ORE,
                         GCBlocks.ALUMINUM_ORE,
                         GCBlocks.DEEPSLATE_ALUMINUM_ORE,
-                        GCBlocks.GALENA_ORE
+                        GCBlocks.GALENA_ORE,
+                        GCBlocks.RAW_TIN_BLOCK,
+                        GCBlocks.TIN_BLOCK,
+                        GCBlocks.RAW_ALUMINUM_BLOCK,
+                        GCBlocks.ALUMINUM_BLOCK,
+                        GCBlocks.RAW_LEAD_BLOCK,
+                        GCBlocks.LEAD_BLOCK,
+                        GCBlocks.RAW_METEORIC_IRON_BLOCK,
+                        GCBlocks.METEORIC_IRON_BLOCK
                 );
 
         this.tag(BlockTags.NEEDS_IRON_TOOL)
                 .add(
                         GCBlocks.SILICON_ORE,
                         GCBlocks.DEEPSLATE_SILICON_ORE,
-                        GCBlocks.FALLEN_METEOR
+                        GCBlocks.FALLEN_METEOR,
+                        GCBlocks.SILICON_BLOCK
                 );
 
         this.tag(BlockTags.NEEDS_DIAMOND_TOOL)
                 .add(
                         GCBlocks.DESH_ORE,
-                        GCBlocks.ILMENITE_ORE
+                        GCBlocks.ILMENITE_ORE,
+                        GCBlocks.RAW_DESH_BLOCK,
+                        GCBlocks.DESH_BLOCK,
+                        GCBlocks.RAW_TITANIUM_BLOCK,
+                        GCBlocks.TITANIUM_BLOCK
                 );
 
         this.tag(BlockTags.DRAGON_IMMUNE)

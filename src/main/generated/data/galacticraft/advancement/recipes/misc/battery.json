@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_compressed_tin": {
+    "has_compressed_aluminum": {
       "conditions": {
         "items": [
           {
-            "items": "galacticraft:compressed_tin"
+            "items": "galacticraft:compressed_aluminum"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_compressed_tin"
+      "has_compressed_aluminum"
     ]
   ],
   "rewards": {

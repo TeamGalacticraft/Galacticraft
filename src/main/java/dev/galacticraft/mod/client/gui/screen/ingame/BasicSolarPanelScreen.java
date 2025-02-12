@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,27 +22,16 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.BasicSolarPanelBlockEntity;
 import dev.galacticraft.mod.screen.SolarPanelMenu;
-import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-import java.util.List;
-
 @Environment(EnvType.CLIENT)
 public class BasicSolarPanelScreen extends SolarPanelScreen<BasicSolarPanelBlockEntity, SolarPanelMenu<BasicSolarPanelBlockEntity>> {
     public BasicSolarPanelScreen(SolarPanelMenu<BasicSolarPanelBlockEntity> handler, Inventory inv, Component title) {
         super(handler, inv, title);
-    }
-
-    @Override
-    public void appendEnergyTooltip(List<Component> list) {
-        if (this.menu.state.isActive()) {
-            list.add(Component.translatable(Translations.Ui.GJT, this.menu.getCurrentEnergyGeneration()).setStyle(Constant.Text.Color.LIGHT_PURPLE_STYLE));
-        }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -148,7 +148,8 @@ public class VenusSkyRenderer implements DimensionRenderingRegistry.SkyRenderer 
     public void render(WorldRenderContext context) {
         ClientLevel level = context.world();
         float partialTicks = context.tickCounter().getRealtimeDeltaTicks();
-        PoseStack poseStack = context.matrixStack();
+        PoseStack poseStack = new PoseStack();
+        poseStack.mulPose(context.positionMatrix());
         Vec3 vec3 = level.getSkyColor(context.camera().getPosition(), partialTicks);
         float f1 = (float) vec3.x;
         float f2 = (float) vec3.y;
