@@ -39,8 +39,6 @@ import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.GCEntityTypes;
-import dev.galacticraft.mod.content.entity.BubbleEntity;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.network.s2c.BubbleSizePayload;
 import dev.galacticraft.mod.network.s2c.BubbleUpdatePayload;
@@ -99,7 +97,6 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     private double size = 0;
     private byte targetSize = 1;
     private int players = 0;
-    private int bubbleId = -1;
     private double prevSize;
     private boolean oxygenUnloaded = true;
 
@@ -126,20 +123,9 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
             if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate())) { //todo: config
                 profiler.push("bubble");
                 if (this.size > this.targetSize) {
-                    this.setSize(Math.max(this.size - 0.1F, this.targetSize));
+                    setSize(Math.max(this.size - 0.1F, this.targetSize));
                 }
-                if (this.size > 0.0D && this.bubbleVisible && this.bubbleId == -1) {
-                    BubbleEntity entity = GCEntityTypes.BUBBLE.create(level);
-                    entity.setPosRaw(this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ());
-                    entity.xo = this.getBlockPos().getX();
-                    entity.yo = this.getBlockPos().getY();
-                    entity.zo = this.getBlockPos().getZ();
-                    level.addFreshEntity(entity);
-                    this.bubbleId = entity.getId();
-                } else if (!this.bubbleVisible && this.bubbleId != -1) {
-                    level.getEntity(bubbleId).discard();
-                    this.bubbleId = -1;
-                }
+
                 profiler.pop();
 
                 this.trySyncSize(level, pos, profiler);
@@ -168,19 +154,15 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
             profiler.pop();
         }
         profiler.push("size");
-        if (this.bubbleId != -1 && this.size <= 0) {
-            level.getEntity(bubbleId).discard();
-            this.bubbleId = -1;
-        }
 
         if (this.size > 0) {
-            this.setSize(this.size - 0.2D);
-            this.trySyncSize(level, pos, profiler);
+            setSize(this.size - 0.2D);
+            trySyncSize(level, pos, profiler);
             distributeOxygenToArea(this.size, true); // technically this oxygen is being created from thin air
         }
 
         if (this.size < 0) {
-            this.setSize(0);
+            setSize(0);
         }
         profiler.pop();
         return status;
@@ -275,7 +257,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     public boolean isBubbleVisible() {
-        return this.bubbleVisible;
+        return size < 0.0D || this.bubbleVisible;
     }
 
     public void setBubbleVisible(boolean bubbleVisible) {
@@ -291,5 +273,13 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     @Override
     public @NotNull CustomPacketPayload createUpdatePayload() {
         return new BubbleUpdatePayload(this.getBlockPos(), this.targetSize, this.size, this.bubbleVisible);
+    }
+
+    @Override
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        CompoundTag tag = new CompoundTag();
+        saveAdditional(tag, registryLookup);
+        populateUpdateTag(tag);
+        return tag;
     }
 }
