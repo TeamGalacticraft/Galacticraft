@@ -25,7 +25,7 @@ package dev.galacticraft.mod.recipe;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -83,7 +83,7 @@ public class RocketRecipe implements Recipe<RecipeInput> {
 
     @Override
     public @NotNull ItemStack getToastSymbol() {
-        return new ItemStack(GCItems.ROCKET_WORKBENCH);
+        return new ItemStack(GCBlocks.ROCKET_WORKBENCH);
     }
 
     @Override
