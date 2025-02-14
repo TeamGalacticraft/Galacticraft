@@ -2,13 +2,13 @@
   "type": "galacticraft:compressing_shapeless",
   "ingredients": [
     {
-      "tag": "c:coal"
+      "tag": "minecraft:coals"
     },
     {
       "item": "galacticraft:compressed_iron"
     },
     {
-      "tag": "c:coal"
+      "tag": "minecraft:coals"
     }
   ],
   "result": {

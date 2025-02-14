@@ -36,7 +36,6 @@ public class GCServerPacketReceivers {
         registerPacket(OpenRocketPayload.TYPE);
         registerPacket(SatelliteCreationPayload.TYPE);
         registerPacket(BubbleVisibilityPayload.TYPE);
-        registerPacket(SelectPartPayload.TYPE);
         registerPacket(OpenGcInventoryPayload.TYPE);
         registerPacket(PlanetTeleportPayload.TYPE);
         registerPacket(BubbleMaxPayload.TYPE);
