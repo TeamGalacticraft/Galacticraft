@@ -24,6 +24,7 @@ package dev.galacticraft.mod.data.recipes;
 
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.api.data.recipe.RocketRecipeBuilder;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -44,7 +45,7 @@ public class GCRocketRecipes extends FabricRecipeProvider {
 
     @Override
     public void buildRecipes(RecipeOutput output) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ROCKET_WORKBENCH)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.ROCKET_WORKBENCH)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('C', Items.CRAFTING_TABLE)
                 .define('L', Items.LEVER)

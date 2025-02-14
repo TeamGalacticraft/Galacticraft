@@ -24,13 +24,11 @@ package dev.galacticraft.mod.content.block.environment;
 
 import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -63,10 +61,10 @@ public class CavernousVinesPlantBlock extends GrowingPlantBodyBlock implements B
         return blockState2.setValue(POISONOUS, blockState.getValue(POISONOUS)).setValue(WATERLOGGED, blockState.getValue(WATERLOGGED));
     }
 
-    @Override
-    public ItemStack getCloneItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
-        return new ItemStack(GCItems.CAVERNOUS_VINES);
-    }
+//    @Override
+//    public ItemStack getCloneItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
+//        return new ItemStack(GCBlocks.CAVERNOUS_VINES_PLANT);
+//    }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
