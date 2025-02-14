@@ -23,6 +23,7 @@
 package dev.galacticraft.impl.internal.mixin.gear;
 
 import dev.galacticraft.api.accessor.GearInventoryProvider;
+import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
 import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.item.Accessory;
@@ -78,6 +79,9 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     private void galacticraft_oxygenCheck(CallbackInfo ci) {
         LivingEntity entity = ((LivingEntity) (Object) this);
         if (!entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(entity.getEyeHeight(entity.getPose()))))) {
+            if (entity.getVehicle() instanceof LanderEntity) {
+                return;
+            }
             if (!entity.isEyeInFluid(FluidTags.WATER) && (!(entity instanceof Player player) || !player.getAbilities().invulnerable)) {
                 entity.setAirSupply(this.decreaseAirSupply(entity.getAirSupply()));
                 if (entity.getAirSupply() == -20) {
@@ -93,6 +97,9 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     @ModifyExpressionValue(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z", ordinal = 0))
     private boolean galacticraft_testForBreathability(boolean original) {
         LivingEntity entity = (LivingEntity) (Object) this;
+        if (entity.getVehicle() instanceof LanderEntity) {
+            return true;
+        }
         return original || !entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(entity.getPose()))));
     }
 
@@ -119,7 +126,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
             ci.setReturnValue(this.increaseAirSupply(air));
         }
 
-        if (this.galacticraft$hasMaskAndGear()) {
+        if (!(this.getVehicle() instanceof LanderEntity) && this.galacticraft$hasMaskAndGear()) {
             InventoryStorage tankInv = InventoryStorage.of(galacticraft$getOxygenTanks(), null);
             for (int i = 0; i < tankInv.getSlotCount(); i++) {
                 Storage<FluidVariant> storage = ContainerItemContext.ofSingleSlot(tankInv.getSlot(i)).find(FluidStorage.ITEM);

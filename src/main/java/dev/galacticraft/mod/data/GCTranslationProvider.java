@@ -901,10 +901,12 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.MAX_OXYGEN, "Maximum Oxygen: %s");
         this.add(Ui.MACHINE_STATUS, "Status: %s");
         this.add(Ui.OXYGEN_TANK_LEVEL, "Oxygen Tank %s: %s/%s");
+        this.add(Ui.OXYGEN_WARNING, "WARNING");
+        this.add(Ui.OXYGEN_SETUP_INVALID, "Oxygen Setup is Invalid!");
         this.add(Ui.ROCKET_FUEL, "Fuel:");
         this.add(Ui.ROCKET_FULL, "% full");
         this.add(Ui.ROCKET_NO_FUEL, "No fuel");
-        this.add(Ui.LANDER_WARNING, "WARNING!");
+        this.add(Ui.LANDER_WARNING, "WARNING");
         this.add(Ui.LANDER_CONTROLS, "Hold \"%s\" to slow down!");
         this.add(Ui.LANDER_VELOCITY, "Entry Velocity: %s m/s");
         this.add(Ui.SMALL_STEP, "Taking one small step");

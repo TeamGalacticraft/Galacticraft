@@ -57,6 +57,7 @@ public class ClientEventHandler {
     }
 
     public static void clientTick(Minecraft client) {
+        OxygenOverlay.clientTick();
         LanderOverlay.clientTick();
         GCKeyBinds.handleKeybinds(client);
     }
