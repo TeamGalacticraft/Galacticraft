@@ -115,15 +115,4 @@ public abstract class ServerLevelMixin extends Level implements LevelAccessor, S
     public FootprintManager galacticraft$getFootprintManager() {
         return footprintManager;
     }
-
-    @ModifyArg(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setDayTime(J)V"), index = 0)
-    private long gc$setDayTime(long original) {
-        Holder<CelestialBody<?, ?>> holder = this.galacticraft$getCelestialBody();
-        if (holder != null) {
-            long dayLength = holder.value().dayLength();
-            long time = this.levelData.getDayTime() + dayLength;
-            return time - time % dayLength;
-        }
-        return original;
-    }
 }
