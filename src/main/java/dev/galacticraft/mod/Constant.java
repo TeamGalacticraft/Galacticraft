@@ -332,8 +332,8 @@ public interface Constant {
         String OXYGEN_GAS = "oxygen_gas";
         String LIQUID_OXYGEN = "liquid_oxygen";
 
-        static ResourceLocation getId(String s) {
-            return Constant.id("block/" + s);
+        static ResourceLocation fluidId(String s) {
+            return Constant.id("block/fluid/" + s);
         }
     }
 
