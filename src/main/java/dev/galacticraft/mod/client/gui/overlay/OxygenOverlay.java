@@ -52,7 +52,7 @@ public class OxygenOverlay {
 
     public static void onHudRender(GuiGraphics graphics, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
-        if (!mc.options.hideGui && mc.level != null && mc.player != null && !mc.player.isSpectator()) {
+        if (!mc.options.hideGui && mc.level != null && mc.player != null && !(mc.player.isSpectator() || mc.player.isCreative())) {
             if (mc.player.getVehicle() instanceof LanderEntity) {
                 return;
             }
@@ -76,8 +76,6 @@ public class OxygenOverlay {
                     if (storage != null) {
                         amount = StorageHelper.calculateAmount(FluidVariant.of(Gases.OXYGEN), storage);
                         capacity = StorageHelper.theoreticalCapacity(storage);
-                    } else if (mc.player.isCreative()) {
-                        amount = capacity;
                     }
                     hasOxygen = hasOxygen || amount > 0;
 

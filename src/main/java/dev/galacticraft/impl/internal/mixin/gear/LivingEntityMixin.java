@@ -30,6 +30,8 @@ import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.api.item.OxygenGear;
 import dev.galacticraft.api.item.OxygenMask;
 import dev.galacticraft.impl.internal.fabric.GalacticraftAPI;
+import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
+import dev.galacticraft.mod.content.block.special.CryogenicChamberPart;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.Galacticraft;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -79,9 +81,6 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     private void galacticraft_oxygenCheck(CallbackInfo ci) {
         LivingEntity entity = ((LivingEntity) (Object) this);
         if (!entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(entity.getEyeHeight(entity.getPose()))))) {
-            if (entity.getVehicle() instanceof LanderEntity) {
-                return;
-            }
             if (!entity.isEyeInFluid(FluidTags.WATER) && (!(entity instanceof Player player) || !player.getAbilities().invulnerable)) {
                 entity.setAirSupply(this.decreaseAirSupply(entity.getAirSupply()));
                 if (entity.getAirSupply() == -20) {
@@ -97,10 +96,11 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     @ModifyExpressionValue(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z", ordinal = 0))
     private boolean galacticraft_testForBreathability(boolean original) {
         LivingEntity entity = (LivingEntity) (Object) this;
-        if (entity.getVehicle() instanceof LanderEntity) {
-            return true;
+        if ((entity.getVehicle() instanceof LanderEntity) || (entity.getInBlockState().getBlock() instanceof CryogenicChamberBlock) || (entity.getInBlockState().getBlock() instanceof CryogenicChamberPart)) {
+            return false;
         }
-        return original || !entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(entity.getPose()))));
+        AttributeInstance attribute = entity.getAttribute(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE);
+        return original || (!entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(entity.getPose())))) && !(attribute != null && attribute.getValue() >= 0.99D));
     }
 
     @ModifyExpressionValue(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;canBreatheUnderwater()Z"))
@@ -120,13 +120,8 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     }
 
     @Inject(method = "decreaseAirSupply", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getAttribute(Lnet/minecraft/core/Holder;)Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;"), cancellable = true)
-    private void galacticraft_modifyAirLevel(int air, CallbackInfoReturnable<Integer> ci) {
-        AttributeInstance attribute = ((LivingEntity) (Object) this).getAttribute(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE);
-        if (attribute != null && attribute.getValue() >= 0.99D) {
-            ci.setReturnValue(this.increaseAirSupply(air));
-        }
-
-        if (!(this.getVehicle() instanceof LanderEntity) && this.galacticraft$hasMaskAndGear()) {
+    private void galacticraft_modifyAirLevel(int air, CallbackInfoReturnable<Integer> cir) {
+        if (this.galacticraft$hasMaskAndGear()) {
             InventoryStorage tankInv = InventoryStorage.of(galacticraft$getOxygenTanks(), null);
             for (int i = 0; i < tankInv.getSlotCount(); i++) {
                 Storage<FluidVariant> storage = ContainerItemContext.ofSingleSlot(tankInv.getSlot(i)).find(FluidStorage.ITEM);
@@ -134,8 +129,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
                     try (Transaction transaction = Transaction.openOuter()) {
                         if (storage.extract(FluidVariant.of(Gases.OXYGEN), Galacticraft.CONFIG.playerOxygenConsuptionRate(), transaction) > 0) {
                             transaction.commit();
-                            ci.setReturnValue(this.increaseAirSupply(air));
-                            return;
+                            cir.setReturnValue(this.increaseAirSupply(air));
                         }
                     }
                 }

@@ -49,7 +49,7 @@ public class LanderOverlay {
             final int height = scaledresolution.getGuiScaledHeight();
             final double motionY = lander.getDeltaMovement().y();
 
-            if (motionY < -2.0) {
+            if (motionY < -1.5) {
                 final int textWidth = mc.font.width(WARNING_TEXT);
                 final int topY = height / 8 - 16;
                 final float offset = 0.25F * (float) (width - 2 * textWidth + 2);
@@ -73,7 +73,7 @@ public class LanderOverlay {
             }
 
             if (motionY != 0.0D) {
-                final Component string = Component.translatable(Translations.Ui.LANDER_VELOCITY, String.format("%.2f", -motionY * TICKS.tickrate()));
+                final Component string = Component.translatable(Translations.Ui.LANDER_VELOCITY, String.format("%.2f", Math.abs(motionY * TICKS.tickrate())));
                 final int red = Math.min((int) Math.floor(Math.abs(motionY) * 85.0D), 255);
                 final int color = FastColor.ARGB32.color(255, red, 255 - red, 0);
                 graphics.drawString(mc.font, string, width / 2 - mc.font.width(string) / 2, height / 3, color, false);
