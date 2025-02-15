@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.mixin;
 
 import com.google.common.collect.ImmutableList;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.accessor.LevelAccessor;
 import dev.galacticraft.mod.accessor.ServerLevelAccessor;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
@@ -52,6 +53,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.HashSet;
@@ -112,5 +114,16 @@ public abstract class ServerLevelMixin extends Level implements LevelAccessor, S
     @Override
     public FootprintManager galacticraft$getFootprintManager() {
         return footprintManager;
+    }
+
+    @ModifyArg(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setDayTime(J)V"), index = 0)
+    private long gc$setDayTime(long original) {
+        Holder<CelestialBody<?, ?>> holder = this.galacticraft$getCelestialBody();
+        if (holder != null) {
+            long dayLength = holder.value().dayLength();
+            long time = this.levelData.getDayTime() + dayLength;
+            return time - time % dayLength;
+        }
+        return original;
     }
 }

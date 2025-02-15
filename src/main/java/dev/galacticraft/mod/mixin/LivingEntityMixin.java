@@ -116,12 +116,6 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
             this.hasImpulse = false;
             ci.cancel();
         }
-
-        Level level = this.level();
-        Holder<CelestialBody<?, ?>> body = level.galacticraft$getCelestialBody();
-        if (body != null && !body.value().atmosphere().breathable() && level.getBlockState(blockPos).getBlock() instanceof BedBlock) {
-            ci.cancel();
-        }
     }
 
     @Inject(method = "aiStep", at = @At("HEAD"), cancellable = true)
