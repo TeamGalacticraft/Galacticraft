@@ -25,9 +25,11 @@ package dev.galacticraft.mod.screen.slot;
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.item.Accessory;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,15 +39,15 @@ public class AccessorySlot extends Slot {
     private final Predicate<ItemStack> stackPredicate;
     private final Pair<ResourceLocation, ResourceLocation> icon;
 
-    public AccessorySlot(Container inventory, int index, int x, int y, Class<? extends Accessory> clazz, ResourceLocation icon) {
+    public AccessorySlot(Container inventory, int index, int x, int y, TagKey<Item> tag, ResourceLocation icon) {
         super(inventory, index, x, y);
-        this.stackPredicate = itemStack -> itemStack.getItem().getClass().equals(clazz);
-        this.icon = Pair.of(InventoryMenu.BLOCK_ATLAS, icon);
+        this.stackPredicate = itemStack -> itemStack.is(tag);
+        this.icon = (icon != null) ? Pair.of(InventoryMenu.BLOCK_ATLAS, icon) : null;
     }
 
-    public AccessorySlot(Container inventory, int index, int x, int y) {
+    public AccessorySlot(Container inventory, int x, int y, int index) {
         super(inventory, index, x, y);
-        this.stackPredicate = itemStack -> itemStack.getItem() instanceof Accessory;
+        this.stackPredicate = itemStack -> false;
         this.icon = null;
     }
 
@@ -58,5 +60,10 @@ public class AccessorySlot extends Slot {
     @Override
     public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
         return this.icon;
+    }
+    
+    @Override
+    public int getMaxStackSize() {
+        return 1;
     }
 }

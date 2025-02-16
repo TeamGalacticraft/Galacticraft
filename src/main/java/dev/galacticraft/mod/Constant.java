@@ -630,6 +630,9 @@ public interface Constant {
         ResourceLocation OXYGEN_MASK = id("slot/oxygen_mask");
         ResourceLocation OXYGEN_GEAR = id("slot/oxygen_gear");
         ResourceLocation OXYGEN_TANK = id("slot/oxygen_tank");
+        ResourceLocation FREQUENCY_MODULE = id("slot/frequency_module");
+        ResourceLocation PARACHUTE = id("slot/parachute");
+        ResourceLocation SHIELD_CONTROLLER = id("slot/shield_controller");
     }
 
     interface Entity {
@@ -878,8 +881,9 @@ public interface Constant {
     @Environment(EnvType.CLIENT)
     interface ModelPartName {
         String OXYGEN_MASK = "oxygen_mask";
-        String OXYGEN_TANK = "oxygen_tank";
         String OXYGEN_PIPE = "oxygen_pipe";
+        String OXYGEN_TANK_1 = "oxygen_tank_1";
+        String OXYGEN_TANK_2 = "oxygen_tank_2";
         String MOON_VILLAGER_BRAIN = "moon_villager_brain";
         String SOLAR_PANEL_POLE = "solar_panel_pole";
         String SOLAR_PANEL_PANEL = "solar_panel_panel";

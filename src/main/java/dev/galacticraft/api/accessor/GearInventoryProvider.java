@@ -22,11 +22,10 @@
 
 package dev.galacticraft.api.accessor;
 
-import dev.galacticraft.api.item.OxygenGear;
-import dev.galacticraft.api.item.OxygenMask;
+import dev.galacticraft.mod.tag.GCTags;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 public interface GearInventoryProvider {
     default Container galacticraft$getGearInv() {
@@ -49,11 +48,11 @@ public interface GearInventoryProvider {
         boolean mask = false;
         boolean gear = false;
         for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
-            Item item = this.galacticraft$getAccessories().getItem(i).getItem();
-            if (!mask && item instanceof OxygenMask) {
+            ItemStack itemStack = this.galacticraft$getAccessories().getItem(i);
+            if (!mask && itemStack.is(GCTags.OXYGEN_MASKS)) {
                 mask = true;
                 if (gear) break;
-            } else if (!gear && item instanceof OxygenGear) {
+            } else if (!gear && itemStack.is(GCTags.OXYGEN_GEAR)) {
                 gear = true;
                 if (mask) break;
             }

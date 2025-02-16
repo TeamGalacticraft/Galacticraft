@@ -208,30 +208,31 @@ public class GCItems {
     public static final Item BATTERY = ITEMS.register(Constant.Item.BATTERY, new BatteryItem(new Item.Properties().stacksTo(1), 15000, 500));
     public static final Item INFINITE_BATTERY = ITEMS.register(Constant.Item.INFINITE_BATTERY, new InfiniteBatteryItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
 
-    //FLUID BUCKETS
+    // FLUID BUCKETS
     public static final Item CRUDE_OIL_BUCKET = ITEMS.register(Constant.Item.CRUDE_OIL_BUCKET, new BucketItem(GCFluids.CRUDE_OIL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
     public static final Item FUEL_BUCKET = ITEMS.register(Constant.Item.FUEL_BUCKET, new BucketItem(GCFluids.FUEL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
     public static final Item SULFURIC_ACID_BUCKET = ITEMS.register(Constant.Item.SULFURIC_ACID_BUCKET, new BucketItem(GCFluids.SULFURIC_ACID, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
-    //GALACTICRAFT INVENTORY
-    public static final GCRegistry.ColorSet<ParachuteItem> PARACHUTE = ITEMS.registerColored(Constant.Item.PARACHUTE, color -> new ParachuteItem(color, new Item.Properties().stacksTo(1)));
+    // GALACTICRAFT INVENTORY
+    public static final GCRegistry.ColorSet<ParachuteItem> PARACHUTE = ITEMS.registerColored(Constant.Item.PARACHUTE, color -> new ParachuteItem(color, new Item.Properties()));
 
-    public static final Item OXYGEN_MASK = ITEMS.register(Constant.Item.OXYGEN_MASK, new OxygenMaskItem(new Item.Properties()));
-    public static final Item OXYGEN_GEAR = ITEMS.register(Constant.Item.OXYGEN_GEAR, new OxygenGearItem(new Item.Properties()));
+    public static final Item OXYGEN_MASK = ITEMS.register(Constant.Item.OXYGEN_MASK, new AccessoryItem(new Item.Properties()));
+    public static final Item OXYGEN_GEAR = ITEMS.register(Constant.Item.OXYGEN_GEAR, new AccessoryItem(new Item.Properties()));
 
     public static final Item SMALL_OXYGEN_TANK = ITEMS.register(Constant.Item.SMALL_OXYGEN_TANK, new OxygenTankItem(new Item.Properties(), 1620 * 10)); // 16200 ticks
     public static final Item MEDIUM_OXYGEN_TANK = ITEMS.register(Constant.Item.MEDIUM_OXYGEN_TANK, new OxygenTankItem(new Item.Properties(), 1620 * 20)); //32400 ticks
     public static final Item LARGE_OXYGEN_TANK = ITEMS.register(Constant.Item.LARGE_OXYGEN_TANK, new OxygenTankItem(new Item.Properties(), 1620 * 30)); //48600 ticks
-    public static final Item INFINITE_OXYGEN_TANK = ITEMS.register(Constant.Item.INFINITE_OXYGEN_TANK, new InfiniteOxygenTankItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
+    public static final Item INFINITE_OXYGEN_TANK = ITEMS.register(Constant.Item.INFINITE_OXYGEN_TANK, new InfiniteOxygenTankItem(new Item.Properties().rarity(Rarity.EPIC)));
 
     public static final Item SHIELD_CONTROLLER = ITEMS.register(Constant.Item.SHIELD_CONTROLLER, new AccessoryItem(new Item.Properties()));
-    public static final Item FREQUENCY_MODULE = ITEMS.register(Constant.Item.FREQUENCY_MODULE, new FrequencyModuleItem(new Item.Properties()));
+    public static final Item FREQUENCY_MODULE = ITEMS.register(Constant.Item.FREQUENCY_MODULE, new AccessoryItem(new Item.Properties()));
 
-    public static final Item THERMAL_PADDING_HELMET = ITEMS.register(Constant.Item.THERMAL_PADDING_HELMET, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.HELMET));
-    public static final Item THERMAL_PADDING_CHESTPIECE = ITEMS.register(Constant.Item.THERMAL_PADDING_CHESTPIECE, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.CHESTPLATE));
-    public static final Item THERMAL_PADDING_LEGGINGS = ITEMS.register(Constant.Item.THERMAL_PADDING_LEGGINGS, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.LEGGINGS));
-    public static final Item THERMAL_PADDING_BOOTS = ITEMS.register(Constant.Item.THERMAL_PADDING_BOOTS, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.BOOTS));
-    // Vehicles
+    public static final Item THERMAL_PADDING_HELMET = ITEMS.register(Constant.Item.THERMAL_PADDING_HELMET, new AccessoryItem(new Item.Properties()));
+    public static final Item THERMAL_PADDING_CHESTPIECE = ITEMS.register(Constant.Item.THERMAL_PADDING_CHESTPIECE, new AccessoryItem(new Item.Properties()));
+    public static final Item THERMAL_PADDING_LEGGINGS = ITEMS.register(Constant.Item.THERMAL_PADDING_LEGGINGS, new AccessoryItem(new Item.Properties()));
+    public static final Item THERMAL_PADDING_BOOTS = ITEMS.register(Constant.Item.THERMAL_PADDING_BOOTS, new AccessoryItem(new Item.Properties()));
+
+    // VEHICLES
     public static final Item BUGGY = ITEMS.register(Constant.Item.BUGGY, new BuggyItem(new Item.Properties().stacksTo(1)));
     public static final Item ROCKET = ITEMS.register(Constant.Item.ROCKET, new RocketItem(new Item.Properties()
             .component(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1)

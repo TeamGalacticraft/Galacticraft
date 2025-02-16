@@ -59,6 +59,22 @@ public class GCTags {
     public static final TagKey<Biome> MOON_RUINS_HAS_STRUCTURE = TagKey.create(Registries.BIOME, Constant.id("has_structure/moon_ruins"));
     public static final TagKey<Biome> MOON_BOSS_HAS_STRUCTURE = TagKey.create(Registries.BIOME, Constant.id("has_structure/moon_boss"));
 
+    public static final TagKey<Item> THERMAL_HEAD = galacticraftTag("thermal/head");
+    public static final TagKey<Item> THERMAL_CHEST = galacticraftTag("thermal/chest");
+    public static final TagKey<Item> THERMAL_PANTS = galacticraftTag("thermal/pants");
+    public static final TagKey<Item> THERMAL_BOOTS = galacticraftTag("thermal/boots");
+    public static final TagKey<Item> OXYGEN_MASKS = galacticraftTag("oxygen/mask");
+    public static final TagKey<Item> OXYGEN_GEAR = galacticraftTag("oxygen/gear");
+    public static final TagKey<Item> OXYGEN_TANKS = galacticraftTag("oxygen/tank");
+    public static final TagKey<Item> PARACHUTES = galacticraftTag("parachutes");
+    public static final TagKey<Item> FREQUENCY_MODULES = galacticraftTag("frequency_modules");
+    public static final TagKey<Item> SHIELD_CONTROLLERS = galacticraftTag("shield_controllers");
+    public static final TagKey<Item> ACCESSORIES = galacticraftTag("accessories");
+    public static final TagKey<Item> ACCESSORY_SLOT_1 = galacticraftTag("slots/accessory_1");
+    public static final TagKey<Item> ACCESSORY_SLOT_2 = galacticraftTag("slots/accessory_2");
+    public static final TagKey<Item> ACCESSORY_SLOT_3 = galacticraftTag("slots/accessory_3");
+    public static final TagKey<Item> ACCESSORY_SLOT_4 = galacticraftTag("slots/accessory_4");
+
     public static final TagKey<Item> ALUMINUM_INGOTS = commonTag("ingots/aluminum");
     public static final TagKey<Item> RAW_ALUMINUM_ORES = commonTag("raw_materials/aluminum");
     public static final TagKey<Item> LEAD_INGOTS = commonTag("ingots/lead");
@@ -80,6 +96,10 @@ public class GCTags {
 
     public static TagKey<Item> commonTag(String path) {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, path));
+    }
+
+    public static TagKey<Item> galacticraftTag(String path) {
+        return TagKey.create(Registries.ITEM, Constant.id(path));
     }
 
     public static void register() {
