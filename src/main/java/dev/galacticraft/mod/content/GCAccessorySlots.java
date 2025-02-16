@@ -36,6 +36,8 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class GCAccessorySlots {
+    public static final int OXYGEN_MASK_SLOT = 4;
+    public static final int OXYGEN_GEAR_SLOT = 5;
     public static final int OXYGEN_TANK_1_SLOT = 6;
     public static final int OXYGEN_TANK_2_SLOT = 7;
     public static final List<TagKey<Item>> SLOT_TAGS = new ArrayList<TagKey<Item>>();

@@ -25,7 +25,9 @@ package dev.galacticraft.mod.client.render.entity.feature;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
+import dev.galacticraft.mod.tag.GCTags;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.HumanoidModel;
@@ -42,23 +44,26 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> extends RenderLayer<T, M> {
+public class SpaceGearRenderLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
     private static final ResourceLocation TEXTURE = Constant.id("textures/entity/oxygen_gear.png");
     private final @Nullable ModelPart mask;
-    private final @Nullable ModelPart tank;
     private final @Nullable ModelPart pipe;
+    private @Nullable ModelPart root;
 
     public SpaceGearRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
-        ModelPart root, head, body;
+        ModelPart head, body;
         if (context.getModel() instanceof HierarchicalModel<?> model) {
-            root = model.root();
-            head = root.getChild(PartNames.HEAD);
-            body = root.getChild(PartNames.BODY);
+            this.root = model.root();
+            head = this.root.getChild(PartNames.HEAD);
+            body = this.root.getChild(PartNames.BODY);
         } else if (context.getModel() instanceof HumanoidModel<?> model){
             head = model.head;
             body = model.body;
@@ -67,34 +72,39 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
             body = model.callGetBodyParts().iterator().next();
         } else {
             this.mask = null;
-            this.tank = null;
             this.pipe = null;
+            this.root = null;
             return;
         }
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
         if (head != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 10).addBox(-5.0F, -9.01F, -5.0F, 10, 10, 10, CubeDeformation.NONE), PartPose.offset(head.x, head.y, head.z));
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -9.01F, -5.0F, 10, 10, 10, CubeDeformation.NONE), PartPose.offset(head.x, head.y, head.z));
         }
 
         if (body != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, 1.0F, 2.0F, 8, 6, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 17).addBox(-2.0F, -3.0F, 0.0F, 4, 5, 8, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 7).addBox(-2.0F, -3.0F, 0.0F, 4, 5, 8, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild("small_left", CubeListBuilder.create().texOffs(0, 20).addBox(0.0F, 1.0F, 2.0F, 4, 6, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild("small_right", CubeListBuilder.create().texOffs(16, 20).addBox(-4.0F, 1.0F, 2.0F, 4, 6, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild("medium_left", CubeListBuilder.create().texOffs(32, 20).addBox(0.0F, 1.0F, 2.0F, 4, 6, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild("medium_right", CubeListBuilder.create().texOffs(48, 20).addBox(-4.0F, 1.0F, 2.0F, 4, 6, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild("large_left", CubeListBuilder.create().texOffs(0, 32).addBox(0.0F, 1.0F, 2.0F, 4, 6, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild("large_right", CubeListBuilder.create().texOffs(16, 32).addBox(-4.0F, 1.0F, 2.0F, 4, 6, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild("infinite_left", CubeListBuilder.create().texOffs(32, 32).addBox(0.0F, 1.0F, 2.0F, 4, 6, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild("infinite_right", CubeListBuilder.create().texOffs(48, 32).addBox(-4.0F, 1.0F, 2.0F, 4, 6, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
         }
 
-        root = modelPartData.bake(64, 32);
+        this.root = modelPartData.bake(64, 64);
 
         if (head != null) {
-            this.mask = root.getChild(Constant.ModelPartName.OXYGEN_MASK);
+            this.mask = this.root.getChild(Constant.ModelPartName.OXYGEN_MASK);
         } else {
             this.mask = null;
         }
 
         if (body != null) {
-            this.tank = root.getChild(Constant.ModelPartName.OXYGEN_TANK);
-            this.pipe = root.getChild(Constant.ModelPartName.OXYGEN_PIPE);
+            this.pipe = this.root.getChild(Constant.ModelPartName.OXYGEN_PIPE);
         } else {
-            this.tank = null;
             this.pipe = null;
         }
     }
@@ -102,7 +112,53 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
     @Override
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
-        if ((Entity)entity instanceof Zombie) {
+        LivingEntity livingEntity = (LivingEntity) entity;
+        boolean hasMask = true;
+        boolean hasGear = true;
+        boolean hasTank1 = true;
+        boolean hasTank2 = true;
+        String tankSize1 = "medium_left";
+        String tankSize2 = "medium_right";
+
+        if (livingEntity instanceof Player) {
+            Container inv = livingEntity.galacticraft$getGearInv();
+            hasMask = inv.getItem(GCAccessorySlots.OXYGEN_MASK_SLOT).is(GCTags.OXYGEN_MASKS);
+            hasGear = inv.getItem(GCAccessorySlots.OXYGEN_GEAR_SLOT).is(GCTags.OXYGEN_GEAR);
+            hasTank1 = inv.getItem(GCAccessorySlots.OXYGEN_TANK_1_SLOT).is(GCTags.OXYGEN_TANKS);
+            hasTank2 = inv.getItem(GCAccessorySlots.OXYGEN_TANK_2_SLOT).is(GCTags.OXYGEN_TANKS);
+            switch (inv.getItem(GCAccessorySlots.OXYGEN_TANK_1_SLOT).getDescriptionId().replace("item.galacticraft.", "")) {
+                case Constant.Item.SMALL_OXYGEN_TANK:
+                    tankSize1 = "small_left";
+                    break;
+                case Constant.Item.MEDIUM_OXYGEN_TANK:
+                    tankSize1 = "medium_left";
+                    break;
+                case Constant.Item.LARGE_OXYGEN_TANK:
+                    tankSize1 = "large_left";
+                    break;
+                case Constant.Item.INFINITE_OXYGEN_TANK:
+                    tankSize1 = "infinite_left";
+                    break;
+                default:
+                    tankSize1 = "medium_left";
+            }
+            switch (inv.getItem(GCAccessorySlots.OXYGEN_TANK_2_SLOT).getDescriptionId().replace("item.galacticraft.", "")) {
+                case Constant.Item.SMALL_OXYGEN_TANK:
+                    tankSize2 = "small_right";
+                    break;
+                case Constant.Item.MEDIUM_OXYGEN_TANK:
+                    tankSize2 = "medium_right";
+                    break;
+                case Constant.Item.LARGE_OXYGEN_TANK:
+                    tankSize2 = "large_right";
+                    break;
+                case Constant.Item.INFINITE_OXYGEN_TANK:
+                    tankSize2 = "infinite_right";
+                    break;
+                default:
+                    tankSize2 = "medium_right";
+            }
+        } else if (livingEntity instanceof Zombie) {
             Zombie zombie = (Zombie) entity;
             if (zombie.isBaby()) {
                 matrices.scale(0.75F, 0.75F, 0.75F);
@@ -110,16 +166,19 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
             }
         }
 
-        if (this.mask != null) {
+        if (this.mask != null && hasMask) {
             this.mask.yRot = headYaw * (float) (Math.PI / 180.0);
             this.mask.xRot = headPitch * (float) (Math.PI / 180.0);
             this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
-
-        if (this.tank != null) {
-            assert this.pipe != null;
-            this.tank.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+        if (this.pipe != null && hasGear) {
             this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+        }
+        if (this.root != null && hasTank1) {
+            this.root.getChild(tankSize1).render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+        }
+        if (this.root != null && hasTank2) {
+            this.root.getChild(tankSize2).render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
     }
 
