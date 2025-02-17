@@ -25,12 +25,8 @@ package dev.galacticraft.mod.client.render.entity.feature;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.GCAccessorySlots;
-import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
-import dev.galacticraft.mod.tag.GCTags;
-import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.IllagerModel;
 import net.minecraft.client.model.HierarchicalModel;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartNames;
 import net.minecraft.client.model.geom.PartPose;
@@ -44,12 +40,11 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public class IllagerGearRenderLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
+public class IllagerGearRenderLayer<T extends AbstractIllager, M extends IllagerModel<T>> extends RenderLayer<T, M> {
     private static final ResourceLocation TEXTURE = Constant.id("textures/entity/illager_gear.png");
     private final @Nullable ModelPart mask;
     private final @Nullable ModelPart nose;
@@ -63,12 +58,6 @@ public class IllagerGearRenderLayer<T extends LivingEntity, M extends EntityMode
             root = model.root();
             head = root.getChild(PartNames.HEAD);
             body = root.getChild(PartNames.BODY);
-        } else if (context.getModel() instanceof HumanoidModel<?> model){
-            head = model.head;
-            body = model.body;
-        } else if (context.getModel() instanceof AnimalModelAgeableListModel model){
-            head = model.callGetHeadParts().iterator().next();
-            body = model.callGetBodyParts().iterator().next();
         } else {
             this.mask = null;
             this.nose = null;
