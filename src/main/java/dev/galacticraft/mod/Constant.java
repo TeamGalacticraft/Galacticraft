@@ -882,8 +882,8 @@ public interface Constant {
     interface ModelPartName {
         String OXYGEN_MASK = "oxygen_mask";
         String OXYGEN_PIPE = "oxygen_pipe";
-        String OXYGEN_TANK_1 = "oxygen_tank_1";
-        String OXYGEN_TANK_2 = "oxygen_tank_2";
+        String OXYGEN_TANK = "oxygen_tank";
+        String ILLAGER_NOSE_COMPARTMENT = "illager_nose_compartment";
         String MOON_VILLAGER_BRAIN = "moon_villager_brain";
         String SOLAR_PANEL_POLE = "solar_panel_pole";
         String SOLAR_PANEL_PANEL = "solar_panel_panel";

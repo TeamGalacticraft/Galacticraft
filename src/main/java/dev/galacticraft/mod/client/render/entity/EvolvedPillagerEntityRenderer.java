@@ -22,13 +22,13 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
-import dev.galacticraft.mod.client.render.entity.feature.SpaceGearRenderLayer;
+import dev.galacticraft.mod.client.render.entity.feature.IllagerGearRenderLayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.PillagerRenderer;
 
 public class EvolvedPillagerEntityRenderer extends PillagerRenderer {
     public EvolvedPillagerEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
-        this.addLayer(new SpaceGearRenderLayer<>(this));
+        this.addLayer(new IllagerGearRenderLayer<>(this));
     }
 }

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
-import dev.galacticraft.mod.client.render.entity.feature.SpaceGearRenderLayer;
+import dev.galacticraft.mod.client.render.entity.feature.IllagerGearRenderLayer;
 import dev.galacticraft.mod.content.entity.EvolvedEvokerEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.EvokerRenderer;
@@ -30,6 +30,6 @@ import net.minecraft.client.renderer.entity.EvokerRenderer;
 public class EvolvedEvokerEntityRenderer extends EvokerRenderer<EvolvedEvokerEntity> {
     public EvolvedEvokerEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
-        this.addLayer(new SpaceGearRenderLayer<>(this));
+        this.addLayer(new IllagerGearRenderLayer<>(this));
     }
 }
