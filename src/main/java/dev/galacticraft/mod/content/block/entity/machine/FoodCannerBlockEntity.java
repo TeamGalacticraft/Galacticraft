@@ -82,25 +82,12 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
     public static final int STORAGE_SLOT = 2;
     public static final int OUTPUT_SLOT = 3;
     //x0 -> x3 && y0 -> y3 x0 and y0 top left x3 and y3 bottom right
-    public static final int[][] ROWS = new int[4][4];
-    static {
-        ROWS[0][0] = 4;
-        ROWS[0][1] = 5;
-        ROWS[0][2] = 6;
-        ROWS[0][3] = 7;
-        ROWS[1][0] = 8;
-        ROWS[1][1] = 9;
-        ROWS[1][2] = 10;
-        ROWS[1][3] = 11;
-        ROWS[2][0] = 12;
-        ROWS[2][1] = 13;
-        ROWS[2][2] = 14;
-        ROWS[2][3] = 15;
-        ROWS[3][0] = 16;
-        ROWS[3][1] = 17;
-        ROWS[3][2] = 18;
-        ROWS[3][3] = 19;
-    }
+    public static final int[][] ROWS = {
+            {4, 5, 6, 7},
+            {8, 9, 10, 11},
+            {12, 13, 14, 15},
+            {16, 17, 18, 19}
+    };
 
     private int progress = 1;
 

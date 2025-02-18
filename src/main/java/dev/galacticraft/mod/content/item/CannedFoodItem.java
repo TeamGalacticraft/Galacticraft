@@ -137,7 +137,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
             String result = getContents(stack).stream()
                     .map(CannedFoodItem::getItemDisplayName)
                     .collect(new TopNCollector<>(3));
-            return Component.translatable(Translations.Items.CANNED_FOOD).append(Component.literal(result));
+            return Component.translatable(Translations.Items.CANNED_FOOD, Component.literal(result));
         }
     }
 
@@ -174,7 +174,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
         if (!getContents(stack).isEmpty()) {
-            tooltip.add(Component.translatable(Translations.Items.TOTAL_NUTRITION).append(Component.literal(String.valueOf(getTotalNutrition(stack)))).withColor(ChatFormatting.DARK_GRAY.getColor()));
+            tooltip.add(Component.translatable(Translations.Items.TOTAL_NUTRITION, Component.literal(String.valueOf(getTotalNutrition(stack)))).withColor(ChatFormatting.DARK_GRAY.getColor()));
         }
     }
 
