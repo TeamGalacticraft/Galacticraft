@@ -3,22 +3,25 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "galacticraft:compressed_aluminum"
+      "item": "galacticraft:aluminum_wire"
     },
     "B": {
-      "item": "galacticraft:compressed_bronze"
+      "item": "galacticraft:basic_wafer"
     },
     "C": {
-      "item": "galacticraft:oxygen_concentrator"
+      "item": "galacticraft:empty_can"
+    },
+    "P": {
+      "item": "minecraft:piston"
     },
     "S": {
       "item": "galacticraft:compressed_steel"
     }
   },
   "pattern": [
-    "SAS",
-    "ACA",
-    "SBS"
+    "SPS",
+    "SCS",
+    "ABA"
   ],
   "result": {
     "count": 1,

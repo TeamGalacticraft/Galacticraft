@@ -476,7 +476,10 @@ public class GCCreativeModeTabs {
             .icon(() -> new ItemStack(CANNED_FOOD))
             .title(Component.translatable(Translations.ItemGroup.CANNED_FOOD))
             .displayItems((parameters, output) -> {
-                output.accept(EMPTY_CANNED_FOOD);
+                output.accept(EMPTY_CAN);
+                for (ItemStack can : CANNED_FOOD_ITEMS) {
+                    output.accept(can);
+                }
             }).build();
 
     public static final CreativeModeTab MACHINES_GROUP = FabricItemGroup

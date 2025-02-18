@@ -80,10 +80,6 @@ import net.minecraft.world.level.material.Fluids;
 import java.util.*;
 import java.util.List;
 
-import static dev.galacticraft.mod.content.item.CannedFoodItem.registerCan;
-import static dev.galacticraft.mod.content.item.GCItems.CANNED_FOOD_ITEMS;
-import static dev.galacticraft.mod.util.TextureUtils.getAverageColor;
-
 @Environment(EnvType.CLIENT)
 public class GalacticraftClient implements ClientModInitializer {
 
@@ -197,48 +193,7 @@ public class GalacticraftClient implements ClientModInitializer {
         ModelLoadingPlugin.register(GCModelLoader.INSTANCE);
 
 
-        //Todo: make fix for the color of the labels based of component nbt
-//        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-//            if (!colorsInitialized)
-//            {
-//                if (client.player != null && client.level != null)
-//                {
-//                    CANNED_FOOD_ITEMS.forEach(cannedFoodItem -> {
-//                        Optional<ItemStack> cannedItem = CannedFoodItem.getContents(cannedFoodItem.getDefaultInstance()).stream().findFirst();
-//                        if (cannedItem.isPresent()) {
-//                            String nameComponent = cannedItem.toString();
-//                            String itemName = extractInsideBrackets(nameComponent);
-//                            assert itemName != null;
-//                            String[] parts = itemName.split(":");
-//                            String namespace = parts[0];
-//                            String item = parts[1];
-//                            for (String[] element: nameOverride)
-//                            {
-//                                if (parts[1].equals(element[0]))
-//                                {
-//                                    item = element[1];
-//                                }
-//                            }
-//                            ResourceLocation textureLocation = new ResourceLocation(namespace, "textures/item/" + item + ".png");
-//                            int avgColor = getAverageColor(textureLocation);
-//                            cannedFoodItem.setColor(avgColor);
-//                        }
-//                    });
-//                    colorsInitialized = true;
-//                }
-//            }
-//        });
-        //For every edible food create a creative item of that canned food type
-        for (Item item : BuiltInRegistries.ITEM)
-        {
-            if (item.components().has(DataComponents.FOOD))
-            {
-                if (!(item instanceof CannedFoodItem))
-                {
-                    registerCan(item.getDefaultInstance());
-                }
-            }
-        }
+
         Constant.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 
@@ -255,14 +210,5 @@ public class GalacticraftClient implements ClientModInitializer {
         GCModelLoader.registerModelType(UnbakedObjModel.TYPE);
 
         GCDimensionEffects.register();
-    }
-
-    public static String extractInsideBrackets(String input) {
-        int startIndex = input.indexOf('{');
-        int endIndex = input.indexOf('}');
-        if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
-            return input.substring(startIndex + 1, endIndex);
-        }
-        return null;
     }
 }

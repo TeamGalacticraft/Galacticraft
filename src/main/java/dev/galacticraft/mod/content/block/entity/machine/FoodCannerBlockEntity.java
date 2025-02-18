@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
+import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
@@ -58,6 +59,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
@@ -69,6 +71,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static dev.galacticraft.mod.content.item.CannedFoodItem.*;
 
@@ -78,22 +82,25 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
     public static final int STORAGE_SLOT = 2;
     public static final int OUTPUT_SLOT = 3;
     //x0 -> x3 && y0 -> y3 x0 and y0 top left x3 and y3 bottom right
-    public static final int FOOD_INPUT_SLOT_1 = 4;
-    public static final int FOOD_INPUT_SLOT_2 = 5;
-    public static final int FOOD_INPUT_SLOT_3 = 6;
-    public static final int FOOD_INPUT_SLOT_4 = 7;
-    public static final int FOOD_INPUT_SLOT_5 = 8;
-    public static final int FOOD_INPUT_SLOT_6 = 9;
-    public static final int FOOD_INPUT_SLOT_7 = 10;
-    public static final int FOOD_INPUT_SLOT_8 = 11;
-    public static final int FOOD_INPUT_SLOT_9 = 12;
-    public static final int FOOD_INPUT_SLOT_10 = 13;
-    public static final int FOOD_INPUT_SLOT_11 = 14;
-    public static final int FOOD_INPUT_SLOT_12 = 15;
-    public static final int FOOD_INPUT_SLOT_13 = 16;
-    public static final int FOOD_INPUT_SLOT_14 = 17;
-    public static final int FOOD_INPUT_SLOT_15 = 18;
-    public static final int FOOD_INPUT_SLOT_16 = 19;
+    public static final int[][] ROWS = new int[4][4];
+    static {
+        ROWS[0][0] = 4;
+        ROWS[0][1] = 5;
+        ROWS[0][2] = 6;
+        ROWS[0][3] = 7;
+        ROWS[1][0] = 8;
+        ROWS[1][1] = 9;
+        ROWS[1][2] = 10;
+        ROWS[1][3] = 11;
+        ROWS[2][0] = 12;
+        ROWS[2][1] = 13;
+        ROWS[2][2] = 14;
+        ROWS[2][3] = 15;
+        ROWS[3][0] = 16;
+        ROWS[3][1] = 17;
+        ROWS[3][2] = 18;
+        ROWS[3][3] = 19;
+    }
 
     private int progress = 1;
 
@@ -107,69 +114,47 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
 
     private ItemStack storage;
 
+    private static List<ItemResourceSlot.Spec> createFoodSlots(int xOffset, int yOffset, int columns, int rows) {
+        List<ItemResourceSlot.Spec> slots = new ArrayList<>();
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < columns; x++) {
+                slots.add(ItemResourceSlot.builder(TransferType.INPUT)
+                        .pos(xOffset + (x * 18), yOffset + (y * 18))
+                        .filter((item, tag) -> item != null && item.components().has(DataComponents.FOOD) && !(item instanceof CannedFoodItem)));
+            }
+        }
+        return slots;
+    }
+
+    private static MachineItemStorage.Spec newMachineStorageSpec()
+    {
+        MachineItemStorage.Spec storage = MachineItemStorage.builder();
+        storage.add(
+                ItemResourceSlot.builder(TransferType.TRANSFER)
+                        .pos(8, 67)
+                        .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
+                        .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)));
+        storage.add(
+                ItemResourceSlot.builder(TransferType.INPUT)
+                        .pos(62, 13)
+                        .filter(ResourceFilters.ofResource(GCItems.EMPTY_CAN))
+                        .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.FOOD_CAN)));
+        storage.add(
+                ItemResourceSlot.builder(TransferType.STORAGE)
+                        .pos(62, 40)
+                        .capacity(1)
+                        .filter(ResourceFilters.ofResource(GCItems.EMPTY_CAN)));
+        storage.add(
+                ItemResourceSlot.builder(TransferType.OUTPUT)
+                        .pos(62, 67));
+        for (ItemResourceSlot.Spec slot : createFoodSlots(98, 13, 4, 4)) {
+            storage.add(slot);
+        }
+        return storage;
+    }
+
     private static final StorageSpec SPEC = StorageSpec.of(
-            MachineItemStorage.spec(
-                    ItemResourceSlot.builder(TransferType.TRANSFER)
-                            .pos(8, 67)
-                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
-                    ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(62, 13)
-                            .filter(ResourceFilters.ofResource(GCItems.EMPTY_CANNED_FOOD)),
-                    ItemResourceSlot.builder(TransferType.STORAGE)
-                            .pos(62, 40)
-                            .capacity(1)
-                            .filter(ResourceFilters.ofResource(GCItems.EMPTY_CANNED_FOOD)),
-                    ItemResourceSlot.builder(TransferType.OUTPUT)
-                            .pos(62, 67),
-                    ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(98, 13)
-                            .filter((item, tag) -> item != null && item.components().has(DataComponents.FOOD) && !(item instanceof CannedFoodItem)),
-                    ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(116, 13)
-                            .filter((item, tag) -> item != null && item.components().has(DataComponents.FOOD) && !(item instanceof CannedFoodItem)),
-                    ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(134, 13)
-                            .filter((item, tag) -> item != null && item.components().has(DataComponents.FOOD) && !(item instanceof CannedFoodItem)),
-                    ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(152, 13)
-                            .filter((item, tag) -> item != null && item.components().has(DataComponents.FOOD) && !(item instanceof CannedFoodItem)),
-                    ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(98, 31)
-                            .filter((item, tag) -> item != null && item.components().has(DataComponents.FOOD) && !(item instanceof CannedFoodItem)),
-                    ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(116, 31)
-                            .filter((item, tag) -> item != null && item.components().has(DataComponents.FOOD) && !(item instanceof CannedFoodItem)),
-                    ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(134, 31)
-                            .filter((item, tag) -> item != null && item.components().has(DataComponents.FOOD) && !(item instanceof CannedFoodItem)),
-                    ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(152, 31)
-                            .filter((item, tag) -> item != null && item.components().has(DataComponents.FOOD) && !(item instanceof CannedFoodItem)),
-                    ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(98, 49)
-                            .filter((item, tag) -> item != null && item.components().has(DataComponents.FOOD) && !(item instanceof CannedFoodItem)),
-                    ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(116, 49)
-                            .filter((item, tag) -> item != null && item.components().has(DataComponents.FOOD) && !(item instanceof CannedFoodItem)),
-                    ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(134, 49)
-                            .filter((item, tag) -> item != null && item.components().has(DataComponents.FOOD) && !(item instanceof CannedFoodItem)),
-                    ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(152, 49)
-                            .filter((item, tag) -> item != null && item.components().has(DataComponents.FOOD) && !(item instanceof CannedFoodItem)),
-                    ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(98, 67)
-                            .filter((item, tag) -> item != null && item.components().has(DataComponents.FOOD) && !(item instanceof CannedFoodItem)),
-                    ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(116, 67)
-                            .filter((item, tag) -> item != null && item.components().has(DataComponents.FOOD) && !(item instanceof CannedFoodItem)),
-                    ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(134, 67)
-                            .filter((item, tag) -> item != null && item.components().has(DataComponents.FOOD) && !(item instanceof CannedFoodItem)),
-                    ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(152, 67)
-                            .filter((item, tag) -> item != null && item.components().has(DataComponents.FOOD) && !(item instanceof CannedFoodItem))
-            ),
+            newMachineStorageSpec(),
             MachineEnergyStorage.spec(
                     Galacticraft.CONFIG.machineEnergyStorageSize(),
                     Galacticraft.CONFIG.foodCannerEnergyConsumptionRate() * 2,
@@ -455,189 +440,26 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
 
 
     private void clearRow(int row) {
-        if (row == 0)
-        {
-            this.itemStorage().slot(FOOD_INPUT_SLOT_1).extract(this.itemStorage().getItem(FOOD_INPUT_SLOT_1).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_2).extract(this.itemStorage().getItem(FOOD_INPUT_SLOT_2).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_3).extract(this.itemStorage().getItem(FOOD_INPUT_SLOT_3).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_4).extract(this.itemStorage().getItem(FOOD_INPUT_SLOT_4).getCount());
-        }
-        if (row == 1)
-        {
-            this.itemStorage().slot(FOOD_INPUT_SLOT_5).extract(this.itemStorage().getItem(FOOD_INPUT_SLOT_5).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_6).extract(this.itemStorage().getItem(FOOD_INPUT_SLOT_6).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_7).extract(this.itemStorage().getItem(FOOD_INPUT_SLOT_7).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_8).extract(this.itemStorage().getItem(FOOD_INPUT_SLOT_8).getCount());
-        }
-        if (row == 2)
-        {
-            this.itemStorage().slot(FOOD_INPUT_SLOT_9).extract(this.itemStorage().getItem(FOOD_INPUT_SLOT_9).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_10).extract(this.itemStorage().getItem(FOOD_INPUT_SLOT_10).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_11).extract(this.itemStorage().getItem(FOOD_INPUT_SLOT_11).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_12).extract(this.itemStorage().getItem(FOOD_INPUT_SLOT_12).getCount());
-        }
-        if (row == 3)
-        {
-            this.itemStorage().slot(FOOD_INPUT_SLOT_13).extract(this.itemStorage().getItem(FOOD_INPUT_SLOT_13).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_14).extract(this.itemStorage().getItem(FOOD_INPUT_SLOT_14).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_15).extract(this.itemStorage().getItem(FOOD_INPUT_SLOT_15).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_16).extract(this.itemStorage().getItem(FOOD_INPUT_SLOT_16).getCount());
+        for (int slot : ROWS[row]) {
+            this.itemStorage().slot(slot).extract(this.itemStorage().getItem(slot).getCount());
         }
     }
+
     private void clearRow(int row, List<ItemStack> stacks) {
         clearRow(row);
-        if (row == 0)
-        {
-            this.itemStorage().slot(FOOD_INPUT_SLOT_1).insert(stacks.get(0).getItem(), stacks.get(0).getComponentsPatch(), stacks.get(0).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_2).insert(stacks.get(1).getItem(), stacks.get(1).getComponentsPatch(), stacks.get(1).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_3).insert(stacks.get(2).getItem(), stacks.get(2).getComponentsPatch(), stacks.get(2).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_4).insert(stacks.get(3).getItem(), stacks.get(3).getComponentsPatch(), stacks.get(3).getCount());
-        }
-        if (row == 1)
-        {
-            this.itemStorage().slot(FOOD_INPUT_SLOT_5).insert(stacks.get(0).getItem(), stacks.get(0).getComponentsPatch(), stacks.get(0).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_6).insert(stacks.get(1).getItem(), stacks.get(1).getComponentsPatch(), stacks.get(1).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_7).insert(stacks.get(2).getItem(), stacks.get(2).getComponentsPatch(), stacks.get(2).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_8).insert(stacks.get(3).getItem(), stacks.get(3).getComponentsPatch(), stacks.get(3).getCount());
-        }
-        if (row == 2)
-        {
-            this.itemStorage().slot(FOOD_INPUT_SLOT_9).insert(stacks.get(0).getItem(), stacks.get(0).getComponentsPatch(), stacks.get(0).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_10).insert(stacks.get(1).getItem(), stacks.get(1).getComponentsPatch(), stacks.get(1).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_11).insert(stacks.get(2).getItem(), stacks.get(2).getComponentsPatch(), stacks.get(2).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_12).insert(stacks.get(3).getItem(), stacks.get(3).getComponentsPatch(), stacks.get(3).getCount());
-        }
-        if (row == 3)
-        {
-            this.itemStorage().slot(FOOD_INPUT_SLOT_13).insert(stacks.get(0).getItem(), stacks.get(0).getComponentsPatch(), stacks.get(0).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_14).insert(stacks.get(1).getItem(), stacks.get(1).getComponentsPatch(), stacks.get(1).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_15).insert(stacks.get(2).getItem(), stacks.get(2).getComponentsPatch(), stacks.get(2).getCount());
-            this.itemStorage().slot(FOOD_INPUT_SLOT_16).insert(stacks.get(3).getItem(), stacks.get(3).getComponentsPatch(), stacks.get(3).getCount());
+        for (int slot : ROWS[row]) {
+            ItemStack stack = stacks.get(slot % 4);
+            this.itemStorage().slot(slot).insert(stack.getItem(), stack.getComponentsPatch(), stack.getCount());
         }
     }
 
     private List<ItemStack> checkRow(int row)
     {
         List<ItemStack> stacks = new ArrayList<>();
-        if (row == 0)
-        {
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_1).isEmpty())
+        for (int slot : ROWS[row]) {
+            if (!this.itemStorage().slot(slot).isEmpty())
             {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_1));
-            }else
-            {
-                stacks.add(Items.AIR.getDefaultInstance());
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_2).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_2));
-            }else
-            {
-                stacks.add(Items.AIR.getDefaultInstance());
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_3).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_3));
-            }else
-            {
-                stacks.add(Items.AIR.getDefaultInstance());
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_4).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_4));
-            }else
-            {
-                stacks.add(Items.AIR.getDefaultInstance());
-            }
-        }
-        if (row == 1)
-        {
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_5).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_5));
-            }else
-            {
-                stacks.add(Items.AIR.getDefaultInstance());
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_6).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_6));
-            }else
-            {
-                stacks.add(Items.AIR.getDefaultInstance());
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_7).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_7));
-            }else
-            {
-                stacks.add(Items.AIR.getDefaultInstance());
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_8).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_8));
-            }else
-            {
-                stacks.add(Items.AIR.getDefaultInstance());
-            }
-        }
-        if (row == 2)
-        {
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_9).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_9));
-            }else
-            {
-                stacks.add(Items.AIR.getDefaultInstance());
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_10).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_10));
-            }else
-            {
-                stacks.add(Items.AIR.getDefaultInstance());
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_11).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_11));
-            }else
-            {
-                stacks.add(Items.AIR.getDefaultInstance());
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_12).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_12));
-            }else
-            {
-                stacks.add(Items.AIR.getDefaultInstance());
-            }
-        }
-        if (row == 3)
-        {
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_13).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_13));
-            }else
-            {
-                stacks.add(Items.AIR.getDefaultInstance());
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_14).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_14));
-            }else
-            {
-                stacks.add(Items.AIR.getDefaultInstance());
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_15).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_15));
-            }else
-            {
-                stacks.add(Items.AIR.getDefaultInstance());
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_16).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_16));
+                stacks.add(this.itemStorage().getItem(slot));
             }else
             {
                 stacks.add(Items.AIR.getDefaultInstance());
@@ -649,80 +471,10 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
     private List<ItemStack> checkRowItems(int row)
     {
         List<ItemStack> stacks = new ArrayList<>();
-        if (row == 0)
-        {
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_1).isEmpty())
+        for (int slot : ROWS[row]) {
+            if (!this.itemStorage().slot(slot).isEmpty())
             {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_1));
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_2).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_2));
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_3).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_3));
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_4).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_4));
-            }
-        }
-        if (row == 1)
-        {
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_5).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_5));
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_6).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_6));
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_7).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_7));
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_8).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_8));
-            }
-        }
-        if (row == 2)
-        {
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_9).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_9));
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_10).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_10));
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_11).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_11));
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_12).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_12));
-            }
-        }
-        if (row == 3)
-        {
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_13).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_13));
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_14).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_14));
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_15).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_15));
-            }
-            if (!this.itemStorage().slot(FOOD_INPUT_SLOT_16).isEmpty())
-            {
-                stacks.add(this.itemStorage().getItem(FOOD_INPUT_SLOT_16));
+                stacks.add(this.itemStorage().getItem(slot));
             }
         }
         return stacks;

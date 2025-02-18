@@ -31,9 +31,13 @@ import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCRegistry;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.util.Translations;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
@@ -48,7 +52,7 @@ public class GCItems {
     public static final GCRegistry<Item> ITEMS = new GCRegistry<>(BuiltInRegistries.ITEM);
     public static final List<ItemLike> HIDDEN_ITEMS = new ArrayList<>(1);
 
-    public static final List<CannedFoodItem> CANNED_FOOD_ITEMS = new ArrayList<>();
+    public static final List<ItemStack> CANNED_FOOD_ITEMS = new ArrayList<>();
 
     // === START BLOCKS ===
     // TORCHES
@@ -253,8 +257,8 @@ public class GCItems {
     public static final Item TIER_3_ROCKET_SCHEMATIC = ITEMS.register(Constant.Item.TIER_3_ROCKET_SCHEMATIC, new SchematicItem(new Item.Properties()));
     public static final Item ASTRO_MINER_SCHEMATIC = ITEMS.register(Constant.Item.ASTRO_MINER_SCHEMATIC, new SchematicItem(new Item.Properties()));
 
-    public static final CannedFoodItem CANNED_FOOD = new CannedFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(0).saturationModifier(0).build()).stacksTo(1));
-    public static final CannedFoodItem EMPTY_CANNED_FOOD = new CannedFoodItem(new Item.Properties().food(null).stacksTo(64));
+    public static final CannedFoodItem CANNED_FOOD = ITEMS.register(Constant.Item.CANNED_FOOD, new CannedFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(0).saturationModifier(0).build()).stacksTo(1)));
+    public static final CannedFoodItem EMPTY_CAN = ITEMS.register(Constant.Item.EMPTY_CAN, new CannedFoodItem(new Item.Properties().food(null).stacksTo(64)));
 
     // SPAWN EGGS
     public static final Item MOON_VILLAGER_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.MOON_VILLAGER, new SpawnEggItem(GCEntityTypes.MOON_VILLAGER, 0x74a3cf, 0xba2500, new Item.Properties()));
@@ -280,5 +284,61 @@ public class GCItems {
         DispenserBlock.registerBehavior(FUEL_BUCKET, DispenserBlock.DISPENSER_REGISTRY.get(Items.WATER_BUCKET));
         DispenserBlock.registerBehavior(CRUDE_OIL_BUCKET, DispenserBlock.DISPENSER_REGISTRY.get(Items.WATER_BUCKET));
         DispenserBlock.registerBehavior(SULFURIC_ACID_BUCKET, DispenserBlock.DISPENSER_REGISTRY.get(Items.WATER_BUCKET));
+        //Todo: make fix for the color of the labels based of component nbt
+//        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+//            if (!colorsInitialized)
+//            {
+//                if (client.player != null && client.level != null)
+//                {
+//                    CANNED_FOOD_ITEMS.forEach(cannedFoodItem -> {
+//                        Optional<ItemStack> cannedItem = CannedFoodItem.getContents(cannedFoodItem.getDefaultInstance()).stream().findFirst();
+//                        if (cannedItem.isPresent()) {
+//                            String nameComponent = cannedItem.toString();
+//                            String itemName = extractInsideBrackets(nameComponent);
+//                            assert itemName != null;
+//                            String[] parts = itemName.split(":");
+//                            String namespace = parts[0];
+//                            String item = parts[1];
+//                            for (String[] element: nameOverride)
+//                            {
+//                                if (parts[1].equals(element[0]))
+//                                {
+//                                    item = element[1];
+//                                }
+//                            }
+//                            ResourceLocation textureLocation = new ResourceLocation(namespace, "textures/item/" + item + ".png");
+//                            int avgColor = getAverageColor(textureLocation);
+//                            cannedFoodItem.setColor(avgColor);
+//                        }
+//                    });
+//                    colorsInitialized = true;
+//                }
+//            }
+//        });
+        //For every edible food create a creative item of that canned food type
+        for (Item item : BuiltInRegistries.ITEM)
+        {
+            if (item.components().has(DataComponents.FOOD))
+            {
+                if (!(item instanceof CannedFoodItem))
+                {
+                    //create new canned food item with empty components
+                    ItemStack cannedFoodItem = CANNED_FOOD.getDefaultInstance();
+                    //add the default itemstack of the edible item into the canned foods components
+                    CannedFoodItem.add(cannedFoodItem, item.getDefaultInstance());
+                    //add the item to the list to be registed in the creative tab later
+                    CANNED_FOOD_ITEMS.add(cannedFoodItem);
+                }
+            }
+        }
+    }
+
+    public static String extractInsideBrackets(String input) {
+        int startIndex = input.indexOf('{');
+        int endIndex = input.indexOf('}');
+        if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+            return input.substring(startIndex + 1, endIndex);
+        }
+        return null;
     }
 }

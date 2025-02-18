@@ -136,7 +136,7 @@ public interface Translations {
     }
 
     interface Items {
-        String EMPTY_CANNED_FOOD = "item.galacticraft.empty_canned_food";
+        String EMPTY_CAN = "item.galacticraft.empty_can";
         String CANNED_FOOD = "item.galacticraft.canned_food";
         String TOTAL_NUTRITION = "item.galacticraft.total_nutrition";
     }

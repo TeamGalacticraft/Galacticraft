@@ -353,7 +353,7 @@ public interface Constant {
         String ITEM_GROUP = "items";
         String SILICON = "silicon";
         String CANNED_FOOD = "canned_food";
-        String EMPTY_CANNED_FOOD = "empty_can";
+        String EMPTY_CAN = "empty_can";
         String RAW_SILICON = "raw_silicon";
         String RAW_METEORIC_IRON = "raw_meteoric_iron";
         String METEORIC_IRON_INGOT = "meteoric_iron_ingot";
@@ -640,6 +640,7 @@ public interface Constant {
         ResourceLocation OXYGEN_MASK = id("slot/oxygen_mask");
         ResourceLocation OXYGEN_GEAR = id("slot/oxygen_gear");
         ResourceLocation OXYGEN_TANK = id("slot/oxygen_tank");
+        ResourceLocation FOOD_CAN = id("slot/food_can");
     }
 
     interface Entity {

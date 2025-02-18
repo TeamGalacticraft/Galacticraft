@@ -400,8 +400,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.AMBIENT_THERMAL_CONTROLLER, "Ambient Thermal Controller");
 
         // FOOD
-        this.item(GCItems.CANNED_FOOD, "Canned ");
-        this.item(GCItems.EMPTY_CANNED_FOOD, "Empty Canned Food");
+        this.item(GCItems.CANNED_FOOD, "Canned %s");
+        this.item(GCItems.EMPTY_CAN, "Empty Can");
 
         this.item(GCItems.MOON_CHEESE_CURD, "Moon Cheese Curd");
 
@@ -915,7 +915,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.PREPARE_FOR_ENTRY, "Prepare for entry!");
         this.add(Ui.TRAVELING_TO, "Traveling to: %s");
 
-        this.add(Ui.TOTAL_NUTRITION, "Total Nutrition: ");
+        this.add(Ui.TOTAL_NUTRITION, "Total Nutrition: %s");
     }
 
     protected void generateStatsTranslations() {

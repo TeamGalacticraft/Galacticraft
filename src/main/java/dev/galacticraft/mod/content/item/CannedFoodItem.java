@@ -65,7 +65,7 @@ import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 import static dev.galacticraft.mod.content.item.GCItems.CANNED_FOOD;
-import static dev.galacticraft.mod.content.item.GCItems.EMPTY_CANNED_FOOD;
+import static dev.galacticraft.mod.content.item.GCItems.EMPTY_CAN;
 
 public class CannedFoodItem extends Item implements FabricItemStack {
     private int color;
@@ -92,7 +92,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
             if (itemStack.isEmpty()) {
                 if (getContents(can).isEmpty())
                 {
-                    can = new ItemStack(EMPTY_CANNED_FOOD);
+                    can = new ItemStack(EMPTY_CAN);
                 }
                 return can;
             }else
@@ -102,7 +102,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
 
                         if (getContents(can).isEmpty())
                         {
-                            can = new ItemStack(EMPTY_CANNED_FOOD);
+                            can = new ItemStack(EMPTY_CAN);
                         }
                         if (!player.getInventory().add(can)) {
                             player.drop(can, false);
@@ -125,20 +125,13 @@ public class CannedFoodItem extends Item implements FabricItemStack {
         // Add functionality when the item is crafted (optional)
     }
 
-    public static void registerCan(ItemStack cannedFoodType)
-    {
-        ItemGroupEvents.modifyEntriesEvent(ResourceKey.create(Registries.CREATIVE_MODE_TAB, Constant.id(Constant.Item.ITEM_GROUP_CANS))).register(entries -> {
-            ItemStack cannedFoodItem = CANNED_FOOD.getDefaultInstance();
-            add(cannedFoodItem, cannedFoodType);
-            entries.accept(cannedFoodItem);
-        });
-    }
+
 
     @Override
     public @NotNull Component getName(ItemStack stack) {
         if (getContents(stack).isEmpty())
         {
-            return Component.translatable(Translations.Items.EMPTY_CANNED_FOOD);
+            return Component.translatable(Translations.Items.EMPTY_CAN);
         }else
         {
             String result = getContents(stack).stream()

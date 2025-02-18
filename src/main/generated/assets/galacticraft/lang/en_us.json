@@ -436,7 +436,7 @@
   "item.galacticraft.desh_shovel": "Desh Shovel",
   "item.galacticraft.desh_stick": "Desh Stick",
   "item.galacticraft.desh_sword": "Desh Sword",
-  "item.galacticraft.empty_can": "Empty Canned Food",
+  "item.galacticraft.empty_can": "Empty Can",
   "item.galacticraft.evolved_creeper_spawn_egg": "Evolved Creeper Spawn Egg",
   "item.galacticraft.evolved_evoker_spawn_egg": "Evolved Evoker Spawn Egg",
   "item.galacticraft.evolved_pillager_spawn_egg": "Evolved Pillager Spawn Egg",
@@ -734,5 +734,7 @@
   "ui.galacticraft.status.warming_up": "Warming Up",
   "ui.galacticraft.total_nutrition": "Total Nutrition: ",
   "ui.galacticraft.traveling_to": "Traveling to: %s",
-  "ui.galacticraft.upgrade": "Upgrade"
+  "ui.galacticraft.upgrade": "Upgrade",
+  "chat.cannotEatInNoAtmosphere": "You can't eat in an unsealed atmosphere!",
+  "chat.cannotEatWithMask": "You cant eat with a mask on!"
 }

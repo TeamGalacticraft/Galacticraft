@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_oxygen_concentrator": {
+    "has_empty_can": {
       "conditions": {
         "items": [
           {
-            "items": "galacticraft:oxygen_concentrator"
+            "items": "galacticraft:empty_can"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_oxygen_concentrator"
+      "has_empty_can"
     ]
   ],
   "rewards": {
