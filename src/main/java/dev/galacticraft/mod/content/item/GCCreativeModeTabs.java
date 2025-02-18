@@ -27,7 +27,6 @@ import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry;
-import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.storage.PlaceholderItemStorage;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
@@ -45,6 +44,7 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
+import static dev.galacticraft.mod.content.GCBlocks.*;
 import static dev.galacticraft.mod.content.GCBlocks.FOOD_CANNER;
 import static dev.galacticraft.mod.content.item.GCItems.*;
 
@@ -271,11 +271,11 @@ public class GCCreativeModeTabs {
 
     public static final CreativeModeTab BLOCKS_GROUP = FabricItemGroup
             .builder()
-            .icon(() -> new ItemStack(GCItems.MOON_TURF))
+            .icon(() -> new ItemStack(MOON_TURF))
             .title(Component.translatable(Translations.ItemGroup.BLOCKS))
             .displayItems((parameters, output) -> {
                 // DECORATION BLOCKS
-                for (GCBlockRegistry.DecorationSet decorationSet : GCBlocks.BLOCKS.getDecorations()) {
+                for (GCBlockRegistry.DecorationSet decorationSet : BLOCKS.getDecorations()) {
                     output.accept(decorationSet.item());
                     output.accept(decorationSet.slabItem());
                     output.accept(decorationSet.stairsItem());
@@ -287,8 +287,8 @@ public class GCCreativeModeTabs {
                 }
 
                 // TORCHES
-                output.accept(GLOWSTONE_TORCH);
-                output.accept(UNLIT_TORCH);
+                output.accept(GCItems.GLOWSTONE_TORCH);
+                output.accept(GCItems.UNLIT_TORCH);
 
                 // LANTERNS
                 output.accept(GLOWSTONE_LANTERN);
@@ -299,7 +299,7 @@ public class GCCreativeModeTabs {
                 output.accept(MOON_DIRT);
                 output.accept(MOON_DIRT_PATH);
                 output.accept(MOON_SURFACE_ROCK);
-                output.accept(GCBlocks.MOON_DUNGEON_BRICK);
+                output.accept(MOON_DUNGEON_BRICK);
 
                 output.accept(MOON_ROCK);
                 output.accept(MOON_ROCK_SLAB);
@@ -393,7 +393,7 @@ public class GCCreativeModeTabs {
                 output.accept(ROCKET_LAUNCH_PAD);
 
                 for (DyeColor color : DyeColor.values()) {
-                    ItemStack stack = new ItemStack(GCBlocks.PARACHEST);
+                    ItemStack stack = new ItemStack(PARACHEST);
                     stack.set(DataComponents.BASE_COLOR, color);
                     output.accept(stack);
                 }
@@ -436,27 +436,27 @@ public class GCCreativeModeTabs {
 
                 output.accept(GALENA_ORE);
 
-                output.accept(GCBlocks.OLIVINE_BASALT);
-                output.accept(GCBlocks.RICH_OLIVINE_BASALT);
-                output.accept(GCBlocks.OLIVINE_CLUSTER);
+                output.accept(OLIVINE_BASALT);
+                output.accept(RICH_OLIVINE_BASALT);
+                output.accept(OLIVINE_CLUSTER);
 
                 // COMPACT MINERAL BLOCKS
-                output.accept(MOON_CHEESE_WHEEL);
+                output.accept(GCItems.MOON_CHEESE_WHEEL);
                 output.accept(SILICON_BLOCK);
-                output.accept(GCBlocks.ALUMINUM_BLOCK);
+                output.accept(ALUMINUM_BLOCK);
                 output.accept(METEORIC_IRON_BLOCK);
                 output.accept(DESH_BLOCK);
-                output.accept(GCBlocks.TIN_BLOCK);
+                output.accept(TIN_BLOCK);
                 output.accept(TITANIUM_BLOCK);
                 output.accept(LEAD_BLOCK);
                 output.accept(LUNAR_SAPPHIRE_BLOCK);
-                output.accept(GCBlocks.RAW_ALUMINUM_BLOCK);
-                output.accept(GCBlocks.RAW_METEORIC_IRON_BLOCK);
-                output.accept(GCBlocks.RAW_DESH_BLOCK);
-                output.accept(GCBlocks.RAW_TIN_BLOCK);
-                output.accept(GCBlocks.RAW_TITANIUM_BLOCK);
-                output.accept(GCBlocks.RAW_LEAD_BLOCK);
-                output.accept(GCBlocks.OLIVINE_BLOCK);
+                output.accept(RAW_ALUMINUM_BLOCK);
+                output.accept(RAW_METEORIC_IRON_BLOCK);
+                output.accept(RAW_DESH_BLOCK);
+                output.accept(RAW_TIN_BLOCK);
+                output.accept(RAW_TITANIUM_BLOCK);
+                output.accept(RAW_LEAD_BLOCK);
+                output.accept(OLIVINE_BLOCK);
 
                 // MOON VILLAGER SPECIAL
                 output.accept(LUNAR_CARTOGRAPHY_TABLE);
@@ -481,7 +481,7 @@ public class GCCreativeModeTabs {
 
     public static final CreativeModeTab MACHINES_GROUP = FabricItemGroup
             .builder()
-            .icon(() -> new ItemStack(GCItems.COAL_GENERATOR))
+            .icon(() -> new ItemStack(COAL_GENERATOR))
             .title(Component.translatable(Translations.ItemGroup.MACHINES))
             .displayItems((parameters, output) -> {
                 output.accept(CIRCUIT_FABRICATOR);

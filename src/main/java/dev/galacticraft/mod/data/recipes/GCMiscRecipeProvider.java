@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.data.recipes;
 
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -59,12 +60,12 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_GEAR)
-                .define('Y', GCItems.GLASS_FLUID_PIPE)
+                .define('Y', GCBlocks.GLASS_FLUID_PIPE)
                 .define('X', GCItems.OXYGEN_CONCENTRATOR)
                 .pattern(" Y ")
                 .pattern("YXY")
                 .pattern("Y Y")
-                .unlockedBy(getHasName(GCItems.GLASS_FLUID_PIPE), has(GCItems.GLASS_FLUID_PIPE))
+                .unlockedBy(getHasName(GCBlocks.GLASS_FLUID_PIPE), has(GCBlocks.GLASS_FLUID_PIPE))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_CONCENTRATOR)
@@ -187,7 +188,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.SINGLE_SOLAR_MODULE, 2)
                 .define('G', ConventionalItemTags.GLASS_BLOCKS)
                 .define('S', GCItems.BLUE_SOLAR_WAFER)
-                .define('W', GCItems.ALUMINUM_WIRE)
+                .define('W', GCBlocks.ALUMINUM_WIRE)
                 .pattern("GGG")
                 .pattern("SSS")
                 .pattern("WWW")
@@ -197,7 +198,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.FULL_SOLAR_PANEL)
                 .define('M', GCItems.SINGLE_SOLAR_MODULE)
-                .define('W', GCItems.ALUMINUM_WIRE)
+                .define('W', GCBlocks.ALUMINUM_WIRE)
                 .pattern("MMM")
                 .pattern("WWW")
                 .pattern("MMM")
@@ -265,15 +266,15 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .define('L', Items.LAPIS_ORE)
                 .define('G', Items.GOLD_ORE)
                 .define('C', Items.COAL_ORE)
-                .define('I', GCItems.ILMENITE_ORE)
-                .define('S', GCItems.DESH_ORE)
-                .define('E', GCItems.MOON_CHEESE_WHEEL) //todo: add cheese ore?
+                .define('I', GCBlocks.ILMENITE_ORE)
+                .define('S', GCBlocks.DESH_ORE)
+                .define('E', GCBlocks.MOON_CHEESE_WHEEL) //todo: add cheese ore?
                 .define('R', Items.REDSTONE_ORE)
                 .define('B', GCItems.BEAM_CORE)
                 .pattern("DLG")
                 .pattern("RBC")
                 .pattern("ESI")
-                .unlockedBy(getHasName(GCItems.ILMENITE_ORE), has(GCItems.ILMENITE_ORE))
+                .unlockedBy(getHasName(GCBlocks.ILMENITE_ORE), has(GCBlocks.ILMENITE_ORE))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.TIN_CANISTER, 2)
@@ -292,7 +293,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(Items.COPPER_INGOT), has(Items.COPPER_INGOT))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.ROCKET_LAUNCH_PAD, 9)
+        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCBlocks.ROCKET_LAUNCH_PAD, 9)
                 .define('C', GCItems.COMPRESSED_IRON)
                 .define('I', Items.IRON_BLOCK)
                 .pattern("CCC")
@@ -300,7 +301,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(Items.IRON_BLOCK), has(Items.IRON_BLOCK))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.FUELING_PAD, 9)
+        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCBlocks.FUELING_PAD, 9)
                 .define('C', GCItems.COMPRESSED_STEEL)
                 .define('I', Items.IRON_BLOCK)
                 .pattern("CCC")
@@ -364,11 +365,11 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.MOON_CHEESE_SLICE, 6)
-                .requires(GCItems.MOON_CHEESE_WHEEL)
-                .unlockedBy(getHasName(GCItems.MOON_CHEESE_WHEEL), has(GCItems.MOON_CHEESE_WHEEL))
+                .requires(GCBlocks.MOON_CHEESE_WHEEL)
+                .unlockedBy(getHasName(GCBlocks.MOON_CHEESE_WHEEL), has(GCBlocks.MOON_CHEESE_WHEEL))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.FOOD, GCItems.MOON_CHEESE_WHEEL)
+        ShapedRecipeBuilder.shaped(RecipeCategory.FOOD, GCBlocks.MOON_CHEESE_WHEEL)
                 .define('C', GCItems.MOON_CHEESE_CURD)
                 .define('M', Items.MILK_BUCKET)
                 .pattern("CCC")
