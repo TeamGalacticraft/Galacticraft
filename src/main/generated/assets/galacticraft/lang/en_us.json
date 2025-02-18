@@ -406,7 +406,7 @@
   "item.galacticraft.brown_parachute": "Brown Parachute",
   "item.galacticraft.buggy": "Buggy",
   "item.galacticraft.burger_bun": "Burger Bun",
-  "item.galacticraft.canned_food": "Canned ",
+  "item.galacticraft.canned_food": "Canned %s",
   "item.galacticraft.canvas": "Canvas",
   "item.galacticraft.carbon_fragments": "Carbon Fragments",
   "item.galacticraft.cargo_rocket_schematic": "Cargo Rocket Schematic",
@@ -732,9 +732,7 @@
   "ui.galacticraft.status.thunder": "Thunder",
   "ui.galacticraft.status.transferring_can": "Transferring Can",
   "ui.galacticraft.status.warming_up": "Warming Up",
-  "ui.galacticraft.total_nutrition": "Total Nutrition: ",
+  "ui.galacticraft.total_nutrition": "Total Nutrition: %s",
   "ui.galacticraft.traveling_to": "Traveling to: %s",
-  "ui.galacticraft.upgrade": "Upgrade",
-  "chat.cannotEatInNoAtmosphere": "You can't eat in an unsealed atmosphere!",
-  "chat.cannotEatWithMask": "You cant eat with a mask on!"
+  "ui.galacticraft.upgrade": "Upgrade"
 }
