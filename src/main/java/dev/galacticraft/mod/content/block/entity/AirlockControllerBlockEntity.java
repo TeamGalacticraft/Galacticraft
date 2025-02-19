@@ -44,6 +44,8 @@ import java.util.List;
 
 import static dev.galacticraft.mod.content.block.special.AirlockSealBlock.FACING;
 
+import static dev.galacticraft.mod.content.block.special.AirlockSealBlock.FACING;
+
 public class AirlockControllerBlockEntity extends BlockEntity implements MenuProvider {
     public boolean redstoneActivation;
     public boolean playerDistanceActivation = true;
@@ -271,7 +273,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
         {
             if (this.protocol.minY == this.protocol.maxY && this.protocol.minX != this.protocol.maxX && this.protocol.minZ != this.protocol.maxZ)
             {
-                // First test if there is getSealed air to either side
+                // First test if there is sealed air to either side
                 for (x = this.protocol.minX + 1; x <= this.protocol.maxX - 1; x++)
                 {
                     for (z = this.protocol.minZ + 1; z <= this.protocol.maxZ - 1; z++)
@@ -300,7 +302,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                     if (sealedSide)
                         break;
                 }
-                // Now replace the airlock blocks with either air, or getSealed air
+                // Now replace the airlock blocks with either air, or sealed air
                 for (x = this.protocol.minX + 1; x <= this.protocol.maxX - 1; x++)
                 {
                     for (z = this.protocol.minZ + 1; z <= this.protocol.maxZ - 1; z++)
@@ -320,7 +322,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
         {
             if (this.lastProtocol.minX != this.lastProtocol.maxX)
             {
-                // First test if there is getSealed air to either side
+                // First test if there is sealed air to either side
                 for (x = this.lastProtocol.minX + 1; x <= this.lastProtocol.maxX - 1; x++)
                 {
                     for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++)
@@ -349,7 +351,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                     if (sealedSide)
                         break;
                 }
-                // Now replace the airlock blocks with either air, or getSealed air
+                // Now replace the airlock blocks with either air, or sealed air
                 for (x = this.lastProtocol.minX + 1; x <= this.lastProtocol.maxX - 1; x++)
                 {
                     for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++)
@@ -366,7 +368,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                 }
             } else if (this.lastProtocol.minZ != this.lastProtocol.maxZ)
             {
-                // First test if there is getSealed air to either side
+                // First test if there is sealed air to either side
                 for (z = this.lastProtocol.minZ + 1; z <= this.lastProtocol.maxZ - 1; z++)
                 {
                     for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++)
@@ -395,7 +397,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                     if (sealedSide)
                         break;
                 }
-                // Now replace the airlock blocks with either air, or getSealed air
+                // Now replace the airlock blocks with either air, or sealed air
                 for (z = this.lastProtocol.minZ + 1; z <= this.lastProtocol.maxZ - 1; z++)
                 {
                     for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++)
@@ -416,7 +418,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable(Translations.Ui.AIRLOCK_OWNER, ownerName);
+        return Component.literal(ownerName + "'s Air Lock Controller");
     }
 
     @Override

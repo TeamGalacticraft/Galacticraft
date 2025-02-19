@@ -505,6 +505,8 @@ public class GCCreativeModeTabs {
                 output.accept(FOOD_CANNER);
                 output.accept(OXYGEN_STORAGE_MODULE);
                 output.accept(FUEL_LOADER);
+                output.accept(AIR_LOCK_FRAME);
+                output.accept(AIR_LOCK_CONTROLLER);
             }).build();
 
     public static void registerSpawnEggs() {
