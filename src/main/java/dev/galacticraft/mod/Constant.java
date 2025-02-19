@@ -736,6 +736,18 @@ public interface Constant {
         int ARROW_DOWN_HOVER_X = 50;
         int ARROW_DOWN_HOVER_Y = 118;
 
+        int OXYGEN_MASK_X = 0;
+        int OXYGEN_MASK_Y = 0;
+        int OXYGEN_PIPE_X = 40;
+        int OXYGEN_PIPE_Y = 7;
+        int SMALL_OXYGEN_TANK_X = 0;
+        int SMALL_OXYGEN_TANK_Y = 20;
+        int MEDIUM_OXYGEN_TANK_X = 16;
+        int MEDIUM_OXYGEN_TANK_Y = 20;
+        int LARGE_OXYGEN_TANK_X = 32;
+        int LARGE_OXYGEN_TANK_Y = 20;
+        int INFINITE_OXYGEN_TANK_X = 48;
+        int INFINITE_OXYGEN_TANK_Y = 20;
     }
 
     interface Menu {
