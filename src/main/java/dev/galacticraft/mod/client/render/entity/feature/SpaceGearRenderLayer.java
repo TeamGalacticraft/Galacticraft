@@ -51,8 +51,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import static dev.galacticraft.mod.Constant.TextureCoordinate.*;
-
 public class SpaceGearRenderLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
     private static final ResourceLocation TEXTURE = Constant.id("textures/entity/oxygen_gear.png");
     private final @Nullable ModelPart mask;
@@ -81,15 +79,15 @@ public class SpaceGearRenderLayer<T extends LivingEntity, M extends EntityModel<
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
         if (head != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(OXYGEN_MASK_X, OXYGEN_MASK_Y).addBox(-5.0F, -9.01F, -5.0F, 10, 10, 10, new CubeDeformation(-0.1F)), PartPose.offset(head.x, head.y, head.z));
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -9.01F, -5.0F, 10, 10, 10, new CubeDeformation(-0.1F)), PartPose.offset(head.x, head.y, head.z));
         }
 
         if (body != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(OXYGEN_PIPE_X, OXYGEN_PIPE_Y).addBox(-2.0F, -5.0F, 5.0F, 4, 8, 5, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
-            modelPartData.addOrReplaceChild(Constant.Item.SMALL_OXYGEN_TANK, CubeListBuilder.create().texOffs(SMALL_OXYGEN_TANK_X, SMALL_OXYGEN_TANK_Y).addBox(0.0F, 1.0F, 2.01F, 4, 8, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
-            modelPartData.addOrReplaceChild(Constant.Item.MEDIUM_OXYGEN_TANK, CubeListBuilder.create().texOffs(MEDIUM_OXYGEN_TANK_X, MEDIUM_OXYGEN_TANK_Y).addBox(0.0F, 1.0F, 2.01F, 4, 8, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
-            modelPartData.addOrReplaceChild(Constant.Item.LARGE_OXYGEN_TANK, CubeListBuilder.create().texOffs(LARGE_OXYGEN_TANK_X, LARGE_OXYGEN_TANK_Y).addBox(0.0F, 1.0F, 2.01F, 4, 8, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
-            modelPartData.addOrReplaceChild(Constant.Item.INFINITE_OXYGEN_TANK, CubeListBuilder.create().texOffs(INFINITE_OXYGEN_TANK_X, INFINITE_OXYGEN_TANK_Y).addBox(0.0F, 1.0F, 2.01F, 4, 8, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 7).addBox(-2.0F, -5.0F, 5.0F, 4, 8, 5, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild(Constant.Item.SMALL_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 20).addBox(0.0F, 1.0F, 2.01F, 4, 8, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild(Constant.Item.MEDIUM_OXYGEN_TANK, CubeListBuilder.create().texOffs(16, 20).addBox(0.0F, 1.0F, 2.01F, 4, 8, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild(Constant.Item.LARGE_OXYGEN_TANK, CubeListBuilder.create().texOffs(32, 20).addBox(0.0F, 1.0F, 2.01F, 4, 8, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild(Constant.Item.INFINITE_OXYGEN_TANK, CubeListBuilder.create().texOffs(48, 20).addBox(0.0F, 1.0F, 2.01F, 4, 8, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
         }
 
         root = modelPartData.bake(64, 32);
