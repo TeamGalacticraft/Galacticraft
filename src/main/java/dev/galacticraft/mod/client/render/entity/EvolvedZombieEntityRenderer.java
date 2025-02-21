@@ -26,8 +26,8 @@ import dev.galacticraft.mod.client.render.entity.feature.SpaceGearRenderLayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ZombieRenderer;
 
-public class EvolvedZombieRenderer extends ZombieRenderer {
-    public EvolvedZombieRenderer(EntityRendererProvider.Context context) {
+public class EvolvedZombieEntityRenderer extends ZombieRenderer {
+    public EvolvedZombieEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
         this.addLayer(new SpaceGearRenderLayer<>(this));
     }

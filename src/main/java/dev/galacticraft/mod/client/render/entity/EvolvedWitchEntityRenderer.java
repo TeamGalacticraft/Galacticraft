@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.client.render.entity;
 
 import dev.galacticraft.mod.client.render.entity.feature.SpaceGearRenderLayer;
-import dev.galacticraft.mod.content.entity.EvolvedWitchEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.WitchRenderer;
 
