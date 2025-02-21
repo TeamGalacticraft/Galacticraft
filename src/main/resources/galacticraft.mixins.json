@@ -41,7 +41,8 @@
     "client.LivingEntityRendererMixin",
     "client.LocalPlayerMixin",
     "client.MinecraftMixin",
-    "client.PauseMenuScreenMixin"
+    "client.PauseMenuScreenMixin",
+    "client.ScreenEffectRendererMixin"
   ],
   "minVersion": "0.8.0",
   "injectors": {

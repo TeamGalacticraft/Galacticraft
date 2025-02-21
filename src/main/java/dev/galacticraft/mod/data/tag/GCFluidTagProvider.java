@@ -28,6 +28,7 @@ import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.tags.FluidTags;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -51,5 +52,10 @@ public class GCFluidTagProvider extends FabricTagProvider.FluidTagProvider {
                 .add(GCFluids.LIQUID_OXYGEN);
         this.getOrCreateTagBuilder(GCTags.OXYGEN)
                 .add(Gases.OXYGEN);
+        this.getOrCreateTagBuilder(GCTags.NON_BREATHABLE)
+                .addOptionalTag(FluidTags.WATER)
+                .addTag(GCTags.OIL)
+                .addTag(GCTags.FUEL)
+                .addTag(GCTags.SULFURIC_ACID);
     }
 }
