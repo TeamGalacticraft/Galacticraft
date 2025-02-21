@@ -171,6 +171,7 @@ public class VariableSizedContainer implements Container {
     @Override
     public void clearContent() {
         Collections.fill(this.stacks, ItemStack.EMPTY);
+        this.setChanged();
     }
 
     public CompoundTag toTag(HolderLookup.Provider provider) {

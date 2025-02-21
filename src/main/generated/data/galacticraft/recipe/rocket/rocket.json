@@ -1,0 +1,20 @@
+{
+  "type": "galacticraft:rocket",
+  "body": {
+    "item": "galacticraft:heavy_plating"
+  },
+  "body_height": 4,
+  "cone": {
+    "item": "galacticraft:nose_cone"
+  },
+  "engine": {
+    "item": "galacticraft:rocket_engine"
+  },
+  "fins": {
+    "item": "galacticraft:rocket_fin"
+  },
+  "result": {
+    "count": 1,
+    "id": "galacticraft:rocket"
+  }
+}

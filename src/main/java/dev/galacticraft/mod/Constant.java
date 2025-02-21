@@ -622,6 +622,13 @@ public interface Constant {
         ResourceLocation OXYGEN_MASK = id("slot/oxygen_mask");
         ResourceLocation OXYGEN_GEAR = id("slot/oxygen_gear");
         ResourceLocation OXYGEN_TANK = id("slot/oxygen_tank");
+
+        ResourceLocation ROCKET_CONE = id("slot/rocket_cone");
+        ResourceLocation ROCKET_PLATING = id("slot/rocket_plating");
+        ResourceLocation ROCKET_BOOSTER = id("slot/rocket_booster");
+        ResourceLocation ROCKET_FIN = id("slot/rocket_fin");
+        ResourceLocation ROCKET_ENGINE = id("slot/rocket_engine");
+        ResourceLocation CHEST = id("slot/chest");
     }
 
     interface Entity {
@@ -863,11 +870,13 @@ public interface Constant {
     interface Recipe {
         String FABRICATION = "fabrication";
         String COMPRESSING = "compressing";
+        String ROCKET = "rocket";
 
         interface Serializer {
             String FABRICATION = "fabrication";
             String COMPRESSING_SHAPELESS = "compressing_shapeless";
             String COMPRESSING_SHAPED = "compressing_shaped";
+            String ROCKET = "rocket";
         }
     }
 
