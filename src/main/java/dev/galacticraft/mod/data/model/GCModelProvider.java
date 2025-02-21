@@ -667,6 +667,8 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.EVOLVED_CREEPER_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
         generator.generateFlatItem(GCItems.EVOLVED_SKELETON_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
         generator.generateFlatItem(GCItems.EVOLVED_SPIDER_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
+        generator.generateFlatItem(GCItems.EVOLVED_ENDERMAN_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
+        generator.generateFlatItem(GCItems.EVOLVED_WITCH_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
         generator.generateFlatItem(GCItems.EVOLVED_PILLAGER_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
         generator.generateFlatItem(GCItems.EVOLVED_EVOKER_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
         generator.generateFlatItem(GCItems.EVOLVED_VINDICATOR_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);

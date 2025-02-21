@@ -108,6 +108,8 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.register(GCEntityTypes.EVOLVED_CREEPER, EvolvedCreeperEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.EVOLVED_SKELETON, EvolvedSkeletonEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.EVOLVED_SPIDER, EvolvedSpiderEntityRenderer::new);
+        EntityRendererRegistry.register(GCEntityTypes.EVOLVED_ENDERMAN, EvolvedEndermanEntityRenderer::new);
+        EntityRendererRegistry.register(GCEntityTypes.EVOLVED_WITCH, EvolvedWitchEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.EVOLVED_EVOKER, EvolvedEvokerEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.EVOLVED_PILLAGER, EvolvedPillagerEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.EVOLVED_VINDICATOR, EvolvedVindicatorEntityRenderer::new);

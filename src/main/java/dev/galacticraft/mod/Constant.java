@@ -492,14 +492,6 @@ public interface Constant {
         String MOON_BUGGY_SCHEMATIC = "moon_buggy_schematic";
         String ASTRO_MINER_SCHEMATIC = "astro_miner_schematic";
 
-        String EVOLVED_ZOMBIE_SPAWN_EGG = "evolved_zombie_spawn_egg";
-        String EVOLVED_PILLAGER_SPAWN_EGG = "evolved_pillager_spawn_egg";
-        String EVOLVED_VINDICATOR_SPAWN_EGG = "evolved_vindicator_spawn_egg";
-        String EVOLVED_EVOKER_SPAWN_EGG = "evolved_evoker_spawn_egg";
-        String EVOLVED_SPIDER_SPAWN_EGG = "evolved_spider_spawn_egg";
-        String EVOLVED_SKELETON_SPAWN_EGG = "evolved_skeleton_spawn_egg";
-        String EVOLVED_CREEPER_SPAWN_EGG = "evolved_creeper_spawn_egg";
-
         String LEGACY_MUSIC_DISC_MARS = "legacy_music_disc_mars";
         String LEGACY_MUSIC_DISC_MIMAS = "legacy_music_disc_mimas";
         String LEGACY_MUSIC_DISC_ORBIT = "legacy_music_disc_orbit";
@@ -638,6 +630,8 @@ public interface Constant {
         String EVOLVED_CREEPER = "evolved_creeper";
         String EVOLVED_SKELETON = "evolved_skeleton";
         String EVOLVED_SPIDER = "evolved_spider";
+        String EVOLVED_ENDERMAN = "evolved_enderman";
+        String EVOLVED_WITCH = "evolved_witch";
         String EVOLVED_PILLAGER = "evolved_pillager";
         String EVOLVED_EVOKER = "evolved_evoker";
         String EVOLVED_VINDICATOR = "evolved_vindicator";
@@ -662,6 +656,8 @@ public interface Constant {
         String EVOLVED_CREEPER = "evolved_creeper_spawn_egg";
         String EVOLVED_SKELETON = "evolved_skeleton_spawn_egg";
         String EVOLVED_SPIDER = "evolved_spider_spawn_egg";
+        String EVOLVED_ENDERMAN = "evolved_enderman_spawn_egg";
+        String EVOLVED_WITCH = "evolved_witch_spawn_egg";
         String EVOLVED_PILLAGER = "evolved_pillager_spawn_egg";
         String EVOLVED_EVOKER = "evolved_evoker_spawn_egg";
         String EVOLVED_VINDICATOR = "evolved_vindicator_spawn_egg";

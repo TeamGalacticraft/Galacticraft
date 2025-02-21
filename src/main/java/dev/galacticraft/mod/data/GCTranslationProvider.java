@@ -535,6 +535,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.EVOLVED_CREEPER_SPAWN_EGG, "Evolved Creeper Spawn Egg");
         this.item(GCItems.EVOLVED_SKELETON_SPAWN_EGG, "Evolved Skeleton Spawn Egg");
         this.item(GCItems.EVOLVED_SPIDER_SPAWN_EGG, "Evolved Spider Spawn Egg");
+        this.item(GCItems.EVOLVED_ENDERMAN_SPAWN_EGG, "Evolved Enderman Spawn Egg");
+        this.item(GCItems.EVOLVED_WITCH_SPAWN_EGG, "Evolved Witch Spawn Egg");
         this.item(GCItems.EVOLVED_PILLAGER_SPAWN_EGG, "Evolved Pillager Spawn Egg");
         this.item(GCItems.EVOLVED_EVOKER_SPAWN_EGG, "Evolved Evoker Spawn Egg");
         this.item(GCItems.EVOLVED_VINDICATOR_SPAWN_EGG, "Evolved Vindicator Spawn Egg");
@@ -586,12 +588,14 @@ public class GCTranslationProvider extends TranslationProvider {
         this.entity(GCEntityTypes.BUGGY, "Buggy");
         this.entity(GCEntityTypes.COMET_CUBE, "Comet Cube");
         this.entity(GCEntityTypes.EVOLVED_CREEPER, "Evolved Creeper");
+        this.entity(GCEntityTypes.EVOLVED_ENDERMAN, "Evolved Enderman");
         this.entity(GCEntityTypes.EVOLVED_EVOKER, "Evolved Evoker");
         this.entity(GCEntityTypes.EVOLVED_PILLAGER, "Evolved Pillager");
         this.entity(GCEntityTypes.EVOLVED_SKELETON, "Evolved Skeleton");
         this.entity(GCEntityTypes.SKELETON_BOSS, "Evolved Skeleton Boss");
         this.entity(GCEntityTypes.EVOLVED_SPIDER, "Evolved Spider");
         this.entity(GCEntityTypes.EVOLVED_VINDICATOR, "Evolved Vindicator");
+        this.entity(GCEntityTypes.EVOLVED_WITCH, "Evolved Witch");
         this.entity(GCEntityTypes.EVOLVED_ZOMBIE, "Evolved Zombie");
         this.entity(GCEntityTypes.GAZER, "Gazer");
         this.entity(GCEntityTypes.GREY, "Grey");
