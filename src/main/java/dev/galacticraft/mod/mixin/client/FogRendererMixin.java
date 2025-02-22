@@ -46,7 +46,7 @@ public class FogRendererMixin {
     @Shadow private static float fogGreen;
     @Shadow private static float fogBlue;
 
-    @Inject(method = "setupColor", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;clearColor(FFFF)V", remap = false))
+    @Inject(method = "setupColor", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;clearColor(FFFF)V", remap = false, ordinal = 1))
     private static void gc$setupColor(Camera camera, float partialTicks, ClientLevel clientLevel, int renderDistanceChunks, float bossColorModifier, CallbackInfo ci) {
         Player player = Minecraft.getInstance().player;
         if (player != null && player.getVehicle() instanceof RocketEntity && player.getY() > 200) {
@@ -54,7 +54,13 @@ public class FogRendererMixin {
             fogRed = (float) vec3.x();
             fogGreen = (float) vec3.y();
             fogBlue = (float) vec3.z();
-        } else if (player.isEyeInFluid(GCTags.OIL)) {
+        }
+    }
+
+    @Inject(method = "setupColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/FogRenderer;getPriorityFogFunction(Lnet/minecraft/world/entity/Entity;F)Lnet/minecraft/client/renderer/FogRenderer$MobEffectFogFunction;"))
+    private static void gc$setupFluidFog(Camera camera, float partialTicks, ClientLevel clientLevel, int renderDistanceChunks, float bossColorModifier, CallbackInfo ci) {
+        Player player = Minecraft.getInstance().player;
+        if (player.isEyeInFluid(GCTags.OIL)) {
             fogRed = 0.0F;
             fogGreen = 0.0F;
             fogBlue = 0.0F;

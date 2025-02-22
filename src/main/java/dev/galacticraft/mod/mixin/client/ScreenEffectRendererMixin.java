@@ -49,14 +49,18 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.material.Fluid;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ScreenEffectRenderer.class)
 public class ScreenEffectRendererMixin {
+    @Unique
     private static final ResourceLocation OIL_LOCATION = Constant.id("textures/misc/crude_oil_overlay.png");
+    @Unique
     private static final ResourceLocation FUEL_LOCATION = Constant.id("textures/misc/fuel_overlay.png");
+    @Unique
     private static final ResourceLocation ACID_LOCATION = Constant.id("textures/misc/sulfuric_acid_overlay.png");
 
     @Inject(method = "renderScreenEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"), cancellable = true)
@@ -70,6 +74,7 @@ public class ScreenEffectRendererMixin {
         }
     }
 
+    @Unique
     private static void gc$renderFluidOverlay(Minecraft minecraft, PoseStack poseStack, ResourceLocation texture) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, texture);

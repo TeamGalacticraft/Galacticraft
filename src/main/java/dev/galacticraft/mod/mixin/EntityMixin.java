@@ -172,15 +172,18 @@ public abstract class EntityMixin implements EntityAccessor {
         }
     }
 
+    @Unique
     private boolean shouldPlaySulfuricAcidSound() {
         return this.tickCount >= this.lastAcidSoundPlayTick + 5;
     }
 
+    @Unique
     private void playSulfuricAcidSound() {
         this.playSound(SoundEvents.LAVA_EXTINGUISH, 0.7F, 1.6F + (level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.4F);
         this.lastAcidSoundPlayTick = this.tickCount;
     }
 
+    @Unique
     private void addSulfuricAcidParticles() {
         for (int i = 0; i < 4; i++) {
             level.addParticle(ParticleTypes.WHITE_SMOKE, true, this.getX() + level.random.nextDouble() - 0.5, Mth.ceil(this.getY()), this.getZ() + level.random.nextDouble() - 0.5, 0.0D, 0.0D, 0.0D);

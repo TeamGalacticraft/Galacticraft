@@ -45,10 +45,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 
 @Mixin(Camera.class)
 public abstract class CameraMixin {
-    @Shadow private BlockGetter level;
-
-    @Shadow private BlockPos.MutableBlockPos blockPosition;
-
     @Shadow
     protected abstract void setRotation(float f, float g);
 

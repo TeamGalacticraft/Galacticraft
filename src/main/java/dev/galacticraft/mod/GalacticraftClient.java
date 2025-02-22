@@ -41,6 +41,7 @@ import dev.galacticraft.mod.client.resources.GCResourceReloadListener;
 import dev.galacticraft.mod.client.resources.RocketTextureManager;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
+import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.block.environment.FallenMeteorBlock;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -59,7 +60,9 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
+import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -162,6 +165,26 @@ public class GalacticraftClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.ACID_VAPOR_PARTICLE, AcidVaporParticle.Provider::new);
 
         FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER); // Workaround for classloading order bug
+
+        FluidRenderHandler oil = new SimpleFluidRenderHandler(
+                Constant.Fluid.fluidId(Constant.Fluid.CRUDE_OIL_STILL),
+                Constant.Fluid.fluidId(Constant.Fluid.CRUDE_OIL_FLOWING)
+        );
+        FluidRenderHandler fuel = new SimpleFluidRenderHandler(
+                Constant.Fluid.fluidId(Constant.Fluid.FUEL_STILL),
+                Constant.Fluid.fluidId(Constant.Fluid.FUEL_FLOWING)
+        );
+        FluidRenderHandler sulfuricAcid = new SimpleFluidRenderHandler(
+                Constant.Fluid.fluidId(Constant.Fluid.SULFURIC_ACID_STILL),
+                Constant.Fluid.fluidId(Constant.Fluid.SULFURIC_ACID_FLOWING)
+        );
+
+        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.CRUDE_OIL, GCFluids.FLOWING_CRUDE_OIL, oil);
+        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FUEL, GCFluids.FLOWING_FUEL, fuel);
+        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.SULFURIC_ACID, GCFluids.FLOWING_SULFURIC_ACID, sulfuricAcid);
+
+        BlockRenderLayerMap.INSTANCE.putFluids(RenderType.translucent(), GCFluids.FUEL, GCFluids.FLOWING_FUEL);
+        BlockRenderLayerMap.INSTANCE.putFluids(RenderType.translucent(), GCFluids.SULFURIC_ACID, GCFluids.FLOWING_SULFURIC_ACID);
 
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> FallenMeteorBlock.colorMultiplier(state, world, pos), GCBlocks.FALLEN_METEOR);
         BuiltinItemRendererRegistry.INSTANCE.register(GCItems.ROCKET, new RocketItemRenderer());
