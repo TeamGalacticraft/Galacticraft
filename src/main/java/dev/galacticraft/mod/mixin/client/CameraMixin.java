@@ -22,10 +22,10 @@
 
 package dev.galacticraft.mod.mixin.client;
 
+import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.block.entity.CryogenicChamberBlockEntity;
 import dev.galacticraft.mod.content.block.entity.CryogenicChamberPartBlockEntity;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
-import dev.galacticraft.mod.tag.GCTags;
 import net.minecraft.client.Camera;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -87,6 +87,12 @@ public abstract class CameraMixin {
 
     @ModifyExpressionValue(method = "getFluidInCamera", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/material/FluidState;is(Lnet/minecraft/tags/TagKey;)Z", ordinal = 0))
     private boolean gc$getFluidInCamera(boolean original, @Local FluidState fluidState) {
-        return original || fluidState.is(GCTags.OIL) || fluidState.is(GCTags.FUEL) || fluidState.is(GCTags.SULFURIC_ACID);
+        return original
+                || fluidState.is(GCFluids.CRUDE_OIL)
+                || fluidState.is(GCFluids.FLOWING_CRUDE_OIL)
+                || fluidState.is(GCFluids.FUEL)
+                || fluidState.is(GCFluids.FLOWING_FUEL) 
+                || fluidState.is(GCFluids.SULFURIC_ACID)
+                || fluidState.is(GCFluids.FLOWING_SULFURIC_ACID);
     }
 }
