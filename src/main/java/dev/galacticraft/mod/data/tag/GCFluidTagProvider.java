@@ -42,20 +42,30 @@ public class GCFluidTagProvider extends FabricTagProvider.FluidTagProvider {
         this.getOrCreateTagBuilder(GCTags.OIL)
                 .add(GCFluids.CRUDE_OIL)
                 .add(GCFluids.FLOWING_CRUDE_OIL);
+        this.getOrCreateTagBuilder(GCTags.OIL_COMMON)
+                .addTag(GCTags.OIL);
+
         this.getOrCreateTagBuilder(GCTags.FUEL)
                 .add(GCFluids.FUEL)
                 .add(GCFluids.FLOWING_FUEL);
+        this.getOrCreateTagBuilder(GCTags.FUEL_COMMON)
+                .addTag(GCTags.FUEL);
+
         this.getOrCreateTagBuilder(GCTags.SULFURIC_ACID)
                 .add(GCFluids.SULFURIC_ACID)
                 .add(GCFluids.FLOWING_SULFURIC_ACID);
+        this.getOrCreateTagBuilder(GCTags.SULFURIC_ACID_COMMON)
+                .addTag(GCTags.SULFURIC_ACID);
+
         this.getOrCreateTagBuilder(GCTags.LIQUID_OXYGEN)
                 .add(GCFluids.LIQUID_OXYGEN);
         this.getOrCreateTagBuilder(GCTags.OXYGEN)
                 .add(Gases.OXYGEN);
+
         this.getOrCreateTagBuilder(GCTags.NON_BREATHABLE)
-                .addOptionalTag(FluidTags.WATER)
                 .addTag(GCTags.OIL)
                 .addTag(GCTags.FUEL)
-                .addTag(GCTags.SULFURIC_ACID);
+                .addTag(GCTags.SULFURIC_ACID)
+                .addOptionalTag(FluidTags.WATER);
     }
 }
