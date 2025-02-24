@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.util.ColorUtil;
 import dev.galacticraft.mod.util.TooltipUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
@@ -56,18 +55,8 @@ public class InfiniteBatteryItem extends Item implements EnergyStorage {
     }
 
     @Override
-    public boolean isBarVisible(ItemStack itemStack) {
-        return true;
-    }
-
-    @Override
     public int getBarWidth(ItemStack stack) {
         return 13;
-    }
-
-    @Override
-    public int getBarColor(ItemStack stack) {
-        return ColorUtil.getRainbow(15000);
     }
 
     @Override

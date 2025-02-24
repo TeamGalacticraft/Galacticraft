@@ -453,6 +453,7 @@ public interface Constant {
         String TITANTIUM_UPGRADE_SMITHING_TEMPLATE = "titanium_upgrade_smithing_template";
         String BATTERY = "battery";
         String INFINITE_BATTERY = "infinite_battery";
+        String INFINITE_INDICATOR = "infinite_indicator";
 
         //Fluid buckets
         String CRUDE_OIL_BUCKET = "crude_oil_bucket";

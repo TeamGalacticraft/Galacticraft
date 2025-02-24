@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "galacticraft:item/infinite_oxygen_tank"
+    "layer0": "galacticraft:item/infinite_oxygen_tank",
+    "layer1": "galacticraft:item/infinite_indicator"
   }
 }
