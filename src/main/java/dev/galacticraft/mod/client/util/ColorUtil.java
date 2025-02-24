@@ -27,8 +27,16 @@ import net.minecraft.util.Mth;
 public class ColorUtil {
     public static final long DEFAULT_INTERVAL = 15000;
 
+    public static int getRainbow() {
+        return getRainbow(DEFAULT_INTERVAL);
+    }
+
     public static int getRainbow(long interval) {
         return Mth.hsvToRgb((float)(System.currentTimeMillis() % interval) / (float)interval, 1.0F, 1.0F);
+    }
+
+    public static int getRainbowOpaque() {
+        return getRainbowOpaque(DEFAULT_INTERVAL);
     }
 
     public static int getRainbowOpaque(long interval) {

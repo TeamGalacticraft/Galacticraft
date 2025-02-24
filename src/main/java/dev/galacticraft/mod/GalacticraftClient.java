@@ -167,7 +167,7 @@ public class GalacticraftClient implements ClientModInitializer {
         FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER); // Workaround for classloading order bug
 
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> FallenMeteorBlock.colorMultiplier(state, world, pos), GCBlocks.FALLEN_METEOR);
-        ColorProviderRegistry.ITEM.register((stack, layer) -> layer != 1 ? -1 : ColorUtil.getRainbowOpaque(15000), GCItems.INFINITE_BATTERY, GCItems.INFINITE_OXYGEN_TANK);
+        ColorProviderRegistry.ITEM.register((stack, layer) -> layer != 1 ? -1 : ColorUtil.getRainbowOpaque(), GCItems.INFINITE_BATTERY, GCItems.INFINITE_OXYGEN_TANK);
 
         BuiltinItemRendererRegistry.INSTANCE.register(GCItems.ROCKET, new RocketItemRenderer());
 
