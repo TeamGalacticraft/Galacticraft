@@ -144,6 +144,7 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
             if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 156, this.topPos + 16, Constant.TextureCoordinate.BUTTON_WIDTH, Constant.TextureCoordinate.BUTTON_HEIGHT)) {
                 this.menu.bubbleVisible = ! this.menu.bubbleVisible;
                 ClientPlayNetworking.send(new BubbleVisibilityPayload(this.menu.bubbleVisible));
+                this.playButtonSound();
                 return true;
             }
 
@@ -152,6 +153,7 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
                     this.menu.targetSize = ((byte) (this.menu.targetSize + 1));
                     textField.setValue(String.valueOf(this.menu.targetSize));
                     ClientPlayNetworking.send(new BubbleMaxPayload(this.menu.targetSize));
+                    this.playButtonSound();
                     return true;
                 }
             }
@@ -161,6 +163,7 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
                     this.menu.targetSize = (byte) (this.menu.targetSize - 1);
                     textField.setValue(String.valueOf(this.menu.targetSize));
                     ClientPlayNetworking.send(new BubbleMaxPayload(this.menu.targetSize));
+                    this.playButtonSound();
                     return true;
                 }
             }

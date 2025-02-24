@@ -50,6 +50,7 @@ import net.minecraft.data.models.model.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -620,7 +621,7 @@ public class GCModelProvider extends FabricModelProvider {
 
         // BATTERIES
         generator.generateFlatItem(GCItems.BATTERY, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.INFINITE_BATTERY, GCItems.BATTERY, ModelTemplates.FLAT_ITEM);
+        this.createRainbowLayeredItem(generator, GCItems.INFINITE_BATTERY, Constant.Item.INFINITE_INDICATOR);
 
         //FLUID BUCKETS
         generator.generateFlatItem(GCItems.CRUDE_OIL_BUCKET, ModelTemplates.FLAT_ITEM);
@@ -636,7 +637,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.SMALL_OXYGEN_TANK, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.MEDIUM_OXYGEN_TANK, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.LARGE_OXYGEN_TANK, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.INFINITE_OXYGEN_TANK, ModelTemplates.FLAT_ITEM);
+        this.createRainbowLayeredItem(generator, GCItems.INFINITE_OXYGEN_TANK, Constant.Item.INFINITE_INDICATOR);
 
         generator.generateFlatItem(GCItems.SHIELD_CONTROLLER, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.FREQUENCY_MODULE, ModelTemplates.FLAT_ITEM);
@@ -667,6 +668,8 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.EVOLVED_CREEPER_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
         generator.generateFlatItem(GCItems.EVOLVED_SKELETON_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
         generator.generateFlatItem(GCItems.EVOLVED_SPIDER_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
+        generator.generateFlatItem(GCItems.EVOLVED_ENDERMAN_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
+        generator.generateFlatItem(GCItems.EVOLVED_WITCH_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
         generator.generateFlatItem(GCItems.EVOLVED_PILLAGER_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
         generator.generateFlatItem(GCItems.EVOLVED_EVOKER_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
         generator.generateFlatItem(GCItems.EVOLVED_VINDICATOR_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
@@ -676,6 +679,10 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.OLI_GRUB_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
         generator.generateFlatItem(GCItems.GREY_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
         generator.generateFlatItem(GCItems.ARCH_GREY_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
+    }
+
+    private void createRainbowLayeredItem(ItemModelGenerators generator, Item item, String overlay) {
+        generator.generateLayeredItem(ModelLocationUtils.getModelLocation(item), TextureMapping.getItemTexture(item), Constant.id(overlay).withPrefix("item/"));
     }
 
     @Contract("_ -> new")

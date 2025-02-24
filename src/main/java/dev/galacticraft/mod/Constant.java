@@ -453,6 +453,7 @@ public interface Constant {
         String TITANTIUM_UPGRADE_SMITHING_TEMPLATE = "titanium_upgrade_smithing_template";
         String BATTERY = "battery";
         String INFINITE_BATTERY = "infinite_battery";
+        String INFINITE_INDICATOR = "infinite_indicator";
 
         //Fluid buckets
         String CRUDE_OIL_BUCKET = "crude_oil_bucket";
@@ -491,14 +492,6 @@ public interface Constant {
         String CARGO_ROCKET_SCHEMATIC = "cargo_rocket_schematic";
         String MOON_BUGGY_SCHEMATIC = "moon_buggy_schematic";
         String ASTRO_MINER_SCHEMATIC = "astro_miner_schematic";
-
-        String EVOLVED_ZOMBIE_SPAWN_EGG = "evolved_zombie_spawn_egg";
-        String EVOLVED_PILLAGER_SPAWN_EGG = "evolved_pillager_spawn_egg";
-        String EVOLVED_VINDICATOR_SPAWN_EGG = "evolved_vindicator_spawn_egg";
-        String EVOLVED_EVOKER_SPAWN_EGG = "evolved_evoker_spawn_egg";
-        String EVOLVED_SPIDER_SPAWN_EGG = "evolved_spider_spawn_egg";
-        String EVOLVED_SKELETON_SPAWN_EGG = "evolved_skeleton_spawn_egg";
-        String EVOLVED_CREEPER_SPAWN_EGG = "evolved_creeper_spawn_egg";
 
         String LEGACY_MUSIC_DISC_MARS = "legacy_music_disc_mars";
         String LEGACY_MUSIC_DISC_MIMAS = "legacy_music_disc_mimas";
@@ -630,6 +623,13 @@ public interface Constant {
         ResourceLocation OXYGEN_MASK = id("slot/oxygen_mask");
         ResourceLocation OXYGEN_GEAR = id("slot/oxygen_gear");
         ResourceLocation OXYGEN_TANK = id("slot/oxygen_tank");
+
+        ResourceLocation ROCKET_CONE = id("slot/rocket_cone");
+        ResourceLocation ROCKET_PLATING = id("slot/rocket_plating");
+        ResourceLocation ROCKET_BOOSTER = id("slot/rocket_booster");
+        ResourceLocation ROCKET_FIN = id("slot/rocket_fin");
+        ResourceLocation ROCKET_ENGINE = id("slot/rocket_engine");
+        ResourceLocation CHEST = id("slot/chest");
     }
 
     interface Entity {
@@ -638,6 +638,8 @@ public interface Constant {
         String EVOLVED_CREEPER = "evolved_creeper";
         String EVOLVED_SKELETON = "evolved_skeleton";
         String EVOLVED_SPIDER = "evolved_spider";
+        String EVOLVED_ENDERMAN = "evolved_enderman";
+        String EVOLVED_WITCH = "evolved_witch";
         String EVOLVED_PILLAGER = "evolved_pillager";
         String EVOLVED_EVOKER = "evolved_evoker";
         String EVOLVED_VINDICATOR = "evolved_vindicator";
@@ -662,6 +664,8 @@ public interface Constant {
         String EVOLVED_CREEPER = "evolved_creeper_spawn_egg";
         String EVOLVED_SKELETON = "evolved_skeleton_spawn_egg";
         String EVOLVED_SPIDER = "evolved_spider_spawn_egg";
+        String EVOLVED_ENDERMAN = "evolved_enderman_spawn_egg";
+        String EVOLVED_WITCH = "evolved_witch_spawn_egg";
         String EVOLVED_PILLAGER = "evolved_pillager_spawn_egg";
         String EVOLVED_EVOKER = "evolved_evoker_spawn_egg";
         String EVOLVED_VINDICATOR = "evolved_vindicator_spawn_egg";
@@ -867,11 +871,13 @@ public interface Constant {
     interface Recipe {
         String FABRICATION = "fabrication";
         String COMPRESSING = "compressing";
+        String ROCKET = "rocket";
 
         interface Serializer {
             String FABRICATION = "fabrication";
             String COMPRESSING_SHAPELESS = "compressing_shapeless";
             String COMPRESSING_SHAPED = "compressing_shaped";
+            String ROCKET = "rocket";
         }
     }
 

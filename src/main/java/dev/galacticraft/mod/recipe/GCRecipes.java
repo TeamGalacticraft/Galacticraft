@@ -30,16 +30,20 @@ import net.minecraft.world.item.crafting.RecipeType;
 public class GCRecipes {
     public static final RecipeType<FabricationRecipe> FABRICATION_TYPE = new GCRecipeType<>();
     public static final RecipeType<CompressingRecipe> COMPRESSING_TYPE = new GCRecipeType<>();
+    public static final RecipeType<RocketRecipe> ROCKET_TYPE = new GCRecipeType<>();
 
     public static final FabricationRecipe.Serializer FABRICATION_SERIALIZER = FabricationRecipe.Serializer.INSTANCE;
     public static final ShapelessCompressingRecipe.Serializer SHAPELESS_COMPRESSING_SERIALIZER = ShapelessCompressingRecipe.Serializer.INSTANCE;
     public static final ShapedCompressingRecipe.Serializer SHAPED_COMPRESSING_SERIALIZER = ShapedCompressingRecipe.Serializer.INSTANCE;
+    public static final RocketRecipe.Serializer ROCKET_SERIALIZER = RocketRecipe.Serializer.INSTANCE;
 
     public static void register() {
         Registry.register(BuiltInRegistries.RECIPE_TYPE, Constant.id(Constant.Recipe.FABRICATION), FABRICATION_TYPE);
         Registry.register(BuiltInRegistries.RECIPE_TYPE, Constant.id(Constant.Recipe.COMPRESSING), COMPRESSING_TYPE);
+        Registry.register(BuiltInRegistries.RECIPE_TYPE, Constant.id(Constant.Recipe.ROCKET), ROCKET_TYPE);
         Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, Constant.id(Constant.Recipe.Serializer.FABRICATION), FABRICATION_SERIALIZER);
         Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, Constant.id(Constant.Recipe.Serializer.COMPRESSING_SHAPELESS), SHAPELESS_COMPRESSING_SERIALIZER);
         Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, Constant.id(Constant.Recipe.Serializer.COMPRESSING_SHAPED), SHAPED_COMPRESSING_SERIALIZER);
+        Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, Constant.id(Constant.Recipe.Serializer.ROCKET), ROCKET_SERIALIZER);
     }
 }

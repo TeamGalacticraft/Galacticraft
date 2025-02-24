@@ -499,6 +499,8 @@ public class GCCreativeModeTabs {
             content.addAfter(ItemStack.EMPTY, EVOLVED_CREEPER_SPAWN_EGG);
             content.addAfter(ItemStack.EMPTY, EVOLVED_SKELETON_SPAWN_EGG);
             content.addAfter(ItemStack.EMPTY, EVOLVED_SPIDER_SPAWN_EGG);
+            content.addAfter(ItemStack.EMPTY, EVOLVED_ENDERMAN_SPAWN_EGG);
+            content.addAfter(ItemStack.EMPTY, EVOLVED_WITCH_SPAWN_EGG);
             content.addAfter(ItemStack.EMPTY, EVOLVED_PILLAGER_SPAWN_EGG);
             content.addAfter(ItemStack.EMPTY, EVOLVED_EVOKER_SPAWN_EGG);
             content.addAfter(ItemStack.EMPTY, EVOLVED_VINDICATOR_SPAWN_EGG);

@@ -82,7 +82,7 @@ public class TooltipUtil {
     }
 
     public static void appendInfiniteCapacityTooltip(String resourceId, List<Component> tooltip) {
-        Component infinite = Component.translatable(Translations.Tooltip.INFINITE).setStyle(Style.EMPTY.withColor(ColorUtil.getRainbow(15000)));
+        Component infinite = Component.translatable(Translations.Tooltip.INFINITE).setStyle(Style.EMPTY.withColor(ColorUtil.getRainbow()));
         appendLabeledTooltip(resourceId, infinite, tooltip);
     }
 }
