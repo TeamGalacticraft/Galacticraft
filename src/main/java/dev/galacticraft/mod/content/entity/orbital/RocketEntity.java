@@ -131,8 +131,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
     @Override
     public LivingEntity getControllingPassenger() {
-        if (getLaunchStage() == LaunchStage.LAUNCHED)
-            return getFirstPassenger() instanceof LivingEntity livingEntity ? livingEntity : super.getControllingPassenger();
+        // If the controlling passenger is not null, then the rocket won't move
         return null;
     }
 
@@ -369,35 +368,35 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         } else {
             particleChance = 1;
         }
-        if ((this.getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal() || this.getLaunchStage() == LaunchStage.IGNITED && this.random.nextInt(particleChance) == 0)) {
+        if ((this.getLaunchStage() == LaunchStage.LAUNCHED || this.getLaunchStage() == LaunchStage.IGNITED) && this.random.nextInt(particleChance) == 0) {
             this.spawnParticles();
         }
 
         if (!level().isClientSide()) {
-            if (getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
+            if (getLaunchStage() == LaunchStage.LAUNCHED) {
                 this.timeSinceLaunch++;
             } else {
                 this.timeSinceLaunch = 0;
             }
 
-            if (this.getPassengers().isEmpty()) {
-                if (getLaunchStage() != LaunchStage.FAILED) {
-                    if (getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
-                        this.setLaunchStage(LaunchStage.FAILED);
-                    } else {
-                        this.setLaunchStage(LaunchStage.IDLE);
-                    }
-                }
-            } else if (!(this.getFirstPassenger() instanceof Player) && this.getLaunchStage() != LaunchStage.FAILED) {
-                if (getLaunchStage() == LaunchStage.LAUNCHED) {
-                    this.setLaunchStage(LaunchStage.FAILED);
-                } else {
-                    this.setLaunchStage(LaunchStage.IDLE);
-                    this.timeBeforeLaunch = getPreLaunchWait();
-                }
+            // if (this.getPassengers().isEmpty()) {
+            //     if (getLaunchStage() != LaunchStage.FAILED) {
+            //         if (getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
+            //             this.setLaunchStage(LaunchStage.FAILED);
+            //         } else {
+            //             this.setLaunchStage(LaunchStage.IDLE);
+            //         }
+            //     }
+            // } else if (!(this.getFirstPassenger() instanceof Player) && this.getLaunchStage() != LaunchStage.FAILED) {
+            //     if (getLaunchStage() == LaunchStage.LAUNCHED) {
+            //         this.setLaunchStage(LaunchStage.FAILED);
+            //     } else {
+            //         this.setLaunchStage(LaunchStage.IDLE);
+            //         this.timeBeforeLaunch = getPreLaunchWait();
+            //     }
 
-                this.removePassenger(this.getFirstPassenger());
-            }
+            //     this.removePassenger(this.getFirstPassenger());
+            // }
 
             if (isOnFire() && !level().isClientSide) {
                 level().explode(this, this.position().x + (level().random.nextDouble() - 0.5 * 4), this.position().y + (level().random.nextDouble() * 3), this.position().z + (level().random.nextDouble() - 0.5 * 4), 10.0F, Level.ExplosionInteraction.TNT);
@@ -423,26 +422,23 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                 }
                 if (getTimeAsState() >= getPreLaunchWait()) {
                     this.setLaunchStage(LaunchStage.LAUNCHED);
-                    if (this.getLinkedPad() != BlockPos.ZERO) {
+                    this.setSpeed(0.0f);
+                    BlockPos dockPos = this.getLinkedPad();
+                    if (dockPos != BlockPos.ZERO) {
                         if (passenger instanceof ServerPlayer player) {
                             GCServerPlayer gcPlayer = GCServerPlayer.get(player);
                             gcPlayer.setRocketData(this.getRocketData());
                             gcPlayer.setLaunchpadStack(new ItemStack(GCBlocks.ROCKET_LAUNCH_PAD, 9));
                         }
                         this.linkedPad.setDockedEntity(null);
-                        for (int x = -1; x <= 1; x++) {
-                            for (int z = -1; z <= 1; z++) {
-                                if (level().getBlockState(getLinkedPad().offset(x, 0, z)).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD
-                                        && level().getBlockState(getLinkedPad().offset(x, 0, z)).getValue(AbstractLaunchPad.PART) != AbstractLaunchPad.Part.NONE) {
-                                    level().setBlock(getLinkedPad().offset(x, 0, z), Blocks.AIR.defaultBlockState(), Block.UPDATE_NONE);
-                                }
-                            }
+                        if (level().getBlockState(dockPos).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD
+                                && level().getBlockState(dockPos).getValue(AbstractLaunchPad.PART) != AbstractLaunchPad.Part.NONE) {
+                            level().destroyBlock(dockPos, false);
                         }
                     }
-                    this.setSpeed(0.0f);
                 }
             } else if (getLaunchStage() == LaunchStage.LAUNCHED) {
-                if (!debugMode && (isTankEmpty() || !this.getTank().getResource().getFluid().is(GCTags.FUEL)) && FabricLoader.getInstance().isDevelopmentEnvironment()) {
+                if (!debugMode && (isTankEmpty() || !this.getTank().getResource().getFluid().is(GCTags.FUEL))) {
                     this.setLaunchStage(LaunchStage.FAILED);
                 } else {
                     try (Transaction t = Transaction.openOuter()) {
@@ -466,22 +462,21 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                     //
                     // I hope this is right
 
-                    if (this.getYRot() > 90) {
-                        this.setYRot(90);
-                    }
-
-                    if (this.getXRot() < -90) {
+                    if (this.getXRot() > 90) {
+                        this.setXRot(90);
+                    } else if (this.getXRot() < -90) {
                         this.setXRot(-90);
                     }
-
-                    double velX = -Mth.sin(this.getYRot() / 180.0F * (float) Math.PI) * Mth.cos((this.getXRot() + 90.0F) / 180.0F * (float) Math.PI) * (this.getSpeed() * 0.632D) * 1.58227848D;
-                    double velY = Mth.sin((this.getXRot() + 90.0F) / 180.0F * (float) Math.PI) * this.getSpeed();
-                    double velZ = Mth.cos(this.getYRot() / 180.0F * (float) Math.PI) * Mth.cos((this.getXRot() + 90.0F) / 180.0F * (float) Math.PI) * (this.getSpeed() * 0.632D) * 1.58227848D;
 
                     this.setDeltaMovement(calculateVelocity());
                 }
 
                 if (this.position().y() >= 1200.0F) {
+                    // will need to change is for rockets that are launched via launch controllers
+                    if (this.getPassengers().isEmpty()) {
+                        this.remove(RemovalReason.DISCARDED);
+                    }
+
                     for (Entity entity : getPassengers()) {
                         if (entity instanceof ServerPlayer serverPlayer) {
                             GCServerPlayer gcPlayer = GCServerPlayer.get(serverPlayer);
@@ -537,7 +532,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     public Vec3 calculateVelocity() {
         double d = this.timeSinceLaunch / 150;
         double velX = -(50 * Math.cos(this.getYRot() / Mth.RAD_TO_DEG) * Math.sin(this.getXRot() * 0.01 / Constant.RADIANS_TO_DEGREES)) * (this.getSpeed() * 0.632D) * 1.58227848D;
-        double velY = -Math.min(d, 1) * Math.cos((this.getYRot() - 180) / Constant.RADIANS_TO_DEGREES) * this.getSpeed();
+        double velY = -Math.min(d, 1) * Math.cos((this.getXRot() - 180) / Constant.RADIANS_TO_DEGREES) * this.getSpeed();
         double velZ = -(50 * Math.sin(this.getYRot() / Mth.RAD_TO_DEG) * Math.sin(this.getXRot() * 0.01 / Constant.RADIANS_TO_DEGREES)) * (this.getSpeed() * 0.632D) * 1.58227848D;
 //        double cosPitch = Mth.cos((this.getXRot() + 90.0F) / 180.0F * (float) Math.PI) * (this.getSpeed() * 0.632D) * 1.58227848D;
 //        double velX = -Mth.sin(this.getYRot() / 180.0F * (float) Math.PI) * cosPitch;
