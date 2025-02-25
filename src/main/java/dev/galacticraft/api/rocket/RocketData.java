@@ -150,7 +150,7 @@ public record RocketData(Optional<EitherHolder<RocketCone<?, ?>>> cone, Optional
     }
 
     private static <T> @Nullable Holder<T> maybeGet(@NotNull HolderLookup.Provider lookup, Optional<EitherHolder<T>> holder) {
-        return holder.isPresent() ? null : holder.get().unwrap(lookup).orElse(null);
+        return holder.isPresent() ? holder.get().unwrap(lookup).orElse(null) : null;
     }
 
     private <T> void maybeSet(DataComponentPatch.Builder builder, DataComponentType<T> type, @Nullable T value) {
