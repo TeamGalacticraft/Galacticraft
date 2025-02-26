@@ -269,12 +269,12 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         return this.tank.getCapacity();
     }
 
-    public int getScaledFuelLevel(int scale) {
+    public float getScaledFuelLevel(float scale) {
         if (this.getFuelTankCapacity() <= 0) {
             return 0;
         }
 
-        return (int) (this.getFuel() * scale / this.getFuelTankCapacity());
+        return this.getFuel() * scale / this.getFuelTankCapacity();
     }
 
     @Override
