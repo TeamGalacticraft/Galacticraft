@@ -38,6 +38,7 @@ import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.screen.SolarPanelMenu;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -76,7 +77,7 @@ public class BasicSolarPanelBlockEntity extends AbstractSolarPanelBlockEntity {
 
     @Override
     protected long calculateEnergyProduction(long time, double multiplier) {
-        double cos = Math.cos(this.level.getSunAngle(1.0f));
+        double cos = Mth.cos(this.level.getSunAngle(1.0f));
         if (cos <= 0) return 0;
         return (long) (Galacticraft.CONFIG.solarPanelEnergyProductionRate() * cos * multiplier);
     }

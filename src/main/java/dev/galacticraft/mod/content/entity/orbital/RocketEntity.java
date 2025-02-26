@@ -508,22 +508,22 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
     public Vec3 calculateVelocity() {
         double d = this.timeSinceLaunch / 150;
-        double velX = -(50 * Math.cos(this.getYRot() / Mth.RAD_TO_DEG) * Math.sin(this.getXRot() * 0.01 / Constant.RADIANS_TO_DEGREES)) * (this.getSpeed() * 0.632D) * 1.58227848D;
-        double velY = -Math.min(d, 1) * Math.cos((this.getXRot() - 180) / Constant.RADIANS_TO_DEGREES) * this.getSpeed();
-        double velZ = -(50 * Math.sin(this.getYRot() / Mth.RAD_TO_DEG) * Math.sin(this.getXRot() * 0.01 / Constant.RADIANS_TO_DEGREES)) * (this.getSpeed() * 0.632D) * 1.58227848D;
+        double velX = -(50 * Mth.cos(this.getYRot() * Mth.DEG_TO_RAD) * Mth.sin(this.getXRot() * 0.01F * Mth.DEG_TO_RAD)) * (this.getSpeed() * 0.632D) * 1.58227848D;
+        double velY = Math.min(d, 1) * Mth.cos(this.getXRot() * Mth.DEG_TO_RAD) * this.getSpeed();
+        double velZ = -(50 * Mth.sin(this.getYRot() * Mth.DEG_TO_RAD) * Mth.sin(this.getXRot() * 0.01F * Mth.DEG_TO_RAD)) * (this.getSpeed() * 0.632D) * 1.58227848D;
         return new Vec3(velX, velY, velZ);
     }
 
     protected void spawnParticles() {
         if (this.isAlive()) {
-            double sinPitch = Math.sin(this.getXRot() / Constant.RADIANS_TO_DEGREES);
-            double x1 = 2 * Math.cos(this.getYRot() / Constant.RADIANS_TO_DEGREES) * sinPitch;
-            double y1 = 2 * Math.cos((this.getXRot() - 180) / Constant.RADIANS_TO_DEGREES);
-            double z1 = 2 * Math.sin(this.getYRot() / Constant.RADIANS_TO_DEGREES) * sinPitch;
+            double sinPitch = Mth.sin(this.getXRot() * Mth.DEG_TO_RAD);
+            double x1 = 2 * Mth.cos(this.getYRot() * Mth.DEG_TO_RAD) * sinPitch;
+            double y1 = -2 * Mth.cos(this.getXRot() * Mth.DEG_TO_RAD);
+            double z1 = 2 * Mth.sin(this.getYRot() * Mth.DEG_TO_RAD) * sinPitch;
 
             if (this.getLaunchStage() == LaunchStage.FAILED && this.linkedPad != null) {
                 double modifier = this.getY() - this.linkedPad.getDockPos().getY();
-                modifier = Math.min(Math.max(modifier, 120.0), 300.0);
+                modifier = Mth.clamp(modifier, 120.0, 300.0);
                 x1 *= modifier / 100.0D;
                 y1 *= modifier / 100.0D;
                 z1 *= modifier / 100.0D;
@@ -657,7 +657,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
         if (stage.ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
             if (up) {
-                setXRot(Math.min(Math.max(getXRot() - 0.5F * turnFactor, -angle), angle));
+                setXRot(Mth.clamp(getXRot() - 0.5F * turnFactor, -angle, angle));
             } else if (down) {
                 setXRot((getXRot() + 2.0F) % 360.0f);
             }

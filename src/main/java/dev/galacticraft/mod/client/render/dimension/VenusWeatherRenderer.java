@@ -59,9 +59,9 @@ public class VenusWeatherRenderer implements DimensionRenderingRegistry.WeatherR
     @Override
     public void render(WorldRenderContext context) {
         Vec3 camPos = context.camera().getPosition();
-        double camX = camPos.x();
-        double camY = camPos.y();
-        double camZ = camPos.z();
+        float camX = (float) camPos.x();
+        float camY = (float) camPos.y();
+        float camZ = (float) camPos.z();
         ClientLevel level = context.world();
         float partialTicks = context.tickCounter().getRealtimeDeltaTicks();
         float strength = level.getRainLevel(partialTicks);
@@ -124,17 +124,17 @@ public class VenusWeatherRenderer implements DimensionRenderingRegistry.WeatherR
                         }
 
                         int index = indexZ + x - px + 16;
-                        double dx = (double) this.rainSizeX[index] * 0.5D;
-                        double dz = (double) this.rainSizeZ[index] * 0.5D;
+                        float dx = this.rainSizeX[index] * 0.5F;
+                        float dz = this.rainSizeZ[index] * 0.5F;
                         int u = context.worldRenderer().ticks & 131071;
                         int dy = x * x * 3121 + x * 45238971 + z * z * 418711 + z * 13761 & 0xFF;
                         float h = 3.0F + random.nextFloat();
-                        float w = -((float)(u + dy) + partialTicks) / 80.0F * h;
+                        float w = -(u + dy + partialTicks) / 80.0F * h;
                         float vOff = w % 32.0F;
-                        double yo = random.nextDouble() / 1.8D;
-                        double xx = x + 0.5D - camX;
-                        double zz = z + 0.5D - camZ;
-                        float rr = (float) Math.sqrt(xx * xx + zz * zz) / r;
+                        float yo = random.nextFloat() / 1.8F;
+                        float xx = x + 0.5F - camX;
+                        float zz = z + 0.5F - camZ;
+                        float rr = Mth.sqrt(xx * xx + zz * zz) / r;
                         float alpha = ((1.0F - rr * rr) * 0.5F + 0.5F) * strength / 0.6F; // 0.6F
                         // is
                         // the
@@ -144,12 +144,12 @@ public class VenusWeatherRenderer implements DimensionRenderingRegistry.WeatherR
                         // Venus
                         mutablePos.set(x, yBase, z);
                         int light = LevelRenderer.getLightColor(level, mutablePos);
-                        double xc = x + 0.5D;
-                        double zc = z + 0.5D;
-                        buffer.addVertex((float) (xc - camX - dx), (float) (ymax - yo - camY), (float) (zc - camZ - dz)).setUv(0.0F, (float) y * 0.25F + vOff).setColor(1.0F, 1.0F, 1.0F, alpha).setLight(light)
-                                .addVertex((float) (xc - camX + dx), (float) (ymax - yo - camY), (float) (zc - camZ + dz)).setUv(1.0F, (float) y * 0.25F + vOff).setColor(1.0F, 1.0F, 1.0F, alpha).setLight(light)
-                                .addVertex((float) (xc - camX + dx), (float) (y - yo - camY), (float) (zc - camZ + dz)).setUv(1.0F, (float) ymax * 0.25F + vOff).setColor(1.0F, 1.0F, 1.0F, alpha).setLight(light)
-                                .addVertex((float) (xc - camX - dx), (float) (y - yo - camY), (float) (zc - camZ - dz)).setUv(0.0F, (float) ymax * 0.25F + vOff).setColor(1.0F, 1.0F, 1.0F, alpha).setLight(light);
+                        float xc = x + 0.5F;
+                        float zc = z + 0.5F;
+                        buffer.addVertex(xc - camX - dx, ymax - yo - camY, zc - camZ - dz).setUv(0.0F, y * 0.25F + vOff).setColor(1.0F, 1.0F, 1.0F, alpha).setLight(light)
+                                .addVertex(xc - camX + dx, ymax - yo - camY, zc - camZ + dz).setUv(1.0F, y * 0.25F + vOff).setColor(1.0F, 1.0F, 1.0F, alpha).setLight(light)
+                                .addVertex(xc - camX + dx, y - yo - camY, zc - camZ + dz).setUv(1.0F, ymax * 0.25F + vOff).setColor(1.0F, 1.0F, 1.0F, alpha).setLight(light)
+                                .addVertex(xc - camX - dx, y - yo - camY, zc - camZ - dz).setUv(0.0F, ymax * 0.25F + vOff).setColor(1.0F, 1.0F, 1.0F, alpha).setLight(light);
                     }
                 }
             }

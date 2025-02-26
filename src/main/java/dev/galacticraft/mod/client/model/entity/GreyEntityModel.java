@@ -71,7 +71,7 @@ public class GreyEntityModel<T extends Entity> extends EntityModel<T> {
 	@Override
 	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		// Calculate the angle to swing the legs based on the limb swing amount
-		float legSwingAngle = (float) (Math.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount);
+		float legSwingAngle = (float) (Mth.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount);
 
 		// Rotate the legs around the hip joints
 		Left_Leg.xRot = legSwingAngle;

@@ -100,7 +100,7 @@ public class OverworldRenderer {
         float r;
 
         if (sunriseColors != null) {
-            final float sunsetModInv = Math.min(1.0F, Math.max(1.0F - theta * 50.0F, 0.0F));
+            final float sunsetModInv = Mth.clamp(1.0F - theta * 50.0F, 0.0F, 1.0F);
 
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
             poseStack.pushPose();
@@ -118,7 +118,7 @@ public class OverworldRenderer {
             final byte phi = 16;
 
             for (int var27 = 0; var27 <= phi; ++var27) {
-                rand3 = (float) (var27 * (Math.PI * 2) / phi);
+                rand3 = var27 * Mth.TWO_PI / phi;
                 final float xx = Mth.sin(rand3);
                 final float rand5 = Mth.cos(rand3);
                 buffer.addVertex(xx * 120.0F, rand5 * 120.0F, -rand5 * 40.0F * sunriseColors[3]).setColor(sunriseColors[0] * sunsetModInv, sunriseColors[1] * sunsetModInv, sunriseColors[2] * sunsetModInv, 0.0F);
@@ -150,8 +150,7 @@ public class OverworldRenderer {
         float threshold;
         Vec3 vec = getFogColor(this.minecraft.level, camera, partialTicks);
         threshold = Math.max(0.1F, (float) vec.length() - 0.1F);
-        float var20 = ((float) playerHeight - 200) / 1000.0F;
-        var20 = Mth.sqrt(var20);
+        float var20 = Mth.sqrt(((float) playerHeight - 200) / 1000.0F);
         float bright1 = Math.min(0.9F, var20 * 3);
 
         if (bright1 > threshold) {
@@ -221,11 +220,10 @@ public class OverworldRenderer {
         if (heightOffset > this.minecraft.options.getEffectiveRenderDistance() * 16) {
             theta *= 400.0F;
 
-            final float sinth = Math.max(Math.min(theta / 100.0F - 0.2F, 0.5F), 0.0F);
+            final float sinth = Mth.clamp(theta / 100.0F - 0.2F, 0.0F, 0.5F);
 
             poseStack.pushPose();
-                        float scale = 850 * (0.25F - theta / 10000.0F);
-            scale = Math.max(scale, 0.2F);
+            float scale = Math.max(850 * (0.25F - theta / 10000.0F), 0.2F);
             poseStack.scale(scale, 1.0F, scale);
             poseStack.translate(0.0F, -(float) player.getY(), 0.0F);
 
@@ -257,10 +255,9 @@ public class OverworldRenderer {
 
     public static Vec3 getFogColor(ClientLevel level, Camera camera, float f) {
         Player player = Minecraft.getInstance().player;
-        float heightOffset = ((float) (player.getY()) - 200) / 1000.0F;
-        heightOffset = Mth.sqrt(heightOffset);
+        float heightOffset = Mth.sqrt(((float) (player.getY()) - 200) / 1000.0F);
 
-        float y = Mth.clamp(Mth.cos(level.getTimeOfDay(f) * (float) (Math.PI * 2)) * 2.0F + 0.5F, 0.0F, 1.0F);
+        float y = Mth.clamp(Mth.cos(level.getTimeOfDay(f) * Mth.TWO_PI) * 2.0F + 0.5F, 0.0F, 1.0F);
         BiomeManager biomeManager = level.getBiomeManager();
         Vec3 vec32 = camera.getPosition().subtract(2.0, 2.0, 2.0).scale(0.25);
         Vec3 vec = CubicSampler.gaussianSampleVec3(
@@ -277,41 +274,41 @@ public class OverworldRenderer {
         BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
 
         for (int i = 0; i < 4000; ++i) {
-            double x = rand.nextFloat() * 2.0F - 1.0F;
-            double y = rand.nextFloat() * 2.0F - 1.0F;
-            double z = rand.nextFloat() * 2.0F - 1.0F;
-            final double size = 0.15F + rand.nextFloat() * 0.1F;
-            double r = x * x + y * y + z * z;
+            float x = rand.nextFloat() * 2.0F - 1.0F;
+            float y = rand.nextFloat() * 2.0F - 1.0F;
+            float z = rand.nextFloat() * 2.0F - 1.0F;
+            final float size = 0.15F + rand.nextFloat() * 0.1F;
+            float r = x * x + y * y + z * z;
 
-            if (r < 1.0D && r > 0.01D) {
-                r = 1.0D / Math.sqrt(r);
+            if (r < 1.0F && r > 0.01F) {
+                r = 1.0F * Mth.invSqrt(r);
                 x *= r;
                 y *= r;
                 z *= r;
-                final double xx = x * 100D;
-                final double zz = z * 100D;
-                final double yy = y * 100D;
-                final double theta = Math.atan2(x, z);
-                final double sinth = Math.sin(theta);
-                final double costh = Math.cos(theta);
-                final double phi = Math.atan2(Math.sqrt(x * x + z * z), y);
-                final double sinphi = Math.sin(phi);
-                final double cosphi = Math.cos(phi);
-                final double rho = rand.nextDouble() * Math.PI * 2.0D;
-                final double sinrho = Math.sin(rho);
-                final double cosrho = Math.cos(rho);
+                final float xx = x * 100.0F;
+                final float zz = z * 100.0F;
+                final float yy = y * 100.0F;
+                final float theta = (float) Mth.atan2(x, z);
+                final float sinth = Mth.sin(theta);
+                final float costh = Mth.cos(theta);
+                final float phi = (float) Mth.atan2(Mth.sqrt(x * x + z * z), y);
+                final float sinphi = Mth.sin(phi);
+                final float cosphi = Mth.cos(phi);
+                final float rho = rand.nextFloat() * Mth.TWO_PI;
+                final float sinrho = Mth.sin(rho);
+                final float cosrho = Mth.cos(rho);
 
                 for (int j = 0; j < 4; ++j) {
-                    final double a = 0.0D;
-                    final double b = ((j & 2) - 1) * size;
-                    final double c = ((j + 1 & 2) - 1) * size;
-                    final double d = b * cosrho - c * sinrho;
-                    final double e = c * cosrho + b * sinrho;
-                    final double dy = d * sinphi + a * cosphi;
-                    final double ff = a * sinphi - d * cosphi;
-                    final double dx = ff * sinth - e * costh;
-                    final double dz = e * sinth + ff * costh;
-                    buffer.addVertex((float) (xx + dx), (float) (yy + dy), (float) (zz + dz));
+                    final float a = 0.0F;
+                    final float b = ((j & 2) - 1) * size;
+                    final float c = ((j + 1 & 2) - 1) * size;
+                    final float d = b * cosrho - c * sinrho;
+                    final float e = c * cosrho + b * sinrho;
+                    final float dy = d * sinphi + a * cosphi;
+                    final float ff = a * sinphi - d * cosphi;
+                    final float dx = ff * sinth - e * costh;
+                    final float dz = e * sinth + ff * costh;
+                    buffer.addVertex(xx + dx, yy + dy, zz + dz);
                 }
             }
         }

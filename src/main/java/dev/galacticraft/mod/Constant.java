@@ -42,7 +42,6 @@ public interface Constant {
     String COMMON_NAMESPACE = "c";
     Logger LOGGER = LogManager.getLogger("Galacticraft");
 
-    double RADIANS_TO_DEGREES = 180.0 / Math.PI;
     int OVERWORLD_SKYPROVIDER_STARTHEIGHT = 200;
 
     @Contract(value = "_ -> new", pure = true)

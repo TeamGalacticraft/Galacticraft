@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.entity;
 
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.FuelDock;
 import dev.galacticraft.mod.api.entity.Dockable;
 import dev.galacticraft.mod.util.FluidUtil;
@@ -37,6 +36,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.ByIdMap;
+import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.*;
@@ -99,11 +99,11 @@ public class Buggy extends GCVehicle implements ContainerListener, ControllableE
         }
         if (left) { // Left
             setYRot(getYRot() - 0.5F * this.turnFactor);
-            this.wheelRotationZ = Math.max(-30.0F, Math.min(30.0F, this.wheelRotationZ + 0.5F));
+            this.wheelRotationZ = Mth.clamp(this.wheelRotationZ + 0.5F, -30.0F, 30.0F);
         }
         if (right) { // Right
             setYRot(getYRot() + 0.5F * this.turnFactor);
-            this.wheelRotationZ = Math.max(-30.0F, Math.min(30.0F, this.wheelRotationZ - 0.5F));
+            this.wheelRotationZ = Mth.clamp(this.wheelRotationZ - 0.5F, -30.0F, 30.0F);
         }
     }
 
@@ -160,9 +160,9 @@ public class Buggy extends GCVehicle implements ContainerListener, ControllableE
         super.tick();
         if (this.level().isClientSide) {
             Vec3 delta = getDeltaMovement();
-            this.wheelRotationX += (float)Math.sqrt(delta.x * delta.x + delta.z * delta.z) * 150.0F * (this.speed < 0 ? 1 : -1);
+            this.wheelRotationX += (float) Math.sqrt(delta.x * delta.x + delta.z * delta.z) * 150.0F * (this.speed < 0 ? 1 : -1);
             this.wheelRotationX %= 360;
-            this.wheelRotationZ = Math.max(-30.0F, Math.min(30.0F, this.wheelRotationZ * 0.9F));
+            this.wheelRotationZ = Mth.clamp(this.wheelRotationZ * 0.9F, -30.0F, 30.0F);
         }
 
         if (!this.onGround()) {
@@ -194,7 +194,7 @@ public class Buggy extends GCVehicle implements ContainerListener, ControllableE
 
         if (isControlledByLocalInstance()) {
             if (!this.tank.isResourceBlank() && this.tank.getAmount() > 0) {
-                setDeltaMovement(-(this.speed * Math.cos((getYRot() - 90F) / Constant.RADIANS_TO_DEGREES)), getDeltaMovement().y, -(this.speed * Math.sin((getYRot() - 90F) / Constant.RADIANS_TO_DEGREES)));
+                setDeltaMovement(this.speed * Mth.sin(getYRot() * Mth.DEG_TO_RAD), getDeltaMovement().y, - this.speed * Mth.cos(getYRot() * Mth.DEG_TO_RAD));
             }
 
             move(MoverType.SELF, getDeltaMovement());

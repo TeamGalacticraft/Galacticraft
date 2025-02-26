@@ -33,6 +33,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
@@ -102,41 +103,41 @@ public class VenusSkyRenderer implements DimensionRenderingRegistry.SkyRenderer 
         BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
 
         for (int starIndex = 0; starIndex < 35000; ++starIndex) {
-            double var4 = rand.nextFloat() * 2.0F - 1.0F;
-            double var6 = rand.nextFloat() * 2.0F - 1.0F;
-            double var8 = rand.nextFloat() * 2.0F - 1.0F;
-            final double var10 = 0.15F + rand.nextFloat() * 0.1F;
-            double var12 = var4 * var4 + var6 * var6 + var8 * var8;
+            float var4 = rand.nextFloat() * 2.0F - 1.0F;
+            float var6 = rand.nextFloat() * 2.0F - 1.0F;
+            float var8 = rand.nextFloat() * 2.0F - 1.0F;
+            final float var10 = 0.15F + rand.nextFloat() * 0.1F;
+            float var12 = var4 * var4 + var6 * var6 + var8 * var8;
 
-            if (var12 < 1.0D && var12 > 0.01D) {
-                var12 = 1.0D / Math.sqrt(var12);
+            if (var12 < 1.0F && var12 > 0.01F) {
+                var12 = Mth.invSqrt(var12);
                 var4 *= var12;
                 var6 *= var12;
                 var8 *= var12;
-                final double var14 = var4 * (rand.nextDouble() * 150D + 130D);
-                final double var16 = var6 * (rand.nextDouble() * 150D + 130D);
-                final double var18 = var8 * (rand.nextDouble() * 150D + 130D);
-                final double var20 = Math.atan2(var4, var8);
-                final double var22 = Math.sin(var20);
-                final double var24 = Math.cos(var20);
-                final double var26 = Math.atan2(Math.sqrt(var4 * var4 + var8 * var8), var6);
-                final double var28 = Math.sin(var26);
-                final double var30 = Math.cos(var26);
-                final double var32 = rand.nextDouble() * Math.PI * 2.0D;
-                final double var34 = Math.sin(var32);
-                final double var36 = Math.cos(var32);
+                final float var14 = var4 * (rand.nextFloat() * 150.0F + 130.0F);
+                final float var16 = var6 * (rand.nextFloat() * 150.0F + 130.0F);
+                final float var18 = var8 * (rand.nextFloat() * 150.0F + 130.0F);
+                final float var20 = (float) Mth.atan2(var4, var8);
+                final float var22 = Mth.sin(var20);
+                final float var24 = Mth.cos(var20);
+                final float var26 = (float) Mth.atan2(Mth.sqrt(var4 * var4 + var8 * var8), var6);
+                final float var28 = Mth.sin(var26);
+                final float var30 = Mth.cos(var26);
+                final float var32 = rand.nextFloat() * Mth.TWO_PI;
+                final float var34 = Mth.sin(var32);
+                final float var36 = Mth.cos(var32);
 
                 for (int var38 = 0; var38 < 4; ++var38) {
-                    final double var39 = 0.0D;
-                    final double var41 = ((var38 & 2) - 1) * var10;
-                    final double var43 = ((var38 + 1 & 2) - 1) * var10;
-                    final double var47 = var41 * var36 - var43 * var34;
-                    final double var49 = var43 * var36 + var41 * var34;
-                    final double var53 = var47 * var28 + var39 * var30;
-                    final double var55 = var39 * var28 - var47 * var30;
-                    final double var57 = var55 * var22 - var49 * var24;
-                    final double var61 = var49 * var22 + var55 * var24;
-                    buffer.addVertex((float) (var14 + var57), (float) (var16 + var53), (float) (var18 + var61));
+                    final float var39 = 0.0F;
+                    final float var41 = ((var38 & 2) - 1) * var10;
+                    final float var43 = ((var38 + 1 & 2) - 1) * var10;
+                    final float var47 = var41 * var36 - var43 * var34;
+                    final float var49 = var43 * var36 + var41 * var34;
+                    final float var53 = var47 * var28 + var39 * var30;
+                    final float var55 = var39 * var28 - var47 * var30;
+                    final float var57 = var55 * var22 - var49 * var24;
+                    final float var61 = var49 * var22 + var55 * var24;
+                    buffer.addVertex(var14 + var57, var16 + var53, var18 + var61);
                 }
             }
         }

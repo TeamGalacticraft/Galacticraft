@@ -47,13 +47,9 @@ public class DefaultCelestialRingDisplayType extends CelestialRingDisplayType<De
 
         PoseStack matrices = graphics.pose();
 
-        final float theta = (float) (2f * Math.PI / 90f);
+        final float theta = 4.0f * Mth.DEG_TO_RAD;
         final float cos = Mth.cos(theta);
         final float sin = Mth.sin(theta);
-        final float theta2 = (float) (2f * Math.PI / -90f);
-        final float cos2 = Mth.cos(theta2);
-        final float sin2 = Mth.sin(theta2);
-
 
         float x = lineScale;
         if (Float.isNaN(x)) return false;
@@ -100,8 +96,8 @@ public class DefaultCelestialRingDisplayType extends CelestialRingDisplayType<De
                 }
 
                 temp = x;
-                x = cos2 * x - sin2 * y;
-                y = sin2 * temp + cos2 * y;
+                x = cos * x + sin * y;
+                y = -sin * temp + cos * y;
             }
             buffer.addVertex(model, x1, y1, 0).setColor(color[0], color[1], color[2], color[3]).setNormal(1, 1, 1); //LINE_LOOP is gone
 

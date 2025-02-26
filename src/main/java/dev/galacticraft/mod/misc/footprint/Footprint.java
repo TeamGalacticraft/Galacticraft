@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.misc.footprint;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.StreamCodecs;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
@@ -112,14 +111,14 @@ public class Footprint {
         mainPosZ = Mth.floor(position.z());
         ;
 
-        double x0 = (Math.sin((45 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.x;
-        double x1 = (Math.sin((135 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.x;
-        double x2 = (Math.sin((225 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.x;
-        double x3 = (Math.sin((315 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.x;
-        double z0 = (Math.cos((45 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.z;
-        double z1 = (Math.cos((135 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.z;
-        double z2 = (Math.cos((225 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.z;
-        double z3 = (Math.cos((315 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.z;
+        double x0 = (Mth.sin((45 - rotation) * Mth.DEG_TO_RAD) * footprintScale) + position.x;
+        double x1 = (Mth.sin((135 - rotation) * Mth.DEG_TO_RAD) * footprintScale) + position.x;
+        double x2 = (Mth.sin((225 - rotation) * Mth.DEG_TO_RAD) * footprintScale) + position.x;
+        double x3 = (Mth.sin((315 - rotation) * Mth.DEG_TO_RAD) * footprintScale) + position.x;
+        double z0 = (Mth.cos((45 - rotation) * Mth.DEG_TO_RAD) * footprintScale) + position.z;
+        double z1 = (Mth.cos((135 - rotation) * Mth.DEG_TO_RAD) * footprintScale) + position.z;
+        double z2 = (Mth.cos((225 - rotation) * Mth.DEG_TO_RAD) * footprintScale) + position.z;
+        double z3 = (Mth.cos((315 - rotation) * Mth.DEG_TO_RAD) * footprintScale) + position.z;
 
         double xMin = Math.min(Math.min(x0, x1), Math.min(x2, x3));
         double xMax = Math.max(Math.max(x0, x1), Math.max(x2, x3));

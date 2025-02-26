@@ -31,6 +31,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.FastColor;
+import net.minecraft.util.Mth;
 import net.minecraft.world.TickRateManager;
 
 public class LanderOverlay {
@@ -50,7 +51,7 @@ public class LanderOverlay {
             if (motionY < -2.0) {
                 graphics.drawString(mc.font, Component.translatable(Translations.Ui.LANDER_WARNING), width / 4 - mc.font.width(Component.translatable(Translations.Ui.LANDER_WARNING)) / 2, height / 8 - 20,
                         FastColor.ARGB32.color(255, 255, 0, 0), false);
-                final int alpha = (int) (200 * (Math.sin(tickCount) * 0.5F + 0.5F)) + 5;
+                final int alpha = (int) (200 * (Mth.sin(tickCount) * 0.5F + 0.5F)) + 5;
                 final Component press_key = Component.translatable(Translations.Ui.LANDER_CONTROLS, mc.options.keyJump.getTranslatedKeyMessage());
                 graphics.drawString(mc.font, press_key,
                         width / 4 - mc.font.width(press_key) / 2, height / 8,

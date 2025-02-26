@@ -42,6 +42,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.Zombie;
 import org.jetbrains.annotations.Nullable;
@@ -93,7 +94,7 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
         if (body != null) {
             this.tank = root.getChild(Constant.ModelPartName.OXYGEN_TANK);
             this.pipe = root.getChild(Constant.ModelPartName.OXYGEN_PIPE);
-            this.pipe.xRot = (float) (Math.PI / -2.0);
+            this.pipe.xRot = -Mth.HALF_PI;
         } else {
             this.tank = null;
             this.pipe = null;
@@ -112,8 +113,8 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
         }
 
         if (this.mask != null) {
-            this.mask.yRot = headYaw * (float) (Math.PI / 180.0);
-            this.mask.xRot = headPitch * (float) (Math.PI / 180.0);
+            this.mask.yRot = headYaw * Mth.DEG_TO_RAD;
+            this.mask.xRot = headPitch * Mth.DEG_TO_RAD;
             this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
 

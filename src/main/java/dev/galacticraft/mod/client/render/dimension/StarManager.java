@@ -42,41 +42,41 @@ public class StarManager {
         final BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
         RenderSystem.setShader(GameRenderer::getPositionShader);
         for (int i = 0; i < 12000; ++i) {
-            double j = random.nextFloat() * 2.0F - 1.0F;
-            double k = random.nextFloat() * 2.0F - 1.0F;
-            double l = random.nextFloat() * 2.0F - 1.0F;
-            double m = 0.15F + random.nextFloat() * 0.1F;
-            double n = j * j + k * k + l * l;
+            float j = random.nextFloat() * 2.0F - 1.0F;
+            float k = random.nextFloat() * 2.0F - 1.0F;
+            float l = random.nextFloat() * 2.0F - 1.0F;
+            float m = 0.15F + random.nextFloat() * 0.1F;
+            float n = j * j + k * k + l * l;
 
-            if (n < 1.0D && n > 0.01D) {
-                n = 1.0D / Math.sqrt(n);
+            if (n < 1.0F && n > 0.01F) {
+                n = Mth.invSqrt(n);
                 j *= n;
                 k *= n;
                 l *= n;
-                double o = j * 100.0D;
-                double p = k * 100.0D;
-                double q = l * 100.0D;
-                double r = Math.atan2(j, l);
-                double s = Math.sin(r);
-                double t = Math.cos(r);
-                double u = Math.atan2(Math.sqrt(j * j + l * l), k);
-                double v = Math.sin(u);
-                double w = Math.cos(u);
-                double x = random.nextDouble() * Math.PI * 2.0D;
-                double y = Math.sin(x);
-                double z = Math.cos(x);
+                float o = j * 100.0F;
+                float p = k * 100.0F;
+                float q = l * 100.0F;
+                float r = (float) Mth.atan2(j, l);
+                float s = Mth.sin(r);
+                float t = Mth.cos(r);
+                float u = (float) Mth.atan2(Mth.sqrt(j * j + l * l), k);
+                float v = Mth.sin(u);
+                float w = Mth.cos(u);
+                float x = random.nextFloat() * Mth.TWO_PI;
+                float y = Mth.sin(x);
+                float z = Mth.cos(x);
 
                 for (int a = 0; a < 4; ++a) {
-                    double b = 0.0D;
-                    double c = ((a & 2) - 1) * m;
-                    double d = ((a + 1 & 2) - 1) * m;
-                    double e = c * z - d * y;
-                    double f = d * z + c * y;
-                    double g = e * v + b * w;
-                    double h = b * v - e * w;
-                    double aa = h * s - f * t;
-                    double ab = f * s + h * t;
-                    buffer.addVertex((float) ((o + aa) * (i > 6000 ? -1 : 1)), (float) ((p + g) * (i > 6000 ? -1 : 1)), (float) ((q + ab) * (i > 6000 ? -1 : 1)));
+                    float b = 0.0F;
+                    float c = ((a & 2) - 1) * m;
+                    float d = ((a + 1 & 2) - 1) * m;
+                    float e = c * z - d * y;
+                    float f = d * z + c * y;
+                    float g = e * v + b * w;
+                    float h = b * v - e * w;
+                    float aa = h * s - f * t;
+                    float ab = f * s + h * t;
+                    buffer.addVertex((o + aa) * (i > 6000 ? -1 : 1), (p + g) * (i > 6000 ? -1 : 1), (q + ab) * (i > 6000 ? -1 : 1));
                 }
             }
         }
@@ -99,7 +99,7 @@ public class StarManager {
 
     public float getStarBrightness(Level world, float delta) {
         final float skyAngle = world.getTimeOfDay(delta);
-        float brightness = 1.0F - (Mth.cos((float) (skyAngle * Math.PI * 2.0D) * 2.0F + 0.25F));
+        float brightness = 1.0F - Mth.cos(skyAngle * Mth.PI * 4.0F + 0.25F);
 
         if (brightness < 0.0F) {
             brightness = 0.0F;

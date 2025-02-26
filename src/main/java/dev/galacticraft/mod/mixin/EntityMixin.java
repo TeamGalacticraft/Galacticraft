@@ -221,10 +221,10 @@ public abstract class EntityMixin implements EntityAccessor {
                     // count
                     switch (galacticraft$getLastStep()) {
                         case 0:
-                            pos.add(new Vector3d(Math.sin(Math.toRadians(-getYRot() + 90)) * 0.25, 0, Math.cos(Math.toRadians(-getYRot() + 90)) * 0.25));
+                            pos.add(new Vector3d(Mth.sin((-getYRot() + 90) * Mth.DEG_TO_RAD) * 0.25, 0, Mth.cos((-getYRot() + 90) * Mth.DEG_TO_RAD) * 0.25));
                             break;
                         case 1:
-                            pos.add(new Vector3d(Math.sin(Math.toRadians(-getYRot() - 90)) * 0.25, 0, Math.cos(Math.toRadians(-getYRot() - 90)) * 0.25));
+                            pos.add(new Vector3d(Mth.sin((-getYRot() - 90) * Mth.DEG_TO_RAD) * 0.25, 0, Mth.cos((-getYRot() - 90) * Mth.DEG_TO_RAD) * 0.25));
                             break;
                     }
 

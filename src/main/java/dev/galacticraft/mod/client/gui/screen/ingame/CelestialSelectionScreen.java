@@ -50,6 +50,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
+import net.minecraft.util.Mth;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -981,7 +982,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
                     texture.blit(RHS - 95, LHS + 182 + canCreateOffset, 93, 12, CREATE_SS_PANEL_BUTTON_U, CREATE_SS_PANEL_BUTTON_V, CREATE_SS_PANEL_BUTTON_WIDTH, CREATE_SS_PANEL_BUTTON_HEIGHT, color);
 
-                    color = (int) ((Math.sin(this.ticksSinceMenuOpenF / 5.0) * 0.5 + 0.5) * 255);
+                    color = (int) ((Mth.sin(this.ticksSinceMenuOpenF / 5.0F) * 0.5F + 0.5F) * 255);
                     texture.drawSplitText(I18n.get(Translations.CelestialSelection.CAN_CREATE_SPACE_STATION), RHS - 48, LHS + 137, 91, FastColor.ARGB32.color(255, color, 255, color));
 
                     if (!mapMode) {
@@ -1017,7 +1018,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
         for (int i = 0; i < children.size(); i++) {
             CelestialBody<?, ?> child = children.get(i);
             int xOffset = xOffsetBase + (child.equals(this.selectedBody) ? 5 : 0);
-            final int scale = (int) Math.min(95.0F, Math.max(0.0F, (this.ticksSinceMenuOpenF * 25.0F) - 95 * i));
+            final int scale = (int) Mth.clamp((this.ticksSinceMenuOpenF * 25.0F) - 95 * i, 0.0F, 95.0F);
 
             float brightness = child.equals(this.selectedBody) ? 0.2F : 0.0F;
             int color;
