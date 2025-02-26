@@ -195,20 +195,47 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 GCBlocks.GALENA_ORE
         };
 
-        this.tag(GCBlockTags.MOON_STONE_ORE_REPLACEABLES)
+        this.tag(GCTags.ORE_BEARING_GROUND_MOON_STONE)
                 .add(GCBlocks.MOON_ROCK);
-        this.tag(GCBlockTags.MOON_BASALT_ORE_REPLACEABLES)
-                .add(GCBlocks.MOON_BASALT);
-        this.tag(GCBlockTags.LUNASLATE_ORE_REPLACEABLES)
+                // .add(GCBlocks.MOON_BASALT);
+        this.tag(GCTags.ORE_BEARING_GROUND_LUNASLATE)
                 .add(GCBlocks.LUNASLATE);
-        this.tag(GCBlockTags.MARS_ROCK_ORE_REPLACEABLES)
+        this.tag(GCTags.ORE_BEARING_GROUND_MARS_ROCK)
                 .add(GCBlocks.MARS_SUB_SURFACE_ROCK);
-        this.tag(GCBlockTags.ASTEROID_ROCK_ORE_REPLACEABLES)
+        this.tag(GCTags.ORE_BEARING_GROUND_ASTEROID_ROCK)
                 .add(GCBlocks.ASTEROID_ROCK);
-        this.tag(GCBlockTags.VENUS_ROCK_ORE_REPLACEABLES)
+        this.tag(GCTags.ORE_BEARING_GROUND_VENUS_ROCK)
                 .add(GCBlocks.HARD_VENUS_ROCK);
 
-        this.tag(BlockTags.COPPER_ORES)
+        this.tag(ConventionalBlockTags.ORES_IN_GROUND_STONE)
+                .add(GCBlocks.SILICON_ORE, GCBlocks.TIN_ORE, GCBlocks.ALUMINUM_ORE);
+        this.tag(ConventionalBlockTags.ORES_IN_GROUND_DEEPSLATE)
+                .add(GCBlocks.DEEPSLATE_SILICON_ORE, GCBlocks.DEEPSLATE_TIN_ORE, GCBlocks.DEEPSLATE_ALUMINUM_ORE);
+        this.tag(GCTags.ORES_IN_GROUND_MOON_STONE)
+                .add(GCBlocks.MOON_COPPER_ORE, GCBlocks.MOON_TIN_ORE);
+        this.tag(GCTags.ORES_IN_GROUND_LUNASLATE)
+                .add(GCBlocks.LUNASLATE_COPPER_ORE, GCBlocks.LUNASLATE_TIN_ORE);
+        this.tag(GCTags.ORES_IN_GROUND_MARS_ROCK)
+                .add(GCBlocks.DESH_ORE);
+        this.tag(GCTags.ORES_IN_GROUND_ASTEROID_ROCK)
+                .add(GCBlocks.ILMENITE_ORE);
+        this.tag(GCTags.ORES_IN_GROUND_VENUS_ROCK)
+                .add(GCBlocks.GALENA_ORE);
+
+        // this.tag(GCBlockTags.MOON_STONE_ORE_REPLACEABLES)
+        //         .add(GCBlocks.MOON_ROCK);
+        // this.tag(GCBlockTags.MOON_BASALT_ORE_REPLACEABLES)
+        //         .add(GCBlocks.MOON_BASALT);
+        // this.tag(GCBlockTags.LUNASLATE_ORE_REPLACEABLES)
+        //         .add(GCBlocks.LUNASLATE);
+        // this.tag(GCBlockTags.MARS_ROCK_ORE_REPLACEABLES)
+        //         .add(GCBlocks.MARS_SUB_SURFACE_ROCK);
+        // this.tag(GCBlockTags.ASTEROID_ROCK_ORE_REPLACEABLES)
+        //         .add(GCBlocks.ASTEROID_ROCK);
+        // this.tag(GCBlockTags.VENUS_ROCK_ORE_REPLACEABLES)
+        //         .add(GCBlocks.HARD_VENUS_ROCK);
+
+        this.tag(ConventionalBlockTags.COPPER_ORES)
                 .add(GCBlocks.MOON_COPPER_ORE, GCBlocks.LUNASLATE_COPPER_ORE);
         this.tag(GCBlockTags.SILICON_ORES)
                 .add(GCBlocks.SILICON_ORE, GCBlocks.DEEPSLATE_SILICON_ORE);
