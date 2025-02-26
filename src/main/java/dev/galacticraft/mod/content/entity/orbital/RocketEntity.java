@@ -448,7 +448,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                     this.setDeltaMovement(calculateVelocity());
                 }
 
-                if (this.position().y() >= 1200.0F) {
+                if (this.position().y() >= Constant.ESCAPE_HEIGHT) {
                     // will need to change is for rockets that are launched via launch controllers
                     if (this.getPassengers().isEmpty()) {
                         this.remove(RemovalReason.DISCARDED);
