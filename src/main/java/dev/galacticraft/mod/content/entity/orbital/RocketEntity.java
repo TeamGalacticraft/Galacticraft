@@ -111,6 +111,8 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     });
     private int timeBeforeLaunch;
     private float timeSinceLaunch;
+    private float zRot;
+    public float zRotO;
 
     public RocketEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -132,6 +134,9 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     @Override
     public LivingEntity getControllingPassenger() {
         // If the controlling passenger is not null, then the rocket won't move
+        // The if statement below has been kept for testing rotations on the ground
+        // if (getLaunchStage() == LaunchStage.LAUNCHED)
+        //     return getFirstPassenger() instanceof LivingEntity livingEntity ? livingEntity : super.getControllingPassenger();
         return null;
     }
 
@@ -298,6 +303,21 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         this.hasImpulse = true;
     }
 
+    public float getZRot() {
+        return this.zRot;
+    }
+
+    public void setZRot(float roll) {
+        this.zRot = roll;
+    }
+
+    public float getViewZRot(float f) {
+        if (f == 1.0F) {
+            return this.getZRot();
+        }
+        return Mth.lerp(f, this.zRotO, this.getZRot());
+    }
+
     @Override
     public void move(MoverType type, Vec3 vec3d) {
         if (onGround()) vec3d.multiply(1.0D, 0.0D, 1.0D);
@@ -357,6 +377,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     @Override
     public void tick() {
         this.noPhysics = false;
+        this.zRotO = this.getZRot();
         setTimeAsState(getTimeAsState() + 1);
 
         super.tick();
@@ -508,18 +529,22 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
     public Vec3 calculateVelocity() {
         double d = this.timeSinceLaunch / 150;
-        double velX = -(50 * Math.cos(this.getYRot() / Mth.RAD_TO_DEG) * Math.sin(this.getXRot() * 0.01 / Constant.RADIANS_TO_DEGREES)) * (this.getSpeed() * 0.632D) * 1.58227848D;
-        double velY = -Math.min(d, 1) * Math.cos((this.getXRot() - 180) / Constant.RADIANS_TO_DEGREES) * this.getSpeed();
-        double velZ = -(50 * Math.sin(this.getYRot() / Mth.RAD_TO_DEG) * Math.sin(this.getXRot() * 0.01 / Constant.RADIANS_TO_DEGREES)) * (this.getSpeed() * 0.632D) * 1.58227848D;
+        double horizontal = -1.58227848D * 0.632D * this.getSpeed();
+        double sinPitch = Mth.sin(this.getXRot() * Mth.DEG_TO_RAD);
+        double sinRoll = Mth.sin(this.getZRot() * Mth.DEG_TO_RAD);
+        double velX = horizontal * (sinRoll * Mth.cos(this.getYRot() * Mth.DEG_TO_RAD) + sinPitch * Mth.sin(this.getYRot() * Mth.DEG_TO_RAD));
+        double velY = Math.min(d, 1) * 0.5 * (Mth.cos(this.getXRot() * Mth.DEG_TO_RAD) + Mth.cos(this.getZRot() * Mth.DEG_TO_RAD)) * this.getSpeed();
+        double velZ = horizontal * (sinRoll * Mth.sin(this.getYRot() * Mth.DEG_TO_RAD) - sinPitch * Mth.cos(this.getYRot() * Mth.DEG_TO_RAD));
         return new Vec3(velX, velY, velZ);
     }
 
     protected void spawnParticles() {
         if (this.isAlive()) {
-            double sinPitch = Math.sin(this.getXRot() / Constant.RADIANS_TO_DEGREES);
-            double x1 = 2 * Math.cos(this.getYRot() / Constant.RADIANS_TO_DEGREES) * sinPitch;
-            double y1 = 2 * Math.cos((this.getXRot() - 180) / Constant.RADIANS_TO_DEGREES);
-            double z1 = 2 * Math.sin(this.getYRot() / Constant.RADIANS_TO_DEGREES) * sinPitch;
+            double sinPitch = Mth.sin(this.getXRot() * Mth.DEG_TO_RAD);
+            double sinRoll = Mth.sin(this.getZRot() * Mth.DEG_TO_RAD);
+            double x1 = 2 * (sinRoll * Mth.cos(this.getYRot() * Mth.DEG_TO_RAD) + sinPitch * Mth.sin(this.getYRot() * Mth.DEG_TO_RAD));
+            double y1 = - Mth.cos(this.getXRot() * Mth.DEG_TO_RAD) - Mth.cos(this.getZRot() * Mth.DEG_TO_RAD);
+            double z1 = 2 * (sinRoll * Mth.sin(this.getYRot() * Mth.DEG_TO_RAD) - sinPitch * Mth.cos(this.getYRot() * Mth.DEG_TO_RAD));
 
             if (this.getLaunchStage() == LaunchStage.FAILED && this.linkedPad != null) {
                 double modifier = this.getY() - this.linkedPad.getDockPos().getY();
@@ -656,16 +681,22 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
             onJump();
 
         if (stage.ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
-            if (up) {
-                setXRot(Math.min(Math.max(getXRot() - 0.5F * turnFactor, -angle), angle));
-            } else if (down) {
-                setXRot((getXRot() + 2.0F) % 360.0f);
+            if (right) {
+                setZRot(Mth.clamp(getZRot() - 0.5F * turnFactor, -angle, angle));
+            } else if (left) {
+                setZRot(Mth.clamp(getZRot() + 0.5F * turnFactor, -angle, angle));
             }
 
-            if (left) {
-                setYRot((getYRot() - 2.0F) % 360.0f);
-            } else if (right) {
-                setYRot((getYRot() + 2.0F) % 360.0f);
+            if (up) {
+                setXRot(Mth.clamp(getXRot() - 0.5F * turnFactor, -angle, angle));
+            } else if (down) {
+                setXRot(Mth.clamp(getXRot() + 0.5F * turnFactor, -angle, angle));
+            }
+
+            if (jumping) {
+                setYRot((getYRot() - turnFactor) % 360.0f);
+            } else if (shiftKeyDown) {
+                setYRot((getYRot() + turnFactor) % 360.0f);
             }
         }
     }

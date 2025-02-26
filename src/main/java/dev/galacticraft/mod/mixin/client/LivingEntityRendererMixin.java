@@ -28,6 +28,7 @@ import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import org.spongepowered.asm.mixin.Mixin;
@@ -64,8 +65,8 @@ public abstract class LivingEntityRendererMixin {
         if (entity.isPassenger() && entity.getVehicle() instanceof RocketEntity rocket) {
             double rotationOffset = 0.7F;
             pose.translate(0, rotationOffset, 0);
-            pose.mulPose(Axis.YP.rotationDegrees(-rocket.getYRot()));
-            pose.mulPose(Axis.ZP.rotationDegrees(rocket.getXRot()));
+            pose.mulPose(Axis.XP.rotationDegrees(rocket.getXRot() * Mth.cos(rocket.getYRot() * Mth.DEG_TO_RAD) - rocket.getZRot() * Mth.sin(rocket.getYRot() * Mth.DEG_TO_RAD)));
+            pose.mulPose(Axis.ZP.rotationDegrees(rocket.getXRot() * Mth.sin(rocket.getYRot() * Mth.DEG_TO_RAD) + rocket.getZRot() * Mth.cos(rocket.getYRot() * Mth.DEG_TO_RAD)));
             pose.translate(0, -rotationOffset, 0);
         }
     }
