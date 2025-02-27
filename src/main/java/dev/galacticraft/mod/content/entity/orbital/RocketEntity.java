@@ -515,7 +515,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         double sinPitch = Mth.sin(this.getXRot() * Mth.DEG_TO_RAD);
         double sinRoll = Mth.sin(this.getZRot() * Mth.DEG_TO_RAD);
         double velX = horizontal * (sinRoll * Mth.cos(this.getYRot() * Mth.DEG_TO_RAD) + sinPitch * Mth.sin(this.getYRot() * Mth.DEG_TO_RAD));
-        double velY = Math.min(d, 1) * 0.5 * (Mth.cos(this.getXRot() * Mth.DEG_TO_RAD) + Mth.cos(this.getZRot() * Mth.DEG_TO_RAD)) * this.getSpeed();
+        double velY = Math.min(d, 1) * 0.5 * Mth.cos(this.getXRot() * Mth.DEG_TO_RAD) * Mth.cos(this.getZRot() * Mth.DEG_TO_RAD) * this.getSpeed();
         double velZ = horizontal * (sinRoll * Mth.sin(this.getYRot() * Mth.DEG_TO_RAD) - sinPitch * Mth.cos(this.getYRot() * Mth.DEG_TO_RAD));
         return new Vec3(velX, velY, velZ);
     }
@@ -529,7 +529,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
             double sinPitch = Mth.sin(this.getXRot() * Mth.DEG_TO_RAD);
             double sinRoll = Mth.sin(this.getZRot() * Mth.DEG_TO_RAD);
             double x1 = 2 * (sinRoll * Mth.cos(this.getYRot() * Mth.DEG_TO_RAD) + sinPitch * Mth.sin(this.getYRot() * Mth.DEG_TO_RAD));
-            double y1 = - Mth.cos(this.getXRot() * Mth.DEG_TO_RAD) - Mth.cos(this.getZRot() * Mth.DEG_TO_RAD);
+            double y1 = - Mth.cos(this.getXRot() * Mth.DEG_TO_RAD) * Mth.cos(this.getZRot() * Mth.DEG_TO_RAD);
             double z1 = 2 * (sinRoll * Mth.sin(this.getYRot() * Mth.DEG_TO_RAD) - sinPitch * Mth.cos(this.getYRot() * Mth.DEG_TO_RAD));
 
             if (this.getLaunchStage() == LaunchStage.FAILED && this.linkedPad != null) {
@@ -659,7 +659,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     @Override
     public void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown) {
         float turnFactor = 2.0F;
-        float angle = 45;
+        float angle = 180.0F;
 
         LaunchStage stage = getLaunchStage();
 
