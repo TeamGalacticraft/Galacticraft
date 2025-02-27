@@ -57,6 +57,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
@@ -449,23 +450,6 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                     }
 
                     this.setSpeed(Math.min(0.75f, this.getSpeed() + 0.05f));
-
-                    // Pitch: -45.0
-                    // Yaw: 0.0
-                    //
-                    // X vel: 0.0
-                    // Y vel: 0.3535533845424652
-                    // Z vel: 0.223445739030838
-                    // = 1.58227848
-                    //
-                    // I hope this is right
-
-                    if (this.getXRot() > 90) {
-                        this.setXRot(90);
-                    } else if (this.getXRot() < -90) {
-                        this.setXRot(-90);
-                    }
-
                     this.setDeltaMovement(calculateVelocity());
                 }
 
@@ -492,9 +476,8 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                     }
                 }
             } else if (!onGround()) {
-                this.setSpeed(Math.max(-1.5f, this.getSpeed() - 0.05f));
-
-                this.setDeltaMovement(calculateVelocity());
+                this.setSpeed(Math.max(-1.5f, this.getSpeed() - 0.1F));
+                this.setDeltaMovement(fallingVelocity());
             }
 
             this.move(MoverType.SELF, this.getDeltaMovement());
@@ -513,7 +496,6 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
             }
 
             ticksSinceJump++;
-
         }
 
         if (getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
@@ -536,6 +518,10 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         double velY = Math.min(d, 1) * 0.5 * (Mth.cos(this.getXRot() * Mth.DEG_TO_RAD) + Mth.cos(this.getZRot() * Mth.DEG_TO_RAD)) * this.getSpeed();
         double velZ = horizontal * (sinRoll * Mth.sin(this.getYRot() * Mth.DEG_TO_RAD) - sinPitch * Mth.cos(this.getYRot() * Mth.DEG_TO_RAD));
         return new Vec3(velX, velY, velZ);
+    }
+
+    public Vec3 fallingVelocity() {
+        return calculateVelocity().scale(0.5D).with(Direction.Axis.Y, this.getSpeed());
     }
 
     protected void spawnParticles() {
