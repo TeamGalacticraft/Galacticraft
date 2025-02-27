@@ -55,8 +55,8 @@ public class RocketInventoryScreen extends AbstractContainerScreen<RocketMenu> {
         final Component fuel = Component.translatable(Translations.Ui.ROCKET_FUEL);
         graphics.drawString(this.font, fuel, 140 - this.font.width(fuel) / 2, 15 + 3, 4210752, false);
 
-        final double percentage = this.menu.rocket.getScaledFuelLevel(100);
-        final ChatFormatting color = percentage > 80.0D ? ChatFormatting.GREEN : percentage > 40.0D ? ChatFormatting.GOLD : ChatFormatting.RED;
+        final float percentage = this.menu.rocket.getScaledFuelLevel(100);
+        final ChatFormatting color = percentage > 80.0F ? ChatFormatting.GREEN : percentage > 40.0F ? ChatFormatting.GOLD : ChatFormatting.RED;
         final MutableComponent text = Component.literal(String.format("%.1f", percentage)).append(Component.translatable(Translations.Ui.ROCKET_FULL));
         graphics.drawString(this.font, text.withStyle(color), 140 - this.font.width(text) / 2, 20 + 8, 4210752, false);
     }
@@ -65,7 +65,7 @@ public class RocketInventoryScreen extends AbstractContainerScreen<RocketMenu> {
     protected void renderBg(GuiGraphics graphics, float v, int mouseX, int mouseY) {
         graphics.blit(Constant.ScreenTexture.ROCKET_INVENTORY, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
 
-        final int fuelLevel = this.menu.rocket.getScaledFuelLevel(38);
+        final int fuelLevel = (int) this.menu.rocket.getScaledFuelLevel(38);
         graphics.blit(Constant.ScreenTexture.ROCKET_INVENTORY, this.leftPos + 71, this.topPos + 45 - fuelLevel, 176, 38 - fuelLevel, 42, fuelLevel);
     }
 }
