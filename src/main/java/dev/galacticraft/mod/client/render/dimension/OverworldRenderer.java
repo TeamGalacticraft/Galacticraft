@@ -281,7 +281,7 @@ public class OverworldRenderer {
             float r = x * x + y * y + z * z;
 
             if (r < 1.0F && r > 0.01F) {
-                r = 1.0F * Mth.invSqrt(r);
+                r = Mth.invSqrt(r);
                 x *= r;
                 y *= r;
                 z *= r;
