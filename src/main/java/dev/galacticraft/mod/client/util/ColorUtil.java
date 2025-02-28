@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,21 @@ package dev.galacticraft.mod.client.util;
 import net.minecraft.util.Mth;
 
 public class ColorUtil {
+    public static final long DEFAULT_INTERVAL = 15000;
+
+    public static int getRainbow() {
+        return getRainbow(DEFAULT_INTERVAL);
+    }
+
     public static int getRainbow(long interval) {
         return Mth.hsvToRgb((float)(System.currentTimeMillis() % interval) / (float)interval, 1.0F, 1.0F);
+    }
+
+    public static int getRainbowOpaque() {
+        return getRainbowOpaque(DEFAULT_INTERVAL);
+    }
+
+    public static int getRainbowOpaque(long interval) {
+        return Mth.hsvToArgb((float)(System.currentTimeMillis() % interval) / (float)interval, 1.0F, 1.0F, 255);
     }
 }

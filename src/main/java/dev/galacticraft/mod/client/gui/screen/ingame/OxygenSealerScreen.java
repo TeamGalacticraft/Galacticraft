@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,6 +39,12 @@ import net.minecraft.world.entity.player.Inventory;
 public class OxygenSealerScreen extends MachineScreen<OxygenSealerBlockEntity, MachineMenu<OxygenSealerBlockEntity>> {
     public OxygenSealerScreen(MachineMenu<OxygenSealerBlockEntity> handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.OXYGEN_SEALER_SCREEN);
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        this.titleLabelX += 20;
     }
 
     @Override

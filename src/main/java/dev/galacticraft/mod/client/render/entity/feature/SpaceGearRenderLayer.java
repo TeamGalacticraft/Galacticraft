@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,6 +43,7 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.monster.Zombie;
 import org.jetbrains.annotations.Nullable;
 
 public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> extends RenderLayer<T, M> {
@@ -73,12 +74,12 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
         if (head != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 10).addBox(-5.0F, -9.0F, -5.0F, 10, 10, 10, CubeDeformation.NONE), PartPose.offset(head.x, head.y, head.z));
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 10).addBox(-5.0F, -9.01F, -5.0F, 10, 10, 10, CubeDeformation.NONE), PartPose.offset(head.x, head.y, head.z));
         }
 
         if (body != null) {
             modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, 1.0F, 2.0F, 8, 6, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 17).addBox(-2.0F, -3.0F, 0.0F, 4, 5, 8, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 17).addBox(-2.0F, -10.0F, -5.0F, 4, 5, 8, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
         }
 
         root = modelPartData.bake(64, 32);
@@ -92,6 +93,7 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
         if (body != null) {
             this.tank = root.getChild(Constant.ModelPartName.OXYGEN_TANK);
             this.pipe = root.getChild(Constant.ModelPartName.OXYGEN_PIPE);
+            this.pipe.xRot = (float) (Math.PI / -2.0);
         } else {
             this.tank = null;
             this.pipe = null;
@@ -101,10 +103,18 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
     @Override
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
-        if (mask != null) {
-            mask.yRot = headYaw * (float) (Math.PI / 180.0);
-            mask.xRot = headPitch * (float) (Math.PI / 180.0);
-            mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+        if ((Entity)entity instanceof Zombie) {
+            Zombie zombie = (Zombie) entity;
+            if (zombie.isBaby()) {
+                matrices.scale(0.75F, 0.75F, 0.75F);
+                matrices.translate(0.0F, 1.0F, 0.0F);
+            }
+        }
+
+        if (this.mask != null) {
+            this.mask.yRot = headYaw * (float) (Math.PI / 180.0);
+            this.mask.xRot = headPitch * (float) (Math.PI / 180.0);
+            this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
 
         if (this.tank != null) {

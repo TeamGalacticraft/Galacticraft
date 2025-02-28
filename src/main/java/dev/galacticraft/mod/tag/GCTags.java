@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,11 +35,15 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.material.Fluid;
 
 public class GCTags {
-    public static final TagKey<Fluid> OIL = TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, "oil"));
-    public static final TagKey<Fluid> FUEL = TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, "fuel"));
-    public static final TagKey<Fluid> SULFURIC_ACID = TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, "sulfuric_acid"));
+    public static final TagKey<Fluid> OIL = TagKey.create(Registries.FLUID, Constant.id("oil"));
+    public static final TagKey<Fluid> OIL_COMMON = TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, "oil"));
+    public static final TagKey<Fluid> FUEL = TagKey.create(Registries.FLUID, Constant.id("fuel"));
+    public static final TagKey<Fluid> FUEL_COMMON = TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, "fuel"));
+    public static final TagKey<Fluid> SULFURIC_ACID = TagKey.create(Registries.FLUID, Constant.id("sulfuric_acid"));
+    public static final TagKey<Fluid> SULFURIC_ACID_COMMON = TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, "sulfuric_acid"));
     public static final TagKey<Fluid> LIQUID_OXYGEN = TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, "oxygen"));
     public static final TagKey<Fluid> OXYGEN = TagKey.create(Registries.FLUID, Constant.id("oxygen"));
+    public static final TagKey<Fluid> NON_BREATHABLE = TagKey.create(Registries.FLUID, Constant.id("non_breathable"));
 
     public static final TagKey<Block> INFINIBURN_MOON = TagKey.create(Registries.BLOCK, Constant.id("infiniburn_moon"));
     public static final TagKey<Block> INFINIBURN_VENUS = TagKey.create(Registries.BLOCK, Constant.id("infiniburn_venus"));

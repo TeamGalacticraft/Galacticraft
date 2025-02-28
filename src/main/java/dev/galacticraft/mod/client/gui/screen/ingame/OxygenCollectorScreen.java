@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,13 +39,12 @@ import net.minecraft.world.entity.player.Inventory;
 public class OxygenCollectorScreen extends MachineScreen<OxygenCollectorBlockEntity, OxygenCollectorMenu> {
     public OxygenCollectorScreen(OxygenCollectorMenu handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.OXYGEN_COLLECTOR_SCREEN);
-        this.imageHeight = 181;
     }
 
     @Override
     protected void init() {
         super.init();
-        this.titleLabelX += 15;
+        this.titleLabelX += 20;
     }
 
     @Override

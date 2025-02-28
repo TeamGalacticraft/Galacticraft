@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.GCModel;
 import dev.galacticraft.mod.client.model.GCModelLoader;
 import dev.galacticraft.mod.client.model.GCRenderTypes;
+import dev.galacticraft.mod.client.render.block.entity.BubbleDistributorRenderer;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.content.entity.BubbleEntity;
 import net.fabricmc.api.EnvType;
@@ -44,7 +45,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 @Environment(EnvType.CLIENT)
 public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
-    private static final ResourceLocation MODEL = Constant.id("models/misc/sphere.json");
     public static final ResourceLocation TEXTURE = Constant.id("textures/model/sphere.png");
     public static GCModel bubbleModel;
 
@@ -55,31 +55,16 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
     @Override
     public void render(BubbleEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
         if (bubbleModel == null) {
-            bubbleModel = GCModelLoader.INSTANCE.getModel(MODEL);
+            bubbleModel = GCModelLoader.INSTANCE.getModel(BubbleDistributorRenderer.MODEL);
             assert bubbleModel != null;
         }
-        BlockEntity blockEntity = entity.level().getBlockEntity(entity.blockPosition());
-        if (!(blockEntity instanceof OxygenBubbleDistributorBlockEntity machine) || entity.isRemoved()) {
-            ((ClientLevel) entity.level()).removeEntity(entity.getId(), Entity.RemovalReason.DISCARDED);
-            return;
-        }
-        if (machine.isDisabled()) { // pretty sure we don't need to check if bubbleVisible since we kill entity at the same time
-            return;
-        }
-        double size = machine.getSize();
-
-        if (bubbleModel == null) {
-            return;
-        }
+        float size = entity.getSize();
 
         matrices.pushPose();
         matrices.translate(0.5F, 1.0F, 0.5F);
-        matrices.scale((float) size, (float) size, (float) size);
+        matrices.scale(size, size, size);
         VertexConsumer consumer = vertexConsumers.getBuffer(GCRenderTypes.bubble(GCRenderTypes.OBJ_ATLAS));
-//        for (BakedQuad quad : bubbleModel.getQuads(null, null, entity.level().random)) {
-//            consumer.putBulkData(matrices.last(), quad, 1, 1, 1, Integer.MAX_VALUE, OverlayTexture.NO_OVERLAY);
-//        }
-        // TEMP: until files are fixed
+
         bubbleModel.render(matrices, null, consumer, light, OverlayTexture.NO_OVERLAY);
 
         matrices.popPose();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -220,11 +220,13 @@ public interface Translations {
         String MISSING_SOURCE = "ui.galacticraft.machine.solar_panel.missing_source";
         String NIGHT = "ui.galacticraft.machine.solar_panel.night";
         String OVERCAST = "ui.galacticraft.machine.solar_panel.overcast";
+        String STORMY = "ui.galacticraft.machine.solar_panel.stormy";
         String LIGHT_SOURCE = "ui.galacticraft.machine.solar_panel.source";
         String LIGHT_SOURCE_MOON = "ui.galacticraft.machine.solar_panel.source.moon";
         String LIGHT_SOURCE_EARTH = "ui.galacticraft.machine.solar_panel.source.earth";
         String LIGHT_SOURCE_NONE = "ui.galacticraft.machine.solar_panel.source.none";
         String LIGHT_SOURCE_RAIN = "ui.galacticraft.machine.solar_panel.source.rain";
+        String LIGHT_SOURCE_THUNDER = "ui.galacticraft.machine.solar_panel.source.thunder";
         String LIGHT_SOURCE_SUN = "ui.galacticraft.machine.solar_panel.source.sun";
         String STATUS = "ui.galacticraft.machine.solar_panel.status";
         String STRENGTH = "ui.galacticraft.machine.solar_panel.strength";
@@ -252,6 +254,7 @@ public interface Translations {
         String OXYGEN_TANK_FULL = "ui.galacticraft.status.oxygen_tank_full";
         String PARTIALLY_BLOCKED = "ui.galacticraft.status.partially_blocked";
         String RAIN = "ui.galacticraft.status.rain";
+        String THUNDER = "ui.galacticraft.status.thunder";
         String SEALED = "ui.galacticraft.status.sealed";
         String WARMING_UP = "ui.galacticraft.status.warming_up";
         String NOT_ENOUGH_FUEL = "ui.galacticraft.status.not_enough_fuel";
@@ -310,6 +313,7 @@ public interface Translations {
         String COLLECTING = "ui.galacticraft.machine.collecting";
         String CURRENT_OXYGEN = "ui.galacticraft.machine.current_oxygen";
         String GJT = "ui.galacticraft.machine.gj_per_t";
+        String MILLIBUCKETS = "ui.galacticraft.machine.millibuckets";
         String MAX_OXYGEN = "ui.galacticraft.machine.max_oxygen";
         String MACHINE_STATUS = "ui.galacticraft.machine.status";
         String OXYGEN_TANK_LEVEL = "ui.galacticraft.player_inv_screen.oxygen_tank_level";

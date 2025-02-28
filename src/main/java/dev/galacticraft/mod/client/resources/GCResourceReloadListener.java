@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,11 +28,13 @@ import dev.galacticraft.mod.client.render.entity.BubbleEntityRenderer;
 import dev.galacticraft.mod.content.GCFluids;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -64,21 +66,13 @@ public class GCResourceReloadListener implements SimpleSynchronousResourceReload
         WireWalkwayBakedModel.invalidate();
         PipeBakedModel.invalidate();
         FluidPipeWalkwayBakedModel.invalidate();
-        FluidRenderHandler oil = (view, pos, state) -> new TextureAtlasSprite[]{atlas.apply(Constant.id("block/crude_oil_still")), atlas.apply(Constant.id("block/crude_oil_flowing"))};
-        FluidRenderHandler fuel = (view, pos, state) -> new TextureAtlasSprite[]{atlas.apply(Constant.id("block/fuel_still")), atlas.apply(Constant.id("block/fuel_flowing"))};
-        FluidRenderHandler sulfuricAcid = (view, pos, state) -> new TextureAtlasSprite[]{
-                atlas.apply(Constant.id("block/fluid/sulfuric_acid_still")),
-                atlas.apply(Constant.id("block/fluid/sulfuric_acid_flowing"))
-        };
-        FluidRenderHandler oxygen = (view, pos, state) -> new TextureAtlasSprite[]{atlas.apply(Constant.id("block/oxygen")), atlas.apply(Constant.id("block/oxygen"))};
-
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.CRUDE_OIL, oil);
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FLOWING_CRUDE_OIL, oil);
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FUEL, fuel);
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FLOWING_FUEL, fuel);
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.SULFURIC_ACID, sulfuricAcid);
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FLOWING_SULFURIC_ACID, sulfuricAcid);
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.LIQUID_OXYGEN, oxygen);
         BubbleEntityRenderer.bubbleModel = null;
+
+        FluidRenderHandler oxygen = (view, pos, state) -> new TextureAtlasSprite[]{
+                atlas.apply(Constant.Fluid.fluidId(Constant.Fluid.LIQUID_OXYGEN)), 
+                atlas.apply(Constant.Fluid.fluidId(Constant.Fluid.LIQUID_OXYGEN))
+        };
+
+        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.LIQUID_OXYGEN, oxygen);
     }
 }

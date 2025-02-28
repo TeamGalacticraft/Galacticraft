@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -64,7 +64,7 @@ public class ParachestScreen extends AbstractContainerScreen<ParachestMenu> {
         var container = getMenu().getContainer();
 
         if (container instanceof ScalableFuelLevel scalable) {
-            int fuelLevel = scalable.getScaledFuelLevel(28);
+            int fuelLevel = (int) scalable.getScaledFuelLevel(28);
             guiGraphics.blit(texture, k + 17, l + (this.inventorySlots == 3 ? 40 : 42) - fuelLevel + this.inventorySlots * 2, 176, 28 - fuelLevel, 34, fuelLevel);
         }
     }

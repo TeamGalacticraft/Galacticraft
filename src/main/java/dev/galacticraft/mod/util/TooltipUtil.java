@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@ package dev.galacticraft.mod.util;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.util.ColorUtil;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -69,8 +70,19 @@ public class TooltipUtil {
         appendLabeledTooltip(resourceId, remaining, tooltip);
     }
 
+    public static void appendFluidRemainingTooltip(String resourceId, long amount, long capacity, List<Component> tooltip) {
+        Component unit = Component.empty();
+        if (!Screen.hasShiftDown()) {
+            amount = (long) ((double) amount / (double) (FluidConstants.BUCKET / 1000));
+            capacity = (long) ((double) capacity / (double) (FluidConstants.BUCKET / 1000));
+            unit = Component.translatable(Translations.Ui.MILLIBUCKETS);
+        }
+        Component remaining = Component.literal(amount + "/" + capacity).append(unit).setStyle(Constant.Text.getStorageLevelStyle(1.0 - ((double) amount / (double) capacity)));
+        appendLabeledTooltip(resourceId, remaining, tooltip);
+    }
+
     public static void appendInfiniteCapacityTooltip(String resourceId, List<Component> tooltip) {
-        Component infinite = Component.translatable(Translations.Tooltip.INFINITE).setStyle(Style.EMPTY.withColor(ColorUtil.getRainbow(15000)));
+        Component infinite = Component.translatable(Translations.Tooltip.INFINITE).setStyle(Style.EMPTY.withColor(ColorUtil.getRainbow()));
         appendLabeledTooltip(resourceId, infinite, tooltip);
     }
 }

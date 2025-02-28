@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
@@ -50,6 +51,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
@@ -69,11 +71,13 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
 
     private static final StorageSpec SPEC = StorageSpec.of(
             MachineItemStorage.spec(
-                    ItemResourceSlot.builder(TransferType.TRANSFER)
+                    ItemResourceSlot.builder(TransferType.PROCESSING)
                             .pos(8, 62)
-                            .filter(ResourceFilters.CAN_INSERT_ENERGY),
+                            .capacity(1)
+                            .filter(ResourceFilters.CAN_INSERT_ENERGY)
+                            .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(71, 53)
+                            .pos(80, 44)
                             .filter((item, tag) -> CoalGeneratorBlockEntity.FUEL_MAP.containsKey(item))
             ),
             MachineEnergyStorage.spec(
