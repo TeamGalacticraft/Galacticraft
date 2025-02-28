@@ -79,7 +79,7 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
 
         if (body != null) {
             modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, 1.0F, 2.0F, 8, 6, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 17).addBox(-2.0F, -3.0F, 0.0F, 4, 5, 8, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 17).addBox(-2.0F, -10.0F, -5.0F, 4, 5, 8, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
         }
 
         root = modelPartData.bake(64, 32);
@@ -93,6 +93,7 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
         if (body != null) {
             this.tank = root.getChild(Constant.ModelPartName.OXYGEN_TANK);
             this.pipe = root.getChild(Constant.ModelPartName.OXYGEN_PIPE);
+            this.pipe.xRot = (float) (Math.PI / -2.0);
         } else {
             this.tank = null;
             this.pipe = null;

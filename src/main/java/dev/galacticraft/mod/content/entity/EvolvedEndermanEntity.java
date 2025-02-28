@@ -20,15 +20,14 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.render.entity;
+package dev.galacticraft.mod.content.entity;
 
-import dev.galacticraft.mod.client.render.entity.feature.SpaceGearRenderLayer;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.ZombieRenderer;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.level.Level;
 
-public class EvolvedZombieRenderer extends ZombieRenderer {
-    public EvolvedZombieRenderer(EntityRendererProvider.Context context) {
-        super(context);
-        this.addLayer(new SpaceGearRenderLayer<>(this));
+public class EvolvedEndermanEntity extends EnderMan {
+    public EvolvedEndermanEntity(EntityType<? extends EvolvedEndermanEntity> entityType, Level world) {
+        super(entityType, world);
     }
 }

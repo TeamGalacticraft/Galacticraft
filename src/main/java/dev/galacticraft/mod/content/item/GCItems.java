@@ -261,6 +261,8 @@ public class GCItems {
     public static final Item EVOLVED_CREEPER_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.EVOLVED_CREEPER, new SpawnEggItem(GCEntityTypes.EVOLVED_CREEPER, 0x0da70b, 0xa8d0d9, new Item.Properties()));
     public static final Item EVOLVED_SKELETON_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.EVOLVED_SKELETON, new SpawnEggItem(GCEntityTypes.EVOLVED_SKELETON, 0xc1c1c1, 0xff9600, new Item.Properties()));
     public static final Item EVOLVED_SPIDER_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.EVOLVED_SPIDER, new SpawnEggItem(GCEntityTypes.EVOLVED_SPIDER, 0x342d27, 0x5aff0e, new Item.Properties()));
+    public static final Item EVOLVED_ENDERMAN_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.EVOLVED_ENDERMAN, new SpawnEggItem(GCEntityTypes.EVOLVED_ENDERMAN, 0x161616, 0xcc00fa, new Item.Properties()));
+    public static final Item EVOLVED_WITCH_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.EVOLVED_WITCH, new SpawnEggItem(GCEntityTypes.EVOLVED_WITCH, 0x30144d, 0x51a03e, new Item.Properties()));
     public static final Item EVOLVED_PILLAGER_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.EVOLVED_PILLAGER, new SpawnEggItem(GCEntityTypes.EVOLVED_PILLAGER, 0x532f36, 0x264747, new Item.Properties()));
     public static final Item EVOLVED_EVOKER_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.EVOLVED_EVOKER, new SpawnEggItem(GCEntityTypes.EVOLVED_EVOKER, 0x1e1c1a, 0xd3cf99, new Item.Properties()));
     public static final Item EVOLVED_VINDICATOR_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.EVOLVED_VINDICATOR, new SpawnEggItem(GCEntityTypes.EVOLVED_VINDICATOR, 0x3f3b37, 0x275e61, new Item.Properties()));

@@ -25,6 +25,7 @@ package dev.galacticraft.mod.mixin.client;
 import dev.galacticraft.mod.content.block.entity.CryogenicChamberBlockEntity;
 import dev.galacticraft.mod.content.block.entity.CryogenicChamberPartBlockEntity;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
+import dev.galacticraft.mod.tag.GCTags;
 import net.minecraft.client.Camera;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,12 +33,15 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.material.FluidState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 
 @Mixin(Camera.class)
 public abstract class CameraMixin {
@@ -79,5 +83,10 @@ public abstract class CameraMixin {
                 this.move(-4.1F, 0.3F, 0.0F);
             }
         }
+    }
+
+    @ModifyExpressionValue(method = "getFluidInCamera", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/material/FluidState;is(Lnet/minecraft/tags/TagKey;)Z", ordinal = 0))
+    private boolean gc$getFluidInCamera(boolean original, @Local FluidState fluidState) {
+        return original || fluidState.is(GCTags.OIL) || fluidState.is(GCTags.FUEL) || fluidState.is(GCTags.SULFURIC_ACID);
     }
 }

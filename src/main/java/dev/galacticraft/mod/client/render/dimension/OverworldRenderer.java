@@ -105,7 +105,7 @@ public class OverworldRenderer {
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
             poseStack.pushPose();
             poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
-            poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.sin(this.minecraft.level.getSunAngle(partialTicks)) < 0.0F ? 180.0F : 0.0F));
+            poseStack.mulPose(Axis.YP.rotationDegrees(Mth.sin(this.minecraft.level.getSunAngle(partialTicks)) < 0.0F ? 180.0F : 0.0F));
             poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
             z = sunriseColors[0] * sunsetModInv;
             var9 = sunriseColors[1] * sunsetModInv;
@@ -247,10 +247,9 @@ public class OverworldRenderer {
             poseStack.popPose();
         }
 
-        RenderSystem.setShaderColor(0.0f, 0.0f, 0.0f, 1.0F);
-
-                RenderSystem.depthMask(true);
-
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        poseStack.popPose();
+        RenderSystem.depthMask(true);
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         RenderSystem.disableBlend();
     }
