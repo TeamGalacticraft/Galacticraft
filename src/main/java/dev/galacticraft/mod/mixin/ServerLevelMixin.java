@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.mixin;
 
 import com.google.common.collect.ImmutableList;
-import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.accessor.LevelAccessor;
 import dev.galacticraft.mod.accessor.ServerLevelAccessor;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
@@ -53,7 +52,6 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.HashSet;
