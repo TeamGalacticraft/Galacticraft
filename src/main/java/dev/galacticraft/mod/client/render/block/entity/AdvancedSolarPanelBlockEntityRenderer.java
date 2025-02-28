@@ -39,6 +39,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 
 @Environment(EnvType.CLIENT)
@@ -47,15 +48,15 @@ public class AdvancedSolarPanelBlockEntityRenderer implements BlockEntityRendere
     private final ModelPart panel;
     private final ModelPart pole;
     private float tilt;
-    public static final float SPEED = (float)Math.toRadians(0.5F);
-    public static final float DAWN = 4.0F * (float)Math.PI / 3.0F;
-    public static final float SUNRISE = 1.5F * (float)Math.PI;
+    public static final float SPEED = 0.5F * Mth.DEG_TO_RAD;
+    public static final float DAWN = 4.0F * Mth.PI / 3.0F;
+    public static final float SUNRISE = 1.5F * Mth.PI;
     public static final float NOON = 0.0F;
-    public static final float SUNSET = 0.5F * (float)Math.PI;
-    public static final float DUSK = 2.0F * (float)Math.PI / 3.0F;
-    public static final float MIDNIGHT = (float)Math.PI;
-    public static final float MIN = 5.0F * (float)Math.PI / 3.0F;
-    public static final float MAX = (float)Math.PI / 3.0F;
+    public static final float SUNSET = Mth.HALF_PI;
+    public static final float DUSK = Mth.TWO_PI / 3.0F;
+    public static final float MIDNIGHT = Mth.PI;
+    public static final float MIN = 5.0F * Mth.PI / 3.0F;
+    public static final float MAX = Mth.PI / 3.0F;
 
     public AdvancedSolarPanelBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
         ModelPart root = context.bakeLayer(GCEntityModelLayer.SOLAR_PANEL);
@@ -87,7 +88,7 @@ public class AdvancedSolarPanelBlockEntityRenderer implements BlockEntityRendere
 
             if (angle > DUSK && angle < DAWN) {
                 if (nightCollection) {
-                    angle -= Math.PI;
+                    angle -= Mth.PI;
                 } else {
                     angle = NOON;
                 }
@@ -102,7 +103,7 @@ public class AdvancedSolarPanelBlockEntityRenderer implements BlockEntityRendere
             } else if (angle <= SUNSET && angle > MAX) {
                 angle = MAX;
             } else if (angle >= SUNRISE) {
-                angle -= 2 * Math.PI;
+                angle -= Mth.TWO_PI;
             }
         }
 

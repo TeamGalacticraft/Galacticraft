@@ -33,6 +33,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 public class LanderEntityRenderer extends EntityRenderer<LanderEntity> {
     protected final LanderModel model;
@@ -63,7 +64,7 @@ public class LanderEntityRenderer extends EntityRenderer<LanderEntity> {
         }
 
         if (hurtTime > 0.0F) {
-            poseStack.mulPose(Axis.XP.rotationDegrees((float) Math.sin(hurtTime) * 0.2F * hurtTime * damage / 25.0F));
+            poseStack.mulPose(Axis.XP.rotationDegrees(Mth.sin(hurtTime) * 0.2F * hurtTime * damage / 25.0F));
         }
 
         poseStack.mulPose(Axis.YN.rotationDegrees(180.0F - entityYaw));
