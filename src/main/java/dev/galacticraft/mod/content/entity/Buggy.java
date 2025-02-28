@@ -159,8 +159,7 @@ public class Buggy extends GCVehicle implements ContainerListener, ControllableE
     public void tick() {
         super.tick();
         if (this.level().isClientSide) {
-            Vec3 delta = getDeltaMovement();
-            this.wheelRotationX += (float) Math.sqrt(delta.x * delta.x + delta.z * delta.z) * 150.0F * (this.speed < 0 ? 1 : -1);
+            this.wheelRotationX += Mth.sqrt((float) this.getDeltaMovement().horizontalDistanceSqr()) * 150.0F * (this.speed < 0 ? 1 : -1);
             this.wheelRotationX %= 360;
             this.wheelRotationZ = Mth.clamp(this.wheelRotationZ * 0.9F, -30.0F, 30.0F);
         }

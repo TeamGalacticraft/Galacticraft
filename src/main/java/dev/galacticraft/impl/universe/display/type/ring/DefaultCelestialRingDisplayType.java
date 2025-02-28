@@ -47,7 +47,7 @@ public class DefaultCelestialRingDisplayType extends CelestialRingDisplayType<De
 
         PoseStack matrices = graphics.pose();
 
-        final float theta = 4.0f * Mth.DEG_TO_RAD;
+        final float theta = 4.0F * Mth.DEG_TO_RAD;
         final float cos = Mth.cos(theta);
         final float sin = Mth.sin(theta);
 
