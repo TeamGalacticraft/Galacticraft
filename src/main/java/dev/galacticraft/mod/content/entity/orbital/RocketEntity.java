@@ -667,11 +667,11 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
             onJump();
 
         if (stage.ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
-            if (right) {
-                setZRot(Mth.clamp(getZRot() - 0.5F * turnFactor, -angle, angle));
-            } else if (left) {
-                setZRot(Mth.clamp(getZRot() + 0.5F * turnFactor, -angle, angle));
-            }
+            // if (right) {
+            //     setZRot(Mth.clamp(getZRot() - 0.5F * turnFactor, -angle, angle));
+            // } else if (left) {
+            //     setZRot(Mth.clamp(getZRot() + 0.5F * turnFactor, -angle, angle));
+            // }
 
             if (up) {
                 setXRot(Mth.clamp(getXRot() - 0.5F * turnFactor, -angle, angle));
@@ -679,9 +679,9 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                 setXRot(Mth.clamp(getXRot() + 0.5F * turnFactor, -angle, angle));
             }
 
-            if (jumping) {
+            if (left) {
                 setYRot((getYRot() - turnFactor) % 360.0f);
-            } else if (shiftKeyDown) {
+            } else if (right) {
                 setYRot((getYRot() + turnFactor) % 360.0f);
             }
         }

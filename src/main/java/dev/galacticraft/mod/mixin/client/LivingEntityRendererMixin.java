@@ -63,10 +63,18 @@ public abstract class LivingEntityRendererMixin {
     @Inject(method = "setupRotations", at = @At("HEAD"))
     private void rotateToMatchRocket(LivingEntity entity, PoseStack pose, float animationProgress, float bodyYaw, float tickDelta, float scale, CallbackInfo ci) {
         if (entity.isPassenger() && entity.getVehicle() instanceof RocketEntity rocket) {
-            double rotationOffset = 0.7F;
+            double rotationOffset = 0.7D;
             pose.translate(0, rotationOffset, 0);
-            pose.mulPose(Axis.XP.rotationDegrees(rocket.getXRot() * Mth.cos(rocket.getYRot() * Mth.DEG_TO_RAD) - rocket.getZRot() * Mth.sin(rocket.getYRot() * Mth.DEG_TO_RAD)));
-            pose.mulPose(Axis.ZP.rotationDegrees(rocket.getXRot() * Mth.sin(rocket.getYRot() * Mth.DEG_TO_RAD) + rocket.getZRot() * Mth.cos(rocket.getYRot() * Mth.DEG_TO_RAD)));
+            float pitch = rocket.getXRot();
+            float yaw = rocket.getYRot();
+            if (pitch < -90.0F || pitch > 90.0F) {
+                // Fix rotation when the rocket is pointing downwards
+                pose.mulPose(Axis.XP.rotationDegrees(pitch * Mth.cos(yaw * Mth.DEG_TO_RAD)));
+                pose.mulPose(Axis.ZP.rotationDegrees(pitch * Mth.sin(yaw * Mth.DEG_TO_RAD)));
+            } else {
+                pose.mulPose(Axis.XP.rotationDegrees(pitch * Mth.cos(yaw * Mth.DEG_TO_RAD)));
+                pose.mulPose(Axis.ZP.rotationDegrees(pitch * Mth.sin(yaw * Mth.DEG_TO_RAD)));
+            }
             pose.translate(0, -rotationOffset, 0);
         }
     }
