@@ -1,5 +1,5 @@
 {
   "textures": {
-    "particle": "galacticraft:block/crude_oil_still"
+    "particle": "galacticraft:block/fluid/crude_oil_still"
   }
 }

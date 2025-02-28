@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,6 @@ package dev.galacticraft.mod.content.block.environment;
 
 import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -113,7 +112,7 @@ public class CavernousVinesBlock extends GrowingPlantHeadBlock implements Boneme
 
     @Override
     public ItemStack getCloneItemStack(LevelReader blockGetter, BlockPos blockPos, BlockState blockState) {
-        return new ItemStack(GCItems.CAVERNOUS_VINES);
+        return new ItemStack(GCBlocks.CAVERNOUS_VINES);
     }
 
     @Override

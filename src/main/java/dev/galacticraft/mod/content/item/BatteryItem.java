@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.util.DrawableUtil;
+import dev.galacticraft.mod.util.TooltipUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -48,9 +48,8 @@ public class BatteryItem extends Item implements SimpleEnergyItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
+        TooltipUtil.appendRemainingTooltip(Translations.Tooltip.ENERGY_REMAINING, this.getStoredEnergy(stack), this.getEnergyCapacity(stack), tooltip);
         super.appendHoverText(stack, context, tooltip, type);
-
-        tooltip.add(Component.translatable(Translations.Tooltip.ENERGY_REMAINING, DrawableUtil.getEnergyDisplay(getStoredEnergy(stack)).setStyle(Constant.Text.Color.getStorageLevelStyle(1.0 - ((double)getStoredEnergy(stack)) / ((double)this.getEnergyCapacity(stack))))));
     }
 
     @Override

@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_cheese_curd": {
+    "has_moon_cheese_curd": {
       "conditions": {
         "items": [
           {
-            "items": "galacticraft:cheese_curd"
+            "items": "galacticraft:moon_cheese_curd"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_cheese_curd"
+      "has_moon_cheese_curd"
     ]
   ],
   "rewards": {

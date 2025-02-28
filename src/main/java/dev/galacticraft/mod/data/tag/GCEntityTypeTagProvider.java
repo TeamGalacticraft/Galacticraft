@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,11 +22,13 @@
 
 package dev.galacticraft.mod.data.tag;
 
+import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityType;
 
 import java.util.concurrent.CompletableFuture;
@@ -41,5 +43,8 @@ public class GCEntityTypeTagProvider extends IntrinsicHolderTagsProvider<EntityT
     protected void addTags(HolderLookup.Provider arg) {
         tag(GCTags.HAS_FOOTPRINTS)
                 .add(EntityType.PLAYER);
+        
+        tag(EntityTypeTags.FALL_DAMAGE_IMMUNE)
+                .add(GCEntityTypes.LANDER);
     }
 }

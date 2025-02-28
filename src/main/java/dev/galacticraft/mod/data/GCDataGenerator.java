@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -78,6 +78,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(GCBannerTagProvider::new);
         pack.addProvider(GCBiomeTagProvider::new);
         pack.addProvider(GCBlockTagProvider::new);
+        pack.addProvider(GCDamageTypeTagProvider::new);
         pack.addProvider(GCDimensionTagProvider::new);
         pack.addProvider(GCEntityTypeTagProvider::new);
         pack.addProvider(GCFluidTagProvider::new);

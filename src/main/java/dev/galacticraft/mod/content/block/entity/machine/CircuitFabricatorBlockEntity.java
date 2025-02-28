@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
+import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.compat.vanilla.RecipeHelper;
@@ -35,6 +36,7 @@ import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -53,6 +55,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -70,24 +73,30 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
     private static final StorageSpec SPEC = StorageSpec.of(
             MachineItemStorage.spec(
                     ItemResourceSlot.builder(TransferType.TRANSFER)
-                            .pos(8, 70)
-                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY),
+                            .pos(8, 72)
+                            .capacity(1)
+                            .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
+                            .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(31, 15)
-                            .filter(ResourceFilters.itemTag(ConventionalItemTags.DIAMOND_GEMS)),
+                            .pos(31, 17)
+                            .filter(ResourceFilters.itemTag(ConventionalItemTags.DIAMOND_GEMS))
+                            .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.DIAMOND)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(62, 45)
-                            .filter(ResourceFilters.ofResource(GCItems.SILICON)),
+                            .pos(62, 47)
+                            .filter(ResourceFilters.ofResource(GCItems.SILICON))
+                            .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.SILICON)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(62, 63)
-                            .filter(ResourceFilters.ofResource(GCItems.SILICON)),
+                            .pos(62, 65)
+                            .filter(ResourceFilters.ofResource(GCItems.SILICON))
+                            .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.SILICON)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(107, 70)
-                            .filter(ResourceFilters.ofResource(Items.REDSTONE)),
+                            .pos(107, 72)
+                            .filter(ResourceFilters.ofResource(Items.REDSTONE))
+                            .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.DUST)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(134, 15),
+                            .pos(134, 17),
                     ItemResourceSlot.builder(TransferType.OUTPUT)
-                            .pos(152, 70)
+                            .pos(152, 72)
             ),
             MachineEnergyStorage.spec(
                     Galacticraft.CONFIG.machineEnergyStorageSize(),

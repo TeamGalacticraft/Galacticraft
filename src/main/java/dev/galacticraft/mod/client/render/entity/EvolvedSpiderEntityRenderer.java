@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@ package dev.galacticraft.mod.client.render.entity;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.render.entity.feature.EvolvedSpiderEyesRenderLayer;
+import dev.galacticraft.mod.client.render.entity.feature.EvolvedSpiderGearRenderLayer;
 import dev.galacticraft.mod.content.entity.EvolvedSpiderEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -40,6 +41,7 @@ public class EvolvedSpiderEntityRenderer extends MobRenderer<EvolvedSpiderEntity
     public EvolvedSpiderEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new SpiderModel<>(context.bakeLayer(ModelLayers.SPIDER)), 0.8f);
         this.addLayer(new EvolvedSpiderEyesRenderLayer<>(this));
+        this.addLayer(new EvolvedSpiderGearRenderLayer<>(this));
     }
 
     @Override

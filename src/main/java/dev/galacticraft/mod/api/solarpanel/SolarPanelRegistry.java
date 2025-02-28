@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,11 @@
 package dev.galacticraft.mod.api.solarpanel;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.solarpanel.LightSource;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
+import dev.galacticraft.mod.api.block.entity.SolarPanel.SolarPanelSource;
+import dev.galacticraft.mod.content.GCLightSources;
+import dev.galacticraft.mod.content.GCSolarPanelStates;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -39,32 +43,32 @@ import java.util.Map;
 import java.util.Objects;
 
 public class SolarPanelRegistry {
-    private static final WorldLightSources DEFAULT_LIGHT_SOURCE = new WorldLightSources(
-            Constant.ScreenTexture.DEFAULT_LIGHT_SOURCES,
-            new LightSource(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_SUN).setStyle(Constant.Text.Color.YELLOW_STYLE), 1.0, 1.0),
-            new LightSource(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_MOON).setStyle(Constant.Text.Color.GRAY_STYLE), 0.07, 1.0),
-            new LightSource(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_RAIN).setStyle(Constant.Text.Color.BLUE_STYLE), 1.0, 2.0),
-            new LightSource(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_NONE).setStyle(Constant.Text.Color.WHITE_STYLE), 0.0, 1.0));
-    private static final Map<ResourceKey<Level>, WorldLightSources> LIGHT_SOURCES = new HashMap<>();
-    private static final Map<BlockEntityType<? extends SolarPanel>, ResourceLocation> SOLAR_PANEL_TEXTURES = new HashMap<>();
+    private static final Map<ResourceKey<Level>, Map<SolarPanelSource, LightSource>> LIGHT_SOURCES = new HashMap<>();
+    private static final Map<BlockEntityType<? extends SolarPanel>, Map<SolarPanelSource, ResourceLocation>> SOLAR_PANEL_TEXTURES = new HashMap<>();
 
-    public static void registerLightSources(ResourceKey<Level> key, WorldLightSources source) {
+    public static void registerLightSources(ResourceKey<Level> key, Map<SolarPanelSource, LightSource> source) {
+        for (Map.Entry<SolarPanelSource, LightSource> entry : GCLightSources.DEFAULT_LIGHT_SOURCES.entrySet()) {
+            source.putIfAbsent(entry.getKey(), entry.getValue());
+        }
         if (LIGHT_SOURCES.put(key, source) != null) {
-            Constant.LOGGER.warn("Replacing ligt source for {}", key.location().toString());
+            Constant.LOGGER.warn("Replacing light source for {}", key.location().toString());
         }
     }
 
-    public static <M extends BlockEntity & SolarPanel, T extends BlockEntityType<M>> void registerSolarPanelTexture(T type, ResourceLocation texture) {
-        if (SOLAR_PANEL_TEXTURES.put(type, texture) != null) {
+    public static <M extends BlockEntity & SolarPanel, T extends BlockEntityType<M>> void registerSolarPanelTexture(T type, Map<SolarPanelSource, ResourceLocation> textures) {
+        for (Map.Entry<SolarPanelSource, ResourceLocation> entry : GCSolarPanelStates.DEFAULT_SOLAR_PANELS.entrySet()) {
+            textures.putIfAbsent(entry.getKey(), entry.getValue());
+        }
+        if (SOLAR_PANEL_TEXTURES.put(type, textures) != null) {
             Constant.LOGGER.warn("Replacing solar panel texture for {}", Objects.requireNonNull(BuiltInRegistries.BLOCK_ENTITY_TYPE.getKey(type)).toString());
         }
     }
 
-    public static @NotNull WorldLightSources getLightSource(ResourceKey<Level> key) {
-        return LIGHT_SOURCES.getOrDefault(key, DEFAULT_LIGHT_SOURCE);
+    public static @NotNull Map<SolarPanelSource, LightSource> getLightSources(ResourceKey<Level> key) {
+        return LIGHT_SOURCES.getOrDefault(key, GCLightSources.DEFAULT_LIGHT_SOURCES);
     }
 
-    public static @NotNull ResourceLocation getSolarPanelTexture(BlockEntityType<?> key) {
-        return SOLAR_PANEL_TEXTURES.getOrDefault(key, Constant.ScreenTexture.DEFAULT_SOLAR_PANELS);
+    public static @NotNull Map<SolarPanelSource, ResourceLocation> getSolarPanelTextures(BlockEntityType<?> key) {
+        return SOLAR_PANEL_TEXTURES.getOrDefault(key, GCSolarPanelStates.DEFAULT_SOLAR_PANELS);
     }
 }

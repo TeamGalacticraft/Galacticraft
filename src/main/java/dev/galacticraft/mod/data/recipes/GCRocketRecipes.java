@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,9 @@
 
 package dev.galacticraft.mod.data.recipes;
 
+import dev.galacticraft.api.rocket.RocketPrefabs;
+import dev.galacticraft.mod.api.data.recipe.RocketRecipeBuilder;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -31,6 +34,7 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.world.item.Items;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -41,7 +45,7 @@ public class GCRocketRecipes extends FabricRecipeProvider {
 
     @Override
     public void buildRecipes(RecipeOutput output) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ROCKET_WORKBENCH)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.ROCKET_WORKBENCH)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('C', Items.CRAFTING_TABLE)
                 .define('L', Items.LEVER)
@@ -84,11 +88,21 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
                 .save(output);
 
+        RocketRecipeBuilder.create(GCItems.ROCKET)
+                .rocketData(RocketPrefabs.TIER_1)
+                .cone(GCItems.NOSE_CONE)
+                .body(GCItems.TIER_1_HEAVY_DUTY_PLATE)
+                .bodyHeight(4)
+                .fins(GCItems.ROCKET_FIN)
+                .engine(GCItems.ROCKET_ENGINE)
+                .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                .save(output);
+
         // TODO: Rocket Parts
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "Rocket Recipes";
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,11 @@
 
 package dev.galacticraft.api.accessor;
 
+import dev.galacticraft.api.item.OxygenGear;
+import dev.galacticraft.api.item.OxygenMask;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
+import net.minecraft.world.item.Item;
 
 public interface GearInventoryProvider {
     default Container galacticraft$getGearInv() {
@@ -40,6 +43,22 @@ public interface GearInventoryProvider {
 
     default Container galacticraft$getAccessories() {
         throw new RuntimeException("This should be overridden by mixin!");
+    }
+
+    default boolean galacticraft$hasMaskAndGear() {
+        boolean mask = false;
+        boolean gear = false;
+        for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
+            Item item = this.galacticraft$getAccessories().getItem(i).getItem();
+            if (!mask && item instanceof OxygenMask) {
+                mask = true;
+                if (gear) break;
+            } else if (!gear && item instanceof OxygenGear) {
+                gear = true;
+                if (mask) break;
+            }
+        }
+        return mask && gear;
     }
 
     default void galacticraft$writeGearToNbt(CompoundTag tag) {

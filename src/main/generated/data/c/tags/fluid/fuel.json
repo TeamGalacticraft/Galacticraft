@@ -1,6 +1,5 @@
 {
   "values": [
-    "galacticraft:fuel_still",
-    "galacticraft:fuel_flowing"
+    "#galacticraft:fuel"
   ]
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -171,6 +171,7 @@ public class VariableSizedContainer implements Container {
     @Override
     public void clearContent() {
         Collections.fill(this.stacks, ItemStack.EMPTY);
+        this.setChanged();
     }
 
     public CompoundTag toTag(HolderLookup.Provider provider) {

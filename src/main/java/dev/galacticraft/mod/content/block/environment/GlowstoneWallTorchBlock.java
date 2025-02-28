@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.content.block.environment;
 
 import com.mojang.serialization.MapCodec;
-import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.util.TooltipUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -50,11 +50,7 @@ public class GlowstoneWallTorchBlock extends WallTorchBlock {
 
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag options) {
+        TooltipUtil.appendLshiftTooltip(Translations.Tooltip.GLOWSTONE_TORCH, tooltip);
         super.appendHoverText(stack, context, tooltip, options);
-        if (Screen.hasShiftDown()) {
-            tooltip.add(Component.translatable(Translations.Tooltip.GLOWSTONE_TORCH).setStyle(Constant.Text.Color.GRAY_STYLE));
-        } else {
-            tooltip.add(Component.translatable(Translations.Tooltip.PRESS_SHIFT).setStyle(Constant.Text.Color.GRAY_STYLE));
-        }
     }
 }

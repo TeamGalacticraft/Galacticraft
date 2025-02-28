@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "galacticraft:item/battery"
+    "layer0": "galacticraft:item/infinite_battery",
+    "layer1": "galacticraft:item/infinite_indicator"
   }
 }

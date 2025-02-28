@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,8 +62,10 @@ public class RocketSound extends AbstractTickableSoundInstance {
                         this.pitch = 1.0F;
                     }
                 }
+            } else if (this.rocket.getLaunchStage() == LaunchStage.LAUNCHED) {
+                pitch = 1.0F;
             } else {
-                this.pitch = 1.0F;
+                stop();
             }
 
             if (this.rocket.getLaunchStage().ordinal() >= LaunchStage.IGNITED.ordinal()) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,10 @@
 
 package dev.galacticraft.mod.content.block;
 
+import dev.galacticraft.mod.util.TooltipUtil;
 import dev.galacticraft.mod.util.Translations;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -42,22 +39,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class GCBlock extends Block {
-    private static final Component PRESS_SHIFT = Component.translatable(Translations.Tooltip.PRESS_SHIFT).withStyle(ChatFormatting.GRAY);
-
     public GCBlock(Properties properties) {
         super(properties);
     }
 
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag options) {
+        TooltipUtil.appendLshiftTooltip(getDescriptionId() + ".description", tooltip);
         super.appendHoverText(stack, context, tooltip, options);
-
-        Component description = Component.translatable(getDescriptionId() + ".description");
-        if (Screen.hasShiftDown()) {
-            tooltip.addAll(Minecraft.getInstance().font.getSplitter().splitLines(description, 150, Style.EMPTY).stream().map(formattedText -> Component.literal(formattedText.getString()).withStyle(ChatFormatting.GRAY)).toList());
-        } else {
-            tooltip.add(PRESS_SHIFT);
-        }
     }
 
     @Override

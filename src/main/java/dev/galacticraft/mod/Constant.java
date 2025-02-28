@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -332,8 +332,8 @@ public interface Constant {
         String OXYGEN_GAS = "oxygen_gas";
         String LIQUID_OXYGEN = "liquid_oxygen";
 
-        static ResourceLocation getId(String s) {
-            return Constant.id("block/" + s);
+        static ResourceLocation fluidId(String s) {
+            return Constant.id("block/fluid/" + s);
         }
     }
 
@@ -396,8 +396,9 @@ public interface Constant {
         String AMBIENT_THERMAL_CONTROLLER = "ambient_thermal_controller";
         String LIQUID_CANISTER = "liquid_canister";
         //FOOD
-        String CHEESE_CURD = "cheese_curd";
-        String CHEESE_SLICE = "cheese_slice";
+        String MOON_CHEESE_WHEEL = "moon_cheese_wheel";
+        String MOON_CHEESE_CURD = "moon_cheese_curd";
+        String MOON_CHEESE_SLICE = "moon_cheese_slice";
         String BURGER_BUN = "burger_bun";
         String GROUND_BEEF = "ground_beef";
         String BEEF_PATTY = "beef_patty";
@@ -452,6 +453,7 @@ public interface Constant {
         String TITANTIUM_UPGRADE_SMITHING_TEMPLATE = "titanium_upgrade_smithing_template";
         String BATTERY = "battery";
         String INFINITE_BATTERY = "infinite_battery";
+        String INFINITE_INDICATOR = "infinite_indicator";
 
         //Fluid buckets
         String CRUDE_OIL_BUCKET = "crude_oil_bucket";
@@ -490,14 +492,6 @@ public interface Constant {
         String CARGO_ROCKET_SCHEMATIC = "cargo_rocket_schematic";
         String MOON_BUGGY_SCHEMATIC = "moon_buggy_schematic";
         String ASTRO_MINER_SCHEMATIC = "astro_miner_schematic";
-
-        String EVOLVED_ZOMBIE_SPAWN_EGG = "evolved_zombie_spawn_egg";
-        String EVOLVED_PILLAGER_SPAWN_EGG = "evolved_pillager_spawn_egg";
-        String EVOLVED_VINDICATOR_SPAWN_EGG = "evolved_vindicator_spawn_egg";
-        String EVOLVED_EVOKER_SPAWN_EGG = "evolved_evoker_spawn_egg";
-        String EVOLVED_SPIDER_SPAWN_EGG = "evolved_spider_spawn_egg";
-        String EVOLVED_SKELETON_SPAWN_EGG = "evolved_skeleton_spawn_egg";
-        String EVOLVED_CREEPER_SPAWN_EGG = "evolved_creeper_spawn_egg";
 
         String LEGACY_MUSIC_DISC_MARS = "legacy_music_disc_mars";
         String LEGACY_MUSIC_DISC_MIMAS = "legacy_music_disc_mimas";
@@ -543,7 +537,6 @@ public interface Constant {
         ResourceLocation ROCKET_WORKBENCH_SCREEN = id("textures/gui/rocket_workbench.png");
         ResourceLocation ROCKET_SELECTION = id("textures/gui/rocket_part_selection.png");
 
-        ResourceLocation MACHINE_CONFIG_PANELS = id("textures/gui/machine_config.png");
         ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
         ResourceLocation ROCKET_INVENTORY = id("textures/gui/rocket.png");
         ResourceLocation OVERLAY = id("textures/gui/overlay.png");
@@ -555,21 +548,88 @@ public interface Constant {
         ResourceLocation OXYGEN_STORAGE_MODULE_SCREEN = id("textures/gui/oxygen_storage_module_screen.png");
         ResourceLocation OXYGEN_SEALER_SCREEN = id("textures/gui/oxygen_sealer_screen.png");
         ResourceLocation FUEL_LOADER_SCREEN = id("textures/gui/fuel_loader_screen.png");
-        ResourceLocation DEFAULT_SOLAR_PANELS = id("textures/solar_panel/default_solar_panels.png");
-        ResourceLocation DEFAULT_LIGHT_SOURCES = id("textures/solar_panel/default_light_sources.png");
-        ResourceLocation MOON_LIGHT_SOURCES = id("textures/solar_panel/moon_light_sources.png");
+        ResourceLocation SOLAR_PANEL_DAY = id("textures/gui/solar_panel/day.png");
+        ResourceLocation SOLAR_PANEL_NIGHT = id("textures/gui/solar_panel/night.png");
+        ResourceLocation SOLAR_PANEL_BLOCKED = id("textures/gui/solar_panel/blocked.png");
+    }
 
+    interface CelestialBody {
+        ResourceLocation SOL = id("textures/gui/celestialbodies/sol.png");
+        ResourceLocation SOL_OVERCAST = id("textures/gui/celestialbodies/sol_overcast.png");
+        ResourceLocation SOL_FROM_MOON = id("textures/gui/celestialbodies/sol_from_moon.png");
+        ResourceLocation MERCURY = id("textures/gui/celestialbodies/mercury.png");
+        ResourceLocation VENUS = id("textures/gui/celestialbodies/venus.png");
+        ResourceLocation EARTH = id("textures/gui/celestialbodies/earth.png");
+        ResourceLocation SPACE_STATION = id("textures/gui/celestialbodies/space_station.png");
+        ResourceLocation MOON = id("textures/gui/celestialbodies/moon.png");
+        ResourceLocation MARS = id("textures/gui/celestialbodies/mars.png");
+        ResourceLocation ASTEROID = id("textures/gui/celestialbodies/asteroid.png");
+        ResourceLocation SATURN = id("textures/gui/celestialbodies/saturn.png");
+        ResourceLocation SATURN_RINGS = id("textures/gui/celestialbodies/saturn_rings.png");
+        ResourceLocation JUPITER = id("textures/gui/celestialbodies/jupiter.png");
+        ResourceLocation CALLISTO = id("textures/gui/celestialbodies/callisto.png");
+        ResourceLocation EUROPA = id("textures/gui/celestialbodies/europa.png");
+        ResourceLocation GANYMEDE = id("textures/gui/celestialbodies/ganymede.png");
+        ResourceLocation IO = id("textures/gui/celestialbodies/io.png");
+        ResourceLocation URANUS = id("textures/gui/celestialbodies/uranus.png");
+        ResourceLocation URANUS_RINGS = id("textures/gui/celestialbodies/uranus_rings.png");
+        ResourceLocation NEPTUNE = id("textures/gui/celestialbodies/neptune.png");
+    }
+
+    interface RecipeViewer {
         ResourceLocation RECIPE_VIEWER_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
+
+        int CIRCUIT_FABRICATOR_U = 0;
+        int CIRCUIT_FABRICATOR_V = 0;
+        int CIRCUIT_FABRICATOR_WIDTH = 139;
+        int CIRCUIT_FABRICATOR_HEIGHT = 73;
+
+        int DIAMOND_X = 1;
+        int DIAMOND_Y = 1;
+        int SILICON_X_1 = 32;
+        int SILICON_Y_1 = 31;
+        int SILICON_X_2 = 32;
+        int SILICON_Y_2 = 49;
+        int REDSTONE_X = 77;
+        int REDSTONE_Y = 56;
+        int INGREDIENT_X = 104;
+        int INGREDIENT_Y = 1;
+        int WAFER_X = 122;
+        int WAFER_Y = 56;
+
+        int COMPRESSOR_U = 0;
+        int COMPRESSOR_V = 74;
+        int COMPRESSOR_WIDTH = 148;
+        int COMPRESSOR_HEIGHT = 54;
+
+        int FIRE_X = 67;
+        int FIRE_Y = 9;
+        int FUEL_X = 67;
+        int FUEL_Y = 31;
+        int COMPRESSED_X = 127;
+        int COMPRESSED_Y = 20;
     }
 
     interface SlotSprite {
-        String THERMAL_HEAD = "slot/thermal_helmet";
-        String THERMAL_CHEST = "slot/thermal_chestpiece";
-        String THERMAL_PANTS = "slot/thermal_leggings";
-        String THERMAL_BOOTS = "slot/thermal_boots";
-        String OXYGEN_MASK = "slot/oxygen_mask";
-        String OXYGEN_GEAR = "slot/oxygen_gear";
-        String OXYGEN_TANK = "slot/oxygen_tank";
+        ResourceLocation ENERGY = id("slot/energy");
+        ResourceLocation BUCKET = id("slot/bucket");
+        ResourceLocation DIAMOND = ResourceLocation.withDefaultNamespace("item/empty_slot_diamond");
+        ResourceLocation DUST = ResourceLocation.withDefaultNamespace("item/empty_slot_redstone_dust");
+        ResourceLocation SILICON = id("slot/silicon");
+        ResourceLocation THERMAL_HEAD = id("slot/thermal_helmet");
+        ResourceLocation THERMAL_CHEST = id("slot/thermal_chestpiece");
+        ResourceLocation THERMAL_PANTS = id("slot/thermal_leggings");
+        ResourceLocation THERMAL_BOOTS = id("slot/thermal_boots");
+        ResourceLocation OXYGEN_MASK = id("slot/oxygen_mask");
+        ResourceLocation OXYGEN_GEAR = id("slot/oxygen_gear");
+        ResourceLocation OXYGEN_TANK = id("slot/oxygen_tank");
+
+        ResourceLocation ROCKET_CONE = id("slot/rocket_cone");
+        ResourceLocation ROCKET_PLATING = id("slot/rocket_plating");
+        ResourceLocation ROCKET_BOOSTER = id("slot/rocket_booster");
+        ResourceLocation ROCKET_FIN = id("slot/rocket_fin");
+        ResourceLocation ROCKET_ENGINE = id("slot/rocket_engine");
+        ResourceLocation CHEST = id("slot/chest");
     }
 
     interface Entity {
@@ -578,6 +638,8 @@ public interface Constant {
         String EVOLVED_CREEPER = "evolved_creeper";
         String EVOLVED_SKELETON = "evolved_skeleton";
         String EVOLVED_SPIDER = "evolved_spider";
+        String EVOLVED_ENDERMAN = "evolved_enderman";
+        String EVOLVED_WITCH = "evolved_witch";
         String EVOLVED_PILLAGER = "evolved_pillager";
         String EVOLVED_EVOKER = "evolved_evoker";
         String EVOLVED_VINDICATOR = "evolved_vindicator";
@@ -602,6 +664,8 @@ public interface Constant {
         String EVOLVED_CREEPER = "evolved_creeper_spawn_egg";
         String EVOLVED_SKELETON = "evolved_skeleton_spawn_egg";
         String EVOLVED_SPIDER = "evolved_spider_spawn_egg";
+        String EVOLVED_ENDERMAN = "evolved_enderman_spawn_egg";
+        String EVOLVED_WITCH = "evolved_witch_spawn_egg";
         String EVOLVED_PILLAGER = "evolved_pillager_spawn_egg";
         String EVOLVED_EVOKER = "evolved_evoker_spawn_egg";
         String EVOLVED_VINDICATOR = "evolved_vindicator_spawn_egg";
@@ -707,27 +771,33 @@ public interface Constant {
     }
 
     interface Text {
-        interface Color {
-            Style DARK_GRAY_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_GRAY);
-            Style GOLD_STYLE = Style.EMPTY.withColor(ChatFormatting.GOLD);
-            Style GREEN_STYLE = Style.EMPTY.withColor(ChatFormatting.GREEN);
-            Style RED_STYLE = Style.EMPTY.withColor(ChatFormatting.RED);
-            Style BLUE_STYLE = Style.EMPTY.withColor(ChatFormatting.BLUE);
-            Style AQUA_STYLE = Style.EMPTY.withColor(ChatFormatting.AQUA);
-            Style GRAY_STYLE = Style.EMPTY.withColor(ChatFormatting.GRAY);
-            Style DARK_RED_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_RED);
-            Style LIGHT_PURPLE_STYLE = Style.EMPTY.withColor(ChatFormatting.LIGHT_PURPLE);
-            Style YELLOW_STYLE = Style.EMPTY.withColor(ChatFormatting.YELLOW);
-            Style WHITE_STYLE = Style.EMPTY.withColor(ChatFormatting.WHITE);
-            Style DARK_BLUE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_BLUE);
+        Style DARK_GRAY_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_GRAY);
+        Style GOLD_STYLE = Style.EMPTY.withColor(ChatFormatting.GOLD);
+        Style GREEN_STYLE = Style.EMPTY.withColor(ChatFormatting.GREEN);
+        Style RED_STYLE = Style.EMPTY.withColor(ChatFormatting.RED);
+        Style BLUE_STYLE = Style.EMPTY.withColor(ChatFormatting.BLUE);
+        Style AQUA_STYLE = Style.EMPTY.withColor(ChatFormatting.AQUA);
+        Style GRAY_STYLE = Style.EMPTY.withColor(ChatFormatting.GRAY);
+        Style DARK_RED_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_RED);
+        Style LIGHT_PURPLE_STYLE = Style.EMPTY.withColor(ChatFormatting.LIGHT_PURPLE);
+        Style YELLOW_STYLE = Style.EMPTY.withColor(ChatFormatting.YELLOW);
+        Style WHITE_STYLE = Style.EMPTY.withColor(ChatFormatting.WHITE);
+        Style DARK_BLUE_STYLE = Style.EMPTY.withColor(ChatFormatting.DARK_BLUE);
 
-            static int getStorageLevelColor(double scale) {
-                return ((int) (255 * scale) << 16) + (((int) (255 * (1.0 - scale))) << 8);
-            }
+        static int getStorageLevelColor(double scale) {
+            return ((int) (255 * scale) << 16) + (((int) (255 * (1.0 - scale))) << 8);
+        }
 
-            static Style getStorageLevelStyle(double scale) {
-                return Style.EMPTY.withColor(TextColor.fromRgb(getStorageLevelColor(scale)));
-            }
+        static Style getStorageLevelStyle(double scale) {
+            return Style.EMPTY.withColor(TextColor.fromRgb(getStorageLevelColor(scale)));
+        }
+
+        static int getCoolingColor(double scale) {
+            return (255 << 16) + (((int) (255 * 0.75 * (1.0 - scale))) << 8);
+        }
+
+        static Style getCoolingStyle(double scale) {
+            return Style.EMPTY.withColor(TextColor.fromRgb(getCoolingColor(scale)));
         }
     }
 
@@ -781,6 +851,11 @@ public interface Constant {
         long T2_MACHINE_ENERGY_USAGE = 200;
     }
 
+    interface Landing {
+        double SAFE_VELOCITY = 1.0D; // meters per tick (~1/20 second)
+        double EXPLOSION_SCALE = 4.0D;
+    }
+
     @ApiStatus.Internal
     interface Misc {
         ResourceLocation INVALID = Constant.id("invalid");
@@ -796,11 +871,13 @@ public interface Constant {
     interface Recipe {
         String FABRICATION = "fabrication";
         String COMPRESSING = "compressing";
+        String ROCKET = "rocket";
 
         interface Serializer {
             String FABRICATION = "fabrication";
             String COMPRESSING_SHAPELESS = "compressing_shapeless";
             String COMPRESSING_SHAPED = "compressing_shaped";
+            String ROCKET = "rocket";
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -76,24 +76,9 @@ public class RocketResultSlot extends Slot {
 
     @Override
     public void onTake(Player player, ItemStack stack) {
+        super.onTake(player, stack);
         this.checkTakeAchievements(stack);
-        for (int i = 0; i < this.menu.cone.inventory.getTargetSize(); i++) {
-            this.menu.cone.inventory.removeItem(i, 1);
-        }
-        for (int i = 0; i < this.menu.body.inventory.getTargetSize(); i++) {
-            this.menu.body.inventory.removeItem(i, 1);
-        }
-        for (int i = 0; i < this.menu.fins.inventory.getTargetSize(); i++) {
-            this.menu.fins.inventory.removeItem(i, 1);
-        }
-        for (int i = 0; i < this.menu.booster.inventory.getTargetSize(); i++) {
-            this.menu.booster.inventory.removeItem(i, 1);
-        }
-        for (int i = 0; i < this.menu.engine.inventory.getTargetSize(); i++) {
-            this.menu.engine.inventory.removeItem(i, 1);
-        }
-        for (int i = 0; i < this.menu.upgrade.inventory.getTargetSize(); i++) {
-            this.menu.upgrade.inventory.removeItem(i, 1);
-        }
+        this.menu.workbench.ingredients.clearContent();
+        this.menu.workbench.chests.clearContent();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -399,9 +399,9 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.AMBIENT_THERMAL_CONTROLLER, "Ambient Thermal Controller");
 
         // FOOD
-        this.item(GCItems.CHEESE_CURD, "Cheese Curd");
+        this.item(GCItems.MOON_CHEESE_CURD, "Moon Cheese Curd");
 
-        this.item(GCItems.CHEESE_SLICE, "Cheese Slice");
+        this.item(GCItems.MOON_CHEESE_SLICE, "Moon Cheese Slice");
         this.item(GCItems.BURGER_BUN, "Burger Bun");
         this.item(GCItems.GROUND_BEEF, "Raw Beef Patty");
         this.item(GCItems.BEEF_PATTY, "Cooked Beef Patty");
@@ -535,6 +535,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.EVOLVED_CREEPER_SPAWN_EGG, "Evolved Creeper Spawn Egg");
         this.item(GCItems.EVOLVED_SKELETON_SPAWN_EGG, "Evolved Skeleton Spawn Egg");
         this.item(GCItems.EVOLVED_SPIDER_SPAWN_EGG, "Evolved Spider Spawn Egg");
+        this.item(GCItems.EVOLVED_ENDERMAN_SPAWN_EGG, "Evolved Enderman Spawn Egg");
+        this.item(GCItems.EVOLVED_WITCH_SPAWN_EGG, "Evolved Witch Spawn Egg");
         this.item(GCItems.EVOLVED_PILLAGER_SPAWN_EGG, "Evolved Pillager Spawn Egg");
         this.item(GCItems.EVOLVED_EVOKER_SPAWN_EGG, "Evolved Evoker Spawn Egg");
         this.item(GCItems.EVOLVED_VINDICATOR_SPAWN_EGG, "Evolved Vindicator Spawn Egg");
@@ -586,12 +588,14 @@ public class GCTranslationProvider extends TranslationProvider {
         this.entity(GCEntityTypes.BUGGY, "Buggy");
         this.entity(GCEntityTypes.COMET_CUBE, "Comet Cube");
         this.entity(GCEntityTypes.EVOLVED_CREEPER, "Evolved Creeper");
+        this.entity(GCEntityTypes.EVOLVED_ENDERMAN, "Evolved Enderman");
         this.entity(GCEntityTypes.EVOLVED_EVOKER, "Evolved Evoker");
         this.entity(GCEntityTypes.EVOLVED_PILLAGER, "Evolved Pillager");
         this.entity(GCEntityTypes.EVOLVED_SKELETON, "Evolved Skeleton");
         this.entity(GCEntityTypes.SKELETON_BOSS, "Evolved Skeleton Boss");
         this.entity(GCEntityTypes.EVOLVED_SPIDER, "Evolved Spider");
         this.entity(GCEntityTypes.EVOLVED_VINDICATOR, "Evolved Vindicator");
+        this.entity(GCEntityTypes.EVOLVED_WITCH, "Evolved Witch");
         this.entity(GCEntityTypes.EVOLVED_ZOMBIE, "Evolved Zombie");
         this.entity(GCEntityTypes.GAZER, "Gazer");
         this.entity(GCEntityTypes.GREY, "Grey");
@@ -676,6 +680,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(GcHouston.IN_OVERWORLD, "I don't need to be rescued!");
         this.add(GcHouston.SUCCESS, "You have been rescued. Better luck next time...");
 
+        this.deathBy(GCDamageTypes.CRASH_LANDING, "%s came in too hot");
         this.deathBy(GCDamageTypes.OIL_BOOM, "%s tried to put out fire with a very flammable material",
                 "%s tried to put out fire with a very flammable material while trying to escape %s");
         this.deathBy(GCDamageTypes.SUFFOCATION, "%s died from lack of oxygen",
@@ -710,14 +715,21 @@ public class GCTranslationProvider extends TranslationProvider {
         // Block Descriptions
         this.blockDesc(GCBlocks.ADVANCED_SOLAR_PANEL, "Advanced Solar Panels collect energy from the sun, and store it for further use. Adjusts position to face the sun, to collect more electricity.");
         this.blockDesc(GCBlocks.BASIC_SOLAR_PANEL, "Basic Solar Panels collect energy from the sun, and store it for further use. Collects most energy at mid-day (non-adjustable).");
-        this.blockDesc(GCBlocks.MOON_CHEESE_WHEEL, "Moon Cheese Wheels are created from the cheeses of the Moon, place-able and edible.");
         this.blockDesc(GCBlocks.CIRCUIT_FABRICATOR, "Circuit Fabricator will process basic materials into silicon wafers, used for advanced machines.");
         this.blockDesc(GCBlocks.COAL_GENERATOR, "Burns coal and charcoal for energy. The simplest but least efficient energy method.");
         this.blockDesc(GCBlocks.COMPRESSOR, "Compressor will process ingots into their compressed equivalents.");
         this.blockDesc(GCBlocks.ELECTRIC_COMPRESSOR, "Electric Compressor will process ingots into their compressed equivalents. Compresses two at a time, making it more effective than its predecessor.");
+        this.blockDesc(GCBlocks.ELECTRIC_FURNACE, "Electric Furnace is used as a faster alternative to traditional coal furnaces.");
+        this.blockDesc(GCBlocks.ELECTRIC_ARC_FURNACE, "Electric Arc Furnace is used as a better and faster alternative to both traditional coal and electric furnaces: double output from ores!");
         this.blockDesc(GCBlocks.ENERGY_STORAGE_MODULE, "Energy Storage Module is used to store large amounts of energy for later use.");
+        this.blockDesc(GCBlocks.FUEL_LOADER, "After being connected to a launch pad, a Fuel Loader will allow fuel to passed into the connected Rocket or other vehicle.");
+        this.blockDesc(GCBlocks.MOON_CHEESE_WHEEL, "Moon Cheese Wheels are created from the cheeses of the Moon, place-able and edible.");
         this.blockDesc(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, "Oxygen Bubble Distributor creates a bubble of air around itself. Requires oxygen and electricity.");
+        this.blockDesc(GCBlocks.OXYGEN_DECOMPRESSOR, "Oxygen Decompressor will unload oxygen into internal storage from an oxygen tank.");
         this.blockDesc(GCBlocks.OXYGEN_COLLECTOR, "Oxygen Collector will store oxygen collected from leaves in the surrounding area.");
+        this.blockDesc(GCBlocks.OXYGEN_COMPRESSOR, "Oxygen Compressor will load oxygen from internal storage into an oxygen tank.");
+        this.blockDesc(GCBlocks.OXYGEN_SEALER, "Oxygen Sealer will check for an enclosed space. If the space is enclosed, it will fill with breathable air.");
+        this.blockDesc(GCBlocks.OXYGEN_STORAGE_MODULE, "Oxygen Storage Module is used to store large amounts of oxygen for later use.");
         this.blockDesc(GCBlocks.PARACHEST, "Parachests will fall from the sky after landing on certain planets/moons, such as Earth. Contains rocket, fuel, and cargo from previous launch.");
         this.blockDesc(GCBlocks.REFINERY, "Refinery will take an input of oil and energy, and output fuel used for rockets and vehicles.");
     
@@ -727,9 +739,10 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Tooltip.GLOWSTONE_TORCH, "Glowstone Torches are best used to light areas when there is no oxygen for wood torches to burn.");
         this.add(Tooltip.INFINITE, "Infinite");
         this.add(Tooltip.OXYGEN_REMAINING, "Oxygen Remaining: %s");
-        this.add(Tooltip.PRESS_SHIFT, "Press LSHIFT for more info");
+        this.add(Tooltip.PRESS_SHIFT, "Press LSHIFT for more information.");
         this.add(Tooltip.STANDARD_WRENCH, "Most Galacticraft machines can be rotated by right-clicking with the Standard Wrench.");
-        this.add(Tooltip.TIME_UNTIL_COOL, "Time Until Cool: %ss");
+        this.add(Tooltip.TIME_UNTIL_COOL, "Time Until Cool: %s");
+        this.add(Tooltip.SECONDS_UNIT, "%ss");
     }
 
     protected void generateConfigTranslations() {
@@ -801,9 +814,11 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(SolarPanel.LIGHT_SOURCE_MOON, "Moon");
         this.add(SolarPanel.LIGHT_SOURCE_EARTH, "Earth");
         this.add(SolarPanel.LIGHT_SOURCE_NONE, "Unknown");
-        this.add(SolarPanel.LIGHT_SOURCE_RAIN, "Rain");
+        this.add(SolarPanel.LIGHT_SOURCE_RAIN, "Sun (Overcast)");
         this.add(SolarPanel.LIGHT_SOURCE_SUN, "Sun");
+        this.add(SolarPanel.LIGHT_SOURCE_THUNDER, "Sun (Stormy)");
         this.add(SolarPanel.STATUS, "Status: ");
+        this.add(SolarPanel.STORMY, "Stormy");
         this.add(SolarPanel.STRENGTH, "Strength: %s");
     }
 
@@ -829,6 +844,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(MachineStatus.OXYGEN_TANK_FULL, "Oxygen Tank Full");
         this.add(MachineStatus.PARTIALLY_BLOCKED, "Partially Blocked");
         this.add(MachineStatus.RAIN, "Rain");
+        this.add(MachineStatus.THUNDER, "Thunder");
         this.add(MachineStatus.SEALED, "Sealed");
         this.add(MachineStatus.WARMING_UP, "Warming Up");
         this.add(MachineStatus.NOT_ENOUGH_FUEL, "Not Enough Fuel");
@@ -885,6 +901,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.COLLECTING, "Collecting: %s/s");
         this.add(Ui.CURRENT_OXYGEN, "Oxygen: %s");
         this.add(Ui.GJT, "%s gJ/t");
+        this.add(Ui.MILLIBUCKETS, "mB");
         this.add(Ui.MAX_OXYGEN, "Maximum Oxygen: %s");
         this.add(Ui.MACHINE_STATUS, "Status: %s");
         this.add(Ui.OXYGEN_TANK_LEVEL, "Oxygen Tank %s: %s/%s");

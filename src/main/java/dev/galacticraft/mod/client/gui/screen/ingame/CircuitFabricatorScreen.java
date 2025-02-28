@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,47 +39,66 @@ import net.minecraft.world.item.crafting.RecipeInput;
 
 @Environment(EnvType.CLIENT)
 public class CircuitFabricatorScreen extends MachineScreen<CircuitFabricatorBlockEntity, RecipeMachineMenu<RecipeInput, FabricationRecipe, CircuitFabricatorBlockEntity>> {
-    private static final int PROGRESS_SIZE = 4;
+    private static final int PROGRESS_SIZE = 3;
     private static final int INITIAL_PROGRESS_U = 0;
-    private static final int INITIAL_PROGRESS_V = 186;
+    private static final int INITIAL_PROGRESS_V = 187;
     private static final int INITIAL_PROGRESS_X = 48;
-    private static final int INITIAL_PROGRESS_Y = 21;
+    private static final int INITIAL_PROGRESS_Y = 23;
     private static final int SECONDARY_PROGRESS_U = 31;
-    private static final int SECONDARY_PROGRESS_V = 216;
+    private static final int SECONDARY_PROGRESS_V = 217;
     private static final int SECONDARY_PROGRESS_X = 79;
-    private static final int SECONDARY_PROGRESS_Y = 51;
+    private static final int SECONDARY_PROGRESS_Y = 53;
     private static final int SECONDARY_CONCURRENT_PROGRESS_U = 31;
-    private static final int SECONDARY_CONCURRENT_PROGRESS_V = 238;
+    private static final int SECONDARY_CONCURRENT_PROGRESS_V = 235;
     private static final int SECONDARY_CONCURRENT_PROGRESS_X = 79;
-    private static final int SECONDARY_CONCURRENT_PROGRESS_Y = 73;
+    private static final int SECONDARY_CONCURRENT_PROGRESS_Y = 71;
     private static final int SECONDARY_CONCURRENT_PROGRESS_2_U = 45;
-    private static final int SECONDARY_CONCURRENT_PROGRESS_2_V = 221;
+    private static final int SECONDARY_CONCURRENT_PROGRESS_2_V = 220;
     private static final int SECONDARY_CONCURRENT_PROGRESS_2_X = 93;
-    private static final int SECONDARY_CONCURRENT_PROGRESS_2_Y = 69;
-    private static final int TERTIARY_PROGRESS_U = 49;
-    private static final int TERTIARY_PROGRESS_V = 216;
-    private static final int TERTIARY_PROGRESS_X = 97;
-    private static final int TERTIARY_PROGRESS_Y = 51;
+    private static final int SECONDARY_CONCURRENT_PROGRESS_2_Y = 71;
+    private static final int TERTIARY_PROGRESS_U = 48;
+    private static final int TERTIARY_PROGRESS_V = 217;
+    private static final int TERTIARY_PROGRESS_X = 96;
+    private static final int TERTIARY_PROGRESS_Y = 53;
     private static final int QUATERNARY_PROGRESS_U = 65;
     private static final int QUATERNARY_PROGRESS_V = 220;
     private static final int QUATERNARY_PROGRESS_X = 113;
-    private static final int QUATERNARY_PROGRESS_Y = 55;
+    private static final int QUATERNARY_PROGRESS_Y = 56;
     private static final int QUINARY_PROGRESS_U = 92;
-    private static final int QUINARY_PROGRESS_V = 197;
+    private static final int QUINARY_PROGRESS_V = 198;
     private static final int QUINARY_PROGRESS_X = 140;
-    private static final int QUINARY_PROGRESS_Y = 51;
+    private static final int QUINARY_PROGRESS_Y = 53;
     private static final int QUINARY_PROGRESS_HEIGHT = 19;
     private static final int SENARY_PROGRESS_U = 110;
     private static final int SENARY_PROGRESS_V = 220;
     private static final int SENARY_PROGRESS_X = 158;
-    private static final int SENARY_PROGRESS_Y = 55;
+    private static final int SENARY_PROGRESS_Y = 56;
+    
+    private static final float A = 24;
+    private static final float B = 20;
+    private static final float C = 18;
+    private static final float D_1 = 17 + PROGRESS_SIZE;
+    private static final float D_2 = 44 + PROGRESS_SIZE;
+    private static final float D = 65;
+    private static final float E = 15;
+    private static final float[] SUMS = {
+            A,
+            A + B,
+            A + B + C,
+            A + B + C + D_1,
+            A + B + C + D_2,
+            A + B + C + D,
+            A + B + C + D + E
+    };
+    private static final float F = (C + E) / C;
 
     public CircuitFabricatorScreen(RecipeMachineMenu<RecipeInput, FabricationRecipe, CircuitFabricatorBlockEntity> handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
         this.imageHeight = 176;
+        this.imageWidth = 176;
 
         this.capacitorX = 8;
-        this.capacitorY = 15;
+        this.capacitorY = 17;
     }
 
     @Override
@@ -88,35 +107,35 @@ public class CircuitFabricatorScreen extends MachineScreen<CircuitFabricatorBloc
         this.drawProgressBar(graphics.pose());
     }
 
-    //24 + 19 + 18 + 65 + 14 = 140
     private void drawProgressBar(PoseStack matrices) {
         assert this.minecraft != null;
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
         if (this.menu.getProgress() > 0) {
-            float progress = (float) ((((double) this.menu.getProgress()) / ((double) this.menu.getMaxProgress())) * 140.0);
-            if (progress <= 24) {
+            float progress = SUMS[6] * (float) this.menu.getProgress() / (float) this.menu.getMaxProgress();
+            if (progress <= SUMS[0]) {
                 DrawableUtil.drawProgressTexture(matrices, this.leftPos + INITIAL_PROGRESS_X, this.topPos + INITIAL_PROGRESS_Y, INITIAL_PROGRESS_U, INITIAL_PROGRESS_V, progress, PROGRESS_SIZE);
             } else {
-                DrawableUtil.drawProgressTexture(matrices, this.leftPos + INITIAL_PROGRESS_X, this.topPos + INITIAL_PROGRESS_Y, INITIAL_PROGRESS_U, INITIAL_PROGRESS_V, 24, Math.min(19, progress - 24) + 4);
-                if (progress > 24 + 19) {
-                    DrawableUtil.drawProgressTexture(matrices, this.leftPos + SECONDARY_PROGRESS_X, this.topPos + SECONDARY_PROGRESS_Y, SECONDARY_PROGRESS_U, SECONDARY_PROGRESS_V, Math.min(18, progress - (24 + 19)), PROGRESS_SIZE);
-                    DrawableUtil.drawProgressTexture(matrices, this.leftPos + SECONDARY_CONCURRENT_PROGRESS_X, this.topPos + SECONDARY_CONCURRENT_PROGRESS_Y - 4, SECONDARY_CONCURRENT_PROGRESS_U, SECONDARY_CONCURRENT_PROGRESS_V - 4, (float) Math.min(18, ((progress - (24.0 + 19.0)) * 1.77777777778)), 4);
+                DrawableUtil.drawProgressTexture(matrices, this.leftPos + INITIAL_PROGRESS_X, this.topPos + INITIAL_PROGRESS_Y, INITIAL_PROGRESS_U, INITIAL_PROGRESS_V, A, Math.min(B, progress - SUMS[0]) + 4);
+                if (progress > SUMS[1]) {
+                    float concurrent = (progress - SUMS[1]) * F;
+                    DrawableUtil.drawProgressTexture(matrices, this.leftPos + SECONDARY_PROGRESS_X, this.topPos + SECONDARY_PROGRESS_Y, SECONDARY_PROGRESS_U, SECONDARY_PROGRESS_V, Math.min(C, progress - SUMS[1]), PROGRESS_SIZE);
+                    DrawableUtil.drawProgressTexture(matrices, this.leftPos + SECONDARY_CONCURRENT_PROGRESS_X, this.topPos + SECONDARY_CONCURRENT_PROGRESS_Y, SECONDARY_CONCURRENT_PROGRESS_U, SECONDARY_CONCURRENT_PROGRESS_V, Math.min(C, concurrent), PROGRESS_SIZE);
 
-                    if (!(((progress - (24.0 + 19.0)) * 1.77777777778) <= 18.0)) { //18 + 14 = 32 // 32/18
-                        double min = Math.min(14, ((progress - (24.0 + 19.0 + (18.0 * (0.5624999999992969)))) * 1.77777777778));
-                        DrawableUtil.drawProgressTexture(matrices, this.leftPos + SECONDARY_CONCURRENT_PROGRESS_2_X, (float) (this.topPos + SECONDARY_CONCURRENT_PROGRESS_2_Y - min), SECONDARY_CONCURRENT_PROGRESS_2_U, SECONDARY_CONCURRENT_PROGRESS_2_V, PROGRESS_SIZE, (float) min);
+                    if (concurrent > C) {
+                        float min = Math.min(E, concurrent - C);
+                        DrawableUtil.drawProgressTexture(matrices, this.leftPos + SECONDARY_CONCURRENT_PROGRESS_2_X, this.topPos + SECONDARY_CONCURRENT_PROGRESS_2_Y - min, SECONDARY_CONCURRENT_PROGRESS_2_U, SECONDARY_CONCURRENT_PROGRESS_2_V, PROGRESS_SIZE, min);
                     }
 
-                    if (progress > 24 + 19 + 18) {
-                        DrawableUtil.drawProgressTexture(matrices, this.leftPos + TERTIARY_PROGRESS_X, this.topPos + TERTIARY_PROGRESS_Y, TERTIARY_PROGRESS_U, TERTIARY_PROGRESS_V, progress - (24 + 19 + 18), PROGRESS_SIZE);
-                        if (progress > 24 + 19 + 18 + 17 + 3) {
-                            DrawableUtil.drawProgressTexture(matrices, this.leftPos + QUATERNARY_PROGRESS_X, this.topPos + QUATERNARY_PROGRESS_Y, QUATERNARY_PROGRESS_U, QUATERNARY_PROGRESS_V, PROGRESS_SIZE, Math.min(14, progress - (24 + 19 + 18 + 17 + 3)));
+                    if (progress > SUMS[2]) {
+                        DrawableUtil.drawProgressTexture(matrices, this.leftPos + TERTIARY_PROGRESS_X, this.topPos + TERTIARY_PROGRESS_Y, TERTIARY_PROGRESS_U, TERTIARY_PROGRESS_V, progress - SUMS[2], PROGRESS_SIZE);
+                        if (progress > SUMS[3]) {
+                            DrawableUtil.drawProgressTexture(matrices, this.leftPos + QUATERNARY_PROGRESS_X, this.topPos + QUATERNARY_PROGRESS_Y, QUATERNARY_PROGRESS_U, QUATERNARY_PROGRESS_V, PROGRESS_SIZE, Math.min(E, progress - SUMS[3]));
                         }
-                        if (progress > 24 + 19 + 18 + 44 + 3) {
-                            DrawableUtil.drawProgressTexture(matrices, this.leftPos + QUINARY_PROGRESS_X, (float) (this.topPos + QUINARY_PROGRESS_Y - Math.floor(Math.min(QUINARY_PROGRESS_HEIGHT, progress - (24 + 19 + 18 + 44 + 3)))), QUINARY_PROGRESS_U, QUINARY_PROGRESS_V, PROGRESS_SIZE, Math.min(19, progress - (24 + 19 + 18 + 44 + 3)));
+                        if (progress > SUMS[4]) {
+                            DrawableUtil.drawProgressTexture(matrices, this.leftPos + QUINARY_PROGRESS_X, this.topPos + QUINARY_PROGRESS_Y - Math.min(QUINARY_PROGRESS_HEIGHT, progress - SUMS[4]), QUINARY_PROGRESS_U, QUINARY_PROGRESS_V, PROGRESS_SIZE, Math.min(B, progress - SUMS[4]));
                         }
-                        if (progress > 24 + 19 + 18 + 65) {
-                            DrawableUtil.drawProgressTexture(matrices, this.leftPos + SENARY_PROGRESS_X, this.topPos + SENARY_PROGRESS_Y, SENARY_PROGRESS_U, SENARY_PROGRESS_V, PROGRESS_SIZE, progress - (24 + 19 + 18 + 65));
+                        if (progress > SUMS[5]) {
+                            DrawableUtil.drawProgressTexture(matrices, this.leftPos + SENARY_PROGRESS_X, this.topPos + SENARY_PROGRESS_Y, SENARY_PROGRESS_U, SENARY_PROGRESS_V, PROGRESS_SIZE, progress - SUMS[5]);
                         }
                     }
                 }

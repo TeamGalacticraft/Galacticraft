@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -338,11 +338,10 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
 
         CelestialBody<?, ?> selectedParent = this.selectedParent;
 
-        if (this.selectedBody != null) {
-            selectedParent = this.selectedBody.parent().value();
-        }
-        if (this.selectedBody == null) {
+        if (this.selectedBody == null || this.selectedBody.parent() == null) {
             selectedParent = celestialBodies.get(Constant.id("sol"));
+        } else {
+            selectedParent = this.selectedBody.parent().value();
         }
 
         if (this.selectedParent != selectedParent) {

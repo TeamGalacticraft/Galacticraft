@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -108,14 +108,14 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         // Ore Tags
         tag(ConventionalItemTags.ORES).add(
-                GCItems.SILICON_ORE, GCItems.DEEPSLATE_SILICON_ORE,
-                GCItems.MOON_COPPER_ORE, GCItems.LUNASLATE_COPPER_ORE,
+                GCBlocks.SILICON_ORE.asItem(), GCBlocks.DEEPSLATE_SILICON_ORE.asItem(),
+                GCBlocks.MOON_COPPER_ORE.asItem(), GCBlocks.LUNASLATE_COPPER_ORE.asItem(),
                 GCBlocks.OLIVINE_BASALT.asItem(), GCBlocks.RICH_OLIVINE_BASALT.asItem(),
-                GCItems.TIN_ORE, GCItems.DEEPSLATE_TIN_ORE, GCItems.MOON_TIN_ORE, GCItems.LUNASLATE_TIN_ORE,
-                GCItems.ALUMINUM_ORE, GCItems.DEEPSLATE_ALUMINUM_ORE,
-                GCItems.DESH_ORE,
-                GCItems.ILMENITE_ORE,
-                GCItems.GALENA_ORE
+                GCBlocks.TIN_ORE.asItem(), GCBlocks.DEEPSLATE_TIN_ORE.asItem(), GCBlocks.MOON_TIN_ORE.asItem(), GCBlocks.LUNASLATE_TIN_ORE.asItem(),
+                GCBlocks.ALUMINUM_ORE.asItem(), GCBlocks.DEEPSLATE_ALUMINUM_ORE.asItem(),
+                GCBlocks.DESH_ORE.asItem(),
+                GCBlocks.ILMENITE_ORE.asItem(),
+                GCBlocks.GALENA_ORE.asItem()
         );
 
         tag(ConventionalItemTags.GEMS)
