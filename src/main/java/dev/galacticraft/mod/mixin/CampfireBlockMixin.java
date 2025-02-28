@@ -23,23 +23,21 @@
 package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.TorchBlock;
-import net.minecraft.world.level.block.WallTorchBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Mixin(TorchBlock.class)
-public abstract class TorchBlockMixin extends Block {
-    public TorchBlockMixin(Properties settings) {
+@Mixin(CampfireBlock.class)
+public abstract class CampfireBlockMixin extends Block {
+    public CampfireBlockMixin(Properties settings) {
         super(settings);
     }
 
@@ -49,11 +47,7 @@ public abstract class TorchBlockMixin extends Block {
         super.onPlace(state, world, pos, oldState, moved);
         Holder<CelestialBody<?, ?>> body = world.galacticraft$getCelestialBody();
         if (body != null && !body.value().atmosphere().breathable()) {
-            if (state.getBlock() instanceof TorchBlock torch && torch != GCBlocks.GLOWSTONE_TORCH) {
-                world.setBlockAndUpdate(pos, GCBlocks.UNLIT_TORCH.defaultBlockState());
-            } else if (state.getBlock() instanceof WallTorchBlock torch && torch != GCBlocks.GLOWSTONE_TORCH) {
-                world.setBlockAndUpdate(pos, GCBlocks.UNLIT_WALL_TORCH.defaultBlockState().setValue(WallTorchBlock.FACING, state.getValue(WallTorchBlock.FACING)));
-            }
+            world.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.LIT, false));
             world.addParticle(ParticleTypes.SMOKE, pos.getX(), pos.getY(), pos.getZ(), 0.0D, 0.0D, 0.0D);
             world.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1.0F, 0.9F, false);
         }
