@@ -92,7 +92,7 @@ public class LevelRendererMixin {
     @Inject(method = "renderSky", at = @At("HEAD"), cancellable = true)
     public void gc$renderSky(Matrix4f matrix4f, Matrix4f projectionMatrix, float tickDelta, Camera camera, boolean thickFog, Runnable fogCallback, CallbackInfo ci) {
         Player player = Minecraft.getInstance().player;
-        if (player.getVehicle() instanceof RocketEntity && player.getVehicle().getY() > 200) {
+        if (player.getVehicle() instanceof RocketEntity && player.getVehicle().getY() > Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) {
             fogCallback.run();
             PoseStack poseStack = new PoseStack();
             poseStack.mulPose(matrix4f);
@@ -104,10 +104,10 @@ public class LevelRendererMixin {
     @Inject(method = "renderClouds", at = @At("HEAD"), cancellable = true)
     public void gc$preventCloudRendering(PoseStack matrices, Matrix4f matrix4f, Matrix4f matrix4f2, float tickDelta, double cameraX, double cameraY, double cameraZ, CallbackInfo ci) {
         Player player = Minecraft.getInstance().player;
-        if (player != null && player.getVehicle() instanceof RocketEntity && player.getVehicle().getY() > Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) {
+        if (player != null && player.getVehicle() instanceof RocketEntity && player.getVehicle().getY() > Constant.CLOUD_HEIGHT) {
             // Have clouds slowly fade out
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, normalize((float) player.getY(), Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT, Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT + 100, 1, 0F));
-            if (player.getVehicle().getY() > 300)
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, normalize((float) player.getY(), Constant.CLOUD_HEIGHT, Constant.CLOUD_LIMIT, 1, 0F));
+            if (player.getVehicle().getY() > Constant.CLOUD_LIMIT)
                 ci.cancel();
         }
     }
@@ -115,7 +115,7 @@ public class LevelRendererMixin {
     @Inject(method = "renderSnowAndRain", at = @At("HEAD"), cancellable = true)
     public void gc$cancelRainAndSnow(LightTexture lightTexture, float f, double d, double e, double g, CallbackInfo ci) {
         Player player = Minecraft.getInstance().player;
-        if (player != null && player.getVehicle() instanceof RocketEntity && player.getVehicle().getY() > 200)
+        if (player != null && player.getVehicle() instanceof RocketEntity && player.getVehicle().getY() > Constant.CLOUD_HEIGHT)
             ci.cancel();
     }
 
