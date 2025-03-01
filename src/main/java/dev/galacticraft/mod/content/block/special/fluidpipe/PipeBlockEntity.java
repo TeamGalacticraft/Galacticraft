@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.special.fluidpipe;
 
+import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
 import dev.galacticraft.mod.api.pipe.impl.PipeNetworkImpl;
@@ -46,10 +47,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Optional;
 
 public abstract class PipeBlockEntity extends BlockEntity implements Pipe, Storage<FluidVariant> {
     private @Nullable PipeNetwork network = null;
-    private DyeColor color = DyeColor.WHITE;
+    private PipeColor color = PipeColor.CLEAR;
     private final long maxTransferRate; // 1 bucket per second
     private final boolean[] connections = new boolean[6];
 
@@ -149,12 +151,12 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe, Stora
     }
 
     @Override
-    public DyeColor getColor() {
+    public PipeColor getColor() {
         return this.color;
     }
 
     @Override
-    public void setColor(DyeColor color) {
+    public void setColor(PipeColor color) {
         this.color = color;
     }
 

@@ -64,20 +64,21 @@ public class GlassFluidPipeBlock extends FluidPipe {
         super.setPlacedBy(level, blockPos, blockState, livingEntity, itemStack);
 
         if (level.getBlockEntity(blockPos) instanceof GlassFluidPipeBlockEntity glassPipe) {
+            var changed = false;
             for (var interactionHand : InteractionHand.values()) {
                 var stack = livingEntity.getItemInHand(interactionHand);
 
-                if (stack.getItem() instanceof DyeItem dye && dye.getDyeColor() != glassPipe.getColor()) {
+                if (stack.getItem() instanceof DyeItem dye && glassPipe.dyeCanBeApplied(dye.getDyeColor())) {
                     glassPipe.setColor(dye.getDyeColor());
                     var copy = stack.copy();
                     copy.consume(1, livingEntity);
 
                     livingEntity.setItemInHand(interactionHand, copy);
+                    changed = true;
                 }
             }
 
             // Regular Stuff
-            var changed = false;
             for (var direction : Constant.Misc.DIRECTIONS) {
                 changed |= glassPipe.getConnections()[direction.ordinal()] = glassPipe.canConnect(direction) && FluidUtil.canAccessFluid(level, blockPos.relative(direction), direction);
             }
@@ -94,7 +95,7 @@ public class GlassFluidPipeBlock extends FluidPipe {
             if (stack.getItem() instanceof DyeItem dye) {
                 var stack2 = stack.copy();
                 var color = dye.getDyeColor();
-                if (color != glassPipe.getColor()) {
+                if (glassPipe.dyeCanBeApplied(color)) {
                     if (!player.getAbilities().instabuild) {
                         stack2.shrink(1);
                     }
