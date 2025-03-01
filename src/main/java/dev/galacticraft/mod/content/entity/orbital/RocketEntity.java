@@ -340,7 +340,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(STAGE, LaunchStage.IDLE);
-        builder.define(THRUST, 0.0f);
+        builder.define(THRUST, 0.0F);
 
         builder.define(TIME_AS_STATE, 0);
 
@@ -487,7 +487,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
             this.move(MoverType.SELF, this.getDeltaMovement());
 
             if (getLaunchStage() == LaunchStage.FAILED) {
-                setRot(this.getYRot() + (level().random.nextFloat() - 0.5F) * 8.0F, this.getXRot() + (level().random.nextFloat() - 0.5F) * 8.0F);
+                setRot((this.getYRot() + level().random.nextFloat() - 0.5F * 8.0F) % 360.0F, (this.getXRot() + level().random.nextFloat() - 0.5F * 8.0F) % 360.0F);
 
                 ServerLevel serverLevel = (ServerLevel) this.level();
                 for (int i = 0; i < 4; i++) {
