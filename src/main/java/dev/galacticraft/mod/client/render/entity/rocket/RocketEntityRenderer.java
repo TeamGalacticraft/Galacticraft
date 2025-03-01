@@ -49,7 +49,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         super.render(entity, yaw, partialTick, matrices, vertexConsumers, light);
         matrices.pushPose();
         Minecraft client = Minecraft.getInstance();
-        matrices.translate(-0.5D, 1.6, -0.5D);
+        matrices.translate(-0.5D, 1.9375D, -0.5D);
         if (entity.getLaunchStage() == LaunchStage.IGNITED) {
             matrices.translate((entity.level().random.nextDouble() - 0.5D) * 0.1D, 0, (entity.level().random.nextDouble() - 0.5D) * 0.1D);
         }
