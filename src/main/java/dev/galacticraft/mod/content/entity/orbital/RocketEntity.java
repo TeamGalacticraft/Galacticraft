@@ -510,7 +510,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                             new ExplosionDamageCalculator(),
                             this.position().x + (level().random.nextDouble() - 0.5 * 4),
                             this.position().y + (level().random.nextDouble() * 3), 
-                            this.position().z + (level().random.nextDouble() - 0.5 * 4)
+                            this.position().z + (level().random.nextDouble() - 0.5 * 4),
                             10.0F,
                             createFire,
                             Level.ExplosionInteraction.TNT
