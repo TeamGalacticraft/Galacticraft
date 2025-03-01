@@ -45,6 +45,7 @@ public class GCEntityTypeTagProvider extends IntrinsicHolderTagsProvider<EntityT
                 .add(EntityType.PLAYER);
         
         tag(EntityTypeTags.FALL_DAMAGE_IMMUNE)
+                .add(GCEntityTypes.ROCKET)
                 .add(GCEntityTypes.LANDER);
     }
 }

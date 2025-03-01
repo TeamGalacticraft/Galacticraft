@@ -39,6 +39,7 @@ import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.entity.ControllableEntity;
+import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.events.RocketEvents;
@@ -62,6 +63,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -82,6 +84,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.EitherHolder;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -486,8 +489,10 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
             if (getLaunchStage() == LaunchStage.FAILED) {
                 setRot(this.getYRot() + (level().random.nextFloat() - 0.5F) * 8.0F, this.getXRot() + (level().random.nextFloat() - 0.5F) * 8.0F);
 
-                for (int i = 0; i < 4; i++)
-                    ((ServerLevel) level()).sendParticles(ParticleTypes.FLAME, this.getX() + (level().random.nextDouble() - 0.5) * 0.12F, this.getY() + 2, this.getZ() + (level().random.nextDouble() - 0.5), 0, level().random.nextDouble() - 0.5, 1, level().random.nextDouble() - 0.5, 0.12000000596046448D);
+                ServerLevel serverLevel = (ServerLevel) this.level();
+                for (int i = 0; i < 4; i++) {
+                    serverLevel.sendParticles(ParticleTypes.FLAME, this.getX() + (level().random.nextDouble() - 0.5) * 0.12F, this.getY() + 2, this.getZ() + (level().random.nextDouble() - 0.5), 0, level().random.nextDouble() - 0.5, 1, level().random.nextDouble() - 0.5, 0.12000000596046448D);
+                }
             }
 
             ticksSinceJump++;
@@ -495,8 +500,22 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
         if (getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
             if (ticksSinceJump > 1000 && this.onGround()) {
-                for (int i = 0; i < 4; i++)
-                    level().explode(this, this.position().x + (level().random.nextDouble() - 0.5 * 4), this.position().y + (level().random.nextDouble() * 3), this.position().z + (level().random.nextDouble() - 0.5 * 4), 10.0F, Level.ExplosionInteraction.TNT);
+                Holder<CelestialBody<?, ?>> holder = this.level().galacticraft$getCelestialBody();
+                boolean createFire = holder == null || holder.value().atmosphere().breathable();
+
+                for (int i = 0; i < 4; i++) {
+                    this.level().explode(
+                            this,
+                            new DamageSource(this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.CRASH_LANDING)),
+                            new ExplosionDamageCalculator(),
+                            this.position().x + (level().random.nextDouble() - 0.5 * 4),
+                            this.position().y + (level().random.nextDouble() * 3), 
+                            this.position().z + (level().random.nextDouble() - 0.5 * 4)
+                            10.0F,
+                            createFire,
+                            Level.ExplosionInteraction.TNT
+                    );
+                }
                 this.remove(RemovalReason.KILLED);
             }
 
@@ -515,10 +534,9 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         double sinPitch = Mth.sin(this.getXRot() * Mth.DEG_TO_RAD);
         double velX = horizontal * sinPitch * Mth.sin(this.getYRot() * Mth.DEG_TO_RAD);
         double velZ = horizontal * -sinPitch * Mth.cos(this.getYRot() * Mth.DEG_TO_RAD);
-        // double sinRoll = Mth.sin(this.getZRot() * Mth.DEG_TO_RAD);
-        // double velX = horizontal * (sinRoll * Mth.cos(this.getYRot() * Mth.DEG_TO_RAD) + sinPitch * Mth.sin(this.getYRot() * Mth.DEG_TO_RAD));
-        // double velZ = horizontal * (sinRoll * Mth.sin(this.getYRot() * Mth.DEG_TO_RAD) - sinPitch * Mth.cos(this.getYRot() * Mth.DEG_TO_RAD));
 
+        // The coefficient of this.getDeltaMovement().y() controls the terminal velocity
+        // You might have to solve a differential equation to obtain a specific value
         double velY = 0.955D * this.getDeltaMovement().y() + 0.08D * Mth.SQRT_OF_TWO * this.getThrust() * Mth.cos(this.getXRot() * Mth.DEG_TO_RAD);
         if (!this.onGround()) {
             Holder<CelestialBody<?, ?>> holder = this.level().galacticraft$getCelestialBody();
@@ -530,25 +548,23 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
     protected void spawnParticles() {
         if (this.isAlive()) {
-            Vec3 delta = this.getDeltaMovement();
             double sinPitch = Mth.sin(this.getXRot() * Mth.DEG_TO_RAD);
-            double sinRoll = Mth.sin(this.getZRot() * Mth.DEG_TO_RAD);
-            double x1 = 2 * (sinRoll * Mth.cos(this.getYRot() * Mth.DEG_TO_RAD) + sinPitch * Mth.sin(this.getYRot() * Mth.DEG_TO_RAD));
-            double y1 = - Mth.cos(this.getXRot() * Mth.DEG_TO_RAD) * Mth.cos(this.getZRot() * Mth.DEG_TO_RAD);
-            double z1 = 2 * (sinRoll * Mth.sin(this.getYRot() * Mth.DEG_TO_RAD) - sinPitch * Mth.cos(this.getYRot() * Mth.DEG_TO_RAD));
+            double x1 = 2 * sinPitch * Mth.sin(this.getYRot() * Mth.DEG_TO_RAD);
+            double z1 = -2 * sinPitch * Mth.cos(this.getYRot() * Mth.DEG_TO_RAD);
+            double y1 = -Mth.cos(this.getXRot() * Mth.DEG_TO_RAD);
 
             if (this.getLaunchStage() == LaunchStage.FAILED && this.linkedPad != null) {
-                double modifier = this.getY() - this.linkedPad.getDockPos().getY();
-                modifier = Math.min(Math.max(modifier, 120.0), 300.0);
+                double modifier = Mth.clamp(this.getY() - this.linkedPad.getDockPos().getY(), 120.0, 300.0);
                 x1 *= modifier / 100.0D;
                 y1 *= modifier / 100.0D;
                 z1 *= modifier / 100.0D;
             }
 
-            double y = this.yo + (this.getY() - this.yo) + y1 - this.getDeltaMovement().y + 1.2D;
+            Vec3 delta = this.getDeltaMovement();
+            double y = this.getY() + y1 - delta.y() + 1.2D;
 
-            final double x2 = this.getX() + x1 - this.getDeltaMovement().x;
-            final double z2 = this.getZ() + z1 - this.getDeltaMovement().z;
+            final double x2 = this.getX() + x1 - delta.x();
+            final double z2 = this.getZ() + z1 - delta.z();
 
             LivingEntity riddenByEntity = !this.getPassengers().isEmpty() && this.getPassengers().get(0) instanceof LivingEntity ? (LivingEntity) this.getPassengers().get(0) : null;
 
@@ -672,12 +688,6 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
             onJump();
 
         if (stage.ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
-            // if (right) {
-            //     setZRot(Mth.clamp(getZRot() - 0.5F * turnFactor, -angle, angle));
-            // } else if (left) {
-            //     setZRot(Mth.clamp(getZRot() + 0.5F * turnFactor, -angle, angle));
-            // }
-
             if (up) {
                 setXRot(Mth.clamp(getXRot() - 0.5F * turnFactor, -angle, angle));
             } else if (down) {
@@ -685,9 +695,15 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
             }
 
             if (left) {
-                setYRot((getYRot() - turnFactor) % 360.0f);
+                setYRot(Mth.wrapDegrees(getYRot() - turnFactor));
             } else if (right) {
-                setYRot((getYRot() + turnFactor) % 360.0f);
+                setYRot(Mth.wrapDegrees(getYRot() + turnFactor));
+            }
+            
+            if (jumping) {
+                setZRot(Mth.wrapDegrees(getZRot() - turnFactor));
+            } else if (shiftKeyDown) {
+                setZRot(Mth.wrapDegrees(getZRot() + turnFactor));
             }
         }
     }
