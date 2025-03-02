@@ -29,14 +29,22 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 
 public class GCFluidTags {
-    public static final TagKey<Fluid> OIL = commonTag("oil");
-    public static final TagKey<Fluid> FUEL = commonTag("fuel");
-    public static final TagKey<Fluid> SULFURIC_ACID = commonTag("sulfuric_acid");
+    public static final TagKey<Fluid> OIL = galacticraftTag("oil");
+    public static final TagKey<Fluid> OIL_COMMON = commonTag("oil");
+    public static final TagKey<Fluid> FUEL = galacticraftTag("fuel");
+    public static final TagKey<Fluid> FUEL_COMMON = commonTag("fuel");
+    public static final TagKey<Fluid> SULFURIC_ACID = galacticraftTag("sulfuric_acid");
+    public static final TagKey<Fluid> SULFURIC_ACID_COMMON = commonTag("sulfuric_acid");
     public static final TagKey<Fluid> LIQUID_OXYGEN = commonTag("oxygen");
-    public static final TagKey<Fluid> OXYGEN = TagKey.create(Registries.FLUID, Constant.id("oxygen"));
+    public static final TagKey<Fluid> OXYGEN = galacticraftTag("oxygen");
+    public static final TagKey<Fluid> NON_BREATHABLE = galacticraftTag("non_breathable");
 
     public static TagKey<Fluid> commonTag(String path) {
         return TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, path));
+    }
+
+    public static TagKey<Fluid> galacticraftTag(String path) {
+        return TagKey.create(Registries.FLUID, Constant.id(path));
     }
 
     public static void register() {

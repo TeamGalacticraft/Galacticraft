@@ -221,6 +221,9 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         this.tag(ConventionalItemTags.CLUSTERS)
                 .add(GCBlocks.OLIVINE_CLUSTER.asItem());
 
+        this.tag(GCItemTags.SILICONS)
+                .add(GCItems.SILICON);
+
         this.tag(GCItemTags.LUNAR_SAPPHIRES)
                 .add(GCItems.LUNAR_SAPPHIRE);
         this.tag(GCItemTags.OLIVINE_SHARDS)

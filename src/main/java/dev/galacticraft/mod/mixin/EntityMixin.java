@@ -31,7 +31,10 @@ import dev.galacticraft.mod.tag.GCEntityTypeTags;
 import dev.galacticraft.mod.tag.GCFluidTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -61,6 +64,7 @@ import java.util.UUID;
 public abstract class EntityMixin implements EntityAccessor {
     private @Unique double distanceSinceLastStep;
     private @Unique int lastStep;
+    private @Unique int lastAcidSoundPlayTick = -20;
 
     @Shadow
     public abstract Vec3 getDeltaMovement();
@@ -73,6 +77,9 @@ public abstract class EntityMixin implements EntityAccessor {
 
     @Shadow
     private Level level;
+
+    @Shadow
+    public int tickCount;
 
 //    @Inject(method = "findDimensionEntryPoint", at = @At("HEAD"), cancellable = true)
 //    private void getTeleportTargetGC(ServerLevel destination, CallbackInfoReturnable<PortalInfo> cir) {
@@ -104,7 +111,13 @@ public abstract class EntityMixin implements EntityAccessor {
     public abstract boolean isInvulnerable();
 
     @Shadow
+    public abstract boolean isInvulnerableTo(DamageSource source);
+
+    @Shadow
     public abstract boolean hurt(DamageSource source, float amount);
+
+    @Shadow
+    public abstract void playSound(SoundEvent sound, float volume, float pitch);
 
     @Shadow
     public abstract double getX();
@@ -140,20 +153,43 @@ public abstract class EntityMixin implements EntityAccessor {
     @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At("TAIL"))
     private void checkWaterStateGC(CallbackInfo ci) {
         Player player = level.getPlayerByUUID(uuid);
-        boolean isCreative = (player != null) && player.isCreative();
+        boolean isCreative = (player != null) && (player.isCreative() || player.isSpectator());
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028d) || this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.0028d)) {
             if (this.isOnFire()) {
                 level.explode(level.getEntity(id), position.x, position.y, position.z, 0f, Level.ExplosionInteraction.NONE);
-                if ((this.isAlwaysTicking() && !isCreative) || !this.isInvulnerable()) {
+                if (!isCreative) {
                     this.hurt(new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.OIL_BOOM)), 20.0f);
                 }
             }
         } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.0028d)) {
-            // The entity enter an acid fluid, this entity need to take damage
-            if ((this.isAlwaysTicking() && !isCreative) || !this.isInvulnerable()) {
+            // The entity enters an acid fluid, this entity needs to take damage
+            if (!isCreative) {
                 this.hurt(new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE)
                         .getHolderOrThrow(GCDamageTypes.SULFURIC_ACID)), 2.0f);
+
+                if (this.shouldPlaySulfuricAcidSound()) {
+                    this.playSulfuricAcidSound();
+                    this.addSulfuricAcidParticles();
+                }
             }
+        }
+    }
+
+    @Unique
+    private boolean shouldPlaySulfuricAcidSound() {
+        return this.tickCount >= this.lastAcidSoundPlayTick + 5;
+    }
+
+    @Unique
+    private void playSulfuricAcidSound() {
+        this.playSound(SoundEvents.LAVA_EXTINGUISH, 0.7F, 1.6F + (level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.4F);
+        this.lastAcidSoundPlayTick = this.tickCount;
+    }
+
+    @Unique
+    private void addSulfuricAcidParticles() {
+        for (int i = 0; i < 4; i++) {
+            level.addParticle(ParticleTypes.WHITE_SMOKE, true, this.getX() + level.random.nextDouble() - 0.5, Mth.ceil(this.getY()), this.getZ() + level.random.nextDouble() - 0.5, 0.0D, 0.0D, 0.0D);
         }
     }
 

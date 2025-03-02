@@ -1,0 +1,11 @@
+{
+  "values": [
+    "#galacticraft:oil",
+    "#galacticraft:fuel",
+    "#galacticraft:sulfuric_acid",
+    {
+      "id": "#minecraft:water",
+      "required": false
+    }
+  ]
+}

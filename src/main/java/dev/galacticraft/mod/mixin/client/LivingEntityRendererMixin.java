@@ -61,13 +61,12 @@ public abstract class LivingEntityRendererMixin {
 
     @Inject(method = "setupRotations", at = @At("HEAD"))
     private void rotateToMatchRocket(LivingEntity entity, PoseStack pose, float animationProgress, float bodyYaw, float tickDelta, float scale, CallbackInfo ci) {
-        if (entity.isPassenger()) {
-            if (entity.getVehicle() instanceof RocketEntity rocket) {
-                double rotationOffset = -0.5F;
-                pose.translate(0, -rotationOffset, 0);
-                pose.mulPose(Axis.ZP.rotationDegrees(rocket.getXRot()));
-                pose.translate(0, rotationOffset, 0);
-            }
+        if (entity.isPassenger() && entity.getVehicle() instanceof RocketEntity rocket) {
+            double rotationOffset = 0.7F;
+            pose.translate(0, rotationOffset, 0);
+            pose.mulPose(Axis.YP.rotationDegrees(-rocket.getYRot()));
+            pose.mulPose(Axis.ZP.rotationDegrees(rocket.getXRot()));
+            pose.translate(0, -rotationOffset, 0);
         }
     }
 

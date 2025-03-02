@@ -28,6 +28,7 @@ import dev.galacticraft.mod.tag.GCFluidTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.tags.FluidTags;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -41,15 +42,30 @@ public class GCFluidTagProvider extends FabricTagProvider.FluidTagProvider {
         this.getOrCreateTagBuilder(GCFluidTags.OIL)
                 .add(GCFluids.CRUDE_OIL)
                 .add(GCFluids.FLOWING_CRUDE_OIL);
+        this.getOrCreateTagBuilder(GCFluidTags.OIL_COMMON)
+                .addTag(GCFluidTags.OIL);
+
         this.getOrCreateTagBuilder(GCFluidTags.FUEL)
                 .add(GCFluids.FUEL)
                 .add(GCFluids.FLOWING_FUEL);
+        this.getOrCreateTagBuilder(GCFluidTags.FUEL_COMMON)
+                .addTag(GCFluidTags.FUEL);
+
         this.getOrCreateTagBuilder(GCFluidTags.SULFURIC_ACID)
                 .add(GCFluids.SULFURIC_ACID)
                 .add(GCFluids.FLOWING_SULFURIC_ACID);
+        this.getOrCreateTagBuilder(GCFluidTags.SULFURIC_ACID_COMMON)
+                .addTag(GCFluidTags.SULFURIC_ACID);
+
         this.getOrCreateTagBuilder(GCFluidTags.LIQUID_OXYGEN)
                 .add(GCFluids.LIQUID_OXYGEN);
         this.getOrCreateTagBuilder(GCFluidTags.OXYGEN)
                 .add(Gases.OXYGEN);
+
+        this.getOrCreateTagBuilder(GCFluidTags.NON_BREATHABLE)
+                .addTag(GCFluidTags.OIL)
+                .addTag(GCFluidTags.FUEL)
+                .addTag(GCFluidTags.SULFURIC_ACID)
+                .addOptionalTag(FluidTags.WATER);
     }
 }
