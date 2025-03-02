@@ -23,7 +23,7 @@
 package dev.galacticraft.impl.internal.mixin;
 
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCDimensionTypeTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -47,7 +47,7 @@ public interface LevelTimeAccessMixin extends LevelTimeAccess {
         Registry<DimensionType> dimensionTypeRegistry = registryAccess().registryOrThrow(Registries.DIMENSION_TYPE);
         if (this instanceof Level level) {
             Holder<CelestialBody<?, ?>> holder = level.galacticraft$getCelestialBody();
-            if (holder != null && dimensionTypeRegistry.getHolder(dimensionTypeRegistry.getId(dimensionType())).map(reference -> reference.is(GCTags.SPACE)).orElse(false)) {
+            if (holder != null && dimensionTypeRegistry.getHolder(dimensionTypeRegistry.getId(dimensionType())).map(reference -> reference.is(GCDimensionTypeTags.SPACE)).orElse(false)) {
                 long worldTime = this.dayTime();
                 long dayLength = holder.value().dayLength();
                 int j = (int) (worldTime % dayLength);

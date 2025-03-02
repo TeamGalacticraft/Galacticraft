@@ -26,7 +26,7 @@ import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.api.data.recipe.RocketRecipeBuilder;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.core.HolderLookup;
@@ -68,7 +68,7 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ROCKET_FIN)
-                .define('S', GCTags.COMPRESSED_STEEL)
+                .define('S', GCItemTags.STEEL_PLATES)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
                 .pattern(" S ")
                 .pattern("PSP")
