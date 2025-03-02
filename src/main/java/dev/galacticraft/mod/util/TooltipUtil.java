@@ -30,9 +30,21 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 
 public class TooltipUtil {
+    private static final NumberFormat NUMBER_FORMAT = NumberFormat.getNumberInstance();
+
+    static {
+        if (NUMBER_FORMAT instanceof DecimalFormat fmt) {
+            fmt.setRoundingMode(RoundingMode.FLOOR);
+        }
+        NUMBER_FORMAT.setGroupingUsed(true);
+    }
+
     public static final Style DEFAULT_STYLE = Constant.Text.GRAY_STYLE;
     private static final Component PRESS_SHIFT = Component.translatable(Translations.Tooltip.PRESS_SHIFT).withStyle(Constant.Text.DARK_GRAY_STYLE);
 
@@ -66,7 +78,8 @@ public class TooltipUtil {
     }
 
     public static void appendRemainingTooltip(String resourceId, long amount, long capacity, List<Component> tooltip) {
-        Component remaining = Component.literal(amount + "/" + capacity).setStyle(Constant.Text.getStorageLevelStyle(1.0 - ((double) amount / (double) capacity)));
+        Component remaining = Component.literal(NUMBER_FORMAT.format(amount) + "/" + NUMBER_FORMAT.format(capacity))
+                .setStyle(Constant.Text.getStorageLevelStyle(1.0 - ((double) amount / (double) capacity)));
         appendLabeledTooltip(resourceId, remaining, tooltip);
     }
 
@@ -77,7 +90,8 @@ public class TooltipUtil {
             capacity = (long) ((double) capacity / (double) (FluidConstants.BUCKET / 1000));
             unit = Component.translatable(Translations.Ui.MILLIBUCKETS);
         }
-        Component remaining = Component.literal(amount + "/" + capacity).append(unit).setStyle(Constant.Text.getStorageLevelStyle(1.0 - ((double) amount / (double) capacity)));
+        Component remaining = Component.literal(NUMBER_FORMAT.format(amount) + "/" + NUMBER_FORMAT.format(capacity)).append(unit)
+                .setStyle(Constant.Text.getStorageLevelStyle(1.0 - ((double) amount / (double) capacity)));
         appendLabeledTooltip(resourceId, remaining, tooltip);
     }
 
