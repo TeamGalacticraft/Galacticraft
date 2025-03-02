@@ -69,8 +69,8 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_CONCENTRATOR)
-                .define('Z', GCItemTags.COMPRESSED_STEEL)
-                .define('W', GCItemTags.COMPRESSED_TIN)
+                .define('Z', GCItemTags.STEEL_PLATES)
+                .define('W', GCItemTags.TIN_PLATES)
                 .define('Y', GCItems.TIN_CANISTER)
                 .define('X', GCItems.OXYGEN_VENT)
                 .pattern("ZWZ")
@@ -329,7 +329,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BEAM_CORE)
                 .define('R', ConventionalItemTags.REDSTONE_DUSTS)
-                .define('I', GCItemTags.COMPRESSED_IRON)
+                .define('I', GCItemTags.IRON_PLATES)
                 .define('G', ConventionalItemTags.GLASS_PANES)
                 .pattern("RIR")
                 .pattern("IGI")

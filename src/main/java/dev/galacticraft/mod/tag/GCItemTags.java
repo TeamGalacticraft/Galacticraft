@@ -71,12 +71,12 @@ public class GCItemTags {
     public static final TagKey<Item> RAW_TIN_BLOCKS = commonTag("storage_blocks/raw_tin");
     public static final TagKey<Item> RAW_TITANIUM_BLOCKS = commonTag("storage_blocks/raw_titanium");
 
-    public static final TagKey<Item> RAW_METEORIC_IRON = commonTag("raw_materials/meteoric_iron");
-    public static final TagKey<Item> RAW_DESH = commonTag("raw_materials/desh");
-    public static final TagKey<Item> RAW_LEAD = commonTag("raw_materials/lead");
-    public static final TagKey<Item> RAW_ALUMINUM = commonTag("raw_materials/aluminum");
-    public static final TagKey<Item> RAW_TIN = commonTag("raw_materials/tin");
-    public static final TagKey<Item> RAW_TITANIUM = commonTag("raw_materials/titanium");
+    public static final TagKey<Item> METEORIC_IRON_RAW_MATERIALS = commonTag("raw_materials/meteoric_iron");
+    public static final TagKey<Item> DESH_RAW_MATERIALS = commonTag("raw_materials/desh");
+    public static final TagKey<Item> LEAD_RAW_MATERIALS = commonTag("raw_materials/lead");
+    public static final TagKey<Item> ALUMINUM_RAW_MATERIALS = commonTag("raw_materials/aluminum");
+    public static final TagKey<Item> TIN_RAW_MATERIALS = commonTag("raw_materials/tin");
+    public static final TagKey<Item> TITANIUM_RAW_MATERIALS = commonTag("raw_materials/titanium");
 
     public static final TagKey<Item> METEORIC_IRON_INGOTS = commonTag("ingots/meteoric_iron");
     public static final TagKey<Item> DESH_INGOTS = commonTag("ingots/desh");
@@ -94,15 +94,15 @@ public class GCItemTags {
     public static final TagKey<Item> TITANIUM_NUGGETS = commonTag("nuggets/titanium");
 
     public static final TagKey<Item> PLATES = commonTag("plates");
-    public static final TagKey<Item> COMPRESSED_METEORIC_IRON = commonTag("plates/meteoric_iron");
-    public static final TagKey<Item> COMPRESSED_DESH = commonTag("plates/desh");
-    public static final TagKey<Item> COMPRESSED_ALUMINUM = commonTag("plates/aluminum");
-    public static final TagKey<Item> COMPRESSED_TIN = commonTag("plates/tin");
-    public static final TagKey<Item> COMPRESSED_TITANIUM = commonTag("plates/titanium");
-    public static final TagKey<Item> COMPRESSED_BRONZE = commonTag("plates/bronze");
-    public static final TagKey<Item> COMPRESSED_COPPER = commonTag("plates/copper");
-    public static final TagKey<Item> COMPRESSED_STEEL = commonTag("plates/steel");
-    public static final TagKey<Item> COMPRESSED_IRON = commonTag("plates/iron");
+    public static final TagKey<Item> METEORIC_IRON_PLATES = commonTag("plates/meteoric_iron");
+    public static final TagKey<Item> DESH_PLATES = commonTag("plates/desh");
+    public static final TagKey<Item> ALUMINUM_PLATES = commonTag("plates/aluminum");
+    public static final TagKey<Item> TIN_PLATES = commonTag("plates/tin");
+    public static final TagKey<Item> TITANIUM_PLATES = commonTag("plates/titanium");
+    public static final TagKey<Item> BRONZE_PLATES = commonTag("plates/bronze");
+    public static final TagKey<Item> COPPER_PLATES = commonTag("plates/copper");
+    public static final TagKey<Item> STEEL_PLATES = commonTag("plates/steel");
+    public static final TagKey<Item> IRON_PLATES = commonTag("plates/iron");
     public static final TagKey<Item> HEAVY_DUTY_PLATES = commonTag("plates/heavy_duty");
     public static final TagKey<Item> TIER_1_HEAVY_DUTY_PLATES = commonTag("plates/heavy_duty/tier_1");
     public static final TagKey<Item> TIER_2_HEAVY_DUTY_PLATES = commonTag("plates/heavy_duty/tier_2");

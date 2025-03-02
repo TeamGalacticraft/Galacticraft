@@ -143,16 +143,83 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         //        "galacticraft:legacy_music_disc_spacerace"
 
         // Ore Tags
-        tag(ConventionalItemTags.ORES).add(
-                GCBlocks.SILICON_ORE.asItem(), GCBlocks.DEEPSLATE_SILICON_ORE.asItem(),
-                GCBlocks.MOON_COPPER_ORE.asItem(), GCBlocks.LUNASLATE_COPPER_ORE.asItem(),
-                GCBlocks.OLIVINE_BASALT.asItem(), GCBlocks.RICH_OLIVINE_BASALT.asItem(),
-                GCBlocks.TIN_ORE.asItem(), GCBlocks.DEEPSLATE_TIN_ORE.asItem(), GCBlocks.MOON_TIN_ORE.asItem(), GCBlocks.LUNASLATE_TIN_ORE.asItem(),
-                GCBlocks.ALUMINUM_ORE.asItem(), GCBlocks.DEEPSLATE_ALUMINUM_ORE.asItem(),
-                GCBlocks.DESH_ORE.asItem(),
-                GCBlocks.ILMENITE_ORE.asItem(),
-                GCBlocks.GALENA_ORE.asItem()
-        );
+        this.tag(ItemTags.COPPER_ORES)
+                .add(GCBlocks.MOON_COPPER_ORE.asItem(), GCBlocks.LUNASLATE_COPPER_ORE.asItem());
+        this.tag(GCItemTags.SILICON_ORES)
+                .add(GCBlocks.SILICON_ORE.asItem(), GCBlocks.DEEPSLATE_SILICON_ORE.asItem());
+        this.tag(GCItemTags.TIN_ORES)
+                .add(GCBlocks.TIN_ORE.asItem(), GCBlocks.DEEPSLATE_TIN_ORE.asItem(), GCBlocks.MOON_TIN_ORE.asItem(), GCBlocks.LUNASLATE_TIN_ORE.asItem());
+        this.tag(GCItemTags.ALUMINUM_ORES)
+                .add(GCBlocks.ALUMINUM_ORE.asItem(), GCBlocks.DEEPSLATE_ALUMINUM_ORE.asItem());
+        this.tag(GCItemTags.METEORIC_IRON_ORES)
+                .add(GCBlocks.FALLEN_METEOR.asItem());
+        this.tag(GCItemTags.OLIVINE_ORES)
+                .add(GCBlocks.OLIVINE_BASALT.asItem(), GCBlocks.RICH_OLIVINE_BASALT.asItem());
+        this.tag(GCItemTags.DESH_ORES)
+                .add(GCBlocks.DESH_ORE.asItem());
+        this.tag(GCItemTags.LEAD_ORES)
+                .add(GCBlocks.GALENA_ORE.asItem());
+        this.tag(GCItemTags.TITANIUM_ORES)
+                .add(GCBlocks.ILMENITE_ORE.asItem());
+        this.tag(ConventionalItemTags.ORES)
+                .addTag(GCItemTags.SILICON_ORES)
+                .addTag(GCItemTags.TIN_ORES)
+                .addTag(GCItemTags.ALUMINUM_ORES)
+                .addTag(GCItemTags.METEORIC_IRON_ORES)
+                .addTag(GCItemTags.OLIVINE_ORES)
+                .addTag(GCItemTags.DESH_ORES)
+                .addTag(GCItemTags.LEAD_ORES)
+                .addTag(GCItemTags.TITANIUM_ORES);
+
+        this.tag(GCItemTags.SILICON_BLOCKS)
+                .add(GCBlocks.SILICON_BLOCK.asItem());
+        this.tag(GCItemTags.TIN_BLOCKS)
+                .add(GCBlocks.TIN_BLOCK.asItem());
+        this.tag(GCItemTags.ALUMINUM_BLOCKS)
+                .add(GCBlocks.ALUMINUM_BLOCK.asItem());
+        this.tag(GCItemTags.METEORIC_IRON_BLOCKS)
+                .add(GCBlocks.METEORIC_IRON_BLOCK.asItem());
+        this.tag(GCItemTags.LUNAR_SAPPHIRE_BLOCKS)
+                .add(GCBlocks.LUNAR_SAPPHIRE_BLOCK.asItem());
+        this.tag(GCItemTags.OLIVINE_BLOCKS)
+                .add(GCBlocks.OLIVINE_BLOCK.asItem());
+        this.tag(GCItemTags.DESH_BLOCKS)
+                .add(GCBlocks.DESH_BLOCK.asItem());
+        this.tag(GCItemTags.LEAD_BLOCKS)
+                .add(GCBlocks.LEAD_BLOCK.asItem());
+        this.tag(GCItemTags.TITANIUM_BLOCKS)
+                .add(GCBlocks.TITANIUM_BLOCK.asItem());
+        this.tag(GCItemTags.RAW_TIN_BLOCKS)
+                .add(GCBlocks.RAW_TIN_BLOCK.asItem());
+        this.tag(GCItemTags.RAW_ALUMINUM_BLOCKS)
+                .add(GCBlocks.RAW_ALUMINUM_BLOCK.asItem());
+        this.tag(GCItemTags.RAW_METEORIC_IRON_BLOCKS)
+                .add(GCBlocks.RAW_METEORIC_IRON_BLOCK.asItem());
+        this.tag(GCItemTags.RAW_DESH_BLOCKS)
+                .add(GCBlocks.RAW_DESH_BLOCK.asItem());
+        this.tag(GCItemTags.RAW_LEAD_BLOCKS)
+                .add(GCBlocks.RAW_LEAD_BLOCK.asItem());
+        this.tag(GCItemTags.RAW_TITANIUM_BLOCKS)
+                .add(GCBlocks.RAW_TITANIUM_BLOCK.asItem());
+        this.tag(ConventionalItemTags.STORAGE_BLOCKS)
+                .addTag(GCItemTags.SILICON_BLOCKS)
+                .addTag(GCItemTags.TIN_BLOCKS)
+                .addTag(GCItemTags.ALUMINUM_BLOCKS)
+                .addTag(GCItemTags.METEORIC_IRON_BLOCKS)
+                .addTag(GCItemTags.LUNAR_SAPPHIRE_BLOCKS)
+                .addTag(GCItemTags.OLIVINE_BLOCKS)
+                .addTag(GCItemTags.DESH_BLOCKS)
+                .addTag(GCItemTags.LEAD_BLOCKS)
+                .addTag(GCItemTags.TITANIUM_BLOCKS)
+                .addTag(GCItemTags.RAW_TIN_BLOCKS)
+                .addTag(GCItemTags.RAW_ALUMINUM_BLOCKS)
+                .addTag(GCItemTags.RAW_METEORIC_IRON_BLOCKS)
+                .addTag(GCItemTags.RAW_DESH_BLOCKS)
+                .addTag(GCItemTags.RAW_LEAD_BLOCKS)
+                .addTag(GCItemTags.RAW_TITANIUM_BLOCKS);
+
+        this.tag(ConventionalItemTags.CLUSTERS)
+                .add(GCBlocks.OLIVINE_CLUSTER.asItem());
 
         this.tag(GCItemTags.LUNAR_SAPPHIRES)
                 .add(GCItems.LUNAR_SAPPHIRE);
@@ -162,8 +229,121 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .addTag(GCItemTags.LUNAR_SAPPHIRES)
                 .addTag(GCItemTags.OLIVINE_SHARDS);
 
-        this.tag(ConventionalItemTags.CLUSTERS)
-                .add(GCBlocks.OLIVINE_CLUSTER.asItem());
+        this.tag(GCItemTags.TIN_INGOTS)
+                .add(GCItems.TIN_INGOT);
+        this.tag(GCItemTags.ALUMINUM_INGOTS)
+                .add(GCItems.ALUMINUM_INGOT);
+        this.tag(GCItemTags.METEORIC_IRON_INGOTS)
+                .add(GCItems.METEORIC_IRON_INGOT);
+        this.tag(GCItemTags.DESH_INGOTS)
+                .add(GCItems.DESH_INGOT);
+        this.tag(GCItemTags.LEAD_INGOTS)
+                .add(GCItems.LEAD_INGOT);
+        this.tag(GCItemTags.TITANIUM_INGOTS)
+                .add(GCItems.TITANIUM_INGOT);
+        this.tag(ConventionalItemTags.INGOTS)
+                .addTag(GCItemTags.TIN_INGOTS)
+                .addTag(GCItemTags.ALUMINUM_INGOTS)
+                .addTag(GCItemTags.METEORIC_IRON_INGOTS)
+                .addTag(GCItemTags.DESH_INGOTS)
+                .addTag(GCItemTags.LEAD_INGOTS)
+                .addTag(GCItemTags.TITANIUM_INGOTS);
+
+        this.tag(GCItemTags.TIN_RAW_MATERIALS)
+                .add(GCItems.RAW_TIN);
+        this.tag(GCItemTags.ALUMINUM_RAW_MATERIALS)
+                .add(GCItems.RAW_ALUMINUM);
+        this.tag(GCItemTags.METEORIC_IRON_RAW_MATERIALS)
+                .add(GCItems.RAW_METEORIC_IRON);
+        this.tag(GCItemTags.DESH_RAW_MATERIALS)
+                .add(GCItems.RAW_DESH);
+        this.tag(GCItemTags.LEAD_RAW_MATERIALS)
+                .add(GCItems.RAW_LEAD);
+        this.tag(GCItemTags.TITANIUM_RAW_MATERIALS)
+                .add(GCItems.RAW_TITANIUM);
+        this.tag(ConventionalItemTags.RAW_MATERIALS)
+                .addTag(GCItemTags.TIN_RAW_MATERIALS)
+                .addTag(GCItemTags.ALUMINUM_RAW_MATERIALS)
+                .addTag(GCItemTags.METEORIC_IRON_RAW_MATERIALS)
+                .addTag(GCItemTags.DESH_RAW_MATERIALS)
+                .addTag(GCItemTags.LEAD_RAW_MATERIALS)
+                .addTag(GCItemTags.TITANIUM_RAW_MATERIALS);
+
+        this.tag(GCItemTags.TIN_NUGGETS)
+                .add(GCItems.TIN_NUGGET);
+        this.tag(GCItemTags.ALUMINUM_NUGGETS)
+                .add(GCItems.ALUMINUM_NUGGET);
+        this.tag(GCItemTags.METEORIC_IRON_NUGGETS)
+                .add(GCItems.METEORIC_IRON_NUGGET);
+        this.tag(GCItemTags.DESH_NUGGETS)
+                .add(GCItems.DESH_NUGGET);
+        this.tag(GCItemTags.LEAD_NUGGETS)
+                .add(GCItems.LEAD_NUGGET);
+        this.tag(GCItemTags.TITANIUM_NUGGETS)
+                .add(GCItems.TITANIUM_NUGGET);
+        this.tag(ConventionalItemTags.NUGGETS)
+                .addTag(GCItemTags.TIN_NUGGETS)
+                .addTag(GCItemTags.ALUMINUM_NUGGETS)
+                .addTag(GCItemTags.METEORIC_IRON_NUGGETS)
+                .addTag(GCItemTags.DESH_NUGGETS)
+                .addTag(GCItemTags.LEAD_NUGGETS)
+                .addTag(GCItemTags.TITANIUM_NUGGETS);
+
+        this.tag(GCItemTags.COPPER_PLATES)
+                .add(GCItems.COMPRESSED_COPPER);
+        this.tag(GCItemTags.IRON_PLATES)
+                .add(GCItems.COMPRESSED_IRON);
+        this.tag(GCItemTags.TIN_PLATES)
+                .add(GCItems.COMPRESSED_TIN);
+        this.tag(GCItemTags.ALUMINUM_PLATES)
+                .add(GCItems.COMPRESSED_ALUMINUM);
+        this.tag(GCItemTags.BRONZE_PLATES)
+                .add(GCItems.COMPRESSED_BRONZE);
+        this.tag(GCItemTags.STEEL_PLATES)
+                .add(GCItems.COMPRESSED_STEEL);
+        this.tag(GCItemTags.METEORIC_IRON_PLATES)
+                .add(GCItems.COMPRESSED_METEORIC_IRON);
+        this.tag(GCItemTags.DESH_PLATES)
+                .add(GCItems.COMPRESSED_DESH);
+        this.tag(GCItemTags.TITANIUM_PLATES)
+                .add(GCItems.COMPRESSED_TITANIUM);
+        this.tag(GCItemTags.TIER_1_HEAVY_DUTY_PLATES)
+                .add(GCItems.TIER_1_HEAVY_DUTY_PLATE);
+        this.tag(GCItemTags.TIER_2_HEAVY_DUTY_PLATES)
+                .add(GCItems.TIER_2_HEAVY_DUTY_PLATE);
+        this.tag(GCItemTags.TIER_3_HEAVY_DUTY_PLATES)
+                .add(GCItems.TIER_3_HEAVY_DUTY_PLATE);
+        this.tag(GCItemTags.HEAVY_DUTY_PLATES)
+                .addTag(GCItemTags.TIER_1_HEAVY_DUTY_PLATES)
+                .addTag(GCItemTags.TIER_2_HEAVY_DUTY_PLATES)
+                .addTag(GCItemTags.TIER_3_HEAVY_DUTY_PLATES);
+        this.tag(GCItemTags.PLATES)
+                .addTag(GCItemTags.COPPER_PLATES)
+                .addTag(GCItemTags.IRON_PLATES)
+                .addTag(GCItemTags.TIN_PLATES)
+                .addTag(GCItemTags.ALUMINUM_PLATES)
+                .addTag(GCItemTags.BRONZE_PLATES)
+                .addTag(GCItemTags.STEEL_PLATES)
+                .addTag(GCItemTags.METEORIC_IRON_PLATES)
+                .addTag(GCItemTags.DESH_PLATES)
+                .addTag(GCItemTags.TITANIUM_PLATES)
+                .addTag(GCItemTags.HEAVY_DUTY_PLATES);
+
+        this.tag(GCItemTags.STEEL_RODS)
+                .add(GCItems.STEEL_POLE);
+        this.tag(GCItemTags.DESH_RODS)
+                .add(GCItems.DESH_STICK);
+        this.tag(ConventionalItemTags.RODS)
+                .addTag(GCItemTags.STEEL_RODS)
+                .addTag(GCItemTags.DESH_RODS);
+
+        this.tag(GCItemTags.TIN_CANISTERS)
+                .add(GCItems.TIN_CANISTER);
+        this.tag(GCItemTags.COPPER_CANISTERS)
+                .add(GCItems.COPPER_CANISTER);
+        this.tag(GCItemTags.CANISTERS)
+                .addTag(GCItemTags.TIN_CANISTERS)
+                .addTag(GCItemTags.COPPER_CANISTERS);
 
         this.tag(GCItemTags.SOLAR_DUSTS)
                 .add(GCItems.SOLAR_DUST);

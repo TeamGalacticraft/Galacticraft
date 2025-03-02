@@ -68,7 +68,7 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ROCKET_FIN)
-                .define('S', GCItemTags.COMPRESSED_STEEL)
+                .define('S', GCItemTags.STEEL_PLATES)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
                 .pattern(" S ")
                 .pattern("PSP")
