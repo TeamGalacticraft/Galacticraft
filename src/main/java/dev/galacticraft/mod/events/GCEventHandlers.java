@@ -55,6 +55,7 @@ import org.jetbrains.annotations.Nullable;
 public class GCEventHandlers {
     public static void init() {
         EntitySleepEvents.ALLOW_BED.register(GCEventHandlers::allowCryogenicSleep);
+        EntitySleepEvents.ALLOW_SETTING_SPAWN.register(GCEventHandlers::allowSettingSpawn);
         EntitySleepEvents.MODIFY_SLEEPING_DIRECTION.register(GCEventHandlers::changeSleepPosition);
         EntitySleepEvents.ALLOW_SLEEPING.register(GCEventHandlers::sleepInSpace);
         EntitySleepEvents.ALLOW_SLEEP_TIME.register(GCEventHandlers::canCryoSleep);
@@ -71,6 +72,11 @@ public class GCEventHandlers {
         return InteractionResult.PASS;
     }
 
+    public static boolean allowSettingSpawn(Player player, BlockPos sleepingPos) {
+        Level level = player.level();
+        return level.isBreathable(sleepingPos) || level.getBlockState(sleepingPos).getBlock() instanceof CryogenicChamberBlock;
+    }
+
     public static Direction changeSleepPosition(LivingEntity entity, BlockPos sleepingPos, @Nullable Direction sleepingDirection) {
         if (entity.isInCryoSleep()) {
             BlockState state = entity.level().getBlockState(sleepingPos);
@@ -83,8 +89,7 @@ public class GCEventHandlers {
 
     public static Player.BedSleepingProblem sleepInSpace(Player player, BlockPos sleepingPos) {
         Level level = player.level();
-        Holder<CelestialBody<?, ?>> body = level.galacticraft$getCelestialBody();
-        if (body != null && level.getBlockState(sleepingPos).getBlock() instanceof BedBlock && !body.value().atmosphere().breathable()) {
+        if (!level.isBreathable(sleepingPos) && level.getBlockState(sleepingPos).getBlock() instanceof BedBlock) {
             player.sendSystemMessage(Component.translatable(Translations.Chat.BED_FAIL));
             return Player.BedSleepingProblem.NOT_POSSIBLE_HERE;
         }
