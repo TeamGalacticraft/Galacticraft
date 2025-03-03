@@ -113,16 +113,6 @@ public class GCCreativeModeTabs {
 //                result.accept(SPACE_EMERGENCY_KIT);
                 output.accept(SHIELD_CONTROLLER);
 
-                // ROCKETS
-                var tier1 = new ItemStack(ROCKET);
-                tier1.set(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1);
-                output.accept(tier1);
-
-                var creativeRocket = new ItemStack(ROCKET);
-                creativeRocket.set(GCDataComponents.CREATIVE, true);
-                creativeRocket.set(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1);
-                output.accept(creativeRocket);
-
                 // MATERIALS
                 output.accept(RAW_TIN);
                 output.accept(RAW_ALUMINUM);
@@ -213,6 +203,16 @@ public class GCCreativeModeTabs {
                 output.accept(ROCKET_FIN);
                 output.accept(ROCKET_ENGINE);
 
+                // ROCKETS
+                var tier1 = new ItemStack(ROCKET);
+                tier1.set(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1);
+                output.accept(tier1);
+
+                var creativeRocket = new ItemStack(ROCKET);
+                creativeRocket.set(GCDataComponents.CREATIVE, true);
+                creativeRocket.set(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1);
+                output.accept(creativeRocket);
+
                 // SCHEMATICS
                 output.accept(TIER_2_ROCKET_SCHEMATIC);
                 output.accept(CARGO_ROCKET_SCHEMATIC);
@@ -281,12 +281,12 @@ public class GCCreativeModeTabs {
                 // DECORATION BLOCKS
                 for (GCBlockRegistry.DecorationSet decorationSet : BLOCKS.getDecorations()) {
                     output.accept(decorationSet.item());
-                    output.accept(decorationSet.slabItem());
                     output.accept(decorationSet.stairsItem());
+                    output.accept(decorationSet.slabItem());
                     output.accept(decorationSet.wallItem());
                     output.accept(decorationSet.detailedItem());
-                    output.accept(decorationSet.detailedSlabItem());
                     output.accept(decorationSet.detailedStairsItem());
+                    output.accept(decorationSet.detailedSlabItem());
                     output.accept(decorationSet.detailedWallItem());
                 }
 
@@ -298,56 +298,56 @@ public class GCCreativeModeTabs {
                 output.accept(MOON_DUNGEON_BRICK);
 
                 output.accept(MOON_ROCK);
-                output.accept(MOON_ROCK_SLAB);
                 output.accept(MOON_ROCK_STAIRS);
+                output.accept(MOON_ROCK_SLAB);
                 output.accept(MOON_ROCK_WALL);
 
                 output.accept(MOON_ROCK_BRICK);
-                output.accept(MOON_ROCK_BRICK_SLAB);
                 output.accept(MOON_ROCK_BRICK_STAIRS);
+                output.accept(MOON_ROCK_BRICK_SLAB);
                 output.accept(MOON_ROCK_BRICK_WALL);
 
                 output.accept(CRACKED_MOON_ROCK_BRICK);
-                output.accept(CRACKED_MOON_ROCK_BRICK_SLAB);
                 output.accept(CRACKED_MOON_ROCK_BRICK_STAIRS);
+                output.accept(CRACKED_MOON_ROCK_BRICK_SLAB);
                 output.accept(CRACKED_MOON_ROCK_BRICK_WALL);
 
                 output.accept(POLISHED_MOON_ROCK);
-                output.accept(POLISHED_MOON_ROCK_SLAB);
                 output.accept(POLISHED_MOON_ROCK_STAIRS);
+                output.accept(POLISHED_MOON_ROCK_SLAB);
                 output.accept(POLISHED_MOON_ROCK_WALL);
 
                 output.accept(CHISELED_MOON_ROCK_BRICK);
                 output.accept(MOON_ROCK_PILLAR);
 
                 output.accept(COBBLED_MOON_ROCK);
-                output.accept(COBBLED_MOON_ROCK_SLAB);
                 output.accept(COBBLED_MOON_ROCK_STAIRS);
+                output.accept(COBBLED_MOON_ROCK_SLAB);
                 output.accept(COBBLED_MOON_ROCK_WALL);
 
                 output.accept(LUNASLATE);
-                output.accept(LUNASLATE_SLAB);
                 output.accept(LUNASLATE_STAIRS);
+                output.accept(LUNASLATE_SLAB);
                 output.accept(LUNASLATE_WALL);
 
                 output.accept(COBBLED_LUNASLATE);
-                output.accept(COBBLED_LUNASLATE_SLAB);
                 output.accept(COBBLED_LUNASLATE_STAIRS);
+                output.accept(COBBLED_LUNASLATE_SLAB);
                 output.accept(COBBLED_LUNASLATE_WALL);
 
                 output.accept(MOON_BASALT);
-                output.accept(MOON_BASALT_SLAB);
                 output.accept(MOON_BASALT_STAIRS);
+                output.accept(MOON_BASALT_SLAB);
                 output.accept(MOON_BASALT_WALL);
 
                 output.accept(MOON_BASALT_BRICK);
-                output.accept(MOON_BASALT_BRICK_SLAB);
                 output.accept(MOON_BASALT_BRICK_STAIRS);
+                output.accept(MOON_BASALT_BRICK_SLAB);
                 output.accept(MOON_BASALT_BRICK_WALL);
 
                 output.accept(CRACKED_MOON_BASALT_BRICK);
-                output.accept(CRACKED_MOON_BASALT_BRICK_SLAB);
                 output.accept(CRACKED_MOON_BASALT_BRICK_STAIRS);
+                output.accept(CRACKED_MOON_BASALT_BRICK_SLAB);
                 output.accept(CRACKED_MOON_BASALT_BRICK_WALL);
 
                 // MARS NATURAL
@@ -355,8 +355,8 @@ public class GCCreativeModeTabs {
                 output.accept(MARS_SUB_SURFACE_ROCK);
                 output.accept(MARS_STONE);
                 output.accept(MARS_COBBLESTONE);
-                output.accept(MARS_COBBLESTONE_SLAB);
                 output.accept(MARS_COBBLESTONE_STAIRS);
+                output.accept(MARS_COBBLESTONE_SLAB);
                 output.accept(MARS_COBBLESTONE_WALL);
 
                 // ASTEROID NATURAL
@@ -392,6 +392,8 @@ public class GCCreativeModeTabs {
                 output.accept(GALENA_ORE);
 
                 output.accept(ILMENITE_ORE);
+
+                output.accept(FALLEN_METEOR);
 
                 output.accept(OLIVINE_BASALT);
                 output.accept(RICH_OLIVINE_BASALT);
