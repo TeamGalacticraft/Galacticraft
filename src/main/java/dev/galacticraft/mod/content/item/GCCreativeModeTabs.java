@@ -100,8 +100,12 @@ public class GCCreativeModeTabs {
                     output.accept(itemStorage.variant.toStack());
                 }
 
-
                 output.accept(INFINITE_OXYGEN_TANK);
+
+                // BATTERIES
+                output.accept(BATTERY);
+                output.accept(INFINITE_BATTERY);
+
                 output.accept(SENSOR_GLASSES);
                 output.accept(FREQUENCY_MODULE);
                 PARACHUTE.colorMap().values().forEach(output::accept);
@@ -120,13 +124,6 @@ public class GCCreativeModeTabs {
                 output.accept(creativeRocket);
 
                 // MATERIALS
-                output.accept(TIN_NUGGET);
-                output.accept(ALUMINUM_NUGGET);
-                output.accept(METEORIC_IRON_NUGGET);
-                output.accept(DESH_NUGGET);
-                output.accept(LEAD_NUGGET);
-                output.accept(TITANIUM_NUGGET);
-
                 output.accept(RAW_TIN);
                 output.accept(RAW_ALUMINUM);
                 output.accept(RAW_METEORIC_IRON);
@@ -137,19 +134,26 @@ public class GCCreativeModeTabs {
                 output.accept(LUNAR_SAPPHIRE);
                 output.accept(OLIVINE_SHARD);
 
+                output.accept(TIN_NUGGET);
+                output.accept(ALUMINUM_NUGGET);
+                output.accept(METEORIC_IRON_NUGGET);
+                output.accept(DESH_NUGGET);
+                output.accept(LEAD_NUGGET);
+                output.accept(TITANIUM_NUGGET);
+
+                output.accept(TIN_INGOT);
+                output.accept(ALUMINUM_INGOT);
                 output.accept(METEORIC_IRON_INGOT);
                 output.accept(DESH_INGOT);
                 output.accept(LEAD_INGOT);
-                output.accept(ALUMINUM_INGOT);
-                output.accept(TIN_INGOT);
                 output.accept(TITANIUM_INGOT);
 
+                output.accept(COMPRESSED_IRON);
                 output.accept(COMPRESSED_COPPER);
                 output.accept(COMPRESSED_TIN);
                 output.accept(COMPRESSED_ALUMINUM);
                 output.accept(COMPRESSED_STEEL);
                 output.accept(COMPRESSED_BRONZE);
-                output.accept(COMPRESSED_IRON);
                 output.accept(COMPRESSED_METEORIC_IRON);
                 output.accept(COMPRESSED_DESH);
                 output.accept(COMPRESSED_TITANIUM);
@@ -158,6 +162,9 @@ public class GCCreativeModeTabs {
                 output.accept(TIER_2_HEAVY_DUTY_PLATE);
                 output.accept(TIER_3_HEAVY_DUTY_PLATE);
 
+                output.accept(COPPER_CANISTER);
+                output.accept(TIN_CANISTER);
+                output.accept(STEEL_POLE);
                 output.accept(DESH_STICK);
                 output.accept(CARBON_FRAGMENTS);
                 output.accept(SOLAR_DUST);
@@ -175,9 +182,6 @@ public class GCCreativeModeTabs {
                 output.accept(SINGLE_SOLAR_MODULE);
                 output.accept(FULL_SOLAR_PANEL);
                 output.accept(SOLAR_ARRAY_WAFER);
-                output.accept(STEEL_POLE);
-                output.accept(COPPER_CANISTER);
-                output.accept(TIN_CANISTER);
                 output.accept(THERMAL_CLOTH);
                 output.accept(ISOTHERMAL_FABRIC);
                 output.accept(ORION_DRIVE);
@@ -186,7 +190,7 @@ public class GCCreativeModeTabs {
 
                 // FOOD
                 output.accept(MOON_CHEESE_CURD);
-
+                output.accept(GCItems.MOON_CHEESE_WHEEL);
                 output.accept(MOON_CHEESE_SLICE);
                 output.accept(BURGER_BUN);
                 output.accept(GROUND_BEEF);
@@ -198,17 +202,9 @@ public class GCCreativeModeTabs {
                 output.accept(CANNED_DEHYDRATED_MELON);
                 output.accept(CANNED_DEHYDRATED_POTATO);
                 output.accept(CANNED_BEEF);
+
                 output.accept(THROWABLE_METEOR_CHUNK);
                 output.accept(HOT_THROWABLE_METEOR_CHUNK);
-
-                // BATTERIES
-                output.accept(BATTERY);
-                output.accept(INFINITE_BATTERY);
-
-                //FLUID BUCKETS
-                output.accept(CRUDE_OIL_BUCKET);
-                output.accept(FUEL_BUCKET);
-                output.accept(SULFURIC_ACID_BUCKET);
 
                 // ROCKET PARTS
                 output.accept(NOSE_CONE);
@@ -269,12 +265,17 @@ public class GCCreativeModeTabs {
                 output.accept(TITANIUM_HOE);
 
                 output.accept(STANDARD_WRENCH);
+
+                //FLUID BUCKETS
+                output.accept(CRUDE_OIL_BUCKET);
+                output.accept(FUEL_BUCKET);
+                output.accept(SULFURIC_ACID_BUCKET);
             })
             .build();
 
     public static final CreativeModeTab BLOCKS_GROUP = FabricItemGroup
             .builder()
-            .icon(() -> new ItemStack(MOON_TURF))
+            .icon(() -> new ItemStack(CHISELED_MOON_ROCK_BRICK))
             .title(Component.translatable(Translations.ItemGroup.BLOCKS))
             .displayItems((parameters, output) -> {
                 // DECORATION BLOCKS
@@ -288,14 +289,6 @@ public class GCCreativeModeTabs {
                     output.accept(decorationSet.detailedStairsItem());
                     output.accept(decorationSet.detailedWallItem());
                 }
-
-                // TORCHES
-                output.accept(GCItems.GLOWSTONE_TORCH);
-                output.accept(GCItems.UNLIT_TORCH);
-
-                // LANTERNS
-                output.accept(GLOWSTONE_LANTERN);
-                output.accept(UNLIT_LANTERN);
 
                 // MOON NATURAL
                 output.accept(MOON_TURF);
@@ -379,6 +372,61 @@ public class GCCreativeModeTabs {
                 output.accept(PUMICE);
                 output.accept(VAPOR_SPOUT);
 
+                // ORES
+                output.accept(SILICON_ORE);
+                output.accept(DEEPSLATE_SILICON_ORE);
+
+                output.accept(MOON_COPPER_ORE);
+                output.accept(LUNASLATE_COPPER_ORE);
+
+                output.accept(TIN_ORE);
+                output.accept(DEEPSLATE_TIN_ORE);
+                output.accept(MOON_TIN_ORE);
+                output.accept(LUNASLATE_TIN_ORE);
+
+                output.accept(ALUMINUM_ORE);
+                output.accept(DEEPSLATE_ALUMINUM_ORE);
+
+                output.accept(DESH_ORE);
+
+                output.accept(GALENA_ORE);
+
+                output.accept(ILMENITE_ORE);
+
+                output.accept(OLIVINE_BASALT);
+                output.accept(RICH_OLIVINE_BASALT);
+
+                // COMPACT MINERAL BLOCKS
+                output.accept(RAW_TIN_BLOCK);
+                output.accept(RAW_ALUMINUM_BLOCK);
+                output.accept(RAW_METEORIC_IRON_BLOCK);
+                output.accept(RAW_DESH_BLOCK);
+                output.accept(RAW_LEAD_BLOCK);
+                output.accept(RAW_TITANIUM_BLOCK);
+
+                output.accept(SILICON_BLOCK);
+                output.accept(LUNAR_SAPPHIRE_BLOCK);
+                output.accept(OLIVINE_BLOCK);
+                output.accept(OLIVINE_CLUSTER);
+
+                output.accept(TIN_BLOCK);
+                output.accept(ALUMINUM_BLOCK);
+                output.accept(METEORIC_IRON_BLOCK);
+                output.accept(DESH_BLOCK);
+                output.accept(LEAD_BLOCK);
+                output.accept(TITANIUM_BLOCK);
+
+                // MOON VILLAGER SPECIAL
+                output.accept(LUNAR_CARTOGRAPHY_TABLE);
+
+                // TORCHES
+                output.accept(GCItems.GLOWSTONE_TORCH);
+                output.accept(GCItems.UNLIT_TORCH);
+
+                // LANTERNS
+                output.accept(GLOWSTONE_LANTERN);
+                output.accept(UNLIT_LANTERN);
+
                 // MISC DECOR
                 output.accept(WALKWAY);
                 output.accept(WIRE_WALKWAY);
@@ -391,8 +439,12 @@ public class GCCreativeModeTabs {
                 output.accept(SEALABLE_ALUMINUM_WIRE);
                 output.accept(HEAVY_SEALABLE_ALUMINUM_WIRE);
                 output.accept(GLASS_FLUID_PIPE);
-                output.accept(FUELING_PAD);
                 output.accept(ROCKET_LAUNCH_PAD);
+                output.accept(FUELING_PAD);
+
+                // MISC MACHINES
+                output.accept(CRYOGENIC_CHAMBER);
+                output.accept(PLAYER_TRANSPORT_TUBE);
 
                 for (DyeColor color : DyeColor.values()) {
                     ItemStack stack = new ItemStack(PARACHEST);
@@ -412,60 +464,8 @@ public class GCCreativeModeTabs {
                 output.accept(CLEAR_VACUUM_GLASS);
                 output.accept(STRONG_VACUUM_GLASS);
 
-                // ORES
-                output.accept(SILICON_ORE);
-                output.accept(DEEPSLATE_SILICON_ORE);
-
-                output.accept(MOON_COPPER_ORE);
-                output.accept(LUNASLATE_COPPER_ORE);
-
-                output.accept(TIN_ORE);
-                output.accept(DEEPSLATE_TIN_ORE);
-                output.accept(MOON_TIN_ORE);
-                output.accept(LUNASLATE_TIN_ORE);
-
-                output.accept(ALUMINUM_ORE);
-                output.accept(DEEPSLATE_ALUMINUM_ORE);
-
-                output.accept(DESH_ORE);
-
-                output.accept(ILMENITE_ORE);
-
-                output.accept(GALENA_ORE);
-
-                output.accept(OLIVINE_BASALT);
-                output.accept(RICH_OLIVINE_BASALT);
-                output.accept(OLIVINE_CLUSTER);
-
-                // COMPACT MINERAL BLOCKS
-                output.accept(GCItems.MOON_CHEESE_WHEEL);
-                output.accept(SILICON_BLOCK);
-                output.accept(ALUMINUM_BLOCK);
-                output.accept(METEORIC_IRON_BLOCK);
-                output.accept(DESH_BLOCK);
-                output.accept(TIN_BLOCK);
-                output.accept(TITANIUM_BLOCK);
-                output.accept(LEAD_BLOCK);
-                output.accept(LUNAR_SAPPHIRE_BLOCK);
-                output.accept(RAW_ALUMINUM_BLOCK);
-                output.accept(RAW_METEORIC_IRON_BLOCK);
-                output.accept(RAW_DESH_BLOCK);
-                output.accept(RAW_TIN_BLOCK);
-                output.accept(RAW_TITANIUM_BLOCK);
-                output.accept(RAW_LEAD_BLOCK);
-                output.accept(OLIVINE_BLOCK);
-
-                // MOON VILLAGER SPECIAL
-                output.accept(LUNAR_CARTOGRAPHY_TABLE);
-
                 // MISC WORLD GEN
                 output.accept(CAVERNOUS_VINES);
-
-                // MISC MACHINES
-                output.accept(CRYOGENIC_CHAMBER);
-                output.accept(PLAYER_TRANSPORT_TUBE);
-
-                // MACHINES
             }).build();
 
     public static final CreativeModeTab MACHINES_GROUP = FabricItemGroup
@@ -483,13 +483,13 @@ public class GCCreativeModeTabs {
                 output.accept(ELECTRIC_FURNACE);
                 output.accept(ELECTRIC_ARC_FURNACE);
                 output.accept(REFINERY);
+                output.accept(FUEL_LOADER);
                 output.accept(OXYGEN_COLLECTOR);
                 output.accept(OXYGEN_SEALER);
                 output.accept(OXYGEN_BUBBLE_DISTRIBUTOR);
                 output.accept(OXYGEN_DECOMPRESSOR);
                 output.accept(OXYGEN_COMPRESSOR);
                 output.accept(OXYGEN_STORAGE_MODULE);
-                output.accept(FUEL_LOADER);
             }).build();
 
     public static void registerSpawnEggs() {
