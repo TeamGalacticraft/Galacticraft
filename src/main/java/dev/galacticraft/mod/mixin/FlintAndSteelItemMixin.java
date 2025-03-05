@@ -23,36 +23,28 @@
 package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.item.FlintAndSteelItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(LanternBlock.class)
-public abstract class LanternBlockMixin extends Block {
-    public LanternBlockMixin(Properties settings) {
-        super(settings);
+@Mixin(FlintAndSteelItem.class)
+public abstract class FlintAndSteelItemMixin extends Item {
+    FlintAndSteelItemMixin() {
+        super(null);
     }
 
-    @Override
-    @Deprecated
-    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean moved) {
-        super.onPlace(state, world, pos, oldState, moved);
-        Holder<CelestialBody<?, ?>> holder = world.galacticraft$getCelestialBody();
+    @Redirect(method = "useOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"))
+    public boolean useOn(Level level, BlockPos blockPos, BlockState blockState, int n) {
+        Holder<CelestialBody<?, ?>> holder = level.galacticraft$getCelestialBody();
         if (holder != null && !holder.value().atmosphere().breathable()) {
-            if (state.getBlock() instanceof LanternBlock lantern && lantern != GCBlocks.GLOWSTONE_LANTERN) {
-                world.setBlockAndUpdate(pos, GCBlocks.UNLIT_LANTERN.defaultBlockState().setValue(LanternBlock.HANGING, state.getValue(LanternBlock.HANGING)).setValue(LanternBlock.WATERLOGGED, state.getValue(LanternBlock.WATERLOGGED)));
-            }
-            world.addParticle(ParticleTypes.SMOKE, pos.getX(), pos.getY(), pos.getZ(), 0.0D, 0.0D, 0.0D);
-            world.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1.0F, 0.9F, false);
+            return false;
         }
+        return level.setBlock(blockPos, blockState, n);
     }
 }
