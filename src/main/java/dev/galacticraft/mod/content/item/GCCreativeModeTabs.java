@@ -172,6 +172,7 @@ public class GCCreativeModeTabs {
                 output.accept(SINGLE_SOLAR_MODULE);
                 output.accept(FULL_SOLAR_PANEL);
                 output.accept(SOLAR_ARRAY_WAFER);
+                output.accept(SOLAR_ARRAY_PANEL);
                 output.accept(THERMAL_CLOTH);
                 output.accept(ISOTHERMAL_FABRIC);
                 output.accept(ORION_DRIVE);

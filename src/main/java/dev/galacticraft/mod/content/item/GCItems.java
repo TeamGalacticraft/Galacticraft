@@ -114,6 +114,7 @@ public class GCItems {
     public static final Item SINGLE_SOLAR_MODULE = registerGeneric(Constant.Item.SINGLE_SOLAR_MODULE);
     public static final Item FULL_SOLAR_PANEL = registerGeneric(Constant.Item.FULL_SOLAR_PANEL);
     public static final Item SOLAR_ARRAY_WAFER = registerGeneric(Constant.Item.SOLAR_ARRAY_WAFER);
+    public static final Item SOLAR_ARRAY_PANEL = registerGeneric(Constant.Item.SOLAR_ARRAY_PANEL);
     public static final Item THERMAL_CLOTH = registerGeneric(Constant.Item.THERMAL_CLOTH);
     public static final Item ISOTHERMAL_FABRIC = registerGeneric(Constant.Item.ISOTHERMAL_FABRIC);
     public static final Item ORION_DRIVE = registerGeneric(Constant.Item.ORION_DRIVE);

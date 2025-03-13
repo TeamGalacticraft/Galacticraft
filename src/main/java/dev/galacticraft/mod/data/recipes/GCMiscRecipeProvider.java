@@ -184,7 +184,6 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.COMPRESSED_METEORIC_IRON), has(GCItems.COMPRESSED_METEORIC_IRON))
                 .save(output);
 
-
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.SINGLE_SOLAR_MODULE, 2)
                 .define('G', ConventionalItemTags.GLASS_BLOCKS)
                 .define('S', GCItems.BLUE_SOLAR_WAFER)
@@ -195,7 +194,6 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.BLUE_SOLAR_WAFER), has(GCItems.BLUE_SOLAR_WAFER))
                 .save(output);
 
-
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.FULL_SOLAR_PANEL)
                 .define('M', GCItems.SINGLE_SOLAR_MODULE)
                 .define('W', GCBlocks.ALUMINUM_WIRE)
@@ -203,6 +201,16 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .pattern("WWW")
                 .pattern("MMM")
                 .unlockedBy(getHasName(GCItems.SINGLE_SOLAR_MODULE), has(GCItems.SINGLE_SOLAR_MODULE))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.SOLAR_ARRAY_PANEL, 3)
+                .define('G', ConventionalItemTags.GLASS_BLOCKS)
+                .define('S', GCItems.SOLAR_ARRAY_WAFER)
+                .define('W', GCBlocks.ALUMINUM_WIRE)
+                .pattern("GGG")
+                .pattern("SSS")
+                .pattern("WWW")
+                .unlockedBy(getHasName(GCItems.SOLAR_ARRAY_WAFER), has(GCItems.SOLAR_ARRAY_WAFER))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.STEEL_POLE)
@@ -222,7 +230,6 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy("has_wool", has(ItemTags.WOOL))
                 .save(output);
 
-
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BATTERY)
                 .define('T', GCItems.COMPRESSED_ALUMINUM)
                 .define('R', ConventionalItemTags.REDSTONE_DUSTS)
@@ -232,7 +239,6 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .pattern("TCT")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_ALUMINUM), has(GCItems.COMPRESSED_ALUMINUM))
                 .save(output);
-
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.AMBIENT_THERMAL_CONTROLLER)
                 .define('B', GCItems.COMPRESSED_BRONZE)

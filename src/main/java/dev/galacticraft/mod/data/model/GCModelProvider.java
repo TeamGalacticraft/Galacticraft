@@ -548,6 +548,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.SINGLE_SOLAR_MODULE, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.FULL_SOLAR_PANEL, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.SOLAR_ARRAY_WAFER, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.SOLAR_ARRAY_PANEL, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.STEEL_POLE, ModelTemplates.FLAT_HANDHELD_ITEM);
         generator.generateFlatItem(GCItems.COPPER_CANISTER, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.TIN_CANISTER, ModelTemplates.FLAT_ITEM);
