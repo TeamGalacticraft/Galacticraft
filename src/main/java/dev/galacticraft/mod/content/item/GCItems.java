@@ -145,24 +145,6 @@ public class GCItems {
     public static final Item THROWABLE_METEOR_CHUNK = ITEMS.register(Constant.Item.THROWABLE_METEOR_CHUNK, new ThrowableMeteorChunkItem(new Item.Properties().stacksTo(16)));
     public static final Item HOT_THROWABLE_METEOR_CHUNK = ITEMS.register(Constant.Item.HOT_THROWABLE_METEOR_CHUNK, new HotThrowableMeteorChunkItem(new Item.Properties().stacksTo(16)));
 
-    // ARMOR
-    public static final Item HEAVY_DUTY_HELMET = ITEMS.register(Constant.Item.HEAVY_DUTY_HELMET, new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1)));
-    public static final Item HEAVY_DUTY_CHESTPLATE = ITEMS.register(Constant.Item.HEAVY_DUTY_CHESTPLATE, new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1)));
-    public static final Item HEAVY_DUTY_LEGGINGS = ITEMS.register(Constant.Item.HEAVY_DUTY_LEGGINGS, new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1)));
-    public static final Item HEAVY_DUTY_BOOTS = ITEMS.register(Constant.Item.HEAVY_DUTY_BOOTS, new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1)));
-
-    public static final Item DESH_HELMET = ITEMS.register(Constant.Item.DESH_HELMET, new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1)));
-    public static final Item DESH_CHESTPLATE = ITEMS.register(Constant.Item.DESH_CHESTPLATE, new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1)));
-    public static final Item DESH_LEGGINGS = ITEMS.register(Constant.Item.DESH_LEGGINGS, new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1)));
-    public static final Item DESH_BOOTS = ITEMS.register(Constant.Item.DESH_BOOTS, new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1)));
-
-    public static final Item TITANIUM_HELMET = ITEMS.register(Constant.Item.TITANIUM_HELMET, new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1)));
-    public static final Item TITANIUM_CHESTPLATE = ITEMS.register(Constant.Item.TITANIUM_CHESTPLATE, new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1)));
-    public static final Item TITANIUM_LEGGINGS = ITEMS.register(Constant.Item.TITANIUM_LEGGINGS, new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1)));
-    public static final Item TITANIUM_BOOTS = ITEMS.register(Constant.Item.TITANIUM_BOOTS, new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1)));
-
-    public static final Item SENSOR_GLASSES = ITEMS.register(Constant.Item.SENSOR_GLASSES, new ArmorItem(GCArmorMaterials.SENSOR_GLASSES, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1)));
-
     // TOOLS + WEAPONS
     public static final Item HEAVY_DUTY_SWORD = ITEMS.register(Constant.Item.HEAVY_DUTY_SWORD, new BrittleSwordItem(GCTiers.STEEL, new Item.Properties().attributes(SwordItem.createAttributes(GCTiers.STEEL, 3, -2.4F))));
     public static final Item HEAVY_DUTY_SHOVEL = ITEMS.register(Constant.Item.HEAVY_DUTY_SHOVEL, new ShovelItem(GCTiers.STEEL, new Item.Properties().attributes(ShovelItem.createAttributes(GCTiers.STEEL, -1.5F, -3.0F))));
@@ -183,6 +165,24 @@ public class GCItems {
     public static final Item TITANIUM_HOE = ITEMS.register(Constant.Item.TITANIUM_HOE, new HoeItem(GCTiers.TITANIUM, new Item.Properties().attributes(HoeItem.createAttributes(GCTiers.TITANIUM, -3.0F, -1.0F))));
 
     public static final Item STANDARD_WRENCH = ITEMS.register(Constant.Item.STANDARD_WRENCH, new StandardWrenchItem(new Item.Properties().durability(256)));
+
+    // ARMOR
+    public static final Item HEAVY_DUTY_HELMET = ITEMS.register(Constant.Item.HEAVY_DUTY_HELMET, new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1)));
+    public static final Item HEAVY_DUTY_CHESTPLATE = ITEMS.register(Constant.Item.HEAVY_DUTY_CHESTPLATE, new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1)));
+    public static final Item HEAVY_DUTY_LEGGINGS = ITEMS.register(Constant.Item.HEAVY_DUTY_LEGGINGS, new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1)));
+    public static final Item HEAVY_DUTY_BOOTS = ITEMS.register(Constant.Item.HEAVY_DUTY_BOOTS, new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1)));
+
+    public static final Item DESH_HELMET = ITEMS.register(Constant.Item.DESH_HELMET, new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1)));
+    public static final Item DESH_CHESTPLATE = ITEMS.register(Constant.Item.DESH_CHESTPLATE, new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1)));
+    public static final Item DESH_LEGGINGS = ITEMS.register(Constant.Item.DESH_LEGGINGS, new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1)));
+    public static final Item DESH_BOOTS = ITEMS.register(Constant.Item.DESH_BOOTS, new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1)));
+
+    public static final Item TITANIUM_HELMET = ITEMS.register(Constant.Item.TITANIUM_HELMET, new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1)));
+    public static final Item TITANIUM_CHESTPLATE = ITEMS.register(Constant.Item.TITANIUM_CHESTPLATE, new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1)));
+    public static final Item TITANIUM_LEGGINGS = ITEMS.register(Constant.Item.TITANIUM_LEGGINGS, new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1)));
+    public static final Item TITANIUM_BOOTS = ITEMS.register(Constant.Item.TITANIUM_BOOTS, new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1)));
+
+    public static final Item SENSOR_GLASSES = ITEMS.register(Constant.Item.SENSOR_GLASSES, new ArmorItem(GCArmorMaterials.SENSOR_GLASSES, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1)));
 
     // SMITHING TEMPLATES
     public static final Item TITANTIUM_UPGRADE_SMITHING_TEMPLATE = ITEMS.register(Constant.Item.TITANTIUM_UPGRADE_SMITHING_TEMPLATE, new SmithingTemplateItem(

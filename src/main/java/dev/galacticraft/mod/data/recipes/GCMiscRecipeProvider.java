@@ -145,11 +145,6 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy("has_coal", has(ConventionalItemTags.COAL))
                 .save(output, BuiltInRegistries.ITEM.getKey(GCItems.CARBON_FRAGMENTS).withSuffix("_from_coal"));
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, GCItems.CARBON_FRAGMENTS, 3)
-                .requires(Items.CHARCOAL)
-                .unlockedBy(getHasName(Items.CHARCOAL), has(Items.CHARCOAL))
-                .save(output, BuiltInRegistries.ITEM.getKey(GCItems.CARBON_FRAGMENTS).withSuffix("_from_charcoal"));
-
         SimpleCookingRecipeBuilder.generic(Ingredient.of(ItemTags.PLANKS), RecipeCategory.MISC, GCItems.CARBON_FRAGMENTS, 0.1f, 200, RecipeSerializer.SMELTING_RECIPE, SmeltingRecipe::new)
                 .unlockedBy("has_planks", has(ItemTags.PLANKS))
                 .save(output, getItemName(GCItems.CARBON_FRAGMENTS) + "_from_smelting_planks");
