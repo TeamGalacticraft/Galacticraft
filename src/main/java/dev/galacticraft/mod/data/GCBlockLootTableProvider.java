@@ -205,11 +205,17 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.add(GCBlocks.ALUMINUM_ORE, this.createOreDrop(GCBlocks.ALUMINUM_ORE, GCItems.RAW_ALUMINUM));
         this.add(GCBlocks.DEEPSLATE_ALUMINUM_ORE, this.createOreDrop(GCBlocks.ALUMINUM_ORE, GCItems.RAW_ALUMINUM));
 
+        this.add(GCBlocks.MOON_CHEESE_ORE, this.createOreDrop(GCBlocks.MOON_CHEESE_ORE, GCItems.MOON_CHEESE_CURD));
+
+        this.add(GCBlocks.LUNAR_SAPPHIRE_ORE, this.createOreDrop(GCBlocks.LUNAR_SAPPHIRE_ORE, GCItems.LUNAR_SAPPHIRE));
+
         this.add(GCBlocks.DESH_ORE, this.createOreDrop(GCBlocks.DESH_ORE, GCItems.RAW_DESH));
 
         this.add(GCBlocks.ILMENITE_ORE, this.createOreDrop(GCBlocks.ILMENITE_ORE, GCItems.RAW_TITANIUM));
 
         this.add(GCBlocks.GALENA_ORE, this.createOreDrop(GCBlocks.GALENA_ORE, GCItems.RAW_LEAD));
+
+        this.add(GCBlocks.SOLAR_ORE, this.createOreDrop(GCBlocks.SOLAR_ORE, GCItems.SOLAR_DUST));
 
         this.add(GCBlocks.OLIVINE_CLUSTER, this.createCrystalClusterDrop(GCBlocks.OLIVINE_CLUSTER, GCItems.OLIVINE_SHARD));
         this.add(GCBlocks.OLIVINE_BASALT, this.createOreDrop(GCBlocks.OLIVINE_BASALT, GCItems.OLIVINE_SHARD, 1.0F, 2.0F));

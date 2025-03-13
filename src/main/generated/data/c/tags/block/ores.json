@@ -4,6 +4,9 @@
     "galacticraft:deepslate_silicon_ore",
     "galacticraft:moon_copper_ore",
     "galacticraft:lunaslate_copper_ore",
+    "galacticraft:fallen_meteor",
+    "galacticraft:moon_cheese_ore",
+    "galacticraft:lunar_sapphire_ore",
     "galacticraft:olivine_basalt",
     "galacticraft:rich_olivine_basalt",
     "galacticraft:tin_ore",
@@ -14,6 +17,7 @@
     "galacticraft:deepslate_aluminum_ore",
     "galacticraft:desh_ore",
     "galacticraft:ilmenite_ore",
-    "galacticraft:galena_ore"
+    "galacticraft:galena_ore",
+    "galacticraft:solar_ore"
   ]
 }

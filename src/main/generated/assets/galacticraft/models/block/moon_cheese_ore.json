@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "minecraft:block/moon_cheese_ore"
+    "all": "galacticraft:block/moon_cheese_ore"
   }
 }
