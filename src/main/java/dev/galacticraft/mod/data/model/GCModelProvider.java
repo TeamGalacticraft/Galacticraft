@@ -176,11 +176,17 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.ALUMINUM_ORE);
         generator.createTrivialCube(GCBlocks.DEEPSLATE_ALUMINUM_ORE);
 
+        generator.createTrivialCube(GCBlocks.MOON_CHEESE_ORE);
+
+        generator.createTrivialCube(GCBlocks.LUNAR_SAPPHIRE_ORE);
+
         generator.createTrivialCube(GCBlocks.DESH_ORE);
 
         generator.createTrivialCube(GCBlocks.ILMENITE_ORE);
 
         generator.createTrivialCube(GCBlocks.GALENA_ORE);
+
+        generator.createTrivialCube(GCBlocks.SOLAR_ORE);
 
         this.createOlivineCluster(generator, GCBlocks.OLIVINE_CLUSTER);
         generator.createSimpleFlatItemModel(GCBlocks.OLIVINE_CLUSTER, "_vertical");

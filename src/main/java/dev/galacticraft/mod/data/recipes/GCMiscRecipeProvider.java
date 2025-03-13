@@ -269,7 +269,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .define('C', Items.COAL_ORE)
                 .define('I', GCBlocks.ILMENITE_ORE)
                 .define('S', GCBlocks.DESH_ORE)
-                .define('E', GCBlocks.MOON_CHEESE_WHEEL) //todo: add cheese ore?
+                .define('E', GCBlocks.MOON_CHEESE_ORE)
                 .define('R', Items.REDSTONE_ORE)
                 .define('B', GCItems.BEAM_CORE)
                 .pattern("DLG")

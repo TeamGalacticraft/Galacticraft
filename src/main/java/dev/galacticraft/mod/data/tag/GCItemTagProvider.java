@@ -110,12 +110,16 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         tag(ConventionalItemTags.ORES).add(
                 GCBlocks.SILICON_ORE.asItem(), GCBlocks.DEEPSLATE_SILICON_ORE.asItem(),
                 GCBlocks.MOON_COPPER_ORE.asItem(), GCBlocks.LUNASLATE_COPPER_ORE.asItem(),
+                GCBlocks.FALLEN_METEOR.asItem(),
+                GCBlocks.MOON_CHEESE_ORE.asItem(),
+                GCBlocks.LUNAR_SAPPHIRE_ORE.asItem(),
                 GCBlocks.OLIVINE_BASALT.asItem(), GCBlocks.RICH_OLIVINE_BASALT.asItem(),
                 GCBlocks.TIN_ORE.asItem(), GCBlocks.DEEPSLATE_TIN_ORE.asItem(), GCBlocks.MOON_TIN_ORE.asItem(), GCBlocks.LUNASLATE_TIN_ORE.asItem(),
                 GCBlocks.ALUMINUM_ORE.asItem(), GCBlocks.DEEPSLATE_ALUMINUM_ORE.asItem(),
                 GCBlocks.DESH_ORE.asItem(),
                 GCBlocks.ILMENITE_ORE.asItem(),
-                GCBlocks.GALENA_ORE.asItem()
+                GCBlocks.GALENA_ORE.asItem(),
+                GCBlocks.SOLAR_ORE.asItem()
         );
 
         tag(ConventionalItemTags.GEMS)

@@ -244,11 +244,17 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.ALUMINUM_ORE, "Aluminum Ore");
         this.block(GCBlocks.DEEPSLATE_ALUMINUM_ORE, "Deepslate Aluminum Ore");
 
+        this.block(GCBlocks.MOON_CHEESE_ORE, "Moon Cheese Ore");
+
+        this.block(GCBlocks.LUNAR_SAPPHIRE_ORE, "Lunar Sapphire Ore");
+
         this.block(GCBlocks.DESH_ORE, "Desh Ore");
 
         this.block(GCBlocks.ILMENITE_ORE, "Ilmenite Ore");
 
         this.block(GCBlocks.GALENA_ORE, "Galena Ore");
+
+        this.block(GCBlocks.SOLAR_ORE, "Solar Ore");
 
         this.block(GCBlocks.OLIVINE_CLUSTER, "Olivine Cluster");
         this.block(GCBlocks.OLIVINE_BASALT, "Olivine Basalt");

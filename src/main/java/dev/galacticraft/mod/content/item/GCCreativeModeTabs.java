@@ -388,9 +388,15 @@ public class GCCreativeModeTabs {
                 output.accept(ALUMINUM_ORE);
                 output.accept(DEEPSLATE_ALUMINUM_ORE);
 
+                output.accept(MOON_CHEESE_ORE);
+
+                output.accept(LUNAR_SAPPHIRE_ORE);
+
                 output.accept(DESH_ORE);
 
                 output.accept(GALENA_ORE);
+
+                output.accept(SOLAR_ORE);
 
                 output.accept(ILMENITE_ORE);
 

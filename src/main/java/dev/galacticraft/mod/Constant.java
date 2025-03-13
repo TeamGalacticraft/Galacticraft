@@ -147,8 +147,6 @@ public interface Constant {
         // Ore
         String MOON_COPPER_ORE = "moon_copper_ore";
         String LUNASLATE_COPPER_ORE = "lunaslate_copper_ore";
-        String DESH_ORE = "desh_ore";
-        String ILMENITE_ORE = "ilmenite_ore";
         String SILICON_ORE = "silicon_ore";
         String DEEPSLATE_SILICON_ORE = "deepslate_silicon_ore";
         String TIN_ORE = "tin_ore";
@@ -157,7 +155,12 @@ public interface Constant {
         String LUNASLATE_TIN_ORE = "lunaslate_tin_ore";
         String ALUMINUM_ORE = "aluminum_ore";
         String DEEPSLATE_ALUMINUM_ORE = "deepslate_aluminum_ore";
+        String MOON_CHEESE_ORE = "moon_cheese_ore";
+        String LUNAR_SAPPHIRE_ORE = "lunar_sapphire_ore";
+        String DESH_ORE = "desh_ore";
+        String ILMENITE_ORE = "ilmenite_ore";
         String GALENA_ORE = "galena_ore";
+        String SOLAR_ORE = "solar_ore";
 
         // Solid Blocks
         String SILICON_BLOCK = "silicon_block";
