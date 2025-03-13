@@ -54,12 +54,14 @@ public class GCItems {
     // MATERIALS
     public static final Item SILICON = registerGeneric(Constant.Item.SILICON);
     
+    public static final Item OLIVINE_SHARD = registerGeneric(Constant.Item.OLIVINE_SHARD);
+    
+    public static final Item LUNAR_SAPPHIRE = registerGeneric(Constant.Item.LUNAR_SAPPHIRE);
+
     public static final Item RAW_METEORIC_IRON = registerGeneric(Constant.Item.RAW_METEORIC_IRON);
     public static final Item METEORIC_IRON_INGOT = registerGeneric(Constant.Item.METEORIC_IRON_INGOT);
     public static final Item METEORIC_IRON_NUGGET = registerGeneric(Constant.Item.METEORIC_IRON_NUGGET);
     public static final Item COMPRESSED_METEORIC_IRON = registerGeneric(Constant.Item.COMPRESSED_METEORIC_IRON);
-
-    public static final Item OLIVINE_SHARD = registerGeneric(Constant.Item.OLIVINE_SHARD);
 
     public static final Item RAW_DESH = registerGeneric(Constant.Item.RAW_DESH);
     public static final Item DESH_INGOT = registerGeneric(Constant.Item.DESH_INGOT);
@@ -85,13 +87,17 @@ public class GCItems {
     public static final Item TITANIUM_NUGGET = registerGeneric(Constant.Item.TITANIUM_NUGGET);
     public static final Item COMPRESSED_TITANIUM = registerGeneric(Constant.Item.COMPRESSED_TITANIUM);
 
-    public static final Item COMPRESSED_BRONZE = registerGeneric(Constant.Item.COMPRESSED_BRONZE);
     public static final Item COMPRESSED_COPPER = registerGeneric(Constant.Item.COMPRESSED_COPPER);
+    public static final Item COMPRESSED_BRONZE = registerGeneric(Constant.Item.COMPRESSED_BRONZE);
     public static final Item COMPRESSED_IRON = registerGeneric(Constant.Item.COMPRESSED_IRON);
     public static final Item COMPRESSED_STEEL = registerGeneric(Constant.Item.COMPRESSED_STEEL);
-    
-    public static final Item LUNAR_SAPPHIRE = registerGeneric(Constant.Item.LUNAR_SAPPHIRE);
+
+    public static final Item STEEL_POLE = registerGeneric(Constant.Item.STEEL_POLE);
     public static final Item DESH_STICK = registerGeneric(Constant.Item.DESH_STICK);
+
+    public static final Item COPPER_CANISTER = registerGeneric(Constant.Item.COPPER_CANISTER);
+    public static final Item TIN_CANISTER = registerGeneric(Constant.Item.TIN_CANISTER);
+
     public static final Item CARBON_FRAGMENTS = registerGeneric(Constant.Item.CARBON_FRAGMENTS);
     public static final Item SOLAR_DUST = registerGeneric(Constant.Item.SOLAR_DUST);
     public static final Item BASIC_WAFER = registerGeneric(Constant.Item.BASIC_WAFER);
@@ -108,9 +114,6 @@ public class GCItems {
     public static final Item SINGLE_SOLAR_MODULE = registerGeneric(Constant.Item.SINGLE_SOLAR_MODULE);
     public static final Item FULL_SOLAR_PANEL = registerGeneric(Constant.Item.FULL_SOLAR_PANEL);
     public static final Item SOLAR_ARRAY_WAFER = registerGeneric(Constant.Item.SOLAR_ARRAY_WAFER);
-    public static final Item STEEL_POLE = registerGeneric(Constant.Item.STEEL_POLE);
-    public static final Item COPPER_CANISTER = registerGeneric(Constant.Item.COPPER_CANISTER);
-    public static final Item TIN_CANISTER = registerGeneric(Constant.Item.TIN_CANISTER);
     public static final Item THERMAL_CLOTH = registerGeneric(Constant.Item.THERMAL_CLOTH);
     public static final Item ISOTHERMAL_FABRIC = registerGeneric(Constant.Item.ISOTHERMAL_FABRIC);
     public static final Item ORION_DRIVE = registerGeneric(Constant.Item.ORION_DRIVE);

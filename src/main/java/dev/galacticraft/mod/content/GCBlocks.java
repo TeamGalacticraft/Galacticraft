@@ -62,17 +62,6 @@ import java.util.function.ToIntFunction;
 public class GCBlocks {
     public static final GCBlockRegistry BLOCKS = new GCBlockRegistry();
 
-    // TORCHES
-    // These 2 torches are special, it's need to register early so others can use dropsLike() reference
-    public static final Block GLOWSTONE_TORCH = BLOCKS.register(Constant.Block.GLOWSTONE_TORCH, new GlowstoneTorchBlock(BlockBehaviour.Properties.of().noCollission().instabreak().lightLevel(blockStatex -> 14).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY)));
-    public static final Block UNLIT_TORCH = BLOCKS.register(Constant.Block.UNLIT_TORCH, new UnlitTorchBlock(BlockBehaviour.Properties.of().noCollission().instabreak().lightLevel(blockStatex -> 0).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY)));
-    public static final Block GLOWSTONE_WALL_TORCH = BLOCKS.register(Constant.Block.GLOWSTONE_WALL_TORCH, new GlowstoneWallTorchBlock(BlockBehaviour.Properties.ofFullCopy(GLOWSTONE_TORCH).dropsLike(GLOWSTONE_TORCH)));
-    public static final Block UNLIT_WALL_TORCH = BLOCKS.register(Constant.Block.UNLIT_WALL_TORCH, new UnlitWallTorchBlock(BlockBehaviour.Properties.ofFullCopy(UNLIT_TORCH).dropsLike(UNLIT_TORCH)));
-
-    // LANTERNS
-    public static final Block GLOWSTONE_LANTERN = BLOCKS.registerWithItem(Constant.Block.GLOWSTONE_LANTERN, new GlowstoneLanternBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.LANTERN)));
-    public static final Block UNLIT_LANTERN = BLOCKS.registerWithItem(Constant.Block.UNLIT_LANTERN, new UnlitLanternBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.LANTERN).lightLevel(state -> 0)));
-
     // FLUIDS
     public static final LiquidBlock CRUDE_OIL = BLOCKS.register(Constant.Block.CRUDE_OIL,
             new CrudeOilBlock(GCFluids.CRUDE_OIL, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK)
@@ -320,6 +309,16 @@ public class GCBlocks {
     public static final AirlockBlock AIR_LOCK_FRAME = BLOCKS.registerWithItem(Constant.Block.AIR_LOCK_FRAME, new AirlockBlock(false, BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)));
     public static final AirlockBlock AIR_LOCK_CONTROLLER = BLOCKS.registerWithItem(Constant.Block.AIR_LOCK_CONTROLLER, new AirlockBlock(true, BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)));
     public static final Block AIR_LOCK_SEAL = BLOCKS.register(Constant.Block.AIR_LOCK_SEAL, new Block(BlockBehaviour.Properties.ofFullCopy(AIR_LOCK_FRAME)));
+
+    // LANTERNS
+    public static final Block GLOWSTONE_LANTERN = BLOCKS.registerWithItem(Constant.Block.GLOWSTONE_LANTERN, new GlowstoneLanternBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.LANTERN)));
+    public static final Block UNLIT_LANTERN = BLOCKS.registerWithItem(Constant.Block.UNLIT_LANTERN, new UnlitLanternBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.LANTERN).lightLevel(state -> 0)));
+
+    // TORCHES
+    public static final Block GLOWSTONE_TORCH = BLOCKS.register(Constant.Block.GLOWSTONE_TORCH, new GlowstoneTorchBlock(BlockBehaviour.Properties.of().noCollission().instabreak().lightLevel(blockStatex -> 14).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY)));
+    public static final Block UNLIT_TORCH = BLOCKS.register(Constant.Block.UNLIT_TORCH, new UnlitTorchBlock(BlockBehaviour.Properties.of().noCollission().instabreak().lightLevel(blockStatex -> 0).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY)));
+    public static final Block GLOWSTONE_WALL_TORCH = BLOCKS.register(Constant.Block.GLOWSTONE_WALL_TORCH, new GlowstoneWallTorchBlock(BlockBehaviour.Properties.ofFullCopy(GLOWSTONE_TORCH).dropsLike(GLOWSTONE_TORCH)));
+    public static final Block UNLIT_WALL_TORCH = BLOCKS.register(Constant.Block.UNLIT_WALL_TORCH, new UnlitWallTorchBlock(BlockBehaviour.Properties.ofFullCopy(UNLIT_TORCH).dropsLike(UNLIT_TORCH)));
 
     public static void register() {
         FlammableBlockRegistry.getDefaultInstance().add(FUEL, 80, 130);
