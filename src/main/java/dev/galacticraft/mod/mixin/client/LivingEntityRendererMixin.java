@@ -24,10 +24,12 @@ package dev.galacticraft.mod.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import org.spongepowered.asm.mixin.Mixin;
@@ -59,17 +61,6 @@ public abstract class LivingEntityRendererMixin {
         return instance.hasPose(pose);
     }
 
-    @Inject(method = "setupRotations", at = @At("HEAD"))
-    private void rotateToMatchRocket(LivingEntity entity, PoseStack pose, float animationProgress, float bodyYaw, float tickDelta, float scale, CallbackInfo ci) {
-        if (entity.isPassenger() && entity.getVehicle() instanceof RocketEntity rocket) {
-            double rotationOffset = 0.7F;
-            pose.translate(0, rotationOffset, 0);
-            pose.mulPose(Axis.YP.rotationDegrees(-rocket.getYRot()));
-            pose.mulPose(Axis.ZP.rotationDegrees(rocket.getXRot()));
-            pose.translate(0, -rotationOffset, 0);
-        }
-    }
-
     @Inject(method = "setupRotations", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getBedOrientation()Lnet/minecraft/core/Direction;"), cancellable = true)
     private void galacticraft$renderCryoChamberPos(LivingEntity entity, PoseStack pose, float animationProgress, float bodyYaw, float tickDelta, float scale, CallbackInfo ci) {
         if (entity.isInCryoSleep()) {
@@ -78,6 +69,28 @@ public abstract class LivingEntityRendererMixin {
             pose.translate(0, 0.82F, 0);
             pose.mulPose(Axis.YP.rotationDegrees(j));
             ci.cancel();
+        }
+    }
+
+    @Inject(method = "setupRotations", at = @At("HEAD"))
+    private void rotateToMatchRocket(LivingEntity entity, PoseStack pose, float animationProgress, float bodyYaw, float tickDelta, float scale, CallbackInfo ci) {
+        if (entity.isPassenger() && entity.getVehicle() instanceof RocketEntity rocket) {
+            double rotationOffset = 0.5D;
+            pose.translate(0, rotationOffset, 0);
+            if (rocket.getLaunchStage() == LaunchStage.IGNITED) {
+                pose.translate((entity.level().random.nextDouble() - 0.5D) * 0.1D, 0, (entity.level().random.nextDouble() - 0.5D) * 0.1D);
+            }
+            float pitch = rocket.getXRot();
+            float yaw = rocket.getYRot();
+            if (pitch < -90.0F || pitch > 90.0F) {
+                // TODO: Fix rotation when the rocket is pointing downwards
+                pose.mulPose(Axis.XP.rotationDegrees(pitch * Mth.cos(yaw * Mth.DEG_TO_RAD)));
+                pose.mulPose(Axis.ZP.rotationDegrees(pitch * Mth.sin(yaw * Mth.DEG_TO_RAD)));
+            } else {
+                pose.mulPose(Axis.XP.rotationDegrees(pitch * Mth.cos(yaw * Mth.DEG_TO_RAD)));
+                pose.mulPose(Axis.ZP.rotationDegrees(pitch * Mth.sin(yaw * Mth.DEG_TO_RAD)));
+            }
+            pose.translate(0, -rotationOffset, 0);
         }
     }
 }
