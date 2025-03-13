@@ -386,6 +386,7 @@ public interface Constant {
         String SINGLE_SOLAR_MODULE = "single_solar_module";
         String FULL_SOLAR_PANEL = "full_solar_panel";
         String SOLAR_ARRAY_WAFER = "solar_array_wafer";
+        String SOLAR_ARRAY_PANEL = "solar_array_panel";
         String STEEL_POLE = "steel_pole";
         String COPPER_CANISTER = "copper_canister";
         String TIN_CANISTER = "tin_canister";

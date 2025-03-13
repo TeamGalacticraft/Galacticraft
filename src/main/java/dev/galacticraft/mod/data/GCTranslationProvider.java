@@ -389,6 +389,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.SINGLE_SOLAR_MODULE, "Single Solar Module");
         this.item(GCItems.FULL_SOLAR_PANEL, "Full Solar Panel");
         this.item(GCItems.SOLAR_ARRAY_WAFER, "Solar Array Wafer");
+        this.item(GCItems.SOLAR_ARRAY_PANEL, "Solar Array Panel");
         this.item(GCItems.STEEL_POLE, "Steel Pole");
         this.item(GCItems.COPPER_CANISTER, "Copper Canister");
         this.item(GCItems.TIN_CANISTER, "Tin Canister");

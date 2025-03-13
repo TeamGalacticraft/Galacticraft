@@ -175,6 +175,7 @@ public class GCCreativeModeTabs {
                 output.accept(SINGLE_SOLAR_MODULE);
                 output.accept(FULL_SOLAR_PANEL);
                 output.accept(SOLAR_ARRAY_WAFER);
+                output.accept(SOLAR_ARRAY_PANEL);
                 output.accept(STEEL_POLE);
                 output.accept(COPPER_CANISTER);
                 output.accept(TIN_CANISTER);

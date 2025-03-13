@@ -108,6 +108,7 @@ public class GCItems {
     public static final Item SINGLE_SOLAR_MODULE = registerGeneric(Constant.Item.SINGLE_SOLAR_MODULE);
     public static final Item FULL_SOLAR_PANEL = registerGeneric(Constant.Item.FULL_SOLAR_PANEL);
     public static final Item SOLAR_ARRAY_WAFER = registerGeneric(Constant.Item.SOLAR_ARRAY_WAFER);
+    public static final Item SOLAR_ARRAY_PANEL = registerGeneric(Constant.Item.SOLAR_ARRAY_PANEL);
     public static final Item STEEL_POLE = registerGeneric(Constant.Item.STEEL_POLE);
     public static final Item COPPER_CANISTER = registerGeneric(Constant.Item.COPPER_CANISTER);
     public static final Item TIN_CANISTER = registerGeneric(Constant.Item.TIN_CANISTER);
