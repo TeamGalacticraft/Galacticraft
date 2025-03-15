@@ -38,6 +38,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
@@ -230,25 +231,40 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.STRONG_VACUUM_GLASS, "Vacuum Glass (Strong)");
 
         // ORES
-        this.block(GCBlocks.SILICON_ORE, "Silicon Ore");
-        this.block(GCBlocks.DEEPSLATE_SILICON_ORE, "Deepslate Silicon Ore");
+        this.block(GCBlocks.MARS_IRON_ORE, "Mars Iron Ore");
+        this.block(GCBlocks.ASTEROID_IRON_ORE, "Asteroid Iron Ore");
 
         this.block(GCBlocks.MOON_COPPER_ORE, "Moon Copper Ore");
         this.block(GCBlocks.LUNASLATE_COPPER_ORE, "Lunaslate Copper Ore");
+        this.block(GCBlocks.MARS_COPPER_ORE, "Mars Copper Ore");
+        this.block(GCBlocks.VENUS_COPPER_ORE, "Venus Copper Ore");
+
+        this.block(GCBlocks.SILICON_ORE, "Silicon Ore");
+        this.block(GCBlocks.DEEPSLATE_SILICON_ORE, "Deepslate Silicon Ore");
 
         this.block(GCBlocks.TIN_ORE, "Tin Ore");
         this.block(GCBlocks.DEEPSLATE_TIN_ORE, "Deepslate Tin Ore");
         this.block(GCBlocks.MOON_TIN_ORE, "Moon Tin Ore");
         this.block(GCBlocks.LUNASLATE_TIN_ORE, "Lunaslate Tin Ore");
+        this.block(GCBlocks.MARS_TIN_ORE, "Mars Tin Ore");
+        this.block(GCBlocks.VENUS_TIN_ORE, "Venus Tin Ore");
 
         this.block(GCBlocks.ALUMINUM_ORE, "Aluminum Ore");
         this.block(GCBlocks.DEEPSLATE_ALUMINUM_ORE, "Deepslate Aluminum Ore");
+        this.block(GCBlocks.ASTEROID_ALUMINUM_ORE, "Asteroid Aluminum Ore");
+        this.block(GCBlocks.VENUS_ALUMINUM_ORE, "Venus Aluminum Ore");
+
+        this.block(GCBlocks.MOON_CHEESE_ORE, "Moon Cheese Ore");
+
+        this.block(GCBlocks.LUNAR_SAPPHIRE_ORE, "Lunar Sapphire Ore");
 
         this.block(GCBlocks.DESH_ORE, "Desh Ore");
 
         this.block(GCBlocks.ILMENITE_ORE, "Ilmenite Ore");
 
         this.block(GCBlocks.GALENA_ORE, "Galena Ore");
+
+        this.block(GCBlocks.SOLAR_ORE, "Solar Ore");
 
         this.block(GCBlocks.OLIVINE_CLUSTER, "Olivine Cluster");
         this.block(GCBlocks.OLIVINE_BASALT, "Olivine Basalt");
@@ -389,6 +405,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.SINGLE_SOLAR_MODULE, "Single Solar Module");
         this.item(GCItems.FULL_SOLAR_PANEL, "Full Solar Panel");
         this.item(GCItems.SOLAR_ARRAY_WAFER, "Solar Array Wafer");
+        this.item(GCItems.SOLAR_ARRAY_PANEL, "Solar Array Panel");
         this.item(GCItems.STEEL_POLE, "Steel Pole");
         this.item(GCItems.COPPER_CANISTER, "Copper Canister");
         this.item(GCItems.TIN_CANISTER, "Tin Canister");
@@ -507,15 +524,28 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.THERMAL_PADDING_LEGGINGS, "Thermal Padding Leggings");
         this.item(GCItems.THERMAL_PADDING_BOOTS, "Thermal Padding Boots");
 
+        this.item(GCItems.ISOTHERMAL_PADDING_HELMET, "Isothermal Padding Helm");
+        this.item(GCItems.ISOTHERMAL_PADDING_CHESTPIECE, "Isothermal Padding Chestpiece");
+        this.item(GCItems.ISOTHERMAL_PADDING_LEGGINGS, "Isothermal Padding Leggings");
+        this.item(GCItems.ISOTHERMAL_PADDING_BOOTS, "Isothermal Padding Boots");
+
         // VEHICLES
         this.item(GCItems.BUGGY, "Buggy");
         this.item(GCItems.ROCKET, "Rocket");
 
-        // ROCKET PIECES
+        // ROCKET PARTS
         this.item(GCItems.NOSE_CONE, "Nose Cone");
         this.item(GCItems.HEAVY_NOSE_CONE, "Heavy Nose Cone");
         this.item(GCItems.ROCKET_FIN, "Rocket Fin");
+        this.item(GCItems.HEAVY_ROCKET_FIN, "Heavy Rocket Fin");
         this.item(GCItems.ROCKET_ENGINE, "Rocket Engine");
+        this.item(GCItems.HEAVY_ROCKET_ENGINE, "Heavy Rocket Engine");
+        this.item(GCItems.ROCKET_BOOSTER, "Rocket Booster");
+
+        // BUGGY PARTS
+        this.item(GCItems.BUGGY_WHEEL, "Buggy Wheel");
+        this.item(GCItems.BUGGY_SEAT, "Buggy Seat");
+        this.item(GCItems.BUGGY_STORAGE, "Buggy Storage");
 
         // SCHEMATICS
         this.item(GCItems.BASIC_ROCKET_CONE_SCHEMATIC, "Basic Rocket Cone Schematic");
@@ -528,6 +558,16 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.MOON_BUGGY_SCHEMATIC, "Moon Buggy Schematic");
         this.item(GCItems.TIER_3_ROCKET_SCHEMATIC, "Tier 3 Rocket Schematic");
         this.item(GCItems.ASTRO_MINER_SCHEMATIC, "Astro Miner Schematic");
+
+        // LEGACY_MUSIC_DISCS
+        this.musicDisc(GCItems.LEGACY_MUSIC_DISC_MARS, "Legacy Music Disc", "Jackson Cordes - Mars");
+        this.add("jukebox_song.galacticraft.legacy_mars", "Jackson Cordes - Mars");
+        this.musicDisc(GCItems.LEGACY_MUSIC_DISC_MIMAS, "Legacy Music Disc", "Jackson Cordes - Mimas");
+        this.add("jukebox_song.galacticraft.legacy_mimas", "Jackson Cordes - Mimas");
+        this.musicDisc(GCItems.LEGACY_MUSIC_DISC_ORBIT, "Legacy Music Disc", "Jackson Cordes - Orbit");
+        this.add("jukebox_song.galacticraft.legacy_orbit", "Jackson Cordes - Orbit");
+        this.musicDisc(GCItems.LEGACY_MUSIC_DISC_SPACERACE, "Legacy Music Disc", "Jackson Cordes - Space Race");
+        this.add("jukebox_song.galacticraft.legacy_spacerace", "Jackson Cordes - Space Race");
 
         // SPAWN EGGS
         this.item(GCItems.MOON_VILLAGER_SPAWN_EGG, "Moon Villager Spawn Egg");
@@ -935,6 +975,11 @@ public class GCTranslationProvider extends TranslationProvider {
 
     protected void blockDesc(Block block, String translation) {
         this.add(block.getDescriptionId() + ".description", translation);
+    }
+
+    protected void musicDisc(Item item, String translation, String description) {
+        this.item(item, translation);
+        this.add(item.getDescriptionId() + ".desc", description);
     }
 
     protected void deathBy(ResourceKey<DamageType> key, String translation) {

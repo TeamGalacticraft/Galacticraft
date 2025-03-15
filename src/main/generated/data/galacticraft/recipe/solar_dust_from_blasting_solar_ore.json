@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.7,
+  "group": "solar_dust",
+  "ingredient": {
+    "item": "galacticraft:solar_ore"
+  },
+  "result": {
+    "id": "galacticraft:solar_dust"
+  }
+}
