@@ -48,232 +48,6 @@ import static dev.galacticraft.mod.content.GCBlocks.*;
 import static dev.galacticraft.mod.content.item.GCItems.*;
 
 public class GCCreativeModeTabs {
-    public static final CreativeModeTab ITEMS_GROUP = FabricItemGroup
-            .builder()
-            .icon(() -> new ItemStack(CANVAS))
-            .title(Component.translatable(Translations.ItemGroup.ITEMS))
-            .displayItems((parameters, output) -> { // todo: add rockets here
-                // GEAR
-                output.accept(OXYGEN_MASK);
-                output.accept(OXYGEN_GEAR);
-
-                try (Transaction t = Transaction.openOuter()) {
-                    PlaceholderItemStorage itemStorage = new PlaceholderItemStorage();
-                    ContainerItemContext context = ContainerItemContext.ofSingleSlot(itemStorage);
-
-                    output.accept(SMALL_OXYGEN_TANK);//todo: set directly
-                    itemStorage.setItem(SMALL_OXYGEN_TANK);
-                    OxygenTankItem smallTankItem = (OxygenTankItem) SMALL_OXYGEN_TANK.asItem();
-                    long smallCapacity = smallTankItem.capacity;
-                    long insertedSmall;
-
-                    do {
-                        insertedSmall = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), smallCapacity, t);
-                    } while (insertedSmall > 0 && smallCapacity > 0);
-
-                    output.accept(itemStorage.variant.toStack());
-
-                    output.accept(MEDIUM_OXYGEN_TANK);
-                    itemStorage.setItem(MEDIUM_OXYGEN_TANK);
-                    OxygenTankItem mediumTankItem = (OxygenTankItem) MEDIUM_OXYGEN_TANK.asItem();
-                    long mediumCapacity = mediumTankItem.capacity;
-                    long insertedMedium;
-
-                    do {
-                        insertedMedium = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), mediumCapacity, t);
-                        mediumCapacity -= insertedMedium;
-                    } while (insertedMedium > 0 && mediumCapacity > 0);
-
-                    output.accept(itemStorage.variant.toStack());
-
-                    output.accept(LARGE_OXYGEN_TANK);
-                    itemStorage.setItem(LARGE_OXYGEN_TANK);
-                    OxygenTankItem largeTankItem = (OxygenTankItem) LARGE_OXYGEN_TANK.asItem();
-                    long largeCapacity = largeTankItem.capacity;
-                    long insertedLarge;
-
-                    do {
-                        insertedLarge = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), largeCapacity, t);
-                        largeCapacity -= insertedLarge;
-                    } while (insertedLarge > 0 && largeCapacity > 0);
-
-                    output.accept(itemStorage.variant.toStack());
-                }
-
-                output.accept(INFINITE_OXYGEN_TANK);
-
-                // BATTERIES
-                output.accept(BATTERY);
-                output.accept(INFINITE_BATTERY);
-
-                output.accept(SENSOR_GLASSES);
-                output.accept(FREQUENCY_MODULE);
-                PARACHUTE.colorMap().values().forEach(output::accept);
-
-//                result.accept(SPACE_EMERGENCY_KIT);
-                output.accept(SHIELD_CONTROLLER);
-
-                // MATERIALS
-                output.accept(RAW_TIN);
-                output.accept(RAW_ALUMINUM);
-                output.accept(RAW_METEORIC_IRON);
-                output.accept(RAW_DESH);
-                output.accept(RAW_LEAD);
-                output.accept(RAW_TITANIUM);
-                output.accept(SILICON);
-                output.accept(LUNAR_SAPPHIRE);
-                output.accept(OLIVINE_SHARD);
-
-                output.accept(TIN_NUGGET);
-                output.accept(ALUMINUM_NUGGET);
-                output.accept(METEORIC_IRON_NUGGET);
-                output.accept(DESH_NUGGET);
-                output.accept(LEAD_NUGGET);
-                output.accept(TITANIUM_NUGGET);
-
-                output.accept(TIN_INGOT);
-                output.accept(ALUMINUM_INGOT);
-                output.accept(METEORIC_IRON_INGOT);
-                output.accept(DESH_INGOT);
-                output.accept(LEAD_INGOT);
-                output.accept(TITANIUM_INGOT);
-
-                output.accept(COMPRESSED_IRON);
-                output.accept(COMPRESSED_COPPER);
-                output.accept(COMPRESSED_TIN);
-                output.accept(COMPRESSED_ALUMINUM);
-                output.accept(COMPRESSED_STEEL);
-                output.accept(COMPRESSED_BRONZE);
-                output.accept(COMPRESSED_METEORIC_IRON);
-                output.accept(COMPRESSED_DESH);
-                output.accept(COMPRESSED_TITANIUM);
-
-                output.accept(TIER_1_HEAVY_DUTY_PLATE);
-                output.accept(TIER_2_HEAVY_DUTY_PLATE);
-                output.accept(TIER_3_HEAVY_DUTY_PLATE);
-
-                output.accept(COPPER_CANISTER);
-                output.accept(TIN_CANISTER);
-                output.accept(STEEL_POLE);
-                output.accept(DESH_STICK);
-                output.accept(CARBON_FRAGMENTS);
-                output.accept(SOLAR_DUST);
-                output.accept(BASIC_WAFER);
-                output.accept(ADVANCED_WAFER);
-                output.accept(BEAM_CORE);
-                output.accept(CANVAS);
-
-                output.accept(FLUID_MANIPULATOR);
-                output.accept(OXYGEN_CONCENTRATOR);
-                output.accept(OXYGEN_FAN);
-                output.accept(OXYGEN_VENT);
-                output.accept(SENSOR_LENS);
-                output.accept(BLUE_SOLAR_WAFER);
-                output.accept(SINGLE_SOLAR_MODULE);
-                output.accept(FULL_SOLAR_PANEL);
-                output.accept(SOLAR_ARRAY_WAFER);
-                output.accept(SOLAR_ARRAY_PANEL);
-                output.accept(THERMAL_CLOTH);
-                output.accept(ISOTHERMAL_FABRIC);
-                output.accept(ORION_DRIVE);
-                output.accept(ATMOSPHERIC_VALVE);
-                output.accept(AMBIENT_THERMAL_CONTROLLER);
-
-                // FOOD
-                output.accept(MOON_CHEESE_CURD);
-                output.accept(GCItems.MOON_CHEESE_WHEEL);
-                output.accept(MOON_CHEESE_SLICE);
-                output.accept(BURGER_BUN);
-                output.accept(GROUND_BEEF);
-                output.accept(BEEF_PATTY);
-                output.accept(CHEESEBURGER);
-
-                output.accept(CANNED_DEHYDRATED_APPLE);
-                output.accept(CANNED_DEHYDRATED_CARROT);
-                output.accept(CANNED_DEHYDRATED_MELON);
-                output.accept(CANNED_DEHYDRATED_POTATO);
-                output.accept(CANNED_BEEF);
-
-                output.accept(THROWABLE_METEOR_CHUNK);
-                output.accept(HOT_THROWABLE_METEOR_CHUNK);
-
-                // ROCKET PARTS
-                output.accept(NOSE_CONE);
-                output.accept(HEAVY_NOSE_CONE);
-
-                output.accept(ROCKET_FIN);
-                output.accept(ROCKET_ENGINE);
-
-                // ROCKETS
-                var tier1 = new ItemStack(ROCKET);
-                tier1.set(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1);
-                output.accept(tier1);
-
-                var creativeRocket = new ItemStack(ROCKET);
-                creativeRocket.set(GCDataComponents.CREATIVE, true);
-                creativeRocket.set(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1);
-                output.accept(creativeRocket);
-
-                // SCHEMATICS
-                output.accept(TIER_2_ROCKET_SCHEMATIC);
-                output.accept(CARGO_ROCKET_SCHEMATIC);
-                output.accept(MOON_BUGGY_SCHEMATIC);
-                output.accept(TIER_3_ROCKET_SCHEMATIC);
-                output.accept(ASTRO_MINER_SCHEMATIC);
-
-                // SMITHING TEMPLATES
-                output.accept(TITANTIUM_UPGRADE_SMITHING_TEMPLATE);
-
-                // ARMOR
-                output.accept(HEAVY_DUTY_HELMET);
-                output.accept(HEAVY_DUTY_CHESTPLATE);
-                output.accept(HEAVY_DUTY_LEGGINGS);
-                output.accept(HEAVY_DUTY_BOOTS);
-
-                output.accept(DESH_HELMET);
-                output.accept(DESH_CHESTPLATE);
-                output.accept(DESH_LEGGINGS);
-                output.accept(DESH_BOOTS);
-
-                output.accept(TITANIUM_HELMET);
-                output.accept(TITANIUM_CHESTPLATE);
-                output.accept(TITANIUM_LEGGINGS);
-                output.accept(TITANIUM_BOOTS);
-
-                // THERMAL PADDING
-                output.accept(THERMAL_PADDING_HELMET);
-                output.accept(THERMAL_PADDING_CHESTPIECE);
-                output.accept(THERMAL_PADDING_LEGGINGS);
-                output.accept(THERMAL_PADDING_BOOTS);
-
-                // TOOLS + WEAPONS
-                output.accept(HEAVY_DUTY_SWORD);
-                output.accept(HEAVY_DUTY_SHOVEL);
-                output.accept(HEAVY_DUTY_PICKAXE);
-                output.accept(HEAVY_DUTY_AXE);
-                output.accept(HEAVY_DUTY_HOE);
-
-                output.accept(DESH_SWORD);
-                output.accept(DESH_SHOVEL);
-                output.accept(DESH_PICKAXE);
-                output.accept(DESH_AXE);
-                output.accept(DESH_HOE);
-
-                output.accept(TITANIUM_SWORD);
-                output.accept(TITANIUM_SHOVEL);
-                output.accept(TITANIUM_PICKAXE);
-                output.accept(TITANIUM_AXE);
-                output.accept(TITANIUM_HOE);
-
-                output.accept(STANDARD_WRENCH);
-
-                //FLUID BUCKETS
-                output.accept(CRUDE_OIL_BUCKET);
-                output.accept(FUEL_BUCKET);
-                output.accept(SULFURIC_ACID_BUCKET);
-            })
-            .build();
-
     public static final CreativeModeTab BLOCKS_GROUP = FabricItemGroup
             .builder()
             .icon(() -> new ItemStack(CHISELED_MOON_ROCK_BRICK))
@@ -476,6 +250,235 @@ public class GCCreativeModeTabs {
                 // MISC WORLD GEN
                 output.accept(CAVERNOUS_VINES);
             }).build();
+
+    public static final CreativeModeTab ITEMS_GROUP = FabricItemGroup
+            .builder()
+            .icon(() -> new ItemStack(CANVAS))
+            .title(Component.translatable(Translations.ItemGroup.ITEMS))
+            .displayItems((parameters, output) -> {                
+                // BATTERIES
+                output.accept(BATTERY);
+                output.accept(INFINITE_BATTERY);
+
+                try (Transaction t = Transaction.openOuter()) {
+                    PlaceholderItemStorage itemStorage = new PlaceholderItemStorage();
+                    ContainerItemContext context = ContainerItemContext.ofSingleSlot(itemStorage);
+
+                    output.accept(SMALL_OXYGEN_TANK);//todo: set directly
+                    itemStorage.setItem(SMALL_OXYGEN_TANK);
+                    OxygenTankItem smallTankItem = (OxygenTankItem) SMALL_OXYGEN_TANK.asItem();
+                    long smallCapacity = smallTankItem.capacity;
+                    long insertedSmall;
+
+                    do {
+                        insertedSmall = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), smallCapacity, t);
+                    } while (insertedSmall > 0 && smallCapacity > 0);
+
+                    output.accept(itemStorage.variant.toStack());
+
+                    output.accept(MEDIUM_OXYGEN_TANK);
+                    itemStorage.setItem(MEDIUM_OXYGEN_TANK);
+                    OxygenTankItem mediumTankItem = (OxygenTankItem) MEDIUM_OXYGEN_TANK.asItem();
+                    long mediumCapacity = mediumTankItem.capacity;
+                    long insertedMedium;
+
+                    do {
+                        insertedMedium = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), mediumCapacity, t);
+                        mediumCapacity -= insertedMedium;
+                    } while (insertedMedium > 0 && mediumCapacity > 0);
+
+                    output.accept(itemStorage.variant.toStack());
+
+                    output.accept(LARGE_OXYGEN_TANK);
+                    itemStorage.setItem(LARGE_OXYGEN_TANK);
+                    OxygenTankItem largeTankItem = (OxygenTankItem) LARGE_OXYGEN_TANK.asItem();
+                    long largeCapacity = largeTankItem.capacity;
+                    long insertedLarge;
+
+                    do {
+                        insertedLarge = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), largeCapacity, t);
+                        largeCapacity -= insertedLarge;
+                    } while (insertedLarge > 0 && largeCapacity > 0);
+
+                    output.accept(itemStorage.variant.toStack());
+                }
+
+                output.accept(INFINITE_OXYGEN_TANK);
+
+                // GEAR
+                output.accept(OXYGEN_MASK);
+                output.accept(OXYGEN_GEAR);
+                output.accept(FREQUENCY_MODULE);
+                output.accept(SHIELD_CONTROLLER);
+                PARACHUTE.colorMap().values().forEach(output::accept);
+
+                // result.accept(SPACE_EMERGENCY_KIT);
+
+                // MATERIALS
+                output.accept(RAW_TIN);
+                output.accept(RAW_ALUMINUM);
+                output.accept(RAW_METEORIC_IRON);
+                output.accept(RAW_DESH);
+                output.accept(RAW_LEAD);
+                output.accept(RAW_TITANIUM);
+                output.accept(SILICON);
+                output.accept(LUNAR_SAPPHIRE);
+                output.accept(OLIVINE_SHARD);
+
+                output.accept(TIN_NUGGET);
+                output.accept(ALUMINUM_NUGGET);
+                output.accept(METEORIC_IRON_NUGGET);
+                output.accept(DESH_NUGGET);
+                output.accept(LEAD_NUGGET);
+                output.accept(TITANIUM_NUGGET);
+
+                output.accept(TIN_INGOT);
+                output.accept(ALUMINUM_INGOT);
+                output.accept(METEORIC_IRON_INGOT);
+                output.accept(DESH_INGOT);
+                output.accept(LEAD_INGOT);
+                output.accept(TITANIUM_INGOT);
+
+                output.accept(COMPRESSED_IRON);
+                output.accept(COMPRESSED_COPPER);
+                output.accept(COMPRESSED_TIN);
+                output.accept(COMPRESSED_ALUMINUM);
+                output.accept(COMPRESSED_STEEL);
+                output.accept(COMPRESSED_BRONZE);
+                output.accept(COMPRESSED_METEORIC_IRON);
+                output.accept(COMPRESSED_DESH);
+                output.accept(COMPRESSED_TITANIUM);
+
+                output.accept(TIER_1_HEAVY_DUTY_PLATE);
+                output.accept(TIER_2_HEAVY_DUTY_PLATE);
+                output.accept(TIER_3_HEAVY_DUTY_PLATE);
+
+                output.accept(COPPER_CANISTER);
+                output.accept(TIN_CANISTER);
+                output.accept(STEEL_POLE);
+                output.accept(DESH_STICK);
+
+                output.accept(BASIC_WAFER);
+                output.accept(ADVANCED_WAFER);
+                output.accept(BLUE_SOLAR_WAFER);
+                output.accept(SINGLE_SOLAR_MODULE);
+                output.accept(FULL_SOLAR_PANEL);
+                output.accept(SOLAR_DUST);
+                output.accept(SOLAR_ARRAY_WAFER);
+                output.accept(SOLAR_ARRAY_PANEL);
+
+                output.accept(OXYGEN_CONCENTRATOR);
+                output.accept(OXYGEN_FAN);
+                output.accept(OXYGEN_VENT);
+
+                output.accept(CANVAS);
+                output.accept(THERMAL_CLOTH);
+                output.accept(ISOTHERMAL_FABRIC);
+
+                output.accept(BEAM_CORE);
+                output.accept(SENSOR_LENS);
+                output.accept(CARBON_FRAGMENTS);
+                output.accept(ATMOSPHERIC_VALVE);
+                output.accept(FLUID_MANIPULATOR);
+                output.accept(AMBIENT_THERMAL_CONTROLLER);
+                output.accept(ORION_DRIVE);
+
+                // FOOD
+                output.accept(MOON_CHEESE_CURD);
+                output.accept(GCItems.MOON_CHEESE_WHEEL);
+                output.accept(MOON_CHEESE_SLICE);
+                output.accept(GROUND_BEEF);
+                output.accept(BEEF_PATTY);
+                output.accept(BURGER_BUN);
+                output.accept(CHEESEBURGER);
+
+                output.accept(CANNED_DEHYDRATED_APPLE);
+                output.accept(CANNED_DEHYDRATED_CARROT);
+                output.accept(CANNED_DEHYDRATED_MELON);
+                output.accept(CANNED_DEHYDRATED_POTATO);
+                output.accept(CANNED_BEEF);
+
+                output.accept(THROWABLE_METEOR_CHUNK);
+                output.accept(HOT_THROWABLE_METEOR_CHUNK);
+
+                // ROCKET PARTS
+                output.accept(NOSE_CONE);
+                output.accept(HEAVY_NOSE_CONE);
+
+                output.accept(ROCKET_FIN);
+                output.accept(ROCKET_ENGINE);
+
+                // ROCKETS
+                var tier1 = new ItemStack(ROCKET);
+                tier1.set(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1);
+                output.accept(tier1);
+
+                var creativeRocket = new ItemStack(ROCKET);
+                creativeRocket.set(GCDataComponents.CREATIVE, true);
+                creativeRocket.set(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1);
+                output.accept(creativeRocket);
+
+                // SCHEMATICS
+                output.accept(TIER_2_ROCKET_SCHEMATIC);
+                output.accept(CARGO_ROCKET_SCHEMATIC);
+                output.accept(MOON_BUGGY_SCHEMATIC);
+                output.accept(TIER_3_ROCKET_SCHEMATIC);
+                output.accept(ASTRO_MINER_SCHEMATIC);
+
+                // SMITHING TEMPLATES
+                output.accept(TITANTIUM_UPGRADE_SMITHING_TEMPLATE);
+
+                // TOOLS + WEAPONS
+                output.accept(HEAVY_DUTY_SWORD);
+                output.accept(HEAVY_DUTY_SHOVEL);
+                output.accept(HEAVY_DUTY_PICKAXE);
+                output.accept(HEAVY_DUTY_AXE);
+                output.accept(HEAVY_DUTY_HOE);
+
+                output.accept(DESH_SWORD);
+                output.accept(DESH_SHOVEL);
+                output.accept(DESH_PICKAXE);
+                output.accept(DESH_AXE);
+                output.accept(DESH_HOE);
+
+                output.accept(TITANIUM_SWORD);
+                output.accept(TITANIUM_SHOVEL);
+                output.accept(TITANIUM_PICKAXE);
+                output.accept(TITANIUM_AXE);
+                output.accept(TITANIUM_HOE);
+
+                output.accept(STANDARD_WRENCH);
+
+                // ARMOR
+                output.accept(HEAVY_DUTY_HELMET);
+                output.accept(HEAVY_DUTY_CHESTPLATE);
+                output.accept(HEAVY_DUTY_LEGGINGS);
+                output.accept(HEAVY_DUTY_BOOTS);
+
+                output.accept(DESH_HELMET);
+                output.accept(DESH_CHESTPLATE);
+                output.accept(DESH_LEGGINGS);
+                output.accept(DESH_BOOTS);
+
+                output.accept(TITANIUM_HELMET);
+                output.accept(TITANIUM_CHESTPLATE);
+                output.accept(TITANIUM_LEGGINGS);
+                output.accept(TITANIUM_BOOTS);
+
+                output.accept(SENSOR_GLASSES);
+
+                // THERMAL PADDING
+                output.accept(THERMAL_PADDING_HELMET);
+                output.accept(THERMAL_PADDING_CHESTPIECE);
+                output.accept(THERMAL_PADDING_LEGGINGS);
+                output.accept(THERMAL_PADDING_BOOTS);
+
+                //FLUID BUCKETS
+                output.accept(CRUDE_OIL_BUCKET);
+                output.accept(FUEL_BUCKET);
+                output.accept(SULFURIC_ACID_BUCKET);
+            })
+            .build();
 
     public static final CreativeModeTab MACHINES_GROUP = FabricItemGroup
             .builder()
