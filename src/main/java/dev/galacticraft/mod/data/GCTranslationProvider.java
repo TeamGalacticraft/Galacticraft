@@ -230,19 +230,28 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.STRONG_VACUUM_GLASS, "Vacuum Glass (Strong)");
 
         // ORES
-        this.block(GCBlocks.SILICON_ORE, "Silicon Ore");
-        this.block(GCBlocks.DEEPSLATE_SILICON_ORE, "Deepslate Silicon Ore");
+        this.block(GCBlocks.MARS_IRON_ORE, "Mars Iron Ore");
+        this.block(GCBlocks.ASTEROID_IRON_ORE, "Asteroid Iron Ore");
 
         this.block(GCBlocks.MOON_COPPER_ORE, "Moon Copper Ore");
         this.block(GCBlocks.LUNASLATE_COPPER_ORE, "Lunaslate Copper Ore");
+        this.block(GCBlocks.MARS_COPPER_ORE, "Mars Copper Ore");
+        this.block(GCBlocks.VENUS_COPPER_ORE, "Venus Copper Ore");
+
+        this.block(GCBlocks.SILICON_ORE, "Silicon Ore");
+        this.block(GCBlocks.DEEPSLATE_SILICON_ORE, "Deepslate Silicon Ore");
 
         this.block(GCBlocks.TIN_ORE, "Tin Ore");
         this.block(GCBlocks.DEEPSLATE_TIN_ORE, "Deepslate Tin Ore");
         this.block(GCBlocks.MOON_TIN_ORE, "Moon Tin Ore");
         this.block(GCBlocks.LUNASLATE_TIN_ORE, "Lunaslate Tin Ore");
+        this.block(GCBlocks.MARS_TIN_ORE, "Mars Tin Ore");
+        this.block(GCBlocks.VENUS_TIN_ORE, "Venus Tin Ore");
 
         this.block(GCBlocks.ALUMINUM_ORE, "Aluminum Ore");
         this.block(GCBlocks.DEEPSLATE_ALUMINUM_ORE, "Deepslate Aluminum Ore");
+        this.block(GCBlocks.ASTEROID_ALUMINUM_ORE, "Asteroid Aluminum Ore");
+        this.block(GCBlocks.VENUS_ALUMINUM_ORE, "Venus Aluminum Ore");
 
         this.block(GCBlocks.MOON_CHEESE_ORE, "Moon Cheese Ore");
 

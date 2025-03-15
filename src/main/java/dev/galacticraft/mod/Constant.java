@@ -145,16 +145,24 @@ public interface Constant {
         String VAPOR_SPOUT = "vapor_spout";
 
         // Ore
+        String MARS_IRON_ORE = "mars_iron_ore";
+        String ASTEROID_IRON_ORE = "asteroid_iron_ore";
         String MOON_COPPER_ORE = "moon_copper_ore";
         String LUNASLATE_COPPER_ORE = "lunaslate_copper_ore";
+        String MARS_COPPER_ORE = "mars_copper_ore";
+        String VENUS_COPPER_ORE = "venus_copper_ore";
         String SILICON_ORE = "silicon_ore";
         String DEEPSLATE_SILICON_ORE = "deepslate_silicon_ore";
         String TIN_ORE = "tin_ore";
         String DEEPSLATE_TIN_ORE = "deepslate_tin_ore";
         String MOON_TIN_ORE = "moon_tin_ore";
         String LUNASLATE_TIN_ORE = "lunaslate_tin_ore";
+        String MARS_TIN_ORE = "mars_tin_ore";
+        String VENUS_TIN_ORE = "venus_tin_ore";
         String ALUMINUM_ORE = "aluminum_ore";
         String DEEPSLATE_ALUMINUM_ORE = "deepslate_aluminum_ore";
+        String ASTEROID_ALUMINUM_ORE = "asteroid_aluminum_ore";
+        String VENUS_ALUMINUM_ORE = "venus_aluminum_ore";
         String MOON_CHEESE_ORE = "moon_cheese_ore";
         String LUNAR_SAPPHIRE_ORE = "lunar_sapphire_ore";
         String DESH_ORE = "desh_ore";

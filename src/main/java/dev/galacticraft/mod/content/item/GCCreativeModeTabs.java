@@ -414,19 +414,28 @@ public class GCCreativeModeTabs {
                 output.accept(STRONG_VACUUM_GLASS);
 
                 // ORES
-                output.accept(SILICON_ORE);
-                output.accept(DEEPSLATE_SILICON_ORE);
+                output.accept(MARS_IRON_ORE);
+                output.accept(ASTEROID_IRON_ORE);
 
                 output.accept(MOON_COPPER_ORE);
                 output.accept(LUNASLATE_COPPER_ORE);
+                output.accept(MARS_COPPER_ORE);
+                output.accept(VENUS_COPPER_ORE);
+
+                output.accept(SILICON_ORE);
+                output.accept(DEEPSLATE_SILICON_ORE);
 
                 output.accept(TIN_ORE);
                 output.accept(DEEPSLATE_TIN_ORE);
                 output.accept(MOON_TIN_ORE);
                 output.accept(LUNASLATE_TIN_ORE);
+                output.accept(MARS_TIN_ORE);
+                output.accept(VENUS_TIN_ORE);
 
                 output.accept(ALUMINUM_ORE);
                 output.accept(DEEPSLATE_ALUMINUM_ORE);
+                output.accept(ASTEROID_ALUMINUM_ORE);
+                output.accept(VENUS_ALUMINUM_ORE);
 
                 output.accept(MOON_CHEESE_ORE);
 

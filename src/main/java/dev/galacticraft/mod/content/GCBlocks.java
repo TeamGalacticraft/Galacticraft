@@ -219,19 +219,28 @@ public class GCBlocks {
     public static final Block STRONG_VACUUM_GLASS = BLOCKS.registerWithItem(Constant.Block.STRONG_VACUUM_GLASS, new VacuumGlassBlock(BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.GLASS)));
 
     // ORES
-    public static final Block SILICON_ORE = BLOCKS.registerWithItem(Constant.Block.SILICON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 3.0F, false)));
-    public static final Block DEEPSLATE_SILICON_ORE = BLOCKS.registerWithItem(Constant.Block.DEEPSLATE_SILICON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(4.5F, 3.0F, true)));
+    public static final Block MARS_IRON_ORE = BLOCKS.registerWithItem(Constant.Block.MARS_IRON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.5F, 3.0F, true)));
+    public static final Block ASTEROID_IRON_ORE = BLOCKS.registerWithItem(Constant.Block.ASTEROID_IRON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.5F, 3.0F, true)));
 
     public static final Block MOON_COPPER_ORE = BLOCKS.registerWithItem(Constant.Block.MOON_COPPER_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 5.0F, false)));
     public static final Block LUNASLATE_COPPER_ORE = BLOCKS.registerWithItem(Constant.Block.LUNASLATE_COPPER_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(5.0F, 5.0F, true)));
+    public static final Block MARS_COPPER_ORE = BLOCKS.registerWithItem(Constant.Block.MARS_COPPER_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(5.0F, 5.0F, true)));
+    public static final Block VENUS_COPPER_ORE = BLOCKS.registerWithItem(Constant.Block.VENUS_COPPER_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(5.0F, 5.0F, true)));
+
+    public static final Block SILICON_ORE = BLOCKS.registerWithItem(Constant.Block.SILICON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 3.0F, false)));
+    public static final Block DEEPSLATE_SILICON_ORE = BLOCKS.registerWithItem(Constant.Block.DEEPSLATE_SILICON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(4.5F, 3.0F, true)));
 
     public static final Block TIN_ORE = BLOCKS.registerWithItem(Constant.Block.TIN_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 3.0F, false)));
     public static final Block DEEPSLATE_TIN_ORE = BLOCKS.registerWithItem(Constant.Block.DEEPSLATE_TIN_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(4.5F, 3.0F, true)));
     public static final Block MOON_TIN_ORE = BLOCKS.registerWithItem(Constant.Block.MOON_TIN_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 5.0F, false)));
     public static final Block LUNASLATE_TIN_ORE = BLOCKS.registerWithItem(Constant.Block.LUNASLATE_TIN_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(5.0F, 5.0F, true)));
+    public static final Block MARS_TIN_ORE = BLOCKS.registerWithItem(Constant.Block.MARS_TIN_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(5.0F, 5.0F, true)));
+    public static final Block VENUS_TIN_ORE = BLOCKS.registerWithItem(Constant.Block.VENUS_TIN_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(5.0F, 5.0F, true)));
 
     public static final Block ALUMINUM_ORE = BLOCKS.registerWithItem(Constant.Block.ALUMINUM_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 3.0F, false)));
     public static final Block DEEPSLATE_ALUMINUM_ORE = BLOCKS.registerWithItem(Constant.Block.DEEPSLATE_ALUMINUM_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.5F, 3.0F, true)));
+    public static final Block ASTEROID_ALUMINUM_ORE = BLOCKS.registerWithItem(Constant.Block.ASTEROID_ALUMINUM_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.5F, 3.0F, true)));
+    public static final Block VENUS_ALUMINUM_ORE = BLOCKS.registerWithItem(Constant.Block.VENUS_ALUMINUM_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.5F, 3.0F, true)));
 
     public static final Block MOON_CHEESE_ORE = BLOCKS.registerWithItem(Constant.Block.MOON_CHEESE_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 5.0F, false)));
 
