@@ -187,18 +187,15 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         var ores = new Block[] {
                 GCBlocks.MARS_IRON_ORE, GCBlocks.ASTEROID_IRON_ORE,
                 GCBlocks.MOON_COPPER_ORE, GCBlocks.LUNASLATE_COPPER_ORE, GCBlocks.MARS_COPPER_ORE, GCBlocks.VENUS_COPPER_ORE,
-                GCBlocks.FALLEN_METEOR,
-                GCBlocks.MOON_CHEESE_ORE,
-                GCBlocks.LUNAR_SAPPHIRE_ORE,
                 GCBlocks.SILICON_ORE, GCBlocks.DEEPSLATE_SILICON_ORE,
                 GCBlocks.TIN_ORE, GCBlocks.DEEPSLATE_TIN_ORE, GCBlocks.MOON_TIN_ORE, GCBlocks.LUNASLATE_TIN_ORE, GCBlocks.MARS_TIN_ORE, GCBlocks.VENUS_TIN_ORE,
                 GCBlocks.ALUMINUM_ORE, GCBlocks.DEEPSLATE_ALUMINUM_ORE, GCBlocks.ASTEROID_ALUMINUM_ORE, GCBlocks.VENUS_ALUMINUM_ORE,
                 GCBlocks.FALLEN_METEOR,
+                GCBlocks.MOON_CHEESE_ORE,
+                GCBlocks.LUNAR_SAPPHIRE_ORE,
                 GCBlocks.OLIVINE_BASALT, GCBlocks.RICH_OLIVINE_BASALT,
                 GCBlocks.DESH_ORE,
                 GCBlocks.ILMENITE_ORE,
-                GCBlocks.GALENA_ORE,
-                GCBlocks.SOLAR_ORE
                 GCBlocks.GALENA_ORE,
                 GCBlocks.SOLAR_ORE
         };

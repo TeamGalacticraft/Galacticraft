@@ -213,16 +213,6 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.SOLAR_ARRAY_WAFER), has(GCItems.SOLAR_ARRAY_WAFER))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.SOLAR_ARRAY_PANEL, 3)
-                .define('G', ConventionalItemTags.GLASS_BLOCKS)
-                .define('S', GCItems.SOLAR_ARRAY_WAFER)
-                .define('W', GCBlocks.ALUMINUM_WIRE)
-                .pattern("GGG")
-                .pattern("SSS")
-                .pattern("WWW")
-                .unlockedBy(getHasName(GCItems.SOLAR_ARRAY_WAFER), has(GCItems.SOLAR_ARRAY_WAFER))
-                .save(output);
-
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.STEEL_POLE)
                 .define('I', GCItems.COMPRESSED_STEEL)
                 .pattern("I")
@@ -284,7 +274,6 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .define('C', Items.COAL_ORE)
                 .define('I', GCBlocks.ILMENITE_ORE)
                 .define('S', GCBlocks.DESH_ORE)
-                .define('E', GCBlocks.MOON_CHEESE_ORE)
                 .define('E', GCBlocks.MOON_CHEESE_ORE)
                 .define('R', Items.REDSTONE_ORE)
                 .define('B', GCItems.BEAM_CORE)
