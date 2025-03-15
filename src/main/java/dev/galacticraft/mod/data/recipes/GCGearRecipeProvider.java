@@ -130,6 +130,33 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.THERMAL_CLOTH), has(GCItems.THERMAL_CLOTH))
                 .save(output);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ISOTHERMAL_PADDING_HELMET)
+                .define('C', GCItems.ISOTHERMAL_FABRIC)
+                .pattern("CCC")
+                .pattern("C C")
+                .unlockedBy(getHasName(GCItems.ISOTHERMAL_FABRIC), has(GCItems.ISOTHERMAL_FABRIC))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ISOTHERMAL_PADDING_CHESTPIECE)
+                .define('C', GCItems.ISOTHERMAL_FABRIC)
+                .pattern("C C")
+                .pattern("CCC")
+                .pattern("CCC")
+                .unlockedBy(getHasName(GCItems.ISOTHERMAL_FABRIC), has(GCItems.ISOTHERMAL_FABRIC))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ISOTHERMAL_PADDING_LEGGINGS)
+                .define('C', GCItems.ISOTHERMAL_FABRIC)
+                .pattern("CCC")
+                .pattern("C C")
+                .pattern("C C")
+                .unlockedBy(getHasName(GCItems.ISOTHERMAL_FABRIC), has(GCItems.ISOTHERMAL_FABRIC))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ISOTHERMAL_PADDING_BOOTS)
+                .define('C', GCItems.ISOTHERMAL_FABRIC)
+                .pattern("C C")
+                .pattern("C C")
+                .unlockedBy(getHasName(GCItems.ISOTHERMAL_FABRIC), has(GCItems.ISOTHERMAL_FABRIC))
+                .save(output);
+
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.SENSOR_GLASSES)
                 .define('D', ConventionalItemTags.DIAMOND_GEMS)
                 .define('S', Items.STRING)

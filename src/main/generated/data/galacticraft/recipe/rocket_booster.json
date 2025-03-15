@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": {
+      "item": "galacticraft:fuel_bucket"
+    },
+    "M": {
+      "item": "galacticraft:compressed_meteoric_iron"
+    },
+    "P": {
+      "item": "galacticraft:heavy_plating"
+    },
+    "V": {
+      "item": "galacticraft:oxygen_vent"
+    },
+    "Y": {
+      "item": "minecraft:yellow_wool"
+    }
+  },
+  "pattern": [
+    "MYM",
+    "MFM",
+    "PVP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:rocket_booster"
+  }
+}

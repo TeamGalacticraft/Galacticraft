@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_moon_cheese_ore": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:moon_cheese_ore"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:moon_cheese_curd_from_smelting_moon_cheese_ore"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_moon_cheese_ore"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:moon_cheese_curd_from_smelting_moon_cheese_ore"
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "galacticraft:item/heavy_nose_cone_joined"
+    "layer0": "galacticraft:item/isothermal_padding_helmet"
   }
 }
