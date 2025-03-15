@@ -26,8 +26,6 @@ import dev.galacticraft.mod.Constant;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.DyeColor;
 
-import java.util.Optional;
-
 public interface Colored {
     PipeColor getColor();
 
