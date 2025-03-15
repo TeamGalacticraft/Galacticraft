@@ -100,22 +100,24 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.COMPRESSED_IRON);
         tag(GCTags.COMPRESSED_TIN)
                 .add(GCItems.COMPRESSED_TIN);
-        tag(ItemTags.CREEPER_DROP_MUSIC_DISCS); //fixme
-        //        "galacticraft:legacy_music_disc_mars",
-        //        "galacticraft:legacy_music_disc_mimas",
-        //        "galacticraft:legacy_music_disc_orbit",
-        //        "galacticraft:legacy_music_disc_spacerace"
+
+        tag(ItemTags.CREEPER_DROP_MUSIC_DISCS)
+                .add(GCItems.LEGACY_MUSIC_DISC_MARS)
+                .add(GCItems.LEGACY_MUSIC_DISC_MIMAS)
+                .add(GCItems.LEGACY_MUSIC_DISC_ORBIT)
+                .add(GCItems.LEGACY_MUSIC_DISC_SPACERACE);
 
         // Ore Tags
         tag(ConventionalItemTags.ORES).add(
+                GCBlocks.MARS_IRON_ORE.asItem(), GCBlocks.ASTEROID_IRON_ORE.asItem(),
+                GCBlocks.MOON_COPPER_ORE.asItem(), GCBlocks.LUNASLATE_COPPER_ORE.asItem(), GCBlocks.MARS_COPPER_ORE.asItem(), GCBlocks.VENUS_COPPER_ORE.asItem(),
                 GCBlocks.SILICON_ORE.asItem(), GCBlocks.DEEPSLATE_SILICON_ORE.asItem(),
-                GCBlocks.MOON_COPPER_ORE.asItem(), GCBlocks.LUNASLATE_COPPER_ORE.asItem(),
                 GCBlocks.FALLEN_METEOR.asItem(),
                 GCBlocks.MOON_CHEESE_ORE.asItem(),
                 GCBlocks.LUNAR_SAPPHIRE_ORE.asItem(),
                 GCBlocks.OLIVINE_BASALT.asItem(), GCBlocks.RICH_OLIVINE_BASALT.asItem(),
-                GCBlocks.TIN_ORE.asItem(), GCBlocks.DEEPSLATE_TIN_ORE.asItem(), GCBlocks.MOON_TIN_ORE.asItem(), GCBlocks.LUNASLATE_TIN_ORE.asItem(),
-                GCBlocks.ALUMINUM_ORE.asItem(), GCBlocks.DEEPSLATE_ALUMINUM_ORE.asItem(),
+                GCBlocks.TIN_ORE.asItem(), GCBlocks.DEEPSLATE_TIN_ORE.asItem(), GCBlocks.MOON_TIN_ORE.asItem(), GCBlocks.LUNASLATE_TIN_ORE.asItem(), GCBlocks.MARS_TIN_ORE.asItem(), GCBlocks.VENUS_TIN_ORE.asItem(),
+                GCBlocks.ALUMINUM_ORE.asItem(), GCBlocks.DEEPSLATE_ALUMINUM_ORE.asItem(), GCBlocks.ASTEROID_ALUMINUM_ORE.asItem(), GCBlocks.VENUS_ALUMINUM_ORE.asItem(),
                 GCBlocks.DESH_ORE.asItem(),
                 GCBlocks.ILMENITE_ORE.asItem(),
                 GCBlocks.GALENA_ORE.asItem(),

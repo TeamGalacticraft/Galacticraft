@@ -145,16 +145,24 @@ public interface Constant {
         String VAPOR_SPOUT = "vapor_spout";
 
         // Ore
+        String MARS_IRON_ORE = "mars_iron_ore";
+        String ASTEROID_IRON_ORE = "asteroid_iron_ore";
         String MOON_COPPER_ORE = "moon_copper_ore";
         String LUNASLATE_COPPER_ORE = "lunaslate_copper_ore";
+        String MARS_COPPER_ORE = "mars_copper_ore";
+        String VENUS_COPPER_ORE = "venus_copper_ore";
         String SILICON_ORE = "silicon_ore";
         String DEEPSLATE_SILICON_ORE = "deepslate_silicon_ore";
         String TIN_ORE = "tin_ore";
         String DEEPSLATE_TIN_ORE = "deepslate_tin_ore";
         String MOON_TIN_ORE = "moon_tin_ore";
         String LUNASLATE_TIN_ORE = "lunaslate_tin_ore";
+        String MARS_TIN_ORE = "mars_tin_ore";
+        String VENUS_TIN_ORE = "venus_tin_ore";
         String ALUMINUM_ORE = "aluminum_ore";
         String DEEPSLATE_ALUMINUM_ORE = "deepslate_aluminum_ore";
+        String ASTEROID_ALUMINUM_ORE = "asteroid_aluminum_ore";
+        String VENUS_ALUMINUM_ORE = "venus_aluminum_ore";
         String MOON_CHEESE_ORE = "moon_cheese_ore";
         String LUNAR_SAPPHIRE_ORE = "lunar_sapphire_ore";
         String DESH_ORE = "desh_ore";
@@ -478,6 +486,8 @@ public interface Constant {
         String LARGE_OXYGEN_TANK = "large_oxygen_tank";
         String INFINITE_OXYGEN_TANK = "infinite_oxygen_tank";
 
+        String EMERGENCY_KIT = "emergency_kit";
+
         String THERMAL_PADDING_HELMET = "thermal_padding_helmet";
         String THERMAL_PADDING_CHESTPIECE = "thermal_padding_chestpiece";
         String THERMAL_PADDING_LEGGINGS = "thermal_padding_leggings";
@@ -501,10 +511,17 @@ public interface Constant {
         String LEGACY_MUSIC_DISC_MIMAS = "legacy_music_disc_mimas";
         String LEGACY_MUSIC_DISC_ORBIT = "legacy_music_disc_orbit";
         String LEGACY_MUSIC_DISC_SPACERACE = "legacy_music_disc_spacerace";
+
         String NOSE_CONE = "nose_cone";
         String HEAVY_NOSE_CONE = "heavy_nose_cone";
         String ROCKET_FIN = "rocket_fin";
+        String HEAVY_ROCKET_FIN = "heavy_rocket_fin";
         String ROCKET_ENGINE = "rocket_engine";
+        String HEAVY_ROCKET_ENGINE = "heavy_rocket_engine";
+        String ROCKET_BOOSTER = "rocket_booster";
+        String BUGGY_WHEEL = "buggy_wheel";
+        String BUGGY_SEAT = "buggy_seat";
+        String BUGGY_STORAGE = "buggy_storage";
         String BASIC_ROCKET_CONE_SCHEMATIC = "basic_rocket_cone_schematic";
         String BASIC_ROCKET_BODY_SCHEMATIC = "basic_rocket_body_schematic";
         String BASIC_ROCKET_FINS_SCHEMATIC = "basic_rocket_fins_schematic";

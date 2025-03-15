@@ -148,19 +148,28 @@ public class GCCreativeModeTabs {
                 output.accept(VAPOR_SPOUT);
 
                 // ORES
-                output.accept(SILICON_ORE);
-                output.accept(DEEPSLATE_SILICON_ORE);
+                output.accept(MARS_IRON_ORE);
+                output.accept(ASTEROID_IRON_ORE);
 
                 output.accept(MOON_COPPER_ORE);
                 output.accept(LUNASLATE_COPPER_ORE);
+                output.accept(MARS_COPPER_ORE);
+                output.accept(VENUS_COPPER_ORE);
+
+                output.accept(SILICON_ORE);
+                output.accept(DEEPSLATE_SILICON_ORE);
 
                 output.accept(TIN_ORE);
                 output.accept(DEEPSLATE_TIN_ORE);
                 output.accept(MOON_TIN_ORE);
                 output.accept(LUNASLATE_TIN_ORE);
+                output.accept(MARS_TIN_ORE);
+                output.accept(VENUS_TIN_ORE);
 
                 output.accept(ALUMINUM_ORE);
                 output.accept(DEEPSLATE_ALUMINUM_ORE);
+                output.accept(ASTEROID_ALUMINUM_ORE);
+                output.accept(VENUS_ALUMINUM_ORE);
 
                 output.accept(MOON_CHEESE_ORE);
 
@@ -312,7 +321,7 @@ public class GCCreativeModeTabs {
                 output.accept(SHIELD_CONTROLLER);
                 PARACHUTE.colorMap().values().forEach(output::accept);
 
-                // result.accept(SPACE_EMERGENCY_KIT);
+                output.accept(EMERGENCY_KIT);
 
                 // MATERIALS
                 output.accept(RAW_TIN);
@@ -404,9 +413,16 @@ public class GCCreativeModeTabs {
                 // ROCKET PARTS
                 output.accept(NOSE_CONE);
                 output.accept(HEAVY_NOSE_CONE);
-
                 output.accept(ROCKET_FIN);
+                output.accept(HEAVY_ROCKET_FIN);
                 output.accept(ROCKET_ENGINE);
+                output.accept(HEAVY_ROCKET_ENGINE);
+                output.accept(ROCKET_BOOSTER);
+
+                // BUGGY PARTS
+                output.accept(BUGGY_WHEEL);
+                output.accept(BUGGY_SEAT);
+                output.accept(BUGGY_STORAGE);
 
                 // ROCKETS
                 var tier1 = new ItemStack(ROCKET);
@@ -473,7 +489,18 @@ public class GCCreativeModeTabs {
                 output.accept(THERMAL_PADDING_LEGGINGS);
                 output.accept(THERMAL_PADDING_BOOTS);
 
-                //FLUID BUCKETS
+                output.accept(ISOTHERMAL_PADDING_HELMET);
+                output.accept(ISOTHERMAL_PADDING_CHESTPIECE);
+                output.accept(ISOTHERMAL_PADDING_LEGGINGS);
+                output.accept(ISOTHERMAL_PADDING_BOOTS);
+
+                // LEGACY MUSIC DISCS
+                output.accept(LEGACY_MUSIC_DISC_MARS);
+                output.accept(LEGACY_MUSIC_DISC_MIMAS);
+                output.accept(LEGACY_MUSIC_DISC_ORBIT);
+                output.accept(LEGACY_MUSIC_DISC_SPACERACE);
+
+                // FLUID BUCKETS
                 output.accept(CRUDE_OIL_BUCKET);
                 output.accept(FUEL_BUCKET);
                 output.accept(SULFURIC_ACID_BUCKET);
