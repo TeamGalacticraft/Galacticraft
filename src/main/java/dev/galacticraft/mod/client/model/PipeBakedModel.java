@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.client.model;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -42,10 +43,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -59,13 +60,13 @@ import java.util.function.Supplier;
 public class PipeBakedModel implements BakedModel {
     private static PipeBakedModel instance = null;
 
-    public static final Map<DyeColor, Material> COLOR_SPRITE_ID_MAP = Util.make(new EnumMap<>(DyeColor.class), map -> {
-        for (var color : DyeColor.values()) {
+    public static final Map<PipeColor, Material> COLOR_SPRITE_ID_MAP = Util.make(new EnumMap<>(PipeColor.class), map -> {
+        for (var color : PipeColor.values()) {
             map.put(color, new Material(InventoryMenu.BLOCK_ATLAS, Constant.id("block/glass_fluid_pipe/" + color.getName())));
         }
     });
 
-    public final Map<DyeColor, TextureAtlasSprite> colorSpriteMap = new EnumMap<>(DyeColor.class);
+    public final Map<PipeColor, TextureAtlasSprite> colorSpriteMap = new EnumMap<>(PipeColor.class);
     private final Mesh down;
     private final Mesh up;
     private final Mesh north;
@@ -74,7 +75,7 @@ public class PipeBakedModel implements BakedModel {
     private final Mesh east;
 
     protected PipeBakedModel(Function<Material, TextureAtlasSprite> textureGetter) {
-        for (var color : DyeColor.values()) {
+        for (var color : PipeColor.values()) {
             this.colorSpriteMap.put(color, textureGetter.apply(COLOR_SPRITE_ID_MAP.get(color)));
         }
         var meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
@@ -178,17 +179,17 @@ public class PipeBakedModel implements BakedModel {
     }
 
     @Override
-    public TextureAtlasSprite getParticleIcon() {
-        return this.colorSpriteMap.get(DyeColor.WHITE);
+    public @NotNull TextureAtlasSprite getParticleIcon() {
+        return this.colorSpriteMap.get(PipeColor.CLEAR);
     }
 
     @Override
-    public ItemTransforms getTransforms() {
+    public @NotNull ItemTransforms getTransforms() {
         return ItemTransforms.NO_TRANSFORMS;
     }
 
     @Override
-    public ItemOverrides getOverrides() {
+    public @NotNull ItemOverrides getOverrides() {
         return ItemOverrides.EMPTY;
     }
 

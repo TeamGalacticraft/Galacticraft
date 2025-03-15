@@ -88,7 +88,7 @@ public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSna
                 BlockEntity blockEntity = level.getBlockEntity(adjacentPos);
                 if (blockEntity != null && !blockEntity.isRemoved()) {
                     if (blockEntity instanceof Pipe adjacent) {
-                        if (!pipe.isColorCompatible(adjacent)) continue;
+                        if (!pipe.canConnectTo(adjacent)) continue;
                         if (this.isCompatibleWith(adjacent)) {
                             if (adjacent.getNetwork() != this && adjacent.canConnect(direction.getOpposite())) {
                                 this.addPipe(adjacentPos, adjacent);
