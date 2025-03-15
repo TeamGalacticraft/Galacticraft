@@ -184,7 +184,6 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.COMPRESSED_METEORIC_IRON), has(GCItems.COMPRESSED_METEORIC_IRON))
                 .save(output);
 
-
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.SINGLE_SOLAR_MODULE, 2)
                 .define('G', ConventionalItemTags.GLASS_BLOCKS)
                 .define('S', GCItems.BLUE_SOLAR_WAFER)
@@ -195,7 +194,6 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.BLUE_SOLAR_WAFER), has(GCItems.BLUE_SOLAR_WAFER))
                 .save(output);
 
-
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.FULL_SOLAR_PANEL)
                 .define('M', GCItems.SINGLE_SOLAR_MODULE)
                 .define('W', GCBlocks.ALUMINUM_WIRE)
@@ -203,6 +201,16 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .pattern("WWW")
                 .pattern("MMM")
                 .unlockedBy(getHasName(GCItems.SINGLE_SOLAR_MODULE), has(GCItems.SINGLE_SOLAR_MODULE))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.SOLAR_ARRAY_PANEL, 3)
+                .define('G', ConventionalItemTags.GLASS_BLOCKS)
+                .define('S', GCItems.SOLAR_ARRAY_WAFER)
+                .define('W', GCBlocks.ALUMINUM_WIRE)
+                .pattern("GGG")
+                .pattern("SSS")
+                .pattern("WWW")
+                .unlockedBy(getHasName(GCItems.SOLAR_ARRAY_WAFER), has(GCItems.SOLAR_ARRAY_WAFER))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.STEEL_POLE)
@@ -222,7 +230,6 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy("has_wool", has(ItemTags.WOOL))
                 .save(output);
 
-
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BATTERY)
                 .define('T', GCItems.COMPRESSED_ALUMINUM)
                 .define('R', ConventionalItemTags.REDSTONE_DUSTS)
@@ -232,7 +239,6 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .pattern("TCT")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_ALUMINUM), has(GCItems.COMPRESSED_ALUMINUM))
                 .save(output);
-
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.AMBIENT_THERMAL_CONTROLLER)
                 .define('B', GCItems.COMPRESSED_BRONZE)
@@ -268,7 +274,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .define('C', Items.COAL_ORE)
                 .define('I', GCBlocks.ILMENITE_ORE)
                 .define('S', GCBlocks.DESH_ORE)
-                .define('E', GCBlocks.MOON_CHEESE_WHEEL) //todo: add cheese ore?
+                .define('E', GCBlocks.MOON_CHEESE_ORE)
                 .define('R', Items.REDSTONE_ORE)
                 .define('B', GCItems.BEAM_CORE)
                 .pattern("DLG")
@@ -335,6 +341,34 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .pattern("IGI")
                 .pattern("RIR")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_IRON), has(GCItems.COMPRESSED_IRON))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BUGGY_WHEEL)
+                .define('L', ConventionalItemTags.LEATHERS)
+                .define('S', GCItemTags.STEEL_PLATES)
+                .pattern(" L ")
+                .pattern("LSL")
+                .pattern(" L ")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BUGGY_SEAT)
+                .define('S', GCItemTags.STEEL_PLATES)
+                .define('I', GCItemTags.IRON_PLATES)
+                .pattern("  S")
+                .pattern(" IS")
+                .pattern("SSS")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BUGGY_STORAGE)
+                .define('S', GCItemTags.STEEL_PLATES)
+                .define('I', GCItemTags.IRON_PLATES)
+                .define('C', ConventionalItemTags.WOODEN_CHESTS)
+                .pattern("SSS")
+                .pattern("ICI")
+                .pattern("SSS")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .save(output);
 
         // Food
