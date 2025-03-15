@@ -106,7 +106,7 @@ public class GCCreativeModeTabs {
                 output.accept(FREQUENCY_MODULE);
                 PARACHUTE.colorMap().values().forEach(output::accept);
 
-//                result.accept(SPACE_EMERGENCY_KIT);
+                output.accept(EMERGENCY_KIT);
                 output.accept(SHIELD_CONTROLLER);
 
                 // ROCKETS
@@ -214,9 +214,16 @@ public class GCCreativeModeTabs {
                 // ROCKET PARTS
                 output.accept(NOSE_CONE);
                 output.accept(HEAVY_NOSE_CONE);
-
                 output.accept(ROCKET_FIN);
+                output.accept(HEAVY_ROCKET_FIN);
                 output.accept(ROCKET_ENGINE);
+                output.accept(HEAVY_ROCKET_ENGINE);
+                output.accept(ROCKET_BOOSTER);
+
+                // BUGGY PARTS
+                output.accept(BUGGY_WHEEL);
+                output.accept(BUGGY_SEAT);
+                output.accept(BUGGY_STORAGE);
 
                 // SCHEMATICS
                 output.accept(TIER_2_ROCKET_SCHEMATIC);
@@ -249,6 +256,11 @@ public class GCCreativeModeTabs {
                 output.accept(THERMAL_PADDING_CHESTPIECE);
                 output.accept(THERMAL_PADDING_LEGGINGS);
                 output.accept(THERMAL_PADDING_BOOTS);
+                
+                output.accept(ISOTHERMAL_PADDING_HELMET);
+                output.accept(ISOTHERMAL_PADDING_CHESTPIECE);
+                output.accept(ISOTHERMAL_PADDING_LEGGINGS);
+                output.accept(ISOTHERMAL_PADDING_BOOTS);
 
                 // TOOLS + WEAPONS
                 output.accept(HEAVY_DUTY_SWORD);
@@ -270,6 +282,12 @@ public class GCCreativeModeTabs {
                 output.accept(TITANIUM_HOE);
 
                 output.accept(STANDARD_WRENCH);
+
+                // LEGACY MUSIC DISCS
+                output.accept(LEGACY_MUSIC_DISC_MARS);
+                output.accept(LEGACY_MUSIC_DISC_MIMAS);
+                output.accept(LEGACY_MUSIC_DISC_ORBIT);
+                output.accept(LEGACY_MUSIC_DISC_SPACERACE);
             })
             .build();
 

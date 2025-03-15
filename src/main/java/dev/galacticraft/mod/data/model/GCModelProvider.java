@@ -588,9 +588,6 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.CANNED_DEHYDRATED_POTATO, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.CANNED_BEEF, ModelTemplates.FLAT_ITEM);
 
-        generator.generateFlatItem(GCItems.NOSE_CONE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.HEAVY_NOSE_CONE, "_joined", ModelTemplates.FLAT_ITEM);
-
         // ROCKET PLATES
         generator.generateFlatItem(GCItems.TIER_1_HEAVY_DUTY_PLATE, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.TIER_2_HEAVY_DUTY_PLATE, ModelTemplates.FLAT_ITEM);
@@ -639,12 +636,12 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.BATTERY, ModelTemplates.FLAT_ITEM);
         this.createRainbowLayeredItem(generator, GCItems.INFINITE_BATTERY, Constant.Item.INFINITE_INDICATOR);
 
-        //FLUID BUCKETS
+        // FLUID BUCKETS
         generator.generateFlatItem(GCItems.CRUDE_OIL_BUCKET, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.FUEL_BUCKET, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.SULFURIC_ACID_BUCKET, ModelTemplates.FLAT_ITEM);
 
-        //GALACTICRAFT INVENTORY
+        // GALACTICRAFT INVENTORY
         GCItems.PARACHUTE.colorMap().forEach((color, parachute) -> generator.generateFlatItem(parachute, ModelTemplates.FLAT_ITEM));
 
         generator.generateFlatItem(GCItems.OXYGEN_MASK, ModelTemplates.FLAT_ITEM);
@@ -657,15 +654,31 @@ public class GCModelProvider extends FabricModelProvider {
 
         generator.generateFlatItem(GCItems.SHIELD_CONTROLLER, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.FREQUENCY_MODULE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.EMERGENCY_KIT, ModelTemplates.FLAT_ITEM);
 
         generator.generateFlatItem(GCItems.THERMAL_PADDING_HELMET, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.THERMAL_PADDING_CHESTPIECE, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.THERMAL_PADDING_LEGGINGS, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.THERMAL_PADDING_BOOTS, ModelTemplates.FLAT_ITEM);
 
-        // ROCKETS
-        generator.generateFlatItem(GCItems.ROCKET_ENGINE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.ISOTHERMAL_PADDING_HELMET, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.ISOTHERMAL_PADDING_CHESTPIECE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.ISOTHERMAL_PADDING_LEGGINGS, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.ISOTHERMAL_PADDING_BOOTS, ModelTemplates.FLAT_ITEM);
+
+        // ROCKETS PARTS
+        generator.generateFlatItem(GCItems.NOSE_CONE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.HEAVY_NOSE_CONE, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.ROCKET_FIN, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.HEAVY_ROCKET_FIN, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.ROCKET_ENGINE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.HEAVY_ROCKET_ENGINE, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.ROCKET_BOOSTER, ModelTemplates.FLAT_ITEM);
+
+        // BUGGY PARTS
+        generator.generateFlatItem(GCItems.BUGGY_WHEEL, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.BUGGY_SEAT, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.BUGGY_STORAGE, ModelTemplates.FLAT_ITEM);
 
         // SCHEMATICS
         generator.generateFlatItem(GCItems.BASIC_ROCKET_BODY_SCHEMATIC, ModelTemplates.FLAT_ITEM);
@@ -677,6 +690,12 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.MOON_BUGGY_SCHEMATIC, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.TIER_3_ROCKET_SCHEMATIC, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.ASTRO_MINER_SCHEMATIC, ModelTemplates.FLAT_ITEM);
+
+        // LEGACY MUSIC DISCS
+        generator.generateFlatItem(GCItems.LEGACY_MUSIC_DISC_MARS, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.LEGACY_MUSIC_DISC_MIMAS, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.LEGACY_MUSIC_DISC_ORBIT, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.LEGACY_MUSIC_DISC_SPACERACE, ModelTemplates.FLAT_ITEM);
 
         // SPAWN EGGS
         generator.generateFlatItem(GCItems.MOON_VILLAGER_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);

@@ -343,6 +343,34 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.COMPRESSED_IRON), has(GCItems.COMPRESSED_IRON))
                 .save(output);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BUGGY_WHEEL)
+                .define('L', ConventionalItemTags.LEATHERS)
+                .define('S', GCTags.COMPRESSED_STEEL)
+                .pattern(" L ")
+                .pattern("LSL")
+                .pattern(" L ")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BUGGY_SEAT)
+                .define('S', GCTags.COMPRESSED_STEEL)
+                .define('I', GCTags.COMPRESSED_IRON)
+                .pattern("  S")
+                .pattern(" IS")
+                .pattern("SSS")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BUGGY_STORAGE)
+                .define('S', GCTags.COMPRESSED_STEEL)
+                .define('I', GCTags.COMPRESSED_IRON)
+                .define('C', ConventionalItemTags.WOODEN_CHESTS)
+                .pattern("SSS")
+                .pattern("ICI")
+                .pattern("SSS")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
+                .save(output);
+
         // Food
         cookingRecipes(output, 100, GCItems.GROUND_BEEF, GCItems.BEEF_PATTY, 1.0F);
 

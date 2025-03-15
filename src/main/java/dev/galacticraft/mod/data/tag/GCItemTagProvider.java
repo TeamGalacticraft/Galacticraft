@@ -100,11 +100,12 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.COMPRESSED_IRON);
         tag(GCTags.COMPRESSED_TIN)
                 .add(GCItems.COMPRESSED_TIN);
-        tag(ItemTags.CREEPER_DROP_MUSIC_DISCS); //fixme
-        //        "galacticraft:legacy_music_disc_mars",
-        //        "galacticraft:legacy_music_disc_mimas",
-        //        "galacticraft:legacy_music_disc_orbit",
-        //        "galacticraft:legacy_music_disc_spacerace"
+
+        tag(ItemTags.CREEPER_DROP_MUSIC_DISCS)
+                .add(GCItems.LEGACY_MUSIC_DISC_MARS)
+                .add(GCItems.LEGACY_MUSIC_DISC_MIMAS)
+                .add(GCItems.LEGACY_MUSIC_DISC_ORBIT)
+                .add(GCItems.LEGACY_MUSIC_DISC_SPACERACE);
 
         // Ore Tags
         tag(ConventionalItemTags.ORES).add(

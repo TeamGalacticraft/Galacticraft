@@ -486,6 +486,8 @@ public interface Constant {
         String LARGE_OXYGEN_TANK = "large_oxygen_tank";
         String INFINITE_OXYGEN_TANK = "infinite_oxygen_tank";
 
+        String EMERGENCY_KIT = "emergency_kit";
+
         String THERMAL_PADDING_HELMET = "thermal_padding_helmet";
         String THERMAL_PADDING_CHESTPIECE = "thermal_padding_chestpiece";
         String THERMAL_PADDING_LEGGINGS = "thermal_padding_leggings";
@@ -509,10 +511,17 @@ public interface Constant {
         String LEGACY_MUSIC_DISC_MIMAS = "legacy_music_disc_mimas";
         String LEGACY_MUSIC_DISC_ORBIT = "legacy_music_disc_orbit";
         String LEGACY_MUSIC_DISC_SPACERACE = "legacy_music_disc_spacerace";
+
         String NOSE_CONE = "nose_cone";
         String HEAVY_NOSE_CONE = "heavy_nose_cone";
         String ROCKET_FIN = "rocket_fin";
+        String HEAVY_ROCKET_FIN = "heavy_rocket_fin";
         String ROCKET_ENGINE = "rocket_engine";
+        String HEAVY_ROCKET_ENGINE = "heavy_rocket_engine";
+        String ROCKET_BOOSTER = "rocket_booster";
+        String BUGGY_WHEEL = "buggy_wheel";
+        String BUGGY_SEAT = "buggy_seat";
+        String BUGGY_STORAGE = "buggy_storage";
         String BASIC_ROCKET_CONE_SCHEMATIC = "basic_rocket_cone_schematic";
         String BASIC_ROCKET_BODY_SCHEMATIC = "basic_rocket_body_schematic";
         String BASIC_ROCKET_FINS_SCHEMATIC = "basic_rocket_fins_schematic";

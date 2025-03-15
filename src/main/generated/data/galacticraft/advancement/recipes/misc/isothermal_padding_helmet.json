@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_isothermal_fabric": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:isothermal_fabric"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraft:isothermal_padding_helmet"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_isothermal_fabric"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraft:isothermal_padding_helmet"
+    ]
+  }
+}
