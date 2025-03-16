@@ -148,44 +148,36 @@ public class GCCreativeModeTabs {
                 output.accept(VAPOR_SPOUT);
 
                 // ORES
-                output.accept(MARS_IRON_ORE);
-                output.accept(ASTEROID_IRON_ORE);
+                output.accept(SILICON_ORE);
+                output.accept(DEEPSLATE_SILICON_ORE);
+                output.accept(TIN_ORE);
+                output.accept(DEEPSLATE_TIN_ORE);
+                output.accept(ALUMINUM_ORE);
+                output.accept(DEEPSLATE_ALUMINUM_ORE);
 
                 output.accept(MOON_COPPER_ORE);
                 output.accept(LUNASLATE_COPPER_ORE);
-                output.accept(MARS_COPPER_ORE);
-                output.accept(VENUS_COPPER_ORE);
-
-                output.accept(SILICON_ORE);
-                output.accept(DEEPSLATE_SILICON_ORE);
-
-                output.accept(TIN_ORE);
-                output.accept(DEEPSLATE_TIN_ORE);
                 output.accept(MOON_TIN_ORE);
                 output.accept(LUNASLATE_TIN_ORE);
-                output.accept(MARS_TIN_ORE);
-                output.accept(VENUS_TIN_ORE);
-
-                output.accept(ALUMINUM_ORE);
-                output.accept(DEEPSLATE_ALUMINUM_ORE);
-                output.accept(ASTEROID_ALUMINUM_ORE);
-                output.accept(VENUS_ALUMINUM_ORE);
-
                 output.accept(FALLEN_METEOR);
-
                 output.accept(MOON_CHEESE_ORE);
-
                 output.accept(LUNAR_SAPPHIRE_ORE);
-
                 output.accept(OLIVINE_BASALT);
                 output.accept(RICH_OLIVINE_BASALT);
 
+                output.accept(MARS_IRON_ORE);
+                output.accept(MARS_COPPER_ORE);
+                output.accept(MARS_TIN_ORE);
                 output.accept(DESH_ORE);
 
+                output.accept(ASTEROID_IRON_ORE);
+                output.accept(ASTEROID_ALUMINUM_ORE);
                 output.accept(ILMENITE_ORE);
 
+                output.accept(VENUS_COPPER_ORE);
+                output.accept(VENUS_TIN_ORE);
+                output.accept(VENUS_ALUMINUM_ORE);
                 output.accept(GALENA_ORE);
-
                 output.accept(SOLAR_ORE);
 
                 // COMPACT MINERAL BLOCKS
@@ -243,7 +235,7 @@ public class GCCreativeModeTabs {
                 output.accept(CRYOGENIC_CHAMBER);
                 output.accept(PLAYER_TRANSPORT_TUBE);
 
-                for (DyeColor color : DyeColor.values()) {
+                for (DyeColor color : GCBlockRegistry.COLOR_ORDER) {
                     ItemStack stack = new ItemStack(PARACHEST);
                     stack.set(DataComponents.BASE_COLOR, color);
                     output.accept(stack);
@@ -324,7 +316,10 @@ public class GCCreativeModeTabs {
                 output.accept(OXYGEN_GEAR);
                 output.accept(FREQUENCY_MODULE);
                 output.accept(SHIELD_CONTROLLER);
-                PARACHUTE.colorMap().values().forEach(output::accept);
+
+                for (DyeColor color : GCBlockRegistry.COLOR_ORDER) {
+                    output.accept(PARACHUTE.get(color));
+                }
 
                 output.accept(EMERGENCY_KIT);
 

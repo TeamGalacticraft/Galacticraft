@@ -55,9 +55,9 @@ public class GCItems {
     // MATERIALS
     public static final Item SILICON = registerGeneric(Constant.Item.SILICON);
 
-    public static final Item OLIVINE_SHARD = registerGeneric(Constant.Item.OLIVINE_SHARD);
-
     public static final Item LUNAR_SAPPHIRE = registerGeneric(Constant.Item.LUNAR_SAPPHIRE);
+
+    public static final Item OLIVINE_SHARD = registerGeneric(Constant.Item.OLIVINE_SHARD);
 
     public static final Item RAW_TIN = registerGeneric(Constant.Item.RAW_TIN);
     public static final Item TIN_INGOT = registerGeneric(Constant.Item.TIN_INGOT);
