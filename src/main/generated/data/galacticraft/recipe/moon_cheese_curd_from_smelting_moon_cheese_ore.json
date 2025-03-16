@@ -2,7 +2,7 @@
   "type": "minecraft:smelting",
   "category": "food",
   "cookingtime": 200,
-  "experience": 0.7,
+  "experience": 0.2,
   "group": "moon_cheese_curd",
   "ingredient": {
     "item": "galacticraft:moon_cheese_ore"

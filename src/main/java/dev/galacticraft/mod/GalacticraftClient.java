@@ -138,10 +138,10 @@ public class GalacticraftClient implements ClientModInitializer {
         GCKeyBinds.register();
 
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.TIN_LADDER, RenderType.cutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.GLASS_FLUID_PIPE, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.GLASS_FLUID_PIPE, RenderType.translucent());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.WALKWAY, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.WIRE_WALKWAY, RenderType.cutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.FLUID_PIPE_WALKWAY, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.FLUID_PIPE_WALKWAY, RenderType.translucent());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.IRON_GRATING, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.GLOWSTONE_TORCH, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.GLOWSTONE_WALL_TORCH, RenderType.cutout());
@@ -152,6 +152,7 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.CAVERNOUS_VINES, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.CAVERNOUS_VINES_PLANT, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.OLIVINE_CLUSTER, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.MOON_CHEESE_LEAVES, RenderType.cutoutMipped());
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), GCBlocks.VACUUM_GLASS, GCBlocks.CLEAR_VACUUM_GLASS, GCBlocks.STRONG_VACUUM_GLASS);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), GCBlocks.CRYOGENIC_CHAMBER, GCBlocks.CRYOGENIC_CHAMBER_PART, GCBlocks.PLAYER_TRANSPORT_TUBE);
 

@@ -367,11 +367,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         // Food
-        cookingRecipes(output, 100, GCItems.GROUND_BEEF, GCItems.BEEF_PATTY, 1.0F);
-
-//        SimpleCookingRecipeBuilder.smelting(Ingredient.of(GCBlocks.MOON_CHEESE_ORE), RecipeCategory.FOOD, GCItems.MOON_CHEESE_CURD, 0.35F, 200)
-//                .unlockedBy(getHasName(GCBlocks.MOON_CHEESE_ORE), has(GCBlocks.MOON_CHEESE_ORE))
-//                .save(result);
+        cookingRecipes(output, 100, GCItems.GROUND_BEEF, GCItems.BEEF_PATTY, 0.35F);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.BURGER_BUN, 2)
                 .requires(Items.WHEAT)

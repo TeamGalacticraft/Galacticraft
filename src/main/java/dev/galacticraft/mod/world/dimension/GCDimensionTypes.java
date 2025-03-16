@@ -40,20 +40,20 @@ public class GCDimensionTypes {
 
     public static void bootstrapRegistries(BootstrapContext<DimensionType> context) {
         context.register(MOON, new DimensionType(
-                OptionalLong.empty(),
-                true,
-                false,
-                false,
-                true,
-                1.0,
-                false,
-                false,
-                -64,
-                384,
-                384,
-                GCTags.INFINIBURN_MOON,
+                OptionalLong.empty(), // fixedTime
+                true, // hasSkyLight
+                false, // hasCeiling
+                false, // ultraWarm
+                true, // natural
+                1.0, // coordinateScale
+                true, // bedWorks (doesn't explode, we can cancel working later)
+                false, // respawnAnchorWorks (doesn't explode, we can cancel working later)
+                -64, // minY
+                384, // height
+                384, // logicalHeight
+                GCTags.INFINIBURN_MOON, // infiniburn
                 Constant.id("moon"), // fixme: GCDimensionEffects somehow seems to load client classes
-                0.1f,
+                0.1f, // ambientLight
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)
         ));
 
@@ -63,9 +63,9 @@ public class GCDimensionTypes {
                 false, // hasCeiling
                 false, // ultraWarm
                 false, // natural
-                1.0,  // coordinateScale
-                false, // bedWorks
-                false, // respawnAnchorWorks
+                1.0, // coordinateScale
+                true, // bedWorks (doesn't explode, we can cancel working later)
+                false, // respawnAnchorWorks (doesn't explode, we can cancel working later)
                 -64, // minY
                 384, // height
                 384, // logicalHeight

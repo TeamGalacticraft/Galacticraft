@@ -22,16 +22,23 @@
 
 package dev.galacticraft.mod.mixin;
 
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.CryogenicAccessor;
+import dev.galacticraft.mod.tag.GCTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,10 +46,15 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
+    @Shadow public abstract double getAttributeValue(Holder<Attribute> holder);
+
     @Unique
     @SuppressWarnings("WrongEntityDataParameterClass")
     private static final EntityDataAccessor<Boolean> IS_IN_CRYO_SLEEP_ID = SynchedEntityData.defineId(
@@ -119,5 +131,38 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
     private void gc$preventMovement(CallbackInfo ci) {
         if (isInCryoSleep())
             ci.cancel();
+    }
+
+    @ModifyReturnValue(method = "getAttributeValue", at = @At(value = "RETURN"))
+    private double gc$adjustSafeFallDistance(double original, Holder<Attribute> attribute) {
+        if (attribute == Attributes.SAFE_FALL_DISTANCE) {
+            Holder<CelestialBody<?, ?>> holder = this.level().galacticraft$getCelestialBody();
+            if (holder != null) {
+                double gravity = holder.value().gravity();
+                return gravity > 0 ? original / gravity : original;
+            }
+        }
+        return original;
+    }
+
+    @ModifyArg(method = "calculateFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;ceil(D)I"), index = 0)
+    protected double gc$adjustFallDamage(double original) {
+        Holder<CelestialBody<?, ?>> holder = this.level().galacticraft$getCelestialBody();
+        return holder != null ? original * holder.value().gravity() : original;
+    }
+
+    @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isFallFlying()Z"))
+    private boolean gc$canStartFallFlying(boolean original) {
+        return this.level().galacticraft$hasDimensionTypeTag(GCTags.VACUUM) ? false : original;
+    }
+
+    @ModifyArg(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V", ordinal = 6), index = 0)
+    private Vec3 gc$adjustAtmosphericDrag(Vec3 original) {
+        Holder<CelestialBody<?, ?>> holder = this.level().galacticraft$getCelestialBody();
+        if (holder != null) {
+            float drag = holder.value().atmosphere().pressure() / 2000.0F;
+            return original.multiply(1.0F - drag, 1.0F - drag * 2.0F, 1.0F - drag);
+        }
+        return original;
     }
 }

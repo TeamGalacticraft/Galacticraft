@@ -236,6 +236,10 @@ public interface Constant {
         String BOSS_SPAWNER = "boss_spawner";
 
         // Moon Cheese
+        String MOON_CHEESE_BLOCK = "moon_cheese_block";
+        String MOON_CHEESE_LOG = "moon_cheese_log";
+        String MOON_CHEESE_LEAVES = "moon_cheese_leaves";
+
         String MOON_CHEESE_WHEEL = "moon_cheese_wheel";
         String CANDLE_MOON_CHEESE_WHEEL = "candle_moon_cheese_wheel";
         String WHITE_CANDLE_MOON_CHEESE_WHEEL = "white_candle_moon_cheese_wheel";
@@ -561,6 +565,7 @@ public interface Constant {
         ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
         ResourceLocation ROCKET_INVENTORY = id("textures/gui/rocket.png");
         ResourceLocation OVERLAY = id("textures/gui/overlay.png");
+        ResourceLocation WARNING_SIGN = id("textures/gui/warning.png");
 
         ResourceLocation MAP_SCREEN = id("textures/gui/map.png");
         ResourceLocation PLANET_ICONS = id("textures/gui/planet_icons.png");

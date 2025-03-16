@@ -24,10 +24,16 @@ package dev.galacticraft.api.accessor;
 
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import net.minecraft.core.Holder;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.dimension.DimensionType;
 import org.jetbrains.annotations.Nullable;
 
 public interface LevelBodyAccessor {
     default @Nullable Holder<CelestialBody<?, ?>> galacticraft$getCelestialBody() {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
+
+    default boolean galacticraft$hasDimensionTypeTag(TagKey<DimensionType> tag) {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 }
