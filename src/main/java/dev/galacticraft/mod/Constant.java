@@ -561,6 +561,7 @@ public interface Constant {
         ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
         ResourceLocation ROCKET_INVENTORY = id("textures/gui/rocket.png");
         ResourceLocation OVERLAY = id("textures/gui/overlay.png");
+        ResourceLocation WARNING_SIGN = id("textures/gui/warning.png");
 
         ResourceLocation MAP_SCREEN = id("textures/gui/map.png");
         ResourceLocation PLANET_ICONS = id("textures/gui/planet_icons.png");
