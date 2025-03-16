@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.block.special.fluidpipe;
 
 import dev.galacticraft.mod.api.block.FluidPipe;
-import dev.galacticraft.mod.api.block.entity.Colored;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;

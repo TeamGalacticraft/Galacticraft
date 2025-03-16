@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.content.block.special.walkway;
 
-import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.FluidPipe;
