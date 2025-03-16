@@ -54,15 +54,15 @@ public class GCOreRecipeProvider extends FabricRecipeProvider {
         // Ore Smelting and Blasting
         oreSmeltingAndBlasting(output, List.of(GCBlocks.MARS_IRON_ORE, GCBlocks.ASTEROID_IRON_ORE), Items.IRON_INGOT, 0.7f, 100);
         oreSmeltingAndBlasting(output, List.of(GCBlocks.MOON_COPPER_ORE, GCBlocks.LUNASLATE_COPPER_ORE, GCBlocks.MARS_COPPER_ORE, GCBlocks.VENUS_COPPER_ORE), Items.COPPER_INGOT, 0.7f, 100);
-        oreSmeltingAndBlasting(output, List.of(GCBlocks.SILICON_ORE, GCBlocks.DEEPSLATE_SILICON_ORE), GCItems.SILICON, 0.7f, 100);
+        oreSmeltingAndBlasting(output, List.of(GCBlocks.SILICON_ORE, GCBlocks.DEEPSLATE_SILICON_ORE), GCItems.SILICON, 0.2f, 100);
         oreSmeltingAndBlasting(output, List.of(GCItems.RAW_ALUMINUM, GCBlocks.ALUMINUM_ORE, GCBlocks.DEEPSLATE_ALUMINUM_ORE, GCBlocks.ASTEROID_ALUMINUM_ORE, GCBlocks.VENUS_ALUMINUM_ORE), GCItems.ALUMINUM_INGOT, 0.7f, 100);
-        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_TIN, GCBlocks.TIN_ORE, GCBlocks.DEEPSLATE_TIN_ORE, GCBlocks.MOON_TIN_ORE, GCBlocks.MARS_TIN_ORE, GCBlocks.VENUS_TIN_ORE), GCItems.TIN_INGOT, 0.7f, 100);
-        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_METEORIC_IRON), GCItems.METEORIC_IRON_INGOT, 0.7f, 100);
-        oreSmeltingAndBlasting(output, List.of(GCBlocks.MOON_CHEESE_ORE), GCItems.MOON_CHEESE_CURD, 0.7f, 100);
-        oreSmeltingAndBlasting(output, List.of(GCBlocks.LUNAR_SAPPHIRE_ORE), GCItems.LUNAR_SAPPHIRE, 0.7f, 100);
-        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_DESH, GCBlocks.DESH_ORE), GCItems.DESH_INGOT, 0.7f, 100);
-        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_TITANIUM, GCBlocks.ILMENITE_ORE), GCItems.TITANIUM_INGOT, 0.7f, 100);
-        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_LEAD, GCBlocks.GALENA_ORE), GCItems.LEAD_INGOT, 0.7f, 100);
+        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_TIN, GCBlocks.TIN_ORE, GCBlocks.DEEPSLATE_TIN_ORE, GCBlocks.MOON_TIN_ORE, GCBlocks.MARS_TIN_ORE, GCBlocks.VENUS_TIN_ORE), GCItems.TIN_INGOT, 0.35f, 100);
+        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_METEORIC_IRON), GCItems.METEORIC_IRON_INGOT, 0.85f, 100);
+        oreSmeltingAndBlasting(output, List.of(GCBlocks.MOON_CHEESE_ORE), GCItems.MOON_CHEESE_CURD, 0.2f, 100);
+        oreSmeltingAndBlasting(output, List.of(GCBlocks.LUNAR_SAPPHIRE_ORE), GCItems.LUNAR_SAPPHIRE, 1.0f, 100);
+        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_DESH, GCBlocks.DESH_ORE), GCItems.DESH_INGOT, 0.85f, 100);
+        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_TITANIUM, GCBlocks.ILMENITE_ORE), GCItems.TITANIUM_INGOT, 1.0f, 100);
+        oreSmeltingAndBlasting(output, List.of(GCItems.RAW_LEAD, GCBlocks.GALENA_ORE), GCItems.LEAD_INGOT, 0.85f, 100);
         oreSmeltingAndBlasting(output, List.of(GCBlocks.SOLAR_ORE), GCItems.SOLAR_DUST, 0.7f, 100);
 
         
