@@ -77,35 +77,41 @@ public class WalkwayBakedModel implements BakedModel {
         this.sprite = textureGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, WALKWAY_TEXTURE));
         var meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
         var emitter = meshBuilder.getEmitter();
-        emitter.square(Direction.WEST, 0.6f, 0.4f, 0.4f, 0.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.EAST, 0.6f, 0.4f, 0.4f, 0.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.SOUTH, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.NORTH, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        
+        emitter.square(Direction.WEST, 0.625f, 0.375f, 0.375f, 0.0f, 0.375f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        emitter.square(Direction.EAST, 0.625f, 0.375f, 0.375f, 0.0f, 0.375f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        emitter.square(Direction.SOUTH, 0.375f, 0.0f, 0.625f, 0.375f, 0.375f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        emitter.square(Direction.NORTH, 0.375f, 0.0f, 0.625f, 0.375f, 0.375f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
         this.down = meshBuilder.build();
-        emitter.square(Direction.EAST, 0.6f, 1.0f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.WEST, 0.6f, 1.0f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.NORTH, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.SOUTH, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        
+        emitter.square(Direction.EAST, 0.625f, 1.0f, 0.375f, 0.625f, 0.375f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        emitter.square(Direction.WEST, 0.625f, 1.0f, 0.375f, 0.625f, 0.375f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        emitter.square(Direction.NORTH, 0.375f, 0.625f, 0.625f, 1.0f, 0.375f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        emitter.square(Direction.SOUTH, 0.375f, 0.625f, 0.625f, 1.0f, 0.375f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
         this.up = meshBuilder.build();
-        emitter.square(Direction.WEST, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.EAST, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.DOWN, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.UP, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        
+        emitter.square(Direction.WEST, 0.0f, 0.375f, 0.375f, 0.625f, 0.375f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        emitter.square(Direction.EAST, 0.625f, 0.375f, 1.0f, 0.625f, 0.375f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        emitter.square(Direction.DOWN, 0.375f, 0.0f, 0.625f, 0.375f, 0.375f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        emitter.square(Direction.UP, 0.375f, 0.625f, 0.625f, 1.0f, 0.375f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
         this.north = meshBuilder.build();
-        emitter.square(Direction.EAST, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.WEST, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.UP, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.DOWN, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        
+        emitter.square(Direction.EAST, 0.0f, 0.375f, 0.375f, 0.625f, 0.375f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        emitter.square(Direction.WEST, 0.625f, 0.375f, 1.0f, 0.625f, 0.375f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        emitter.square(Direction.UP, 0.375f, 0.0f, 0.625f, 0.375f, 0.375f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        emitter.square(Direction.DOWN, 0.375f, 0.625f, 0.625f, 1.0f, 0.375f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
         this.south = meshBuilder.build();
-        emitter.square(Direction.NORTH, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.SOUTH, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.UP, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.DOWN, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        
+        emitter.square(Direction.NORTH, 0.625f, 0.375f, 1.0f, 0.625f, 0.375f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        emitter.square(Direction.SOUTH, 0.0f, 0.375f, 0.375f, 0.625f, 0.375f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        emitter.square(Direction.UP, 0.0f, 0.375f, 0.375f, 0.625f, 0.375f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        emitter.square(Direction.DOWN, 0.0f, 0.375f, 0.375f, 0.625f, 0.375f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
         this.west = meshBuilder.build();
-        emitter.square(Direction.SOUTH, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.NORTH, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.DOWN, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.UP, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        
+        emitter.square(Direction.SOUTH, 0.625f, 0.375f, 1.0f, 0.625f, 0.375f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        emitter.square(Direction.NORTH, 0.0f, 0.375f, 0.375f, 0.625f, 0.375f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        emitter.square(Direction.DOWN, 0.625f, 0.375f, 1.0f, 0.625f, 0.375f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+        emitter.square(Direction.UP, 0.625f, 0.375f, 1.0f, 0.625f, 0.375f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
         this.east = meshBuilder.build();
     }
 
