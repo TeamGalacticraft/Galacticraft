@@ -59,6 +59,16 @@ public class GCItems {
 
     public static final Item LUNAR_SAPPHIRE = registerGeneric(Constant.Item.LUNAR_SAPPHIRE);
 
+    public static final Item RAW_TIN = registerGeneric(Constant.Item.RAW_TIN);
+    public static final Item TIN_INGOT = registerGeneric(Constant.Item.TIN_INGOT);
+    public static final Item TIN_NUGGET = registerGeneric(Constant.Item.TIN_NUGGET);
+    public static final Item COMPRESSED_TIN = registerGeneric(Constant.Item.COMPRESSED_TIN);
+
+    public static final Item RAW_ALUMINUM = registerGeneric(Constant.Item.RAW_ALUMINUM);
+    public static final Item ALUMINUM_INGOT = registerGeneric(Constant.Item.ALUMINUM_INGOT);
+    public static final Item ALUMINUM_NUGGET = registerGeneric(Constant.Item.ALUMINUM_NUGGET);
+    public static final Item COMPRESSED_ALUMINUM = registerGeneric(Constant.Item.COMPRESSED_ALUMINUM);
+
     public static final Item RAW_METEORIC_IRON = registerGeneric(Constant.Item.RAW_METEORIC_IRON);
     public static final Item METEORIC_IRON_INGOT = registerGeneric(Constant.Item.METEORIC_IRON_INGOT);
     public static final Item METEORIC_IRON_NUGGET = registerGeneric(Constant.Item.METEORIC_IRON_NUGGET);
@@ -69,24 +79,14 @@ public class GCItems {
     public static final Item DESH_NUGGET = registerGeneric(Constant.Item.DESH_NUGGET);
     public static final Item COMPRESSED_DESH = registerGeneric(Constant.Item.COMPRESSED_DESH);
 
-    public static final Item RAW_LEAD = registerGeneric(Constant.Item.RAW_LEAD);
-    public static final Item LEAD_INGOT = registerGeneric(Constant.Item.LEAD_INGOT);
-    public static final Item LEAD_NUGGET = registerGeneric(Constant.Item.LEAD_NUGGET);
-    
-    public static final Item RAW_ALUMINUM = registerGeneric(Constant.Item.RAW_ALUMINUM);
-    public static final Item ALUMINUM_INGOT = registerGeneric(Constant.Item.ALUMINUM_INGOT);
-    public static final Item ALUMINUM_NUGGET = registerGeneric(Constant.Item.ALUMINUM_NUGGET);
-    public static final Item COMPRESSED_ALUMINUM = registerGeneric(Constant.Item.COMPRESSED_ALUMINUM);
-
-    public static final Item RAW_TIN = registerGeneric(Constant.Item.RAW_TIN);
-    public static final Item TIN_INGOT = registerGeneric(Constant.Item.TIN_INGOT);
-    public static final Item TIN_NUGGET = registerGeneric(Constant.Item.TIN_NUGGET);
-    public static final Item COMPRESSED_TIN = registerGeneric(Constant.Item.COMPRESSED_TIN);
-
     public static final Item RAW_TITANIUM = registerGeneric(Constant.Item.RAW_TITANIUM);
     public static final Item TITANIUM_INGOT = registerGeneric(Constant.Item.TITANIUM_INGOT);
     public static final Item TITANIUM_NUGGET = registerGeneric(Constant.Item.TITANIUM_NUGGET);
     public static final Item COMPRESSED_TITANIUM = registerGeneric(Constant.Item.COMPRESSED_TITANIUM);
+
+    public static final Item RAW_LEAD = registerGeneric(Constant.Item.RAW_LEAD);
+    public static final Item LEAD_INGOT = registerGeneric(Constant.Item.LEAD_INGOT);
+    public static final Item LEAD_NUGGET = registerGeneric(Constant.Item.LEAD_NUGGET);
 
     public static final Item COMPRESSED_COPPER = registerGeneric(Constant.Item.COMPRESSED_COPPER);
     public static final Item COMPRESSED_BRONZE = registerGeneric(Constant.Item.COMPRESSED_BRONZE);

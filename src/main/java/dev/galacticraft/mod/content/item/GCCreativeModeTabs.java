@@ -171,30 +171,30 @@ public class GCCreativeModeTabs {
                 output.accept(ASTEROID_ALUMINUM_ORE);
                 output.accept(VENUS_ALUMINUM_ORE);
 
+                output.accept(FALLEN_METEOR);
+
                 output.accept(MOON_CHEESE_ORE);
 
                 output.accept(LUNAR_SAPPHIRE_ORE);
 
+                output.accept(OLIVINE_BASALT);
+                output.accept(RICH_OLIVINE_BASALT);
+
                 output.accept(DESH_ORE);
+
+                output.accept(ILMENITE_ORE);
 
                 output.accept(GALENA_ORE);
 
                 output.accept(SOLAR_ORE);
-
-                output.accept(ILMENITE_ORE);
-
-                output.accept(FALLEN_METEOR);
-
-                output.accept(OLIVINE_BASALT);
-                output.accept(RICH_OLIVINE_BASALT);
 
                 // COMPACT MINERAL BLOCKS
                 output.accept(RAW_TIN_BLOCK);
                 output.accept(RAW_ALUMINUM_BLOCK);
                 output.accept(RAW_METEORIC_IRON_BLOCK);
                 output.accept(RAW_DESH_BLOCK);
-                output.accept(RAW_LEAD_BLOCK);
                 output.accept(RAW_TITANIUM_BLOCK);
+                output.accept(RAW_LEAD_BLOCK);
 
                 output.accept(SILICON_BLOCK);
                 output.accept(LUNAR_SAPPHIRE_BLOCK);
@@ -205,8 +205,13 @@ public class GCCreativeModeTabs {
                 output.accept(ALUMINUM_BLOCK);
                 output.accept(METEORIC_IRON_BLOCK);
                 output.accept(DESH_BLOCK);
-                output.accept(LEAD_BLOCK);
                 output.accept(TITANIUM_BLOCK);
+                output.accept(LEAD_BLOCK);
+
+                // CHEESE BLOCKS
+                output.accept(MOON_CHEESE_BLOCK);
+                output.accept(MOON_CHEESE_LOG);
+                output.accept(MOON_CHEESE_LEAVES);
 
                 // MOON VILLAGER SPECIAL
                 output.accept(LUNAR_CARTOGRAPHY_TABLE);
@@ -328,8 +333,8 @@ public class GCCreativeModeTabs {
                 output.accept(RAW_ALUMINUM);
                 output.accept(RAW_METEORIC_IRON);
                 output.accept(RAW_DESH);
-                output.accept(RAW_LEAD);
                 output.accept(RAW_TITANIUM);
+                output.accept(RAW_LEAD);
                 output.accept(SILICON);
                 output.accept(LUNAR_SAPPHIRE);
                 output.accept(OLIVINE_SHARD);
@@ -338,15 +343,15 @@ public class GCCreativeModeTabs {
                 output.accept(ALUMINUM_NUGGET);
                 output.accept(METEORIC_IRON_NUGGET);
                 output.accept(DESH_NUGGET);
-                output.accept(LEAD_NUGGET);
                 output.accept(TITANIUM_NUGGET);
+                output.accept(LEAD_NUGGET);
 
                 output.accept(TIN_INGOT);
                 output.accept(ALUMINUM_INGOT);
                 output.accept(METEORIC_IRON_INGOT);
                 output.accept(DESH_INGOT);
-                output.accept(LEAD_INGOT);
                 output.accept(TITANIUM_INGOT);
+                output.accept(LEAD_INGOT);
 
                 output.accept(COMPRESSED_IRON);
                 output.accept(COMPRESSED_COPPER);
