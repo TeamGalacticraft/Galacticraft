@@ -61,7 +61,7 @@ public class OxygenOverlay {
             boolean nonBreathable = (body != null) && !body.value().atmosphere().breathable();
             boolean hasMaskAndGear = mc.player.galacticraft$hasMaskAndGear();
             if (nonBreathable || hasMaskAndGear) {
-                boolean hasOxygen = mc.level.isBreathable(mc.player.blockPosition().above());
+                boolean hasOxygen = false;
                 Container inv = mc.player.galacticraft$getOxygenTanks();
                 final int outline = 0x99FFFFFF;
                 final int y = 4;
@@ -83,7 +83,7 @@ public class OxygenOverlay {
                     DrawableUtil.drawOxygenBuffer(graphics.pose(), x, y, amount, capacity);
                 }
 
-                if (nonBreathable && !hasOxygen) {
+                if (nonBreathable && !(hasOxygen || mc.level.isBreathable(mc.player.blockPosition().above()))) {
                     final Window scaledresolution = mc.getWindow();
                     final int width = scaledresolution.getGuiScaledWidth();
                     final int height = scaledresolution.getGuiScaledHeight();
@@ -107,6 +107,14 @@ public class OxygenOverlay {
                                 FastColor.ARGB32.color(alpha, alpha, alpha, alpha), false);
                     }
 
+                    graphics.pose().popPose();
+                } else if (!hasMaskAndGear || !hasOxygen) {
+                    // Less obtrusive warning for if the player currently has oxygen, but has an invalid oxygen setup
+                    graphics.pose().pushPose();
+                    graphics.pose().scale(2.0F, 2.0F, 0.0F);
+                    int x = mc.getWindow().getGuiScaledWidth() - Constant.TextureCoordinate.OVERLAY_WIDTH - 13;
+                    graphics.pose().translate(0.5F * x, 0.5F * y + 0.25F * (Constant.TextureCoordinate.OVERLAY_HEIGHT - 14), 0.0F);
+                    graphics.blit(Constant.ScreenTexture.WARNING_SIGN, 0, 0, 0.0F, 0.0F, 7, 7, 8, 8);
                     graphics.pose().popPose();
                 }
             }
