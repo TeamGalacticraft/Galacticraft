@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "minecraft:block/moon_cheese_leaves"
+    "all": "galacticraft:block/moon_cheese_leaves"
   }
 }

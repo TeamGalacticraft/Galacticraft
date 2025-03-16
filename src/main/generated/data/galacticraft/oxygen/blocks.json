@@ -1808,5 +1808,159 @@
         "age": "3"
       }
     }
+  },
+  {
+    "amount": 1.0,
+    "blockState": {
+      "Name": "galacticraft:moon_cheese_leaves",
+      "Properties": {
+        "distance": "1",
+        "persistent": "false",
+        "waterlogged": "true"
+      }
+    }
+  },
+  {
+    "amount": 1.0,
+    "blockState": {
+      "Name": "galacticraft:moon_cheese_leaves",
+      "Properties": {
+        "distance": "1",
+        "persistent": "false",
+        "waterlogged": "false"
+      }
+    }
+  },
+  {
+    "amount": 1.0,
+    "blockState": {
+      "Name": "galacticraft:moon_cheese_leaves",
+      "Properties": {
+        "distance": "2",
+        "persistent": "false",
+        "waterlogged": "true"
+      }
+    }
+  },
+  {
+    "amount": 1.0,
+    "blockState": {
+      "Name": "galacticraft:moon_cheese_leaves",
+      "Properties": {
+        "distance": "2",
+        "persistent": "false",
+        "waterlogged": "false"
+      }
+    }
+  },
+  {
+    "amount": 1.0,
+    "blockState": {
+      "Name": "galacticraft:moon_cheese_leaves",
+      "Properties": {
+        "distance": "3",
+        "persistent": "false",
+        "waterlogged": "true"
+      }
+    }
+  },
+  {
+    "amount": 1.0,
+    "blockState": {
+      "Name": "galacticraft:moon_cheese_leaves",
+      "Properties": {
+        "distance": "3",
+        "persistent": "false",
+        "waterlogged": "false"
+      }
+    }
+  },
+  {
+    "amount": 1.0,
+    "blockState": {
+      "Name": "galacticraft:moon_cheese_leaves",
+      "Properties": {
+        "distance": "4",
+        "persistent": "false",
+        "waterlogged": "true"
+      }
+    }
+  },
+  {
+    "amount": 1.0,
+    "blockState": {
+      "Name": "galacticraft:moon_cheese_leaves",
+      "Properties": {
+        "distance": "4",
+        "persistent": "false",
+        "waterlogged": "false"
+      }
+    }
+  },
+  {
+    "amount": 1.0,
+    "blockState": {
+      "Name": "galacticraft:moon_cheese_leaves",
+      "Properties": {
+        "distance": "5",
+        "persistent": "false",
+        "waterlogged": "true"
+      }
+    }
+  },
+  {
+    "amount": 1.0,
+    "blockState": {
+      "Name": "galacticraft:moon_cheese_leaves",
+      "Properties": {
+        "distance": "5",
+        "persistent": "false",
+        "waterlogged": "false"
+      }
+    }
+  },
+  {
+    "amount": 1.0,
+    "blockState": {
+      "Name": "galacticraft:moon_cheese_leaves",
+      "Properties": {
+        "distance": "6",
+        "persistent": "false",
+        "waterlogged": "true"
+      }
+    }
+  },
+  {
+    "amount": 1.0,
+    "blockState": {
+      "Name": "galacticraft:moon_cheese_leaves",
+      "Properties": {
+        "distance": "6",
+        "persistent": "false",
+        "waterlogged": "false"
+      }
+    }
+  },
+  {
+    "amount": 1.0,
+    "blockState": {
+      "Name": "galacticraft:moon_cheese_leaves",
+      "Properties": {
+        "distance": "7",
+        "persistent": "false",
+        "waterlogged": "true"
+      }
+    }
+  },
+  {
+    "amount": 1.0,
+    "blockState": {
+      "Name": "galacticraft:moon_cheese_leaves",
+      "Properties": {
+        "distance": "7",
+        "persistent": "false",
+        "waterlogged": "false"
+      }
+    }
   }
 ]

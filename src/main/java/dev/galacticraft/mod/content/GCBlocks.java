@@ -258,7 +258,28 @@ public class GCBlocks {
     public static final Block OLIVINE_BASALT = BLOCKS.registerWithItem(Constant.Block.OLIVINE_BASALT, new Block(BlockBehaviour.Properties.ofFullCopy(MOON_BASALT).strength(3.5F, 6.0F)));
     public static final Block RICH_OLIVINE_BASALT = BLOCKS.registerWithItem(Constant.Block.RICH_OLIVINE_BASALT, new Block(BlockBehaviour.Properties.ofFullCopy(OLIVINE_BASALT)));
 
+    // COMPACT MINERAL BLOCKS
+    public static final Block SILICON_BLOCK = BLOCKS.registerWithItem(Constant.Block.SILICON_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
+    public static final Block METEORIC_IRON_BLOCK = BLOCKS.registerWithItem(Constant.Block.METEORIC_IRON_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
+    public static final Block DESH_BLOCK = BLOCKS.registerWithItem(Constant.Block.DESH_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
+    public static final Block ALUMINUM_BLOCK = BLOCKS.registerWithItem(Constant.Block.ALUMINUM_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
+    public static final Block TIN_BLOCK = BLOCKS.registerWithItem(Constant.Block.TIN_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
+    public static final Block TITANIUM_BLOCK = BLOCKS.registerWithItem(Constant.Block.TITANIUM_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
+    public static final Block LEAD_BLOCK = BLOCKS.registerWithItem(Constant.Block.LEAD_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
+    public static final Block LUNAR_SAPPHIRE_BLOCK = BLOCKS.registerWithItem(Constant.Block.LUNAR_SAPPHIRE_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(5.0F, 6.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));
+    public static final Block OLIVINE_BLOCK = BLOCKS.registerWithItem(Constant.Block.OLIVINE_BLOCK, new RotatedPillarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).strength(1.5F, 1.5F).sound(SoundType.AMETHYST).requiresCorrectToolForDrops()));
+    public static final Block RAW_METEORIC_IRON_BLOCK = BLOCKS.registerWithItem(Constant.Block.RAW_METEORIC_IRON_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));
+    public static final Block RAW_DESH_BLOCK = BLOCKS.registerWithItem(Constant.Block.RAW_DESH_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));
+    public static final Block RAW_ALUMINUM_BLOCK = BLOCKS.registerWithItem(Constant.Block.RAW_ALUMINUM_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));
+    public static final Block RAW_TIN_BLOCK = BLOCKS.registerWithItem(Constant.Block.RAW_TIN_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));
+    public static final Block RAW_TITANIUM_BLOCK = BLOCKS.registerWithItem(Constant.Block.RAW_TITANIUM_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));
+    public static final Block RAW_LEAD_BLOCK = BLOCKS.registerWithItem(Constant.Block.RAW_LEAD_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));
+
     // CHEESE BLOCKS
+    public static final Block MOON_CHEESE_BLOCK = BLOCKS.registerWithItem(Constant.Block.MOON_CHEESE_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW).strength(0.5F).sound(SoundType.WOOL)));
+    public static final Block MOON_CHEESE_LOG = BLOCKS.registerWithItem(Constant.Block.MOON_CHEESE_LOG, new RotatedPillarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW).strength(0.5F).sound(SoundType.WOOL)));
+    public static final Block MOON_CHEESE_LEAVES = BLOCKS.registerWithItem(Constant.Block.MOON_CHEESE_LEAVES, new LeavesBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW).strength(0.2F).randomTicks().sound(SoundType.GRASS).noOcclusion().isSuffocating(GCBlocks::never).isViewBlocking(GCBlocks::never).ignitedByLava().pushReaction(PushReaction.DESTROY).isRedstoneConductor(GCBlocks::never)));
+
     public static final Block MOON_CHEESE_WHEEL = BLOCKS.register(Constant.Block.MOON_CHEESE_WHEEL, new MoonCheeseWheel(BlockBehaviour.Properties.of().forceSolidOn().strength(0.5F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY)));
     public static final Block CANDLE_MOON_CHEESE_WHEEL = BLOCKS.register(Constant.Block.CANDLE_MOON_CHEESE_WHEEL, new CandleMoonCheeseWheel(Blocks.CANDLE, BlockBehaviour.Properties.ofFullCopy(MOON_CHEESE_WHEEL).lightLevel(litBlockEmission(3))));
     public static final Block WHITE_CANDLE_MOON_CHEESE_WHEEL = BLOCKS.register(Constant.Block.WHITE_CANDLE_MOON_CHEESE_WHEEL, new CandleMoonCheeseWheel(Blocks.WHITE_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL)));
@@ -277,25 +298,6 @@ public class GCBlocks {
     public static final Block GREEN_CANDLE_MOON_CHEESE_WHEEL = BLOCKS.register(Constant.Block.GREEN_CANDLE_MOON_CHEESE_WHEEL, new CandleMoonCheeseWheel(Blocks.GREEN_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL)));
     public static final Block RED_CANDLE_MOON_CHEESE_WHEEL = BLOCKS.register(Constant.Block.RED_CANDLE_MOON_CHEESE_WHEEL, new CandleMoonCheeseWheel(Blocks.RED_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL)));
     public static final Block BLACK_CANDLE_MOON_CHEESE_WHEEL = BLOCKS.register(Constant.Block.BLACK_CANDLE_MOON_CHEESE_WHEEL, new CandleMoonCheeseWheel(Blocks.BLACK_CANDLE, BlockBehaviour.Properties.ofFullCopy(CANDLE_MOON_CHEESE_WHEEL)));
-
-    // COMPACT MINERAL BLOCKS
-    public static final Block SILICON_BLOCK = BLOCKS.registerWithItem(Constant.Block.SILICON_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
-    public static final Block METEORIC_IRON_BLOCK = BLOCKS.registerWithItem(Constant.Block.METEORIC_IRON_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
-    public static final Block DESH_BLOCK = BLOCKS.registerWithItem(Constant.Block.DESH_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
-    public static final Block ALUMINUM_BLOCK = BLOCKS.registerWithItem(Constant.Block.ALUMINUM_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
-    public static final Block TIN_BLOCK = BLOCKS.registerWithItem(Constant.Block.TIN_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
-    public static final Block TITANIUM_BLOCK = BLOCKS.registerWithItem(Constant.Block.TITANIUM_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
-    public static final Block LEAD_BLOCK = BLOCKS.registerWithItem(Constant.Block.LEAD_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
-    public static final Block LUNAR_SAPPHIRE_BLOCK = BLOCKS.registerWithItem(Constant.Block.LUNAR_SAPPHIRE_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(5.0F, 6.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));
-    public static final Block OLIVINE_BLOCK = BLOCKS.registerWithItem(Constant.Block.OLIVINE_BLOCK, new RotatedPillarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GREEN).strength(1.5F, 1.5F).sound(SoundType.AMETHYST).requiresCorrectToolForDrops()));
-    public static final Block RAW_METEORIC_IRON_BLOCK = BLOCKS.registerWithItem(Constant.Block.RAW_METEORIC_IRON_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));
-    public static final Block RAW_DESH_BLOCK = BLOCKS.registerWithItem(Constant.Block.RAW_DESH_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));
-    public static final Block RAW_ALUMINUM_BLOCK = BLOCKS.registerWithItem(Constant.Block.RAW_ALUMINUM_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));
-    public static final Block RAW_TIN_BLOCK = BLOCKS.registerWithItem(Constant.Block.RAW_TIN_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));
-    public static final Block RAW_TITANIUM_BLOCK = BLOCKS.registerWithItem(Constant.Block.RAW_TITANIUM_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));
-    public static final Block RAW_LEAD_BLOCK = BLOCKS.registerWithItem(Constant.Block.RAW_LEAD_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));
-
-
 
     // MOON VILLAGER SPECIAL
     public static final Block LUNAR_CARTOGRAPHY_TABLE = BLOCKS.registerWithItem(Constant.Block.LUNAR_CARTOGRAPHY_TABLE, new LunarCartographyTableBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).ignitedByLava().instrument(NoteBlockInstrument.BASS).strength(2.5F).sound(SoundType.WOOD)));

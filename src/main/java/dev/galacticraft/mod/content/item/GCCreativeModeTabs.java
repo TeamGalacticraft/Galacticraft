@@ -489,6 +489,11 @@ public class GCCreativeModeTabs {
                 output.accept(RAW_LEAD_BLOCK);
                 output.accept(OLIVINE_BLOCK);
 
+                // CHEESE BLOCKS
+                output.accept(MOON_CHEESE_BLOCK);
+                output.accept(MOON_CHEESE_LOG);
+                output.accept(MOON_CHEESE_LEAVES);
+
                 // MOON VILLAGER SPECIAL
                 output.accept(LUNAR_CARTOGRAPHY_TABLE);
 

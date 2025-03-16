@@ -202,6 +202,27 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.OLIVINE_BASALT);
         generator.createTrivialCube(GCBlocks.RICH_OLIVINE_BASALT);
 
+        // COMPACT MINERAL BLOCKS
+        generator.createTrivialCube(GCBlocks.SILICON_BLOCK);
+        generator.createTrivialCube(GCBlocks.METEORIC_IRON_BLOCK);
+        generator.createTrivialCube(GCBlocks.DESH_BLOCK);
+        generator.createTrivialCube(GCBlocks.ALUMINUM_BLOCK);
+        generator.createTrivialCube(GCBlocks.TIN_BLOCK);
+        generator.createTrivialCube(GCBlocks.TITANIUM_BLOCK);
+        generator.createTrivialCube(GCBlocks.LEAD_BLOCK);
+        generator.createTrivialCube(GCBlocks.LUNAR_SAPPHIRE_BLOCK);
+        generator.createTrivialCube(GCBlocks.RAW_METEORIC_IRON_BLOCK);
+        generator.createTrivialCube(GCBlocks.RAW_DESH_BLOCK);
+        generator.createTrivialCube(GCBlocks.RAW_ALUMINUM_BLOCK);
+        generator.createTrivialCube(GCBlocks.RAW_TIN_BLOCK);
+        generator.createTrivialCube(GCBlocks.RAW_TITANIUM_BLOCK);
+        generator.createTrivialCube(GCBlocks.RAW_LEAD_BLOCK);
+
+        // CHEESE BLOCKS
+        generator.createTrivialCube(GCBlocks.MOON_CHEESE_BLOCK);
+        generator.createAxisAlignedPillarBlock(GCBlocks.MOON_CHEESE_LOG, TexturedModel.COLUMN);
+        generator.createTrivialCube(GCBlocks.MOON_CHEESE_LEAVES);
+
         this.createCheeseWheel(generator);
         this.createCandleCheeseWheel(generator, Blocks.CANDLE, GCBlocks.CANDLE_MOON_CHEESE_WHEEL);
         this.createCandleCheeseWheel(generator, Blocks.WHITE_CANDLE, GCBlocks.WHITE_CANDLE_MOON_CHEESE_WHEEL);
@@ -220,22 +241,6 @@ public class GCModelProvider extends FabricModelProvider {
         this.createCandleCheeseWheel(generator, Blocks.GREEN_CANDLE, GCBlocks.GREEN_CANDLE_MOON_CHEESE_WHEEL);
         this.createCandleCheeseWheel(generator, Blocks.RED_CANDLE, GCBlocks.RED_CANDLE_MOON_CHEESE_WHEEL);
         this.createCandleCheeseWheel(generator, Blocks.BLACK_CANDLE, GCBlocks.BLACK_CANDLE_MOON_CHEESE_WHEEL);
-
-        // COMPACT MINERAL BLOCKS
-        generator.createTrivialCube(GCBlocks.SILICON_BLOCK);
-        generator.createTrivialCube(GCBlocks.METEORIC_IRON_BLOCK);
-        generator.createTrivialCube(GCBlocks.DESH_BLOCK);
-        generator.createTrivialCube(GCBlocks.ALUMINUM_BLOCK);
-        generator.createTrivialCube(GCBlocks.TIN_BLOCK);
-        generator.createTrivialCube(GCBlocks.TITANIUM_BLOCK);
-        generator.createTrivialCube(GCBlocks.LEAD_BLOCK);
-        generator.createTrivialCube(GCBlocks.LUNAR_SAPPHIRE_BLOCK);
-        generator.createTrivialCube(GCBlocks.RAW_METEORIC_IRON_BLOCK);
-        generator.createTrivialCube(GCBlocks.RAW_DESH_BLOCK);
-        generator.createTrivialCube(GCBlocks.RAW_ALUMINUM_BLOCK);
-        generator.createTrivialCube(GCBlocks.RAW_TIN_BLOCK);
-        generator.createTrivialCube(GCBlocks.RAW_TITANIUM_BLOCK);
-        generator.createTrivialCube(GCBlocks.RAW_LEAD_BLOCK);
 
         // MOON VILLAGER SPECIAL
         generator.copyModel(Blocks.CARTOGRAPHY_TABLE, GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
