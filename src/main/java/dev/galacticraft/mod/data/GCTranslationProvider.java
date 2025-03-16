@@ -270,7 +270,28 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.OLIVINE_BASALT, "Olivine Basalt");
         this.block(GCBlocks.RICH_OLIVINE_BASALT, "Rich Olivine Basalt");
 
+        // COMPACT MINERAL BLOCKS
+        this.block(GCBlocks.SILICON_BLOCK, "Block of Silicon");
+        this.block(GCBlocks.METEORIC_IRON_BLOCK, "Block of Meteoric Iron");
+        this.block(GCBlocks.DESH_BLOCK, "Block of Desh");
+        this.block(GCBlocks.ALUMINUM_BLOCK, "Block of Aluminum");
+        this.block(GCBlocks.TIN_BLOCK, "Block of Tin");
+        this.block(GCBlocks.TITANIUM_BLOCK, "Block of Titanium");
+        this.block(GCBlocks.LEAD_BLOCK, "Block of Lead");
+        this.block(GCBlocks.LUNAR_SAPPHIRE_BLOCK, "Block of Lunar Sapphire");
+        this.block(GCBlocks.OLIVINE_BLOCK, "Block of Olivine");
+        this.block(GCBlocks.RAW_METEORIC_IRON_BLOCK, "Block of Raw Meteoric Iron");
+        this.block(GCBlocks.RAW_DESH_BLOCK, "Block of Raw Desh");
+        this.block(GCBlocks.RAW_ALUMINUM_BLOCK, "Block of Raw Aluminum");
+        this.block(GCBlocks.RAW_TIN_BLOCK, "Block of Raw Tin");
+        this.block(GCBlocks.RAW_TITANIUM_BLOCK, "Block of Raw Titanium");
+        this.block(GCBlocks.RAW_LEAD_BLOCK, "Block of Raw Lead");
+
         // CHEESE BLOCKS
+        this.block(GCBlocks.MOON_CHEESE_BLOCK, "Moon Cheese Block");
+        this.block(GCBlocks.MOON_CHEESE_LOG, "Moon Cheese Log");
+        this.block(GCBlocks.MOON_CHEESE_LEAVES, "Moon Cheese Leaves");
+
         this.block(GCBlocks.MOON_CHEESE_WHEEL, "Moon Cheese Wheel");
         this.block(GCBlocks.CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Candle");
         this.block(GCBlocks.WHITE_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with White Candle");
@@ -289,23 +310,6 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.GREEN_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Green Candle");
         this.block(GCBlocks.RED_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Red Candle");
         this.block(GCBlocks.BLACK_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Black Candle");
-
-        // COMPACT MINERAL BLOCKS
-        this.block(GCBlocks.SILICON_BLOCK, "Block of Silicon");
-        this.block(GCBlocks.METEORIC_IRON_BLOCK, "Block of Meteoric Iron");
-        this.block(GCBlocks.DESH_BLOCK, "Block of Desh");
-        this.block(GCBlocks.ALUMINUM_BLOCK, "Block of Aluminum");
-        this.block(GCBlocks.TIN_BLOCK, "Block of Tin");
-        this.block(GCBlocks.TITANIUM_BLOCK, "Block of Titanium");
-        this.block(GCBlocks.LEAD_BLOCK, "Block of Lead");
-        this.block(GCBlocks.LUNAR_SAPPHIRE_BLOCK, "Block of Lunar Sapphire");
-        this.block(GCBlocks.OLIVINE_BLOCK, "Block of Olivine");
-        this.block(GCBlocks.RAW_METEORIC_IRON_BLOCK, "Block of Raw Meteoric Iron");
-        this.block(GCBlocks.RAW_DESH_BLOCK, "Block of Raw Desh");
-        this.block(GCBlocks.RAW_ALUMINUM_BLOCK, "Block of Raw Aluminum");
-        this.block(GCBlocks.RAW_TIN_BLOCK, "Block of Raw Tin");
-        this.block(GCBlocks.RAW_TITANIUM_BLOCK, "Block of Raw Titanium");
-        this.block(GCBlocks.RAW_LEAD_BLOCK, "Block of Raw Lead");
 
         // MOON VILLAGER SPECIAL
         this.block(GCBlocks.LUNAR_CARTOGRAPHY_TABLE, "Lunar Cartography Table");
@@ -1027,10 +1031,12 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.MAX_OXYGEN, "Maximum Oxygen: %s");
         this.add(Ui.MACHINE_STATUS, "Status: %s");
         this.add(Ui.OXYGEN_TANK_LEVEL, "Oxygen Tank %s: %s/%s");
+        this.add(Ui.OXYGEN_WARNING, "WARNING");
+        this.add(Ui.OXYGEN_SETUP_INVALID, "Oxygen Setup is Invalid!");
         this.add(Ui.ROCKET_FUEL, "Fuel:");
         this.add(Ui.ROCKET_FULL, "% full");
         this.add(Ui.ROCKET_NO_FUEL, "No fuel");
-        this.add(Ui.LANDER_WARNING, "WARNING!");
+        this.add(Ui.LANDER_WARNING, "WARNING");
         this.add(Ui.LANDER_CONTROLS, "Hold \"%s\" to slow down!");
         this.add(Ui.LANDER_VELOCITY, "Entry Velocity: %s m/s");
         this.add(Ui.SMALL_STEP, "Taking one small step");

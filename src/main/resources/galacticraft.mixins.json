@@ -12,6 +12,7 @@
     "DimensionTransitionMixin",
     "DimensionTypeMixin",
     "EntityMixin",
+    "FireworkRocketItemMixin",
     "FlowingFluidMixin",
     "GiveCommandMixin",
     "ItemEntityMixin",

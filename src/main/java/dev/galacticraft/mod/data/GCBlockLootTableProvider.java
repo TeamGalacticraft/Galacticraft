@@ -231,25 +231,6 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.add(GCBlocks.OLIVINE_BASALT, this.createOreDrop(GCBlocks.OLIVINE_BASALT, GCItems.OLIVINE_SHARD, 1.0F, 2.0F));
         this.add(GCBlocks.RICH_OLIVINE_BASALT, this.createOreDrop(GCBlocks.RICH_OLIVINE_BASALT, GCItems.OLIVINE_SHARD, 3.0F, 4.0F));
 
-        this.add(GCBlocks.MOON_CHEESE_WHEEL, noDrop());
-        this.add(GCBlocks.CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.CANDLE));
-        this.add(GCBlocks.WHITE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.WHITE_CANDLE));
-        this.add(GCBlocks.ORANGE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.ORANGE_CANDLE));
-        this.add(GCBlocks.MAGENTA_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.MAGENTA_CANDLE));
-        this.add(GCBlocks.LIGHT_BLUE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.LIGHT_BLUE_CANDLE));
-        this.add(GCBlocks.YELLOW_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.YELLOW_CANDLE));
-        this.add(GCBlocks.LIME_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.LIME_CANDLE));
-        this.add(GCBlocks.PINK_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.PINK_CANDLE));
-        this.add(GCBlocks.GRAY_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.GRAY_CANDLE));
-        this.add(GCBlocks.LIGHT_GRAY_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.LIGHT_GRAY_CANDLE));
-        this.add(GCBlocks.CYAN_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.CYAN_CANDLE));
-        this.add(GCBlocks.PURPLE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.PURPLE_CANDLE));
-        this.add(GCBlocks.BLUE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.BLUE_CANDLE));
-        this.add(GCBlocks.BROWN_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.BROWN_CANDLE));
-        this.add(GCBlocks.GREEN_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.GREEN_CANDLE));
-        this.add(GCBlocks.RED_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.RED_CANDLE));
-        this.add(GCBlocks.BLACK_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.BLACK_CANDLE));
-
         this.dropSelf(GCBlocks.SILICON_BLOCK);
         this.dropSelf(GCBlocks.METEORIC_IRON_BLOCK);
         this.dropSelf(GCBlocks.DESH_BLOCK);
@@ -268,6 +249,29 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         this.add(GCBlocks.FALLEN_METEOR, block -> createSilkTouchDispatchTable(block, this.applyExplosionDecay(block, LootItem.lootTableItem(GCItems.RAW_METEORIC_IRON)
                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 2.0f))))));
+
+        this.dropSelf(GCBlocks.MOON_CHEESE_BLOCK);
+        this.dropSelf(GCBlocks.MOON_CHEESE_LOG);
+        this.dropSelf(GCBlocks.MOON_CHEESE_LEAVES);
+
+        this.add(GCBlocks.MOON_CHEESE_WHEEL, noDrop());
+        this.add(GCBlocks.CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.CANDLE));
+        this.add(GCBlocks.WHITE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.WHITE_CANDLE));
+        this.add(GCBlocks.ORANGE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.ORANGE_CANDLE));
+        this.add(GCBlocks.MAGENTA_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.MAGENTA_CANDLE));
+        this.add(GCBlocks.LIGHT_BLUE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.LIGHT_BLUE_CANDLE));
+        this.add(GCBlocks.YELLOW_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.YELLOW_CANDLE));
+        this.add(GCBlocks.LIME_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.LIME_CANDLE));
+        this.add(GCBlocks.PINK_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.PINK_CANDLE));
+        this.add(GCBlocks.GRAY_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.GRAY_CANDLE));
+        this.add(GCBlocks.LIGHT_GRAY_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.LIGHT_GRAY_CANDLE));
+        this.add(GCBlocks.CYAN_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.CYAN_CANDLE));
+        this.add(GCBlocks.PURPLE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.PURPLE_CANDLE));
+        this.add(GCBlocks.BLUE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.BLUE_CANDLE));
+        this.add(GCBlocks.BROWN_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.BROWN_CANDLE));
+        this.add(GCBlocks.GREEN_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.GREEN_CANDLE));
+        this.add(GCBlocks.RED_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.RED_CANDLE));
+        this.add(GCBlocks.BLACK_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.BLACK_CANDLE));
 
         this.dropSelf(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
 

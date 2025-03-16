@@ -28,6 +28,7 @@ import dev.galacticraft.machinelib.api.data.model.MachineModelGenerator;
 import dev.galacticraft.machinelib.client.api.model.MachineTextureBase;
 import dev.galacticraft.machinelib.client.api.model.TextureProvider;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.decoration.IronGratingBlock;
@@ -49,7 +50,6 @@ import net.minecraft.data.models.blockstates.*;
 import net.minecraft.data.models.model.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -202,6 +202,27 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.OLIVINE_BASALT);
         generator.createTrivialCube(GCBlocks.RICH_OLIVINE_BASALT);
 
+        // COMPACT MINERAL BLOCKS
+        generator.createTrivialCube(GCBlocks.SILICON_BLOCK);
+        generator.createTrivialCube(GCBlocks.METEORIC_IRON_BLOCK);
+        generator.createTrivialCube(GCBlocks.DESH_BLOCK);
+        generator.createTrivialCube(GCBlocks.ALUMINUM_BLOCK);
+        generator.createTrivialCube(GCBlocks.TIN_BLOCK);
+        generator.createTrivialCube(GCBlocks.TITANIUM_BLOCK);
+        generator.createTrivialCube(GCBlocks.LEAD_BLOCK);
+        generator.createTrivialCube(GCBlocks.LUNAR_SAPPHIRE_BLOCK);
+        generator.createTrivialCube(GCBlocks.RAW_METEORIC_IRON_BLOCK);
+        generator.createTrivialCube(GCBlocks.RAW_DESH_BLOCK);
+        generator.createTrivialCube(GCBlocks.RAW_ALUMINUM_BLOCK);
+        generator.createTrivialCube(GCBlocks.RAW_TIN_BLOCK);
+        generator.createTrivialCube(GCBlocks.RAW_TITANIUM_BLOCK);
+        generator.createTrivialCube(GCBlocks.RAW_LEAD_BLOCK);
+
+        // CHEESE BLOCKS
+        generator.createTrivialCube(GCBlocks.MOON_CHEESE_BLOCK);
+        generator.createAxisAlignedPillarBlock(GCBlocks.MOON_CHEESE_LOG, TexturedModel.COLUMN);
+        generator.createTrivialCube(GCBlocks.MOON_CHEESE_LEAVES);
+
         this.createCheeseWheel(generator);
         this.createCandleCheeseWheel(generator, Blocks.CANDLE, GCBlocks.CANDLE_MOON_CHEESE_WHEEL);
         this.createCandleCheeseWheel(generator, Blocks.WHITE_CANDLE, GCBlocks.WHITE_CANDLE_MOON_CHEESE_WHEEL);
@@ -220,22 +241,6 @@ public class GCModelProvider extends FabricModelProvider {
         this.createCandleCheeseWheel(generator, Blocks.GREEN_CANDLE, GCBlocks.GREEN_CANDLE_MOON_CHEESE_WHEEL);
         this.createCandleCheeseWheel(generator, Blocks.RED_CANDLE, GCBlocks.RED_CANDLE_MOON_CHEESE_WHEEL);
         this.createCandleCheeseWheel(generator, Blocks.BLACK_CANDLE, GCBlocks.BLACK_CANDLE_MOON_CHEESE_WHEEL);
-
-        // COMPACT MINERAL BLOCKS
-        generator.createTrivialCube(GCBlocks.SILICON_BLOCK);
-        generator.createTrivialCube(GCBlocks.METEORIC_IRON_BLOCK);
-        generator.createTrivialCube(GCBlocks.DESH_BLOCK);
-        generator.createTrivialCube(GCBlocks.ALUMINUM_BLOCK);
-        generator.createTrivialCube(GCBlocks.TIN_BLOCK);
-        generator.createTrivialCube(GCBlocks.TITANIUM_BLOCK);
-        generator.createTrivialCube(GCBlocks.LEAD_BLOCK);
-        generator.createTrivialCube(GCBlocks.LUNAR_SAPPHIRE_BLOCK);
-        generator.createTrivialCube(GCBlocks.RAW_METEORIC_IRON_BLOCK);
-        generator.createTrivialCube(GCBlocks.RAW_DESH_BLOCK);
-        generator.createTrivialCube(GCBlocks.RAW_ALUMINUM_BLOCK);
-        generator.createTrivialCube(GCBlocks.RAW_TIN_BLOCK);
-        generator.createTrivialCube(GCBlocks.RAW_TITANIUM_BLOCK);
-        generator.createTrivialCube(GCBlocks.RAW_LEAD_BLOCK);
 
         // MOON VILLAGER SPECIAL
         generator.copyModel(Blocks.CARTOGRAPHY_TABLE, GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
@@ -458,11 +463,12 @@ public class GCModelProvider extends FabricModelProvider {
     }
 
     private void createGlassFluidPipeAndWalkway(BlockModelGenerators generator) {
-        for (var color : DyeColor.values()) {
+        for (var color : PipeColor.values()) {
             GCModelTemplates.GLASS_FLUID_PIPE.create(Constant.id(color + "_" + BuiltInRegistries.BLOCK.getKey(GCBlocks.GLASS_FLUID_PIPE).getPath()).withPrefix("block/"), color(TextureMapping.getBlockTexture(GCBlocks.GLASS_FLUID_PIPE, "/" + color)), generator.modelOutput);
             GCModelTemplates.FLUID_PIPE_WALKWAY.create(Constant.id(color + "_" + BuiltInRegistries.BLOCK.getKey(GCBlocks.FLUID_PIPE_WALKWAY).getPath()).withPrefix("block/"), color(TextureMapping.getBlockTexture(GCBlocks.GLASS_FLUID_PIPE, "/" + color)), generator.modelOutput);
         }
-        generator.delegateItemModel(GCBlocks.FLUID_PIPE_WALKWAY, Constant.id("white_fluid_pipe_walkway").withPrefix("block/"));
+//        generator.delegateItemModel(GCBlocks.GLASS_FLUID_PIPE, Constant.id("clear_fluid_pipe_walkway").withPrefix("block"));
+        generator.delegateItemModel(GCBlocks.FLUID_PIPE_WALKWAY, Constant.id("clear_fluid_pipe_walkway").withPrefix("block/"));
     }
 
     private void createAutoGeneratedModel(BlockModelGenerators generator, Block block, ResourceLocation id) {

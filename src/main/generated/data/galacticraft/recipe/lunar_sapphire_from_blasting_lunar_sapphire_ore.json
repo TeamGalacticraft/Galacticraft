@@ -2,7 +2,7 @@
   "type": "minecraft:blasting",
   "category": "misc",
   "cookingtime": 100,
-  "experience": 0.7,
+  "experience": 1.0,
   "group": "lunar_sapphire",
   "ingredient": {
     "item": "galacticraft:lunar_sapphire_ore"

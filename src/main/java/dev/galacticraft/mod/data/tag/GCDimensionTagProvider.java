@@ -45,5 +45,7 @@ public class GCDimensionTagProvider extends FabricTagProvider<DimensionType> {
         this.tag(GCDimensionTypeTags.SPACE)
                 .add(GCDimensionTypes.MOON)
                 .add(GCDimensionTypes.VENUS);
+        tag(GCTags.VACUUM)
+                .add(GCDimensionTypes.MOON);
     }
 }
