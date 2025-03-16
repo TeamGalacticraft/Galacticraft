@@ -22,9 +22,7 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.tag.GCTags;
-import net.minecraft.core.Holder;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FireworkRocketItem;
@@ -42,11 +40,6 @@ public abstract class FireworkRocketItemMixin extends Item {
 
     @ModifyExpressionValue(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isFallFlying()Z"))
     private boolean gc$useFireworkInVacuum(boolean original, Level level, Player player, InteractionHand interactionHand) {
-        Holder<CelestialBody<?, ?>> holder = level.galacticraft$getCelestialBody();
-        if (holder != null && holder.value().atmosphere().pressure() < 0.1) {
-            // Prevent fireworks from working when the pressure is less than 10% of Earth's atmosphere
-            return false;
-        }
-        return original;
+        return level.galacticraft$hasDimensionTypeTag(GCTags.VACUUM) ? false : original;
     }
 }
