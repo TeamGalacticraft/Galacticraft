@@ -58,8 +58,8 @@ public class GlassFluidPipeBlock extends FluidPipe {
     public static final VoxelShape DOWN = box(6, 0, 6, 10, 10, 10);
     public static final VoxelShape NONE = box(6, 6, 6, 10, 10, 10);
 
-    public GlassFluidPipeBlock(Properties settings) {
-        super(settings);
+    public GlassFluidPipeBlock(Properties settings, PipeColor color) {
+        super(settings, color);
     }
 
     @Override

@@ -26,6 +26,7 @@ import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.FluidPipe;
+import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.api.block.entity.Walkway;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.content.block.entity.networked.FluidPipeWalkwayBlockEntity;
@@ -60,21 +61,21 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 public class FluidPipeWalkway extends FluidPipe implements FluidLoggable {
-    public static final MapCodec<FluidPipeWalkway> CODEC = simpleCodec(FluidPipeWalkway::new);
+//    public static final MapCodec<FluidPipeWalkway> CODEC = simpleCodec(FluidPipeWalkway::new);
     private static final VoxelShape[] SHAPES = new VoxelShape[64];
 
-    public FluidPipeWalkway(Properties settings) {
-        super(settings);
+    public FluidPipeWalkway(Properties settings, PipeColor color) {
+        super(settings, color);
         this.registerDefaultState(this.getStateDefinition().any()
                 .setValue(FLUID, INVALID)
                 .setValue(FlowingFluid.LEVEL, 8)
                 .setValue(FlowingFluid.FALLING, false));
     }
 
-    @Override
-    protected MapCodec<? extends Block> codec() {
-        return CODEC;
-    }
+//    @Override
+//    protected MapCodec<? extends Block> codec() {
+//        return CODEC;
+//    }
 
     private static int getFacingMask(Direction direction) {
         return 1 << direction.get3DDataValue();

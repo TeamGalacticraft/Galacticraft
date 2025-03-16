@@ -32,6 +32,7 @@ import dev.galacticraft.mod.content.block.entity.networked.WireWalkwayBlockEntit
 import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlockEntity;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class GCBlockEntityTypes {
@@ -44,7 +45,7 @@ public class GCBlockEntityTypes {
     // WIRES, PIPES, WALKWAYS
     public static final BlockEntityType<WireBlockEntity> WIRE_T1 = BlockEntityType.Builder.of((pos, state) -> WireBlockEntity.createT1(GCBlockEntityTypes.WIRE_T1, pos, state), GCBlocks.ALUMINUM_WIRE, GCBlocks.SEALABLE_ALUMINUM_WIRE).build();
     public static final BlockEntityType<WireBlockEntity> WIRE_T2 = BlockEntityType.Builder.of((pos, state) -> WireBlockEntity.createT2(GCBlockEntityTypes.WIRE_T2, pos, state), /*GCBlocks.HEAVY_ALUMINUM_WIRE,*/ GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE).build();
-    public static final BlockEntityType<GlassFluidPipeBlockEntity> GLASS_FLUID_PIPE = BlockEntityType.Builder.of(GlassFluidPipeBlockEntity::new, GCBlocks.GLASS_FLUID_PIPE).build();
+    public static final BlockEntityType<GlassFluidPipeBlockEntity> GLASS_FLUID_PIPE = BlockEntityType.Builder.of(GlassFluidPipeBlockEntity::new, GCBlocks.GLASS_FLUID_PIPES.values().toArray(new Block[17])).build();
     public static final BlockEntityType<WalkwayBlockEntity> WALKWAY = BlockEntityType.Builder.of(WalkwayBlockEntity::new, GCBlocks.WALKWAY).build();
     public static final BlockEntityType<WireWalkwayBlockEntity> WIRE_WALKWAY = BlockEntityType.Builder.of(WireWalkwayBlockEntity::new, GCBlocks.WIRE_WALKWAY).build();
     public static final BlockEntityType<FluidPipeWalkwayBlockEntity> FLUID_PIPE_WALKWAY = BlockEntityType.Builder.of(FluidPipeWalkwayBlockEntity::new, GCBlocks.FLUID_PIPE_WALKWAY).build();

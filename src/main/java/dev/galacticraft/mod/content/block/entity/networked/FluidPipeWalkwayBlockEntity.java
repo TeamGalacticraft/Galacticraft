@@ -23,14 +23,17 @@
 package dev.galacticraft.mod.content.block.entity.networked;
 
 import dev.galacticraft.mod.api.block.entity.Colored;
+import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.api.block.entity.Walkway;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,7 +66,7 @@ public class FluidPipeWalkwayBlockEntity extends PipeBlockEntity implements Walk
         this.direction = direction;
         this.getConnections()[direction.ordinal()] = false;
 
-        if (this.hasLevel()) {
+        if (this.level != null) {
             this.level.updateNeighborsAt(this.worldPosition, this.getBlockState().getBlock());
         }
     }
@@ -71,5 +74,10 @@ public class FluidPipeWalkwayBlockEntity extends PipeBlockEntity implements Walk
     @Override
     public boolean canConnect(Direction direction) {
         return direction != this.direction;
+    }
+
+    @Override
+    protected Block getMatchingBlock(PipeColor color) {
+        return GCBlocks.FLUID_PIPE_WALKWAY;
     }
 }

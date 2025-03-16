@@ -24,6 +24,7 @@ package dev.galacticraft.mod.api.block;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.api.pipe.Pipe;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
 import net.fabricmc.loader.api.FabricLoader;
@@ -41,8 +42,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class FluidPipe extends Block implements EntityBlock {
-    public FluidPipe(Properties settings) {
+    public final PipeColor color;
+
+    public FluidPipe(Properties settings, PipeColor color) {
         super(settings.pushReaction(PushReaction.BLOCK));
+        this.color = color;
     }
 
     @Override

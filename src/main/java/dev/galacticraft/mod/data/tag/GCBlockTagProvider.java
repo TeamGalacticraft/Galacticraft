@@ -28,13 +28,14 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -189,6 +190,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(clusters)
                 .add(slab)
                 .add(stairs)
+                .add(GCBlocks.GLASS_FLUID_PIPES.values().toArray(new Block[17]))
                 .add(
                         GCBlocks.FALLEN_METEOR,
                         GCBlocks.TIN_LADDER,
@@ -207,7 +209,6 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.AIR_LOCK_CONTROLLER,
                         GCBlocks.SEALABLE_ALUMINUM_WIRE,
                         GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE,
-                        GCBlocks.GLASS_FLUID_PIPE,
 
                         GCBlocks.SILICON_BLOCK,
                         GCBlocks.METEORIC_IRON_BLOCK,
@@ -385,7 +386,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.MOON_TURF);
     }
 
-    protected FabricTagProvider<Block>.FabricTagBuilder tag(TagKey<Block> tag) {
+    protected FabricTagProvider<Block>.@NotNull FabricTagBuilder tag(TagKey<Block> tag) {
         return getOrCreateTagBuilder(tag);
     }
 }
