@@ -67,6 +67,15 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
                 .save(output);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.HEAVY_NOSE_CONE)
+                .define('R', Items.REDSTONE_TORCH)
+                .define('P', GCItems.TIER_3_HEAVY_DUTY_PLATE)
+                .pattern(" R ")
+                .pattern(" P ")
+                .pattern("P P")
+                .unlockedBy(getHasName(GCItems.TIER_3_HEAVY_DUTY_PLATE), has(GCItems.TIER_3_HEAVY_DUTY_PLATE))
+                .save(output);
+
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ROCKET_FIN)
                 .define('S', GCTags.COMPRESSED_STEEL)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
@@ -75,6 +84,24 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .pattern("P P")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
                 .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.HEAVY_ROCKET_FIN)
+                .define('T', GCItems.TIER_2_HEAVY_DUTY_PLATE)
+                .define('P', GCItems.TIER_3_HEAVY_DUTY_PLATE)
+                .pattern(" T ")
+                .pattern("PTP")
+                .pattern("P P")
+                .unlockedBy(getHasName(GCItems.TIER_3_HEAVY_DUTY_PLATE), has(GCItems.TIER_3_HEAVY_DUTY_PLATE))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.HEAVY_ROCKET_FIN)
+                .define('T', GCItems.COMPRESSED_TITANIUM)
+                .define('P', GCItems.TIER_3_HEAVY_DUTY_PLATE)
+                .pattern(" T ")
+                .pattern("PTP")
+                .pattern("P P")
+                .unlockedBy(getHasName(GCItems.TIER_3_HEAVY_DUTY_PLATE), has(GCItems.TIER_3_HEAVY_DUTY_PLATE))
+                .save(output, getItemName(GCItems.HEAVY_ROCKET_FIN) + "_alt");
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ROCKET_ENGINE)
                 .define('F', Items.FLINT_AND_STEEL)
@@ -86,6 +113,30 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .pattern("PTP")
                 .pattern("PVP")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.HEAVY_ROCKET_ENGINE)
+                .define('F', Items.FLINT_AND_STEEL)
+                .define('B', Items.STONE_BUTTON)
+                .define('V', GCItems.OXYGEN_VENT)
+                .define('P', GCItems.TIER_3_HEAVY_DUTY_PLATE)
+                .define('T', GCItems.TIN_CANISTER)
+                .pattern(" FB")
+                .pattern("PTP")
+                .pattern("PVP")
+                .unlockedBy(getHasName(GCItems.TIER_3_HEAVY_DUTY_PLATE), has(GCItems.TIER_3_HEAVY_DUTY_PLATE))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ROCKET_BOOSTER)
+                .define('M', GCItems.COMPRESSED_METEORIC_IRON)
+                .define('Y', Items.YELLOW_WOOL)
+                .define('F', GCItems.FUEL_BUCKET)
+                .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
+                .define('V', GCItems.OXYGEN_VENT)
+                .pattern("MYM")
+                .pattern("MFM")
+                .pattern("PVP")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_METEORIC_IRON), has(GCItems.COMPRESSED_METEORIC_IRON))
                 .save(output);
 
         RocketRecipeBuilder.create(GCItems.ROCKET)

@@ -200,7 +200,7 @@ public class GCBlocks {
     public static final Block ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.ALUMINUM_WIRE, new AluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL)));
     public static final Block SEALABLE_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.SEALABLE_ALUMINUM_WIRE, new SealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(TIN_DECORATION.block())));
     public static final Block HEAVY_SEALABLE_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE, new HeavySealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(TIN_DECORATION.block())));
-    public static final Block GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.GLASS_FLUID_PIPE, new GlassFluidPipeBlock(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).sound(SoundType.GLASS).requiresCorrectToolForDrops()));
+    public static final Block GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.GLASS_FLUID_PIPE, new GlassFluidPipeBlock(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).sound(SoundType.GLASS).requiresCorrectToolForDrops().forceSolidOn()));
     public static final Block FUELING_PAD = BLOCKS.registerWithItem(Constant.Block.FUELING_PAD, new FuelPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 10.0F).requiresCorrectToolForDrops()));
     public static final Block ROCKET_LAUNCH_PAD = BLOCKS.registerWithItem(Constant.Block.ROCKET_LAUNCH_PAD, new LaunchPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 10.0F).requiresCorrectToolForDrops()));
     public static final Block ROCKET_WORKBENCH = BLOCKS.registerWithItem(Constant.Block.ROCKET_WORKBENCH, new RocketWorkbench(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F)));
@@ -219,25 +219,40 @@ public class GCBlocks {
     public static final Block STRONG_VACUUM_GLASS = BLOCKS.registerWithItem(Constant.Block.STRONG_VACUUM_GLASS, new VacuumGlassBlock(BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.GLASS)));
 
     // ORES
-    public static final Block SILICON_ORE = BLOCKS.registerWithItem(Constant.Block.SILICON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 3.0F, false)));
-    public static final Block DEEPSLATE_SILICON_ORE = BLOCKS.registerWithItem(Constant.Block.DEEPSLATE_SILICON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(4.5F, 3.0F, true)));
+    public static final Block MARS_IRON_ORE = BLOCKS.registerWithItem(Constant.Block.MARS_IRON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.5F, 3.0F, true)));
+    public static final Block ASTEROID_IRON_ORE = BLOCKS.registerWithItem(Constant.Block.ASTEROID_IRON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.5F, 3.0F, true)));
 
     public static final Block MOON_COPPER_ORE = BLOCKS.registerWithItem(Constant.Block.MOON_COPPER_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 5.0F, false)));
     public static final Block LUNASLATE_COPPER_ORE = BLOCKS.registerWithItem(Constant.Block.LUNASLATE_COPPER_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(5.0F, 5.0F, true)));
+    public static final Block MARS_COPPER_ORE = BLOCKS.registerWithItem(Constant.Block.MARS_COPPER_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(5.0F, 5.0F, true)));
+    public static final Block VENUS_COPPER_ORE = BLOCKS.registerWithItem(Constant.Block.VENUS_COPPER_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(5.0F, 5.0F, true)));
+
+    public static final Block SILICON_ORE = BLOCKS.registerWithItem(Constant.Block.SILICON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 3.0F, false)));
+    public static final Block DEEPSLATE_SILICON_ORE = BLOCKS.registerWithItem(Constant.Block.DEEPSLATE_SILICON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(4.5F, 3.0F, true)));
 
     public static final Block TIN_ORE = BLOCKS.registerWithItem(Constant.Block.TIN_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 3.0F, false)));
     public static final Block DEEPSLATE_TIN_ORE = BLOCKS.registerWithItem(Constant.Block.DEEPSLATE_TIN_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(4.5F, 3.0F, true)));
     public static final Block MOON_TIN_ORE = BLOCKS.registerWithItem(Constant.Block.MOON_TIN_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 5.0F, false)));
     public static final Block LUNASLATE_TIN_ORE = BLOCKS.registerWithItem(Constant.Block.LUNASLATE_TIN_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(5.0F, 5.0F, true)));
+    public static final Block MARS_TIN_ORE = BLOCKS.registerWithItem(Constant.Block.MARS_TIN_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(5.0F, 5.0F, true)));
+    public static final Block VENUS_TIN_ORE = BLOCKS.registerWithItem(Constant.Block.VENUS_TIN_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(5.0F, 5.0F, true)));
 
     public static final Block ALUMINUM_ORE = BLOCKS.registerWithItem(Constant.Block.ALUMINUM_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 3.0F, false)));
     public static final Block DEEPSLATE_ALUMINUM_ORE = BLOCKS.registerWithItem(Constant.Block.DEEPSLATE_ALUMINUM_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.5F, 3.0F, true)));
+    public static final Block ASTEROID_ALUMINUM_ORE = BLOCKS.registerWithItem(Constant.Block.ASTEROID_ALUMINUM_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.5F, 3.0F, true)));
+    public static final Block VENUS_ALUMINUM_ORE = BLOCKS.registerWithItem(Constant.Block.VENUS_ALUMINUM_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.5F, 3.0F, true)));
+
+    public static final Block MOON_CHEESE_ORE = BLOCKS.registerWithItem(Constant.Block.MOON_CHEESE_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 5.0F, false)));
+
+    public static final Block LUNAR_SAPPHIRE_ORE = BLOCKS.registerWithItem(Constant.Block.LUNAR_SAPPHIRE_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 5.0F, false)));
 
     public static final Block DESH_ORE = BLOCKS.registerWithItem(Constant.Block.DESH_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 5.0F, false)));
 
     public static final Block ILMENITE_ORE = BLOCKS.registerWithItem(Constant.Block.ILMENITE_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 5.0F, false)));
 
     public static final Block GALENA_ORE = BLOCKS.registerWithItem(Constant.Block.GALENA_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 5.0F, false)));
+
+    public static final Block SOLAR_ORE = BLOCKS.registerWithItem(Constant.Block.SOLAR_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.0F, 5.0F, false)));
 
     public static final Block OLIVINE_CLUSTER = BLOCKS.registerWithItem(Constant.Block.OLIVINE_CLUSTER, new OlivineClusterBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.AMETHYST_CLUSTER).mapColor(MapColor.COLOR_LIGHT_GREEN)));
     public static final Block OLIVINE_BASALT = BLOCKS.registerWithItem(Constant.Block.OLIVINE_BASALT, new Block(BlockBehaviour.Properties.ofFullCopy(MOON_BASALT).strength(3.5F, 6.0F)));

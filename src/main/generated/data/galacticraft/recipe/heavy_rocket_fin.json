@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "item": "galacticraft:heavy_plating_t3"
+    },
+    "T": {
+      "item": "galacticraft:heavy_plating_t2"
+    }
+  },
+  "pattern": [
+    " T ",
+    "PTP",
+    "P P"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:heavy_rocket_fin"
+  }
+}
