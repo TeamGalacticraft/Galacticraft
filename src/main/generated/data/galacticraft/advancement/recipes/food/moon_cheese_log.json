@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_compressed_steel": {
+    "has_moon_cheese_wheel": {
       "conditions": {
         "items": [
           {
-            "items": "galacticraft:compressed_steel"
+            "items": "galacticraft:moon_cheese_wheel"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "galacticraft:diagonal_light_panel_flipped"
+        "recipe": "galacticraft:moon_cheese_log"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_compressed_steel"
+      "has_moon_cheese_wheel"
     ]
   ],
   "rewards": {
     "recipes": [
-      "galacticraft:diagonal_light_panel_flipped"
+      "galacticraft:moon_cheese_log"
     ]
   }
 }

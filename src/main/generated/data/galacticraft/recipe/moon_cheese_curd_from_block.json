@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "moon_cheese_curd",
+  "ingredients": [
+    {
+      "item": "galacticraft:moon_cheese_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "galacticraft:moon_cheese_curd"
+  }
+}
