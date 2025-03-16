@@ -27,14 +27,18 @@ import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.storage.WritableLevelData;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -43,9 +47,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.function.Supplier;
 
 @Mixin(value = Level.class, priority = 100) // apply before oxygen level mixin
-public class LevelCelestialBodyMixin implements LevelBodyAccessor {
+public abstract class LevelCelestialBodyMixin implements LevelBodyAccessor {
     @Unique
     private Holder<CelestialBody<? ,?>> celestialBody = null;
+
+    @Shadow public abstract RegistryAccess registryAccess();
+
+    @Shadow public abstract DimensionType dimensionType();
 
     @Inject(method = "<init>(Lnet/minecraft/world/level/storage/WritableLevelData;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/core/RegistryAccess;Lnet/minecraft/core/Holder;Ljava/util/function/Supplier;ZZJI)V", at = @At("RETURN"))
     private void init(WritableLevelData writableLevelData,
@@ -65,5 +73,11 @@ public class LevelCelestialBodyMixin implements LevelBodyAccessor {
     @Override
     public @Nullable Holder<CelestialBody<?, ?>> galacticraft$getCelestialBody() {
         return this.celestialBody;
+    }
+
+    @Override
+    public boolean galacticraft$hasDimensionTypeTag(TagKey<DimensionType> tag) {
+        Registry<DimensionType> dimensionTypeRegistry = this.registryAccess().registryOrThrow(Registries.DIMENSION_TYPE);
+        return dimensionTypeRegistry.getHolder(dimensionTypeRegistry.getId(this.dimensionType())).map(reference -> reference.is(tag)).orElse(false);
     }
 }
