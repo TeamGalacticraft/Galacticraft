@@ -61,7 +61,7 @@ public class OxygenOverlay {
             boolean nonBreathable = (body != null) && !body.value().atmosphere().breathable();
             boolean hasMaskAndGear = mc.player.galacticraft$hasMaskAndGear();
             if (nonBreathable || hasMaskAndGear) {
-                boolean hasOxygen = false;
+                boolean hasOxygen = mc.level.isBreathable(mc.player.blockPosition().above());
                 Container inv = mc.player.galacticraft$getOxygenTanks();
                 final int outline = 0x99FFFFFF;
                 final int y = 4;
@@ -83,7 +83,7 @@ public class OxygenOverlay {
                     DrawableUtil.drawOxygenBuffer(graphics.pose(), x, y, amount, capacity);
                 }
 
-                if (nonBreathable && !(hasMaskAndGear && hasOxygen)) {
+                if (nonBreathable && !hasOxygen) {
                     final Window scaledresolution = mc.getWindow();
                     final int width = scaledresolution.getGuiScaledWidth();
                     final int height = scaledresolution.getGuiScaledHeight();
@@ -99,11 +99,13 @@ public class OxygenOverlay {
                     graphics.drawString(mc.font, WARNING_TEXT, 0, topY, FastColor.ARGB32.color(255, 255, 0, 0), false);
                     graphics.blit(Constant.ScreenTexture.WARNING_SIGN, textWidth + 3, topY, 0.0F, 0.0F, 7, 7, 8, 8);
 
-                    graphics.pose().translate(-offset, 0.0F, 0.0F);
+                    if (mc.player.isAlive()) {
+                        graphics.pose().translate(-offset, 0.0F, 0.0F);
 
-                    final int alpha = (int) (200 * (Math.sin(tickCount) * 0.5F + 0.5F)) + 5;
-                    graphics.drawString(mc.font, INVALID_SETUP, width / 4 - mc.font.width(INVALID_SETUP) / 2, height / 8,
-                            FastColor.ARGB32.color(alpha, alpha, alpha, alpha), false);
+                        final int alpha = (int) (200 * (Math.sin(tickCount) * 0.5F + 0.5F)) + 5;
+                        graphics.drawString(mc.font, INVALID_SETUP, width / 4 - mc.font.width(INVALID_SETUP) / 2, height / 8,
+                                FastColor.ARGB32.color(alpha, alpha, alpha, alpha), false);
+                    }
 
                     graphics.pose().popPose();
                 }
