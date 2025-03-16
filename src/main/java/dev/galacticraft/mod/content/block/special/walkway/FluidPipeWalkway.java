@@ -107,7 +107,7 @@ public class FluidPipeWalkway extends FluidPipe implements FluidLoggable {
             if (stack.getItem() instanceof DyeItem dye) {
                 var stack2 = stack.copy();
                 var color = dye.getDyeColor();
-                if (color != walkway.getColor()) {
+                if (walkway.dyeCanBeApplied(color)) {
                     stack2.consume(1, player);
                     player.setItemInHand(hand, stack2);
                     walkway.setColor(color);
@@ -130,7 +130,7 @@ public class FluidPipeWalkway extends FluidPipe implements FluidLoggable {
             for (var interactionHand : InteractionHand.values()) {
                 var stack = player.getItemInHand(interactionHand);
 
-                if (stack.getItem() instanceof DyeItem dye && dye.getDyeColor() != walkway.getColor()) {
+                if (stack.getItem() instanceof DyeItem dye && walkway.dyeCanBeApplied(dye.getDyeColor())) {
                     walkway.setColor(dye.getDyeColor());
                     var copy = stack.copy();
 

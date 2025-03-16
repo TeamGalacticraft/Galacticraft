@@ -22,36 +22,43 @@
 
 package dev.galacticraft.mod.api.block.entity;
 
-import dev.galacticraft.mod.Constant;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.DyeColor;
 
-public interface Colored {
-    PipeColor getColor();
+public enum PipeColor {
+    WHITE("white"),
+    ORANGE("orange"),
+    MAGENTA("magenta"),
+    LIGHT_BLUE("light_blue"),
+    YELLOW("yellow"),
+    LIME("lime"),
+    PINK("pink"),
+    GRAY("gray"),
+    LIGHT_GRAY("light_gray"),
+    CYAN("cyan"),
+    PURPLE("purple"),
+    BLUE("blue"),
+    BROWN("brown"),
+    GREEN("green"),
+    RED("red"),
+    BLACK("black"),
+    CLEAR("clear");
 
-    void setColor(PipeColor color);
+    private final String name;
 
-    default void setColor(DyeColor dye) {
-        this.setColor(PipeColor.fromDye(dye));
+    PipeColor(final String name) {
+        this.name = name;
     }
 
-    default boolean canConnectTo(Colored other) {
-        return this.getColor() == other.getColor() || this.getColor() == PipeColor.CLEAR || other.getColor() == PipeColor.CLEAR;
+    public static PipeColor fromDye(DyeColor dye) {
+        return PipeColor.values()[dye.ordinal()];
     }
 
-    default boolean dyeCanBeApplied(DyeColor dye) {
-        return this.getColor() != PipeColor.fromDye(dye);
+    public String getName() {
+        return this.name;
     }
 
-    default void writeColorNbt(CompoundTag nbt) {
-        nbt.putByte(Constant.Nbt.COLOR, (byte) this.getColor().ordinal());
-    }
-
-    default void readColorNbt(CompoundTag nbt) {
-        if (nbt.contains(Constant.Nbt.COLOR)) {
-            this.setColor(PipeColor.values()[nbt.getByte(Constant.Nbt.COLOR)]);
-        } else {
-            this.setColor(PipeColor.CLEAR);
-        }
+    @Override
+    public String toString() {
+        return this.name;
     }
 }
