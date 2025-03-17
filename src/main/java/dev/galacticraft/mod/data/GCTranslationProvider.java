@@ -580,13 +580,13 @@ public class GCTranslationProvider extends TranslationProvider {
 
         // LEGACY_MUSIC_DISCS
         this.musicDisc(GCItems.LEGACY_MUSIC_DISC_MARS, "Legacy Music Disc", "Jackson Cordes - Mars");
-        this.add("jukebox_song.galacticraft.legacy_mars", "Jackson Cordes - Mars");
+        this.add(JukeboxSong.LEGACY_MARS, "Jackson Cordes - Mars");
         this.musicDisc(GCItems.LEGACY_MUSIC_DISC_MIMAS, "Legacy Music Disc", "Jackson Cordes - Mimas");
-        this.add("jukebox_song.galacticraft.legacy_mimas", "Jackson Cordes - Mimas");
+        this.add(JukeboxSong.LEGACY_MIMAS, "Jackson Cordes - Mimas");
         this.musicDisc(GCItems.LEGACY_MUSIC_DISC_ORBIT, "Legacy Music Disc", "Jackson Cordes - Orbit");
-        this.add("jukebox_song.galacticraft.legacy_orbit", "Jackson Cordes - Orbit");
+        this.add(JukeboxSong.LEGACY_ORBIT, "Jackson Cordes - Orbit");
         this.musicDisc(GCItems.LEGACY_MUSIC_DISC_SPACERACE, "Legacy Music Disc", "Jackson Cordes - Space Race");
-        this.add("jukebox_song.galacticraft.legacy_spacerace", "Jackson Cordes - Space Race");
+        this.add(JukeboxSong.LEGACY_SPACERACE, "Jackson Cordes - Space Race");
 
         // SPAWN EGGS
         this.item(GCItems.MOON_VILLAGER_SPAWN_EGG, "Moon Villager Spawn Egg");
