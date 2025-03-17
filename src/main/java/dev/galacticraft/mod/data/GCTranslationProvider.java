@@ -82,7 +82,22 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(RecipeCategory.CIRCUIT_FABRICATOR, "Circuit Fabricating");
         this.add(RecipeCategory.COMPRESSOR, "Compressing");
 
-        this.add(BannerPattern.ROCKET, "Rocket");
+        this.add(BannerPattern.ROCKET + ".white", "White Rocket");
+        this.add(BannerPattern.ROCKET + ".orange", "Orange Rocket");
+        this.add(BannerPattern.ROCKET + ".magenta", "Magenta Rocket");
+        this.add(BannerPattern.ROCKET + ".light_blue", "Light Blue Rocket");
+        this.add(BannerPattern.ROCKET + ".yellow", "Yellow Rocket");
+        this.add(BannerPattern.ROCKET + ".lime", "Lime Rocket");
+        this.add(BannerPattern.ROCKET + ".pink", "Pink Rocket");
+        this.add(BannerPattern.ROCKET + ".gray", "Gray Rocket");
+        this.add(BannerPattern.ROCKET + ".light_gray", "Light Gray Rocket");
+        this.add(BannerPattern.ROCKET + ".cyan", "Cyan Rocket");
+        this.add(BannerPattern.ROCKET + ".purple", "Purple Rocket");
+        this.add(BannerPattern.ROCKET + ".blue", "Blue Rocket");
+        this.add(BannerPattern.ROCKET + ".brown", "Brown Rocket");
+        this.add(BannerPattern.ROCKET + ".red", "Red Rocket");
+        this.add(BannerPattern.ROCKET + ".green", "Green Rocket");
+        this.add(BannerPattern.ROCKET + ".black", "Black Rocket");
     }
 
     protected void generateBlockTranslations() {
