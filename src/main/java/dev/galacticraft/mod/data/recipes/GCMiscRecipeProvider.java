@@ -143,12 +143,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, GCItems.CARBON_FRAGMENTS, 3)
                 .requires(ConventionalItemTags.COAL)
                 .unlockedBy("has_coal", has(ConventionalItemTags.COAL))
-                .save(output, BuiltInRegistries.ITEM.getKey(GCItems.CARBON_FRAGMENTS).withSuffix("_from_coal"));
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, GCItems.CARBON_FRAGMENTS, 3)
-                .requires(Items.CHARCOAL)
-                .unlockedBy(getHasName(Items.CHARCOAL), has(Items.CHARCOAL))
-                .save(output, BuiltInRegistries.ITEM.getKey(GCItems.CARBON_FRAGMENTS).withSuffix("_from_charcoal"));
+                .save(output);
 
         SimpleCookingRecipeBuilder.generic(Ingredient.of(ItemTags.PLANKS), RecipeCategory.MISC, GCItems.CARBON_FRAGMENTS, 0.1f, 200, RecipeSerializer.SMELTING_RECIPE, SmeltingRecipe::new)
                 .unlockedBy("has_planks", has(ItemTags.PLANKS))
@@ -231,12 +226,13 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BATTERY)
-                .define('T', GCItems.COMPRESSED_ALUMINUM)
+                .define('P', GCItems.COMPRESSED_COPPER)
+                .define('A', GCItems.COMPRESSED_ALUMINUM)
                 .define('R', ConventionalItemTags.REDSTONE_DUSTS)
                 .define('C', ConventionalItemTags.COAL)
-                .pattern(" T ")
-                .pattern("TRT")
-                .pattern("TCT")
+                .pattern(" P ")
+                .pattern("ARA")
+                .pattern("ACA")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_ALUMINUM), has(GCItems.COMPRESSED_ALUMINUM))
                 .save(output);
 
@@ -394,7 +390,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.GROUND_BEEF), has(GCItems.GROUND_BEEF))
                 .save(output);
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.MOON_CHEESE_SLICE, 6)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.MOON_CHEESE_SLICE, 7)
                 .requires(GCBlocks.MOON_CHEESE_WHEEL)
                 .unlockedBy(getHasName(GCBlocks.MOON_CHEESE_WHEEL), has(GCBlocks.MOON_CHEESE_WHEEL))
                 .save(output);
@@ -406,6 +402,13 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .pattern("CMC")
                 .pattern("CCC")
                 .unlockedBy(getHasName(GCItems.MOON_CHEESE_CURD), has(GCItems.MOON_CHEESE_CURD))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.FOOD, GCBlocks.MOON_CHEESE_LOG)
+                .define('C', GCItems.MOON_CHEESE_WHEEL)
+                .pattern("C")
+                .pattern("C")
+                .unlockedBy(getHasName(GCItems.MOON_CHEESE_WHEEL), has(GCItems.MOON_CHEESE_WHEEL))
                 .save(output);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CANNED_DEHYDRATED_APPLE)

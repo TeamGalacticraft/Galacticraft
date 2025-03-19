@@ -83,7 +83,7 @@ public class OxygenOverlay {
                     DrawableUtil.drawOxygenBuffer(graphics.pose(), x, y, amount, capacity);
                 }
 
-                if (nonBreathable && !(hasOxygen || mc.level.isBreathable(mc.player.blockPosition().above()))) {
+                if (nonBreathable && !((hasMaskAndGear && hasOxygen) || mc.level.isBreathable(mc.player.blockPosition().above()))) {
                     final Window scaledresolution = mc.getWindow();
                     final int width = scaledresolution.getGuiScaledWidth();
                     final int height = scaledresolution.getGuiScaledHeight();
