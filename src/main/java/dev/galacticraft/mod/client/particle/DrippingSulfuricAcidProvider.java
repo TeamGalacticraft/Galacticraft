@@ -35,12 +35,12 @@ import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
-public record DrippingOilProvider(SpriteSet spriteProvider) implements ParticleProvider<SimpleParticleType> {
+public record DrippingSulfuricAcidProvider(SpriteSet spriteProvider) implements ParticleProvider<SimpleParticleType> {
     @Override
     @Nullable
     public Particle createParticle(SimpleParticleType particleOptions, ClientLevel clientLevel, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-        var particle = new DripParticle.DripHangParticle(clientLevel, x, y, z, GCFluids.CRUDE_OIL, GCParticleTypes.FALLING_CRUDE_OIL);
-        particle.setColor(42f / 255f, 42f / 255f, 42f / 255f);
+        var particle = new DripParticle.DripHangParticle(clientLevel, x, y, z, GCFluids.SULFURIC_ACID, GCParticleTypes.FALLING_SULFURIC_ACID);
+        particle.setColor(151f / 255f, 245f / 255f, 70f / 255f);
         particle.pickSprite(this.spriteProvider);
         return particle;
     }

@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.render.dimension;
 
 import dev.galacticraft.mod.api.dimension.GalacticDimensionEffects;
-import dev.galacticraft.mod.particle.ScaleParticleType;
+import dev.galacticraft.mod.particle.GCParticleTypes;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.ParticleStatus;
@@ -33,6 +33,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
@@ -119,12 +120,10 @@ public class VenusDimensionEffects extends GalacticDimensionEffects {
                         double baseYOff = shape.max(Direction.Axis.Y, xOffset, zOffset);
                         double fluidHeight = fluidState.getHeight(level, below);
                         double yOffset = Math.max(baseYOff, fluidHeight);
-                        ParticleOptions particle = !fluidState.is(FluidTags.LAVA) && !blockState.is(Blocks.MAGMA_BLOCK) && !CampfireBlock.isLitCampfire(blockState)
-                                ? new ScaleParticleType(ParticleTypes.SMOKE, 0.95F)
-                                : ParticleTypes.SMOKE;
-                        this.minecraft
-                                .level
-                                .addParticle(particle, (double) below.getX() + xOffset, (double) below.getY() + yOffset, (double) below.getZ() + zOffset, 0.0, 0.0, 0.0);
+                        SimpleParticleType simpleParticleType = fluidState.is(FluidTags.LAVA) || blockState.is(Blocks.MAGMA_BLOCK) || CampfireBlock.isLitCampfire(blockState)
+                                ? ParticleTypes.SMOKE
+                                : GCParticleTypes.SPLASH_VENUS;
+                        this.minecraft.level.addParticle(simpleParticleType, (double) below.getX() + xOffset, (double) below.getY() + yOffset, (double) below.getZ() + zOffset, 0.0, 0.0, 0.0);
                     }
                 }
             }
