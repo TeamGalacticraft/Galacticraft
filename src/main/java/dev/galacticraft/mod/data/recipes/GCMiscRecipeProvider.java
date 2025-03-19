@@ -24,7 +24,7 @@ package dev.galacticraft.mod.data.recipes;
 
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
@@ -69,8 +69,8 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_CONCENTRATOR)
-                .define('Z', GCTags.COMPRESSED_STEEL)
-                .define('W', GCTags.COMPRESSED_TIN)
+                .define('Z', GCItemTags.STEEL_PLATES)
+                .define('W', GCItemTags.TIN_PLATES)
                 .define('Y', GCItems.TIN_CANISTER)
                 .define('X', GCItems.OXYGEN_VENT)
                 .pattern("ZWZ")
@@ -280,7 +280,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.TIN_CANISTER, 2)
-                .define('X', GCTags.TIN_INGOTS)
+                .define('X', GCItemTags.TIN_INGOTS)
                 .pattern("X X")
                 .pattern("X X")
                 .pattern("XXX")
@@ -331,7 +331,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BEAM_CORE)
                 .define('R', ConventionalItemTags.REDSTONE_DUSTS)
-                .define('I', GCTags.COMPRESSED_IRON)
+                .define('I', GCItemTags.IRON_PLATES)
                 .define('G', ConventionalItemTags.GLASS_PANES)
                 .pattern("RIR")
                 .pattern("IGI")
@@ -341,7 +341,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BUGGY_WHEEL)
                 .define('L', ConventionalItemTags.LEATHERS)
-                .define('S', GCTags.COMPRESSED_STEEL)
+                .define('S', GCItemTags.STEEL_PLATES)
                 .pattern(" L ")
                 .pattern("LSL")
                 .pattern(" L ")
@@ -349,8 +349,8 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BUGGY_SEAT)
-                .define('S', GCTags.COMPRESSED_STEEL)
-                .define('I', GCTags.COMPRESSED_IRON)
+                .define('S', GCItemTags.STEEL_PLATES)
+                .define('I', GCItemTags.IRON_PLATES)
                 .pattern("  S")
                 .pattern(" IS")
                 .pattern("SSS")
@@ -358,8 +358,8 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BUGGY_STORAGE)
-                .define('S', GCTags.COMPRESSED_STEEL)
-                .define('I', GCTags.COMPRESSED_IRON)
+                .define('S', GCItemTags.STEEL_PLATES)
+                .define('I', GCItemTags.IRON_PLATES)
                 .define('C', ConventionalItemTags.WOODEN_CHESTS)
                 .pattern("SSS")
                 .pattern("ICI")
