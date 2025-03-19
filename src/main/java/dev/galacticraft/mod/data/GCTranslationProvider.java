@@ -82,7 +82,22 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(RecipeCategory.CIRCUIT_FABRICATOR, "Circuit Fabricating");
         this.add(RecipeCategory.COMPRESSOR, "Compressing");
 
-        this.add(BannerPattern.ROCKET, "Rocket");
+        this.add(BannerPattern.ROCKET + ".white", "White Rocket");
+        this.add(BannerPattern.ROCKET + ".orange", "Orange Rocket");
+        this.add(BannerPattern.ROCKET + ".magenta", "Magenta Rocket");
+        this.add(BannerPattern.ROCKET + ".light_blue", "Light Blue Rocket");
+        this.add(BannerPattern.ROCKET + ".yellow", "Yellow Rocket");
+        this.add(BannerPattern.ROCKET + ".lime", "Lime Rocket");
+        this.add(BannerPattern.ROCKET + ".pink", "Pink Rocket");
+        this.add(BannerPattern.ROCKET + ".gray", "Gray Rocket");
+        this.add(BannerPattern.ROCKET + ".light_gray", "Light Gray Rocket");
+        this.add(BannerPattern.ROCKET + ".cyan", "Cyan Rocket");
+        this.add(BannerPattern.ROCKET + ".purple", "Purple Rocket");
+        this.add(BannerPattern.ROCKET + ".blue", "Blue Rocket");
+        this.add(BannerPattern.ROCKET + ".brown", "Brown Rocket");
+        this.add(BannerPattern.ROCKET + ".red", "Red Rocket");
+        this.add(BannerPattern.ROCKET + ".green", "Green Rocket");
+        this.add(BannerPattern.ROCKET + ".black", "Black Rocket");
     }
 
     protected void generateBlockTranslations() {
@@ -565,13 +580,13 @@ public class GCTranslationProvider extends TranslationProvider {
 
         // LEGACY_MUSIC_DISCS
         this.musicDisc(GCItems.LEGACY_MUSIC_DISC_MARS, "Legacy Music Disc", "Jackson Cordes - Mars");
-        this.add("jukebox_song.galacticraft.legacy_mars", "Jackson Cordes - Mars");
+        this.add(JukeboxSong.LEGACY_MARS, "Jackson Cordes - Mars");
         this.musicDisc(GCItems.LEGACY_MUSIC_DISC_MIMAS, "Legacy Music Disc", "Jackson Cordes - Mimas");
-        this.add("jukebox_song.galacticraft.legacy_mimas", "Jackson Cordes - Mimas");
+        this.add(JukeboxSong.LEGACY_MIMAS, "Jackson Cordes - Mimas");
         this.musicDisc(GCItems.LEGACY_MUSIC_DISC_ORBIT, "Legacy Music Disc", "Jackson Cordes - Orbit");
-        this.add("jukebox_song.galacticraft.legacy_orbit", "Jackson Cordes - Orbit");
+        this.add(JukeboxSong.LEGACY_ORBIT, "Jackson Cordes - Orbit");
         this.musicDisc(GCItems.LEGACY_MUSIC_DISC_SPACERACE, "Legacy Music Disc", "Jackson Cordes - Space Race");
-        this.add("jukebox_song.galacticraft.legacy_spacerace", "Jackson Cordes - Space Race");
+        this.add(JukeboxSong.LEGACY_SPACERACE, "Jackson Cordes - Space Race");
 
         // SPAWN EGGS
         this.item(GCItems.MOON_VILLAGER_SPAWN_EGG, "Moon Villager Spawn Egg");

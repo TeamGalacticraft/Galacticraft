@@ -42,7 +42,7 @@ public class VenusWeatherRenderer implements DimensionRenderingRegistry.WeatherR
     public static final VenusWeatherRenderer INSTANCE = new VenusWeatherRenderer();
     private final float[] rainSizeX = new float[1024];
     private final float[] rainSizeZ = new float[1024];
-    private static final ResourceLocation RAIN_TEXTURES = Constant.id("textures/misc/rain_venus.png");
+    private static final ResourceLocation RAIN_TEXTURES = Constant.id("textures/environment/rain_venus.png");
 
     public VenusWeatherRenderer() {
         for (int i = 0; i < 32; ++i) {

@@ -38,6 +38,13 @@ public interface Translations {
         String ROCKET = "banner_pattern.galacticraft.rocket";
     }
 
+    interface JukeboxSong {
+        String LEGACY_MARS = "jukebox_song.galacticraft.legacy_mars";
+        String LEGACY_MIMAS = "jukebox_song.galacticraft.legacy_mimas";
+        String LEGACY_ORBIT = "jukebox_song.galacticraft.legacy_orbit";
+        String LEGACY_SPACERACE = "jukebox_song.galacticraft.legacy_spacerace";
+    }
+
     interface Chat {
         String BED_FAIL = "chat.galacticraft.bed_fail";
         String CHAMBER_HOT = "chat.galacticraft.chamber_hot";

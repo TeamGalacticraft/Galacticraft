@@ -533,19 +533,21 @@ public interface Constant {
     }
 
     interface Particle {
-        String DRIPPING_FUEL = "dripping_fuel";
-        String FALLING_FUEL = "falling_fuel";
         String DRIPPING_CRUDE_OIL = "dripping_crude_oil";
         String FALLING_CRUDE_OIL = "falling_crude_oil";
+        String DRIPPING_FUEL = "dripping_fuel";
+        String FALLING_FUEL = "falling_fuel";
+        String DRIPPING_SULFURIC_ACID = "dripping_sulfuric_acid";
+        String FALLING_SULFURIC_ACID = "falling_sulfuric_acid";
+
         String CRYOGENIC_PARTICLE = "cryogenic_particle";
         String LANDER_FLAME = "lander_flame_particle";
         String SPARK = "spark";
-        String DRIPPING_SULFURIC_ACID = "dripping_sulfuric_acid";
-        String FALLING_SULFURIC_ACID = "falling_sulfuric_acid";
         String LAUNCH_SMOKE = "launch_smoke";
         String LAUNCH_FLAME = "launch_flame";
         String LAUNCH_FLAME_LAUNCHED = "launch_flame_launched";
         String ACID_VAPOR_PARTICLE = "acid_vapor";
+        String SPLASH_VENUS = "splash_venus";
     }
 
     interface ScreenTexture {
