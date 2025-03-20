@@ -22,16 +22,22 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FlintAndSteelItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import com.llamalad7.mixinextras.sugar.Local;
 
 @Mixin(FlintAndSteelItem.class)
 public abstract class FlintAndSteelItemMixin extends Item {
@@ -39,12 +45,14 @@ public abstract class FlintAndSteelItemMixin extends Item {
         super(null);
     }
 
-    @Redirect(method = "useOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"))
-    public boolean useOn(Level level, BlockPos blockPos, BlockState blockState, int n) {
-        Holder<CelestialBody<?, ?>> holder = level.galacticraft$getCelestialBody();
-        if (holder != null && !holder.value().atmosphere().breathable()) {
-            return false;
+    @Inject(method = "useOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/CampfireBlock;canLight(Lnet/minecraft/world/level/block/state/BlockState;)Z"), cancellable = true)
+    public void useOn(UseOnContext useOnContext, CallbackInfoReturnable<InteractionResult> cir, @Local BlockPos blockPos, @Local Player player, @Local Level level) {
+        if (!level.isBreathable(blockPos)) {
+            level.playSound(player, blockPos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0f, level.getRandom().nextFloat() * 0.4f + 0.8f);
+            if (player != null) {
+                useOnContext.getItemInHand().hurtAndBreak(1, player, LivingEntity.getSlotForHand(useOnContext.getHand()));
+            }
+            cir.setReturnValue(InteractionResult.sidedSuccess(level.isClientSide()));
         }
-        return level.setBlock(blockPos, blockState, n);
     }
 }
