@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_deepslate_silicon_ore": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:deepslate_silicon_ore"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:silicon_from_blasting_deepslate_silicon_ore"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_deepslate_silicon_ore"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:silicon_from_blasting_deepslate_silicon_ore"
+    ]
+  }
+}

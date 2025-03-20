@@ -16,6 +16,7 @@
     "EntityMixin",
     "FireChargeItemMixin",
     "FlintAndSteelItemMixin",
+    "FireworkRocketItemMixin",
     "FlowingFluidMixin",
     "GiveCommandMixin",
     "ItemEntityMixin",

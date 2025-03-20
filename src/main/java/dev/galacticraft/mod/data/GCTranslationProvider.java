@@ -38,6 +38,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
@@ -81,7 +82,22 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(RecipeCategory.CIRCUIT_FABRICATOR, "Circuit Fabricating");
         this.add(RecipeCategory.COMPRESSOR, "Compressing");
 
-        this.add(BannerPattern.ROCKET, "Rocket");
+        this.add(BannerPattern.ROCKET + ".white", "White Rocket");
+        this.add(BannerPattern.ROCKET + ".orange", "Orange Rocket");
+        this.add(BannerPattern.ROCKET + ".magenta", "Magenta Rocket");
+        this.add(BannerPattern.ROCKET + ".light_blue", "Light Blue Rocket");
+        this.add(BannerPattern.ROCKET + ".yellow", "Yellow Rocket");
+        this.add(BannerPattern.ROCKET + ".lime", "Lime Rocket");
+        this.add(BannerPattern.ROCKET + ".pink", "Pink Rocket");
+        this.add(BannerPattern.ROCKET + ".gray", "Gray Rocket");
+        this.add(BannerPattern.ROCKET + ".light_gray", "Light Gray Rocket");
+        this.add(BannerPattern.ROCKET + ".cyan", "Cyan Rocket");
+        this.add(BannerPattern.ROCKET + ".purple", "Purple Rocket");
+        this.add(BannerPattern.ROCKET + ".blue", "Blue Rocket");
+        this.add(BannerPattern.ROCKET + ".brown", "Brown Rocket");
+        this.add(BannerPattern.ROCKET + ".red", "Red Rocket");
+        this.add(BannerPattern.ROCKET + ".green", "Green Rocket");
+        this.add(BannerPattern.ROCKET + ".black", "Black Rocket");
     }
 
     protected void generateBlockTranslations() {
@@ -230,19 +246,32 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.STRONG_VACUUM_GLASS, "Vacuum Glass (Strong)");
 
         // ORES
-        this.block(GCBlocks.SILICON_ORE, "Silicon Ore");
-        this.block(GCBlocks.DEEPSLATE_SILICON_ORE, "Deepslate Silicon Ore");
+        this.block(GCBlocks.MARS_IRON_ORE, "Mars Iron Ore");
+        this.block(GCBlocks.ASTEROID_IRON_ORE, "Asteroid Iron Ore");
 
         this.block(GCBlocks.MOON_COPPER_ORE, "Moon Copper Ore");
         this.block(GCBlocks.LUNASLATE_COPPER_ORE, "Lunaslate Copper Ore");
+        this.block(GCBlocks.MARS_COPPER_ORE, "Mars Copper Ore");
+        this.block(GCBlocks.VENUS_COPPER_ORE, "Venus Copper Ore");
+
+        this.block(GCBlocks.SILICON_ORE, "Silicon Ore");
+        this.block(GCBlocks.DEEPSLATE_SILICON_ORE, "Deepslate Silicon Ore");
 
         this.block(GCBlocks.TIN_ORE, "Tin Ore");
         this.block(GCBlocks.DEEPSLATE_TIN_ORE, "Deepslate Tin Ore");
         this.block(GCBlocks.MOON_TIN_ORE, "Moon Tin Ore");
         this.block(GCBlocks.LUNASLATE_TIN_ORE, "Lunaslate Tin Ore");
+        this.block(GCBlocks.MARS_TIN_ORE, "Mars Tin Ore");
+        this.block(GCBlocks.VENUS_TIN_ORE, "Venus Tin Ore");
 
         this.block(GCBlocks.ALUMINUM_ORE, "Aluminum Ore");
         this.block(GCBlocks.DEEPSLATE_ALUMINUM_ORE, "Deepslate Aluminum Ore");
+        this.block(GCBlocks.ASTEROID_ALUMINUM_ORE, "Asteroid Aluminum Ore");
+        this.block(GCBlocks.VENUS_ALUMINUM_ORE, "Venus Aluminum Ore");
+
+        this.block(GCBlocks.MOON_CHEESE_ORE, "Moon Cheese Ore");
+
+        this.block(GCBlocks.LUNAR_SAPPHIRE_ORE, "Lunar Sapphire Ore");
 
         this.block(GCBlocks.DESH_ORE, "Desh Ore");
 
@@ -250,11 +279,34 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.block(GCBlocks.GALENA_ORE, "Galena Ore");
 
+        this.block(GCBlocks.SOLAR_ORE, "Solar Ore");
+
         this.block(GCBlocks.OLIVINE_CLUSTER, "Olivine Cluster");
         this.block(GCBlocks.OLIVINE_BASALT, "Olivine Basalt");
         this.block(GCBlocks.RICH_OLIVINE_BASALT, "Rich Olivine Basalt");
 
+        // COMPACT MINERAL BLOCKS
+        this.block(GCBlocks.SILICON_BLOCK, "Block of Silicon");
+        this.block(GCBlocks.METEORIC_IRON_BLOCK, "Block of Meteoric Iron");
+        this.block(GCBlocks.DESH_BLOCK, "Block of Desh");
+        this.block(GCBlocks.ALUMINUM_BLOCK, "Block of Aluminum");
+        this.block(GCBlocks.TIN_BLOCK, "Block of Tin");
+        this.block(GCBlocks.TITANIUM_BLOCK, "Block of Titanium");
+        this.block(GCBlocks.LEAD_BLOCK, "Block of Lead");
+        this.block(GCBlocks.LUNAR_SAPPHIRE_BLOCK, "Block of Lunar Sapphire");
+        this.block(GCBlocks.OLIVINE_BLOCK, "Block of Olivine");
+        this.block(GCBlocks.RAW_METEORIC_IRON_BLOCK, "Block of Raw Meteoric Iron");
+        this.block(GCBlocks.RAW_DESH_BLOCK, "Block of Raw Desh");
+        this.block(GCBlocks.RAW_ALUMINUM_BLOCK, "Block of Raw Aluminum");
+        this.block(GCBlocks.RAW_TIN_BLOCK, "Block of Raw Tin");
+        this.block(GCBlocks.RAW_TITANIUM_BLOCK, "Block of Raw Titanium");
+        this.block(GCBlocks.RAW_LEAD_BLOCK, "Block of Raw Lead");
+
         // CHEESE BLOCKS
+        this.block(GCBlocks.MOON_CHEESE_BLOCK, "Moon Cheese Block");
+        this.block(GCBlocks.MOON_CHEESE_LOG, "Moon Cheese Log");
+        this.block(GCBlocks.MOON_CHEESE_LEAVES, "Moon Cheese Leaves");
+
         this.block(GCBlocks.MOON_CHEESE_WHEEL, "Moon Cheese Wheel");
         this.block(GCBlocks.CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Candle");
         this.block(GCBlocks.WHITE_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with White Candle");
@@ -273,23 +325,6 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.GREEN_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Green Candle");
         this.block(GCBlocks.RED_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Red Candle");
         this.block(GCBlocks.BLACK_CANDLE_MOON_CHEESE_WHEEL, "Moon Cheese Wheel with Black Candle");
-
-        // COMPACT MINERAL BLOCKS
-        this.block(GCBlocks.SILICON_BLOCK, "Block of Silicon");
-        this.block(GCBlocks.METEORIC_IRON_BLOCK, "Block of Meteoric Iron");
-        this.block(GCBlocks.DESH_BLOCK, "Block of Desh");
-        this.block(GCBlocks.ALUMINUM_BLOCK, "Block of Aluminum");
-        this.block(GCBlocks.TIN_BLOCK, "Block of Tin");
-        this.block(GCBlocks.TITANIUM_BLOCK, "Block of Titanium");
-        this.block(GCBlocks.LEAD_BLOCK, "Block of Lead");
-        this.block(GCBlocks.LUNAR_SAPPHIRE_BLOCK, "Block of Lunar Sapphire");
-        this.block(GCBlocks.OLIVINE_BLOCK, "Block of Olivine");
-        this.block(GCBlocks.RAW_METEORIC_IRON_BLOCK, "Block of Raw Meteoric Iron");
-        this.block(GCBlocks.RAW_DESH_BLOCK, "Block of Raw Desh");
-        this.block(GCBlocks.RAW_ALUMINUM_BLOCK, "Block of Raw Aluminum");
-        this.block(GCBlocks.RAW_TIN_BLOCK, "Block of Raw Tin");
-        this.block(GCBlocks.RAW_TITANIUM_BLOCK, "Block of Raw Titanium");
-        this.block(GCBlocks.RAW_LEAD_BLOCK, "Block of Raw Lead");
 
         // MOON VILLAGER SPECIAL
         this.block(GCBlocks.LUNAR_CARTOGRAPHY_TABLE, "Lunar Cartography Table");
@@ -389,6 +424,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.SINGLE_SOLAR_MODULE, "Single Solar Module");
         this.item(GCItems.FULL_SOLAR_PANEL, "Full Solar Panel");
         this.item(GCItems.SOLAR_ARRAY_WAFER, "Solar Array Wafer");
+        this.item(GCItems.SOLAR_ARRAY_PANEL, "Solar Array Panel");
         this.item(GCItems.STEEL_POLE, "Steel Pole");
         this.item(GCItems.COPPER_CANISTER, "Copper Canister");
         this.item(GCItems.TIN_CANISTER, "Tin Canister");
@@ -507,15 +543,28 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.THERMAL_PADDING_LEGGINGS, "Thermal Padding Leggings");
         this.item(GCItems.THERMAL_PADDING_BOOTS, "Thermal Padding Boots");
 
+        this.item(GCItems.ISOTHERMAL_PADDING_HELMET, "Isothermal Padding Helm");
+        this.item(GCItems.ISOTHERMAL_PADDING_CHESTPIECE, "Isothermal Padding Chestpiece");
+        this.item(GCItems.ISOTHERMAL_PADDING_LEGGINGS, "Isothermal Padding Leggings");
+        this.item(GCItems.ISOTHERMAL_PADDING_BOOTS, "Isothermal Padding Boots");
+
         // VEHICLES
         this.item(GCItems.BUGGY, "Buggy");
         this.item(GCItems.ROCKET, "Rocket");
 
-        // ROCKET PIECES
+        // ROCKET PARTS
         this.item(GCItems.NOSE_CONE, "Nose Cone");
         this.item(GCItems.HEAVY_NOSE_CONE, "Heavy Nose Cone");
         this.item(GCItems.ROCKET_FIN, "Rocket Fin");
+        this.item(GCItems.HEAVY_ROCKET_FIN, "Heavy Rocket Fin");
         this.item(GCItems.ROCKET_ENGINE, "Rocket Engine");
+        this.item(GCItems.HEAVY_ROCKET_ENGINE, "Heavy Rocket Engine");
+        this.item(GCItems.ROCKET_BOOSTER, "Rocket Booster");
+
+        // BUGGY PARTS
+        this.item(GCItems.BUGGY_WHEEL, "Buggy Wheel");
+        this.item(GCItems.BUGGY_SEAT, "Buggy Seat");
+        this.item(GCItems.BUGGY_STORAGE, "Buggy Storage");
 
         // SCHEMATICS
         this.item(GCItems.BASIC_ROCKET_CONE_SCHEMATIC, "Basic Rocket Cone Schematic");
@@ -528,6 +577,16 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.MOON_BUGGY_SCHEMATIC, "Moon Buggy Schematic");
         this.item(GCItems.TIER_3_ROCKET_SCHEMATIC, "Tier 3 Rocket Schematic");
         this.item(GCItems.ASTRO_MINER_SCHEMATIC, "Astro Miner Schematic");
+
+        // LEGACY_MUSIC_DISCS
+        this.musicDisc(GCItems.LEGACY_MUSIC_DISC_MARS, "Legacy Music Disc", "Jackson Cordes - Mars");
+        this.add(JukeboxSong.LEGACY_MARS, "Jackson Cordes - Mars");
+        this.musicDisc(GCItems.LEGACY_MUSIC_DISC_MIMAS, "Legacy Music Disc", "Jackson Cordes - Mimas");
+        this.add(JukeboxSong.LEGACY_MIMAS, "Jackson Cordes - Mimas");
+        this.musicDisc(GCItems.LEGACY_MUSIC_DISC_ORBIT, "Legacy Music Disc", "Jackson Cordes - Orbit");
+        this.add(JukeboxSong.LEGACY_ORBIT, "Jackson Cordes - Orbit");
+        this.musicDisc(GCItems.LEGACY_MUSIC_DISC_SPACERACE, "Legacy Music Disc", "Jackson Cordes - Space Race");
+        this.add(JukeboxSong.LEGACY_SPACERACE, "Jackson Cordes - Space Race");
 
         // SPAWN EGGS
         this.item(GCItems.MOON_VILLAGER_SPAWN_EGG, "Moon Villager Spawn Egg");
@@ -905,10 +964,12 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.MAX_OXYGEN, "Maximum Oxygen: %s");
         this.add(Ui.MACHINE_STATUS, "Status: %s");
         this.add(Ui.OXYGEN_TANK_LEVEL, "Oxygen Tank %s: %s/%s");
+        this.add(Ui.OXYGEN_WARNING, "WARNING");
+        this.add(Ui.OXYGEN_SETUP_INVALID, "Oxygen Setup is Invalid!");
         this.add(Ui.ROCKET_FUEL, "Fuel:");
         this.add(Ui.ROCKET_FULL, "% full");
         this.add(Ui.ROCKET_NO_FUEL, "No fuel");
-        this.add(Ui.LANDER_WARNING, "WARNING!");
+        this.add(Ui.LANDER_WARNING, "WARNING");
         this.add(Ui.LANDER_CONTROLS, "Hold \"%s\" to slow down!");
         this.add(Ui.LANDER_VELOCITY, "Entry Velocity: %s m/s");
         this.add(Ui.SMALL_STEP, "Taking one small step");
@@ -935,6 +996,11 @@ public class GCTranslationProvider extends TranslationProvider {
 
     protected void blockDesc(Block block, String translation) {
         this.add(block.getDescriptionId() + ".description", translation);
+    }
+
+    protected void musicDisc(Item item, String translation, String description) {
+        this.item(item, translation);
+        this.add(item.getDescriptionId() + ".desc", description);
     }
 
     protected void deathBy(ResourceKey<DamageType> key, String translation) {
