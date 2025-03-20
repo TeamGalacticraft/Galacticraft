@@ -22,37 +22,37 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.FlintAndSteelItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.TorchBlock;
-import net.minecraft.world.level.block.WallTorchBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import com.llamalad7.mixinextras.sugar.Local;
 
-@Mixin(TorchBlock.class)
-public abstract class TorchBlockMixin extends Block {
-    public TorchBlockMixin(Properties settings) {
-        super(settings);
+@Mixin(FlintAndSteelItem.class)
+public abstract class FlintAndSteelItemMixin extends Item {
+    FlintAndSteelItemMixin() {
+        super(null);
     }
 
-    @Override
-    @Deprecated
-    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean moved) {
-        super.onPlace(state, level, pos, oldState, moved);
-        if (!level.isBreathable(pos)) {
-            if (state.getBlock() instanceof TorchBlock torch && torch != GCBlocks.GLOWSTONE_TORCH) {
-                level.setBlockAndUpdate(pos, GCBlocks.UNLIT_TORCH.defaultBlockState());
-            } else if (state.getBlock() instanceof WallTorchBlock torch && torch != GCBlocks.GLOWSTONE_TORCH) {
-                level.setBlockAndUpdate(pos, GCBlocks.UNLIT_WALL_TORCH.defaultBlockState().setValue(WallTorchBlock.FACING, state.getValue(WallTorchBlock.FACING)));
+    @Inject(method = "useOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/CampfireBlock;canLight(Lnet/minecraft/world/level/block/state/BlockState;)Z"), cancellable = true)
+    public void useOn(UseOnContext useOnContext, CallbackInfoReturnable<InteractionResult> cir, @Local BlockPos blockPos, @Local Player player, @Local Level level) {
+        if (!level.isBreathable(blockPos)) {
+            level.playSound(player, blockPos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0f, level.getRandom().nextFloat() * 0.4f + 0.8f);
+            if (player != null) {
+                useOnContext.getItemInHand().hurtAndBreak(1, player, LivingEntity.getSlotForHand(useOnContext.getHand()));
             }
-            level.addParticle(ParticleTypes.SMOKE, pos.getX(), pos.getY(), pos.getZ(), 0.0D, 0.0D, 0.0D);
-            level.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1.0F, 0.9F, false);
+            cir.setReturnValue(InteractionResult.sidedSuccess(level.isClientSide()));
         }
     }
 }
