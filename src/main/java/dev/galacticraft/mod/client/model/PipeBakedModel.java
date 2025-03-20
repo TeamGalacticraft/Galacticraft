@@ -25,6 +25,7 @@ package dev.galacticraft.mod.client.model;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
+import dev.galacticraft.mod.content.block.special.fluidpipe.GlassFluidPipeBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
@@ -127,8 +128,8 @@ public class PipeBakedModel implements BakedModel {
     public void emitBlockQuads(BlockAndTintGetter getter, BlockState blockState, BlockPos blockPos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         var emitter = context.getEmitter();
 
-        if (getter.getBlockEntity(blockPos) instanceof GlassFluidPipeBlockEntity pipe) {
-            ColorTransform.INSTANCE.setSprite(this.colorSpriteMap.get(pipe.getColor()));
+        if (getter.getBlockEntity(blockPos) instanceof GlassFluidPipeBlockEntity pipe && blockState.getBlock() instanceof GlassFluidPipeBlock block) {
+            ColorTransform.INSTANCE.setSprite(this.colorSpriteMap.get(block.color));
             context.pushTransform(ColorTransform.INSTANCE);
             this.emitBlockQuadsDirection(emitter, pipe.getConnections(), this.down, Direction.DOWN);
             this.emitBlockQuadsDirection(emitter, pipe.getConnections(), this.up, Direction.UP);

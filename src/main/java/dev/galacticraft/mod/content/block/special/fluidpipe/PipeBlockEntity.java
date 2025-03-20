@@ -22,9 +22,8 @@
 
 package dev.galacticraft.mod.content.block.special.fluidpipe;
 
-import dev.galacticraft.mod.api.block.FluidPipe;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
-import dev.galacticraft.mod.api.pipe.Pipe;
+import dev.galacticraft.mod.api.pipe.FluidPipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
 import dev.galacticraft.mod.api.pipe.impl.PipeNetworkImpl;
 import dev.galacticraft.mod.util.FluidUtil;
@@ -43,13 +42,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.Property;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Iterator;
 
-public abstract class PipeBlockEntity extends BlockEntity implements Pipe, Storage<FluidVariant> {
+public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, Storage<FluidVariant> {
     private @Nullable PipeNetwork network = null;
     private final long maxTransferRate; // 1 bucket per second
     private final boolean[] connections = new boolean[6];
@@ -135,40 +134,13 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe, Stora
     }
 
     @Override
-    public boolean supportsExtraction() {
-        return true;
-    }
-
-    @Override
     public boolean supportsInsertion() {
         return this.maxTransferRate > 0;
     }
 
     @Override
-    public Iterator<StorageView<FluidVariant>> iterator() {
+    public @NotNull Iterator<StorageView<FluidVariant>> iterator() {
         return Collections.emptyIterator();
-    }
-
-    @Override
-    public PipeColor getColor() {
-        return ((FluidPipe)this.getBlockState().getBlock()).color;
-    }
-
-    // Taken from AE2's Color Applicator implementation
-    @Override
-    public void setColor(PipeColor color) {
-        if (level != null) {
-            BlockState newState = this.getMatchingBlock(color).defaultBlockState();
-            BlockState oldState = this.getBlockState();
-            for (Property<?> property : newState.getProperties()) {
-                newState = copyProperty(oldState, newState, property);
-            }
-            level.setBlockAndUpdate(this.worldPosition, newState);
-        }
-    }
-
-    private static <T extends Comparable<T>> BlockState copyProperty(BlockState oldState, BlockState newState, Property<T> property) {
-        return newState.setValue(property, oldState.getValue(property));
     }
 
     protected abstract Block getMatchingBlock(PipeColor color);
@@ -176,7 +148,6 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe, Stora
     @Override
     protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         super.loadAdditional(nbt, registryLookup);
-        this.readColorNbt(nbt);
         this.readConnectionNbt(nbt);
 
         if (this.level != null && this.level.isClientSide) {
@@ -187,7 +158,6 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe, Stora
     @Override
     protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         super.saveAdditional(nbt, registryLookup);
-        this.writeColorNbt(nbt);
         this.writeConnectionNbt(nbt);
     }
 
@@ -197,7 +167,7 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe, Stora
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
         return this.saveWithoutMetadata(registryLookup);
     }
 }

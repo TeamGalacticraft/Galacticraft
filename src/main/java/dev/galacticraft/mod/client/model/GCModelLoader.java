@@ -35,7 +35,6 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.event.RocketAtlasCallback;
-import dev.galacticraft.mod.client.render.rocket.GalacticraftRocketPartRenderers;
 import dev.galacticraft.mod.client.resources.RocketTextureManager;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
@@ -101,7 +100,7 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
             } else if (Constant.BakedModel.FLUID_PIPE_WALKWAY_MARKER.equals(resourceId)) {
                 return FluidPipeWalkwayUnbakedModel.INSTANCE;
             } else if (Constant.BakedModel.GLASS_FLUID_PIPE_MARKER.equals(resourceId)) {
-                return PipeUnbakedModel.INSTANCE;
+                return null;
             } else if (Constant.BakedModel.VACUUM_GLASS_MODEL.equals(resourceId)) {
                 return VacuumGlassUnbakedModel.INSTANCE;
             } else if (PARACHEST_ITEM.equals(resourceId)) {

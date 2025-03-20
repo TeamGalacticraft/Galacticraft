@@ -25,7 +25,7 @@ package dev.galacticraft.mod.lookup;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.item.SingleVariantFixedItemBackedFluidStorage;
-import dev.galacticraft.mod.api.pipe.Pipe;
+import dev.galacticraft.mod.api.pipe.FluidPipe;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -73,8 +73,8 @@ public class GCApiLookupProviders {
         MachineBlockEntity.registerProviders(MACHINE_BLOCKS);
 
         FluidStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
-            if (direction == null || !((Pipe) blockEntity).canConnect(direction)) return null;
-            return ((Pipe) blockEntity).getInsertable();
+            if (direction == null || !((FluidPipe) blockEntity).canConnect(direction)) return null;
+            return ((FluidPipe) blockEntity).getInsertable();
         }, PIPE_TYPES);
 
         EnergyStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {

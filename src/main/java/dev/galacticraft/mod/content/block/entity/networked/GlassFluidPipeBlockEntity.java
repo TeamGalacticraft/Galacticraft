@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.content.block.entity.networked;
 
-import dev.galacticraft.mod.api.block.entity.Colored;
 import dev.galacticraft.mod.api.block.entity.Connected;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.api.block.entity.Pullable;
@@ -36,7 +35,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colored, Connected, Pullable {
+public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Connected, Pullable {
     private boolean pull;
 
     public GlassFluidPipeBlockEntity(BlockPos pos, BlockState state) {

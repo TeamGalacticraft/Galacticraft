@@ -27,6 +27,7 @@ import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.block.entity.networked.FluidPipeWalkwayBlockEntity;
+import dev.galacticraft.mod.content.block.special.fluidpipe.GlassFluidPipeBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
@@ -50,6 +51,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -139,7 +141,7 @@ public class FluidPipeWalkwayBakedModel implements BakedModel {
     public void emitBlockQuads(BlockAndTintGetter getter, BlockState blockState, BlockPos blockPos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         var emitter = context.getEmitter();
 
-        if (getter.getBlockEntity(blockPos) instanceof FluidPipeWalkwayBlockEntity pipe) {
+        if (getter.getBlockEntity(blockPos) instanceof FluidPipeWalkwayBlockEntity pipe && blockState.getBlock() instanceof GlassFluidPipeBlock block) {
             var x = 0;
             var y = 0;
             var connections = pipe.getConnections();
@@ -160,10 +162,10 @@ public class FluidPipeWalkwayBakedModel implements BakedModel {
 
             WalkwayBakedModel.Transform.INSTANCE.setQuaternions(Axis.XP.rotationDegrees(x), Axis.YP.rotationDegrees(y));
             context.pushTransform(WalkwayBakedModel.Transform.INSTANCE);
-            this.coloredWalkway.get(pipe.getColor()).emitBlockQuads(getter, blockState, blockPos, randomSupplier, context);
+            this.coloredWalkway.get(block.color).emitBlockQuads(getter, blockState, blockPos, randomSupplier, context);
             context.popTransform();
 
-            PipeBakedModel.ColorTransform.INSTANCE.setSprite(this.colorSpriteMap.get(pipe.getColor()));
+            PipeBakedModel.ColorTransform.INSTANCE.setSprite(this.colorSpriteMap.get(block.color));
             context.pushTransform(PipeBakedModel.ColorTransform.INSTANCE);
             this.emitBlockQuadsDirection(emitter, connections, this.down, Direction.DOWN);
             this.emitBlockQuadsDirection(emitter, connections, this.up, Direction.UP);
@@ -189,7 +191,7 @@ public class FluidPipeWalkwayBakedModel implements BakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState blockState, @Nullable Direction direction, RandomSource random) {
+    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState blockState, @Nullable Direction direction, RandomSource random) {
         return Collections.emptyList();
     }
 
@@ -214,17 +216,17 @@ public class FluidPipeWalkwayBakedModel implements BakedModel {
     }
 
     @Override
-    public TextureAtlasSprite getParticleIcon() {
+    public @NotNull TextureAtlasSprite getParticleIcon() {
         return this.walkwaySprite;
     }
 
     @Override
-    public ItemTransforms getTransforms() {
+    public @NotNull ItemTransforms getTransforms() {
         return ItemTransforms.NO_TRANSFORMS;
     }
 
     @Override
-    public ItemOverrides getOverrides() {
+    public @NotNull ItemOverrides getOverrides() {
         return ItemOverrides.EMPTY;
     }
 

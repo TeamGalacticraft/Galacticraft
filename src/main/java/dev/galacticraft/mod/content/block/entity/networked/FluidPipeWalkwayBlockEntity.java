@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.content.block.entity.networked;
 
-import dev.galacticraft.mod.api.block.entity.Colored;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.api.block.entity.Walkway;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
@@ -37,8 +36,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-public class FluidPipeWalkwayBlockEntity extends PipeBlockEntity implements Walkway, Colored {
-    private Direction direction;
+public class FluidPipeWalkwayBlockEntity extends PipeBlockEntity implements Walkway {
+    private Direction direction = Direction.UP;
 
     public FluidPipeWalkwayBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.FLUID_PIPE_WALKWAY, pos, state, FluidConstants.BUCKET / 50);

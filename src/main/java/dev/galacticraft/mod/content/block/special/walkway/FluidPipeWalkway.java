@@ -22,12 +22,12 @@
 
 package dev.galacticraft.mod.content.block.special.walkway;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidLoggable;
-import dev.galacticraft.mod.api.block.FluidPipe;
+import dev.galacticraft.mod.api.block.FluidPipeBlock;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.api.block.entity.Walkway;
-import dev.galacticraft.mod.api.pipe.Pipe;
+import dev.galacticraft.mod.api.pipe.FluidPipe;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.networked.FluidPipeWalkwayBlockEntity;
 import dev.galacticraft.mod.content.block.special.fluidpipe.GlassFluidPipeBlock;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
@@ -36,13 +36,6 @@ import dev.galacticraft.mod.util.DirectionUtil;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -50,25 +43,25 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class FluidPipeWalkway extends FluidPipe implements FluidLoggable {
+public class FluidPipeWalkway extends FluidPipeBlock implements FluidLoggable {
 //    public static final MapCodec<FluidPipeWalkway> CODEC = simpleCodec(FluidPipeWalkway::new);
     private static final VoxelShape[] SHAPES = new VoxelShape[64];
 
     public FluidPipeWalkway(Properties settings, PipeColor color) {
         super(settings, color);
-        this.registerDefaultState(this.getStateDefinition().any()
-                .setValue(FLUID, INVALID)
-                .setValue(FlowingFluid.LEVEL, 8)
-                .setValue(FlowingFluid.FALLING, false));
+
+        BlockState state = this.getStateDefinition().any();
+        state = FluidLoggable.applyDefaultState(state);
+        state = FluidPipeBlock.applyDefaultState(state);
+        this.registerDefaultState(state);
     }
 
 //    @Override
@@ -81,7 +74,7 @@ public class FluidPipeWalkway extends FluidPipe implements FluidLoggable {
     }
 
     @Override
-    public VoxelShape getShape(BlockState blockState, BlockGetter level, BlockPos blockPos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(BlockState blockState, BlockGetter level, BlockPos blockPos, CollisionContext context) {
         if (level.getBlockEntity(blockPos) instanceof FluidPipeWalkwayBlockEntity walkway) {
             var index = getFacingMask(walkway.getDirection());
             if (SHAPES[index] != null) {
@@ -93,81 +86,14 @@ public class FluidPipeWalkway extends FluidPipe implements FluidLoggable {
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        var fluidState = context.getLevel().getFluidState(context.getClickedPos());
-        return this.defaultBlockState()
-                .setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType()))
-                .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1))
-                .setValue(FlowingFluid.FALLING, fluidState.hasProperty(FlowingFluid.FALLING) ? fluidState.getValue(FlowingFluid.FALLING) : false);
+    public @NotNull BlockState getStateForPlacement(BlockPlaceContext context) {
+        BlockState state = super.getStateForPlacement(context);
+        return FluidLoggable.applyFluidState(context.getLevel(), state, context.getClickedPos());
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (level.getBlockEntity(pos) instanceof FluidPipeWalkwayBlockEntity walkway) {
-            if (stack.getItem() instanceof DyeItem dye) {
-                var stack2 = stack.copy();
-                var color = dye.getDyeColor();
-                if (walkway.dyeCanBeApplied(color)) {
-                    stack2.consume(1, player);
-                    player.setItemInHand(hand, stack2);
-                    walkway.setColor(color);
-                    level.sendBlockUpdated(pos, state, state, Block.UPDATE_IMMEDIATE);
-                    return ItemInteractionResult.SUCCESS;
-                } else {
-                    return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
-                }
-            }
-        }
-        return super.useItemOn(stack, state, level, pos, player, hand, hit);
-    }
-
-
-    @Override
-    public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity livingEntity, ItemStack itemStack) {
-        super.setPlacedBy(level, blockPos, blockState, livingEntity, itemStack);
-
-        if (level.getBlockEntity(blockPos) instanceof FluidPipeWalkwayBlockEntity walkway && livingEntity instanceof Player player) {
-            for (var interactionHand : InteractionHand.values()) {
-                var stack = player.getItemInHand(interactionHand);
-
-                if (stack.getItem() instanceof DyeItem dye && walkway.dyeCanBeApplied(dye.getDyeColor())) {
-                    walkway.setColor(dye.getDyeColor());
-                    var copy = stack.copy();
-
-                    if (!player.getAbilities().instabuild) {
-                        copy.shrink(1);
-                    }
-
-                    player.setItemInHand(interactionHand, copy);
-                }
-            }
-
-            walkway.setDirection(Direction.orderedByNearest(player)[0].getOpposite());
-
-            for (var direction : Constant.Misc.DIRECTIONS) {
-                if (walkway.getDirection() != direction) {
-                    if (level.getBlockEntity(blockPos.relative(direction)) instanceof Pipe pipe) {
-                        if (pipe.canConnect(direction.getOpposite())) {
-                            walkway.getConnections()[direction.ordinal()] = true;
-                            continue;
-                        }
-                    }
-                    else if (FluidUtil.canAccessFluid(level, blockPos.relative(direction), direction)) {
-                        walkway.getConnections()[direction.ordinal()] = true;
-                        continue;
-                    }
-                }
-                walkway.getConnections()[direction.ordinal()] = false;
-            }
-            level.updateNeighborsAt(blockPos, blockState.getBlock());
-        }
-    }
-
-    @Override
-    public BlockState updateShape(BlockState blockState, Direction facing, BlockState neighborState, LevelAccessor level, BlockPos blockPos, BlockPos neighborPos) {
-        if (!this.isEmpty(blockState)) {
-            level.scheduleTick(blockPos, BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)), BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)).getTickDelay(level));
-        }
+    public @NotNull BlockState updateShape(BlockState blockState, Direction facing, BlockState neighborState, LevelAccessor level, BlockPos blockPos, BlockPos neighborPos) {
+        this.tryScheduleFluidTick(level, blockState, blockPos);
         return blockState;
     }
 
@@ -179,7 +105,7 @@ public class FluidPipeWalkway extends FluidPipe implements FluidLoggable {
         if (Math.abs(distance.getX() + distance.getY() + distance.getZ()) == 1 && level.getBlockEntity(blockPos) instanceof Walkway walkway) {
             var direction = DirectionUtil.fromNormal(distance);
             if (direction != walkway.getDirection()) {
-                if (level.getBlockEntity(blockPos.relative(direction)) instanceof Pipe pipe) {
+                if (level.getBlockEntity(blockPos.relative(direction)) instanceof FluidPipe pipe) {
                     if (pipe.canConnect(direction.getOpposite())) {
                         if (walkway.getConnections()[direction.ordinal()] != (walkway.getConnections()[direction.ordinal()] = true)) {
                             level.neighborChanged(blockPos.relative(direction), blockState.getBlock(), blockPos);
@@ -202,30 +128,24 @@ public class FluidPipeWalkway extends FluidPipe implements FluidLoggable {
     }
 
     @Override
-    public FluidState getFluidState(BlockState blockState) {
-        if (this.isEmpty(blockState)) {
-            return EMPTY_STATE;
-        }
-
-        var state1 = BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)).defaultFluidState();
-
-        if (state1.getValues().containsKey(FlowingFluid.LEVEL)) {
-            state1 = state1.setValue(FlowingFluid.LEVEL, blockState.getValue(FlowingFluid.LEVEL));
-        }
-        if (state1.getValues().containsKey(FlowingFluid.FALLING)) {
-            state1 = state1.setValue(FlowingFluid.FALLING, blockState.getValue(FlowingFluid.FALLING));
-        }
-        return state1;
+    public @NotNull FluidState getFluidState(BlockState blockState) {
+        return this.createFluidState(blockState);
     }
 
     @Override
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(FLUID, FlowingFluid.LEVEL, FlowingFluid.FALLING);
+        FluidPipeBlock.addStateDefinitions(stateBuilder);
+        FluidLoggable.addStateDefinitions(stateBuilder);
     }
 
     @Override
     @Nullable
     public PipeBlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
         return new FluidPipeWalkwayBlockEntity(blockPos, blockState);
+    }
+
+    @Override
+    protected Block getMatchingBlock(PipeColor color) {
+        return GCBlocks.FLUID_PIPE_WALKWAY;
     }
 }
