@@ -113,16 +113,6 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.DIAGONAL_LIGHT_PANEL)
-                .define('S', Items.GLASS_PANE)
-                .define('G', GCItems.GLOWSTONE_TORCH)
-                .define('T', GCItems.COMPRESSED_STEEL)
-                .pattern(" S")
-                .pattern("SG")
-                .pattern(" T")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
-                .save(output, BuiltInRegistries.ITEM.getKey(GCBlocks.DIAGONAL_LIGHT_PANEL.asItem()).withSuffix("_flipped"));
-
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.SPOTLIGHT_LIGHT_PANEL)
                 .define('S', Items.GLASS_PANE)
                 .define('G', GCItems.GLOWSTONE_TORCH)

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:copper_ingot_from_smelting_venus_copper_ore"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_venus_copper_ore": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:venus_copper_ore"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_venus_copper_ore"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:copper_ingot_from_smelting_venus_copper_ore"
+    ]
+  }
+}

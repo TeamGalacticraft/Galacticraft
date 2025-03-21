@@ -15,6 +15,7 @@ jobs:
           upload_sources: false
           upload_translations: false
           download_translations: true
+          skip_untranslated_strings: true
 
           localization_branch_name: 'feat/lang/service'
 

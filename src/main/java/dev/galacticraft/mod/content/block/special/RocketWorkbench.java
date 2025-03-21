@@ -25,6 +25,7 @@ package dev.galacticraft.mod.content.block.special;
 import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -33,6 +34,7 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class RocketWorkbench extends BaseEntityBlock {
@@ -42,17 +44,17 @@ public class RocketWorkbench extends BaseEntityBlock {
     }
 
     @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState blockState) {
+    public @NotNull RenderShape getRenderShape(BlockState blockState) {
         return RenderShape.MODEL;
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+    protected @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (!level.isClientSide) {
             BlockEntity entity = level.getBlockEntity(pos);
             if (entity instanceof RocketWorkbenchBlockEntity workbench) {
@@ -60,6 +62,18 @@ public class RocketWorkbench extends BaseEntityBlock {
             }
         }
         return InteractionResult.CONSUME;
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.getBlock() != newState.getBlock()) {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof RocketWorkbenchBlockEntity workbench) {
+                Containers.dropContents(level, pos, workbench.ingredients);
+                Containers.dropContents(level, pos, workbench.chests);
+            }
+            super.onRemove(state, level, pos, newState, moved);
+        }
     }
 
     @Nullable

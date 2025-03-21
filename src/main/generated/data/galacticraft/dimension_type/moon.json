@@ -1,6 +1,6 @@
 {
   "ambient_light": 0.1,
-  "bed_works": false,
+  "bed_works": true,
   "coordinate_scale": 1.0,
   "effects": "galacticraft:moon",
   "has_ceiling": false,

@@ -26,22 +26,32 @@ import dev.galacticraft.mod.Constant;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.DyeColor;
 
-import java.util.Objects;
-
 public interface Colored {
-    DyeColor getColor();
+    PipeColor getColor();
 
-    void setColor(DyeColor color);
+    void setColor(PipeColor color);
 
-    default boolean isColorCompatible(Colored colored) {
-        return this.getColor() == colored.getColor() || this.getColor() == DyeColor.WHITE || colored.getColor() == DyeColor.WHITE;
+    default void setColor(DyeColor dye) {
+        this.setColor(PipeColor.fromDye(dye));
+    }
+
+    default boolean canConnectTo(Colored other) {
+        return this.getColor() == other.getColor() || this.getColor() == PipeColor.CLEAR || other.getColor() == PipeColor.CLEAR;
+    }
+
+    default boolean dyeCanBeApplied(DyeColor dye) {
+        return this.getColor() != PipeColor.fromDye(dye);
     }
 
     default void writeColorNbt(CompoundTag nbt) {
-        nbt.putByte(Constant.Nbt.COLOR, (byte) Objects.requireNonNullElse(this.getColor(), DyeColor.WHITE).ordinal());
+        nbt.putByte(Constant.Nbt.COLOR, (byte) this.getColor().ordinal());
     }
 
     default void readColorNbt(CompoundTag nbt) {
-        this.setColor(DyeColor.values()[nbt.getByte(Constant.Nbt.COLOR)]);
+        if (nbt.contains(Constant.Nbt.COLOR)) {
+            this.setColor(PipeColor.values()[nbt.getByte(Constant.Nbt.COLOR)]);
+        } else {
+            this.setColor(PipeColor.CLEAR);
+        }
     }
 }

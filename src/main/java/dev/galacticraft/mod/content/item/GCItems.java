@@ -28,6 +28,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
+import dev.galacticraft.mod.content.GCJukeboxSongs;
 import dev.galacticraft.mod.content.GCRegistry;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.util.Translations;
@@ -108,6 +109,7 @@ public class GCItems {
     public static final Item SINGLE_SOLAR_MODULE = registerGeneric(Constant.Item.SINGLE_SOLAR_MODULE);
     public static final Item FULL_SOLAR_PANEL = registerGeneric(Constant.Item.FULL_SOLAR_PANEL);
     public static final Item SOLAR_ARRAY_WAFER = registerGeneric(Constant.Item.SOLAR_ARRAY_WAFER);
+    public static final Item SOLAR_ARRAY_PANEL = registerGeneric(Constant.Item.SOLAR_ARRAY_PANEL);
     public static final Item STEEL_POLE = registerGeneric(Constant.Item.STEEL_POLE);
     public static final Item COPPER_CANISTER = registerGeneric(Constant.Item.COPPER_CANISTER);
     public static final Item TIN_CANISTER = registerGeneric(Constant.Item.TIN_CANISTER);
@@ -133,9 +135,9 @@ public class GCItems {
     public static final Item CANNED_BEEF = ITEMS.register(Constant.Item.CANNED_BEEF, new CannedFoodItem(new Item.Properties().food(GCFoodComponent.CANNED_BEEF)));
     
     // ROCKET PLATES
-    public static final Item TIER_1_HEAVY_DUTY_PLATE = ITEMS.register(Constant.Item.TIER_1_HEAVY_DUTY_PLATE, new Item(new Item.Properties()));
-    public static final Item TIER_2_HEAVY_DUTY_PLATE = ITEMS.register(Constant.Item.TIER_2_HEAVY_DUTY_PLATE, new Item(new Item.Properties()));
-    public static final Item TIER_3_HEAVY_DUTY_PLATE = ITEMS.register(Constant.Item.TIER_3_HEAVY_DUTY_PLATE, new Item(new Item.Properties()));
+    public static final Item TIER_1_HEAVY_DUTY_PLATE = registerGeneric(Constant.Item.TIER_1_HEAVY_DUTY_PLATE);
+    public static final Item TIER_2_HEAVY_DUTY_PLATE = registerGeneric(Constant.Item.TIER_2_HEAVY_DUTY_PLATE);
+    public static final Item TIER_3_HEAVY_DUTY_PLATE = registerGeneric(Constant.Item.TIER_3_HEAVY_DUTY_PLATE);
 
     // THROWABLE METEOR CHUNKS
     public static final Item THROWABLE_METEOR_CHUNK = ITEMS.register(Constant.Item.THROWABLE_METEOR_CHUNK, new ThrowableMeteorChunkItem(new Item.Properties().stacksTo(16)));
@@ -214,7 +216,7 @@ public class GCItems {
     public static final Item SULFURIC_ACID_BUCKET = ITEMS.register(Constant.Item.SULFURIC_ACID_BUCKET, new BucketItem(GCFluids.SULFURIC_ACID, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
     // GALACTICRAFT INVENTORY
-    public static final GCRegistry.ColorSet<ParachuteItem> PARACHUTE = ITEMS.registerColored(Constant.Item.PARACHUTE, color -> new ParachuteItem(color, new Item.Properties()));
+    public static final GCRegistry.ColorSet<ParachuteItem> PARACHUTE = ITEMS.registerColored(Constant.Item.PARACHUTE, color -> new ParachuteItem(color, new Item.Properties().stacksTo(1)));
 
     public static final Item OXYGEN_MASK = ITEMS.register(Constant.Item.OXYGEN_MASK, new AccessoryItem(new Item.Properties()));
     public static final Item OXYGEN_GEAR = ITEMS.register(Constant.Item.OXYGEN_GEAR, new AccessoryItem(new Item.Properties()));
@@ -227,10 +229,17 @@ public class GCItems {
     public static final Item SHIELD_CONTROLLER = ITEMS.register(Constant.Item.SHIELD_CONTROLLER, new AccessoryItem(new Item.Properties()));
     public static final Item FREQUENCY_MODULE = ITEMS.register(Constant.Item.FREQUENCY_MODULE, new AccessoryItem(new Item.Properties()));
 
+    public static final Item EMERGENCY_KIT = registerGeneric(Constant.Item.EMERGENCY_KIT);
+
     public static final Item THERMAL_PADDING_HELMET = ITEMS.register(Constant.Item.THERMAL_PADDING_HELMET, new AccessoryItem(new Item.Properties()));
     public static final Item THERMAL_PADDING_CHESTPIECE = ITEMS.register(Constant.Item.THERMAL_PADDING_CHESTPIECE, new AccessoryItem(new Item.Properties()));
     public static final Item THERMAL_PADDING_LEGGINGS = ITEMS.register(Constant.Item.THERMAL_PADDING_LEGGINGS, new AccessoryItem(new Item.Properties()));
     public static final Item THERMAL_PADDING_BOOTS = ITEMS.register(Constant.Item.THERMAL_PADDING_BOOTS, new AccessoryItem(new Item.Properties()));
+
+    public static final Item ISOTHERMAL_PADDING_HELMET = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_HELMET, new AccessoryItem(new Item.Properties()));
+    public static final Item ISOTHERMAL_PADDING_CHESTPIECE = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_CHESTPIECE, new AccessoryItem(new Item.Properties()));
+    public static final Item ISOTHERMAL_PADDING_LEGGINGS = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_LEGGINGS, new AccessoryItem(new Item.Properties()));
+    public static final Item ISOTHERMAL_PADDING_BOOTS = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_BOOTS, new AccessoryItem(new Item.Properties()));
 
     // VEHICLES
     public static final Item BUGGY = ITEMS.register(Constant.Item.BUGGY, new BuggyItem(new Item.Properties().stacksTo(1)));
@@ -238,11 +247,19 @@ public class GCItems {
             .component(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1)
             .stacksTo(1)));
 
-    // ROCKET PIECES
-    public static final Item NOSE_CONE = ITEMS.register(Constant.Item.NOSE_CONE, new Item(new Item.Properties()));
-    public static final Item HEAVY_NOSE_CONE = ITEMS.register(Constant.Item.HEAVY_NOSE_CONE, new Item(new Item.Properties()));
-    public static final Item ROCKET_FIN = ITEMS.register(Constant.Item.ROCKET_FIN, new Item(new Item.Properties()));
-    public static final Item ROCKET_ENGINE = ITEMS.register(Constant.Item.ROCKET_ENGINE, new Item(new Item.Properties()));
+    // ROCKET PARTS
+    public static final Item NOSE_CONE = registerGeneric(Constant.Item.NOSE_CONE);
+    public static final Item HEAVY_NOSE_CONE = registerGeneric(Constant.Item.HEAVY_NOSE_CONE);
+    public static final Item ROCKET_FIN = registerGeneric(Constant.Item.ROCKET_FIN);
+    public static final Item HEAVY_ROCKET_FIN = registerGeneric(Constant.Item.HEAVY_ROCKET_FIN);
+    public static final Item ROCKET_ENGINE = registerGeneric(Constant.Item.ROCKET_ENGINE);
+    public static final Item HEAVY_ROCKET_ENGINE = registerGeneric(Constant.Item.HEAVY_ROCKET_ENGINE);
+    public static final Item ROCKET_BOOSTER = registerGeneric(Constant.Item.ROCKET_BOOSTER);
+
+    // BUGGY PARTS
+    public static final Item BUGGY_WHEEL = registerGeneric(Constant.Item.BUGGY_WHEEL);
+    public static final Item BUGGY_SEAT = registerGeneric(Constant.Item.BUGGY_SEAT);
+    public static final Item BUGGY_STORAGE = registerGeneric(Constant.Item.BUGGY_STORAGE);
 
     // SCHEMATICS
     public static final Item BASIC_ROCKET_CONE_SCHEMATIC = ITEMS.register(Constant.Item.BASIC_ROCKET_CONE_SCHEMATIC, new RocketPartSchematic(new Item.Properties().stacksTo(1).rarity(Rarity.RARE), GCRocketParts.TIER_1_CONE));
@@ -256,12 +273,20 @@ public class GCItems {
     public static final Item TIER_3_ROCKET_SCHEMATIC = ITEMS.register(Constant.Item.TIER_3_ROCKET_SCHEMATIC, new SchematicItem(new Item.Properties()));
     public static final Item ASTRO_MINER_SCHEMATIC = ITEMS.register(Constant.Item.ASTRO_MINER_SCHEMATIC, new SchematicItem(new Item.Properties()));
 
+    // LEGACY MUSIC DISCS
+    public static final Item LEGACY_MUSIC_DISC_MARS = ITEMS.register(Constant.Item.LEGACY_MUSIC_DISC_MARS, new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(GCJukeboxSongs.MARS)));
+    public static final Item LEGACY_MUSIC_DISC_MIMAS = ITEMS.register(Constant.Item.LEGACY_MUSIC_DISC_MIMAS, new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(GCJukeboxSongs.MIMAS)));
+    public static final Item LEGACY_MUSIC_DISC_ORBIT = ITEMS.register(Constant.Item.LEGACY_MUSIC_DISC_ORBIT, new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(GCJukeboxSongs.ORBIT)));
+    public static final Item LEGACY_MUSIC_DISC_SPACERACE = ITEMS.register(Constant.Item.LEGACY_MUSIC_DISC_SPACERACE, new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(GCJukeboxSongs.SPACERACE)));
+
     // SPAWN EGGS
     public static final Item MOON_VILLAGER_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.MOON_VILLAGER, new SpawnEggItem(GCEntityTypes.MOON_VILLAGER, 0x74a3cf, 0xba2500, new Item.Properties()));
     public static final Item EVOLVED_ZOMBIE_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.EVOLVED_ZOMBIE, new SpawnEggItem(GCEntityTypes.EVOLVED_ZOMBIE, 0x00afaf, 0x463aa5, new Item.Properties()));
     public static final Item EVOLVED_CREEPER_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.EVOLVED_CREEPER, new SpawnEggItem(GCEntityTypes.EVOLVED_CREEPER, 0x0da70b, 0xa8d0d9, new Item.Properties()));
     public static final Item EVOLVED_SKELETON_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.EVOLVED_SKELETON, new SpawnEggItem(GCEntityTypes.EVOLVED_SKELETON, 0xc1c1c1, 0xff9600, new Item.Properties()));
     public static final Item EVOLVED_SPIDER_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.EVOLVED_SPIDER, new SpawnEggItem(GCEntityTypes.EVOLVED_SPIDER, 0x342d27, 0x5aff0e, new Item.Properties()));
+    public static final Item EVOLVED_ENDERMAN_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.EVOLVED_ENDERMAN, new SpawnEggItem(GCEntityTypes.EVOLVED_ENDERMAN, 0x161616, 0xcc00fa, new Item.Properties()));
+    public static final Item EVOLVED_WITCH_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.EVOLVED_WITCH, new SpawnEggItem(GCEntityTypes.EVOLVED_WITCH, 0x30144d, 0x51a03e, new Item.Properties()));
     public static final Item EVOLVED_PILLAGER_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.EVOLVED_PILLAGER, new SpawnEggItem(GCEntityTypes.EVOLVED_PILLAGER, 0x532f36, 0x264747, new Item.Properties()));
     public static final Item EVOLVED_EVOKER_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.EVOLVED_EVOKER, new SpawnEggItem(GCEntityTypes.EVOLVED_EVOKER, 0x1e1c1a, 0xd3cf99, new Item.Properties()));
     public static final Item EVOLVED_VINDICATOR_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.EVOLVED_VINDICATOR, new SpawnEggItem(GCEntityTypes.EVOLVED_VINDICATOR, 0x3f3b37, 0x275e61, new Item.Properties()));

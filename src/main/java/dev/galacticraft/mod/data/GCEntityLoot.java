@@ -144,6 +144,67 @@ public class GCEntityLoot extends GCEntityLootSubProvider {
                                         .when(LootItemKilledByPlayerCondition.killedByPlayer())
                         )
         );
+        add(
+                GCEntityTypes.EVOLVED_ENDERMAN,
+                LootTable.lootTable()
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(
+                                                LootItem.lootTableItem(Items.ENDER_PEARL)
+                                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 1.0F)))
+                                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.lookup, UniformGenerator.between(0.0F, 1.0F)))
+                                        )
+                        )
+        );
+        add(
+                GCEntityTypes.EVOLVED_WITCH,
+                LootTable.lootTable()
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(UniformGenerator.between(0.0F, 1.0F))
+                                        .add(
+                                                LootItem.lootTableItem(Items.GLOWSTONE_DUST)
+                                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
+                                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.lookup, UniformGenerator.between(0.0F, 1.0F)))
+                                        )
+                                        .add(
+                                                LootItem.lootTableItem(Items.SUGAR)
+                                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
+                                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.lookup, UniformGenerator.between(0.0F, 1.0F)))
+                                        )
+                                        .add(
+                                                LootItem.lootTableItem(Items.SPIDER_EYE)
+                                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
+                                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.lookup, UniformGenerator.between(0.0F, 1.0F)))
+                                        )
+                                        .add(
+                                                LootItem.lootTableItem(Items.GLASS_BOTTLE)
+                                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
+                                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.lookup, UniformGenerator.between(0.0F, 1.0F)))
+                                        )
+                                        .add(
+                                                LootItem.lootTableItem(Items.GUNPOWDER)
+                                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
+                                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.lookup, UniformGenerator.between(0.0F, 1.0F)))
+                                        )
+                                        .add(
+                                                LootItem.lootTableItem(Items.STICK)
+                                                        .setWeight(2)
+                                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
+                                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.lookup, UniformGenerator.between(0.0F, 1.0F)))
+                                        )
+                        )
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(
+                                                LootItem.lootTableItem(Items.REDSTONE)
+                                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(4.0F, 8.0F)))
+                                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.lookup, UniformGenerator.between(0.0F, 1.0F)))
+                                        )
+                        )
+        );
         add(GCEntityTypes.EVOLVED_PILLAGER, noDrops());
         add(
                 GCEntityTypes.EVOLVED_EVOKER,

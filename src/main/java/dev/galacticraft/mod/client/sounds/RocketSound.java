@@ -62,8 +62,10 @@ public class RocketSound extends AbstractTickableSoundInstance {
                         this.pitch = 1.0F;
                     }
                 }
+            } else if (this.rocket.getLaunchStage() == LaunchStage.LAUNCHED) {
+                pitch = 1.0F;
             } else {
-                this.pitch = 1.0F;
+                stop();
             }
 
             if (this.rocket.getLaunchStage().ordinal() >= LaunchStage.IGNITED.ordinal()) {
