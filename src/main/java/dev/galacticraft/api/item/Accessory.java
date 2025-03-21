@@ -30,6 +30,5 @@ public interface Accessory {
     }
 
     default void tick(LivingEntity entity) {
-
     }
 }
