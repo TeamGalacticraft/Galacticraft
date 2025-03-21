@@ -49,14 +49,18 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         super.render(entity, yaw, partialTick, matrices, vertexConsumers, light);
         matrices.pushPose();
         Minecraft client = Minecraft.getInstance();
-        matrices.translate(-0.5D, 1.6, -0.5D);
+        float rotationOffset = 1.6F;
+        matrices.translate(0, rotationOffset, 0);
         if (entity.getLaunchStage() == LaunchStage.IGNITED) {
             matrices.translate((entity.level().random.nextDouble() - 0.5D) * 0.1D, 0, (entity.level().random.nextDouble() - 0.5D) * 0.1D);
         }
-        matrices.translate(0.5D, 0, 0.5D);
-        matrices.mulPose(Axis.YN.rotationDegrees(180.0F + entity.getViewYRot(partialTick)));
-        matrices.mulPose(Axis.ZN.rotationDegrees(entity.getViewXRot(partialTick)));
-        matrices.translate(0, 0.25D, 0);
+        float pitch = entity.getViewXRot(partialTick);
+        float roll = -entity.getViewZRot(partialTick);
+        // TODO: Fix roll rotation when the rocket is pointing downwards
+        matrices.mulPose(Axis.YN.rotationDegrees(180.0F + entity.getViewYRot(partialTick) - roll));
+        matrices.mulPose(Axis.XN.rotationDegrees(pitch * Mth.cos(roll * Mth.DEG_TO_RAD)));
+        matrices.mulPose(Axis.ZN.rotationDegrees(pitch * Mth.sin(roll * Mth.DEG_TO_RAD)));
+        matrices.translate(0, -rotationOffset, 0);
 
         float wobbleTicks = (float) entity.getHurtTime() - partialTick;
         float wobbleStrength = entity.getDamage() - partialTick;
@@ -70,7 +74,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         }
 
 //        RenderSystem.setShaderTexture(0, getTextureLocation(entity));
-        matrices.translate(0.0D, -1.75D, 0.0D);
+        matrices.translate(0.0F, 0.4375F, 0.0F);
 
         Holder<? extends RocketPart<?, ?>> part = entity.engine();
         if (part != null) {
@@ -79,7 +83,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
             matrices.popPose();
         }
 
-        matrices.translate(0.0D, 0.5, 0.0D);
+        matrices.translate(0.0F, 0.5F, 0.0F);
 
         part = entity.booster();
         if (part != null) {
@@ -95,7 +99,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
             matrices.popPose();
         }
 
-        matrices.translate(0.0D, 1.0D, 0.0D);
+        matrices.translate(0.0F, 1.0F, 0.0F);
 
         part = entity.body();
         if (part != null) {
@@ -104,7 +108,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
             matrices.popPose();
         }
 
-        matrices.translate(0.0D, 1.75, 0.0D);
+        matrices.translate(0.0F, 1.75F, 0.0F);
 
         part = entity.cone();
         if (part != null) {

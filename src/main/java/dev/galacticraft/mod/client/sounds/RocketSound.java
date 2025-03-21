@@ -69,13 +69,13 @@ public class RocketSound extends AbstractTickableSoundInstance {
             }
 
             if (this.rocket.getLaunchStage().ordinal() >= LaunchStage.IGNITED.ordinal()) {
-                if (this.rocket.getY() > 1000) {
+                if (this.rocket.getY() > Constant.SPACE_HEIGHT) {
                     this.volume = 0F;
                     if (this.rocket.getLaunchStage() != LaunchStage.FAILED) {
                         stop();
                     }
                 } else if (this.rocket.getY() > Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) {
-                    this.volume = 1.0F - (float) ((this.rocket.getY() - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) / (1000.0 - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT));
+                    this.volume = 1.0F - ((float) (this.rocket.getY() - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT)) / ((float) (Constant.SPACE_HEIGHT - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT));
                 } else {
                     this.volume = 1.0F;
                 }
