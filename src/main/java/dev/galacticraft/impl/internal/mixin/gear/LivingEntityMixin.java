@@ -137,6 +137,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
                     try (Transaction transaction = Transaction.openOuter()) {
                         if (storage.extract(FluidVariant.of(Gases.OXYGEN), Galacticraft.CONFIG.playerOxygenConsuptionRate(), transaction) > 0) {
                             transaction.commit();
+                            this.lastHurtBySuffocationTimestamp = this.tickCount;
                             cir.setReturnValue(this.increaseAirSupply(air));
                         }
                     }
