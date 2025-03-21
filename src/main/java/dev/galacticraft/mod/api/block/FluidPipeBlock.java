@@ -72,6 +72,10 @@ public abstract class FluidPipeBlock extends PipeBlock implements EntityBlock {
         this.color = color;
     }
 
+    protected boolean hasConnectionOnSide(Direction side) {
+        return true;
+    }
+
     @Override
     protected @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (!level.isClientSide() && Galacticraft.CONFIG.isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
@@ -176,19 +180,23 @@ public abstract class FluidPipeBlock extends PipeBlock implements EntityBlock {
         return null; // idk man
     }
 
+    protected BlockState updateConnection(BlockState currentState, Direction side, BlockState neighborState, BlockPos neighborPos, Level level) {
+        BooleanProperty directionProperty = PipeBlock.PROPERTY_BY_DIRECTION.get(side);
+        Block neighbor = neighborState.getBlock();
+
+        if (neighbor instanceof FluidPipeBlock pipe && !this.color.canConnectTo(pipe.color)) {
+            return currentState.setValue(directionProperty, false);
+        } else if (FluidUtil.canAccessFluid(level, neighborPos, side)) {
+            return currentState.setValue(directionProperty, true);
+        } else {
+            return currentState.setValue(directionProperty, false);
+        }
+    }
+
     @Override
     protected @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos pos, BlockPos neighborPos) {
         if (levelAccessor instanceof Level level) {
-            BooleanProperty directionProperty = PipeBlock.PROPERTY_BY_DIRECTION.get(direction);
-            Block neighbor = neighborState.getBlock();
-
-            if (neighbor instanceof FluidPipeBlock pipe && !this.color.canConnectTo(pipe.color)) {
-                return state.setValue(directionProperty, false);
-            } else if (FluidUtil.canAccessFluid(level, neighborPos, direction)) {
-                return state.setValue(directionProperty, true);
-            } else {
-                return state.setValue(directionProperty, false);
-            }
+            return this.updateConnection(state, direction, neighborState, neighborPos, level);
         }
 
         return state;
@@ -201,6 +209,11 @@ public abstract class FluidPipeBlock extends PipeBlock implements EntityBlock {
         Direction direction = Direction.fromDelta(neighborPos.getX() - pos.getX(), neighborPos.getY() - pos.getY(), neighborPos.getZ() - pos.getZ());
         if (direction == null)
             return;
+
+        BlockState neighborState = level.getBlockState(neighborPos);
+
+        state = this.updateConnection(state, direction, neighborState, neighborPos, level);
+        level.setBlockAndUpdate(pos, state);
 
         if (!level.isClientSide) {
             var pipe = (FluidPipe) level.getBlockEntity(pos);
