@@ -75,6 +75,8 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
         super(type, world);
     }
 
+    private int lastHurtBySuffocationTimestamp;
+
     @Shadow protected abstract int increaseAirSupply(int air);
     @Shadow protected abstract int decreaseAirSupply(int air);
 
@@ -90,6 +92,11 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
                     entity.hurt(new DamageSource(entity.level().registryAccess()
                             .registryOrThrow(Registries.DAMAGE_TYPE)
                             .getHolderOrThrow(GCDamageTypes.SUFFOCATION)), 2.0f);
+                } else if (this.tickCount - this.lastHurtBySuffocationTimestamp > 20) {
+                    this.lastHurtBySuffocationTimestamp = this.tickCount;
+                    entity.hurt(new DamageSource(entity.level().registryAccess()
+                            .registryOrThrow(Registries.DAMAGE_TYPE)
+                            .getHolderOrThrow(GCDamageTypes.SUFFOCATION)), 1.0f);
                 }
             }
         }
