@@ -25,6 +25,7 @@ package dev.galacticraft.mod.client.model;
 import com.google.common.collect.Maps;
 import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.block.entity.networked.FluidPipeWalkwayBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -46,7 +47,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
@@ -62,13 +62,13 @@ import java.util.function.Supplier;
 public class FluidPipeWalkwayBakedModel implements BakedModel {
     private static FluidPipeWalkwayBakedModel instance = null;
     private static final ResourceLocation WALKWAY_TEXTURE = Constant.id("block/walkway");
-    private static final Map<DyeColor, Material> COLOR_SPRITE_ID_MAP = Util.make(Maps.newEnumMap(DyeColor.class), map -> {
-        for (var color : DyeColor.values()) {
+    private static final Map<PipeColor, Material> COLOR_SPRITE_ID_MAP = Util.make(Maps.newEnumMap(PipeColor.class), map -> {
+        for (var color : PipeColor.values()) {
             map.put(color, new Material(InventoryMenu.BLOCK_ATLAS, Constant.id("block/glass_fluid_pipe/" + color.getName())));
         }
     });
-    private final Map<DyeColor, BakedModel> coloredWalkway = Maps.newHashMap();
-    private final Map<DyeColor, TextureAtlasSprite> colorSpriteMap = Maps.newEnumMap(DyeColor.class);
+    private final Map<PipeColor, BakedModel> coloredWalkway = Maps.newHashMap();
+    private final Map<PipeColor, TextureAtlasSprite> colorSpriteMap = Maps.newEnumMap(PipeColor.class);
     private final Mesh down;
     private final Mesh up;
     private final Mesh north;
@@ -79,7 +79,7 @@ public class FluidPipeWalkwayBakedModel implements BakedModel {
 
     protected FluidPipeWalkwayBakedModel(ModelBaker loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer) {
         this.walkwaySprite = textureGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, WALKWAY_TEXTURE));
-        for (var color : DyeColor.values()) {
+        for (var color : PipeColor.values()) {
             var pipeWalkway = Constant.id("block/" + color + "_fluid_pipe_walkway");
             this.coloredWalkway.put(color, loader.getModel(pipeWalkway).bake(loader, textureGetter, rotationContainer));
             this.colorSpriteMap.put(color, textureGetter.apply(COLOR_SPRITE_ID_MAP.get(color)));

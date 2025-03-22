@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "galacticraft:block/moon_cheese_log",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "galacticraft:block/moon_cheese_log"
+    },
+    "axis=z": {
+      "model": "galacticraft:block/moon_cheese_log",
+      "x": 90
+    }
+  }
+}

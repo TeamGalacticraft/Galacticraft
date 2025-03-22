@@ -38,6 +38,13 @@ public interface Translations {
         String ROCKET = "banner_pattern.galacticraft.rocket";
     }
 
+    interface JukeboxSong {
+        String LEGACY_MARS = "jukebox_song.galacticraft.legacy_mars";
+        String LEGACY_MIMAS = "jukebox_song.galacticraft.legacy_mimas";
+        String LEGACY_ORBIT = "jukebox_song.galacticraft.legacy_orbit";
+        String LEGACY_SPACERACE = "jukebox_song.galacticraft.legacy_spacerace";
+    }
+
     interface Chat {
         String BED_FAIL = "chat.galacticraft.bed_fail";
         String CHAMBER_HOT = "chat.galacticraft.chamber_hot";
@@ -317,6 +324,8 @@ public interface Translations {
         String MAX_OXYGEN = "ui.galacticraft.machine.max_oxygen";
         String MACHINE_STATUS = "ui.galacticraft.machine.status";
         String OXYGEN_TANK_LEVEL = "ui.galacticraft.player_inv_screen.oxygen_tank_level";
+        String OXYGEN_WARNING = "ui.galacticraft.oxygen.warning";
+        String OXYGEN_SETUP_INVALID = "ui.galacticraft.oxygen.invalid_setup";
         String ROCKET_FUEL = "ui.galacticraft.rocket.fuel";
         String ROCKET_FULL = "ui.galacticraft.rocket.full";
         String ROCKET_NO_FUEL = "ui.galacticraft.rocket.no_fuel";
