@@ -75,6 +75,8 @@ public class GCTags {
     public static final TagKey<Item> COMPRESSED_IRON = commonTag("plates/iron");
     public static final TagKey<Item> COMPRESSED_TIN = commonTag("plates/tin");
 
+    public static final TagKey<Item> EVOLVED_CREEPER_DROP_MUSIC_DISCS = TagKey.create(Registries.ITEM, Constant.id("evolved_creeper_drop_music_discs"));
+
     public static final TagKey<Structure> MOON_RUINS = TagKey.create(Registries.STRUCTURE, Constant.id("moon_ruins"));
 
     public static final TagKey<DimensionType> FOOTPRINTS_DIMENSIONS = TagKey.create(Registries.DIMENSION_TYPE, Constant.id("footprints"));
@@ -82,6 +84,7 @@ public class GCTags {
     public static final TagKey<DimensionType> VACUUM = TagKey.create(Registries.DIMENSION_TYPE, Constant.id("vacuum"));
 
     public static final TagKey<EntityType<?>> HAS_FOOTPRINTS = TagKey.create(Registries.ENTITY_TYPE, Constant.id("has_footprints"));
+    public static final TagKey<EntityType<?>> HAS_OXYGEN_SETUP = TagKey.create(Registries.ENTITY_TYPE, Constant.id("has_oxygen_setup"));
 
     public static TagKey<Item> commonTag(String path) {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, path));
