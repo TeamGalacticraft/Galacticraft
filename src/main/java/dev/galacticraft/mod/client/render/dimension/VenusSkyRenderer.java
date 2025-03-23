@@ -110,7 +110,7 @@ public class VenusSkyRenderer implements DimensionRenderingRegistry.SkyRenderer 
             float var12 = var4 * var4 + var6 * var6 + var8 * var8;
 
             if (var12 < 1.0F && var12 > 0.01F) {
-                var12 = Mth.invSqrt(var12);
+                var12 = Mth.invSqrt(var12); // Could maybe use Mth.fastInvSqrt here?
                 var4 *= var12;
                 var6 *= var12;
                 var8 *= var12;
@@ -148,13 +148,13 @@ public class VenusSkyRenderer implements DimensionRenderingRegistry.SkyRenderer 
     @Override
     public void render(WorldRenderContext context) {
         ClientLevel level = context.world();
-        float partialTicks = context.tickCounter().getRealtimeDeltaTicks();
+        final float partialTicks = context.tickCounter().getRealtimeDeltaTicks();
         PoseStack poseStack = new PoseStack();
         poseStack.mulPose(context.positionMatrix());
-        Vec3 vec3 = level.getSkyColor(context.camera().getPosition(), partialTicks);
-        float f1 = (float) vec3.x;
-        float f2 = (float) vec3.y;
-        float f3 = (float) vec3.z;
+        final Vec3 vec3 = level.getSkyColor(context.camera().getPosition(), partialTicks);
+        final float f1 = (float) vec3.x;
+        final float f2 = (float) vec3.y;
+        final float f3 = (float) vec3.z;
         float f6;
 
         RenderSystem.depthMask(false);

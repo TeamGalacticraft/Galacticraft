@@ -49,7 +49,7 @@ public class StarManager {
             float n = j * j + k * k + l * l;
 
             if (n < 1.0F && n > 0.01F) {
-                n = Mth.invSqrt(n);
+                n = Mth.invSqrt(n); // Could maybe use Mth.fastInvSqrt here?
                 j *= n;
                 k *= n;
                 l *= n;
@@ -99,16 +99,7 @@ public class StarManager {
 
     public float getStarBrightness(Level world, float delta) {
         final float skyAngle = world.getTimeOfDay(delta);
-        float brightness = 1.0F - Mth.cos(skyAngle * Mth.PI * 4.0F + 0.25F);
-
-        if (brightness < 0.0F) {
-            brightness = 0.0F;
-        }
-
-        if (brightness > 1.0F) {
-            brightness = 1.0F;
-        }
-
+        final float brightness = Mth.clamp(1.0F - Mth.cos(skyAngle * Mth.PI * 4.0F + 0.25F), 0.0F, 1.0F);
         return brightness * brightness * 0.5F + 0.3F;
     }
 }

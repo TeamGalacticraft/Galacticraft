@@ -82,9 +82,9 @@ public class OverworldRenderer {
         final float var21 = Math.max(1.0F - theta * 4.0F, 0.0F);
 
         final Vec3 skyColor = this.minecraft.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), partialTicks);
-        float i = (float) skyColor.x * var21;
-        float x = (float) skyColor.y * var21;
-        float var5 = (float) skyColor.z * var21;
+        final float i = (float) skyColor.x * var21;
+        final float x = (float) skyColor.y * var21;
+        final float var5 = (float) skyColor.z * var21;
         float z;
 
         FogRenderer.levelFogColor();
@@ -142,16 +142,15 @@ public class OverworldRenderer {
         poseStack.mulPose(Axis.YP.rotationDegrees(-90.0F));
 
         poseStack.mulPose(Axis.XP.rotationDegrees(this.minecraft.level.getTimeOfDay(partialTicks) * 360.0F));
-        double playerHeight = player.getY();
 
         // Draw stars
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
-        float threshold;
-        Vec3 vec = getFogColor(this.minecraft.level, camera, partialTicks);
-        threshold = Math.max(0.1F, (float) vec.length() - 0.1F);
-        float var20 = Mth.sqrt(((float) playerHeight - 200) / 1000.0F);
-        float bright1 = Math.min(0.9F, var20 * 3);
+        final Vec3 vec = getFogColor(this.minecraft.level, camera, partialTicks);
+        final float threshold = Math.max(0.1F, (float) vec.length() - 0.1F);
+        final float playerY = (float) player.getY();
+        final float var20 = Mth.sqrt((playerY - 200.0F) / 1000.0F);
+        final float bright1 = Math.min(0.9F, var20 * 3);
 
         if (bright1 > threshold) {
             RenderSystem.setShaderColor(bright1, bright1, bright1, 1.0F);
@@ -196,7 +195,7 @@ public class OverworldRenderer {
         // Draw moon
         r = 40.0F;
         RenderSystem.setShaderTexture(0, MOON_LOCATION);
-        float sinphi = this.minecraft.level.getMoonPhase();
+        final int sinphi = this.minecraft.level.getMoonPhase();
         final int cosphi = (int) (sinphi % 4);
         final int var29 = (int) (sinphi / 4 % 2);
         final float yy = (cosphi) / 4.0F;
@@ -215,17 +214,16 @@ public class OverworldRenderer {
         poseStack.popPose();
         RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 1.0F);
 
-        double heightOffset = playerHeight - 64;
-
+        final float heightOffset = playerY - 64.0F;
         if (heightOffset > this.minecraft.options.getEffectiveRenderDistance() * 16) {
             theta *= 400.0F;
 
             final float sinth = Mth.clamp(theta / 100.0F - 0.2F, 0.0F, 0.5F);
+            final float scale = Math.max(850 * (0.25F - theta / 10000.0F), 0.2F);
 
             poseStack.pushPose();
-            float scale = Math.max(850 * (0.25F - theta / 10000.0F), 0.2F);
             poseStack.scale(scale, 1.0F, scale);
-            poseStack.translate(0.0F, -(float) player.getY(), 0.0F);
+            poseStack.translate(0.0F, -playerY, 0.0F);
 
             RenderSystem.setShaderTexture(0, CelestialBodyTextures.EARTH);
 
@@ -254,7 +252,7 @@ public class OverworldRenderer {
 
     public static Vec3 getFogColor(ClientLevel level, Camera camera, float f) {
         Player player = Minecraft.getInstance().player;
-        float heightOffset = Mth.sqrt(((float) (player.getY()) - 200) / 1000.0F);
+        float heightOffset = Mth.sqrt(((float) (player.getY()) - 200.0F) / 1000.0F);
 
         float y = Mth.clamp(Mth.cos(level.getTimeOfDay(f) * Mth.TWO_PI) * 2.0F + 0.5F, 0.0F, 1.0F);
         BiomeManager biomeManager = level.getBiomeManager();
@@ -280,7 +278,7 @@ public class OverworldRenderer {
             float r = x * x + y * y + z * z;
 
             if (r < 1.0F && r > 0.01F) {
-                r = Mth.invSqrt(r);
+                r = Mth.invSqrt(r); // Could maybe use Mth.fastInvSqrt here?
                 x *= r;
                 y *= r;
                 z *= r;
