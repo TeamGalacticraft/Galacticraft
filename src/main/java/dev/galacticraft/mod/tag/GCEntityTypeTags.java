@@ -30,6 +30,7 @@ import net.minecraft.world.entity.EntityType;
 
 public class GCEntityTypeTags {
     public static final TagKey<EntityType<?>> HAS_FOOTPRINTS = TagKey.create(Registries.ENTITY_TYPE, Constant.id("has_footprints"));
+    public static final TagKey<EntityType<?>> HAS_OXYGEN_SETUP = TagKey.create(Registries.ENTITY_TYPE, Constant.id("has_oxygen_setup"));
 
     public static void register() {
     }

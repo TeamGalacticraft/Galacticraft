@@ -140,7 +140,7 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.BATTERY)
                 .add(GCItems.INFINITE_BATTERY);
 
-        this.tag(ItemTags.CREEPER_DROP_MUSIC_DISCS)
+        tag(GCItemTags.EVOLVED_CREEPER_DROP_MUSIC_DISCS)
                 .add(GCItems.LEGACY_MUSIC_DISC_MARS)
                 .add(GCItems.LEGACY_MUSIC_DISC_MIMAS)
                 .add(GCItems.LEGACY_MUSIC_DISC_ORBIT)
