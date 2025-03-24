@@ -27,6 +27,7 @@ import dev.galacticraft.api.item.Accessory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
@@ -36,19 +37,28 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Predicate;
 
 public class AccessorySlot extends Slot {
+    private final LivingEntity owner;
     private final Predicate<ItemStack> stackPredicate;
     private final Pair<ResourceLocation, ResourceLocation> icon;
 
-    public AccessorySlot(Container inventory, int index, int x, int y, TagKey<Item> tag, ResourceLocation icon) {
+    public AccessorySlot(Container inventory, LivingEntity owner, int index, int x, int y, TagKey<Item> tag, ResourceLocation icon) {
         super(inventory, index, x, y);
+        this.owner = owner;
         this.stackPredicate = itemStack -> itemStack.is(tag);
         this.icon = (icon != null) ? Pair.of(InventoryMenu.BLOCK_ATLAS, icon) : null;
     }
 
-    public AccessorySlot(Container inventory, int x, int y, int index) {
+    public AccessorySlot(Container inventory, LivingEntity owner, int x, int y, int index) {
         super(inventory, index, x, y);
+        this.owner = owner;
         this.stackPredicate = itemStack -> false;
         this.icon = null;
+    }
+
+    @Override
+    public void setByPlayer(ItemStack incoming, ItemStack previous) {
+        this.owner.galacticraft$onEquipAccessory(previous, incoming);
+        super.setByPlayer(incoming, previous);
     }
 
     @Override

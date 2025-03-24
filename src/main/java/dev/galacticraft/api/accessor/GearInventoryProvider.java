@@ -28,6 +28,10 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 
 public interface GearInventoryProvider {
+    default void galacticraft$onEquipAccessory(ItemStack previous, ItemStack incoming) {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
+
     default Container galacticraft$getGearInv() {
         throw new RuntimeException("This should be overridden by mixin!");
     }

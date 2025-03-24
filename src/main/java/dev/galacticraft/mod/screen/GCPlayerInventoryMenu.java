@@ -56,7 +56,7 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
 
         // Galacticraft inv
         for (int i = 0; i < 8; ++i) {
-            this.addSlot(new AccessorySlot(inventory, i, COLUMNS[i / 4], 8 + (i % 4) * 18, GCAccessorySlots.SLOT_TAGS.get(i), GCAccessorySlots.SLOT_SPRITES.get(i)));
+            this.addSlot(new AccessorySlot(inventory, player, i, COLUMNS[i / 4], 8 + (i % 4) * 18, GCAccessorySlots.SLOT_TAGS.get(i), GCAccessorySlots.SLOT_SPRITES.get(i)));
         }
 
         RegistryAccess manager = player.level().registryAccess();
@@ -76,7 +76,7 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
                     }
                 }
             }
-            this.addSlot(new AccessorySlot(inventory, i, COLUMNS[i / 4], 8 + (i % 4) * 18, slotTag, sprite));
+            this.addSlot(new AccessorySlot(inventory, player, i, COLUMNS[i / 4], 8 + (i % 4) * 18, slotTag, sprite));
         }
 
         // Player main inv

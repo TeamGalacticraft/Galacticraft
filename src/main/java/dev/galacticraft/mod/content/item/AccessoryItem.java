@@ -47,6 +47,8 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.phys.AABB;
 
 public class AccessoryItem extends Item implements Accessory {
+    public Holder<SoundEvent> equipSound;
+
     public static final DispenseItemBehavior DISPENSE_ITEM_BEHAVIOR = new DefaultDispenseItemBehavior(){
 
         @Override
@@ -67,22 +69,25 @@ public class AccessoryItem extends Item implements Accessory {
             if (inv.getItem(slot).isEmpty() && itemStack.is(GCAccessorySlots.SLOT_TAGS.get(slot))) {
                 ItemStack itemStack2 = itemStack.split(1);
                 inv.setItem(slot, itemStack2);
-                playEquipSound(player);
+                player.galacticraft$onEquipAccessory(itemStack, itemStack2);
                 return true;
             }
         }
         return false;
     }
 
-    public AccessoryItem(Properties settings) {
+    public AccessoryItem(Properties settings, Holder<SoundEvent> equipSound) {
         super(settings.stacksTo(1));
+        this.equipSound = equipSound;
         DispenserBlock.registerBehavior(this, DISPENSE_ITEM_BEHAVIOR);
     }
 
-    public static void playEquipSound(Entity entity) {
-        if (!entity.level().isClientSide() && !entity.isSpectator() && !entity.isSilent()) {
-            entity.level().playSeededSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ARMOR_EQUIP_GENERIC, entity.getSoundSource(), 1.0f, 1.0f, entity.getRandom().nextLong());
-        }
+    public AccessoryItem(Properties settings) {
+        this(settings, SoundEvents.ARMOR_EQUIP_GENERIC);
+    }
+
+    public Holder<SoundEvent> getEquipSound() {
+        return this.equipSound;
     }
 
     @Override //should sync with server
@@ -92,10 +97,7 @@ public class AccessoryItem extends Item implements Accessory {
         for (int slot = 0; slot < inv.getContainerSize(); ++slot) {
             if (itemStack.is(GCAccessorySlots.SLOT_TAGS.get(slot))) {
                 ItemStack itemStack2 = inv.getItem(slot);
-                if (ItemStack.matches(itemStack, itemStack2)) {
-                    return InteractionResultHolder.fail(itemStack);
-                }
-                if (itemStack2.getItem() instanceof OxygenTankItem && OxygenTankItem.getStorage(itemStack2).getAmount() > 0) {
+                if (ItemStack.matches(itemStack, itemStack2) || (itemStack2.getItem() instanceof OxygenTankItem && OxygenTankItem.getStorage(itemStack2).getAmount() > 0)) {
                     if (slot == GCAccessorySlots.OXYGEN_TANK_1_SLOT) {
                         continue;
                     }
@@ -107,7 +109,7 @@ public class AccessoryItem extends Item implements Accessory {
                 ItemStack itemStack3 = itemStack2.isEmpty() ? itemStack : itemStack2.copyAndClear();
                 ItemStack itemStack4 = player.isCreative() ? itemStack.copy() : itemStack.copyAndClear();
                 inv.setItem(slot, itemStack4);
-                playEquipSound(player);
+                player.galacticraft$onEquipAccessory(itemStack3, itemStack4);
                 return InteractionResultHolder.sidedSuccess(itemStack3, level.isClientSide());
             }
         }

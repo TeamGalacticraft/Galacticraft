@@ -27,6 +27,7 @@ import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
 import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.item.Accessory;
+import dev.galacticraft.mod.screen.slot.AccessorySlot;
 import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.impl.internal.fabric.GalacticraftAPI;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
@@ -181,6 +182,16 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
                     return;
                 }
             }
+        }
+    }
+    
+    @Override
+    public void galacticraft$onEquipAccessory(ItemStack previous, ItemStack incoming) {
+        if ((incoming.isEmpty() && previous.isEmpty()) || ItemStack.isSameItemSameComponents(previous, incoming) || this.firstTick) {
+            return;
+        }
+        if (!this.level().isClientSide() && !this.isSpectator() && !this.isSilent() && incoming.getItem() instanceof Accessory accessory) {
+            this.level().playSeededSound(null, this.getX(), this.getY(), this.getZ(), accessory.getEquipSound(), this.getSoundSource(), 1.0f, 1.0f, this.random.nextLong());
         }
     }
 

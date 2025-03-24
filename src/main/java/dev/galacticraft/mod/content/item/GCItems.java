@@ -36,6 +36,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -231,15 +232,15 @@ public class GCItems {
 
     public static final Item EMERGENCY_KIT = registerGeneric(Constant.Item.EMERGENCY_KIT);
 
-    public static final Item THERMAL_PADDING_HELMET = ITEMS.register(Constant.Item.THERMAL_PADDING_HELMET, new AccessoryItem(new Item.Properties()));
-    public static final Item THERMAL_PADDING_CHESTPIECE = ITEMS.register(Constant.Item.THERMAL_PADDING_CHESTPIECE, new AccessoryItem(new Item.Properties()));
-    public static final Item THERMAL_PADDING_LEGGINGS = ITEMS.register(Constant.Item.THERMAL_PADDING_LEGGINGS, new AccessoryItem(new Item.Properties()));
-    public static final Item THERMAL_PADDING_BOOTS = ITEMS.register(Constant.Item.THERMAL_PADDING_BOOTS, new AccessoryItem(new Item.Properties()));
+    public static final Item THERMAL_PADDING_HELMET = ITEMS.register(Constant.Item.THERMAL_PADDING_HELMET, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item THERMAL_PADDING_CHESTPIECE = ITEMS.register(Constant.Item.THERMAL_PADDING_CHESTPIECE, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item THERMAL_PADDING_LEGGINGS = ITEMS.register(Constant.Item.THERMAL_PADDING_LEGGINGS, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item THERMAL_PADDING_BOOTS = ITEMS.register(Constant.Item.THERMAL_PADDING_BOOTS, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
 
-    public static final Item ISOTHERMAL_PADDING_HELMET = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_HELMET, new AccessoryItem(new Item.Properties()));
-    public static final Item ISOTHERMAL_PADDING_CHESTPIECE = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_CHESTPIECE, new AccessoryItem(new Item.Properties()));
-    public static final Item ISOTHERMAL_PADDING_LEGGINGS = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_LEGGINGS, new AccessoryItem(new Item.Properties()));
-    public static final Item ISOTHERMAL_PADDING_BOOTS = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_BOOTS, new AccessoryItem(new Item.Properties()));
+    public static final Item ISOTHERMAL_PADDING_HELMET = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_HELMET, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item ISOTHERMAL_PADDING_CHESTPIECE = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_CHESTPIECE, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item ISOTHERMAL_PADDING_LEGGINGS = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_LEGGINGS, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item ISOTHERMAL_PADDING_BOOTS = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_BOOTS, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
 
     // VEHICLES
     public static final Item BUGGY = ITEMS.register(Constant.Item.BUGGY, new BuggyItem(new Item.Properties().stacksTo(1)));
