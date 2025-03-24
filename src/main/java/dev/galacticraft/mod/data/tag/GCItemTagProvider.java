@@ -88,13 +88,17 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.THERMAL_PADDING_CHESTPIECE)
                 .add(GCItems.THERMAL_PADDING_HELMET);
         tag(GCTags.THERMAL_HEAD)
-                .add(GCItems.THERMAL_PADDING_HELMET);
+                .add(GCItems.THERMAL_PADDING_HELMET)
+                .add(GCItems.ISOTHERMAL_PADDING_HELMET);
         tag(GCTags.THERMAL_CHEST)
-                .add(GCItems.THERMAL_PADDING_CHESTPIECE);
+                .add(GCItems.THERMAL_PADDING_CHESTPIECE)
+                .add(GCItems.ISOTHERMAL_PADDING_CHESTPIECE);
         tag(GCTags.THERMAL_PANTS)
-                .add(GCItems.THERMAL_PADDING_LEGGINGS);
+                .add(GCItems.THERMAL_PADDING_LEGGINGS)
+                .add(GCItems.ISOTHERMAL_PADDING_LEGGINGS);
         tag(GCTags.THERMAL_BOOTS)
-                .add(GCItems.THERMAL_PADDING_BOOTS);
+                .add(GCItems.THERMAL_PADDING_BOOTS)
+                .add(GCItems.ISOTHERMAL_PADDING_BOOTS);
 
         // Oxygen equipment
         tag(GCTags.OXYGEN_MASKS)

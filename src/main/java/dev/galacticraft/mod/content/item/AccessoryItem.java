@@ -24,18 +24,53 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.mod.content.GCAccessorySlots;
+import java.util.List;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.dispenser.BlockSource;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.phys.AABB;
 
 public class AccessoryItem extends Item implements Accessory {
+    public static final DispenseItemBehavior DISPENSE_ITEM_BEHAVIOR = new DefaultDispenseItemBehavior(){
+
+        @Override
+        protected ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
+            return AccessoryItem.dispenseAccessory(blockSource, itemStack) ? itemStack : super.execute(blockSource, itemStack);
+        }
+    };
+
+    public static boolean dispenseAccessory(BlockSource blockSource, ItemStack itemStack) {
+        BlockPos blockPos = blockSource.pos().relative(blockSource.state().getValue(DispenserBlock.FACING));
+        List<Player> list = blockSource.level().getEntitiesOfClass(Player.class, new AABB(blockPos), EntitySelector.NO_SPECTATORS);
+        if (list.isEmpty()) {
+            return false;
+        }
+        Player player = (Player)list.get(0);
+        Container inv = player.galacticraft$getGearInv();
+        for (int slot = 0; slot < inv.getContainerSize(); ++slot) {
+            if (inv.getItem(slot).isEmpty() && itemStack.is(GCAccessorySlots.SLOT_TAGS.get(slot))) {
+                ItemStack itemStack2 = itemStack.split(1);
+                inv.setItem(slot, itemStack2);
+                return true;
+            }
+        }
+        return false;
+    }
+
     public AccessoryItem(Properties settings) {
         super(settings.stacksTo(1));
+        DispenserBlock.registerBehavior(this, DISPENSE_ITEM_BEHAVIOR);
     }
 
     @Override //should sync with server
