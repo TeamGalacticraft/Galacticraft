@@ -22,7 +22,9 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.storage.PlaceholderItemStorage;
 import dev.galacticraft.mod.util.TooltipUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -51,6 +53,26 @@ public class OxygenTankItem extends AccessoryItem {
         StorageView<FluidVariant> storage = (StorageView<FluidVariant>) ContainerItemContext.withConstant(stack).find(FluidStorage.ITEM);
         assert storage != null;
         return storage;
+    }
+
+    public static ItemStack getFullTank(Item item) {
+        // ItemStack itemStack = item.getDefaultInstance();
+        try (Transaction t = Transaction.openOuter()) {
+            PlaceholderItemStorage itemStorage = new PlaceholderItemStorage();
+            ContainerItemContext context = ContainerItemContext.ofSingleSlot(itemStorage);
+
+            OxygenTankItem tankItem = (OxygenTankItem) item.asItem();
+            itemStorage.setItem(tankItem);
+            long capacity = tankItem.capacity;
+            long inserted;
+
+            do {
+                inserted = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), capacity, t);
+            } while (inserted > 0 && capacity > 0);
+
+            return itemStorage.variant.toStack();
+        }
+        // return itemStack;
     }
 
     public OxygenTankItem(Properties settings, int capacity) {

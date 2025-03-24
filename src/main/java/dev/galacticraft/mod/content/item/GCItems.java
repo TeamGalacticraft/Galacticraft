@@ -230,7 +230,7 @@ public class GCItems {
     public static final Item SHIELD_CONTROLLER = ITEMS.register(Constant.Item.SHIELD_CONTROLLER, new AccessoryItem(new Item.Properties()));
     public static final Item FREQUENCY_MODULE = ITEMS.register(Constant.Item.FREQUENCY_MODULE, new AccessoryItem(new Item.Properties()));
 
-    public static final Item EMERGENCY_KIT = registerGeneric(Constant.Item.EMERGENCY_KIT);
+    public static final Item EMERGENCY_KIT = ITEMS.register(Constant.Item.EMERGENCY_KIT, new EmergencyKitItem(new Item.Properties().stacksTo(1)));
 
     public static final Item THERMAL_PADDING_HELMET = ITEMS.register(Constant.Item.THERMAL_PADDING_HELMET, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
     public static final Item THERMAL_PADDING_CHESTPIECE = ITEMS.register(Constant.Item.THERMAL_PADDING_CHESTPIECE, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
