@@ -963,7 +963,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.MILLIBUCKETS, "mB");
         this.add(Ui.MAX_OXYGEN, "Maximum Oxygen: %s");
         this.add(Ui.MACHINE_STATUS, "Status: %s");
-        this.add(Ui.OXYGEN_TANK_LEVEL, "Oxygen Tank %s: %s/%s");
+        this.add(Ui.OXYGEN_TANK_1_LEVEL, "Oxygen Tank 1: %s");
+        this.add(Ui.OXYGEN_TANK_2_LEVEL, "Oxygen Tank 2: %s");
         this.add(Ui.OXYGEN_WARNING, "WARNING");
         this.add(Ui.OXYGEN_SETUP_INVALID, "Oxygen Setup is Invalid!");
         this.add(Ui.ROCKET_FUEL, "Fuel:");

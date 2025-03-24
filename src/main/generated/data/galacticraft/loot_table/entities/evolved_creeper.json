@@ -46,7 +46,7 @@
         {
           "type": "minecraft:tag",
           "expand": true,
-          "name": "minecraft:creeper_drop_music_discs"
+          "name": "galacticraft:evolved_creeper_drop_music_discs"
         }
       ],
       "rolls": 1.0
