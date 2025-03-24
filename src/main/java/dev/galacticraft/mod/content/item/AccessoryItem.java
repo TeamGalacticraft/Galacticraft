@@ -26,13 +26,18 @@ import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.mod.content.GCAccessorySlots;
 import java.util.List;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -62,6 +67,7 @@ public class AccessoryItem extends Item implements Accessory {
             if (inv.getItem(slot).isEmpty() && itemStack.is(GCAccessorySlots.SLOT_TAGS.get(slot))) {
                 ItemStack itemStack2 = itemStack.split(1);
                 inv.setItem(slot, itemStack2);
+                playEquipSound(player);
                 return true;
             }
         }
@@ -73,16 +79,38 @@ public class AccessoryItem extends Item implements Accessory {
         DispenserBlock.registerBehavior(this, DISPENSE_ITEM_BEHAVIOR);
     }
 
+    public static void playEquipSound(Entity entity) {
+        if (!entity.level().isClientSide() && !entity.isSpectator() && !entity.isSilent()) {
+            entity.level().playSeededSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ARMOR_EQUIP_GENERIC, entity.getSoundSource(), 1.0f, 1.0f, entity.getRandom().nextLong());
+        }
+    }
+
     @Override //should sync with server
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         Container inv = player.galacticraft$getGearInv();
         ItemStack itemStack = player.getItemInHand(hand);
         for (int slot = 0; slot < inv.getContainerSize(); ++slot) {
-            if (inv.getItem(slot).isEmpty() && itemStack.is(GCAccessorySlots.SLOT_TAGS.get(slot))) {
-                inv.setItem(slot, itemStack);
-                return new InteractionResultHolder<>(InteractionResult.SUCCESS, ItemStack.EMPTY);
+            if (itemStack.is(GCAccessorySlots.SLOT_TAGS.get(slot))) {
+                ItemStack itemStack2 = inv.getItem(slot);
+                if (ItemStack.matches(itemStack, itemStack2)) {
+                    return InteractionResultHolder.fail(itemStack);
+                }
+                if (itemStack2.getItem() instanceof OxygenTankItem && OxygenTankItem.getStorage(itemStack2).getAmount() > 0) {
+                    if (slot == GCAccessorySlots.OXYGEN_TANK_1_SLOT) {
+                        continue;
+                    }
+                    return InteractionResultHolder.fail(itemStack);
+                }
+                if (!level.isClientSide()) {
+                    player.awardStat(Stats.ITEM_USED.get(itemStack.getItem()));
+                }
+                ItemStack itemStack3 = itemStack2.isEmpty() ? itemStack : itemStack2.copyAndClear();
+                ItemStack itemStack4 = player.isCreative() ? itemStack.copy() : itemStack.copyAndClear();
+                inv.setItem(slot, itemStack4);
+                playEquipSound(player);
+                return InteractionResultHolder.sidedSuccess(itemStack3, level.isClientSide());
             }
         }
-        return super.use(world, player, hand);
+        return super.use(level, player, hand);
     }
 }

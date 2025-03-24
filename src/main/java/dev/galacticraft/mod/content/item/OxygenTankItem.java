@@ -47,6 +47,12 @@ import java.util.List;
 public class OxygenTankItem extends AccessoryItem {
     public final long capacity;
 
+    public static StorageView<FluidVariant> getStorage(ItemStack stack) {
+        StorageView<FluidVariant> storage = (StorageView<FluidVariant>) ContainerItemContext.withConstant(stack).find(FluidStorage.ITEM);
+        assert storage != null;
+        return storage;
+    }
+
     public OxygenTankItem(Properties settings, int capacity) {
         super(settings.durability(capacity));
         this.capacity = capacity;
@@ -59,16 +65,13 @@ public class OxygenTankItem extends AccessoryItem {
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        StorageView<FluidVariant> storage = (StorageView<FluidVariant>) ContainerItemContext.withConstant(stack).find(FluidStorage.ITEM);
-        assert storage != null;
-
+        StorageView<FluidVariant> storage = OxygenTankItem.getStorage(stack);
         return Math.round(13.0F - (float) (storage.getCapacity() - storage.getAmount()) * 13.0F / (float) storage.getCapacity());
     }
 
     @Override
     public int getBarColor(ItemStack stack) {
-        StorageView<FluidVariant> storage = (StorageView<FluidVariant>) ContainerItemContext.withConstant(stack).find(FluidStorage.ITEM);
-        assert storage != null;
+        StorageView<FluidVariant> storage = OxygenTankItem.getStorage(stack);
         float scale = 1.0F - ((float) storage.getAmount() / (float) storage.getCapacity());
         return Constant.Text.getStorageLevelColor(scale);
     }
@@ -90,8 +93,7 @@ public class OxygenTankItem extends AccessoryItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
-        StorageView<FluidVariant> storage = (StorageView<FluidVariant>) ContainerItemContext.withConstant(stack).find(FluidStorage.ITEM);
-        assert storage != null;
+        StorageView<FluidVariant> storage = OxygenTankItem.getStorage(stack);
         TooltipUtil.appendFluidRemainingTooltip(Translations.Tooltip.OXYGEN_REMAINING, storage.getAmount(), storage.getCapacity(), tooltip);
         super.appendHoverText(stack, context, tooltip, type);
     }
