@@ -25,6 +25,7 @@ package dev.galacticraft.mod.events;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberPart;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
@@ -59,8 +60,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
-
 public class GCEventHandlers {
     public static void init() {
         EntitySleepEvents.ALLOW_BED.register(GCEventHandlers::allowCryogenicSleep);
@@ -88,12 +87,12 @@ public class GCEventHandlers {
                 if (heldItem.getItem() instanceof CannedFoodItem) {
                     return InteractionResultHolder.pass(heldItem);
                 } else {
-                    player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_WITH_MASK).withColor(Color.RED.getRGB()), true);
+                    player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_WITH_MASK).withStyle(Constant.Text.RED_STYLE), true);
                     return InteractionResultHolder.fail(heldItem);
                 }
             }
         } else if (!oxygenWorld && !world.isBreathable(new BlockPos((int) Math.floor(playerEyePos.x), (int) Math.floor(playerEyePos.y), (int) Math.floor(playerEyePos.z)))) { //sealed atmosphere check. they dont have a mask on so make sure they can breathe before eating
-            player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_IN_NO_ATMOSPHERE).withColor(Color.RED.getRGB()), true);
+            player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_IN_NO_ATMOSPHERE).withStyle(Constant.Text.RED_STYLE), true);
             return InteractionResultHolder.fail(player.getItemInHand(hand));
         }
         return InteractionResultHolder.pass(player.getItemInHand(hand));

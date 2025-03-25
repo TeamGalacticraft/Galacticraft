@@ -430,7 +430,6 @@ public class GCCreativeModeTabs {
 
                 // ORES
                 output.accept(MARS_IRON_ORE);
-                output.accept(ASTEROID_IRON_ORE);
 
                 output.accept(MOON_COPPER_ORE);
                 output.accept(LUNASLATE_COPPER_ORE);
@@ -447,7 +446,6 @@ public class GCCreativeModeTabs {
                 output.accept(MARS_TIN_ORE);
                 output.accept(VENUS_TIN_ORE);
 
-                output.accept(ASTEROID_ALUMINUM_ORE);
                 output.accept(ASTEROID_IRON_ORE);
                 output.accept(ASTEROID_SILICON_ORE);
 

@@ -241,7 +241,7 @@ public class GCBlocks {
     public static final Block ASTEROID_IRON_ORE = BLOCKS.registerWithItem(Constant.Block.ASTEROID_IRON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(ASTEROID_ROCK, 3.5F, 3.0F)));
     public static final Block ASTEROID_ALUMINUM_ORE = BLOCKS.registerWithItem(Constant.Block.ASTEROID_ALUMINUM_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(ASTEROID_ROCK, 3.5F, 3.0F)));
     public static final Block ILMENITE_ORE = BLOCKS.registerWithItem(Constant.Block.ILMENITE_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(ASTEROID_ROCK, 3.0F, 5.0F)));
-    public static final Block ASTEROID_SILICON_ORE = BLOCKS.registerWithItem(Constant.Block.ASTEROID_SILICON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(3.5F, 3.0F, false)));
+    public static final Block ASTEROID_SILICON_ORE = BLOCKS.registerWithItem(Constant.Block.ASTEROID_SILICON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(ASTEROID_ROCK, 3.5F, 3.0F)));
 
     public static final Block VENUS_COPPER_ORE = BLOCKS.registerWithItem(Constant.Block.VENUS_COPPER_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(SOFT_VENUS_ROCK, 5.0F, 5.0F)));
     public static final Block VENUS_TIN_ORE = BLOCKS.registerWithItem(Constant.Block.VENUS_TIN_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(SOFT_VENUS_ROCK, 5.0F, 5.0F)));

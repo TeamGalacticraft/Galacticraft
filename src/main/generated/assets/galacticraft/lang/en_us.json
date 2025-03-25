@@ -1,5 +1,4 @@
 {
-  "banner_pattern.galacticraft.rocket": "Rocket",
   "biome.galacticraft.asteroid_field": "Asteroid Field",
   "biome.galacticraft.basaltic_mare": "Basaltic Mare",
   "biome.galacticraft.comet_tundra": "Comet Tundra",
@@ -27,6 +26,7 @@
   "block.galacticraft.asteroid_rock": "Asteroid Rock",
   "block.galacticraft.asteroid_rock_block_1": "Asteroid Rock",
   "block.galacticraft.asteroid_rock_block_2": "Asteroid Rock",
+  "block.galacticraft.asteroid_silicon_ore": "Asteroid Silicon Ore",
   "block.galacticraft.banner.rocket.black": "Black Rocket",
   "block.galacticraft.banner.rocket.blue": "Blue Rocket",
   "block.galacticraft.banner.rocket.brown": "Brown Rocket",
@@ -43,7 +43,6 @@
   "block.galacticraft.banner.rocket.red": "Red Rocket",
   "block.galacticraft.banner.rocket.white": "White Rocket",
   "block.galacticraft.banner.rocket.yellow": "Yellow Rocket",
-  "block.galacticraft.asteroid_silicon_ore": "Asteroid Silicon Ore",
   "block.galacticraft.basic_solar_panel": "Basic Solar Panel",
   "block.galacticraft.basic_solar_panel.description": "Basic Solar Panels collect energy from the sun, and store it for further use. Collects most energy at mid-day (non-adjustable).",
   "block.galacticraft.black_candle_moon_cheese_wheel": "Moon Cheese Wheel with Black Candle",

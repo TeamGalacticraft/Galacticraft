@@ -7,7 +7,8 @@
     "bottom": "galacticraft:block/tin_decoration"
   },
   "elements": [
-    {   "from": [ 4, 0, 0 ],
+    {
+      "from": [ 4, 0, 0 ],
       "to": [ 12, 16, 16 ],
       "faces": {
         "down": {"texture": "#top"},

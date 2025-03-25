@@ -52,8 +52,6 @@ public class GCEntityTypes {
     public static final EntityType<EvolvedCreeperEntity> EVOLVED_CREEPER =  ENTITIES.register(Entity.EVOLVED_CREEPER, EntityType.Builder.of(EvolvedCreeperEntity::new, MobCategory.MONSTER)
             .sized(0.6F, 1.7F)
             .clientTrackingRange(8)
-    public static final EntityType<EvolvedCreeperEntity> EVOLVED_CREEPER = ENTITIES.register(Entity.EVOLVED_CREEPER, EntityType.Builder.of(EvolvedCreeperEntity::new, MobCategory.MONSTER)
-            .sized(0.65F, 1.8F)
             .build());
     public static final EntityType<EvolvedSkeletonEntity> EVOLVED_SKELETON = ENTITIES.register(Entity.EVOLVED_SKELETON, EntityType.Builder.of(EvolvedSkeletonEntity::new, MobCategory.MONSTER)
             .sized(0.6F, 1.99F)

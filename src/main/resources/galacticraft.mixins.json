@@ -29,7 +29,6 @@
     "client.ClientPacketListenerMixin"
   ],
   "client": [
-    "client.FabricItemMixin",
     "client.AbstractClientPlayerMixin",
     "client.AlphaWarningTitleScreenMixin",
     "client.AnimalModelAgeableListModel",
@@ -37,6 +36,7 @@
     "client.BlockModelMixin$DeserializerMixin",
     "client.CameraMixin",
     "client.ClientLevelMixin",
+    "client.FabricItemMixin",
     "client.FogRendererMixin",
     "client.HumanoidModelMixin",
     "client.LevelRendererMixin",

@@ -72,7 +72,6 @@ public class CannedFoodBlockEntityRenderer implements BlockEntityRenderer<Canned
             float z = (position[2] - 8) / 16.0f;
 
             int canColor = contents.get(i).get(GCDataComponents.COLOR);
-            System.out.println(Integer.toHexString(canColor));
             // Extract RGB components from the integer color
             float red = ((canColor >> 16) & 0xFF) / 255.0f;
             float green = ((canColor >> 8) & 0xFF) / 255.0f;

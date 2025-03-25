@@ -181,8 +181,6 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.MARS_TIN_ORE);
         generator.createTrivialCube(GCBlocks.VENUS_TIN_ORE);
 
-        generator.createTrivialCube(GCBlocks.ASTEROID_ALUMINUM_ORE);
-        generator.createTrivialCube(GCBlocks.ASTEROID_IRON_ORE);
         generator.createTrivialCube(GCBlocks.ASTEROID_SILICON_ORE);
 
         generator.createTrivialCube(GCBlocks.ALUMINUM_ORE);
@@ -195,9 +193,6 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.LUNAR_SAPPHIRE_ORE);
 
         generator.createTrivialCube(GCBlocks.DESH_ORE);
-        generator.createTrivialCube(GCBlocks.MARS_COPPER_ORE);
-        generator.createTrivialCube(GCBlocks.MARS_IRON_ORE);
-        generator.createTrivialCube(GCBlocks.MARS_TIN_ORE);
 
 
         generator.createTrivialCube(GCBlocks.ILMENITE_ORE);
@@ -606,9 +601,6 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.GROUND_BEEF, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.BEEF_PATTY, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.CHEESEBURGER, ModelTemplates.FLAT_ITEM);
-
-        generator.generateFlatItem(GCItems.NOSE_CONE, ModelTemplates.FLAT_ITEM);
-        generator.generateFlatItem(GCItems.HEAVY_NOSE_CONE, "_joined", ModelTemplates.FLAT_ITEM);
 
         // ROCKET PLATES
         generator.generateFlatItem(GCItems.TIER_1_HEAVY_DUTY_PLATE, ModelTemplates.FLAT_ITEM);
