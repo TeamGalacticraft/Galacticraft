@@ -87,12 +87,12 @@ public class GCEventHandlers {
                 if (heldItem.getItem() instanceof CannedFoodItem) {
                     return InteractionResultHolder.pass(heldItem);
                 } else {
-                    player.displayClientMessage(Component.translatable("chat.cannotEatWithMask").withColor(Color.RED.getRGB()), true);
+                    player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_WITH_MASK).withColor(Color.RED.getRGB()), true);
                     return InteractionResultHolder.fail(heldItem);
                 }
             }
         } else if (!oxygenWorld && !world.isBreathable(new BlockPos((int) Math.floor(playerEyePos.x), (int) Math.floor(playerEyePos.y), (int) Math.floor(playerEyePos.z)))) { //sealed atmosphere check. they dont have a mask on so make sure they can breathe before eating
-            player.displayClientMessage(Component.translatable("chat.cannotEatInNoAtmosphere").withColor(Color.RED.getRGB()), true);
+            player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_IN_NO_ATMOSPHERE).withColor(Color.RED.getRGB()), true);
             return InteractionResultHolder.fail(player.getItemInHand(hand));
         }
         return InteractionResultHolder.pass(player.getItemInHand(hand));

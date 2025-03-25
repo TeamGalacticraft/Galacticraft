@@ -39,6 +39,7 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.accessor.LevelAccessor;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.machine.SealerManager;
@@ -113,7 +114,10 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         Holder<CelestialBody<?, ?>> holder = world.galacticraft$getCelestialBody();
         this.oxygenWorld = holder == null || holder.value().atmosphere().breathable();
         if (!world.isClientSide) {
-            SealerManager.INSTANCE.addSealer(this, Objects.requireNonNull(Objects.requireNonNull(world.getServer()).getLevel(world.dimension())));
+            if (level != null) {
+                SealerManager manager = ((LevelAccessor) level).getSealerManager();
+                manager.addSealer(this, Objects.requireNonNull(Objects.requireNonNull(world.getServer()).getLevel(world.dimension())));
+            }
         }
     }
 
@@ -129,11 +133,12 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         // Check if the machine has enough energy
+        SealerManager manager = ((LevelAccessor) level).getSealerManager();
         if (!this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenSealerEnergyConsumptionRate())) {
             //recalculate area to avoid issues with fake oxygen
             if (this.hasEnergy) {
                 this.hasEnergy = false;
-                SealerManager.INSTANCE.recalculateSealingStatus(pos, level);
+                manager.recalculateSealingStatus(pos, level);
             }
             return MachineStatuses.NOT_ENOUGH_ENERGY;
         }
@@ -144,7 +149,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
             //recalculate area to avoid issues with fake oxygen
             if (this.hasOxygen) {
                 this.hasOxygen = false;
-                SealerManager.INSTANCE.recalculateSealingStatus(pos, level);
+                manager.recalculateSealingStatus(pos, level);
             }
             return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
         }
@@ -154,7 +159,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
             //recalculate area to avoid issues with fake oxygen
             if (!this.blocked) {
                 this.blocked = true;
-                SealerManager.INSTANCE.recalculateSealingStatus(pos, level);
+                manager.recalculateSealingStatus(pos, level);
             }
             return GCMachineStatuses.BLOCKED;
         }
@@ -163,7 +168,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         // Update sealing status periodically
         if (this.sealCheckTimer-- <= 0) {
             this.sealCheckTimer = SEAL_CHECK_TIME;
-            SealerManager.INSTANCE.recalculateSealingStatus(pos, level);
+            manager.recalculateSealingStatus(pos, level);
         }
 
         // Consume oxygen if sealed
@@ -190,7 +195,8 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     public void setRemoved() {
         super.setRemoved();
         if (this.level != null && !this.level.isClientSide) {
-            SealerManager.INSTANCE.removeSealer(this, (ServerLevel) this.level);
+            SealerManager manager = ((LevelAccessor) level).getSealerManager();
+            manager.removeSealer(this, (ServerLevel) this.level);
         }
     }
 

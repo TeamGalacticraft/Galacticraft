@@ -25,6 +25,7 @@ package dev.galacticraft.mod.util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -34,16 +35,28 @@ import java.util.Optional;
 
 public class TextureUtils {
     public static int getAverageColor(ResourceLocation textureLocation) {
-        Optional<Resource> resourceOptional = Minecraft.getInstance().getResourceManager().getResource(textureLocation);
+        if (Minecraft.getInstance().level == null) {
+            System.out.println("NO LEVEL FOUND");
+            return 0x00FFFF; // Default white color when the game is not fully loaded
+        }
+
+        ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
+        if (resourceManager == null) {
+            System.out.println("NO RESOURCE MANAGER FOUND");
+            return 0xFF00FF; // Return default if ResourceManager isn't ready
+        }
+
+        Optional<Resource> resourceOptional = resourceManager.getResource(textureLocation);
         if (resourceOptional.isEmpty()) {
-            throw new RuntimeException("Failed to find resource: " + textureLocation);
+            System.out.println("RESOURCE OPTIONAL IS EMPTY");
+            return 0xFFFF00; // Avoid throwing an exception, return default instead
         }
 
         try (InputStream is = resourceOptional.get().open()) {
             BufferedImage image = ImageIO.read(is);
             return calculateAverageColor(image);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load image: " + textureLocation, e);
+            return 0xFFFFFF; // Return default if the texture couldn't be read
         }
     }
 

@@ -26,10 +26,7 @@ import dev.galacticraft.machinelib.api.block.SimpleMachineBlock;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.block.boss.BossSpawner;
-import dev.galacticraft.mod.content.block.decoration.IronGratingBlock;
-import dev.galacticraft.mod.content.block.decoration.LightPanelBlock;
-import dev.galacticraft.mod.content.block.decoration.LunarCartographyTableBlock;
-import dev.galacticraft.mod.content.block.decoration.VacuumGlassBlock;
+import dev.galacticraft.mod.content.block.decoration.*;
 import dev.galacticraft.mod.content.block.environment.*;
 import dev.galacticraft.mod.content.block.machine.*;
 import dev.galacticraft.mod.content.block.special.*;
@@ -99,6 +96,8 @@ public class GCBlocks {
     public static final DecorationSet TIN_DECORATION = BLOCKS.registerDecoration(Constant.Block.TIN_DECORATION, BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops(), 2.5F, 3.0F);
     public static final DecorationSet TITANIUM_DECORATION = BLOCKS.registerDecoration(Constant.Block.TITANIUM_DECORATION, BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops(), 2.5F, 3.0F);
     public static final DecorationSet DARK_DECORATION = BLOCKS.registerDecoration(Constant.Block.DARK_DECORATION, BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops(), 2.5F, 3.0F);
+
+    public static final Block CANNED_FOOD = BLOCKS.register(Constant.Block.CANNED_FOOD, new CannedFoodBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).strength(0.5F, 0.5F).noOcclusion()));
 
     // MOON NATURAL
     public static final Block MOON_TURF = BLOCKS.registerWithItem(Constant.Block.MOON_TURF, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).strength(0.5F, 0.5F)));

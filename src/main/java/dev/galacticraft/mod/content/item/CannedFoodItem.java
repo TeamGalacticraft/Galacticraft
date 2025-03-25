@@ -22,18 +22,25 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.mod.content.CannedFoodTooltip;
+import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.block.decoration.CannedFoodBlock;
+import dev.galacticraft.mod.content.block.entity.decoration.CannedFoodBlockEntity;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.item.v1.FabricItemStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -43,7 +50,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -54,17 +65,64 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static dev.galacticraft.mod.content.item.GCItems.EMPTY_CAN;
+import static dev.galacticraft.mod.util.TextureUtils.getAverageColor;
+import static net.minecraft.data.models.model.TextureMapping.getItemTexture;
 
 public class CannedFoodItem extends Item implements FabricItemStack {
-    private int color;
-
+    public static final int MAX_CANS = 8;
     public static final int MAX_FOOD = 16;
 
+    @Override
+    public @NotNull InteractionResult useOn(UseOnContext context) {
+        Level world = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        BlockState clickedState = world.getBlockState(pos);
+        ItemStack stack = context.getItemInHand();
+        Direction face = context.getClickedFace();
+        Block clickedBlock = clickedState.getBlock();
+
+        if (clickedBlock instanceof CannedFoodBlock) {
+            BlockEntity be = world.getBlockEntity(pos);
+            if (be instanceof CannedFoodBlockEntity canEntity) {
+                int currentCans = clickedState.getValue(CannedFoodBlock.CANS);
+                if (currentCans < MAX_CANS) {
+                    canEntity.addCanItem(stack, stack.get(GCDataComponents.COLOR)); // Store canned food item
+                    world.setBlock(pos, clickedState.setValue(CannedFoodBlock.CANS, currentCans + 1), 3);
+                    stack.shrink(1);
+                    return InteractionResult.SUCCESS;
+                }
+            }
+        }
+
+        if (clickedState.isSolid()) {
+            BlockPos placementPos = pos.relative(face);
+            if (world.getBlockState(placementPos).isAir()) {
+                BlockState newState = GCBlocks.CANNED_FOOD.defaultBlockState()
+                        .setValue(CannedFoodBlock.CANS, 1)
+                        .setValue(CannedFoodBlock.FACING, context.getHorizontalDirection().getOpposite());
+
+                world.setBlock(placementPos, newState, 3);
+                BlockEntity be = world.getBlockEntity(placementPos);
+                if (be instanceof CannedFoodBlockEntity canEntity) {
+                    if (stack.has(GCDataComponents.COLOR)) {
+                        canEntity.addCanItem(stack, stack.get(GCDataComponents.COLOR));
+                    } else {
+                        stack.set(GCDataComponents.COLOR, 0);
+                        canEntity.addCanItem(stack, stack.get(GCDataComponents.COLOR));
+                    }
+                }
+                stack.shrink(1);
+                return InteractionResult.SUCCESS;
+            }
+        }
+
+        return InteractionResult.PASS;
+    }
 
     @Override
     public @NotNull ItemStack finishUsingItem(ItemStack itemStack, Level level, LivingEntity livingEntity) {
         if (!level.isClientSide) {
-            int consumingItems = getItemsToBeConsumed(itemStack);
+            int consumingItems = getItemsToBeConsumed(itemStack, (Player) livingEntity);
             DataComponentMap components = itemStack.getComponents();
             super.finishUsingItem(itemStack, level, livingEntity);
             if (livingEntity instanceof ServerPlayer serverPlayer) {
@@ -100,13 +158,12 @@ public class CannedFoodItem extends Item implements FabricItemStack {
 
     public CannedFoodItem(Properties settings) {
         super(settings);
-        this.color = 0;
+        this.getDefaultInstance().set(GCDataComponents.COLOR, 0);
     }
 
     @Override
     public void onCraftedBy(ItemStack stack, Level world, Player player) {
         super.onCraftedBy(stack, world, player);
-        // Add functionality when the item is crafted (optional)
     }
 
 
@@ -129,19 +186,6 @@ public class CannedFoodItem extends Item implements FabricItemStack {
         }
         String result = String.join(", ", list);
         return hasMore ? result + "..." : result;
-    }
-
-    public void setColor(int color) {
-        this.color = color;
-    }
-
-    public int getColor(int layer) {
-        // Specify color for each layer, you can add more layers and their colors
-        if (layer == 1) {
-            return this.color;
-        } else {
-            return 0xFFFFFF; // Default color (no tint)
-        }
     }
 
     @Override
@@ -183,8 +227,8 @@ public class CannedFoodItem extends Item implements FabricItemStack {
 
     private static void removeOne(ItemStack stack) {
         ItemContainerContents itemContainerContents = stack.get(DataComponents.CONTAINER);
-
         assert itemContainerContents != null;
+
         List<ItemStack> items = new ArrayList<>(itemContainerContents.stream().toList());
         if (!items.isEmpty()) {
             ItemStack itemStack = items.getFirst();
@@ -196,6 +240,10 @@ public class CannedFoodItem extends Item implements FabricItemStack {
                 items.removeFirst();
             }
             stack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(items));
+
+            // 🔹 Recalculate and update the stored color
+            int newColor = calculateCanColor(items);
+            stack.set(GCDataComponents.COLOR, newColor);
         }
     }
 
@@ -208,11 +256,11 @@ public class CannedFoodItem extends Item implements FabricItemStack {
             assert cannedFoodContainer != null;
             List<ItemStack> cannedFoodItems = new ArrayList<>(cannedFoodContainer.stream().toList());
 
-            //the max food items that the canned food item can hold
             int k = Math.min(stack.getCount(), MAX_FOOD);
             if (k != 0) {
                 ItemStack itemStack2 = stack.copyWithCount(k);
                 int iter = -1;
+
                 for (int i = 0; i < cannedFoodItems.size(); i++) {
                     if (cannedFoodItems.get(i).getItem().toString().equals(itemStack2.getItem().toString())) {
                         iter = i;
@@ -224,10 +272,52 @@ public class CannedFoodItem extends Item implements FabricItemStack {
                     itemStack2.setCount(cannedFoodItems.get(iter).getCount() + 1);
                     cannedFoodItems.set(iter, itemStack2);
                 }
+
+                // Update container contents
                 cannedFood.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(cannedFoodItems));
+
+                // 🔹 Recalculate and store the new color inside the stack components
+                int newColor = calculateCanColor(cannedFoodItems);
+                cannedFood.set(GCDataComponents.COLOR, 0xFF0000);
             }
         }
     }
+
+    private static int calculateCanColor(List<ItemStack> items) {
+        System.out.println("Calculating can color");
+        if (items.isEmpty()) {
+            System.out.println("No items to calculate can color");
+            return 0xFFFFFF; // Default white color for empty cans
+        }
+
+        long sumRed = 0, sumGreen = 0, sumBlue = 0;
+        int count = 0;
+
+        for (ItemStack stack : items) {
+            ResourceLocation texture = getItemTexture(stack.getItem());
+
+            // Avoid crashing if the resource manager isn't ready
+            int color = getAverageColor(texture);
+
+            int red = (color >> 16) & 0xFF;
+            int green = (color >> 8) & 0xFF;
+            int blue = color & 0xFF;
+
+            sumRed += red;
+            sumGreen += green;
+            sumBlue += blue;
+            count++;
+        }
+
+        if (count == 0) return 0xFFFFFF;
+
+        int avgRed = (int) (sumRed / count);
+        int avgGreen = (int) (sumGreen / count);
+        int avgBlue = (int) (sumBlue / count);
+
+        return (avgRed << 16) | (avgGreen << 8) | avgBlue;
+    }
+
 
     public static List<ItemStack> addToCan(List<ItemStack> items, ItemStack can) {
         int size = getSize(can);
@@ -279,7 +369,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
     public static FoodProperties getCanFoodProperties(ItemStack stack, Player player) {
         int playerHunger = 0;
         if (player != null) {
-            playerHunger = player.getFoodLevel();
+            playerHunger = player.getFoodData().getFoodLevel();
         }
         int nutritionRequired = 20 - playerHunger;
         int canNutrition = 0;
@@ -321,10 +411,10 @@ public class CannedFoodItem extends Item implements FabricItemStack {
         return canNutrition;
     }
 
-    public static int getItemsToBeConsumed(ItemStack stack) {
+    public static int getItemsToBeConsumed(ItemStack stack, Player player) {
         int playerHunger = 0;
-        if (Minecraft.getInstance().player != null) {
-            playerHunger = Minecraft.getInstance().player.getFoodData().getFoodLevel();
+        if (player != null) {
+            playerHunger = player.getFoodData().getFoodLevel();
         }
         int nutritionRequired = 20 - playerHunger;
         int canNutrition = 0;

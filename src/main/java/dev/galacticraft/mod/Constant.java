@@ -326,6 +326,7 @@ public interface Constant {
         String LUNAR_CARTOGRAPHY_TABLE = "lunar_cartography_table";
         String OXYGEN_STORAGE_MODULE = "oxygen_storage_module";
         String MOON_DIRT_PATH = "moon_dirt_path";
+        String CANNED_FOOD = "canned_food";
     }
 
     interface Fluid {
@@ -815,6 +816,9 @@ public interface Constant {
         String NO_DROP = "NoDrop";
         String OWNER = "Owner";
         String PROGRESS = "Progress";
+        String TRANSFERRING_CAN = "TransferringCan";
+        String TRANSFERRING_FOOD = "TransferringFood";
+        String STORAGE = "Storage";
         String SIZE = "Size";
         String MAX_SIZE = "MaxSize";
         String VISIBLE = "Visible";

@@ -78,6 +78,8 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
     public static final Codec<GCUnbakedModel> MODEL_CODEC = MODEL_TYPE_CODEC.dispatch(TYPE_KEY.toString(), GCUnbakedModel::getType, GCUnbakedModel.GCModelType::codec);
     private static final ResourceLocation PARACHEST_ITEM = Constant.id("item/parachest");
 
+    public static final ResourceLocation CANNED_FOOD_MODEL = Constant.id("block/canned_food_model");
+
     private Map<ResourceLocation, GCModel> models = ImmutableMap.of();
     private AtlasSet atlases;
 
@@ -88,8 +90,11 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
             pluginContext.addModels(Constant.id("block/" + color + "_fluid_pipe_walkway"));
         }
 
+        pluginContext.addModels(CANNED_FOOD_MODEL);
+
         pluginContext.resolveModel().register(context -> {
             var resourceId = context.id();
+
 
             if (Constant.BakedModel.WIRE_MARKER.equals(resourceId)) {
                 return WireUnbakedModel.INSTANCE;
@@ -103,6 +108,8 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
                 return PipeUnbakedModel.INSTANCE;
             } else if (Constant.BakedModel.VACUUM_GLASS_MODEL.equals(resourceId)) {
                 return VacuumGlassUnbakedModel.INSTANCE;
+            } else if (CANNED_FOOD_MODEL.equals(resourceId)) {
+                return context.getOrLoadModel(CANNED_FOOD_MODEL);
             } else if (PARACHEST_ITEM.equals(resourceId)) {
                 var chutes = Maps.<DyeColor, UnbakedModel>newHashMap();
                 for (var color : DyeColor.values()) {

@@ -420,10 +420,10 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
         super.loadAdditional(tag, lookup);
         setProgress(tag.getInt(Constant.Nbt.PROGRESS));
-        this.transferring_can = tag.getBoolean("TRANSFERRING_CAN");
-        this.transferring_food = tag.getBoolean("TRANSFERRING_FOOD");
+        this.transferring_can = tag.getBoolean(Constant.Nbt.TRANSFERRING_CAN);
+        this.transferring_food = tag.getBoolean(Constant.Nbt.TRANSFERRING_FOOD);
         ItemStack itemStack = GCItems.CANNED_FOOD.getDefaultInstance();
-        itemStack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(listTagToCompoundTag(tag.getList("STORAGE", ListTag.TAG_COMPOUND))));
+        itemStack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(listTagToCompoundTag(tag.getList(Constant.Nbt.STORAGE, ListTag.TAG_COMPOUND))));
         this.storage = itemStack;
 
     }
@@ -433,9 +433,9 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
         super.saveAdditional(tag, lookup);
         tag.putInt(Constant.Nbt.PROGRESS, this.progress);
-        tag.putBoolean("TRANSFERRING_CAN", this.transferring_can);
-        tag.putBoolean("TRANSFERRING_FOOD", this.transferring_food);
-        tag.put("STORAGE", compoundTagToListTag(Objects.requireNonNull(this.storage.get(DataComponents.BLOCK_ENTITY_DATA)).copyTag()));
+        tag.putBoolean(Constant.Nbt.TRANSFERRING_CAN, this.transferring_can);
+        tag.putBoolean(Constant.Nbt.TRANSFERRING_FOOD, this.transferring_food);
+        tag.put(Constant.Nbt.STORAGE, compoundTagToListTag(Objects.requireNonNull(this.storage.get(DataComponents.BLOCK_ENTITY_DATA)).copyTag()));
     }
 
     public static CompoundTag listTagToCompoundTag(ListTag listTag) {

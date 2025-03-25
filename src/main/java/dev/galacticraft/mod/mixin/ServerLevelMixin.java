@@ -94,7 +94,8 @@ public abstract class ServerLevelMixin extends Level implements LevelAccessor {
         }
 
         // Notify the SealerManager about the block change
-        SealerManager.INSTANCE.onBlockChange(pos, newState, this.getLevel());
+        SealerManager manager = ((LevelAccessor) getLevel()).getSealerManager();
+        manager.onBlockChange(pos, newState, this.getLevel());
     }
 
     @Inject(method = "tickChunk", at = @At("HEAD"))

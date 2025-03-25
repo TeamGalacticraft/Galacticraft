@@ -652,6 +652,9 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Chat.CHAMBER_TOO_FAR_AWAY, "You may not rest now; the cryogenic chamber is too far away");
         this.add(Chat.ROCKET_WARNING, "Press again to launch.");
 
+        this.add(Chat.CANNOT_EAT_IN_NO_ATMOSPHERE, "You can not eat in no atmosphere.");
+        this.add(Chat.CANNOT_EAT_WITH_MASK, "You can not eat regular food with a mask on.");
+
         this.add(Subtitles.THROW_METEOR_CHUNK, "Meteor Chunk flies");
 
         this.add(RegistryDebug.DUMP, "Dumped: %s");

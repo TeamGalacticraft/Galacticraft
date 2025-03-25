@@ -44,7 +44,6 @@ import java.util.List;
 public class GCItems {
     public static final GCRegistry<Item> ITEMS = new GCRegistry<>(BuiltInRegistries.ITEM);
     public static final List<ItemLike> HIDDEN_ITEMS = new ArrayList<>(1);
-
     public static final List<ItemStack> CANNED_FOOD_ITEMS = new ArrayList<>();
 
     // === START BLOCKS ===

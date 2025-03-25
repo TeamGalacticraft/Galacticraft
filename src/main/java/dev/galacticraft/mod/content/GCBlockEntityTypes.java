@@ -24,6 +24,7 @@ package dev.galacticraft.mod.content;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.*;
+import dev.galacticraft.mod.content.block.entity.decoration.CannedFoodBlockEntity;
 import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.content.block.entity.networked.FluidPipeWalkwayBlockEntity;
 import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
@@ -80,6 +81,9 @@ public class GCBlockEntityTypes {
     public static final BlockEntityType<CryogenicChamberPartBlockEntity> CRYOGENIC_CHAMBER_PART = BlockEntityType.Builder.of(CryogenicChamberPartBlockEntity::new, GCBlocks.CRYOGENIC_CHAMBER_PART).build();
     public static final BlockEntityType<DungeonSpawnerBlockEntity> DUNGEON_BOSS_SPAWNER = BLOCK_ENTITIES.register(Constant.Block.BOSS_SPAWNER, BlockEntityType.Builder.of(DungeonSpawnerBlockEntity::new, GCBlocks.BOSS_SPAWNER).build());
 
+    // DECORATION
+    public static final BlockEntityType<CannedFoodBlockEntity> CANNED_FOOD = BlockEntityType.Builder.of(CannedFoodBlockEntity::new, GCBlocks.CANNED_FOOD).build();
+
     public static final BlockEntityType<AirlockControllerBlockEntity> AIRLOCK_CONTROLLER = BlockEntityType.Builder.of(AirlockControllerBlockEntity::new, GCBlocks.AIR_LOCK_CONTROLLER).build();
     public static final BlockEntityType<RocketWorkbenchBlockEntity> ROCKET_WORKBENCH = BlockEntityType.Builder.of(RocketWorkbenchBlockEntity::new, GCBlocks.ROCKET_WORKBENCH).build();
 
@@ -119,6 +123,8 @@ public class GCBlockEntityTypes {
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.CRYOGENIC_CHAMBER), CRYOGENIC_CHAMBER);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.AIR_LOCK_CONTROLLER), AIRLOCK_CONTROLLER);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.ROCKET_WORKBENCH), ROCKET_WORKBENCH);
+
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.CANNED_FOOD), CANNED_FOOD);
     }
 
     private static void register(String id, BlockEntityType<?> type) {

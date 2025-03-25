@@ -182,7 +182,7 @@ public class GalacticraftClient implements ClientModInitializer {
             if (data instanceof CannedFoodTooltip canned) {
                 return new ClientCannedFoodTooltip(canned);
             }
-            return null; // let others handle it
+            return null;
         });
 
         Constant.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);

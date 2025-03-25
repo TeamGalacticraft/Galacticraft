@@ -63,7 +63,6 @@ public class ClientCannedFoodTooltip implements ClientTooltipComponent {
     public void renderImage(Font textRenderer, int x, int y, GuiGraphics context) {
         int i = this.gridSizeX();
         int j = this.gridSizeY();
-        //context.blitSprite(BACKGROUND_SPRITE, x, y, this.backgroundWidth(), this.backgroundHeight());
         boolean bl = true;
         int k = 0;
 

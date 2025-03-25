@@ -472,7 +472,7 @@ public class GCCreativeModeTabs {
 
     public static final CreativeModeTab CANNED_FOOD_GROUP = FabricItemGroup
             .builder()
-            .icon(() -> new ItemStack(CANNED_FOOD))
+            .icon(() -> new ItemStack(GCItems.CANNED_FOOD))
             .title(Component.translatable(Translations.ItemGroup.CANNED_FOOD))
             .displayItems((parameters, output) -> {
                 output.accept(EMPTY_CAN);
