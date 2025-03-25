@@ -43,7 +43,13 @@ public interface Constant {
     Logger LOGGER = LogManager.getLogger("Galacticraft");
 
     double RADIANS_TO_DEGREES = 180.0 / Math.PI;
+
     int OVERWORLD_SKYPROVIDER_STARTHEIGHT = 200;
+    int CLOUD_HEIGHT = 200;
+    int CLOUD_LIMIT = CLOUD_HEIGHT + 100;
+    int SPACE_HEIGHT = 1000;
+    int REENTRY_HEIGHT = 1100;
+    int ESCAPE_HEIGHT = 1200;
 
     @Contract(value = "_ -> new", pure = true)
     static @NotNull ResourceLocation id(String id) {
@@ -149,10 +155,10 @@ public interface Constant {
         String MARS_IRON_ORE = "mars_iron_ore";
         String MARS_TIN_ORE = "mars_tin_ore";
         String MARS_COPPER_ORE = "mars_copper_ore";
+        String ASTEROID_IRON_ORE = "asteroid_iron_ore";
         String MOON_COPPER_ORE = "moon_copper_ore";
         String LUNASLATE_COPPER_ORE = "lunaslate_copper_ore";
-        String DESH_ORE = "desh_ore";
-        String ILMENITE_ORE = "ilmenite_ore";
+        String VENUS_COPPER_ORE = "venus_copper_ore";
         String SILICON_ORE = "silicon_ore";
         String DEEPSLATE_SILICON_ORE = "deepslate_silicon_ore";
         String TIN_ORE = "tin_ore";
@@ -160,11 +166,17 @@ public interface Constant {
         String MOON_TIN_ORE = "moon_tin_ore";
         String LUNASLATE_TIN_ORE = "lunaslate_tin_ore";
         String ASTEROID_ALUMINUM_ORE = "asteroid_aluminum_ore";
-        String ASTEROID_IRON_ORE = "asteroid_iron_ore";
         String ASTEROID_SILICON_ORE = "asteroid_silicon_ore";
+        String VENUS_TIN_ORE = "venus_tin_ore";
         String ALUMINUM_ORE = "aluminum_ore";
         String DEEPSLATE_ALUMINUM_ORE = "deepslate_aluminum_ore";
+        String VENUS_ALUMINUM_ORE = "venus_aluminum_ore";
+        String MOON_CHEESE_ORE = "moon_cheese_ore";
+        String LUNAR_SAPPHIRE_ORE = "lunar_sapphire_ore";
+        String DESH_ORE = "desh_ore";
+        String ILMENITE_ORE = "ilmenite_ore";
         String GALENA_ORE = "galena_ore";
+        String SOLAR_ORE = "solar_ore";
 
         // Solid Blocks
         String SILICON_BLOCK = "silicon_block";
@@ -232,6 +244,10 @@ public interface Constant {
         String BOSS_SPAWNER = "boss_spawner";
 
         // Moon Cheese
+        String MOON_CHEESE_BLOCK = "moon_cheese_block";
+        String MOON_CHEESE_LOG = "moon_cheese_log";
+        String MOON_CHEESE_LEAVES = "moon_cheese_leaves";
+
         String MOON_CHEESE_WHEEL = "moon_cheese_wheel";
         String CANDLE_MOON_CHEESE_WHEEL = "candle_moon_cheese_wheel";
         String WHITE_CANDLE_MOON_CHEESE_WHEEL = "white_candle_moon_cheese_wheel";
@@ -341,8 +357,8 @@ public interface Constant {
         String OXYGEN_GAS = "oxygen_gas";
         String LIQUID_OXYGEN = "liquid_oxygen";
 
-        static ResourceLocation getId(String s) {
-            return Constant.id("block/" + s);
+        static ResourceLocation fluidId(String s) {
+            return Constant.id("block/fluid/" + s);
         }
     }
 
@@ -399,6 +415,7 @@ public interface Constant {
         String SINGLE_SOLAR_MODULE = "single_solar_module";
         String FULL_SOLAR_PANEL = "full_solar_panel";
         String SOLAR_ARRAY_WAFER = "solar_array_wafer";
+        String SOLAR_ARRAY_PANEL = "solar_array_panel";
         String STEEL_POLE = "steel_pole";
         String COPPER_CANISTER = "copper_canister";
         String TIN_CANISTER = "tin_canister";
@@ -460,6 +477,7 @@ public interface Constant {
         String TITANTIUM_UPGRADE_SMITHING_TEMPLATE = "titanium_upgrade_smithing_template";
         String BATTERY = "battery";
         String INFINITE_BATTERY = "infinite_battery";
+        String INFINITE_INDICATOR = "infinite_indicator";
 
         //Fluid buckets
         String CRUDE_OIL_BUCKET = "crude_oil_bucket";
@@ -480,6 +498,8 @@ public interface Constant {
         String LARGE_OXYGEN_TANK = "large_oxygen_tank";
         String INFINITE_OXYGEN_TANK = "infinite_oxygen_tank";
 
+        String EMERGENCY_KIT = "emergency_kit";
+
         String THERMAL_PADDING_HELMET = "thermal_padding_helmet";
         String THERMAL_PADDING_CHESTPIECE = "thermal_padding_chestpiece";
         String THERMAL_PADDING_LEGGINGS = "thermal_padding_leggings";
@@ -499,22 +519,21 @@ public interface Constant {
         String MOON_BUGGY_SCHEMATIC = "moon_buggy_schematic";
         String ASTRO_MINER_SCHEMATIC = "astro_miner_schematic";
 
-        String EVOLVED_ZOMBIE_SPAWN_EGG = "evolved_zombie_spawn_egg";
-        String EVOLVED_PILLAGER_SPAWN_EGG = "evolved_pillager_spawn_egg";
-        String EVOLVED_VINDICATOR_SPAWN_EGG = "evolved_vindicator_spawn_egg";
-        String EVOLVED_EVOKER_SPAWN_EGG = "evolved_evoker_spawn_egg";
-        String EVOLVED_SPIDER_SPAWN_EGG = "evolved_spider_spawn_egg";
-        String EVOLVED_SKELETON_SPAWN_EGG = "evolved_skeleton_spawn_egg";
-        String EVOLVED_CREEPER_SPAWN_EGG = "evolved_creeper_spawn_egg";
-
         String LEGACY_MUSIC_DISC_MARS = "legacy_music_disc_mars";
         String LEGACY_MUSIC_DISC_MIMAS = "legacy_music_disc_mimas";
         String LEGACY_MUSIC_DISC_ORBIT = "legacy_music_disc_orbit";
         String LEGACY_MUSIC_DISC_SPACERACE = "legacy_music_disc_spacerace";
+
         String NOSE_CONE = "nose_cone";
         String HEAVY_NOSE_CONE = "heavy_nose_cone";
         String ROCKET_FIN = "rocket_fin";
+        String HEAVY_ROCKET_FIN = "heavy_rocket_fin";
         String ROCKET_ENGINE = "rocket_engine";
+        String HEAVY_ROCKET_ENGINE = "heavy_rocket_engine";
+        String ROCKET_BOOSTER = "rocket_booster";
+        String BUGGY_WHEEL = "buggy_wheel";
+        String BUGGY_SEAT = "buggy_seat";
+        String BUGGY_STORAGE = "buggy_storage";
         String BASIC_ROCKET_CONE_SCHEMATIC = "basic_rocket_cone_schematic";
         String BASIC_ROCKET_BODY_SCHEMATIC = "basic_rocket_body_schematic";
         String BASIC_ROCKET_FINS_SCHEMATIC = "basic_rocket_fins_schematic";
@@ -522,19 +541,21 @@ public interface Constant {
     }
 
     interface Particle {
-        String DRIPPING_FUEL = "dripping_fuel";
-        String FALLING_FUEL = "falling_fuel";
         String DRIPPING_CRUDE_OIL = "dripping_crude_oil";
         String FALLING_CRUDE_OIL = "falling_crude_oil";
+        String DRIPPING_FUEL = "dripping_fuel";
+        String FALLING_FUEL = "falling_fuel";
+        String DRIPPING_SULFURIC_ACID = "dripping_sulfuric_acid";
+        String FALLING_SULFURIC_ACID = "falling_sulfuric_acid";
+
         String CRYOGENIC_PARTICLE = "cryogenic_particle";
         String LANDER_FLAME = "lander_flame_particle";
         String SPARK = "spark";
-        String DRIPPING_SULFURIC_ACID = "dripping_sulfuric_acid";
-        String FALLING_SULFURIC_ACID = "falling_sulfuric_acid";
         String LAUNCH_SMOKE = "launch_smoke";
         String LAUNCH_FLAME = "launch_flame";
         String LAUNCH_FLAME_LAUNCHED = "launch_flame_launched";
         String ACID_VAPOR_PARTICLE = "acid_vapor";
+        String SPLASH_VENUS = "splash_venus";
     }
 
     interface ScreenTexture {
@@ -554,6 +575,7 @@ public interface Constant {
         ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
         ResourceLocation ROCKET_INVENTORY = id("textures/gui/rocket.png");
         ResourceLocation OVERLAY = id("textures/gui/overlay.png");
+        ResourceLocation WARNING_SIGN = id("textures/gui/warning.png");
 
         ResourceLocation MAP_SCREEN = id("textures/gui/map.png");
         ResourceLocation PLANET_ICONS = id("textures/gui/planet_icons.png");
@@ -638,6 +660,13 @@ public interface Constant {
         ResourceLocation OXYGEN_MASK = id("slot/oxygen_mask");
         ResourceLocation OXYGEN_GEAR = id("slot/oxygen_gear");
         ResourceLocation OXYGEN_TANK = id("slot/oxygen_tank");
+
+        ResourceLocation ROCKET_CONE = id("slot/rocket_cone");
+        ResourceLocation ROCKET_PLATING = id("slot/rocket_plating");
+        ResourceLocation ROCKET_BOOSTER = id("slot/rocket_booster");
+        ResourceLocation ROCKET_FIN = id("slot/rocket_fin");
+        ResourceLocation ROCKET_ENGINE = id("slot/rocket_engine");
+        ResourceLocation CHEST = id("slot/chest");
         ResourceLocation FOOD_CAN = id("slot/food_can");
     }
 
@@ -647,6 +676,8 @@ public interface Constant {
         String EVOLVED_CREEPER = "evolved_creeper";
         String EVOLVED_SKELETON = "evolved_skeleton";
         String EVOLVED_SPIDER = "evolved_spider";
+        String EVOLVED_ENDERMAN = "evolved_enderman";
+        String EVOLVED_WITCH = "evolved_witch";
         String EVOLVED_PILLAGER = "evolved_pillager";
         String EVOLVED_EVOKER = "evolved_evoker";
         String EVOLVED_VINDICATOR = "evolved_vindicator";
@@ -671,6 +702,8 @@ public interface Constant {
         String EVOLVED_CREEPER = "evolved_creeper_spawn_egg";
         String EVOLVED_SKELETON = "evolved_skeleton_spawn_egg";
         String EVOLVED_SPIDER = "evolved_spider_spawn_egg";
+        String EVOLVED_ENDERMAN = "evolved_enderman_spawn_egg";
+        String EVOLVED_WITCH = "evolved_witch_spawn_egg";
         String EVOLVED_PILLAGER = "evolved_pillager_spawn_egg";
         String EVOLVED_EVOKER = "evolved_evoker_spawn_egg";
         String EVOLVED_VINDICATOR = "evolved_vindicator_spawn_egg";
@@ -880,11 +913,13 @@ public interface Constant {
     interface Recipe {
         String FABRICATION = "fabrication";
         String COMPRESSING = "compressing";
+        String ROCKET = "rocket";
 
         interface Serializer {
             String FABRICATION = "fabrication";
             String COMPRESSING_SHAPELESS = "compressing_shapeless";
             String COMPRESSING_SHAPED = "compressing_shaped";
+            String ROCKET = "rocket";
         }
     }
 

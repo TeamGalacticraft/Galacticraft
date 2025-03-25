@@ -2,20 +2,23 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
+    "A": {
+      "item": "galacticraft:compressed_aluminum"
+    },
     "C": {
       "tag": "c:coal"
     },
+    "P": {
+      "item": "galacticraft:compressed_copper"
+    },
     "R": {
       "tag": "c:dusts/redstone"
-    },
-    "T": {
-      "item": "galacticraft:compressed_aluminum"
     }
   },
   "pattern": [
-    " T ",
-    "TRT",
-    "TCT"
+    " P ",
+    "ARA",
+    "ACA"
   ],
   "result": {
     "count": 1,

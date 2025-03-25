@@ -26,6 +26,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -80,7 +81,7 @@ public class OverworldRenderer {
     }
 
     public void renderOverworldSky(Player player, PoseStack poseStack, Matrix4f matrix4f, float partialTicks, Camera camera, boolean bl, Runnable runnable) {
-        float theta = Mth.sqrt(((float) (player.getY()) - 200) / 1000.0F);
+        float theta = Mth.sqrt(((float) (player.getY()) - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) / ((float) Constant.ESCAPE_HEIGHT - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT));
         final float var21 = Math.max(1.0F - theta * 4.0F, 0.0F);
 
         final Vec3 skyColor = this.minecraft.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), partialTicks);
@@ -107,7 +108,7 @@ public class OverworldRenderer {
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
             poseStack.pushPose();
             poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
-            poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.sin(this.minecraft.level.getSunAngle(partialTicks)) < 0.0F ? 180.0F : 0.0F));
+            poseStack.mulPose(Axis.YP.rotationDegrees(Mth.sin(this.minecraft.level.getSunAngle(partialTicks)) < 0.0F ? 180.0F : 0.0F));
             poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
             z = sunriseColors[0] * sunsetModInv;
             var9 = sunriseColors[1] * sunsetModInv;
@@ -152,7 +153,7 @@ public class OverworldRenderer {
         float threshold;
         Vec3 vec = getFogColor(this.minecraft.level, camera, partialTicks);
         threshold = Math.max(0.1F, (float) vec.length() - 0.1F);
-        float var20 = ((float) playerHeight - 200) / 1000.0F;
+        float var20 = ((float) playerHeight - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) / ((float) Constant.ESCAPE_HEIGHT - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT);
         var20 = Mth.sqrt(var20);
         float bright1 = Math.min(0.9F, var20 * 3);
 
@@ -249,6 +250,7 @@ public class OverworldRenderer {
             poseStack.popPose();
         }
 
+
         RenderSystem.setShaderColor(0.0f, 0.0f, 0.0f, 1.0F);
 
         RenderSystem.depthMask(true);
@@ -259,7 +261,7 @@ public class OverworldRenderer {
 
     public static Vec3 getFogColor(ClientLevel level, Camera camera, float f) {
         Player player = Minecraft.getInstance().player;
-        float heightOffset = ((float) (player.getY()) - 200) / 1000.0F;
+        float heightOffset = ((float) (player.getY()) - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) / ((float) Constant.ESCAPE_HEIGHT - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT);
         heightOffset = Mth.sqrt(heightOffset);
 
         float y = Mth.clamp(Mth.cos(level.getTimeOfDay(f) * (float) (Math.PI * 2)) * 2.0F + 0.5F, 0.0F, 1.0F);

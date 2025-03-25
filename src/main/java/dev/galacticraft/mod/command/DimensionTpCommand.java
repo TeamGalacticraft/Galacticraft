@@ -96,6 +96,7 @@ public class DimensionTpCommand {
 
     private static boolean tryTeleport(ServerLevel level, ServerPlayer player, @Nullable Vec3 pos) {
         if (pos == null) pos = getValidTeleportPos(level, player);
+        player.resetFallDistance();
         player.teleportTo(level,
                 pos.x,
                 pos.y,

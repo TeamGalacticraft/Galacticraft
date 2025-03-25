@@ -35,11 +35,15 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.material.Fluid;
 
 public class GCTags {
-    public static final TagKey<Fluid> OIL = TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, "oil"));
-    public static final TagKey<Fluid> FUEL = TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, "fuel"));
-    public static final TagKey<Fluid> SULFURIC_ACID = TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, "sulfuric_acid"));
+    public static final TagKey<Fluid> OIL = TagKey.create(Registries.FLUID, Constant.id("oil"));
+    public static final TagKey<Fluid> OIL_COMMON = TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, "oil"));
+    public static final TagKey<Fluid> FUEL = TagKey.create(Registries.FLUID, Constant.id("fuel"));
+    public static final TagKey<Fluid> FUEL_COMMON = TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, "fuel"));
+    public static final TagKey<Fluid> SULFURIC_ACID = TagKey.create(Registries.FLUID, Constant.id("sulfuric_acid"));
+    public static final TagKey<Fluid> SULFURIC_ACID_COMMON = TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, "sulfuric_acid"));
     public static final TagKey<Fluid> LIQUID_OXYGEN = TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, "oxygen"));
     public static final TagKey<Fluid> OXYGEN = TagKey.create(Registries.FLUID, Constant.id("oxygen"));
+    public static final TagKey<Fluid> NON_BREATHABLE = TagKey.create(Registries.FLUID, Constant.id("non_breathable"));
 
     public static final TagKey<Block> INFINIBURN_MOON = TagKey.create(Registries.BLOCK, Constant.id("infiniburn_moon"));
     public static final TagKey<Block> INFINIBURN_VENUS = TagKey.create(Registries.BLOCK, Constant.id("infiniburn_venus"));
@@ -73,12 +77,16 @@ public class GCTags {
     public static final TagKey<Item> COMPRESSED_IRON = commonTag("plates/iron");
     public static final TagKey<Item> COMPRESSED_TIN = commonTag("plates/tin");
 
+    public static final TagKey<Item> EVOLVED_CREEPER_DROP_MUSIC_DISCS = TagKey.create(Registries.ITEM, Constant.id("evolved_creeper_drop_music_discs"));
+
     public static final TagKey<Structure> MOON_RUINS = TagKey.create(Registries.STRUCTURE, Constant.id("moon_ruins"));
 
     public static final TagKey<DimensionType> FOOTPRINTS_DIMENSIONS = TagKey.create(Registries.DIMENSION_TYPE, Constant.id("footprints"));
     public static final TagKey<DimensionType> SPACE = TagKey.create(Registries.DIMENSION_TYPE, Constant.id("space"));
+    public static final TagKey<DimensionType> VACUUM = TagKey.create(Registries.DIMENSION_TYPE, Constant.id("vacuum"));
 
     public static final TagKey<EntityType<?>> HAS_FOOTPRINTS = TagKey.create(Registries.ENTITY_TYPE, Constant.id("has_footprints"));
+    public static final TagKey<EntityType<?>> HAS_OXYGEN_SETUP = TagKey.create(Registries.ENTITY_TYPE, Constant.id("has_oxygen_setup"));
 
     public static TagKey<Item> commonTag(String path) {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, path));

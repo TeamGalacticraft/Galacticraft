@@ -106,7 +106,7 @@ public class GCCreativeModeTabs {
                 output.accept(FREQUENCY_MODULE);
                 PARACHUTE.colorMap().values().forEach(output::accept);
 
-//                result.accept(SPACE_EMERGENCY_KIT);
+                output.accept(EMERGENCY_KIT);
                 output.accept(SHIELD_CONTROLLER);
 
                 // ROCKETS
@@ -175,6 +175,7 @@ public class GCCreativeModeTabs {
                 output.accept(SINGLE_SOLAR_MODULE);
                 output.accept(FULL_SOLAR_PANEL);
                 output.accept(SOLAR_ARRAY_WAFER);
+                output.accept(SOLAR_ARRAY_PANEL);
                 output.accept(STEEL_POLE);
                 output.accept(COPPER_CANISTER);
                 output.accept(TIN_CANISTER);
@@ -209,9 +210,16 @@ public class GCCreativeModeTabs {
                 // ROCKET PARTS
                 output.accept(NOSE_CONE);
                 output.accept(HEAVY_NOSE_CONE);
-
                 output.accept(ROCKET_FIN);
+                output.accept(HEAVY_ROCKET_FIN);
                 output.accept(ROCKET_ENGINE);
+                output.accept(HEAVY_ROCKET_ENGINE);
+                output.accept(ROCKET_BOOSTER);
+
+                // BUGGY PARTS
+                output.accept(BUGGY_WHEEL);
+                output.accept(BUGGY_SEAT);
+                output.accept(BUGGY_STORAGE);
 
                 // SCHEMATICS
                 output.accept(TIER_2_ROCKET_SCHEMATIC);
@@ -244,6 +252,11 @@ public class GCCreativeModeTabs {
                 output.accept(THERMAL_PADDING_CHESTPIECE);
                 output.accept(THERMAL_PADDING_LEGGINGS);
                 output.accept(THERMAL_PADDING_BOOTS);
+                
+                output.accept(ISOTHERMAL_PADDING_HELMET);
+                output.accept(ISOTHERMAL_PADDING_CHESTPIECE);
+                output.accept(ISOTHERMAL_PADDING_LEGGINGS);
+                output.accept(ISOTHERMAL_PADDING_BOOTS);
 
                 // TOOLS + WEAPONS
                 output.accept(HEAVY_DUTY_SWORD);
@@ -265,6 +278,12 @@ public class GCCreativeModeTabs {
                 output.accept(TITANIUM_HOE);
 
                 output.accept(STANDARD_WRENCH);
+
+                // LEGACY MUSIC DISCS
+                output.accept(LEGACY_MUSIC_DISC_MARS);
+                output.accept(LEGACY_MUSIC_DISC_MIMAS);
+                output.accept(LEGACY_MUSIC_DISC_ORBIT);
+                output.accept(LEGACY_MUSIC_DISC_SPACERACE);
             })
             .build();
 
@@ -410,16 +429,23 @@ public class GCCreativeModeTabs {
                 output.accept(STRONG_VACUUM_GLASS);
 
                 // ORES
-                output.accept(SILICON_ORE);
-                output.accept(DEEPSLATE_SILICON_ORE);
+                output.accept(MARS_IRON_ORE);
+                output.accept(ASTEROID_IRON_ORE);
 
                 output.accept(MOON_COPPER_ORE);
                 output.accept(LUNASLATE_COPPER_ORE);
+                output.accept(MARS_COPPER_ORE);
+                output.accept(VENUS_COPPER_ORE);
+
+                output.accept(SILICON_ORE);
+                output.accept(DEEPSLATE_SILICON_ORE);
 
                 output.accept(TIN_ORE);
                 output.accept(DEEPSLATE_TIN_ORE);
                 output.accept(MOON_TIN_ORE);
                 output.accept(LUNASLATE_TIN_ORE);
+                output.accept(MARS_TIN_ORE);
+                output.accept(VENUS_TIN_ORE);
 
                 output.accept(ASTEROID_ALUMINUM_ORE);
                 output.accept(ASTEROID_IRON_ORE);
@@ -428,12 +454,20 @@ public class GCCreativeModeTabs {
 
                 output.accept(ALUMINUM_ORE);
                 output.accept(DEEPSLATE_ALUMINUM_ORE);
+                output.accept(ASTEROID_ALUMINUM_ORE);
+                output.accept(VENUS_ALUMINUM_ORE);
+
+                output.accept(MOON_CHEESE_ORE);
+
+                output.accept(LUNAR_SAPPHIRE_ORE);
 
                 output.accept(DESH_ORE);
 
                 output.accept(ILMENITE_ORE);
 
                 output.accept(GALENA_ORE);
+
+                output.accept(SOLAR_ORE);
 
                 output.accept(OLIVINE_BASALT);
                 output.accept(RICH_OLIVINE_BASALT);
@@ -456,6 +490,11 @@ public class GCCreativeModeTabs {
                 output.accept(RAW_TITANIUM_BLOCK);
                 output.accept(RAW_LEAD_BLOCK);
                 output.accept(OLIVINE_BLOCK);
+
+                // CHEESE BLOCKS
+                output.accept(MOON_CHEESE_BLOCK);
+                output.accept(MOON_CHEESE_LOG);
+                output.accept(MOON_CHEESE_LEAVES);
 
                 // MOON VILLAGER SPECIAL
                 output.accept(LUNAR_CARTOGRAPHY_TABLE);
@@ -515,6 +554,8 @@ public class GCCreativeModeTabs {
             content.addAfter(ItemStack.EMPTY, EVOLVED_CREEPER_SPAWN_EGG);
             content.addAfter(ItemStack.EMPTY, EVOLVED_SKELETON_SPAWN_EGG);
             content.addAfter(ItemStack.EMPTY, EVOLVED_SPIDER_SPAWN_EGG);
+            content.addAfter(ItemStack.EMPTY, EVOLVED_ENDERMAN_SPAWN_EGG);
+            content.addAfter(ItemStack.EMPTY, EVOLVED_WITCH_SPAWN_EGG);
             content.addAfter(ItemStack.EMPTY, EVOLVED_PILLAGER_SPAWN_EGG);
             content.addAfter(ItemStack.EMPTY, EVOLVED_EVOKER_SPAWN_EGG);
             content.addAfter(ItemStack.EMPTY, EVOLVED_VINDICATOR_SPAWN_EGG);

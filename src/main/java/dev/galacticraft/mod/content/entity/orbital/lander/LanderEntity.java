@@ -331,10 +331,10 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
     }
 
     @Override
-    public int getScaledFuelLevel(int scale) {
-        final double fuelLevel = this.tank.getResource().isBlank() ? 0 : this.tank.getAmount();
+    public float getScaledFuelLevel(float scale) {
+        final float fuelLevel = this.tank.getResource().isBlank() ? 0 : this.tank.getAmount();
 
-        return (int) (fuelLevel * scale / tank.getCapacity());
+        return fuelLevel * scale / tank.getCapacity();
     }
 
     @Override

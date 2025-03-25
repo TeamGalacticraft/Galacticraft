@@ -27,6 +27,7 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.config.CelestialTeleporterConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.type.CelestialTeleporterType;
 import dev.galacticraft.impl.universe.celestialbody.landable.teleporter.config.DefaultCelestialTeleporterConfig;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -40,10 +41,10 @@ public class LanderCelestialTeleporterType<Config extends CelestialTeleporterCon
 
     @Override
     public void onEnterAtmosphere(ServerLevel level, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody, Config config) {
-        player.teleportTo(level, player.getX(), 1100, player.getZ(), -90.0F, 45.0F);
+        player.teleportTo(level, player.getX(), Constant.REENTRY_HEIGHT, player.getZ(), -90.0F, 45.0F);
         LanderEntity lander = new LanderEntity(player);
         level.addFreshEntity(lander);
-        lander.setPos(player.getX(), 1100, player.getZ());
+        lander.setPos(player.getX(), Constant.REENTRY_HEIGHT, player.getZ());
         player.startRiding(lander, true);
     }
 }

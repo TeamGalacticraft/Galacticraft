@@ -31,15 +31,18 @@ import net.minecraft.core.registries.BuiltInRegistries;
 
 public class GCParticleTypes {
     public static final GCRegistry<ParticleType<?>> PARTICLES = new GCRegistry<>(BuiltInRegistries.PARTICLE_TYPE);
-    public static final SimpleParticleType DRIPPING_FUEL = PARTICLES.register(Particle.DRIPPING_FUEL, FabricParticleTypes.simple());
-    public static final SimpleParticleType FALLING_FUEL = PARTICLES.register(Particle.FALLING_FUEL, FabricParticleTypes.simple());
+
     public static final SimpleParticleType DRIPPING_CRUDE_OIL = PARTICLES.register(Particle.DRIPPING_CRUDE_OIL, FabricParticleTypes.simple());
     public static final SimpleParticleType FALLING_CRUDE_OIL = PARTICLES.register(Particle.FALLING_CRUDE_OIL, FabricParticleTypes.simple());
+    public static final SimpleParticleType DRIPPING_FUEL = PARTICLES.register(Particle.DRIPPING_FUEL, FabricParticleTypes.simple());
+    public static final SimpleParticleType FALLING_FUEL = PARTICLES.register(Particle.FALLING_FUEL, FabricParticleTypes.simple());
+    public static final SimpleParticleType DRIPPING_SULFURIC_ACID = PARTICLES.register(Particle.DRIPPING_SULFURIC_ACID, FabricParticleTypes.simple());
+    public static final SimpleParticleType FALLING_SULFURIC_ACID = PARTICLES.register(Particle.FALLING_SULFURIC_ACID, FabricParticleTypes.simple());
+
     public static final SimpleParticleType CRYOGENIC_PARTICLE = PARTICLES.register(Particle.CRYOGENIC_PARTICLE, FabricParticleTypes.simple());
     public static final SimpleParticleType LANDER_FLAME_PARTICLE = PARTICLES.register(Particle.LANDER_FLAME, FabricParticleTypes.simple());
     public static final SimpleParticleType SPARK_PARTICLE = PARTICLES.register(Particle.SPARK, FabricParticleTypes.simple());
-    public static final SimpleParticleType DRIPPING_SULFURIC_ACID = PARTICLES.register(Particle.DRIPPING_SULFURIC_ACID, FabricParticleTypes.simple());
-    public static final SimpleParticleType FALLING_SULFURIC_ACID = PARTICLES.register(Particle.FALLING_SULFURIC_ACID, FabricParticleTypes.simple()); // Why does this exist?
+    public static final SimpleParticleType SPLASH_VENUS = PARTICLES.register(Particle.SPLASH_VENUS, FabricParticleTypes.simple());
     public static final ParticleType<LaunchSmokeParticleOption> LAUNCH_SMOKE_PARTICLE = PARTICLES.register(Particle.LAUNCH_SMOKE, FabricParticleTypes.complex(false, LaunchSmokeParticleOption.CODEC, LaunchSmokeParticleOption.STREAM_CODEC));
     public static final ParticleType<EntityParticleOption> LAUNCH_FLAME = PARTICLES.register(Particle.LAUNCH_FLAME, FabricParticleTypes.complex(false, EntityParticleOption::codec, EntityParticleOption::streamCodec));
     public static final ParticleType<EntityParticleOption> LAUNCH_FLAME_LAUNCHED = PARTICLES.register(Particle.LAUNCH_FLAME_LAUNCHED, FabricParticleTypes.complex(false, EntityParticleOption::codec, EntityParticleOption::streamCodec));

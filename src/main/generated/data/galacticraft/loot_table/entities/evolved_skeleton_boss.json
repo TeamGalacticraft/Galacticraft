@@ -10,6 +10,16 @@
         }
       ],
       "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:wither_skeleton_skull"
+        }
+      ],
+      "rolls": 1.0
     }
   ],
   "random_sequence": "galacticraft:entities/evolved_skeleton_boss"

@@ -37,7 +37,9 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -353,9 +355,9 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_STEEL)
                 .unlockedBy(getHasName(GCItems.COMPRESSED_IRON), has(GCItems.COMPRESSED_IRON))
-                .requires(ConventionalItemTags.COAL)
+                .requires(ItemTags.COALS)
                 .requires(GCItems.COMPRESSED_IRON)
-                .requires(ConventionalItemTags.COAL)
+                .requires(ItemTags.COALS)
                 .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_STEEL)
                 .requires(GCTags.STEEL_INGOTS)
@@ -419,7 +421,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "Machine Recipes";
     }
 }
