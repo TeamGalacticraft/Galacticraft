@@ -42,7 +42,7 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 
 public class EmergencyKitItem extends Item {
-    private static final List<ItemStack> EMERGENCY_ITEMS = List.of(
+    public static final List<ItemStack> EMERGENCY_ITEMS = List.of(
             GCItems.OXYGEN_MASK.getDefaultInstance(),
             GCItems.OXYGEN_GEAR.getDefaultInstance(),
             GCItems.SMALL_OXYGEN_TANK.getDefaultInstance(),

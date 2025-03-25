@@ -908,6 +908,7 @@ public interface Constant {
             String COMPRESSING_SHAPELESS = "compressing_shapeless";
             String COMPRESSING_SHAPED = "compressing_shaped";
             String ROCKET = "rocket";
+            String EMERGENCY_KIT = "crafting_special_emergencykit";
         }
     }
 
