@@ -35,7 +35,7 @@ public interface Translations {
     }
 
     interface BannerPattern {
-        String ROCKET = "banner_pattern.galacticraft.rocket";
+        String ROCKET = "block.galacticraft.banner.rocket";
     }
 
     interface JukeboxSong {

@@ -619,6 +619,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCTags.COMPRESSED_STEEL, "Steel Plates");
         this.tag(GCTags.COMPRESSED_IRON, "Iron Plates");
         this.tag(GCTags.COMPRESSED_TIN, "Tin Plates");
+        this.tag(GCTags.EVOLVED_CREEPER_DROP_MUSIC_DISCS, "Evolved Creeper Music Disc Drops");
     }
 
     protected void generateGasTranslations() {
