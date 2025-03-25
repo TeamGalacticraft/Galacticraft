@@ -65,11 +65,11 @@ public class GCResourceReloadListener implements SimpleSynchronousResourceReload
         PipeBakedModel.invalidate();
         FluidPipeWalkwayBakedModel.invalidate();
         FluidRenderHandler oil = (view, pos, state) -> new TextureAtlasSprite[]{
-                atlas.apply(Constant.id("block/fluid/crude_oil_still")), 
+                atlas.apply(Constant.id("block/fluid/crude_oil_still")),
                 atlas.apply(Constant.id("block/fluid/crude_oil_flowing"))
         };
         FluidRenderHandler fuel = (view, pos, state) -> new TextureAtlasSprite[]{
-                atlas.apply(Constant.id("block/fluid/fuel_still")), 
+                atlas.apply(Constant.id("block/fluid/fuel_still")),
                 atlas.apply(Constant.id("block/fluid/fuel_flowing"))
         };
         FluidRenderHandler sulfuricAcid = (view, pos, state) -> new TextureAtlasSprite[]{
@@ -77,7 +77,7 @@ public class GCResourceReloadListener implements SimpleSynchronousResourceReload
                 atlas.apply(Constant.id("block/fluid/sulfuric_acid_flowing"))
         };
         FluidRenderHandler oxygen = (view, pos, state) -> new TextureAtlasSprite[]{
-                atlas.apply(Constant.id("block/fluid/oxygen")), 
+                atlas.apply(Constant.id("block/fluid/oxygen")),
                 atlas.apply(Constant.id("block/fluid/oxygen"))
         };
 

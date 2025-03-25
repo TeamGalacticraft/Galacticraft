@@ -60,9 +60,13 @@ import java.util.function.Supplier;
 
 @Mixin(ServerLevel.class)
 public abstract class ServerLevelMixin extends Level implements LevelAccessor {
-    @Shadow @Final @Mutable private List<CustomSpawner> customSpawners;
+    @Shadow
+    @Final
+    @Mutable
+    private List<CustomSpawner> customSpawners;
 
-    @Shadow public abstract ServerLevel getLevel();
+    @Shadow
+    public abstract ServerLevel getLevel();
 
     private final @Unique FootprintManager footprintManager = new ServerFootprintManager();
 

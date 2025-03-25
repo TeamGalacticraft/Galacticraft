@@ -41,7 +41,8 @@ import java.util.Optional;
 
 public record DecorativePlanetConfig(@NotNull Component name, @NotNull Component description,
                                      @NotNull Holder<CelestialBody<?, ?>> parent,
-                                     @NotNull CelestialPosition<?, ?> position, @NotNull CelestialDisplay<?, ?> display, @NotNull CelestialRingDisplay<?, ?> ring,
+                                     @NotNull CelestialPosition<?, ?> position, @NotNull CelestialDisplay<?, ?> display,
+                                     @NotNull CelestialRingDisplay<?, ?> ring,
                                      GasComposition atmosphere, float gravity,
                                      @Nullable SatelliteRecipe satelliteRecipe) implements CelestialBodyConfig {
     public static final Codec<DecorativePlanetConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(

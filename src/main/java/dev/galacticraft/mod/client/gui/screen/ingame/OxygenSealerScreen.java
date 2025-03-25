@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
-import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
@@ -49,8 +48,7 @@ public class OxygenSealerScreen extends MachineScreen<OxygenSealerBlockEntity, O
 
         MachineStatus status = this.menu.state.getStatus();
         graphics.drawString(this.font, Component.translatable(Translations.Ui.MACHINE_STATUS, status != null ? status.getText() : Component.empty()), this.leftPos + 50, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
-        if (status != null)
-        {
+        if (status != null) {
             if (!status.equals(GCMachineStatuses.BLOCKED)) {
                 int sealCheckTime = this.menu.sealTickTime;
                 //TODO: make this a bar that goes down over time to match gc4's sealer screen?

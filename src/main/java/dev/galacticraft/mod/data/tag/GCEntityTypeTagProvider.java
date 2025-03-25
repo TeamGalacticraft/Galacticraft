@@ -43,7 +43,7 @@ public class GCEntityTypeTagProvider extends IntrinsicHolderTagsProvider<EntityT
     protected void addTags(HolderLookup.Provider arg) {
         tag(GCTags.HAS_FOOTPRINTS)
                 .add(EntityType.PLAYER);
-        
+
         tag(EntityTypeTags.FALL_DAMAGE_IMMUNE)
                 .add(GCEntityTypes.LANDER);
     }

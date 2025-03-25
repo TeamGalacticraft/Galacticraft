@@ -42,6 +42,7 @@ public sealed interface RocketPartType<C extends RocketPartConfig> permits Rocke
     /**
      * Called every tick when this part is applied to a placed rocket.
      * The rocket may not have launched yet.
+     *
      * @param rocket the rocket that this part is a part of.
      */
     void tick(@NotNull Rocket rocket, @NotNull C config);
@@ -50,5 +51,5 @@ public sealed interface RocketPartType<C extends RocketPartConfig> permits Rocke
 
     @NotNull ConfiguredTravelPredicate<?, ?> travelPredicate(@NotNull C config);
 
-    @Nullable RocketPartRecipe<?,?> getRecipe(C config);
+    @Nullable RocketPartRecipe<?, ?> getRecipe(C config);
 }

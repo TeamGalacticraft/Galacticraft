@@ -31,18 +31,22 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ImposterProtoChunk.class)
 public abstract class ImposterProtoChunkMixin implements ChunkOxygenAccessor {
-    @Shadow @Final private boolean allowWrites;
-    @Shadow @Final private LevelChunk wrapped;
+    @Shadow
+    @Final
+    private boolean allowWrites;
+    @Shadow
+    @Final
+    private LevelChunk wrapped;
 
     @Override
     public boolean galacticraft$isInverted(int x, int y, int z) {
-        return ((ChunkOxygenAccessor)this.wrapped).galacticraft$isInverted(x, y, z);
+        return ((ChunkOxygenAccessor) this.wrapped).galacticraft$isInverted(x, y, z);
     }
 
     @Override
     public void galacticraft$setInverted(int x, int y, int z, boolean inverted) {
         if (this.allowWrites) {
-            ((ChunkOxygenAccessor)this.wrapped).galacticraft$setInverted(x, y, z, inverted);
+            ((ChunkOxygenAccessor) this.wrapped).galacticraft$setInverted(x, y, z, inverted);
         }
     }
 }

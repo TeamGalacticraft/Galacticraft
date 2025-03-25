@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,7 @@
 
 package dev.galacticraft.api.perlin;
 
-public abstract class NoiseModule
-{
+public abstract class NoiseModule {
     public float frequencyX = 1;
     public float frequencyY = 1;
     public float frequencyZ = 1;
@@ -35,8 +34,7 @@ public abstract class NoiseModule
 
     public abstract float getNoise(float i, float j, float k);
 
-    public void setFrequency(float frequency)
-    {
+    public void setFrequency(float frequency) {
         this.frequencyX = frequency;
         this.frequencyY = frequency;
         this.frequencyZ = frequency;

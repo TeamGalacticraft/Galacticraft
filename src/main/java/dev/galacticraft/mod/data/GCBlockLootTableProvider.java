@@ -35,10 +35,10 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.BlockLootSubProvider;
-import net.minecraft.world.item.Items;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
@@ -47,8 +47,8 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
-import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.functions.SetComponentsFunction;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
@@ -302,10 +302,10 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
     private LootTable.Builder createLaunchPadTable(Block block) {
         return LootTable.lootTable().withPool(this.applyExplosionCondition(block, LootPool.lootPool()
-                .setRolls(ConstantValue.exactly(1.0F))
-                .add(LootItem.lootTableItem(block)
-                        .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
-                                .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AbstractLaunchPad.PART, AbstractLaunchPad.Part.NONE))))))
+                        .setRolls(ConstantValue.exactly(1.0F))
+                        .add(LootItem.lootTableItem(block)
+                                .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+                                        .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AbstractLaunchPad.PART, AbstractLaunchPad.Part.NONE))))))
                 .withPool(this.applyExplosionCondition(block, LootPool.lootPool()
                         .setRolls(ConstantValue.exactly(9.0F))
                         .add(LootItem.lootTableItem(block)
@@ -346,7 +346,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
                     .apply(SetComponentsFunction.setComponent(DataComponents.BASE_COLOR, color))
                     .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
                             .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(ParachestBlock.COLOR, color)
-            )));
+                            )));
         }
         return LootTable.lootTable().withPool(this.applyExplosionCondition(block, pool));
     }

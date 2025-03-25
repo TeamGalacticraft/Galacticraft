@@ -22,15 +22,14 @@
 
 package dev.galacticraft.impl.internal.mixin.gear;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.item.Accessory;
-import dev.galacticraft.api.item.OxygenGear;
-import dev.galacticraft.api.item.OxygenMask;
 import dev.galacticraft.impl.internal.fabric.GalacticraftAPI;
-import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -41,29 +40,24 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Fluid;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements GearInventoryProvider {
@@ -71,8 +65,11 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
         super(type, world);
     }
 
-    @Shadow protected abstract int increaseAirSupply(int air);
-    @Shadow protected abstract int decreaseAirSupply(int air);
+    @Shadow
+    protected abstract int increaseAirSupply(int air);
+
+    @Shadow
+    protected abstract int decreaseAirSupply(int air);
 
     @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"))
     private void galacticraft_oxygenCheck(CallbackInfo ci) {

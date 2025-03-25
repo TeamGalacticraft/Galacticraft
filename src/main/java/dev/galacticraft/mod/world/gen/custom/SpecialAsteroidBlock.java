@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,16 +25,15 @@ package dev.galacticraft.mod.world.gen.custom;
 import net.minecraft.world.level.block.Block;
 
 import java.util.ArrayList;
-public class SpecialAsteroidBlock
-{
+
+public class SpecialAsteroidBlock {
     public Block block;
     public int probability;
     public double thickness; //Arbitrary scale from 0 to 1;
     public int index;
     public static ArrayList<SpecialAsteroidBlock> register = new ArrayList<>();
 
-    public SpecialAsteroidBlock(Block block, int probability, double thickness)
-    {
+    public SpecialAsteroidBlock(Block block, int probability, double thickness) {
         this.block = block;
         this.probability = probability;
         this.thickness = thickness;

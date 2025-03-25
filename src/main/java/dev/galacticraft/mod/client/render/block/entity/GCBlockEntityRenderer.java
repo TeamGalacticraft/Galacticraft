@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.client.render.block.entity;
 
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 
 public class GCBlockEntityRenderer {

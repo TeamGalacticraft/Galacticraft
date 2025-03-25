@@ -57,7 +57,7 @@ public class OverworldCelestialTeleporterType<Config extends CelestialTeleporter
                         break;
                     }
                 }
-                
+
                 var gcPlayer = GCServerPlayer.get(player);
                 var rocketInv = gcPlayer.getRocketStacks();
                 ParachestEntity chest = new ParachestEntity(GCEntityTypes.PARACHEST, level, rocketInv, color, gcPlayer.getFuel());

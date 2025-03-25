@@ -27,5 +27,6 @@ import dev.galacticraft.api.rocket.part.config.RocketUpgradeConfig;
 import dev.galacticraft.api.rocket.part.type.RocketUpgradeType;
 import org.jetbrains.annotations.NotNull;
 
-public record RocketUpgradeImpl<C extends RocketUpgradeConfig, T extends RocketUpgradeType<C>>(@NotNull C config, @NotNull T type) implements RocketUpgrade<C, T> {
+public record RocketUpgradeImpl<C extends RocketUpgradeConfig, T extends RocketUpgradeType<C>>(@NotNull C config,
+                                                                                               @NotNull T type) implements RocketUpgrade<C, T> {
 }

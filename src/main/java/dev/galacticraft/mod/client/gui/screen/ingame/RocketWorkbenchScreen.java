@@ -356,7 +356,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
                 }
             }
         } else {
-            
+
         }
         guiGraphics.drawString(this.font, this.openTab.name, 12, 14, 0xEEEEEE, true);
         pose.popPose();
@@ -367,7 +367,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
     ) {
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(x, y, 50.0);
-        guiGraphics.pose().mulPose(new Matrix4f().scaling((float)scale, (float)scale, (float)(-scale)));
+        guiGraphics.pose().mulPose(new Matrix4f().scaling((float) scale, (float) scale, (float) (-scale)));
         guiGraphics.pose().mulPose(pose);
         Lighting.setupForEntityInInventory();
         EntityRenderDispatcher entityRenderDispatcher = Minecraft.getInstance().getEntityRenderDispatcher();

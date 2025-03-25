@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -47,7 +47,7 @@ public class FoodCannerMenu extends MachineMenu<FoodCannerBlockEntity> {
     }
 
     @Override
-    public void registerData(@NotNull MenuData data){
+    public void registerData(@NotNull MenuData data) {
         super.registerData(data);
 
         data.registerInt(this.be::getProgress, this::setProgress);
@@ -70,24 +70,31 @@ public class FoodCannerMenu extends MachineMenu<FoodCannerBlockEntity> {
     public int getFirstRowConsumed() {
         return firstRowConsumed;
     }
+
     public void setFirstRowConsumed(int value) {
         this.firstRowConsumed = value;
     }
+
     public int getSecondRowConsumed() {
         return secondRowConsumed;
     }
+
     public void setSecondRowConsumed(int value) {
         this.secondRowConsumed = value;
     }
+
     public int getThirdRowConsumed() {
         return thirdRowConsumed;
     }
+
     public void setThirdRowConsumed(int value) {
         this.thirdRowConsumed = value;
     }
+
     public int getForthRowConsumed() {
         return forthRowConsumed;
     }
+
     public void setForthRowConsumed(int value) {
         this.forthRowConsumed = value;
     }

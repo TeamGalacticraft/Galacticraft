@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,20 +21,16 @@
  */
 
 package dev.galacticraft.mod.machine;
+
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.api.config.Config;
-import dev.galacticraft.mod.config.ConfigImpl;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.dimension.DimensionType;
 
 import java.util.*;
 
@@ -47,7 +43,8 @@ public class SealerManager {
     // Map of dimension -> sealed blocks
     private final Map<ResourceKey<Level>, Set<BlockPos>> sealedBlocks = new HashMap<>();
 
-    private SealerManager() {}
+    private SealerManager() {
+    }
 
     public void onBlockChange(BlockPos pos, BlockState newState, ServerLevel level) {
         ResourceKey<Level> dimension = level.dimension();

@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.world.dimension;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.world.biome.GCBiomes;
 import dev.galacticraft.mod.world.biome.source.GCMultiNoiseBiomeSourceParameterLists;
 import dev.galacticraft.mod.world.gen.GCNoiseGeneratorSettings;
 import dev.galacticraft.mod.world.gen.custom.AsteroidChunkGenerator;
@@ -31,8 +30,9 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.biome.*;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.MultiNoiseBiomeSource;
+import net.minecraft.world.level.biome.MultiNoiseBiomeSourceParameterList;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;

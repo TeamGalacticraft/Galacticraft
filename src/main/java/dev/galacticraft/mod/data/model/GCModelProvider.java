@@ -23,8 +23,6 @@
 package dev.galacticraft.mod.data.model;
 
 import com.google.common.collect.Maps;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.machinelib.api.data.model.MachineModelGenerator;
 import dev.galacticraft.machinelib.client.api.model.MachineTextureBase;
@@ -54,15 +52,10 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.trialspawner.TrialSpawnerState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
 import org.jetbrains.annotations.Contract;
 
 import java.util.List;
-import java.util.function.Supplier;
-
-import static dev.galacticraft.machinelib.api.block.MachineBlock.ACTIVE;
 
 public class GCModelProvider extends FabricModelProvider {
     private static final TexturedModel.Provider DETAILED_DECORATION = TexturedModel.createDefault(GCModelProvider::detailedTexture, ModelTemplates.CUBE_BOTTOM_TOP);
@@ -371,7 +364,7 @@ public class GCModelProvider extends FabricModelProvider {
         }
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(FuelLoaderBlock.AMOUNT)
                 .generate(i -> Variant.variant().with(VariantProperties.MODEL, ids[i])
-        )));
+                )));
     }
 
     private static void createResourceStorageBlock(BlockModelGenerators generator, Block block) {
@@ -385,7 +378,7 @@ public class GCModelProvider extends FabricModelProvider {
         }
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(ResourceStorageBlock.AMOUNT)
                 .generate(i -> Variant.variant().with(VariantProperties.MODEL, ids[i])
-        )));
+                )));
     }
 
     private static void createActiveMachine(BlockModelGenerators generator, Block block, TextureProvider activeTex, TextureProvider inactiveTex) {
@@ -394,7 +387,7 @@ public class GCModelProvider extends FabricModelProvider {
 
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(MachineBlock.ACTIVE)
                 .generate(i -> Variant.variant().with(VariantProperties.MODEL, i ? active : inactive)
-        )));
+                )));
     }
 
     private static void createOxygenCompressor(BlockModelGenerators generator, Block compressor) {

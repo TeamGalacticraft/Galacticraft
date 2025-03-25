@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,17 +29,14 @@ import squeek.appleskin.api.event.FoodValuesEvent;
 import static dev.galacticraft.mod.content.item.CannedFoodItem.getCanFoodProperties;
 import static dev.galacticraft.mod.content.item.CannedFoodItem.isCannedFoodItem;
 
-public class AppleSkinEventHandler implements AppleSkinApi
-{
+public class AppleSkinEventHandler implements AppleSkinApi {
 
     @Override
     public void registerEvents() {
         FoodValuesEvent.EVENT.register(foodValuesEvent -> {
-            if (isCannedFoodItem(foodValuesEvent.itemStack))
-            {
-                FoodProperties foodProperties = getCanFoodProperties(foodValuesEvent.itemStack);
-                if (foodProperties != null)
-                {
+            if (isCannedFoodItem(foodValuesEvent.itemStack)) {
+                FoodProperties foodProperties = getCanFoodProperties(foodValuesEvent.itemStack, foodValuesEvent.player);
+                if (foodProperties != null) {
                     foodValuesEvent.modifiedFoodComponent = foodProperties;
                 }
             }

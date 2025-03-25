@@ -44,46 +44,46 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class GCLevelStemProvider implements DataProvider {
-	private final PackOutput.PathProvider path;
-	private final CompletableFuture<HolderLookup.Provider> registriesFuture;
-	private final Consumer<BootstrapContext<LevelStem>> bootstrap;
+    private final PackOutput.PathProvider path;
+    private final CompletableFuture<HolderLookup.Provider> registriesFuture;
+    private final Consumer<BootstrapContext<LevelStem>> bootstrap;
 
-	public GCLevelStemProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture, Consumer<BootstrapContext<LevelStem>> bootstrap) {
-		this.path = output.createPathProvider(PackOutput.Target.DATA_PACK, "dimension");
-		this.registriesFuture = registriesFuture;
-		this.bootstrap = bootstrap;
-	}
+    public GCLevelStemProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture, Consumer<BootstrapContext<LevelStem>> bootstrap) {
+        this.path = output.createPathProvider(PackOutput.Target.DATA_PACK, "dimension");
+        this.registriesFuture = registriesFuture;
+        this.bootstrap = bootstrap;
+    }
 
-	@Override
-	public @NotNull CompletableFuture<?> run(CachedOutput output) {
-		return this.registriesFuture.thenCompose(registries -> {
-			Map<ResourceLocation, LevelStem> entries = new HashMap<>();
-			this.bootstrap.accept(new BootstrapContext<>() {
-				@Override
-				public Holder.Reference<LevelStem> register(ResourceKey<LevelStem> resourceKey, LevelStem object, Lifecycle lifecycle) {
-					entries.put(resourceKey.location(), object);
-					return Holder.Reference.createStandAlone(null, resourceKey);
-				}
+    @Override
+    public @NotNull CompletableFuture<?> run(CachedOutput output) {
+        return this.registriesFuture.thenCompose(registries -> {
+            Map<ResourceLocation, LevelStem> entries = new HashMap<>();
+            this.bootstrap.accept(new BootstrapContext<>() {
+                @Override
+                public Holder.Reference<LevelStem> register(ResourceKey<LevelStem> resourceKey, LevelStem object, Lifecycle lifecycle) {
+                    entries.put(resourceKey.location(), object);
+                    return Holder.Reference.createStandAlone(null, resourceKey);
+                }
 
-				@Override
-				public <S> HolderGetter<S> lookup(ResourceKey<? extends net.minecraft.core.Registry<? extends S>> resourceKey) {
-					return registries.lookupOrThrow(resourceKey);
-				}
-			});
-			CompletableFuture<?>[] futures = new CompletableFuture[entries.size()];
-			var i = 0;
-			var ops = RegistryOps.create(JsonOps.INSTANCE, registries);
-			for (var entry : entries.entrySet()) {
-				var completableFuture = CompletableFuture.supplyAsync(() -> LevelStem.CODEC.encodeStart(ops, entry.getValue()).getOrThrow())
-						.thenCompose(json -> DataProvider.saveStable(output, json, this.path.json(entry.getKey())));
-				futures[i++] = completableFuture;
-			}
-			return CompletableFuture.allOf(futures);
-		});
-	}
+                @Override
+                public <S> HolderGetter<S> lookup(ResourceKey<? extends net.minecraft.core.Registry<? extends S>> resourceKey) {
+                    return registries.lookupOrThrow(resourceKey);
+                }
+            });
+            CompletableFuture<?>[] futures = new CompletableFuture[entries.size()];
+            var i = 0;
+            var ops = RegistryOps.create(JsonOps.INSTANCE, registries);
+            for (var entry : entries.entrySet()) {
+                var completableFuture = CompletableFuture.supplyAsync(() -> LevelStem.CODEC.encodeStart(ops, entry.getValue()).getOrThrow())
+                        .thenCompose(json -> DataProvider.saveStable(output, json, this.path.json(entry.getKey())));
+                futures[i++] = completableFuture;
+            }
+            return CompletableFuture.allOf(futures);
+        });
+    }
 
-	@Override
-	public @NotNull String getName() {
-		return "Level Stems";
-	}
+    @Override
+    public @NotNull String getName() {
+        return "Level Stems";
+    }
 }

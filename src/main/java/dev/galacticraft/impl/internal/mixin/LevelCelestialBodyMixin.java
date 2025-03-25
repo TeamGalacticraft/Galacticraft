@@ -45,7 +45,7 @@ import java.util.function.Supplier;
 @Mixin(value = Level.class, priority = 100) // apply before oxygen level mixin
 public class LevelCelestialBodyMixin implements LevelBodyAccessor {
     @Unique
-    private Holder<CelestialBody<? ,?>> celestialBody = null;
+    private Holder<CelestialBody<?, ?>> celestialBody = null;
 
     @Inject(method = "<init>(Lnet/minecraft/world/level/storage/WritableLevelData;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/core/RegistryAccess;Lnet/minecraft/core/Holder;Ljava/util/function/Supplier;ZZJI)V", at = @At("RETURN"))
     private void init(WritableLevelData writableLevelData,

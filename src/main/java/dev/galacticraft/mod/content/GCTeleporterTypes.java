@@ -43,7 +43,8 @@ public class GCTeleporterTypes {
     public static final CelestialTeleporterType<DefaultCelestialTeleporterConfig> LANDER = TELEPORTERS.register(Teleporters.LANDER, LanderCelestialTeleporterType.INSTANCE);
     public static final CelestialTeleporterType<DefaultCelestialTeleporterConfig> OVERWORLD = TELEPORTERS.register(Teleporters.OVERWORLD, OverworldCelestialTeleporterType.INSTANCE);
 
-    public static void register() {}
+    public static void register() {
+    }
 
     public static void bootstrapRegistries(BootstrapContext<CelestialTeleporter<?, ?>> context) {
         context.register(BuiltinObjects.DIRECT_CELESTIAL_TELEPORTER, new CelestialTeleporter<>(DirectCelestialTeleporterType.INSTANCE, DefaultCelestialTeleporterConfig.INSTANCE));

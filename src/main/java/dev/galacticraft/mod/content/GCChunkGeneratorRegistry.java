@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.content;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.chunk.ChunkGenerator;

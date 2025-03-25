@@ -44,6 +44,7 @@ public class GCDensityFunctions {
         // Final Density handles overall terrain shape
         public static final ResourceKey<DensityFunction> FINAL_DENSITY = createKey("venus/final_density");
     }
+
     public static final class Asteroid {
         // Final Density handles overall terrain shape
         public static final ResourceKey<DensityFunction> FINAL_DENSITY = createKey("asteroid/final_density");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,20 +22,15 @@
 
 package dev.galacticraft.mod.mixin.client;
 
-import dev.galacticraft.mod.content.item.CannedFoodItem;
-import net.fabricmc.fabric.api.item.v1.FabricItem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponentHolder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.lang.reflect.Field;
@@ -52,9 +47,8 @@ public interface FabricItemMixin {
         ItemStack stack = getItemStack(holder);
         if (isCannedFoodItem(stack)) {
             //data component holder has parent of canned food item
-            if (type.equals(DataComponents.FOOD))
-            {
-                FoodProperties foodProperties = getCanFoodProperties(stack);
+            if (type.equals(DataComponents.FOOD)) {
+                FoodProperties foodProperties = getCanFoodProperties(stack, Minecraft.getInstance().player);
                 cir.setReturnValue((T) foodProperties);
             }
         }

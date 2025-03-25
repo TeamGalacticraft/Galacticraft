@@ -24,11 +24,11 @@ package dev.galacticraft.mod.data;
 
 import dev.galacticraft.api.data.TranslationProvider;
 import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.GCStats;
-import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCTags;
@@ -946,7 +946,8 @@ public class GCTranslationProvider extends TranslationProvider {
     protected void deathBy(ResourceKey<DamageType> key, String translation, String playerTranslation) {
         this.deathBy(key, translation);
         Matcher matcher = Pattern.compile("%s").matcher(playerTranslation);
-        if (matcher.results().count() < 2) throw new IllegalArgumentException(".player death message must contain two instances of %s");
+        if (matcher.results().count() < 2)
+            throw new IllegalArgumentException(".player death message must contain two instances of %s");
         this.add("death.attack." + key.location().getPath() + ".player", playerTranslation);
     }
 

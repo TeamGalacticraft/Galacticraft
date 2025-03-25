@@ -107,7 +107,7 @@ public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSna
             }
         }
     }
-    
+
     public void removePipe(@NotNull BlockPos removedPos) {
         if (!this.level.isLoaded(removedPos)) {
             Constant.LOGGER.debug("Removing pipe from unloaded chunk, removing entire network");
@@ -218,7 +218,7 @@ public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSna
             return 0;
         }
 
-        double ratio = Math.min(1.0, (double)amount / (double)totalRequested);
+        double ratio = Math.min(1.0, (double) amount / (double) totalRequested);
         final long baseTransferred = this.transferred;
 
         this.updateSnapshots(transaction);
@@ -286,5 +286,6 @@ public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSna
         return pipes;
     }
 
-    public record PipeSnapshot(FluidVariant variant, long transferred) {}
+    public record PipeSnapshot(FluidVariant variant, long transferred) {
+    }
 }

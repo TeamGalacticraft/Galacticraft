@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,40 +24,32 @@ package dev.galacticraft.mod.world.gen.custom;
 
 import java.util.ArrayList;
 import java.util.Random;
-public class SpecialAsteroidBlockHandler
-{
+
+public class SpecialAsteroidBlockHandler {
     ArrayList<SpecialAsteroidBlock> asteroidBlocks;
 
-    public SpecialAsteroidBlockHandler(SpecialAsteroidBlock... asteroidBlocks)
-    {
+    public SpecialAsteroidBlockHandler(SpecialAsteroidBlock... asteroidBlocks) {
         this.asteroidBlocks = new ArrayList<SpecialAsteroidBlock>();
-        for (SpecialAsteroidBlock asteroidBlock : this.asteroidBlocks)
-        {
-            for (int i = 0; i < asteroidBlock.probability; i++)
-            {
+        for (SpecialAsteroidBlock asteroidBlock : this.asteroidBlocks) {
+            for (int i = 0; i < asteroidBlock.probability; i++) {
                 this.asteroidBlocks.add(asteroidBlock);
             }
         }
     }
 
-    public SpecialAsteroidBlockHandler()
-    {
+    public SpecialAsteroidBlockHandler() {
         this.asteroidBlocks = new ArrayList<SpecialAsteroidBlock>();
     }
 
-    public void addBlock(SpecialAsteroidBlock asteroidBlock)
-    {
-        for (int i = 0; i < asteroidBlock.probability; i++)
-        {
+    public void addBlock(SpecialAsteroidBlock asteroidBlock) {
+        for (int i = 0; i < asteroidBlock.probability; i++) {
             this.asteroidBlocks.add(asteroidBlock);
         }
     }
 
-    public SpecialAsteroidBlock getBlock(Random rand, int size)
-    {
+    public SpecialAsteroidBlock getBlock(Random rand, int size) {
         int s = this.asteroidBlocks.size();
-        if (s < 10)
-        {
+        if (s < 10) {
             return this.asteroidBlocks.get(rand.nextInt(s));
         }
 

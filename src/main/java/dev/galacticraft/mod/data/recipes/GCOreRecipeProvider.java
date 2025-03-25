@@ -60,7 +60,7 @@ public class GCOreRecipeProvider extends FabricRecipeProvider {
         oreSmeltingAndBlasting(output, List.of(GCItems.RAW_LEAD, GCBlocks.GALENA_ORE), GCItems.LEAD_INGOT, 0.7f, 100);
 
         oreSmeltingAndBlasting(output, List.of(GCBlocks.MOON_COPPER_ORE, GCBlocks.LUNASLATE_COPPER_ORE), Items.COPPER_INGOT, 0.7f, 100);
-        
+
         // Nuggets <-> Ingots
         nineBlockStoragePackingRecipe(output, RecipeCategory.MISC, GCItems.METEORIC_IRON_NUGGET, RecipeCategory.MISC, GCItems.METEORIC_IRON_INGOT, "meteoric_iron_ingot_from_nuggets", "meteoric_iron_ingot");
         nineBlockStoragePackingRecipe(output, RecipeCategory.MISC, GCItems.DESH_NUGGET, RecipeCategory.MISC, GCItems.DESH_INGOT, "desh_ingot_from_nuggets", "desh_ingot");

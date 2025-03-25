@@ -62,14 +62,13 @@ public interface GearInventoryProvider {
     }
 
     default boolean galacticraft$hasMask() {
-        boolean mask = false;
         for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
             Item item = this.galacticraft$getAccessories().getItem(i).getItem();
-            if (!mask && item instanceof OxygenMask) {
-                mask = true;
+            if (item instanceof OxygenMask) {
+                return true;
             }
         }
-        return mask;
+        return false;
     }
 
     default void galacticraft$writeGearToNbt(CompoundTag tag) {

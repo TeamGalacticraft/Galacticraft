@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,7 @@ import dev.galacticraft.api.perlin.NoiseModule;
 
 import java.util.Random;
 
-public class Gradient extends NoiseModule
-{
+public class Gradient extends NoiseModule {
     private final FishyNoise noiseGen;
     private final float offsetX;
     private final float offsetY;
@@ -36,8 +35,7 @@ public class Gradient extends NoiseModule
     private final int numOctaves;
     private final float persistance;
 
-    public Gradient(long seed, int nOctaves, float p)
-    {
+    public Gradient(long seed, int nOctaves, float p) {
         this.numOctaves = nOctaves;
         this.persistance = p;
         final Random rand = new Random(seed);
@@ -48,13 +46,11 @@ public class Gradient extends NoiseModule
     }
 
     @Override
-    public float getNoise(float i)
-    {
+    public float getNoise(float i) {
         i *= this.frequencyX;
         float val = 0;
         float curAmplitude = this.amplitude;
-        for (int n = 0; n < this.numOctaves; n++)
-        {
+        for (int n = 0; n < this.numOctaves; n++) {
             val += this.noiseGen.noise2d(i + this.offsetX, this.offsetY) * curAmplitude;
             i *= 2;
             curAmplitude *= this.persistance;
@@ -63,10 +59,8 @@ public class Gradient extends NoiseModule
     }
 
     @Override
-    public float getNoise(float i, float j)
-    {
-        if (this.numOctaves == 1)
-        {
+    public float getNoise(float i, float j) {
+        if (this.numOctaves == 1) {
             return this.noiseGen.noise2d(i * this.frequencyX + this.offsetX, j * this.frequencyY + this.offsetY) * this.amplitude;
         }
 
@@ -74,8 +68,7 @@ public class Gradient extends NoiseModule
         j *= this.frequencyY;
         float val = 0;
         float curAmplitude = this.amplitude;
-        for (int n = 0; n < this.numOctaves; n++)
-        {
+        for (int n = 0; n < this.numOctaves; n++) {
             val += this.noiseGen.noise2d(i + this.offsetX, j + this.offsetY) * curAmplitude;
             i *= 2;
             j *= 2;
@@ -85,10 +78,8 @@ public class Gradient extends NoiseModule
     }
 
     @Override
-    public float getNoise(float i, float j, float k)
-    {
-        if (this.numOctaves == 1)
-        {
+    public float getNoise(float i, float j, float k) {
+        if (this.numOctaves == 1) {
             return this.noiseGen.noise3d(i * this.frequencyX + this.offsetX, j * this.frequencyY + this.offsetY, k * this.frequencyZ + this.offsetZ) * this.amplitude;
         }
 
@@ -97,8 +88,7 @@ public class Gradient extends NoiseModule
         k *= this.frequencyZ;
         float val = 0;
         float curAmplitude = this.amplitude;
-        for (int n = 0; n < this.numOctaves; n++)
-        {
+        for (int n = 0; n < this.numOctaves; n++) {
             val += this.noiseGen.noise3d(i + this.offsetX, j + this.offsetY, k + this.offsetZ) * curAmplitude;
             i *= 2;
             j *= 2;

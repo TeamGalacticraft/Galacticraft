@@ -275,7 +275,7 @@ public interface Translations {
         String WARMING_UP = "ui.galacticraft.status.warming_up";
         String NOT_ENOUGH_FUEL = "ui.galacticraft.status.not_enough_fuel";
         String NO_ROCKET = "ui.galacticraft.status.no_rocket";
-        String ROCKET_IS_FULL ="ui.galacticraft.status.rocket_is_full";
+        String ROCKET_IS_FULL = "ui.galacticraft.status.rocket_is_full";
     }
 
     interface CelestialSelection {

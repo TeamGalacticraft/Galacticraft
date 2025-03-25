@@ -105,7 +105,7 @@ public abstract class TranslationProvider implements DataProvider {
     }
 
     protected void enchantment(Enchantment enchantment, String translation) {
-        this.add(((TranslatableContents)enchantment.description().getContents()).getKey(), translation);
+        this.add(((TranslatableContents) enchantment.description().getContents()).getKey(), translation);
     }
 
     protected void stat(ResourceLocation id, String translation) {

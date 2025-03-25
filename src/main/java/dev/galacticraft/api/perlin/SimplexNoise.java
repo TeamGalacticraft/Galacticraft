@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,17 +24,14 @@ package dev.galacticraft.api.perlin;
 
 import java.util.Random;
 
-public class SimplexNoise
-{
+public class SimplexNoise {
     int[] perm = new int[512];
 
-    public int[][] grad2d = new int[][] { { 0, 0 }, { 0, 1 }, { 1, 1 }, { 1, 0 } };
+    public int[][] grad2d = new int[][]{{0, 0}, {0, 1}, {1, 1}, {1, 0}};
 
-    public SimplexNoise(long seed)
-    {
+    public SimplexNoise(long seed) {
         final Random rand = new Random(seed);
-        for (int i = 0; i < 256; i++)
-        {
+        for (int i = 0; i < 256; i++) {
             this.perm[i] = i; // Fill up the random array with numbers 0-256
         }
 

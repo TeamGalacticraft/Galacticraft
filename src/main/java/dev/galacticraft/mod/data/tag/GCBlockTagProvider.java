@@ -64,7 +64,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.MOON_TURF);
         this.tag(GCTags.MOON_STONE_ORE_REPLACABLES)
                 .add(GCBlocks.MOON_ROCK);
-                // .add(GCBlocks.MOON_BASALT);
+        // .add(GCBlocks.MOON_BASALT);
         this.tag(GCTags.LUNASLATE_ORE_REPLACABLES)
                 .add(GCBlocks.LUNASLATE);
         this.tag(GCTags.MACHINES)
@@ -97,7 +97,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.CAVERNOUS_VINES_PLANT
                 );
 
-        var stairs = new Block[] {
+        var stairs = new Block[]{
                 GCBlocks.MOON_ROCK_STAIRS,
                 GCBlocks.MOON_ROCK_BRICK_STAIRS,
                 GCBlocks.CRACKED_MOON_ROCK_BRICK_STAIRS,
@@ -112,7 +112,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 GCBlocks.MARS_COBBLESTONE_STAIRS
         };
 
-        var wall = new Block[] {
+        var wall = new Block[]{
                 GCBlocks.MOON_ROCK_WALL,
                 GCBlocks.MOON_ROCK_BRICK_WALL,
                 GCBlocks.CRACKED_MOON_ROCK_BRICK_WALL,
@@ -127,7 +127,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 GCBlocks.MARS_COBBLESTONE_WALL
         };
 
-        var slab = new Block[] {
+        var slab = new Block[]{
                 GCBlocks.MOON_ROCK_SLAB,
                 GCBlocks.MOON_ROCK_BRICK_SLAB,
                 GCBlocks.CRACKED_MOON_ROCK_BRICK_SLAB,
@@ -161,7 +161,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         }
 
         // ORE MINING TAGS
-        var ores = new Block[] {
+        var ores = new Block[]{
                 GCBlocks.SILICON_ORE, GCBlocks.DEEPSLATE_SILICON_ORE,
                 GCBlocks.MOON_COPPER_ORE, GCBlocks.LUNASLATE_COPPER_ORE,
                 GCBlocks.OLIVINE_BASALT, GCBlocks.RICH_OLIVINE_BASALT,
@@ -175,7 +175,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         this.tag(ConventionalBlockTags.ORES).add(ores);
 
-        var clusters = new Block[] {
+        var clusters = new Block[]{
                 GCBlocks.OLIVINE_CLUSTER
         };
 

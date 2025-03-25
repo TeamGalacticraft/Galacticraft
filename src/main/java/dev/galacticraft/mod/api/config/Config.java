@@ -58,6 +58,7 @@ public interface Config {
     long machineEnergyStorageSize();
 
     long oxygenCompressorEnergyConsumptionRate();
+
     long foodCannerEnergyConsumptionRate();
 
     long oxygenDecompressorEnergyConsumptionRate();

@@ -29,7 +29,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class MultiBlockUtil {
-    private MultiBlockUtil() {}
+    private MultiBlockUtil() {
+    }
 
     @NotNull
     public static List<BlockPos> generateSolarPanelParts() {

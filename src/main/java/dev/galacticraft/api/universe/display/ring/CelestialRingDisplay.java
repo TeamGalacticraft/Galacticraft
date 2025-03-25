@@ -30,7 +30,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import org.joml.Vector3f;
 
-public record CelestialRingDisplay<C extends CelestialRingDisplayConfig, T extends CelestialRingDisplayType<C>>(T type, C config) {
+public record CelestialRingDisplay<C extends CelestialRingDisplayConfig, T extends CelestialRingDisplayType<C>>(T type,
+                                                                                                                C config) {
     public static final Codec<CelestialRingDisplay<?, ?>> CODEC = BuiltInAddonRegistries.CELESTIAL_RING_DISPLAY_TYPE.byNameCodec().dispatch(CelestialRingDisplay::type, CelestialRingDisplayType::codec);
 
     @Environment(EnvType.CLIENT)

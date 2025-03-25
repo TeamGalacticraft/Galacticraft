@@ -40,20 +40,18 @@ import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.machine.*;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
+import dev.galacticraft.mod.machine.SealerManager;
 import dev.galacticraft.mod.screen.OxygenSealerMenu;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -152,8 +150,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         }
         this.hasOxygen = true;
 
-        if (!level.getBlockState(pos.offset(0, 1, 0)).isAir())
-        {
+        if (!level.getBlockState(pos.offset(0, 1, 0)).isAir()) {
             //recalculate area to avoid issues with fake oxygen
             if (!this.blocked) {
                 this.blocked = true;

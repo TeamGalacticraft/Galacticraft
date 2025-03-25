@@ -37,7 +37,8 @@ import org.jetbrains.annotations.NotNull;
 
 public record StarConfig(@NotNull Component name, @NotNull Component description,
                          @NotNull Holder<Galaxy> galaxy, @NotNull CelestialPosition<?, ?> position,
-                         @NotNull CelestialDisplay<?, ?> display, @NotNull CelestialRingDisplay<?, ?> ring, GasComposition photosphericComposition, float gravity,
+                         @NotNull CelestialDisplay<?, ?> display, @NotNull CelestialRingDisplay<?, ?> ring,
+                         GasComposition photosphericComposition, float gravity,
                          double luminance, int surfaceTemperature) implements CelestialBodyConfig {
     public static final Codec<StarConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ComponentSerialization.CODEC.fieldOf("name").forGetter(StarConfig::name),

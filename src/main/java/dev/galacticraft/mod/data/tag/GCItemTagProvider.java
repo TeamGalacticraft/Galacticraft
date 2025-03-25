@@ -31,7 +31,6 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.Item;
 
 import java.util.concurrent.CompletableFuture;

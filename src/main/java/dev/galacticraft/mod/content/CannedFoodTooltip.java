@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,8 +29,7 @@ import net.minecraft.world.item.ItemStack;
 public class CannedFoodTooltip implements TooltipComponent {
     private final NonNullList<ItemStack> items;
 
-    public CannedFoodTooltip(NonNullList<ItemStack> nonNullList)
-    {
+    public CannedFoodTooltip(NonNullList<ItemStack> nonNullList) {
         this.items = nonNullList;
     }
 

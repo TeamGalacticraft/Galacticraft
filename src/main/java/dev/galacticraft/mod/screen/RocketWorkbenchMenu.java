@@ -151,7 +151,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         int rocketHeight = Math.max(BASE_HEIGHT, Math.max(Math.max(
                         (engine != null ? engine.height() + SPACING : 0) + (body != null ? body.height() + SPACING : 0) + (cone != null ? cone.height() + SPACING : 0),
                         (booster != null ? booster.height() + SPACING : 0) + (fins != null ? fins.height() + SPACING : 0)),
-                35 + (upgrade != null ? SPACING : 0) + ((int)Math.ceil(1 / 2.0)) * 19));
+                35 + (upgrade != null ? SPACING : 0) + ((int) Math.ceil(1 / 2.0)) * 19));
 
         return rocketHeight - BASE_HEIGHT;
     }
@@ -217,8 +217,8 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
     @Override
     public void onSizeChanged() {
         this.slots.clear();
-        ((AbstractContainerMenuAccessor)this).getLastSlots().clear();
-        ((AbstractContainerMenuAccessor)this).getRemoteSlots().clear();
+        ((AbstractContainerMenuAccessor) this).getLastSlots().clear();
+        ((AbstractContainerMenuAccessor) this).getRemoteSlots().clear();
 
         RocketPartRecipe<?, ?> engine = this.engine.getRecipe();
         RocketPartRecipe<?, ?> body = this.body.getRecipe();
@@ -344,7 +344,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         recipe = this.engine.getRecipe();
         craftable = craftable && (recipe != null && recipe.matches(this.engine.inventory.asInput(), this.workbench.getLevel()));
         recipe = this.upgrade.getRecipe();
-        craftable = craftable && (recipe == null ||recipe.matches(this.upgrade.inventory.asInput(), this.workbench.getLevel()));
+        craftable = craftable && (recipe == null || recipe.matches(this.upgrade.inventory.asInput(), this.workbench.getLevel()));
         if (craftable) {
             ItemStack stack = new ItemStack(GCItems.ROCKET, 1);
             stack.applyComponents(rocketData.asPatch());

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,21 +22,14 @@
 
 package dev.galacticraft.mod.content;
 
-import dev.galacticraft.mod.Constant;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientBundleTooltip;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.tooltip.BundleTooltip;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.BundleContents;
-import org.apache.commons.lang3.math.Fraction;
 
 @Environment(EnvType.CLIENT)
 public class ClientCannedFoodTooltip implements ClientTooltipComponent {
@@ -74,8 +67,8 @@ public class ClientCannedFoodTooltip implements ClientTooltipComponent {
         boolean bl = true;
         int k = 0;
 
-        for(int l = 0; l < j; ++l) {
-            for(int m = 0; m < i; ++m) {
+        for (int l = 0; l < j; ++l) {
+            for (int m = 0; m < i; ++m) {
                 int n = x + m * 18 + 1;
                 int o = y + l * 20 + 1;
                 this.renderSlot(n, o, k++, bl, context, textRenderer);
@@ -85,19 +78,11 @@ public class ClientCannedFoodTooltip implements ClientTooltipComponent {
     }
 
     private void renderSlot(int x, int y, int index, boolean shouldBlock, GuiGraphics context, Font textRenderer) {
-        if (index >= this.contents.size()) {
-            //creates a ending slot used for bundle not items contained
-            //this.blit(context, x, y, shouldBlock ? ClientCannedFoodTooltip.Texture.BLOCKED_SLOT : ClientCannedFoodTooltip.Texture.SLOT);
-        } else {
+        if (!(index >= this.contents.size())) {
             ItemStack itemStack = this.contents.get(index);
             this.blit(context, x, y, Texture.SLOT);
             context.renderItem(itemStack, x + 1, y + 1, index);
             context.renderItemDecorations(textRenderer, itemStack, x + 1, y + 1);
-            //used to highlight the item slot
-            //not needed
-//            if (index == 0) {
-//                AbstractContainerScreen.renderSlotHighlight(context, x + 1, y + 1, 0);
-//            }
         }
     }
 
@@ -106,11 +91,11 @@ public class ClientCannedFoodTooltip implements ClientTooltipComponent {
     }
 
     private int gridSizeX() {
-        return Math.max(2, (int)Math.ceil(Math.sqrt((double)this.contents.size() + 1.0)));
+        return Math.max(2, (int) Math.ceil(Math.sqrt((double) this.contents.size() + 1.0)));
     }
 
     private int gridSizeY() {
-        return (int)Math.ceil(((double)this.contents.size() + 1.0) / (double)this.gridSizeX());
+        return (int) Math.ceil(((double) this.contents.size() + 1.0) / (double) this.gridSizeX());
     }
 
     @Environment(EnvType.CLIENT)

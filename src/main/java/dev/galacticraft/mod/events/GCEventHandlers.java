@@ -22,21 +22,17 @@
 
 package dev.galacticraft.mod.events;
 
-import dev.galacticraft.api.item.OxygenMask;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberPart;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
-import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.machine.SealerManager;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.network.s2c.FootprintRemovedPacket;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -49,7 +45,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -61,7 +56,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -88,11 +82,9 @@ public class GCEventHandlers {
             //get item in hand
             ItemStack heldItem = player.getItemInHand(hand);
             //check if item has food component
-            if (heldItem.getComponents().has(DataComponents.FOOD))
-            {
+            if (heldItem.getComponents().has(DataComponents.FOOD)) {
                 //check if item is a canned food item
-                if (heldItem.getItem() instanceof CannedFoodItem)
-                {
+                if (heldItem.getItem() instanceof CannedFoodItem) {
                     return InteractionResultHolder.pass(heldItem);
                 } else {
                     player.displayClientMessage(Component.translatable("chat.cannotEatWithMask").withColor(Color.RED.getRGB()), true);

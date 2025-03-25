@@ -45,7 +45,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
 import static dev.galacticraft.mod.content.GCBlocks.*;
-import static dev.galacticraft.mod.content.GCBlocks.FOOD_CANNER;
 import static dev.galacticraft.mod.content.item.GCItems.*;
 
 public class GCCreativeModeTabs {

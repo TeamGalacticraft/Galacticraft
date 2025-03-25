@@ -25,7 +25,6 @@ package dev.galacticraft.impl.satellite;
 import dev.galacticraft.api.satellite.SatelliteRecipe;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -47,7 +46,7 @@ public class SatelliteRecipeImpl implements SatelliteRecipe {
     public boolean test(@NotNull Container inventory) {
         int invSize = inventory.getContainerSize();
         if (invSize == 0) return false;
-        
+
         IntArrayList slotModifiers = new IntArrayList();
         slotModifiers.size(invSize);
 

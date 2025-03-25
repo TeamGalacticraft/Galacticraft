@@ -32,7 +32,8 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
 import net.minecraft.resources.RegistryFileCodec;
 
-public record ConfiguredTravelPredicate<C extends TravelPredicateConfig, T extends TravelPredicateType<C>>(C config, T type) {
+public record ConfiguredTravelPredicate<C extends TravelPredicateConfig, T extends TravelPredicateType<C>>(C config,
+                                                                                                           T type) {
     public static final Codec<ConfiguredTravelPredicate<?, ?>> DIRECT_CODEC = BuiltInRocketRegistries.TRAVEL_PREDICATE_TYPE.byNameCodec().dispatch(ConfiguredTravelPredicate::type, TravelPredicateType::codec);
     public static final Codec<Holder<ConfiguredTravelPredicate<?, ?>>> CODEC = RegistryFileCodec.create(RocketRegistries.TRAVEL_PREDICATE, DIRECT_CODEC);
     public static final Codec<HolderSet<ConfiguredTravelPredicate<?, ?>>> LIST_CODEC = RegistryCodecs.homogeneousList(RocketRegistries.TRAVEL_PREDICATE, DIRECT_CODEC);

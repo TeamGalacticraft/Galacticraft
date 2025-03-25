@@ -43,7 +43,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record PatternedRocketPartRecipeConfig(int height, @NotNull List<RocketPartRecipeSlot> right, @NotNull List<RocketPartRecipeSlot> left, @NotNull
+public record PatternedRocketPartRecipeConfig(int height, @NotNull List<RocketPartRecipeSlot> right,
+                                              @NotNull List<RocketPartRecipeSlot> left, @NotNull
                                               NonNullList<Ingredient> ingredients) implements RocketPartRecipeConfig {
     private static final Codec<PatternedRocketPartRecipeConfig> INTERNAL_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("height").forGetter(PatternedRocketPartRecipeConfig::height),

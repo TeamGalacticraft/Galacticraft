@@ -39,11 +39,12 @@ import dev.galacticraft.mod.client.render.item.RocketItemRenderer;
 import dev.galacticraft.mod.client.render.rocket.GalacticraftRocketPartRenderers;
 import dev.galacticraft.mod.client.resources.GCResourceReloadListener;
 import dev.galacticraft.mod.client.resources.RocketTextureManager;
+import dev.galacticraft.mod.content.CannedFoodTooltip;
+import dev.galacticraft.mod.content.ClientCannedFoodTooltip;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.block.environment.FallenMeteorBlock;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
-import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.events.ClientEventHandler;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
@@ -57,28 +58,17 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluids;
-
-import java.util.*;
-import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class GalacticraftClient implements ClientModInitializer {
@@ -186,13 +176,14 @@ public class GalacticraftClient implements ClientModInitializer {
 
         });
         GCRenderTypes.init();
-        //couldn't be bothered finding a better way to get the texture of the items so overrides exists now
-        List<String[]> nameOverride = new ArrayList<>();
-        nameOverride.add(new String[]{"enchanted_golden_apple", "golden_apple"});
-        nameOverride.add(new String[]{"air", "lime_dye"});
         ModelLoadingPlugin.register(GCModelLoader.INSTANCE);
 
-
+        TooltipComponentCallback.EVENT.register(data -> {
+            if (data instanceof CannedFoodTooltip canned) {
+                return new ClientCannedFoodTooltip(canned);
+            }
+            return null; // let others handle it
+        });
 
         Constant.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

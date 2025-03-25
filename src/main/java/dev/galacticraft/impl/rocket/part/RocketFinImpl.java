@@ -27,5 +27,6 @@ import dev.galacticraft.api.rocket.part.config.RocketFinConfig;
 import dev.galacticraft.api.rocket.part.type.RocketFinType;
 import org.jetbrains.annotations.NotNull;
 
-public record RocketFinImpl<C extends RocketFinConfig, T extends RocketFinType<C>>(@NotNull C config, @NotNull T type) implements RocketFin<C, T> {
+public record RocketFinImpl<C extends RocketFinConfig, T extends RocketFinType<C>>(@NotNull C config,
+                                                                                   @NotNull T type) implements RocketFin<C, T> {
 }

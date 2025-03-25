@@ -71,5 +71,6 @@ public final class GCMachineStatuses {
      */
     public static final MachineStatus ROCKET_IS_FULL = MachineStatus.create(Translations.MachineStatus.ROCKET_IS_FULL, ChatFormatting.GOLD, MachineStatus.Type.OUTPUT_FULL);
 
-    public static void register() {}
+    public static void register() {
+    }
 }

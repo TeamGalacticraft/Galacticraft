@@ -35,7 +35,6 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Holder;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.Container;
 
 public class OxygenOverlay {

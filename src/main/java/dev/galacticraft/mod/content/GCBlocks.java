@@ -290,7 +290,6 @@ public class GCBlocks {
     public static final Block RAW_LEAD_BLOCK = BLOCKS.registerWithItem(Constant.Block.RAW_LEAD_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));
 
 
-
     // MOON VILLAGER SPECIAL
     public static final Block LUNAR_CARTOGRAPHY_TABLE = BLOCKS.registerWithItem(Constant.Block.LUNAR_CARTOGRAPHY_TABLE, new LunarCartographyTableBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).ignitedByLava().instrument(NoteBlockInstrument.BASS).strength(2.5F).sound(SoundType.WOOD)));
 

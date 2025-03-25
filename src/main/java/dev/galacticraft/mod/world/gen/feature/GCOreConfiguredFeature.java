@@ -69,7 +69,7 @@ public class GCOreConfiguredFeature {
 
     public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_TIN_MOON = key("ore_tin_moon");
     public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_TIN_SMALL_MOON = key("ore_tin_small_moon");
-    
+
     @Contract(pure = true)
     private static @NotNull ResourceKey<ConfiguredFeature<?, ?>> key(String s) {
         return Constant.key(Registries.CONFIGURED_FEATURE, s);

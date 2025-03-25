@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,18 +23,14 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import com.mojang.datafixers.util.Pair;
-import dev.galacticraft.api.component.GCDataComponents;
-import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.storage.MachineEnergyStorage;
-import dev.galacticraft.machinelib.api.storage.MachineFluidStorage;
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
-import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
@@ -43,22 +39,17 @@ import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
-import dev.galacticraft.mod.network.s2c.BubbleUpdatePayload;
 import dev.galacticraft.mod.screen.FoodCannerMenu;
-import dev.galacticraft.mod.screen.GCMenuTypes;
-import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.*;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -67,12 +58,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static dev.galacticraft.mod.content.item.CannedFoodItem.*;
 
@@ -113,8 +101,7 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
         return slots;
     }
 
-    private static MachineItemStorage.Spec newMachineStorageSpec()
-    {
+    private static MachineItemStorage.Spec newMachineStorageSpec() {
         MachineItemStorage.Spec storage = MachineItemStorage.builder();
         storage.add(
                 ItemResourceSlot.builder(TransferType.TRANSFER)
@@ -165,44 +152,32 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         progress();
-        if (noEnergy())
-        {
+        if (noEnergy()) {
             return MachineStatuses.NOT_ENOUGH_ENERGY;
         }
-        if (inputSlotEmpty())
-        {
-            if (!transferring_can && storageSlotEmpty())
-            {
+        if (inputSlotEmpty()) {
+            if (!transferring_can && storageSlotEmpty()) {
                 setProgress(1);
                 return GCMachineStatuses.MISSING_EMPTY_CAN;
             }
         }
-        if (storageSlotEmpty())
-        {
-            if (getProgress() == 1 && !transferring_can)
-            {
+        if (storageSlotEmpty()) {
+            if (getProgress() == 1 && !transferring_can) {
                 this.transferring_can = true;
                 this.itemStorage().slot(INPUT_SLOT).extractOne();
                 return GCMachineStatuses.TRANSFERRING_CAN;
             }
-            if (getProgress() == 10)
-            {
-                if (transferring_can)
-                {
-                    if (transferring_food)
-                    {
+            if (getProgress() == 10) {
+                if (transferring_can) {
+                    if (transferring_food) {
                         this.transferring_can = false;
                         this.itemStorage().slot(STORAGE_SLOT).insert(this.storage.getItem(), this.storage.getComponentsPatch(), 1);
-                    }
-                    else
-                    {
+                    } else {
                         this.transferring_can = false;
                         this.itemStorage().slot(STORAGE_SLOT).insert(GCItems.CANNED_FOOD, 1);
                         this.storage = GCItems.CANNED_FOOD.getDefaultInstance();
                     }
-                }
-                else
-                {
+                } else {
                     setProgress(1);
                     resetConsumedRows();
                     return GCMachineStatuses.MISSING_EMPTY_CAN;
@@ -213,28 +188,20 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
         boolean row1 = !checkRowItems(1).isEmpty();
         boolean row2 = !checkRowItems(2).isEmpty();
         boolean row3 = !checkRowItems(3).isEmpty();
-        if (progress < 107 && getSize(this.storage) == MAX_FOOD && !transferring_can && !transferring_food)
-        {
+        if (progress < 107 && getSize(this.storage) == MAX_FOOD && !transferring_can && !transferring_food) {
             setProgress(107);
         }
-        if (!(row0 || row1 || row2 || row3) && !transferring_can && !transferring_food)
-        {
-            if (storageContainsFood())
-            {
+        if (!(row0 || row1 || row2 || row3) && !transferring_can && !transferring_food) {
+            if (storageContainsFood()) {
                 setProgress(107);
-            }
-            else
-            {
+            } else {
                 return GCMachineStatuses.NO_FOOD;
             }
         }
-        if (getProgress() == 10)
-        {
+        if (getProgress() == 10) {
             transferring_food = false;
-            if (row0)
-            {
-                if (getSize(this.storage) < MAX_FOOD)
-                {
+            if (row0) {
+                if (getSize(this.storage) < MAX_FOOD) {
                     transferring_food = true;
                     setFirstRowConsumed(1);
                     List<ItemStack> leftover = addToCan(checkRow(0), this.storage);
@@ -242,24 +209,18 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
                     return GCMachineStatuses.CANNING;
                 }
 
-            }
-            else
-            {
+            } else {
                 setProgress(37);
             }
         }
-        if (getProgress() == 37)
-        {
-            if (this.itemStorage().slot(STORAGE_SLOT).isEmpty() && transferring_food)
-            {
+        if (getProgress() == 37) {
+            if (this.itemStorage().slot(STORAGE_SLOT).isEmpty() && transferring_food) {
                 setProgress(1);
                 return GCMachineStatuses.MISSING_EMPTY_CAN;
             }
             transferring_food = false;
-            if (row1)
-            {
-                if (getSize(this.storage) < MAX_FOOD)
-                {
+            if (row1) {
+                if (getSize(this.storage) < MAX_FOOD) {
                     transferring_food = true;
                     setSecondRowConsumed(1);
                     List<ItemStack> leftover = addToCan(checkRow(1), this.storage);
@@ -267,33 +228,24 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
                     return GCMachineStatuses.CANNING;
                 }
 
-            }
-            else
-            {
-                if (getFirstRowConsumed() == 1)
-                {
+            } else {
+                if (getFirstRowConsumed() == 1) {
                     transferring_food = true;
                     setProgress(46);
-                }
-                else
-                {
+                } else {
                     setProgress(53);
                 }
 
             }
         }
-        if (getProgress() == 53)
-        {
-            if (this.itemStorage().slot(STORAGE_SLOT).isEmpty() && transferring_food)
-            {
+        if (getProgress() == 53) {
+            if (this.itemStorage().slot(STORAGE_SLOT).isEmpty() && transferring_food) {
                 setProgress(1);
                 return GCMachineStatuses.MISSING_EMPTY_CAN;
             }
             transferring_food = false;
-            if (row3)
-            {
-                if (getSize(this.storage) < MAX_FOOD)
-                {
+            if (row3) {
+                if (getSize(this.storage) < MAX_FOOD) {
                     transferring_food = true;
                     setForthRowConsumed(1);
                     List<ItemStack> leftover = addToCan(checkRow(3), this.storage);
@@ -301,24 +253,18 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
                     return GCMachineStatuses.CANNING;
                 }
 
-            }
-            else
-            {
+            } else {
                 setProgress(79);
             }
         }
-        if (getProgress() == 79)
-        {
-            if (this.itemStorage().slot(STORAGE_SLOT).isEmpty() && transferring_food)
-            {
+        if (getProgress() == 79) {
+            if (this.itemStorage().slot(STORAGE_SLOT).isEmpty() && transferring_food) {
                 setProgress(1);
                 return GCMachineStatuses.MISSING_EMPTY_CAN;
             }
             transferring_food = false;
-            if (row2)
-            {
-                if (getSize(this.storage) < MAX_FOOD)
-                {
+            if (row2) {
+                if (getSize(this.storage) < MAX_FOOD) {
                     transferring_food = true;
                     setThirdRowConsumed(1);
                     List<ItemStack> leftover = addToCan(checkRow(2), this.storage);
@@ -326,58 +272,46 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
                     return GCMachineStatuses.CANNING;
                 }
 
-            }
-            else
-            {
-                if (getFirstRowConsumed() == 1 || getSecondRowConsumed() == 1)
-                {
+            } else {
+                if (getFirstRowConsumed() == 1 || getSecondRowConsumed() == 1) {
                     transferring_food = true;
                     setProgress(97);
-                    if (getForthRowConsumed() == 1)
-                    {
+                    if (getForthRowConsumed() == 1) {
                         transferring_food = true;
                         setProgress(87);
                     }
-                }else if (getForthRowConsumed() == 1)
-                {
+                } else if (getForthRowConsumed() == 1) {
                     transferring_food = true;
                     setProgress(87);
-                }else
-                {
+                } else {
                     setProgress(107);
                 }
 
             }
         }
 
-        if (getProgress() == 107)
-        {
-            if (this.itemStorage().slot(STORAGE_SLOT).isEmpty() && transferring_food)
-            {
+        if (getProgress() == 107) {
+            if (this.itemStorage().slot(STORAGE_SLOT).isEmpty() && transferring_food) {
                 setProgress(1);
                 resetConsumedRows();
                 return GCMachineStatuses.MISSING_EMPTY_CAN;
             }
             transferring_food = false;
-            if (outputFull())
-            {
-                if (storageSlotEmpty())
-                {
+            if (outputFull()) {
+                if (storageSlotEmpty()) {
                     this.storage = GCItems.CANNED_FOOD.getDefaultInstance();
                     resetConsumedRows();
                     setProgress(1);
                     return MachineStatuses.OUTPUT_FULL;
                 }
-                if (this.itemStorage().getItem(STORAGE_SLOT) != this.storage)
-                {
+                if (this.itemStorage().getItem(STORAGE_SLOT) != this.storage) {
                     this.itemStorage().slot(STORAGE_SLOT).extractOne();
                     this.itemStorage().slot(STORAGE_SLOT).insert(this.storage.getItem(), this.storage.getComponentsPatch(), 1);
                 }
-                if (getSize(this.storage) < MAX_FOOD && (row0 || row1 || row2 || row3))
-                {
+                if (getSize(this.storage) < MAX_FOOD && (row0 || row1 || row2 || row3)) {
                     setProgress(10);
                     resetConsumedRows();
-                    return MachineStatuses.OUTPUT_FULL  ;
+                    return MachineStatuses.OUTPUT_FULL;
                 }
                 return MachineStatuses.OUTPUT_FULL;
             }
@@ -385,8 +319,7 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
             this.itemStorage().slot(STORAGE_SLOT).extractOne();
             return GCMachineStatuses.TRANSFERRING_CAN;
         }
-        if (getProgress() == 115 && transferring_can)
-        {
+        if (getProgress() == 115 && transferring_can) {
             transferring_can = false;
             this.itemStorage().slot(OUTPUT_SLOT).insert(this.storage.getItem(), this.storage.getComponentsPatch(), 1);
             this.storage = GCItems.CANNED_FOOD.getDefaultInstance();
@@ -440,37 +373,30 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
         }
     }
 
-    private List<ItemStack> checkRow(int row)
-    {
+    private List<ItemStack> checkRow(int row) {
         List<ItemStack> stacks = new ArrayList<>();
         for (int slot : ROWS[row]) {
-            if (!this.itemStorage().slot(slot).isEmpty())
-            {
+            if (!this.itemStorage().slot(slot).isEmpty()) {
                 stacks.add(this.itemStorage().getItem(slot));
-            }else
-            {
+            } else {
                 stacks.add(Items.AIR.getDefaultInstance());
             }
         }
         return stacks;
     }
 
-    private List<ItemStack> checkRowItems(int row)
-    {
+    private List<ItemStack> checkRowItems(int row) {
         List<ItemStack> stacks = new ArrayList<>();
         for (int slot : ROWS[row]) {
-            if (!this.itemStorage().slot(slot).isEmpty())
-            {
+            if (!this.itemStorage().slot(slot).isEmpty()) {
                 stacks.add(this.itemStorage().getItem(slot));
             }
         }
         return stacks;
     }
 
-    private void progress()
-    {
-        if (this.isActive())
-        {
+    private void progress() {
+        if (this.isActive()) {
             this.progress += 1;
         }
         if (this.progress > this.maxProgress) setProgress(1);
@@ -518,7 +444,7 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
         return compoundTag;
     }
 
-    public static ListTag compoundTagToListTag(CompoundTag compoundTag){
+    public static ListTag compoundTagToListTag(CompoundTag compoundTag) {
         if (compoundTag != null) {
             return compoundTag.getList("Items", ListTag.TAG_COMPOUND); // Retrieve the ListTag stored under the key "Items"
         } else {
@@ -529,24 +455,31 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
     public int getFirstRowConsumed() {
         return firstRowConsumed;
     }
+
     public void setFirstRowConsumed(int value) {
         this.firstRowConsumed = value;
     }
+
     public int getSecondRowConsumed() {
         return secondRowConsumed;
     }
+
     public void setSecondRowConsumed(int value) {
         this.secondRowConsumed = value;
     }
+
     public int getThirdRowConsumed() {
         return thirdRowConsumed;
     }
+
     public void setThirdRowConsumed(int value) {
         this.thirdRowConsumed = value;
     }
+
     public int getForthRowConsumed() {
         return forthRowConsumed;
     }
+
     public void setForthRowConsumed(int value) {
         this.forthRowConsumed = value;
     }

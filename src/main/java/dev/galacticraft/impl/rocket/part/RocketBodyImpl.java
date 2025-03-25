@@ -27,5 +27,6 @@ import dev.galacticraft.api.rocket.part.config.RocketBodyConfig;
 import dev.galacticraft.api.rocket.part.type.RocketBodyType;
 import org.jetbrains.annotations.NotNull;
 
-public record RocketBodyImpl<C extends RocketBodyConfig, T extends RocketBodyType<C>>(@NotNull C config, @NotNull T type) implements RocketBody<C, T> {
+public record RocketBodyImpl<C extends RocketBodyConfig, T extends RocketBodyType<C>>(@NotNull C config,
+                                                                                      @NotNull T type) implements RocketBody<C, T> {
 }

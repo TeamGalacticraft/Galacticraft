@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,25 +41,30 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.WorldGenRegion;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.NoiseColumn;
+import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.*;
-import net.minecraft.world.level.levelgen.*;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
+import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.blending.Blender;
-import net.minecraft.world.level.storage.*;
+import net.minecraft.world.level.storage.DimensionDataStorage;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static dev.galacticraft.impl.internal.fabric.GalacticraftAPI.currentWorldSaveDirectory;
 import static dev.galacticraft.mod.world.gen.custom.AsteroidSaveData.saveDataID;
@@ -141,8 +146,9 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
                     BiomeSource.CODEC.fieldOf("biomeSource").forGetter(generator -> generator.biomeSource),
                     ServerLevel.RESOURCE_KEY_CODEC.fieldOf("dimensionKey").forGetter(generator -> generator.dimensionKey),
                     Codec.LONG.fieldOf("par2").forGetter(generator -> 1000L)
-    ).apply(instance, AsteroidChunkGenerator::new));
+            ).apply(instance, AsteroidChunkGenerator::new));
     private final Holder<NoiseGeneratorSettings> settings = null;
+
     public AsteroidChunkGenerator(BiomeSource biomeSource, ResourceKey<Level> dimensionKey, long par2) {
         super(biomeSource);
         this.dimensionKey = dimensionKey;
@@ -169,9 +175,9 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
         this.asteroidSkewZ.frequencyZ = 0.005F;
 
         this.coreHandler = new SpecialAsteroidBlockHandler();
-        this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.ASTEROID_ROCK_2,  5, .3));
-        this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.ASTEROID_ROCK_1,  7, .3));
-        this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.ASTEROID_ROCK,  11, .25));
+        this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.ASTEROID_ROCK_2, 5, .3));
+        this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.ASTEROID_ROCK_1, 7, .3));
+        this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.ASTEROID_ROCK, 11, .25));
 
         //!ConfigManagerAst.disableAluminumGen
         if (true)
@@ -184,7 +190,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
             this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.ASTEROID_IRON_ORE, 3, .2));
         //ConfigManagerCore.enableSiliconOreGen
         if (true)
-            this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.ASTEROID_SILICON_ORE,2, .15));
+            this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.ASTEROID_SILICON_ORE, 2, .15));
         //Solid Meteoric Iron - has no config to disable
         this.coreHandler.addBlock(new SpecialAsteroidBlock(GCBlocks.METEORIC_IRON_BLOCK, 2, .13));
         //Diamond ore - has no config to disable
@@ -210,23 +216,18 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
         final int rangeSize = AsteroidChunkGenerator.MAX_ASTEROID_RADIUS - AsteroidChunkGenerator.MIN_ASTEROID_RADIUS;
 
         //If asteroid centre is nearby might need to generate some asteroid parts in this chunk
-        for (int i = chunkX - 3; i < chunkX + 3; i++)
-        {
+        for (int i = chunkX - 3; i < chunkX + 3; i++) {
             int minX = i * 16;
             int maxX = minX + AsteroidChunkGenerator.CHUNK_SIZE_X;
-            for (int k = chunkZ - 3; k < chunkZ + 3; k++)
-            {
+            for (int k = chunkZ - 3; k < chunkZ + 3; k++) {
                 int minZ = k * 16;
                 int maxZ = minZ + AsteroidChunkGenerator.CHUNK_SIZE_Z;
 
                 //something about redundant code in gc4's code
-                for (int x = minX; x < maxX; x += 2)
-                {
-                    for (int z = minZ; z < maxZ; z += 2)
-                    {
+                for (int x = minX; x < maxX; x += 2) {
+                    for (int z = minZ; z < maxZ; z += 2) {
                         //the next line is called 3136 times per chunk generated apparently? saying something about slow getNoise
-                        if (this.randFromPointPos(x, z) < (this.asteroidDensity.getNoise(x, z) + .4) / asteroidChance)
-                        {
+                        if (this.randFromPointPos(x, z) < (this.asteroidDensity.getNoise(x, z) + .4) / asteroidChance) {
                             random.setSeed(x + z * 3067);
                             int y = random.nextInt(rangeY) + AsteroidChunkGenerator.MIN_ASTEROID_Y;
                             int size = random.nextInt(rangeSize) + AsteroidChunkGenerator.MIN_ASTEROID_RADIUS;
@@ -251,20 +252,17 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
         return level.getDataStorage();
     }
 
-    private void generateAsteroid(Random rand, int asteroidX, int asteroidY, int asteroidZ, int chunkX, int chunkZ, int size, ChunkAccess primer)
-    {
+    private void generateAsteroid(Random rand, int asteroidX, int asteroidY, int asteroidZ, int chunkX, int chunkZ, int size, ChunkAccess primer) {
         SpecialAsteroidBlock core = this.coreHandler.getBlock(rand, size);
 
         SpecialAsteroidBlock shell = null;
-        if (rand.nextInt(AsteroidChunkGenerator.ASTEROID_SHELL_CHANCE) == 0)
-        {
+        if (rand.nextInt(AsteroidChunkGenerator.ASTEROID_SHELL_CHANCE) == 0) {
             shell = this.shellHandler.getBlock(rand, size);
         }
 
         boolean isHollow = false;
         final float hollowSize = rand.nextFloat() * (AsteroidChunkGenerator.MAX_HOLLOW_SIZE - AsteroidChunkGenerator.MIN_HOLLOW_SIZE) + AsteroidChunkGenerator.MIN_HOLLOW_SIZE;
-        if (rand.nextInt(AsteroidChunkGenerator.HOLLOW_CHANCE) == 0 && size >= AsteroidChunkGenerator.MIN_RADIUS_FOR_HOLLOW)
-        {
+        if (rand.nextInt(AsteroidChunkGenerator.HOLLOW_CHANCE) == 0 && size >= AsteroidChunkGenerator.MIN_RADIUS_FOR_HOLLOW) {
             isHollow = true;
             shell = new SpecialAsteroidBlock(GCBlocks.DENSE_ICE, 1, .15);
         }
@@ -282,8 +280,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
         final int ySize = yMax - yMin;
         final int zSize = zMax - zMin;
 
-        if (xSize <= 0 || ySize <= 0 || zSize <= 0)
-        {
+        if (xSize <= 0 || ySize <= 0 || zSize <= 0) {
             return;
         }
 
@@ -296,12 +293,10 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
         float[] sizeZArray = new float[xSize * ySize];
         float[] sizeYArray = new float[xSize * zSize];
 
-        for (int x = 0; x < xSize; x++)
-        {
+        for (int x = 0; x < xSize; x++) {
             int xx = x * zSize;
             float xxx = x + noiseOffsetX;
-            for (int z = 0; z < zSize; z++)
-            {
+            for (int z = 0; z < zSize; z++) {
                 sizeYArray[xx + z] = this.asteroidSkewY.getNoise(xxx, z + noiseOffsetZ);
             }
         }
@@ -311,22 +306,18 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
         this.largeAsteroidsLastChunkX = chunkX;
         this.largeAsteroidsLastChunkZ = chunkZ;
 
-        for (int y = 0; y < ySize; y++)
-        {
+        for (int y = 0; y < ySize; y++) {
             int yy = y * zSize;
             float yyy = y + noiseOffsetY;
-            for (int z = 0; z < zSize; z++)
-            {
+            for (int z = 0; z < zSize; z++) {
                 sizeXArray[yy + z] = this.asteroidSkewX.getNoise(yyy, z + noiseOffsetZ);
             }
         }
 
-        for (int x = 0; x < xSize; x++)
-        {
+        for (int x = 0; x < xSize; x++) {
             int xx = x * ySize;
             float xxx = x + noiseOffsetX;
-            for (int y = 0; y < ySize; y++)
-            {
+            for (int y = 0; y < ySize; y++) {
                 sizeZArray[xx + y] = this.asteroidSkewZ.getNoise(xxx, y + noiseOffsetY);
             }
         }
@@ -336,8 +327,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
         int terrainYY = 0;
 
         BlockState asteroidShell = null;
-        if (shell != null)
-        {
+        if (shell != null) {
             asteroidShell = shell.block.defaultBlockState();
             shellThickness = 1.0 - shell.thickness;
         }
@@ -429,30 +419,25 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
             }
         }
 
-        if (isHollow)
-        {
+        if (isHollow) {
             shellThickness = 0;
-            if (shell != null)
-            {
+            if (shell != null) {
                 shellThickness = 1.0 - shell.thickness;
             }
-            for (int x = xMin; x < xMax; x++)
-            {
+            for (int x = xMin; x < xMax; x++) {
                 int indexXY = (x - xMin) * ySize - yMin;
                 int indexXZ = (x - xMin) * zSize - zMin;
                 int distanceX = asteroidX - (x + chunkX);
                 distanceX *= distanceX;
 
-                for (int z = zMin; z < zMax; z++)
-                {
+                for (int z = zMin; z < zMax; z++) {
                     float sizeModY = sizeYArray[indexXZ + z];
                     float sizeY = size + sizeYArray[indexXZ + z];
                     sizeY *= sizeY;
                     int distanceZ = asteroidZ - (z + chunkZ);
                     distanceZ *= distanceZ;
 
-                    for (int y = yMin; y < yMax; y++)
-                    {
+                    for (int y = yMin; y < yMax; y++) {
                         float sizeX = size + sizeXArray[(y - yMin) * zSize + z - zMin];
                         float sizeZ = size + sizeZArray[indexXY + y];
                         sizeX *= sizeX;
@@ -462,14 +447,11 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
                         float distance = distanceX / sizeX + distanceY / sizeY + distanceZ / sizeZ;
                         distance += this.asteroidTurbulance.getNoise(x + chunkX, y, z + chunkZ);
 
-                        if (distance <= 1)
-                        {
+                        if (distance <= 1) {
                             BlockState state = primer.getBlockState(new BlockPos(x, y, z));
                             BlockState stateAbove = primer.getBlockState(new BlockPos(x, y + 1, z));
-                            if (Blocks.AIR == stateAbove.getBlock() && (state.getBlock() == GCBlocks.ASTEROID_ROCK || state.getBlock() == GCBlocks.ASTEROID_ROCK_1 || state.getBlock() == GCBlocks.ASTEROID_ROCK_2 || state.getBlock() == Blocks.GRASS_BLOCK))
-                            {
-                                if (this.rand.nextInt(GLOWSTONE_CHANCE) == 0)
-                                {
+                            if (Blocks.AIR == stateAbove.getBlock() && (state.getBlock() == GCBlocks.ASTEROID_ROCK || state.getBlock() == GCBlocks.ASTEROID_ROCK_1 || state.getBlock() == GCBlocks.ASTEROID_ROCK_2 || state.getBlock() == Blocks.GRASS_BLOCK)) {
+                                if (this.rand.nextInt(GLOWSTONE_CHANCE) == 0) {
                                     primer.setBlockState(new BlockPos(x, y, z), Blocks.GLOWSTONE.defaultBlockState(), false);
 //                                    blockArray[index] = this.LIGHT;
 //                                    metaArray[index] = this.LIGHT_META;
@@ -482,16 +464,13 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
         }
     }
 
-    private final int getTerrainHeightFor(float yMod, int asteroidY, int asteroidSize)
-    {
+    private final int getTerrainHeightFor(float yMod, int asteroidY, int asteroidSize) {
         return (int) (asteroidY - asteroidSize / 4 + yMod * 1.5F);
     }
 
-    private final int getTerrainHeightAt(int x, int z, float[] yModArray, int xMin, int zMin, int zSize, int asteroidY, int asteroidSize)
-    {
+    private final int getTerrainHeightAt(int x, int z, float[] yModArray, int xMin, int zMin, int zSize, int asteroidY, int asteroidSize) {
         final int index = (x - xMin) * zSize - zMin;
-        if (index < yModArray.length && index >= 0)
-        {
+        if (index < yModArray.length && index >= 0) {
             final float yMod = yModArray[index];
             return this.getTerrainHeightFor(yMod, asteroidY, asteroidSize);
         }
@@ -507,11 +486,10 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
     public void applyCarvers(WorldGenRegion region, long seed, RandomState randomState, BiomeManager biomeManager, StructureManager structureManager, ChunkAccess chunkAccess, GenerationStep.Carving carving) {
         int chunkX = chunkAccess.getPos().x;
         int chunkZ = chunkAccess.getPos().z;
-        
+
         int x = chunkX << 4;
         int z = chunkZ << 4;
-        if (!AsteroidChunkGenerator.chunksDone.add(new BlockVec3(x, 0, z)))
-        {
+        if (!AsteroidChunkGenerator.chunksDone.add(new BlockVec3(x, 0, z))) {
             return;
         }
 
@@ -568,21 +546,17 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
             }
         }
 
-        if (this.largeAsteroidsLastChunkX != chunkX || this.largeAsteroidsLastChunkZ != chunkZ)
-        {
+        if (this.largeAsteroidsLastChunkX != chunkX || this.largeAsteroidsLastChunkZ != chunkZ) {
             this.generateChunkData(null, null, null, chunkAccess);
         }
 
         this.rand.setSeed(chunkX * var7 + chunkZ * var9 ^ seed);
 
         //Look for hollow asteroids to populate
-        if (!this.largeAsteroids.isEmpty())
-        {
-            for (AsteroidData asteroidIndex : new ArrayList<AsteroidData>(this.largeAsteroids))
-            {
+        if (!this.largeAsteroids.isEmpty()) {
+            for (AsteroidData asteroidIndex : new ArrayList<AsteroidData>(this.largeAsteroids)) {
                 if (asteroidIndex == null) return;
-                if (!asteroidIndex.isHollow)
-                {
+                if (!asteroidIndex.isHollow) {
                     continue;
                 }
 
@@ -594,48 +568,42 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
                 int asteroidSize = asteroidIndex.asteroidSizeArray;
                 boolean treesdone = false;
 
-                if (rand.nextInt(AsteroidChunkGenerator.TREE_CHANCE) == 0)
-                {
+                if (rand.nextInt(AsteroidChunkGenerator.TREE_CHANCE) == 0) {
                     int treeType = rand.nextInt(3);
-                    if (treeType == 1)
-                    {
+                    if (treeType == 1) {
                         treeType = 0;
                     }
                     BlockState log = Blocks.OAK_LOG.defaultBlockState();
                     BlockState leaves = Blocks.OAK_LEAVES.defaultBlockState();
                     /**WorldGenTrees wg = new WorldGenTrees(false, 2, log, leaves, false);
-                    for (int tries = 0; tries < 5; tries++)
-                    {
-                        int i = rand.nextInt(16) + x + 8;
-                        int k = rand.nextInt(16) + z + 8;
-                        if (wg.generate(world, rand, new BlockPos(i, this.getTerrainHeightAt(i - x, k - z, sizeYArray, xMin, zMin, zSize, asteroidY, asteroidSize), k)))
-                        {
-                            break;
-                        }
-                    }**/
+                     for (int tries = 0; tries < 5; tries++)
+                     {
+                     int i = rand.nextInt(16) + x + 8;
+                     int k = rand.nextInt(16) + z + 8;
+                     if (wg.generate(world, rand, new BlockPos(i, this.getTerrainHeightAt(i - x, k - z, sizeYArray, xMin, zMin, zSize, asteroidY, asteroidSize), k)))
+                     {
+                     break;
+                     }
+                     }**/
                     treesdone = true;
                 }
-                if (!treesdone || rand.nextInt(AsteroidChunkGenerator.TALL_GRASS_CHANCE) == 0)
-                {
+                if (!treesdone || rand.nextInt(AsteroidChunkGenerator.TALL_GRASS_CHANCE) == 0) {
                     int i = rand.nextInt(16) + x + 8;
                     int k = rand.nextInt(16) + z + 8;
                     //new WorldGenTallGrass(GRASS_TYPE).generate(world, rand, new BlockPos(i, this.getTerrainHeightAt(i - x, k - z, sizeYArray, xMin, zMin, zSize, asteroidY, asteroidSize), k));
                 }
-                if (rand.nextInt(AsteroidChunkGenerator.FLOWER_CHANCE) == 0)
-                {
+                if (rand.nextInt(AsteroidChunkGenerator.FLOWER_CHANCE) == 0) {
                     int i = rand.nextInt(16) + x + 8;
                     int k = rand.nextInt(16) + z + 8;
                     int[] types = new int[]{2, 4, 5, 7};
                     //new WorldGenFlowers(this.FLOWER, Blocks.POPPY).generate(world, rand, new BlockPos(i, this.getTerrainHeightAt(i - x, k - z, sizeYArray, xMin, zMin, zSize, asteroidY, asteroidSize), k));
                 }
-                if (rand.nextInt(AsteroidChunkGenerator.LAVA_CHANCE) == 0)
-                {
+                if (rand.nextInt(AsteroidChunkGenerator.LAVA_CHANCE) == 0) {
                     int i = rand.nextInt(16) + x + 8;
                     int k = rand.nextInt(16) + z + 8;
                     //new WorldGenLakes(this.LAVA).generate(world, rand, new BlockPos(i, this.getTerrainHeightAt(i - x, k - z, sizeYArray, xMin, zMin, zSize, asteroidY, asteroidSize), k));
                 }
-                if (rand.nextInt(AsteroidChunkGenerator.WATER_CHANCE) == 0)
-                {
+                if (rand.nextInt(AsteroidChunkGenerator.WATER_CHANCE) == 0) {
                     int i = rand.nextInt(16) + x + 8;
                     int k = rand.nextInt(16) + z + 8;
                     //new WorldGenLakes(this.WATER).generate(world, rand, new BlockPos(i, this.getTerrainHeightAt(i - x, k - z, sizeYArray, xMin, zMin, zSize, asteroidY, asteroidSize), k));
@@ -644,16 +612,13 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
         }
 
         //Update all block lighting
-        for (int xx = 0; xx < 16; xx++)
-        {
+        for (int xx = 0; xx < 16; xx++) {
             int xPos = x + xx;
-            for (int zz = 0; zz < 16; zz++)
-            {
+            for (int zz = 0; zz < 16; zz++) {
                 int zPos = z + zz;
 
                 //Asteroid at min height 48, size 20, can't have lit blocks below 16
-                for (int y = 16; y < 240; y++)
-                {
+                for (int y = 16; y < 240; y++) {
 //LIGHTTEMP                    world.checkLightFor(EnumSkyBlock.BLOCK, new BlockPos(xPos, y, zPos));
                 }
             }
@@ -694,11 +659,9 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
         return future;
     }
 
-    public void resetBase()
-    {
+    public void resetBase() {
         //this.dungeonGenerator.reset();
     }
-
 
 
     @Override
@@ -726,16 +689,14 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
 
     }
 
-    private float randFromPointPos(int x, int z)
-    {
+    private float randFromPointPos(int x, int z) {
         int n = x + z * 57;
         n ^= n << 13;
         n = n * (n * n * 15731 + 789221) + 1376312589 & 0x3fffffff;
         return 1.0F - n / 1073741824.0F;
     }
 
-    private final void setOtherAxisFrequency(float frequency)
-    {
+    private final void setOtherAxisFrequency(float frequency) {
         this.asteroidSkewX.frequencyY = frequency;
         this.asteroidSkewX.frequencyZ = frequency;
 
@@ -746,66 +707,52 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
         this.asteroidSkewZ.frequencyY = frequency;
     }
 
-    private final int clamp(int x, int min, int max)
-    {
-        if (x < min)
-        {
+    private final int clamp(int x, int min, int max) {
+        if (x < min) {
             x = min;
-        }
-        else if (x > max)
-        {
+        } else if (x > max) {
             x = max;
         }
         return x;
     }
 
-    private final double clamp(double x, double min, double max)
-    {
-        if (x < min)
-        {
+    private final double clamp(double x, double min, double max) {
+        if (x < min) {
             x = min;
-        }
-        else if (x > max)
-        {
+        } else if (x > max) {
             x = max;
         }
         return x;
     }
-    private float randFromPoint(int x, int y, int z)
-    {
+
+    private float randFromPoint(int x, int y, int z) {
         int n = x + z * 57 + y * 571;
         n ^= n << 13;
         n = n * (n * n * 15731 + 789221) + 1376312589 & 0x7fffffff;
         return 1.0F - n / 1073741824.0F;
     }
 
-    private float randFromPoint(int x, int z)
-    {
+    private float randFromPoint(int x, int z) {
         int n = x + z * 57;
         n ^= n << 13;
         n = n * (n * n * 15731 + 789221) + 1376312589 & 0x7fffffff;
         return 1.0F - n / 1073741824.0F;
     }
 
-    public void addAsteroid(int x, int y, int z, int size, int core)
-    {
+    public void addAsteroid(int x, int y, int z, int size, int core) {
         AsteroidData coords = new AsteroidData(x, y, z, size, core);
-        if (!this.asteroids.contains(coords))
-        {
-            if (this.dataNotLoaded)
-            {
+        if (!this.asteroids.contains(coords)) {
+            if (this.dataNotLoaded) {
                 this.loadAsteroidSavedData();
             }
-            if (!this.asteroids.contains(coords))
-            {
+            if (!this.asteroids.contains(coords)) {
                 this.addToNBT(this.datafile.datacompound, coords);
                 this.asteroids.add(coords);
             }
         }
     }
 
-    private void addToNBT(CompoundTag nbt, AsteroidData coords)
-    {
+    private void addToNBT(CompoundTag nbt, AsteroidData coords) {
         ListTag coordList = nbt.getList("coords", 10);
         CompoundTag tag = new CompoundTag();
         coords.writeToNBT(tag);
@@ -818,11 +765,9 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
     }
 
 
-    private void writeToNBT(CompoundTag nbt)
-    {
+    private void writeToNBT(CompoundTag nbt) {
         ListTag coordList = new ListTag();
-        for (AsteroidData coords : this.asteroids)
-        {
+        for (AsteroidData coords : this.asteroids) {
             CompoundTag tag = new CompoundTag();
             coords.writeToNBT(tag);
             coordList.add(tag);
@@ -834,8 +779,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
         this.setData(dataFile, datafile);
     }
 
-    private static class AsteroidData
-    {
+    private static class AsteroidData {
         public boolean isHollow;
         public float[] sizeYArray;
         public int xMinArray;
@@ -848,8 +792,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
         public int asteroidYArray;
         public int asteroidZArray;
 
-        public AsteroidData(boolean hollow, float[] sizeYArray2, int xMin, int zMin, int xmax, int zmax, int zSize, int size, int asteroidX, int asteroidY, int asteroidZ)
-        {
+        public AsteroidData(boolean hollow, float[] sizeYArray2, int xMin, int zMin, int xmax, int zmax, int zSize, int size, int asteroidX, int asteroidY, int asteroidZ) {
             this.isHollow = hollow;
             this.sizeYArray = sizeYArray2.clone();
             this.xMinArray = xMin;
@@ -862,51 +805,42 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
             this.asteroidYArray = asteroidY;
             this.asteroidZArray = asteroidZ;
         }
+
         protected BlockVec3 centre;
         protected int sizeAndLandedFlag = 15;
         protected int coreAndSpawnedFlag = -2;
 
-        public AsteroidData(int x, int y, int z)
-        {
+        public AsteroidData(int x, int y, int z) {
             this.centre = new BlockVec3(x, y, z);
         }
 
-        public AsteroidData(int x, int y, int z, int size, int core)
-        {
+        public AsteroidData(int x, int y, int z, int size, int core) {
             this.centre = new BlockVec3(x, y, z);
             this.sizeAndLandedFlag = size;
             this.coreAndSpawnedFlag = core;
         }
 
-        public AsteroidData(BlockVec3 bv)
-        {
+        public AsteroidData(BlockVec3 bv) {
             this.centre = bv;
         }
 
         @Override
-        public int hashCode()
-        {
-            if (this.centre != null)
-            {
+        public int hashCode() {
+            if (this.centre != null) {
                 return this.centre.hashCode();
-            }
-            else
-            {
+            } else {
                 return 0;
             }
         }
 
         @Override
-        public boolean equals(Object o)
-        {
-            if (o instanceof AsteroidData)
-            {
+        public boolean equals(Object o) {
+            if (o instanceof AsteroidData) {
                 BlockVec3 vector = ((AsteroidData) o).centre;
                 return this.centre.x == vector.x && this.centre.y == vector.y && this.centre.z == vector.z;
             }
 
-            if (o instanceof BlockVec3)
-            {
+            if (o instanceof BlockVec3) {
                 BlockVec3 vector = (BlockVec3) o;
                 return this.centre.x == vector.x && this.centre.y == vector.y && this.centre.z == vector.z;
             }
@@ -914,8 +848,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
             return false;
         }
 
-        public CompoundTag writeToNBT(CompoundTag tag)
-        {
+        public CompoundTag writeToNBT(CompoundTag tag) {
             tag.putInt("x", this.centre.x);
             tag.putInt("y", this.centre.y);
             tag.putInt("z", this.centre.z);
@@ -925,20 +858,17 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
             return tag;
         }
 
-        public static AsteroidData readFromNBT(CompoundTag tag)
-        {
+        public static AsteroidData readFromNBT(CompoundTag tag) {
             BlockVec3 tempVector = new BlockVec3();
             tempVector.x = tag.getInt("x");
             tempVector.y = tag.getInt("y");
             tempVector.z = tag.getInt("z");
 
             AsteroidData roid = new AsteroidData(tempVector);
-            if (tag.hasUUID("coreAndFlag"))
-            {
+            if (tag.hasUUID("coreAndFlag")) {
                 roid.coreAndSpawnedFlag = tag.getInt("coreAndFlag");
             }
-            if (tag.hasUUID("sizeAndFlag"))
-            {
+            if (tag.hasUUID("sizeAndFlag")) {
                 roid.sizeAndLandedFlag = tag.getInt("sizeAndFlag");
             }
 
@@ -946,8 +876,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
         }
     }
 
-    private int getIndex(int x, int y, int z)
-    {
+    private int getIndex(int x, int y, int z) {
         return x * AsteroidChunkGenerator.CHUNK_SIZE_Y * 16 | z * AsteroidChunkGenerator.CHUNK_SIZE_Y | y;
     }
 
@@ -957,10 +886,8 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
 
         this.datafile = this.loadData(dataFile);
 
-        if (this.datafile == null)
-        {
-            if (!Files.exists(dataFile))
-            {
+        if (this.datafile == null) {
+            if (!Files.exists(dataFile)) {
                 try {
                     Files.createDirectories(dataPath);
                 } catch (IOException e) {
@@ -975,9 +902,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
             this.datafile = new AsteroidSaveData("");
             this.writeToNBT(this.datafile.datacompound);
             this.setData(dataFile, this.datafile);
-        }
-        else
-        {
+        } else {
             this.readFromNBT(this.datafile.datacompound);
         }
 
@@ -994,8 +919,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
     }
 
     public AsteroidSaveData loadData(Path filePath) {
-        if (Files.exists(filePath))
-        {
+        if (Files.exists(filePath)) {
             CompoundTag tag;
             try {
                 tag = NbtIo.read(filePath);
@@ -1005,68 +929,55 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
             AsteroidSaveData saveData = new AsteroidSaveData("");
             saveData.datacompound = tag;
             return saveData;
-        }
-        else
-        {
+        } else {
             return null;
         }
     }
 
 
-    private void readFromNBT(CompoundTag nbt)
-    {
+    private void readFromNBT(CompoundTag nbt) {
         ListTag coordList = nbt.getList("coords", 10);
-        if (coordList.size() > 0)
-        {
-            for (int j = 0; j < coordList.size(); j++)
-            {
+        if (coordList.size() > 0) {
+            for (int j = 0; j < coordList.size(); j++) {
                 CompoundTag tag1 = coordList.getCompound(j);
 
-                if (tag1 != null)
-                {
+                if (tag1 != null) {
                     this.asteroids.add(AsteroidData.readFromNBT(tag1));
                 }
             }
         }
     }
 
-    public BlockVec3 isLargeAsteroidAt(int x0, int z0)
-    {
+    public BlockVec3 isLargeAsteroidAt(int x0, int z0) {
         int xToCheck;
         int zToCheck;
-        for (int i0 = 0; i0 <= 32; i0++)
-        {
-            for (int i1 = -i0; i1 <= i0; i1++)
-            {
+        for (int i0 = 0; i0 <= 32; i0++) {
+            for (int i1 = -i0; i1 <= i0; i1++) {
                 xToCheck = (x0 >> 4) + i0;
                 zToCheck = (z0 >> 4) + i1;
 
-                if (isLargeAsteroidAt0(xToCheck * 16, zToCheck * 16))
-                {
+                if (isLargeAsteroidAt0(xToCheck * 16, zToCheck * 16)) {
                     return new BlockVec3(xToCheck * 16, 0, zToCheck * 16);
                 }
 
                 xToCheck = (x0 >> 4) + i0;
                 zToCheck = (z0 >> 4) - i1;
 
-                if (isLargeAsteroidAt0(xToCheck * 16, zToCheck * 16))
-                {
+                if (isLargeAsteroidAt0(xToCheck * 16, zToCheck * 16)) {
                     return new BlockVec3(xToCheck * 16, 0, zToCheck * 16);
                 }
 
                 xToCheck = (x0 >> 4) - i0;
                 zToCheck = (z0 >> 4) + i1;
 
-                if (isLargeAsteroidAt0(xToCheck * 16, zToCheck * 16))
-                {
+                if (isLargeAsteroidAt0(xToCheck * 16, zToCheck * 16)) {
                     return new BlockVec3(xToCheck * 16, 0, zToCheck * 16);
                 }
 
                 xToCheck = (x0 >> 4) - i0;
                 zToCheck = (z0 >> 4) - i1;
 
-                if (isLargeAsteroidAt0(xToCheck * 16, zToCheck * 16))
-                {
+                if (isLargeAsteroidAt0(xToCheck * 16, zToCheck * 16)) {
                     return new BlockVec3(xToCheck * 16, 0, zToCheck * 16);
                 }
             }
@@ -1075,14 +986,10 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
         return null;
     }
 
-    private boolean isLargeAsteroidAt0(int x0, int z0)
-    {
-        for (int x = x0; x < x0 + AsteroidChunkGenerator.CHUNK_SIZE_X; x += 2)
-        {
-            for (int z = z0; z < z0 + AsteroidChunkGenerator.CHUNK_SIZE_Z; z += 2)
-            {
-                if ((Math.abs(this.randFromPoint(x, z)) < (this.asteroidDensity.getNoise(x, z) + .4) / AsteroidChunkGenerator.ASTEROID_CHANCE))
-                {
+    private boolean isLargeAsteroidAt0(int x0, int z0) {
+        for (int x = x0; x < x0 + AsteroidChunkGenerator.CHUNK_SIZE_X; x += 2) {
+            for (int z = z0; z < z0 + AsteroidChunkGenerator.CHUNK_SIZE_Z; z += 2) {
+                if ((Math.abs(this.randFromPoint(x, z)) < (this.asteroidDensity.getNoise(x, z) + .4) / AsteroidChunkGenerator.ASTEROID_CHANCE)) {
                     return true;
                 }
             }

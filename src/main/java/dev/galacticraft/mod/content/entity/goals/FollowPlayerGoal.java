@@ -68,7 +68,7 @@ public class FollowPlayerGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return this.following != null && !this.navigation.isDone() && this.mob.distanceToSqr(this.following) > (double)(this.stopDistance * this.stopDistance);
+        return this.following != null && !this.navigation.isDone() && this.mob.distanceToSqr(this.following) > (double) (this.stopDistance * this.stopDistance);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class FollowPlayerGoal extends Goal {
     @Override
     public void tick() {
         if (this.following != null && !this.mob.isLeashed()) {
-            this.mob.getLookControl().setLookAt(this.following, 10.0F, (float)this.mob.getMaxHeadXRot());
+            this.mob.getLookControl().setLookAt(this.following, 10.0F, (float) this.mob.getMaxHeadXRot());
             if (--this.timeToRecalcPath <= 0) {
                 this.timeToRecalcPath = this.adjustedTickDelay(10);
                 double d = this.mob.getX() - this.following.getX();

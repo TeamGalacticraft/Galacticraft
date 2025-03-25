@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.world.dimension;
 
-import com.google.common.base.Optional;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.tag.GCTags;
 import net.minecraft.core.registries.Registries;

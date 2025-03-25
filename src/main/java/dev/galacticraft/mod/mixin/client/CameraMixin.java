@@ -44,7 +44,8 @@ public abstract class CameraMixin {
     @Shadow
     protected abstract void setRotation(float f, float g);
 
-    @Shadow protected abstract void move(float f, float g, float h);
+    @Shadow
+    protected abstract void move(float f, float g, float h);
 
     @Unique
     private static float sleepDirectionToRotationCryo(Direction direction) {

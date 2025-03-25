@@ -33,11 +33,11 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 
 public class ParachestModel extends HierarchicalModel<ParachestEntity> {
-    
+
     private final ModelPart root;
     public ModelPart[] parachute = new ModelPart[3];
     public ModelPart[] parachuteStrings = new ModelPart[4];
-    
+
     public ParachestModel(ModelPart parachute) {
         this.root = parachute;
         this.parachute[0] = parachute.getChild("parachute_0");

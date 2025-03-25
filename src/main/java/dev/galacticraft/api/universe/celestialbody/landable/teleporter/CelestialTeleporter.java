@@ -39,7 +39,8 @@ import net.minecraft.server.level.ServerPlayer;
  * This class is for determining how a celestial should handle a player teleporting to it.
  * Such as making custom landing sequences.
  */
-public record CelestialTeleporter<C extends CelestialTeleporterConfig, T extends CelestialTeleporterType<C>>(T type, C config) {
+public record CelestialTeleporter<C extends CelestialTeleporterConfig, T extends CelestialTeleporterType<C>>(T type,
+                                                                                                             C config) {
     public static final Codec<CelestialTeleporter<?, ?>> DIRECT_CODEC = BuiltInAddonRegistries.CELESTIAL_TELEPORTER_TYPE.byNameCodec().dispatch(CelestialTeleporter::type, CelestialTeleporterType::codec);
     public static final Codec<Holder<CelestialTeleporter<?, ?>>> CODEC = RegistryFileCodec.create(AddonRegistries.CELESTIAL_TELEPORTER, DIRECT_CODEC);
     public static final Codec<HolderSet<CelestialTeleporter<?, ?>>> LIST_CODEC = RegistryCodecs.homogeneousList(AddonRegistries.CELESTIAL_TELEPORTER, DIRECT_CODEC);

@@ -45,8 +45,10 @@ import java.util.Optional;
 
 public record PlanetConfig(@NotNull Component name, @NotNull Component description,
                            @NotNull Holder<CelestialBody<?, ?>> parent,
-                           @NotNull CelestialPosition<?, ?> position, @NotNull CelestialDisplay<?, ?> display, @NotNull CelestialRingDisplay<?, ?> ring,
-                           @NotNull ResourceKey<Level> world, Holder<CelestialTeleporter<?, ?>> teleporter, @NotNull GasComposition atmosphere, float gravity,
+                           @NotNull CelestialPosition<?, ?> position, @NotNull CelestialDisplay<?, ?> display,
+                           @NotNull CelestialRingDisplay<?, ?> ring,
+                           @NotNull ResourceKey<Level> world, Holder<CelestialTeleporter<?, ?>> teleporter,
+                           @NotNull GasComposition atmosphere, float gravity,
                            CelestialHandler celestialHandler,
                            int accessWeight, int dayTemperature, int nightTemperature, long dayLength,
                            @Nullable SatelliteRecipe satelliteRecipe) implements CelestialBodyConfig {

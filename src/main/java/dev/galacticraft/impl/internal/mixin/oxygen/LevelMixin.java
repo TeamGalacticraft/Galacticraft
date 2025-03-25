@@ -52,9 +52,12 @@ import java.util.function.Supplier;
 public abstract class LevelMixin implements LevelOxygenAccessor, InternalLevelOxygenAccessor, LevelAccessor {
     private @Unique boolean breathable = true;
 
-    @Shadow public abstract @NotNull LevelChunk getChunk(int i, int j);
+    @Shadow
+    public abstract @NotNull LevelChunk getChunk(int i, int j);
 
-    @Shadow @Final private ResourceKey<Level> dimension;
+    @Shadow
+    @Final
+    private ResourceKey<Level> dimension;
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void initializeOxygenValues(WritableLevelData writableLevelData, ResourceKey<Level> resourceKey, RegistryAccess registryAccess, Holder holder, Supplier supplier, boolean bl, boolean bl2, long l, int i, CallbackInfo ci) {

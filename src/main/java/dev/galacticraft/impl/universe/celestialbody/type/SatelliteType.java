@@ -125,7 +125,7 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
                                                                        ChunkGenerator generator, DimensionType type, SatelliteOwnershipData ownershipData, String name) {
         Constant.LOGGER.debug("Attempting to create a world dynamically ({})", id);
 
-        ((DynamicDimensionRegistry)server).createDynamicDimension(id, generator, type);
+        ((DynamicDimensionRegistry) server).createDynamicDimension(id, generator, type);
 
         Holder<CelestialTeleporter<?, ?>> direct = server.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_TELEPORTER).getHolderOrThrow(BuiltinObjects.DIRECT_CELESTIAL_TELEPORTER);
 
