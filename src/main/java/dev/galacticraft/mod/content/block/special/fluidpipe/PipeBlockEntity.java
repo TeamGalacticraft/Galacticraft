@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.special.fluidpipe;
 
+import dev.galacticraft.mod.api.block.FluidPipeBlock;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.api.pipe.FluidPipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
@@ -39,6 +40,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -105,17 +107,19 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
 
     @Override
     public void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction) {
-        boolean connected = this.canConnect(direction) && FluidUtil.canAccessFluid(this.level, neighborPos, direction);
-        if (this.connections[direction.get3DDataValue()] != connected) {
-            this.connections[direction.get3DDataValue()] = connected;
-            this.level.sendBlockUpdated(pos, state, state, 0);
-            this.level.updateNeighborsAt(pos, state.getBlock());
+        if (this.level == null) {
+            return;
         }
 
-        if (this.network == null || this.network.markedForRemoval()) {
-            this.createNetwork();
+        boolean connected = state.getValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction));
+        if (this.connections[direction.get3DDataValue()] != connected) {
+            this.connections[direction.get3DDataValue()] = connected;
+
+            if (this.network == null || this.network.markedForRemoval()) {
+                this.createNetwork();
+            }
+            this.network.updateConnection(pos, neighborPos, direction);
         }
-        this.network.updateConnection(pos, neighborPos, direction);
     }
 
     @Override
