@@ -619,6 +619,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCTags.COMPRESSED_STEEL, "Steel Plates");
         this.tag(GCTags.COMPRESSED_IRON, "Iron Plates");
         this.tag(GCTags.COMPRESSED_TIN, "Tin Plates");
+        this.tag(GCTags.EVOLVED_CREEPER_DROP_MUSIC_DISCS, "Evolved Creeper Music Disc Drops");
     }
 
     protected void generateGasTranslations() {
@@ -963,7 +964,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.MILLIBUCKETS, "mB");
         this.add(Ui.MAX_OXYGEN, "Maximum Oxygen: %s");
         this.add(Ui.MACHINE_STATUS, "Status: %s");
-        this.add(Ui.OXYGEN_TANK_LEVEL, "Oxygen Tank %s: %s/%s");
+        this.add(Ui.OXYGEN_TANK_1_LEVEL, "Oxygen Tank 1: %s");
+        this.add(Ui.OXYGEN_TANK_2_LEVEL, "Oxygen Tank 2: %s");
         this.add(Ui.OXYGEN_WARNING, "WARNING");
         this.add(Ui.OXYGEN_SETUP_INVALID, "Oxygen Setup is Invalid!");
         this.add(Ui.ROCKET_FUEL, "Fuel:");

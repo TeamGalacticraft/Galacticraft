@@ -43,6 +43,11 @@ public interface Constant {
     Logger LOGGER = LogManager.getLogger("Galacticraft");
 
     int OVERWORLD_SKYPROVIDER_STARTHEIGHT = 200;
+    int CLOUD_HEIGHT = 200;
+    int CLOUD_LIMIT = CLOUD_HEIGHT + 100;
+    int SPACE_HEIGHT = 1000;
+    int REENTRY_HEIGHT = 1100;
+    int ESCAPE_HEIGHT = 1200;
 
     @Contract(value = "_ -> new", pure = true)
     static @NotNull ResourceLocation id(String id) {

@@ -25,6 +25,7 @@ package dev.galacticraft.mod.data;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCRegistry;
 import dev.galacticraft.mod.data.loot.GCEntityLootSubProvider;
+import dev.galacticraft.mod.tag.GCTags;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.EntityTypeTags;
@@ -56,8 +57,7 @@ public class GCEntityLoot extends GCEntityLootSubProvider {
 
     @Override
     public void generate() {
-        add(
-                GCEntityTypes.EVOLVED_ZOMBIE,
+        add(GCEntityTypes.EVOLVED_ZOMBIE,
                 LootTable.lootTable()
                         .withPool(
                                 LootPool.lootPool()
@@ -81,8 +81,7 @@ public class GCEntityLoot extends GCEntityLootSubProvider {
                                         .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.lookup, 0.025F, 0.01F))
                         )
         );
-        add(
-                GCEntityTypes.EVOLVED_CREEPER,
+        add(GCEntityTypes.EVOLVED_CREEPER,
                 LootTable.lootTable()
                         .withPool(
                                 LootPool.lootPool()
@@ -95,12 +94,11 @@ public class GCEntityLoot extends GCEntityLootSubProvider {
                         )
                         .withPool(
                                 LootPool.lootPool()
-                                        .add(TagEntry.expandTag(ItemTags.CREEPER_DROP_MUSIC_DISCS))
+                                        .add(TagEntry.expandTag(GCTags.EVOLVED_CREEPER_DROP_MUSIC_DISCS))
                                         .when(LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.ATTACKER, EntityPredicate.Builder.entity().of(EntityTypeTags.SKELETONS)))
                         )
         );
-        add(
-                GCEntityTypes.EVOLVED_SKELETON,
+        add(GCEntityTypes.EVOLVED_SKELETON,
                 LootTable.lootTable()
                         .withPool(
                                 LootPool.lootPool()
@@ -121,8 +119,7 @@ public class GCEntityLoot extends GCEntityLootSubProvider {
                                         )
                         )
         );
-        add(
-                GCEntityTypes.EVOLVED_SPIDER,
+        add(GCEntityTypes.EVOLVED_SPIDER,
                 LootTable.lootTable()
                         .withPool(
                                 LootPool.lootPool()
@@ -144,8 +141,7 @@ public class GCEntityLoot extends GCEntityLootSubProvider {
                                         .when(LootItemKilledByPlayerCondition.killedByPlayer())
                         )
         );
-        add(
-                GCEntityTypes.EVOLVED_ENDERMAN,
+        add(GCEntityTypes.EVOLVED_ENDERMAN,
                 LootTable.lootTable()
                         .withPool(
                                 LootPool.lootPool()
@@ -157,8 +153,7 @@ public class GCEntityLoot extends GCEntityLootSubProvider {
                                         )
                         )
         );
-        add(
-                GCEntityTypes.EVOLVED_WITCH,
+        add(GCEntityTypes.EVOLVED_WITCH,
                 LootTable.lootTable()
                         .withPool(
                                 LootPool.lootPool()
@@ -206,8 +201,7 @@ public class GCEntityLoot extends GCEntityLootSubProvider {
                         )
         );
         add(GCEntityTypes.EVOLVED_PILLAGER, noDrops());
-        add(
-                GCEntityTypes.EVOLVED_EVOKER,
+        add(GCEntityTypes.EVOLVED_EVOKER,
                 LootTable.lootTable()
                         .withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(Items.TOTEM_OF_UNDYING)))
                         .withPool(
@@ -221,8 +215,7 @@ public class GCEntityLoot extends GCEntityLootSubProvider {
                                         .when(LootItemKilledByPlayerCondition.killedByPlayer())
                         )
         );
-        add(
-                GCEntityTypes.EVOLVED_VINDICATOR,
+        add(GCEntityTypes.EVOLVED_VINDICATOR,
                 LootTable.lootTable()
                         .withPool(
                                 LootPool.lootPool()
@@ -242,10 +235,19 @@ public class GCEntityLoot extends GCEntityLootSubProvider {
         add(GCEntityTypes.GREY, noDrops());
         add(GCEntityTypes.ARCH_GREY, noDrops());
 
-        add(GCEntityTypes.SKELETON_BOSS, LootTable.lootTable()
-                .pool(LootPool.lootPool()
-                        .add(LootItem.lootTableItem(Items.ARROW))
-                        .build()));
+        add(GCEntityTypes.SKELETON_BOSS,
+                LootTable.lootTable()
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(LootItem.lootTableItem(Items.ARROW)) // Replace with key
+                        )
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(LootItem.lootTableItem(Items.WITHER_SKELETON_SKULL))
+                        )
+        );
     }
 
     @Override

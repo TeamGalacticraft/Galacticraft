@@ -35,7 +35,7 @@ public interface Translations {
     }
 
     interface BannerPattern {
-        String ROCKET = "banner_pattern.galacticraft.rocket";
+        String ROCKET = "block.galacticraft.banner.rocket";
     }
 
     interface JukeboxSong {
@@ -323,7 +323,8 @@ public interface Translations {
         String MILLIBUCKETS = "ui.galacticraft.machine.millibuckets";
         String MAX_OXYGEN = "ui.galacticraft.machine.max_oxygen";
         String MACHINE_STATUS = "ui.galacticraft.machine.status";
-        String OXYGEN_TANK_LEVEL = "ui.galacticraft.player_inv_screen.oxygen_tank_level";
+        String OXYGEN_TANK_1_LEVEL = "ui.galacticraft.player_inv_screen.oxygen_tank_1_level";
+        String OXYGEN_TANK_2_LEVEL = "ui.galacticraft.player_inv_screen.oxygen_tank_2_level";
         String OXYGEN_WARNING = "ui.galacticraft.oxygen.warning";
         String OXYGEN_SETUP_INVALID = "ui.galacticraft.oxygen.invalid_setup";
         String ROCKET_FUEL = "ui.galacticraft.rocket.fuel";

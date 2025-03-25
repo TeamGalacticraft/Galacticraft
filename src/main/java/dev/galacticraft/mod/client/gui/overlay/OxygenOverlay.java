@@ -108,7 +108,7 @@ public class OxygenOverlay {
                     }
 
                     graphics.pose().popPose();
-                } else if (!hasMaskAndGear || !hasOxygen) {
+                } else if (nonBreathable && (!hasMaskAndGear || !hasOxygen)) {
                     // Less obtrusive warning for if the player currently has oxygen, but has an invalid oxygen setup
                     graphics.pose().pushPose();
                     graphics.pose().scale(2.0F, 2.0F, 0.0F);

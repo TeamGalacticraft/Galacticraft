@@ -1,5 +1,5 @@
 {
-  "music.music_moon": {
+  "music.moon": {
     "sounds": [
       {
         "name": "galacticraft:music/cheese",
@@ -19,7 +19,7 @@
       }
     ]
   },
-  "music.music_credits": {
+  "music.credits": {
     "sounds": [
       {
         "name": "galacticraft:music/credits",
@@ -27,7 +27,7 @@
       }
     ]
   },
-  "music.music_orbit": {
+  "music.orbit": {
     "sounds": [
       {
         "name": "galacticraft:music/orbit",
@@ -43,7 +43,7 @@
       }
     ]
   },
-  "music.music_mars": {
+  "music.mars": {
     "sounds": [
       {
         "name": "galacticraft:music/mars",
@@ -180,7 +180,7 @@
       }
     ]
   },
-  "music.legacy.mars": {
+  "music_disc.legacy.mars": {
     "sounds": [
       {
         "name": "galacticraft:music/legacy/mars",
@@ -188,7 +188,7 @@
       }
     ]
   },
-  "music.legacy.mimas": {
+  "music_disc.legacy.mimas": {
     "sounds": [
       {
         "name": "galacticraft:music/legacy/mimas",
@@ -196,7 +196,7 @@
       }
     ]
   },
-  "music.legacy.orbit": {
+  "music_disc.legacy.orbit": {
     "sounds": [
       {
         "name": "galacticraft:music/legacy/orbit",
@@ -204,7 +204,7 @@
       }
     ]
   },
-  "music.legacy.spacerace": {
+  "music_disc.legacy.spacerace": {
     "sounds": [
       {
         "name": "galacticraft:music/legacy/spacerace",

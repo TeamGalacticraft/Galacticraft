@@ -26,6 +26,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -78,7 +79,7 @@ public class OverworldRenderer {
         VertexBuffer.unbind();
     }
     public void renderOverworldSky(Player player, PoseStack poseStack, Matrix4f matrix4f, float partialTicks, Camera camera, boolean bl, Runnable runnable) {
-        float theta = Mth.sqrt(((float) (player.getY()) - 200) / 1000.0F);
+        float theta = Mth.sqrt(((float) (player.getY()) - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) / ((float) Constant.ESCAPE_HEIGHT - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT));
         final float var21 = Math.max(1.0F - theta * 4.0F, 0.0F);
 
         final Vec3 skyColor = this.minecraft.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), partialTicks);
@@ -149,7 +150,7 @@ public class OverworldRenderer {
         final Vec3 vec = getFogColor(this.minecraft.level, camera, partialTicks);
         final float threshold = Math.max(0.1F, (float) vec.length() - 0.1F);
         final float playerY = (float) player.getY();
-        final float var20 = Mth.sqrt((playerY - 200.0F) / 1000.0F);
+        final float var20 = Mth.sqrt((playerY - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) / ((float) Constant.ESCAPE_HEIGHT - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT));
         final float bright1 = Math.min(0.9F, var20 * 3);
 
         if (bright1 > threshold) {
@@ -252,7 +253,8 @@ public class OverworldRenderer {
 
     public static Vec3 getFogColor(ClientLevel level, Camera camera, float f) {
         Player player = Minecraft.getInstance().player;
-        float heightOffset = Mth.sqrt(((float) (player.getY()) - 200.0F) / 1000.0F);
+        float heightOffset = ((float) (player.getY()) - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) / ((float) Constant.ESCAPE_HEIGHT - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT);
+        heightOffset = Mth.sqrt(heightOffset);
 
         float y = Mth.clamp(Mth.cos(level.getTimeOfDay(f) * Mth.TWO_PI) * 2.0F + 0.5F, 0.0F, 1.0F);
         BiomeManager biomeManager = level.getBiomeManager();

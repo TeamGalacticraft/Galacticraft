@@ -42,11 +42,8 @@
                 },
                 {
                   "enchantment": "minecraft:fortune",
-                  "formula": "minecraft:uniform_bonus_count",
-                  "function": "minecraft:apply_bonus",
-                  "parameters": {
-                    "bonusMultiplier": 1
-                  }
+                  "formula": "minecraft:ore_drops",
+                  "function": "minecraft:apply_bonus"
                 },
                 {
                   "function": "minecraft:explosion_decay"
