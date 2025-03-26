@@ -1,9 +1,9 @@
 {
-  "feature": "galacticraft:ore_copper_large_moon",
+  "feature": "galacticraft:ore_lunar_sapphire_moon",
   "placement": [
     {
       "type": "minecraft:count",
-      "count": 17
+      "count": 18
     },
     {
       "type": "minecraft:in_square"
@@ -16,7 +16,7 @@
           "absolute": 112
         },
         "min_inclusive": {
-          "above_bottom": 0
+          "absolute": 0
         }
       }
     },

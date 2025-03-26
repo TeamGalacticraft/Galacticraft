@@ -50,8 +50,8 @@ public class GCTags {
     public static final TagKey<Block> BASE_STONE_MOON = TagKey.create(Registries.BLOCK, Constant.id("base_stone_moon"));
     public static final TagKey<Block> MOON_CARVER_REPLACEABLES = TagKey.create(Registries.BLOCK, Constant.id("moon_carver_replaceables"));
     public static final TagKey<Block> MOON_CRATER_CARVER_REPLACEABLES = TagKey.create(Registries.BLOCK, Constant.id("moon_crater_carver_replaceables"));
-    public static final TagKey<Block> MOON_STONE_ORE_REPLACABLES = TagKey.create(Registries.BLOCK, Constant.id("moon_stone_ore_replaceables"));
-    public static final TagKey<Block> LUNASLATE_ORE_REPLACABLES = TagKey.create(Registries.BLOCK, Constant.id("lunaslate_ore_replaceables"));
+    public static final TagKey<Block> MOON_STONE_ORE_REPLACEABLES = TagKey.create(Registries.BLOCK, Constant.id("moon_stone_ore_replaceables"));
+    public static final TagKey<Block> LUNASLATE_ORE_REPLACEABLES = TagKey.create(Registries.BLOCK, Constant.id("lunaslate_ore_replaceables"));
     public static final TagKey<Block> MACHINES = TagKey.create(Registries.BLOCK, Constant.id("machines"));
     public static final TagKey<Block> FOOTPRINTS = TagKey.create(Registries.BLOCK, Constant.id("footprints"));
 

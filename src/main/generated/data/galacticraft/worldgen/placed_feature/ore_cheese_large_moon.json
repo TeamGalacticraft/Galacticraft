@@ -1,9 +1,9 @@
 {
-  "feature": "galacticraft:ore_copper_large_moon",
+  "feature": "galacticraft:ore_cheese_large_moon",
   "placement": [
     {
       "type": "minecraft:count",
-      "count": 17
+      "count": 5
     },
     {
       "type": "minecraft:in_square"
@@ -11,12 +11,12 @@
     {
       "type": "minecraft:height_range",
       "height": {
-        "type": "minecraft:trapezoid",
+        "type": "minecraft:uniform",
         "max_inclusive": {
           "absolute": 112
         },
         "min_inclusive": {
-          "above_bottom": 0
+          "absolute": 0
         }
       }
     },
