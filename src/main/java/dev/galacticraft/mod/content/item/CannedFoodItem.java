@@ -241,7 +241,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
             }
             stack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(items));
 
-            // 🔹 Recalculate and update the stored color
+            // Recalculate and update the stored color
             int newColor = calculateCanColor(items);
             stack.set(GCDataComponents.COLOR, newColor);
         }
@@ -276,7 +276,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
                 // Update container contents
                 cannedFood.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(cannedFoodItems));
 
-                // 🔹 Recalculate and store the new color inside the stack components
+                // Recalculate and store the new color inside the stack components
                 int newColor = calculateCanColor(cannedFoodItems);
                 cannedFood.set(GCDataComponents.COLOR, 0xFF0000);
             }
@@ -284,9 +284,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
     }
 
     private static int calculateCanColor(List<ItemStack> items) {
-        System.out.println("Calculating can color");
         if (items.isEmpty()) {
-            System.out.println("No items to calculate can color");
             return 0xFFFFFF; // Default white color for empty cans
         }
 

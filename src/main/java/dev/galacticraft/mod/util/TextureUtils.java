@@ -48,7 +48,6 @@ public class TextureUtils {
 
         Optional<Resource> resourceOptional = resourceManager.getResource(textureLocation);
         if (resourceOptional.isEmpty()) {
-            System.out.println("RESOURCE OPTIONAL IS EMPTY");
             return 0xFFFF00; // Avoid throwing an exception, return default instead
         }
 

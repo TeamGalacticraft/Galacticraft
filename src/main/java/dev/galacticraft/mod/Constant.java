@@ -851,7 +851,7 @@ public interface Constant {
         String PROGRESS = "Progress";
         String TRANSFERRING_CAN = "TransferringCan";
         String TRANSFERRING_FOOD = "TransferringFood";
-        String STORAGE = "Storage";
+        String STORAGE = "StorageStack";
         String SIZE = "Size";
         String MAX_SIZE = "MaxSize";
         String VISIBLE = "Visible";

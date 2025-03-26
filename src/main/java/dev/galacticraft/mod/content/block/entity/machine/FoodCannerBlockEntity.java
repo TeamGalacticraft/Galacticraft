@@ -61,6 +61,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static dev.galacticraft.mod.content.item.CannedFoodItem.*;
 
@@ -422,10 +423,8 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
         setProgress(tag.getInt(Constant.Nbt.PROGRESS));
         this.transferring_can = tag.getBoolean(Constant.Nbt.TRANSFERRING_CAN);
         this.transferring_food = tag.getBoolean(Constant.Nbt.TRANSFERRING_FOOD);
-        ItemStack itemStack = GCItems.CANNED_FOOD.getDefaultInstance();
-        itemStack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(listTagToCompoundTag(tag.getList(Constant.Nbt.STORAGE, ListTag.TAG_COMPOUND))));
-        this.storage = itemStack;
 
+        this.storage = ItemStack.parseOptional(lookup, tag.getCompound(Constant.Nbt.STORAGE));
     }
 
 
@@ -435,7 +434,8 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
         tag.putInt(Constant.Nbt.PROGRESS, this.progress);
         tag.putBoolean(Constant.Nbt.TRANSFERRING_CAN, this.transferring_can);
         tag.putBoolean(Constant.Nbt.TRANSFERRING_FOOD, this.transferring_food);
-        tag.put(Constant.Nbt.STORAGE, compoundTagToListTag(Objects.requireNonNull(this.storage.get(DataComponents.BLOCK_ENTITY_DATA)).copyTag()));
+
+        tag.put(Constant.Nbt.STORAGE, this.storage.save(lookup, new CompoundTag()));
     }
 
     public static CompoundTag listTagToCompoundTag(ListTag listTag) {
