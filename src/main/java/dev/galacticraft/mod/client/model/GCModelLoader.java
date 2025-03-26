@@ -36,6 +36,7 @@ import com.mojang.serialization.JsonOps;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.event.RocketAtlasCallback;
 import dev.galacticraft.mod.client.resources.RocketTextureManager;
+import dev.galacticraft.mod.content.GCBlocks;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.Util;
@@ -43,6 +44,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.model.AtlasSet;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.FileToIdConverter;
@@ -90,7 +92,12 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
             pluginContext.addModels(Constant.id("block/" + color + "_fluid_pipe_walkway"));
         }
 
-        pluginContext.addModels(CANNED_FOOD_MODEL);
+        pluginContext.modifyModelAfterBake().register((model, context) -> {
+            if (context.resourceId() != null && context.resourceId().equals(CANNED_FOOD_MODEL)) {
+                return new CannedFoodBakedModel(model);
+            }
+            return model;
+        });
 
         pluginContext.resolveModel().register(context -> {
             var resourceId = context.id();
@@ -108,8 +115,6 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
                 return PipeUnbakedModel.INSTANCE;
             } else if (Constant.BakedModel.VACUUM_GLASS_MODEL.equals(resourceId)) {
                 return VacuumGlassUnbakedModel.INSTANCE;
-            } else if (CANNED_FOOD_MODEL.equals(resourceId)) {
-                return context.getOrLoadModel(CANNED_FOOD_MODEL);
             } else if (PARACHEST_ITEM.equals(resourceId)) {
                 var chutes = Maps.<DyeColor, UnbakedModel>newHashMap();
                 for (var color : DyeColor.values()) {

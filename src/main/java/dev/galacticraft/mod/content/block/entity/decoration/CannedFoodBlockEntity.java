@@ -22,8 +22,10 @@
 
 package dev.galacticraft.mod.content.block.entity.decoration;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.block.decoration.CannedFoodBlock;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -33,10 +35,13 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +56,7 @@ public class CannedFoodBlockEntity extends BlockEntity {
     }
 
     public int getCanCount() {
-        return getBlockState().getValue(CannedFoodBlock.CANS);
+        return canContents.size();
     }
 
     public List<ItemStack> getCanContents() {
@@ -59,11 +64,17 @@ public class CannedFoodBlockEntity extends BlockEntity {
     }
 
     public void addCanItem(ItemStack stack) {
-        if (canContents.size() < 8) {
-            canContents.add(stack);
-            this.setChanged();
-            if (level != null && !level.isClientSide()) {
-                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        if (this.canContents.size() < 8) {
+            this.canContents.add(stack);
+            setChanged();
+            if (level != null) {
+                BlockState state = getBlockState();
+                level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_CLIENTS);
+                level.setBlocksDirty(worldPosition, state, state);
+
+                if (!level.isClientSide) {
+                    level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_CLIENTS);
+                }
             }
         }
     }
@@ -72,6 +83,11 @@ public class CannedFoodBlockEntity extends BlockEntity {
         for (ItemStack stack : canContents) {
             popResource(level, pos, stack);
         }
+    }
+
+    @Override
+    public List<ItemStack> getRenderData() {
+        return List.copyOf(this.getCanContents());
     }
 
     @Override
@@ -105,8 +121,15 @@ public class CannedFoodBlockEntity extends BlockEntity {
 
     @Override
     public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider lookup) {
-        CompoundTag tag = new CompoundTag();
-        this.saveAdditional(tag, lookup);
+        CompoundTag tag = super.getUpdateTag(lookup);
+        tag.putInt("CanCount", getCanCount());
+        ListTag list = new ListTag();
+        for (ItemStack stack : canContents) {
+            if (!stack.isEmpty()) {
+                list.add(stack.save(lookup));
+            }
+        }
+        tag.put("CanContents", list);
         return tag;
     }
 

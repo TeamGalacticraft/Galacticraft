@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "galacticraft:block/canned_food" }
+    "": { "model": "galacticraft:block/canned_food_model" }
   }
 }

@@ -31,6 +31,7 @@ import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.item.v1.FabricItemStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -57,6 +58,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -76,7 +78,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
 
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
-        if (!context.getLevel().isClientSide()) {
+        //if (!context.getLevel().isClientSide()) {
             Level world = context.getLevel();
             BlockPos pos = context.getClickedPos();
             BlockState clickedState = world.getBlockState(pos);
@@ -87,17 +89,10 @@ public class CannedFoodItem extends Item implements FabricItemStack {
             if (clickedBlock instanceof CannedFoodBlock) {
                 BlockEntity be = world.getBlockEntity(pos);
                 if (be instanceof CannedFoodBlockEntity canEntity) {
-                    int currentCans = clickedState.getValue(CannedFoodBlock.CANS);
+                    int currentCans = canEntity.getCanCount();
                     if (currentCans < MAX_CANS) {
                         canEntity.addCanItem(stack.copyWithCount(1)); // Store canned food item
-                        CompoundTag tag = null;
-                        tag = canEntity.saveWithFullMetadata(world.registryAccess());
-                        world.setBlock(pos, clickedState.setValue(CannedFoodBlock.CANS, currentCans + 1), 3);
-                        BlockEntity newEntity = world.getBlockEntity(pos);
-                        if (newEntity instanceof CannedFoodBlockEntity newCanEntity) {
-                            newCanEntity.loadAdditional(tag, world.registryAccess());
-                        }
-                        stack.shrink(1);
+                        stack.consume(1, context.getPlayer());
                         return InteractionResult.SUCCESS;
                     }
                 }
@@ -107,19 +102,22 @@ public class CannedFoodItem extends Item implements FabricItemStack {
             BlockState belowState = world.getBlockState(below);
 
             if (belowState.getBlock() instanceof CannedFoodBlock) {
-                if (belowState.getValue(CannedFoodBlock.CANS) < MAX_CANS) {
-                    return InteractionResult.FAIL;
+                BlockEntity be = world.getBlockEntity(below);
+                if (be instanceof CannedFoodBlockEntity canEntity) {
+                    if (canEntity.getCanCount() < MAX_CANS) {
+                        return InteractionResult.FAIL;
+                    }
                 }
             } else if (!belowState.isFaceSturdy(world, below, Direction.UP, SupportType.FULL)) {
                 return InteractionResult.FAIL;
             }
             BlockPos placementPos = pos.relative(face);
-            if (world.getBlockState(placementPos).isAir()) {
+            BlockState oldState = world.getBlockState(placementPos);
+            if (oldState.isAir()) {
                 BlockState newState = GCBlocks.CANNED_FOOD.defaultBlockState()
-                        .setValue(CannedFoodBlock.CANS, 1)
                         .setValue(CannedFoodBlock.FACING, context.getHorizontalDirection().getOpposite());
 
-                world.setBlock(placementPos, newState, 3);
+                world.setBlock(placementPos, newState, Block.UPDATE_ALL);
                 BlockEntity be = world.getBlockEntity(placementPos);
                 if (be instanceof CannedFoodBlockEntity canEntity) {
                     if (stack.has(GCDataComponents.COLOR)) {
@@ -129,11 +127,11 @@ public class CannedFoodItem extends Item implements FabricItemStack {
                         canEntity.addCanItem(stack.copyWithCount(1));
                     }
                 }
-                stack.shrink(1);
+                stack.consume(1, context.getPlayer());
                 return InteractionResult.SUCCESS;
             }
 
-        }
+        //}
         return InteractionResult.FAIL;
     }
 

@@ -30,6 +30,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -43,26 +44,28 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class CannedFoodBlock extends Block implements EntityBlock {
-    public static final IntegerProperty CANS = IntegerProperty.create("cans", 1, 8);
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public CannedFoodBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any()
-                .setValue(CANS, 1)
                 .setValue(FACING, Direction.NORTH));
     }
 
     @Override
+    protected RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
+    }
+
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(CANS, FACING);
+        builder.add(FACING);
     }
 
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext ctx) {
         return this.defaultBlockState()
-                .setValue(FACING, ctx.getHorizontalDirection().getOpposite())
-                .setValue(CANS, 1);
+                .setValue(FACING, ctx.getHorizontalDirection().getOpposite());
     }
 
     @Override
