@@ -628,18 +628,19 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Gas.CARBON_MONOXIDE, "Carbon Monoxide");
         this.add(Gas.HELIUM, "Helium");
         this.add(Gas.HYDROGEN, "Hydrogen");
+        this.add(Gas.HYDROGEN_DEUTERIUM_OXIDE, "Hydrogen Deuterium Oxide");
         this.add(Gas.IODINE, "Iodine");
         this.add(Gas.KRYPTON, "Krypton");
         this.add(Gas.METHANE, "Methane");
         this.add(Gas.NEON, "Neon");
+        this.add(Gas.NITRIC_OXIDE, "Nitric Oxide");
         this.add(Gas.NITROGEN, "Nitrogen");
-        this.add(Gas.NITROUS_DIOXIDE, "Nitrous Dioxide");
+        this.add(Gas.NITROGEN_DIOXIDE, "Nitrogen Dioxide");
         this.add(Gas.NITROUS_OXIDE, "Nitrous Oxide");
         this.add(Gas.OXYGEN, "Oxygen");
         this.add(Gas.OZONE, "Ozone");
         this.add(Gas.WATER_VAPOR, "Water Vapor");
         this.add(Gas.XENON, "Xenon");
-        this.add(Gas.HYDROGEN_DEUTERIUM_OXYGEN, "Hydrogen Deuterium Oxygen");
     }
 
     protected void generateEntityTranslations() {
