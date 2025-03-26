@@ -36,6 +36,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -53,6 +54,7 @@ import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -74,27 +76,43 @@ public class CannedFoodItem extends Item implements FabricItemStack {
 
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
-        Level world = context.getLevel();
-        BlockPos pos = context.getClickedPos();
-        BlockState clickedState = world.getBlockState(pos);
-        ItemStack stack = context.getItemInHand();
-        Direction face = context.getClickedFace();
-        Block clickedBlock = clickedState.getBlock();
+        if (!context.getLevel().isClientSide()) {
+            Level world = context.getLevel();
+            BlockPos pos = context.getClickedPos();
+            BlockState clickedState = world.getBlockState(pos);
+            ItemStack stack = context.getItemInHand();
+            Direction face = context.getClickedFace();
+            Block clickedBlock = clickedState.getBlock();
 
-        if (clickedBlock instanceof CannedFoodBlock) {
-            BlockEntity be = world.getBlockEntity(pos);
-            if (be instanceof CannedFoodBlockEntity canEntity) {
-                int currentCans = clickedState.getValue(CannedFoodBlock.CANS);
-                if (currentCans < MAX_CANS) {
-                    canEntity.addCanItem(stack, stack.get(GCDataComponents.COLOR)); // Store canned food item
-                    world.setBlock(pos, clickedState.setValue(CannedFoodBlock.CANS, currentCans + 1), 3);
-                    stack.shrink(1);
-                    return InteractionResult.SUCCESS;
+            if (clickedBlock instanceof CannedFoodBlock) {
+                BlockEntity be = world.getBlockEntity(pos);
+                if (be instanceof CannedFoodBlockEntity canEntity) {
+                    int currentCans = clickedState.getValue(CannedFoodBlock.CANS);
+                    if (currentCans < MAX_CANS) {
+                        canEntity.addCanItem(stack.copyWithCount(1)); // Store canned food item
+                        CompoundTag tag = null;
+                        tag = canEntity.saveWithFullMetadata(world.registryAccess());
+                        world.setBlock(pos, clickedState.setValue(CannedFoodBlock.CANS, currentCans + 1), 3);
+                        BlockEntity newEntity = world.getBlockEntity(pos);
+                        if (newEntity instanceof CannedFoodBlockEntity newCanEntity) {
+                            newCanEntity.loadAdditional(tag, world.registryAccess());
+                        }
+                        stack.shrink(1);
+                        return InteractionResult.SUCCESS;
+                    }
                 }
             }
-        }
 
-        if (clickedState.isSolid()) {
+            BlockPos below = pos.relative(face).below();
+            BlockState belowState = world.getBlockState(below);
+
+            if (belowState.getBlock() instanceof CannedFoodBlock) {
+                if (belowState.getValue(CannedFoodBlock.CANS) < MAX_CANS) {
+                    return InteractionResult.FAIL;
+                }
+            } else if (!belowState.isFaceSturdy(world, below, Direction.UP, SupportType.FULL)) {
+                return InteractionResult.FAIL;
+            }
             BlockPos placementPos = pos.relative(face);
             if (world.getBlockState(placementPos).isAir()) {
                 BlockState newState = GCBlocks.CANNED_FOOD.defaultBlockState()
@@ -105,18 +123,18 @@ public class CannedFoodItem extends Item implements FabricItemStack {
                 BlockEntity be = world.getBlockEntity(placementPos);
                 if (be instanceof CannedFoodBlockEntity canEntity) {
                     if (stack.has(GCDataComponents.COLOR)) {
-                        canEntity.addCanItem(stack, stack.get(GCDataComponents.COLOR));
+                        canEntity.addCanItem(stack.copyWithCount(1));
                     } else {
-                        stack.set(GCDataComponents.COLOR, 0);
-                        canEntity.addCanItem(stack, stack.get(GCDataComponents.COLOR));
+                        stack.set(GCDataComponents.COLOR, 0xFFFFFF);
+                        canEntity.addCanItem(stack.copyWithCount(1));
                     }
                 }
                 stack.shrink(1);
                 return InteractionResult.SUCCESS;
             }
-        }
 
-        return InteractionResult.PASS;
+        }
+        return InteractionResult.FAIL;
     }
 
     @Override
@@ -158,7 +176,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
 
     public CannedFoodItem(Properties settings) {
         super(settings);
-        this.getDefaultInstance().set(GCDataComponents.COLOR, 0);
+        this.getDefaultInstance().set(GCDataComponents.COLOR, 0xFFFFFF);
     }
 
     @Override
@@ -278,7 +296,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
 
                 // Recalculate and store the new color inside the stack components
                 int newColor = calculateCanColor(cannedFoodItems);
-                cannedFood.set(GCDataComponents.COLOR, 0xFF0000);
+                cannedFood.set(GCDataComponents.COLOR, newColor);
             }
         }
     }
@@ -296,7 +314,6 @@ public class CannedFoodItem extends Item implements FabricItemStack {
 
             // Avoid crashing if the resource manager isn't ready
             int color = getAverageColor(texture);
-
             int red = (color >> 16) & 0xFF;
             int green = (color >> 8) & 0xFF;
             int blue = color & 0xFF;

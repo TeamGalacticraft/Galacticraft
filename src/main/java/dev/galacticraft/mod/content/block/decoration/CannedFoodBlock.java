@@ -36,6 +36,8 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -70,7 +72,7 @@ public class CannedFoodBlock extends Block implements EntityBlock {
 
     @Override
     public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, net.minecraft.world.phys.shapes.CollisionContext context) {
-        return Block.box(0, 0, 0, 16, 16, 16); //todo: make this dynamic and based on can count
+        return Shapes.join(Block.box(0, 0, 0, 8, 8, 8),Block.box(8,8,8,16,16,16), BooleanOp.OR);
     }
 
     @Override

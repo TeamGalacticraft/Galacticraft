@@ -53,6 +53,17 @@ public class CannedFoodBlockEntityRenderer implements BlockEntityRenderer<Canned
         int canCount = entity.getCanCount();
         List<ItemStack> contents = entity.getCanContents();
 
+        if (contents.size() < canCount) {
+            // Prevent crash and wait for data sync
+            // to avoid rendering bugs where it stops rendering while waiting for client sync
+            // if the block had previous data keep rendering previous data until client sync happens
+            if (!contents.isEmpty()) {
+                canCount -= 1;
+            } else {
+                return;
+            }
+        }
+
         // Define relative positions for each can layout
         float[][][] positions = {
                 {{8, 0, 8}},                        // 1 can
@@ -71,7 +82,11 @@ public class CannedFoodBlockEntityRenderer implements BlockEntityRenderer<Canned
             float y = position[1] / 16.0f;
             float z = (position[2] - 8) / 16.0f;
 
-            int canColor = contents.get(i).get(GCDataComponents.COLOR);
+            int canColor = 0;
+
+            ItemStack stack = contents.get(i);
+            canColor = stack.getOrDefault(GCDataComponents.COLOR, 0);
+
             // Extract RGB components from the integer color
             float red = ((canColor >> 16) & 0xFF) / 255.0f;
             float green = ((canColor >> 8) & 0xFF) / 255.0f;

@@ -54,22 +54,17 @@ public class CannedFoodBlockEntity extends BlockEntity {
         return getBlockState().getValue(CannedFoodBlock.CANS);
     }
 
-    public void setCanCount(int canCount) {
-        if (level != null) {
-            level.setBlock(getBlockPos(), getBlockState().setValue(CannedFoodBlock.CANS, canCount), 3);
-            this.setChanged();
-        }
-    }
-
-
     public List<ItemStack> getCanContents() {
         return canContents;
     }
 
-    public void addCanItem(ItemStack stack, int color) {
+    public void addCanItem(ItemStack stack) {
         if (canContents.size() < 8) {
             canContents.add(stack);
             this.setChanged();
+            if (level != null && !level.isClientSide()) {
+                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+            }
         }
     }
 
@@ -82,14 +77,14 @@ public class CannedFoodBlockEntity extends BlockEntity {
     @Override
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
         super.loadAdditional(tag, lookup);
-        if (tag.contains("CanCount")) {
-            setCanCount(tag.getInt("CanCount"));
-        }
-        if (tag.contains("CanContents")) {
-            canContents.clear();
-            ListTag list = tag.getList("CanContents", Tag.TAG_COMPOUND);
-            for (Tag itemTag : list) {
-                canContents.add(ItemStack.parse(lookup, itemTag).orElseThrow(RuntimeException::new));
+        this.canContents.clear();
+
+        ListTag list = tag.getList("CanContents", Tag.TAG_COMPOUND);
+        for (Tag t : list) {
+            CompoundTag itemTag = (CompoundTag) t;
+            ItemStack stack = ItemStack.parseOptional(lookup, itemTag);
+            if (!stack.isEmpty()) {
+                this.canContents.add(stack);
             }
         }
     }
@@ -100,8 +95,11 @@ public class CannedFoodBlockEntity extends BlockEntity {
         tag.putInt("CanCount", getCanCount());
         ListTag list = new ListTag();
         for (ItemStack stack : canContents) {
-            list.add(stack.save(lookup, new CompoundTag()));
+            if (!stack.isEmpty()) {
+                list.add(stack.save(lookup, new CompoundTag()));
+            }
         }
+
         tag.put("CanContents", list);
     }
 

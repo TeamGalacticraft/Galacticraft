@@ -22,57 +22,38 @@
 
 package dev.galacticraft.mod.util;
 
+import dev.galacticraft.mod.mixin.client.SpriteContentAccessor;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.SpriteContents;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
-import net.minecraft.server.packs.resources.ResourceManager;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Optional;
 
 public class TextureUtils {
     public static int getAverageColor(ResourceLocation textureLocation) {
-        if (Minecraft.getInstance().level == null) {
-            System.out.println("NO LEVEL FOUND");
-            return 0x00FFFF; // Default white color when the game is not fully loaded
-        }
+        TextureAtlasSprite textureAtlasSprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(textureLocation);
 
-        ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
-        if (resourceManager == null) {
-            System.out.println("NO RESOURCE MANAGER FOUND");
-            return 0xFF00FF; // Return default if ResourceManager isn't ready
-        }
-
-        Optional<Resource> resourceOptional = resourceManager.getResource(textureLocation);
-        if (resourceOptional.isEmpty()) {
-            return 0xFFFF00; // Avoid throwing an exception, return default instead
-        }
-
-        try (InputStream is = resourceOptional.get().open()) {
-            BufferedImage image = ImageIO.read(is);
-            return calculateAverageColor(image);
-        } catch (IOException e) {
-            return 0xFFFFFF; // Return default if the texture couldn't be read
-        }
+        return calculateAverageColor(textureAtlasSprite);
     }
 
-    private static int calculateAverageColor(BufferedImage image) {
+    private static int calculateAverageColor(TextureAtlasSprite image) {
         long sumRed = 0;
         long sumGreen = 0;
         long sumBlue = 0;
         int pixelCount = 0;
 
-        for (int y = 0; y < image.getHeight(); y++) {
-            for (int x = 0; x < image.getWidth(); x++) {
+        SpriteContents contents = image.contents();
 
-                int rgb = image.getRGB(x, y);
+        for (int y = 0; y < contents.height(); y++) {
+            for (int x = 0; x < contents.width(); x++) {
+
+                int rgb = ((SpriteContentAccessor) contents).getOriginalImage().getPixelRGBA(x, y);
                 if (rgb != 0) {
-                    int red = (rgb >> 16) & 0xFF;
+                    int red = rgb & 0xFF;
                     int green = (rgb >> 8) & 0xFF;
-                    int blue = rgb & 0xFF;
+                    int blue = (rgb >> 16) & 0xFF;
 
                     sumRed += red;
                     sumGreen += green;

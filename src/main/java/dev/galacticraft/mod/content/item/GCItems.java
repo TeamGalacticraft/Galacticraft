@@ -50,7 +50,6 @@ import java.util.List;
 public class GCItems {
     public static final GCRegistry<Item> ITEMS = new GCRegistry<>(BuiltInRegistries.ITEM);
     public static final List<ItemLike> HIDDEN_ITEMS = new ArrayList<>(1);
-    public static final List<ItemStack> CANNED_FOOD_ITEMS = new ArrayList<>();
 
     // TORCHES
     public static final Item GLOWSTONE_TORCH = ITEMS.register(Constant.Block.GLOWSTONE_TORCH, new StandingAndWallBlockItem(GCBlocks.GLOWSTONE_TORCH, GCBlocks.GLOWSTONE_WALL_TORCH, new Item.Properties(), Direction.DOWN));
@@ -306,19 +305,6 @@ public class GCItems {
         DispenserBlock.registerBehavior(FUEL_BUCKET, DispenserBlock.DISPENSER_REGISTRY.get(Items.WATER_BUCKET));
         DispenserBlock.registerBehavior(CRUDE_OIL_BUCKET, DispenserBlock.DISPENSER_REGISTRY.get(Items.WATER_BUCKET));
         DispenserBlock.registerBehavior(SULFURIC_ACID_BUCKET, DispenserBlock.DISPENSER_REGISTRY.get(Items.WATER_BUCKET));
-        //For every edible food create a creative item of that canned food type
-        for (Item item : BuiltInRegistries.ITEM) {
-            if (item.components().has(DataComponents.FOOD)) {
-                if (!(item instanceof CannedFoodItem)) {
-                    //create new canned food item with empty components
-                    ItemStack cannedFoodItem = CANNED_FOOD.getDefaultInstance();
-                    //add the default itemstack of the edible item into the canned foods components
-                    CannedFoodItem.add(cannedFoodItem, item.getDefaultInstance());
-                    //add the item to the list to be registed in the creative tab later
-                    CANNED_FOOD_ITEMS.add(cannedFoodItem);
-                }
-            }
-        }
 
         DispenserBlock.registerBehavior(MOON_VILLAGER_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
         DispenserBlock.registerBehavior(EVOLVED_ZOMBIE_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
