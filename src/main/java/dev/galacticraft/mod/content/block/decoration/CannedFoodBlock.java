@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.decoration;
 
+import dev.galacticraft.mod.client.model.CannedFoodBakedModel;
 import dev.galacticraft.mod.content.block.entity.decoration.CannedFoodBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -42,6 +43,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public class CannedFoodBlock extends Block implements EntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -75,7 +78,21 @@ public class CannedFoodBlock extends Block implements EntityBlock {
 
     @Override
     public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, net.minecraft.world.phys.shapes.CollisionContext context) {
-        return Shapes.join(Block.box(0, 0, 0, 8, 8, 8),Block.box(8,8,8,16,16,16), BooleanOp.OR);
+        VoxelShape shape = Shapes.empty();
+        BlockEntity be = world.getBlockEntity(pos);
+        if (be instanceof CannedFoodBlockEntity cannedFoodBlockEntity) {
+            int canCount = cannedFoodBlockEntity.getCanCount();
+            for (int i = 0; i < canCount; i++) {
+                float[] position = CannedFoodBakedModel.POSITIONS[canCount - 1][i];
+
+                float x = (position[0]);
+                float y = position[1];
+                float z = (position[2]);
+
+                shape = Shapes.join(shape,Block.box(x-3,y,z-3,x+3,y+8,z+3), BooleanOp.OR);
+            }
+        }
+        return shape;
     }
 
     @Override

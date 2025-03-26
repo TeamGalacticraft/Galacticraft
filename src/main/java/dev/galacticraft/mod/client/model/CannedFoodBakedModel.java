@@ -27,25 +27,27 @@ public class CannedFoodBakedModel extends ForwardingBakedModel {
         this.wrapped = bakedModel;
     }
 
+    // Define relative positions for each can layout
+    public static float[][][] POSITIONS = {
+            {{8, 0, 8}},                        // 1 can
+            {{4, 0, 8}, {12, 0, 8}},            // 2 cans
+            {{4, 0, 4}, {12, 0, 6}, {6, 0, 12}},// 3 cans
+            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}}, // 4 cans
+            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {8, 8, 8}}, // 5 cans (layer 2 starts)
+            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 8}, {12, 8, 8}}, // 6 cans
+            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 4}, {12, 8, 6}, {6, 8, 12}}, // 7 cans
+            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 4}, {12, 8, 4}, {4, 8, 12}, {12, 8, 12}} // 8 cans (full)
+    };
+
     @Override
     public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         List<ItemStack> contents = (List<ItemStack>) blockView.getBlockEntityRenderData(pos);
         int canCount = contents.size();
 
-        // Define relative positions for each can layout
-        float[][][] positions = {
-                {{8, 0, 8}},                        // 1 can
-                {{4, 0, 8}, {12, 0, 8}},            // 2 cans
-                {{4, 0, 4}, {12, 0, 6}, {6, 0, 12}},// 3 cans
-                {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}}, // 4 cans
-                {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {8, 8, 8}}, // 5 cans (layer 2 starts)
-                {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 8}, {12, 8, 8}}, // 6 cans
-                {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 4}, {12, 8, 6}, {6, 8, 12}}, // 7 cans
-                {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 4}, {12, 8, 4}, {4, 8, 12}, {12, 8, 12}} // 8 cans (full)
-        };
+
 
         for (int i = 0; i < canCount; i++) {
-            float[] position = positions[canCount - 1][i];
+            float[] position = POSITIONS[canCount - 1][i];
             float x = (position[0] - 8) / 16.0f; // Convert pixel coords to block space
             float y = position[1] / 16.0f;
             float z = (position[2] - 8) / 16.0f;
