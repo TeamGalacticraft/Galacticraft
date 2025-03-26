@@ -106,6 +106,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     private boolean galacticraft_testForBreathability(boolean original) {
         LivingEntity entity = (LivingEntity) (Object) this;
         if ((entity.getVehicle() instanceof LanderEntity) || (entity.getInBlockState().getBlock() instanceof CryogenicChamberBlock) || (entity.getInBlockState().getBlock() instanceof CryogenicChamberPart)) {
+            this.lastHurtBySuffocationTimestamp = this.tickCount;
             return false;
         }
         return original || this.isEyeInFluid(GCTags.NON_BREATHABLE) || !entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(entity.getPose()))));
