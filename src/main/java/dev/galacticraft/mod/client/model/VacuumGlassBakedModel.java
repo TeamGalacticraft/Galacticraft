@@ -60,7 +60,7 @@ public class VacuumGlassBakedModel implements BakedModel {
 
     public VacuumGlassBakedModel(Function<Material, TextureAtlasSprite> textureGetter) {
         this.glass = textureGetter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, Constant.id("block/vacuum_glass_vanilla")));
-        this.frame = textureGetter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, Constant.id("block/aluminum_decoration")));
+        this.frame = textureGetter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, Constant.id("block/plated_aluminum_block")));
     }
 
     @Override

@@ -37,7 +37,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
 public class SpaceTravelScreen extends Screen {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/block/tin_decoration.png");
+    private static final ResourceLocation TEXTURE = Constant.id("textures/block/plated_tin_block.png");
     private static final String[] POSSIBLE_TEXTS = new String[]{
             Translations.Ui.SMALL_STEP,
             Translations.Ui.GIANT_LEAP,
