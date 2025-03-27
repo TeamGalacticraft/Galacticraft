@@ -39,25 +39,28 @@ public class GCBiomeTagProvider extends FabricTagProvider<Biome> {
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
-        tag(GCTags.MOON)
+        this.tag(GCTags.MOON)
                 .add(GCBiomes.Moon.COMET_TUNDRA)
                 .add(GCBiomes.Moon.BASALTIC_MARE)
                 .add(GCBiomes.Moon.LUNAR_HIGHLANDS)
                 .add(GCBiomes.Moon.LUNAR_LOWLANDS)
                 .add(GCBiomes.Moon.OLIVINE_SPIKES);
 
-        tag(GCTags.VENUS)
+        this.tag(GCTags.VENUS)
                 .add(GCBiomes.Venus.VENUS_VALLEY)
                 .add(GCBiomes.Venus.VENUS_FLAT)
                 .add(GCBiomes.Venus.VENUS_MOUNTAIN);
 
-        tag(GCTags.MOON_PILLAGER_BASE_HAS_STRUCTURE)
+        this.tag(GCTags.ASTEROID)
+                .add(GCBiomes.Asteroid.ASTEROID_FIELD);
+
+        this.tag(GCTags.MOON_PILLAGER_BASE_HAS_STRUCTURE)
                 .add(GCBiomes.Moon.BASALTIC_MARE);
-        tag(GCTags.MOON_VILLAGE_HIGHLANDS_HAS_STRUCTURE)
+        this.tag(GCTags.MOON_VILLAGE_HIGHLANDS_HAS_STRUCTURE)
                 .add(GCBiomes.Moon.LUNAR_HIGHLANDS);
-        tag(GCTags.MOON_RUINS_HAS_STRUCTURE)
+        this.tag(GCTags.MOON_RUINS_HAS_STRUCTURE)
                 .add(GCBiomes.Moon.BASALTIC_MARE);
-        tag(GCTags.MOON_BOSS_HAS_STRUCTURE)
+        this.tag(GCTags.MOON_BOSS_HAS_STRUCTURE)
                 .addTag(GCTags.MOON);
     }
 }

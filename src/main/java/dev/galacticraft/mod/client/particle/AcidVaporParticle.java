@@ -30,6 +30,7 @@ import net.minecraft.client.particle.*;
 
 public class AcidVaporParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
+
     protected AcidVaporParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, SpriteSet sprites, float scale) {
         super(level, x, y, z, 0.0D, 0.0D, 0.0D);
         this.sprites = sprites;

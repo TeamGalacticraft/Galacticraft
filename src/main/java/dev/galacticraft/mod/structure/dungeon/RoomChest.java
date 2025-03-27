@@ -51,21 +51,21 @@ public class RoomChest extends RoomEmpty {
     public void postProcess(WorldGenLevel worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource rand, BoundingBox boundingBox, ChunkPos pos, BlockPos pivot) {
         super.postProcess(worldIn, structureManager, chunkGenerator, rand, boundingBox, pos, pivot);
 //        if (super.postProcess(worldIn, structureManager, chunkGenerator, rand, boundingBox, pos, pivot)) {
-            int chestX = this.sizeX / 2;
-            int chestY = 1;
-            int chestZ = this.sizeZ / 2;
-            this.placeBlock(worldIn, Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, this.getDirection().getOpposite()), chestX, chestY, chestZ, boundingBox);
+        int chestX = this.sizeX / 2;
+        int chestY = 1;
+        int chestZ = this.sizeZ / 2;
+        this.placeBlock(worldIn, Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, this.getDirection().getOpposite()), chestX, chestY, chestZ, boundingBox);
 
-            BlockPos blockpos = new BlockPos(this.getWorldX(chestX, chestZ), this.getWorldY(chestY), this.getWorldZ(chestX, chestZ));
-            ChestBlockEntity chest = (ChestBlockEntity) worldIn.getBlockEntity(blockpos);
+        BlockPos blockpos = new BlockPos(this.getWorldX(chestX, chestZ), this.getWorldY(chestY), this.getWorldZ(chestX, chestZ));
+        ChestBlockEntity chest = (ChestBlockEntity) worldIn.getBlockEntity(blockpos);
 
-            if (chest != null) {
-                ResourceKey<LootTable> chesttype = RoomTreasure.MOONCHEST;
+        if (chest != null) {
+            ResourceKey<LootTable> chesttype = RoomTreasure.MOONCHEST;
 //                if (worldIn.provider instanceof IGalacticraftWorldProvider) {
 //                    chesttype = ((IGalacticraftWorldProvider) worldIn.provider).getDungeonChestType();
 //                }
-                chest.setLootTable(chesttype, rand.nextLong());
-            }
+            chest.setLootTable(chesttype, rand.nextLong());
+        }
 
 //        }
     }

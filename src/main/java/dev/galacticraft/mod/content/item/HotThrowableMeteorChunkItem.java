@@ -59,7 +59,7 @@ public class HotThrowableMeteorChunkItem extends ThrowableMeteorChunkItem {
         if (maybeTicks != null) {
             int ticksUntilCool = maybeTicks;
             double secondsUntilCool = ticksUntilCool / 20.0;
-            Style style = Constant.Text.getCoolingStyle((double)ticksUntilCool/(double)MAX_TICKS);
+            Style style = Constant.Text.getCoolingStyle((double) ticksUntilCool / (double) MAX_TICKS);
             Component remaining = Component.translatable(Translations.Tooltip.SECONDS_UNIT, String.format("%.1f", secondsUntilCool)).setStyle(style);
             TooltipUtil.appendLabeledTooltip(Translations.Tooltip.TIME_UNTIL_COOL, remaining, tooltip);
         }

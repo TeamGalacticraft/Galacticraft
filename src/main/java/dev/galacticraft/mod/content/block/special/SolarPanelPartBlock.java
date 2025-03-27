@@ -26,7 +26,6 @@ import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.api.block.MultiBlockBase;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.SolarPanelPartBlockEntity;
-import dev.galacticraft.mod.content.block.entity.machine.AdvancedSolarPanelBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -54,15 +53,15 @@ public class SolarPanelPartBlock extends BaseEntityBlock {
     private static final VoxelShape TOP_POLE_SHAPE = box(6.5, 0, 6.5, 9.5, 8, 9.5);
     private static final VoxelShape TOP_SHAPE = box(0, 8, 0, 16, 9, 16);
     private static final VoxelShape[] TOP_SHAPES = {
-        box(0, 8, 1, 15, 9, 16),
-        box(0, 8, 0, 15, 9, 16),
-        box(0, 8, 0, 15, 9, 15),
-        box(0, 8, 1, 16, 9, 16),
-        Shapes.or(TOP_POLE_SHAPE, TOP_SHAPE),
-        box(0, 8, 0, 16, 9, 15),
-        box(1, 8, 1, 16, 9, 16),
-        box(1, 8, 0, 16, 9, 16),
-        box(1, 8, 0, 16, 9, 15)
+            box(0, 8, 1, 15, 9, 16),
+            box(0, 8, 0, 15, 9, 16),
+            box(0, 8, 0, 15, 9, 15),
+            box(0, 8, 1, 16, 9, 16),
+            Shapes.or(TOP_POLE_SHAPE, TOP_SHAPE),
+            box(0, 8, 0, 16, 9, 15),
+            box(1, 8, 1, 16, 9, 16),
+            box(1, 8, 0, 16, 9, 16),
+            box(1, 8, 0, 16, 9, 15)
     };
 
     public SolarPanelPartBlock(Properties settings) {
@@ -81,7 +80,7 @@ public class SolarPanelPartBlock extends BaseEntityBlock {
             return POLE_SHAPE;
         }
         for (int i = 0; i < 9; i++) {
-            block = blockView.getBlockState(pos.below(2).east((i/3)-1).north((i%3)-1)).getBlock();
+            block = blockView.getBlockState(pos.below(2).east((i / 3) - 1).north((i % 3) - 1)).getBlock();
             if (block == GCBlocks.BASIC_SOLAR_PANEL || block == GCBlocks.ADVANCED_SOLAR_PANEL) {
                 return TOP_SHAPES[i];
             }

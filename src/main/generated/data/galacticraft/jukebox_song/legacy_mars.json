@@ -4,5 +4,5 @@
     "translate": "jukebox_song.galacticraft.legacy_mars"
   },
   "length_in_seconds": 124.0,
-  "sound_event": "galacticraft:music.legacy.mars"
+  "sound_event": "galacticraft:music_disc.legacy.mars"
 }

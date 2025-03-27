@@ -42,10 +42,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(SoundEngine.class)
 @Environment(EnvType.CLIENT)
 public abstract class SoundEngineMixin implements SoundSystemAccessor {
-    @Shadow @Final private Listener listener;
-    @Unique private float multiplier = 1.0f;
+    @Shadow
+    @Final
+    private Listener listener;
+    @Unique
+    private float multiplier = 1.0f;
 
-    @Shadow public abstract void updateCategoryVolume(SoundSource soundCategory, float volume);
+    @Shadow
+    public abstract void updateCategoryVolume(SoundSource soundCategory, float volume);
 
     @Inject(method = "calculateVolume(FLnet/minecraft/sounds/SoundSource;)F", at = @At("RETURN"), cancellable = true)
     private void galacticraft_adjustVolumeToAtmosphere(float f, SoundSource soundSource, CallbackInfoReturnable<Float> cir) {

@@ -1,0 +1,7 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "particle": "galacticraft:block/canned_food"
+  },
+  "elements": []
+}

@@ -50,6 +50,7 @@ public non-sealed abstract class RocketBoosterType<C extends RocketBoosterConfig
 
     /**
      * Returns the maximum velocity of this booster in blocks/tick.
+     *
      * @return the maximum velocity of this booster blocks/tick.
      */
     @Contract(pure = true)
@@ -57,6 +58,7 @@ public non-sealed abstract class RocketBoosterType<C extends RocketBoosterConfig
 
     /**
      * Returns the acceleration of this booster in blocks/tick^2.
+     *
      * @return the acceleration of this booster blocks/tick^2.
      */
     @Contract(pure = true)
@@ -64,6 +66,7 @@ public non-sealed abstract class RocketBoosterType<C extends RocketBoosterConfig
 
     /**
      * Returns the amount of fuel consumed by this booster per tick.
+     *
      * @return the amount of fuel consumed by this booster per tick.
      */
     @Contract(pure = true)

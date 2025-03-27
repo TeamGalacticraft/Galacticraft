@@ -24,7 +24,6 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.machinelib.client.api.util.GraphicsUtil;
 import dev.galacticraft.mod.Constant;
@@ -100,12 +99,17 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
                     if (this.menu.getBlockage()[y * 3 + x]) {
                         graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.GRAY_STYLE).append(BLOCKED), mouseX, mouseY);
                     } else {
-                        switch (this.menu.getSource()){
-                            case DAY -> graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.GRAY_STYLE).append(DAY), mouseX, mouseY);
-                            case OVERCAST -> graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.GRAY_STYLE).append(OVERCAST), mouseX, mouseY);
-                            case STORMY -> graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.GRAY_STYLE).append(STORMY), mouseX, mouseY);
-                            case NIGHT -> graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.GRAY_STYLE).append(NIGHT), mouseX, mouseY);
-                            case NO_LIGHT_SOURCE -> graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.GRAY_STYLE).append(MISSING_SOURCE), mouseX, mouseY);
+                        switch (this.menu.getSource()) {
+                            case DAY ->
+                                    graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.GRAY_STYLE).append(DAY), mouseX, mouseY);
+                            case OVERCAST ->
+                                    graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.GRAY_STYLE).append(OVERCAST), mouseX, mouseY);
+                            case STORMY ->
+                                    graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.GRAY_STYLE).append(STORMY), mouseX, mouseY);
+                            case NIGHT ->
+                                    graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.GRAY_STYLE).append(NIGHT), mouseX, mouseY);
+                            case NO_LIGHT_SOURCE ->
+                                    graphics.renderTooltip(this.font, Component.translatable(Translations.SolarPanel.STATUS).setStyle(Constant.Text.GRAY_STYLE).append(MISSING_SOURCE), mouseX, mouseY);
                         }
                     }
                     return;

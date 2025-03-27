@@ -64,13 +64,13 @@ public final class Gases {
             Component.translatable(Translations.Gas.OXYGEN),
             Constant.id("gas/oxygen"), "O2"
     );
-    public static final ResourceLocation CARBON_DIOXIDE_ID = Constant.id("carbon_dioxide");
+    public static final ResourceLocation OZONE_ID = Constant.id("ozone");
     /**
-     * Carbon dioxide.
+     * Ozone.
      */
-    public static final Fluid CARBON_DIOXIDE = GasFluid.create(
-            Component.translatable(Translations.Gas.CARBON_DIOXIDE),
-            Constant.id("gas/carbon_dioxide"), "CO2"
+    public static final Fluid OZONE = GasFluid.create(
+            Component.translatable(Translations.Gas.OZONE),
+            Constant.id("gas/ozone"), "O3"
     );
     public static final ResourceLocation WATER_VAPOR_ID = Constant.id("water_vapor");
     /**
@@ -80,53 +80,14 @@ public final class Gases {
             Component.translatable(Translations.Gas.WATER_VAPOR),
             Constant.id("gas/water_vapor"), "H2O"
     );
-    public static final ResourceLocation METHANE_ID = Constant.id("methane");
+    public static final ResourceLocation HYDROGEN_DEUTERIUM_OXIDE_ID = Constant.id("hydrogen_deuterium_oxide");
     /**
-     * Methane.
+     * Hydrogen deuterium oxide.
      */
-    public static final Fluid METHANE = GasFluid.create(
-            Component.translatable(Translations.Gas.METHANE),
-            Constant.id("gas/methane"), "CH4"
-    );
-    public static final ResourceLocation HELIUM_ID = Constant.id("helium");
-    /**
-     * Helium.
-     */
-    public static final Fluid HELIUM = GasFluid.create(
-            Component.translatable(Translations.Gas.HELIUM),
-            Constant.id("gas/helium"), "He"
-    );
-    public static final ResourceLocation ARGON_ID = Constant.id("argon");
-    /**
-     * Argon.
-     */
-    public static final Fluid ARGON = GasFluid.create(
-            Component.translatable(Translations.Gas.ARGON),
-            Constant.id("gas/argon"), "Ar"
-    );
-    public static final ResourceLocation NEON_ID = Constant.id("neon");
-    /**
-     * Neon.
-     */
-    public static final Fluid NEON = GasFluid.create(
-            Component.translatable(Translations.Gas.NEON),
-            Constant.id("gas/neon"), "Ne"
-    );
-    public static final ResourceLocation KRYPTON_ID = Constant.id("krypton");
-    /**
-     * Krypton.
-     */
-    public static final Fluid KRYPTON = GasFluid.create(
-            Component.translatable(Translations.Gas.KRYPTON),
-            Constant.id("gas/krypton"), "Kr"
-    );
-    public static final ResourceLocation NITROUS_OXIDE_ID = Constant.id("nitrous_oxide");
-    /**
-     * Nitrous oxide.
-     */
-    public static final Fluid NITROUS_OXIDE = GasFluid.create(
-            Component.translatable(Translations.Gas.NITROUS_OXIDE),
-            Constant.id("gas/nitrous_oxide"), "N2O"
+    public static final Fluid HYDROGEN_DEUTERIUM_OXIDE = GasFluid.create(
+            Component.translatable(Translations.Gas.HYDROGEN_DEUTERIUM_OXIDE),
+            Constant.id("gas/hydrogen_deuterium_oxide"),
+            "HDO"
     );
     public static final ResourceLocation CARBON_MONOXIDE_ID = Constant.id("carbon_monoxide");
     /**
@@ -136,6 +97,79 @@ public final class Gases {
             Component.translatable(Translations.Gas.CARBON_MONOXIDE),
             Constant.id("gas/carbon_monoxide"), "CO"
     );
+    public static final ResourceLocation CARBON_DIOXIDE_ID = Constant.id("carbon_dioxide");
+    /**
+     * Carbon dioxide.
+     */
+    public static final Fluid CARBON_DIOXIDE = GasFluid.create(
+            Component.translatable(Translations.Gas.CARBON_DIOXIDE),
+            Constant.id("gas/carbon_dioxide"), "CO2"
+    );
+    public static final ResourceLocation METHANE_ID = Constant.id("methane");
+    /**
+     * Methane.
+     */
+    public static final Fluid METHANE = GasFluid.create(
+            Component.translatable(Translations.Gas.METHANE),
+            Constant.id("gas/methane"), "CH4"
+    );
+    public static final ResourceLocation NITRIC_OXIDE_ID = Constant.id("nitric_oxide");
+    /**
+     * Nitric oxide.
+     */
+    public static final Fluid NITRIC_OXIDE = GasFluid.create(
+            Component.translatable(Translations.Gas.NITRIC_OXIDE),
+            Constant.id("gas/nitric_oxide"),
+            "NO"
+    );
+    public static final ResourceLocation NITROUS_OXIDE_ID = Constant.id("nitrous_oxide");
+    /**
+     * Nitrous oxide.
+     */
+    public static final Fluid NITROUS_OXIDE = GasFluid.create(
+            Component.translatable(Translations.Gas.NITROUS_OXIDE),
+            Constant.id("gas/nitrous_oxide"), "N2O"
+    );
+    public static final ResourceLocation NITROGEN_DIOXIDE_ID = Constant.id("nitrogen_dioxide");
+    /**
+     * Nitrogen dioxide.
+     */
+    public static final Fluid NITROGEN_DIOXIDE = GasFluid.create(
+            Component.translatable(Translations.Gas.NITROGEN_DIOXIDE),
+            Constant.id("gas/nitrogen_dioxide"), "NO2"
+    );
+    public static final ResourceLocation HELIUM_ID = Constant.id("helium");
+    /**
+     * Helium.
+     */
+    public static final Fluid HELIUM = GasFluid.create(
+            Component.translatable(Translations.Gas.HELIUM),
+            Constant.id("gas/helium"), "He"
+    );
+    public static final ResourceLocation NEON_ID = Constant.id("neon");
+    /**
+     * Neon.
+     */
+    public static final Fluid NEON = GasFluid.create(
+            Component.translatable(Translations.Gas.NEON),
+            Constant.id("gas/neon"), "Ne"
+    );
+    public static final ResourceLocation ARGON_ID = Constant.id("argon");
+    /**
+     * Argon.
+     */
+    public static final Fluid ARGON = GasFluid.create(
+            Component.translatable(Translations.Gas.ARGON),
+            Constant.id("gas/argon"), "Ar"
+    );
+    public static final ResourceLocation KRYPTON_ID = Constant.id("krypton");
+    /**
+     * Krypton.
+     */
+    public static final Fluid KRYPTON = GasFluid.create(
+            Component.translatable(Translations.Gas.KRYPTON),
+            Constant.id("gas/krypton"), "Kr"
+    );
     public static final ResourceLocation XENON_ID = Constant.id("xenon");
     /**
      * Xenon.
@@ -143,22 +177,6 @@ public final class Gases {
     public static final Fluid XENON = GasFluid.create(
             Component.translatable(Translations.Gas.XENON),
             Constant.id("gas/xenon"), "Xe"
-    );
-    public static final ResourceLocation OZONE_ID = Constant.id("ozone");
-    /**
-     * Ozone.
-     */
-    public static final Fluid OZONE = GasFluid.create(
-            Component.translatable(Translations.Gas.OZONE),
-            Constant.id("gas/ozone"), "O3"
-    );
-    public static final ResourceLocation NITROUS_DIOXIDE_ID = Constant.id("nitrous_dioxide");
-    /**
-     * Nitrous dioxide.
-     */
-    public static final Fluid NITROUS_DIOXIDE = GasFluid.create(
-            Component.translatable(Translations.Gas.NITROUS_DIOXIDE),
-            Constant.id("gas/nitrous_dioxide"), "NO2"
     );
     public static final ResourceLocation IODINE_ID = Constant.id("iodine");
     /**
@@ -173,18 +191,20 @@ public final class Gases {
         Registry.register(BuiltInRegistries.FLUID, HYDROGEN_ID, HYDROGEN);
         Registry.register(BuiltInRegistries.FLUID, NITROGEN_ID, NITROGEN);
         Registry.register(BuiltInRegistries.FLUID, OXYGEN_ID, OXYGEN);
-        Registry.register(BuiltInRegistries.FLUID, CARBON_DIOXIDE_ID, CARBON_DIOXIDE);
-        Registry.register(BuiltInRegistries.FLUID, WATER_VAPOR_ID, WATER_VAPOR);
-        Registry.register(BuiltInRegistries.FLUID, METHANE_ID, METHANE);
-        Registry.register(BuiltInRegistries.FLUID, HELIUM_ID, HELIUM);
-        Registry.register(BuiltInRegistries.FLUID, ARGON_ID, ARGON);
-        Registry.register(BuiltInRegistries.FLUID, NEON_ID, NEON);
-        Registry.register(BuiltInRegistries.FLUID, KRYPTON_ID, KRYPTON);
-        Registry.register(BuiltInRegistries.FLUID, NITROUS_OXIDE_ID, NITROUS_OXIDE);
-        Registry.register(BuiltInRegistries.FLUID, CARBON_MONOXIDE_ID, CARBON_MONOXIDE);
-        Registry.register(BuiltInRegistries.FLUID, XENON_ID, XENON);
         Registry.register(BuiltInRegistries.FLUID, OZONE_ID, OZONE);
-        Registry.register(BuiltInRegistries.FLUID, NITROUS_DIOXIDE_ID, NITROUS_DIOXIDE);
+        Registry.register(BuiltInRegistries.FLUID, WATER_VAPOR_ID, WATER_VAPOR);
+        Registry.register(BuiltInRegistries.FLUID, HYDROGEN_DEUTERIUM_OXIDE_ID, HYDROGEN_DEUTERIUM_OXIDE);
+        Registry.register(BuiltInRegistries.FLUID, CARBON_MONOXIDE_ID, CARBON_MONOXIDE);
+        Registry.register(BuiltInRegistries.FLUID, CARBON_DIOXIDE_ID, CARBON_DIOXIDE);
+        Registry.register(BuiltInRegistries.FLUID, METHANE_ID, METHANE);
+        Registry.register(BuiltInRegistries.FLUID, NITRIC_OXIDE_ID, NITRIC_OXIDE);
+        Registry.register(BuiltInRegistries.FLUID, NITROUS_OXIDE_ID, NITROUS_OXIDE);
+        Registry.register(BuiltInRegistries.FLUID, NITROGEN_DIOXIDE_ID, NITROGEN_DIOXIDE);
+        Registry.register(BuiltInRegistries.FLUID, HELIUM_ID, HELIUM);
+        Registry.register(BuiltInRegistries.FLUID, NEON_ID, NEON);
+        Registry.register(BuiltInRegistries.FLUID, ARGON_ID, ARGON);
+        Registry.register(BuiltInRegistries.FLUID, KRYPTON_ID, KRYPTON);
+        Registry.register(BuiltInRegistries.FLUID, XENON_ID, XENON);
         Registry.register(BuiltInRegistries.FLUID, IODINE_ID, IODINE);
     }
 

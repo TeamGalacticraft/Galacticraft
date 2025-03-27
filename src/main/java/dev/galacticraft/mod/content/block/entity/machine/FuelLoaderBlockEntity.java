@@ -97,7 +97,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
                             .capacity(FluidConstants.BUCKET * NUM_BUCKETS)
                             .filter(ResourceFilters.ofResource(GCFluids.FUEL)) // fixme: tag?
             )
-        );
+    );
 
     private BlockPos connectionPos = BlockPos.ZERO;
     private int amount = 0;

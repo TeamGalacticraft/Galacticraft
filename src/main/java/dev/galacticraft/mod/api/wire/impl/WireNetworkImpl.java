@@ -211,7 +211,7 @@ public class WireNetworkImpl extends SnapshotParticipant<Long> implements WireNe
             return 0;
         }
 
-        double ratio = Math.min(1.0, (double)amount / (double)totalRequested);
+        double ratio = Math.min(1.0, (double) amount / (double) totalRequested);
         final long baseTransferred = this.transferred;
 
         this.updateSnapshots(transaction);

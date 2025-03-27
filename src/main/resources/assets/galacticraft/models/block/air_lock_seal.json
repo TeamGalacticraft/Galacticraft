@@ -1,0 +1,23 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "particle": "galacticraft:block/tin_decoration",
+    "top": "galacticraft:block/tin_decoration",
+    "side": "galacticraft:block/tin_decoration",
+    "bottom": "galacticraft:block/tin_decoration"
+  },
+  "elements": [
+    {
+      "from": [ 4, 0, 0 ],
+      "to": [ 12, 16, 16 ],
+      "faces": {
+        "down": {"texture": "#top"},
+        "up": {"texture": "#bottom"},
+        "north": {"texture": "#side"},
+        "east": {"texture": "#side"},
+        "south": {"texture": "#side"},
+        "west": {"texture": "#side"}
+      }
+    }
+  ]
+}

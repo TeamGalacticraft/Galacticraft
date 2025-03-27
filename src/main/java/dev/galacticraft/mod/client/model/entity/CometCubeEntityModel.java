@@ -31,34 +31,34 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.entity.Entity;
 
 public class CometCubeEntityModel<T extends Entity> extends EntityModel<T> {
-	private final ModelPart body;
-	private final ModelPart tail;
+    private final ModelPart body;
+    private final ModelPart tail;
 
-	public CometCubeEntityModel(ModelPart root) {
-		this.body = root.getChild("Body");
-		this.tail = root.getChild("tail");
-	}
+    public CometCubeEntityModel(ModelPart root) {
+        this.body = root.getChild("Body");
+        this.tail = root.getChild("tail");
+    }
 
-	public static LayerDefinition createBodyLayer() {
-		MeshDefinition meshdefinition = new MeshDefinition();
-		PartDefinition partdefinition = meshdefinition.getRoot();
+    public static LayerDefinition createBodyLayer() {
+        MeshDefinition meshdefinition = new MeshDefinition();
+        PartDefinition partdefinition = meshdefinition.getRoot();
 
-		PartDefinition Body = partdefinition.addOrReplaceChild("Body", CubeListBuilder.create().texOffs(0, 0).addBox(-6.0F, -11.0F, -6.0F, 12.0F, 11.0F, 12.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+        PartDefinition Body = partdefinition.addOrReplaceChild("Body", CubeListBuilder.create().texOffs(0, 0).addBox(-6.0F, -11.0F, -6.0F, 12.0F, 11.0F, 12.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
 
-		PartDefinition tail = partdefinition.addOrReplaceChild("tail", CubeListBuilder.create().texOffs(0, 9).addBox(0.0F, -7.0F, 0.0F, 0.0F, 15.0F, 14.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 18.0F, 6.0F));
+        PartDefinition tail = partdefinition.addOrReplaceChild("tail", CubeListBuilder.create().texOffs(0, 9).addBox(0.0F, -7.0F, 0.0F, 0.0F, 15.0F, 14.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 18.0F, 6.0F));
 
-		return LayerDefinition.create(meshdefinition, 64, 64);
-	}
+        return LayerDefinition.create(meshdefinition, 64, 64);
+    }
 
-	@Override
-	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    @Override
+    public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 
-	}
+    }
 
-	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertices, int light, int overlay, int color) {
-		body.render(poseStack, vertices, light, overlay);
-		tail.render(poseStack, vertices, light, overlay);
+    @Override
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertices, int light, int overlay, int color) {
+        body.render(poseStack, vertices, light, overlay);
+        tail.render(poseStack, vertices, light, overlay);
 
-	}
+    }
 }

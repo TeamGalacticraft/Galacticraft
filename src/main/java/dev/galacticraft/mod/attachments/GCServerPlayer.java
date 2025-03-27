@@ -85,7 +85,7 @@ public class GCServerPlayer {
         for (int stack = 0; stack < getRocketStacks().size(); stack++)
             if (getRocketStacks().get(stack).isEmpty())
                 if (stack == getRocketStacks().size() - 1)
-                        getRocketStacks().set(stack, rocketItem);
+                    getRocketStacks().set(stack, rocketItem);
     }
 
     public void setLaunchpadStack(ItemStack launchpad) {

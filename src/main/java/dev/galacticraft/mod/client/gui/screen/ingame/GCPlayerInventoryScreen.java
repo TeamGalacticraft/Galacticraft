@@ -125,5 +125,6 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
     }
 
     @Override
-    protected void renderLabels(GuiGraphics graphics, int i, int j) {}
+    protected void renderLabels(GuiGraphics graphics, int i, int j) {
+    }
 }

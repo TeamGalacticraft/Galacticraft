@@ -416,41 +416,6 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .pattern("C")
                 .unlockedBy(getHasName(GCItems.MOON_CHEESE_WHEEL), has(GCItems.MOON_CHEESE_WHEEL))
                 .save(output);
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CANNED_DEHYDRATED_APPLE)
-                .requires(GCItems.TIN_CANISTER)
-                .requires(Items.APPLE)
-                .requires(Items.APPLE)
-                .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItems.TIN_CANISTER))
-                .save(output);
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CANNED_DEHYDRATED_POTATO)
-                .requires(GCItems.TIN_CANISTER)
-                .requires(Items.POTATO)
-                .requires(Items.POTATO)
-                .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItems.TIN_CANISTER))
-                .save(output);
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CANNED_DEHYDRATED_CARROT)
-                .requires(GCItems.TIN_CANISTER)
-                .requires(Items.CARROT)
-                .requires(Items.CARROT)
-                .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItems.TIN_CANISTER))
-                .save(output);
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CANNED_DEHYDRATED_MELON)
-                .requires(GCItems.TIN_CANISTER)
-                .requires(Items.MELON_SLICE)
-                .requires(Items.MELON_SLICE)
-                .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItems.TIN_CANISTER))
-                .save(output);
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CANNED_BEEF)
-                .requires(GCItems.TIN_CANISTER)
-                .requires(GCItems.GROUND_BEEF)
-                .requires(GCItems.GROUND_BEEF)
-                .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItems.TIN_CANISTER))
-                .save(output);
     }
 
     @Override

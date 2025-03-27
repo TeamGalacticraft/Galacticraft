@@ -22,11 +22,13 @@
 
 package dev.galacticraft.mod.content.block.environment;
 
+import dev.galacticraft.mod.Constant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -46,21 +48,25 @@ public class VolcanicRockBlock extends Block {
     }
 
     @Override
+    public void wasExploded(Level level, BlockPos pos, Explosion explosion) {
+        super.wasExploded(level, pos, explosion);
+        level.setBlockAndUpdate(pos, Blocks.LAVA.defaultBlockState());
+    }
+
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        super.playerWillDestroy(level, pos, state, player);
+        ItemStack stack = player.getUseItem();
+        if (!stack.isCorrectToolForDrops(state) || stack.getEnchantments().getLevel(level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.SILK_TOUCH)) < 1) {
+            return Blocks.LAVA.defaultBlockState();
+        }
+        return state;
+    }
+
+    @Override
     public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack stack) {
         super.playerDestroy(level, player, pos, state, blockEntity, stack);
         if (stack.getEnchantments().getLevel(level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.SILK_TOUCH)) < 1) {
             level.setBlockAndUpdate(pos, Blocks.LAVA.defaultBlockState());
         }
-    }
-
-    @Override
-    public List<ItemStack> getDrops(BlockState state, LootParams.@NotNull Builder builder) {
-        ItemStack itemStack = builder.getOptionalParameter(LootContextParams.TOOL);
-        if (itemStack != null) {
-            if (itemStack.getEnchantments().getLevel(builder.getLevel().registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.SILK_TOUCH)) >= 1) {
-                return super.getDrops(state, builder);
-            }
-        }
-        return Collections.emptyList();
     }
 }

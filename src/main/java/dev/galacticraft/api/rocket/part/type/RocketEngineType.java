@@ -50,6 +50,7 @@ public non-sealed abstract class RocketEngineType<C extends RocketEngineConfig> 
 
     /**
      * Returns the fuel capacity of this rocket.
+     *
      * @return the fuel capacity of this rocket. 1 bucket = 81000.
      * @see net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants
      */
