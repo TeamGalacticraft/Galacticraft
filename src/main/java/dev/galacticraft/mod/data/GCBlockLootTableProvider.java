@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.data;
 
-import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.special.ParachestBlock;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
@@ -71,16 +70,15 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.GLOWSTONE_LANTERN);
         this.dropSelf(GCBlocks.UNLIT_LANTERN);
 
-        for (DecorationSet decorationSet : GCBlocks.BLOCKS.getDecorations()) {
-            this.dropSelf(decorationSet.block());
-            this.dropSelf(decorationSet.slab());
-            this.dropSelf(decorationSet.stairs());
-            this.dropSelf(decorationSet.wall());
-            this.dropSelf(decorationSet.detailedBlock());
-            this.dropSelf(decorationSet.detailedSlab());
-            this.dropSelf(decorationSet.detailedStairs());
-            this.dropSelf(decorationSet.detailedWall());
-        }
+        this.dropSelf(GCBlocks.PLATED_ALUMINUM_BLOCK);
+        this.dropSelf(GCBlocks.PLATED_BRONZE_BLOCK);
+        this.dropSelf(GCBlocks.PLATED_COPPER_BLOCK);
+        this.dropSelf(GCBlocks.PLATED_IRON_BLOCK);
+        this.dropSelf(GCBlocks.PLATED_METEORIC_IRON_BLOCK);
+        this.dropSelf(GCBlocks.PLATED_STEEL_BLOCK);
+        this.dropSelf(GCBlocks.PLATED_TIN_BLOCK);
+        this.dropSelf(GCBlocks.PLATED_TITANIUM_BLOCK);
+        this.dropSelf(GCBlocks.PLATED_DESH_BLOCK);
 
         this.dropSelf(GCBlocks.MOON_TURF);
         this.dropSelf(GCBlocks.MOON_DIRT);

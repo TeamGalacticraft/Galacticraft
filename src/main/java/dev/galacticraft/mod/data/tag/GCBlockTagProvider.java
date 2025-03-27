@@ -140,24 +140,6 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 GCBlocks.MARS_COBBLESTONE_SLAB
         };
 
-        List<GCBlockRegistry.DecorationSet> decorations = GCBlocks.BLOCKS.getDecorations();
-
-        var slabBuilder = this.tag(BlockTags.SLABS)
-                .add(slab);
-
-
-        var stairsBuilder = this.tag(BlockTags.STAIRS)
-                .add(stairs);
-
-        var wallBuilder = this.tag(BlockTags.WALLS)
-                .add(wall);
-
-        for (GCBlockRegistry.DecorationSet decorationSet : decorations) {
-            slabBuilder.add(decorationSet.slab(), decorationSet.detailedSlab());
-            stairsBuilder.add(decorationSet.stairs(), decorationSet.detailedStairs());
-            wallBuilder.add(decorationSet.wall(), decorationSet.detailedWall());
-        }
-
         // ORE MINING TAGS
         var ores = new Block[] {
                 GCBlocks.MARS_IRON_ORE, GCBlocks.ASTEROID_IRON_ORE,
@@ -242,24 +224,15 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.ASTEROID_ROCK_1,
                         GCBlocks.ASTEROID_ROCK_2,
 
-                        GCBlocks.TIN_DECORATION.block(),
-                        GCBlocks.COPPER_DECORATION.block(),
-                        GCBlocks.BRONZE_DECORATION.block(),
-                        GCBlocks.STEEL_DECORATION.block(),
-                        GCBlocks.TITANIUM_DECORATION.block(),
-                        GCBlocks.IRON_DECORATION.block(),
-                        GCBlocks.ALUMINUM_DECORATION.block(),
-                        GCBlocks.DARK_DECORATION.block(),
-                        GCBlocks.METEORIC_IRON_DECORATION.block(),
-                        GCBlocks.TIN_DECORATION.detailedBlock(),
-                        GCBlocks.COPPER_DECORATION.detailedBlock(),
-                        GCBlocks.BRONZE_DECORATION.detailedBlock(),
-                        GCBlocks.STEEL_DECORATION.detailedBlock(),
-                        GCBlocks.TITANIUM_DECORATION.detailedBlock(),
-                        GCBlocks.IRON_DECORATION.detailedBlock(),
-                        GCBlocks.ALUMINUM_DECORATION.detailedBlock(),
-                        GCBlocks.METEORIC_IRON_DECORATION.detailedBlock(),
-                        GCBlocks.DARK_DECORATION.detailedBlock(),
+                        GCBlocks.PLATED_TIN_BLOCK,
+                        GCBlocks.PLATED_COPPER_BLOCK,
+                        GCBlocks.PLATED_BRONZE_BLOCK,
+                        GCBlocks.PLATED_STEEL_BLOCK,
+                        GCBlocks.PLATED_TITANIUM_BLOCK,
+                        GCBlocks.PLATED_IRON_BLOCK,
+                        GCBlocks.PLATED_ALUMINUM_BLOCK,
+                        GCBlocks.PLATED_DESH_BLOCK,
+                        GCBlocks.PLATED_METEORIC_IRON_BLOCK,
                         GCBlocks.MOON_ROCK,
                         GCBlocks.MOON_ROCK_BRICK,
                         GCBlocks.CRACKED_MOON_ROCK_BRICK,

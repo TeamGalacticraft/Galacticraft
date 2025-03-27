@@ -3,7 +3,7 @@
   "category": "building",
   "key": {
     "X": {
-      "item": "galacticraft:compressed_titanium"
+      "item": "galacticraft:compressed_desh"
     }
   },
   "pattern": [
@@ -12,6 +12,6 @@
   ],
   "result": {
     "count": 1,
-    "id": "galacticraft:titanium_decoration"
+    "id": "galacticraft:dark_decoration"
   }
 }

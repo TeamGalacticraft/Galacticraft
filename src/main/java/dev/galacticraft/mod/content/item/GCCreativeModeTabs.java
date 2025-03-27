@@ -297,16 +297,15 @@ public class GCCreativeModeTabs {
             .title(Component.translatable(Translations.ItemGroup.BLOCKS))
             .displayItems((parameters, output) -> {
                 // DECORATION BLOCKS
-                for (GCBlockRegistry.DecorationSet decorationSet : BLOCKS.getDecorations()) {
-                    output.accept(decorationSet.item());
-                    output.accept(decorationSet.slabItem());
-                    output.accept(decorationSet.stairsItem());
-                    output.accept(decorationSet.wallItem());
-                    output.accept(decorationSet.detailedItem());
-                    output.accept(decorationSet.detailedSlabItem());
-                    output.accept(decorationSet.detailedStairsItem());
-                    output.accept(decorationSet.detailedWallItem());
-                }
+                output.accept(PLATED_ALUMINUM_BLOCK);
+                output.accept(PLATED_BRONZE_BLOCK);
+                output.accept(PLATED_COPPER_BLOCK);
+                output.accept(PLATED_IRON_BLOCK);
+                output.accept(PLATED_METEORIC_IRON_BLOCK);
+                output.accept(PLATED_STEEL_BLOCK);
+                output.accept(PLATED_TIN_BLOCK);
+                output.accept(PLATED_TITANIUM_BLOCK);
+                output.accept(PLATED_DESH_BLOCK);
 
                 // TORCHES
                 output.accept(GCItems.GLOWSTONE_TORCH);
