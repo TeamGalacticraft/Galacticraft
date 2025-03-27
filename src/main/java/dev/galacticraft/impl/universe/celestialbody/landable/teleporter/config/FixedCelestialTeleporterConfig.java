@@ -27,8 +27,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.config.CelestialTeleporterConfig;
 import net.minecraft.world.level.Level;
 
-public record FixedCelestialTeleporterConfig(double x, double y, double z, float yaw,
-                                             float pitch) implements CelestialTeleporterConfig {
+public record FixedCelestialTeleporterConfig(double x, double y, double z, float yaw, float pitch) implements CelestialTeleporterConfig {
     public static final Codec<FixedCelestialTeleporterConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.DOUBLE.fieldOf("x").orElse((double) Level.MAX_LEVEL_SIZE + 1).forGetter(FixedCelestialTeleporterConfig::x),
             Codec.DOUBLE.fieldOf("y").orElse(-10000.0).forGetter(FixedCelestialTeleporterConfig::y),

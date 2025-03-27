@@ -78,55 +78,55 @@ public class CannedFoodItem extends Item implements FabricItemStack {
 
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
-            Level world = context.getLevel();
-            BlockPos pos = context.getClickedPos();
-            BlockState clickedState = world.getBlockState(pos);
-            ItemStack stack = context.getItemInHand();
-            Direction face = context.getClickedFace();
-            Block clickedBlock = clickedState.getBlock();
+        Level world = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        BlockState clickedState = world.getBlockState(pos);
+        ItemStack stack = context.getItemInHand();
+        Direction face = context.getClickedFace();
+        Block clickedBlock = clickedState.getBlock();
 
-            if (clickedBlock instanceof CannedFoodBlock) {
-                BlockEntity be = world.getBlockEntity(pos);
-                if (be instanceof CannedFoodBlockEntity canEntity) {
-                    int currentCans = canEntity.getCanCount();
-                    if (currentCans < MAX_CANS) {
-                        canEntity.addCanItem(stack.copyWithCount(1)); // Store canned food item
-                        stack.consume(1, context.getPlayer());
-                        return InteractionResult.SUCCESS;
-                    }
+        if (clickedBlock instanceof CannedFoodBlock) {
+            BlockEntity be = world.getBlockEntity(pos);
+            if (be instanceof CannedFoodBlockEntity canEntity) {
+                int currentCans = canEntity.getCanCount();
+                if (currentCans < MAX_CANS) {
+                    canEntity.addCanItem(stack.copyWithCount(1)); // Store canned food item
+                    stack.consume(1, context.getPlayer());
+                    return InteractionResult.SUCCESS;
                 }
             }
+        }
 
-            BlockPos below = pos.relative(face).below();
-            BlockState belowState = world.getBlockState(below);
+        BlockPos below = pos.relative(face).below();
+        BlockState belowState = world.getBlockState(below);
 
-            if (belowState.getBlock() instanceof CannedFoodBlock) {
-                BlockEntity be = world.getBlockEntity(below);
-                if (be instanceof CannedFoodBlockEntity canEntity) {
-                    if (canEntity.getCanCount() < MAX_CANS) {
-                        return InteractionResult.FAIL;
-                    }
+        if (belowState.getBlock() instanceof CannedFoodBlock) {
+            BlockEntity be = world.getBlockEntity(below);
+            if (be instanceof CannedFoodBlockEntity canEntity) {
+                if (canEntity.getCanCount() < MAX_CANS) {
+                    return InteractionResult.FAIL;
                 }
-            } else if (!belowState.isFaceSturdy(world, below, Direction.UP, SupportType.FULL)) {
-                return InteractionResult.FAIL;
             }
-            BlockPos placementPos = pos.relative(face);
-            BlockState oldState = world.getBlockState(placementPos);
-            if (oldState.isAir()) {
-                BlockState newState = GCBlocks.CANNED_FOOD.defaultBlockState().setValue(CannedFoodBlock.FACING, context.getHorizontalDirection().getOpposite());
-                world.setBlock(placementPos, newState, Block.UPDATE_ALL);
-                BlockEntity be = world.getBlockEntity(placementPos);
-                if (be instanceof CannedFoodBlockEntity canEntity) {
-                    if (stack.has(GCDataComponents.COLOR)) {
-                        canEntity.addCanItem(stack.copyWithCount(1));
-                    } else {
-                        stack.set(GCDataComponents.COLOR, 0xFFFFFF);
-                        canEntity.addCanItem(stack.copyWithCount(1));
-                    }
+        } else if (!belowState.isFaceSturdy(world, below, Direction.UP, SupportType.FULL)) {
+            return InteractionResult.FAIL;
+        }
+        BlockPos placementPos = pos.relative(face);
+        BlockState oldState = world.getBlockState(placementPos);
+        if (oldState.isAir()) {
+            BlockState newState = GCBlocks.CANNED_FOOD.defaultBlockState().setValue(CannedFoodBlock.FACING, context.getHorizontalDirection().getOpposite());
+            world.setBlock(placementPos, newState, Block.UPDATE_ALL);
+            BlockEntity be = world.getBlockEntity(placementPos);
+            if (be instanceof CannedFoodBlockEntity canEntity) {
+                if (stack.has(GCDataComponents.COLOR)) {
+                    canEntity.addCanItem(stack.copyWithCount(1));
+                } else {
+                    stack.set(GCDataComponents.COLOR, 0xFFFFFF);
+                    canEntity.addCanItem(stack.copyWithCount(1));
                 }
-                stack.consume(1, context.getPlayer());
-                return InteractionResult.SUCCESS;
             }
+            stack.consume(1, context.getPlayer());
+            return InteractionResult.SUCCESS;
+        }
         return InteractionResult.FAIL;
     }
 
@@ -214,7 +214,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
         if (!getContents(stack).isEmpty()) {
-            tooltip.add(Component.translatable(Translations.Ui.TOTAL_NUTRITION, getTotalNutrition(stack)).withColor(ChatFormatting.DARK_GRAY.getColor()));
+            tooltip.add(Component.translatable(Translations.Ui.TOTAL_NUTRITION, getTotalNutrition(stack)).withStyle(ChatFormatting.GRAY));
         }
     }
 

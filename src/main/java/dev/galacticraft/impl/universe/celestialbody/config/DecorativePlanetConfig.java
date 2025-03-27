@@ -39,12 +39,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public record DecorativePlanetConfig(@NotNull Component name, @NotNull Component description,
-                                     @NotNull Holder<CelestialBody<?, ?>> parent,
-                                     @NotNull CelestialPosition<?, ?> position, @NotNull CelestialDisplay<?, ?> display,
-                                     @NotNull CelestialRingDisplay<?, ?> ring,
-                                     GasComposition atmosphere, float gravity,
-                                     @Nullable SatelliteRecipe satelliteRecipe) implements CelestialBodyConfig {
+public record DecorativePlanetConfig(
+        @NotNull Component name,
+        @NotNull Component description,
+        @NotNull Holder<CelestialBody<?, ?>> parent,
+        @NotNull CelestialPosition<?, ?> position,
+        @NotNull CelestialDisplay<?, ?> display,
+        @NotNull CelestialRingDisplay<?, ?> ring,
+        GasComposition atmosphere, float gravity,
+        @Nullable SatelliteRecipe satelliteRecipe
+) implements CelestialBodyConfig {
+
     public static final Codec<DecorativePlanetConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ComponentSerialization.CODEC.fieldOf("name").forGetter(DecorativePlanetConfig::name),
             ComponentSerialization.CODEC.fieldOf("description").forGetter(DecorativePlanetConfig::description),

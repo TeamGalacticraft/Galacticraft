@@ -793,7 +793,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.blockDesc(GCBlocks.OXYGEN_COMPRESSOR, "Oxygen Compressor will load oxygen from internal storage into an oxygen tank.");
         this.blockDesc(GCBlocks.OXYGEN_SEALER, "Oxygen Sealer will check for an enclosed space. If the space is enclosed, it will fill with breathable air.");
         this.blockDesc(GCBlocks.OXYGEN_STORAGE_MODULE, "Oxygen Storage Module is used to store large amounts of oxygen for later use.");
-        this.blockDesc(GCBlocks.FOOD_CANNER, "Food Canner is used to can up to %s food items into a can that can be eaten with a oxygen mask on.");
+        this.blockDesc(GCBlocks.FOOD_CANNER, "Food Canner is used to compress up to %s edible items into a can that allows you to eat the food while wearing an oxygen mask.");
         this.blockDesc(GCBlocks.PARACHEST, "Parachests will fall from the sky after landing on certain planets/moons, such as Earth. Contains rocket, fuel, and cargo from previous launch.");
         this.blockDesc(GCBlocks.REFINERY, "Refinery will take an input of oil and energy, and output fuel used for rockets and vehicles.");
 

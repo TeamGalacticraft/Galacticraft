@@ -37,8 +37,9 @@ public record TeamNamePayload(String name) implements C2SPayload {
     public static final StreamCodec<ByteBuf, TeamNamePayload> CODEC = ByteBufCodecs.STRING_UTF8.map(TeamNamePayload::new, TeamNamePayload::name);
 
     public TeamNamePayload {
-        if (name.length() > 32)
+        if (name.length() > 32) {
             throw new IllegalArgumentException("Team name cannot be longer than 32 characters"); //todo: actual constraints
+        }
     }
 
     @Override

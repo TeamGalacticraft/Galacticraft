@@ -31,8 +31,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
 
-public record GasCompositionImpl(@NotNull Object2DoubleMap<ResourceKey<Fluid>> composition, double temperature,
-                                 float pressure) implements GasComposition {
+public record GasCompositionImpl(@NotNull Object2DoubleMap<ResourceKey<Fluid>> composition, double temperature, float pressure) implements GasComposition {
     public static GasComposition readPacket(@NotNull FriendlyByteBuf buf) {
         int size = buf.readInt();
         Builder builder = new Builder();

@@ -30,8 +30,7 @@ import net.minecraft.world.item.DyeColor;
 import java.util.*;
 import java.util.function.Function;
 
-public record ParachestUnbakedModel(UnbakedModel parentModel,
-                                    Map<DyeColor, UnbakedModel> chutes) implements UnbakedModel {
+public record ParachestUnbakedModel(UnbakedModel parentModel, Map<DyeColor, UnbakedModel> chutes) implements UnbakedModel {
 
     @Override
     public Collection<ResourceLocation> getDependencies() {

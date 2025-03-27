@@ -27,7 +27,6 @@ import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.config.Config;
-import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.util.Translations;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;

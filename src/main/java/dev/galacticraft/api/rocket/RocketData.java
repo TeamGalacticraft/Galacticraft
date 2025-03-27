@@ -44,17 +44,23 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public record RocketData(Optional<EitherHolder<RocketCone<?, ?>>> cone, Optional<EitherHolder<RocketBody<?, ?>>> body,
-                         Optional<EitherHolder<RocketFin<?, ?>>> fin,
-                         Optional<EitherHolder<RocketBooster<?, ?>>> booster,
-                         Optional<EitherHolder<RocketEngine<?, ?>>> engine,
-                         Optional<EitherHolder<RocketUpgrade<?, ?>>> upgrade, int color
+public record RocketData(
+        Optional<EitherHolder<RocketCone<?, ?>>> cone,
+        Optional<EitherHolder<RocketBody<?, ?>>> body,
+        Optional<EitherHolder<RocketFin<?, ?>>> fin,
+        Optional<EitherHolder<RocketBooster<?, ?>>> booster,
+        Optional<EitherHolder<RocketEngine<?, ?>>> engine,
+        Optional<EitherHolder<RocketUpgrade<?, ?>>> upgrade,
+        int color
 ) {
-    public RocketData(@Nullable EitherHolder<RocketCone<?, ?>> cone, @Nullable EitherHolder<RocketBody<?, ?>> body,
-                      @Nullable EitherHolder<RocketFin<?, ?>> fin,
-                      @Nullable EitherHolder<RocketBooster<?, ?>> booster,
-                      @Nullable EitherHolder<RocketEngine<?, ?>> engine,
-                      @Nullable EitherHolder<RocketUpgrade<?, ?>> upgrade, int color) {
+    public RocketData(
+            @Nullable EitherHolder<RocketCone<?, ?>> cone,
+            @Nullable EitherHolder<RocketBody<?, ?>> body,
+            @Nullable EitherHolder<RocketFin<?, ?>> fin,
+            @Nullable EitherHolder<RocketBooster<?, ?>> booster,
+            @Nullable EitherHolder<RocketEngine<?, ?>> engine,
+            @Nullable EitherHolder<RocketUpgrade<?, ?>> upgrade,
+            int color) {
         this(Optional.ofNullable(cone), Optional.ofNullable(body), Optional.ofNullable(fin), Optional.ofNullable(booster), Optional.ofNullable(engine), Optional.ofNullable(upgrade), color);
     }
 

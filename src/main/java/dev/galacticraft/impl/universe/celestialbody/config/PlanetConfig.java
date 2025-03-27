@@ -43,15 +43,24 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public record PlanetConfig(@NotNull Component name, @NotNull Component description,
-                           @NotNull Holder<CelestialBody<?, ?>> parent,
-                           @NotNull CelestialPosition<?, ?> position, @NotNull CelestialDisplay<?, ?> display,
-                           @NotNull CelestialRingDisplay<?, ?> ring,
-                           @NotNull ResourceKey<Level> world, Holder<CelestialTeleporter<?, ?>> teleporter,
-                           @NotNull GasComposition atmosphere, float gravity,
-                           CelestialHandler celestialHandler,
-                           int accessWeight, int dayTemperature, int nightTemperature, long dayLength,
-                           @Nullable SatelliteRecipe satelliteRecipe) implements CelestialBodyConfig {
+public record PlanetConfig(
+        @NotNull Component name,
+        @NotNull Component description,
+        @NotNull Holder<CelestialBody<?, ?>> parent,
+        @NotNull CelestialPosition<?, ?> position,
+        @NotNull CelestialDisplay<?, ?> display,
+        @NotNull CelestialRingDisplay<?, ?> ring,
+        @NotNull ResourceKey<Level> world,
+        Holder<CelestialTeleporter<?, ?>> teleporter,
+        @NotNull GasComposition atmosphere,
+        float gravity,
+        CelestialHandler celestialHandler,
+        int accessWeight,
+        int dayTemperature,
+        int nightTemperature,
+        long dayLength,
+        @Nullable SatelliteRecipe satelliteRecipe
+) implements CelestialBodyConfig {
     public static final Codec<PlanetConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ComponentSerialization.CODEC.fieldOf("name").forGetter(PlanetConfig::name),
             ComponentSerialization.CODEC.fieldOf("description").forGetter(PlanetConfig::description),

@@ -29,9 +29,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.Optional;
 
-public record IconCelestialDisplayConfig(ResourceLocation texture, int u, int v, int width, int height,
-                                         float scale,
-                                         Optional<Decoration> decoration) implements CelestialDisplayConfig {
+public record IconCelestialDisplayConfig(ResourceLocation texture, int u, int v, int width, int height, float scale, Optional<Decoration> decoration) implements CelestialDisplayConfig {
     public static final Codec<IconCelestialDisplayConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("texture").forGetter(IconCelestialDisplayConfig::texture),
             Codec.INT.fieldOf("u").forGetter(IconCelestialDisplayConfig::u),

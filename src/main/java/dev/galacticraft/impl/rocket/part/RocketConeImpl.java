@@ -27,6 +27,5 @@ import dev.galacticraft.api.rocket.part.config.RocketConeConfig;
 import dev.galacticraft.api.rocket.part.type.RocketConeType;
 import org.jetbrains.annotations.NotNull;
 
-public record RocketConeImpl<C extends RocketConeConfig, T extends RocketConeType<C>>(@NotNull C config,
-                                                                                      @NotNull T type) implements RocketCone<C, T> {
+public record RocketConeImpl<C extends RocketConeConfig, T extends RocketConeType<C>>(@NotNull C config, @NotNull T type) implements RocketCone<C, T> {
 }

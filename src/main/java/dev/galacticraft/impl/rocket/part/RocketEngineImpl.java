@@ -27,6 +27,5 @@ import dev.galacticraft.api.rocket.part.config.RocketEngineConfig;
 import dev.galacticraft.api.rocket.part.type.RocketEngineType;
 import org.jetbrains.annotations.NotNull;
 
-public record RocketEngineImpl<C extends RocketEngineConfig, T extends RocketEngineType<C>>(@NotNull C config,
-                                                                                            @NotNull T type) implements RocketEngine<C, T> {
+public record RocketEngineImpl<C extends RocketEngineConfig, T extends RocketEngineType<C>>(@NotNull C config, @NotNull T type) implements RocketEngine<C, T> {
 }

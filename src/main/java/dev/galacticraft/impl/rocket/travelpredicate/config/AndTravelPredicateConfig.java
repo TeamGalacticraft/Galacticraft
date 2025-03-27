@@ -30,7 +30,6 @@ import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
 
-public record AndTravelPredicateConfig(
-        @Unmodifiable @NotNull List<ConfiguredTravelPredicate<?, ?>> predicates) implements TravelPredicateConfig {
+public record AndTravelPredicateConfig(@Unmodifiable @NotNull List<ConfiguredTravelPredicate<?, ?>> predicates) implements TravelPredicateConfig {
     public static final Codec<AndTravelPredicateConfig> CODEC = ConfiguredTravelPredicate.DIRECT_CODEC.listOf().xmap(AndTravelPredicateConfig::new, AndTravelPredicateConfig::predicates);
 }

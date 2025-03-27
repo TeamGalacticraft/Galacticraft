@@ -173,8 +173,8 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.VENUS_COPPER_ORE);
 
         generator.createTrivialCube(GCBlocks.SILICON_ORE);
-        generator.createTrivialCube(GCBlocks.ASTEROID_SILICON_ORE);
         generator.createTrivialCube(GCBlocks.DEEPSLATE_SILICON_ORE);
+        generator.createTrivialCube(GCBlocks.ASTEROID_SILICON_ORE);
 
         generator.createTrivialCube(GCBlocks.TIN_ORE);
         generator.createTrivialCube(GCBlocks.DEEPSLATE_TIN_ORE);

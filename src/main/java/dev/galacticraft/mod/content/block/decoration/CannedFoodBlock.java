@@ -90,7 +90,7 @@ public class CannedFoodBlock extends Block implements EntityBlock {
                 float y = position[1];
                 float z = position[2];
 
-                shape = Shapes.join(shape,Block.box(x - 3 ,y ,z - 3 ,x + 3 ,y + 8 ,z + 3 ), BooleanOp.OR);
+                shape = Shapes.join(shape, Block.box(x - 3, y, z - 3, x + 3, y + 8, z + 3), BooleanOp.OR);
             }
         }
         return shape;

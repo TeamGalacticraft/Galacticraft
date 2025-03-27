@@ -163,19 +163,19 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         // ORE MINING TAGS
         var ores = new Block[] {
-                GCBlocks.ALUMINUM_ORE, GCBlocks.ASTEROID_ALUMINUM_ORE, GCBlocks.DEEPSLATE_ALUMINUM_ORE, GCBlocks.VENUS_ALUMINUM_ORE,
+                GCBlocks.ALUMINUM_ORE, GCBlocks.DEEPSLATE_ALUMINUM_ORE, GCBlocks.ASTEROID_ALUMINUM_ORE, GCBlocks.VENUS_ALUMINUM_ORE,
                 GCBlocks.MOON_CHEESE_ORE,
-                GCBlocks.LUNASLATE_COPPER_ORE, GCBlocks.MARS_COPPER_ORE, GCBlocks.MOON_COPPER_ORE, GCBlocks.VENUS_COPPER_ORE,
+                GCBlocks.MOON_COPPER_ORE, GCBlocks.LUNASLATE_COPPER_ORE, GCBlocks.MARS_COPPER_ORE,  GCBlocks.VENUS_COPPER_ORE,
                 GCBlocks.DESH_ORE,
                 GCBlocks.FALLEN_METEOR,
                 GCBlocks.GALENA_ORE,
                 GCBlocks.ILMENITE_ORE,
-                GCBlocks.ASTEROID_IRON_ORE, GCBlocks.MARS_IRON_ORE,
+                GCBlocks.MARS_IRON_ORE, GCBlocks.ASTEROID_IRON_ORE,
                 GCBlocks.OLIVINE_BASALT, GCBlocks.RICH_OLIVINE_BASALT,
                 GCBlocks.LUNAR_SAPPHIRE_ORE,
-                GCBlocks.SILICON_ORE, GCBlocks.ASTEROID_SILICON_ORE, GCBlocks.DEEPSLATE_SILICON_ORE,
+                GCBlocks.SILICON_ORE, GCBlocks.DEEPSLATE_SILICON_ORE, GCBlocks.ASTEROID_SILICON_ORE,
                 GCBlocks.SOLAR_ORE,
-                GCBlocks.TIN_ORE, GCBlocks.DEEPSLATE_TIN_ORE, GCBlocks.LUNASLATE_TIN_ORE, GCBlocks.MARS_TIN_ORE, GCBlocks.MOON_TIN_ORE, GCBlocks.VENUS_TIN_ORE,
+                GCBlocks.TIN_ORE, GCBlocks.DEEPSLATE_TIN_ORE, GCBlocks.MOON_TIN_ORE, GCBlocks.LUNASLATE_TIN_ORE, GCBlocks.MARS_TIN_ORE, GCBlocks.VENUS_TIN_ORE,
         };
 
         this.tag(ConventionalBlockTags.ORES).add(ores);

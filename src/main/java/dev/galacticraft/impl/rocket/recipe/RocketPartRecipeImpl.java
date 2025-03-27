@@ -35,8 +35,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public record RocketPartRecipeImpl<C extends RocketPartRecipeConfig, T extends RocketPartRecipeType<C>>(T type,
-                                                                                                        C config) implements RocketPartRecipe<C, T> {
+public record RocketPartRecipeImpl<C extends RocketPartRecipeConfig, T extends RocketPartRecipeType<C>>(T type, C config) implements RocketPartRecipe<C, T> {
     @Override
     public int slots() {
         return this.type.slots(this.config);
