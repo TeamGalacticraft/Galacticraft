@@ -44,7 +44,6 @@ import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.village.GCVillagerProfessions;
 import dev.galacticraft.mod.village.MoonVillagerTypes;
 import dev.galacticraft.mod.world.biome.source.GCMultiNoiseBiomeSourceParameterLists;
-import dev.galacticraft.mod.world.dimension.GCGases;
 import dev.galacticraft.mod.world.gen.carver.GCCarvers;
 import dev.galacticraft.mod.world.gen.feature.GCOrePlacedFeatures;
 import dev.galacticraft.mod.world.gen.feature.GCPlacedFeatures;
@@ -75,7 +74,6 @@ public class Galacticraft implements ModInitializer {
         GCRecipes.register();
         GCEntityDataSerializers.register();
         GCEntityTypes.register();
-        GCGases.register();
         GCOrePlacedFeatures.register();
         GCPlacedFeatures.register();
         GCStructurePieceTypes.register();

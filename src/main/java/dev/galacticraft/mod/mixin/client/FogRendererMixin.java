@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.mixin.client;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.render.dimension.OverworldRenderer;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.tag.GCTags;
@@ -49,7 +50,7 @@ public class FogRendererMixin {
     @Inject(method = "setupColor", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;clearColor(FFFF)V", remap = false, ordinal = 1))
     private static void gc$setupColor(Camera camera, float partialTicks, ClientLevel clientLevel, int renderDistanceChunks, float bossColorModifier, CallbackInfo ci) {
         Player player = Minecraft.getInstance().player;
-        if (player != null && player.getVehicle() instanceof RocketEntity && player.getY() > 200) {
+        if (player != null && player.getVehicle() instanceof RocketEntity && player.getY() > Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) {
             Vec3 vec3 = OverworldRenderer.getFogColor(clientLevel, camera, partialTicks);
             fogRed = (float) vec3.x();
             fogGreen = (float) vec3.y();
