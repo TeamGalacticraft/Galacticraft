@@ -25,8 +25,7 @@
     "PlayerMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
-    "TorchBlockMixin",
-    "client.ClientPacketListenerMixin"
+    "TorchBlockMixin"
   ],
   "client": [
     "client.AbstractClientPlayerMixin",
@@ -36,6 +35,7 @@
     "client.BlockModelMixin$DeserializerMixin",
     "client.CameraMixin",
     "client.ClientLevelMixin",
+    "client.ClientPacketListenerMixin",
     "client.FogRendererMixin",
     "client.HumanoidModelMixin",
     "client.LevelRendererMixin",
