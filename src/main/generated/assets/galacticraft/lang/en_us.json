@@ -147,6 +147,7 @@
   "block.galacticraft.fallen_meteor": "Fallen Meteor",
   "block.galacticraft.fluid_pipe_walkway": "Fluid Pipe Walkway",
   "block.galacticraft.food_canner": "Food Canner",
+  "block.galacticraft.food_canner.description": "Food Canner is used to can up to %s food items into a can that can be eaten with a oxygen mask on.",
   "block.galacticraft.fuel": "Fuel",
   "block.galacticraft.fuel_loader": "Fuel Loader",
   "block.galacticraft.fuel_loader.description": "After being connected to a launch pad, a Fuel Loader will allow fuel to passed into the connected Rocket or other vehicle.",
