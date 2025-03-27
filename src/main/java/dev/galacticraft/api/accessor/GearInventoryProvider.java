@@ -66,8 +66,8 @@ public interface GearInventoryProvider {
 
     default boolean galacticraft$hasMask() {
         for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
-            Item item = this.galacticraft$getAccessories().getItem(i).getItem();
-            if (item instanceof OxygenMask) {
+            ItemStack itemStack = this.galacticraft$getAccessories().getItem(i);
+            if (itemStack.is(GCTags.OXYGEN_MASKS)) {
                 return true;
             }
         }

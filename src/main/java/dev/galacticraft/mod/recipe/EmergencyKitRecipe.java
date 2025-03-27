@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.recipe;
 
 import dev.galacticraft.mod.content.item.EmergencyKitItem;
+import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.item.OxygenTankItem;
 import net.minecraft.core.HolderLookup;
@@ -53,6 +54,10 @@ public class EmergencyKitRecipe extends CustomRecipe {
                 ItemStack itemStack = EmergencyKitItem.EMERGENCY_ITEMS.get(j + i * 3).copy();
                 if (itemStack.getItem() instanceof OxygenTankItem tankItem) {
                     itemStack = OxygenTankItem.getFullTank(tankItem);
+                } else if (itemStack.getComponents().has(DataComponents.FOOD)) {
+                    ItemStack itemStack2 = itemStack.copyWithCount(16);
+                    itemStack = GCItems.CANNED_FOOD.getDefaultInstance();
+                    CannedFoodItem.add(itemStack, itemStack2);
                 }
 
                 if (ItemStack.isSameItemSameComponents(craftingInput.getItem(j, i), itemStack)) continue;

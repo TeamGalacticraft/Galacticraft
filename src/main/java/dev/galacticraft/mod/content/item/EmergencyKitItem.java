@@ -24,8 +24,10 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCAccessorySlots;
+import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.item.OxygenTankItem;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
@@ -43,13 +45,13 @@ import java.util.List;
 
 public class EmergencyKitItem extends Item {
     public static final List<ItemStack> EMERGENCY_ITEMS = List.of(
+            GCItems.HEAVY_DUTY_PICKAXE.getDefaultInstance(),
             GCItems.OXYGEN_MASK.getDefaultInstance(),
             GCItems.OXYGEN_GEAR.getDefaultInstance(),
             GCItems.SMALL_OXYGEN_TANK.getDefaultInstance(),
-            GCItems.SMALL_OXYGEN_TANK.getDefaultInstance(),
             GCItems.PARACHUTE.get(DyeColor.RED).getDefaultInstance(),
-            GCItems.HEAVY_DUTY_PICKAXE.getDefaultInstance(),
-            GCItems.CANNED_DEHYDRATED_APPLE.getDefaultInstance(),
+            GCItems.SMALL_OXYGEN_TANK.getDefaultInstance(),
+            Items.APPLE.getDefaultInstance(),
             PotionContents.createItemStack(Items.POTION, Potions.HEALING),
             PotionContents.createItemStack(Items.POTION, Potions.LONG_NIGHT_VISION)
     );
@@ -66,6 +68,9 @@ public class EmergencyKitItem extends Item {
             ItemStack itemStack2 = itemStack.copy();
             if (itemStack.getItem() instanceof OxygenTankItem tankItem) {
                 itemStack2 = OxygenTankItem.getFullTank(tankItem);
+            } else if (itemStack.getComponents().has(DataComponents.FOOD)) {
+                itemStack2 = GCItems.CANNED_FOOD.getDefaultInstance();
+                CannedFoodItem.add(itemStack2, itemStack.copyWithCount(16));
             }
 
             boolean equipped = false;
