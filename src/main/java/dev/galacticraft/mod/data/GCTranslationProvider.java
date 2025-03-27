@@ -124,7 +124,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.PLATED_STEEL_BLOCK, "Plated Steel Block");
         this.block(GCBlocks.PLATED_TIN_BLOCK, "Plated Tin Block");
         this.block(GCBlocks.PLATED_TITANIUM_BLOCK, "Plated Titanium Block");
-        this.block(GCBlocks.PLATED_DESH_BLOCK, "Plated Dark Block");
+        this.block(GCBlocks.PLATED_DESH_BLOCK, "Plated Desh Block");
 
         // MOON NATURAL
         this.block(GCBlocks.MOON_TURF, "Moon Turf");
