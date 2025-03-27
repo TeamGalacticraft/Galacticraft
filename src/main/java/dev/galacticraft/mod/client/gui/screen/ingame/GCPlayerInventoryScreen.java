@@ -27,6 +27,7 @@ import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
+import dev.galacticraft.mod.util.TooltipUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -58,7 +59,7 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
                         amount += view.getAmount();
                     }
                 }
-                graphics.renderTooltip(this.font, Component.translatable(Translations.Ui.OXYGEN_TANK_LEVEL, 1, amount, capacity), mouseX, mouseY);
+                graphics.renderTooltip(this.font, Component.translatable(Translations.Ui.OXYGEN_TANK_1_LEVEL, TooltipUtil.formatFluidRemaining(amount, capacity)), mouseX, mouseY);
             }
         } else if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 152, this.topPos + 8, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT)) {
             Storage<FluidVariant> storage = ContainerItemContext.withConstant(this.menu.inventory.getItem(GCPlayerInventoryMenu.OXYGEN_TANK_2_SLOT)).find(FluidStorage.ITEM);
@@ -71,7 +72,7 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
                         amount += view.getAmount();
                     }
                 }
-                graphics.renderTooltip(this.font, Component.translatable(Translations.Ui.OXYGEN_TANK_LEVEL, 2, amount, capacity), mouseX, mouseY);
+                graphics.renderTooltip(this.font, Component.translatable(Translations.Ui.OXYGEN_TANK_2_LEVEL, TooltipUtil.formatFluidRemaining(amount, capacity)), mouseX, mouseY);
             }
         }
         super.renderTooltip(graphics, mouseX, mouseY);

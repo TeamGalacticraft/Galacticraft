@@ -36,7 +36,10 @@
       "galacticraft:ore_copper_large_moon",
       "galacticraft:ore_tin_small_moon",
       "galacticraft:ore_tin_middle_moon",
-      "galacticraft:ore_tin_upper_moon"
+      "galacticraft:ore_tin_upper_moon",
+      "galacticraft:ore_cheese_moon",
+      "galacticraft:ore_cheese_large_moon",
+      "galacticraft:ore_lunar_sapphire_moon"
     ]
   ],
   "has_precipitation": false,

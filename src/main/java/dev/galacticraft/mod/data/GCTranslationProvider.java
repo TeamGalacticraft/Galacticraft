@@ -698,6 +698,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.CHEESE_FOODS, "Cheese Foods");
         this.tag(GCItemTags.CANNED_FOODS, "Canned Foods");
 
+        this.tag(GCItemTags.EVOLVED_CREEPER_DROP_MUSIC_DISCS, "Evolved Creeper Music Disc Drops");
+
         this.tag(GCItemTags.OIL_BUCKETS, "Oil Buckets");
         this.tag(GCItemTags.FUEL_BUCKETS, "Fuel Buckets");
         this.tag(GCItemTags.SULFURIC_ACID_BUCKETS, "Sulfuric Acid Buckets");
@@ -709,18 +711,19 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Gas.CARBON_MONOXIDE, "Carbon Monoxide");
         this.add(Gas.HELIUM, "Helium");
         this.add(Gas.HYDROGEN, "Hydrogen");
+        this.add(Gas.HYDROGEN_DEUTERIUM_OXIDE, "Hydrogen Deuterium Oxide");
         this.add(Gas.IODINE, "Iodine");
         this.add(Gas.KRYPTON, "Krypton");
         this.add(Gas.METHANE, "Methane");
         this.add(Gas.NEON, "Neon");
+        this.add(Gas.NITRIC_OXIDE, "Nitric Oxide");
         this.add(Gas.NITROGEN, "Nitrogen");
-        this.add(Gas.NITROUS_DIOXIDE, "Nitrous Dioxide");
+        this.add(Gas.NITROGEN_DIOXIDE, "Nitrogen Dioxide");
         this.add(Gas.NITROUS_OXIDE, "Nitrous Oxide");
         this.add(Gas.OXYGEN, "Oxygen");
         this.add(Gas.OZONE, "Ozone");
         this.add(Gas.WATER_VAPOR, "Water Vapor");
         this.add(Gas.XENON, "Xenon");
-        this.add(Gas.HYDROGEN_DEUTERIUM_OXYGEN, "Hydrogen Deuterium Oxygen");
     }
 
     protected void generateEntityTranslations() {
@@ -1045,7 +1048,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.MILLIBUCKETS, "mB");
         this.add(Ui.MAX_OXYGEN, "Maximum Oxygen: %s");
         this.add(Ui.MACHINE_STATUS, "Status: %s");
-        this.add(Ui.OXYGEN_TANK_LEVEL, "Oxygen Tank %s: %s/%s");
+        this.add(Ui.OXYGEN_TANK_1_LEVEL, "Oxygen Tank 1: %s");
+        this.add(Ui.OXYGEN_TANK_2_LEVEL, "Oxygen Tank 2: %s");
         this.add(Ui.OXYGEN_WARNING, "WARNING");
         this.add(Ui.OXYGEN_SETUP_INVALID, "Oxygen Setup is Invalid!");
         this.add(Ui.ROCKET_FUEL, "Fuel:");

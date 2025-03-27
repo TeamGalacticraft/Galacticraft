@@ -35,7 +35,7 @@ public interface Translations {
     }
 
     interface BannerPattern {
-        String ROCKET = "banner_pattern.galacticraft.rocket";
+        String ROCKET = "block.galacticraft.banner.rocket";
     }
 
     interface JukeboxSong {
@@ -183,18 +183,19 @@ public interface Translations {
         String CARBON_MONOXIDE = "gas.galacticraft.carbon_monoxide";
         String HELIUM = "gas.galacticraft.helium";
         String HYDROGEN = "gas.galacticraft.hydrogen";
+        String HYDROGEN_DEUTERIUM_OXIDE = "gas.galacticraft.hydrogen_deuterium_oxide";
         String IODINE = "gas.galacticraft.iodine";
         String KRYPTON = "gas.galacticraft.krypton";
         String METHANE = "gas.galacticraft.methane";
         String NEON = "gas.galacticraft.neon";
+        String NITRIC_OXIDE = "gas.galacticraft.nitric_oxide";
         String NITROGEN = "gas.galacticraft.nitrogen";
-        String NITROUS_DIOXIDE = "gas.galacticraft.nitrous_dioxide";
+        String NITROGEN_DIOXIDE = "gas.galacticraft.nitrogen_dioxide";
         String NITROUS_OXIDE = "gas.galacticraft.nitrous_oxide";
         String OXYGEN = "gas.galacticraft.oxygen";
         String OZONE = "gas.galacticraft.ozone";
         String WATER_VAPOR = "gas.galacticraft.water_vapor";
         String XENON = "gas.galacticraft.xenon";
-        String HYDROGEN_DEUTERIUM_OXYGEN = "gas.galacticraft.hydrogen_deuterium_oxygen";
     }
 
     interface SpaceRace {
@@ -323,7 +324,8 @@ public interface Translations {
         String MILLIBUCKETS = "ui.galacticraft.machine.millibuckets";
         String MAX_OXYGEN = "ui.galacticraft.machine.max_oxygen";
         String MACHINE_STATUS = "ui.galacticraft.machine.status";
-        String OXYGEN_TANK_LEVEL = "ui.galacticraft.player_inv_screen.oxygen_tank_level";
+        String OXYGEN_TANK_1_LEVEL = "ui.galacticraft.player_inv_screen.oxygen_tank_1_level";
+        String OXYGEN_TANK_2_LEVEL = "ui.galacticraft.player_inv_screen.oxygen_tank_2_level";
         String OXYGEN_WARNING = "ui.galacticraft.oxygen.warning";
         String OXYGEN_SETUP_INVALID = "ui.galacticraft.oxygen.invalid_setup";
         String ROCKET_FUEL = "ui.galacticraft.rocket.fuel";
