@@ -712,15 +712,12 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Gas.HELIUM, "Helium");
         this.add(Gas.HYDROGEN, "Hydrogen");
         this.add(Gas.HYDROGEN_DEUTERIUM_OXIDE, "Hydrogen Deuterium Oxide");
-        this.add(Gas.HYDROGEN_DEUTERIUM_OXIDE, "Hydrogen Deuterium Oxide");
         this.add(Gas.IODINE, "Iodine");
         this.add(Gas.KRYPTON, "Krypton");
         this.add(Gas.METHANE, "Methane");
         this.add(Gas.NEON, "Neon");
         this.add(Gas.NITRIC_OXIDE, "Nitric Oxide");
-        this.add(Gas.NITRIC_OXIDE, "Nitric Oxide");
         this.add(Gas.NITROGEN, "Nitrogen");
-        this.add(Gas.NITROGEN_DIOXIDE, "Nitrogen Dioxide");
         this.add(Gas.NITROGEN_DIOXIDE, "Nitrogen Dioxide");
         this.add(Gas.NITROUS_OXIDE, "Nitrous Oxide");
         this.add(Gas.OXYGEN, "Oxygen");
@@ -1051,8 +1048,6 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.MILLIBUCKETS, "mB");
         this.add(Ui.MAX_OXYGEN, "Maximum Oxygen: %s");
         this.add(Ui.MACHINE_STATUS, "Status: %s");
-        this.add(Ui.OXYGEN_TANK_1_LEVEL, "Oxygen Tank 1: %s");
-        this.add(Ui.OXYGEN_TANK_2_LEVEL, "Oxygen Tank 2: %s");
         this.add(Ui.OXYGEN_TANK_1_LEVEL, "Oxygen Tank 1: %s");
         this.add(Ui.OXYGEN_TANK_2_LEVEL, "Oxygen Tank 2: %s");
         this.add(Ui.OXYGEN_WARNING, "WARNING");
