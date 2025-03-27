@@ -163,7 +163,7 @@
       "net/minecraft/class_1937": [
         "dev/galacticraft/api/accessor/LevelBodyAccessor",
         "dev/galacticraft/api/accessor/LevelOxygenAccessor",
-        "dev/galacticraft/mod/accessor/LevelAccessor"
+        "dev/galacticraft/mod/accessor/GCLevelAccessor"
       ],
       "net/minecraft/class_1657": ["dev/galacticraft/mod/accessor/CryogenicAccessor"],
       "net/minecraft/class_1297": ["dev/galacticraft/mod/accessor/EntityAccessor"]
