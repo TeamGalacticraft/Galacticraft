@@ -49,7 +49,7 @@ public class GCDimensionTypes {
                 1.0, // coordinateScale
                 true, // bedWorks (doesn't explode, we can cancel working later)
                 false, // respawnAnchorWorks (doesn't explode, we can cancel working later)
-                -64, // minY
+                -32, // minY
                 384, // height
                 384, // logicalHeight
                 GCTags.INFINIBURN_MOON, // infiniburn
@@ -67,7 +67,7 @@ public class GCDimensionTypes {
                 1.0, // coordinateScale
                 true, // bedWorks (doesn't explode, we can cancel working later)
                 false, // respawnAnchorWorks (doesn't explode, we can cancel working later)
-                -64, // minY
+                -32, // minY
                 384, // height
                 384, // logicalHeight
                 GCTags.INFINIBURN_VENUS, // infiniburn

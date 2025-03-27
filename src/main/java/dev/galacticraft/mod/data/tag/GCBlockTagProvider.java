@@ -63,10 +63,10 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.MOON_BASALT)
                 .add(GCBlocks.MOON_DIRT)
                 .add(GCBlocks.MOON_TURF);
-        this.tag(GCTags.MOON_STONE_ORE_REPLACABLES)
+        this.tag(GCTags.MOON_STONE_ORE_REPLACEABLES)
                 .add(GCBlocks.MOON_ROCK);
                 // .add(GCBlocks.MOON_BASALT);
-        this.tag(GCTags.LUNASLATE_ORE_REPLACABLES)
+        this.tag(GCTags.LUNASLATE_ORE_REPLACEABLES)
                 .add(GCBlocks.LUNASLATE);
         this.tag(GCTags.MACHINES)
                 .add(
