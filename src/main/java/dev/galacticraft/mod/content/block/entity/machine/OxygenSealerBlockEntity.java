@@ -39,7 +39,7 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.accessor.LevelAccessor;
+import dev.galacticraft.mod.accessor.GCLevelAccessor;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.machine.SealerManager;
@@ -115,7 +115,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         this.oxygenWorld = holder == null || holder.value().atmosphere().breathable();
         if (!world.isClientSide) {
             if (level != null) {
-                SealerManager manager = ((LevelAccessor) level).getSealerManager();
+                SealerManager manager = ((GCLevelAccessor) level).getSealerManager();
                 manager.addSealer(this, Objects.requireNonNull(Objects.requireNonNull(world.getServer()).getLevel(world.dimension())));
             }
         }
@@ -133,7 +133,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         // Check if the machine has enough energy
-        SealerManager manager = ((LevelAccessor) level).getSealerManager();
+        SealerManager manager = ((GCLevelAccessor) level).getSealerManager();
         if (!this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenSealerEnergyConsumptionRate())) {
             //recalculate area to avoid issues with fake oxygen
             if (this.hasEnergy) {
@@ -195,7 +195,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     public void setRemoved() {
         super.setRemoved();
         if (this.level != null && !this.level.isClientSide) {
-            SealerManager manager = ((LevelAccessor) level).getSealerManager();
+            SealerManager manager = ((GCLevelAccessor) level).getSealerManager();
             manager.removeSealer(this, (ServerLevel) this.level);
         }
     }

@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.mixin;
 
 import com.google.common.collect.ImmutableList;
-import dev.galacticraft.mod.accessor.LevelAccessor;
+import dev.galacticraft.mod.accessor.GCLevelAccessor;
 import dev.galacticraft.mod.machine.SealerManager;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.misc.footprint.ServerFootprintManager;
@@ -59,7 +59,7 @@ import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
 @Mixin(ServerLevel.class)
-public abstract class ServerLevelMixin extends Level implements LevelAccessor {
+public abstract class ServerLevelMixin extends Level implements GCLevelAccessor {
     @Shadow
     @Final
     @Mutable
@@ -94,7 +94,7 @@ public abstract class ServerLevelMixin extends Level implements LevelAccessor {
         }
 
         // Notify the SealerManager about the block change
-        SealerManager manager = ((LevelAccessor) getLevel()).getSealerManager();
+        SealerManager manager = ((GCLevelAccessor) getLevel()).getSealerManager();
         manager.onBlockChange(pos, newState, this.getLevel());
     }
 

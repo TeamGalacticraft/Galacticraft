@@ -25,7 +25,7 @@ package dev.galacticraft.mod.accessor;
 import dev.galacticraft.mod.machine.SealerManager;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 
-public interface LevelAccessor {
+public interface GCLevelAccessor {
     SealerManager getSealerManager();
 
     default FootprintManager galacticraft$getFootprintManager() {
