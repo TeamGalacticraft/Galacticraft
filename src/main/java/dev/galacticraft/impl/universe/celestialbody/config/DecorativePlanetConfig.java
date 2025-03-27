@@ -46,7 +46,8 @@ public record DecorativePlanetConfig(
         @NotNull CelestialPosition<?, ?> position,
         @NotNull CelestialDisplay<?, ?> display,
         @NotNull CelestialRingDisplay<?, ?> ring,
-        GasComposition atmosphere, float gravity,
+        GasComposition atmosphere,
+        float gravity,
         @Nullable SatelliteRecipe satelliteRecipe
 ) implements CelestialBodyConfig {
 
