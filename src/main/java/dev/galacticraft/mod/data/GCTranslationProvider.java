@@ -24,7 +24,6 @@ package dev.galacticraft.mod.data;
 
 import dev.galacticraft.api.data.TranslationProvider;
 import dev.galacticraft.api.rocket.part.RocketPart;
-import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCRocketParts;
