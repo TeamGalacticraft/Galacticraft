@@ -412,8 +412,7 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
 
     @Override
     public @Nullable MachineMenu<? extends MachineBlockEntity> createMenu(int syncId, Inventory inv, Player player) {
-        if (this.getSecurity().hasAccess(player)) return new FoodCannerMenu(syncId, (ServerPlayer) player, this);
-        return null;
+        return this.getSecurity().hasAccess(player) ? new FoodCannerMenu(syncId, (ServerPlayer) player, this) : null;
     }
 
     @Override

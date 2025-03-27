@@ -34,8 +34,6 @@ import org.joml.Matrix4f;
 
 public class AsteroidSkyRenderer extends SpaceSkyRenderer {
     public static final AsteroidSkyRenderer INSTANCE = new AsteroidSkyRenderer();
-    private static final ResourceLocation EARTH_TEXTURE = Constant.id("textures/gui/celestialbodies/earth.png");
-    private static final ResourceLocation SUN_TEXTURE = Constant.id("textures/gui/celestialbodies/sol.png");
 
     @Override
     public void render(WorldRenderContext context) {
@@ -67,7 +65,7 @@ public class AsteroidSkyRenderer extends SpaceSkyRenderer {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         float size = 6.0F;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, SUN_TEXTURE);
+        RenderSystem.setShaderTexture(0, Constant.CelestialBody.SOL);
         BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         buffer.addVertex(matrix, -size, 100.0F, -size).setUv(0.0F, 0.0F)
                 .addVertex(matrix, size, 100.0F, -size).setUv(1.0F, 0.0F)
@@ -89,7 +87,7 @@ public class AsteroidSkyRenderer extends SpaceSkyRenderer {
         matrices.mulPose(Axis.XP.rotationDegrees((context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks()) * 360.0F) * 0.001F));
         matrices.mulPose(Axis.XP.rotationDegrees(earthRotation + 200.0F));
 
-        RenderSystem.setShaderTexture(0, EARTH_TEXTURE);
+        RenderSystem.setShaderTexture(0, Constant.CelestialBody.EARTH);
 
         buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         buffer.addVertex(matrix, -size, -100.0F, size).setUv(0.0F, 1.0F)
