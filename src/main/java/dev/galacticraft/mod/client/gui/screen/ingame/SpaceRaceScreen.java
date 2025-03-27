@@ -79,9 +79,9 @@ public class SpaceRaceScreen extends Screen {
 
         int flagButtonWidth = 96;
         int flagButtonHeight = 64;
-        int flagButtonX = this.width/2 - flagButtonWidth/2, flagButtonY = this.getTop() + 10;
+        int flagButtonX = this.width / 2 - flagButtonWidth / 2, flagButtonY = this.getTop() + 10;
         this.addRenderableWidget(new CustomizeFlagButton(flagButtonX, flagButtonY, flagButtonWidth, flagButtonHeight, this.teamFlag, () -> setMenu(Menu.TEAM_FLAG)));
-        this.addRenderableWidget(new TeamColorButton(flagButtonX + flagButtonWidth + 10, flagButtonY + flagButtonHeight/2 - 45/2, 45, 45));
+        this.addRenderableWidget(new TeamColorButton(flagButtonX + flagButtonWidth + 10, flagButtonY + flagButtonHeight / 2 - 45 / 2, 45, 45));
         this.addRenderableWidget(this.teamNameInput = new EditBox(this.font, this.getLeft() + (this.backgroundWidth / 2) - 64, flagButtonY + 75, 128, 15, this.teamNameInput, Component.empty()) {
             private String prevText;
 
@@ -111,11 +111,11 @@ public class SpaceRaceScreen extends Screen {
         addBackButton();
 
         this.addRenderableOnly((graphics, mouseX, mouseY, delta) -> {
-            graphics.fill(this.width/2 - 50, this.getTop() + 10, this.width/2 + 50, this.getTop() + 10 + 100, this.teamColor);
+            graphics.fill(this.width / 2 - 50, this.getTop() + 10, this.width / 2 + 50, this.getTop() + 10 + 100, this.teamColor);
         });
 
         int sliderWidth = 200;
-        int sliderX = this.width/2 - sliderWidth/2;
+        int sliderX = this.width / 2 - sliderWidth / 2;
         this.addRenderableWidget(new ColorSlider(sliderX, this.getBottom() - 80, sliderWidth, 20, Component.translatable(Translations.SpaceRace.RED), FastColor.ARGB32.red(this.teamColor), value -> {
             this.teamColor = (this.teamColor & 0xFF00FFFF) + (value << 16);
         }));
@@ -165,12 +165,12 @@ public class SpaceRaceScreen extends Screen {
         // 5% of width
         int maxWidth = (int) (this.width - (getXMargins() * 1.5D));
         if (backgroundWidth < maxWidth) {
-            backgroundWidth += (int) Math.min(60*delta, maxWidth - backgroundWidth);
+            backgroundWidth += (int) Math.min(60 * delta, maxWidth - backgroundWidth);
         }
 
         int maxHeight = (int) (this.height - (getYMargins() * 1.5D));
         if (backgroundHeight < maxHeight) {
-            backgroundHeight += (int) Math.min(40*delta, maxHeight - backgroundHeight);
+            backgroundHeight += (int) Math.min(40 * delta, maxHeight - backgroundHeight);
         }
 
         if (!this.animationCompleted && this.isAnimationComplete()) {
@@ -326,7 +326,8 @@ public class SpaceRaceScreen extends Screen {
         private final Component originalMessage;
 
         public ComingSoonButton(Component component, int x, int y, int width, int height) {
-            super(component, x, y, width, height, button -> {});
+            super(component, x, y, width, height, button -> {
+            });
             this.originalMessage = component;
         }
 
@@ -359,7 +360,7 @@ public class SpaceRaceScreen extends Screen {
             graphics.renderOutline(this.getX(), this.getY(), this.width, this.height, this.isHoveredOrFocused() ? 0xFF3c3c3c : 0xFF2d2d2d);
 
             Font font = Minecraft.getInstance().font;
-            graphics.drawCenteredString(font, Component.translatable(Translations.SpaceRace.CUSTOMIZE_FLAG), this.getX() + this.width/2, this.getY() + this.height/2 - font.lineHeight/2, 0xFFFFFFFF);
+            graphics.drawCenteredString(font, Component.translatable(Translations.SpaceRace.CUSTOMIZE_FLAG), this.getX() + this.width / 2, this.getY() + this.height / 2 - font.lineHeight / 2, 0xFFFFFFFF);
         }
 
         @Override
@@ -386,8 +387,8 @@ public class SpaceRaceScreen extends Screen {
         protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
             Font font = Minecraft.getInstance().font;
             graphics.fill(this.getX(), this.getY(), this.getX() + this.getWidth(), this.getY() + this.getHeight(), teamColor);
-            int centerX = this.getX() + this.getWidth()/2;
-            int centerY = this.getY() + this.getHeight()/2 - font.lineHeight/2;
+            int centerX = this.getX() + this.getWidth() / 2;
+            int centerY = this.getY() + this.getHeight() / 2 - font.lineHeight / 2;
             graphics.drawCenteredString(font, line1, centerX, centerY - font.lineHeight, 0xFFFFFFFF);
             graphics.drawCenteredString(font, line2, centerX, centerY, 0xFFFFFFFF);
             graphics.drawCenteredString(font, line3, centerX, centerY + font.lineHeight, 0xFFFFFFFF);
@@ -406,14 +407,14 @@ public class SpaceRaceScreen extends Screen {
         private final Component colorName;
 
         public ColorSlider(int x, int y, int width, int height, Component colorName, int value, Consumer<Integer> consumer) {
-            super(x, y, width, height, Component.translatable("options.percent_value", colorName, (int)(value/255.0 * 100.0)), value/255.0);
+            super(x, y, width, height, Component.translatable("options.percent_value", colorName, (int) (value / 255.0 * 100.0)), value / 255.0);
             this.consumer = consumer;
             this.colorName = colorName;
         }
 
         @Override
         protected void updateMessage() {
-            this.setMessage(Component.translatable("options.percent_value", this.colorName, (int)(this.value * 100.0)));
+            this.setMessage(Component.translatable("options.percent_value", this.colorName, (int) (this.value * 100.0)));
         }
 
         @Override

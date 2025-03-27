@@ -96,6 +96,7 @@ public class DimensionTpCommand {
 
     private static boolean tryTeleport(ServerLevel level, ServerPlayer player, @Nullable Vec3 pos) {
         if (pos == null) pos = getValidTeleportPos(level, player);
+        player.resetFallDistance();
         player.teleportTo(level,
                 pos.x,
                 pos.y,
@@ -118,7 +119,8 @@ public class DimensionTpCommand {
 
     /**
      * Finds the highest solid block in the level to teleport to.
-     * @param level The level.
+     *
+     * @param level  The level.
      * @param entity The entity to teleport.
      * @return The highest valid position to teleport to.
      */

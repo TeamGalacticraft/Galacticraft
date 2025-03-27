@@ -69,7 +69,7 @@ public class GCResourceReloadListener implements SimpleSynchronousResourceReload
         BubbleEntityRenderer.bubbleModel = null;
 
         FluidRenderHandler oxygen = (view, pos, state) -> new TextureAtlasSprite[]{
-                atlas.apply(Constant.Fluid.fluidId(Constant.Fluid.LIQUID_OXYGEN)), 
+                atlas.apply(Constant.Fluid.fluidId(Constant.Fluid.LIQUID_OXYGEN)),
                 atlas.apply(Constant.Fluid.fluidId(Constant.Fluid.LIQUID_OXYGEN))
         };
 

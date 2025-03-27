@@ -101,8 +101,7 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
                 world.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
             }
             return true;
-        }
-        else if (BuiltInRegistries.FLUID.getKey(fluidState.getType()).equals(state.getValue(FLUID))) {
+        } else if (BuiltInRegistries.FLUID.getKey(fluidState.getType()).equals(state.getValue(FLUID))) {
             if (!world.isClientSide()) {
                 world.setBlock(pos, state.setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)).setValue(FlowingFluid.FALLING, fluidState.getValue(FlowingFluid.FALLING)), 3);
                 world.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
@@ -116,8 +115,7 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
                 world.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
             }
             return true;
-        }
-        else if (fluidState.getType() == Fluids.EMPTY) {
+        } else if (fluidState.getType() == Fluids.EMPTY) {
             world.setBlock(pos, state.setValue(FLUID, Constant.Misc.EMPTY).setValue(FlowingFluid.LEVEL, 1).setValue(FlowingFluid.FALLING, false), 3);
         }
         return false;

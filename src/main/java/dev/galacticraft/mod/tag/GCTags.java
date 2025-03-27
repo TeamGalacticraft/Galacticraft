@@ -47,16 +47,18 @@ public class GCTags {
 
     public static final TagKey<Block> INFINIBURN_MOON = TagKey.create(Registries.BLOCK, Constant.id("infiniburn_moon"));
     public static final TagKey<Block> INFINIBURN_VENUS = TagKey.create(Registries.BLOCK, Constant.id("infiniburn_venus"));
+    public static final TagKey<Block> INFINIBURN_ASTEROID = TagKey.create(Registries.BLOCK, Constant.id("infiniburn_asteroid"));
     public static final TagKey<Block> BASE_STONE_MOON = TagKey.create(Registries.BLOCK, Constant.id("base_stone_moon"));
     public static final TagKey<Block> MOON_CARVER_REPLACEABLES = TagKey.create(Registries.BLOCK, Constant.id("moon_carver_replaceables"));
     public static final TagKey<Block> MOON_CRATER_CARVER_REPLACEABLES = TagKey.create(Registries.BLOCK, Constant.id("moon_crater_carver_replaceables"));
-    public static final TagKey<Block> MOON_STONE_ORE_REPLACABLES = TagKey.create(Registries.BLOCK, Constant.id("moon_stone_ore_replaceables"));
-    public static final TagKey<Block> LUNASLATE_ORE_REPLACABLES = TagKey.create(Registries.BLOCK, Constant.id("lunaslate_ore_replaceables"));
+    public static final TagKey<Block> MOON_STONE_ORE_REPLACEABLES = TagKey.create(Registries.BLOCK, Constant.id("moon_stone_ore_replaceables"));
+    public static final TagKey<Block> LUNASLATE_ORE_REPLACEABLES = TagKey.create(Registries.BLOCK, Constant.id("lunaslate_ore_replaceables"));
     public static final TagKey<Block> MACHINES = TagKey.create(Registries.BLOCK, Constant.id("machines"));
     public static final TagKey<Block> FOOTPRINTS = TagKey.create(Registries.BLOCK, Constant.id("footprints"));
 
     public static final TagKey<Biome> MOON = TagKey.create(Registries.BIOME, Constant.id("moon"));
     public static final TagKey<Biome> VENUS = TagKey.create(Registries.BIOME, Constant.id("venus"));
+    public static final TagKey<Biome> ASTEROID = TagKey.create(Registries.BIOME, Constant.id("asteroid"));
 
     public static final TagKey<Biome> MOON_PILLAGER_BASE_HAS_STRUCTURE = TagKey.create(Registries.BIOME, Constant.id("has_structure/moon_pillager_base"));
     public static final TagKey<Biome> MOON_VILLAGE_HIGHLANDS_HAS_STRUCTURE = TagKey.create(Registries.BIOME, Constant.id("has_structure/moon_village_highlands"));
@@ -75,6 +77,8 @@ public class GCTags {
     public static final TagKey<Item> COMPRESSED_IRON = commonTag("plates/iron");
     public static final TagKey<Item> COMPRESSED_TIN = commonTag("plates/tin");
 
+    public static final TagKey<Item> EVOLVED_CREEPER_DROP_MUSIC_DISCS = TagKey.create(Registries.ITEM, Constant.id("evolved_creeper_drop_music_discs"));
+
     public static final TagKey<Structure> MOON_RUINS = TagKey.create(Registries.STRUCTURE, Constant.id("moon_ruins"));
 
     public static final TagKey<DimensionType> FOOTPRINTS_DIMENSIONS = TagKey.create(Registries.DIMENSION_TYPE, Constant.id("footprints"));
@@ -82,6 +86,7 @@ public class GCTags {
     public static final TagKey<DimensionType> VACUUM = TagKey.create(Registries.DIMENSION_TYPE, Constant.id("vacuum"));
 
     public static final TagKey<EntityType<?>> HAS_FOOTPRINTS = TagKey.create(Registries.ENTITY_TYPE, Constant.id("has_footprints"));
+    public static final TagKey<EntityType<?>> HAS_OXYGEN_SETUP = TagKey.create(Registries.ENTITY_TYPE, Constant.id("has_oxygen_setup"));
 
     public static TagKey<Item> commonTag(String path) {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, path));

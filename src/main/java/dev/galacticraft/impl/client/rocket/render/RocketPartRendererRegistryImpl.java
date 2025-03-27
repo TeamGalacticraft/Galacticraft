@@ -37,7 +37,8 @@ import java.util.Map;
 public class RocketPartRendererRegistryImpl implements RocketPartRendererRegistry {
     private final Map<ResourceKey<? extends RocketPart<?, ?>>, RocketPartRenderer> renderers = new HashMap<>();
 
-    public RocketPartRendererRegistryImpl() {}
+    public RocketPartRendererRegistryImpl() {
+    }
 
     @Override
     public <T extends RocketPart<?, ?>> void register(@NotNull ResourceKey<T> id, @NotNull RocketPartRenderer renderer) {

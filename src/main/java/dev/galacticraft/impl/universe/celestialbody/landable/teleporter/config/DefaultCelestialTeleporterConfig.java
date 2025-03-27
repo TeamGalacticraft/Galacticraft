@@ -29,5 +29,6 @@ public class DefaultCelestialTeleporterConfig implements CelestialTeleporterConf
     public static final DefaultCelestialTeleporterConfig INSTANCE = new DefaultCelestialTeleporterConfig();
     public static final Codec<DefaultCelestialTeleporterConfig> CODEC = Codec.unit(INSTANCE);
 
-    private DefaultCelestialTeleporterConfig() {}
+    private DefaultCelestialTeleporterConfig() {
+    }
 }

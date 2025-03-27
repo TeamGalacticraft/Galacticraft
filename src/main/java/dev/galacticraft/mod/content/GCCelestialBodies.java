@@ -73,7 +73,7 @@ public class GCCelestialBodies {
     public static final ResourceKey<CelestialBody<?, ?>> MERCURY = key("mercury");
     public static final ResourceKey<CelestialBody<?, ?>> VENUS = key("venus");
     public static final ResourceKey<CelestialBody<?, ?>> MARS = key("mars");
-    public static final ResourceKey<CelestialBody<?, ?>> ASTEROIDS = key("asteroids");
+    public static final ResourceKey<CelestialBody<?, ?>> ASTEROID = key("asteroid");
     public static final ResourceKey<CelestialBody<?, ?>> JUPITER = key("jupiter");
     public static final ResourceKey<CelestialBody<?, ?>> SATURN = key("saturn");
     public static final ResourceKey<CelestialBody<?, ?>> URANUS = key("uranus");
@@ -131,7 +131,7 @@ public class GCCelestialBodies {
                                 .gas(Gases.CARBON_MONOXIDE_ID, 0.100)
                                 .gas(Gases.XENON_ID, 0.090)
                                 .gas(Gases.OZONE_ID, 0.070)
-                                .gas(Gases.NITROUS_DIOXIDE_ID, 0.020)
+                                .gas(Gases.NITROGEN_DIOXIDE_ID, 0.020)
                                 .gas(Gases.IODINE_ID, 0.010)
                                 .build(),
                         1.0f,
@@ -218,18 +218,25 @@ public class GCCelestialBodies {
                 null
         )));
 
-        context.register(ASTEROIDS, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
-                Component.translatable(Translations.CelestialBody.ASTEROIDS),
-                Component.translatable(Translations.CelestialBody.ASTEROIDS_DESC),
+        context.register(ASTEROID, PlanetType.INSTANCE.configure(new PlanetConfig(
+                Component.translatable(Translations.CelestialBody.ASTEROID),
+                Component.translatable(Translations.CelestialBody.ASTEROID_DESC),
                 sol,
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(45.0F, 1.375F, 0.0F, true)),
                 SpinningIconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.CelestialBody.ASTEROID, 0, 0, 16, 16)),
                 AsteroidCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
+                GCDimensions.ASTEROID,
+                teleporters.getOrThrow(GCTeleporterTypes.LANDER_CELESTIAL_TELEPORTER),
                 new GasComposition.Builder()
-                        .temperature(23.0)
-                        .pressure(3.0E-15F)
+                        .temperature(-2.0)
+                        .pressure(0)
                         .build(),
-                0.166F,
+                0.1f,
+                GCCelestialHandlers.DEFAULT,
+                2,
+                -2,
+                -2,
+                99999999L, // 30 times longer than earth
                 null
         )));
 

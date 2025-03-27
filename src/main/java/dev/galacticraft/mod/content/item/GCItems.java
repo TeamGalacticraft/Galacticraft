@@ -25,6 +25,7 @@ package dev.galacticraft.mod.content.item;
 import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.*;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
@@ -33,9 +34,11 @@ import dev.galacticraft.mod.content.GCRegistry;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -140,12 +143,6 @@ public class GCItems {
     public static final Item BEEF_PATTY = ITEMS.register(Constant.Item.BEEF_PATTY, new Item(new Item.Properties().food(GCFoodComponent.BEEF_PATTY)));
     public static final Item BURGER_BUN = ITEMS.register(Constant.Item.BURGER_BUN, new Item(new Item.Properties().food(GCFoodComponent.BURGER_BUN)));
     public static final Item CHEESEBURGER = ITEMS.register(Constant.Item.CHEESEBURGER, new Item(new Item.Properties().food(GCFoodComponent.CHEESEBURGER)));
-    
-    public static final Item CANNED_DEHYDRATED_APPLE = ITEMS.register(Constant.Item.CANNED_DEHYDRATED_APPLE, new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_APPLE)));
-    public static final Item CANNED_DEHYDRATED_CARROT = ITEMS.register(Constant.Item.CANNED_DEHYDRATED_CARROT, new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_CARROT)));
-    public static final Item CANNED_DEHYDRATED_MELON = ITEMS.register(Constant.Item.CANNED_DEHYDRATED_MELON, new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_MELON)));
-    public static final Item CANNED_DEHYDRATED_POTATO = ITEMS.register(Constant.Item.CANNED_DEHYDRATED_POTATO, new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_POTATO)));
-    public static final Item CANNED_BEEF = ITEMS.register(Constant.Item.CANNED_BEEF, new CannedFoodItem(new Item.Properties().food(GCFoodComponent.CANNED_BEEF)));
 
     // THROWABLE METEOR CHUNKS
     public static final Item THROWABLE_METEOR_CHUNK = ITEMS.register(Constant.Item.THROWABLE_METEOR_CHUNK, new ThrowableMeteorChunkItem(new Item.Properties().stacksTo(16)));
@@ -288,6 +285,10 @@ public class GCItems {
     public static final Item FUEL_BUCKET = ITEMS.register(Constant.Item.FUEL_BUCKET, new BucketItem(GCFluids.FUEL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
     public static final Item SULFURIC_ACID_BUCKET = ITEMS.register(Constant.Item.SULFURIC_ACID_BUCKET, new BucketItem(GCFluids.SULFURIC_ACID, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
+    // CANNED FOOD
+    public static final CannedFoodItem EMPTY_CAN = ITEMS.register(Constant.Item.EMPTY_CAN, new CannedFoodItem(new Item.Properties().food(null)));
+    public static final CannedFoodItem CANNED_FOOD = ITEMS.register(Constant.Item.CANNED_FOOD, new CannedFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(0).saturationModifier(0).build()).stacksTo(1)));
+
     // SPAWN EGGS
     public static final Item MOON_VILLAGER_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.MOON_VILLAGER, new SpawnEggItem(GCEntityTypes.MOON_VILLAGER, 0x74a3cf, 0xba2500, new Item.Properties()));
     public static final Item EVOLVED_ZOMBIE_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.EVOLVED_ZOMBIE, new SpawnEggItem(GCEntityTypes.EVOLVED_ZOMBIE, 0x00afaf, 0x463aa5, new Item.Properties()));
@@ -314,5 +315,22 @@ public class GCItems {
         DispenserBlock.registerBehavior(FUEL_BUCKET, DispenserBlock.DISPENSER_REGISTRY.get(Items.WATER_BUCKET));
         DispenserBlock.registerBehavior(CRUDE_OIL_BUCKET, DispenserBlock.DISPENSER_REGISTRY.get(Items.WATER_BUCKET));
         DispenserBlock.registerBehavior(SULFURIC_ACID_BUCKET, DispenserBlock.DISPENSER_REGISTRY.get(Items.WATER_BUCKET));
+
+        DispenserBlock.registerBehavior(MOON_VILLAGER_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
+        DispenserBlock.registerBehavior(EVOLVED_ZOMBIE_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
+        DispenserBlock.registerBehavior(EVOLVED_CREEPER_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
+        DispenserBlock.registerBehavior(EVOLVED_SKELETON_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
+        DispenserBlock.registerBehavior(EVOLVED_SPIDER_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
+        DispenserBlock.registerBehavior(EVOLVED_ENDERMAN_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
+        DispenserBlock.registerBehavior(EVOLVED_WITCH_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
+        DispenserBlock.registerBehavior(EVOLVED_PILLAGER_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
+        DispenserBlock.registerBehavior(EVOLVED_EVOKER_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
+        DispenserBlock.registerBehavior(EVOLVED_VINDICATOR_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
+        DispenserBlock.registerBehavior(GAZER_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
+        DispenserBlock.registerBehavior(RUMBLER_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
+        DispenserBlock.registerBehavior(COMET_CUBE_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
+        DispenserBlock.registerBehavior(OLI_GRUB_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
+        DispenserBlock.registerBehavior(GREY_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
+        DispenserBlock.registerBehavior(ARCH_GREY_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
     }
 }

@@ -43,7 +43,13 @@ public interface Constant {
     Logger LOGGER = LogManager.getLogger("Galacticraft");
 
     double RADIANS_TO_DEGREES = 180.0 / Math.PI;
+
     int OVERWORLD_SKYPROVIDER_STARTHEIGHT = 200;
+    int CLOUD_HEIGHT = 200;
+    int CLOUD_LIMIT = CLOUD_HEIGHT + 100;
+    int SPACE_HEIGHT = 1000;
+    int REENTRY_HEIGHT = 1100;
+    int ESCAPE_HEIGHT = 1200;
 
     @Contract(value = "_ -> new", pure = true)
     static @NotNull ResourceLocation id(String id) {
@@ -136,6 +142,7 @@ public interface Constant {
         String ASTEROID_ROCK = "asteroid_rock";
         String ASTEROID_ROCK_1 = "asteroid_rock_block_1";
         String ASTEROID_ROCK_2 = "asteroid_rock_block_2";
+        String DENSE_ICE = "dense_ice";
 
         String SOFT_VENUS_ROCK = "soft_venus_rock";
         String HARD_VENUS_ROCK = "hard_venus_rock";
@@ -146,10 +153,11 @@ public interface Constant {
 
         // Ore
         String MARS_IRON_ORE = "mars_iron_ore";
+        String MARS_TIN_ORE = "mars_tin_ore";
+        String MARS_COPPER_ORE = "mars_copper_ore";
         String ASTEROID_IRON_ORE = "asteroid_iron_ore";
         String MOON_COPPER_ORE = "moon_copper_ore";
         String LUNASLATE_COPPER_ORE = "lunaslate_copper_ore";
-        String MARS_COPPER_ORE = "mars_copper_ore";
         String VENUS_COPPER_ORE = "venus_copper_ore";
         String SILICON_ORE = "silicon_ore";
         String DEEPSLATE_SILICON_ORE = "deepslate_silicon_ore";
@@ -157,11 +165,11 @@ public interface Constant {
         String DEEPSLATE_TIN_ORE = "deepslate_tin_ore";
         String MOON_TIN_ORE = "moon_tin_ore";
         String LUNASLATE_TIN_ORE = "lunaslate_tin_ore";
-        String MARS_TIN_ORE = "mars_tin_ore";
+        String ASTEROID_ALUMINUM_ORE = "asteroid_aluminum_ore";
+        String ASTEROID_SILICON_ORE = "asteroid_silicon_ore";
         String VENUS_TIN_ORE = "venus_tin_ore";
         String ALUMINUM_ORE = "aluminum_ore";
         String DEEPSLATE_ALUMINUM_ORE = "deepslate_aluminum_ore";
-        String ASTEROID_ALUMINUM_ORE = "asteroid_aluminum_ore";
         String VENUS_ALUMINUM_ORE = "venus_aluminum_ore";
         String MOON_CHEESE_ORE = "moon_cheese_ore";
         String LUNAR_SAPPHIRE_ORE = "lunar_sapphire_ore";
@@ -273,6 +281,7 @@ public interface Constant {
         String OXYGEN_BUBBLE_DISTRIBUTOR = "oxygen_bubble_distributor";
         String OXYGEN_COLLECTOR = "oxygen_collector";
         String OXYGEN_COMPRESSOR = "oxygen_compressor";
+        String FOOD_CANNER = "food_canner";
         String OXYGEN_DECOMPRESSOR = "oxygen_decompressor";
         String OXYGEN_DETECTOR = "oxygen_detector";
         String OXYGEN_SEALER = "oxygen_sealer";
@@ -333,6 +342,7 @@ public interface Constant {
         String LUNAR_CARTOGRAPHY_TABLE = "lunar_cartography_table";
         String OXYGEN_STORAGE_MODULE = "oxygen_storage_module";
         String MOON_DIRT_PATH = "moon_dirt_path";
+        String CANNED_FOOD = "canned_food";
     }
 
     interface Fluid {
@@ -353,8 +363,12 @@ public interface Constant {
     }
 
     interface Item {
+        String ITEM_GROUP_CANS = "cans";
         String ITEM_GROUP = "items";
         String SILICON = "silicon";
+        String CANNED_FOOD = "canned_food";
+        String EMPTY_CAN = "empty_can";
+        String RAW_SILICON = "raw_silicon";
         String RAW_METEORIC_IRON = "raw_meteoric_iron";
         String METEORIC_IRON_INGOT = "meteoric_iron_ingot";
         String METEORIC_IRON_NUGGET = "meteoric_iron_nugget";
@@ -419,12 +433,6 @@ public interface Constant {
         String GROUND_BEEF = "ground_beef";
         String BEEF_PATTY = "beef_patty";
         String CHEESEBURGER = "cheeseburger";
-        //CANNED FOOD
-        String CANNED_DEHYDRATED_APPLE = "canned_dehydrated_apple";
-        String CANNED_DEHYDRATED_CARROT = "canned_dehydrated_carrot";
-        String CANNED_DEHYDRATED_MELON = "canned_dehydrated_melon";
-        String CANNED_DEHYDRATED_POTATO = "canned_dehydrated_potato";
-        String CANNED_BEEF = "canned_beef";
         //ROCKET PARTS
         String TIER_1_HEAVY_DUTY_PLATE = "heavy_plating";
         String TIER_2_HEAVY_DUTY_PLATE = "heavy_plating_t2";
@@ -573,6 +581,7 @@ public interface Constant {
         ResourceLocation PLANET_ICONS = id("textures/gui/planet_icons.png");
         ResourceLocation BUBBLE_DISTRIBUTOR_SCREEN = id("textures/gui/oxygen_bubble_distributor_screen.png");
         ResourceLocation OXYGEN_COMPRESSOR_SCREEN = id("textures/gui/oxygen_compressor_screen.png");
+        ResourceLocation FOOD_CANNER_SCREEN = id("textures/gui/food_canner_screen.png");
         ResourceLocation OXYGEN_STORAGE_MODULE_SCREEN = id("textures/gui/oxygen_storage_module_screen.png");
         ResourceLocation OXYGEN_SEALER_SCREEN = id("textures/gui/oxygen_sealer_screen.png");
         ResourceLocation FUEL_LOADER_SCREEN = id("textures/gui/fuel_loader_screen.png");
@@ -658,6 +667,7 @@ public interface Constant {
         ResourceLocation ROCKET_FIN = id("slot/rocket_fin");
         ResourceLocation ROCKET_ENGINE = id("slot/rocket_engine");
         ResourceLocation CHEST = id("slot/chest");
+        ResourceLocation FOOD_CAN = id("slot/food_can");
     }
 
     interface Entity {
@@ -782,6 +792,7 @@ public interface Constant {
         String OXYGEN_COLLECTOR_MENU = "oxygen_collector_menu";
         String BUBBLE_DISTRIBUTOR_MENU = "bubble_distributor_menu";
         String OXYGEN_COMPRESSOR_MENU = "oxygen_compressor_menu";
+        String FOOD_CANNER_MENU = "food_canner_menu";
         String OXYGEN_DECOMPRESSOR_MENU = "oxygen_decompressor_menu";
         String OXYGEN_STORAGE_MODULE_MENU = "oxygen_storage_module_menu";
         String OXYGEN_SEALER_MENU = "oxygen_sealer_menu";
@@ -838,6 +849,9 @@ public interface Constant {
         String NO_DROP = "NoDrop";
         String OWNER = "Owner";
         String PROGRESS = "Progress";
+        String TRANSFERRING_CAN = "TransferringCan";
+        String TRANSFERRING_FOOD = "TransferringFood";
+        String STORAGE = "StorageStack";
         String SIZE = "Size";
         String MAX_SIZE = "MaxSize";
         String VISIBLE = "Visible";
@@ -866,6 +880,8 @@ public interface Constant {
         String GASES = "Gases";
         String CRYOGENIC_COOLDOWN = "cryogenic_cooldown";
         String ROCKET_UUID = "RocketUuid";
+        String CAN_CONTENTS = "CanContents";
+        String CAN_COUNT = "CanCount";
     }
 
     interface Chunk {
@@ -934,6 +950,7 @@ public interface Constant {
         ResourceLocation WIRE_MARKER = id("autogenerated/aluminum_wire");
         ResourceLocation GLASS_FLUID_PIPE_MARKER = id("autogenerated/glass_fluid_pipe");
         ResourceLocation VACUUM_GLASS_MODEL = id("vacuum_glass");
+        ResourceLocation CANNED_FOOD = id("block/canned_food_model");
     }
 
     interface Carver {

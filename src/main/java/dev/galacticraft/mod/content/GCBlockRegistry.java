@@ -93,8 +93,10 @@ public class GCBlockRegistry extends GCRegistry<Block> {
     }
 
     public record DecorationSet(
-            Block block, StairBlock stairs, SlabBlock slab, WallBlock wall, Block detailedBlock, StairBlock detailedStairs, SlabBlock detailedSlab, WallBlock detailedWall,
-            BlockItem item, BlockItem stairsItem, BlockItem slabItem, BlockItem wallItem, BlockItem detailedItem, BlockItem detailedStairsItem, BlockItem detailedSlabItem, BlockItem detailedWallItem
+            Block block, StairBlock stairs, SlabBlock slab, WallBlock wall,
+            Block detailedBlock, StairBlock detailedStairs, SlabBlock detailedSlab, WallBlock detailedWall,
+            BlockItem item, BlockItem stairsItem, BlockItem slabItem, BlockItem wallItem,
+            BlockItem detailedItem, BlockItem detailedStairsItem, BlockItem detailedSlabItem, BlockItem detailedWallItem
     ) implements ItemLike {
         @Override
         public Item asItem() {

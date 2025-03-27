@@ -36,9 +36,9 @@ public interface ChunkOxygenAccessor {
     /**
      * Sets the breathable state for entities for the supplied position
      *
-     * @param x     the position to test on the X-axis, normalized from 0 to 15
-     * @param y     the position to test on the Y-axis, must be within world height
-     * @param z     the position to test on the Z-axis, normalized from 0 to 15
+     * @param x        the position to test on the X-axis, normalized from 0 to 15
+     * @param y        the position to test on the Y-axis, must be within world height
+     * @param z        the position to test on the Z-axis, normalized from 0 to 15
      * @param inverted whether the supplied position is breathable
      */
     void galacticraft$setInverted(int x, int y, int z, boolean inverted);

@@ -47,8 +47,8 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -201,7 +201,7 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
             level.setBlockAndUpdate(basePos, baseState.setValue(OCCUPIED, true));
 
             player.startSleepInBed(basePos.above()).ifLeft(problem -> {
-                switch(problem) {
+                switch (problem) {
                     case Player.BedSleepingProblem.OBSTRUCTED:
                         player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_OBSTRUCTED), true);
                         break;
@@ -217,7 +217,7 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
                 player.setYRot(baseState.getValue(CryogenicChamberBlock.FACING).toYRot());
             });
         } else {
-            player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_HOT, (int)(player.getCryogenicChamberCooldown() / TICKS.tickrate())), false);
+            player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_HOT, (int) (player.getCryogenicChamberCooldown() / TICKS.tickrate())), false);
         }
 
         return InteractionResult.SUCCESS;
@@ -245,7 +245,7 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
     public boolean propagatesSkylightDown(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
         return true;
     }
-    
+
     @Override
     public boolean isPossibleToRespawnInThis(BlockState blockState) {
         return true;

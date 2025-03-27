@@ -46,7 +46,7 @@ public class FootprintManager {
                     List<Footprint> toRemove = new ArrayList<>();
 
                     for (Footprint footprint : footprints) {
-                        footprint.age += (short)20;
+                        footprint.age += (short) 20;
 
                         if (footprint.age >= Footprint.MAX_AGE) {
                             toRemove.add(footprint);

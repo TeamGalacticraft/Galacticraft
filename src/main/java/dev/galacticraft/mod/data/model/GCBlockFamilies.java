@@ -142,5 +142,6 @@ public class GCBlockFamilies {
         return MAP.values().stream();
     }
 
-    public record DecorationFamily(BlockFamily original, BlockFamily detailed) {}
+    public record DecorationFamily(BlockFamily original, BlockFamily detailed) {
+    }
 }

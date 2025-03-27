@@ -39,10 +39,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 
 import static dev.galacticraft.mod.content.GCBlocks.*;
 import static dev.galacticraft.mod.content.item.GCItems.*;
@@ -159,11 +156,11 @@ public class GCCreativeModeTabs {
                 output.accept(LUNASLATE_COPPER_ORE);
                 output.accept(MOON_TIN_ORE);
                 output.accept(LUNASLATE_TIN_ORE);
-                output.accept(FALLEN_METEOR);
                 output.accept(MOON_CHEESE_ORE);
                 output.accept(LUNAR_SAPPHIRE_ORE);
                 output.accept(OLIVINE_BASALT);
                 output.accept(RICH_OLIVINE_BASALT);
+                output.accept(FALLEN_METEOR);
 
                 output.accept(MARS_IRON_ORE);
                 output.accept(MARS_COPPER_ORE);
@@ -255,6 +252,33 @@ public class GCCreativeModeTabs {
 
                 // MISC WORLD GEN
                 output.accept(CAVERNOUS_VINES);
+            }).build();
+
+    public static final CreativeModeTab MACHINES_GROUP = FabricItemGroup
+            .builder()
+            .icon(() -> new ItemStack(COAL_GENERATOR))
+            .title(Component.translatable(Translations.ItemGroup.MACHINES))
+            .displayItems((parameters, output) -> {
+                output.accept(CIRCUIT_FABRICATOR);
+                output.accept(COMPRESSOR);
+                output.accept(ELECTRIC_COMPRESSOR);
+                output.accept(COAL_GENERATOR);
+                output.accept(BASIC_SOLAR_PANEL);
+                output.accept(ADVANCED_SOLAR_PANEL);
+                output.accept(ENERGY_STORAGE_MODULE);
+                output.accept(ELECTRIC_FURNACE);
+                output.accept(ELECTRIC_ARC_FURNACE);
+                output.accept(REFINERY);
+                output.accept(FUEL_LOADER);
+                output.accept(OXYGEN_COLLECTOR);
+                output.accept(OXYGEN_SEALER);
+                output.accept(OXYGEN_BUBBLE_DISTRIBUTOR);
+                output.accept(OXYGEN_DECOMPRESSOR);
+                output.accept(OXYGEN_COMPRESSOR);
+                output.accept(OXYGEN_STORAGE_MODULE);
+                output.accept(FOOD_CANNER);
+                output.accept(AIR_LOCK_FRAME);
+                output.accept(AIR_LOCK_CONTROLLER);
             }).build();
 
     public static final CreativeModeTab ITEMS_GROUP = FabricItemGroup
@@ -401,12 +425,6 @@ public class GCCreativeModeTabs {
                 output.accept(BURGER_BUN);
                 output.accept(CHEESEBURGER);
 
-                output.accept(CANNED_DEHYDRATED_APPLE);
-                output.accept(CANNED_DEHYDRATED_CARROT);
-                output.accept(CANNED_DEHYDRATED_MELON);
-                output.accept(CANNED_DEHYDRATED_POTATO);
-                output.accept(CANNED_BEEF);
-
                 output.accept(THROWABLE_METEOR_CHUNK);
                 output.accept(HOT_THROWABLE_METEOR_CHUNK);
 
@@ -507,28 +525,25 @@ public class GCCreativeModeTabs {
             })
             .build();
 
-    public static final CreativeModeTab MACHINES_GROUP = FabricItemGroup
+    public static final CreativeModeTab CANNED_FOOD_GROUP = FabricItemGroup
             .builder()
-            .icon(() -> new ItemStack(COAL_GENERATOR))
-            .title(Component.translatable(Translations.ItemGroup.MACHINES))
+            .icon(() -> new ItemStack(GCItems.CANNED_FOOD))
+            .title(Component.translatable(Translations.ItemGroup.CANNED_FOOD))
             .displayItems((parameters, output) -> {
-                output.accept(CIRCUIT_FABRICATOR);
-                output.accept(COMPRESSOR);
-                output.accept(ELECTRIC_COMPRESSOR);
-                output.accept(COAL_GENERATOR);
-                output.accept(BASIC_SOLAR_PANEL);
-                output.accept(ADVANCED_SOLAR_PANEL);
-                output.accept(ENERGY_STORAGE_MODULE);
-                output.accept(ELECTRIC_FURNACE);
-                output.accept(ELECTRIC_ARC_FURNACE);
-                output.accept(REFINERY);
-                output.accept(FUEL_LOADER);
-                output.accept(OXYGEN_COLLECTOR);
-                output.accept(OXYGEN_SEALER);
-                output.accept(OXYGEN_BUBBLE_DISTRIBUTOR);
-                output.accept(OXYGEN_DECOMPRESSOR);
-                output.accept(OXYGEN_COMPRESSOR);
-                output.accept(OXYGEN_STORAGE_MODULE);
+                output.accept(EMPTY_CAN);
+                //For every edible food create a creative item of that canned food type
+                for (Item item : BuiltInRegistries.ITEM) {
+                    if (item.components().has(DataComponents.FOOD)) {
+                        if (!(item instanceof CannedFoodItem)) {
+                            //create new canned food item with empty components
+                            ItemStack cannedFoodItem = GCItems.CANNED_FOOD.getDefaultInstance();
+                            //add the default itemstack of the edible item into the canned foods components
+                            CannedFoodItem.add(cannedFoodItem, item.getDefaultInstance());
+                            //add the item to the creative tab
+                            output.accept(cannedFoodItem);
+                        }
+                    }
+                }
             }).build();
 
     public static void registerSpawnEggs() {
@@ -556,6 +571,7 @@ public class GCCreativeModeTabs {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Item.ITEM_GROUP), ITEMS_GROUP);
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Block.ITEM_GROUP_BLOCKS), BLOCKS_GROUP);
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Block.ITEM_GROUP_MACHINES), MACHINES_GROUP);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Item.ITEM_GROUP_CANS), CANNED_FOOD_GROUP);
         registerSpawnEggs();
     }
 }

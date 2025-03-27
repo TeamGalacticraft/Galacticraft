@@ -30,8 +30,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-class AirLockProtocol
-{
+class AirLockProtocol {
     public boolean isValidFrame(BlockPos pos) {
         return world.getBlockState(pos).getBlock() instanceof AirlockBlock;
     }
@@ -55,8 +54,7 @@ class AirLockProtocol
     public int minZ = 6000000;
     public int maxZ = -6000000;
 
-    public AirLockProtocol(BlockEntity head)
-    {
+    public AirLockProtocol(BlockEntity head) {
         this.adjacentAirLocks = new ArrayList<>();
         this.checked = new HashSet<>();
         this.world = head.getLevel();
@@ -64,32 +62,23 @@ class AirLockProtocol
         this.maxLoops = 26;
     }
 
-    private void loopThrough(BlockPos pos, int loops)
-    {
+    private void loopThrough(BlockPos pos, int loops) {
         int xAligned = this.head.getBlockPos().getX();
         int zAligned = this.head.getBlockPos().getZ();
-        for (int x = -1; x <= 1; x++)
-        {
+        for (int x = -1; x <= 1; x++) {
             int xTest = pos.getX() + x;
-            for (int z = -1; z <= 1; z++)
-            {
+            for (int z = -1; z <= 1; z++) {
                 int zTest = pos.getZ() + z;
 
-                if ((xTest == xAligned || zTest == zAligned))
-                {
-                    for (int y = -1; y <= 1; y++)
-                    {
-                        if (!(x == 0 && y == 0 && z == 0))
-                        {
+                if ((xTest == xAligned || zTest == zAligned)) {
+                    for (int y = -1; y <= 1; y++) {
+                        if (!(x == 0 && y == 0 && z == 0)) {
                             final BlockPos testPos = new BlockPos(xTest, pos.getY() + y, zTest);
-                            if (!this.checked.contains(testPos))
-                            {
+                            if (!this.checked.contains(testPos)) {
                                 this.checked.add(testPos);
-                                if (isValidFrame(testPos))
-                                {
+                                if (isValidFrame(testPos)) {
                                     this.adjacentAirLocks.add(testPos);
-                                    if (loops > 1)
-                                    {
+                                    if (loops > 1) {
                                         this.loopThrough(testPos, loops - 1);
                                     }
                                 }
@@ -101,25 +90,18 @@ class AirLockProtocol
         }
     }
 
-    private void loopThroughHorizontal(BlockPos pos, int loops)
-    {
+    private void loopThroughHorizontal(BlockPos pos, int loops) {
         int yTest = pos.getY();
-        for (int x = -1; x <= 1; x++)
-        {
+        for (int x = -1; x <= 1; x++) {
             int xTest = pos.getX() + x;
-            for (int z = -1; z <= 1; z++)
-            {
-                if (!(x == 0 && z == 0))
-                {
+            for (int z = -1; z <= 1; z++) {
+                if (!(x == 0 && z == 0)) {
                     final BlockPos testPos = new BlockPos(xTest, yTest, pos.getZ() + z);
-                    if (!this.checked.contains(testPos))
-                    {
+                    if (!this.checked.contains(testPos)) {
                         this.checked.add(testPos);
-                        if (isValidFrame(testPos))
-                        {
+                        if (isValidFrame(testPos)) {
                             this.adjacentAirLocks.add(testPos);
-                            if (loops > 1)
-                            {
+                            if (loops > 1) {
                                 this.loopThroughHorizontal(testPos, loops - 1);
                             }
                         }
@@ -129,10 +111,8 @@ class AirLockProtocol
         }
     }
 
-    public int calculate(boolean horizontal)
-    {
-        if (this.world.isClientSide())
-        {
+    public int calculate(boolean horizontal) {
+        if (this.world.isClientSide()) {
             return -1;
         }
 
@@ -149,56 +129,45 @@ class AirLockProtocol
         this.checked.add(headPos);
         this.adjacentAirLocks.add(headPos);
 
-        if (horizontal)
-        {
+        if (horizontal) {
             this.loopThroughHorizontal(headPos, this.maxLoops);
-        } else
-        {
+        } else {
             this.loopThrough(headPos, this.maxLoops);
         }
 
-        for (final BlockPos airLock : this.adjacentAirLocks)
-        {
-            if (airLock.getX() < this.minX)
-            {
+        for (final BlockPos airLock : this.adjacentAirLocks) {
+            if (airLock.getX() < this.minX) {
                 this.minX = airLock.getX();
             }
 
-            if (airLock.getX() > this.maxX)
-            {
+            if (airLock.getX() > this.maxX) {
                 this.maxX = airLock.getX();
             }
 
-            if (airLock.getY() < this.minY)
-            {
+            if (airLock.getY() < this.minY) {
                 this.minY = airLock.getY();
             }
 
-            if (airLock.getY() > this.maxY)
-            {
+            if (airLock.getY() > this.maxY) {
                 this.maxY = airLock.getY();
             }
 
-            if (airLock.getZ() < this.minZ)
-            {
+            if (airLock.getZ() < this.minZ) {
                 this.minZ = airLock.getZ();
             }
 
-            if (airLock.getZ() > this.maxZ)
-            {
+            if (airLock.getZ() > this.maxZ) {
                 this.maxZ = airLock.getZ();
             }
         }
 
         final int count = this.maxX - this.minX + this.maxZ - this.minZ + this.maxY - this.minY;
 
-        if (count > 24 || this.maxX - this.minX <= 1 && this.maxZ - this.minZ <= 1 || !horizontal && this.maxY - this.minY <= 1)
-        {
+        if (count > 24 || this.maxX - this.minX <= 1 && this.maxZ - this.minZ <= 1 || !horizontal && this.maxY - this.minY <= 1) {
             return -1;
         }
 
-        if (horizontal && (this.maxX - this.minX <= 1 || this.maxZ - this.minZ <= 1))
-        {
+        if (horizontal && (this.maxX - this.minX <= 1 || this.maxZ - this.minZ <= 1)) {
             return -1;
         }
 
@@ -207,116 +176,84 @@ class AirLockProtocol
         this.airLocksDimension2Min = 0;
         this.airLocksDimension2Max = 0;
 
-        if (horizontal)
-        {
+        if (horizontal) {
             this.checkDimensionsHorizontal();
-        } else
-        {
+        } else {
             this.checkDimensions();
         }
 
         if (this.airLocksDimension2Max == 0 || this.airLocksDimension2Min == 0 || (this.airLocksDimension1Min == 0 || this.airLocksDimension1Max == 0)
-                || this.airLocksDimension2Max != this.airLocksDimension2Min || this.airLocksDimension1Max != this.airLocksDimension1Min)
-        {
+                || this.airLocksDimension2Max != this.airLocksDimension2Min || this.airLocksDimension1Max != this.airLocksDimension1Min) {
             return -1;
         }
 
         return this.adjacentAirLocks.size();
     }
 
-    private void checkDimensions()
-    {
-        for (int y = this.minY; y <= this.maxY; y++)
-        {
-
-            if (isValidFrame(new BlockPos(this.minX, y, this.minZ)))
-            {
+    private void checkDimensions() {
+        for (int y = this.minY; y <= this.maxY; y++) {
+            if (isValidFrame(new BlockPos(this.minX, y, this.minZ))) {
                 this.airLocksDimension1Min++;
             }
         }
 
-        for (int y = this.minY; y <= this.maxY; y++)
-        {
-            if (isValidFrame(new BlockPos(this.maxX, y, this.maxZ)))
-            {
+        for (int y = this.minY; y <= this.maxY; y++) {
+            if (isValidFrame(new BlockPos(this.maxX, y, this.maxZ))) {
                 this.airLocksDimension1Max++;
             }
         }
 
-        if (this.minX != this.maxX)
-        {
-            for (int x = this.minX; x <= this.maxX; x++)
-            {
-                if (isValidFrame(new BlockPos(x, this.maxY, this.maxZ)))
-                {
+        if (this.minX != this.maxX) {
+            for (int x = this.minX; x <= this.maxX; x++) {
+                if (isValidFrame(new BlockPos(x, this.maxY, this.maxZ))) {
                     this.airLocksDimension2Max++;
                 }
             }
 
-            for (int x = this.minX; x <= this.maxX; x++)
-            {
-
-                if (isValidFrame(new BlockPos(x, this.minY, this.maxZ)))
-                {
+            for (int x = this.minX; x <= this.maxX; x++) {
+                if (isValidFrame(new BlockPos(x, this.minY, this.maxZ))) {
                     this.airLocksDimension2Min++;
                 }
             }
-        } else if (this.minZ != this.maxZ)
-        {
-            for (int z = this.minZ; z <= this.maxZ; z++)
-            {
-
-                if (isValidFrame(new BlockPos(this.maxX, this.maxY, z)))
-                {
+        } else if (this.minZ != this.maxZ) {
+            for (int z = this.minZ; z <= this.maxZ; z++) {
+                if (isValidFrame(new BlockPos(this.maxX, this.maxY, z))) {
                     this.airLocksDimension2Max++;
                 }
             }
 
-            for (int z = this.minZ; z <= this.maxZ; z++)
-            {
-                if (isValidFrame(new BlockPos(this.maxX, this.minY, z)))
-                {
+            for (int z = this.minZ; z <= this.maxZ; z++) {
+                if (isValidFrame(new BlockPos(this.maxX, this.minY, z))) {
                     this.airLocksDimension2Min++;
                 }
             }
         }
     }
 
-    private void checkDimensionsHorizontal()
-    {
-        if (this.minX != this.maxX)
-        {
-            for (int x = this.minX; x <= this.maxX; x++)
-            {
-                if (isValidFrame(new BlockPos(x, this.minY, this.maxZ)))
-                {
+    private void checkDimensionsHorizontal() {
+        if (this.minX != this.maxX) {
+            for (int x = this.minX; x <= this.maxX; x++) {
+                if (isValidFrame(new BlockPos(x, this.minY, this.maxZ))) {
                     this.airLocksDimension1Max++;
                 }
             }
 
-            for (int x = this.minX; x <= this.maxX; x++)
-            {
-                if (isValidFrame(new BlockPos(x, this.minY, this.minZ)))
-                {
+            for (int x = this.minX; x <= this.maxX; x++) {
+                if (isValidFrame(new BlockPos(x, this.minY, this.minZ))) {
                     this.airLocksDimension1Min++;
                 }
             }
         }
 
-        if (this.minZ != this.maxZ)
-        {
-            for (int z = this.minZ; z <= this.maxZ; z++)
-            {
-                if (isValidFrame(new BlockPos(this.maxX, this.minY, z)))
-                {
+        if (this.minZ != this.maxZ) {
+            for (int z = this.minZ; z <= this.maxZ; z++) {
+                if (isValidFrame(new BlockPos(this.maxX, this.minY, z))) {
                     this.airLocksDimension2Max++;
                 }
             }
 
-            for (int z = this.minZ; z <= this.maxZ; z++)
-            {
-                if (isValidFrame(new BlockPos(this.minX, this.minY, z)))
-                {
+            for (int z = this.minZ; z <= this.maxZ; z++) {
+                if (isValidFrame(new BlockPos(this.minX, this.minY, z))) {
                     this.airLocksDimension2Min++;
                 }
             }

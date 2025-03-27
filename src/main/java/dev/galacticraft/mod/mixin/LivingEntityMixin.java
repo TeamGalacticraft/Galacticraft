@@ -61,9 +61,11 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
             LivingEntity.class, EntityDataSerializers.BOOLEAN
     );
 
-    @Shadow public abstract void setYHeadRot(float f);
+    @Shadow
+    public abstract void setYHeadRot(float f);
 
-    @Unique public int cryogenicChamberCooldown;
+    @Unique
+    public int cryogenicChamberCooldown;
 
     public LivingEntityMixin(EntityType<?> entityType, Level level) {
         super(entityType, level);

@@ -25,16 +25,8 @@ package dev.galacticraft.mod.mixin.client;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import de.javagl.obj.*;
 import dev.galacticraft.mod.client.accessor.BlockModelAccessor;
-import dev.galacticraft.mod.client.model.GCModelLoader;
-import dev.galacticraft.mod.client.model.ObjModel;
-import dev.galacticraft.mod.client.model.GCRenderTypes;
 import dev.galacticraft.mod.client.model.types.UnbakedObjModel;
-import net.fabricmc.fabric.api.renderer.v1.Renderer;
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
-import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
-import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -44,7 +36,6 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -52,16 +43,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
 @Mixin(BlockModel.class)
 public abstract class BlockModelMixin implements BlockModelAccessor {
-    @Shadow public abstract Material getMaterial(String spriteName);
+    @Shadow
+    public abstract Material getMaterial(String spriteName);
 
     private UnbakedObjModel galacticraft$obj;
 

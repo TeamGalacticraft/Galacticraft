@@ -79,11 +79,11 @@ public interface DefaultCompressingDisplay extends SimpleGridMenuDisplay {
             List<EntryIngredient> inputs = new LinkedList<>();
             List<EntryIngredient> outputs = new LinkedList<>();
             for (Tag element : list) {
-                inputs.add(EntryIngredient.read(((ListTag)element)));
+                inputs.add(EntryIngredient.read(((ListTag) element)));
             }
             list = tag.getList(Constant.Nbt.OUTPUTS, Tag.TAG_LIST);
             for (Tag element : list) {
-                outputs.add(EntryIngredient.read(((ListTag)element)));
+                outputs.add(EntryIngredient.read(((ListTag) element)));
             }
             if (tag.getBoolean(Constant.Nbt.SHAPED)) {
                 return new DefaultShapedCompressingDisplay(inputs, outputs);

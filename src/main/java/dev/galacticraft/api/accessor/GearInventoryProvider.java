@@ -61,6 +61,16 @@ public interface GearInventoryProvider {
         return mask && gear;
     }
 
+    default boolean galacticraft$hasMask() {
+        for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
+            Item item = this.galacticraft$getAccessories().getItem(i).getItem();
+            if (item instanceof OxygenMask) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     default void galacticraft$writeGearToNbt(CompoundTag tag) {
         throw new RuntimeException("This should be overridden by mixin!");
     }

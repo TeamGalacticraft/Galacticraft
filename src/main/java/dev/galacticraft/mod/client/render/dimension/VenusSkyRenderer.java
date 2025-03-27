@@ -223,10 +223,10 @@ public class VenusSkyRenderer implements DimensionRenderingRegistry.SkyRenderer 
                 .addVertex(last, -f10, 100.0F, f10).setColor(r, g, b, a)
                 .addVertex(last, -f10 * 1.5F, 100.0F, 0).setColor(r, g, b, a)
                 .addVertex(last, -f10, 100.0F, -f10).setColor(r, g, b, a);
-        
+
         BufferUploader.drawWithShader(buffer.buildOrThrow());
         buffer = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
-        
+
         r = f6 * starBrightness;
         g = f7 * starBrightness;
         b = f8 * starBrightness;
