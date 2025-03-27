@@ -40,102 +40,102 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 
 public class EvolvedPillagerSpawner implements CustomSpawner {
-   private int ticksUntilNextSpawn;
+    private int ticksUntilNextSpawn;
 
-   public int tick(ServerLevel world, boolean spawnMonsters, boolean spawnAnimals) {
-      if (!spawnMonsters) {
-         return 0;
-      } else if (!world.getGameRules().getBoolean(GameRules.RULE_DO_PATROL_SPAWNING)) {
-         return 0;
-      } else {
-         RandomSource random = world.random;
-         --this.ticksUntilNextSpawn;
-         if (this.ticksUntilNextSpawn > 0) {
+    public int tick(ServerLevel world, boolean spawnMonsters, boolean spawnAnimals) {
+        if (!spawnMonsters) {
             return 0;
-         } else {
-            this.ticksUntilNextSpawn += 10000 + random.nextInt(1000);
-            Holder<CelestialBody<?, ?>> holder = world.galacticraft$getCelestialBody();
-            long dayLength = holder != null ? holder.value().dayLength() : 24000;
-            long l = world.getDayTime() / dayLength;
-            if (l >= 5L && world.isDay()) {
-               if (random.nextInt(5) != 0) {
-                  return 0;
-               } else {
-                  int i = world.players().size();
-                  if (i < 1) {
-                     return 0;
-                  } else {
-                     Player player = world.players().get(random.nextInt(i));
-                     if (player.isSpectator()) {
-                        return 0;
-                     } else if (world.isCloseToVillage(player.blockPosition(), 2)) {
-                        return 0;
-                     } else {
-                        int j = (24 + random.nextInt(24)) * (random.nextBoolean() ? -1 : 1);
-                        int k = (24 + random.nextInt(24)) * (random.nextBoolean() ? -1 : 1);
-                        BlockPos.MutableBlockPos mutable = player.blockPosition().mutable().move(j, 0, k);
-                        if (!world.hasChunksAt(mutable.getX() - 10, mutable.getY() - 10, mutable.getZ() - 10, mutable.getX() + 10, mutable.getY() + 10, mutable.getZ() + 10)) {
-                           return 0;
-                        } else {
-                           Holder<Biome> biome = world.getBiome(mutable);
-                           if (biome.is(BiomeTags.WITHOUT_PATROL_SPAWNS)) {
-                              return 0;
-                           } else {
-                              int m = 0;
-                              int n = (int)Math.ceil(world.getCurrentDifficultyAt(mutable).getEffectiveDifficulty()) + 1;
-
-                              for(int o = 0; o < n; ++o) {
-                                 ++m;
-                                 mutable.setY(world.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, mutable).getY());
-                                 if (o == 0) {
-                                    if (!this.spawnPillager(world, mutable, random, true)) {
-                                       break;
-                                    }
-                                 } else {
-                                    this.spawnPillager(world, mutable, random, false);
-                                 }
-
-                                 mutable.setX(mutable.getX() + random.nextInt(5) - random.nextInt(5));
-                                 mutable.setZ(mutable.getZ() + random.nextInt(5) - random.nextInt(5));
-                              }
-
-                              return m;
-                           }
-                        }
-                     }
-                  }
-               }
+        } else if (!world.getGameRules().getBoolean(GameRules.RULE_DO_PATROL_SPAWNING)) {
+            return 0;
+        } else {
+            RandomSource random = world.random;
+            --this.ticksUntilNextSpawn;
+            if (this.ticksUntilNextSpawn > 0) {
+                return 0;
             } else {
-               return 0;
-            }
-         }
-      }
-   }
+                this.ticksUntilNextSpawn += 10000 + random.nextInt(1000);
+                Holder<CelestialBody<?, ?>> holder = world.galacticraft$getCelestialBody();
+                long dayLength = holder != null ? holder.value().dayLength() : 24000;
+                long l = world.getDayTime() / dayLength;
+                if (l >= 5L && world.isDay()) {
+                    if (random.nextInt(5) != 0) {
+                        return 0;
+                    } else {
+                        int i = world.players().size();
+                        if (i < 1) {
+                            return 0;
+                        } else {
+                            Player player = world.players().get(random.nextInt(i));
+                            if (player.isSpectator()) {
+                                return 0;
+                            } else if (world.isCloseToVillage(player.blockPosition(), 2)) {
+                                return 0;
+                            } else {
+                                int j = (24 + random.nextInt(24)) * (random.nextBoolean() ? -1 : 1);
+                                int k = (24 + random.nextInt(24)) * (random.nextBoolean() ? -1 : 1);
+                                BlockPos.MutableBlockPos mutable = player.blockPosition().mutable().move(j, 0, k);
+                                if (!world.hasChunksAt(mutable.getX() - 10, mutable.getY() - 10, mutable.getZ() - 10, mutable.getX() + 10, mutable.getY() + 10, mutable.getZ() + 10)) {
+                                    return 0;
+                                } else {
+                                    Holder<Biome> biome = world.getBiome(mutable);
+                                    if (biome.is(BiomeTags.WITHOUT_PATROL_SPAWNS)) {
+                                        return 0;
+                                    } else {
+                                        int m = 0;
+                                        int n = (int) Math.ceil(world.getCurrentDifficultyAt(mutable).getEffectiveDifficulty()) + 1;
 
-   /**
-    * @param captain whether the pillager is the captain of a patrol
-    */
-   private boolean spawnPillager(ServerLevel world, BlockPos pos, RandomSource random, boolean captain) {
-      BlockState blockState = world.getBlockState(pos);
-      if (!NaturalSpawner.isValidEmptySpawnBlock(world, pos, blockState, blockState.getFluidState(), GCEntityTypes.EVOLVED_PILLAGER)) {
-         return false;
-      } else if (!PatrollingMonster.checkPatrollingMonsterSpawnRules(GCEntityTypes.EVOLVED_PILLAGER, world, MobSpawnType.PATROL, pos, random)) {
-         return false;
-      } else {
-         PatrollingMonster patrolEntity = GCEntityTypes.EVOLVED_PILLAGER.create(world);
-         if (patrolEntity != null) {
-            if (captain) {
-               patrolEntity.setPatrolLeader(true);
-               patrolEntity.findPatrolTarget();
-            }
+                                        for (int o = 0; o < n; ++o) {
+                                            ++m;
+                                            mutable.setY(world.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, mutable).getY());
+                                            if (o == 0) {
+                                                if (!this.spawnPillager(world, mutable, random, true)) {
+                                                    break;
+                                                }
+                                            } else {
+                                                this.spawnPillager(world, mutable, random, false);
+                                            }
 
-            patrolEntity.setPos(pos.getX(), pos.getY(), pos.getZ());
-            patrolEntity.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.PATROL, null);
-            world.addFreshEntityWithPassengers(patrolEntity);
-            return true;
-         } else {
+                                            mutable.setX(mutable.getX() + random.nextInt(5) - random.nextInt(5));
+                                            mutable.setZ(mutable.getZ() + random.nextInt(5) - random.nextInt(5));
+                                        }
+
+                                        return m;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    return 0;
+                }
+            }
+        }
+    }
+
+    /**
+     * @param captain whether the pillager is the captain of a patrol
+     */
+    private boolean spawnPillager(ServerLevel world, BlockPos pos, RandomSource random, boolean captain) {
+        BlockState blockState = world.getBlockState(pos);
+        if (!NaturalSpawner.isValidEmptySpawnBlock(world, pos, blockState, blockState.getFluidState(), GCEntityTypes.EVOLVED_PILLAGER)) {
             return false;
-         }
-      }
-   }
+        } else if (!PatrollingMonster.checkPatrollingMonsterSpawnRules(GCEntityTypes.EVOLVED_PILLAGER, world, MobSpawnType.PATROL, pos, random)) {
+            return false;
+        } else {
+            PatrollingMonster patrolEntity = GCEntityTypes.EVOLVED_PILLAGER.create(world);
+            if (patrolEntity != null) {
+                if (captain) {
+                    patrolEntity.setPatrolLeader(true);
+                    patrolEntity.findPatrolTarget();
+                }
+
+                patrolEntity.setPos(pos.getX(), pos.getY(), pos.getZ());
+                patrolEntity.finalizeSpawn(world, world.getCurrentDifficultyAt(pos), MobSpawnType.PATROL, null);
+                world.addFreshEntityWithPassengers(patrolEntity);
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
 }

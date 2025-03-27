@@ -106,7 +106,7 @@ public class MoonSurfaceRules {
 
     @SafeVarargs
     @Contract("_ -> new")
-    public static SurfaceRules.@NotNull ConditionSource biome(@NotNull ResourceKey<Biome> @NotNull... keys) {
+    public static SurfaceRules.@NotNull ConditionSource biome(@NotNull ResourceKey<Biome> @NotNull ... keys) {
         return SurfaceRules.isBiome(keys);
     }
 

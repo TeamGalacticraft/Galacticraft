@@ -59,10 +59,10 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
             root = model.root();
             head = root.getChild(PartNames.HEAD);
             body = root.getChild(PartNames.BODY);
-        } else if (context.getModel() instanceof HumanoidModel<?> model){
+        } else if (context.getModel() instanceof HumanoidModel<?> model) {
             head = model.head;
             body = model.body;
-        } else if (context.getModel() instanceof AnimalModelAgeableListModel model){
+        } else if (context.getModel() instanceof AnimalModelAgeableListModel model) {
             head = model.callGetHeadParts().iterator().next();
             body = model.callGetBodyParts().iterator().next();
         } else {
@@ -103,7 +103,7 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
     @Override
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
-        if ((Entity)entity instanceof Zombie) {
+        if ((Entity) entity instanceof Zombie) {
             Zombie zombie = (Zombie) entity;
             if (zombie.isBaby()) {
                 matrices.scale(0.75F, 0.75F, 0.75F);

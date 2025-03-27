@@ -55,7 +55,8 @@ public interface MultiBlockBase {
         }
     }
 
-    @Unmodifiable List<BlockPos> getOtherParts(BlockState blockState);
+    @Unmodifiable
+    List<BlockPos> getOtherParts(BlockState blockState);
 
     void onMultiBlockPlaced(Level level, BlockPos blockPos, BlockState blockState);
 

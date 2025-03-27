@@ -29,7 +29,10 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Fuelable {
     @Nullable Fluid getFuelTankFluid();
+
     long getFuelTankAmount();
+
     long getFuelTankCapacity();
+
     Storage<FluidVariant> getFuelTank();
 }

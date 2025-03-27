@@ -35,10 +35,18 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import org.jetbrains.annotations.NotNull;
 
-public record StarConfig(@NotNull Component name, @NotNull Component description,
-                         @NotNull Holder<Galaxy> galaxy, @NotNull CelestialPosition<?, ?> position,
-                         @NotNull CelestialDisplay<?, ?> display, @NotNull CelestialRingDisplay<?, ?> ring, GasComposition photosphericComposition, float gravity,
-                         double luminance, int surfaceTemperature) implements CelestialBodyConfig {
+public record StarConfig(
+        @NotNull Component name,
+        @NotNull Component description,
+        @NotNull Holder<Galaxy> galaxy,
+        @NotNull CelestialPosition<?, ?> position,
+        @NotNull CelestialDisplay<?, ?> display,
+        @NotNull CelestialRingDisplay<?, ?> ring,
+        GasComposition photosphericComposition,
+        float gravity,
+        double luminance,
+        int surfaceTemperature
+) implements CelestialBodyConfig {
     public static final Codec<StarConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ComponentSerialization.CODEC.fieldOf("name").forGetter(StarConfig::name),
             ComponentSerialization.CODEC.fieldOf("description").forGetter(StarConfig::description),

@@ -68,8 +68,7 @@ public class DungeonStructure extends Structure {
         startPiece.addChildren(startPiece, collector, worldgenRandom);
         List<StructurePiece> list = startPiece.attachedComponents;
 
-        while (!list.isEmpty())
-        {
+        while (!list.isEmpty()) {
             int i = worldgenRandom.nextInt(list.size());
             StructurePiece structurecomponent = list.remove(i);
             structurecomponent.addChildren(startPiece, collector, worldgenRandom);

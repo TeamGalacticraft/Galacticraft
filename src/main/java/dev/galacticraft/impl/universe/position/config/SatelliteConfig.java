@@ -93,33 +93,61 @@ public final class SatelliteConfig implements CelestialBodyConfig {
         this.options = options;
     }
 
-    public Holder<CelestialBody<?, ?>> parent() {return parent;}
+    public Holder<CelestialBody<?, ?>> parent() {
+        return parent;
+    }
 
-    public Holder<Galaxy> galaxy() {return galaxy;}
+    public Holder<Galaxy> galaxy() {
+        return galaxy;
+    }
 
-    public CelestialPosition<?, ?> position() {return position;}
+    public CelestialPosition<?, ?> position() {
+        return position;
+    }
 
-    public CelestialDisplay<?, ?> display() {return display;}
+    public CelestialDisplay<?, ?> display() {
+        return display;
+    }
 
-    public CelestialRingDisplay<?, ?> ring() {return ring;}
+    public CelestialRingDisplay<?, ?> ring() {
+        return ring;
+    }
 
-    public SatelliteOwnershipData ownershipData() {return ownershipData;}
+    public SatelliteOwnershipData ownershipData() {
+        return ownershipData;
+    }
 
-    public Component customName() {return customName;}
+    public Component customName() {
+        return customName;
+    }
 
-    public void customName(Component name) {this.customName = name;}
+    public void customName(Component name) {
+        this.customName = name;
+    }
 
-    public ResourceKey<Level> world() {return world;}
+    public ResourceKey<Level> world() {
+        return world;
+    }
 
-    public Holder<CelestialTeleporter<?, ?>> teleporter() {return teleporter;}
+    public Holder<CelestialTeleporter<?, ?>> teleporter() {
+        return teleporter;
+    }
 
-    public GasComposition atmosphere() {return atmosphere;}
+    public GasComposition atmosphere() {
+        return atmosphere;
+    }
 
-    public float gravity() {return gravity;}
+    public float gravity() {
+        return gravity;
+    }
 
-    public int accessWeight() {return accessWeight;}
+    public int accessWeight() {
+        return accessWeight;
+    }
 
-    public LevelStem dimensionOptions() {return options;}
+    public LevelStem dimensionOptions() {
+        return options;
+    }
 
     @Override
     public boolean equals(Object obj) {

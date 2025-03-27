@@ -23,9 +23,8 @@
 package dev.galacticraft.mod.mixin;
 
 import com.google.common.collect.ImmutableList;
-import dev.galacticraft.mod.accessor.LevelAccessor;
-import dev.galacticraft.mod.accessor.ServerLevelAccessor;
-import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
+import dev.galacticraft.mod.accessor.GCLevelAccessor;
+import dev.galacticraft.mod.machine.SealerManager;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.misc.footprint.ServerFootprintManager;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
@@ -37,6 +36,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.progress.ChunkProgressListener;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.RandomSequences;
 import net.minecraft.world.level.CustomSpawner;
@@ -54,17 +54,20 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
 @Mixin(ServerLevel.class)
-public abstract class ServerLevelMixin extends Level implements LevelAccessor, ServerLevelAccessor {
-    @Shadow @Final @Mutable private List<CustomSpawner> customSpawners;
-    private final @Unique Set<OxygenSealerBlockEntity> sealers = new HashSet<>();
+public abstract class ServerLevelMixin extends Level implements GCLevelAccessor {
+    @Shadow
+    @Final
+    @Mutable
+    private List<CustomSpawner> customSpawners;
+
+    @Shadow
+    public abstract ServerLevel getLevel();
+
     private final @Unique FootprintManager footprintManager = new ServerFootprintManager();
 
     protected ServerLevelMixin(WritableLevelData levelData, ResourceKey<Level> dimension, RegistryAccess registryAccess, Holder<DimensionType> dimensionTypeRegistration, Supplier<ProfilerFiller> profiler, boolean isClientSide, boolean isDebug, long biomeZoomSeed, int maxChainedNeighborUpdates) {
@@ -79,26 +82,20 @@ public abstract class ServerLevelMixin extends Level implements LevelAccessor, S
     }
 
     @Inject(method = "sendBlockUpdated", at = @At(value = "INVOKE", target = "Ljava/util/Set;iterator()Ljava/util/Iterator;", remap = false))
-    private void updateSealerListeners_gc(BlockPos pos, BlockState oldState, BlockState newState, int flags, CallbackInfo ci) {
-        List<OxygenSealerBlockEntity> queueRemove = new LinkedList<>();
-        for (OxygenSealerBlockEntity sealer : this.sealers) {
-            if (sealer.isRemoved()) {
-                queueRemove.add(sealer);
-                assert false : "this shouldn't happen! Oxygen sealer was removed but nothing called #markRemoved";
-            }
-            sealer.enqueueUpdate(pos, newState.getCollisionShape(((Level)(Object) this), pos));
+    private void onBlockChanges(BlockPos pos, BlockState oldState, BlockState newState, int flags, CallbackInfo ci) {
+        // Skip if both old and new states are solid blocks
+        if (oldState.isSolid() && newState.isSolid()) {
+            return;
         }
-        this.sealers.removeAll(queueRemove);
-    }
 
-    @Override
-    public void addSealer(OxygenSealerBlockEntity sealer) {
-        this.sealers.add(sealer);
-    }
+        // Check if the block is a leaf (for oxygen collection logic)
+        if (newState.is(BlockTags.LEAVES)) {
+            // Oxygen collector code update (if needed)
+        }
 
-    @Override
-    public void removeSealer(OxygenSealerBlockEntity sealer) {
-        this.sealers.remove(sealer);
+        // Notify the SealerManager about the block change
+        SealerManager manager = ((GCLevelAccessor) getLevel()).getSealerManager();
+        manager.onBlockChange(pos, newState, this.getLevel());
     }
 
     @Inject(method = "tickChunk", at = @At("HEAD"))

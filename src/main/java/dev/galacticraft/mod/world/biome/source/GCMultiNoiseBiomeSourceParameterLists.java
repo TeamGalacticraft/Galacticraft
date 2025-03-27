@@ -86,21 +86,26 @@ public class GCMultiNoiseBiomeSourceParameterLists {
 
     public static final ResourceLocation MOON_PRESET_ID = Constant.id("moon");
     public static final ResourceLocation VENUS_PRESET_ID = Constant.id("venus");
+    public static final ResourceLocation ASTEROID_PRESET_ID = Constant.id("asteroid");
     public static final MultiNoiseBiomeSourceParameterList.Preset MOON_PRESET = new MultiNoiseBiomeSourceParameterList.Preset(
             MOON_PRESET_ID, GCMultiNoiseBiomeSourceParameterLists::generateMoon
     );
     public static final MultiNoiseBiomeSourceParameterList.Preset VENUS_PRESET = new MultiNoiseBiomeSourceParameterList.Preset(
             VENUS_PRESET_ID, GCMultiNoiseBiomeSourceParameterLists::generateVenus
     );
+    public static final MultiNoiseBiomeSourceParameterList.Preset ASTEROID_PRESET = new MultiNoiseBiomeSourceParameterList.Preset(
+            ASTEROID_PRESET_ID, GCMultiNoiseBiomeSourceParameterLists::generateAsteroid
+    );
 
     public static final ResourceKey<MultiNoiseBiomeSourceParameterList> MOON = Constant.key(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, "moon");
     public static final ResourceKey<MultiNoiseBiomeSourceParameterList> VENUS = Constant.key(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, "venus");
+    public static final ResourceKey<MultiNoiseBiomeSourceParameterList> ASTEROID = Constant.key(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, "asteroid");
 
     @Contract("_ -> new")
     private static <T> Climate.@NotNull ParameterList<T> generateMoon(Function<ResourceKey<Biome>, T> biomeRegistry) {
         ImmutableList.Builder<Pair<Climate.ParameterPoint, T>> builder = ImmutableList.builder();
         writeBiomeParameters(builder::add,
-                HOT, // hot to prevent snow
+                HOT,
                 DRY,
                 Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS),
                 MIN_EROSION,
@@ -167,6 +172,21 @@ public class GCMultiNoiseBiomeSourceParameterLists {
         return new Climate.ParameterList<>(builder.build());
     }
 
+    @Contract("_ -> new")
+    private static <T> Climate.@NotNull ParameterList<T> generateAsteroid(Function<ResourceKey<Biome>, T> biomeRegistry) {
+        ImmutableList.Builder<Pair<Climate.ParameterPoint, T>> builder = ImmutableList.builder();
+        writeBiomeParameters(builder::add,
+                HOT, // hot to prevent snow
+                DRY,// ,
+                Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS),
+                MIN_EROSION,
+                WEIRDNESS_H_MIXED,
+                0.0F,
+                biomeRegistry.apply(GCBiomes.Asteroid.ASTEROID_FIELD));
+
+        return new Climate.ParameterList<>(builder.build());
+    }
+
     private static <T> void writeBiomeParameters(
             Consumer<Pair<Climate.ParameterPoint, T>> parameters,
             Parameter temperature,
@@ -194,12 +214,14 @@ public class GCMultiNoiseBiomeSourceParameterLists {
     public static void register() {
         MultiNoiseBiomeSourceParameterListPresetAccessor.getByName().put(MOON_PRESET_ID, MOON_PRESET);
         MultiNoiseBiomeSourceParameterListPresetAccessor.getByName().put(VENUS_PRESET_ID, VENUS_PRESET);
+        MultiNoiseBiomeSourceParameterListPresetAccessor.getByName().put(ASTEROID_PRESET_ID, ASTEROID_PRESET);
     }
 
     public static void bootstrapRegistries(BootstrapContext<MultiNoiseBiomeSourceParameterList> context) {
         HolderGetter<Biome> lookup = context.lookup(Registries.BIOME);
         context.register(MOON, new MultiNoiseBiomeSourceParameterList(MOON_PRESET, lookup));
         context.register(VENUS, new MultiNoiseBiomeSourceParameterList(VENUS_PRESET, lookup));
+        context.register(ASTEROID, new MultiNoiseBiomeSourceParameterList(ASTEROID_PRESET, lookup));
     }
 }
 

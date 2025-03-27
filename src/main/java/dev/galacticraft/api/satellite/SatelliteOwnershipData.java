@@ -64,7 +64,9 @@ public interface SatelliteOwnershipData {
 
     boolean open();
 
-    @NotNull @Unmodifiable List<UUID> trusted();
+    @NotNull
+    @Unmodifiable
+    List<UUID> trusted();
 
     void trust(UUID uuid);
 

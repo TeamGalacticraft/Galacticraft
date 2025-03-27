@@ -119,7 +119,8 @@ public class DimensionTpCommand {
 
     /**
      * Finds the highest solid block in the level to teleport to.
-     * @param level The level.
+     *
+     * @param level  The level.
      * @param entity The entity to teleport.
      * @return The highest valid position to teleport to.
      */

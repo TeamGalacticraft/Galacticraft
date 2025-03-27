@@ -78,7 +78,7 @@ public class GCOreConfiguredFeature {
     public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_CHEESE_LARGE_MOON = key("ore_cheese_large_moon");
 
     public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_LUNAR_SAPPHIRE_MOON = key("ore_lunar_sapphire_moon");
-    
+
     @Contract(pure = true)
     private static @NotNull ResourceKey<ConfiguredFeature<?, ?>> key(String s) {
         return Constant.key(Registries.CONFIGURED_FEATURE, s);

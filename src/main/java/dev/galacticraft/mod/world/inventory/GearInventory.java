@@ -60,7 +60,7 @@ public class GearInventory extends SimpleContainer {
             ItemStack stack = this.getItem(i);
             if (!stack.isEmpty()) {
                 CompoundTag compoundTag = new CompoundTag();
-                compoundTag.putByte("Slot", (byte)i);
+                compoundTag.putByte("Slot", (byte) i);
                 listTag.add(stack.save(lookup, compoundTag));
             }
         }

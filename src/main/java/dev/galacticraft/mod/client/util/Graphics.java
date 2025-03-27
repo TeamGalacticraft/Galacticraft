@@ -383,7 +383,7 @@ public class Graphics implements AutoCloseable {
         }
     }
 
-    public class Text implements AutoCloseable{
+    public class Text implements AutoCloseable {
         private boolean textDirty = false;
 
         public int getSplitStringLines(String text, int width) {
@@ -414,7 +414,7 @@ public class Graphics implements AutoCloseable {
         }
 
         public int drawCenteredText(String text, int centerX, int y, int color, boolean shadow) {
-            return this.drawText(text, centerX - Graphics.this.font.width(text) / 2.0f, (float)y, color, shadow);
+            return this.drawText(text, centerX - Graphics.this.font.width(text) / 2.0f, (float) y, color, shadow);
         }
 
         public int drawCenteredText(Component text, int centerX, int y, int color) {
@@ -422,7 +422,7 @@ public class Graphics implements AutoCloseable {
         }
 
         public int drawCenteredText(Component text, int centerX, int y, int color, boolean shadow) {
-            return this.drawText(text, centerX - Graphics.this.font.width(text) / 2.0f, (float)y, color, shadow);
+            return this.drawText(text, centerX - Graphics.this.font.width(text) / 2.0f, (float) y, color, shadow);
         }
 
         public int drawCenteredText(FormattedCharSequence text, int centerX, int y, int color) {
@@ -430,7 +430,7 @@ public class Graphics implements AutoCloseable {
         }
 
         public int drawCenteredText(FormattedCharSequence text, int centerX, int y, int color, boolean shadow) {
-            return this.drawText(text, centerX - Graphics.this.font.width(text) / 2.0f, (float)y, color, shadow);
+            return this.drawText(text, centerX - Graphics.this.font.width(text) / 2.0f, (float) y, color, shadow);
         }
 
         public int drawText(String text, int x, int y, int color) {

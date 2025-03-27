@@ -47,6 +47,7 @@ import java.util.concurrent.CompletableFuture;
  */
 public class PlanetChunkGenerator extends ChunkGenerator {
     private final Holder<NoiseGeneratorSettings> settings = null;
+
     public PlanetChunkGenerator(BiomeSource biomeSource) {
         super(biomeSource);
     }

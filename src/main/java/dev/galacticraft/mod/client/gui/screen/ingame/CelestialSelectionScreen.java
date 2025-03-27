@@ -201,7 +201,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
         }
         if (body.parent() != null) {
             if (body.parent().value().parent() != null) {
-                return I18n.get(((TranslatableContents)body.parent().value().parent().value().name().getContents()).getKey());
+                return I18n.get(((TranslatableContents) body.parent().value().parent().value().name().getContents()).getKey());
             } else {
                 return I18n.get(((TranslatableContents) body.galaxy().value().name().getContents()).getKey());
             }
@@ -212,8 +212,10 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
     protected String parentName() {
         if (this.selectedBody == null) return I18n.get(Translations.CelestialBody.SOL); //fixme
-        if (this.selectedBody == celestialBodies.get(Constant.id("sol"))) return I18n.get(Translations.CelestialBody.SOL);
-        if (this.selectedBody.parent() != null) return I18n.get(((TranslatableContents)this.selectedBody.parent().value().name().getContents()).getKey());
+        if (this.selectedBody == celestialBodies.get(Constant.id("sol")))
+            return I18n.get(Translations.CelestialBody.SOL);
+        if (this.selectedBody.parent() != null)
+            return I18n.get(((TranslatableContents) this.selectedBody.parent().value().name().getContents()).getKey());
         return I18n.get(((TranslatableContents) this.selectedBody.galaxy().value().name().getContents()).getKey());
     }
 
@@ -285,7 +287,8 @@ public class CelestialSelectionScreen extends CelestialScreen {
     }
 
     protected boolean canCreateSpaceStation(CelestialBody<?, ?> atBody) {
-        if (!(atBody.type() instanceof Orbitable orbitable) || orbitable.satelliteRecipe(atBody.config()) == null) return false;
+        if (!(atBody.type() instanceof Orbitable orbitable) || orbitable.satelliteRecipe(atBody.config()) == null)
+            return false;
         if (this.mapMode/* || ConfigManagerCore.disableSpaceStationCreation.get()*/ || !this.canCreateStations) //todo SSconfig
         {
             return false;
@@ -326,7 +329,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
                 try {
                     assert this.minecraft != null;
                     ClientPlayNetworking.send(new PlanetTeleportPayload(celestialBodies.getKey(this.selectedBody)));
-                    this.minecraft.setScreen(new SpaceTravelScreen(isSatellite(selectedBody) ? ((Satellite) this.selectedBody.type()).getCustomName(this.selectedBody.config()).getString() : ((TranslatableContents)this.selectedBody.name().getContents()).getKey(), ((Landable) this.selectedBody.type()).world(this.selectedBody.config())));
+                    this.minecraft.setScreen(new SpaceTravelScreen(isSatellite(selectedBody) ? ((Satellite) this.selectedBody.type()).getCustomName(this.selectedBody.config()).getString() : ((TranslatableContents) this.selectedBody.name().getContents()).getKey(), ((Landable) this.selectedBody.type()).world(this.selectedBody.config())));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -355,20 +358,16 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
         if (!this.mapMode) {
             if (x >= RHS - 95 && x < RHS && y > LHS + 181 + canCreateOffset && y < LHS + 182 + 12 + canCreateOffset) {
-                if (this.selectedBody != null && this.selectedBody.type() instanceof Orbitable orbitable/* && this.selectedBody.getWorld() != null*/)
-                {
+                if (this.selectedBody != null && this.selectedBody.type() instanceof Orbitable orbitable/* && this.selectedBody.getWorld() != null*/) {
                     SatelliteRecipe recipe = orbitable.satelliteRecipe(this.selectedBody.config());
-                    if (recipe != null && this.canCreateSpaceStation(this.selectedBody))
-                    {
+                    if (recipe != null && this.canCreateSpaceStation(this.selectedBody)) {
                         assert this.minecraft != null;
                         assert this.minecraft.player != null;
-                        if (recipe.test(this.minecraft.player.getInventory()) || this.minecraft.player.isCreative())
-                        {
+                        if (recipe.test(this.minecraft.player.getInventory()) || this.minecraft.player.isCreative()) {
 //                            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_BIND_SPACE_STATION_ID, GCCoreUtil.getWorld(this.minecraft.level), new Object[]{this.selectedBody.getWorld()}));
                             ClientPlayNetworking.send(new SatelliteCreationPayload(celestialBodies.getHolderOrThrow(celestialBodies.getResourceKey(this.selectedBody).get())));
                             //Zoom in on planet to show the new SpaceStation if not already zoomed
-                            if (!this.isZoomed())
-                            {
+                            if (!this.isZoomed()) {
                                 this.selectionState = EnumSelection.ZOOMED;
                                 this.preSelectZoom = this.zoom;
                                 this.preSelectPosition = this.position;
@@ -1031,7 +1030,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
             if (scale > 0) {
                 color = 0xe0e0e0;
-                texture.drawText(I18n.get(((TranslatableContents)child.name().getContents()).getKey()), 7 + xOffset, yOffsetBase + yOffset + 2, color, false);
+                texture.drawText(I18n.get(((TranslatableContents) child.name().getContents()).getKey()), 7 + xOffset, yOffsetBase + yOffset + 2, color, false);
             }
 
             yOffset += 14;
@@ -1060,7 +1059,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
     protected int getAmountInInventory(Ingredient ingredient) {
         int i = 0;
 
-        for(int j = 0; j < Objects.requireNonNull(Objects.requireNonNull(this.minecraft).player).getInventory().getContainerSize(); ++j) {
+        for (int j = 0; j < Objects.requireNonNull(Objects.requireNonNull(this.minecraft).player).getInventory().getContainerSize(); ++j) {
             ItemStack stack = this.minecraft.player.getInventory().getItem(j);
             if (ingredient.test(stack)) {
                 i += stack.getCount();

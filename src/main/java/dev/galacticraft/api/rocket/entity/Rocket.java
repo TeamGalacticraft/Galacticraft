@@ -35,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 public interface Rocket extends Dockable {
     /**
      * Returns the launch stage of this rocket.
+     *
      * @return the launch stage of this rocket.
      */
     LaunchStage getLaunchStage();

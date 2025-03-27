@@ -38,7 +38,9 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(AbstractClientPlayer.class)
 @Environment(EnvType.CLIENT)
 public abstract class AbstractClientPlayerMixin {
-    @Shadow @Nullable protected abstract PlayerInfo getPlayerInfo();
+    @Shadow
+    @Nullable
+    protected abstract PlayerInfo getPlayerInfo();
 
     @ModifyReturnValue(method = "getSkin", at = @At("RETURN"))
     private PlayerSkin getCapeTexture_gc(PlayerSkin original) {

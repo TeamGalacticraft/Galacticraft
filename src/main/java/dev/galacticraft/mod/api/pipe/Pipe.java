@@ -33,12 +33,14 @@ import org.jetbrains.annotations.Nullable;
 public interface Pipe extends Connected, Colored {
     /**
      * Sets the {@link PipeNetwork} associated with this pipe
+     *
      * @param network The network to associate with
      */
     void setNetwork(@Nullable PipeNetwork network);
 
     /**
      * Returns the associated {@link PipeNetwork}
+     *
      * @return The associated {@link PipeNetwork}
      */
     @Contract(pure = true)
@@ -46,6 +48,7 @@ public interface Pipe extends Connected, Colored {
 
     /**
      * Returns whether this pipe is able to connect to another block on the specified face/direction
+     *
      * @param direction the direction offset to the block to check adjacency to
      * @return Whether this pipe is able to connect to another block on the specified face/direction
      */
@@ -57,6 +60,7 @@ public interface Pipe extends Connected, Colored {
 
     /**
      * Returns the maximum amount of fluid allowed to be transferred through this pipe.
+     *
      * @return the maximum amount of fluid allowed to be transferred through this pipe.
      */
     long getMaxTransferRate();
