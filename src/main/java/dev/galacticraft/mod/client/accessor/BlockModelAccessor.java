@@ -22,11 +22,7 @@
 
 package dev.galacticraft.mod.client.accessor;
 
-import de.javagl.obj.Mtl;
-import de.javagl.obj.Obj;
 import dev.galacticraft.mod.client.model.types.UnbakedObjModel;
-
-import java.util.List;
 
 public interface BlockModelAccessor {
     void galacticraft$setObjData(UnbakedObjModel obj);

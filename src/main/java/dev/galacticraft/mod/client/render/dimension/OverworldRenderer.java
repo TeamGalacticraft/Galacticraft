@@ -54,6 +54,7 @@ public class OverworldRenderer {
     @Nullable
     private VertexBuffer starBuffer4;
     private Minecraft minecraft = Minecraft.getInstance();
+
     public OverworldRenderer() {
         RandomSource rand = RandomSource.create(10842L);
         RenderSystem.setShader(GameRenderer::getPositionShader);
@@ -78,6 +79,7 @@ public class OverworldRenderer {
         this.starBuffer4.upload(this.renderStars(rand));
         VertexBuffer.unbind();
     }
+
     public void renderOverworldSky(Player player, PoseStack poseStack, Matrix4f matrix4f, float partialTicks, Camera camera, boolean bl, Runnable runnable) {
         float theta = Mth.sqrt(((float) (player.getY()) - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) / ((float) Constant.ESCAPE_HEIGHT - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT));
         final float var21 = Math.max(1.0F - theta * 4.0F, 0.0F);
@@ -181,7 +183,7 @@ public class OverworldRenderer {
 
         // Draw sun
         RenderSystem.blendFuncSeparate(
-            GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO
+                GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO
         );
         r = 30.0F;
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -225,7 +227,7 @@ public class OverworldRenderer {
             final float sinth = Math.max(Math.min(theta / 100.0F - 0.2F, 0.5F), 0.0F);
 
             poseStack.pushPose();
-                        float scale = 850 * (0.25F - theta / 10000.0F);
+            float scale = 850 * (0.25F - theta / 10000.0F);
             scale = Math.max(scale, 0.2F);
             poseStack.scale(scale, 1.0F, scale);
             poseStack.translate(0.0F, -(float) player.getY(), 0.0F);
@@ -248,9 +250,11 @@ public class OverworldRenderer {
             poseStack.popPose();
         }
 
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        poseStack.popPose();
+
+        RenderSystem.setShaderColor(0.0f, 0.0f, 0.0f, 1.0F);
+
         RenderSystem.depthMask(true);
+
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         RenderSystem.disableBlend();
     }

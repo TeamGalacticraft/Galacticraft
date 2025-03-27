@@ -51,6 +51,7 @@ public non-sealed abstract class RocketBodyType<C extends RocketBodyConfig> impl
 
     /**
      * Returns the maximum number of passengers allowed on this rocket.
+     *
      * @return the maximum number of passengers allowed on this rocket.
      */
     @Contract(pure = true)

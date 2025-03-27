@@ -66,9 +66,9 @@ public class SpaceTravelScreen extends Screen {
         this.minecraft.getTextureManager().bindForSetup(TEXTURE);
         RenderSystem.setShaderTexture(0, TEXTURE);
         BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        buffer.addVertex(0.0F, this.height, 0.0F).setUv(0.0F, (float)this.height / 32.0F).setColor(200, 200, 200, 255)
-                .addVertex(this.width, this.height, 0.0F).setUv((float)this.width / 32.0F, (float)this.height / 32.0F).setColor(200, 200, 200, 255)
-                .addVertex(this.width, 0.0F, 0.0F).setUv((float)this.width / 32.0F, 0.0F).setColor(200, 200, 200, 255)
+        buffer.addVertex(0.0F, this.height, 0.0F).setUv(0.0F, (float) this.height / 32.0F).setColor(200, 200, 200, 255)
+                .addVertex(this.width, this.height, 0.0F).setUv((float) this.width / 32.0F, (float) this.height / 32.0F).setColor(200, 200, 200, 255)
+                .addVertex(this.width, 0.0F, 0.0F).setUv((float) this.width / 32.0F, 0.0F).setColor(200, 200, 200, 255)
                 .addVertex(0.0F, 0.0F, 0.0F).setUv(0.0F, 0.0F).setColor(200, 200, 200, 255);
         BufferUploader.drawWithShader(buffer.buildOrThrow());
 

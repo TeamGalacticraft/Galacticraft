@@ -45,7 +45,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin extends LivingEntityMixin implements ServerPlayerAccessor {
 
-    private @Unique @Nullable RocketData rocketData = null;
+    private @Unique
+    @Nullable RocketData rocketData = null;
     private @Unique boolean celestialActive = false;
     private @Unique boolean isRideTick = false;
 
@@ -114,7 +115,7 @@ public abstract class ServerPlayerMixin extends LivingEntityMixin implements Ser
     @Inject(method = "bedBlocked", at = @At(value = "HEAD"), cancellable = true)
     private void checkIfCryoBedBlocked(BlockPos sleepingPos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
         BlockPos basePos = sleepingPos.below();
-        if (this.level().getBlockState(basePos).getBlock() instanceof CryogenicChamberBlock){
+        if (this.level().getBlockState(basePos).getBlock() instanceof CryogenicChamberBlock) {
             cir.setReturnValue(!this.gc$freeAt(basePos.relative(direction)) || !this.gc$freeAt(sleepingPos.relative(direction)));
         }
     }

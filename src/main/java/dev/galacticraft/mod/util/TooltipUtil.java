@@ -48,7 +48,8 @@ public class TooltipUtil {
     public static final Style DEFAULT_STYLE = Constant.Text.GRAY_STYLE;
     private static final Component PRESS_SHIFT = Component.translatable(Translations.Tooltip.PRESS_SHIFT).withStyle(Constant.Text.DARK_GRAY_STYLE);
 
-    private TooltipUtil() {}
+    private TooltipUtil() {
+    }
 
     public static void appendLshiftTooltip(String resourceId, List<Component> tooltip) {
         Minecraft minecraft = Minecraft.getInstance();

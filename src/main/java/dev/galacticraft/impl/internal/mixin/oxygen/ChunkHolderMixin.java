@@ -42,9 +42,12 @@ import java.util.List;
 
 @Mixin(ChunkHolder.class)
 public abstract class ChunkHolderMixin {
-    @Shadow protected abstract void broadcast(List<ServerPlayer> list, Packet<?> packet);
+    @Shadow
+    protected abstract void broadcast(List<ServerPlayer> list, Packet<?> packet);
 
-    @Shadow @Final private ChunkHolder.PlayerProvider playerProvider;
+    @Shadow
+    @Final
+    private ChunkHolder.PlayerProvider playerProvider;
 
     @Inject(method = "broadcastChanges", at = @At("HEAD"))
     private void galacticraft_flushOxygenPackets(LevelChunk chunk, CallbackInfo ci) {

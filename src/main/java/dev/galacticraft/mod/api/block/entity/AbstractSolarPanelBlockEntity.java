@@ -22,13 +22,12 @@
 
 package dev.galacticraft.mod.api.block.entity;
 
-import dev.galacticraft.machinelib.api.block.MachineBlock;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.util.EnergySource;
-import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;

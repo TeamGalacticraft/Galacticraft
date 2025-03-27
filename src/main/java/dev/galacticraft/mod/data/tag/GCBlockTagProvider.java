@@ -25,6 +25,7 @@ package dev.galacticraft.mod.data.tag;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.block.GCBlock;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
@@ -84,8 +85,10 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR,
                         GCBlocks.OXYGEN_DECOMPRESSOR,
                         GCBlocks.OXYGEN_COMPRESSOR,
+                        GCBlocks.FOOD_CANNER,
                         GCBlocks.OXYGEN_STORAGE_MODULE,
-                        GCBlocks.FUEL_LOADER
+                        GCBlocks.FUEL_LOADER,
+                        GCBlocks.ROCKET_WORKBENCH
                 );
 
         this.tag(BlockTags.CLIMBABLE)
@@ -95,7 +98,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.CAVERNOUS_VINES_PLANT
                 );
 
-        var stairs = new Block[] {
+        var stairs = new Block[]{
                 GCBlocks.MOON_ROCK_STAIRS,
                 GCBlocks.MOON_ROCK_BRICK_STAIRS,
                 GCBlocks.CRACKED_MOON_ROCK_BRICK_STAIRS,
@@ -142,24 +145,24 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         // ORE MINING TAGS
         var ores = new Block[] {
-                GCBlocks.MARS_IRON_ORE, GCBlocks.ASTEROID_IRON_ORE,
-                GCBlocks.MOON_COPPER_ORE, GCBlocks.LUNASLATE_COPPER_ORE, GCBlocks.MARS_COPPER_ORE, GCBlocks.VENUS_COPPER_ORE,
-                GCBlocks.SILICON_ORE, GCBlocks.DEEPSLATE_SILICON_ORE,
-                GCBlocks.FALLEN_METEOR,
-                GCBlocks.MOON_CHEESE_ORE,
-                GCBlocks.LUNAR_SAPPHIRE_ORE,
-                GCBlocks.OLIVINE_BASALT, GCBlocks.RICH_OLIVINE_BASALT,
-                GCBlocks.TIN_ORE, GCBlocks.DEEPSLATE_TIN_ORE, GCBlocks.MOON_TIN_ORE, GCBlocks.LUNASLATE_TIN_ORE, GCBlocks.MARS_TIN_ORE, GCBlocks.VENUS_TIN_ORE,
                 GCBlocks.ALUMINUM_ORE, GCBlocks.DEEPSLATE_ALUMINUM_ORE, GCBlocks.ASTEROID_ALUMINUM_ORE, GCBlocks.VENUS_ALUMINUM_ORE,
+                GCBlocks.MOON_CHEESE_ORE,
+                GCBlocks.MOON_COPPER_ORE, GCBlocks.LUNASLATE_COPPER_ORE, GCBlocks.MARS_COPPER_ORE,  GCBlocks.VENUS_COPPER_ORE,
                 GCBlocks.DESH_ORE,
-                GCBlocks.ILMENITE_ORE,
+                GCBlocks.FALLEN_METEOR,
                 GCBlocks.GALENA_ORE,
-                GCBlocks.SOLAR_ORE
+                GCBlocks.ILMENITE_ORE,
+                GCBlocks.MARS_IRON_ORE, GCBlocks.ASTEROID_IRON_ORE,
+                GCBlocks.OLIVINE_BASALT, GCBlocks.RICH_OLIVINE_BASALT,
+                GCBlocks.LUNAR_SAPPHIRE_ORE,
+                GCBlocks.SILICON_ORE, GCBlocks.DEEPSLATE_SILICON_ORE, GCBlocks.ASTEROID_SILICON_ORE,
+                GCBlocks.SOLAR_ORE,
+                GCBlocks.TIN_ORE, GCBlocks.DEEPSLATE_TIN_ORE, GCBlocks.MOON_TIN_ORE, GCBlocks.LUNASLATE_TIN_ORE, GCBlocks.MARS_TIN_ORE, GCBlocks.VENUS_TIN_ORE,
         };
 
         this.tag(ConventionalBlockTags.ORES).add(ores);
 
-        var clusters = new Block[] {
+        var clusters = new Block[]{
                 GCBlocks.OLIVINE_CLUSTER
         };
 
@@ -223,6 +226,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.ASTEROID_ROCK,
                         GCBlocks.ASTEROID_ROCK_1,
                         GCBlocks.ASTEROID_ROCK_2,
+                        GCBlocks.DENSE_ICE,
 
                         GCBlocks.PLATED_TIN_BLOCK,
                         GCBlocks.PLATED_COPPER_BLOCK,
@@ -277,6 +281,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.LUNASLATE_TIN_ORE,
                         GCBlocks.MARS_TIN_ORE,
                         GCBlocks.VENUS_TIN_ORE,
+                        GCBlocks.ASTEROID_SILICON_ORE,
                         GCBlocks.ALUMINUM_ORE,
                         GCBlocks.DEEPSLATE_ALUMINUM_ORE,
                         GCBlocks.ASTEROID_ALUMINUM_ORE,

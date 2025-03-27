@@ -42,7 +42,8 @@ public interface WireNetwork {
 
     /**
      * Inserts energy into the network
-     * @param amount The amount of energy to insert
+     *
+     * @param amount      The amount of energy to insert
      * @param transaction Whether to perform the action or not
      * @return the amount of energy that failed to insert
      */
@@ -50,6 +51,7 @@ public interface WireNetwork {
 
     /**
      * Returns the maximum amount of energy allowed to pass through this network per tick
+     *
      * @return the maximum amount of energy allowed to pass through this network per tick
      */
     long getMaxTransferRate();

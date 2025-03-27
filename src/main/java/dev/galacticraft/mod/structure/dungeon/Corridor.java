@@ -80,7 +80,7 @@ public class Corridor extends SizedPiece {
 
     private <T extends SizedPiece> T getRoom(StructurePieceType type, DungeonStart startPiece, RandomSource rand) {
         if (!(type instanceof GCStructurePieceTypes.GCRoomPieceType roomType))
-            throw new RuntimeException("Room " + type +" is not a instance of GCRoomPieceType!");
+            throw new RuntimeException("Room " + type + " is not a instance of GCRoomPieceType!");
         SizedPiece dummy = roomType.create(this.configuration, rand, 0, 0, this.getDirection().getOpposite(), getGenDepth() + 1);
         BoundingBox extension = getExtension(this.getDirection(), getDirection().getAxis() == Direction.Axis.X ? dummy.getSizeX() : dummy.getSizeZ(),
                 getDirection().getAxis() == Direction.Axis.X ? dummy.getSizeZ() : dummy.getSizeX());

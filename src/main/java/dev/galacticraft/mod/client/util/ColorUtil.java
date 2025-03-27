@@ -32,7 +32,7 @@ public class ColorUtil {
     }
 
     public static int getRainbow(long interval) {
-        return Mth.hsvToRgb((float)(System.currentTimeMillis() % interval) / (float)interval, 1.0F, 1.0F);
+        return Mth.hsvToRgb((float) (System.currentTimeMillis() % interval) / (float) interval, 1.0F, 1.0F);
     }
 
     public static int getRainbowOpaque() {

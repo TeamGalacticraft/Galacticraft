@@ -87,5 +87,6 @@ public class ObjModel implements GCModel {
     }
 
     @Override
-    public void close() {}
+    public void close() {
+    }
 }

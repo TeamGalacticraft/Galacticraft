@@ -49,7 +49,7 @@ import java.util.function.Supplier;
 @Mixin(value = Level.class, priority = 100) // apply before oxygen level mixin
 public abstract class LevelCelestialBodyMixin implements LevelBodyAccessor {
     @Unique
-    private Holder<CelestialBody<? ,?>> celestialBody = null;
+    private Holder<CelestialBody<?, ?>> celestialBody = null;
 
     @Shadow public abstract RegistryAccess registryAccess();
 

@@ -109,7 +109,9 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
         Storage<FluidVariant> tank = this.itemStorage().slot(OXYGEN_INPUT_SLOT).find(FluidStorage.ITEM);
         profiler.pop();
         if (tank == null) return GCMachineStatuses.MISSING_OXYGEN_TANK;
-        if (StorageUtil.simulateExtract(tank, FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null) == 0) return GCMachineStatuses.EMPTY_OXYGEN_TANK;
+        if (StorageUtil.simulateExtract(tank, FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null) == 0) {
+            return GCMachineStatuses.EMPTY_OXYGEN_TANK;
+        }
         profiler.push("transaction");
 
         try {

@@ -33,9 +33,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Entity.class)
 public abstract class EntityGravityMixin {
-    @Shadow protected abstract double getDefaultGravity();
+    @Shadow
+    protected abstract double getDefaultGravity();
 
-    @Shadow private Level level;
+    @Shadow
+    private Level level;
 
     @Redirect(method = "getGravity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getDefaultGravity()D"))
     private double replaceGravity(Entity instance) {

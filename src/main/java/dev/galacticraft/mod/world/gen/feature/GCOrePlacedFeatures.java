@@ -44,7 +44,7 @@ public class GCOrePlacedFeatures {
     // OVERWORLD
     public static final ResourceKey<PlacedFeature> ORE_SILICON = key("ore_silicon"); //todo actual ore numbers
     public static final ResourceKey<PlacedFeature> ORE_SILICON_LARGE = key("ore_silicon_large");
-    
+
     public static final ResourceKey<PlacedFeature> ORE_TIN_UPPER = key("ore_tin_upper");
     public static final ResourceKey<PlacedFeature> ORE_TIN_MIDDLE = key("ore_tin_middle");
     public static final ResourceKey<PlacedFeature> ORE_TIN_SMALL = key("ore_tin_small");
