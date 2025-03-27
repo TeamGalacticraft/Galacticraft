@@ -9,7 +9,7 @@
   "height": 384,
   "infiniburn": "#galacticraft:infiniburn_moon",
   "logical_height": 384,
-  "min_y": -64,
+  "min_y": -32,
   "monster_spawn_block_light_limit": 0,
   "monster_spawn_light_level": {
     "type": "minecraft:uniform",

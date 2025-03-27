@@ -60,6 +60,7 @@ public class GCEntityTypeTagProvider extends IntrinsicHolderTagsProvider<EntityT
         tag(EntityTypeTags.IMPACT_PROJECTILES)
                 .add(GCEntityTypes.THROWABLE_METEOR_CHUNK);
         tag(EntityTypeTags.FALL_DAMAGE_IMMUNE)
+                .add(GCEntityTypes.ROCKET)
                 .add(GCEntityTypes.LANDER);
 
         tag(EntityTypeTags.SKELETONS)

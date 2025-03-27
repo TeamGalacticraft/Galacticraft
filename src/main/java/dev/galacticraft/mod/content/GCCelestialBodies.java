@@ -131,7 +131,7 @@ public class GCCelestialBodies {
                                 .gas(Gases.CARBON_MONOXIDE_ID, 0.100)
                                 .gas(Gases.XENON_ID, 0.090)
                                 .gas(Gases.OZONE_ID, 0.070)
-                                .gas(Gases.NITROUS_DIOXIDE_ID, 0.020)
+                                .gas(Gases.NITROGEN_DIOXIDE_ID, 0.020)
                                 .gas(Gases.IODINE_ID, 0.010)
                                 .build(),
                         1.0f,

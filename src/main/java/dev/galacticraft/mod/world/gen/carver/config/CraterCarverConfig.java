@@ -48,7 +48,7 @@ public class CraterCarverConfig extends CarverConfiguration {
     public final int idealRangeOffset;
 
     public CraterCarverConfig(float probability, HeightProvider y, FloatProvider yScale, CarverDebugSettings carverDebugConfig, int maxRadius, int minRadius, int idealRangeOffset) {
-        super(probability, y, yScale, VerticalAnchor.absolute(-64), carverDebugConfig, BuiltInRegistries.BLOCK.getOrCreateTag(GCTags.MOON_CRATER_CARVER_REPLACEABLES)); // TODO: Crater replaceables
+        super(probability, y, yScale, VerticalAnchor.bottom(), carverDebugConfig, BuiltInRegistries.BLOCK.getOrCreateTag(GCTags.MOON_CRATER_CARVER_REPLACEABLES)); // TODO: Crater replaceables
         this.maxRadius = maxRadius;
         this.minRadius = minRadius;
         this.idealRangeOffset = idealRangeOffset;
