@@ -21,7 +21,7 @@ public class FoodCannerBlock extends SimpleMachineBlock {
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, @NotNull TooltipFlag flag) {
         if (Screen.hasShiftDown()) {
-            tooltip.addAll(DisplayUtil.wrapText(Component.translatable(this.getDescriptionId() + ".description", CannedFoodItem.MAX_FOOD).withStyle(dev.galacticraft.machinelib.impl.Constant.Text.GRAY_STYLE), 150));
+            tooltip.addAll(DisplayUtil.wrapText(Component.translatable(this.getDescriptionId() + ".description", CannedFoodItem.MAX_FOOD).withStyle(Constant.Text.GRAY_STYLE), 150));
         } else {
             tooltip.add(PRESS_SHIFT);
         }
