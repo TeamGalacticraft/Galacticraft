@@ -49,8 +49,14 @@ public class GCOreConfiguredFeature {
     public static final List<OreConfiguration.TargetBlockState> TIN_ORES = List.of(OreConfiguration.target(STONE_ORE_REPLACEABLE, GCBlocks.TIN_ORE.defaultBlockState()), OreConfiguration.target(DEEPSLATE_ORE_REPLACEABLE, GCBlocks.DEEPSLATE_TIN_ORE.defaultBlockState()));
     public static final List<OreConfiguration.TargetBlockState> ALUMINUM_ORES = List.of(OreConfiguration.target(STONE_ORE_REPLACEABLE, GCBlocks.ALUMINUM_ORE.defaultBlockState()), OreConfiguration.target(DEEPSLATE_ORE_REPLACEABLE, GCBlocks.DEEPSLATE_ALUMINUM_ORE.defaultBlockState()));
     public static final List<OreConfiguration.TargetBlockState> SILICON_ORES = List.of(OreConfiguration.target(STONE_ORE_REPLACEABLE, GCBlocks.SILICON_ORE.defaultBlockState()), OreConfiguration.target(DEEPSLATE_ORE_REPLACEABLE, GCBlocks.DEEPSLATE_SILICON_ORE.defaultBlockState()));
+    public static final List<OreConfiguration.TargetBlockState> TIN_ORES = List.of(OreConfiguration.target(STONE_ORE_REPLACEABLE, GCBlocks.TIN_ORE.defaultBlockState()), OreConfiguration.target(DEEPSLATE_ORE_REPLACEABLE, GCBlocks.DEEPSLATE_TIN_ORE.defaultBlockState()));
+    public static final List<OreConfiguration.TargetBlockState> ALUMINUM_ORES = List.of(OreConfiguration.target(STONE_ORE_REPLACEABLE, GCBlocks.ALUMINUM_ORE.defaultBlockState()), OreConfiguration.target(DEEPSLATE_ORE_REPLACEABLE, GCBlocks.DEEPSLATE_ALUMINUM_ORE.defaultBlockState()));
+    public static final List<OreConfiguration.TargetBlockState> SILICON_ORES = List.of(OreConfiguration.target(STONE_ORE_REPLACEABLE, GCBlocks.SILICON_ORE.defaultBlockState()), OreConfiguration.target(DEEPSLATE_ORE_REPLACEABLE, GCBlocks.DEEPSLATE_SILICON_ORE.defaultBlockState()));
 
     public static final List<OreConfiguration.TargetBlockState> COPPER_ORES_MOON = List.of(OreConfiguration.target(MOON_STONE_ORE_REPLACEABLE, GCBlocks.MOON_COPPER_ORE.defaultBlockState()), OreConfiguration.target(LUNASLATE_ORE_REPLACEABLE, GCBlocks.LUNASLATE_COPPER_ORE.defaultBlockState()));
+    public static final List<OreConfiguration.TargetBlockState> TIN_ORES_MOON = List.of(OreConfiguration.target(MOON_STONE_ORE_REPLACEABLE, GCBlocks.MOON_TIN_ORE.defaultBlockState()), OreConfiguration.target(LUNASLATE_ORE_REPLACEABLE, GCBlocks.LUNASLATE_TIN_ORE.defaultBlockState()));
+    public static final List<OreConfiguration.TargetBlockState> CHEESE_ORES_MOON = List.of(OreConfiguration.target(MOON_STONE_ORE_REPLACEABLE, GCBlocks.MOON_CHEESE_ORE.defaultBlockState()));
+    public static final List<OreConfiguration.TargetBlockState> LUNAR_SAPPHIRE_ORES_MOON = List.of(OreConfiguration.target(MOON_STONE_ORE_REPLACEABLE, GCBlocks.LUNAR_SAPPHIRE_ORE.defaultBlockState()));
     public static final List<OreConfiguration.TargetBlockState> TIN_ORES_MOON = List.of(OreConfiguration.target(MOON_STONE_ORE_REPLACEABLE, GCBlocks.MOON_TIN_ORE.defaultBlockState()), OreConfiguration.target(LUNASLATE_ORE_REPLACEABLE, GCBlocks.LUNASLATE_TIN_ORE.defaultBlockState()));
     public static final List<OreConfiguration.TargetBlockState> CHEESE_ORES_MOON = List.of(OreConfiguration.target(MOON_STONE_ORE_REPLACEABLE, GCBlocks.MOON_CHEESE_ORE.defaultBlockState()));
     public static final List<OreConfiguration.TargetBlockState> LUNAR_SAPPHIRE_ORES_MOON = List.of(OreConfiguration.target(MOON_STONE_ORE_REPLACEABLE, GCBlocks.LUNAR_SAPPHIRE_ORE.defaultBlockState()));
@@ -78,6 +84,11 @@ public class GCOreConfiguredFeature {
     public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_CHEESE_LARGE_MOON = key("ore_cheese_large_moon");
 
     public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_LUNAR_SAPPHIRE_MOON = key("ore_lunar_sapphire_moon");
+
+    public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_CHEESE_SMALL_MOON = key("ore_cheese_small_moon");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_CHEESE_LARGE_MOON = key("ore_cheese_large_moon");
+
+    public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_LUNAR_SAPPHIRE_MOON = key("ore_lunar_sapphire_moon");
     
     @Contract(pure = true)
     private static @NotNull ResourceKey<ConfiguredFeature<?, ?>> key(String s) {
@@ -85,6 +96,7 @@ public class GCOreConfiguredFeature {
     }
 
     public static void bootstrapRegistries(BootstrapContext<ConfiguredFeature<?, ?>> context) {
+        // OVERWORLD
         // OVERWORLD
         context.register(ORE_SILICON_SMALL, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(SILICON_ORES, 6, 0.5F)));
         context.register(ORE_SILICON_LARGE, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(SILICON_ORES, 9, 0.7F)));
@@ -94,11 +106,16 @@ public class GCOreConfiguredFeature {
         context.register(ORE_ALUMINUM_SMALL, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(ALUMINUM_ORES, 3)));
 
         // MOON
+
+        // MOON
         context.register(BASALT_DISK_MOON, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(BASE_STONE_MOON, GCBlocks.MOON_BASALT.defaultBlockState(), 33)));
         context.register(ORE_COPPER_SMALL_MOON, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(COPPER_ORES_MOON, 10)));
         context.register(ORE_COPPER_LARGE_MOON, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(COPPER_ORES_MOON, 20)));
         context.register(ORE_TIN_MOON, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(TIN_ORES_MOON, 6)));
         context.register(ORE_TIN_SMALL_MOON, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(TIN_ORES_MOON, 4)));
+        context.register(ORE_CHEESE_SMALL_MOON, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(CHEESE_ORES_MOON, 4)));
+        context.register(ORE_CHEESE_LARGE_MOON, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(CHEESE_ORES_MOON, 9)));
+        context.register(ORE_LUNAR_SAPPHIRE_MOON, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(LUNAR_SAPPHIRE_ORES_MOON, 3)));
         context.register(ORE_CHEESE_SMALL_MOON, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(CHEESE_ORES_MOON, 4)));
         context.register(ORE_CHEESE_LARGE_MOON, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(CHEESE_ORES_MOON, 9)));
         context.register(ORE_LUNAR_SAPPHIRE_MOON, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(LUNAR_SAPPHIRE_ORES_MOON, 3)));

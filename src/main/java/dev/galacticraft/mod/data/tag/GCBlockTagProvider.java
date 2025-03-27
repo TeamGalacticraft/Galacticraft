@@ -69,6 +69,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 // .add(GCBlocks.MOON_BASALT);
         this.tag(GCBlockTags.LUNASLATE_ORE_REPLACEABLES)
                 .add(GCBlocks.LUNASLATE);
+
         this.tag(GCBlockTags.MACHINES)
                 .add(
                         GCBlocks.CIRCUIT_FABRICATOR,
