@@ -105,7 +105,7 @@ public class GCMultiNoiseBiomeSourceParameterLists {
     private static <T> Climate.@NotNull ParameterList<T> generateMoon(Function<ResourceKey<Biome>, T> biomeRegistry) {
         ImmutableList.Builder<Pair<Climate.ParameterPoint, T>> builder = ImmutableList.builder();
         writeBiomeParameters(builder::add,
-                HOT, // hot to prevent snow
+                HOT,
                 DRY,
                 Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS),
                 MIN_EROSION,
@@ -215,7 +215,6 @@ public class GCMultiNoiseBiomeSourceParameterLists {
         MultiNoiseBiomeSourceParameterListPresetAccessor.getByName().put(MOON_PRESET_ID, MOON_PRESET);
         MultiNoiseBiomeSourceParameterListPresetAccessor.getByName().put(VENUS_PRESET_ID, VENUS_PRESET);
         MultiNoiseBiomeSourceParameterListPresetAccessor.getByName().put(ASTEROID_PRESET_ID, ASTEROID_PRESET);
-
     }
 
     public static void bootstrapRegistries(BootstrapContext<MultiNoiseBiomeSourceParameterList> context) {

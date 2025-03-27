@@ -80,10 +80,10 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
 
     private int progress = 1;
 
-    private int firstRowConsumed = 0;
-    private int secondRowConsumed = 0;
-    private int thirdRowConsumed = 0;
-    private int forthRowConsumed = 0;
+    private boolean firstRowConsumed = false;
+    private boolean secondRowConsumed = false;
+    private boolean thirdRowConsumed = false;
+    private boolean forthRowConsumed = false;
     private final int maxProgress = 115;
     private boolean transferring_can = false;
     private boolean transferring_food = false;
@@ -204,7 +204,7 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
             if (row0) {
                 if (getSize(this.storage) < MAX_FOOD) {
                     transferring_food = true;
-                    setFirstRowConsumed(1);
+                    setFirstRowConsumed(true);
                     List<ItemStack> leftover = addToCan(checkRow(0), this.storage);
                     clearRow(0, leftover);
                     return GCMachineStatuses.CANNING;
@@ -223,14 +223,14 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
             if (row1) {
                 if (getSize(this.storage) < MAX_FOOD) {
                     transferring_food = true;
-                    setSecondRowConsumed(1);
+                    setSecondRowConsumed(true);
                     List<ItemStack> leftover = addToCan(checkRow(1), this.storage);
                     clearRow(1, leftover);
                     return GCMachineStatuses.CANNING;
                 }
 
             } else {
-                if (getFirstRowConsumed() == 1) {
+                if (getFirstRowConsumed()) {
                     transferring_food = true;
                     setProgress(46);
                 } else {
@@ -248,7 +248,7 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
             if (row3) {
                 if (getSize(this.storage) < MAX_FOOD) {
                     transferring_food = true;
-                    setForthRowConsumed(1);
+                    setForthRowConsumed(true);
                     List<ItemStack> leftover = addToCan(checkRow(3), this.storage);
                     clearRow(3, leftover);
                     return GCMachineStatuses.CANNING;
@@ -267,21 +267,21 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
             if (row2) {
                 if (getSize(this.storage) < MAX_FOOD) {
                     transferring_food = true;
-                    setThirdRowConsumed(1);
+                    setThirdRowConsumed(true);
                     List<ItemStack> leftover = addToCan(checkRow(2), this.storage);
                     clearRow(2, leftover);
                     return GCMachineStatuses.CANNING;
                 }
 
             } else {
-                if (getFirstRowConsumed() == 1 || getSecondRowConsumed() == 1) {
+                if (getFirstRowConsumed() || getSecondRowConsumed()) {
                     transferring_food = true;
                     setProgress(97);
-                    if (getForthRowConsumed() == 1) {
+                    if (getForthRowConsumed()) {
                         transferring_food = true;
                         setProgress(87);
                     }
-                } else if (getForthRowConsumed() == 1) {
+                } else if (getForthRowConsumed()) {
                     transferring_food = true;
                     setProgress(87);
                 } else {
@@ -333,10 +333,10 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
     }
 
     private void resetConsumedRows() {
-        setFirstRowConsumed(0);
-        setSecondRowConsumed(0);
-        setThirdRowConsumed(0);
-        setForthRowConsumed(0);
+        setFirstRowConsumed(false);
+        setSecondRowConsumed(false);
+        setThirdRowConsumed(false);
+        setForthRowConsumed(false);
     }
 
     private boolean storageContainsFood() {
@@ -358,7 +358,6 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
     private boolean outputFull() {
         return this.itemStorage().slot(OUTPUT_SLOT).isFull();
     }
-
 
     private void clearRow(int row) {
         for (int slot : ROWS[row]) {
@@ -438,49 +437,35 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
         tag.put(Constant.Nbt.STORAGE, this.storage.save(lookup, new CompoundTag()));
     }
 
-    public static CompoundTag listTagToCompoundTag(ListTag listTag) {
-        CompoundTag compoundTag = new CompoundTag();
-        compoundTag.put("Items", listTag); // Store the ListTag under the key "Items"
-        return compoundTag;
-    }
-
-    public static ListTag compoundTagToListTag(CompoundTag compoundTag) {
-        if (compoundTag != null) {
-            return compoundTag.getList("Items", ListTag.TAG_COMPOUND); // Retrieve the ListTag stored under the key "Items"
-        } else {
-            return new ListTag(); // Return an empty ListTag if the key doesn't exist
-        }
-    }
-
-    public int getFirstRowConsumed() {
+    public boolean getFirstRowConsumed() {
         return firstRowConsumed;
     }
 
-    public void setFirstRowConsumed(int value) {
+    public void setFirstRowConsumed(boolean value) {
         this.firstRowConsumed = value;
     }
 
-    public int getSecondRowConsumed() {
+    public boolean getSecondRowConsumed() {
         return secondRowConsumed;
     }
 
-    public void setSecondRowConsumed(int value) {
+    public void setSecondRowConsumed(boolean value) {
         this.secondRowConsumed = value;
     }
 
-    public int getThirdRowConsumed() {
+    public boolean getThirdRowConsumed() {
         return thirdRowConsumed;
     }
 
-    public void setThirdRowConsumed(int value) {
+    public void setThirdRowConsumed(boolean value) {
         this.thirdRowConsumed = value;
     }
 
-    public int getForthRowConsumed() {
+    public boolean getForthRowConsumed() {
         return forthRowConsumed;
     }
 
-    public void setForthRowConsumed(int value) {
+    public void setForthRowConsumed(boolean value) {
         this.forthRowConsumed = value;
     }
 }

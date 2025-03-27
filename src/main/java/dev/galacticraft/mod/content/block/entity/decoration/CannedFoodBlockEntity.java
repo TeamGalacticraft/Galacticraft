@@ -24,8 +24,6 @@ package dev.galacticraft.mod.content.block.entity.decoration;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.block.decoration.CannedFoodBlock;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -35,18 +33,14 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static net.minecraft.world.level.block.Block.popResource;
 
 public class CannedFoodBlockEntity extends BlockEntity {
     private final List<ItemStack> canContents = new ArrayList<>();
@@ -81,7 +75,7 @@ public class CannedFoodBlockEntity extends BlockEntity {
 
     public void dropStoredCans(Level level, BlockPos pos) {
         for (ItemStack stack : canContents) {
-            popResource(level, pos, stack);
+            Block.popResource(level, pos, stack);
         }
     }
 
@@ -95,7 +89,7 @@ public class CannedFoodBlockEntity extends BlockEntity {
         super.loadAdditional(tag, lookup);
         this.canContents.clear();
 
-        ListTag list = tag.getList("CanContents", Tag.TAG_COMPOUND);
+        ListTag list = tag.getList(Constant.Nbt.CAN_CONTENTS, Tag.TAG_COMPOUND);
         for (Tag t : list) {
             CompoundTag itemTag = (CompoundTag) t;
             ItemStack stack = ItemStack.parseOptional(lookup, itemTag);
@@ -108,7 +102,7 @@ public class CannedFoodBlockEntity extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
         super.saveAdditional(tag, lookup);
-        tag.putInt("CanCount", getCanCount());
+        tag.putInt(Constant.Nbt.CAN_COUNT, getCanCount());
         ListTag list = new ListTag();
         for (ItemStack stack : canContents) {
             if (!stack.isEmpty()) {
@@ -116,20 +110,20 @@ public class CannedFoodBlockEntity extends BlockEntity {
             }
         }
 
-        tag.put("CanContents", list);
+        tag.put(Constant.Nbt.CAN_CONTENTS, list);
     }
 
     @Override
     public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider lookup) {
         CompoundTag tag = super.getUpdateTag(lookup);
-        tag.putInt("CanCount", getCanCount());
+        tag.putInt(Constant.Nbt.CAN_COUNT, getCanCount());
         ListTag list = new ListTag();
         for (ItemStack stack : canContents) {
             if (!stack.isEmpty()) {
                 list.add(stack.save(lookup));
             }
         }
-        tag.put("CanContents", list);
+        tag.put(Constant.Nbt.CAN_CONTENTS, list);
         return tag;
     }
 

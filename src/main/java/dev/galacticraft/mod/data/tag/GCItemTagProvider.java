@@ -109,21 +109,19 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         // Ore Tags
         tag(ConventionalItemTags.ORES).add(
-                GCBlocks.MARS_IRON_ORE.asItem(), GCBlocks.ASTEROID_IRON_ORE.asItem(),
-                GCBlocks.MOON_COPPER_ORE.asItem(), GCBlocks.LUNASLATE_COPPER_ORE.asItem(), GCBlocks.MARS_COPPER_ORE.asItem(), GCBlocks.VENUS_COPPER_ORE.asItem(),
-                GCBlocks.SILICON_ORE.asItem(), GCBlocks.DEEPSLATE_SILICON_ORE.asItem(),
-                GCBlocks.FALLEN_METEOR.asItem(),
+                GCBlocks.ALUMINUM_ORE.asItem(), GCBlocks.ASTEROID_ALUMINUM_ORE.asItem(), GCBlocks.DEEPSLATE_ALUMINUM_ORE.asItem(), GCBlocks.VENUS_ALUMINUM_ORE.asItem(),
                 GCBlocks.MOON_CHEESE_ORE.asItem(),
-                GCBlocks.LUNAR_SAPPHIRE_ORE.asItem(),
-                GCBlocks.OLIVINE_BASALT.asItem(), GCBlocks.RICH_OLIVINE_BASALT.asItem(),
-                GCBlocks.TIN_ORE.asItem(), GCBlocks.DEEPSLATE_TIN_ORE.asItem(), GCBlocks.MOON_TIN_ORE.asItem(), GCBlocks.LUNASLATE_TIN_ORE.asItem(),
-                GCBlocks.ALUMINUM_ORE.asItem(), GCBlocks.DEEPSLATE_ALUMINUM_ORE.asItem(),
-                GCBlocks.ASTEROID_ALUMINUM_ORE.asItem(), GCBlocks.ASTEROID_IRON_ORE.asItem(), GCBlocks.ASTEROID_SILICON_ORE.asItem(),
-                GCBlocks.MARS_IRON_ORE.asItem(), GCBlocks.MARS_COPPER_ORE.asItem(), GCBlocks.MARS_TIN_ORE.asItem(),
+                GCBlocks.LUNASLATE_COPPER_ORE.asItem(), GCBlocks.MARS_COPPER_ORE.asItem(), GCBlocks.MOON_COPPER_ORE.asItem(), GCBlocks.VENUS_COPPER_ORE.asItem(),
                 GCBlocks.DESH_ORE.asItem(),
-                GCBlocks.ILMENITE_ORE.asItem(),
+                GCBlocks.FALLEN_METEOR.asItem(),
                 GCBlocks.GALENA_ORE.asItem(),
-                GCBlocks.SOLAR_ORE.asItem()
+                GCBlocks.ILMENITE_ORE.asItem(),
+                GCBlocks.ASTEROID_IRON_ORE.asItem(), GCBlocks.MARS_IRON_ORE.asItem(),
+                GCBlocks.OLIVINE_BASALT.asItem(), GCBlocks.RICH_OLIVINE_BASALT.asItem(),
+                GCBlocks.LUNAR_SAPPHIRE_ORE.asItem(),
+                GCBlocks.SILICON_ORE.asItem(), GCBlocks.ASTEROID_SILICON_ORE.asItem(), GCBlocks.DEEPSLATE_SILICON_ORE.asItem(),
+                GCBlocks.SOLAR_ORE.asItem(),
+                GCBlocks.TIN_ORE.asItem(), GCBlocks.DEEPSLATE_TIN_ORE.asItem(), GCBlocks.LUNASLATE_TIN_ORE.asItem(), GCBlocks.MARS_TIN_ORE.asItem(), GCBlocks.MOON_TIN_ORE.asItem(), GCBlocks.VENUS_TIN_ORE.asItem()
         );
 
         tag(ConventionalItemTags.GEMS)

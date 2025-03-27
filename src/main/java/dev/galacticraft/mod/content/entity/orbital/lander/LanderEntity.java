@@ -447,7 +447,6 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
 
             if (jumping) {
                 var deltaM = getDeltaMovement();
-                ;
                 setDeltaMovement(deltaM.x(), Math.min(deltaM.y() + 0.03F, getY() < level().getHeight(Heightmap.Types.WORLD_SURFACE, getBlockX(), getBlockZ()) + 35 ? -0.15 : -1.0), deltaM.z());
             }
 

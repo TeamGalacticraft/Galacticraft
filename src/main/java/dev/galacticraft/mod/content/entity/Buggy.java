@@ -64,7 +64,6 @@ public class Buggy extends GCVehicle implements ContainerListener, ControllableE
     private boolean shouldClimb;
 
     protected SimpleContainer inventory;
-    ;
 
     public Buggy(EntityType<?> entityType, Level level) {
         super(entityType, level);

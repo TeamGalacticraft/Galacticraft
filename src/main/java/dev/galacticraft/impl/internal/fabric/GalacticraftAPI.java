@@ -109,9 +109,9 @@ public class GalacticraftAPI implements ModInitializer {
 
         if (overworld != null) {
             currentWorldSaveDirectory = overworld.getServer().getWorldPath(LevelResource.ROOT);
-            System.out.println("World Save Directory: " + currentWorldSaveDirectory.toString());
+            Constant.LOGGER.info("World Save Directory: {}", currentWorldSaveDirectory.toString());
         } else {
-            System.err.println("Error: Overworld level is null");
+            Constant.LOGGER.error("Error: Overworld level is null");
         }
     }
 }

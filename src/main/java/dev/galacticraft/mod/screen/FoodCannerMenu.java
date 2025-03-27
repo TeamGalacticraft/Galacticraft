@@ -33,10 +33,10 @@ import org.jetbrains.annotations.NotNull;
 public class FoodCannerMenu extends MachineMenu<FoodCannerBlockEntity> {
     private int progress;
 
-    private int firstRowConsumed;
-    private int secondRowConsumed;
-    private int thirdRowConsumed;
-    private int forthRowConsumed;
+    private boolean firstRowConsumed;
+    private boolean secondRowConsumed;
+    private boolean thirdRowConsumed;
+    private boolean forthRowConsumed;
 
     public FoodCannerMenu(int syncId, @NotNull ServerPlayer player, @NotNull FoodCannerBlockEntity machine) {
         super(GCMenuTypes.FOOD_CANNER, syncId, player, machine);
@@ -51,10 +51,10 @@ public class FoodCannerMenu extends MachineMenu<FoodCannerBlockEntity> {
         super.registerData(data);
 
         data.registerInt(this.be::getProgress, this::setProgress);
-        data.registerInt(this.be::getFirstRowConsumed, this::setFirstRowConsumed);
-        data.registerInt(this.be::getSecondRowConsumed, this::setSecondRowConsumed);
-        data.registerInt(this.be::getThirdRowConsumed, this::setThirdRowConsumed);
-        data.registerInt(this.be::getForthRowConsumed, this::setForthRowConsumed);
+        data.registerBoolean(this.be::getFirstRowConsumed, this::setFirstRowConsumed);
+        data.registerBoolean(this.be::getSecondRowConsumed, this::setSecondRowConsumed);
+        data.registerBoolean(this.be::getThirdRowConsumed, this::setThirdRowConsumed);
+        data.registerBoolean(this.be::getForthRowConsumed, this::setForthRowConsumed);
 
     }
 
@@ -67,35 +67,35 @@ public class FoodCannerMenu extends MachineMenu<FoodCannerBlockEntity> {
         this.progress = value;
     }
 
-    public int getFirstRowConsumed() {
+    public boolean getFirstRowConsumed() {
         return firstRowConsumed;
     }
 
-    public void setFirstRowConsumed(int value) {
+    public void setFirstRowConsumed(boolean value) {
         this.firstRowConsumed = value;
     }
 
-    public int getSecondRowConsumed() {
+    public boolean getSecondRowConsumed() {
         return secondRowConsumed;
     }
 
-    public void setSecondRowConsumed(int value) {
+    public void setSecondRowConsumed(boolean value) {
         this.secondRowConsumed = value;
     }
 
-    public int getThirdRowConsumed() {
+    public boolean getThirdRowConsumed() {
         return thirdRowConsumed;
     }
 
-    public void setThirdRowConsumed(int value) {
+    public void setThirdRowConsumed(boolean value) {
         this.thirdRowConsumed = value;
     }
 
-    public int getForthRowConsumed() {
+    public boolean getForthRowConsumed() {
         return forthRowConsumed;
     }
 
-    public void setForthRowConsumed(int value) {
+    public void setForthRowConsumed(boolean value) {
         this.forthRowConsumed = value;
     }
 

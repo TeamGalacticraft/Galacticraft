@@ -78,7 +78,6 @@ public class CannedFoodItem extends Item implements FabricItemStack {
 
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
-        //if (!context.getLevel().isClientSide()) {
             Level world = context.getLevel();
             BlockPos pos = context.getClickedPos();
             BlockState clickedState = world.getBlockState(pos);
@@ -114,9 +113,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
             BlockPos placementPos = pos.relative(face);
             BlockState oldState = world.getBlockState(placementPos);
             if (oldState.isAir()) {
-                BlockState newState = GCBlocks.CANNED_FOOD.defaultBlockState()
-                        .setValue(CannedFoodBlock.FACING, context.getHorizontalDirection().getOpposite());
-
+                BlockState newState = GCBlocks.CANNED_FOOD.defaultBlockState().setValue(CannedFoodBlock.FACING, context.getHorizontalDirection().getOpposite());
                 world.setBlock(placementPos, newState, Block.UPDATE_ALL);
                 BlockEntity be = world.getBlockEntity(placementPos);
                 if (be instanceof CannedFoodBlockEntity canEntity) {
@@ -130,8 +127,6 @@ public class CannedFoodItem extends Item implements FabricItemStack {
                 stack.consume(1, context.getPlayer());
                 return InteractionResult.SUCCESS;
             }
-
-        //}
         return InteractionResult.FAIL;
     }
 
@@ -158,7 +153,6 @@ public class CannedFoodItem extends Item implements FabricItemStack {
             } else {
                 if (livingEntity instanceof Player player) {
                     if (!player.getAbilities().instabuild) {
-
                         if (getContents(can).isEmpty()) {
                             can = new ItemStack(EMPTY_CAN);
                         }
@@ -190,7 +184,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
         } else {
             String result = summarizeTopN(getContents(stack).stream()
                     .map(CannedFoodItem::getItemDisplayName), 3);
-            return Component.translatable(Translations.Items.CANNED_FOOD, Component.literal(result));
+            return Component.translatable(Translations.Items.CANNED_FOOD, result);
         }
     }
 
@@ -220,7 +214,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
         if (!getContents(stack).isEmpty()) {
-            tooltip.add(Component.translatable(Translations.Items.TOTAL_NUTRITION, Component.literal(String.valueOf(getTotalNutrition(stack)))).withColor(ChatFormatting.DARK_GRAY.getColor()));
+            tooltip.add(Component.translatable(Translations.Ui.TOTAL_NUTRITION, getTotalNutrition(stack)).withColor(ChatFormatting.DARK_GRAY.getColor()));
         }
     }
 

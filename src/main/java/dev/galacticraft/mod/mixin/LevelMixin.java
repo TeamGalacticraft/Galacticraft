@@ -26,9 +26,11 @@ import dev.galacticraft.mod.accessor.LevelAccessor;
 import dev.galacticraft.mod.machine.SealerManager;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(Level.class)
 public class LevelMixin implements LevelAccessor {
+    @Unique
     private final SealerManager sealerManager = new SealerManager();
 
     @Override

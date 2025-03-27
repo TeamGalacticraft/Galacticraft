@@ -192,6 +192,4 @@ public abstract class GCVehicle extends Entity {
     public ItemStack getDropItem() {
         return ItemStack.EMPTY;
     }
-
-    ;
 }

@@ -39,6 +39,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
@@ -77,7 +78,7 @@ public class CannedFoodBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, net.minecraft.world.phys.shapes.CollisionContext context) {
+    public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         VoxelShape shape = Shapes.empty();
         BlockEntity be = world.getBlockEntity(pos);
         if (be instanceof CannedFoodBlockEntity cannedFoodBlockEntity) {
@@ -85,11 +86,11 @@ public class CannedFoodBlock extends Block implements EntityBlock {
             for (int i = 0; i < canCount; i++) {
                 float[] position = CannedFoodBakedModel.POSITIONS[canCount - 1][i];
 
-                float x = (position[0]);
+                float x = position[0];
                 float y = position[1];
-                float z = (position[2]);
+                float z = position[2];
 
-                shape = Shapes.join(shape,Block.box(x-3,y,z-3,x+3,y+8,z+3), BooleanOp.OR);
+                shape = Shapes.join(shape,Block.box(x - 3 ,y ,z - 3 ,x + 3 ,y + 8 ,z + 3 ), BooleanOp.OR);
             }
         }
         return shape;

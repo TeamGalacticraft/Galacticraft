@@ -60,5 +60,7 @@ public class GCBiomeTagProvider extends FabricTagProvider<Biome> {
                 .add(GCBiomes.Moon.LUNAR_HIGHLANDS);
         this.tag(GCTags.MOON_RUINS_HAS_STRUCTURE)
                 .add(GCBiomes.Moon.BASALTIC_MARE);
+        this.tag(GCTags.MOON_BOSS_HAS_STRUCTURE)
+                .addTag(GCTags.MOON);
     }
 }

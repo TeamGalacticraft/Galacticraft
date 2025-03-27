@@ -44,7 +44,6 @@ public class GCEntityTypeTagProvider extends IntrinsicHolderTagsProvider<EntityT
         tag(GCTags.HAS_FOOTPRINTS)
                 .add(EntityType.PLAYER);
 
-
         tag(GCTags.HAS_OXYGEN_SETUP)
                 .add(GCEntityTypes.EVOLVED_ZOMBIE)
                 .add(GCEntityTypes.EVOLVED_CREEPER)

@@ -240,7 +240,6 @@ public class ConfigImpl implements Config {
         return oxygenCompressorEnergyConsumptionRate;
     }
 
-
     public void setOxygenCompressorEnergyConsumptionRate(long amount) {
         this.oxygenCompressorEnergyConsumptionRate = amount;
     }

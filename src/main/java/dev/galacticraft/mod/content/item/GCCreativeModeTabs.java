@@ -545,9 +545,9 @@ public class GCCreativeModeTabs {
                 output.accept(OXYGEN_BUBBLE_DISTRIBUTOR);
                 output.accept(OXYGEN_DECOMPRESSOR);
                 output.accept(OXYGEN_COMPRESSOR);
-                output.accept(FOOD_CANNER);
                 output.accept(OXYGEN_STORAGE_MODULE);
                 output.accept(FUEL_LOADER);
+                output.accept(FOOD_CANNER);
                 output.accept(AIR_LOCK_FRAME);
                 output.accept(AIR_LOCK_CONTROLLER);
             }).build();

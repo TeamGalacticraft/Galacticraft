@@ -192,7 +192,6 @@ class AirLockProtocol {
 
     private void checkDimensions() {
         for (int y = this.minY; y <= this.maxY; y++) {
-
             if (isValidFrame(new BlockPos(this.minX, y, this.minZ))) {
                 this.airLocksDimension1Min++;
             }
@@ -212,14 +211,12 @@ class AirLockProtocol {
             }
 
             for (int x = this.minX; x <= this.maxX; x++) {
-
                 if (isValidFrame(new BlockPos(x, this.minY, this.maxZ))) {
                     this.airLocksDimension2Min++;
                 }
             }
         } else if (this.minZ != this.maxZ) {
             for (int z = this.minZ; z <= this.maxZ; z++) {
-
                 if (isValidFrame(new BlockPos(this.maxX, this.maxY, z))) {
                     this.airLocksDimension2Max++;
                 }

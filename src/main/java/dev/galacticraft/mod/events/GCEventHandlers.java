@@ -74,26 +74,24 @@ public class GCEventHandlers {
 
     private static InteractionResultHolder<ItemStack> onPlayerUseItem(Player player, Level world, InteractionHand hand) {
         Holder<CelestialBody<?, ?>> body = world.galacticraft$getCelestialBody();
-        boolean oxygenWorld = body.value().atmosphere().breathable();
-        Vec3 playerEyePos = player.getEyePosition();
+        if (body != null) {
+            boolean oxygenWorld = body.value().atmosphere().breathable();
+            Vec3 playerEyePos = player.getEyePosition();
 
-        //check if wearing a o2 mask first
-        if (player.galacticraft$hasMask()) {
-            //get item in hand
             ItemStack heldItem = player.getItemInHand(hand);
-            //check if item has food component
             if (heldItem.getComponents().has(DataComponents.FOOD)) {
-                //check if item is a canned food item
-                if (heldItem.getItem() instanceof CannedFoodItem) {
-                    return InteractionResultHolder.pass(heldItem);
-                } else {
-                    player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_WITH_MASK).withStyle(Constant.Text.RED_STYLE), true);
-                    return InteractionResultHolder.fail(heldItem);
+                if (player.galacticraft$hasMask()) {
+                    if (heldItem.getItem() instanceof CannedFoodItem) {
+                        return InteractionResultHolder.pass(heldItem);
+                    } else {
+                        player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_WITH_MASK).withStyle(Constant.Text.RED_STYLE), true);
+                        return InteractionResultHolder.fail(heldItem);
+                    }
+                } else if (!oxygenWorld && !world.isBreathable(new BlockPos((int) Math.floor(playerEyePos.x), (int) Math.floor(playerEyePos.y), (int) Math.floor(playerEyePos.z)))) { //sealed atmosphere check. they dont have a mask on so make sure they can breathe before eating
+                    player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_IN_NO_ATMOSPHERE).withStyle(Constant.Text.RED_STYLE), true);
+                    return InteractionResultHolder.fail(player.getItemInHand(hand));
                 }
             }
-        } else if (!oxygenWorld && !world.isBreathable(new BlockPos((int) Math.floor(playerEyePos.x), (int) Math.floor(playerEyePos.y), (int) Math.floor(playerEyePos.z)))) { //sealed atmosphere check. they dont have a mask on so make sure they can breathe before eating
-            player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_IN_NO_ATMOSPHERE).withStyle(Constant.Text.RED_STYLE), true);
-            return InteractionResultHolder.fail(player.getItemInHand(hand));
         }
         return InteractionResultHolder.pass(player.getItemInHand(hand));
     }

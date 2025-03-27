@@ -51,7 +51,7 @@ public class FoodCannerScreen extends MachineScreen<FoodCannerBlockEntity, FoodC
                 //transferring can
                 draw(68, 30, 36, 189, 4, progress, matrices);
             }
-            if (this.menu.getFirstRowConsumed() == 1) {
+            if (this.menu.getFirstRowConsumed()) {
                 if (inBounds(progress, 10, 36)) {
                     if (inBounds(progress, 10, 17)) {
                         draw(97, 19, 65, 178, 9 - progress, 4, matrices);
@@ -73,7 +73,7 @@ public class FoodCannerScreen extends MachineScreen<FoodCannerBlockEntity, FoodC
                     draw(86, 19, 54, 178, 11, 20, matrices);
                 }
             }
-            if (this.menu.getSecondRowConsumed() == 1) {
+            if (this.menu.getSecondRowConsumed()) {
                 if (inBounds(progress, 37, 44)) {
                     draw(97, 39, 65, 198, 36 - progress, 2, matrices);
                 }
@@ -81,7 +81,7 @@ public class FoodCannerScreen extends MachineScreen<FoodCannerBlockEntity, FoodC
                     draw(89, 39, 57, 198, 8, 2, matrices);
                 }
             }
-            if (this.menu.getThirdRowConsumed() == 1) {
+            if (this.menu.getThirdRowConsumed()) {
                 if (inBounds(progress, 79, 86)) {
                     draw(97, 57, 65, 216, 78 - progress, 2, matrices);
                 }
@@ -95,7 +95,7 @@ public class FoodCannerScreen extends MachineScreen<FoodCannerBlockEntity, FoodC
                     draw(87, 59, 55, 218, 2, -10, matrices);
                 }
             }
-            if (this.menu.getForthRowConsumed() == 1) {
+            if (this.menu.getForthRowConsumed()) {
                 if (inBounds(progress, 53, 62)) {
                     draw(97, 75, 65, 234, 52 - progress, 2, matrices);
                 }
@@ -118,7 +118,7 @@ public class FoodCannerScreen extends MachineScreen<FoodCannerBlockEntity, FoodC
             if (inBounds(progress, 45, 52)) {
                 draw(87, 39, 55, 198, 2, progress - 44, matrices);
             }
-            if (this.menu.getFirstRowConsumed() == 1 || this.menu.getSecondRowConsumed() == 1) {
+            if (this.menu.getFirstRowConsumed() || this.menu.getSecondRowConsumed()) {
                 if (inBounds(progress, 52, 106)) {
                     draw(87, 39, 55, 198, 2, 8, matrices);
                 }

@@ -75,11 +75,11 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
 
     public void tick() {
         ticks++;
-        if (!this.getLevel().isClientSide()) {
+        if (!this.level.isClientSide()) {
             this.active = false;
 
             if (this.redstoneActivation) {
-                this.active = this.getLevel().getBestNeighborSignal(this.getBlockPos()) > 0;
+                this.active = this.level.getBestNeighborSignal(this.getBlockPos()) > 0;
             }
 
             if ((this.active || !this.redstoneActivation) && this.playerDistanceActivation) {
@@ -94,7 +94,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                 Vec3 minPos = new Vec3(getBlockPos().getX() + 0.5D - distance, getBlockPos().getY() + 0.5D - distance, getBlockPos().getZ() + 0.5D - distance);
                 Vec3 maxPos = new Vec3(getBlockPos().getX() + 0.5D + distance, getBlockPos().getY() + 0.5D + distance, getBlockPos().getZ() + 0.5D + distance);
                 AABB matchingRegion = new AABB(minPos.x, minPos.y, minPos.z, maxPos.x, maxPos.y, maxPos.z);
-                List<Player> playersWithin = this.getLevel().getEntitiesOfClass(Player.class, matchingRegion);
+                List<Player> playersWithin = this.level.getEntitiesOfClass(Player.class, matchingRegion);
 
                 if (this.playerNameMatches) {
                     boolean foundPlayer = false;
@@ -140,8 +140,8 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                 }
 
                 if (this.active != this.lastActive) {
-                    BlockState state = this.getLevel().getBlockState(this.getBlockPos());
-                    this.getLevel().sendBlockUpdated(this.getBlockPos(), state, state, 3);
+                    BlockState state = this.level.getBlockState(this.getBlockPos());
+                    this.level.sendBlockUpdated(this.getBlockPos(), state, state, 3);
                 }
 
                 this.lastActive = this.active;
@@ -158,8 +158,8 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
 
         boolean facingNorth = (this.lastProtocol.maxX - this.lastProtocol.minX) == 0;
 
-        if (!this.getLevel().getBlockState(new BlockPos(x, y, z)).is(GCBlocks.AIR_LOCK_SEAL)) {
-//            this.getLevel().playSound(null, x, y, z, GCSounds.openAirLock, SoundSource.BLOCKS, 1.0F, 1.0F);
+        if (!this.level.getBlockState(new BlockPos(x, y, z)).is(GCBlocks.AIR_LOCK_SEAL)) {
+//            this.level.playSound(null, x, y, z, GCSounds.openAirLock, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
 
         if (this.horizontalModeEnabled) {
@@ -167,11 +167,11 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                 for (x = this.protocol.minX + 1; x <= this.protocol.maxX - 1; x++) {
                     for (z = this.protocol.minZ + 1; z <= this.protocol.maxZ - 1; z++) {
                         BlockPos pos = new BlockPos(x, y, z);
-                        if (this.getLevel().getBlockState(pos).isAir()) {
+                        if (this.level.getBlockState(pos).isAir()) {
                             if (facingNorth) {
-                                this.getLevel().setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.EAST), 3);
+                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.EAST), 3);
                             } else {
-                                this.getLevel().setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.NORTH), 3);
+                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.NORTH), 3);
                             }
                         }
                     }
@@ -182,11 +182,11 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                 for (x = this.protocol.minX + 1; x <= this.protocol.maxX - 1; x++) {
                     for (y = this.protocol.minY + 1; y <= this.protocol.maxY - 1; y++) {
                         BlockPos pos = new BlockPos(x, y, z);
-                        if (this.getLevel().getBlockState(pos).isAir()) {
+                        if (this.level.getBlockState(pos).isAir()) {
                             if (facingNorth) {
-                                this.getLevel().setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.EAST), 3);
+                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.EAST), 3);
                             } else {
-                                this.getLevel().setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.NORTH), 3);
+                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.NORTH), 3);
                             }
                         }
                     }
@@ -195,11 +195,11 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                 for (z = this.protocol.minZ + 1; z <= this.protocol.maxZ - 1; z++) {
                     for (y = this.protocol.minY + 1; y <= this.protocol.maxY - 1; y++) {
                         BlockPos pos = new BlockPos(x, y, z);
-                        if (this.getLevel().getBlockState(pos).isAir()) {
+                        if (this.level.getBlockState(pos).isAir()) {
                             if (facingNorth) {
-                                this.getLevel().setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.EAST), 3);
+                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.EAST), 3);
                             } else {
-                                this.getLevel().setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.NORTH), 3);
+                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.NORTH), 3);
                             }
                         }
                     }
@@ -218,10 +218,10 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
         int z = this.lastProtocol.minZ + (this.lastProtocol.maxZ - this.lastProtocol.minZ) / 2;
 
         BlockPos pos = new BlockPos(x, y, z);
-        BlockState state = this.getLevel().getBlockState(pos);
+        BlockState state = this.level.getBlockState(pos);
 
         if (!(state.getBlock() instanceof AirBlock)) {
-//            this.getLevel().playSound(null, x, y, z, GCSounds.closeAirLock, SoundSource.BLOCKS, 1.0F, 1.0F); TODO: Sound
+//            this.level().playSound(null, x, y, z, GCSounds.closeAirLock, SoundSource.BLOCKS, 1.0F, 1.0F); TODO: Sound
         }
 
         boolean sealedSide = false;
@@ -232,17 +232,17 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                 for (x = this.protocol.minX + 1; x <= this.protocol.maxX - 1; x++) {
                     for (z = this.protocol.minZ + 1; z <= this.protocol.maxZ - 1; z++) {
                         pos = new BlockPos(x, y, z);
-                        breathable = this.getLevel().isBreathable(pos.above());
+                        breathable = this.level.isBreathable(pos.above());
                         if (breathable) {
-                            if (this.getLevel().getBlockState(pos).getBlock() == GCBlocks.AIR_LOCK_SEAL) {
+                            if (this.level.getBlockState(pos).getBlock() == GCBlocks.AIR_LOCK_SEAL) {
                                 sealedSide = true;
                                 break;
                             }
                             continue;
                         }
-                        breathable = this.getLevel().isBreathable(pos.below());
+                        breathable = this.level.isBreathable(pos.below());
                         if (breathable) {
-                            if (this.getLevel().getBlockState(pos).getBlock() == GCBlocks.AIR_LOCK_SEAL) {
+                            if (this.level.getBlockState(pos).getBlock() == GCBlocks.AIR_LOCK_SEAL) {
                                 sealedSide = true;
                                 break;
                             }
@@ -255,11 +255,11 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                 for (x = this.protocol.minX + 1; x <= this.protocol.maxX - 1; x++) {
                     for (z = this.protocol.minZ + 1; z <= this.protocol.maxZ - 1; z++) {
                         pos = new BlockPos(x, y, z);
-                        if (this.getLevel().getBlockState(pos).getBlock() == GCBlocks.AIR_LOCK_SEAL) {
+                        if (this.level.getBlockState(pos).getBlock() == GCBlocks.AIR_LOCK_SEAL) {
                             if (sealedSide)
-                                this.getLevel().setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                             else
-                                this.getLevel().setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                         }
                     }
                 }
@@ -270,17 +270,17 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                 for (x = this.lastProtocol.minX + 1; x <= this.lastProtocol.maxX - 1; x++) {
                     for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++) {
                         pos = new BlockPos(x, y, z);
-                        breathable = this.getLevel().isBreathable(pos.north());
+                        breathable = this.level.isBreathable(pos.north());
                         if (breathable) {
-                            if (this.getLevel().getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
+                            if (this.level.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
                                 sealedSide = true;
                                 break;
                             }
                             continue;
                         }
-                        breathable = this.getLevel().isBreathable(pos.south());
+                        breathable = this.level.isBreathable(pos.south());
                         if (breathable) {
-                            if (this.getLevel().getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
+                            if (this.level.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
                                 sealedSide = true;
                                 break;
                             }
@@ -293,11 +293,11 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                 for (x = this.lastProtocol.minX + 1; x <= this.lastProtocol.maxX - 1; x++) {
                     for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++) {
                         pos = new BlockPos(x, y, z);
-                        if (this.getLevel().getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
+                        if (this.level.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
                             if (sealedSide)
-                                this.getLevel().setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                             else
-                                this.getLevel().setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                         }
                     }
                 }
@@ -306,17 +306,17 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                 for (z = this.lastProtocol.minZ + 1; z <= this.lastProtocol.maxZ - 1; z++) {
                     for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++) {
                         pos = new BlockPos(x, y, z);
-                        breathable = this.getLevel().isBreathable(pos.west());
+                        breathable = this.level.isBreathable(pos.west());
                         if (breathable) {
-                            if (this.getLevel().getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
+                            if (this.level.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
                                 sealedSide = true;
                                 break;
                             }
                             continue;
                         }
-                        breathable = this.getLevel().isBreathable(pos.east());
+                        breathable = this.level.isBreathable(pos.east());
                         if (breathable) {
-                            if (this.getLevel().getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
+                            if (this.level.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
                                 sealedSide = true;
                                 break;
                             }
@@ -329,11 +329,11 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                 for (z = this.lastProtocol.minZ + 1; z <= this.lastProtocol.maxZ - 1; z++) {
                     for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++) {
                         pos = new BlockPos(x, y, z);
-                        if (this.getLevel().getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
+                        if (this.level.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
                             if (sealedSide)
-                                this.getLevel().setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                             else
-                                this.getLevel().setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                         }
                     }
                 }

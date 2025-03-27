@@ -68,18 +68,6 @@ public class GCResourceReloadListener implements SimpleSynchronousResourceReload
         FluidPipeWalkwayBakedModel.invalidate();
         BubbleEntityRenderer.bubbleModel = null;
 
-        FluidRenderHandler oil = (view, pos, state) -> new TextureAtlasSprite[]{
-                atlas.apply(Constant.id("block/fluid/crude_oil_still")),
-                atlas.apply(Constant.id("block/fluid/crude_oil_flowing"))
-        };
-        FluidRenderHandler fuel = (view, pos, state) -> new TextureAtlasSprite[]{
-                atlas.apply(Constant.id("block/fluid/fuel_still")),
-                atlas.apply(Constant.id("block/fluid/fuel_flowing"))
-        };
-        FluidRenderHandler sulfuricAcid = (view, pos, state) -> new TextureAtlasSprite[]{
-                atlas.apply(Constant.id("block/fluid/sulfuric_acid_still")),
-                atlas.apply(Constant.id("block/fluid/sulfuric_acid_flowing"))
-        };
         FluidRenderHandler oxygen = (view, pos, state) -> new TextureAtlasSprite[]{
                 atlas.apply(Constant.Fluid.fluidId(Constant.Fluid.LIQUID_OXYGEN)),
                 atlas.apply(Constant.id("block/fluid/oxygen")),
