@@ -568,10 +568,10 @@ public class GCCreativeModeTabs {
     }
 
     public static void register() {
-        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Item.ITEM_GROUP), ITEMS_GROUP);
-        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Block.ITEM_GROUP_BLOCKS), BLOCKS_GROUP);
-        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Block.ITEM_GROUP_MACHINES), MACHINES_GROUP);
-        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Item.ITEM_GROUP_CANS), CANNED_FOOD_GROUP);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id("1." + Constant.Block.ITEM_GROUP_BLOCKS), BLOCKS_GROUP);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id("2." + Constant.Block.ITEM_GROUP_MACHINES), MACHINES_GROUP);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id("3." + Constant.Item.ITEM_GROUP), ITEMS_GROUP);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id("4." + Constant.Item.ITEM_GROUP_CANS), CANNED_FOOD_GROUP);
         registerSpawnEggs();
     }
 }
