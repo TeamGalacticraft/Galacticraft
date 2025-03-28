@@ -330,6 +330,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_ALUMINUM)
                 .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItems.ALUMINUM_INGOT))
                 .requires(GCItemTags.ALUMINUM_INGOTS)
+                .requires(GCItemTags.ALUMINUM_INGOTS)
                 .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_BRONZE)
                 .requires(GCItems.COMPRESSED_COPPER)
@@ -338,32 +339,40 @@ public class GCMachineRecipes extends FabricRecipeProvider {
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_COPPER)
                 .unlockedBy(getHasName(Items.COPPER_INGOT), has(ConventionalItemTags.COPPER_INGOTS))
                 .requires(ConventionalItemTags.COPPER_INGOTS)
+                .requires(ConventionalItemTags.COPPER_INGOTS)
                 .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_DESH)
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
+                .requires(GCItems.DESH_INGOT)
                 .requires(GCItems.DESH_INGOT)
                 .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_IRON)
                 .unlockedBy(getHasName(Items.IRON_INGOT), has(ConventionalItemTags.IRON_INGOTS))
                 .requires(ConventionalItemTags.IRON_INGOTS)
+                .requires(ConventionalItemTags.IRON_INGOTS)
                 .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_METEORIC_IRON)
+                .requires(GCItems.METEORIC_IRON_INGOT)
                 .requires(GCItems.METEORIC_IRON_INGOT)
                 .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_STEEL)
                 .unlockedBy(getHasName(GCItems.COMPRESSED_IRON), has(GCItems.COMPRESSED_IRON))
                 .requires(ItemTags.COALS)
                 .requires(GCItems.COMPRESSED_IRON)
+                .requires(ItemTags.COALS)
                 .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_STEEL)
+                .requires(GCItemTags.STEEL_INGOTS)
                 .requires(GCItemTags.STEEL_INGOTS)
                 .save(output, BuiltInRegistries.ITEM.getKey(GCItems.COMPRESSED_STEEL).withSuffix("_from_ingots"));
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_TIN)
                 .unlockedBy(getHasName(GCItems.TIN_INGOT), has(GCItems.TIN_INGOT))
                 .requires(GCItemTags.TIN_INGOTS)
+                .requires(GCItemTags.TIN_INGOTS)
                 .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_TITANIUM)
                 .unlockedBy(getHasName(GCItems.TITANIUM_INGOT), has(GCItems.TITANIUM_INGOT))
+                .requires(GCItems.TITANIUM_INGOT)
                 .requires(GCItems.TITANIUM_INGOT)
                 .save(output);
 

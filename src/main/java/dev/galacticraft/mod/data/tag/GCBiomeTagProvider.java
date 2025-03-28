@@ -51,6 +51,9 @@ public class GCBiomeTagProvider extends FabricTagProvider<Biome> {
                 .add(GCBiomes.Venus.VENUS_FLAT)
                 .add(GCBiomes.Venus.VENUS_MOUNTAIN);
 
+        this.tag(GCBiomeTags.ASTEROID)
+                .add(GCBiomes.Asteroid.ASTEROID_FIELD);
+
         this.tag(GCBiomeTags.MOON_PILLAGER_BASE_HAS_STRUCTURE)
                 .add(GCBiomes.Moon.BASALTIC_MARE);
         this.tag(GCBiomeTags.MOON_VILLAGE_HIGHLANDS_HAS_STRUCTURE)
