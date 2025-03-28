@@ -36,7 +36,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class ConnectingBlockUtil {
     public static final VoxelShape WALKWAY_TOP = Block.box(6.0D, 6.0D, 6.0D, 10.0D, 10.0D, 10.0D);
-    private ConnectingBlockUtil() {}
+
+    private ConnectingBlockUtil() {
+    }
 
     public static BooleanProperty getBooleanProperty(Direction dir) {
         return switch (dir) {
@@ -129,17 +131,22 @@ public class ConnectingBlockUtil {
 
     public static BlockState rotateConnections(BlockState state, Rotation rotation) {
         return switch (rotation) {
-            case CLOCKWISE_180 -> state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.SOUTH)).setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.WEST)).setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.NORTH)).setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.EAST));
-            case COUNTERCLOCKWISE_90 -> state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.EAST)).setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.SOUTH)).setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.WEST)).setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.NORTH));
-            case CLOCKWISE_90 -> state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.WEST)).setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.NORTH)).setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.EAST)).setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.SOUTH));
+            case CLOCKWISE_180 ->
+                    state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.SOUTH)).setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.WEST)).setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.NORTH)).setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.EAST));
+            case COUNTERCLOCKWISE_90 ->
+                    state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.EAST)).setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.SOUTH)).setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.WEST)).setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.NORTH));
+            case CLOCKWISE_90 ->
+                    state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.WEST)).setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.NORTH)).setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.EAST)).setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.SOUTH));
             default -> state;
         };
     }
 
     public static BlockState mirror(BlockState state, Mirror mirror) {
         return switch (mirror) {
-            case LEFT_RIGHT -> state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.SOUTH)).setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.NORTH));
-            case FRONT_BACK -> state.setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.WEST)).setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.EAST));
+            case LEFT_RIGHT ->
+                    state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.SOUTH)).setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.NORTH));
+            case FRONT_BACK ->
+                    state.setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.WEST)).setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.EAST));
             case NONE -> state;
         };
     }

@@ -22,13 +22,11 @@
 
 package dev.galacticraft.mod.content.item;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartTypes;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
@@ -40,8 +38,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -106,12 +104,18 @@ public class RocketItem extends Item {
         RocketData data = stack.has(GCDataComponents.ROCKET_DATA) ? stack.get(GCDataComponents.ROCKET_DATA) : RocketPrefabs.MISSING;
         List<Component> list = new ArrayList<Component>();
         list.add(Component.translatable(Translations.Ui.COLOR).append(": ").withStyle(style).append(Component.literal("#" + Integer.toHexString(data.color())).withColor(data.color())));
-        if (data.cone().isPresent()) list.add(RocketPartTypes.CONE.name.copy().append(": ").append(RocketPart.getName(data.cone().get().key())).withStyle(style));
-        if (data.body().isPresent()) list.add(RocketPartTypes.BODY.name.copy().append(": ").append(RocketPart.getName(data.body().get().key())).withStyle(style));
-        if (data.fin().isPresent()) list.add(RocketPartTypes.FIN.name.copy().append(": ").append(RocketPart.getName(data.fin().get().key())).withStyle(style));
-        if (data.booster().isPresent()) list.add(RocketPartTypes.BOOSTER.name.copy().append(": ").append(RocketPart.getName(data.booster().get().key())).withStyle(style));
-        if (data.engine().isPresent()) list.add(RocketPartTypes.ENGINE.name.copy().append(": ").append(RocketPart.getName(data.engine().get().key())).withStyle(style));
-        if (data.upgrade().isPresent()) list.add(RocketPartTypes.UPGRADE.name.copy().append(": ").append(RocketPart.getName(data.upgrade().get().key())).withStyle(style));
+        if (data.cone().isPresent())
+            list.add(RocketPartTypes.CONE.name.copy().append(": ").append(RocketPart.getName(data.cone().get().key())).withStyle(style));
+        if (data.body().isPresent())
+            list.add(RocketPartTypes.BODY.name.copy().append(": ").append(RocketPart.getName(data.body().get().key())).withStyle(style));
+        if (data.fin().isPresent())
+            list.add(RocketPartTypes.FIN.name.copy().append(": ").append(RocketPart.getName(data.fin().get().key())).withStyle(style));
+        if (data.booster().isPresent())
+            list.add(RocketPartTypes.BOOSTER.name.copy().append(": ").append(RocketPart.getName(data.booster().get().key())).withStyle(style));
+        if (data.engine().isPresent())
+            list.add(RocketPartTypes.ENGINE.name.copy().append(": ").append(RocketPart.getName(data.engine().get().key())).withStyle(style));
+        if (data.upgrade().isPresent())
+            list.add(RocketPartTypes.UPGRADE.name.copy().append(": ").append(RocketPart.getName(data.upgrade().get().key())).withStyle(style));
 
         TooltipUtil.appendLshiftTooltip(list, tooltip);
         super.appendHoverText(stack, context, tooltip, options);

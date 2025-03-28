@@ -32,12 +32,14 @@ import team.reborn.energy.api.EnergyStorage;
 public interface Wire extends Connected {
     /**
      * Sets the {@link WireNetwork} associated with this wire
+     *
      * @param network The network to associate with
      */
     void setNetwork(@Nullable WireNetwork network);
 
     /**
      * Returns the associated {@link WireNetwork}
+     *
      * @return The associated {@link WireNetwork}
      */
     @Contract(pure = true)
@@ -45,6 +47,7 @@ public interface Wire extends Connected {
 
     /**
      * Returns whether this wire is able to connect to another block on the specified face/direction
+     *
      * @param direction the direction offset to the block to check adjacency to
      * @return Whether this wire is able to connect to another block on the specified face/direction
      */
@@ -56,6 +59,7 @@ public interface Wire extends Connected {
 
     /**
      * Returns the maximum amount of energy (in gJ) allowed to be transferred through this wire.
+     *
      * @return the maximum amount of energy (in gJ) allowed to be transferred through this wire.
      */
     int getMaxTransferRate();

@@ -133,6 +133,7 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
 
     private static class OxygenTankSlot extends Slot {
         private static final ResourceFilter<Item> FILTER = ResourceFilters.canExtractFluid(Gases.OXYGEN);
+
         public OxygenTankSlot(Container gearInventory, int slotId, int x, int y) {
             super(gearInventory, slotId, x, y);
         }
@@ -174,12 +175,12 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
                 }
             } else if (index < 39) {
                 if (!this.moveItemStackTo(stackFrom, 0, 8, true) &&
-                    !this.moveItemStackTo(stackFrom, 39, 48, false)) {
+                        !this.moveItemStackTo(stackFrom, 39, 48, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (index < 49) {
                 if (!this.moveItemStackTo(stackFrom, 0, 8, true) &&
-                    !this.moveItemStackTo(stackFrom, 12, 39, false)) {
+                        !this.moveItemStackTo(stackFrom, 12, 39, false)) {
                     return ItemStack.EMPTY;
                 }
             }

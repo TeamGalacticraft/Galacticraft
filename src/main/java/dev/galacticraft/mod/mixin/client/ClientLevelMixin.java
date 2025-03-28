@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.mixin.client;
 
-import dev.galacticraft.mod.accessor.LevelAccessor;
+import dev.galacticraft.mod.accessor.GCLevelAccessor;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -36,7 +36,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientLevel.class)
 @Environment(EnvType.CLIENT)
-public abstract class ClientLevelMixin implements LevelAccessor {
+public abstract class ClientLevelMixin implements GCLevelAccessor {
     private final @Unique FootprintManager footprintManager = new FootprintManager();
 
     @Inject(method = "tickTime", at = @At("RETURN"))

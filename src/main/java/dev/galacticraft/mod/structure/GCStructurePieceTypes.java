@@ -46,7 +46,8 @@ public class GCStructurePieceTypes {
     public static final StructurePieceType ROOM_CHEST = setPieceId(RoomChest::new, "MoonDungeonChestRoom");
     public static final StructurePieceType ROOM_TREASURE = setGCPieceId(RoomTreasure::new, RoomTreasure::new, RoomTreasure::new, "MoonDungeonTreasureRoom");
 
-    public static void register() {}
+    public static void register() {
+    }
 
     private static StructurePieceType setFullContextPieceId(StructurePieceType type, String id) {
         return PIECES.register(id.toLowerCase(Locale.ROOT), type);
@@ -60,7 +61,7 @@ public class GCStructurePieceTypes {
         return setFullContextPieceId(type, id);
     }
 
-    private static StructurePieceType setGCPieceId(StructurePieceType.ContextlessType type, GCRoomPiece piece, GCRoomPieceWithSize withSize , String id) {
+    private static StructurePieceType setGCPieceId(StructurePieceType.ContextlessType type, GCRoomPiece piece, GCRoomPieceWithSize withSize, String id) {
         return setFullContextPieceId(new GCRoomPieceType() {
             @Override
             public SizedPiece create(DungeonConfiguration configuration, RandomSource random, int blockPosX, int blockPosZ, Direction direction, int genDepth) {
@@ -89,6 +90,7 @@ public class GCStructurePieceTypes {
 
     public interface GCRoomPieceType extends StructurePieceType {
         SizedPiece create(DungeonConfiguration configuration, RandomSource random, int blockPosX, int blockPosZ, Direction direction, int genDepth);
+
         SizedPiece create(DungeonConfiguration configuration, RandomSource random, int blockPosX, int blockPosZ, int sizeX, int sizeY, int sizeZ, Direction direction, int genDepth);
     }
 }

@@ -29,7 +29,7 @@ public interface SurfaceEnvironment<C extends CelestialBodyConfig> {
      * Returns the approximate temperature on this celestial body
      *
      * @param access the registry access
-     * @param time the current world time
+     * @param time   the current world time
      * @param config the celestial body configuration to be queried
      * @return the approximate temperature on this celestial body
      */

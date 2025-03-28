@@ -52,7 +52,9 @@ import java.util.BitSet;
 
 @Mixin(LevelChunk.class)
 public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygenAccessor, ChunkOxygenSyncer {
-    @Shadow @Final Level level;
+    @Shadow
+    @Final
+    Level level;
     private @Unique short dirtySections = 0b0;
 
     private LevelChunkMixin(ChunkPos pos, UpgradeData upgradeData, LevelHeightAccessor heightLimitView, Registry<Biome> biome, long inhabitedTime, @Nullable LevelChunkSection[] sectionArrayInitializer, @Nullable BlendingData blendingData) {

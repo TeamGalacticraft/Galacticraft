@@ -134,163 +134,163 @@ public class EvolvedSkeletonBossModel extends EntityModel<SkeletonBoss> implemen
         float halfPI = Mth.HALF_PI;
 
         root.addOrReplaceChild("upper_head", CubeListBuilder.create()
-                .texOffs(0, 16)
-                .addBox(-4F, -8F, -6F, 8, 8, 8)
-                .mirror(),
+                        .texOffs(0, 16)
+                        .addBox(-4F, -8F, -6F, 8, 8, 8)
+                        .mirror(),
                 PartPose.offset(0F, -24F, 6F));
         root.addOrReplaceChild("pelvis", CubeListBuilder.create()
-                .texOffs(32, 19)
-                .addBox(-6F, 0F, -3F, 12, 5, 5)
-                .mirror(),
+                        .texOffs(32, 19)
+                        .addBox(-6F, 0F, -3F, 12, 5, 5)
+                        .mirror(),
                 PartPose.offset(0F, -2F, 5F));
         root.addOrReplaceChild("sternum", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(-1.5F, 0F, -1F, 3, 9, 1)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(-1.5F, 0F, -1F, 3, 9, 1)
+                        .mirror(),
                 PartPose.offset(0F, -21F, 2F));
         root.addOrReplaceChild("right_leg", CubeListBuilder.create()
-                .texOffs(56, 33)
-                .addBox(-2F, 0F, -2F, 3, 26, 3),
+                        .texOffs(56, 33)
+                        .addBox(-2F, 0F, -2F, 3, 26, 3),
                 PartPose.offset(-5F, 0F, 5F));
         root.addOrReplaceChild("right_arm", CubeListBuilder.create()
-                .texOffs(56, 33)
-                .addBox(-2F, -2F, -1.5F, 3, 24, 3)
-                .mirror(),
+                        .texOffs(56, 33)
+                        .addBox(-2F, -2F, -1.5F, 3, 24, 3)
+                        .mirror(),
                 PartPose.offset(-8F, -20F, 5F));
         root.addOrReplaceChild("spine", CubeListBuilder.create()
-                .texOffs(32, 33)
-                .addBox(-1.5F, 0F, -1F, 3, 22, 2)
-                .mirror(),
+                        .texOffs(32, 33)
+                        .addBox(-1.5F, 0F, -1F, 3, 22, 2)
+                        .mirror(),
                 PartPose.offset(0F, -24F, 6F));
         root.addOrReplaceChild("left_arm", CubeListBuilder.create()
-                .texOffs(56, 33)
-                .addBox(-1F, -2F, -1.5F, 3, 24, 3)
-                .mirror(),
+                        .texOffs(56, 33)
+                        .addBox(-1F, -2F, -1.5F, 3, 24, 3)
+                        .mirror(),
                 PartPose.offset(8F, -20F, 5F));
         root.addOrReplaceChild("left_leg", CubeListBuilder.create()
-                .texOffs(56, 33)
-                .addBox(-2F, 0F, -2F, 3, 26, 3)
-                .mirror(),
+                        .texOffs(56, 33)
+                        .addBox(-2F, 0F, -2F, 3, 26, 3)
+                        .mirror(),
                 PartPose.offset(6F, 0F, 5F));
         root.addOrReplaceChild("left_front_bot_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(-1F, 0F, 0F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(-1F, 0F, 0F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(7F, -13F, 2F));
         root.addOrReplaceChild("left_front_top_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(-1F, 0F, 0F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(-1F, 0F, 0F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(7F, -22F, 2F));
         root.addOrReplaceChild("left_front_second_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(-1F, 0F, 0F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(-1F, 0F, 0F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(7F, -19F, 2F));
         root.addOrReplaceChild("left_front_third_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(-1F, 0F, 0F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(-1F, 0F, 0F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(7F, -16F, 2F));
         root.addOrReplaceChild("left_side_bot_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(-1F, 0F, -6F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(-1F, 0F, -6F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(7F, -13F, 7F));
         root.addOrReplaceChild("left_side_third_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(-1F, 0F, -6F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(-1F, 0F, -6F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(7F, -16F, 7F));
         root.addOrReplaceChild("left_side_second_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(-1F, 0F, -6F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(-1F, 0F, -6F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(7F, -19F, 7F));
         root.addOrReplaceChild("left_side_top_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(-1F, 0F, -6F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(-1F, 0F, -6F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(7F, -22F, 7F));
         root.addOrReplaceChild("right_side_top_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(0F, 0F, -6F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(0F, 0F, -6F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(-7F, -22F, 7F));
         root.addOrReplaceChild("right_side_second_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(0F, 0F, -6F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(0F, 0F, -6F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(-7F, -19F, 7F));
         root.addOrReplaceChild("right_side_third_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(0F, 0F, -6F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(0F, 0F, -6F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(-7F, -16F, 7F));
         root.addOrReplaceChild("right_side_bot_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(0F, 0F, -6F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(0F, 0F, -6F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(-7F, -13F, 7F));
         root.addOrReplaceChild("right_front_bot_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(0F, 0F, 0F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(0F, 0F, 0F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(-7F, -13F, 2F));
         root.addOrReplaceChild("right_front_third_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(0F, 0F, 0F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(0F, 0F, 0F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(-7F, -16F, 2F));
         root.addOrReplaceChild("right_front_second_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(0F, 0F, 0F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(0F, 0F, 0F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(-7F, -19F, 2F));
         root.addOrReplaceChild("right_front_top_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(0F, 0F, 0F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(0F, 0F, 0F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(-7F, -22F, 2F));
         root.addOrReplaceChild("left_back_top_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(-1F, 0F, 0F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(-1F, 0F, 0F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(7F, -22F, 7F));
         root.addOrReplaceChild("left_back_second_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(-1F, 0F, 0F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(-1F, 0F, 0F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(7F, -19F, 7F));
         root.addOrReplaceChild("left_back_third_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(-1F, 0F, 0F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(-1F, 0F, 0F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(7F, -16F, 7F));
         root.addOrReplaceChild("left_back_bot_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(-1F, 0F, 0F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(-1F, 0F, 0F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(7F, -13F, 7F));
         root.addOrReplaceChild("right_back_bot_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(0F, 0F, 0F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(0F, 0F, 0F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(-7F, -13F, 7F));
         root.addOrReplaceChild("right_back_third_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(0F, 0F, 0F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(0F, 0F, 0F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(-7F, -16F, 7F));
         root.addOrReplaceChild("right_back_second_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(0F, 0F, 0F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(0F, 0F, 0F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(-7F, -19F, 7F));
         root.addOrReplaceChild("right_back_top_rib", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(0F, 0F, 0F, 1, 2, 6)
-                .mirror(),
+                        .texOffs(0, 0)
+                        .addBox(0F, 0F, 0F, 1, 2, 6)
+                        .mirror(),
                 PartPose.offset(-7F, -22F, 7F));
         return LayerDefinition.create(mesh, 128, 128);
     }

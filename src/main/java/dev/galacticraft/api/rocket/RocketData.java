@@ -28,8 +28,6 @@ import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.mod.content.GCRocketParts;
-import dev.galacticraft.mod.util.StreamCodecs;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
@@ -46,19 +44,26 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public record RocketData(Optional<EitherHolder<RocketCone<?, ?>>> cone, Optional<EitherHolder<RocketBody<?, ?>>> body,
-                         Optional<EitherHolder<RocketFin<?, ?>>> fin,
-                         Optional<EitherHolder<RocketBooster<?, ?>>> booster,
-                         Optional<EitherHolder<RocketEngine<?, ?>>> engine,
-                         Optional<EitherHolder<RocketUpgrade<?, ?>>> upgrade, int color
+public record RocketData(
+        Optional<EitherHolder<RocketCone<?, ?>>> cone,
+        Optional<EitherHolder<RocketBody<?, ?>>> body,
+        Optional<EitherHolder<RocketFin<?, ?>>> fin,
+        Optional<EitherHolder<RocketBooster<?, ?>>> booster,
+        Optional<EitherHolder<RocketEngine<?, ?>>> engine,
+        Optional<EitherHolder<RocketUpgrade<?, ?>>> upgrade,
+        int color
 ) {
-    public RocketData(@Nullable EitherHolder<RocketCone<?, ?>> cone, @Nullable EitherHolder<RocketBody<?, ?>> body,
-                      @Nullable EitherHolder<RocketFin<?, ?>> fin,
-                      @Nullable EitherHolder<RocketBooster<?, ?>> booster,
-                      @Nullable EitherHolder<RocketEngine<?, ?>> engine,
-                      @Nullable EitherHolder<RocketUpgrade<?, ?>> upgrade, int color) {
+    public RocketData(
+            @Nullable EitherHolder<RocketCone<?, ?>> cone,
+            @Nullable EitherHolder<RocketBody<?, ?>> body,
+            @Nullable EitherHolder<RocketFin<?, ?>> fin,
+            @Nullable EitherHolder<RocketBooster<?, ?>> booster,
+            @Nullable EitherHolder<RocketEngine<?, ?>> engine,
+            @Nullable EitherHolder<RocketUpgrade<?, ?>> upgrade,
+            int color) {
         this(Optional.ofNullable(cone), Optional.ofNullable(body), Optional.ofNullable(fin), Optional.ofNullable(booster), Optional.ofNullable(engine), Optional.ofNullable(upgrade), color);
     }
+
     public static final Codec<RocketData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             RocketCone.EITHER_CODEC.optionalFieldOf("cone").forGetter(RocketData::cone),
             RocketBody.EITHER_CODEC.optionalFieldOf("body").forGetter(RocketData::body),
@@ -67,7 +72,7 @@ public record RocketData(Optional<EitherHolder<RocketCone<?, ?>>> cone, Optional
             RocketEngine.EITHER_CODEC.optionalFieldOf("engine").forGetter(RocketData::engine),
             RocketUpgrade.EITHER_CODEC.optionalFieldOf("upgrade").forGetter(RocketData::upgrade),
             Codec.INT.fieldOf("color").forGetter(RocketData::color)
-            ).apply(instance, RocketData::new));
+    ).apply(instance, RocketData::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, RocketData> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistriesTrusted(CODEC);
 

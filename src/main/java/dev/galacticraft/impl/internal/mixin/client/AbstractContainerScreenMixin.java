@@ -45,11 +45,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractContainerScreen.class)
 public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> extends Screen {
-    @Shadow protected int leftPos;
+    @Shadow
+    protected int leftPos;
 
-    @Shadow protected int topPos;
+    @Shadow
+    protected int topPos;
 
-    @Shadow @Final protected T menu;
+    @Shadow
+    @Final
+    protected T menu;
 
     protected AbstractContainerScreenMixin(Component component) {
         super(component);
@@ -111,7 +115,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             if (data.visiblePredicate().test(Minecraft.getInstance().player)) {
                 if (i == 0) {
                     graphics.blit(texture, this.leftPos, this.topPos - 28, 0.0F, 32.0F, 29, 32, 64, 64);
-                } else { 
+                } else {
                     graphics.blit(texture, this.leftPos + (29 * i), this.topPos - 28, 29.0F, 0.0F, 29, 32, 64, 64);
                 }
                 i++;

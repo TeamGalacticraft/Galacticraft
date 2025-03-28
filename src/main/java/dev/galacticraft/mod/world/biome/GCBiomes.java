@@ -51,6 +51,10 @@ public final class GCBiomes {
         public static final ResourceKey<Biome> VENUS_MOUNTAIN = key("venus_mountain");
     }
 
+    public static final class Asteroid {
+        public static final ResourceKey<Biome> ASTEROID_FIELD = key("asteroid_field");
+    }
+
     public static final ResourceKey<Biome> SPACE = ResourceKey.create(Registries.BIOME, Constant.id("space"));
 
     public static Biome createSpaceBiome(HolderGetter<PlacedFeature> holderGetter, HolderGetter<ConfiguredWorldCarver<?>> holderGetter2) {
@@ -82,6 +86,8 @@ public final class GCBiomes {
         context.register(Venus.VENUS_VALLEY, VenusBiomes.venus(featureLookup, carverLookup));
         context.register(Venus.VENUS_FLAT, VenusBiomes.venus(featureLookup, carverLookup));
         context.register(Venus.VENUS_MOUNTAIN, VenusBiomes.venus(featureLookup, carverLookup));
+
+        context.register(Asteroid.ASTEROID_FIELD, AsteroidBiomes.asteroid(featureLookup, carverLookup));
     }
 
     @Contract(pure = true)

@@ -39,7 +39,8 @@ import java.util.BitSet;
 
 @Mixin(LevelChunkSection.class)
 public abstract class LevelChunkSectionMixin implements ChunkSectionOxygenAccessor {
-    private @Unique @Nullable BitSet bits = null;
+    private @Unique
+    @Nullable BitSet bits = null;
 
     @Override
     public boolean galacticraft$isInverted(int pos) {

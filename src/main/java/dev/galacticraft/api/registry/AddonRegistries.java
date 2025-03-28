@@ -36,7 +36,8 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 
 public final class AddonRegistries {
-    private AddonRegistries() {}
+    private AddonRegistries() {
+    }
 
     public static final ResourceKey<Registry<CelestialPositionType<?>>> CELESTIAL_POSITION_TYPE = ResourceKey.createRegistryKey(Constant.id("celestial_position_type"));
     public static final ResourceKey<Registry<CelestialDisplayType<?>>> CELESTIAL_DISPLAY_TYPE = ResourceKey.createRegistryKey(Constant.id("celestial_display_type"));

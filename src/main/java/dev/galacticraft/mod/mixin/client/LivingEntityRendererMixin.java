@@ -42,7 +42,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRendererMixin {
-    @Shadow protected EntityModel<?> model;
+    @Shadow
+    protected EntityModel<?> model;
 
     @Unique
     private static float sleepDirectionToRotationCryo(Direction direction) {

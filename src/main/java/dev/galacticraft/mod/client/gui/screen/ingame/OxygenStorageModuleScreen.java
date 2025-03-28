@@ -54,7 +54,7 @@ public class OxygenStorageModuleScreen extends MachineScreen<OxygenStorageModule
 
     private void drawOxygenBufferBar(GuiGraphics graphics) {
         FluidResourceSlot slot = this.menu.fluidStorage.slot(OxygenStorageModuleBlockEntity.OXYGEN_TANK);
-        double oxygenScale = (double)slot.getAmount() / (double)slot.getCapacity();
+        double oxygenScale = (double) slot.getAmount() / (double) slot.getCapacity();
 
         graphics.blit(Constant.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN, this.leftPos + 52, this.topPos + 57, 176, 0, (int) (72.0D * oxygenScale), 3);
     }

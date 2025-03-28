@@ -45,6 +45,11 @@ public class GCDensityFunctions {
         public static final ResourceKey<DensityFunction> FINAL_DENSITY = createKey("venus/final_density");
     }
 
+    public static final class Asteroid {
+        // Final Density handles overall terrain shape
+        public static final ResourceKey<DensityFunction> FINAL_DENSITY = createKey("asteroid/final_density");
+    }
+
     private static ResourceKey<DensityFunction> createKey(String id) {
         return ResourceKey.create(Registries.DENSITY_FUNCTION, Constant.id(id));
     }
@@ -126,6 +131,11 @@ public class GCDensityFunctions {
 //        );
 
         context.register(Venus.FINAL_DENSITY, DensityFunctions.add(
+                DensityFunctions.yClampedGradient(0, 90, 1, -1),
+                BlendedNoise.createUnseeded(0.25, 0.375, 80.0, 160.0, 8.0)
+        ));
+
+        context.register(Asteroid.FINAL_DENSITY, DensityFunctions.add(
                 DensityFunctions.yClampedGradient(0, 90, 1, -1),
                 BlendedNoise.createUnseeded(0.25, 0.375, 80.0, 160.0, 8.0)
         ));

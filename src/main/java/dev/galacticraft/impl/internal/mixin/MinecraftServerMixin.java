@@ -55,9 +55,12 @@ import java.util.Map;
 
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin implements SatelliteAccessor {
-    @Unique private final Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> satellites = new HashMap<>();
+    @Unique
+    private final Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> satellites = new HashMap<>();
 
-    @Shadow @Final protected LevelStorageSource.LevelStorageAccess storageSource;
+    @Shadow
+    @Final
+    protected LevelStorageSource.LevelStorageAccess storageSource;
 
     @Override
     public @Unmodifiable Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> galacticraft$getSatellites() {

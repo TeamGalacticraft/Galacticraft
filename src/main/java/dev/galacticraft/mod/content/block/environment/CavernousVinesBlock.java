@@ -84,8 +84,7 @@ public class CavernousVinesBlock extends GrowingPlantHeadBlock implements Boneme
                 levelAccessor.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
             }
             return super.updateShape(blockState, direction, blockState2, levelAccessor, blockPos, blockPos2);
-        }
-        else {
+        } else {
             return this.updateBodyAfterConvertedFromHead(blockState, this.getBodyBlock().defaultBlockState().setValue(WATERLOGGED, levelAccessor.getFluidState(blockPos).getType() == Fluids.WATER));
         }
     }

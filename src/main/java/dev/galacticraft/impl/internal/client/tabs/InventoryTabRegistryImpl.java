@@ -51,5 +51,6 @@ public class InventoryTabRegistryImpl implements InventoryTabRegistry {
         TABS.add(new TabData(icon, onClick, visiblePredicate, clazz));
     }
 
-    public record TabData(ItemStack icon, Runnable onClick, Predicate<Player> visiblePredicate, Class<? extends AbstractContainerMenu> clazz) { }
+    public record TabData(ItemStack icon, Runnable onClick, Predicate<Player> visiblePredicate, Class<? extends AbstractContainerMenu> clazz) {
+    }
 }

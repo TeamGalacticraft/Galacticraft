@@ -45,9 +45,11 @@ import java.util.Collection;
 
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin implements GearInventoryProvider {
-    @Shadow public ServerGamePacketListenerImpl connection;
+    @Shadow
+    public ServerGamePacketListenerImpl connection;
 
-    @Shadow public abstract ServerLevel serverLevel();
+    @Shadow
+    public abstract ServerLevel serverLevel();
 
     private final @Unique SimpleContainer gearInv = this.galacticraft_createGearInventory();
     private final @Unique Container tankInv = MappedInventory.create(this.gearInv, 4, 5);

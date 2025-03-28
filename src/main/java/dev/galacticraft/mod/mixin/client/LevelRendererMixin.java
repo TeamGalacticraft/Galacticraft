@@ -40,9 +40,9 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.joml.Matrix4f;
@@ -67,23 +67,23 @@ public class LevelRendererMixin {
     private void gc$setupRenderer(Minecraft minecraft, EntityRenderDispatcher entityRenderDispatcher, BlockEntityRenderDispatcher blockEntityRenderDispatcher, RenderBuffers renderBuffers, CallbackInfo ci) {
         this.worldRenderer = new OverworldRenderer();
     }
-    
-	@Inject(method = "renderHitOutline", at = @At("HEAD"), cancellable = true)
-	private void onRenderHitOutline(PoseStack poseStack, VertexConsumer vertexConsumer, Entity entity, double cameraX, double cameraY, double cameraZ, BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
+
+    @Inject(method = "renderHitOutline", at = @At("HEAD"), cancellable = true)
+    private void onRenderHitOutline(PoseStack poseStack, VertexConsumer vertexConsumer, Entity entity, double cameraX, double cameraY, double cameraZ, BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
         if (blockState.getBlock() instanceof CryogenicChamberBlock || blockState.getBlock() instanceof CryogenicChamberPart || blockState.getBlock() instanceof TransportTube) {
             // LevelRenderer.renderShape(poseStack, vertexConsumer, blockState.getShape(entity.level(), blockPos, CollisionContext.of(entity)), (double)blockPos.getX() - cameraX, (double)blockPos.getY() - cameraY, (double)blockPos.getZ() - cameraZ, 0.0f, 0.0f, 0.0f, 0.0f);
             VoxelShape voxelShape = blockState.getShape(entity.level(), blockPos, CollisionContext.of(entity));
-            double d = (double)blockPos.getX() - cameraX;
-            double d2 = (double)blockPos.getY() - cameraY;
-            double d3 = (double)blockPos.getZ() - cameraZ;
+            double d = (double) blockPos.getX() - cameraX;
+            double d2 = (double) blockPos.getY() - cameraY;
+            double d3 = (double) blockPos.getZ() - cameraZ;
             PoseStack.Pose pose = poseStack.last();
             voxelShape.forAllEdges((d4, d5, d6, d7, d8, d9) -> {
-                float f5 = (float)(d7 - d4);
-                float f6 = (float)(d8 - d5);
-                float f7 = (float)(d9 - d6);
+                float f5 = (float) (d7 - d4);
+                float f6 = (float) (d8 - d5);
+                float f7 = (float) (d9 - d6);
                 float f8 = Mth.sqrt(f5 * f5 + f6 * f6 + f7 * f7);
-                vertexConsumer.addVertex(pose, (float)(d4 + d), (float)(d5 + d2), (float)(d6 + d3)).setColor(R, G, B, A).setNormal(pose, f5 /= f8, f6 /= f8, f7 /= f8);
-                vertexConsumer.addVertex(pose, (float)(d7 + d), (float)(d8 + d2), (float)(d9 + d3)).setColor(R, G, B, A).setNormal(pose, f5, f6, f7);
+                vertexConsumer.addVertex(pose, (float) (d4 + d), (float) (d5 + d2), (float) (d6 + d3)).setColor(R, G, B, A).setNormal(pose, f5 /= f8, f6 /= f8, f7 /= f8);
+                vertexConsumer.addVertex(pose, (float) (d7 + d), (float) (d8 + d2), (float) (d9 + d3)).setColor(R, G, B, A).setNormal(pose, f5, f6, f7);
             });
             ci.cancel();
         }
@@ -123,7 +123,7 @@ public class LevelRendererMixin {
     @Unique
     private float normalize(float x, float inMin, float inMax, float outMin, float outMax) {
         float outRange = outMax - outMin;
-        float inRange  = inMax - inMin;
-        return (x - inMin) *outRange / inRange + outMin;
+        float inRange = inMax - inMin;
+        return (x - inMin) * outRange / inRange + outMin;
     }
 }

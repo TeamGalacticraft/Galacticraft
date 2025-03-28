@@ -111,7 +111,7 @@ public class VenusWeatherRenderer implements DimensionRenderingRegistry.WeatherR
                     }
 
                     if (y != ymax) {
-                        RandomSource random = RandomSource.create((long)(x * x * 3121 + x * 45238971 ^ z * z * 418711 + z * 13761));
+                        RandomSource random = RandomSource.create((long) (x * x * 3121 + x * 45238971 ^ z * z * 418711 + z * 13761));
 
                         if (drawFlag != 0) {
                             if (drawFlag >= 0 && buffer != null) {
@@ -129,7 +129,7 @@ public class VenusWeatherRenderer implements DimensionRenderingRegistry.WeatherR
                         int u = context.worldRenderer().ticks & 131071;
                         int dy = x * x * 3121 + x * 45238971 + z * z * 418711 + z * 13761 & 0xFF;
                         float h = 3.0F + random.nextFloat();
-                        float w = -(u + dy + partialTicks) / 80.0F * h;
+                        float w = -((float) (u + dy) + partialTicks) / 80.0F * h;
                         float vOff = w % 32.0F;
                         float yo = random.nextFloat() / 1.8F;
                         float xx = x + 0.5F - camX;

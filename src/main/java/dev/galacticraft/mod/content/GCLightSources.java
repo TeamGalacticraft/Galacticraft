@@ -29,7 +29,6 @@ import dev.galacticraft.mod.api.solarpanel.SolarPanelRegistry;
 import dev.galacticraft.mod.util.Translations;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +46,7 @@ public class GCLightSources {
                 new LightSource(Constant.CelestialBody.SOL_OVERCAST, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_RAIN).setStyle(Constant.Text.BLUE_STYLE), 1.0, 2.0));
         DEFAULT_LIGHT_SOURCES.put(SolarPanelSource.STORMY,
                 new LightSource(Constant.CelestialBody.SOL_OVERCAST, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_THUNDER).setStyle(Constant.Text.DARK_GRAY_STYLE), 1.0, 10.0));
-        DEFAULT_LIGHT_SOURCES.put(SolarPanelSource.NO_LIGHT_SOURCE, 
+        DEFAULT_LIGHT_SOURCES.put(SolarPanelSource.NO_LIGHT_SOURCE,
                 new LightSource(null, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_NONE).setStyle(Constant.Text.WHITE_STYLE), 0.0, 1.0));
 
         MOON_LIGHT_SOURCES.put(SolarPanelSource.DAY,
@@ -58,7 +57,7 @@ public class GCLightSources {
                 new LightSource(null, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_NONE).setStyle(Constant.Text.BLUE_STYLE), 0.0, 1.0));
         MOON_LIGHT_SOURCES.put(SolarPanelSource.STORMY,
                 new LightSource(null, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_NONE).setStyle(Constant.Text.DARK_GRAY_STYLE), 0.0, 1.0));
-        MOON_LIGHT_SOURCES.put(SolarPanelSource.NO_LIGHT_SOURCE, 
+        MOON_LIGHT_SOURCES.put(SolarPanelSource.NO_LIGHT_SOURCE,
                 new LightSource(null, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_NONE).setStyle(Constant.Text.WHITE_STYLE), 0.0, 1.0));
 
         SolarPanelRegistry.registerLightSources(GCDimensions.MOON, MOON_LIGHT_SOURCES);
