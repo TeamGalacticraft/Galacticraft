@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_compressed_steel": {
+    "has_oxygen_fan": {
       "conditions": {
         "items": [
           {
-            "items": "galacticraft:compressed_steel"
+            "items": "galacticraft:oxygen_fan"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_compressed_steel"
+      "has_oxygen_fan"
     ]
   ],
   "rewards": {

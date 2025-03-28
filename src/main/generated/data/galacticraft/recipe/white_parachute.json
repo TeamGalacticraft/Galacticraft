@@ -6,7 +6,7 @@
       "item": "galacticraft:canvas"
     },
     "S": {
-      "item": "minecraft:string"
+      "tag": "c:strings"
     }
   },
   "pattern": [
