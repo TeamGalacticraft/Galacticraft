@@ -160,120 +160,15 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         // Metal decoration blocks
-        decorationBlock(output, GCItems.COMPRESSED_TIN,
-                GCBlocks.TIN_DECORATION.item(),
-                GCBlocks.TIN_DECORATION.slabItem(),
-                GCBlocks.TIN_DECORATION.stairsItem(),
-                GCBlocks.TIN_DECORATION.wallItem()
-        );
-        detailedDecorationBlock(output, GCItems.COMPRESSED_TIN,
-                GCBlocks.TIN_DECORATION.detailedItem(),
-                GCBlocks.TIN_DECORATION.detailedSlabItem(),
-                GCBlocks.TIN_DECORATION.detailedStairsItem(),
-                GCBlocks.TIN_DECORATION.detailedWallItem()
-        );
-
-        decorationBlock(output, GCItems.COMPRESSED_COPPER,
-                GCBlocks.COPPER_DECORATION.item(),
-                GCBlocks.COPPER_DECORATION.slabItem(),
-                GCBlocks.COPPER_DECORATION.stairsItem(),
-                GCBlocks.COPPER_DECORATION.wallItem()
-        );
-        detailedDecorationBlock(output, GCItems.COMPRESSED_COPPER,
-                GCBlocks.COPPER_DECORATION.detailedItem(),
-                GCBlocks.COPPER_DECORATION.detailedSlabItem(),
-                GCBlocks.COPPER_DECORATION.detailedStairsItem(),
-                GCBlocks.COPPER_DECORATION.detailedWallItem()
-        );
-
-        decorationBlock(output, GCItems.COMPRESSED_IRON,
-                GCBlocks.IRON_DECORATION.item(),
-                GCBlocks.IRON_DECORATION.slabItem(),
-                GCBlocks.IRON_DECORATION.stairsItem(),
-                GCBlocks.IRON_DECORATION.wallItem()
-        );
-        detailedDecorationBlock(output, GCItems.COMPRESSED_IRON,
-                GCBlocks.IRON_DECORATION.detailedItem(),
-                GCBlocks.IRON_DECORATION.detailedSlabItem(),
-                GCBlocks.IRON_DECORATION.detailedStairsItem(),
-                GCBlocks.IRON_DECORATION.detailedWallItem()
-        );
-
-        decorationBlock(output, GCItems.COMPRESSED_ALUMINUM,
-                GCBlocks.ALUMINUM_DECORATION.item(),
-                GCBlocks.ALUMINUM_DECORATION.slabItem(),
-                GCBlocks.ALUMINUM_DECORATION.stairsItem(),
-                GCBlocks.ALUMINUM_DECORATION.wallItem()
-        );
-        detailedDecorationBlock(output, GCItems.COMPRESSED_ALUMINUM,
-                GCBlocks.ALUMINUM_DECORATION.detailedItem(),
-                GCBlocks.ALUMINUM_DECORATION.detailedSlabItem(),
-                GCBlocks.ALUMINUM_DECORATION.detailedStairsItem(),
-                GCBlocks.ALUMINUM_DECORATION.detailedWallItem()
-        );
-
-        decorationBlock(output, GCItems.COMPRESSED_STEEL,
-                GCBlocks.STEEL_DECORATION.item(),
-                GCBlocks.STEEL_DECORATION.slabItem(),
-                GCBlocks.STEEL_DECORATION.stairsItem(),
-                GCBlocks.STEEL_DECORATION.wallItem()
-        );
-        detailedDecorationBlock(output, GCItems.COMPRESSED_STEEL,
-                GCBlocks.STEEL_DECORATION.detailedItem(),
-                GCBlocks.STEEL_DECORATION.detailedSlabItem(),
-                GCBlocks.STEEL_DECORATION.detailedStairsItem(),
-                GCBlocks.STEEL_DECORATION.detailedWallItem()
-        );
-
-        decorationBlock(output, GCItems.COMPRESSED_BRONZE,
-                GCBlocks.BRONZE_DECORATION.item(),
-                GCBlocks.BRONZE_DECORATION.slabItem(),
-                GCBlocks.BRONZE_DECORATION.stairsItem(),
-                GCBlocks.BRONZE_DECORATION.wallItem()
-        );
-        detailedDecorationBlock(output, GCItems.COMPRESSED_BRONZE,
-                GCBlocks.BRONZE_DECORATION.detailedItem(),
-                GCBlocks.BRONZE_DECORATION.detailedSlabItem(),
-                GCBlocks.BRONZE_DECORATION.detailedStairsItem(),
-                GCBlocks.BRONZE_DECORATION.detailedWallItem()
-        );
-
-        decorationBlock(output, GCItems.COMPRESSED_METEORIC_IRON,
-                GCBlocks.METEORIC_IRON_DECORATION.item(),
-                GCBlocks.METEORIC_IRON_DECORATION.slabItem(),
-                GCBlocks.METEORIC_IRON_DECORATION.stairsItem(),
-                GCBlocks.METEORIC_IRON_DECORATION.wallItem()
-        );
-        detailedDecorationBlock(output, GCItems.COMPRESSED_METEORIC_IRON,
-                GCBlocks.METEORIC_IRON_DECORATION.detailedItem(),
-                GCBlocks.METEORIC_IRON_DECORATION.detailedSlabItem(),
-                GCBlocks.METEORIC_IRON_DECORATION.detailedStairsItem(),
-                GCBlocks.METEORIC_IRON_DECORATION.detailedWallItem()
-        );
-
-        decorationBlock(output, GCItems.COMPRESSED_TITANIUM,
-                GCBlocks.TITANIUM_DECORATION.item(),
-                GCBlocks.TITANIUM_DECORATION.slabItem(),
-                GCBlocks.TITANIUM_DECORATION.stairsItem(),
-                GCBlocks.TITANIUM_DECORATION.wallItem()
-        );
-        detailedDecorationBlock(output, GCItems.COMPRESSED_TITANIUM,
-                GCBlocks.TITANIUM_DECORATION.detailedItem(),
-                GCBlocks.TITANIUM_DECORATION.detailedSlabItem(),
-                GCBlocks.TITANIUM_DECORATION.detailedStairsItem(),
-                GCBlocks.TITANIUM_DECORATION.detailedWallItem()
-        );
-
-        decorationBlockVariants(output, GCBlocks.DARK_DECORATION.item(),
-                GCBlocks.DARK_DECORATION.slabItem(),
-                GCBlocks.DARK_DECORATION.stairsItem(),
-                GCBlocks.DARK_DECORATION.wallItem()
-        );
-        decorationBlockVariants(output, GCBlocks.DARK_DECORATION.detailedItem(),
-                GCBlocks.DARK_DECORATION.detailedSlabItem(),
-                GCBlocks.DARK_DECORATION.detailedStairsItem(),
-                GCBlocks.DARK_DECORATION.detailedWallItem()
-        );
+        platedMetalBlock(output, GCItems.COMPRESSED_TIN, GCBlocks.PLATED_TIN_BLOCK.asItem());
+        platedMetalBlock(output, GCItems.COMPRESSED_COPPER, GCBlocks.PLATED_COPPER_BLOCK.asItem());
+        platedMetalBlock(output, GCItems.COMPRESSED_IRON, GCBlocks.PLATED_IRON_BLOCK.asItem());
+        platedMetalBlock(output, GCItems.COMPRESSED_ALUMINUM, GCBlocks.PLATED_ALUMINUM_BLOCK.asItem());
+        platedMetalBlock(output, GCItems.COMPRESSED_STEEL, GCBlocks.PLATED_STEEL_BLOCK.asItem());
+        platedMetalBlock(output, GCItems.COMPRESSED_BRONZE, GCBlocks.PLATED_BRONZE_BLOCK.asItem());
+        platedMetalBlock(output, GCItems.COMPRESSED_METEORIC_IRON, GCBlocks.PLATED_METEORIC_IRON_BLOCK.asItem());
+        platedMetalBlock(output, GCItems.COMPRESSED_TITANIUM, GCBlocks.PLATED_TITANIUM_BLOCK.asItem());
+        platedMetalBlock(output, GCItems.COMPRESSED_DESH, GCBlocks.PLATED_DESH_BLOCK.asItem());
 
         // Rock decoration blocks
         decorationBlockVariants(output, GCBlocks.MOON_ROCK,
@@ -383,29 +278,13 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
         stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, chiseled, brick);
     }
 
-    public static void decorationBlock(RecipeOutput output, ItemLike input, ItemLike block, ItemLike slab, ItemLike stairs, ItemLike wall) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, block, 4)
-                .define('#', Items.STONE)
+    public static void platedMetalBlock(RecipeOutput output, ItemLike input, ItemLike block) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, block, 1)
                 .define('X', input)
-                .pattern("## ")
-                .pattern("##X")
+                .pattern("XX")
+                .pattern("XX")
                 .unlockedBy(getHasName(input), has(input))
                 .save(output);
-
-        decorationBlockVariants(output, block, slab, stairs, wall);
-    }
-
-    public static void detailedDecorationBlock(RecipeOutput output, ItemLike input, ItemLike block, ItemLike slab, ItemLike stairs, ItemLike wall) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, block, 4)
-                .define('#', Items.STONE)
-                .define('X', input)
-                .pattern("##")
-                .pattern("##")
-                .pattern(" X")
-                .unlockedBy(getHasName(input), has(input))
-                .save(output);
-
-        decorationBlockVariants(output, block, slab, stairs, wall);
     }
 
     public static void stairs(RecipeOutput output, ItemLike stairs, ItemLike base) {

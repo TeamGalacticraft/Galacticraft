@@ -1,8 +1,0 @@
-{
-  "parent": "galacticraft:block/template_detailed_wall_side",
-  "textures": {
-    "bottom": "galacticraft:block/aluminum_decoration",
-    "side": "galacticraft:block/detailed_aluminum_decoration_side",
-    "top": "galacticraft:block/detailed_aluminum_decoration_top"
-  }
-}
