@@ -366,8 +366,9 @@ public interface Constant {
         String ITEM_GROUP_CANS = "cans";
         String ITEM_GROUP = "items";
         String SILICON = "silicon";
-        String CANNED_FOOD = "canned_food";
         String EMPTY_CAN = "empty_can";
+        String CANNED_FOOD = "canned_food";
+        String CANNED_FOOD_LABEL = "canned_food_label";
         String RAW_SILICON = "raw_silicon";
         String RAW_METEORIC_IRON = "raw_meteoric_iron";
         String METEORIC_IRON_INGOT = "meteoric_iron_ingot";
