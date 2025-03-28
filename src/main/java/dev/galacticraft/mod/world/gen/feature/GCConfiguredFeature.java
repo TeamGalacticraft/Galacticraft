@@ -24,20 +24,34 @@ package dev.galacticraft.mod.world.gen.feature;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.LakeFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
-public class GCConfiguredFeature {
-    public static final ResourceKey<ConfiguredFeature<?, ?>> OIL_LAKE = ResourceKey.create(Registries.CONFIGURED_FEATURE, Constant.id("oil_lake"));
+public abstract class GCConfiguredFeature {
+    public static final ResourceKey<ConfiguredFeature<?, ?>> OIL_LAKE = key("oil_lake");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> METEOR_CRATER = key("meteor_crater");
+
+    public static final Feature<MeteorCraterFeature.Configuration> METEOR_FEATURE = new MeteorCraterFeature(MeteorCraterFeature.Configuration.CODEC);
 
     public static void bootstrapRegistries(BootstrapContext<ConfiguredFeature<?, ?>> context) {
-        context.register(OIL_LAKE, new ConfiguredFeature<>(Feature.LAKE,
-                new LakeFeature.Configuration(BlockStateProvider.simple(GCBlocks.CRUDE_OIL), BlockStateProvider.simple(Blocks.STONE))));
+        context.register(OIL_LAKE, new ConfiguredFeature<>(Feature.LAKE, new LakeFeature.Configuration(BlockStateProvider.simple(GCBlocks.CRUDE_OIL), BlockStateProvider.simple(Blocks.STONE))));
+        context.register(METEOR_CRATER, new ConfiguredFeature<>(METEOR_FEATURE, new MeteorCraterFeature.Configuration(BlockStateProvider.simple(GCBlocks.ASTEROID_ROCK), 5)));
+    }
+
+    private static ResourceKey<ConfiguredFeature<?, ?>> key(String name) {
+        return Constant.key(Registries.CONFIGURED_FEATURE, name);
     }
 }

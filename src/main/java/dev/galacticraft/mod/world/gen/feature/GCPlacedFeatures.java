@@ -41,18 +41,31 @@ import java.util.List;
 
 public class GCPlacedFeatures {
     public static final ResourceKey<PlacedFeature> OIL_LAKE = ResourceKey.create(Registries.PLACED_FEATURE, Constant.id("oil_lake"));
+    public static final ResourceKey<PlacedFeature> METEOR_CRATER = ResourceKey.create(Registries.PLACED_FEATURE, Constant.id("meteor_crater"));
 
     public static void bootstrapRegistries(BootstrapContext<PlacedFeature> context) {
         HolderGetter<ConfiguredFeature<?, ?>> configuredFeatureLookup = context.lookup(Registries.CONFIGURED_FEATURE);
+
         context.register(OIL_LAKE, new PlacedFeature(configuredFeatureLookup.getOrThrow(GCConfiguredFeature.OIL_LAKE), List.of(
                 PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
                 RarityFilter.onAverageOnceEvery(70),
                 InSquarePlacement.spread(),
                 BiomeFilter.biome()
         )));
+
+        context.register(METEOR_CRATER, new PlacedFeature(
+                configuredFeatureLookup.getOrThrow(GCConfiguredFeature.METEOR_CRATER),
+                List.of(
+                        RarityFilter.onAverageOnceEvery(30),
+                        InSquarePlacement.spread(),
+                        PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
+                        BiomeFilter.biome()
+                )
+        ));
     }
 
     public static void register() {
         BiomeModifications.addFeature(context -> context.hasFeature(MiscOverworldFeatures.LAKE_LAVA), GenerationStep.Decoration.LAKES, OIL_LAKE);
+        BiomeModifications.addFeature(context -> context.getBiomeKey().location().getNamespace().equals("minecraft"), GenerationStep.Decoration.TOP_LAYER_MODIFICATION, METEOR_CRATER);
     }
 }
