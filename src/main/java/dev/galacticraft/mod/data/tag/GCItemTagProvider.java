@@ -171,6 +171,8 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCBlocks.ILMENITE_ORE.asItem());
         this.tag(GCItemTags.LEAD_ORES)
                 .add(GCBlocks.GALENA_ORE.asItem());
+        this.tag(GCItemTags.SOLAR_ORES)
+                .add(GCBlocks.SOLAR_ORE.asItem());
         this.tag(ConventionalItemTags.ORES)
                 .addTag(GCItemTags.SILICON_ORES)
                 .addTag(GCItemTags.TIN_ORES)
@@ -181,7 +183,8 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .addTag(GCItemTags.METEORIC_IRON_ORES)
                 .addTag(GCItemTags.DESH_ORES)
                 .addTag(GCItemTags.TITANIUM_ORES)
-                .addTag(GCItemTags.LEAD_ORES);
+                .addTag(GCItemTags.LEAD_ORES)
+                .addTag(GCItemTags.SOLAR_ORES);
 
         this.tag(GCItemTags.TIN_BLOCKS)
                 .add(GCBlocks.TIN_BLOCK.asItem());

@@ -32,45 +32,36 @@ public class GCBlockTags {
     public static final TagKey<Block> INFINIBURN_MOON = galacticraftTag("infiniburn_moon");
     public static final TagKey<Block> INFINIBURN_VENUS = galacticraftTag("infiniburn_venus");
     public static final TagKey<Block> INFINIBURN_ASTEROID = galacticraftTag("infiniburn_asteroid");
+
     public static final TagKey<Block> BASE_STONE_MOON = galacticraftTag("base_stone_moon");
     public static final TagKey<Block> MOON_CARVER_REPLACEABLES = galacticraftTag("moon_carver_replaceables");
     public static final TagKey<Block> MOON_CRATER_CARVER_REPLACEABLES = galacticraftTag("moon_crater_carver_replaceables");
+
     public static final TagKey<Block> MOON_STONE_ORE_REPLACEABLES = galacticraftTag("moon_stone_ore_replaceables");
     public static final TagKey<Block> MOON_BASALT_ORE_REPLACEABLES = galacticraftTag("moon_basalt_ore_replaceables");
     public static final TagKey<Block> LUNASLATE_ORE_REPLACEABLES = galacticraftTag("lunaslate_ore_replaceables");
-    public static final TagKey<Block> MARS_ROCK_ORE_REPLACEABLES = galacticraftTag("mars_rock_ore_replaceables");
+    public static final TagKey<Block> MARS_STONE_ORE_REPLACEABLES = galacticraftTag("mars_stone_ore_replaceables");
     public static final TagKey<Block> ASTEROID_ROCK_ORE_REPLACEABLES = galacticraftTag("asteroid_rock_ore_replaceables");
-    public static final TagKey<Block> VENUS_ROCK_ORE_REPLACEABLES = galacticraftTag("venus_rock_ore_replaceables");
+    public static final TagKey<Block> HARD_VENUS_ROCK_ORE_REPLACEABLES = galacticraftTag("hard_venus_rock_ore_replaceables");
+    public static final TagKey<Block> SOFT_VENUS_ROCK_ORE_REPLACEABLES = galacticraftTag("soft_venus_rock_ore_replaceables");
+
     public static final TagKey<Block> ORE_BEARING_GROUND_MOON_STONE = commonTag("ore_bearing_ground/moon_stone");
     public static final TagKey<Block> ORE_BEARING_GROUND_MOON_BASALT = commonTag("ore_bearing_ground/moon_basalt");
     public static final TagKey<Block> ORE_BEARING_GROUND_LUNASLATE = commonTag("ore_bearing_ground/lunaslate");
-    public static final TagKey<Block> ORE_BEARING_GROUND_MARS_ROCK = commonTag("ore_bearing_ground/mars_rock");
+    public static final TagKey<Block> ORE_BEARING_GROUND_MARS_STONE = commonTag("ore_bearing_ground/mars_stone");
     public static final TagKey<Block> ORE_BEARING_GROUND_ASTEROID_ROCK = commonTag("ore_bearing_ground/asteroid_rock");
     public static final TagKey<Block> ORE_BEARING_GROUND_VENUS_ROCK = commonTag("ore_bearing_ground/venus_rock");
+    public static final TagKey<Block> ORE_BEARING_GROUND_HARD_VENUS_ROCK = commonTag("ore_bearing_ground/venus_rock/hard");
+    public static final TagKey<Block> ORE_BEARING_GROUND_SOFT_VENUS_ROCK = commonTag("ore_bearing_ground/venus_rock/soft");
+
     public static final TagKey<Block> ORES_IN_GROUND_MOON_STONE = commonTag("ores_in_ground/moon_stone");
     public static final TagKey<Block> ORES_IN_GROUND_MOON_BASALT = commonTag("ores_in_ground/moon_basalt");
     public static final TagKey<Block> ORES_IN_GROUND_LUNASLATE = commonTag("ores_in_ground/lunaslate");
-    public static final TagKey<Block> ORES_IN_GROUND_MARS_ROCK = commonTag("ores_in_ground/mars_rock");
+    public static final TagKey<Block> ORES_IN_GROUND_MARS_STONE = commonTag("ores_in_ground/mars_stone");
     public static final TagKey<Block> ORES_IN_GROUND_ASTEROID_ROCK = commonTag("ores_in_ground/asteroid_rock");
     public static final TagKey<Block> ORES_IN_GROUND_VENUS_ROCK = commonTag("ores_in_ground/venus_rock");
-
-    public static final TagKey<Block> MACHINES = galacticraftTag("machines");
-    public static final TagKey<Block> FOOTPRINTS = galacticraftTag("footprints");
-
-    public static final TagKey<Block> SLABS = galacticraftTag("slabs");
-    public static final TagKey<Block> STAIRS = galacticraftTag("stairs");
-    public static final TagKey<Block> WALLS = galacticraftTag("walls");
-    
-    public static final TagKey<Block> DECORATION_BLOCKS = galacticraftTag("decoration_blocks");
-    public static final TagKey<Block> ALUMINUM_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/aluminum");
-    public static final TagKey<Block> BRONZE_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/bronze");
-    public static final TagKey<Block> COPPER_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/copper");
-    public static final TagKey<Block> DARK_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/dark");
-    public static final TagKey<Block> IRON_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/iron");
-    public static final TagKey<Block> METEORIC_IRON_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/meteoric_iron");
-    public static final TagKey<Block> STEEL_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/steel");
-    public static final TagKey<Block> TIN_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/tin");
-    public static final TagKey<Block> TITANIUM_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/titanium");
+    public static final TagKey<Block> ORES_IN_GROUND_HARD_VENUS_ROCK = commonTag("ores_in_ground/venus_rock/hard");
+    public static final TagKey<Block> ORES_IN_GROUND_SOFT_VENUS_ROCK = commonTag("ores_in_ground/venus_rock/soft");
 
     public static final TagKey<Block> ALUMINUM_ORES = commonTag("ores/aluminum");
     public static final TagKey<Block> CHEESE_ORES = commonTag("ores/cheese");
@@ -100,6 +91,24 @@ public class GCBlockTags {
     public static final TagKey<Block> RAW_METEORIC_IRON_BLOCKS = commonTag("storage_blocks/raw_meteoric_iron");
     public static final TagKey<Block> RAW_TIN_BLOCKS = commonTag("storage_blocks/raw_tin");
     public static final TagKey<Block> RAW_TITANIUM_BLOCKS = commonTag("storage_blocks/raw_titanium");
+
+    public static final TagKey<Block> MACHINES = galacticraftTag("machines");
+    public static final TagKey<Block> FOOTPRINTS = galacticraftTag("footprints");
+
+    public static final TagKey<Block> SLABS = galacticraftTag("slabs");
+    public static final TagKey<Block> STAIRS = galacticraftTag("stairs");
+    public static final TagKey<Block> WALLS = galacticraftTag("walls");
+    
+    public static final TagKey<Block> DECORATION_BLOCKS = galacticraftTag("decoration_blocks");
+    public static final TagKey<Block> ALUMINUM_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/aluminum");
+    public static final TagKey<Block> BRONZE_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/bronze");
+    public static final TagKey<Block> COPPER_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/copper");
+    public static final TagKey<Block> DARK_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/dark");
+    public static final TagKey<Block> IRON_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/iron");
+    public static final TagKey<Block> METEORIC_IRON_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/meteoric_iron");
+    public static final TagKey<Block> STEEL_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/steel");
+    public static final TagKey<Block> TIN_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/tin");
+    public static final TagKey<Block> TITANIUM_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/titanium");
 
     public static TagKey<Block> commonTag(String path) {
         return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, path));
