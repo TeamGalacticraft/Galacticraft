@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "galacticraft:aluminum_wire"
+    },
+    "B": {
+      "item": "galacticraft:basic_wafer"
+    },
+    "C": {
+      "item": "galacticraft:empty_can"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "S": {
+      "item": "galacticraft:compressed_steel"
+    }
+  },
+  "pattern": [
+    "SPS",
+    "SCS",
+    "ABA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:food_canner"
+  }
+}

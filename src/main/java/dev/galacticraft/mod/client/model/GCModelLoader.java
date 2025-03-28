@@ -35,8 +35,8 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.event.RocketAtlasCallback;
-import dev.galacticraft.mod.client.render.rocket.GalacticraftRocketPartRenderers;
 import dev.galacticraft.mod.client.resources.RocketTextureManager;
+import dev.galacticraft.mod.content.GCBlocks;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.Util;
@@ -44,6 +44,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.model.AtlasSet;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.FileToIdConverter;
@@ -79,6 +80,8 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
     public static final Codec<GCUnbakedModel> MODEL_CODEC = MODEL_TYPE_CODEC.dispatch(TYPE_KEY.toString(), GCUnbakedModel::getType, GCUnbakedModel.GCModelType::codec);
     private static final ResourceLocation PARACHEST_ITEM = Constant.id("item/parachest");
 
+    public static final ResourceLocation CANNED_FOOD_MODEL = Constant.id("block/canned_food_model");
+
     private Map<ResourceLocation, GCModel> models = ImmutableMap.of();
     private AtlasSet atlases;
 
@@ -89,8 +92,16 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
             pluginContext.addModels(Constant.id("block/" + color + "_fluid_pipe_walkway"));
         }
 
+        pluginContext.modifyModelAfterBake().register((model, context) -> {
+            if (context.resourceId() != null && context.resourceId().equals(CANNED_FOOD_MODEL)) {
+                return new CannedFoodBakedModel(model);
+            }
+            return model;
+        });
+
         pluginContext.resolveModel().register(context -> {
             var resourceId = context.id();
+
 
             if (Constant.BakedModel.WIRE_MARKER.equals(resourceId)) {
                 return WireUnbakedModel.INSTANCE;

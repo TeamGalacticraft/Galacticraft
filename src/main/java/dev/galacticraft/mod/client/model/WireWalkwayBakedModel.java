@@ -204,8 +204,7 @@ public class WireWalkwayBakedModel implements BakedModel {
         if (connections[direction.get3DDataValue()]) {
             mesh.outputTo(emitter);
             smallMesh.outputTo(emitter);
-        }
-        else {
+        } else {
             emitter.square(direction, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 12, 0).uv(1, 16, 0).uv(2, 16, 4).uv(3, 12, 4).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
         }
     }

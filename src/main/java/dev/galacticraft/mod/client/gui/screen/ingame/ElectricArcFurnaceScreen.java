@@ -50,7 +50,7 @@ public class ElectricArcFurnaceScreen extends MachineScreen<ElectricArcFurnaceBl
     protected void renderMachineBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.renderMachineBackground(graphics, mouseX, mouseY, delta);
         if (this.menu.getMaxProgress() != 0 && this.menu.getProgress() != 0) {
-            float scale = (float)menu.getProgress() / (float)menu.getMaxProgress();
+            float scale = (float) menu.getProgress() / (float) menu.getMaxProgress();
             int width = Mth.ceil(ARROW_WIDTH * scale);
             DrawableUtil.drawProgressTexture(graphics.pose(), this.leftPos + ARROW_X, this.topPos + ARROW_Y, ARROW_U, ARROW_V, width, ARROW_HEIGHT);
         }

@@ -40,11 +40,11 @@ public interface CelestialHandler {
      * Gets the parachest spawn location when entering this dimension. Return
      * null for no parachest spawn
      *
-     * @param world The world to be spawned into
+     * @param world  The world to be spawned into
      * @param player The player being teleported
-     * @param rand The random instance
+     * @param rand   The random instance
      * @return a vector3 object containing the coordinates to be spawned into
-     *         the world with. Return null for no spawn
+     * the world with. Return null for no spawn
      */
     @Nullable
     Vec3 getParachestSpawnLocation(Level world, Player player, RandomSource rand);
@@ -54,7 +54,7 @@ public interface CelestialHandler {
      * entering the dimension
      *
      * @return whether player will set parachute open upon entering this
-     *         dimension
+     * dimension
      */
     boolean useParachute();
 }

@@ -498,12 +498,12 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
         assert this.minecraft != null;
         assert this.minecraft.level != null;
         long time = this.minecraft.level.getGameTime();
-        Vector3f cBodyPos = new Vector3f((float)cBody.position().x(time, delta), (float)cBody.position().y(time, delta), 0);
+        Vector3f cBodyPos = new Vector3f((float) cBody.position().x(time, delta), (float) cBody.position().y(time, delta), 0);
 
         if (cBody.parent() != null) {
             cBodyPos.add(this.getCelestialBodyPosition(cBody.parent().value(), delta));
         } else {
-            cBodyPos.add((float)cBody.galaxy().value().position().x(time, delta), (float)cBody.galaxy().value().position().y(time, delta), 0);
+            cBodyPos.add((float) cBody.galaxy().value().position().x(time, delta), (float) cBody.galaxy().value().position().y(time, delta), 0);
         }
         return cBodyPos;
     }

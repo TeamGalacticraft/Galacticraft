@@ -50,15 +50,14 @@ public class RocketOverlay {
      * @param player thePlayer
      * @return position of player's spaceship
      */
-    protected static int getPlayerPositionY(Player player)
-    {
-        if (player.getVehicle() != null && player.getVehicle() instanceof RocketEntity rocket)
-        {
+    protected static int getPlayerPositionY(Player player) {
+        if (player.getVehicle() != null && player.getVehicle() instanceof RocketEntity rocket) {
             return (int) Math.floor(rocket.getY());
         }
 
         return (int) Math.floor(player.getY());
     }
+
     public static void onHudRender(GuiGraphics graphics, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         if (playerHead == null) {

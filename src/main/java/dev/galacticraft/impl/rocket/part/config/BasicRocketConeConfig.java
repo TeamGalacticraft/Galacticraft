@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public record BasicRocketConeConfig(ConfiguredTravelPredicate<?, ?> predicate, @Nullable RocketPartRecipe<?,?> recipe) implements RocketConeConfig {
+public record BasicRocketConeConfig(ConfiguredTravelPredicate<?, ?> predicate, @Nullable RocketPartRecipe<?, ?> recipe) implements RocketConeConfig {
     public static final Codec<BasicRocketConeConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ConfiguredTravelPredicate.DIRECT_CODEC.fieldOf("predicate").forGetter(BasicRocketConeConfig::predicate),
             RocketPartRecipe.DIRECT_CODEC.optionalFieldOf("recipe").forGetter(config -> Optional.ofNullable(config.recipe))

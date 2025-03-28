@@ -25,8 +25,7 @@
     "PlayerMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
-    "TorchBlockMixin",
-    "client.ClientPacketListenerMixin"
+    "TorchBlockMixin"
   ],
   "client": [
     "client.AbstractClientPlayerMixin",
@@ -36,6 +35,8 @@
     "client.BlockModelMixin$DeserializerMixin",
     "client.CameraMixin",
     "client.ClientLevelMixin",
+    "client.ClientPacketListenerMixin",
+    "client.FabricItemMixin",
     "client.FogRendererMixin",
     "client.HumanoidModelMixin",
     "client.LevelRendererMixin",
@@ -43,7 +44,8 @@
     "client.LocalPlayerMixin",
     "client.MinecraftMixin",
     "client.PauseMenuScreenMixin",
-    "client.ScreenEffectRendererMixin"
+    "client.ScreenEffectRendererMixin",
+    "client.SpriteContentAccessor"
   ],
   "minVersion": "0.8.0",
   "injectors": {

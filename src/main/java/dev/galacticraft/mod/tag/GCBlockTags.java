@@ -31,6 +31,7 @@ import net.minecraft.world.level.block.Block;
 public class GCBlockTags {
     public static final TagKey<Block> INFINIBURN_MOON = galacticraftTag("infiniburn_moon");
     public static final TagKey<Block> INFINIBURN_VENUS = galacticraftTag("infiniburn_venus");
+    public static final TagKey<Block> INFINIBURN_ASTEROID = galacticraftTag("infiniburn_asteroid");
     public static final TagKey<Block> BASE_STONE_MOON = galacticraftTag("base_stone_moon");
     public static final TagKey<Block> MOON_CARVER_REPLACEABLES = galacticraftTag("moon_carver_replaceables");
     public static final TagKey<Block> MOON_CRATER_CARVER_REPLACEABLES = galacticraftTag("moon_crater_carver_replaceables");

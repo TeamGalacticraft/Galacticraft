@@ -32,5 +32,6 @@ public class GCCelestialHandlers {
     public static final CelestialHandler DEFAULT = CELESTIAL_HANDLERS.register("default", new DefaultCelestialHandler());
     public static final CelestialHandler OVERWORLD = CELESTIAL_HANDLERS.register("overworld", new OverworldHandler());
 
-    public static void register() {}
+    public static void register() {
+    }
 }

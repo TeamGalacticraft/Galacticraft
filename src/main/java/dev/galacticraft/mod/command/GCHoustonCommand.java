@@ -81,7 +81,7 @@ public class GCHoustonCommand {
 
             context.getSource().sendSuccess(() -> Component.translatable(Translations.GcHouston.SUCCESS).setStyle(Constant.Text.GREEN_STYLE), true);
         } else {
-            PROMPT_EXPIRY.put(uuid, tickId + (int)(GC_HOUSTON_TIMER_LENGTH * context.getSource().getServer().tickRateManager().millisecondsPerTick()));
+            PROMPT_EXPIRY.put(uuid, tickId + (int) (GC_HOUSTON_TIMER_LENGTH * context.getSource().getServer().tickRateManager().millisecondsPerTick()));
             context.getSource().sendSuccess(() -> Component.translatable(Translations.GcHouston.CONFIRMATION), false);
         }
         return Command.SINGLE_SUCCESS;

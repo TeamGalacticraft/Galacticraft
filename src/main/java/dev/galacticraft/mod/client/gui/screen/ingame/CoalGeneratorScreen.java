@@ -51,7 +51,7 @@ public class CoalGeneratorScreen extends MachineScreen<CoalGeneratorBlockEntity,
     protected void renderMachineBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.renderMachineBackground(graphics, mouseX, mouseY, delta);
         if (this.menu.getFuelLength() > 0) {
-            float scale = 1.0F - (float)this.menu.getFuelTime() / (float)this.menu.getFuelLength();
+            float scale = 1.0F - (float) this.menu.getFuelTime() / (float) this.menu.getFuelLength();
             int height = Mth.ceil((FIRE_HEIGHT - 1) * scale) + 1;
             DrawableUtil.drawProgressTexture(graphics.pose(), this.leftPos + FIRE_X, this.topPos + FIRE_Y + FIRE_HEIGHT - height, 0, FIRE_U, FIRE_V + FIRE_HEIGHT - height, FIRE_WIDTH, height);
         }

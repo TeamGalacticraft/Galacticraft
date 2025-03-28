@@ -53,6 +53,8 @@ public class GCItemTags {
     public static final TagKey<Item> ALUMINUM_ORES = commonTag("ores/aluminum");
     public static final TagKey<Item> TIN_ORES = commonTag("ores/tin");
     public static final TagKey<Item> TITANIUM_ORES = commonTag("ores/titanium");
+    public static final TagKey<Item> CHEESE_ORES = commonTag("ores/cheese");
+    public static final TagKey<Item> LUNAR_SAPPHIRE_ORES = commonTag("ores/lunar_sapphire");
 
     public static final TagKey<Item> SILICON_BLOCKS = commonTag("storage_blocks/silicon");
     public static final TagKey<Item> OLIVINE_BLOCKS = commonTag("storage_blocks/olivine");

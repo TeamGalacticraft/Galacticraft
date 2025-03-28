@@ -25,6 +25,7 @@ package dev.galacticraft.mod.data.tag;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.block.GCBlock;
 import dev.galacticraft.mod.tag.GCBlockTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
@@ -87,8 +88,10 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR,
                         GCBlocks.OXYGEN_DECOMPRESSOR,
                         GCBlocks.OXYGEN_COMPRESSOR,
+                        GCBlocks.FOOD_CANNER,
                         GCBlocks.OXYGEN_STORAGE_MODULE,
-                        GCBlocks.FUEL_LOADER
+                        GCBlocks.FUEL_LOADER,
+                        GCBlocks.ROCKET_WORKBENCH
                 );
 
         this.tag(BlockTags.CLIMBABLE)
@@ -98,7 +101,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.CAVERNOUS_VINES_PLANT
                 );
 
-        var stairs = new Block[] {
+        var stairs = new Block[]{
                 GCBlocks.MOON_ROCK_STAIRS,
                 GCBlocks.MOON_ROCK_BRICK_STAIRS,
                 GCBlocks.CRACKED_MOON_ROCK_BRICK_STAIRS,
@@ -193,13 +196,13 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         var ores = new Block[] {
                 GCBlocks.MARS_IRON_ORE, GCBlocks.ASTEROID_IRON_ORE,
                 GCBlocks.MOON_COPPER_ORE, GCBlocks.LUNASLATE_COPPER_ORE, GCBlocks.MARS_COPPER_ORE, GCBlocks.VENUS_COPPER_ORE,
-                GCBlocks.SILICON_ORE, GCBlocks.DEEPSLATE_SILICON_ORE,
+                GCBlocks.SILICON_ORE, GCBlocks.DEEPSLATE_SILICON_ORE, GCBlocks.ASTEROID_SILICON_ORE,
                 GCBlocks.TIN_ORE, GCBlocks.DEEPSLATE_TIN_ORE, GCBlocks.MOON_TIN_ORE, GCBlocks.LUNASLATE_TIN_ORE, GCBlocks.MARS_TIN_ORE, GCBlocks.VENUS_TIN_ORE,
                 GCBlocks.ALUMINUM_ORE, GCBlocks.DEEPSLATE_ALUMINUM_ORE, GCBlocks.ASTEROID_ALUMINUM_ORE, GCBlocks.VENUS_ALUMINUM_ORE,
-                GCBlocks.FALLEN_METEOR,
                 GCBlocks.MOON_CHEESE_ORE,
                 GCBlocks.LUNAR_SAPPHIRE_ORE,
                 GCBlocks.OLIVINE_BASALT, GCBlocks.RICH_OLIVINE_BASALT,
+                GCBlocks.FALLEN_METEOR,
                 GCBlocks.DESH_ORE,
                 GCBlocks.ILMENITE_ORE,
                 GCBlocks.GALENA_ORE,
@@ -208,7 +211,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         this.tag(ConventionalBlockTags.ORES).add(ores);
 
-        var clusters = new Block[] {
+        var clusters = new Block[]{
                 GCBlocks.OLIVINE_CLUSTER
         };
 
@@ -272,6 +275,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.ASTEROID_ROCK,
                         GCBlocks.ASTEROID_ROCK_1,
                         GCBlocks.ASTEROID_ROCK_2,
+                        GCBlocks.DENSE_ICE,
 
                         GCBlocks.TIN_DECORATION.block(),
                         GCBlocks.COPPER_DECORATION.block(),
@@ -325,12 +329,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.FLUID_PIPE_WALKWAY,
                         GCBlocks.MARS_IRON_ORE,
                         GCBlocks.ASTEROID_IRON_ORE,
-                        GCBlocks.MARS_IRON_ORE,
-                        GCBlocks.ASTEROID_IRON_ORE,
                         GCBlocks.MOON_COPPER_ORE,
                         GCBlocks.LUNASLATE_COPPER_ORE,
-                        GCBlocks.MARS_COPPER_ORE,
-                        GCBlocks.VENUS_COPPER_ORE,
                         GCBlocks.MARS_COPPER_ORE,
                         GCBlocks.VENUS_COPPER_ORE,
                         GCBlocks.TIN_ORE,
@@ -339,18 +339,12 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.LUNASLATE_TIN_ORE,
                         GCBlocks.MARS_TIN_ORE,
                         GCBlocks.VENUS_TIN_ORE,
-                        GCBlocks.MARS_TIN_ORE,
-                        GCBlocks.VENUS_TIN_ORE,
                         GCBlocks.ALUMINUM_ORE,
                         GCBlocks.DEEPSLATE_ALUMINUM_ORE,
                         GCBlocks.ASTEROID_ALUMINUM_ORE,
                         GCBlocks.VENUS_ALUMINUM_ORE,
                         GCBlocks.MOON_CHEESE_ORE,
-                        GCBlocks.ASTEROID_ALUMINUM_ORE,
-                        GCBlocks.VENUS_ALUMINUM_ORE,
-                        GCBlocks.MOON_CHEESE_ORE,
                         GCBlocks.GALENA_ORE,
-                        GCBlocks.SOLAR_ORE,
                         GCBlocks.SOLAR_ORE,
                         GCBlocks.RAW_TIN_BLOCK,
                         GCBlocks.TIN_BLOCK,
@@ -366,8 +360,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(
                         GCBlocks.SILICON_ORE,
                         GCBlocks.DEEPSLATE_SILICON_ORE,
+                        GCBlocks.ASTEROID_SILICON_ORE,
                         GCBlocks.FALLEN_METEOR,
-                        GCBlocks.LUNAR_SAPPHIRE_ORE,
                         GCBlocks.LUNAR_SAPPHIRE_ORE,
                         GCBlocks.SILICON_BLOCK
                 );

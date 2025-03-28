@@ -45,7 +45,8 @@ import java.util.Set;
 
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin implements ServerResearchAccessor {
-    @Shadow public abstract boolean isCreative();
+    @Shadow
+    public abstract boolean isCreative();
 
     private final @Unique Set<ResourceLocation> unlockedRecipes = new HashSet<>();
 
@@ -59,7 +60,7 @@ public abstract class ServerPlayerMixin implements ServerResearchAccessor {
     public void galacticraft$unlockRocketPartRecipes(ResourceLocation... ids) {
         Collections.addAll(this.unlockedRecipes, ids);
 
-        ServerPlayNetworking.send((ServerPlayer) (Object)this, new ResearchUpdatePayload(true, List.of(ids)));
+        ServerPlayNetworking.send((ServerPlayer) (Object) this, new ResearchUpdatePayload(true, List.of(ids)));
     }
 
     @Override
@@ -68,7 +69,7 @@ public abstract class ServerPlayerMixin implements ServerResearchAccessor {
             this.unlockedRecipes.remove(id);
         }
 
-        ServerPlayNetworking.send((ServerPlayer) (Object)this, new ResearchUpdatePayload(false, List.of(ids)));
+        ServerPlayNetworking.send((ServerPlayer) (Object) this, new ResearchUpdatePayload(false, List.of(ids)));
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))

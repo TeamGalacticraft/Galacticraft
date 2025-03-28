@@ -152,15 +152,19 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         this.tag(ItemTags.COPPER_ORES)
                 .add(GCBlocks.MOON_COPPER_ORE.asItem(), GCBlocks.LUNASLATE_COPPER_ORE.asItem(), GCBlocks.MARS_COPPER_ORE.asItem(), GCBlocks.VENUS_COPPER_ORE.asItem());
         this.tag(GCItemTags.SILICON_ORES)
-                .add(GCBlocks.SILICON_ORE.asItem(), GCBlocks.DEEPSLATE_SILICON_ORE.asItem());
+                .add(GCBlocks.SILICON_ORE.asItem(), GCBlocks.DEEPSLATE_SILICON_ORE.asItem(), GCBlocks.ASTEROID_SILICON_ORE.asItem());
         this.tag(GCItemTags.TIN_ORES)
                 .add(GCBlocks.TIN_ORE.asItem(), GCBlocks.DEEPSLATE_TIN_ORE.asItem(), GCBlocks.MOON_TIN_ORE.asItem(), GCBlocks.LUNASLATE_TIN_ORE.asItem(), GCBlocks.MARS_TIN_ORE.asItem(), GCBlocks.VENUS_TIN_ORE.asItem());
         this.tag(GCItemTags.ALUMINUM_ORES)
                 .add(GCBlocks.ALUMINUM_ORE.asItem(), GCBlocks.DEEPSLATE_ALUMINUM_ORE.asItem(), GCBlocks.ASTEROID_ALUMINUM_ORE.asItem(), GCBlocks.VENUS_ALUMINUM_ORE.asItem());
-        this.tag(GCItemTags.METEORIC_IRON_ORES)
-                .add(GCBlocks.FALLEN_METEOR.asItem());
+        this.tag(GCItemTags.CHEESE_ORES)
+                .add(GCBlocks.MOON_CHEESE_ORE.asItem());
+        this.tag(GCItemTags.LUNAR_SAPPHIRE_ORES)
+                .add(GCBlocks.LUNAR_SAPPHIRE_ORE.asItem());
         this.tag(GCItemTags.OLIVINE_ORES)
                 .add(GCBlocks.OLIVINE_BASALT.asItem(), GCBlocks.RICH_OLIVINE_BASALT.asItem());
+        this.tag(GCItemTags.METEORIC_IRON_ORES)
+                .add(GCBlocks.FALLEN_METEOR.asItem());
         this.tag(GCItemTags.DESH_ORES)
                 .add(GCBlocks.DESH_ORE.asItem());
         this.tag(GCItemTags.LEAD_ORES)
@@ -382,15 +386,8 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.MOON_CHEESE_SLICE)
                 .add(GCBlocks.MOON_CHEESE_WHEEL.asItem())
                 .add(GCItems.CHEESEBURGER);
-        this.tag(GCItemTags.CANNED_FOODS)
-                .add(GCItems.CANNED_DEHYDRATED_APPLE)
-                .add(GCItems.CANNED_DEHYDRATED_CARROT)
-                .add(GCItems.CANNED_DEHYDRATED_MELON)
-                .add(GCItems.CANNED_DEHYDRATED_POTATO)
-                .add(GCItems.CANNED_BEEF);
         this.tag(ConventionalItemTags.FOODS)
-                .addTag(GCItemTags.CHEESE_FOODS)
-                .addTag(GCItemTags.CANNED_FOODS);
+                .addTag(GCItemTags.CHEESE_FOODS);
 
         this.tag(ItemTags.WOLF_FOOD)
                 .add(GCItems.MOON_CHEESE_CURD)

@@ -57,7 +57,7 @@ public record BakedModelRocketPartRenderer(ResourceLocation model,
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         PoseStack pose = graphics.pose();
         pose.pushPose();
-        pose.translate(x, y-5, 10); //todo: add GUI model transforms to models
+        pose.translate(x, y - 5, 10); //todo: add GUI model transforms to models
         pose.translate(8, 16, 8);
 //        model.get().getTransforms().getTransform(ItemDisplayContext.GUI).apply(false, pose);
         pose.mulPose(Axis.XN.rotationDegrees(35));
@@ -74,7 +74,7 @@ public record BakedModelRocketPartRenderer(ResourceLocation model,
         RenderSystem.disableCull();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 //        if (model.get().usesBlockLight()) {
-            Lighting.setupFor3DItems();
+        Lighting.setupFor3DItems();
 //        } else {
 //            Lighting.setupFor3DItems();
 //        }
@@ -87,7 +87,7 @@ public record BakedModelRocketPartRenderer(ResourceLocation model,
 //        entityVertexConsumers.endBatch();
 
 //        if (model.get().usesBlockLight()) {
-            Lighting.setupFor3DItems();
+        Lighting.setupFor3DItems();
 //        }
         pose.popPose();
     }

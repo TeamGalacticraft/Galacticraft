@@ -31,13 +31,14 @@ import net.minecraft.util.Mth;
 
 public class ConfirmFlagScreen extends ConfirmScreen {
     protected final ResourceLocation imageLocation;
+
     public ConfirmFlagScreen(BooleanConsumer booleanConsumer, ResourceLocation flagImage, Component component, Component component2) {
         super(booleanConsumer, component, component2);
         this.imageLocation = flagImage;
     }
 
     private int titleTop() {
-        int i = this.height/2;
+        int i = this.height / 2;
         return Mth.clamp(i - 20 - this.font.lineHeight, 10, 80);
     }
 
@@ -48,6 +49,6 @@ public class ConfirmFlagScreen extends ConfirmScreen {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.render(graphics, mouseX, mouseY, delta);
-        graphics.blit(this.imageLocation, this.width/2 - 24, this.flagTop(), 0, 0, 0, 48, 32, 48, 32);
+        graphics.blit(this.imageLocation, this.width / 2 - 24, this.flagTop(), 0, 0, 0, 48, 32, 48, 32);
     }
 }

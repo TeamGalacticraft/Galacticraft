@@ -1,8 +1,11 @@
 {
   "values": [
     "#galacticraft:machines",
-    "galacticraft:mars_iron_ore",
-    "galacticraft:asteroid_iron_ore",
+    "galacticraft:aluminum_ore",
+    "galacticraft:deepslate_aluminum_ore",
+    "galacticraft:asteroid_aluminum_ore",
+    "galacticraft:venus_aluminum_ore",
+    "galacticraft:moon_cheese_ore",
     "galacticraft:moon_copper_ore",
     "galacticraft:lunaslate_copper_ore",
     "galacticraft:mars_copper_ore",
@@ -102,6 +105,7 @@
     "galacticraft:asteroid_rock",
     "galacticraft:asteroid_rock_block_1",
     "galacticraft:asteroid_rock_block_2",
+    "galacticraft:dense_ice",
     "galacticraft:tin_decoration",
     "galacticraft:copper_decoration",
     "galacticraft:bronze_decoration",

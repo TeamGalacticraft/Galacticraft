@@ -33,11 +33,9 @@ import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.BlockItemStateProperties;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -52,7 +50,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -68,7 +65,7 @@ public class ParachestBlock extends GCBlock implements EntityBlock {
     public ParachestBlock(Properties properties) {
         super(properties);
         registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH)
-            .setValue(COLOR, DyeColor.WHITE));
+                .setValue(COLOR, DyeColor.WHITE));
     }
 
     @Override
@@ -92,7 +89,7 @@ public class ParachestBlock extends GCBlock implements EntityBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {
         BlockState blockState = this.defaultBlockState()
-            .setValue(FACING, blockPlaceContext.getHorizontalDirection());
+                .setValue(FACING, blockPlaceContext.getHorizontalDirection());
 
         ItemStack itemStack = blockPlaceContext.getItemInHand();
         if (!itemStack.isEmpty()) {

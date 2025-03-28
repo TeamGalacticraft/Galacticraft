@@ -31,6 +31,7 @@ import java.util.function.Predicate;
 
 public interface InventoryTabRegistry {
     InventoryTabRegistry INSTANCE = InventoryTabRegistryImpl.INSTANCE;
+
     void register(ItemStack icon, Runnable onClick, Predicate<Player> visiblePredicate, Class<? extends AbstractContainerMenu> clazz);
 
     default void register(ItemStack icon, Runnable onClick, Class<? extends AbstractContainerMenu> clazz) {

@@ -25,6 +25,7 @@ package dev.galacticraft.mod.content.item;
 import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.*;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
@@ -33,9 +34,11 @@ import dev.galacticraft.mod.content.GCRegistry;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -51,10 +54,10 @@ public class GCItems {
     // TORCHES
     public static final Item GLOWSTONE_TORCH = ITEMS.register(Constant.Block.GLOWSTONE_TORCH, new StandingAndWallBlockItem(GCBlocks.GLOWSTONE_TORCH, GCBlocks.GLOWSTONE_WALL_TORCH, new Item.Properties(), Direction.DOWN));
     public static final Item UNLIT_TORCH = ITEMS.register(Constant.Block.UNLIT_TORCH, new StandingAndWallBlockItem(GCBlocks.UNLIT_TORCH, GCBlocks.UNLIT_WALL_TORCH, new Item.Properties(), Direction.DOWN));
-    
+
     // MATERIALS
     public static final Item SILICON = registerGeneric(Constant.Item.SILICON);
-    
+
     public static final Item RAW_METEORIC_IRON = registerGeneric(Constant.Item.RAW_METEORIC_IRON);
     public static final Item METEORIC_IRON_INGOT = registerGeneric(Constant.Item.METEORIC_IRON_INGOT);
     public static final Item METEORIC_IRON_NUGGET = registerGeneric(Constant.Item.METEORIC_IRON_NUGGET);
@@ -70,7 +73,7 @@ public class GCItems {
     public static final Item RAW_LEAD = registerGeneric(Constant.Item.RAW_LEAD);
     public static final Item LEAD_INGOT = registerGeneric(Constant.Item.LEAD_INGOT);
     public static final Item LEAD_NUGGET = registerGeneric(Constant.Item.LEAD_NUGGET);
-    
+
     public static final Item RAW_ALUMINUM = registerGeneric(Constant.Item.RAW_ALUMINUM);
     public static final Item ALUMINUM_INGOT = registerGeneric(Constant.Item.ALUMINUM_INGOT);
     public static final Item ALUMINUM_NUGGET = registerGeneric(Constant.Item.ALUMINUM_NUGGET);
@@ -90,7 +93,7 @@ public class GCItems {
     public static final Item COMPRESSED_COPPER = registerGeneric(Constant.Item.COMPRESSED_COPPER);
     public static final Item COMPRESSED_IRON = registerGeneric(Constant.Item.COMPRESSED_IRON);
     public static final Item COMPRESSED_STEEL = registerGeneric(Constant.Item.COMPRESSED_STEEL);
-    
+
     public static final Item LUNAR_SAPPHIRE = registerGeneric(Constant.Item.LUNAR_SAPPHIRE);
     public static final Item DESH_STICK = registerGeneric(Constant.Item.DESH_STICK);
     public static final Item CARBON_FRAGMENTS = registerGeneric(Constant.Item.CARBON_FRAGMENTS);
@@ -99,7 +102,7 @@ public class GCItems {
     public static final Item ADVANCED_WAFER = registerGeneric(Constant.Item.ADVANCED_WAFER);
     public static final Item BEAM_CORE = registerGeneric(Constant.Item.BEAM_CORE);
     public static final Item CANVAS = registerGeneric(Constant.Item.CANVAS);
-    
+
     public static final Item FLUID_MANIPULATOR = registerGeneric(Constant.Item.FLUID_MANIPULATOR);
     public static final Item OXYGEN_CONCENTRATOR = registerGeneric(Constant.Item.OXYGEN_CONCENTRATOR);
     public static final Item OXYGEN_FAN = registerGeneric(Constant.Item.OXYGEN_FAN);
@@ -118,7 +121,7 @@ public class GCItems {
     public static final Item ORION_DRIVE = registerGeneric(Constant.Item.ORION_DRIVE);
     public static final Item ATMOSPHERIC_VALVE = registerGeneric(Constant.Item.ATMOSPHERIC_VALVE);
     public static final Item AMBIENT_THERMAL_CONTROLLER = registerGeneric(Constant.Item.AMBIENT_THERMAL_CONTROLLER);
-    
+
     // FOOD
     public static final Item MOON_CHEESE_WHEEL = ITEMS.register(Constant.Item.MOON_CHEESE_WHEEL, new BlockItem(GCBlocks.MOON_CHEESE_WHEEL, new Item.Properties())); // Special case
     public static final Item MOON_CHEESE_CURD = ITEMS.register(Constant.Item.MOON_CHEESE_CURD, new Item(new Item.Properties().food(GCFoodComponent.MOON_CHEESE_CURD)));
@@ -127,13 +130,7 @@ public class GCItems {
     public static final Item GROUND_BEEF = ITEMS.register(Constant.Item.GROUND_BEEF, new Item(new Item.Properties().food(GCFoodComponent.GROUND_BEEF)));
     public static final Item BEEF_PATTY = ITEMS.register(Constant.Item.BEEF_PATTY, new Item(new Item.Properties().food(GCFoodComponent.BEEF_PATTY)));
     public static final Item CHEESEBURGER = ITEMS.register(Constant.Item.CHEESEBURGER, new Item(new Item.Properties().food(GCFoodComponent.CHEESEBURGER)));
-    
-    public static final Item CANNED_DEHYDRATED_APPLE = ITEMS.register(Constant.Item.CANNED_DEHYDRATED_APPLE, new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_APPLE)));
-    public static final Item CANNED_DEHYDRATED_CARROT = ITEMS.register(Constant.Item.CANNED_DEHYDRATED_CARROT, new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_CARROT)));
-    public static final Item CANNED_DEHYDRATED_MELON = ITEMS.register(Constant.Item.CANNED_DEHYDRATED_MELON, new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_MELON)));
-    public static final Item CANNED_DEHYDRATED_POTATO = ITEMS.register(Constant.Item.CANNED_DEHYDRATED_POTATO, new CannedFoodItem(new Item.Properties().food(GCFoodComponent.DEHYDRATED_POTATO)));
-    public static final Item CANNED_BEEF = ITEMS.register(Constant.Item.CANNED_BEEF, new CannedFoodItem(new Item.Properties().food(GCFoodComponent.CANNED_BEEF)));
-    
+
     // ROCKET PLATES
     public static final Item TIER_1_HEAVY_DUTY_PLATE = registerGeneric(Constant.Item.TIER_1_HEAVY_DUTY_PLATE);
     public static final Item TIER_2_HEAVY_DUTY_PLATE = registerGeneric(Constant.Item.TIER_2_HEAVY_DUTY_PLATE);
@@ -278,6 +275,10 @@ public class GCItems {
     public static final Item LEGACY_MUSIC_DISC_MIMAS = ITEMS.register(Constant.Item.LEGACY_MUSIC_DISC_MIMAS, new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(GCJukeboxSongs.MIMAS)));
     public static final Item LEGACY_MUSIC_DISC_ORBIT = ITEMS.register(Constant.Item.LEGACY_MUSIC_DISC_ORBIT, new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(GCJukeboxSongs.ORBIT)));
     public static final Item LEGACY_MUSIC_DISC_SPACERACE = ITEMS.register(Constant.Item.LEGACY_MUSIC_DISC_SPACERACE, new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(GCJukeboxSongs.SPACERACE)));
+
+    // CANNED FOOD
+    public static final CannedFoodItem EMPTY_CAN = ITEMS.register(Constant.Item.EMPTY_CAN, new CannedFoodItem(new Item.Properties().food(null)));
+    public static final CannedFoodItem CANNED_FOOD = ITEMS.register(Constant.Item.CANNED_FOOD, new CannedFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(0).saturationModifier(0).build()).stacksTo(1)));
 
     // SPAWN EGGS
     public static final Item MOON_VILLAGER_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.MOON_VILLAGER, new SpawnEggItem(GCEntityTypes.MOON_VILLAGER, 0x74a3cf, 0xba2500, new Item.Properties()));

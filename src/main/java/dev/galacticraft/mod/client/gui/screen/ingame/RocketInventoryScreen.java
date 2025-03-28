@@ -26,7 +26,6 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.screen.RocketMenu;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
