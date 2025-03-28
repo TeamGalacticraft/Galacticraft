@@ -47,5 +47,8 @@ public class GCStructureTagProvider extends FabricTagProvider<Structure> {
 
         this.getOrCreateTagBuilder(GCTags.UNCOMMON_METEOR)
                 .add(GCStructures.Meteors.LARGE_METEOR);
+
+        this.getOrCreateTagBuilder(GCTags.RARE_METEORS)
+                .add(GCStructures.Meteors.EXTREME_METEOR);
     }
 }

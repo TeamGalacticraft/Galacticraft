@@ -87,7 +87,7 @@ public class GCStructureSets {
                 1.0F, // 100% frequency
                 8372619, //salt
                 Optional.empty(), //exclusion zone?
-                64, 16, RandomSpreadType.LINEAR
+                8, 4, RandomSpreadType.LINEAR
         )));
 
         context.register(Meteors.UNCOMMON_METEORS, new StructureSet(List.of(
@@ -95,20 +95,21 @@ public class GCStructureSets {
         ), new RandomSpreadStructurePlacement(
                 Vec3i.ZERO,
                 StructurePlacement.FrequencyReductionMethod.DEFAULT,
-                0.2F, // 20% frequency
+                1.0F, // 100% frequency
                 9572822, //salt
                 Optional.empty(), //exclusion zone?
-                256, 64, RandomSpreadType.LINEAR
+                32, 8, RandomSpreadType.LINEAR
         )));
 
         context.register(Meteors.RARE_METEORS, new StructureSet(List.of(
+                new StructureSet.StructureSelectionEntry(structureLookup.getOrThrow(GCStructures.Meteors.EXTREME_METEOR), 1)
         ), new RandomSpreadStructurePlacement(
                 Vec3i.ZERO,
                 StructurePlacement.FrequencyReductionMethod.DEFAULT,
-                0.01F, // 1% frequency
+                1.0F, // 100% frequency
                 9679240, //salt
                 Optional.empty(), //exclusion zone?
-                1024, 256, RandomSpreadType.LINEAR
+                128, 32, RandomSpreadType.LINEAR
         )));
     }
 }

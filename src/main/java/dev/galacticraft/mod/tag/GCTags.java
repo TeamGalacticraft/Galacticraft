@@ -64,8 +64,6 @@ public class GCTags {
     public static final TagKey<Biome> MOON_VILLAGE_HIGHLANDS_HAS_STRUCTURE = TagKey.create(Registries.BIOME, Constant.id("has_structure/moon_village_highlands"));
     public static final TagKey<Biome> MOON_RUINS_HAS_STRUCTURE = TagKey.create(Registries.BIOME, Constant.id("has_structure/moon_ruins"));
     public static final TagKey<Biome> MOON_BOSS_HAS_STRUCTURE = TagKey.create(Registries.BIOME, Constant.id("has_structure/moon_boss"));
-    public static final TagKey<Biome> BIOME_HAS_SMALL_METEORS = TagKey.create(Registries.BIOME, Constant.id("has_structure/small_meteors"));
-    public static final TagKey<Biome> BIOME_HAS_LARGE_METEORS = TagKey.create(Registries.BIOME, Constant.id("has_structure/large_meteors"));
 
     public static final TagKey<Item> ALUMINUM_INGOTS = commonTag("ingots/aluminum");
     public static final TagKey<Item> RAW_ALUMINUM_ORES = commonTag("raw_materials/aluminum");

@@ -1,7 +1,7 @@
 {
   "type": "galacticraft:meteor",
   "config": {
-    "biomes": "#galacticraft:has_structure/small_meteors",
+    "biomes": "#minecraft:is_overworld",
     "spawn_overrides": {},
     "step": "surface_structures"
   },

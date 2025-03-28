@@ -28,9 +28,11 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -64,9 +66,5 @@ public class GCBiomeTagProvider extends FabricTagProvider<Biome> {
                 .add(GCBiomes.Moon.BASALTIC_MARE);
         this.tag(GCTags.MOON_BOSS_HAS_STRUCTURE)
                 .addTag(GCTags.MOON);
-        this.tag(GCTags.BIOME_HAS_SMALL_METEORS)
-                .add(Biomes.DESERT);
-        this.tag(GCTags.BIOME_HAS_LARGE_METEORS)
-                .add(Biomes.DESERT);
     }
 }

@@ -37,11 +37,13 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -74,6 +76,7 @@ public class GCStructures {
     public static final class Meteors {
         public static final ResourceKey<Structure> SMALL_METEOR = key("small_meteor");
         public static final ResourceKey<Structure> LARGE_METEOR = key("large_meteor");
+        public static final ResourceKey<Structure> EXTREME_METEOR = key("extreme_meteor");
     }
 
     private static ResourceKey<Structure> key(String id) {
@@ -110,7 +113,7 @@ public class GCStructures {
         context.register(Moon.BOSS, new DungeonStructure(new Structure.StructureSettings(biomeLookup.getOrThrow(GCTags.MOON_BOSS_HAS_STRUCTURE)), new DungeonConfiguration(GCBlocks.MOON_DUNGEON_BRICK.defaultBlockState(), 25, 8, 16,
                 5, 6, GCStructurePieceTypes.ROOM_BOSS, GCStructurePieceTypes.ROOM_TREASURE)));
 
-        context.register(Meteors.SMALL_METEOR, new MeteorStructure(new Structure.StructureSettings(biomeLookup.getOrThrow(GCTags.BIOME_HAS_SMALL_METEORS)), new MeteorStructure.MeteorConfiguration(
+        context.register(Meteors.SMALL_METEOR, new MeteorStructure(new Structure.StructureSettings(biomeLookup.getOrThrow(BiomeTags.IS_OVERWORLD)), new MeteorStructure.MeteorConfiguration(
                 false,
                 0,
                 SINGULAR,
@@ -120,13 +123,23 @@ public class GCStructures {
                 Optional.empty()
         )));
 
-        context.register(Meteors.LARGE_METEOR, new MeteorStructure(new Structure.StructureSettings.Builder(biomeLookup.getOrThrow(GCTags.BIOME_HAS_LARGE_METEORS)).generationStep(GenerationStep.Decoration.SURFACE_STRUCTURES).terrainAdapation(TerrainAdjustment.BEARD_THIN).build(), new MeteorStructure.MeteorConfiguration(
+        context.register(Meteors.LARGE_METEOR, new MeteorStructure(new Structure.StructureSettings.Builder(biomeLookup.getOrThrow(BiomeTags.IS_OVERWORLD)).generationStep(GenerationStep.Decoration.SURFACE_STRUCTURES).terrainAdapation(TerrainAdjustment.BEARD_THIN).build(), new MeteorStructure.MeteorConfiguration(
                 false,
                 0,
                 SINGULAR,
                 27,
                 List.of(new MeteorStructure.Core(BlockStateProvider.simple(GCBlocks.ASTEROID_ALUMINUM_ORE), 9), new MeteorStructure.Core(BlockStateProvider.simple(GCBlocks.ASTEROID_IRON_ORE), 9), new MeteorStructure.Core(BlockStateProvider.simple(GCBlocks.ASTEROID_SILICON_ORE), 9)),
                 List.of(new MeteorStructure.Shell(BlockStateProvider.simple(GCBlocks.ASTEROID_ROCK), 3), new MeteorStructure.Shell(BlockStateProvider.simple(GCBlocks.ASTEROID_ROCK_2), 2), new MeteorStructure.Shell(BlockStateProvider.simple(GCBlocks.DENSE_ICE), 1)),
+                Optional.empty()
+        )));
+
+        context.register(Meteors.EXTREME_METEOR, new MeteorStructure(new Structure.StructureSettings.Builder(biomeLookup.getOrThrow(BiomeTags.IS_OVERWORLD)).generationStep(GenerationStep.Decoration.SURFACE_STRUCTURES).terrainAdapation(TerrainAdjustment.BEARD_THIN).build(), new MeteorStructure.MeteorConfiguration(
+                false,
+                0,
+                SINGULAR,
+                120,
+                List.of(new MeteorStructure.Core(BlockStateProvider.simple(GCBlocks.ASTEROID_ALUMINUM_ORE), 50), new MeteorStructure.Core(BlockStateProvider.simple(GCBlocks.ASTEROID_IRON_ORE), 100), new MeteorStructure.Core(BlockStateProvider.simple(GCBlocks.ASTEROID_SILICON_ORE), 70)),
+                List.of(new MeteorStructure.Shell(BlockStateProvider.simple(GCBlocks.ASTEROID_ROCK), 9), new MeteorStructure.Shell(BlockStateProvider.simple(GCBlocks.ASTEROID_ROCK_2), 6), new MeteorStructure.Shell(BlockStateProvider.simple(GCBlocks.DENSE_ICE), 3),  new MeteorStructure.Shell(BlockStateProvider.simple(Blocks.OBSIDIAN), 1)),
                 Optional.empty()
         )));
     }
