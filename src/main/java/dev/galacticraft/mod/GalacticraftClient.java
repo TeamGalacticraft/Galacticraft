@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod;
 
+import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.client.tabs.InventoryTabRegistry;
 import dev.galacticraft.mod.client.GCKeyBinds;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
@@ -210,6 +211,7 @@ public class GalacticraftClient implements ClientModInitializer {
 
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> FallenMeteorBlock.colorMultiplier(state, world, pos), GCBlocks.FALLEN_METEOR);
         ColorProviderRegistry.ITEM.register((stack, layer) -> layer != 1 ? -1 : ColorUtil.getRainbowOpaque(), GCItems.INFINITE_BATTERY, GCItems.INFINITE_OXYGEN_TANK);
+        ColorProviderRegistry.ITEM.register((stack, layer) -> layer != 1 ? -1 : stack.getOrDefault(GCDataComponents.COLOR, 0) + 0xFF000000, GCItems.CANNED_FOOD);
 
         BuiltinItemRendererRegistry.INSTANCE.register(GCItems.ROCKET, new RocketItemRenderer());
 

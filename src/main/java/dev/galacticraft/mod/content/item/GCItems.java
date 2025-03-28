@@ -277,8 +277,9 @@ public class GCItems {
     public static final Item LEGACY_MUSIC_DISC_ORBIT = ITEMS.register(Constant.Item.LEGACY_MUSIC_DISC_ORBIT, new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(GCJukeboxSongs.ORBIT)));
     public static final Item LEGACY_MUSIC_DISC_SPACERACE = ITEMS.register(Constant.Item.LEGACY_MUSIC_DISC_SPACERACE, new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(GCJukeboxSongs.SPACERACE)));
 
-    public static final CannedFoodItem CANNED_FOOD = ITEMS.register(Constant.Item.CANNED_FOOD, new CannedFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(0).saturationModifier(0).build()).stacksTo(1)));
+    // CANNED FOOD
     public static final CannedFoodItem EMPTY_CAN = ITEMS.register(Constant.Item.EMPTY_CAN, new CannedFoodItem(new Item.Properties().food(null)));
+    public static final CannedFoodItem CANNED_FOOD = ITEMS.register(Constant.Item.CANNED_FOOD, new CannedFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(0).saturationModifier(0).build()).stacksTo(1)));
 
     // SPAWN EGGS
     public static final Item MOON_VILLAGER_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.MOON_VILLAGER, new SpawnEggItem(GCEntityTypes.MOON_VILLAGER, 0x74a3cf, 0xba2500, new Item.Properties()));
