@@ -55,7 +55,7 @@ public class EmergencyKitRecipe extends CustomRecipe {
                 if (itemStack.getItem() instanceof OxygenTankItem tankItem) {
                     itemStack = OxygenTankItem.getFullTank(tankItem);
                 } else if (itemStack.getComponents().has(DataComponents.FOOD)) {
-                    ItemStack itemStack2 = itemStack.copyWithCount(16);
+                    ItemStack itemStack2 = itemStack.copyWithCount(CannedFoodItem.MAX_FOOD);
                     itemStack = GCItems.CANNED_FOOD.getDefaultInstance();
                     CannedFoodItem.add(itemStack, itemStack2);
                 }

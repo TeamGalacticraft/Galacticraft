@@ -70,7 +70,7 @@ public class EmergencyKitItem extends Item {
                 itemStack2 = OxygenTankItem.getFullTank(tankItem);
             } else if (itemStack.getComponents().has(DataComponents.FOOD)) {
                 itemStack2 = GCItems.CANNED_FOOD.getDefaultInstance();
-                CannedFoodItem.add(itemStack2, itemStack.copyWithCount(16));
+                CannedFoodItem.add(itemStack2, itemStack.copyWithCount(CannedFoodItem.MAX_FOOD));
             }
 
             boolean equipped = false;
