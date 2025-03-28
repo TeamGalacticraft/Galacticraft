@@ -414,9 +414,29 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         this.tag(ItemTags.STAIRS).addTag(GCItemTags.STAIRS);
         this.tag(ItemTags.WALLS).addTag(GCItemTags.WALLS);
 
+        this.copy(GCBlockTags.MOON_COBBLESTONES, GCItemTags.MOON_COBBLESTONES);
+        this.copy(GCBlockTags.LUNASLATE_COBBLESTONES, GCItemTags.LUNASLATE_COBBLESTONES);
+        this.copy(GCBlockTags.MARS_COBBLESTONES, GCItemTags.MARS_COBBLESTONES);
+        this.tag(ConventionalItemTags.COBBLESTONES)
+                .addTag(GCItemTags.MOON_COBBLESTONES)
+                .addTag(GCItemTags.LUNASLATE_COBBLESTONES)
+                .addTag(GCItemTags.MARS_COBBLESTONES);
+
+        this.tag(ItemTags.STONE_TOOL_MATERIALS)
+                .add(GCBlocks.COBBLED_MOON_ROCK.asItem())
+                .add(GCBlocks.COBBLED_LUNASLATE.asItem())
+                .add(GCBlocks.MARS_COBBLESTONE.asItem());
+        this.tag(ItemTags.STONE_CRAFTING_MATERIALS)
+                .add(GCBlocks.COBBLED_MOON_ROCK.asItem())
+                .add(GCBlocks.COBBLED_LUNASLATE.asItem())
+                .add(GCBlocks.MARS_COBBLESTONE.asItem());
+
         this.tag(ConventionalItemTags.PLAYER_WORKSTATIONS_FURNACES)
                 .add(GCBlocks.ELECTRIC_FURNACE.asItem())
                 .add(GCBlocks.ELECTRIC_ARC_FURNACE.asItem());
+
+        this.tag(ConventionalItemTags.VILLAGER_JOB_SITES)
+                .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE.asItem());
     }
 
     protected FabricTagProvider<Item>.FabricTagBuilder tag(TagKey<Item> tag) {

@@ -130,6 +130,10 @@ public class GCItemTags {
     public static final TagKey<Item> STAIRS = galacticraftTag("stairs");
     public static final TagKey<Item> WALLS = galacticraftTag("walls");
 
+    public static final TagKey<Item> MOON_COBBLESTONES = commonTag("cobblestones/moon");
+    public static final TagKey<Item> LUNASLATE_COBBLESTONES = commonTag("cobblestones/lunaslate");
+    public static final TagKey<Item> MARS_COBBLESTONES = commonTag("cobblestones/mars");
+
     public static final TagKey<Item> OIL_BUCKETS = commonTag("buckets/oil");
     public static final TagKey<Item> FUEL_BUCKETS = commonTag("buckets/fuel");
     public static final TagKey<Item> SULFURIC_ACID_BUCKETS = commonTag("buckets/sulfuric_acid");

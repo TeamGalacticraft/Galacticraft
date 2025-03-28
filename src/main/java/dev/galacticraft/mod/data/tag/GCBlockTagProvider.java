@@ -584,9 +584,26 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.BLACK_CANDLE_MOON_CHEESE_WHEEL
                 );
 
+        this.tag(GCBlockTags.MOON_COBBLESTONES)
+                .add(GCBlocks.COBBLED_MOON_ROCK);
+        this.tag(GCBlockTags.LUNASLATE_COBBLESTONES)
+                .add(GCBlocks.COBBLED_LUNASLATE);
+        this.tag(GCBlockTags.MARS_COBBLESTONES)
+                .add(GCBlocks.MARS_COBBLESTONE);
+        this.tag(ConventionalBlockTags.COBBLESTONES)
+                .addTag(GCBlockTags.MOON_COBBLESTONES)
+                .addTag(GCBlockTags.LUNASLATE_COBBLESTONES)
+                .addTag(GCBlockTags.MARS_COBBLESTONES);
+
+        this.tag(BlockTags.ICE)
+                .add(GCBlocks.DENSE_ICE);
+
         this.tag(ConventionalBlockTags.PLAYER_WORKSTATIONS_FURNACES)
                 .add(GCBlocks.ELECTRIC_FURNACE)
                 .add(GCBlocks.ELECTRIC_ARC_FURNACE);
+
+        this.tag(ConventionalBlockTags.VILLAGER_JOB_SITES)
+                .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
 
         var replaceableTagAppender = this.tag(BlockTags.REPLACEABLE);
         provider.lookupOrThrow(Registries.BLOCK)

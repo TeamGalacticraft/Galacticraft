@@ -635,14 +635,16 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.TITANIUM_ORES, "Titanium Ores");
 
         this.tag(GCItemTags.ALUMINUM_BLOCKS, "Aluminum Blocks");
-        this.tag(GCItemTags.LEAD_BLOCKS, "Lead Blocks");
-        this.tag(GCItemTags.LUNAR_SAPPHIRE_BLOCKS, "Lunar Sapphire Blocks");
-        this.tag(GCItemTags.METEORIC_IRON_BLOCKS, "Meteoric Iron Blocks");
-        this.tag(GCItemTags.OLIVINE_BLOCKS, "Olivine Blocks");
         this.tag(GCItemTags.DESH_BLOCKS, "Desh Blocks");
-        this.tag(GCItemTags.SILICON_BLOCKS, "Silicon Blocks");
+        this.tag(GCItemTags.LEAD_BLOCKS, "Lead Blocks");
+        this.tag(GCItemTags.METEORIC_IRON_BLOCKS, "Meteoric Iron Blocks");
         this.tag(GCItemTags.TIN_BLOCKS, "Tin Blocks");
         this.tag(GCItemTags.TITANIUM_BLOCKS, "Titanium Blocks");
+
+        this.tag(GCItemTags.SILICON_BLOCKS, "Silicon Blocks");
+        this.tag(GCItemTags.CHEESE_BLOCKS, "Cheese Blocks");
+        this.tag(GCItemTags.LUNAR_SAPPHIRE_BLOCKS, "Lunar Sapphire Blocks");
+        this.tag(GCItemTags.OLIVINE_BLOCKS, "Olivine Blocks");
 
         this.tag(GCItemTags.RAW_ALUMINUM_BLOCKS, "Raw Aluminum Blocks");
         this.tag(GCItemTags.RAW_DESH_BLOCKS, "Raw Desh Blocks");
