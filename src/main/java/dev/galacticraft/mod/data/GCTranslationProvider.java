@@ -631,6 +631,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.METEORIC_IRON_ORES, "Meteoric Iron Ores");
         this.tag(GCItemTags.OLIVINE_ORES, "Olivine Ores");
         this.tag(GCItemTags.SILICON_ORES, "Silicon Ores");
+        this.tag(GCItemTags.SOLAR_ORES, "Solar Dust Ores");
         this.tag(GCItemTags.TIN_ORES, "Tin Ores");
         this.tag(GCItemTags.TITANIUM_ORES, "Titanium Ores");
 
@@ -707,6 +708,14 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.OIL_BUCKETS, "Oil Buckets");
         this.tag(GCItemTags.FUEL_BUCKETS, "Fuel Buckets");
         this.tag(GCItemTags.SULFURIC_ACID_BUCKETS, "Sulfuric Acid Buckets");
+
+        this.tag(GCItemTags.SLABS, "Galacticraft Slabs");
+        this.tag(GCItemTags.STAIRS, "Galacticraft Stairs");
+        this.tag(GCItemTags.WALLS, "Galacticraft Walls");
+
+        this.tag(GCItemTags.MOON_COBBLESTONES, "Moon Cobblestones");
+        this.tag(GCItemTags.LUNASLATE_COBBLESTONES, "Lunaslate Cobblestones");
+        this.tag(GCItemTags.MARS_COBBLESTONES, "Mars Cobblestones");
     }
 
     protected void generateGasTranslations() {
