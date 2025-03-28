@@ -87,7 +87,7 @@ public class GCDimensionTypes {
                 -64, // minY
                 384, // height
                 384, // logicalHeight
-                GCTags.INFINIBURN_ASTEROID, // infiniburn
+                GCBlockTags.INFINIBURN_ASTEROID, // infiniburn
                 Constant.id("asteroid"), // effectsLocation // fixme
                 0.0F, // ambientLight
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)

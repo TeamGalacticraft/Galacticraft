@@ -167,38 +167,40 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCBlocks.FALLEN_METEOR.asItem());
         this.tag(GCItemTags.DESH_ORES)
                 .add(GCBlocks.DESH_ORE.asItem());
-        this.tag(GCItemTags.LEAD_ORES)
-                .add(GCBlocks.GALENA_ORE.asItem());
         this.tag(GCItemTags.TITANIUM_ORES)
                 .add(GCBlocks.ILMENITE_ORE.asItem());
+        this.tag(GCItemTags.LEAD_ORES)
+                .add(GCBlocks.GALENA_ORE.asItem());
         this.tag(ConventionalItemTags.ORES)
                 .addTag(GCItemTags.SILICON_ORES)
                 .addTag(GCItemTags.TIN_ORES)
                 .addTag(GCItemTags.ALUMINUM_ORES)
-                .addTag(GCItemTags.METEORIC_IRON_ORES)
+                .addTag(GCItemTags.CHEESE_ORES)
+                .addTag(GCItemTags.LUNAR_SAPPHIRE_ORES)
                 .addTag(GCItemTags.OLIVINE_ORES)
+                .addTag(GCItemTags.METEORIC_IRON_ORES)
                 .addTag(GCItemTags.DESH_ORES)
-                .addTag(GCItemTags.LEAD_ORES)
-                .addTag(GCItemTags.TITANIUM_ORES);
+                .addTag(GCItemTags.TITANIUM_ORES)
+                .addTag(GCItemTags.LEAD_ORES);
 
-        this.tag(GCItemTags.SILICON_BLOCKS)
-                .add(GCBlocks.SILICON_BLOCK.asItem());
         this.tag(GCItemTags.TIN_BLOCKS)
                 .add(GCBlocks.TIN_BLOCK.asItem());
         this.tag(GCItemTags.ALUMINUM_BLOCKS)
                 .add(GCBlocks.ALUMINUM_BLOCK.asItem());
         this.tag(GCItemTags.METEORIC_IRON_BLOCKS)
                 .add(GCBlocks.METEORIC_IRON_BLOCK.asItem());
+        this.tag(GCItemTags.DESH_BLOCKS)
+                .add(GCBlocks.DESH_BLOCK.asItem());
+        this.tag(GCItemTags.TITANIUM_BLOCKS)
+                .add(GCBlocks.TITANIUM_BLOCK.asItem());
+        this.tag(GCItemTags.LEAD_BLOCKS)
+                .add(GCBlocks.LEAD_BLOCK.asItem());
+        this.tag(GCItemTags.SILICON_BLOCKS)
+                .add(GCBlocks.SILICON_BLOCK.asItem());
         this.tag(GCItemTags.LUNAR_SAPPHIRE_BLOCKS)
                 .add(GCBlocks.LUNAR_SAPPHIRE_BLOCK.asItem());
         this.tag(GCItemTags.OLIVINE_BLOCKS)
                 .add(GCBlocks.OLIVINE_BLOCK.asItem());
-        this.tag(GCItemTags.DESH_BLOCKS)
-                .add(GCBlocks.DESH_BLOCK.asItem());
-        this.tag(GCItemTags.LEAD_BLOCKS)
-                .add(GCBlocks.LEAD_BLOCK.asItem());
-        this.tag(GCItemTags.TITANIUM_BLOCKS)
-                .add(GCBlocks.TITANIUM_BLOCK.asItem());
         this.tag(GCItemTags.RAW_TIN_BLOCKS)
                 .add(GCBlocks.RAW_TIN_BLOCK.asItem());
         this.tag(GCItemTags.RAW_ALUMINUM_BLOCKS)
@@ -207,26 +209,26 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCBlocks.RAW_METEORIC_IRON_BLOCK.asItem());
         this.tag(GCItemTags.RAW_DESH_BLOCKS)
                 .add(GCBlocks.RAW_DESH_BLOCK.asItem());
-        this.tag(GCItemTags.RAW_LEAD_BLOCKS)
-                .add(GCBlocks.RAW_LEAD_BLOCK.asItem());
         this.tag(GCItemTags.RAW_TITANIUM_BLOCKS)
                 .add(GCBlocks.RAW_TITANIUM_BLOCK.asItem());
+        this.tag(GCItemTags.RAW_LEAD_BLOCKS)
+                .add(GCBlocks.RAW_LEAD_BLOCK.asItem());
         this.tag(ConventionalItemTags.STORAGE_BLOCKS)
-                .addTag(GCItemTags.SILICON_BLOCKS)
                 .addTag(GCItemTags.TIN_BLOCKS)
                 .addTag(GCItemTags.ALUMINUM_BLOCKS)
                 .addTag(GCItemTags.METEORIC_IRON_BLOCKS)
+                .addTag(GCItemTags.DESH_BLOCKS)
+                .addTag(GCItemTags.TITANIUM_BLOCKS)
+                .addTag(GCItemTags.LEAD_BLOCKS)
+                .addTag(GCItemTags.SILICON_BLOCKS)
                 .addTag(GCItemTags.LUNAR_SAPPHIRE_BLOCKS)
                 .addTag(GCItemTags.OLIVINE_BLOCKS)
-                .addTag(GCItemTags.DESH_BLOCKS)
-                .addTag(GCItemTags.LEAD_BLOCKS)
-                .addTag(GCItemTags.TITANIUM_BLOCKS)
                 .addTag(GCItemTags.RAW_TIN_BLOCKS)
                 .addTag(GCItemTags.RAW_ALUMINUM_BLOCKS)
                 .addTag(GCItemTags.RAW_METEORIC_IRON_BLOCKS)
                 .addTag(GCItemTags.RAW_DESH_BLOCKS)
-                .addTag(GCItemTags.RAW_LEAD_BLOCKS)
-                .addTag(GCItemTags.RAW_TITANIUM_BLOCKS);
+                .addTag(GCItemTags.RAW_TITANIUM_BLOCKS)
+                .addTag(GCItemTags.RAW_LEAD_BLOCKS);
 
         this.tag(ConventionalItemTags.CLUSTERS)
                 .add(GCBlocks.OLIVINE_CLUSTER.asItem());
@@ -250,17 +252,17 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.METEORIC_IRON_INGOT);
         this.tag(GCItemTags.DESH_INGOTS)
                 .add(GCItems.DESH_INGOT);
-        this.tag(GCItemTags.LEAD_INGOTS)
-                .add(GCItems.LEAD_INGOT);
         this.tag(GCItemTags.TITANIUM_INGOTS)
                 .add(GCItems.TITANIUM_INGOT);
+        this.tag(GCItemTags.LEAD_INGOTS)
+                .add(GCItems.LEAD_INGOT);
         this.tag(ConventionalItemTags.INGOTS)
                 .addTag(GCItemTags.TIN_INGOTS)
                 .addTag(GCItemTags.ALUMINUM_INGOTS)
                 .addTag(GCItemTags.METEORIC_IRON_INGOTS)
                 .addTag(GCItemTags.DESH_INGOTS)
-                .addTag(GCItemTags.LEAD_INGOTS)
-                .addTag(GCItemTags.TITANIUM_INGOTS);
+                .addTag(GCItemTags.TITANIUM_INGOTS)
+                .addTag(GCItemTags.LEAD_INGOTS);
 
         this.tag(GCItemTags.TIN_RAW_MATERIALS)
                 .add(GCItems.RAW_TIN);
@@ -270,17 +272,17 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.RAW_METEORIC_IRON);
         this.tag(GCItemTags.DESH_RAW_MATERIALS)
                 .add(GCItems.RAW_DESH);
-        this.tag(GCItemTags.LEAD_RAW_MATERIALS)
-                .add(GCItems.RAW_LEAD);
         this.tag(GCItemTags.TITANIUM_RAW_MATERIALS)
                 .add(GCItems.RAW_TITANIUM);
+        this.tag(GCItemTags.LEAD_RAW_MATERIALS)
+                .add(GCItems.RAW_LEAD);
         this.tag(ConventionalItemTags.RAW_MATERIALS)
                 .addTag(GCItemTags.TIN_RAW_MATERIALS)
                 .addTag(GCItemTags.ALUMINUM_RAW_MATERIALS)
                 .addTag(GCItemTags.METEORIC_IRON_RAW_MATERIALS)
                 .addTag(GCItemTags.DESH_RAW_MATERIALS)
-                .addTag(GCItemTags.LEAD_RAW_MATERIALS)
-                .addTag(GCItemTags.TITANIUM_RAW_MATERIALS);
+                .addTag(GCItemTags.TITANIUM_RAW_MATERIALS)
+                .addTag(GCItemTags.LEAD_RAW_MATERIALS);
 
         this.tag(GCItemTags.TIN_NUGGETS)
                 .add(GCItems.TIN_NUGGET);
@@ -290,17 +292,17 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.METEORIC_IRON_NUGGET);
         this.tag(GCItemTags.DESH_NUGGETS)
                 .add(GCItems.DESH_NUGGET);
-        this.tag(GCItemTags.LEAD_NUGGETS)
-                .add(GCItems.LEAD_NUGGET);
         this.tag(GCItemTags.TITANIUM_NUGGETS)
                 .add(GCItems.TITANIUM_NUGGET);
+        this.tag(GCItemTags.LEAD_NUGGETS)
+                .add(GCItems.LEAD_NUGGET);
         this.tag(ConventionalItemTags.NUGGETS)
                 .addTag(GCItemTags.TIN_NUGGETS)
                 .addTag(GCItemTags.ALUMINUM_NUGGETS)
                 .addTag(GCItemTags.METEORIC_IRON_NUGGETS)
                 .addTag(GCItemTags.DESH_NUGGETS)
-                .addTag(GCItemTags.LEAD_NUGGETS)
-                .addTag(GCItemTags.TITANIUM_NUGGETS);
+                .addTag(GCItemTags.TITANIUM_NUGGETS)
+                .addTag(GCItemTags.LEAD_NUGGETS);
 
         this.tag(GCItemTags.COPPER_PLATES)
                 .add(GCItems.COMPRESSED_COPPER);
@@ -363,20 +365,13 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         this.tag(ConventionalItemTags.DUSTS)
                 .addTag(GCItemTags.SOLAR_DUSTS);
 
-        this.tag(ConventionalItemTags.FRUIT_FOODS)
-                .add(GCItems.CANNED_DEHYDRATED_APPLE)
-                .add(GCItems.CANNED_DEHYDRATED_MELON);
-        this.tag(ConventionalItemTags.VEGETABLE_FOODS)
-                .add(GCItems.CANNED_DEHYDRATED_CARROT)
-                .add(GCItems.CANNED_DEHYDRATED_POTATO);
         this.tag(ConventionalItemTags.BREAD_FOODS)
                 .add(GCItems.BURGER_BUN);
         this.tag(ItemTags.MEAT)
                 .add(GCItems.GROUND_BEEF)
                 .add(GCItems.BEEF_PATTY);
         this.tag(ConventionalItemTags.RAW_MEAT_FOODS)
-                .add(GCItems.GROUND_BEEF)
-                .add(GCItems.CANNED_BEEF);
+                .add(GCItems.GROUND_BEEF);
         this.tag(ConventionalItemTags.COOKED_MEAT_FOODS)
                 .add(GCItems.BEEF_PATTY);
         this.tag(ConventionalItemTags.EDIBLE_WHEN_PLACED_FOODS)

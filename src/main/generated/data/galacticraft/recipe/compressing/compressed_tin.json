@@ -3,9 +3,6 @@
   "ingredients": [
     {
       "tag": "c:ingots/tin"
-    },
-    {
-      "tag": "c:ingots/tin"
     }
   ],
   "result": {

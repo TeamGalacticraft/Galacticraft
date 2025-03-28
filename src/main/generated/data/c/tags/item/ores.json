@@ -3,10 +3,12 @@
     "#c:ores/silicon",
     "#c:ores/tin",
     "#c:ores/aluminum",
-    "#c:ores/meteoric_iron",
+    "#c:ores/cheese",
+    "#c:ores/lunar_sapphire",
     "#c:ores/olivine",
+    "#c:ores/meteoric_iron",
     "#c:ores/desh",
-    "#c:ores/lead",
-    "#c:ores/titanium"
+    "#c:ores/titanium",
+    "#c:ores/lead"
   ]
 }
