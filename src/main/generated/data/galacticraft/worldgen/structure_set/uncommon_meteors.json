@@ -1,0 +1,15 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "frequency": 0.2,
+    "salt": 9572822,
+    "separation": 64,
+    "spacing": 256
+  },
+  "structures": [
+    {
+      "structure": "galacticraft:large_meteor",
+      "weight": 1
+    }
+  ]
+}

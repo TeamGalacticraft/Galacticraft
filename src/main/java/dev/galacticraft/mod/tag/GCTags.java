@@ -64,6 +64,8 @@ public class GCTags {
     public static final TagKey<Biome> MOON_VILLAGE_HIGHLANDS_HAS_STRUCTURE = TagKey.create(Registries.BIOME, Constant.id("has_structure/moon_village_highlands"));
     public static final TagKey<Biome> MOON_RUINS_HAS_STRUCTURE = TagKey.create(Registries.BIOME, Constant.id("has_structure/moon_ruins"));
     public static final TagKey<Biome> MOON_BOSS_HAS_STRUCTURE = TagKey.create(Registries.BIOME, Constant.id("has_structure/moon_boss"));
+    public static final TagKey<Biome> BIOME_HAS_SMALL_METEORS = TagKey.create(Registries.BIOME, Constant.id("has_structure/small_meteors"));
+    public static final TagKey<Biome> BIOME_HAS_LARGE_METEORS = TagKey.create(Registries.BIOME, Constant.id("has_structure/large_meteors"));
 
     public static final TagKey<Item> ALUMINUM_INGOTS = commonTag("ingots/aluminum");
     public static final TagKey<Item> RAW_ALUMINUM_ORES = commonTag("raw_materials/aluminum");
@@ -80,6 +82,9 @@ public class GCTags {
     public static final TagKey<Item> EVOLVED_CREEPER_DROP_MUSIC_DISCS = TagKey.create(Registries.ITEM, Constant.id("evolved_creeper_drop_music_discs"));
 
     public static final TagKey<Structure> MOON_RUINS = TagKey.create(Registries.STRUCTURE, Constant.id("moon_ruins"));
+    public static final TagKey<Structure> COMMON_METEOR = TagKey.create(Registries.STRUCTURE, Constant.id("common_meteor"));
+    public static final TagKey<Structure> UNCOMMON_METEOR = TagKey.create(Registries.STRUCTURE, Constant.id("uncommon_meteor"));
+    public static final TagKey<Structure> RARE_METEORS = TagKey.create(Registries.STRUCTURE, Constant.id("rare_meteors"));
 
     public static final TagKey<DimensionType> FOOTPRINTS_DIMENSIONS = TagKey.create(Registries.DIMENSION_TYPE, Constant.id("footprints"));
     public static final TagKey<DimensionType> SPACE = TagKey.create(Registries.DIMENSION_TYPE, Constant.id("space"));

@@ -41,9 +41,6 @@ import java.util.List;
 
 public class GCPlacedFeatures {
     public static final ResourceKey<PlacedFeature> OIL_LAKE = ResourceKey.create(Registries.PLACED_FEATURE, Constant.id("oil_lake"));
-    public static final ResourceKey<PlacedFeature> SMALL_METEOR = ResourceKey.create(Registries.PLACED_FEATURE, Constant.id("small_meteor"));
-    public static final ResourceKey<PlacedFeature> MEDIUM_METEOR = ResourceKey.create(Registries.PLACED_FEATURE, Constant.id("medium_meteor"));
-    public static final ResourceKey<PlacedFeature> LARGE_METEOR = ResourceKey.create(Registries.PLACED_FEATURE, Constant.id("large_meteor"));
 
     public static void bootstrapRegistries(BootstrapContext<PlacedFeature> context) {
         HolderGetter<ConfiguredFeature<?, ?>> configuredFeatureLookup = context.lookup(Registries.CONFIGURED_FEATURE);
@@ -54,32 +51,9 @@ public class GCPlacedFeatures {
                 InSquarePlacement.spread(),
                 BiomeFilter.biome()
         )));
-
-        setMeteorPlacement(SMALL_METEOR, GCConfiguredFeature.SMALL_METEOR, 30, context, configuredFeatureLookup);
-        setMeteorPlacement(MEDIUM_METEOR, GCConfiguredFeature.MEDIUM_METEOR, 90, context, configuredFeatureLookup);
-        setMeteorPlacement(LARGE_METEOR, GCConfiguredFeature.LARGE_METEOR, 270, context, configuredFeatureLookup);
     }
 
     public static void register() {
         BiomeModifications.addFeature(context -> context.hasFeature(MiscOverworldFeatures.LAKE_LAVA), GenerationStep.Decoration.LAKES, OIL_LAKE);
-        registerMeteor(SMALL_METEOR);
-        registerMeteor(MEDIUM_METEOR);
-        registerMeteor(LARGE_METEOR);
-    }
-
-    private static void setMeteorPlacement(ResourceKey<PlacedFeature> identifier, ResourceKey<ConfiguredFeature<?,?>> configuredIdentifier, int rarity, BootstrapContext<PlacedFeature> context, HolderGetter<ConfiguredFeature<?, ?>> configuredFeatureLookup) {
-        context.register(identifier, new PlacedFeature(
-                configuredFeatureLookup.getOrThrow(configuredIdentifier),
-                List.of(
-                        RarityFilter.onAverageOnceEvery(rarity),
-                        InSquarePlacement.spread(),
-                        PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
-                        BiomeFilter.biome()
-                )
-        ));
-    }
-
-    private static void registerMeteor(ResourceKey<PlacedFeature> identifier) {
-        BiomeModifications.addFeature(context -> context.getBiomeKey().location().getNamespace().equals("minecraft"), GenerationStep.Decoration.TOP_LAYER_MODIFICATION, identifier);
     }
 }

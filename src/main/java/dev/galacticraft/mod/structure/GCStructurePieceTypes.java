@@ -24,6 +24,7 @@ package dev.galacticraft.mod.structure;
 
 import dev.galacticraft.mod.content.GCRegistry;
 import dev.galacticraft.mod.structure.dungeon.*;
+import dev.galacticraft.mod.world.gen.structure.meteor.MeteorStructurePiece;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -45,6 +46,7 @@ public class GCStructurePieceTypes {
     public static final StructurePieceType ROOM_BOSS = setGCPieceId(RoomBoss::new, RoomBoss::new, RoomBoss::new, "MoonDungeonBossRoom");
     public static final StructurePieceType ROOM_CHEST = setPieceId(RoomChest::new, "MoonDungeonChestRoom");
     public static final StructurePieceType ROOM_TREASURE = setGCPieceId(RoomTreasure::new, RoomTreasure::new, RoomTreasure::new, "MoonDungeonTreasureRoom");
+    public static final StructurePieceType METEOR = setPieceId(MeteorStructurePiece::new, "meteor");
 
     public static void register() {
     }

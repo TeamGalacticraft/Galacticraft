@@ -1,7 +1,12 @@
 {
   "type": "galacticraft:meteor",
   "config": {
-    "center": [
+    "biomes": "#galacticraft:has_structure/small_meteors",
+    "spawn_overrides": {},
+    "step": "surface_structures"
+  },
+  "meteor_configuration": {
+    "core": [
       {
         "block": {
           "type": "minecraft:simple_state_provider",
@@ -16,7 +21,7 @@
     "meteor_angle": 0.0,
     "meteor_type": "SINGULAR",
     "radius": 3,
-    "shell": [
+    "shells": [
       {
         "block": {
           "type": "minecraft:simple_state_provider",

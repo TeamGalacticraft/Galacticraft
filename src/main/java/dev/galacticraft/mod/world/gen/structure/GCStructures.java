@@ -30,6 +30,7 @@ import dev.galacticraft.mod.structure.GCStructureTemplatePools;
 import dev.galacticraft.mod.structure.dungeon.DungeonConfiguration;
 import dev.galacticraft.mod.structure.dungeon.DungeonStructure;
 import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.world.gen.structure.meteor.MeteorStructure;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderOwner;
 import net.minecraft.core.HolderSet;
@@ -41,9 +42,11 @@ import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.heightproviders.ConstantHeight;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSpawnOverride;
@@ -54,7 +57,11 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import static dev.galacticraft.mod.world.gen.structure.meteor.MeteorStructure.MeteorType.SINGULAR;
 
 public class GCStructures {
     public static final class Moon {
@@ -62,6 +69,11 @@ public class GCStructures {
         public static final ResourceKey<Structure> PILLAGER_BASE = key("moon_pillager_base");
         public static final ResourceKey<Structure> VILLAGE = key("moon_village");
         public static final ResourceKey<Structure> BOSS = key("moon_boss");
+    }
+
+    public static final class Meteors {
+        public static final ResourceKey<Structure> SMALL_METEOR = key("small_meteor");
+        public static final ResourceKey<Structure> LARGE_METEOR = key("large_meteor");
     }
 
     private static ResourceKey<Structure> key(String id) {
@@ -97,6 +109,26 @@ public class GCStructures {
         ));
         context.register(Moon.BOSS, new DungeonStructure(new Structure.StructureSettings(biomeLookup.getOrThrow(GCTags.MOON_BOSS_HAS_STRUCTURE)), new DungeonConfiguration(GCBlocks.MOON_DUNGEON_BRICK.defaultBlockState(), 25, 8, 16,
                 5, 6, GCStructurePieceTypes.ROOM_BOSS, GCStructurePieceTypes.ROOM_TREASURE)));
+
+        context.register(Meteors.SMALL_METEOR, new MeteorStructure(new Structure.StructureSettings(biomeLookup.getOrThrow(GCTags.BIOME_HAS_SMALL_METEORS)), new MeteorStructure.MeteorConfiguration(
+                false,
+                0,
+                SINGULAR,
+                3,
+                List.of(new MeteorStructure.Core(BlockStateProvider.simple(GCBlocks.ASTEROID_ALUMINUM_ORE), 1)),
+                List.of(new MeteorStructure.Shell(BlockStateProvider.simple(GCBlocks.ASTEROID_ROCK), 1)),
+                Optional.empty()
+        )));
+
+        context.register(Meteors.LARGE_METEOR, new MeteorStructure(new Structure.StructureSettings.Builder(biomeLookup.getOrThrow(GCTags.BIOME_HAS_LARGE_METEORS)).generationStep(GenerationStep.Decoration.SURFACE_STRUCTURES).terrainAdapation(TerrainAdjustment.BEARD_THIN).build(), new MeteorStructure.MeteorConfiguration(
+                false,
+                0,
+                SINGULAR,
+                27,
+                List.of(new MeteorStructure.Core(BlockStateProvider.simple(GCBlocks.ASTEROID_ALUMINUM_ORE), 9), new MeteorStructure.Core(BlockStateProvider.simple(GCBlocks.ASTEROID_IRON_ORE), 9), new MeteorStructure.Core(BlockStateProvider.simple(GCBlocks.ASTEROID_SILICON_ORE), 9)),
+                List.of(new MeteorStructure.Shell(BlockStateProvider.simple(GCBlocks.ASTEROID_ROCK), 3), new MeteorStructure.Shell(BlockStateProvider.simple(GCBlocks.ASTEROID_ROCK_2), 2), new MeteorStructure.Shell(BlockStateProvider.simple(GCBlocks.DENSE_ICE), 1)),
+                Optional.empty()
+        )));
     }
 
     @Contract("_ -> new")
