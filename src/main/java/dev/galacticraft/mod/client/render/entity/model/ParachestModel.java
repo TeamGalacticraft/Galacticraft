@@ -68,31 +68,31 @@ public class ParachestModel extends HierarchicalModel<ParachestEntity> {
 
     @Override
     public void setupAnim(ParachestEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        this.parachute[0].yRot = (float) (0 / Mth.RAD_TO_DEG);
-        this.parachute[2].yRot = (float) -(0 / Mth.RAD_TO_DEG);
-        this.parachuteStrings[0].yRot = (float) (0 / Mth.RAD_TO_DEG);
-        this.parachuteStrings[1].yRot = (float) (0 / Mth.RAD_TO_DEG);
-        this.parachuteStrings[2].yRot = (float) -(0 / Mth.RAD_TO_DEG);
-        this.parachuteStrings[3].yRot = (float) -(0 / Mth.RAD_TO_DEG);
+        this.parachute[0].yRot = 0.0F;
+        this.parachute[2].yRot = 0.0F;
+        this.parachuteStrings[0].yRot = 0.0F;
+        this.parachuteStrings[1].yRot = 0.0F;
+        this.parachuteStrings[2].yRot = 0.0F;
+        this.parachuteStrings[3].yRot = 0.0F;
 
         this.parachute[0].setPos(-5.85F, -11.0F, 2.0F);
         this.parachute[1].setPos(9F, -7F, 2.0F);
         this.parachute[2].setPos(-2.15F, 4.0F, 2.0F);
-        this.parachute[0].zRot = (float) (210F / Mth.RAD_TO_DEG);
-        this.parachute[1].zRot = (float) (180F / Mth.RAD_TO_DEG);
-        this.parachute[2].zRot = (float) -(210F / Mth.RAD_TO_DEG);
-        this.parachuteStrings[0].zRot = (float) ((155F + 180F) / Mth.RAD_TO_DEG);
-        this.parachuteStrings[0].xRot = (float) (23F / Mth.RAD_TO_DEG);
+        this.parachute[0].zRot = 210F * Mth.DEG_TO_RAD;
+        this.parachute[1].zRot = 180F * Mth.DEG_TO_RAD;
+        this.parachute[2].zRot = -210F * Mth.DEG_TO_RAD;
+        this.parachuteStrings[0].zRot = (155F + 180F) * Mth.DEG_TO_RAD;
+        this.parachuteStrings[0].xRot = 23F * Mth.DEG_TO_RAD;
         this.parachuteStrings[0].setPos(9.0F, 3.0F, 2.0F);
-        this.parachuteStrings[1].zRot = (float) ((155F + 180F) / Mth.RAD_TO_DEG);
-        this.parachuteStrings[1].xRot = (float) -(23F / Mth.RAD_TO_DEG);
+        this.parachuteStrings[1].zRot = (155F + 180F) * Mth.DEG_TO_RAD;
+        this.parachuteStrings[1].xRot = -23F * Mth.DEG_TO_RAD;
         this.parachuteStrings[1].setPos(9.0F, 3.0F, 2.0F);
 
-        this.parachuteStrings[2].zRot = (float) -((155F + 180F) / Mth.RAD_TO_DEG);
-        this.parachuteStrings[2].xRot = (float) (23F / Mth.RAD_TO_DEG);
+        this.parachuteStrings[2].zRot = -(155F + 180F) * Mth.DEG_TO_RAD;
+        this.parachuteStrings[2].xRot = 23F * Mth.DEG_TO_RAD;
         this.parachuteStrings[2].setPos(9.0F, 3.0F, 2.0F);
-        this.parachuteStrings[3].zRot = (float) -((155F + 180F) / Mth.RAD_TO_DEG);
-        this.parachuteStrings[3].xRot = (float) -(23F / Mth.RAD_TO_DEG);
+        this.parachuteStrings[3].zRot = -(155F + 180F) * Mth.DEG_TO_RAD;
+        this.parachuteStrings[3].xRot = -23F * Mth.DEG_TO_RAD;
         this.parachuteStrings[3].setPos(9.0F, 3.0F, 2.0F);
     }
 

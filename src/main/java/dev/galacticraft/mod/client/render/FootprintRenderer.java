@@ -111,13 +111,13 @@ public class FootprintRenderer {
             float footprintScale = 0.5F;
             Matrix4f last = poseStack.last().pose();
             buffer
-                    .addVertex(last, Mth.sin((45 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale, 0, Mth.cos((45 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale)
+                    .addVertex(last, Mth.sin((45 - footprint.rotation) * Mth.DEG_TO_RAD) * footprintScale, 0, Mth.cos((45 - footprint.rotation) * Mth.DEG_TO_RAD) * footprintScale)
                     .setUv(f7, f9)
-                    .addVertex(last, Mth.sin((135 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale, 0, Mth.cos((135 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale)
+                    .addVertex(last, Mth.sin((135 - footprint.rotation) * Mth.DEG_TO_RAD) * footprintScale, 0, Mth.cos((135 - footprint.rotation) * Mth.DEG_TO_RAD) * footprintScale)
                     .setUv(f7, f8)
-                    .addVertex(last, Mth.sin((225 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale, 0, Mth.cos((225 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale)
+                    .addVertex(last, Mth.sin((225 - footprint.rotation) * Mth.DEG_TO_RAD) * footprintScale, 0, Mth.cos((225 - footprint.rotation) * Mth.DEG_TO_RAD) * footprintScale)
                     .setUv(f6, f8)
-                    .addVertex(last, Mth.sin((315 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale, 0, Mth.cos((315 - footprint.rotation) / Mth.RAD_TO_DEG) * footprintScale)
+                    .addVertex(last, Mth.sin((315 - footprint.rotation) * Mth.DEG_TO_RAD) * footprintScale, 0, Mth.cos((315 - footprint.rotation) * Mth.DEG_TO_RAD) * footprintScale)
                     .setUv(f6, f9);
 
             BufferUploader.drawWithShader(buffer.buildOrThrow());
