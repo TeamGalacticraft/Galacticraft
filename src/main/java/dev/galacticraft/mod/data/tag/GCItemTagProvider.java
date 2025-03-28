@@ -152,7 +152,7 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.LEGACY_MUSIC_DISC_ORBIT)
                 .add(GCItems.LEGACY_MUSIC_DISC_SPACERACE);
 
-        // Ore Tags
+        // ORE TAGS
         this.tag(ItemTags.IRON_ORES)
                 .add(GCBlocks.MARS_IRON_ORE.asItem())
                 .add(GCBlocks.ASTEROID_IRON_ORE.asItem());
@@ -186,6 +186,7 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .addTag(GCItemTags.LEAD_ORES)
                 .addTag(GCItemTags.SOLAR_ORES);
 
+        // STORAGE BLOCK TAGS
         this.copy(GCBlockTags.TIN_BLOCKS, GCItemTags.TIN_BLOCKS);
         this.copy(GCBlockTags.ALUMINUM_BLOCKS, GCItemTags.ALUMINUM_BLOCKS);
         this.copy(GCBlockTags.METEORIC_IRON_BLOCKS, GCItemTags.METEORIC_IRON_BLOCKS);
@@ -194,6 +195,7 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         this.copy(GCBlockTags.LEAD_BLOCKS, GCItemTags.LEAD_BLOCKS);
 
         this.copy(GCBlockTags.SILICON_BLOCKS, GCItemTags.SILICON_BLOCKS);
+        this.copy(GCBlockTags.CHEESE_BLOCKS, GCItemTags.CHEESE_BLOCKS);
         this.copy(GCBlockTags.LUNAR_SAPPHIRE_BLOCKS, GCItemTags.LUNAR_SAPPHIRE_BLOCKS);
         this.copy(GCBlockTags.OLIVINE_BLOCKS, GCItemTags.OLIVINE_BLOCKS);
 
@@ -212,6 +214,7 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .addTag(GCItemTags.TITANIUM_BLOCKS)
                 .addTag(GCItemTags.LEAD_BLOCKS)
                 .addTag(GCItemTags.SILICON_BLOCKS)
+                .addTag(GCItemTags.CHEESE_BLOCKS)
                 .addTag(GCItemTags.LUNAR_SAPPHIRE_BLOCKS)
                 .addTag(GCItemTags.OLIVINE_BLOCKS)
                 .addTag(GCItemTags.RAW_TIN_BLOCKS)
@@ -403,6 +406,13 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .addTag(GCItemTags.OIL_BUCKETS)
                 .addTag(GCItemTags.FUEL_BUCKETS)
                 .addTag(GCItemTags.SULFURIC_ACID_BUCKETS);
+
+        this.copy(GCBlockTags.SLABS, GCItemTags.SLABS);
+        this.copy(GCBlockTags.STAIRS, GCItemTags.STAIRS);
+        this.copy(GCBlockTags.WALLS, GCItemTags.WALLS);
+        this.tag(ItemTags.SLABS).addTag(GCItemTags.SLABS);
+        this.tag(ItemTags.STAIRS).addTag(GCItemTags.STAIRS);
+        this.tag(ItemTags.WALLS).addTag(GCItemTags.WALLS);
 
         this.tag(ConventionalItemTags.PLAYER_WORKSTATIONS_FURNACES)
                 .add(GCBlocks.ELECTRIC_FURNACE.asItem())

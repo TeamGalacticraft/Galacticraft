@@ -76,6 +76,7 @@ public class GCBlockTags {
     public static final TagKey<Block> TITANIUM_ORES = commonTag("ores/titanium");
 
     public static final TagKey<Block> ALUMINUM_BLOCKS = commonTag("storage_blocks/aluminum");
+    public static final TagKey<Block> CHEESE_BLOCKS = commonTag("storage_blocks/cheese");
     public static final TagKey<Block> DESH_BLOCKS = commonTag("storage_blocks/desh");
     public static final TagKey<Block> LEAD_BLOCKS = commonTag("storage_blocks/lead");
     public static final TagKey<Block> LUNAR_SAPPHIRE_BLOCKS = commonTag("storage_blocks/lunar_sapphire");

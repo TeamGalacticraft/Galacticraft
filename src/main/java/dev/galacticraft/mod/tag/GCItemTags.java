@@ -58,6 +58,7 @@ public class GCItemTags {
     public static final TagKey<Item> TITANIUM_ORES = commonTag("ores/titanium");
 
     public static final TagKey<Item> ALUMINUM_BLOCKS = commonTag("storage_blocks/aluminum");
+    public static final TagKey<Item> CHEESE_BLOCKS = commonTag("storage_blocks/cheese");
     public static final TagKey<Item> DESH_BLOCKS = commonTag("storage_blocks/desh");
     public static final TagKey<Item> LEAD_BLOCKS = commonTag("storage_blocks/lead");
     public static final TagKey<Item> LUNAR_SAPPHIRE_BLOCKS = commonTag("storage_blocks/lunar_sapphire");
@@ -124,6 +125,10 @@ public class GCItemTags {
     public static final TagKey<Item> CANNED_FOODS = commonTag("foods/canned");
 
     public static final TagKey<Item> EVOLVED_CREEPER_DROP_MUSIC_DISCS = galacticraftTag("evolved_creeper_drop_music_discs");
+
+    public static final TagKey<Item> SLABS = galacticraftTag("slabs");
+    public static final TagKey<Item> STAIRS = galacticraftTag("stairs");
+    public static final TagKey<Item> WALLS = galacticraftTag("walls");
 
     public static final TagKey<Item> OIL_BUCKETS = commonTag("buckets/oil");
     public static final TagKey<Item> FUEL_BUCKETS = commonTag("buckets/fuel");
