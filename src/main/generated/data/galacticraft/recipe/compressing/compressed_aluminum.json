@@ -3,6 +3,9 @@
   "ingredients": [
     {
       "tag": "c:ingots/aluminum"
+    },
+    {
+      "tag": "c:ingots/aluminum"
     }
   ],
   "result": {

@@ -3,6 +3,9 @@
   "ingredients": [
     {
       "tag": "c:ingots/steel"
+    },
+    {
+      "tag": "c:ingots/steel"
     }
   ],
   "result": {
