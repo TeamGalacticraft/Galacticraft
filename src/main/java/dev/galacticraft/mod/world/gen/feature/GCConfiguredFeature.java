@@ -24,6 +24,7 @@ package dev.galacticraft.mod.world.gen.feature;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.block.GCBlock;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -40,15 +41,51 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+import java.util.Optional;
+
+import static dev.galacticraft.mod.world.gen.feature.MeteorFeature.MeteorType.SINGULAR;
+
 public abstract class GCConfiguredFeature {
     public static final ResourceKey<ConfiguredFeature<?, ?>> OIL_LAKE = key("oil_lake");
-    public static final ResourceKey<ConfiguredFeature<?, ?>> METEOR_CRATER = key("meteor_crater");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> SMALL_METEOR = key("small_meteor");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> MEDIUM_METEOR = key("medium_meteor");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> LARGE_METEOR = key("large_meteor");
 
-    public static final Feature<MeteorCraterFeature.Configuration> METEOR_FEATURE = new MeteorCraterFeature(MeteorCraterFeature.Configuration.CODEC);
+    public static final Feature<MeteorFeature.Configuration> METEOR_FEATURE = new MeteorFeature(MeteorFeature.Configuration.CODEC);
 
     public static void bootstrapRegistries(BootstrapContext<ConfiguredFeature<?, ?>> context) {
         context.register(OIL_LAKE, new ConfiguredFeature<>(Feature.LAKE, new LakeFeature.Configuration(BlockStateProvider.simple(GCBlocks.CRUDE_OIL), BlockStateProvider.simple(Blocks.STONE))));
-        context.register(METEOR_CRATER, new ConfiguredFeature<>(METEOR_FEATURE, new MeteorCraterFeature.Configuration(BlockStateProvider.simple(GCBlocks.ASTEROID_ROCK), 5)));
+
+        context.register(SMALL_METEOR, new ConfiguredFeature<>(METEOR_FEATURE, new MeteorFeature.Configuration(
+                false,
+                0,
+                SINGULAR,
+                3,
+                List.of(new MeteorFeature.Center(BlockStateProvider.simple(GCBlocks.ASTEROID_ALUMINUM_ORE), 1)),
+                List.of(new MeteorFeature.Shell(BlockStateProvider.simple(GCBlocks.ASTEROID_ROCK), 1)),
+                Optional.empty()
+        )));
+
+        context.register(MEDIUM_METEOR, new ConfiguredFeature<>(METEOR_FEATURE, new MeteorFeature.Configuration(
+                false,
+                0,
+                SINGULAR,
+                9,
+                List.of(new MeteorFeature.Center(BlockStateProvider.simple(GCBlocks.ASTEROID_ALUMINUM_ORE), 9)),
+                List.of(new MeteorFeature.Shell(BlockStateProvider.simple(GCBlocks.ASTEROID_ROCK), 3), new MeteorFeature.Shell(BlockStateProvider.simple(GCBlocks.ASTEROID_ROCK_2), 2)),
+                Optional.empty()
+        )));
+
+        context.register(LARGE_METEOR, new ConfiguredFeature<>(METEOR_FEATURE, new MeteorFeature.Configuration(
+                false,
+                0,
+                SINGULAR,
+                27,
+                List.of(new MeteorFeature.Center(BlockStateProvider.simple(GCBlocks.ASTEROID_ALUMINUM_ORE), 9), new MeteorFeature.Center(BlockStateProvider.simple(GCBlocks.ASTEROID_IRON_ORE), 9), new MeteorFeature.Center(BlockStateProvider.simple(GCBlocks.ASTEROID_SILICON_ORE), 9)),
+                List.of(new MeteorFeature.Shell(BlockStateProvider.simple(GCBlocks.ASTEROID_ROCK), 3), new MeteorFeature.Shell(BlockStateProvider.simple(GCBlocks.ASTEROID_ROCK_2), 2), new MeteorFeature.Shell(BlockStateProvider.simple(GCBlocks.DENSE_ICE), 1)),
+                Optional.empty()
+        )));
     }
 
     private static ResourceKey<ConfiguredFeature<?, ?>> key(String name) {

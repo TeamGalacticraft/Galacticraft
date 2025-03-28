@@ -9,7 +9,7 @@ import static dev.galacticraft.mod.world.gen.feature.GCConfiguredFeature.METEOR_
 
 public class GCFeatures {
     public static void register() {
-        register("meteor_crater", METEOR_FEATURE);
+        register("meteor", METEOR_FEATURE);
     }
 
     private static void register(String id, Feature feature) {

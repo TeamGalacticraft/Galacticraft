@@ -1,9 +1,9 @@
 {
-  "feature": "galacticraft:meteor_crater",
+  "feature": "galacticraft:large_meteor",
   "placement": [
     {
       "type": "minecraft:rarity_filter",
-      "chance": 30
+      "chance": 270
     },
     {
       "type": "minecraft:in_square"

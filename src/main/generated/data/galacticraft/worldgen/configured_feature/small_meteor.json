@@ -1,0 +1,31 @@
+{
+  "type": "galacticraft:meteor",
+  "config": {
+    "center": [
+      {
+        "block": {
+          "type": "minecraft:simple_state_provider",
+          "state": {
+            "Name": "galacticraft:asteroid_aluminum_ore"
+          }
+        },
+        "count": 1
+      }
+    ],
+    "has_crater": false,
+    "meteor_angle": 0.0,
+    "meteor_type": "SINGULAR",
+    "radius": 3,
+    "shell": [
+      {
+        "block": {
+          "type": "minecraft:simple_state_provider",
+          "state": {
+            "Name": "galacticraft:asteroid_rock"
+          }
+        },
+        "parts": 1
+      }
+    ]
+  }
+}
