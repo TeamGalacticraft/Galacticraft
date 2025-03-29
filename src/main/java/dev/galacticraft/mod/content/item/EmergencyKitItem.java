@@ -41,20 +41,29 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EmergencyKitItem extends Item {
-    public static final List<ItemStack> EMERGENCY_ITEMS = List.of(
-            GCItems.HEAVY_DUTY_PICKAXE.getDefaultInstance(),
-            GCItems.OXYGEN_MASK.getDefaultInstance(),
-            GCItems.OXYGEN_GEAR.getDefaultInstance(),
-            GCItems.SMALL_OXYGEN_TANK.getDefaultInstance(),
-            GCItems.PARACHUTE.get(DyeColor.RED).getDefaultInstance(),
-            GCItems.SMALL_OXYGEN_TANK.getDefaultInstance(),
-            Items.APPLE.getDefaultInstance(),
-            PotionContents.createItemStack(Items.POTION, Potions.HEALING),
-            PotionContents.createItemStack(Items.POTION, Potions.LONG_NIGHT_VISION)
-    );
+
+    public static List<ItemStack> getContents() {
+        List<ItemStack> emergencyItems = new ArrayList<ItemStack>();
+
+        ItemStack cannedFoodItem = GCItems.CANNED_FOOD.getDefaultInstance();
+        CannedFoodItem.add(cannedFoodItem, new ItemStack(Items.APPLE, CannedFoodItem.MAX_FOOD));
+
+        emergencyItems.add(GCItems.HEAVY_DUTY_PICKAXE.getDefaultInstance());
+        emergencyItems.add(GCItems.OXYGEN_MASK.getDefaultInstance());
+        emergencyItems.add(GCItems.OXYGEN_GEAR.getDefaultInstance());
+        emergencyItems.add(OxygenTankItem.getFullTank(GCItems.SMALL_OXYGEN_TANK));
+        emergencyItems.add(GCItems.PARACHUTE.get(DyeColor.RED).getDefaultInstance());
+        emergencyItems.add(OxygenTankItem.getFullTank(GCItems.SMALL_OXYGEN_TANK));
+        emergencyItems.add(cannedFoodItem);
+        emergencyItems.add(PotionContents.createItemStack(Items.POTION, Potions.HEALING));
+        emergencyItems.add(PotionContents.createItemStack(Items.POTION, Potions.LONG_NIGHT_VISION));
+
+        return emergencyItems;
+    }
 
     public EmergencyKitItem(Properties settings) {
         super(settings);
@@ -64,24 +73,15 @@ public class EmergencyKitItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         Container inv = player.galacticraft$getGearInv();
         int n = inv.getContainerSize();
-        for (ItemStack itemStack : EMERGENCY_ITEMS) {
-            // Do not modify itemStack itself, instead create a copy of it!
-            ItemStack itemStack2 = itemStack.copy();
-            if (itemStack.getItem() instanceof OxygenTankItem tankItem) {
-                itemStack2 = OxygenTankItem.getFullTank(tankItem);
-            } else if (itemStack.getComponents().has(DataComponents.FOOD)) {
-                itemStack2 = GCItems.CANNED_FOOD.getDefaultInstance();
-                CannedFoodItem.add(itemStack2, itemStack.copyWithCount(CannedFoodItem.MAX_FOOD));
-            }
-
+        for (ItemStack itemStack : getContents()) {
             for (int slot = 0; slot < n; ++slot) {
-                if (inv.getItem(slot).isEmpty() && itemStack2.is(GCAccessorySlots.SLOT_TAGS.get(slot))) {
-                    ItemStack itemStack3 = itemStack2.split(1);
-                    inv.setItem(slot, itemStack3);
-                    player.galacticraft$onEquipAccessory(itemStack2, itemStack3);
+                if (inv.getItem(slot).isEmpty() && itemStack.is(GCAccessorySlots.SLOT_TAGS.get(slot))) {
+                    ItemStack itemStack2 = itemStack.split(1);
+                    inv.setItem(slot, itemStack2);
+                    player.galacticraft$onEquipAccessory(itemStack, itemStack2);
                     break;
                 } else if (slot == n - 1) {
-                    player.addItem(itemStack2);
+                    player.addItem(itemStack);
                 }
             }
         }

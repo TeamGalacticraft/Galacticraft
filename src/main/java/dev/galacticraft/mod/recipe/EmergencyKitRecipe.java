@@ -52,16 +52,7 @@ public class EmergencyKitRecipe extends CustomRecipe {
         }
 
         boolean[] found = new boolean[9];
-        for (ItemStack itemStack : EmergencyKitItem.EMERGENCY_ITEMS) {
-            // Do not modify itemStack itself, instead create a copy of it!
-            ItemStack itemStack2 = itemStack.copy();
-            if (itemStack.getItem() instanceof OxygenTankItem tankItem) {
-                itemStack2 = OxygenTankItem.getFullTank(tankItem);
-            } else if (itemStack.getComponents().has(DataComponents.FOOD)) {
-                itemStack2 = GCItems.CANNED_FOOD.getDefaultInstance();
-                CannedFoodItem.add(itemStack2, itemStack.copyWithCount(CannedFoodItem.MAX_FOOD));
-            }
-
+        for (ItemStack itemStack : EmergencyKitItem.getContents()) {
             for (int i = 0; i < 9; ++i) {
                 if (found[i]) {
                     if (i == 8) {
@@ -69,7 +60,7 @@ public class EmergencyKitRecipe extends CustomRecipe {
                     } else {
                         continue;
                     }
-                } else if (ItemStack.isSameItemSameComponents(craftingInput.getItem(i), itemStack2)) {
+                } else if (ItemStack.isSameItemSameComponents(craftingInput.getItem(i), itemStack)) {
                     found[i] = true;
                     break;
                 } else if (i == 8) {
