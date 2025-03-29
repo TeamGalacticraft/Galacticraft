@@ -26,11 +26,6 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.item.EmergencyKitItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.EmergencyKitRecipe;
-import me.shedaniel.rei.api.common.display.Display;
-import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import me.shedaniel.rei.api.common.util.EntryIngredients;
-import me.shedaniel.rei.plugin.client.categories.crafting.filler.CraftingRecipeFiller;
-import me.shedaniel.rei.plugin.common.displays.crafting.DefaultCustomShapelessDisplay;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
@@ -39,9 +34,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 
-import java.util.stream.Collectors;
 import java.util.List;
-import java.util.Objects;
 
 public final class EmergencyKitRecipeMaker {
     private static final String group = "emergency_kit";
