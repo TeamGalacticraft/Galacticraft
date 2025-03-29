@@ -3,6 +3,9 @@
   "ingredients": [
     {
       "item": "galacticraft:meteoric_iron_ingot"
+    },
+    {
+      "item": "galacticraft:meteoric_iron_ingot"
     }
   ],
   "result": {

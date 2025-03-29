@@ -30,7 +30,7 @@ import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.api.item.OxygenGear;
 import dev.galacticraft.api.item.OxygenMask;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCFluidTags;
 import dev.galacticraft.impl.internal.fabric.GalacticraftAPI;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberPart;
@@ -85,7 +85,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
         LivingEntity entity = ((LivingEntity) (Object) this);
         AttributeInstance attribute = entity.getAttribute(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE);
         if (!entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(entity.getEyeHeight(entity.getPose())))) && !(attribute != null && attribute.getValue() >= 0.99D)) {
-            if (!entity.isEyeInFluid(GCTags.NON_BREATHABLE) && (!(entity instanceof Player player) || !player.getAbilities().invulnerable)) {
+            if (!entity.isEyeInFluid(GCFluidTags.NON_BREATHABLE) && (!(entity instanceof Player player) || !player.getAbilities().invulnerable)) {
                 entity.setAirSupply(this.decreaseAirSupply(entity.getAirSupply()));
                 if (entity.getAirSupply() == -20) {
                     entity.setAirSupply(0);
@@ -109,12 +109,12 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
             this.lastHurtBySuffocationTimestamp = this.tickCount;
             return false;
         }
-        return original || this.isEyeInFluid(GCTags.NON_BREATHABLE) || !entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(entity.getPose()))));
+        return original || this.isEyeInFluid(GCFluidTags.NON_BREATHABLE) || !entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(entity.getPose()))));
     }
 
     @ModifyExpressionValue(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;canBreatheUnderwater()Z"))
     private boolean galacticraft_suffocationDamage(boolean original) {
-        return original || !this.isEyeInFluid(GCTags.NON_BREATHABLE);
+        return original || !this.isEyeInFluid(GCFluidTags.NON_BREATHABLE);
     }
 
     @Inject(method = "tick", at = @At(value = "RETURN"))

@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "galacticraft:meteoric_iron_ingot"
+            "items": "galacticraft:compressed_meteoric_iron"
           }
         ]
       },

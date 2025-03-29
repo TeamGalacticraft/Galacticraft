@@ -26,10 +26,10 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.GCBlock;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCBlockTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -38,6 +38,8 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 
 public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
@@ -47,58 +49,267 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        this.tag(GCTags.INFINIBURN_MOON)
+        this.tag(GCBlockTags.INFINIBURN_MOON)
                 .add(GCBlocks.MOON_BASALT_BRICK);
-        this.tag(GCTags.BASE_STONE_MOON)
+        this.tag(GCBlockTags.BASE_STONE_MOON)
                 .add(GCBlocks.MOON_ROCK);
-        this.tag(GCTags.MOON_CARVER_REPLACEABLES)
+        this.tag(GCBlockTags.MOON_CARVER_REPLACEABLES)
                 .add(GCBlocks.MOON_ROCK)
                 .add(GCBlocks.MOON_SURFACE_ROCK)
                 .add(GCBlocks.MOON_BASALT)
                 .add(GCBlocks.MOON_DIRT)
                 .add(GCBlocks.MOON_TURF);
-        this.tag(GCTags.MOON_CRATER_CARVER_REPLACEABLES)
+        this.tag(GCBlockTags.MOON_CRATER_CARVER_REPLACEABLES)
                 .add(GCBlocks.MOON_ROCK)
                 .add(GCBlocks.MOON_SURFACE_ROCK)
                 .add(GCBlocks.MOON_BASALT)
                 .add(GCBlocks.MOON_DIRT)
                 .add(GCBlocks.MOON_TURF);
-        this.tag(GCTags.MOON_STONE_ORE_REPLACEABLES)
+
+        this.tag(GCBlockTags.MOON_STONE_ORE_REPLACEABLES)
                 .add(GCBlocks.MOON_ROCK);
-                // .add(GCBlocks.MOON_BASALT);
-        this.tag(GCTags.LUNASLATE_ORE_REPLACEABLES)
+        this.tag(GCBlockTags.LUNASLATE_ORE_REPLACEABLES)
                 .add(GCBlocks.LUNASLATE);
-        this.tag(GCTags.MACHINES)
-                .add(
-                        GCBlocks.CIRCUIT_FABRICATOR,
-                        GCBlocks.COMPRESSOR,
-                        GCBlocks.ELECTRIC_COMPRESSOR,
-                        GCBlocks.COAL_GENERATOR,
-                        GCBlocks.BASIC_SOLAR_PANEL,
-                        GCBlocks.ADVANCED_SOLAR_PANEL,
-                        GCBlocks.ENERGY_STORAGE_MODULE,
-                        GCBlocks.ELECTRIC_FURNACE,
-                        GCBlocks.ELECTRIC_ARC_FURNACE,
-                        GCBlocks.REFINERY,
-                        GCBlocks.OXYGEN_COLLECTOR,
-                        GCBlocks.OXYGEN_SEALER,
-                        GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR,
-                        GCBlocks.OXYGEN_DECOMPRESSOR,
-                        GCBlocks.OXYGEN_COMPRESSOR,
-                        GCBlocks.FOOD_CANNER,
-                        GCBlocks.OXYGEN_STORAGE_MODULE,
-                        GCBlocks.FUEL_LOADER,
-                        GCBlocks.ROCKET_WORKBENCH
-                );
+        this.tag(GCBlockTags.MOON_BASALT_ORE_REPLACEABLES)
+                .add(GCBlocks.MOON_BASALT);
+        this.tag(GCBlockTags.MARS_STONE_ORE_REPLACEABLES)
+                .add(GCBlocks.MARS_STONE);
+        this.tag(GCBlockTags.ASTEROID_ROCK_ORE_REPLACEABLES)
+                .add(GCBlocks.ASTEROID_ROCK)
+                .add(GCBlocks.ASTEROID_ROCK_1)
+                .add(GCBlocks.ASTEROID_ROCK_2);
+        this.tag(GCBlockTags.SOFT_VENUS_ROCK_ORE_REPLACEABLES)
+                .add(GCBlocks.SOFT_VENUS_ROCK);
+        this.tag(GCBlockTags.HARD_VENUS_ROCK_ORE_REPLACEABLES)
+                .add(GCBlocks.HARD_VENUS_ROCK);
+
+        this.tag(GCBlockTags.ORE_BEARING_GROUND_MOON_STONE)
+                .add(GCBlocks.MOON_ROCK);
+        this.tag(GCBlockTags.ORE_BEARING_GROUND_LUNASLATE)
+                .add(GCBlocks.LUNASLATE);
+        this.tag(GCBlockTags.ORE_BEARING_GROUND_MOON_BASALT)
+                .add(GCBlocks.MOON_BASALT);
+        this.tag(GCBlockTags.ORE_BEARING_GROUND_MARS_STONE)
+                .add(GCBlocks.MARS_STONE);
+        this.tag(GCBlockTags.ORE_BEARING_GROUND_ASTEROID_ROCK)
+                .add(GCBlocks.ASTEROID_ROCK);
+        this.tag(GCBlockTags.ORE_BEARING_GROUND_SOFT_VENUS_ROCK)
+                .add(GCBlocks.SOFT_VENUS_ROCK);
+        this.tag(GCBlockTags.ORE_BEARING_GROUND_HARD_VENUS_ROCK)
+                .add(GCBlocks.HARD_VENUS_ROCK);
+        this.tag(GCBlockTags.ORE_BEARING_GROUND_VENUS_ROCK)
+                .addTag(GCBlockTags.ORE_BEARING_GROUND_SOFT_VENUS_ROCK)
+                .addTag(GCBlockTags.ORE_BEARING_GROUND_HARD_VENUS_ROCK);
+
+        this.tag(ConventionalBlockTags.ORES_IN_GROUND_STONE)
+                .add(GCBlocks.SILICON_ORE)
+                .add(GCBlocks.TIN_ORE)
+                .add(GCBlocks.ALUMINUM_ORE);
+        this.tag(ConventionalBlockTags.ORES_IN_GROUND_DEEPSLATE)
+                .add(GCBlocks.DEEPSLATE_SILICON_ORE)
+                .add(GCBlocks.DEEPSLATE_TIN_ORE)
+                .add(GCBlocks.DEEPSLATE_ALUMINUM_ORE);
+        this.tag(GCBlockTags.ORES_IN_GROUND_MOON_STONE)
+                .add(GCBlocks.MOON_COPPER_ORE)
+                .add(GCBlocks.MOON_TIN_ORE)
+                .add(GCBlocks.MOON_CHEESE_ORE)
+                .add(GCBlocks.LUNAR_SAPPHIRE_ORE);
+        this.tag(GCBlockTags.ORES_IN_GROUND_LUNASLATE)
+                .add(GCBlocks.LUNASLATE_COPPER_ORE)
+                .add(GCBlocks.LUNASLATE_TIN_ORE);
+        this.tag(GCBlockTags.ORES_IN_GROUND_MOON_BASALT)
+                .add(GCBlocks.OLIVINE_BASALT)
+                .add(GCBlocks.RICH_OLIVINE_BASALT);
+        this.tag(GCBlockTags.ORES_IN_GROUND_MARS_STONE)
+                .add(GCBlocks.MARS_IRON_ORE)
+                .add(GCBlocks.MARS_COPPER_ORE)
+                .add(GCBlocks.MARS_TIN_ORE)
+                .add(GCBlocks.DESH_ORE);
+        this.tag(GCBlockTags.ORES_IN_GROUND_ASTEROID_ROCK)
+                .add(GCBlocks.ASTEROID_IRON_ORE)
+                .add(GCBlocks.ASTEROID_SILICON_ORE)
+                .add(GCBlocks.ASTEROID_ALUMINUM_ORE)
+                .add(GCBlocks.ILMENITE_ORE);
+        this.tag(GCBlockTags.ORES_IN_GROUND_SOFT_VENUS_ROCK)
+                .add(GCBlocks.VENUS_COPPER_ORE)
+                .add(GCBlocks.VENUS_TIN_ORE)
+                .add(GCBlocks.VENUS_ALUMINUM_ORE)
+                .add(GCBlocks.SOLAR_ORE);
+        this.tag(GCBlockTags.ORES_IN_GROUND_HARD_VENUS_ROCK)
+                .add(GCBlocks.GALENA_ORE);
+        this.tag(GCBlockTags.ORES_IN_GROUND_VENUS_ROCK)
+                .addTag(GCBlockTags.ORES_IN_GROUND_SOFT_VENUS_ROCK)
+                .addTag(GCBlockTags.ORES_IN_GROUND_HARD_VENUS_ROCK);
+
+        // Ores that drop more than one item on average without fortune
+        this.tag(ConventionalBlockTags.ORE_RATES_DENSE)
+                .add(GCBlocks.MOON_COPPER_ORE)
+                .add(GCBlocks.LUNASLATE_COPPER_ORE)
+                .add(GCBlocks.MARS_COPPER_ORE)
+                .add(GCBlocks.VENUS_COPPER_ORE)
+                .add(GCBlocks.SILICON_ORE)
+                .add(GCBlocks.DEEPSLATE_SILICON_ORE)
+                .add(GCBlocks.ASTEROID_SILICON_ORE)
+                .add(GCBlocks.TIN_ORE)
+                .add(GCBlocks.DEEPSLATE_TIN_ORE)
+                .add(GCBlocks.MOON_TIN_ORE)
+                .add(GCBlocks.LUNASLATE_TIN_ORE)
+                .add(GCBlocks.MARS_TIN_ORE)
+                .add(GCBlocks.VENUS_TIN_ORE)
+                .add(GCBlocks.MOON_CHEESE_ORE)
+                .add(GCBlocks.OLIVINE_BASALT);
+
+        // Ores that drop one item on average without fortune
+        this.tag(ConventionalBlockTags.ORE_RATES_SINGULAR)
+                .add(GCBlocks.MARS_IRON_ORE)
+                .add(GCBlocks.ASTEROID_IRON_ORE)
+                .add(GCBlocks.ALUMINUM_ORE)
+                .add(GCBlocks.DEEPSLATE_ALUMINUM_ORE)
+                .add(GCBlocks.ASTEROID_ALUMINUM_ORE)
+                .add(GCBlocks.VENUS_ALUMINUM_ORE)
+                .add(GCBlocks.LUNAR_SAPPHIRE_ORE)
+                .add(GCBlocks.RICH_OLIVINE_BASALT)
+                .add(GCBlocks.FALLEN_METEOR)
+                .add(GCBlocks.DESH_ORE)
+                .add(GCBlocks.ILMENITE_ORE)
+                .add(GCBlocks.GALENA_ORE)
+                .add(GCBlocks.SOLAR_ORE);
+
+        // ORE TAGS
+        this.tag(BlockTags.IRON_ORES)
+                .add(GCBlocks.MARS_IRON_ORE)
+                .add(GCBlocks.ASTEROID_IRON_ORE);
+        this.tag(BlockTags.COPPER_ORES)
+                .add(GCBlocks.MOON_COPPER_ORE)
+                .add(GCBlocks.LUNASLATE_COPPER_ORE)
+                .add(GCBlocks.MARS_COPPER_ORE)
+                .add(GCBlocks.VENUS_COPPER_ORE);
+        this.tag(GCBlockTags.SILICON_ORES)
+                .add(GCBlocks.SILICON_ORE)
+                .add(GCBlocks.DEEPSLATE_SILICON_ORE)
+                .add(GCBlocks.ASTEROID_SILICON_ORE);
+        this.tag(GCBlockTags.TIN_ORES)
+                .add(GCBlocks.TIN_ORE)
+                .add(GCBlocks.DEEPSLATE_TIN_ORE)
+                .add(GCBlocks.MOON_TIN_ORE)
+                .add(GCBlocks.LUNASLATE_TIN_ORE)
+                .add(GCBlocks.MARS_TIN_ORE)
+                .add(GCBlocks.VENUS_TIN_ORE);
+        this.tag(GCBlockTags.ALUMINUM_ORES)
+                .add(GCBlocks.ALUMINUM_ORE)
+                .add(GCBlocks.DEEPSLATE_ALUMINUM_ORE)
+                .add(GCBlocks.ASTEROID_ALUMINUM_ORE)
+                .add(GCBlocks.VENUS_ALUMINUM_ORE);
+        this.tag(GCBlockTags.CHEESE_ORES)
+                .add(GCBlocks.MOON_CHEESE_ORE);
+        this.tag(GCBlockTags.LUNAR_SAPPHIRE_ORES)
+                .add(GCBlocks.LUNAR_SAPPHIRE_ORE);
+        this.tag(GCBlockTags.OLIVINE_ORES)
+                .add(GCBlocks.OLIVINE_BASALT)
+                .add(GCBlocks.RICH_OLIVINE_BASALT);
+        this.tag(GCBlockTags.METEORIC_IRON_ORES)
+                .add(GCBlocks.FALLEN_METEOR);
+        this.tag(GCBlockTags.DESH_ORES)
+                .add(GCBlocks.DESH_ORE);
+        this.tag(GCBlockTags.TITANIUM_ORES)
+                .add(GCBlocks.ILMENITE_ORE);
+        this.tag(GCBlockTags.LEAD_ORES)
+                .add(GCBlocks.GALENA_ORE);
+        this.tag(GCBlockTags.SOLAR_ORES)
+                .add(GCBlocks.SOLAR_ORE);
+        this.tag(ConventionalBlockTags.ORES)
+                .addTag(GCBlockTags.SILICON_ORES)
+                .addTag(GCBlockTags.TIN_ORES)
+                .addTag(GCBlockTags.ALUMINUM_ORES)
+                .addTag(GCBlockTags.CHEESE_ORES)
+                .addTag(GCBlockTags.LUNAR_SAPPHIRE_ORES)
+                .addTag(GCBlockTags.OLIVINE_ORES)
+                .addTag(GCBlockTags.METEORIC_IRON_ORES)
+                .addTag(GCBlockTags.DESH_ORES)
+                .addTag(GCBlockTags.TITANIUM_ORES)
+                .addTag(GCBlockTags.LEAD_ORES)
+                .addTag(GCBlockTags.SOLAR_ORES);
+
+        // STORAGE BLOCK TAGS
+        this.tag(GCBlockTags.TIN_BLOCKS)
+                .add(GCBlocks.TIN_BLOCK);
+        this.tag(GCBlockTags.ALUMINUM_BLOCKS)
+                .add(GCBlocks.ALUMINUM_BLOCK);
+        this.tag(GCBlockTags.METEORIC_IRON_BLOCKS)
+                .add(GCBlocks.METEORIC_IRON_BLOCK);
+        this.tag(GCBlockTags.DESH_BLOCKS)
+                .add(GCBlocks.DESH_BLOCK);
+        this.tag(GCBlockTags.TITANIUM_BLOCKS)
+                .add(GCBlocks.TITANIUM_BLOCK);
+        this.tag(GCBlockTags.LEAD_BLOCKS)
+                .add(GCBlocks.LEAD_BLOCK);
+
+        this.tag(GCBlockTags.SILICON_BLOCKS)
+                .add(GCBlocks.SILICON_BLOCK);
+        this.tag(GCBlockTags.CHEESE_BLOCKS)
+                .add(GCBlocks.MOON_CHEESE_BLOCK);
+        this.tag(GCBlockTags.LUNAR_SAPPHIRE_BLOCKS)
+                .add(GCBlocks.LUNAR_SAPPHIRE_BLOCK);
+        this.tag(GCBlockTags.OLIVINE_BLOCKS)
+                .add(GCBlocks.OLIVINE_BLOCK);
+
+        this.tag(GCBlockTags.RAW_TIN_BLOCKS)
+                .add(GCBlocks.RAW_TIN_BLOCK);
+        this.tag(GCBlockTags.RAW_ALUMINUM_BLOCKS)
+                .add(GCBlocks.RAW_ALUMINUM_BLOCK);
+        this.tag(GCBlockTags.RAW_METEORIC_IRON_BLOCKS)
+                .add(GCBlocks.RAW_METEORIC_IRON_BLOCK);
+        this.tag(GCBlockTags.RAW_DESH_BLOCKS)
+                .add(GCBlocks.RAW_DESH_BLOCK);
+        this.tag(GCBlockTags.RAW_TITANIUM_BLOCKS)
+                .add(GCBlocks.RAW_TITANIUM_BLOCK);
+        this.tag(GCBlockTags.RAW_LEAD_BLOCKS)
+                .add(GCBlocks.RAW_LEAD_BLOCK);
+        this.tag(ConventionalBlockTags.STORAGE_BLOCKS)
+                .addTag(GCBlockTags.TIN_BLOCKS)
+                .addTag(GCBlockTags.ALUMINUM_BLOCKS)
+                .addTag(GCBlockTags.METEORIC_IRON_BLOCKS)
+                .addTag(GCBlockTags.DESH_BLOCKS)
+                .addTag(GCBlockTags.TITANIUM_BLOCKS)
+                .addTag(GCBlockTags.LEAD_BLOCKS)
+                .addTag(GCBlockTags.SILICON_BLOCKS)
+                .addTag(GCBlockTags.CHEESE_BLOCKS)
+                .addTag(GCBlockTags.LUNAR_SAPPHIRE_BLOCKS)
+                .addTag(GCBlockTags.OLIVINE_BLOCKS)
+                .addTag(GCBlockTags.RAW_TIN_BLOCKS)
+                .addTag(GCBlockTags.RAW_ALUMINUM_BLOCKS)
+                .addTag(GCBlockTags.RAW_METEORIC_IRON_BLOCKS)
+                .addTag(GCBlockTags.RAW_DESH_BLOCKS)
+                .addTag(GCBlockTags.RAW_TITANIUM_BLOCKS)
+                .addTag(GCBlockTags.RAW_LEAD_BLOCKS);
+
+        this.tag(GCBlockTags.MACHINES)
+                .add(GCBlocks.CIRCUIT_FABRICATOR)
+                .add(GCBlocks.COMPRESSOR)
+                .add(GCBlocks.ELECTRIC_COMPRESSOR)
+                .add(GCBlocks.COAL_GENERATOR)
+                .add(GCBlocks.BASIC_SOLAR_PANEL)
+                .add(GCBlocks.ADVANCED_SOLAR_PANEL)
+                .add(GCBlocks.ENERGY_STORAGE_MODULE)
+                .add(GCBlocks.ELECTRIC_FURNACE)
+                .add(GCBlocks.ELECTRIC_ARC_FURNACE)
+                .add(GCBlocks.REFINERY)
+                .add(GCBlocks.FUEL_LOADER)
+                .add(GCBlocks.OXYGEN_COLLECTOR)
+                .add(GCBlocks.OXYGEN_SEALER)
+                .add(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR)
+                .add(GCBlocks.OXYGEN_DECOMPRESSOR)
+                .add(GCBlocks.OXYGEN_COMPRESSOR)
+                .add(GCBlocks.OXYGEN_STORAGE_MODULE)
+                .add(GCBlocks.FOOD_CANNER)
+                .add(GCBlocks.ROCKET_WORKBENCH);
 
         this.tag(BlockTags.CLIMBABLE)
-                .add(
-                        GCBlocks.TIN_LADDER,
-                        GCBlocks.CAVERNOUS_VINES,
-                        GCBlocks.CAVERNOUS_VINES_PLANT
-                );
+                .add(GCBlocks.TIN_LADDER)
+                .add(GCBlocks.CAVERNOUS_VINES)
+                .add(GCBlocks.CAVERNOUS_VINES_PLANT);
 
-        var stairs = new Block[]{
+        var stairs = new Block[] {
                 GCBlocks.MOON_ROCK_STAIRS,
                 GCBlocks.MOON_ROCK_BRICK_STAIRS,
                 GCBlocks.CRACKED_MOON_ROCK_BRICK_STAIRS,
@@ -145,55 +356,87 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         List<GCBlockRegistry.DecorationSet> decorations = GCBlocks.BLOCKS.getDecorations();
 
-        var slabBuilder = this.tag(BlockTags.SLABS)
-                .add(slab);
+        Map<String, TagKey<Block>> decoTags = new HashMap<>();
+ 
+        decoTags.put("aluminum_decoration", GCBlockTags.ALUMINUM_DECORATION_BLOCKS);
+        decoTags.put("bronze_decoration", GCBlockTags.BRONZE_DECORATION_BLOCKS);
+        decoTags.put("copper_decoration", GCBlockTags.COPPER_DECORATION_BLOCKS);
+        decoTags.put("iron_decoration", GCBlockTags.IRON_DECORATION_BLOCKS);
+        decoTags.put("meteoric_iron_decoration", GCBlockTags.METEORIC_IRON_DECORATION_BLOCKS);
+        decoTags.put("steel_decoration", GCBlockTags.STEEL_DECORATION_BLOCKS);
+        decoTags.put("tin_decoration", GCBlockTags.TIN_DECORATION_BLOCKS);
+        decoTags.put("titanium_decoration", GCBlockTags.TITANIUM_DECORATION_BLOCKS);
+        decoTags.put("dark_decoration", GCBlockTags.DARK_DECORATION_BLOCKS);
 
+        this.tag(BlockTags.SLABS).addTag(GCBlockTags.SLABS);
+        this.tag(BlockTags.STAIRS).addTag(GCBlockTags.STAIRS);
+        this.tag(BlockTags.WALLS).addTag(GCBlockTags.WALLS);
 
-        var stairsBuilder = this.tag(BlockTags.STAIRS)
-                .add(stairs);
+        var slabBuilder = this.tag(GCBlockTags.SLABS).add(slab);
+        var stairsBuilder = this.tag(GCBlockTags.STAIRS).add(stairs);
+        var wallBuilder = this.tag(GCBlockTags.WALLS).add(wall);
 
-        var wallBuilder = this.tag(BlockTags.WALLS)
-                .add(wall);
-
+        String decoSetId;
         for (GCBlockRegistry.DecorationSet decorationSet : decorations) {
             slabBuilder.add(decorationSet.slab(), decorationSet.detailedSlab());
             stairsBuilder.add(decorationSet.stairs(), decorationSet.detailedStairs());
             wallBuilder.add(decorationSet.wall(), decorationSet.detailedWall());
+
+            decoSetId = decorationSet.block().getDescriptionId();
+            decoSetId = decoSetId.substring(decoSetId.lastIndexOf(".") + 1);
+            this.tag(decoTags.get(decoSetId))
+                .add(decorationSet.block(), decorationSet.slab(), decorationSet.stairs(), decorationSet.wall())
+                .add(decorationSet.detailedBlock(), decorationSet.detailedSlab(), decorationSet.detailedStairs(), decorationSet.detailedWall());
         }
 
-        // ORE MINING TAGS
-        var ores = new Block[] {
-                GCBlocks.ALUMINUM_ORE, GCBlocks.DEEPSLATE_ALUMINUM_ORE, GCBlocks.ASTEROID_ALUMINUM_ORE, GCBlocks.VENUS_ALUMINUM_ORE,
-                GCBlocks.MOON_CHEESE_ORE,
-                GCBlocks.MOON_COPPER_ORE, GCBlocks.LUNASLATE_COPPER_ORE, GCBlocks.MARS_COPPER_ORE,  GCBlocks.VENUS_COPPER_ORE,
-                GCBlocks.DESH_ORE,
-                GCBlocks.FALLEN_METEOR,
-                GCBlocks.GALENA_ORE,
-                GCBlocks.ILMENITE_ORE,
-                GCBlocks.MARS_IRON_ORE, GCBlocks.ASTEROID_IRON_ORE,
-                GCBlocks.OLIVINE_BASALT, GCBlocks.RICH_OLIVINE_BASALT,
-                GCBlocks.LUNAR_SAPPHIRE_ORE,
-                GCBlocks.SILICON_ORE, GCBlocks.DEEPSLATE_SILICON_ORE, GCBlocks.ASTEROID_SILICON_ORE,
-                GCBlocks.SOLAR_ORE,
-                GCBlocks.TIN_ORE, GCBlocks.DEEPSLATE_TIN_ORE, GCBlocks.MOON_TIN_ORE, GCBlocks.LUNASLATE_TIN_ORE, GCBlocks.MARS_TIN_ORE, GCBlocks.VENUS_TIN_ORE,
-        };
+        this.tag(GCBlockTags.DECORATION_BLOCKS)
+                .addTag(GCBlockTags.ALUMINUM_DECORATION_BLOCKS)
+                .addTag(GCBlockTags.BRONZE_DECORATION_BLOCKS)
+                .addTag(GCBlockTags.COPPER_DECORATION_BLOCKS)
+                .addTag(GCBlockTags.IRON_DECORATION_BLOCKS)
+                .addTag(GCBlockTags.METEORIC_IRON_DECORATION_BLOCKS)
+                .addTag(GCBlockTags.STEEL_DECORATION_BLOCKS)
+                .addTag(GCBlockTags.TIN_DECORATION_BLOCKS)
+                .addTag(GCBlockTags.TITANIUM_DECORATION_BLOCKS)
+                .addTag(GCBlockTags.DARK_DECORATION_BLOCKS);
 
-        this.tag(ConventionalBlockTags.ORES).add(ores);
-
-        var clusters = new Block[]{
-                GCBlocks.OLIVINE_CLUSTER
-        };
-
-        this.tag(ConventionalBlockTags.CLUSTERS).add(clusters);
+        this.tag(ConventionalBlockTags.CLUSTERS)
+                .add(GCBlocks.OLIVINE_CLUSTER);
 
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
-                .forceAddTag(GCTags.MACHINES)
-                .add(ores)
-                .add(clusters)
+                .forceAddTag(GCBlockTags.MACHINES)
                 .add(slab)
                 .add(stairs)
                 .add(
+                        GCBlocks.MARS_IRON_ORE,
+                        GCBlocks.ASTEROID_IRON_ORE,
+                        GCBlocks.MOON_COPPER_ORE,
+                        GCBlocks.LUNASLATE_COPPER_ORE,
+                        GCBlocks.MARS_COPPER_ORE,
+                        GCBlocks.VENUS_COPPER_ORE,
+                        GCBlocks.SILICON_ORE,
+                        GCBlocks.DEEPSLATE_SILICON_ORE,
+                        GCBlocks.ASTEROID_SILICON_ORE,
+                        GCBlocks.TIN_ORE,
+                        GCBlocks.DEEPSLATE_TIN_ORE,
+                        GCBlocks.MOON_TIN_ORE,
+                        GCBlocks.LUNASLATE_TIN_ORE,
+                        GCBlocks.MARS_TIN_ORE, GCBlocks.VENUS_TIN_ORE,
+                        GCBlocks.ALUMINUM_ORE,
+                        GCBlocks.DEEPSLATE_ALUMINUM_ORE,
+                        GCBlocks.ASTEROID_ALUMINUM_ORE,
+                        GCBlocks.VENUS_ALUMINUM_ORE,
+                        GCBlocks.MOON_CHEESE_ORE,
+                        GCBlocks.LUNAR_SAPPHIRE_ORE,
+                        GCBlocks.OLIVINE_BASALT,
+                        GCBlocks.RICH_OLIVINE_BASALT,
                         GCBlocks.FALLEN_METEOR,
+                        GCBlocks.DESH_ORE,
+                        GCBlocks.ILMENITE_ORE,
+                        GCBlocks.GALENA_ORE,
+                        GCBlocks.SOLAR_ORE,
+
+                        GCBlocks.OLIVINE_CLUSTER,
                         GCBlocks.TIN_LADDER,
                         GCBlocks.FUELING_PAD,
                         GCBlocks.ROCKET_LAUNCH_PAD,
@@ -280,15 +523,13 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.MARS_COBBLESTONE
                 );
 
-        this.tag(BlockTags.MINEABLE_WITH_AXE).add(GCBlocks.PARACHEST);
+        this.tag(BlockTags.MINEABLE_WITH_AXE)
+                .add(GCBlocks.PARACHEST);
 
         this.tag(BlockTags.MINEABLE_WITH_SHOVEL)
-                .add(
-                        GCBlocks.MOON_TURF,
-                        GCBlocks.MOON_DIRT,
-                        GCBlocks.MOON_DIRT_PATH
-                );
-
+                .add(GCBlocks.MOON_TURF)
+                .add(GCBlocks.MOON_DIRT)
+                .add(GCBlocks.MOON_DIRT_PATH);
 
         this.tag(BlockTags.NEEDS_STONE_TOOL)
                 .add(
@@ -308,7 +549,6 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.LUNASLATE_TIN_ORE,
                         GCBlocks.MARS_TIN_ORE,
                         GCBlocks.VENUS_TIN_ORE,
-                        GCBlocks.ASTEROID_SILICON_ORE,
                         GCBlocks.ALUMINUM_ORE,
                         GCBlocks.DEEPSLATE_ALUMINUM_ORE,
                         GCBlocks.ASTEROID_ALUMINUM_ORE,
@@ -330,6 +570,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(
                         GCBlocks.SILICON_ORE,
                         GCBlocks.DEEPSLATE_SILICON_ORE,
+                        GCBlocks.ASTEROID_SILICON_ORE,
                         GCBlocks.FALLEN_METEOR,
                         GCBlocks.LUNAR_SAPPHIRE_ORE,
                         GCBlocks.SILICON_BLOCK
@@ -346,17 +587,14 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 );
 
         this.tag(BlockTags.DRAGON_IMMUNE)
-                .add(
-                        GCBlocks.AIR_LOCK_SEAL);
+                .add(GCBlocks.AIR_LOCK_SEAL);
 
         this.tag(BlockTags.WITHER_IMMUNE)
-                .add(
-                        GCBlocks.AIR_LOCK_SEAL);
+                .add(GCBlocks.AIR_LOCK_SEAL);
 
         this.tag(BlockTags.WALL_POST_OVERRIDE)
-                .add(
-                        GCBlocks.GLOWSTONE_TORCH,
-                        GCBlocks.UNLIT_TORCH);
+                .add(GCBlocks.GLOWSTONE_TORCH)
+                .add(GCBlocks.UNLIT_TORCH);
 
         // Cheese Candle Tags
         this.tag(BlockTags.CANDLE_CAKES)
@@ -380,17 +618,48 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.BLACK_CANDLE_MOON_CHEESE_WHEEL
                 );
 
+        this.tag(ConventionalBlockTags.STONES)
+                .add(GCBlocks.MOON_SURFACE_ROCK)
+                .add(GCBlocks.MOON_ROCK)
+                .add(GCBlocks.LUNASLATE)
+                .add(GCBlocks.MARS_SURFACE_ROCK)
+                .add(GCBlocks.MARS_SUB_SURFACE_ROCK)
+                .add(GCBlocks.MARS_STONE)
+                .add(GCBlocks.SOFT_VENUS_ROCK)
+                .add(GCBlocks.HARD_VENUS_ROCK);
+
+        this.tag(GCBlockTags.MOON_COBBLESTONES)
+                .add(GCBlocks.COBBLED_MOON_ROCK);
+        this.tag(GCBlockTags.LUNASLATE_COBBLESTONES)
+                .add(GCBlocks.COBBLED_LUNASLATE);
+        this.tag(GCBlockTags.MARS_COBBLESTONES)
+                .add(GCBlocks.MARS_COBBLESTONE);
+        this.tag(ConventionalBlockTags.COBBLESTONES)
+                .addTag(GCBlockTags.MOON_COBBLESTONES)
+                .addTag(GCBlockTags.LUNASLATE_COBBLESTONES)
+                .addTag(GCBlockTags.MARS_COBBLESTONES);
+
+        this.tag(BlockTags.ICE)
+                .add(GCBlocks.DENSE_ICE);
+
+        this.tag(ConventionalBlockTags.PLAYER_WORKSTATIONS_FURNACES)
+                .add(GCBlocks.ELECTRIC_FURNACE)
+                .add(GCBlocks.ELECTRIC_ARC_FURNACE);
+
+        this.tag(ConventionalBlockTags.VILLAGER_JOB_SITES)
+                .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
+
         var replaceableTagAppender = this.tag(BlockTags.REPLACEABLE);
         provider.lookupOrThrow(Registries.BLOCK)
                 .filterElements(block -> BuiltInRegistries.BLOCK.getKey(block).getNamespace().equals(Constant.MOD_ID) && block.defaultBlockState().canBeReplaced())
                 .listElementIds()
                 .forEach(replaceableTagAppender::add);
 
-        tag(GCTags.FOOTPRINTS)
+        this.tag(GCBlockTags.FOOTPRINTS)
                 .add(GCBlocks.MOON_TURF);
     }
 
     protected FabricTagProvider<Block>.FabricTagBuilder tag(TagKey<Block> tag) {
-        return getOrCreateTagBuilder(tag);
+        return this.getOrCreateTagBuilder(tag);
     }
 }

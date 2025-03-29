@@ -12,7 +12,7 @@
       "item": "galacticraft:meteoric_iron_ingot"
     },
     "S": {
-      "item": "minecraft:string"
+      "tag": "c:strings"
     }
   },
   "pattern": [
