@@ -29,6 +29,7 @@ import dev.galacticraft.mod.content.item.OxygenTankItem;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.WrittenBookItem;
@@ -46,22 +47,34 @@ public class EmergencyKitRecipe extends CustomRecipe {
 
     @Override
     public boolean matches(CraftingInput craftingInput, Level level) {
-        if (craftingInput.ingredientCount() != 9 || craftingInput.width() != 3 || craftingInput.height() != 3) {
+        if (craftingInput.ingredientCount() != 9) {
             return false;
         }
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 3; ++j) {
-                ItemStack itemStack = EmergencyKitItem.EMERGENCY_ITEMS.get(j + i * 3).copy();
-                if (itemStack.getItem() instanceof OxygenTankItem tankItem) {
-                    itemStack = OxygenTankItem.getFullTank(tankItem);
-                } else if (itemStack.getComponents().has(DataComponents.FOOD)) {
-                    ItemStack itemStack2 = itemStack.copyWithCount(CannedFoodItem.MAX_FOOD);
-                    itemStack = GCItems.CANNED_FOOD.getDefaultInstance();
-                    CannedFoodItem.add(itemStack, itemStack2);
-                }
 
-                if (ItemStack.isSameItemSameComponents(craftingInput.getItem(j, i), itemStack)) continue;
-                return false;
+        boolean[] found = new boolean[9];
+        for (ItemStack itemStack : EmergencyKitItem.EMERGENCY_ITEMS) {
+            // Do not modify itemStack itself, instead create a copy of it!
+            ItemStack itemStack2 = itemStack.copy();
+            if (itemStack.getItem() instanceof OxygenTankItem tankItem) {
+                itemStack2 = OxygenTankItem.getFullTank(tankItem);
+            } else if (itemStack.getComponents().has(DataComponents.FOOD)) {
+                itemStack2 = GCItems.CANNED_FOOD.getDefaultInstance();
+                CannedFoodItem.add(itemStack2, itemStack.copyWithCount(CannedFoodItem.MAX_FOOD));
+            }
+
+            for (int i = 0; i < 9; ++i) {
+                if (found[i]) {
+                    if (i == 8) {
+                        return false;
+                    } else {
+                        continue;
+                    }
+                } else if (ItemStack.isSameItemSameComponents(craftingInput.getItem(i), itemStack2)) {
+                    found[i] = true;
+                    break;
+                } else if (i == 8) {
+                    return false;
+                }
             }
         }
         return true;

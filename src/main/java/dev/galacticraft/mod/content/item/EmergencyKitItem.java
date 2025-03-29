@@ -63,8 +63,9 @@ public class EmergencyKitItem extends Item {
     @Override //should sync with server
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         Container inv = player.galacticraft$getGearInv();
+        int n = inv.getContainerSize();
         for (ItemStack itemStack : EMERGENCY_ITEMS) {
-            // Do not touch itemStack itself, instead create a copy of it!
+            // Do not modify itemStack itself, instead create a copy of it!
             ItemStack itemStack2 = itemStack.copy();
             if (itemStack.getItem() instanceof OxygenTankItem tankItem) {
                 itemStack2 = OxygenTankItem.getFullTank(tankItem);
@@ -73,18 +74,15 @@ public class EmergencyKitItem extends Item {
                 CannedFoodItem.add(itemStack2, itemStack.copyWithCount(CannedFoodItem.MAX_FOOD));
             }
 
-            boolean equipped = false;
-            for (int slot = 0; slot < inv.getContainerSize(); ++slot) {
+            for (int slot = 0; slot < n; ++slot) {
                 if (inv.getItem(slot).isEmpty() && itemStack2.is(GCAccessorySlots.SLOT_TAGS.get(slot))) {
                     ItemStack itemStack3 = itemStack2.split(1);
                     inv.setItem(slot, itemStack3);
                     player.galacticraft$onEquipAccessory(itemStack2, itemStack3);
-                    equipped = true;
                     break;
+                } else if (slot == n - 1) {
+                    player.addItem(itemStack2);
                 }
-            }
-            if (!equipped) {
-                player.addItem(itemStack2);
             }
         }
 
