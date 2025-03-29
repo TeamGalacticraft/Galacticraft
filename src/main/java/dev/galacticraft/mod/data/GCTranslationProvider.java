@@ -607,6 +607,22 @@ public class GCTranslationProvider extends TranslationProvider {
     }
 
     protected void generateTagTranslations() {
+        this.tag(GCTags.THERMAL_HEAD, "Thermal Padding Helmets");
+        this.tag(GCTags.THERMAL_CHEST, "Thermal Padding Chestpieces");
+        this.tag(GCTags.THERMAL_PANTS, "Thermal Padding Pants");
+        this.tag(GCTags.THERMAL_BOOTS, "Thermal Padding Boots");
+        this.tag(GCTags.OXYGEN_MASKS, "Oxygen Masks");
+        this.tag(GCTags.OXYGEN_GEAR, "Oxygen Gear");
+        this.tag(GCTags.OXYGEN_TANKS, "Oxygen Tanks");
+        this.tag(GCTags.PARACHUTES, "Parachutes");
+        this.tag(GCTags.FREQUENCY_MODULES, "Frequency Modules");
+        this.tag(GCTags.SHIELD_CONTROLLERS, "Shield Controllers");
+        this.tag(GCTags.ACCESSORIES, "Galacticraft Accessories");
+        this.tag(GCTags.ACCESSORY_SLOT_1, "Galacticraft Accessory Slot 1");
+        this.tag(GCTags.ACCESSORY_SLOT_2, "Galacticraft Accessory Slot 2");
+        this.tag(GCTags.ACCESSORY_SLOT_3, "Galacticraft Accessory Slot 3");
+        this.tag(GCTags.ACCESSORY_SLOT_4, "Galacticraft Accessory Slot 4");
+
         this.tag(GCTags.ALUMINUM_INGOTS, "Aluminum Ingots");
         this.tag(GCTags.RAW_ALUMINUM_ORES, "Raw Aluminum");
         this.tag(GCTags.LEAD_INGOTS, "Lead Ingots");
