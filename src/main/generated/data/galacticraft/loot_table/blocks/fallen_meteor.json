@@ -41,6 +41,11 @@
                   "function": "minecraft:set_count"
                 },
                 {
+                  "enchantment": "minecraft:fortune",
+                  "formula": "minecraft:ore_drops",
+                  "function": "minecraft:apply_bonus"
+                },
+                {
                   "function": "minecraft:explosion_decay"
                 }
               ],

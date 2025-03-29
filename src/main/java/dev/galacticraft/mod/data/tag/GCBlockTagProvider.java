@@ -141,6 +141,40 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .addTag(GCBlockTags.ORES_IN_GROUND_HARD_VENUS_ROCK)
                 .addTag(GCBlockTags.ORES_IN_GROUND_SOFT_VENUS_ROCK);
 
+        // Ores that drop more than one item on average without fortune
+        this.tag(ConventionalBlockTags.ORE_RATES_DENSE)
+                .add(GCBlocks.MOON_COPPER_ORE)
+                .add(GCBlocks.LUNASLATE_COPPER_ORE)
+                .add(GCBlocks.MARS_COPPER_ORE)
+                .add(GCBlocks.VENUS_COPPER_ORE)
+                .add(GCBlocks.SILICON_ORE)
+                .add(GCBlocks.DEEPSLATE_SILICON_ORE)
+                .add(GCBlocks.ASTEROID_SILICON_ORE)
+                .add(GCBlocks.TIN_ORE)
+                .add(GCBlocks.DEEPSLATE_TIN_ORE)
+                .add(GCBlocks.MOON_TIN_ORE)
+                .add(GCBlocks.LUNASLATE_TIN_ORE)
+                .add(GCBlocks.MARS_TIN_ORE)
+                .add(GCBlocks.VENUS_TIN_ORE)
+                .add(GCBlocks.MOON_CHEESE_ORE)
+                .add(GCBlocks.OLIVINE_BASALT);
+
+        // Ores that drop one item on average without fortune
+        this.tag(ConventionalBlockTags.ORE_RATES_SINGULAR)
+                .add(GCBlocks.MARS_IRON_ORE)
+                .add(GCBlocks.ASTEROID_IRON_ORE)
+                .add(GCBlocks.ALUMINUM_ORE)
+                .add(GCBlocks.DEEPSLATE_ALUMINUM_ORE)
+                .add(GCBlocks.ASTEROID_ALUMINUM_ORE)
+                .add(GCBlocks.VENUS_ALUMINUM_ORE)
+                .add(GCBlocks.LUNAR_SAPPHIRE_ORE)
+                .add(GCBlocks.RICH_OLIVINE_BASALT)
+                .add(GCBlocks.FALLEN_METEOR)
+                .add(GCBlocks.DESH_ORE)
+                .add(GCBlocks.ILMENITE_ORE)
+                .add(GCBlocks.GALENA_ORE)
+                .add(GCBlocks.SOLAR_ORE);
+
         // ORE TAGS
         this.tag(BlockTags.IRON_ORES)
                 .add(GCBlocks.MARS_IRON_ORE)
