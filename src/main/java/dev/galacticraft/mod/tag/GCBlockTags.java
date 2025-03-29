@@ -42,8 +42,8 @@ public class GCBlockTags {
     public static final TagKey<Block> LUNASLATE_ORE_REPLACEABLES = galacticraftTag("lunaslate_ore_replaceables");
     public static final TagKey<Block> MARS_STONE_ORE_REPLACEABLES = galacticraftTag("mars_stone_ore_replaceables");
     public static final TagKey<Block> ASTEROID_ROCK_ORE_REPLACEABLES = galacticraftTag("asteroid_rock_ore_replaceables");
-    public static final TagKey<Block> HARD_VENUS_ROCK_ORE_REPLACEABLES = galacticraftTag("hard_venus_rock_ore_replaceables");
     public static final TagKey<Block> SOFT_VENUS_ROCK_ORE_REPLACEABLES = galacticraftTag("soft_venus_rock_ore_replaceables");
+    public static final TagKey<Block> HARD_VENUS_ROCK_ORE_REPLACEABLES = galacticraftTag("hard_venus_rock_ore_replaceables");
 
     public static final TagKey<Block> ORE_BEARING_GROUND_MOON_STONE = commonTag("ore_bearing_ground/moon_stone");
     public static final TagKey<Block> ORE_BEARING_GROUND_MOON_BASALT = commonTag("ore_bearing_ground/moon_basalt");
@@ -51,8 +51,8 @@ public class GCBlockTags {
     public static final TagKey<Block> ORE_BEARING_GROUND_MARS_STONE = commonTag("ore_bearing_ground/mars_stone");
     public static final TagKey<Block> ORE_BEARING_GROUND_ASTEROID_ROCK = commonTag("ore_bearing_ground/asteroid_rock");
     public static final TagKey<Block> ORE_BEARING_GROUND_VENUS_ROCK = commonTag("ore_bearing_ground/venus_rock");
-    public static final TagKey<Block> ORE_BEARING_GROUND_HARD_VENUS_ROCK = commonTag("ore_bearing_ground/venus_rock/hard");
     public static final TagKey<Block> ORE_BEARING_GROUND_SOFT_VENUS_ROCK = commonTag("ore_bearing_ground/venus_rock/soft");
+    public static final TagKey<Block> ORE_BEARING_GROUND_HARD_VENUS_ROCK = commonTag("ore_bearing_ground/venus_rock/hard");
 
     public static final TagKey<Block> ORES_IN_GROUND_MOON_STONE = commonTag("ores_in_ground/moon_stone");
     public static final TagKey<Block> ORES_IN_GROUND_MOON_BASALT = commonTag("ores_in_ground/moon_basalt");
@@ -60,8 +60,8 @@ public class GCBlockTags {
     public static final TagKey<Block> ORES_IN_GROUND_MARS_STONE = commonTag("ores_in_ground/mars_stone");
     public static final TagKey<Block> ORES_IN_GROUND_ASTEROID_ROCK = commonTag("ores_in_ground/asteroid_rock");
     public static final TagKey<Block> ORES_IN_GROUND_VENUS_ROCK = commonTag("ores_in_ground/venus_rock");
-    public static final TagKey<Block> ORES_IN_GROUND_HARD_VENUS_ROCK = commonTag("ores_in_ground/venus_rock/hard");
     public static final TagKey<Block> ORES_IN_GROUND_SOFT_VENUS_ROCK = commonTag("ores_in_ground/venus_rock/soft");
+    public static final TagKey<Block> ORES_IN_GROUND_HARD_VENUS_ROCK = commonTag("ores_in_ground/venus_rock/hard");
 
     public static final TagKey<Block> ALUMINUM_ORES = commonTag("ores/aluminum");
     public static final TagKey<Block> CHEESE_ORES = commonTag("ores/cheese");

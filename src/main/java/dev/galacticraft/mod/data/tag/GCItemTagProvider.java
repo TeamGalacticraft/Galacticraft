@@ -414,6 +414,16 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         this.tag(ItemTags.STAIRS).addTag(GCItemTags.STAIRS);
         this.tag(ItemTags.WALLS).addTag(GCItemTags.WALLS);
 
+        this.tag(ConventionalItemTags.STONES)
+                .add(GCBlocks.MOON_SURFACE_ROCK.asItem())
+                .add(GCBlocks.MOON_ROCK.asItem())
+                .add(GCBlocks.LUNASLATE.asItem())
+                .add(GCBlocks.MARS_SURFACE_ROCK.asItem())
+                .add(GCBlocks.MARS_SUB_SURFACE_ROCK.asItem())
+                .add(GCBlocks.MARS_STONE.asItem())
+                .add(GCBlocks.SOFT_VENUS_ROCK.asItem())
+                .add(GCBlocks.HARD_VENUS_ROCK.asItem());
+
         this.copy(GCBlockTags.MOON_COBBLESTONES, GCItemTags.MOON_COBBLESTONES);
         this.copy(GCBlockTags.LUNASLATE_COBBLESTONES, GCItemTags.LUNASLATE_COBBLESTONES);
         this.copy(GCBlockTags.MARS_COBBLESTONES, GCItemTags.MARS_COBBLESTONES);
@@ -425,11 +435,17 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         this.tag(ItemTags.STONE_TOOL_MATERIALS)
                 .add(GCBlocks.COBBLED_MOON_ROCK.asItem())
                 .add(GCBlocks.COBBLED_LUNASLATE.asItem())
-                .add(GCBlocks.MARS_COBBLESTONE.asItem());
+                .add(GCBlocks.MARS_COBBLESTONE.asItem())
+                .add(GCBlocks.ASTEROID_ROCK.asItem())
+                .add(GCBlocks.ASTEROID_ROCK_1.asItem())
+                .add(GCBlocks.ASTEROID_ROCK_2.asItem());
         this.tag(ItemTags.STONE_CRAFTING_MATERIALS)
                 .add(GCBlocks.COBBLED_MOON_ROCK.asItem())
                 .add(GCBlocks.COBBLED_LUNASLATE.asItem())
-                .add(GCBlocks.MARS_COBBLESTONE.asItem());
+                .add(GCBlocks.MARS_COBBLESTONE.asItem())
+                .add(GCBlocks.ASTEROID_ROCK.asItem())
+                .add(GCBlocks.ASTEROID_ROCK_1.asItem())
+                .add(GCBlocks.ASTEROID_ROCK_2.asItem());
 
         this.tag(ConventionalItemTags.PLAYER_WORKSTATIONS_FURNACES)
                 .add(GCBlocks.ELECTRIC_FURNACE.asItem())

@@ -78,10 +78,10 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.ASTEROID_ROCK)
                 .add(GCBlocks.ASTEROID_ROCK_1)
                 .add(GCBlocks.ASTEROID_ROCK_2);
-        this.tag(GCBlockTags.HARD_VENUS_ROCK_ORE_REPLACEABLES)
-                .add(GCBlocks.HARD_VENUS_ROCK);
         this.tag(GCBlockTags.SOFT_VENUS_ROCK_ORE_REPLACEABLES)
                 .add(GCBlocks.SOFT_VENUS_ROCK);
+        this.tag(GCBlockTags.HARD_VENUS_ROCK_ORE_REPLACEABLES)
+                .add(GCBlocks.HARD_VENUS_ROCK);
 
         this.tag(GCBlockTags.ORE_BEARING_GROUND_MOON_STONE)
                 .add(GCBlocks.MOON_ROCK);
@@ -93,13 +93,13 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.MARS_STONE);
         this.tag(GCBlockTags.ORE_BEARING_GROUND_ASTEROID_ROCK)
                 .add(GCBlocks.ASTEROID_ROCK);
-        this.tag(GCBlockTags.ORE_BEARING_GROUND_HARD_VENUS_ROCK)
-                .add(GCBlocks.HARD_VENUS_ROCK);
         this.tag(GCBlockTags.ORE_BEARING_GROUND_SOFT_VENUS_ROCK)
                 .add(GCBlocks.SOFT_VENUS_ROCK);
+        this.tag(GCBlockTags.ORE_BEARING_GROUND_HARD_VENUS_ROCK)
+                .add(GCBlocks.HARD_VENUS_ROCK);
         this.tag(GCBlockTags.ORE_BEARING_GROUND_VENUS_ROCK)
-                .addTag(GCBlockTags.ORE_BEARING_GROUND_HARD_VENUS_ROCK)
-                .addTag(GCBlockTags.ORE_BEARING_GROUND_SOFT_VENUS_ROCK);
+                .addTag(GCBlockTags.ORE_BEARING_GROUND_SOFT_VENUS_ROCK)
+                .addTag(GCBlockTags.ORE_BEARING_GROUND_HARD_VENUS_ROCK);
 
         this.tag(ConventionalBlockTags.ORES_IN_GROUND_STONE)
                 .add(GCBlocks.SILICON_ORE)
@@ -130,16 +130,16 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.ASTEROID_SILICON_ORE)
                 .add(GCBlocks.ASTEROID_ALUMINUM_ORE)
                 .add(GCBlocks.ILMENITE_ORE);
-        this.tag(GCBlockTags.ORES_IN_GROUND_HARD_VENUS_ROCK)
-                .add(GCBlocks.GALENA_ORE);
         this.tag(GCBlockTags.ORES_IN_GROUND_SOFT_VENUS_ROCK)
                 .add(GCBlocks.VENUS_COPPER_ORE)
                 .add(GCBlocks.VENUS_TIN_ORE)
                 .add(GCBlocks.VENUS_ALUMINUM_ORE)
                 .add(GCBlocks.SOLAR_ORE);
+        this.tag(GCBlockTags.ORES_IN_GROUND_HARD_VENUS_ROCK)
+                .add(GCBlocks.GALENA_ORE);
         this.tag(GCBlockTags.ORES_IN_GROUND_VENUS_ROCK)
-                .addTag(GCBlockTags.ORES_IN_GROUND_HARD_VENUS_ROCK)
-                .addTag(GCBlockTags.ORES_IN_GROUND_SOFT_VENUS_ROCK);
+                .addTag(GCBlockTags.ORES_IN_GROUND_SOFT_VENUS_ROCK)
+                .addTag(GCBlockTags.ORES_IN_GROUND_HARD_VENUS_ROCK);
 
         // Ores that drop more than one item on average without fortune
         this.tag(ConventionalBlockTags.ORE_RATES_DENSE)
@@ -617,6 +617,16 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.RED_CANDLE_MOON_CHEESE_WHEEL,
                         GCBlocks.BLACK_CANDLE_MOON_CHEESE_WHEEL
                 );
+
+        this.tag(ConventionalBlockTags.STONES)
+                .add(GCBlocks.MOON_SURFACE_ROCK)
+                .add(GCBlocks.MOON_ROCK)
+                .add(GCBlocks.LUNASLATE)
+                .add(GCBlocks.MARS_SURFACE_ROCK)
+                .add(GCBlocks.MARS_SUB_SURFACE_ROCK)
+                .add(GCBlocks.MARS_STONE)
+                .add(GCBlocks.SOFT_VENUS_ROCK)
+                .add(GCBlocks.HARD_VENUS_ROCK);
 
         this.tag(GCBlockTags.MOON_COBBLESTONES)
                 .add(GCBlocks.COBBLED_MOON_ROCK);
