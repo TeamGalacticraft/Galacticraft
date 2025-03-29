@@ -22,14 +22,20 @@
 
 package dev.galacticraft.api.item;
 
+import net.minecraft.core.Holder;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
 
 public interface Accessory {
+    default public Holder<SoundEvent> getEquipSound() {
+        return SoundEvents.ARMOR_EQUIP_GENERIC;
+    }
+
     default boolean enablesHearing() {
         return false;
     }
 
     default void tick(LivingEntity entity) {
-
     }
 }
