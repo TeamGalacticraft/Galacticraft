@@ -37,7 +37,7 @@ import net.minecraft.world.item.crafting.ShapelessRecipe;
 import java.util.List;
 
 public final class EmergencyKitRecipeMaker {
-    private static final String group = "emergency_kit";
+    private static final String group = "jei.emergency_kit";
 
 	public static List<RecipeHolder<CraftingRecipe>> createRecipes() {
         List<ItemStack> emergencyItems = EmergencyKitItem.getContents();
