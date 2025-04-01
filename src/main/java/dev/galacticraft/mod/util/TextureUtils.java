@@ -28,8 +28,12 @@ import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
+import org.joml.Vector3f;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class TextureUtils {
     public static int getAverageColor(ResourceLocation textureLocation) {
@@ -39,35 +43,84 @@ public class TextureUtils {
     }
 
     private static int calculateAverageColor(TextureAtlasSprite image) {
-        long sumRed = 0;
-        long sumGreen = 0;
-        long sumBlue = 0;
-        int pixelCount = 0;
-
         SpriteContents contents = image.contents();
+        List<Vector3f> pixels = new ArrayList<>();
 
         for (int y = 0; y < contents.height(); y++) {
             for (int x = 0; x < contents.width(); x++) {
+                int rgba = ((SpriteContentAccessor) contents).getOriginalImage().getPixelRGBA(x, y);
+                int alpha = (rgba >> 24) & 0xFF;
+                if (alpha < 64) continue;
 
-                int rgb = ((SpriteContentAccessor) contents).getOriginalImage().getPixelRGBA(x, y);
-                if (rgb != 0) {
-                    int red = rgb & 0xFF;
-                    int green = (rgb >> 8) & 0xFF;
-                    int blue = (rgb >> 16) & 0xFF;
+                int red = rgba & 0xFF;
+                int green = (rgba >> 8) & 0xFF;
+                int blue = (rgba >> 16) & 0xFF;
 
-                    sumRed += red;
-                    sumGreen += green;
-                    sumBlue += blue;
-                    pixelCount++;
-                }
+                pixels.add(new Vector3f(red, green, blue));
             }
         }
 
-        int avgRed = (int) (sumRed / pixelCount);
-        int avgGreen = (int) (sumGreen / pixelCount);
-        int avgBlue = (int) (sumBlue / pixelCount);
+        if (pixels.isEmpty()) return 0xFFFFFF;
 
-        return (avgRed << 16) | (avgGreen << 8) | avgBlue;
+        Vector3f dominant = kMeans(pixels, 3);
+        return ((int)dominant.x << 16) | ((int)dominant.y << 8) | (int)dominant.z;
+    }
+
+    private static Vector3f kMeans(List<Vector3f> points, int k) {
+        List<Vector3f> centroids = new ArrayList<>();
+        Random rand = new Random();
+
+        for (int i = 0; i < k; i++) {
+            centroids.add(points.get(rand.nextInt(points.size())));
+        }
+
+        for (int iteration = 0; iteration < 10; iteration++) {
+            List<List<Vector3f>> clusters = new ArrayList<>();
+            for (int i = 0; i < k; i++) clusters.add(new ArrayList<>());
+
+            for (Vector3f p : points) {
+                int closest = 0;
+                float minDist = Float.MAX_VALUE;
+                for (int i = 0; i < k; i++) {
+                    float dist = distanceSquared(p, centroids.get(i));
+                    if (dist < minDist) {
+                        minDist = dist;
+                        closest = i;
+                    }
+                }
+                clusters.get(closest).add(p);
+            }
+
+            for (int i = 0; i < k; i++) {
+                centroids.set(i, average(clusters.get(i)));
+            }
+        }
+
+        int largest = 0;
+        for (int i = 1; i < k; i++) {
+            if (centroids.get(i).length() > centroids.get(largest).length()) {
+                largest = i;
+            }
+        }
+        return centroids.get(largest);
+    }
+
+    private static float distanceSquared(Vector3f a, Vector3f b) {
+        float dx = a.x - b.x;
+        float dy = a.y - b.y;
+        float dz = a.z - b.z;
+        return dx * dx + dy * dy + dz * dz;
+    }
+
+    private static Vector3f average(List<Vector3f> points) {
+        float r = 0, g = 0, b = 0;
+        for (Vector3f p : points) {
+            r += p.x;
+            g += p.y;
+            b += p.z;
+        }
+        int size = points.size();
+        return new Vector3f(r / size, g / size, b / size);
     }
 }
 
