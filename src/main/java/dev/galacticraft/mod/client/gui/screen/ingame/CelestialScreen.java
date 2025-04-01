@@ -37,7 +37,6 @@ import dev.galacticraft.api.universe.celestialbody.star.Star;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.util.Graphics;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -64,22 +63,11 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 
+import static dev.galacticraft.mod.Constant.CelestialScreen.*;
+
 @SuppressWarnings({"SpellCheckingInspection", "DataFlowIssue"})
 @Environment(EnvType.CLIENT)
 public class CelestialScreen extends Screen implements ClientSatelliteAccessor.SatelliteListener {
-    protected static final int BORDER_Z = 9900;
-
-    // String colours
-    protected static final int BLACK = FastColor.ARGB32.color(255, 0, 0, 0);
-    protected static final int BORDER_EDGE_TOP_LEFT = FastColor.ARGB32.color(255, 40, 40, 40);
-    protected static final int BORDER_EDGE_BOTTOM_RIGHT = FastColor.ARGB32.color(255, 80, 80, 80);
-    protected static final int BORDER_GREY = FastColor.ARGB32.color(255, 100, 100, 100);
-
-    private static final ResourceLocation SELECTION_CURSOR = Constant.id("textures/gui/selection_cursor.png");
-    private static final int SELECTION_CURSOR_U = 0;
-    private static final int SELECTION_CURSOR_V = 0;
-    private static final int SELECTION_CURSOR_SIZE = 64;
-
     protected int borderSize = 0;
     protected int borderEdgeSize = 0;
 
@@ -104,7 +92,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
     protected final Map<CelestialBody<?, ?>, Vec3> planetPositions = new IdentityHashMap<>();
 
     protected @Nullable CelestialBody<?, ?> selectedBody;
-    protected @Nullable CelestialBody<?, ?> selectedParent = celestialBodies.get(Constant.id("sol"));
+    protected @Nullable CelestialBody<?, ?> selectedParent = celestialBodies.get(SOL);
     protected @Nullable CelestialBody<?, ?> lastSelectedBody;
 
     protected EnumSelection selectionState = EnumSelection.UNSELECTED;
@@ -339,7 +327,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
         CelestialBody<?, ?> selectedParent = this.selectedParent;
 
         if (this.selectedBody == null || this.selectedBody.parent() == null) {
-            selectedParent = celestialBodies.get(Constant.id("sol"));
+            selectedParent = celestialBodies.get(SOL);
         } else {
             selectedParent = this.selectedBody.parent().value();
         }
@@ -486,7 +474,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
             }
             matrices.pushPose();
             this.setupMatrix(this.selectedBody, matrices, scale, delta);
-            Graphics.blitCentered(matrices.last().pose(), 0.0f, 0.0f, size, size, 0, SELECTION_CURSOR_U, SELECTION_CURSOR_V, SELECTION_CURSOR_SIZE, SELECTION_CURSOR_SIZE, SELECTION_CURSOR_SIZE, SELECTION_CURSOR_SIZE, CelestialScreen.SELECTION_CURSOR, color);
+            Graphics.blitCentered(matrices.last().pose(), 0.0f, 0.0f, size, size, 0, SELECTION_CURSOR_U, SELECTION_CURSOR_V, SELECTION_CURSOR_SIZE, SELECTION_CURSOR_SIZE, SELECTION_CURSOR_SIZE, SELECTION_CURSOR_SIZE, SELECTION_CURSOR, color);
             matrices.popPose();
         }
     }

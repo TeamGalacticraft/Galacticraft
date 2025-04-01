@@ -34,7 +34,6 @@ import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.satellite.Orbitable;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.util.Graphics;
 import dev.galacticraft.mod.network.c2s.PlanetTeleportPayload;
 import dev.galacticraft.mod.network.c2s.SatelliteCreationPayload;
@@ -59,102 +58,11 @@ import org.lwjgl.glfw.GLFW;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static dev.galacticraft.mod.Constant.CelestialScreen.*;
+
 @SuppressWarnings({"SpellCheckingInspection", "DataFlowIssue"})
 @Environment(EnvType.CLIENT)
 public class CelestialSelectionScreen extends CelestialScreen {
-    protected static final int MAX_SPACE_STATION_NAME_LENGTH = 32;
-
-    // String colours
-    protected static final int WHITE = FastColor.ARGB32.color(255, 255, 255, 255);
-    protected static final int GREY5 = FastColor.ARGB32.color(255, 150, 150, 150);
-    protected static final int GREY4 = FastColor.ARGB32.color(255, 140, 140, 140);
-    protected static final int GREY3 = FastColor.ARGB32.color(255, 120, 120, 120);
-    protected static final int GREEN = FastColor.ARGB32.color(255, 0, 255, 0);
-    protected static final int RED = FastColor.ARGB32.color(255, 255, 0, 0);
-    protected static final int RED3 = FastColor.ARGB32.color(255, 255, 100, 100);
-
-    // UI COLOURS
-    protected static final int BLUE = FastColor.ARGB32.color(255, 0, 153, 255); // panel/button colour
-    protected static final int YELLOW = FastColor.ARGB32.color(255, 255, 255, 0); // galaxy/grandfather panel
-    protected static final int GREY6 = FastColor.ARGB32.color(255, 165, 165, 165);
-
-    private static final int SIDE_PANEL_U = 0;
-    private static final int SIDE_PANEL_V = 0;
-    private static final int SIDE_PANEL_WIDTH = 95;
-    private static final int SIDE_PANEL_HEIGHT = 137;
-
-    private static final int CATALOG_U = 0;
-    private static final int CATALOG_V = 197;
-    private static final int CATALOG_WIDTH = 74;
-    private static final int CATALOG_HEIGHT = 11;
-
-    private static final int ZOOM_INFO_TAB_U = 134;
-    private static final int ZOOM_INFO_TAB_V = 67;
-    private static final int ZOOM_INFO_TAB_WIDTH = 83;
-    private static final int ZOOM_INFO_TAB_HEIGHT = 38;
-
-    private static final int PROFILE_UPPER_TAB_U = 134;
-    private static final int PROFILE_UPPER_TAB_V = 0;
-    private static final int PROFILE_UPPER_TAB_WIDTH = 86;
-    private static final int PROFILE_UPPER_TAB_HEIGHT = 15;
-
-    private static final int CATALOG_BACKING_U = 0;
-    private static final int CATALOG_BACKING_V = 221;
-    private static final int CATALOG_BACKING_WIDTH = 83;
-    private static final int CATALOG_BACKING_HEIGHT = 12;
-
-    private static final int PARENT_LABEL_U = 134;
-    private static final int PARENT_LABEL_V = 151;
-    private static final int PARENT_LABEL_WIDTH = 95;
-    private static final int PARENT_LABEL_HEIGHT = 41;
-
-    private static final int GRANDPARENT_LABEL_U = 134;
-    private static final int GRANDPARENT_LABEL_V = 193;
-    private static final int GRANDPARENT_LABEL_WIDTH = 93;
-    private static final int GRANDPARENT_LABEL_HEIGHT = 17;
-
-    private static final int SIDE_BUTTON_U = 134;
-    private static final int SIDE_BUTTON_V = 223;
-    private static final int SIDE_BUTTON_WIDTH = 92;
-    private static final int SIDE_BUTTON_HEIGHT = 12;
-
-    private static final int TOP_RIGHT_ACTION_BUTTON_U = 134;
-    private static final int TOP_RIGHT_ACTION_BUTTON_V = 211;
-    private static final int TOP_RIGHT_ACTION_BUTTON_WIDTH = 74;
-    private static final int TOP_RIGHT_ACTION_BUTTON_HEIGHT = 11;
-
-    private static final int SIDE_BUTTON_GRADIENT_U = 0;
-    private static final int SIDE_BUTTON_GRADIENT_V = 234;
-    private static final int SIDE_BUTTON_GRADIENT_WIDTH = 86;
-    private static final int SIDE_BUTTON_GRADIENTn_HEIGHT = 20;
-
-    private static final int TOPBAR_U = 134;
-    private static final int TOPBAR_V = 138;
-    private static final int TOPBAR_WIDTH = 94;
-    private static final int TOPBAR_HEIGHT = 12;
-
-    private static final int TOPBAR_SUB_U = 0;
-    private static final int TOPBAR_SUB_V = 209;
-    private static final int TOPBAR_SUB_WIDTH = 94;
-    private static final int TOPBAR_SUB_HEIGHT = 11;
-
-    private static final int CREATE_SS_PANEL_U = 0;
-    private static final int CREATE_SS_PANEL_V = 137;
-    private static final int CREATE_SS_PANEL_WIDTH = 93;
-    private static final int CREATE_SS_PANEL_HEIGHT = 47;
-    private static final int CREATE_SS_PANEL_CAP_U = 0;
-    private static final int CREATE_SS_PANEL_CAP_V = 185;
-    private static final int CREATE_SS_PANEL_CAP_WIDTH = 61;
-    private static final int CREATE_SS_PANEL_CAP_HEIGHT = 4;
-    private static final int CREATE_SS_PANEL_BUTTON_U = 134;
-    private static final int CREATE_SS_PANEL_BUTTON_V = 236;
-    private static final int CREATE_SS_PANEL_BUTTON_WIDTH = 93;
-    private static final int CREATE_SS_PANEL_BUTTON_HEIGHT = 12;
-
-    protected static final ResourceLocation TEXTURE_0 = Constant.id("textures/gui/celestial_selection.png");
-    protected static final ResourceLocation TEXTURE_1 = Constant.id("textures/gui/celestial_selection_1.png");
-    public static final int GREEN1 = FastColor.ARGB32.color(255, 0, 255, 25);
-
     protected int LHS = 0;
     protected int RHS = 0;
     protected int BOT = 0;
@@ -196,7 +104,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
     protected String getGrandparentName() {
         CelestialBody<?, ?> body = this.selectedBody;
-        if (body == null || body == celestialBodies.get(Constant.id("sol"))) {
+        if (body == null || body == celestialBodies.get(SOL)) {
             return I18n.get(Translations.Galaxy.MILKY_WAY); //fixme
         }
         if (body.parent() != null) {
@@ -212,7 +120,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
     protected String parentName() {
         if (this.selectedBody == null) return I18n.get(Translations.CelestialBody.SOL); //fixme
-        if (this.selectedBody == celestialBodies.get(Constant.id("sol")))
+        if (this.selectedBody == celestialBodies.get(SOL))
             return I18n.get(Translations.CelestialBody.SOL);
         if (this.selectedBody.parent() != null)
             return I18n.get(((TranslatableContents) this.selectedBody.parent().value().name().getContents()).getKey());
@@ -648,7 +556,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
         String str;
 
         try (Graphics graphics = Graphics.managed(gui, this.font)) {
-            try (Graphics.TextureColor texture = graphics.textureColor(TEXTURE_0)) {
+            try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION)) {
                 // Catalog:
                 texture.blit(LHS, LHS, 74, 11, CATALOG_U, CATALOG_V, CATALOG_WIDTH, CATALOG_HEIGHT, BLUE);
                 str = I18n.get(Translations.CelestialSelection.CATALOG).toUpperCase();
@@ -667,14 +575,14 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
                 // Grandparent frame:
                 texture.blit(LHS + 2 - 95 + scale, LHS + 14, 93, 17, GRANDPARENT_LABEL_U, GRANDPARENT_LABEL_V, GRANDPARENT_LABEL_WIDTH, GRANDPARENT_LABEL_HEIGHT, YELLOW);
-                if (this.isZoomed() && this.selectedBody == celestialBodies.get(Constant.id("sol"))) {
+                if (this.isZoomed() && this.selectedBody == celestialBodies.get(SOL)) {
                     str = this.getGrandparentName();
                 } else {
                     str = planetZoomedNotMoon ? this.parentName() : this.getGrandparentName();
                 }
                 texture.drawText(str, LHS + 7 - 95 + scale, LHS + 16, GREY3, false);
 
-                List<CelestialBody<?, ?>> children = this.getChildren(/*planetZoomedNotMoon*/this.isZoomed() ? this.selectedBody : celestialBodies.get(Constant.id("sol")));
+                List<CelestialBody<?, ?>> children = this.getChildren(/*planetZoomedNotMoon*/this.isZoomed() ? this.selectedBody : celestialBodies.get(SOL));
                 this.drawChildButtons(texture, children, 0, 0, true);
 
                 if (this.mapMode) {
@@ -691,14 +599,14 @@ public class CelestialSelectionScreen extends CelestialScreen {
                 if (isSatellite(this.selectedBody)) {
                     this.drawSpaceStationDetails(graphics);
                 } else {
-                    try (Graphics.TextureColor texture = graphics.textureColor(TEXTURE_0)) {
+                    try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION)) {
                         texture.blit(RHS - 96, LHS, 96, 139, SIDE_PANEL_U, SIDE_PANEL_V, SIDE_PANEL_WIDTH, SIDE_PANEL_HEIGHT, BLUE);
                     }
                 }
 
                 this.drawSpaceStationCreationPrompt(gui, graphics, mouseX, mouseY);
 
-                try (Graphics.TextureColor texture = graphics.textureColor(TEXTURE_0)) {
+                try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION)) {
                     // Top bar title:
                     int color = BLUE;
                     if (isSatellite(this.selectedBody)) {
@@ -771,7 +679,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
                 }
 
                 if (isSatellite(this.selectedBody) && renamingSpaceStation) {
-                    try (Graphics.TextureColor texture = graphics.textureColor(TEXTURE_1, 512, 512)) {
+                    try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION_1, 512, 512)) {
                         texture.blit(width / 2 - 90, this.height / 2 - 38, 179, 67, 159, 0, 179, 67, BLUE);
                         texture.blit(width / 2 - 90 + 4, this.height / 2 - 38 + 2, 171, 10, 159, 92, 171, 10, BLUE);
                         texture.blit(width / 2 - 90 + 8, this.height / 2 - 38 + 18, 161, 13, 159, 67, 161, 13, BLUE);
@@ -812,7 +720,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
         String str;
         int max;
 
-        try (Graphics.TextureColor texture = graphics.textureColor(TEXTURE_1, 512)) {
+        try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION_1, 512)) {
             CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody;
             int stationListSize = (int) ((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().values().stream().filter(s -> s.parent().value() == this.selectedBody.parent().value()).count();
 
@@ -844,7 +752,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
             }
         }
 
-        try (Graphics.TextureColor texture = graphics.textureColor(TEXTURE_0)) {
+        try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION)) {
             Iterator<CelestialBody<SatelliteConfig, SatelliteType>> it = ((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().values().stream().filter(s -> s.parent() == this.selectedBody.parent() && s.type().ownershipData(s.config()).canAccess(this.minecraft.player)).iterator();
             int i = 0;
             int j = 0;
@@ -881,7 +789,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
     private void drawSpaceStationCreationPrompt(GuiGraphics gui, Graphics graphics, int mousePosX, int mousePosY) {
         String str;
         if (this.canCreateSpaceStation(this.selectedBody) && (!(isSatellite(this.selectedBody)))) {
-            try (Graphics.TextureColor texture = graphics.textureColor(TEXTURE_0)) {
+            try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION)) {
                 int canCreateLength = Math.max(0, texture.getSplitStringLines(I18n.get(Translations.CelestialSelection.CAN_CREATE_SPACE_STATION), 91) - 2);
                 canCreateOffset = canCreateLength * this.font.lineHeight;
 
@@ -964,7 +872,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
                     i++;
                 }
 
-                try (Graphics.TextureColor texture = graphics.textureColor(TEXTURE_0)) {
+                try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION)) {
                     int color;
                     if (validInputMaterials || this.minecraft.player.getAbilities().instabuild) {
                         color = GREEN1;
