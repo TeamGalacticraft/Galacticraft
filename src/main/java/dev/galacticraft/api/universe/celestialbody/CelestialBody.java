@@ -94,7 +94,7 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
     /**
      * Returns this celestial body's parent value, or {@code Null} if it does not exist
      *
-     * @param registry The server/clients {@link CelestialBody} registry
+     * @param registry The server/client's {@link CelestialBody} registry
      * @return this celestial body's parent value
      */
     public CelestialBody<?, ?> parentValue(Registry<CelestialBody<?, ?>> registry) {
@@ -104,7 +104,7 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
     /**
      * Returns this celestial body's parent galaxy's {@link ResourceKey}
      *
-     * @param registry The server/clients {@link CelestialBody} registry
+     * @param registry The server/client's {@link CelestialBody} registry
      * @return this celestial body's parent galaxy's id {@link ResourceKey}
      */
     public Optional<ResourceKey<Galaxy>> galaxy(Registry<CelestialBody<?, ?>> registry) {
@@ -114,8 +114,8 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
     /**
      * Returns this celestial body's parent galaxy's value
      *
-     * @param galaxyRegistry The server/clients {@link Galaxy} registry
-     * @param celestialBodyRegistry The server/clients {@link CelestialBody} registry
+     * @param galaxyRegistry The server/client's {@link Galaxy} registry
+     * @param celestialBodyRegistry The server/client's {@link CelestialBody} registry
      * @return this celestial body's parent galaxy's value
      */
     public Galaxy galaxyValue(Registry<Galaxy> galaxyRegistry, Registry<CelestialBody<?, ?>> celestialBodyRegistry) {
@@ -179,7 +179,7 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
         return this.type().gravity(this.config());
     }
 
-    public ResourceKey<CelestialBody<?,?>> getKey(Registry<CelestialBody<?,?>> registry) {
+    public ResourceKey<CelestialBody<?, ?>> getKey(Registry<CelestialBody<?, ?>> registry) {
         return registry.getResourceKey(this).orElseThrow();
     }
 }

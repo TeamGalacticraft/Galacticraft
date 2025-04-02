@@ -68,7 +68,9 @@ public interface Galaxy {
         return getById(getRegistry(manager), id);
     }
 
-    static Optional<ResourceKey<Galaxy>> getResourceKey(Registry<Galaxy> registry, Galaxy galaxy) {return registry.getResourceKey(galaxy);}
+    static Optional<ResourceKey<Galaxy>> getResourceKey(Registry<Galaxy> registry, Galaxy galaxy) {
+        return registry.getResourceKey(galaxy);
+    }
 
     static ResourceLocation getId(RegistryAccess manager, Galaxy galaxy) {
         return getId(getRegistry(manager), galaxy);

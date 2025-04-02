@@ -42,7 +42,7 @@ import java.util.Optional;
 public record DecorativePlanetConfig(
         @NotNull Component name,
         @NotNull Component description,
-        @NotNull Optional<ResourceKey<CelestialBody<?,?>>> parent,
+        @NotNull Optional<ResourceKey<CelestialBody<?, ?>>> parent,
         @NotNull CelestialPosition<?, ?> position,
         @NotNull CelestialDisplay<?, ?> display,
         @NotNull CelestialRingDisplay<?, ?> ring,
@@ -63,7 +63,7 @@ public record DecorativePlanetConfig(
             SatelliteRecipe.CODEC.optionalFieldOf("satellite_recipe").forGetter(c -> Optional.ofNullable(c.satelliteRecipe))
     ).apply(instance, DecorativePlanetConfig::new));
 
-    private DecorativePlanetConfig(@NotNull Component name, @NotNull Component description, @NotNull Optional<ResourceKey<CelestialBody<?,?>>> parent, @NotNull CelestialPosition<?, ?> position, @NotNull CelestialDisplay<?, ?> display, @NotNull CelestialRingDisplay<?, ?> ring, GasComposition atmosphere, float gravity, @Nullable Optional<SatelliteRecipe> satelliteRecipe) {
+    private DecorativePlanetConfig(@NotNull Component name, @NotNull Component description, @NotNull Optional<ResourceKey<CelestialBody<?, ?>>> parent, @NotNull CelestialPosition<?, ?> position, @NotNull CelestialDisplay<?, ?> display, @NotNull CelestialRingDisplay<?, ?> ring, GasComposition atmosphere, float gravity, @Nullable Optional<SatelliteRecipe> satelliteRecipe) {
         this(name, description, parent, position, display, ring, atmosphere, gravity, satelliteRecipe.orElse(null));
     }
 }

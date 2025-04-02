@@ -987,6 +987,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.TRAVELING_TO, "Traveling to: %s");
 
         this.add(Ui.TOTAL_NUTRITION, "Total Nutrition: %s");
+        this.add(Ui.SPACE_STATION_NAME, "%s's Space Station");
     }
 
     protected void generateStatsTranslations() {

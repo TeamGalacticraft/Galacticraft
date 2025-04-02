@@ -46,7 +46,7 @@ import java.util.Optional;
 public record PlanetConfig(
         @NotNull Component name,
         @NotNull Component description,
-        @NotNull Optional<ResourceKey<CelestialBody<?,?>>> parent,
+        @NotNull Optional<ResourceKey<CelestialBody<?, ?>>> parent,
         @NotNull CelestialPosition<?, ?> position,
         @NotNull CelestialDisplay<?, ?> display,
         @NotNull CelestialRingDisplay<?, ?> ring,
@@ -80,7 +80,7 @@ public record PlanetConfig(
             SatelliteRecipe.CODEC.optionalFieldOf("satellite_recipe").forGetter(c -> Optional.ofNullable(c.satelliteRecipe))
     ).apply(instance, PlanetConfig::new));
 
-    private PlanetConfig(Component name, Component description, Optional<ResourceKey<CelestialBody<?,?>>> parent, CelestialPosition<?, ?> position, CelestialDisplay<?, ?> display, CelestialRingDisplay<?, ?> ring, ResourceKey<Level> world, Holder<CelestialTeleporter<?, ?>> teleporter, GasComposition atmosphere, float gravity, CelestialHandler celestialHandler, int accessWeight, int dayTemperature, int nightTemperature, long dayLength, Optional<SatelliteRecipe> satelliteRecipe) {
+    private PlanetConfig(Component name, Component description, Optional<ResourceKey<CelestialBody<?, ?>>> parent, CelestialPosition<?, ?> position, CelestialDisplay<?, ?> display, CelestialRingDisplay<?, ?> ring, ResourceKey<Level> world, Holder<CelestialTeleporter<?, ?>> teleporter, GasComposition atmosphere, float gravity, CelestialHandler celestialHandler, int accessWeight, int dayTemperature, int nightTemperature, long dayLength, Optional<SatelliteRecipe> satelliteRecipe) {
         this(name, description, parent, position, display, ring, world, teleporter, atmosphere, gravity, celestialHandler, accessWeight, dayTemperature, nightTemperature, dayLength, satelliteRecipe.orElse(null));
     }
 }
