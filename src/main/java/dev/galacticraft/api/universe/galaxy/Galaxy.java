@@ -35,9 +35,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFileCodec;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 public interface Galaxy {
     Codec<Galaxy> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -46,7 +49,7 @@ public interface Galaxy {
             CelestialPosition.CODEC.fieldOf("position").forGetter(Galaxy::position),
             CelestialDisplay.CODEC.fieldOf("display").forGetter(Galaxy::display)
     ).apply(instance, Galaxy::create));
-    Codec<Holder<Galaxy>> CODEC = RegistryFileCodec.create(AddonRegistries.GALAXY, DIRECT_CODEC);
+    Codec<ResourceKey<Galaxy>> CODEC = ResourceKey.codec(AddonRegistries.GALAXY);
     Codec<HolderSet<Galaxy>> LIST_CODEC = RegistryCodecs.homogeneousList(AddonRegistries.GALAXY, DIRECT_CODEC);
     StreamCodec<RegistryFriendlyByteBuf, Galaxy> STREAM_CODEC = StreamCodecs.ofRegistryEntry(AddonRegistries.GALAXY);
 
@@ -62,6 +65,8 @@ public interface Galaxy {
     static Galaxy getById(RegistryAccess manager, ResourceLocation id) {
         return getById(getRegistry(manager), id);
     }
+
+    static Optional<ResourceKey<Galaxy>> getResourceKey(Registry<Galaxy> registry, Galaxy galaxy) {return registry.getResourceKey(galaxy);}
 
     static ResourceLocation getId(RegistryAccess manager, Galaxy galaxy) {
         return getId(getRegistry(manager), galaxy);

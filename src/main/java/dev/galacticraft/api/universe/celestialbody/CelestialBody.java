@@ -33,22 +33,24 @@ import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.mod.util.StreamCodecs;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryCodecs;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.RegistryFileCodec;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBodyType<C>>(T type, C config) {
     public static final Codec<CelestialBody<?, ?>> DIRECT_CODEC = BuiltInAddonRegistries.CELESTIAL_BODY_TYPE.byNameCodec().dispatch(CelestialBody::type, CelestialBodyType::codec);
-    public static final Codec<Holder<CelestialBody<?, ?>>> CODEC = RegistryFileCodec.create(AddonRegistries.CELESTIAL_BODY, DIRECT_CODEC);
-    public static final Codec<HolderSet<CelestialBody<?, ?>>> LIST_CODEC = RegistryCodecs.homogeneousList(AddonRegistries.CELESTIAL_BODY, DIRECT_CODEC);
+    public static final Codec<ResourceKey<CelestialBody<?, ?>>> CODEC = ResourceKey.codec(AddonRegistries.CELESTIAL_BODY);
+    public static final Codec<HolderSet<CelestialBody<?, ?>>> LIST_CODEC = RegistryCodecs.homogeneousList(AddonRegistries.CELESTIAL_BODY, DIRECT_CODEC); //fixme: can maybe remove?
     public static final StreamCodec<RegistryFriendlyByteBuf, Holder<CelestialBody<?, ?>>> STREAM_CODEC = StreamCodecs.ofHolder(AddonRegistries.CELESTIAL_BODY);
 
     public static double getGravity(Entity entity) {
@@ -81,21 +83,43 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
     }
 
     /**
-     * Returns this celestial body's parent, or {@code null} if it does not have one
+     * Returns this celestial body's parent {@link ResourceKey}, or {@code Optional.empty} if it does not have one
      *
-     * @return this celestial body's parent
+     * @return this celestial body's parent {@link ResourceKey}
      */
-    public @Nullable Holder<CelestialBody<?, ?>> parent() {
-        return this.type().parent(this.config());
+    public <P> Optional<ResourceKey<P>> parent() {
+        return this.type().parent(this.config);
     }
 
     /**
-     * Returns this celestial body's parent galaxy's id
+     * Returns this celestial body's parent value, or {@code Null} if it does not exist
      *
-     * @return this celestial body's parent galaxy's id
+     * @param registry The server/clients {@link CelestialBody} registry
+     * @return this celestial body's parent value
      */
-    public @NotNull Holder<Galaxy> galaxy() {
-        return this.type().galaxy(this.config());
+    public CelestialBody<?, ?> parentValue(Registry<CelestialBody<?, ?>> registry) {
+        return registry.getOrThrow(this.type().parent(this.config).orElseThrow().cast(AddonRegistries.CELESTIAL_BODY).orElseThrow());
+    }
+
+    /**
+     * Returns this celestial body's parent galaxy's {@link ResourceKey}
+     *
+     * @param registry The server/clients {@link CelestialBody} registry
+     * @return this celestial body's parent galaxy's id {@link ResourceKey}
+     */
+    public Optional<ResourceKey<Galaxy>> galaxy(Registry<CelestialBody<?, ?>> registry) {
+        return this.type().galaxy(registry, this.config());
+    }
+
+    /**
+     * Returns this celestial body's parent galaxy's value
+     *
+     * @param galaxyRegistry The server/clients {@link Galaxy} registry
+     * @param celestialBodyRegistry The server/clients {@link CelestialBody} registry
+     * @return this celestial body's parent galaxy's value
+     */
+    public Galaxy galaxyValue(Registry<Galaxy> galaxyRegistry, Registry<CelestialBody<?, ?>> celestialBodyRegistry) {
+        return galaxyRegistry.getOrThrow(this.galaxy(celestialBodyRegistry).orElseThrow());
     }
 
     /**
@@ -153,5 +177,9 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
      */
     public float gravity() {
         return this.type().gravity(this.config());
+    }
+
+    public ResourceKey<CelestialBody<?,?>> getKey(Registry<CelestialBody<?,?>> registry) {
+        return registry.getResourceKey(this).orElseThrow();
     }
 }

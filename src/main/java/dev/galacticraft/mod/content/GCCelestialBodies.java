@@ -33,7 +33,7 @@ import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.impl.universe.celestialbody.config.DecorativePlanetConfig;
 import dev.galacticraft.impl.universe.celestialbody.config.PlanetConfig;
 import dev.galacticraft.impl.universe.celestialbody.config.StarConfig;
-import dev.galacticraft.impl.universe.celestialbody.type.DecorativePlanet;
+import dev.galacticraft.impl.universe.celestialbody.type.DecorativePlanetType;
 import dev.galacticraft.impl.universe.celestialbody.type.PlanetType;
 import dev.galacticraft.impl.universe.celestialbody.type.StarType;
 import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
@@ -54,6 +54,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.Registry;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -81,13 +82,12 @@ public class GCCelestialBodies {
 
     public static void bootstrapRegistries(BootstrapContext<CelestialBody<?, ?>> context) {
         HolderGetter<CelestialTeleporter<?, ?>> teleporters = context.lookup(AddonRegistries.CELESTIAL_TELEPORTER);
-        HolderGetter<Galaxy> galaxies = context.lookup(AddonRegistries.GALAXY);
 
         Holder.Reference<CelestialBody<?, ?>> sol = context.register(BuiltinObjects.SOL_KEY, StarType.INSTANCE.configure(
                 new StarConfig(
                         Component.translatable(Translations.CelestialBody.SOL),
                         Component.translatable(Translations.CelestialBody.SOL_DESC),
-                        galaxies.getOrThrow(BuiltinObjects.MILKY_WAY_KEY),
+                        Optional.of(BuiltinObjects.MILKY_WAY_KEY),
                         StaticCelestialPositionType.INSTANCE.configure(new StaticCelestialPositionConfig(0, 0)),
                         IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.CelestialBody.SOL, 0, 0, 8, 8, 1.5f, Optional.empty())),
                         DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
@@ -108,7 +108,7 @@ public class GCCelestialBodies {
                 new PlanetConfig(
                         Component.translatable(Translations.CelestialBody.EARTH),
                         Component.translatable(Translations.CelestialBody.EARTH_DESC),
-                        sol,
+                        Optional.of(BuiltinObjects.SOL_KEY),
                         OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(1.0F, 1.0, 0.0F, true)),
                         IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.CelestialBody.EARTH, 0, 0, 8, 8)),
                         DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
@@ -147,7 +147,7 @@ public class GCCelestialBodies {
         context.register(MOON, PlanetType.INSTANCE.configure(new PlanetConfig(
                 Component.translatable(Translations.CelestialBody.MOON),
                 Component.translatable(Translations.CelestialBody.MOON_DESC),
-                earth,
+                Optional.of(EARTH),
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(1 / 0.01F, 20.0, 0.2667, false)),
                 IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.CelestialBody.MOON, 0, 0, 8, 8)),
                 DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
@@ -166,10 +166,10 @@ public class GCCelestialBodies {
                 null
         )));
 
-        context.register(MERCURY, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
+        context.register(MERCURY, DecorativePlanetType.INSTANCE.configure(new DecorativePlanetConfig(
                 Component.translatable(Translations.CelestialBody.MERCURY),
                 Component.translatable(Translations.CelestialBody.MERCURY_DESC),
-                sol,
+                Optional.of(BuiltinObjects.SOL_KEY),
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(0.24096385542168674698795180722892F, 0.5F, 1.45F, true)),
                 IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.CelestialBody.MERCURY, 0, 0, 16, 16)),
                 DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
@@ -184,7 +184,7 @@ public class GCCelestialBodies {
         context.register(VENUS, PlanetType.INSTANCE.configure(new PlanetConfig(
                 Component.translatable(Translations.CelestialBody.VENUS),
                 Component.translatable(Translations.CelestialBody.VENUS_DESC),
-                sol,
+                Optional.of(BuiltinObjects.SOL_KEY),
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(0.61527929901423877327491785323111F, 0.75F, 2.0F, true)),
                 IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.CelestialBody.VENUS, 0, 0, 16, 16)),
                 DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
@@ -203,10 +203,10 @@ public class GCCelestialBodies {
                 null
         )));
 
-        context.register(MARS, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
+        context.register(MARS, DecorativePlanetType.INSTANCE.configure(new DecorativePlanetConfig(
                 Component.translatable(Translations.CelestialBody.MARS),
                 Component.translatable(Translations.CelestialBody.MARS_DESC),
-                sol,
+                Optional.of(BuiltinObjects.SOL_KEY),
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(1.8811610076670317634173055859803F, 1.25F, 0.1667F, true)),
                 IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.CelestialBody.MARS, 0, 0, 16, 16)),
                 DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
@@ -221,7 +221,7 @@ public class GCCelestialBodies {
         context.register(ASTEROID, PlanetType.INSTANCE.configure(new PlanetConfig(
                 Component.translatable(Translations.CelestialBody.ASTEROID),
                 Component.translatable(Translations.CelestialBody.ASTEROID_DESC),
-                sol,
+                Optional.of(BuiltinObjects.SOL_KEY),
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(45.0F, 1.375F, 0.0F, true)),
                 SpinningIconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.CelestialBody.ASTEROID, 0, 0, 16, 16)),
                 AsteroidCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
@@ -240,10 +240,10 @@ public class GCCelestialBodies {
                 null
         )));
 
-        context.register(JUPITER, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
+        context.register(JUPITER, DecorativePlanetType.INSTANCE.configure(new DecorativePlanetConfig(
                 Component.translatable(Translations.CelestialBody.JUPITER),
                 Component.translatable(Translations.CelestialBody.JUPITER_DESC),
-                sol,
+                Optional.of(BuiltinObjects.SOL_KEY),
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(11.861993428258488499452354874042F, 1.5F, Mth.PI, true)),
                 IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.CelestialBody.JUPITER, 0, 0, 16, 16)),
                 DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
@@ -255,10 +255,10 @@ public class GCCelestialBodies {
                 null
         )));
 
-        context.register(SATURN, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
+        context.register(SATURN, DecorativePlanetType.INSTANCE.configure(new DecorativePlanetConfig(
                 Component.translatable(Translations.CelestialBody.SATURN),
                 Component.translatable(Translations.CelestialBody.SATURN_DESC),
-                sol,
+                Optional.of(BuiltinObjects.SOL_KEY),
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(29.463307776560788608981380065717F, 1.75F, 5.45F, true)),
                 IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(
                         Constant.CelestialBody.SATURN, 0, 0, 16, 16, 1,
@@ -273,10 +273,10 @@ public class GCCelestialBodies {
                 null
         )));
 
-        context.register(URANUS, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
+        context.register(URANUS, DecorativePlanetType.INSTANCE.configure(new DecorativePlanetConfig(
                 Component.translatable(Translations.CelestialBody.URANUS),
                 Component.translatable(Translations.CelestialBody.URANUS_DESC),
-                sol,
+                Optional.of(BuiltinObjects.SOL_KEY),
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(84.063526834611171960569550930997F, 2.0F, 1.38F, true)),
                 IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(
                         Constant.CelestialBody.URANUS, 0, 0, 16, 16, 1,
@@ -291,10 +291,10 @@ public class GCCelestialBodies {
                 null
         )));
 
-        context.register(NEPTUNE, DecorativePlanet.INSTANCE.configure(new DecorativePlanetConfig(
+        context.register(NEPTUNE, DecorativePlanetType.INSTANCE.configure(new DecorativePlanetConfig(
                 Component.translatable(Translations.CelestialBody.NEPTUNE),
                 Component.translatable(Translations.CelestialBody.NEPTUNE_DESC),
-                sol,
+                Optional.of(BuiltinObjects.SOL_KEY),
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(164.84118291347207009857612267251F, 2.25F, 1.0F, true)),
                 IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.CelestialBody.NEPTUNE, 0, 0, 16, 16)),
                 DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),

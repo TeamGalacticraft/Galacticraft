@@ -33,12 +33,15 @@ import dev.galacticraft.api.universe.position.CelestialPosition;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 public record StarConfig(
         @NotNull Component name,
         @NotNull Component description,
-        @NotNull Holder<Galaxy> galaxy,
+        @NotNull Optional<ResourceKey<Galaxy>> galaxy,
         @NotNull CelestialPosition<?, ?> position,
         @NotNull CelestialDisplay<?, ?> display,
         @NotNull CelestialRingDisplay<?, ?> ring,
@@ -50,7 +53,7 @@ public record StarConfig(
     public static final Codec<StarConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ComponentSerialization.CODEC.fieldOf("name").forGetter(StarConfig::name),
             ComponentSerialization.CODEC.fieldOf("description").forGetter(StarConfig::description),
-            Galaxy.CODEC.fieldOf("galaxy").forGetter(StarConfig::galaxy),
+            Galaxy.CODEC.optionalFieldOf("galaxy").forGetter(StarConfig::galaxy),
             CelestialPosition.CODEC.fieldOf("position").forGetter(StarConfig::position),
             CelestialDisplay.CODEC.fieldOf("display").forGetter(StarConfig::display),
             CelestialRingDisplay.CODEC.fieldOf("ring").forGetter(StarConfig::ring),

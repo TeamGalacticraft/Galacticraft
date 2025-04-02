@@ -25,15 +25,22 @@ package dev.galacticraft.api.universe.celestialbody;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import dev.galacticraft.api.gas.GasComposition;
+import dev.galacticraft.api.universe.celestialbody.satellite.Orbitable;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
 import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
-import net.minecraft.core.Holder;
+import dev.galacticraft.impl.universe.celestialbody.type.DecorativePlanetType;
+import dev.galacticraft.impl.universe.celestialbody.type.PlanetType;
+import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
+import dev.galacticraft.impl.universe.celestialbody.type.StarType;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public abstract class CelestialBodyType<C extends CelestialBodyConfig> {
     private final MapCodec<CelestialBody<C, CelestialBodyType<C>>> codec;
@@ -61,20 +68,20 @@ public abstract class CelestialBodyType<C extends CelestialBodyConfig> {
     public abstract @NotNull Component description(C config);
 
     /**
-     * Returns the celestial body's parent, or {@code null} if it does not have one
+     * Returns the celestial body's parent {@link ResourceKey}, or {@code Optional.empty} if it does not have one
      *
      * @param config the celestial body configuration to be queried
-     * @return the celestial body's parent
+     * @return the celestial body's parent {@link ResourceKey}
      */
-    public abstract @Nullable Holder<CelestialBody<?, ?>> parent(C config);
-
+    public abstract <T> Optional<ResourceKey<T>> parent(C config);
     /**
-     * Returns the celestial body's parent galaxy's id
+     * Returns the celestial body's parent galaxy's {@link ResourceKey}
      *
+     * @param registry the registry of all the celestial bodies to be used
      * @param config the celestial body configuration to be queried
-     * @return the celestial body's parent galaxy's id
+     * @return the celestial body's parent galaxy's {@link ResourceKey}
      */
-    public abstract @NotNull Holder<Galaxy> galaxy(C config);
+    public abstract Optional<ResourceKey<Galaxy>> galaxy(Registry<CelestialBody<?, ?>> registry, C config);
 
     /**
      * Returns the celestial body's position provider
@@ -138,5 +145,25 @@ public abstract class CelestialBodyType<C extends CelestialBodyConfig> {
 
     public CelestialBody<C, ? extends CelestialBodyType<C>> configure(C config) {
         return new CelestialBody<>(this, config);
+    }
+
+    public boolean isStar() {
+        return this instanceof StarType;
+    }
+
+    public boolean isPlanet() {
+        return this instanceof PlanetType;
+    }
+
+    public boolean isSatellite() {
+        return this instanceof SatelliteType;
+    }
+
+    public boolean isOrbitable() {
+        return this instanceof Orbitable;
+    }
+
+    public boolean isDecorativePlanet() {
+        return this instanceof DecorativePlanetType;
     }
 }

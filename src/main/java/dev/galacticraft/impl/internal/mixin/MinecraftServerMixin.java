@@ -120,7 +120,7 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
     @Override
     public void galacticraft$loadSatellites(DynamicDimensionLoadCallback.DynamicDimensionLoader dynamicDimensionLoader) {
         for (Map.Entry<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> entry : this.satellites.entrySet()) {
-            LevelStem levelStem = entry.getValue().config().dimensionOptions();
+            LevelStem levelStem = entry.getValue().config().getOptions();
             dynamicDimensionLoader.loadDynamicDimension(entry.getKey(), levelStem.generator(), levelStem.type().value());
         }
     }
