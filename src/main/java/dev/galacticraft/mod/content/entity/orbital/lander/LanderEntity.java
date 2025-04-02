@@ -125,10 +125,10 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
     }
 
     public Pair<Vec3, Vec3> getParticlePosition() {
-        double sinPitch = Math.sin(this.getXRot() / Constant.RADIANS_TO_DEGREES);
-        final double x1 = 4 * Math.cos(this.getYRot() / Constant.RADIANS_TO_DEGREES) * sinPitch;
-        final double z1 = 4 * Math.sin(this.getYRot() / Constant.RADIANS_TO_DEGREES) * sinPitch;
-        final double y1 = -4 * Math.abs(Math.cos(this.getXRot() / Constant.RADIANS_TO_DEGREES));
+        double sinPitch = Mth.sin(this.getXRot() * Mth.DEG_TO_RAD);
+        final double x1 = 4 * Mth.cos(this.getYRot() * Mth.DEG_TO_RAD) * sinPitch;
+        final double z1 = 4 * Mth.sin(this.getYRot() * Mth.DEG_TO_RAD) * sinPitch;
+        final double y1 = -4 * Math.abs(Mth.cos(this.getXRot() * Mth.DEG_TO_RAD));
 
         double motionY = getDeltaMovement().y();
         return new Pair<>(new Vec3(this.getX(), this.getY() + 1D + motionY / 2, this.getZ()), new Vec3(x1, y1 + motionY / 2, z1));
@@ -269,9 +269,9 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
             this.addDeltaMovement(new Vec3(0, (holder != null ? holder.value().gravity() : 1.0d) * -0.008D, 0));
         }
 
-        double motY = -1 * Math.sin(getXRot() / Constant.RADIANS_TO_DEGREES);
-        double motX = Math.cos(getYRot() / Constant.RADIANS_TO_DEGREES) * motY;
-        double motZ = Math.sin(getYRot() / Constant.RADIANS_TO_DEGREES) * motY;
+        double motY = -Mth.sin(getXRot() * Mth.DEG_TO_RAD);
+        double motX = Mth.cos(getYRot() * Mth.DEG_TO_RAD) * motY;
+        double motZ = Mth.sin(getYRot() * Mth.DEG_TO_RAD) * motY;
 
         setDeltaMovement(new Vec3(motX / 2.0F, getDeltaMovement().y(), motZ / 2.0F));
     }
@@ -437,9 +437,9 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
     public void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown) {
         if (!onGround()) {
             if (up)
-                setXRot(Math.min(Math.max(getXRot() - 0.5F * turnFactor, -angle), angle));
+                setXRot(Mth.clamp(getXRot() - 0.5F * turnFactor, -angle, angle));
             if (down)
-                setXRot(Math.min(Math.max(getXRot() + 0.5F * turnFactor, -angle), angle));
+                setXRot(Mth.clamp(getXRot() + 0.5F * turnFactor, -angle, angle));
             if (left)
                 setYRot(getYRot() - 0.5F * turnFactor);
             if (right)
