@@ -6,7 +6,7 @@
       "item": "galacticraft:heavy_plating"
     },
     "S": {
-      "item": "minecraft:stick"
+      "tag": "c:rods/wooden"
     }
   },
   "pattern": [

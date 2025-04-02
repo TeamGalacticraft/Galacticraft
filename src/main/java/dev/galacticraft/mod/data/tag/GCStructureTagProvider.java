@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.data.tag;
 
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCStructureTags;
 import dev.galacticraft.mod.world.gen.structure.GCStructures;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
@@ -39,7 +39,7 @@ public class GCStructureTagProvider extends FabricTagProvider<Structure> {
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
-        this.getOrCreateTagBuilder(GCTags.MOON_RUINS)
+        this.getOrCreateTagBuilder(GCStructureTags.MOON_RUINS)
                 .add(GCStructures.Moon.RUINS);
     }
 }

@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content.block.environment;
 
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCFluidTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -41,7 +41,7 @@ public class CrudeOilBlock extends LiquidBlock {
 
     @Override
     public void entityInside(BlockState blockState, Level world, BlockPos blockPos, Entity entity) {
-        if (world.getBlockState(entity.blockPosition().offset(0, (int) Math.floor(entity.getEyeHeight(entity.getPose())), 0)).getFluidState().getType().is(GCTags.OIL)) {
+        if (world.getBlockState(entity.blockPosition().offset(0, (int) Math.floor(entity.getEyeHeight(entity.getPose())), 0)).getFluidState().getType().is(GCFluidTags.OIL)) {
             if (entity instanceof LivingEntity living) {
                 if (living instanceof Player player) {
                     if (player.isCreative()) {

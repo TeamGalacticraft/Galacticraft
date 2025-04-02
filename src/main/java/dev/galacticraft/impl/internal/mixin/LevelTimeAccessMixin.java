@@ -23,7 +23,7 @@
 package dev.galacticraft.impl.internal.mixin;
 
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCDimensionTypeTags;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelTimeAccess;
@@ -43,7 +43,7 @@ public interface LevelTimeAccessMixin extends LevelTimeAccess {
         // Might be worth it to make our own dimension type system?
         if (this instanceof Level level) {
             Holder<CelestialBody<?, ?>> holder = level.galacticraft$getCelestialBody();
-            if (holder != null && level.galacticraft$hasDimensionTypeTag(GCTags.SPACE)) {
+            if (holder != null && level.galacticraft$hasDimensionTypeTag(GCDimensionTypeTags.SPACE)) {
                 long worldTime = this.dayTime();
                 long dayLength = holder.value().dayLength();
                 int j = (int) (worldTime % dayLength);

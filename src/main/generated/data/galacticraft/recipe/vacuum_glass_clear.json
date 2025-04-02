@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "galacticraft:aluminum_ingot"
+      "tag": "c:ingots/aluminum"
     },
     "G": {
-      "item": "minecraft:glass"
+      "tag": "c:glass_blocks/colorless"
     }
   },
   "pattern": [
