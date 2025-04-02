@@ -48,6 +48,7 @@ public class GCTags {
     public static final TagKey<Block> INFINIBURN_MOON = TagKey.create(Registries.BLOCK, Constant.id("infiniburn_moon"));
     public static final TagKey<Block> INFINIBURN_VENUS = TagKey.create(Registries.BLOCK, Constant.id("infiniburn_venus"));
     public static final TagKey<Block> INFINIBURN_ASTEROID = TagKey.create(Registries.BLOCK, Constant.id("infiniburn_asteroid"));
+    public static final TagKey<Block> INFINIBURN_SATELLITE = TagKey.create(Registries.BLOCK, Constant.id("infiniburn_satellite"));
     public static final TagKey<Block> BASE_STONE_MOON = TagKey.create(Registries.BLOCK, Constant.id("base_stone_moon"));
     public static final TagKey<Block> MOON_CARVER_REPLACEABLES = TagKey.create(Registries.BLOCK, Constant.id("moon_carver_replaceables"));
     public static final TagKey<Block> MOON_CRATER_CARVER_REPLACEABLES = TagKey.create(Registries.BLOCK, Constant.id("moon_crater_carver_replaceables"));

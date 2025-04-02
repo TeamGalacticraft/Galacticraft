@@ -357,6 +357,7 @@ public interface Translations {
         String PREPARE_FOR_ENTRY = "ui.galacticraft.prepare_for_entry";
         String TRAVELING_TO = "ui.galacticraft.traveling_to";
         String TOTAL_NUTRITION = "ui.galacticraft.total_nutrition";
+        String SPACE_STATION_NAME = "ui.galacticraft.space_station_name";
     }
 
     interface Boss {

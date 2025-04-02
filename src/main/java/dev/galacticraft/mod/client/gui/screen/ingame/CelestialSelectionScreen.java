@@ -47,7 +47,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.item.ItemStack;
@@ -107,14 +106,14 @@ public class CelestialSelectionScreen extends CelestialScreen {
         if (body == null || body == celestialBodies.get(SOL)) {
             return I18n.get(Translations.Galaxy.MILKY_WAY); //fixme
         }
-        if (body.parent() != null) {
-            if (body.parent().value().parent() != null) {
-                return I18n.get(((TranslatableContents) body.parent().value().parent().value().name().getContents()).getKey());
+        if (body.parent().isPresent()) {
+            if (body.parentValue(celestialBodies).parent().isPresent()) {
+                return I18n.get(((TranslatableContents) body.parentValue(celestialBodies).parentValue(celestialBodies).name().getContents()).getKey());
             } else {
-                return I18n.get(((TranslatableContents) body.galaxy().value().name().getContents()).getKey());
+                return I18n.get(((TranslatableContents) body.galaxyValue(galaxies, celestialBodies).name().getContents()).getKey());
             }
         } else {
-            return I18n.get(((TranslatableContents) body.galaxy().value().name().getContents()).getKey());
+            return I18n.get(((TranslatableContents) body.galaxyValue(galaxies, celestialBodies).name().getContents()).getKey());
         }
     }
 
@@ -122,14 +121,14 @@ public class CelestialSelectionScreen extends CelestialScreen {
         if (this.selectedBody == null) return I18n.get(Translations.CelestialBody.SOL); //fixme
         if (this.selectedBody == celestialBodies.get(SOL))
             return I18n.get(Translations.CelestialBody.SOL);
-        if (this.selectedBody.parent() != null)
-            return I18n.get(((TranslatableContents) this.selectedBody.parent().value().name().getContents()).getKey());
-        return I18n.get(((TranslatableContents) this.selectedBody.galaxy().value().name().getContents()).getKey());
+        if (this.selectedBody.parent().isPresent())
+            return I18n.get(((TranslatableContents) this.selectedBody.parentValue(celestialBodies).name().getContents()).getKey());
+        return I18n.get(((TranslatableContents) this.selectedBody.galaxyValue(galaxies, celestialBodies).name().getContents()).getKey());
     }
 
     protected List<CelestialBody<?, ?>> getChildren(CelestialBody<?, ?> celestialBody) {
         if (celestialBody != null) {
-            List<CelestialBody<?, ?>> list = celestialBodies.stream().filter(celestialBodyType -> celestialBodyType.parent() != null && celestialBodyType.parent().value() == celestialBody).collect(Collectors.toList());
+            List<CelestialBody<?, ?>> list = celestialBodies.stream().filter(celestialBodyType -> celestialBodyType.parent().isPresent() && celestialBodyType.parentValue(celestialBodies) == celestialBody).collect(Collectors.toList());
             list.addAll(getVisibleSatellitesForCelestialBody(celestialBody));
             list.sort((o1, o2) -> Float.compare(o1.position().lineScale(), o2.position().lineScale()));
             return list;
@@ -195,8 +194,13 @@ public class CelestialSelectionScreen extends CelestialScreen {
     }
 
     protected boolean canCreateSpaceStation(CelestialBody<?, ?> atBody) {
-        if (!(atBody.type() instanceof Orbitable orbitable) || orbitable.satelliteRecipe(atBody.config()) == null)
+        if (!atBody.type().isOrbitable()) {
             return false;
+        }
+        SatelliteRecipe recipe = ((Orbitable) atBody.type()).satelliteRecipe(atBody.config());
+        if (recipe == null) {
+            return false;
+        }
         if (this.mapMode/* || ConfigManagerCore.disableSpaceStationCreation.get()*/ || !this.canCreateStations) //todo SSconfig
         {
             return false;
@@ -211,7 +215,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
         assert this.minecraft != null;
         assert this.minecraft.level != null;
         for (CelestialBody<SatelliteConfig, SatelliteType> type : ((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().values()) {
-            if (type.parent().value() == atBody) {
+            if (type.parentValue(celestialBodies) == atBody) {
                 assert this.minecraft.player != null;
                 if (type.type().ownershipData(type.config()).owner().equals(this.minecraft.player.getUUID())) {
                     foundSatellite = true;
@@ -236,7 +240,12 @@ public class CelestialSelectionScreen extends CelestialScreen {
             if (this.data == null || this.data.canTravel(manager, this.fromBody, this.selectedBody)) {
                 try {
                     assert this.minecraft != null;
-                    ClientPlayNetworking.send(new PlanetTeleportPayload(celestialBodies.getKey(this.selectedBody)));
+                    if (this.selectedBody.type().isSatellite()) {
+                        SatelliteConfig config = (SatelliteConfig) this.selectedBody.config();
+                        ClientPlayNetworking.send(new PlanetTeleportPayload(config.getId()));
+                    } else {
+                        ClientPlayNetworking.send(new PlanetTeleportPayload(celestialBodies.getKey(this.selectedBody)));
+                    }
                     this.minecraft.setScreen(new SpaceTravelScreen(isSatellite(selectedBody) ? ((Satellite) this.selectedBody.type()).getCustomName(this.selectedBody.config()).getString() : ((TranslatableContents) this.selectedBody.name().getContents()).getKey(), ((Landable) this.selectedBody.type()).world(this.selectedBody.config())));
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -273,7 +282,8 @@ public class CelestialSelectionScreen extends CelestialScreen {
                         assert this.minecraft.player != null;
                         if (recipe.test(this.minecraft.player.getInventory()) || this.minecraft.player.isCreative()) {
 //                            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_BIND_SPACE_STATION_ID, GCCoreUtil.getWorld(this.minecraft.level), new Object[]{this.selectedBody.getWorld()}));
-                            ClientPlayNetworking.send(new SatelliteCreationPayload(celestialBodies.getHolderOrThrow(celestialBodies.getResourceKey(this.selectedBody).get())));
+                            SatelliteCreationPayload payload = new SatelliteCreationPayload(this.selectedBody.getKey(celestialBodies));
+                            ClientPlayNetworking.send(payload);
                             //Zoom in on planet to show the new SpaceStation if not already zoomed
                             if (!this.isZoomed()) {
                                 this.selectionState = EnumSelection.ZOOMED;
@@ -722,7 +732,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
         try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION_1, 512)) {
             CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody;
-            int stationListSize = (int) ((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().values().stream().filter(s -> s.parent().value() == this.selectedBody.parent().value()).count();
+            int stationListSize = (int) ((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().values().stream().filter(s -> s.parentValue(celestialBodies) == this.selectedBody.parentValue(celestialBodies)).count();
 
             max = Math.min((this.height / 2) / 14, stationListSize);
             texture.blit(RHS - 95, LHS, 95, 53, this.selectedStationOwner.isEmpty() ? 95 : 0, 186, 95, 53, BLUE);
@@ -907,7 +917,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
         if (selectedBody == null || selectedBody.type() instanceof Satellite) return Collections.emptyList();
         List<CelestialBody<SatelliteConfig, SatelliteType>> list = new LinkedList<>();
         for (CelestialBody<SatelliteConfig, SatelliteType> satellite : ((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().values()) {
-            if (satellite.parent().value() == selectedBody && satellite.type().ownershipData(satellite.config()).canAccess(this.minecraft.player)) {
+            if (satellite.parentValue(celestialBodies) == selectedBody && satellite.type().ownershipData(satellite.config()).canAccess(this.minecraft.player)) {
                 list.add(satellite);
             }
         }
