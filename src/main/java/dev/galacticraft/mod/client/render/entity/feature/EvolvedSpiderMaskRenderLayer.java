@@ -43,13 +43,12 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
-public class EvolvedSpiderGearRenderLayer<T extends EvolvedSpiderEntity, M extends SpiderModel<T>> extends RenderLayer<T, M> {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/entity/oxygen_gear.png");
+public class EvolvedSpiderMaskRenderLayer<T extends EvolvedSpiderEntity, M extends SpiderModel<T>> extends RenderLayer<T, M> {
+    private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/spider_gear.png");
     private final @Nullable ModelPart mask;
-    private final @Nullable ModelPart tank;
     private final @Nullable ModelPart pipe;
 
-    public EvolvedSpiderGearRenderLayer(RenderLayerParent<T, M> context) {
+    public EvolvedSpiderMaskRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
         ModelPart root, head, body;
         if (context.getModel() instanceof HierarchicalModel<?> model) {
@@ -58,19 +57,16 @@ public class EvolvedSpiderGearRenderLayer<T extends EvolvedSpiderEntity, M exten
             body = root.getChild("body1");
         } else {
             this.mask = null;
-            this.tank = null;
             this.pipe = null;
             return;
         }
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
         if (head != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 10).addBox(-5.0F, -9.0F, -5.0F, 10, 10, 10, CubeDeformation.NONE), PartPose.offset(head.x, head.y, head.z));
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -9.0F, -5.0F, 10, 10, 10, CubeDeformation.NONE), PartPose.offset(head.x, head.y, head.z));
         }
-
         if (body != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -5.0F, 4.01F, 8, 6, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 17).addBox(-2.0F, -10.0F, -12.0F, 4, 5, 8, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 3).addBox(-2.0F, -14.0F, 4.0F, 4, 11, 6, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
         }
 
         root = modelPartData.bake(64, 32);
@@ -82,11 +78,9 @@ public class EvolvedSpiderGearRenderLayer<T extends EvolvedSpiderEntity, M exten
         }
 
         if (body != null) {
-            this.tank = root.getChild(Constant.ModelPartName.OXYGEN_TANK);
             this.pipe = root.getChild(Constant.ModelPartName.OXYGEN_PIPE);
-            this.tank.xRot = (float) (Math.PI / 2.0);
+            this.pipe.xRot = (float) (Math.PI / 2.0);
         } else {
-            this.tank = null;
             this.pipe = null;
         }
     }
@@ -100,10 +94,7 @@ public class EvolvedSpiderGearRenderLayer<T extends EvolvedSpiderEntity, M exten
             this.mask.xRot = (headPitch + 90.0F) * (float) (Math.PI / 180.0);
             this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
-
-        if (this.tank != null) {
-            assert this.pipe != null;
-            this.tank.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+        if (this.pipe != null) {
             this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
     }
