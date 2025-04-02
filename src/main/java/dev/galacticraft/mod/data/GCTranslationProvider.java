@@ -30,7 +30,6 @@ import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
-import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.world.biome.GCBiomes;
@@ -1004,6 +1003,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.TRAVELING_TO, "Traveling to: %s");
 
         this.add(Ui.TOTAL_NUTRITION, "Total Nutrition: %s");
+        this.add(Ui.SPACE_STATION_NAME, "%s's Space Station");
     }
 
     protected void generateStatsTranslations() {

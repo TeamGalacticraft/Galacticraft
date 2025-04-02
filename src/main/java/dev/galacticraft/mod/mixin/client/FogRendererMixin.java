@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.mixin.client;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.render.dimension.OverworldRenderer;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
@@ -39,7 +40,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import com.llamalad7.mixinextras.sugar.Local;
 
 @Mixin(FogRenderer.class)
 public class FogRendererMixin {

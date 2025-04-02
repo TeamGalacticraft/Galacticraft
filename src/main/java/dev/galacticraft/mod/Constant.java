@@ -31,6 +31,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
@@ -578,8 +579,6 @@ public interface Constant {
         ResourceLocation OVERLAY = id("textures/gui/overlay.png");
         ResourceLocation WARNING_SIGN = id("textures/gui/warning.png");
 
-        ResourceLocation MAP_SCREEN = id("textures/gui/map.png");
-        ResourceLocation PLANET_ICONS = id("textures/gui/planet_icons.png");
         ResourceLocation BUBBLE_DISTRIBUTOR_SCREEN = id("textures/gui/oxygen_bubble_distributor_screen.png");
         ResourceLocation OXYGEN_COMPRESSOR_SCREEN = id("textures/gui/oxygen_compressor_screen.png");
         ResourceLocation FOOD_CANNER_SCREEN = id("textures/gui/food_canner_screen.png");
@@ -589,6 +588,112 @@ public interface Constant {
         ResourceLocation SOLAR_PANEL_DAY = id("textures/gui/solar_panel/day.png");
         ResourceLocation SOLAR_PANEL_NIGHT = id("textures/gui/solar_panel/night.png");
         ResourceLocation SOLAR_PANEL_BLOCKED = id("textures/gui/solar_panel/blocked.png");
+    }
+
+    interface CelestialScreen {
+        ResourceLocation CELESTIAL_SELECTION = id("textures/gui/celestial_selection.png");
+        ResourceLocation CELESTIAL_SELECTION_1 = id("textures/gui/celestial_selection_1.png");
+        ResourceLocation SELECTION_CURSOR = id("textures/gui/selection_cursor.png");
+
+        ResourceLocation SOL = id("sol");
+
+        // String colours
+        int BLACK = FastColor.ARGB32.color(255, 0, 0, 0);
+        int GREY3 = FastColor.ARGB32.color(255, 120, 120, 120);
+        int GREY4 = FastColor.ARGB32.color(255, 140, 140, 140);
+        int GREY5 = FastColor.ARGB32.color(255, 150, 150, 150);
+        int GREY6 = FastColor.ARGB32.color(255, 165, 165, 165);
+        int WHITE = FastColor.ARGB32.color(255, 255, 255, 255);
+        int RED = FastColor.ARGB32.color(255, 255, 0, 0);
+        int RED3 = FastColor.ARGB32.color(255, 255, 100, 100);
+        int GREEN = FastColor.ARGB32.color(255, 0, 255, 0);
+        int GREEN1 = FastColor.ARGB32.color(255, 0, 255, 25);
+        int BLUE = FastColor.ARGB32.color(255, 0, 153, 255);
+        int YELLOW = FastColor.ARGB32.color(255, 255, 255, 0);
+
+        int BORDER_EDGE_TOP_LEFT = FastColor.ARGB32.color(255, 40, 40, 40);
+        int BORDER_EDGE_BOTTOM_RIGHT = FastColor.ARGB32.color(255, 80, 80, 80);
+        int BORDER_GREY = FastColor.ARGB32.color(255, 100, 100, 100);
+        int BORDER_Z = 9900;
+
+        int MAX_SPACE_STATION_NAME_LENGTH = 32;
+
+        int SELECTION_CURSOR_U = 0;
+        int SELECTION_CURSOR_V = 0;
+        int SELECTION_CURSOR_SIZE = 64;
+
+        int SIDE_PANEL_U = 0;
+        int SIDE_PANEL_V = 0;
+        int SIDE_PANEL_WIDTH = 95;
+        int SIDE_PANEL_HEIGHT = 137;
+
+        int CATALOG_U = 0;
+        int CATALOG_V = 197;
+        int CATALOG_WIDTH = 74;
+        int CATALOG_HEIGHT = 11;
+
+        int CATALOG_BACKING_U = 0;
+        int CATALOG_BACKING_V = 221;
+        int CATALOG_BACKING_WIDTH = 83;
+        int CATALOG_BACKING_HEIGHT = 12;
+
+        int ZOOM_INFO_TAB_U = 134;
+        int ZOOM_INFO_TAB_V = 67;
+        int ZOOM_INFO_TAB_WIDTH = 83;
+        int ZOOM_INFO_TAB_HEIGHT = 38;
+
+        int PROFILE_UPPER_TAB_U = 134;
+        int PROFILE_UPPER_TAB_V = 0;
+        int PROFILE_UPPER_TAB_WIDTH = 86;
+        int PROFILE_UPPER_TAB_HEIGHT = 15;
+
+        int PARENT_LABEL_U = 134;
+        int PARENT_LABEL_V = 151;
+        int PARENT_LABEL_WIDTH = 95;
+        int PARENT_LABEL_HEIGHT = 41;
+
+        int GRANDPARENT_LABEL_U = 134;
+        int GRANDPARENT_LABEL_V = 193;
+        int GRANDPARENT_LABEL_WIDTH = 93;
+        int GRANDPARENT_LABEL_HEIGHT = 17;
+
+        int SIDE_BUTTON_U = 134;
+        int SIDE_BUTTON_V = 223;
+        int SIDE_BUTTON_WIDTH = 92;
+        int SIDE_BUTTON_HEIGHT = 12;
+
+        int SIDE_BUTTON_GRADIENT_U = 0;
+        int SIDE_BUTTON_GRADIENT_V = 234;
+        int SIDE_BUTTON_GRADIENT_WIDTH = 86;
+        int SIDE_BUTTON_GRADIENTn_HEIGHT = 20;
+
+        int TOP_RIGHT_ACTION_BUTTON_U = 134;
+        int TOP_RIGHT_ACTION_BUTTON_V = 211;
+        int TOP_RIGHT_ACTION_BUTTON_WIDTH = 74;
+        int TOP_RIGHT_ACTION_BUTTON_HEIGHT = 11;
+
+        int TOPBAR_U = 134;
+        int TOPBAR_V = 138;
+        int TOPBAR_WIDTH = 94;
+        int TOPBAR_HEIGHT = 12;
+
+        int TOPBAR_SUB_U = 0;
+        int TOPBAR_SUB_V = 209;
+        int TOPBAR_SUB_WIDTH = 94;
+        int TOPBAR_SUB_HEIGHT = 11;
+
+        int CREATE_SS_PANEL_U = 0;
+        int CREATE_SS_PANEL_V = 137;
+        int CREATE_SS_PANEL_WIDTH = 93;
+        int CREATE_SS_PANEL_HEIGHT = 47;
+        int CREATE_SS_PANEL_CAP_U = 0;
+        int CREATE_SS_PANEL_CAP_V = 185;
+        int CREATE_SS_PANEL_CAP_WIDTH = 61;
+        int CREATE_SS_PANEL_CAP_HEIGHT = 4;
+        int CREATE_SS_PANEL_BUTTON_U = 134;
+        int CREATE_SS_PANEL_BUTTON_V = 236;
+        int CREATE_SS_PANEL_BUTTON_WIDTH = 93;
+        int CREATE_SS_PANEL_BUTTON_HEIGHT = 12;
     }
 
     interface CelestialBody {

@@ -83,6 +83,13 @@ public interface StreamCodecs {
         );
     }
 
+    public static <T> StreamCodec<RegistryFriendlyByteBuf, ResourceKey<T>> ofResourceKey(ResourceKey<? extends Registry<T>> registryKey) {
+        return StreamCodec.of(
+                (buf, key) -> buf.writeResourceLocation(key.location()),
+                buf -> ResourceKey.create(registryKey, buf.readResourceLocation())
+        );
+    }
+
     static <B, C, T1, T2, T3, T4, T5, T6, T7> StreamCodec<B, C> composite(
             StreamCodec<? super B, T1> codec1, Function<C, T1> from1, StreamCodec<? super B, T2> codec2, Function<C, T2> from2,
             StreamCodec<? super B, T3> codec3, Function<C, T3> from3, StreamCodec<? super B, T4> codec4, Function<C, T4> from4,
