@@ -38,6 +38,25 @@ import java.util.function.Function;
  * Helper class to make registering things cleaner
  */
 public class GCRegistry<T> {
+    public static final DyeColor[] COLOR_ORDER = {
+        DyeColor.WHITE,
+        DyeColor.LIGHT_GRAY,
+        DyeColor.GRAY,
+        DyeColor.BLACK,
+        DyeColor.BROWN,
+        DyeColor.RED,
+        DyeColor.ORANGE,
+        DyeColor.YELLOW,
+        DyeColor.LIME,
+        DyeColor.GREEN,
+        DyeColor.CYAN,
+        DyeColor.LIGHT_BLUE,
+        DyeColor.BLUE,
+        DyeColor.PURPLE,
+        DyeColor.MAGENTA,
+        DyeColor.PINK
+    };
+
     private final Registry<T> registry;
     private final List<Holder.Reference<T>> entries = new ArrayList<>();
 
@@ -62,7 +81,7 @@ public class GCRegistry<T> {
 
     public <V extends T> ColorSet<V> registerColored(String id, Function<DyeColor, V> consumer) {
         ImmutableMap.Builder<DyeColor, V> colorMap = new ImmutableMap.Builder<>();
-        for (DyeColor color : DyeColor.values()) {
+        for (DyeColor color : COLOR_ORDER) {
             colorMap.put(color, register(color.getName() + '_' + id, consumer.apply(color)));
         }
 

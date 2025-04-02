@@ -73,12 +73,12 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         for (DecorationSet decorationSet : GCBlocks.BLOCKS.getDecorations()) {
             this.dropSelf(decorationSet.block());
-            this.dropSelf(decorationSet.slab());
             this.dropSelf(decorationSet.stairs());
+            this.dropSelf(decorationSet.slab());
             this.dropSelf(decorationSet.wall());
             this.dropSelf(decorationSet.detailedBlock());
-            this.dropSelf(decorationSet.detailedSlab());
             this.dropSelf(decorationSet.detailedStairs());
+            this.dropSelf(decorationSet.detailedSlab());
             this.dropSelf(decorationSet.detailedWall());
         }
 
