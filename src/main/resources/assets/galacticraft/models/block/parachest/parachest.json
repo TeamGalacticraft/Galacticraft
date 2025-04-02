@@ -1,7 +1,7 @@
 {
   "parent": "block/block",
   "textures": {
-    "particle": "galacticraft:block/parachest",
+    "particle": "minecraft:block/oak_planks",
     "texture": "galacticraft:block/parachest"
   },
   "display": {

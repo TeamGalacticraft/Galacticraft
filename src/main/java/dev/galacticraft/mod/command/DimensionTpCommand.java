@@ -26,6 +26,8 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.tree.CommandNode;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
@@ -54,7 +56,7 @@ import java.util.Collections;
 
 public class DimensionTpCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal(Constant.Command.DIMENSION_TP)
+        LiteralCommandNode literalCommandNode = dispatcher.register(Commands.literal(Constant.Command.DIMENSION_TP)
                 .requires(stack -> stack.hasPermission(2))
                 .executes(DimensionTpCommand::openCelestialScreen)
                 .then(Commands.argument("dimension", DimensionArgument.dimension())
@@ -70,7 +72,9 @@ public class DimensionTpCommand {
         );
 
         dispatcher.register(Commands.literal(Constant.Command.DIMTP)
-                .redirect(dispatcher.getRoot().getChild(Constant.Command.DIMENSION_TP))
+                .requires(stack -> stack.hasPermission(2))
+                .executes(DimensionTpCommand::openCelestialScreen)
+                .redirect((CommandNode) literalCommandNode)
         );
     }
 
