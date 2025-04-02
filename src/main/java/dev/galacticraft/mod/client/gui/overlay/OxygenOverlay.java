@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.client.gui.overlay;
 
+import com.mojang.blaze3d.platform.Window;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.machinelib.api.util.StorageHelper;
@@ -29,7 +30,6 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
 import dev.galacticraft.mod.util.DrawableUtil;
 import dev.galacticraft.mod.util.Translations;
-import com.mojang.blaze3d.platform.Window;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -39,10 +39,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.FastColor;
-import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 
 public class OxygenOverlay {

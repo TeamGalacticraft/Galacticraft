@@ -29,7 +29,6 @@ import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
 public class AsteroidSkyRenderer extends SpaceSkyRenderer {
