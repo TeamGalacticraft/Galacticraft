@@ -41,5 +41,14 @@ public class GCStructureTagProvider extends FabricTagProvider<Structure> {
     protected void addTags(HolderLookup.Provider arg) {
         this.getOrCreateTagBuilder(GCTags.MOON_RUINS)
                 .add(GCStructures.Moon.RUINS);
+
+        this.getOrCreateTagBuilder(GCTags.COMMON_METEOR)
+                .add(GCStructures.Meteors.SMALL_METEOR);
+
+        this.getOrCreateTagBuilder(GCTags.UNCOMMON_METEOR)
+                .add(GCStructures.Meteors.LARGE_METEOR);
+
+        this.getOrCreateTagBuilder(GCTags.RARE_METEORS)
+                .add(GCStructures.Meteors.EXTREME_METEOR);
     }
 }
