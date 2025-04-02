@@ -127,7 +127,7 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
                 GCTags.INFINIBURN_SATELLITE, // infiniburn
                 Constant.id("satellite"), // effectsLocation
                 0, // ambientLight
-                new DimensionType.MonsterSettings(false, true, UniformInt.of(0, 7), 0)
+                new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)
         );
         SatelliteChunkGenerator chunkGenerator = new SatelliteChunkGenerator(server.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(GCBiomes.SPACE), structure);
         SatelliteOwnershipData ownershipData = SatelliteOwnershipData.create(player.getUUID(), player.getScoreboardName(), new LinkedList<>(), false);
