@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Constant.Block;
 import dev.galacticraft.mod.content.block.entity.*;
 import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.content.block.entity.networked.FluidPipeWalkwayBlockEntity;
@@ -81,6 +82,7 @@ public class GCBlockEntityTypes {
 
     public static final BlockEntityType<AirlockControllerBlockEntity> AIRLOCK_CONTROLLER = BlockEntityType.Builder.of(AirlockControllerBlockEntity::new, GCBlocks.AIR_LOCK_CONTROLLER).build();
     public static final BlockEntityType<RocketWorkbenchBlockEntity> ROCKET_WORKBENCH = BlockEntityType.Builder.of(RocketWorkbenchBlockEntity::new, GCBlocks.ROCKET_WORKBENCH).build();
+    public static final BlockEntityType<TransportTubeBlockEntity> TRANSPORT_TUBE = BLOCK_ENTITIES.register(Block.PLAYER_TRANSPORT_TUBE, BlockEntityType.Builder.of(TransportTubeBlockEntity::new, GCBlocks.PLAYER_TRANSPORT_TUBE).build());
 
     public static void register() {
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.COAL_GENERATOR), COAL_GENERATOR);

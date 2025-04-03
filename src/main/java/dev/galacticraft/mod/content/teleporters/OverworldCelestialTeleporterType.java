@@ -28,7 +28,7 @@ import dev.galacticraft.api.universe.celestialbody.landable.teleporter.config.Ce
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.type.CelestialTeleporterType;
 import dev.galacticraft.impl.universe.celestialbody.config.PlanetConfig;
 import dev.galacticraft.impl.universe.celestialbody.landable.teleporter.config.DefaultCelestialTeleporterConfig;
-import dev.galacticraft.mod.attachments.GCServerPlayer;
+import dev.galacticraft.mod.attachments.GCPlayer;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.ParachestEntity;
 import dev.galacticraft.mod.content.item.ParachuteItem;
@@ -58,7 +58,7 @@ public class OverworldCelestialTeleporterType<Config extends CelestialTeleporter
                     }
                 }
                 
-                var gcPlayer = GCServerPlayer.get(player);
+                var gcPlayer = GCPlayer.get(player);
                 var rocketInv = gcPlayer.getRocketStacks();
                 ParachestEntity chest = new ParachestEntity(GCEntityTypes.PARACHEST, level, rocketInv, color, gcPlayer.getFuel());
                 rocketInv.clear();

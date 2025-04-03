@@ -32,7 +32,7 @@ import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.FuelDock;
-import dev.galacticraft.mod.attachments.GCServerPlayer;
+import dev.galacticraft.mod.attachments.GCPlayer;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
@@ -425,7 +425,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                     this.setLaunchStage(LaunchStage.LAUNCHED);
                     if (this.getLinkedPad() != BlockPos.ZERO) {
                         if (passenger instanceof ServerPlayer player) {
-                            GCServerPlayer gcPlayer = GCServerPlayer.get(player);
+                            GCPlayer gcPlayer = GCPlayer.get(player);
                             gcPlayer.setRocketData(this.getRocketData());
                             gcPlayer.setLaunchpadStack(new ItemStack(GCBlocks.ROCKET_LAUNCH_PAD, 9));
                         }
@@ -484,7 +484,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                 if (this.position().y() >= 1200.0F) {
                     for (Entity entity : getPassengers()) {
                         if (entity instanceof ServerPlayer serverPlayer) {
-                            GCServerPlayer gcPlayer = GCServerPlayer.get(serverPlayer);
+                            GCPlayer gcPlayer = GCPlayer.get(serverPlayer);
                             gcPlayer.setRocketStacks(NonNullList.withSize(2, ItemStack.EMPTY)); // TODO un-hardcode this
                             gcPlayer.setFuel(this.tank.getAmount());
                             var rocket = new ItemStack(GCItems.ROCKET);

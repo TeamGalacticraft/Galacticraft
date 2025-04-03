@@ -26,7 +26,7 @@ import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.entity.IgnoreShift;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.attachments.GCServerPlayer;
+import dev.galacticraft.mod.attachments.GCPlayer;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.entity.ControllableEntity;
@@ -89,7 +89,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
     public LanderEntity(ServerPlayer player) {
         this(GCEntityTypes.LANDER, player.level());
 
-        GCServerPlayer gcPlayer = GCServerPlayer.get(player);
+        GCPlayer gcPlayer = GCPlayer.get(player);
         this.inventory = NonNullList.withSize(gcPlayer.getRocketStacks().size() + 1, ItemStack.EMPTY);
         this.storage = InventoryStorage.of(this, null);
         this.tank.variant = FluidVariant.of(GCFluids.FUEL);

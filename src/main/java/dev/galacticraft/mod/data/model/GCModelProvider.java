@@ -232,7 +232,7 @@ public class GCModelProvider extends FabricModelProvider {
 
         // MISC MACHINES
 //        generator.createNonTemplateModelBlock(GCBlocks.CRYOGENIC_CHAMBER);
-        generator.createNonTemplateModelBlock(GCBlocks.PLAYER_TRANSPORT_TUBE);
+        createTransportTubeVariant(generator, GCBlocks.PLAYER_TRANSPORT_TUBE);
 
         //todo gen models (not just blockstates)
         MachineModelGenerator.setupMachineBaseTextures(generator, Constant.MOD_ID, MachineTextureBase.prefixed(Constant.MOD_ID, "block/machine"));
@@ -369,6 +369,26 @@ public class GCModelProvider extends FabricModelProvider {
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(MachineBlock.ACTIVE)
                 .generate(i -> Variant.variant().with(VariantProperties.MODEL, i ? active : inactive)
         )));
+    }
+
+    public final void createTransportTubeVariant(BlockModelGenerators generator, Block block) {
+
+        generator.blockStateOutput
+                .accept(
+                        MultiVariantGenerator.multiVariant(block,
+                                Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block)))
+                                .with(createFacingDispatch())
+                );
+    }
+
+    public static PropertyDispatch createFacingDispatch() {
+        return PropertyDispatch.property(BlockStateProperties.FACING)
+                .select(Direction.DOWN, Variant.variant())
+                .select(Direction.UP, Variant.variant())
+                .select(Direction.NORTH, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90))
+                .select(Direction.SOUTH, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90))
+                .select(Direction.WEST, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R90).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90))
+                .select(Direction.EAST, Variant.variant().with(VariantProperties.X_ROT, VariantProperties.Rotation.R270).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90));
     }
 
     private static void createOxygenCompressor(BlockModelGenerators generator, Block compressor) {

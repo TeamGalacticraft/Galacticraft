@@ -20,19 +20,35 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.attachments;
+package dev.galacticraft.mod.content.block.entity;
 
-import dev.galacticraft.mod.Constant.Attachments;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
-@SuppressWarnings("UnstableApiUsage")
-public final class GCAttachments {
-    public static final AttachmentType<GCPlayer> PLAYER = AttachmentRegistry.create(Attachments.SERVER_PLAYER, builder ->
-            builder.persistent(GCPlayer.CODEC)
-            .copyOnDeath());
+public class TransportTubeBlockEntity extends BlockEntity {
+    private BlockPos connectionPos;
+    private boolean isOwner = false;
+    public TransportTubeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
+    }
 
-    public static final AttachmentType<GCClientPlayer> CLIENT_PLAYER = AttachmentRegistry.create(Attachments.CLIENT_PLAYER);
+    public TransportTubeBlockEntity(BlockPos pos, BlockState state) {
+        this(GCBlockEntityTypes.TRANSPORT_TUBE, pos, state);
+    }
 
-    public static final AttachmentType<GCLevel> LEVEL = AttachmentRegistry.create(Attachments.LEVEL);
+    public void addConnection(BlockPos pos, boolean isOwner) {
+        this.connectionPos = pos;
+        this.isOwner = isOwner;
+    }
+
+    public BlockPos getConnectionPos() {
+        return this.connectionPos;
+    }
+
+    public boolean isOwner() {
+        return isOwner;
+    }
 }

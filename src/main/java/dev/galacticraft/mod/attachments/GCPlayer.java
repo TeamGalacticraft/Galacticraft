@@ -25,33 +25,35 @@ package dev.galacticraft.mod.attachments;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.rocket.RocketData;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 import java.util.Optional;
 
-public class GCServerPlayer {
+@SuppressWarnings("UnstableApiUsage")
+public class GCPlayer {
     private RocketData rocketData;
     public NonNullList<ItemStack> stacks = NonNullList.withSize(2, ItemStack.EMPTY);
     public long fuel;
+    private boolean buildingHyperloop = false;
+    private BlockPos startLinkPos = null;
 
-    public static final Codec<GCServerPlayer> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<GCPlayer> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             RocketData.CODEC.optionalFieldOf("rocket_data").forGetter(o -> Optional.ofNullable(o.rocketData)),
-            Codec.LONG.fieldOf("fuel").forGetter(GCServerPlayer::getFuel),
-            ItemStack.OPTIONAL_CODEC.listOf().fieldOf("rocket_stacks").forGetter(GCServerPlayer::getRocketStacks)
-    ).apply(instance, (data, fuel, stacks) -> new GCServerPlayer(data.orElse(null), fuel, stacks)));
+            Codec.LONG.fieldOf("fuel").forGetter(GCPlayer::getFuel),
+            ItemStack.OPTIONAL_CODEC.listOf().fieldOf("rocket_stacks").forGetter(GCPlayer::getRocketStacks)
+    ).apply(instance, (data, fuel, stacks) -> new GCPlayer(data.orElse(null), fuel, stacks)));
 
-    public static GCServerPlayer get(ServerPlayer player) {
-        return player.getAttachedOrCreate(GCAttachments.SERVER_PLAYER, () -> new GCServerPlayer(player));
+    public static GCPlayer get(Player player) {
+        return player.getAttachedOrCreate(GCAttachments.PLAYER, GCPlayer::new);
     }
 
+    public GCPlayer() {}
 
-    public GCServerPlayer(ServerPlayer player) {
-    }
-
-    public GCServerPlayer(RocketData data, long fuel, List<ItemStack> stacks) {
+    public GCPlayer(RocketData data, long fuel, List<ItemStack> stacks) {
         this.rocketData = data;
         this.fuel = fuel;
         this.stacks = NonNullList.of(ItemStack.EMPTY, stacks.toArray(ItemStack[]::new));
@@ -93,5 +95,21 @@ public class GCServerPlayer {
             if (getRocketStacks().get(stack).isEmpty())
                 if (stack == getRocketStacks().size() - 2)
                     getRocketStacks().set(stack, launchpad == null ? ItemStack.EMPTY : launchpad);
+    }
+
+    public boolean isBuildingHyperloop() {
+        return buildingHyperloop;
+    }
+
+    public void setBuildingHyperloop(boolean buildingHyperloop) {
+        this.buildingHyperloop = buildingHyperloop;
+    }
+
+    public BlockPos getStartLinkPos() {
+        return startLinkPos;
+    }
+
+    public void setStartLinkPos(BlockPos startLinkPos) {
+        this.startLinkPos = startLinkPos;
     }
 }

@@ -104,7 +104,7 @@ public class UnbakedObjModel implements GCUnbakedModel {
                     int vtx = Math.min(i, face.getNumVertices() - 1);
                     FloatTuple pos = obj.getVertex(face.getVertexIndex(vtx));
                     emitter.pos(i, pos.getX(), pos.getY(), pos.getZ());
-                    emitter.color(i, FastColor.ARGB32.color(255, 255, 255));
+                    emitter.color(i, 0xFFFFFFFF);
 
                     TextureAtlasSprite sprite = material.sprite();
 

@@ -32,5 +32,6 @@ public class GCBlockEntityRenderer {
         BlockEntityRenderers.register(GCBlockEntityTypes.ADVANCED_SOLAR_PANEL, AdvancedSolarPanelBlockEntityRenderer::new);
         BlockEntityRenderers.register(GCBlockEntityTypes.GLASS_FLUID_PIPE, FluidPipeBlockEntityRenderer::new);
         BlockEntityRenderers.register(GCBlockEntityTypes.OXYGEN_BUBBLE_DISTRIBUTOR, BubbleDistributorRenderer::new);
+        BlockEntityRenderers.register(GCBlockEntityTypes.TRANSPORT_TUBE, TransportTubeBlockEntityRenderer::new);
     }
 }

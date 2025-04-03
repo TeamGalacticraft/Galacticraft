@@ -1,7 +1,28 @@
 {
   "variants": {
-    "": {
+    "facing=down": {
       "model": "galacticraft:block/player_transport_tube"
+    },
+    "facing=east": {
+      "model": "galacticraft:block/player_transport_tube",
+      "x": 270,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "galacticraft:block/player_transport_tube",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "galacticraft:block/player_transport_tube",
+      "x": 90
+    },
+    "facing=up": {
+      "model": "galacticraft:block/player_transport_tube"
+    },
+    "facing=west": {
+      "model": "galacticraft:block/player_transport_tube",
+      "x": 90,
+      "y": 90
     }
   }
 }

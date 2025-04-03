@@ -22,17 +22,28 @@
 
 package dev.galacticraft.mod.attachments;
 
-import dev.galacticraft.mod.Constant.Attachments;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
-@SuppressWarnings("UnstableApiUsage")
-public final class GCAttachments {
-    public static final AttachmentType<GCPlayer> PLAYER = AttachmentRegistry.create(Attachments.SERVER_PLAYER, builder ->
-            builder.persistent(GCPlayer.CODEC)
-            .copyOnDeath());
+import java.util.concurrent.atomic.AtomicInteger;
 
-    public static final AttachmentType<GCClientPlayer> CLIENT_PLAYER = AttachmentRegistry.create(Attachments.CLIENT_PLAYER);
+public class GCLevel {
+    private static final AtomicInteger LOOP_COUNTER = new AtomicInteger();
+    private final Int2ObjectMap<Hyperloop> loops = new Int2ObjectOpenHashMap<>();
 
-    public static final AttachmentType<GCLevel> LEVEL = AttachmentRegistry.create(Attachments.LEVEL);
+    public static GCLevel get(Level level) {
+        return level.getAttachedOrCreate(GCAttachments.LEVEL, GCLevel::new);
+    }
+
+    public boolean buildHyperloop(BlockPos start, BlockPos end) {
+        loops.put(LOOP_COUNTER.getAndIncrement(), new Hyperloop(start, end));
+        return true;
+    }
+
+
+    public record Hyperloop(BlockPos start, BlockPos end) {
+
+    }
 }

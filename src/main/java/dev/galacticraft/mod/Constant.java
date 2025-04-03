@@ -945,8 +945,9 @@ public interface Constant {
     }
 
     interface Attachments {
-        String SERVER_PLAYER = "server_player";
-        String CLIENT_PLAYER = "client_player";
+        ResourceLocation SERVER_PLAYER = id("server_player");
+        ResourceLocation CLIENT_PLAYER = id("client_player");
+        ResourceLocation LEVEL = id("level");
     }
 
     interface Teleporters {
