@@ -121,7 +121,8 @@ public class VacuumGlassBakedModel implements BakedModel {
         RenderContext.QuadTransform glassTransform = quad -> {
             quad.spriteBake(this.glass, MutableQuadView.BAKE_LOCK_UV); //todo glass UVs
             return true;
-        };RenderContext.QuadTransform aluminumTransform = quad -> {
+        };
+        RenderContext.QuadTransform aluminumTransform = quad -> {
             quad.spriteBake(this.frame, MutableQuadView.BAKE_LOCK_UV);
             return true;
         };

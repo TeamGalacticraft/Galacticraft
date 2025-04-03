@@ -35,9 +35,9 @@ public interface PipeNetwork {
     /**
      * Updates the pipe's connection to the updated block
      *
-     * @param pipePos The pipe that is adjacent to the updated pos
-     * @param adjacentPos        The position of the block that was updated
-     * @param direction         The direction of the updated block
+     * @param pipePos     The pipe that is adjacent to the updated pos
+     * @param adjacentPos The position of the block that was updated
+     * @param direction   The direction of the updated block
      */
     void updateConnection(@NotNull BlockPos pipePos, @NotNull BlockPos adjacentPos, @NotNull Direction direction);
 

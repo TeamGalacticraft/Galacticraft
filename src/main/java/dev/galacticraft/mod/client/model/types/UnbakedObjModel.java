@@ -29,8 +29,6 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.*;
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
-import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
@@ -136,7 +134,8 @@ public class UnbakedObjModel implements GCUnbakedModel {
         }
     }
 
-    public record BakedMaterial(Mtl material, TextureAtlasSprite sprite) {}
+    public record BakedMaterial(Mtl material, TextureAtlasSprite sprite) {
+    }
 
     public static class ObjType implements GCModelType {
         public static final ResourceLocation ID = Constant.id("obj");

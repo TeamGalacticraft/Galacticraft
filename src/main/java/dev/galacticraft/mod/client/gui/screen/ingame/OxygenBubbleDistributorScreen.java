@@ -82,7 +82,7 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
             } else {
                 graphics.blit(Constant.ScreenTexture.OVERLAY, this.leftPos + 156, this.topPos + 16, Constant.TextureCoordinate.BUTTON_RED_HOVER_X, Constant.TextureCoordinate.BUTTON_RED_HOVER_Y, Constant.TextureCoordinate.BUTTON_WIDTH, Constant.TextureCoordinate.BUTTON_HEIGHT);
             }
-            graphics.drawString(this.font, Component.translatable(Translations.Ui.BUBBLE_NOT_VISIBLE), this.leftPos + 60 , this.topPos + 18, ChatFormatting.RED.getColor(), false);
+            graphics.drawString(this.font, Component.translatable(Translations.Ui.BUBBLE_NOT_VISIBLE), this.leftPos + 60, this.topPos + 18, ChatFormatting.RED.getColor(), false);
         } else {
             if (!DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 156, this.topPos + 16, Constant.TextureCoordinate.BUTTON_WIDTH, Constant.TextureCoordinate.BUTTON_HEIGHT)) {
                 graphics.blit(Constant.ScreenTexture.OVERLAY, this.leftPos + 156, this.topPos + 16, Constant.TextureCoordinate.BUTTON_GREEN_X, Constant.TextureCoordinate.BUTTON_GREEN_Y, Constant.TextureCoordinate.BUTTON_WIDTH, Constant.TextureCoordinate.BUTTON_HEIGHT);
@@ -142,7 +142,7 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
     private boolean checkClick(double mouseX, double mouseY, int button) {
         if (button == 0) {
             if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 156, this.topPos + 16, Constant.TextureCoordinate.BUTTON_WIDTH, Constant.TextureCoordinate.BUTTON_HEIGHT)) {
-                this.menu.bubbleVisible = ! this.menu.bubbleVisible;
+                this.menu.bubbleVisible = !this.menu.bubbleVisible;
                 ClientPlayNetworking.send(new BubbleVisibilityPayload(this.menu.bubbleVisible));
                 this.playButtonSound();
                 return true;

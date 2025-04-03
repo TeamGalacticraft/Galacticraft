@@ -150,8 +150,7 @@ public abstract class AbstractLaunchPad extends BaseEntityBlock {
                     updateMultiBlock(level, blockPos);
                     return;
                 }
-            }
-            else if (c == 3) {
+            } else if (c == 3) {
                 for (Direction primaryDir : CARDINAL) {
                     if (level.getBlockState(blockPos.relative(primaryDir)).is(this) && level.getBlockState(blockPos.relative(primaryDir.getOpposite())).is(this)) {
                         for (Direction secondaryDir : CARDINAL) {
@@ -164,8 +163,7 @@ public abstract class AbstractLaunchPad extends BaseEntityBlock {
                         }
                     }
                 }
-            }
-            else if (c == 2) {
+            } else if (c == 2) {
                 for (Direction primaryDir : CARDINAL) {
                     if (level.getBlockState(blockPos.relative(primaryDir)).is(this)) {
                         Direction[] secondaryDirs = primaryDir.getAxis() == Direction.Axis.Z ? new Direction[]{Direction.EAST, Direction.WEST} : new Direction[]{Direction.NORTH, Direction.SOUTH};
@@ -270,7 +268,7 @@ public abstract class AbstractLaunchPad extends BaseEntityBlock {
     }
 
     // returns true if the given block is the center of a valid 3x3 launchpad
-    private boolean isValid3x3 (Level level, BlockPos centerBlockPos) {
+    private boolean isValid3x3(Level level, BlockPos centerBlockPos) {
         // check if any blocks in 3x3 grid are not valid
         for (var x = -1; x <= 1; x++) {
             for (var z = -1; z <= 1; z++) {

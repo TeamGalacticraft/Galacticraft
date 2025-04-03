@@ -32,7 +32,9 @@ import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 public final class GcApiEntityAttributes {
     public static final Holder.Reference<Attribute> CAN_BREATHE_IN_SPACE = Registry.registerForHolder(BuiltInRegistries.ATTRIBUTE, Constant.id("can_breathe_in_space"), (new RangedAttribute("galacticraft.attribute.name.generic.can_breathe_in_space", 0.0D, 0.0D, 1.0D)).setSyncable(true));
 
-    private GcApiEntityAttributes() {}
+    private GcApiEntityAttributes() {
+    }
 
-    public static void init() {}
+    public static void init() {
+    }
 }

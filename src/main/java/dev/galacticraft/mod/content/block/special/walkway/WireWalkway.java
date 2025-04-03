@@ -142,8 +142,7 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
                         }
                         return;
                     }
-                }
-                else if (EnergyStorage.SIDED.find(level, blockPos.relative(direction), direction.getOpposite()) != null) {
+                } else if (EnergyStorage.SIDED.find(level, blockPos.relative(direction), direction.getOpposite()) != null) {
                     if (walkway.getConnections()[direction.ordinal()] != (walkway.getConnections()[direction.ordinal()] = true)) {
                         level.neighborChanged(blockPos.relative(direction), blockState.getBlock(), blockPos);
                         level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);

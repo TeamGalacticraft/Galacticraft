@@ -39,7 +39,8 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record OpenCelestialScreenPayload(@Nullable RocketData data, Holder<CelestialBody<?, ?>> celestialBody) implements S2CPayload {
+public record OpenCelestialScreenPayload(@Nullable RocketData data,
+                                         Holder<CelestialBody<?, ?>> celestialBody) implements S2CPayload {
     public static final StreamCodec<RegistryFriendlyByteBuf, OpenCelestialScreenPayload> STREAM_CODEC = StreamCodec.composite(
             StreamCodecs.ofNullable(RocketData.STREAM_CODEC),
             p -> p.data,

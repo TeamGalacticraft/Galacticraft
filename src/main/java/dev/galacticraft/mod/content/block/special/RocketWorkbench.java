@@ -39,6 +39,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class RocketWorkbench extends BaseEntityBlock {
     public static final MapCodec<RocketWorkbench> CODEC = simpleCodec(RocketWorkbench::new);
+
     public RocketWorkbench(Properties properties) {
         super(properties);
     }

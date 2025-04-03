@@ -29,5 +29,6 @@ public class EmptyCelestialDisplayConfig implements CelestialDisplayConfig {
     public static final EmptyCelestialDisplayConfig INSTANCE = new EmptyCelestialDisplayConfig();
     public static final Codec<EmptyCelestialDisplayConfig> CODEC = Codec.unit(EmptyCelestialDisplayConfig.INSTANCE);
 
-    private EmptyCelestialDisplayConfig() {}
+    private EmptyCelestialDisplayConfig() {
+    }
 }

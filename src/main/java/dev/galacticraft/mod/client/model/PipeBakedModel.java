@@ -144,8 +144,7 @@ public class PipeBakedModel implements BakedModel {
     private void emitBlockQuadsDirection(QuadEmitter emitter, boolean[] connections, Mesh mesh, Direction direction) {
         if (connections[direction.get3DDataValue()]) {
             mesh.outputTo(emitter);
-        }
-        else {
+        } else {
             emitter.square(direction, 0.375f, 0.375f, 0.625f, 0.625f, 0.375f).color(-1, -1, -1, -1).uv(0, 12, 0).uv(1, 16, 0).uv(2, 16, 4).uv(3, 12, 4).emit();
         }
     }

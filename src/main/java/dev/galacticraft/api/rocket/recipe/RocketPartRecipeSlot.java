@@ -34,12 +34,14 @@ public interface RocketPartRecipeSlot {
             Codec.INT.fieldOf("x").forGetter(RocketPartRecipeSlot::x),
             Codec.INT.fieldOf("y").forGetter(RocketPartRecipeSlot::y),
             Ingredient.CODEC.fieldOf("ingredient").forGetter(RocketPartRecipeSlot::ingredient)).apply(instance, RocketPartRecipeSlot::create));
+
     @Contract("_, _, _ -> new")
     static @NotNull RocketPartRecipeSlot create(int x, int y, @NotNull Ingredient ingredient) {
         return new RocketPartRecipeSlotImpl(x, y, ingredient);
     }
 
     int x();
+
     int y();
 
     @NotNull Ingredient ingredient();

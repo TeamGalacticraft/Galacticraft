@@ -29,7 +29,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public record BlockPosContainerData(Supplier<@NotNull BlockPos> supplier, Consumer<@NotNull BlockPos> consumer) implements ContainerData {
+public record BlockPosContainerData(Supplier<@NotNull BlockPos> supplier,
+                                    Consumer<@NotNull BlockPos> consumer) implements ContainerData {
 
     @Override
     public int get(int index) {

@@ -43,8 +43,41 @@ public class GCEntityTypeTagProvider extends IntrinsicHolderTagsProvider<EntityT
     protected void addTags(HolderLookup.Provider arg) {
         tag(GCTags.HAS_FOOTPRINTS)
                 .add(EntityType.PLAYER);
-        
+
+        tag(GCTags.HAS_OXYGEN_SETUP)
+                .add(GCEntityTypes.EVOLVED_ZOMBIE)
+                .add(GCEntityTypes.EVOLVED_CREEPER)
+                .add(GCEntityTypes.EVOLVED_SKELETON)
+                .add(GCEntityTypes.EVOLVED_SPIDER)
+                .add(GCEntityTypes.EVOLVED_ENDERMAN)
+                .add(GCEntityTypes.EVOLVED_WITCH)
+                .add(GCEntityTypes.EVOLVED_PILLAGER)
+                .add(GCEntityTypes.EVOLVED_EVOKER)
+                .add(GCEntityTypes.EVOLVED_VINDICATOR);
+        tag(EntityTypeTags.CAN_BREATHE_UNDER_WATER)
+                .addTag(GCTags.HAS_OXYGEN_SETUP);
+
+        tag(EntityTypeTags.IMPACT_PROJECTILES)
+                .add(GCEntityTypes.THROWABLE_METEOR_CHUNK);
         tag(EntityTypeTags.FALL_DAMAGE_IMMUNE)
+                .add(GCEntityTypes.ROCKET)
                 .add(GCEntityTypes.LANDER);
+
+        tag(EntityTypeTags.SKELETONS)
+                .add(GCEntityTypes.EVOLVED_SKELETON)
+                .add(GCEntityTypes.SKELETON_BOSS);
+        tag(EntityTypeTags.ZOMBIES)
+                .add(GCEntityTypes.EVOLVED_ZOMBIE);
+        tag(EntityTypeTags.RAIDERS)
+                .add(GCEntityTypes.EVOLVED_WITCH)
+                .add(GCEntityTypes.EVOLVED_PILLAGER)
+                .add(GCEntityTypes.EVOLVED_EVOKER)
+                .add(GCEntityTypes.EVOLVED_VINDICATOR);
+        tag(EntityTypeTags.ILLAGER)
+                .add(GCEntityTypes.EVOLVED_PILLAGER)
+                .add(GCEntityTypes.EVOLVED_EVOKER)
+                .add(GCEntityTypes.EVOLVED_VINDICATOR);
+        tag(EntityTypeTags.ARTHROPOD)
+                .add(GCEntityTypes.EVOLVED_SPIDER);
     }
 }

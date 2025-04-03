@@ -36,8 +36,9 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
@@ -46,8 +47,8 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
-import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.functions.SetComponentsFunction;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
@@ -58,13 +59,6 @@ import java.util.concurrent.CompletableFuture;
 public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
     protected GCBlockLootTableProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registryLookup) {
         super(output, registryLookup);
-    }
-
-    public LootTable.Builder siliconOreDrops(Block ore) {
-        return createSilkTouchDispatchTable(ore, this.applyExplosionDecay(ore, LootItem.lootTableItem(GCItems.SILICON)
-                .apply(SetItemCountFunction.setCount(UniformGenerator.between(4.0F, 6.0F)))
-                .apply(ApplyBonusCount.addOreBonusCount(this.registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.FORTUNE)))
-        ));
     }
 
     @Override
@@ -163,11 +157,12 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.ASTEROID_ROCK);
         this.dropSelf(GCBlocks.ASTEROID_ROCK_1);
         this.dropSelf(GCBlocks.ASTEROID_ROCK_2);
+        this.dropSelf(GCBlocks.DENSE_ICE);
 
         this.dropSelf(GCBlocks.SOFT_VENUS_ROCK);
         this.dropSelf(GCBlocks.HARD_VENUS_ROCK);
         this.dropSelf(GCBlocks.SCORCHED_VENUS_ROCK);
-        this.add(GCBlocks.VOLCANIC_ROCK, createSilkTouchOnlyTable(GCBlocks.VOLCANIC_ROCK));
+        this.add(GCBlocks.VOLCANIC_ROCK, this.createSilkTouchOnlyTable(GCBlocks.VOLCANIC_ROCK));
         this.dropSelf(GCBlocks.PUMICE);
         this.add(GCBlocks.VAPOR_SPOUT, this.createSingleItemTableWithSilkTouch(GCBlocks.VAPOR_SPOUT, GCBlocks.SOFT_VENUS_ROCK));
 
@@ -176,6 +171,8 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.WIRE_WALKWAY);
         this.dropSelf(GCBlocks.TIN_LADDER);
         this.dropSelf(GCBlocks.IRON_GRATING);
+
+        this.add(GCBlocks.CANNED_FOOD, LootTable.lootTable());
 
         this.dropSelf(GCBlocks.ALUMINUM_WIRE);
         this.dropSelf(GCBlocks.SEALABLE_ALUMINUM_WIRE);
@@ -195,63 +192,47 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.CLEAR_VACUUM_GLASS);
         this.dropSelf(GCBlocks.STRONG_VACUUM_GLASS);
 
-        this.add(GCBlocks.MARS_IRON_ORE, this.createCopperOreDrops(GCBlocks.MARS_IRON_ORE));
-        this.add(GCBlocks.ASTEROID_IRON_ORE, this.createCopperOreDrops(GCBlocks.ASTEROID_IRON_ORE));
-
-        this.add(GCBlocks.MOON_COPPER_ORE, this.createCopperOreDrops(GCBlocks.MOON_COPPER_ORE));
-        this.add(GCBlocks.LUNASLATE_COPPER_ORE, this.createCopperOreDrops(GCBlocks.LUNASLATE_COPPER_ORE));
-        this.add(GCBlocks.MARS_COPPER_ORE, this.createCopperOreDrops(GCBlocks.MARS_COPPER_ORE));
-        this.add(GCBlocks.VENUS_COPPER_ORE, this.createCopperOreDrops(GCBlocks.VENUS_COPPER_ORE));
-
-        this.add(GCBlocks.SILICON_ORE, this.siliconOreDrops(GCBlocks.SILICON_ORE));
-        this.add(GCBlocks.DEEPSLATE_SILICON_ORE, this.siliconOreDrops(GCBlocks.DEEPSLATE_SILICON_ORE));
-
-        this.add(GCBlocks.TIN_ORE, this.createOreDrop(GCBlocks.TIN_ORE, GCItems.RAW_TIN));
-        this.add(GCBlocks.DEEPSLATE_TIN_ORE, this.createOreDrop(GCBlocks.DEEPSLATE_TIN_ORE, GCItems.RAW_TIN));
-        this.add(GCBlocks.MOON_TIN_ORE, this.createOreDrop(GCBlocks.MOON_TIN_ORE, GCItems.RAW_TIN));
-        this.add(GCBlocks.LUNASLATE_TIN_ORE, this.createOreDrop(GCBlocks.LUNASLATE_TIN_ORE, GCItems.RAW_TIN));
-        this.add(GCBlocks.MARS_TIN_ORE, this.createOreDrop(GCBlocks.MARS_TIN_ORE, GCItems.RAW_TIN));
-        this.add(GCBlocks.VENUS_TIN_ORE, this.createOreDrop(GCBlocks.VENUS_TIN_ORE, GCItems.RAW_TIN));
-
+        // --ORES-- (alphabetical)
+        //ALUMINUM
         this.add(GCBlocks.ALUMINUM_ORE, this.createOreDrop(GCBlocks.ALUMINUM_ORE, GCItems.RAW_ALUMINUM));
         this.add(GCBlocks.DEEPSLATE_ALUMINUM_ORE, this.createOreDrop(GCBlocks.DEEPSLATE_ALUMINUM_ORE, GCItems.RAW_ALUMINUM));
         this.add(GCBlocks.ASTEROID_ALUMINUM_ORE, this.createOreDrop(GCBlocks.ASTEROID_ALUMINUM_ORE, GCItems.RAW_ALUMINUM));
         this.add(GCBlocks.VENUS_ALUMINUM_ORE, this.createOreDrop(GCBlocks.VENUS_ALUMINUM_ORE, GCItems.RAW_ALUMINUM));
-
-        this.add(GCBlocks.MOON_CHEESE_ORE, this.createOreDrop(GCBlocks.MOON_CHEESE_ORE, GCItems.MOON_CHEESE_CURD));
-
-        this.add(GCBlocks.LUNAR_SAPPHIRE_ORE, this.createOreDrop(GCBlocks.LUNAR_SAPPHIRE_ORE, GCItems.LUNAR_SAPPHIRE));
-
+        //CHEESE
+        this.add(GCBlocks.MOON_CHEESE_ORE, this.createOreDrop(GCBlocks.MOON_CHEESE_ORE, GCItems.MOON_CHEESE_CURD, 2.0F, 6.0F));
+        //COPPER
+        this.add(GCBlocks.MOON_COPPER_ORE, this.createCopperOreDrops(GCBlocks.MOON_COPPER_ORE));
+        this.add(GCBlocks.LUNASLATE_COPPER_ORE, this.createCopperOreDrops(GCBlocks.LUNASLATE_COPPER_ORE));
+        this.add(GCBlocks.MARS_COPPER_ORE, this.createCopperOreDrops(GCBlocks.MARS_COPPER_ORE));
+        this.add(GCBlocks.VENUS_COPPER_ORE, this.createCopperOreDrops(GCBlocks.VENUS_COPPER_ORE));
+        //DESH
         this.add(GCBlocks.DESH_ORE, this.createOreDrop(GCBlocks.DESH_ORE, GCItems.RAW_DESH));
-
-        this.add(GCBlocks.ILMENITE_ORE, this.createOreDrop(GCBlocks.ILMENITE_ORE, GCItems.RAW_TITANIUM));
-
+        //GALENA
         this.add(GCBlocks.GALENA_ORE, this.createOreDrop(GCBlocks.GALENA_ORE, GCItems.RAW_LEAD));
-
+        //ILMENITE
+        this.add(GCBlocks.ILMENITE_ORE, this.createOreDrop(GCBlocks.ILMENITE_ORE, GCItems.RAW_TITANIUM));
+        //IRON
+        this.add(GCBlocks.MARS_IRON_ORE, this.createOreDrop(GCBlocks.MARS_IRON_ORE, Items.RAW_IRON));
+        this.add(GCBlocks.ASTEROID_IRON_ORE, this.createOreDrop(GCBlocks.ASTEROID_IRON_ORE, Items.RAW_IRON));
+        //SAPPHIRE
+        this.add(GCBlocks.LUNAR_SAPPHIRE_ORE, this.createOreDrop(GCBlocks.LUNAR_SAPPHIRE_ORE, GCItems.LUNAR_SAPPHIRE));
+        //SILICON
+        this.add(GCBlocks.SILICON_ORE, this.createOreDrop(GCBlocks.SILICON_ORE, GCItems.SILICON, 4.0F, 6.0F));
+        this.add(GCBlocks.DEEPSLATE_SILICON_ORE, this.createOreDrop(GCBlocks.DEEPSLATE_SILICON_ORE, GCItems.SILICON, 4.0F, 6.0F));
+        this.add(GCBlocks.ASTEROID_SILICON_ORE, this.createOreDrop(GCBlocks.ASTEROID_SILICON_ORE, GCItems.SILICON, 4.0F, 6.0F));
+        //SOLAR
         this.add(GCBlocks.SOLAR_ORE, this.createOreDrop(GCBlocks.SOLAR_ORE, GCItems.SOLAR_DUST));
+        //TIN
+        this.add(GCBlocks.TIN_ORE, this.createOreDrop(GCBlocks.TIN_ORE, GCItems.RAW_TIN, 2.0F, 5.0F));
+        this.add(GCBlocks.DEEPSLATE_TIN_ORE, this.createOreDrop(GCBlocks.DEEPSLATE_TIN_ORE, GCItems.RAW_TIN, 2.0F, 5.0F));
+        this.add(GCBlocks.MOON_TIN_ORE, this.createOreDrop(GCBlocks.MOON_TIN_ORE, GCItems.RAW_TIN, 2.0F, 5.0F));
+        this.add(GCBlocks.LUNASLATE_TIN_ORE, this.createOreDrop(GCBlocks.LUNASLATE_TIN_ORE, GCItems.RAW_TIN, 2.0F, 5.0F));
+        this.add(GCBlocks.MARS_TIN_ORE, this.createOreDrop(GCBlocks.MARS_TIN_ORE, GCItems.RAW_TIN, 2.0F, 5.0F));
+        this.add(GCBlocks.VENUS_TIN_ORE, this.createOreDrop(GCBlocks.VENUS_TIN_ORE, GCItems.RAW_TIN, 2.0F, 5.0F));
 
         this.add(GCBlocks.OLIVINE_CLUSTER, this.createCrystalClusterDrop(GCBlocks.OLIVINE_CLUSTER, GCItems.OLIVINE_SHARD));
         this.add(GCBlocks.OLIVINE_BASALT, this.createOreDrop(GCBlocks.OLIVINE_BASALT, GCItems.OLIVINE_SHARD, 1.0F, 2.0F));
         this.add(GCBlocks.RICH_OLIVINE_BASALT, this.createOreDrop(GCBlocks.RICH_OLIVINE_BASALT, GCItems.OLIVINE_SHARD, 3.0F, 4.0F));
-
-        this.add(GCBlocks.MOON_CHEESE_WHEEL, noDrop());
-        this.add(GCBlocks.CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.CANDLE));
-        this.add(GCBlocks.WHITE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.WHITE_CANDLE));
-        this.add(GCBlocks.ORANGE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.ORANGE_CANDLE));
-        this.add(GCBlocks.MAGENTA_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.MAGENTA_CANDLE));
-        this.add(GCBlocks.LIGHT_BLUE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.LIGHT_BLUE_CANDLE));
-        this.add(GCBlocks.YELLOW_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.YELLOW_CANDLE));
-        this.add(GCBlocks.LIME_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.LIME_CANDLE));
-        this.add(GCBlocks.PINK_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.PINK_CANDLE));
-        this.add(GCBlocks.GRAY_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.GRAY_CANDLE));
-        this.add(GCBlocks.LIGHT_GRAY_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.LIGHT_GRAY_CANDLE));
-        this.add(GCBlocks.CYAN_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.CYAN_CANDLE));
-        this.add(GCBlocks.PURPLE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.PURPLE_CANDLE));
-        this.add(GCBlocks.BLUE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.BLUE_CANDLE));
-        this.add(GCBlocks.BROWN_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.BROWN_CANDLE));
-        this.add(GCBlocks.GREEN_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.GREEN_CANDLE));
-        this.add(GCBlocks.RED_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.RED_CANDLE));
-        this.add(GCBlocks.BLACK_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.BLACK_CANDLE));
 
         this.dropSelf(GCBlocks.SILICON_BLOCK);
         this.dropSelf(GCBlocks.METEORIC_IRON_BLOCK);
@@ -271,6 +252,29 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         this.add(GCBlocks.FALLEN_METEOR, block -> createSilkTouchDispatchTable(block, this.applyExplosionDecay(block, LootItem.lootTableItem(GCItems.RAW_METEORIC_IRON)
                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 2.0f))))));
+
+        this.dropSelf(GCBlocks.MOON_CHEESE_BLOCK);
+        this.dropSelf(GCBlocks.MOON_CHEESE_LOG);
+        this.dropSelf(GCBlocks.MOON_CHEESE_LEAVES);
+
+        this.add(GCBlocks.MOON_CHEESE_WHEEL, noDrop());
+        this.add(GCBlocks.CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.CANDLE));
+        this.add(GCBlocks.WHITE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.WHITE_CANDLE));
+        this.add(GCBlocks.ORANGE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.ORANGE_CANDLE));
+        this.add(GCBlocks.MAGENTA_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.MAGENTA_CANDLE));
+        this.add(GCBlocks.LIGHT_BLUE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.LIGHT_BLUE_CANDLE));
+        this.add(GCBlocks.YELLOW_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.YELLOW_CANDLE));
+        this.add(GCBlocks.LIME_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.LIME_CANDLE));
+        this.add(GCBlocks.PINK_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.PINK_CANDLE));
+        this.add(GCBlocks.GRAY_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.GRAY_CANDLE));
+        this.add(GCBlocks.LIGHT_GRAY_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.LIGHT_GRAY_CANDLE));
+        this.add(GCBlocks.CYAN_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.CYAN_CANDLE));
+        this.add(GCBlocks.PURPLE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.PURPLE_CANDLE));
+        this.add(GCBlocks.BLUE_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.BLUE_CANDLE));
+        this.add(GCBlocks.BROWN_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.BROWN_CANDLE));
+        this.add(GCBlocks.GREEN_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.GREEN_CANDLE));
+        this.add(GCBlocks.RED_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.RED_CANDLE));
+        this.add(GCBlocks.BLACK_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.BLACK_CANDLE));
 
         this.dropSelf(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
 
@@ -299,6 +303,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.OXYGEN_COMPRESSOR);
         this.dropSelf(GCBlocks.OXYGEN_STORAGE_MODULE);
         this.dropSelf(GCBlocks.FUEL_LOADER);
+        this.dropSelf(GCBlocks.FOOD_CANNER);
 
         this.dropSelf(GCBlocks.PLAYER_TRANSPORT_TUBE);
         this.dropSelf(GCBlocks.ROCKET_WORKBENCH);
@@ -328,7 +333,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
                         block,
                         LootItem.lootTableItem(item)
                                 .apply(SetItemCountFunction.setCount(UniformGenerator.between(min, max)))
-                                .apply(ApplyBonusCount.addUniformBonusCount(this.registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.FORTUNE)))
+                                .apply(ApplyBonusCount.addOreBonusCount(this.registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.FORTUNE)))
                 )
         );
     }

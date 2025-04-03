@@ -4,5 +4,5 @@
     "translate": "jukebox_song.galacticraft.legacy_orbit"
   },
   "length_in_seconds": 172.0,
-  "sound_event": "galacticraft:music.legacy.orbit"
+  "sound_event": "galacticraft:music_disc.legacy.orbit"
 }

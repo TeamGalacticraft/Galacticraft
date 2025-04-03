@@ -31,5 +31,6 @@ public final class CelestialBodyTextures {
     public static final ResourceLocation SUN = ResourceLocation.withDefaultNamespace("textures/environment/sun.png");
     public static final ResourceLocation EARTH = Constant.id("textures/environment/earth.png");
 
-    private CelestialBodyTextures() {}
+    private CelestialBodyTextures() {
+    }
 }

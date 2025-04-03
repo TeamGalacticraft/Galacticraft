@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public record BasicRocketEngineConfig(ConfiguredTravelPredicate<?, ?> predicate, long fuelCapacity, @Nullable RocketPartRecipe<?,?> recipe) implements RocketEngineConfig {
+public record BasicRocketEngineConfig(ConfiguredTravelPredicate<?, ?> predicate, long fuelCapacity, @Nullable RocketPartRecipe<?, ?> recipe) implements RocketEngineConfig {
     public static final Codec<BasicRocketEngineConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ConfiguredTravelPredicate.DIRECT_CODEC.fieldOf("predicate").forGetter(BasicRocketEngineConfig::predicate),
             Codec.LONG.fieldOf("fuel_capacity").forGetter(BasicRocketEngineConfig::fuelCapacity),

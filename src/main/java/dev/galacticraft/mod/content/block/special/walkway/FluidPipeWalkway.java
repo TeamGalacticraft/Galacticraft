@@ -113,8 +113,7 @@ public class FluidPipeWalkway extends FluidPipeBlock implements FluidLoggable {
                         }
                         return;
                     }
-                }
-                else if (FluidUtil.canAccessFluid(level, blockPos.relative(direction), direction)) {
+                } else if (FluidUtil.canAccessFluid(level, blockPos.relative(direction), direction)) {
                     if (walkway.getConnections()[direction.ordinal()] != (walkway.getConnections()[direction.ordinal()] = true)) {
                         level.neighborChanged(blockPos.relative(direction), blockState.getBlock(), blockPos);
                         level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);

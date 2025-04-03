@@ -93,11 +93,14 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
             ),
             MachineFluidStorage.spec(
                     FluidResourceSlot.builder(TransferType.INPUT)
-                            .hidden()
+                            .pos(69, 21)
+                            .width(38)
+                            .height(47)
+                            .unmarked()
                             .capacity(FluidConstants.BUCKET * NUM_BUCKETS)
                             .filter(ResourceFilters.ofResource(GCFluids.FUEL)) // fixme: tag?
             )
-        );
+    );
 
     private BlockPos connectionPos = BlockPos.ZERO;
     private int amount = 0;

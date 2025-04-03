@@ -27,7 +27,6 @@ import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
@@ -112,16 +111,6 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .pattern(" T")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .save(output);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.DIAGONAL_LIGHT_PANEL)
-                .define('S', Items.GLASS_PANE)
-                .define('G', GCItems.GLOWSTONE_TORCH)
-                .define('T', GCItems.COMPRESSED_STEEL)
-                .pattern(" S")
-                .pattern("SG")
-                .pattern(" T")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
-                .save(output, BuiltInRegistries.ITEM.getKey(GCBlocks.DIAGONAL_LIGHT_PANEL.asItem()).withSuffix("_flipped"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.SPOTLIGHT_LIGHT_PANEL)
                 .define('S', Items.GLASS_PANE)
