@@ -153,7 +153,7 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
 
         CelestialBody<?, ?> parent = celestialBodyRegistry.get(parentResourceKey);
 
-        DimensionRenderingRegistry.registerSkyRenderer(key, AsteroidSkyRenderer.INSTANCE);
+        // DimensionRenderingRegistry.registerSkyRenderer(key, AsteroidSkyRenderer.INSTANCE);
 
         assert parent != null;
         SatelliteConfig config = new SatelliteConfig(id, Component.translatable(name), Optional.of(parentResourceKey), position, display, ring, ownershipData, ResourceKey.create(Registries.DIMENSION, id), direct, EMPTY_GAS_COMPOSITION, 1.0f, parent.type() instanceof Tiered<?> ? ((Tiered) parent.type()).accessWeight(parent.config()) : 1, new LevelStem(Holder.direct(type), generator));
