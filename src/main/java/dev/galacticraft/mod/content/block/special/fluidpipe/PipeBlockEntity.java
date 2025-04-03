@@ -22,12 +22,10 @@
 
 package dev.galacticraft.mod.content.block.special.fluidpipe;
 
-import dev.galacticraft.mod.api.block.FluidPipeBlock;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.api.pipe.FluidPipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
 import dev.galacticraft.mod.api.pipe.impl.PipeNetworkImpl;
-import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
@@ -58,6 +56,10 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
     public PipeBlockEntity(BlockEntityType<? extends PipeBlockEntity> type, BlockPos pos, BlockState state, long maxTransferRate) {
         super(type, pos, state);
         this.maxTransferRate = maxTransferRate;
+
+        for (Direction direction : Direction.values()) {
+            this.connections[direction.get3DDataValue()] = state.getValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction));
+        }
     }
 
     @Override
@@ -107,10 +109,6 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
 
     @Override
     public void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction) {
-        if (this.level == null) {
-            return;
-        }
-
         boolean connected = state.getValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction));
         if (this.connections[direction.get3DDataValue()] != connected) {
             this.connections[direction.get3DDataValue()] = connected;

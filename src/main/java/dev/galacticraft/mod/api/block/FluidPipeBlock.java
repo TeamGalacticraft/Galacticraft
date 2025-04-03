@@ -208,9 +208,6 @@ public abstract class FluidPipeBlock extends PipeBlock implements EntityBlock {
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos neighborPos, boolean notify) {
         super.neighborChanged(state, level, pos, block, neighborPos, notify);
 
-        if (level.isClientSide())
-            return;
-
         Direction direction = Direction.fromDelta(neighborPos.getX() - pos.getX(), neighborPos.getY() - pos.getY(), neighborPos.getZ() - pos.getZ());
         if (direction == null)
             return;
@@ -221,7 +218,7 @@ public abstract class FluidPipeBlock extends PipeBlock implements EntityBlock {
         if (newState != state) {
             level.setBlockAndUpdate(pos, newState);
 
-            if (!level.isClientSide && level.getBlockEntity(pos) instanceof FluidPipe pipe) {
+            if (level.getBlockEntity(pos) instanceof FluidPipe pipe) {
                 pipe.updateConnection(newState, pos, neighborPos, direction);
             }
         }
