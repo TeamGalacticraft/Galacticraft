@@ -141,7 +141,7 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
         DynamicDimensionRegistry registry = DynamicDimensionRegistry.from(server);
         assert server.getLevel(key) == null : "World already registered?!";
         assert registry.anyDimensionExists(id) : "Dimension Type already registered?!";
-        return create(id, server, parent, position, display, ring, chunkGenerator, type, ownershipData, Component.translatable(Translations.Ui.SPACE_STATION_NAME, player.getGameProfile().getName()).toString(), celestialBodyRegistry, key);
+        return create(id, server, parent, position, display, ring, chunkGenerator, type, ownershipData, "", celestialBodyRegistry, key);
     }
 
     @ApiStatus.Internal
@@ -156,7 +156,7 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
         // DimensionRenderingRegistry.registerSkyRenderer(key, AsteroidSkyRenderer.INSTANCE);
 
         assert parent != null;
-        SatelliteConfig config = new SatelliteConfig(id, Component.translatable(name), Optional.of(parentResourceKey), position, display, ring, ownershipData, ResourceKey.create(Registries.DIMENSION, id), direct, EMPTY_GAS_COMPOSITION, 1.0f, parent.type() instanceof Tiered<?> ? ((Tiered) parent.type()).accessWeight(parent.config()) : 1, new LevelStem(Holder.direct(type), generator));
+        SatelliteConfig config = new SatelliteConfig(id, name, Optional.of(parentResourceKey), position, display, ring, ownershipData, ResourceKey.create(Registries.DIMENSION, id), direct, EMPTY_GAS_COMPOSITION, 1.0f, parent.type() instanceof Tiered<?> ? ((Tiered) parent.type()).accessWeight(parent.config()) : 1, new LevelStem(Holder.direct(type), generator));
         CelestialBody<SatelliteConfig, SatelliteType> satellite = INSTANCE.configure(config);
 
         ((SatelliteAccessor) server).galacticraft$addSatellite(id, satellite);
@@ -215,12 +215,12 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
     }
 
     @Override
-    public void setCustomName(@NotNull Component text, SatelliteConfig config) {
+    public void setCustomName(@NotNull String text, SatelliteConfig config) {
         config.setCustomName(text);
     }
 
     @Override
-    public @NotNull Component getCustomName(SatelliteConfig config) {
+    public @NotNull String getCustomName(SatelliteConfig config) {
         return config.getCustomName();
     }
 

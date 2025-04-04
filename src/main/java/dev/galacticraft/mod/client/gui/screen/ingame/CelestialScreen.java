@@ -556,7 +556,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
     }
 
     protected boolean isSatellite(CelestialBody<?, ?> selectedBody) {
-        return selectedBody != null && selectedBody.type().isSatellite();
+        return selectedBody != null && selectedBody.isSatellite();
     }
 
     public void setBlackBackground(GuiGraphics graphics) {
