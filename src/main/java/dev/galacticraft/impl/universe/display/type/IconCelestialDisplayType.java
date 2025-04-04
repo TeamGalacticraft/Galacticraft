@@ -42,7 +42,7 @@ public class IconCelestialDisplayType extends CelestialDisplayType<IconCelestial
     }
 
     @Override
-    public Vector4f render(GuiGraphics graphics, Tesselator tesselator, int size, double mouseX, double mouseY, float delta, IconCelestialDisplayConfig config) {
+    public Vector4f render(GuiGraphics graphics, int size, double mouseX, double mouseY, float delta, IconCelestialDisplayConfig config) {
         float realSize = config.scale() * size;
         AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(config.texture());
         texture.bind();

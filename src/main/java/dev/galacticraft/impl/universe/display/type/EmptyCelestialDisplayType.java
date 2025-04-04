@@ -22,7 +22,6 @@
 
 package dev.galacticraft.impl.universe.display.type;
 
-import com.mojang.blaze3d.vertex.Tesselator;
 import dev.galacticraft.api.universe.display.CelestialDisplayType;
 import dev.galacticraft.impl.universe.display.config.EmptyCelestialDisplayConfig;
 import net.minecraft.client.gui.GuiGraphics;
@@ -36,7 +35,7 @@ public class EmptyCelestialDisplayType extends CelestialDisplayType<EmptyCelesti
     }
 
     @Override
-    public Vector4f render(GuiGraphics graphics, Tesselator tesselator, int size, double mouseX, double mouseY, float delta, EmptyCelestialDisplayConfig config) {
+    public Vector4f render(GuiGraphics graphics, int size, double mouseX, double mouseY, float delta, EmptyCelestialDisplayConfig config) {
         return NULL_VECTOR;
     }
 }

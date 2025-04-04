@@ -22,7 +22,6 @@
 
 package dev.galacticraft.api.universe.display;
 
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
@@ -39,7 +38,7 @@ public abstract class CelestialDisplayType<C extends CelestialDisplayConfig> {
     }
 
     @Environment(EnvType.CLIENT)
-    public abstract Vector4f render(GuiGraphics graphics, Tesselator tesselator, int size, double mouseX, double mouseY, float delta, C config);
+    public abstract Vector4f render(GuiGraphics graphics, int size, double mouseX, double mouseY, float delta, C config);
 
     public MapCodec<CelestialDisplay<C, CelestialDisplayType<C>>> codec() {
         return this.codec;
