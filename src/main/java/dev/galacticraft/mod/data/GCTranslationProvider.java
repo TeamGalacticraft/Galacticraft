@@ -694,6 +694,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(CelestialBody.VENUS, "Venus");
         this.add(CelestialBody.VENUS_DESC, "");
         this.add(CelestialBody.SATELLITE, "Satellite");
+        this.add(CelestialBody.SATELLITES, "Satellites");
         this.add(CelestialBody.SATELLITE_DESC, "");
     }
 

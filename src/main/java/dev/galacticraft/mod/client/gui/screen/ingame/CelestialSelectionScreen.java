@@ -961,7 +961,11 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
             if (scale > 0) {
                 color = 0xe0e0e0;
-                texture.drawText(I18n.get(((TranslatableContents) child.name().getContents()).getKey()), 7 + xOffset, yOffsetBase + yOffset + 2, color, false);
+                String key = ((TranslatableContents) child.name().getContents()).getKey();
+                if (child.isSatellite()) {
+                    key += "s";
+                }
+                texture.drawText(I18n.get(key), 7 + xOffset, yOffsetBase + yOffset + 2, color, false);
             }
 
             yOffset += 14;
