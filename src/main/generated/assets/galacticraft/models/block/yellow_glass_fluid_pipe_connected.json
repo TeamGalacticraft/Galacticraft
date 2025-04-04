@@ -1,0 +1,6 @@
+{
+  "parent": "galacticraft:block/template_pipe_connected",
+  "textures": {
+    "all": "galacticraft:block/yellow_glass_fluid_pipe"
+  }
+}

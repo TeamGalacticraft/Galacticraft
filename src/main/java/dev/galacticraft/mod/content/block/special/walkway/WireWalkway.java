@@ -120,7 +120,7 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
 
     @Override
     public BlockState updateShape(BlockState blockState, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos blockPos, BlockPos neighborPos) {
-        if (!this.isEmpty(blockState)) {
+        if (!this.hasFluid(blockState)) {
             level.scheduleTick(blockPos, BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)), BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)).getTickDelay(level));
         }
         return blockState;
@@ -157,7 +157,7 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
 
     @Override
     public FluidState getFluidState(BlockState blockState) {
-        if (this.isEmpty(blockState)) {
+        if (this.hasFluid(blockState)) {
             return EMPTY_STATE;
         }
 

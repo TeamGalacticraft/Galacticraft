@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.gametest;
 
-import dev.galacticraft.mod.api.pipe.Pipe;
+import dev.galacticraft.mod.api.pipe.FluidPipe;
 import dev.galacticraft.mod.api.pipe.impl.PipeNetworkImpl;
 import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.BlockPos;
@@ -41,11 +41,11 @@ public class PipeTestSuite implements GalacticraftGameTest {
         final var be0 = context.getBlockEntity(pos0);
         final var be1 = context.getBlockEntity(pos1);
         final var be2 = context.getBlockEntity(pos2);
-        if (!(be0 instanceof Pipe pipe0)) {
+        if (!(be0 instanceof FluidPipe pipe0)) {
             context.fail(String.format("Expected a pipe but found %s!", be0), pos0);
-        } else if (!(be1 instanceof Pipe pipe1)) {
+        } else if (!(be1 instanceof FluidPipe pipe1)) {
             context.fail(String.format("Expected a pipe but found %s!", be1), pos1);
-        } else if (!(be2 instanceof Pipe pipe2)) {
+        } else if (!(be2 instanceof FluidPipe pipe2)) {
             context.fail(String.format("Expected a pipe but found %s!", be2), pos2);
         } else {
             if (pipe0.getNetwork() == null) {

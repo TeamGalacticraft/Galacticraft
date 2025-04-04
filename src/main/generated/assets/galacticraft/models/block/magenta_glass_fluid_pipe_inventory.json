@@ -1,0 +1,6 @@
+{
+  "parent": "galacticraft:item/template_pipe_inventory",
+  "textures": {
+    "all": "galacticraft:block/magenta_glass_fluid_pipe"
+  }
+}

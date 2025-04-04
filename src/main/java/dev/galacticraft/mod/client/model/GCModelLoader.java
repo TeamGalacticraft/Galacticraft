@@ -110,7 +110,7 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
             } else if (Constant.BakedModel.FLUID_PIPE_WALKWAY_MARKER.equals(resourceId)) {
                 return FluidPipeWalkwayUnbakedModel.INSTANCE;
             } else if (Constant.BakedModel.GLASS_FLUID_PIPE_MARKER.equals(resourceId)) {
-                return PipeUnbakedModel.INSTANCE;
+                return null;
             } else if (Constant.BakedModel.VACUUM_GLASS_MODEL.equals(resourceId)) {
                 return VacuumGlassUnbakedModel.INSTANCE;
             } else if (PARACHEST_ITEM.equals(resourceId)) {
