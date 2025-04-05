@@ -43,6 +43,7 @@ import dev.galacticraft.mod.content.block.special.walkway.WireWalkway;
 import dev.galacticraft.mod.util.MultiBlockUtil;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FlattenableBlockRegistry;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.level.BlockGetter;
@@ -226,26 +227,26 @@ public class GCBlocks {
     public static final Block GREEN_GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.GREEN_GLASS_FLUID_PIPE, new GlassFluidPipeBlock(GLASS_FLUID_PIPE.properties(), PipeColor.GREEN));
     public static final Block RED_GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.RED_GLASS_FLUID_PIPE, new GlassFluidPipeBlock(GLASS_FLUID_PIPE.properties(), PipeColor.RED));
     public static final Block BLACK_GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.BLACK_GLASS_FLUID_PIPE, new GlassFluidPipeBlock(GLASS_FLUID_PIPE.properties(), PipeColor.BLACK));
-    public static final Map<PipeColor, Block> GLASS_FLUID_PIPES = new HashMap<>();
-    static {
-        GLASS_FLUID_PIPES.put(PipeColor.CLEAR, GLASS_FLUID_PIPE);
-        GLASS_FLUID_PIPES.put(PipeColor.WHITE, WHITE_GLASS_FLUID_PIPE);
-        GLASS_FLUID_PIPES.put(PipeColor.ORANGE, ORANGE_GLASS_FLUID_PIPE);
-        GLASS_FLUID_PIPES.put(PipeColor.MAGENTA, MAGENTA_GLASS_FLUID_PIPE);
-        GLASS_FLUID_PIPES.put(PipeColor.LIGHT_BLUE, LIGHT_BLUE_GLASS_FLUID_PIPE);
-        GLASS_FLUID_PIPES.put(PipeColor.YELLOW, YELLOW_GLASS_FLUID_PIPE);
-        GLASS_FLUID_PIPES.put(PipeColor.LIME, LIME_GLASS_FLUID_PIPE);
-        GLASS_FLUID_PIPES.put(PipeColor.PINK, PINK_GLASS_FLUID_PIPE);
-        GLASS_FLUID_PIPES.put(PipeColor.GRAY, GRAY_GLASS_FLUID_PIPE);
-        GLASS_FLUID_PIPES.put(PipeColor.LIGHT_GRAY, LIGHT_GRAY_GLASS_FLUID_PIPE);
-        GLASS_FLUID_PIPES.put(PipeColor.CYAN, CYAN_GLASS_FLUID_PIPE);
-        GLASS_FLUID_PIPES.put(PipeColor.PURPLE, PURPLE_GLASS_FLUID_PIPE);
-        GLASS_FLUID_PIPES.put(PipeColor.BLUE, BLUE_GLASS_FLUID_PIPE);
-        GLASS_FLUID_PIPES.put(PipeColor.BROWN, BROWN_GLASS_FLUID_PIPE);
-        GLASS_FLUID_PIPES.put(PipeColor.GREEN, GREEN_GLASS_FLUID_PIPE);
-        GLASS_FLUID_PIPES.put(PipeColor.RED, RED_GLASS_FLUID_PIPE);
-        GLASS_FLUID_PIPES.put(PipeColor.BLACK, BLACK_GLASS_FLUID_PIPE);
-    }
+
+    public static final Map<PipeColor, Block> GLASS_FLUID_PIPES = Util.make(new HashMap<>(17), map -> {
+        map.put(PipeColor.CLEAR, GLASS_FLUID_PIPE);
+        map.put(PipeColor.WHITE, WHITE_GLASS_FLUID_PIPE);
+        map.put(PipeColor.ORANGE, ORANGE_GLASS_FLUID_PIPE);
+        map.put(PipeColor.MAGENTA, MAGENTA_GLASS_FLUID_PIPE);
+        map.put(PipeColor.LIGHT_BLUE, LIGHT_BLUE_GLASS_FLUID_PIPE);
+        map.put(PipeColor.YELLOW, YELLOW_GLASS_FLUID_PIPE);
+        map.put(PipeColor.LIME, LIME_GLASS_FLUID_PIPE);
+        map.put(PipeColor.PINK, PINK_GLASS_FLUID_PIPE);
+        map.put(PipeColor.GRAY, GRAY_GLASS_FLUID_PIPE);
+        map.put(PipeColor.LIGHT_GRAY, LIGHT_GRAY_GLASS_FLUID_PIPE);
+        map.put(PipeColor.CYAN, CYAN_GLASS_FLUID_PIPE);
+        map.put(PipeColor.PURPLE, PURPLE_GLASS_FLUID_PIPE);
+        map.put(PipeColor.BLUE, BLUE_GLASS_FLUID_PIPE);
+        map.put(PipeColor.BROWN, BROWN_GLASS_FLUID_PIPE);
+        map.put(PipeColor.GREEN, GREEN_GLASS_FLUID_PIPE);
+        map.put(PipeColor.RED, RED_GLASS_FLUID_PIPE);
+        map.put(PipeColor.BLACK, BLACK_GLASS_FLUID_PIPE);
+    });
 
     // LIGHT PANELS
     public static final Block SQUARE_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.SQUARE_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)));
