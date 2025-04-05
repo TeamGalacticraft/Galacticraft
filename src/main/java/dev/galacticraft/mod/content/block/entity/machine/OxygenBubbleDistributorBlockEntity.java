@@ -24,6 +24,7 @@ package dev.galacticraft.mod.content.block.entity.machine;
 
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
@@ -46,6 +47,7 @@ import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -56,6 +58,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -99,6 +102,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     private int players = 0;
     private double prevSize;
     private boolean oxygenUnloaded = true;
+    private boolean atmosphereBreathable = true;
 
     public OxygenBubbleDistributorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.OXYGEN_BUBBLE_DISTRIBUTOR, pos, state, SPEC);
@@ -118,12 +122,12 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("transaction");
         MachineStatus status;
-        distributeOxygenToArea(this.prevSize, false);
+        this.distributeOxygenToArea(this.prevSize, this.atmosphereBreathable);
         try {
             if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate())) { //todo: config
                 profiler.push("bubble");
                 if (this.size > this.targetSize) {
-                    setSize(Math.max(this.size - 0.1F, this.targetSize));
+                    this.setSize(Math.max(this.size - 0.1F, this.targetSize));
                 }
 
                 profiler.pop();
@@ -141,7 +145,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
                         setSize(this.size + 0.05D);
                     }
                     profiler.pop();
-                    distributeOxygenToArea(this.size, true);
+                    this.distributeOxygenToArea(this.size, true);
                     return GCMachineStatuses.DISTRIBUTING;
                 } else {
                     status = GCMachineStatuses.NOT_ENOUGH_OXYGEN;
@@ -156,30 +160,37 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         profiler.push("size");
 
         if (this.size > 0) {
-            setSize(this.size - 0.2D);
-            trySyncSize(level, pos, profiler);
-            distributeOxygenToArea(this.size, true); // technically this oxygen is being created from thin air
+            this.setSize(this.size - 0.2D);
+            this.trySyncSize(level, pos, profiler);
+            this.distributeOxygenToArea(this.size, true); // technically this oxygen is being created from thin air
         }
 
         if (this.size < 0) {
-            setSize(0);
+            this.setSize(0);
         }
         profiler.pop();
         return status;
     }
 
     @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        Holder<CelestialBody<?, ?>> holder = level.galacticraft$getCelestialBody();
+        this.atmosphereBreathable = (holder == null || holder.value().atmosphere().breathable());
+    }
+
+    @Override
     public void setRemoved() {
         if (!this.oxygenUnloaded) {
             this.oxygenUnloaded = true;
-            distributeOxygenToArea(this.size, false);
+            this.distributeOxygenToArea(this.size, this.atmosphereBreathable);
         }
         super.setRemoved();
     }
 
     @Override
     protected void tickDisabled(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        this.distributeOxygenToArea(this.prevSize, false); // REVIEW: Inefficient?
+        this.distributeOxygenToArea(this.prevSize, this.atmosphereBreathable); // REVIEW: Inefficient?
         this.size = 0; // I believe this is needed to allow multiple bubbles in a level?
         this.trySyncSize(level, pos, profiler);
 
@@ -214,8 +225,8 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         for (int x = this.getBlockPos().getX() - radius; x <= this.getBlockPos().getX() + radius; x++) {
             for (int y = this.getBlockPos().getY() - radius; y <= this.getBlockPos().getY() + radius; y++) {
                 for (int z = this.getBlockPos().getZ() - radius; z <= this.getBlockPos().getZ() + radius; z++) {
-                    if (getDistanceFromServer(x, y, z) <= bubbleR2) {
-                        getLevel().setBreathable(pos.set(x, y, z), oxygenated);
+                    if (this.getDistanceFromServer(x, y, z) <= bubbleR2) {
+                        this.level.setBreathable(pos.set(x, y, z), oxygenated);
                     }
                 }
             }
