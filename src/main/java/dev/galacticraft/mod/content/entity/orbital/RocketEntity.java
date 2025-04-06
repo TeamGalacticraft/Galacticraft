@@ -497,17 +497,16 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
         if (getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
             if (ticksSinceJump > 1000 && this.onGround()) {
-                Holder<CelestialBody<?, ?>> holder = this.level().galacticraft$getCelestialBody();
-                boolean createFire = holder == null || holder.value().atmosphere().breathable();
+                boolean createFire = this.level().getDefaultBreathable();
 
                 for (int i = 0; i < 4; i++) {
                     this.level().explode(
                             this,
                             new DamageSource(this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.CRASH_LANDING)),
                             new ExplosionDamageCalculator(),
-                            this.position().x + (level().random.nextDouble() - 0.5 * 4),
-                            this.position().y + (level().random.nextDouble() * 3), 
-                            this.position().z + (level().random.nextDouble() - 0.5 * 4),
+                            this.position().x + (this.level().random.nextDouble() - 0.5 * 4),
+                            this.position().y + (this.level().random.nextDouble() * 3), 
+                            this.position().z + (this.level().random.nextDouble() - 0.5 * 4),
                             10.0F,
                             createFire,
                             Level.ExplosionInteraction.TNT
