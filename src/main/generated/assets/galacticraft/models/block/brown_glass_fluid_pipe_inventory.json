@@ -1,6 +1,0 @@
-{
-  "parent": "galacticraft:item/template_pipe_inventory",
-  "textures": {
-    "all": "galacticraft:block/brown_glass_fluid_pipe"
-  }
-}
