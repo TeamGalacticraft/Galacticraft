@@ -92,26 +92,26 @@ public class PipeBakedModel implements BakedModel {
 
         emitter
                 .square(Direction.WEST, 0, 0.375f, 0.375f, 0.625f, 0.375f)
-                .uv(0, 4, 0)
-                .uv(1, 0, 0)
-                .uv(2, 0, 6)
-                .uv(3, 4, 6)
+                .uv(0, 0, 0)
+                .uv(1, 4, 0)
+                .uv(2, 4, 6)
+                .uv(3, 0, 6)
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
                 .square(Direction.UP, 0.375f, 0.625f, 0.625f, 1, 0.375f)
-                .uv(0, 0, 0)
-                .uv(1, 0, 6)
-                .uv(2, 4, 6)
-                .uv(3, 4, 0)
+                .uv(0, 0, 16)
+                .uv(1, 0, 10)
+                .uv(2, 4, 10)
+                .uv(3, 4, 16)
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
                 .square(Direction.EAST, 0.625f, 0.375f, 1, 0.625f, 0.375f)
-                .uv(0, 4, 10)
-                .uv(1, 0, 10)
-                .uv(2, 0, 16)
-                .uv(3, 4, 16)
+                .uv(0, 0, 10)
+                .uv(1, 4, 10)
+                .uv(2, 4, 16)
+                .uv(3, 0, 16)
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
@@ -126,18 +126,18 @@ public class PipeBakedModel implements BakedModel {
 
         emitter
                 .square(Direction.WEST, 0.625f, 0.375f, 1, 0.625f, 0.375f)
-                .uv(0, 4, 10)
-                .uv(1, 0, 10)
-                .uv(2, 0, 16)
-                .uv(3, 4, 16)
+                .uv(0, 0, 10)
+                .uv(1, 4, 10)
+                .uv(2, 4, 16)
+                .uv(3, 0, 16)
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
                 .square(Direction.EAST, 0, 0.375f, 0.375f, 0.625f, 0.375f)
-                .uv(0, 4, 0)
-                .uv(1, 0, 0)
-                .uv(2, 0, 6)
-                .uv(3, 4, 6)
+                .uv(0, 0, 0)
+                .uv(1, 4, 0)
+                .uv(2, 4, 6)
+                .uv(3, 0, 6)
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
@@ -160,18 +160,18 @@ public class PipeBakedModel implements BakedModel {
 
         emitter
                 .square(Direction.NORTH, 0, 0.375f, 0.375f, 0.625f, 0.375f)
-                .uv(0, 4, 0)
-                .uv(1, 0, 0)
-                .uv(2, 0, 6)
-                .uv(3, 4, 6)
+                .uv(0, 0, 0)
+                .uv(1, 4, 0)
+                .uv(2, 4, 6)
+                .uv(3, 0, 6)
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
                 .square(Direction.SOUTH, 0.625f, 0.375f, 1, 0.625f, 0.375f)
-                .uv(0, 4, 10)
-                .uv(1, 0, 10)
-                .uv(2, 0, 16)
-                .uv(3, 4, 16)
+                .uv(0, 0, 10)
+                .uv(1, 4, 10)
+                .uv(2, 4, 16)
+                .uv(3, 0, 16)
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
@@ -194,18 +194,18 @@ public class PipeBakedModel implements BakedModel {
 
         emitter
                 .square(Direction.NORTH, 0.625f, 0.375f, 1, 0.625f, 0.375f)
-                .uv(0, 4, 10)
-                .uv(1, 0, 10)
-                .uv(2, 0, 16)
-                .uv(3, 4, 16)
+                .uv(0, 0, 10)
+                .uv(1, 4, 10)
+                .uv(2, 4, 16)
+                .uv(3, 0, 16)
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
                 .square(Direction.SOUTH, 0, 0.375f, 0.375f, 0.625f, 0.375f)
-                .uv(0, 4, 0)
-                .uv(1, 0, 0)
-                .uv(2, 0, 6)
-                .uv(3, 4, 6)
+                .uv(0, 0, 0)
+                .uv(1, 4, 0)
+                .uv(2, 4, 6)
+                .uv(3, 0, 6)
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
