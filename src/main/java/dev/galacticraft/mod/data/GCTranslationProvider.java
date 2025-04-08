@@ -24,7 +24,6 @@ package dev.galacticraft.mod.data;
 
 import dev.galacticraft.api.data.TranslationProvider;
 import dev.galacticraft.api.rocket.part.RocketPart;
-import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCRocketParts;
@@ -118,15 +117,15 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.SULFURIC_ACID, "Sulfuric Acid");
 
         // DECORATION BLOCKS
-        this.decorationSet(GCBlocks.ALUMINUM_DECORATION, "Aluminum Decoration");
-        this.decorationSet(GCBlocks.BRONZE_DECORATION, "Bronze Decoration");
-        this.decorationSet(GCBlocks.COPPER_DECORATION, "Copper Decoration");
-        this.decorationSet(GCBlocks.IRON_DECORATION, "Iron Decoration");
-        this.decorationSet(GCBlocks.METEORIC_IRON_DECORATION, "Meteoric Iron Decoration");
-        this.decorationSet(GCBlocks.STEEL_DECORATION, "Steel Decoration");
-        this.decorationSet(GCBlocks.TIN_DECORATION, "Tin Decoration");
-        this.decorationSet(GCBlocks.TITANIUM_DECORATION, "Titanium Decoration");
-        this.decorationSet(GCBlocks.DARK_DECORATION, "Dark Decoration");
+        this.block(GCBlocks.PLATED_ALUMINUM_BLOCK, "Plated Aluminum Block");
+        this.block(GCBlocks.PLATED_BRONZE_BLOCK, "Plated Bronze Block");
+        this.block(GCBlocks.PLATED_COPPER_BLOCK, "Plated Copper Block");
+        this.block(GCBlocks.PLATED_IRON_BLOCK, "Plated Iron Block");
+        this.block(GCBlocks.PLATED_METEORIC_IRON_BLOCK, "Plated Meteoric Iron Block");
+        this.block(GCBlocks.PLATED_STEEL_BLOCK, "Plated Steel Block");
+        this.block(GCBlocks.PLATED_TIN_BLOCK, "Plated Tin Block");
+        this.block(GCBlocks.PLATED_TITANIUM_BLOCK, "Plated Titanium Block");
+        this.block(GCBlocks.PLATED_DESH_BLOCK, "Plated Desh Block");
 
         // MOON NATURAL
         this.block(GCBlocks.MOON_TURF, "Moon Turf");
@@ -994,17 +993,6 @@ public class GCTranslationProvider extends TranslationProvider {
     protected void generateStatsTranslations() {
         this.stat(GCStats.OPEN_PARACHEST, "Parachests Opened");
         this.stat(GCStats.INTERACT_WITH_ROCKET_WORKBENCH, "Interactions with Rocket Workbench");
-    }
-
-    protected void decorationSet(DecorationSet decoSet, String translation) {
-        this.block(decoSet.block(), translation);
-        this.block(decoSet.slab(), translation + " Slab");
-        this.block(decoSet.stairs(), translation + " Stairs");
-        this.block(decoSet.wall(), translation + " Wall");
-        this.block(decoSet.detailedBlock(), "Detailed " + translation);
-        this.block(decoSet.detailedSlab(), "Detailed " + translation + " Slab");
-        this.block(decoSet.detailedStairs(), "Detailed " + translation + " Stairs");
-        this.block(decoSet.detailedWall(), "Detailed " + translation + " Wall");
     }
 
     protected void blockDesc(Block block, String translation) {

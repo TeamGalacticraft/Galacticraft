@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/inner_stairs",
-  "textures": {
-    "bottom": "galacticraft:block/titanium_decoration",
-    "side": "galacticraft:block/titanium_decoration",
-    "top": "galacticraft:block/titanium_decoration"
-  }
-}
