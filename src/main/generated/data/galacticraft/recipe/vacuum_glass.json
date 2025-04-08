@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "G": {
-      "item": "minecraft:glass"
+      "tag": "c:glass_blocks/colorless"
     },
     "T": {
-      "item": "galacticraft:tin_ingot"
+      "tag": "c:ingots/tin"
     }
   },
   "pattern": [

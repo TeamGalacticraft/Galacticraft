@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.world.gen.carver;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCBlockTags;
 import dev.galacticraft.mod.world.gen.carver.config.CraterCarverConfig;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -58,7 +58,7 @@ public class GCConfiguredCarvers {
                 ConstantFloat.of(3.0f),
                 VerticalAnchor.aboveBottom(8),
                 CarverDebugSettings.DEFAULT,
-                BuiltInRegistries.BLOCK.getOrCreateTag(GCTags.MOON_CARVER_REPLACEABLES),
+                BuiltInRegistries.BLOCK.getOrCreateTag(GCBlockTags.MOON_CARVER_REPLACEABLES),
                 UniformFloat.of(-0.125f, 0.125f),
                 new CanyonCarverConfiguration.CanyonShapeConfiguration(
                         UniformFloat.of(0.75f, 1.0f),

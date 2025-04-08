@@ -3,6 +3,9 @@
   "ingredients": [
     {
       "item": "galacticraft:desh_ingot"
+    },
+    {
+      "item": "galacticraft:desh_ingot"
     }
   ],
   "result": {

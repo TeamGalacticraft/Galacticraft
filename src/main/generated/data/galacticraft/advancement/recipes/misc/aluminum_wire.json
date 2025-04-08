@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_glass_pane": {
+    "has_aluminum_ingot": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:glass_pane"
+            "items": "#c:ingots/aluminum"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_glass_pane"
+      "has_aluminum_ingot"
     ]
   ],
   "rewards": {
