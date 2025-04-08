@@ -23,25 +23,15 @@
 package dev.galacticraft.mod.world.gen.feature;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.GCBlocks;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstrapContext;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.LakeFeature;
-import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-
-public abstract class GCConfiguredFeature {
-    public static final ResourceKey<ConfiguredFeature<?, ?>> OIL_LAKE = key("oil_lake");
-
-    public static void bootstrapRegistries(BootstrapContext<ConfiguredFeature<?, ?>> context) {
-        context.register(OIL_LAKE, new ConfiguredFeature<>(Feature.LAKE, new LakeFeature.Configuration(BlockStateProvider.simple(GCBlocks.CRUDE_OIL), BlockStateProvider.simple(Blocks.STONE))));
+public class GCFeatures {
+    public static void register() {
     }
 
-    private static ResourceKey<ConfiguredFeature<?, ?>> key(String name) {
-        return Constant.key(Registries.CONFIGURED_FEATURE, name);
+    private static void register(String id, Feature feature) {
+        Registry.register(BuiltInRegistries.FEATURE, Constant.id(id), feature);
     }
 }
