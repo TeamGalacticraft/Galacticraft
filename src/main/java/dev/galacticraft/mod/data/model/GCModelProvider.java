@@ -598,6 +598,10 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.ATMOSPHERIC_VALVE, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.AMBIENT_THERMAL_CONTROLLER, ModelTemplates.FLAT_ITEM);
 
+        for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
+            GCModelTemplates.PIPE_INVENTORY.create(ModelLocationUtils.getModelLocation(pipe.asItem()), TextureMapping.layer0(pipe), generator.output);
+        }
+
         // FOOD
         generator.generateFlatItem(GCItems.MOON_CHEESE_CURD, ModelTemplates.FLAT_ITEM);
 

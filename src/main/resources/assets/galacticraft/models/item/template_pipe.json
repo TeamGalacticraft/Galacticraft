@@ -1,0 +1,18 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "galacticraft:item/template_wire",
+	"elements": [
+		{
+			"from": [2, 4, 6],
+			"to": [14, 8, 10],
+			"faces": {
+				"north": {"uv": [0, 2, 4, 14], "rotation": 270, "texture": "#layer0"},
+				"east": {"uv": [0, 6, 4, 10], "texture": "#layer0"},
+				"south": {"uv": [0, 2, 4, 14], "rotation": 90, "texture": "#layer0"},
+				"west": {"uv": [0, 6, 4, 10], "texture": "#layer0"},
+				"up": {"uv": [0, 2, 4, 14], "rotation": 90, "texture": "#layer0"},
+				"down": {"uv": [0, 2, 4, 14], "rotation": 90, "texture": "#layer0"}
+			}
+		}
+	]
+}
