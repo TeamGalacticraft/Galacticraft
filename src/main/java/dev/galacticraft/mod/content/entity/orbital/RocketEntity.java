@@ -606,6 +606,10 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
             setThrust(tag.getFloat("Thrust"));
         }
 
+        if (tag.contains("Fuel")) {
+            setFuel(tag.getLong("Fuel"));
+        }
+
         BlockEntity be = this.level().getBlockEntity(BlockPos.of(tag.getLong("Linked")));
         if (be instanceof FuelDock pad)
             this.linkedPad = pad;
@@ -618,6 +622,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
         tag.putString("Stage", getLaunchStage().name());
         tag.putDouble("Thrust", this.getThrust());
+        tag.putLong("Fuel", this.getFuel());
 
         if (this.linkedPad != null) tag.putLong("Linked", this.linkedPad.getDockPos().asLong());
     }
