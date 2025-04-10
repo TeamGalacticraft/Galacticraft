@@ -104,12 +104,8 @@ public abstract class FluidPipeBlock extends PipeBlock implements EntityBlock {
                 this.setColor(state, level, pos, color);
 
                 return ItemInteractionResult.SUCCESS;
-            } else if ((stack.is(Items.WATER_BUCKET) || stack.is(Items.WET_SPONGE)) && this.color != PipeColor.CLEAR) {
-                if (stack.is(Items.WATER_BUCKET) && !player.getAbilities().instabuild) {
-                    player.setItemInHand(hand, new ItemStack(Items.BUCKET));
-                }
+            } else if (stack.is(Items.WET_SPONGE) && this.color != PipeColor.CLEAR) {
                 this.setColor(state, level, pos, PipeColor.CLEAR);
-
                 return ItemInteractionResult.SUCCESS;
             } else if (stack.getItem() instanceof StandardWrenchItem && pipeEntity instanceof Pullable pullablePipe) {
                 var stack2 = stack.copy();

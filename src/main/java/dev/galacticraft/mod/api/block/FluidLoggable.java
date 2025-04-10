@@ -99,7 +99,7 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
     default boolean placeLiquid(LevelAccessor world, BlockPos pos, BlockState state, FluidState fluidState) {
         if (!(fluidState.getType() instanceof FlowingFluid))
             return false;
-        if (!this.hasFluid(state)) {
+        if (!hasFluid(state)) {
             if (!world.isClientSide()) {
                 world.setBlock(pos, state.setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType())).setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)).setValue(FlowingFluid.FALLING, fluidState.getValue(FlowingFluid.FALLING)), 3);
                 world.scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
@@ -127,7 +127,7 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
 
     @Override
     default @NotNull ItemStack pickupBlock(@Nullable Player player, LevelAccessor world, BlockPos pos, BlockState state) {
-        if (this.hasFluid(state)) {
+        if (hasFluid(state)) {
             if (BuiltInRegistries.FLUID.get(state.getValue(FLUID)).defaultFluidState().isSource()) {
                 world.setBlock(pos, state.setValue(FLUID, Constant.Misc.EMPTY).setValue(FlowingFluid.LEVEL, 1), 3);
                 return new ItemStack(BuiltInRegistries.FLUID.get(state.getValue(FLUID)).getBucket());
@@ -136,7 +136,7 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
         return ItemStack.EMPTY;
     }
 
-    default boolean hasFluid(BlockState state) {
+    static boolean hasFluid(BlockState state) {
         return !(state.getValue(FLUID).equals(Constant.Misc.EMPTY) || state.getValue(FLUID).equals(INVALID));
     }
 
@@ -145,8 +145,8 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
         return Optional.empty();
     }
 
-    default FluidState createFluidState(BlockState blockState) {
-        if (!this.hasFluid(blockState)) {
+    static FluidState createFluidState(BlockState blockState) {
+        if (!hasFluid(blockState)) {
             return EMPTY_STATE;
         }
 
@@ -161,8 +161,8 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
         return fluidState;
     }
 
-    default void tryScheduleFluidTick(LevelAccessor level, BlockState blockState, BlockPos pos) {
-        if (this.hasFluid(blockState)) {
+    static void tryScheduleFluidTick(LevelAccessor level, BlockState blockState, BlockPos pos) {
+        if (hasFluid(blockState)) {
             level.scheduleTick(pos, BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)), BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)).getTickDelay(level));
         }
     }

@@ -93,7 +93,7 @@ public class FluidPipeWalkway extends FluidPipeBlock implements FluidLoggable {
 
     @Override
     public @NotNull BlockState updateShape(BlockState blockState, Direction facing, BlockState neighborState, LevelAccessor level, BlockPos blockPos, BlockPos neighborPos) {
-        this.tryScheduleFluidTick(level, blockState, blockPos);
+        FluidLoggable.tryScheduleFluidTick(level, blockState, blockPos);
         return blockState;
     }
 
@@ -128,7 +128,7 @@ public class FluidPipeWalkway extends FluidPipeBlock implements FluidLoggable {
 
     @Override
     public @NotNull FluidState getFluidState(BlockState blockState) {
-        return this.createFluidState(blockState);
+        return FluidLoggable.createFluidState(blockState);
     }
 
     @Override

@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.special.fluidpipe;
 
+import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.FluidPipeBlock;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlocks;
@@ -29,15 +30,20 @@ import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEn
 import dev.galacticraft.mod.util.DirectionUtil;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class GlassFluidPipeBlock extends FluidPipeBlock {
+public class GlassFluidPipeBlock extends FluidPipeBlock implements FluidLoggable {
     public static final VoxelShape NORTH = box(6, 6, 0, 10, 10, 10);
     public static final VoxelShape EAST = box(6, 6, 6, 16, 10, 10);
     public static final VoxelShape SOUTH = box(6, 6, 6, 10, 10, 16);
@@ -51,12 +57,14 @@ public class GlassFluidPipeBlock extends FluidPipeBlock {
 
         BlockState state = this.getStateDefinition().any();
         state = FluidPipeBlock.applyDefaultState(state);
+        state = FluidLoggable.applyDefaultState(state);
         this.registerDefaultState(state);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> compositeStateBuilder) {
         FluidPipeBlock.addStateDefinitions(compositeStateBuilder);
+        FluidLoggable.addStateDefinitions(compositeStateBuilder);
     }
 
     @Override
@@ -77,6 +85,24 @@ public class GlassFluidPipeBlock extends FluidPipeBlock {
                 }
             }
         }
+    }
+
+    @Override
+    public @NotNull BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        BlockState state = super.getStateForPlacement(ctx);
+        state = FluidLoggable.applyFluidState(ctx.getLevel(), state, ctx.getClickedPos());
+        return state;
+    }
+
+    @Override
+    protected @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos pos, BlockPos neighborPos) {
+        FluidLoggable.tryScheduleFluidTick(levelAccessor, state, pos);
+        return super.updateShape(state, direction, neighborState, levelAccessor, pos, neighborPos);
+    }
+
+    @Override
+    protected @NotNull FluidState getFluidState(BlockState state) {
+        return FluidLoggable.createFluidState(state);
     }
 
     @Override

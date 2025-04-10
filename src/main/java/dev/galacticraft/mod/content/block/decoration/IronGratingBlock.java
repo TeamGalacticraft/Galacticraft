@@ -83,7 +83,7 @@ public class IronGratingBlock extends Block implements FluidLoggable {
 
     @Override
     public @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborBlockState, LevelAccessor world, BlockPos blockPos, BlockPos neighborBlockPos) {
-        this.tryScheduleFluidTick(world, state, blockPos);
+        FluidLoggable.tryScheduleFluidTick(world, state, blockPos);
         return super.updateShape(state, direction, neighborBlockState, world, blockPos, neighborBlockPos);
     }
 
@@ -94,7 +94,7 @@ public class IronGratingBlock extends Block implements FluidLoggable {
 
     @Override
     public @NotNull FluidState getFluidState(BlockState state) {
-        return this.createFluidState(state);
+        return FluidLoggable.createFluidState(state);
     }
 
     @Override

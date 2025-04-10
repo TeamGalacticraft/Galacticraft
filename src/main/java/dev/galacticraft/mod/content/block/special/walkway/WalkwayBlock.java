@@ -125,7 +125,7 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
 
     @Override
     public @NotNull BlockState updateShape(BlockState blockState, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos blockPos, BlockPos neighborPos) {
-        if (!this.hasFluid(blockState)) {
+        if (!FluidLoggable.hasFluid(blockState)) {
             level.scheduleTick(blockPos, BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)), BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)).getTickDelay(level));
         }
         return blockState;
@@ -158,19 +158,7 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
 
     @Override
     public @NotNull FluidState getFluidState(BlockState blockState) {
-        if (this.hasFluid(blockState)) {
-            return EMPTY_STATE;
-        }
-
-        var state1 = BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)).defaultFluidState();
-
-        if (state1.getValues().containsKey(FlowingFluid.LEVEL)) {
-            state1 = state1.setValue(FlowingFluid.LEVEL, blockState.getValue(FlowingFluid.LEVEL));
-        }
-        if (state1.getValues().containsKey(FlowingFluid.FALLING)) {
-            state1 = state1.setValue(FlowingFluid.FALLING, blockState.getValue(FlowingFluid.FALLING));
-        }
-        return state1;
+        return FluidLoggable.createFluidState(blockState);
     }
 
     @Override
