@@ -62,7 +62,6 @@ public class GCResourceReloadListener implements SimpleSynchronousResourceReload
         WireBakedModel.invalidate();
         WalkwayBakedModel.invalidate();
         WireWalkwayBakedModel.invalidate();
-        PipeBakedModel.invalidate();
         FluidPipeWalkwayBakedModel.invalidate();
         BubbleEntityRenderer.bubbleModel = null;
 

@@ -53,6 +53,10 @@ public enum PipeColor {
         return PipeColor.values()[dye.ordinal()];
     }
 
+    public boolean canConnectTo(PipeColor other) {
+        return this == CLEAR || other == CLEAR || this == other;
+    }
+
     public String getName() {
         return this.name;
     }

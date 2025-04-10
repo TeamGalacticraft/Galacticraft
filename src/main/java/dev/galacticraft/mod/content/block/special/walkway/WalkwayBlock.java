@@ -46,6 +46,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -73,7 +74,7 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState blockState, BlockGetter level, BlockPos blockPos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(BlockState blockState, BlockGetter level, BlockPos blockPos, CollisionContext context) {
         if (level.getBlockEntity(blockPos) instanceof WalkwayBlockEntity walkway) {
             var index = getFacingMask(walkway.getDirection());
             var shapes = Lists.newArrayList(ConnectingBlockUtil.WALKWAY_TOP);
@@ -123,8 +124,8 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState blockState, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos blockPos, BlockPos neighborPos) {
-        if (!this.isEmpty(blockState)) {
+    public @NotNull BlockState updateShape(BlockState blockState, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos blockPos, BlockPos neighborPos) {
+        if (!FluidLoggable.hasFluid(blockState)) {
             level.scheduleTick(blockPos, BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)), BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)).getTickDelay(level));
         }
         return blockState;
@@ -156,20 +157,8 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
     }
 
     @Override
-    public FluidState getFluidState(BlockState blockState) {
-        if (this.isEmpty(blockState)) {
-            return EMPTY_STATE;
-        }
-
-        var state1 = BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)).defaultFluidState();
-
-        if (state1.getValues().containsKey(FlowingFluid.LEVEL)) {
-            state1 = state1.setValue(FlowingFluid.LEVEL, blockState.getValue(FlowingFluid.LEVEL));
-        }
-        if (state1.getValues().containsKey(FlowingFluid.FALLING)) {
-            state1 = state1.setValue(FlowingFluid.FALLING, blockState.getValue(FlowingFluid.FALLING));
-        }
-        return state1;
+    public @NotNull FluidState getFluidState(BlockState blockState) {
+        return FluidLoggable.createFluidState(blockState);
     }
 
     @Override
