@@ -27,6 +27,7 @@ import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry;
+import dev.galacticraft.mod.content.item.OxygenTankItem;
 import dev.galacticraft.mod.storage.PlaceholderItemStorage;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
@@ -54,51 +55,14 @@ public class GCCreativeModeTabs {
                 output.accept(OXYGEN_MASK);
                 output.accept(OXYGEN_GEAR);
 
-                try (Transaction t = Transaction.openOuter()) {
-                    PlaceholderItemStorage itemStorage = new PlaceholderItemStorage();
-                    ContainerItemContext context = ContainerItemContext.ofSingleSlot(itemStorage);
-
-                    output.accept(SMALL_OXYGEN_TANK);//todo: set directly
-                    itemStorage.setItem(SMALL_OXYGEN_TANK);
-                    OxygenTankItem smallTankItem = (OxygenTankItem) SMALL_OXYGEN_TANK.asItem();
-                    long smallCapacity = smallTankItem.capacity;
-                    long insertedSmall;
-
-                    do {
-                        insertedSmall = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), smallCapacity, t);
-                    } while (insertedSmall > 0 && smallCapacity > 0);
-
-                    output.accept(itemStorage.variant.toStack());
-
-                    output.accept(MEDIUM_OXYGEN_TANK);
-                    itemStorage.setItem(MEDIUM_OXYGEN_TANK);
-                    OxygenTankItem mediumTankItem = (OxygenTankItem) MEDIUM_OXYGEN_TANK.asItem();
-                    long mediumCapacity = mediumTankItem.capacity;
-                    long insertedMedium;
-
-                    do {
-                        insertedMedium = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), mediumCapacity, t);
-                        mediumCapacity -= insertedMedium;
-                    } while (insertedMedium > 0 && mediumCapacity > 0);
-
-                    output.accept(itemStorage.variant.toStack());
-
-                    output.accept(LARGE_OXYGEN_TANK);
-                    itemStorage.setItem(LARGE_OXYGEN_TANK);
-                    OxygenTankItem largeTankItem = (OxygenTankItem) LARGE_OXYGEN_TANK.asItem();
-                    long largeCapacity = largeTankItem.capacity;
-                    long insertedLarge;
-
-                    do {
-                        insertedLarge = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), largeCapacity, t);
-                        largeCapacity -= insertedLarge;
-                    } while (insertedLarge > 0 && largeCapacity > 0);
-
-                    output.accept(itemStorage.variant.toStack());
-                }
-
-
+                output.accept(SMALL_OXYGEN_TANK);
+                output.accept(OxygenTankItem.getFullTank(SMALL_OXYGEN_TANK));
+                output.accept(MEDIUM_OXYGEN_TANK);
+                output.accept(OxygenTankItem.getFullTank(MEDIUM_OXYGEN_TANK));
+                output.accept(LARGE_OXYGEN_TANK);
+                output.accept(OxygenTankItem.getFullTank(LARGE_OXYGEN_TANK));
                 output.accept(INFINITE_OXYGEN_TANK);
+
                 output.accept(SENSOR_GLASSES);
                 output.accept(FREQUENCY_MODULE);
                 PARACHUTE.colorMap().values().forEach(output::accept);

@@ -22,13 +22,16 @@
 
 package dev.galacticraft.api.accessor;
 
-import dev.galacticraft.api.item.OxygenGear;
-import dev.galacticraft.api.item.OxygenMask;
+import dev.galacticraft.mod.tag.GCTags;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 public interface GearInventoryProvider {
+    default void galacticraft$onEquipAccessory(ItemStack previous, ItemStack incoming) {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
+
     default Container galacticraft$getGearInv() {
         throw new RuntimeException("This should be overridden by mixin!");
     }
@@ -49,11 +52,11 @@ public interface GearInventoryProvider {
         boolean mask = false;
         boolean gear = false;
         for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
-            Item item = this.galacticraft$getAccessories().getItem(i).getItem();
-            if (!mask && item instanceof OxygenMask) {
+            ItemStack itemStack = this.galacticraft$getAccessories().getItem(i);
+            if (!mask && itemStack.is(GCTags.OXYGEN_MASKS)) {
                 mask = true;
                 if (gear) break;
-            } else if (!gear && item instanceof OxygenGear) {
+            } else if (!gear && itemStack.is(GCTags.OXYGEN_GEAR)) {
                 gear = true;
                 if (mask) break;
             }
@@ -63,8 +66,8 @@ public interface GearInventoryProvider {
 
     default boolean galacticraft$hasMask() {
         for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
-            Item item = this.galacticraft$getAccessories().getItem(i).getItem();
-            if (item instanceof OxygenMask) {
+            ItemStack itemStack = this.galacticraft$getAccessories().getItem(i);
+            if (itemStack.is(GCTags.OXYGEN_MASKS)) {
                 return true;
             }
         }

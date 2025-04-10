@@ -22,10 +22,11 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.mod.Constant;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 
-public class ParachuteItem extends Item {
+public class ParachuteItem extends AccessoryItem {
     private final DyeColor color;
 
     public ParachuteItem(DyeColor color, Properties properties) {
