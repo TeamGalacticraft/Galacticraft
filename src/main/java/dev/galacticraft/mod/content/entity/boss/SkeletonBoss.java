@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.entity.boss;
 
 import dev.galacticraft.api.entity.IgnoreShift;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
@@ -124,9 +123,9 @@ public class SkeletonBoss extends AbstractBossEntity implements RangedAttackMob,
     @Override
     public void positionRider(Entity passenger, Entity.MoveFunction positionUpdater) {
         Vec3 vec3 = this.getPassengerRidingPosition(passenger);
-        final double offsetX = Math.sin(-this.getYHeadRot() / Constant.RADIANS_TO_DEGREES);
-        final double offsetZ = Math.cos(this.getYHeadRot() / Constant.RADIANS_TO_DEGREES);
-        final double offsetY = 2 * Math.cos((this.throwTimer + this.postThrowDelay) * 0.05F);
+        final double offsetX = -Mth.sin(this.getYHeadRot() * Mth.DEG_TO_RAD);
+        final double offsetZ = Mth.cos(this.getYHeadRot() * Mth.DEG_TO_RAD);
+        final double offsetY = 2 * Mth.cos((this.throwTimer + this.postThrowDelay) * 0.05F);
         Vec3 point = passenger.getVehicleAttachmentPoint(this);
         positionUpdater.accept(passenger, vec3.x() + offsetX, vec3.y() + point.y + offsetY, vec3.z() + offsetZ);
     }
