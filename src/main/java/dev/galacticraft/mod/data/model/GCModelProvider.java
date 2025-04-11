@@ -148,7 +148,8 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE);
         createLaunchPadBlock(GCBlocks.FUELING_PAD, generator);
         createLaunchPadBlock(GCBlocks.ROCKET_LAUNCH_PAD, generator);
-        generator.createNonTemplateModelBlock(GCBlocks.ROCKET_WORKBENCH);
+        this.createRocketWorkbench(generator);
+        // generator.createNonTemplateModelBlock(GCBlocks.ROCKET_WORKBENCH);
         generator.createNonTemplateModelBlock(GCBlocks.FALLEN_METEOR);
 
         // LIGHT PANELS
@@ -458,6 +459,16 @@ public class GCModelProvider extends FabricModelProvider {
         var block = GCBlocks.AIR_LOCK_CONTROLLER;
         var textureMapping = TextureMapping.column(TextureMapping.getBlockTexture(block), TextureMapping.getBlockTexture(GCBlocks.AIR_LOCK_FRAME));
         generator.createTrivialBlock(block, textureMapping, ModelTemplates.CUBE_COLUMN);
+    }
+
+    private void createRocketWorkbench(BlockModelGenerators generator) {
+        var block = GCBlocks.ROCKET_WORKBENCH;
+        var textureMapping = new TextureMapping()
+                .put(TextureSlot.PARTICLE, ResourceLocation.parse("galacticraft:block/machine"))
+                .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(block, "_bottom"))
+                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(block, "_top"))
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block, "_side"));
+        generator.createTrivialBlock(block, textureMapping, ModelTemplates.CUBE_BOTTOM_TOP);
     }
 
     private void createParachests(BlockModelGenerators generator) {
