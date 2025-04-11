@@ -28,11 +28,13 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
 import dev.galacticraft.mod.tag.GCTags;
+import net.minecraft.client.model.EndermanModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.IllagerModel;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.SpiderModel;
+import net.minecraft.client.model.WitchModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartNames;
 import net.minecraft.client.model.geom.PartPose;
@@ -48,6 +50,8 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.AbstractIllager;
+import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -62,8 +66,8 @@ public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityMode
         ModelPart root, body;
         boolean rotate = false;
         float x = 0.0F;
-        float y = 1.0F;
-        float z = context.getModel() instanceof IllagerModel ? 3.01F : 2.01F;
+        float y = context.getModel() instanceof EndermanModel ? 2.0F : 1.0F;
+        float z = context.getModel() instanceof IllagerModel || context.getModel() instanceof WitchModel ? 3.01F : 2.01F;
         if (context.getModel() instanceof SpiderModel model) {
             root = model.root();
             body = root.getChild("body1");
@@ -127,6 +131,9 @@ public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityMode
             if (zombie.isBaby()) {
                 matrices.scale(0.75F, 0.75F, 0.75F);
             }
+        } else if (livingEntity instanceof AbstractIllager || livingEntity instanceof Witch) {
+            tankSize1 = Constant.Item.LARGE_OXYGEN_TANK;
+            tankSize2 = Constant.Item.LARGE_OXYGEN_TANK;
         }
 
         if (this.tanks != null && hasTank1) {

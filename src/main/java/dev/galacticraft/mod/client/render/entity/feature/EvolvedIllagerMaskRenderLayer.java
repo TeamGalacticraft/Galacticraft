@@ -45,9 +45,8 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class EvolvedIllagerMaskRenderLayer<T extends AbstractIllager, M extends IllagerModel<T>> extends RenderLayer<T, M> {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/entity/illager_gear.png");
+    private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/illager_gear.png");
     private final @Nullable ModelPart mask;
-    private final @Nullable ModelPart nose;
     private final @Nullable ModelPart pipe;
 
     public EvolvedIllagerMaskRenderLayer(RenderLayerParent<T, M> context) {
@@ -59,28 +58,25 @@ public class EvolvedIllagerMaskRenderLayer<T extends AbstractIllager, M extends 
             body = root.getChild(PartNames.BODY);
         } else {
             this.mask = null;
-            this.nose = null;
             this.pipe = null;
             return;
         }
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
         if (head != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -11.01F, -5.0F, 10, 12, 10, CubeDeformation.NONE), PartPose.offset(head.x, head.y, head.z));
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.ILLAGER_NOSE_COMPARTMENT, CubeListBuilder.create().texOffs(10, 23).addBox(-2.0F, -4.01F, -7.0F, 4, 6, 3, CubeDeformation.NONE), PartPose.offset(head.x, head.y, head.z));
+            PartDefinition maskPartData = modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -11.01F, -5.0F, 10, 12, 10, CubeDeformation.NONE), PartPose.offset(head.x, head.y, head.z));
+            maskPartData.addOrReplaceChild(Constant.ModelPartName.ILLAGER_NOSE_COMPARTMENT, CubeListBuilder.create().texOffs(10, 23).addBox(-2.0F, -4.01F, -7.0F, 4, 6, 3, CubeDeformation.NONE), PartPose.offset(head.x, head.y, head.z));
         }
         if (body != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 5).addBox(-2.0F, -6.0F, 5.0F, 4, 9, 6, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 6).addBox(-2.0F, -3.0F, 2.0F, 4, 6, 8, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
         }
 
         root = modelPartData.bake(64, 32);
 
         if (head != null) {
             this.mask = root.getChild(Constant.ModelPartName.OXYGEN_MASK);
-            this.nose = root.getChild(Constant.ModelPartName.ILLAGER_NOSE_COMPARTMENT);
         } else {
             this.mask = null;
-            this.nose = null;
         }
 
         if (body != null) {
@@ -98,9 +94,6 @@ public class EvolvedIllagerMaskRenderLayer<T extends AbstractIllager, M extends 
             this.mask.yRot = headYaw * (float) (Math.PI / 180.0);
             this.mask.xRot = headPitch * (float) (Math.PI / 180.0);
             this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
-            this.nose.yRot = this.mask.yRot;
-            this.nose.xRot = this.mask.xRot;
-            this.nose.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
         if (this.pipe != null) {
             this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
