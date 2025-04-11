@@ -45,15 +45,14 @@ public abstract class MinecraftClientMixin {
 
     @Inject(method = "setLevel", at = @At("RETURN"))
     private void updateSoundMultiplier(ClientLevel level, ReceivingLevelScreen.Reason reason, CallbackInfo ci) {
+        float volume = 1.0F;
         if (level != null) {
             Holder<CelestialBody<?, ?>> holder = level.galacticraft$getCelestialBody();
             if (holder != null) {
-                ((SoundSystemAccessor) ((SoundManagerAccessor) this.getSoundManager()).getSoundSystem()).galacticraft$updateAtmosphericVolumeMultiplier(holder.value().atmosphere().pressure());
-            } else {
-                ((SoundSystemAccessor) ((SoundManagerAccessor) this.getSoundManager()).getSoundSystem()).galacticraft$updateAtmosphericVolumeMultiplier(1.0f);
+                volume = holder.value().atmosphere().pressure();
             }
-        } else {
-            ((SoundSystemAccessor) ((SoundManagerAccessor) this.getSoundManager()).getSoundSystem()).galacticraft$updateAtmosphericVolumeMultiplier(1.0f);
         }
+
+        ((SoundSystemAccessor) ((SoundManagerAccessor) this.getSoundManager()).getSoundSystem()).galacticraft$updateAtmosphericVolumeMultiplier(volume);
     }
 }

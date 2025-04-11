@@ -69,7 +69,7 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
      * @return the name of this celestial body
      */
     public @NotNull Component name() {
-        return this.type().name(this.config());
+        return this.type.name(this.config);
     }
 
     /**
@@ -79,7 +79,7 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
      * @return the description of this celestial body
      */
     public @NotNull Component description() {
-        return this.type().description(this.config());
+        return this.type.description(this.config);
     }
 
     /**
@@ -88,7 +88,7 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
      * @return this celestial body's parent {@link ResourceKey}
      */
     public <P> Optional<ResourceKey<P>> parent() {
-        return this.type().parent(this.config);
+        return this.type.parent(this.config);
     }
 
     /**
@@ -98,7 +98,7 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
      * @return this celestial body's parent value
      */
     public CelestialBody<?, ?> parentValue(Registry<CelestialBody<?, ?>> registry) {
-        return registry.getOrThrow(this.type().parent(this.config).orElseThrow().cast(AddonRegistries.CELESTIAL_BODY).orElseThrow());
+        return registry.getOrThrow(this.type.parent(this.config).orElseThrow().cast(AddonRegistries.CELESTIAL_BODY).orElseThrow());
     }
 
     /**
@@ -108,7 +108,7 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
      * @return this celestial body's parent galaxy's id {@link ResourceKey}
      */
     public Optional<ResourceKey<Galaxy>> galaxy(Registry<CelestialBody<?, ?>> registry) {
-        return this.type().galaxy(registry, this.config());
+        return this.type.galaxy(registry, this.config);
     }
 
     /**
@@ -129,7 +129,7 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
      * @see CelestialPosition
      */
     public @NotNull CelestialPosition<?, ?> position() {
-        return this.type().position(this.config());
+        return this.type.position(this.config);
     }
 
     /**
@@ -139,7 +139,7 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
      * @see CelestialDisplay
      */
     public @NotNull CelestialDisplay<?, ?> display() {
-        return this.type().display(this.config());
+        return this.type.display(this.config);
     }
 
     /**
@@ -149,7 +149,7 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
      * @see CelestialRingDisplay
      */
     public @NotNull CelestialRingDisplay<?, ?> ring() {
-        return this.type().ring(this.config());
+        return this.type.ring(this.config);
     }
 
     /**
@@ -158,7 +158,7 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
      * @return this celestial body's atmospheric composition
      */
     public @NotNull GasComposition atmosphere() {
-        return this.type().atmosphere(this.config());
+        return this.type.atmosphere(this.config);
     }
 
     /**
@@ -167,7 +167,7 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
      * @return this celestial body's length of a single day on this celestial body
      */
     public long dayLength() {
-        return type().dayLength(this.config);
+        return this.type.dayLength(this.config);
     }
 
     /**
@@ -176,10 +176,30 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
      * @return this celestial body's gravity
      */
     public float gravity() {
-        return this.type().gravity(this.config());
+        return this.type.gravity(this.config);
     }
 
     public ResourceKey<CelestialBody<?, ?>> getKey(Registry<CelestialBody<?, ?>> registry) {
         return registry.getResourceKey(this).orElseThrow();
+    }
+
+    public boolean isStar() {
+        return this.type.isStar();
+    }
+
+    public boolean isPlanet() {
+        return this.type.isPlanet();
+    }
+
+    public boolean isSatellite() {
+        return this.type.isSatellite();
+    }
+
+    public boolean isOrbitable() {
+        return this.type.isOrbitable();
+    }
+
+    public boolean isDecorativePlanet() {
+        return this.type.isDecorativePlanet();
     }
 }

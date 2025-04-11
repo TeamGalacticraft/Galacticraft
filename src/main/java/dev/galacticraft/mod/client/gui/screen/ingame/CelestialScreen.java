@@ -104,10 +104,10 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
     public CelestialScreen(Component title) {
         super(title);
 
-        ClientSatelliteAccessor accessor = (ClientSatelliteAccessor) Objects.requireNonNull(Minecraft.getInstance().getConnection());
         this.bodiesToRender.addAll(this.celestialBodies.stream().toList());
-        this.bodiesToRender.addAll(accessor.galacticraft$getSatellites().values());
         this.bodiesToRender.sort((o1, o2) -> Float.compare(o1.position().lineScale(), o2.position().lineScale()));
+
+        ClientSatelliteAccessor accessor = (ClientSatelliteAccessor) Objects.requireNonNull(Minecraft.getInstance().getConnection());
         accessor.addListener(this);
     }
 
@@ -556,7 +556,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
     }
 
     protected boolean isSatellite(CelestialBody<?, ?> selectedBody) {
-        return selectedBody != null && selectedBody.type().isSatellite();
+        return selectedBody != null && selectedBody.isSatellite();
     }
 
     public void setBlackBackground(GuiGraphics graphics) {

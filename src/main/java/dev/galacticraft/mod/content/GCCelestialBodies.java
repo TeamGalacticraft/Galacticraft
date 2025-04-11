@@ -193,7 +193,7 @@ public class GCCelestialBodies {
                         .temperature(23.0)
                         .pressure(3.0E-15F)
                         .build(),
-                0.0375F,
+                0.91F,
                 GCCelestialHandlers.DEFAULT,
                 1,
                 105,
