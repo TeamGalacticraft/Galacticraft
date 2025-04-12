@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.data.recipes;
 
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.api.data.recipe.CircuitFabricatorRecipeBuilder;
 import dev.galacticraft.mod.api.data.recipe.ShapedCompressorRecipeBuilder;
 import dev.galacticraft.mod.api.data.recipe.ShapelessCompressorRecipeBuilder;
@@ -31,6 +33,7 @@ import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
+import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -38,9 +41,14 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class GCMachineRecipes extends FabricRecipeProvider {
@@ -272,6 +280,47 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("XXX")
                 .unlockedBy(getHasName(Items.GLASS_PANE), has(Items.GLASS_PANE))
                 .save(output);
+
+        // Dye fluid pipes
+        Map<PipeColor, TagKey<Item>> colorToDye = Util.make(new HashMap<>(16) , map -> {
+            map.put(PipeColor.WHITE, ConventionalItemTags.WHITE_DYES);
+            map.put(PipeColor.ORANGE, ConventionalItemTags.ORANGE_DYES);
+            map.put(PipeColor.MAGENTA, ConventionalItemTags.MAGENTA_DYES);
+            map.put(PipeColor.LIGHT_BLUE, ConventionalItemTags.LIGHT_BLUE_DYES);
+            map.put(PipeColor.YELLOW, ConventionalItemTags.YELLOW_DYES);
+            map.put(PipeColor.LIME, ConventionalItemTags.LIME_DYES);
+            map.put(PipeColor.PINK, ConventionalItemTags.PINK_DYES);
+            map.put(PipeColor.GRAY, ConventionalItemTags.GRAY_DYES);
+            map.put(PipeColor.LIGHT_GRAY, ConventionalItemTags.LIGHT_GRAY_DYES);
+            map.put(PipeColor.CYAN, ConventionalItemTags.CYAN_DYES);
+            map.put(PipeColor.PURPLE, ConventionalItemTags.PURPLE_DYES);
+            map.put(PipeColor.BLUE, ConventionalItemTags.BLUE_DYES);
+            map.put(PipeColor.BROWN, ConventionalItemTags.BROWN_DYES);
+            map.put(PipeColor.GREEN, ConventionalItemTags.GREEN_DYES);
+            map.put(PipeColor.RED, ConventionalItemTags.RED_DYES);
+            map.put(PipeColor.BLACK, ConventionalItemTags.BLACK_DYES);
+        });
+        for (Map.Entry<PipeColor, TagKey<Item>> entry : colorToDye.entrySet()) {
+            Block pipeBlock = GCBlocks.GLASS_FLUID_PIPES.get(entry.getKey());
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, pipeBlock, 8)
+                    .define('P', GCBlocks.GLASS_FLUID_PIPE)
+                    .define('D', entry.getValue())
+                    .pattern("PPP")
+                    .pattern("PDP")
+                    .pattern("PPP")
+                    .unlockedBy(getHasName(GCBlocks.GLASS_FLUID_PIPE), has(GCBlocks.GLASS_FLUID_PIPE))
+                    .save(output);
+        }
+
+        // Wash fluid pipes
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.GLASS_FLUID_PIPE, 8)
+                .define('P', GCTags.STAINED_GLASS_FLUID_PIPES)
+                .define('W', Items.WATER_BUCKET)
+                .pattern("PPP")
+                .pattern("PWP")
+                .pattern("PPP")
+                .unlockedBy(getHasName(GCBlocks.GLASS_FLUID_PIPE), has(GCBlocks.GLASS_FLUID_PIPE))
+                .save(output, Constant.id("wash_stained_glass_fluid_pipe"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.ALUMINUM_WIRE, 6)
                 .define('W', Items.WHITE_WOOL)

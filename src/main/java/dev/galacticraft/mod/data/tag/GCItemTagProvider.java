@@ -32,6 +32,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -101,6 +103,12 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         tag(GCTags.COMPRESSED_TIN)
                 .add(GCItems.COMPRESSED_TIN);
 
+        Item[] stainedGlassFluidPipes = GCBlocks.GLASS_FLUID_PIPES.values().stream().filter(b -> b != GCBlocks.GLASS_FLUID_PIPE).map(Block::asItem).toArray(Item[]::new);
+        tag(GCTags.STAINED_GLASS_FLUID_PIPES)
+                .add(stainedGlassFluidPipes);
+        tag(ConventionalItemTags.DYED)
+                .add(stainedGlassFluidPipes);
+
         tag(GCTags.EVOLVED_CREEPER_DROP_MUSIC_DISCS)
                 .add(GCItems.LEGACY_MUSIC_DISC_MARS)
                 .add(GCItems.LEGACY_MUSIC_DISC_MIMAS)
@@ -145,7 +153,7 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         );
     }
 
-    protected FabricTagProvider<Item>.FabricTagBuilder tag(TagKey<Item> tag) {
+    protected FabricTagProvider<Item>.@NotNull FabricTagBuilder tag(TagKey<Item> tag) {
         return getOrCreateTagBuilder(tag);
     }
 }
