@@ -33,7 +33,6 @@ import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberPart;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
-import dev.galacticraft.mod.screen.slot.AccessorySlot;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -45,7 +44,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -174,7 +172,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
 
     @Inject(method = "canFreeze", at = @At(value = "HEAD"), cancellable = true)
     private void galacticraft_canFreezeThermalPadding(CallbackInfoReturnable<Boolean> cir) {
-        if ((Entity)this instanceof Player player) {
+        if ((Entity) this instanceof Player player) {
             Container inv = player.galacticraft$getThermalArmor();
             for (int slot = 0; slot < inv.getContainerSize(); slot++) {
                 if (inv.getItem(slot).is(ItemTags.FREEZE_IMMUNE_WEARABLES)) {

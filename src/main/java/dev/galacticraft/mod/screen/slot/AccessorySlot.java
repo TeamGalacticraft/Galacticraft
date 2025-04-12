@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.screen.slot;
 
 import com.mojang.datafixers.util.Pair;
-import dev.galacticraft.api.item.Accessory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;

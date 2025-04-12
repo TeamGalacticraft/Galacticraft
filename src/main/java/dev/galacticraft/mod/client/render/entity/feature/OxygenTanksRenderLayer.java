@@ -25,7 +25,6 @@ package dev.galacticraft.mod.client.render.entity.feature;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
 import dev.galacticraft.mod.tag.GCTags;
 import net.minecraft.client.model.EndermanModel;
@@ -54,7 +53,6 @@ import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {

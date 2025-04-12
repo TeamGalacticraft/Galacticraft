@@ -86,7 +86,11 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.THERMAL_PADDING_BOOTS)
                 .add(GCItems.THERMAL_PADDING_LEGGINGS)
                 .add(GCItems.THERMAL_PADDING_CHESTPIECE)
-                .add(GCItems.THERMAL_PADDING_HELMET);
+                .add(GCItems.THERMAL_PADDING_HELMET)
+                .add(GCItems.ISOTHERMAL_PADDING_BOOTS)
+                .add(GCItems.ISOTHERMAL_PADDING_LEGGINGS)
+                .add(GCItems.ISOTHERMAL_PADDING_CHESTPIECE)
+                .add(GCItems.ISOTHERMAL_PADDING_HELMET);
         tag(GCTags.THERMAL_HEAD)
                 .add(GCItems.THERMAL_PADDING_HELMET)
                 .add(GCItems.ISOTHERMAL_PADDING_HELMET);

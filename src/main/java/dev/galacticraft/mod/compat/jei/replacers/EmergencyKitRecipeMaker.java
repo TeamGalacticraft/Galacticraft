@@ -25,7 +25,6 @@ package dev.galacticraft.mod.compat.jei.replacers;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.item.EmergencyKitItem;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.recipe.EmergencyKitRecipe;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
@@ -39,19 +38,19 @@ import java.util.List;
 public final class EmergencyKitRecipeMaker {
     private static final String group = "jei.emergency_kit";
 
-	public static List<RecipeHolder<CraftingRecipe>> createRecipes() {
+    public static List<RecipeHolder<CraftingRecipe>> createRecipes() {
         List<ItemStack> emergencyItems = EmergencyKitItem.getContents();
-		NonNullList<Ingredient> inputs = NonNullList.withSize(9, Ingredient.EMPTY);
+        NonNullList<Ingredient> inputs = NonNullList.withSize(9, Ingredient.EMPTY);
         for (int i = 0; i < 9; ++i) {
             inputs.set(i, Ingredient.of(emergencyItems.get(i)));
         }
 
-		ItemStack output = GCItems.EMERGENCY_KIT.getDefaultInstance();
-		CraftingRecipe recipe = new ShapelessRecipe(group, CraftingBookCategory.MISC, output, inputs);
+        ItemStack output = GCItems.EMERGENCY_KIT.getDefaultInstance();
+        CraftingRecipe recipe = new ShapelessRecipe(group, CraftingBookCategory.MISC, output, inputs);
         return List.of(new RecipeHolder<>(Constant.id(group), recipe));
-	}
+    }
 
-	private EmergencyKitRecipeMaker() {
+    private EmergencyKitRecipeMaker() {
 
-	}
+    }
 }

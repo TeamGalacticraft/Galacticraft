@@ -41,7 +41,6 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.monster.AbstractIllager;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class EvolvedIllagerMaskRenderLayer<T extends AbstractIllager, M extends IllagerModel<T>> extends RenderLayer<T, M> {

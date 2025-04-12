@@ -23,16 +23,9 @@
 package dev.galacticraft.mod.recipe;
 
 import dev.galacticraft.mod.content.item.EmergencyKitItem;
-import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.content.item.OxygenTankItem;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.WrittenBookItem;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;

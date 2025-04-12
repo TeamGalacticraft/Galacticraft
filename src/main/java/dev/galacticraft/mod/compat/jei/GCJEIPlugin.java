@@ -92,33 +92,33 @@ public class GCJEIPlugin implements IModPlugin {
         registration.addRecipes(GCJEIRecipeTypes.FABRICATION, manager.getAllRecipesFor(GCRecipes.FABRICATION_TYPE).stream().map(RecipeHolder::value).toList());
         registration.addRecipes(GCJEIRecipeTypes.COMPRESSING, manager.getAllRecipesFor(GCRecipes.COMPRESSING_TYPE).stream().map(RecipeHolder::value).toList());
 
-		IJeiHelpers jeiHelpers = registration.getJeiHelpers();
+        IJeiHelpers jeiHelpers = registration.getJeiHelpers();
         var craftingRecipes = manager.getAllRecipesFor(RecipeType.CRAFTING);;
-		var specialCraftingRecipes = replaceSpecialCraftingRecipes(craftingRecipes, jeiHelpers);
-		registration.addRecipes(RecipeTypes.CRAFTING, specialCraftingRecipes);
+        var specialCraftingRecipes = replaceSpecialCraftingRecipes(craftingRecipes, jeiHelpers);
+        registration.addRecipes(RecipeTypes.CRAFTING, specialCraftingRecipes);
     }
 
     private static List<RecipeHolder<CraftingRecipe>> replaceSpecialCraftingRecipes(List<RecipeHolder<CraftingRecipe>> unhandledCraftingRecipes, IJeiHelpers jeiHelpers) {
-		Map<Class<? extends CraftingRecipe>, Supplier<List<RecipeHolder<CraftingRecipe>>>> replacers = new IdentityHashMap<>();
-		replacers.put(EmergencyKitRecipe.class, EmergencyKitRecipeMaker::createRecipes);
+        Map<Class<? extends CraftingRecipe>, Supplier<List<RecipeHolder<CraftingRecipe>>>> replacers = new IdentityHashMap<>();
+        replacers.put(EmergencyKitRecipe.class, EmergencyKitRecipeMaker::createRecipes);
 
-		return unhandledCraftingRecipes.stream()
-			.map(RecipeHolder::value)
-			.map(CraftingRecipe::getClass)
-			.distinct()
-			.filter(replacers::containsKey)
-			// distinct + this limit will ensure we stop iterating early if we find all the recipes we're looking for.
-			.limit(replacers.size())
-			.flatMap(recipeClass -> {
-				var supplier = replacers.get(recipeClass);
-				try {
-					return supplier.get()
-						.stream();
-				} catch (RuntimeException e) {
-					Constant.LOGGER.error("Failed to create JEI recipes for {}", recipeClass, e);
-					return Stream.of();
-				}
-			})
-			.toList();
-	}
+        return unhandledCraftingRecipes.stream()
+            .map(RecipeHolder::value)
+            .map(CraftingRecipe::getClass)
+            .distinct()
+            .filter(replacers::containsKey)
+            // distinct + this limit will ensure we stop iterating early if we find all the recipes we're looking for.
+            .limit(replacers.size())
+            .flatMap(recipeClass -> {
+                var supplier = replacers.get(recipeClass);
+                try {
+                    return supplier.get()
+                        .stream();
+                } catch (RuntimeException e) {
+                    Constant.LOGGER.error("Failed to create JEI recipes for {}", recipeClass, e);
+                    return Stream.of();
+                }
+            })
+            .toList();
+    }
 }

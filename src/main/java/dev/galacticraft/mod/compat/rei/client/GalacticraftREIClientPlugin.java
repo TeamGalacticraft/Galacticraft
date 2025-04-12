@@ -34,7 +34,6 @@ import dev.galacticraft.mod.compat.rei.common.display.DefaultShapedCompressingDi
 import dev.galacticraft.mod.compat.rei.common.display.DefaultShapelessCompressingDisplay;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.recipe.EmergencyKitRecipe;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;

@@ -49,7 +49,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
@@ -71,10 +70,10 @@ public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel
             root = model.root();
             head = root.getChild(PartNames.HEAD);
             body = root.getChild(PartNames.BODY);
-        } else if (context.getModel() instanceof HumanoidModel<?> model){
+        } else if (context.getModel() instanceof HumanoidModel<?> model) {
             head = model.head;
             body = model.body;
-        } else if (context.getModel() instanceof AnimalModelAgeableListModel model){
+        } else if (context.getModel() instanceof AnimalModelAgeableListModel model) {
             head = model.callGetHeadParts().iterator().next();
             body = model.callGetBodyParts().iterator().next();
             rotate = true;

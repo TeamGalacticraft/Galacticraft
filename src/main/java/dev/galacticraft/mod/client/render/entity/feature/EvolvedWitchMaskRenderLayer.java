@@ -41,7 +41,6 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.monster.Witch;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class EvolvedWitchMaskRenderLayer<T extends Witch, M extends WitchModel<T>> extends RenderLayer<T, M> {

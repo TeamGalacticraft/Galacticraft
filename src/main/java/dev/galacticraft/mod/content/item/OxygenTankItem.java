@@ -56,7 +56,6 @@ public class OxygenTankItem extends AccessoryItem {
     }
 
     public static ItemStack getFullTank(Item item) {
-        // ItemStack itemStack = item.getDefaultInstance();
         try (Transaction t = Transaction.openOuter()) {
             PlaceholderItemStorage itemStorage = new PlaceholderItemStorage();
             ContainerItemContext context = ContainerItemContext.ofSingleSlot(itemStorage);
@@ -72,7 +71,6 @@ public class OxygenTankItem extends AccessoryItem {
 
             return itemStorage.variant.toStack();
         }
-        // return itemStack;
     }
 
     public OxygenTankItem(Properties settings, int capacity) {
