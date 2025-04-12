@@ -103,7 +103,7 @@ public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel
         if (body != null) {
             this.pipe = root.getChild(Constant.ModelPartName.OXYGEN_PIPE);
             if (rotate) {
-                this.pipe.xRot = -Mth.HALF_PI;
+                this.pipe.xRot = Mth.HALF_PI;
             }
         } else {
             this.pipe = null;
