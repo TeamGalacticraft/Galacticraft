@@ -41,15 +41,22 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class StandardWrenchItem extends Item {
     public StandardWrenchItem(Properties settings) {
         super(settings);
+    }
+
+    private static <T extends Comparable<T>> BlockState cycle(BlockState state, Property<T> property, Iterable<T> values, boolean reverse) {
+        return state.setValue(property, cycle(values, state.getValue(property), reverse));
     }
 
     private static <T extends Comparable<T>> BlockState cycle(BlockState state, Property<T> property, boolean reverse) {
@@ -83,10 +90,15 @@ public class StandardWrenchItem extends Item {
                     }
                 }
 
-                BlockState newState = cycle(state, property, player.isShiftKeyDown());
+                Collection<Direction> sortedValues = ((Collection<Direction>) possibleValues).stream().sorted(Comparator.comparingInt(direction -> direction.get2DDataValue())).collect(Collectors.toList());
+                BlockState newState = cycle(state, property, sortedValues, player.isShiftKeyDown());
                 world.setBlock(pos, newState, 18);
                 stack.hurtAndBreak(2, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
             }
+        } else if (block.getStateDefinition().getProperty("rotation") instanceof IntegerProperty property) {
+            BlockState newState = cycle(state, property, player.isShiftKeyDown());
+            world.setBlock(pos, newState, 18);
+            stack.hurtAndBreak(2, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
         }
     }
 
