@@ -31,10 +31,13 @@ import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.impl.universe.celestialbody.config.StarConfig;
-import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class StarType extends CelestialBodyType<StarConfig> implements Star<StarConfig> {
     public static final StarType INSTANCE = new StarType();
@@ -55,12 +58,12 @@ public class StarType extends CelestialBodyType<StarConfig> implements Star<Star
      * @return {@code null}
      */
     @Override
-    public @Nullable Holder<CelestialBody<?, ?>> parent(StarConfig config) {
-        return null;
+    public @Nullable Optional<ResourceKey<?>> parent(StarConfig config) {
+        return Optional.empty();
     }
 
     @Override
-    public @NotNull Holder<Galaxy> galaxy(StarConfig config) {
+    public @NotNull Optional<ResourceKey<Galaxy>> galaxy(Registry<CelestialBody<?, ?>> registry, StarConfig config) {
         return config.galaxy();
     }
 

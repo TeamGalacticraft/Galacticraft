@@ -33,6 +33,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -50,6 +51,15 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
     }
 
     @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        Holder<CelestialBody<?, ?>> holder = level.galacticraft$getCelestialBody();
+        if (holder != null) {
+            this.dayLength = holder.value().dayLength();
+        }
+    }
+
+    @Override
     public void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("charge");
         this.drainPowerToSlot(CHARGE_SLOT);
@@ -62,10 +72,6 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
                     this.blocked++;
                 }
             }
-        }
-        Holder<CelestialBody<?, ?>> holder = level.galacticraft$getCelestialBody();
-        if (holder != null) {
-            dayLength = holder.value().dayLength();
         }
         profiler.pop();
     }
@@ -93,7 +99,7 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
         if (time > this.dayLength / 4) time = (long) (this.dayLength / 2) - time;
 
         profiler.push("transaction");
-        this.currentEnergyGeneration = calculateEnergyProduction(time, multiplier);
+        this.currentEnergyGeneration = this.calculateEnergyProduction(time, multiplier);
         this.energyStorage().insert(this.currentEnergyGeneration);
         profiler.pop();
         return status == null ? GCMachineStatuses.COLLECTING : status;

@@ -31,6 +31,7 @@ public class GCDimensionEffects {
     public static final ResourceLocation MOON = Constant.id("moon");
     public static final ResourceLocation VENUS = Constant.id("venus");
     public static final ResourceLocation ASTEROID = Constant.id("asteroid");
+    public static final ResourceLocation SATELLITE = Constant.id("satellite");
 
     public static void register() {
         DimensionRenderingRegistry.registerDimensionEffects(MOON, MoonDimensionEffects.INSTANCE);
@@ -47,5 +48,7 @@ public class GCDimensionEffects {
         DimensionRenderingRegistry.registerCloudRenderer(GCDimensions.ASTEROID, EmptyCloudRenderer.INSTANCE);
         DimensionRenderingRegistry.registerWeatherRenderer(GCDimensions.ASTEROID, EmptyWeatherRenderer.INSTANCE);
         DimensionRenderingRegistry.registerSkyRenderer(GCDimensions.ASTEROID, AsteroidSkyRenderer.INSTANCE);
+
+        DimensionRenderingRegistry.registerDimensionEffects(SATELLITE, AsteroidDimensionEffects.INSTANCE);
     }
 }

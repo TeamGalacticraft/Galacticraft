@@ -59,7 +59,6 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
@@ -86,8 +85,6 @@ import net.minecraft.world.item.EitherHolder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
@@ -500,17 +497,16 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
         if (getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
             if (ticksSinceJump > 1000 && this.onGround()) {
-                Holder<CelestialBody<?, ?>> holder = this.level().galacticraft$getCelestialBody();
-                boolean createFire = holder == null || holder.value().atmosphere().breathable();
+                boolean createFire = this.level().getDefaultBreathable();
 
                 for (int i = 0; i < 4; i++) {
                     this.level().explode(
                             this,
                             new DamageSource(this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.CRASH_LANDING)),
                             new ExplosionDamageCalculator(),
-                            this.position().x + (level().random.nextDouble() - 0.5 * 4),
-                            this.position().y + (level().random.nextDouble() * 3), 
-                            this.position().z + (level().random.nextDouble() - 0.5 * 4),
+                            this.position().x + (this.level().random.nextDouble() - 0.5 * 4),
+                            this.position().y + (this.level().random.nextDouble() * 3), 
+                            this.position().z + (this.level().random.nextDouble() - 0.5 * 4),
                             10.0F,
                             createFire,
                             Level.ExplosionInteraction.TNT
@@ -610,6 +606,10 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
             setThrust(tag.getFloat("Thrust"));
         }
 
+        if (tag.contains("Fuel")) {
+            setFuel(tag.getLong("Fuel"));
+        }
+
         BlockEntity be = this.level().getBlockEntity(BlockPos.of(tag.getLong("Linked")));
         if (be instanceof FuelDock pad)
             this.linkedPad = pad;
@@ -622,6 +622,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
         tag.putString("Stage", getLaunchStage().name());
         tag.putDouble("Thrust", this.getThrust());
+        tag.putLong("Fuel", this.getFuel());
 
         if (this.linkedPad != null) tag.putLong("Linked", this.linkedPad.getDockPos().asLong());
     }
