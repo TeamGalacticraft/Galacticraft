@@ -142,12 +142,6 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .addTag(GCTags.PARACHUTES)
                 .addTag(GCTags.SHIELD_CONTROLLERS);
 
-        // Accessory slots
-        tag(GCTags.ACCESSORY_SLOT_1).addTag(GCTags.FREQUENCY_MODULES);
-        tag(GCTags.ACCESSORY_SLOT_2).addTag(GCTags.PARACHUTES);
-        tag(GCTags.ACCESSORY_SLOT_3).addTag(GCTags.SHIELD_CONTROLLERS);
-        tag(GCTags.ACCESSORY_SLOT_4).addTag(GCTags.ACCESSORIES);
-
         tag(GCTags.ALUMINUM_INGOTS)
                 .add(GCItems.ALUMINUM_INGOT);
         tag(GCTags.RAW_ALUMINUM_ORES)

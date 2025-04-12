@@ -24,22 +24,13 @@ package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.screen.slot.AccessorySlot;
-import dev.galacticraft.mod.tag.GCTags;
-import net.minecraft.core.Holder;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.function.Predicate;
 
 public class GCPlayerInventoryMenu extends AbstractContainerMenu {
     public static final int[] COLUMNS = {8, 80, 98};
@@ -55,28 +46,8 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
         this.inventory = player.galacticraft$getGearInv();
 
         // Galacticraft inv
-        for (int i = 0; i < 8; ++i) {
+        for (int i = 0; i < 12; ++i) {
             this.addSlot(new AccessorySlot(inventory, player, i, COLUMNS[i / 4], 8 + (i % 4) * 18, GCAccessorySlots.SLOT_TAGS.get(i), GCAccessorySlots.SLOT_SPRITES.get(i)));
-        }
-
-        RegistryAccess manager = player.level().registryAccess();
-        for (int i = 8; i < 12; ++i) {
-            TagKey<Item> slotTag = GCAccessorySlots.SLOT_TAGS.get(i);
-            ResourceLocation sprite = GCAccessorySlots.GENERIC_ACCESSORY_SPRITE;
-            var holderSet1 = manager.registryOrThrow(Registries.ITEM).getTag(slotTag).orElse(null);
-            if (holderSet1 != null) {
-                Predicate<Holder<Item>> predicate = holder -> (holderSet1.contains(holder)); 
-                for (var pair : GCAccessorySlots.ACCESSORY_TAGS.entrySet()) {
-                    var holderSet2 = manager.registryOrThrow(Registries.ITEM).getTag(pair.getKey()).orElse(null);
-                    if (holderSet2 != null && holderSet1.size() == holderSet2.size()) {
-                        if (holderSet2.stream().allMatch(predicate)) {
-                            sprite = pair.getValue();
-                            break;
-                        }
-                    }
-                }
-            }
-            this.addSlot(new AccessorySlot(inventory, player, i, COLUMNS[i / 4], 8 + (i % 4) * 18, slotTag, sprite));
         }
 
         // Player main inv

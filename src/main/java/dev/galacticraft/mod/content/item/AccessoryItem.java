@@ -97,6 +97,9 @@ public class AccessoryItem extends Item implements Accessory {
         for (int slot = 0; slot < inv.getContainerSize(); ++slot) {
             if (itemStack.is(GCAccessorySlots.SLOT_TAGS.get(slot))) {
                 ItemStack itemStack2 = inv.getItem(slot);
+                if (8 <= slot && slot < 11 && !itemStack2.isEmpty()) {
+                    continue;
+                }
                 if (ItemStack.matches(itemStack, itemStack2) || (itemStack2.getItem() instanceof OxygenTankItem && OxygenTankItem.getStorage(itemStack2).getAmount() > 0)) {
                     if (slot == GCAccessorySlots.OXYGEN_TANK_1_SLOT) {
                         continue;

@@ -769,6 +769,7 @@ public interface Constant {
         ResourceLocation FREQUENCY_MODULE = id("slot/frequency_module");
         ResourceLocation PARACHUTE = id("slot/parachute");
         ResourceLocation SHIELD_CONTROLLER = id("slot/shield_controller");
+        ResourceLocation GENERIC_ACCESSORY = null;
 
         ResourceLocation ROCKET_CONE = id("slot/rocket_cone");
         ResourceLocation ROCKET_PLATING = id("slot/rocket_plating");
