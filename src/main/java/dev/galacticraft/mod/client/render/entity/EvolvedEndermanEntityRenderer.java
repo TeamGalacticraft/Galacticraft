@@ -22,13 +22,15 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
-import dev.galacticraft.mod.client.render.entity.feature.SpaceGearRenderLayer;
+import dev.galacticraft.mod.client.render.entity.feature.OxygenMaskRenderLayer;
+import dev.galacticraft.mod.client.render.entity.feature.OxygenTanksRenderLayer;
 import net.minecraft.client.renderer.entity.EndermanRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 public class EvolvedEndermanEntityRenderer extends EndermanRenderer {
     public EvolvedEndermanEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
-        this.addLayer(new SpaceGearRenderLayer<>(this));
+        this.addLayer(new OxygenMaskRenderLayer<>(this));
+        this.addLayer(new OxygenTanksRenderLayer<>(this));
     }
 }
