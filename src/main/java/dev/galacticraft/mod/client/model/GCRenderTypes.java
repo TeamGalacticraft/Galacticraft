@@ -73,7 +73,7 @@ public class GCRenderTypes {
                         .setWriteMaskState(RenderType.COLOR_WRITE)
                         .setOverlayState(RenderType.OVERLAY)
                         .createCompositeState(composite);
-                return RenderType.create("entity_bubble", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RenderType.TRANSIENT_BUFFER_SIZE, true, true, compositeState);
+                return RenderType.create("entity_bubble", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RenderType.TRANSIENT_BUFFER_SIZE, false, true, compositeState);
             })
     );
 

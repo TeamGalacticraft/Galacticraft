@@ -22,13 +22,15 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
-import dev.galacticraft.mod.client.render.entity.feature.SpaceGearRenderLayer;
+import dev.galacticraft.mod.client.render.entity.feature.EvolvedWitchMaskRenderLayer;
+import dev.galacticraft.mod.client.render.entity.feature.OxygenTanksRenderLayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.WitchRenderer;
 
 public class EvolvedWitchEntityRenderer extends WitchRenderer {
     public EvolvedWitchEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
-        this.addLayer(new SpaceGearRenderLayer<>(this));
+        this.addLayer(new EvolvedWitchMaskRenderLayer<>(this));
+        this.addLayer(new OxygenTanksRenderLayer<>(this));
     }
 }

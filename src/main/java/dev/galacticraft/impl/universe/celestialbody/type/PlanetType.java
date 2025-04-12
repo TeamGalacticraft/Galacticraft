@@ -34,13 +34,17 @@ import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.impl.universe.celestialbody.config.PlanetConfig;
+import dev.galacticraft.impl.universe.celestialbody.config.StarConfig;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class PlanetType extends CelestialBodyType<PlanetConfig> implements Tiered<PlanetConfig>, Orbitable<PlanetConfig> {
     public static final PlanetType INSTANCE = new PlanetType();
@@ -55,13 +59,19 @@ public class PlanetType extends CelestialBodyType<PlanetConfig> implements Tiere
     }
 
     @Override
-    public @Nullable Holder<CelestialBody<?, ?>> parent(PlanetConfig config) {
+    public @Nullable Optional<ResourceKey<CelestialBody<?, ?>>> parent(PlanetConfig config) {
         return config.parent();
     }
 
     @Override
-    public @NotNull Holder<Galaxy> galaxy(PlanetConfig config) {
-        return config.parent().value().galaxy();
+    public @NotNull Optional<ResourceKey<Galaxy>> galaxy(Registry<CelestialBody<?, ?>> registry, PlanetConfig config) {
+        if (config.parent().isPresent()) {
+            CelestialBody<?, ?> body = registry.get(config.parent().get());
+            if (body != null && body.type() instanceof StarType starType) {
+                return starType.galaxy(registry, (StarConfig) body.config());
+            }
+        }
+        return Optional.empty();
     }
 
     @Override

@@ -27,23 +27,26 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.util.StreamCodecs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public record SatelliteCreationPayload(Holder<CelestialBody<?, ?>> body) implements C2SPayload {
-    public static final StreamCodec<RegistryFriendlyByteBuf, SatelliteCreationPayload> STREAM_CODEC = ByteBufCodecs.holderRegistry(AddonRegistries.CELESTIAL_BODY).map(SatelliteCreationPayload::new, p -> p.body);
+public record SatelliteCreationPayload(ResourceKey<CelestialBody<?, ?>> body) implements C2SPayload {
+    public static final StreamCodec<RegistryFriendlyByteBuf, SatelliteCreationPayload> STREAM_CODEC =
+            StreamCodecs.ofResourceKey(AddonRegistries.CELESTIAL_BODY)
+                    .map(SatelliteCreationPayload::new, SatelliteCreationPayload::body);
+
     public static final ResourceLocation ID = Constant.id("create_satellite");
     public static final Type<SatelliteCreationPayload> TYPE = new Type<>(ID);
 
     @Override
     public void handle(ServerPlayNetworking.@NotNull Context context) {
-        SatelliteType.registerSatellite(context.server(), context.player(), this.body, context.server().getStructureManager().get(Constant.Structure.SPACE_STATION).orElseThrow());
+        SatelliteType.registerSatellite(context.server(), context.player(), this.body, context.server().getStructureManager().get(Constant.Structure.SPACE_STATION).orElseThrow(), context.server().registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY));
     }
 
     @Override

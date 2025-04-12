@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.galacticraft.mod.tag.GCTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -30,7 +31,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 
 @Mixin(FireworkRocketItem.class)
 public abstract class FireworkRocketItemMixin extends Item {

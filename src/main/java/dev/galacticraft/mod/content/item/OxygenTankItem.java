@@ -22,7 +22,9 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.storage.PlaceholderItemStorage;
 import dev.galacticraft.mod.util.TooltipUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -44,8 +46,32 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class OxygenTankItem extends Item {
+public class OxygenTankItem extends AccessoryItem {
     public final long capacity;
+
+    public static StorageView<FluidVariant> getStorage(ItemStack stack) {
+        StorageView<FluidVariant> storage = (StorageView<FluidVariant>) ContainerItemContext.withConstant(stack).find(FluidStorage.ITEM);
+        assert storage != null;
+        return storage;
+    }
+
+    public static ItemStack getFullTank(Item item) {
+        try (Transaction t = Transaction.openOuter()) {
+            PlaceholderItemStorage itemStorage = new PlaceholderItemStorage();
+            ContainerItemContext context = ContainerItemContext.ofSingleSlot(itemStorage);
+
+            OxygenTankItem tankItem = (OxygenTankItem) item.asItem();
+            itemStorage.setItem(tankItem);
+            long capacity = tankItem.capacity;
+            long inserted;
+
+            do {
+                inserted = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), capacity, t);
+            } while (inserted > 0 && capacity > 0);
+
+            return itemStorage.variant.toStack();
+        }
+    }
 
     public OxygenTankItem(Properties settings, int capacity) {
         super(settings.durability(capacity));
@@ -59,16 +85,13 @@ public class OxygenTankItem extends Item {
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        StorageView<FluidVariant> storage = (StorageView<FluidVariant>) ContainerItemContext.withConstant(stack).find(FluidStorage.ITEM);
-        assert storage != null;
-
+        StorageView<FluidVariant> storage = OxygenTankItem.getStorage(stack);
         return Math.round(13.0F - (float) (storage.getCapacity() - storage.getAmount()) * 13.0F / (float) storage.getCapacity());
     }
 
     @Override
     public int getBarColor(ItemStack stack) {
-        StorageView<FluidVariant> storage = (StorageView<FluidVariant>) ContainerItemContext.withConstant(stack).find(FluidStorage.ITEM);
-        assert storage != null;
+        StorageView<FluidVariant> storage = OxygenTankItem.getStorage(stack);
         float scale = 1.0F - ((float) storage.getAmount() / (float) storage.getCapacity());
         return Constant.Text.getStorageLevelColor(scale);
     }
@@ -90,22 +113,8 @@ public class OxygenTankItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
-        StorageView<FluidVariant> storage = (StorageView<FluidVariant>) ContainerItemContext.withConstant(stack).find(FluidStorage.ITEM);
-        assert storage != null;
+        StorageView<FluidVariant> storage = OxygenTankItem.getStorage(stack);
         TooltipUtil.appendFluidRemainingTooltip(Translations.Tooltip.OXYGEN_REMAINING, storage.getAmount(), storage.getCapacity(), tooltip);
         super.appendHoverText(stack, context, tooltip, type);
-    }
-
-    @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
-        ItemStack copy = user.getItemInHand(hand).copy();
-        try (Transaction transaction = Transaction.openOuter()) {
-            long l = InventoryStorage.of(user.galacticraft$getOxygenTanks(), null).insert(ItemVariant.of(copy), copy.getCount(), transaction);
-            if (l == copy.getCount()) {
-                transaction.commit();
-                return new InteractionResultHolder<>(InteractionResult.SUCCESS, ItemStack.EMPTY);
-            }
-        }
-        return super.use(world, user, hand);
     }
 }

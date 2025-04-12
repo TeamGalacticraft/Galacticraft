@@ -247,7 +247,7 @@ public class OverworldRenderer {
         }
 
 
-        RenderSystem.setShaderColor(0.0f, 0.0f, 0.0f, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         RenderSystem.depthMask(true);
 

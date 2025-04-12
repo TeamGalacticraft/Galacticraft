@@ -40,7 +40,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -72,25 +71,22 @@ public class GCEventHandlers {
         UseItemCallback.EVENT.register(GCEventHandlers::onPlayerUseItem);
     }
 
-    private static InteractionResultHolder<ItemStack> onPlayerUseItem(Player player, Level world, InteractionHand hand) {
-        Holder<CelestialBody<?, ?>> body = world.galacticraft$getCelestialBody();
-        if (body != null) {
-            boolean oxygenWorld = body.value().atmosphere().breathable();
+    private static InteractionResultHolder<ItemStack> onPlayerUseItem(Player player, Level level, InteractionHand hand) {
+        ItemStack heldItem = player.getItemInHand(hand);
+        if (heldItem.getComponents().has(DataComponents.FOOD)) {
+            boolean oxygenWorld = level.getDefaultBreathable();
             Vec3 playerEyePos = player.getEyePosition();
 
-            ItemStack heldItem = player.getItemInHand(hand);
-            if (heldItem.getComponents().has(DataComponents.FOOD)) {
-                if (player.galacticraft$hasMask()) {
-                    if (heldItem.getItem() instanceof CannedFoodItem) {
-                        return InteractionResultHolder.pass(heldItem);
-                    } else {
-                        player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_WITH_MASK).withStyle(Constant.Text.RED_STYLE), true);
-                        return InteractionResultHolder.fail(heldItem);
-                    }
-                } else if (!oxygenWorld && !world.isBreathable(new BlockPos((int) Math.floor(playerEyePos.x), (int) Math.floor(playerEyePos.y), (int) Math.floor(playerEyePos.z)))) { //sealed atmosphere check. they dont have a mask on so make sure they can breathe before eating
-                    player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_IN_NO_ATMOSPHERE).withStyle(Constant.Text.RED_STYLE), true);
-                    return InteractionResultHolder.fail(player.getItemInHand(hand));
+            if (player.galacticraft$hasMask()) {
+                if (heldItem.getItem() instanceof CannedFoodItem) {
+                    return InteractionResultHolder.pass(heldItem);
+                } else {
+                    player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_WITH_MASK).withStyle(Constant.Text.RED_STYLE), true);
+                    return InteractionResultHolder.fail(heldItem);
                 }
+            } else if (!oxygenWorld && !level.isBreathable(new BlockPos((int) Math.floor(playerEyePos.x), (int) Math.floor(playerEyePos.y), (int) Math.floor(playerEyePos.z)))) { //sealed atmosphere check. they dont have a mask on so make sure they can breathe before eating
+                player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_IN_NO_ATMOSPHERE).withStyle(Constant.Text.RED_STYLE), true);
+                return InteractionResultHolder.fail(player.getItemInHand(hand));
             }
         }
         return InteractionResultHolder.pass(player.getItemInHand(hand));
@@ -171,14 +167,14 @@ public class GCEventHandlers {
 
     }
 
-    public static void onWorldTick(ServerLevel world) {
-        FootprintManager footprintManager = world.galacticraft$getFootprintManager();
+    public static void onWorldTick(ServerLevel level) {
+        FootprintManager footprintManager = level.galacticraft$getFootprintManager();
         if (!footprintManager.footprintBlockChanges.isEmpty()) {
             for (GlobalPos targetPoint : footprintManager.footprintBlockChanges) {
                 ;
-                if (world.dimension().location().equals(targetPoint.dimension().location())) {
+                if (level.dimension().location().equals(targetPoint.dimension().location())) {
                     long packedPos = ChunkPos.asLong(targetPoint.pos());
-                    PlayerLookup.around(world, targetPoint.pos(), 50).forEach(player -> {
+                    PlayerLookup.around(level, targetPoint.pos(), 50).forEach(player -> {
                         ServerPlayNetworking.send(player, new FootprintRemovedPacket(packedPos, targetPoint.pos()));
                     });
                 }
