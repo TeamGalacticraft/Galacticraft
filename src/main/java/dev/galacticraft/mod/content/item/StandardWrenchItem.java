@@ -90,14 +90,21 @@ public class StandardWrenchItem extends Item {
                     }
                 }
 
-                Collection<Direction> sortedValues = ((Collection<Direction>) possibleValues).stream().sorted(Comparator.comparingInt(direction -> direction.get2DDataValue())).collect(Collectors.toList());
+                Collection<Direction> sortedValues = ((Collection<Direction>) possibleValues).stream()
+                        .sorted(Comparator.comparingInt(direction -> direction.get2DDataValue()))
+                        .filter(direction -> state.setValue(property, direction).canSurvive(world, pos))
+                        .collect(Collectors.toList());
                 BlockState newState = cycle(state, property, sortedValues, player.isShiftKeyDown());
-                world.setBlock(pos, newState, 18);
+                world.setBlock(pos, newState, 3);
                 stack.hurtAndBreak(2, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
             }
+        } else if (block.getStateDefinition().getProperty("axis") instanceof EnumProperty property) {
+            BlockState newState = cycle(state, property, player.isShiftKeyDown());
+            world.setBlock(pos, newState, 3);
+            stack.hurtAndBreak(2, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
         } else if (block.getStateDefinition().getProperty("rotation") instanceof IntegerProperty property) {
             BlockState newState = cycle(state, property, player.isShiftKeyDown());
-            world.setBlock(pos, newState, 18);
+            world.setBlock(pos, newState, 3);
             stack.hurtAndBreak(2, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
         }
     }
