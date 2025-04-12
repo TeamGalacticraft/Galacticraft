@@ -25,7 +25,10 @@ package dev.galacticraft.mod.client.render.entity.feature;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
+import dev.galacticraft.mod.tag.GCTags;
+import net.minecraft.client.model.EndermanModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.HumanoidModel;
@@ -42,19 +45,27 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
-public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> extends RenderLayer<T, M> {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/entity/oxygen_gear.png");
+public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
+    private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/oxygen_gear.png");
     private final @Nullable ModelPart mask;
-    private final @Nullable ModelPart tank;
     private final @Nullable ModelPart pipe;
 
-    public SpaceGearRenderLayer(RenderLayerParent<T, M> context) {
+    public OxygenMaskRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
         ModelPart root, head, body;
+        boolean rotate = false;
+        float maskX = -5.0F;
+        float maskY = -9.0F;
+        float maskZ = -5.0F;
+        float pipeX = -2.0F;
+        float pipeY = context.getModel() instanceof EndermanModel ? -2.0F : -3.0F;
+        float pipeZ = 2.0F;
         if (context.getModel() instanceof HierarchicalModel<?> model) {
             root = model.root();
             head = root.getChild(PartNames.HEAD);
@@ -65,21 +76,19 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
         } else if (context.getModel() instanceof AnimalModelAgeableListModel model) {
             head = model.callGetHeadParts().iterator().next();
             body = model.callGetBodyParts().iterator().next();
+            rotate = true;
         } else {
             this.mask = null;
-            this.tank = null;
             this.pipe = null;
             return;
         }
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
         if (head != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 10).addBox(-5.0F, -9.01F, -5.0F, 10, 10, 10, CubeDeformation.NONE), PartPose.offset(head.x, head.y, head.z));
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(maskX, maskY, maskZ, 10, 10, 10, new CubeDeformation(-0.1F)), PartPose.offset(head.x, head.y, head.z));
         }
-
         if (body != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, 1.0F, 2.0F, 8, 6, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 17).addBox(-2.0F, -10.0F, -5.0F, 4, 5, 8, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 6).addBox(pipeX, pipeY, pipeZ, 4, 6, 8, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
         }
 
         root = modelPartData.bake(64, 32);
@@ -91,11 +100,11 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
         }
 
         if (body != null) {
-            this.tank = root.getChild(Constant.ModelPartName.OXYGEN_TANK);
             this.pipe = root.getChild(Constant.ModelPartName.OXYGEN_PIPE);
-            this.pipe.xRot = (float) (Math.PI / -2.0);
+            if (rotate) {
+                this.pipe.xRot = (float) (Math.PI / 2.0);
+            }
         } else {
-            this.tank = null;
             this.pipe = null;
         }
     }
@@ -103,7 +112,15 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
     @Override
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
-        if ((Entity) entity instanceof Zombie) {
+        LivingEntity livingEntity = (LivingEntity) entity;
+        boolean hasMask = true;
+        boolean hasGear = true;
+
+        if (livingEntity instanceof Player player) {
+            Container inv = livingEntity.galacticraft$getGearInv();
+            hasMask = inv.getItem(GCAccessorySlots.OXYGEN_MASK_SLOT).is(GCTags.OXYGEN_MASKS);
+            hasGear = inv.getItem(GCAccessorySlots.OXYGEN_GEAR_SLOT).is(GCTags.OXYGEN_GEAR);
+        } else if (livingEntity instanceof Zombie) {
             Zombie zombie = (Zombie) entity;
             if (zombie.isBaby()) {
                 matrices.scale(0.75F, 0.75F, 0.75F);
@@ -111,15 +128,12 @@ public class SpaceGearRenderLayer<T extends Entity, M extends EntityModel<T>> ex
             }
         }
 
-        if (this.mask != null) {
+        if (this.mask != null && hasMask) {
             this.mask.yRot = headYaw * (float) (Math.PI / 180.0);
             this.mask.xRot = headPitch * (float) (Math.PI / 180.0);
             this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
-
-        if (this.tank != null) {
-            assert this.pipe != null;
-            this.tank.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+        if (this.pipe != null && hasGear) {
             this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
     }

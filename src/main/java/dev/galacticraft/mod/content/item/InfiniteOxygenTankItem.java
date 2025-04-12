@@ -39,7 +39,7 @@ import net.minecraft.world.item.TooltipFlag;
 import java.util.Iterator;
 import java.util.List;
 
-public class InfiniteOxygenTankItem extends Item implements Storage<FluidVariant>, StorageView<FluidVariant> {
+public class InfiniteOxygenTankItem extends AccessoryItem implements Storage<FluidVariant>, StorageView<FluidVariant> {
     public InfiniteOxygenTankItem(Properties settings) {
         super(settings);
     }

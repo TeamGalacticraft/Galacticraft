@@ -784,6 +784,10 @@ public interface Constant {
         ResourceLocation OXYGEN_MASK = id("slot/oxygen_mask");
         ResourceLocation OXYGEN_GEAR = id("slot/oxygen_gear");
         ResourceLocation OXYGEN_TANK = id("slot/oxygen_tank");
+        ResourceLocation FREQUENCY_MODULE = id("slot/frequency_module");
+        ResourceLocation PARACHUTE = id("slot/parachute");
+        ResourceLocation SHIELD_CONTROLLER = id("slot/shield_controller");
+        ResourceLocation GENERIC_ACCESSORY = null;
 
         ResourceLocation ROCKET_CONE = id("slot/rocket_cone");
         ResourceLocation ROCKET_PLATING = id("slot/rocket_plating");
@@ -898,7 +902,6 @@ public interface Constant {
         int ARROW_DOWN_Y = 118;
         int ARROW_DOWN_HOVER_X = 50;
         int ARROW_DOWN_HOVER_Y = 118;
-
     }
 
     interface Menu {
@@ -1046,14 +1049,16 @@ public interface Constant {
             String COMPRESSING_SHAPELESS = "compressing_shapeless";
             String COMPRESSING_SHAPED = "compressing_shaped";
             String ROCKET = "rocket";
+            String EMERGENCY_KIT = "crafting_special_emergencykit";
         }
     }
 
     @Environment(EnvType.CLIENT)
     interface ModelPartName {
         String OXYGEN_MASK = "oxygen_mask";
-        String OXYGEN_TANK = "oxygen_tank";
         String OXYGEN_PIPE = "oxygen_pipe";
+        String OXYGEN_TANK = "oxygen_tank";
+        String ILLAGER_NOSE_COMPARTMENT = "illager_nose_compartment";
         String MOON_VILLAGER_BRAIN = "moon_villager_brain";
         String SOLAR_PANEL_POLE = "solar_panel_pole";
         String SOLAR_PANEL_PANEL = "solar_panel_panel";

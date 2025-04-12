@@ -174,6 +174,7 @@ public interface Translations {
         String VENUS_DESC = "planet.galacticraft.venus.description";
         String VENUS = "planet.galacticraft.venus";
         String SATELLITE = "ui.galacticraft.satellite";
+        String SATELLITES = "ui.galacticraft.satellites";
         String SATELLITE_DESC = "ui.galacticraft.satellite.description";
     }
 

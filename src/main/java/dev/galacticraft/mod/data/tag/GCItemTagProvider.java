@@ -31,6 +31,7 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
@@ -81,6 +82,67 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.TITANIUM_CHESTPLATE)
                 .add(GCItems.TITANIUM_LEGGINGS)
                 .add(GCItems.TITANIUM_BOOTS);
+
+        // Thermal armor
+        tag(ItemTags.FREEZE_IMMUNE_WEARABLES)
+                .add(GCItems.THERMAL_PADDING_BOOTS)
+                .add(GCItems.THERMAL_PADDING_LEGGINGS)
+                .add(GCItems.THERMAL_PADDING_CHESTPIECE)
+                .add(GCItems.THERMAL_PADDING_HELMET)
+                .add(GCItems.ISOTHERMAL_PADDING_BOOTS)
+                .add(GCItems.ISOTHERMAL_PADDING_LEGGINGS)
+                .add(GCItems.ISOTHERMAL_PADDING_CHESTPIECE)
+                .add(GCItems.ISOTHERMAL_PADDING_HELMET);
+        tag(GCTags.THERMAL_HEAD)
+                .add(GCItems.THERMAL_PADDING_HELMET)
+                .add(GCItems.ISOTHERMAL_PADDING_HELMET);
+        tag(GCTags.THERMAL_CHEST)
+                .add(GCItems.THERMAL_PADDING_CHESTPIECE)
+                .add(GCItems.ISOTHERMAL_PADDING_CHESTPIECE);
+        tag(GCTags.THERMAL_PANTS)
+                .add(GCItems.THERMAL_PADDING_LEGGINGS)
+                .add(GCItems.ISOTHERMAL_PADDING_LEGGINGS);
+        tag(GCTags.THERMAL_BOOTS)
+                .add(GCItems.THERMAL_PADDING_BOOTS)
+                .add(GCItems.ISOTHERMAL_PADDING_BOOTS);
+
+        // Oxygen equipment
+        tag(GCTags.OXYGEN_MASKS)
+                .add(GCItems.OXYGEN_MASK);
+        tag(GCTags.OXYGEN_GEAR)
+                .add(GCItems.OXYGEN_GEAR);
+        tag(GCTags.OXYGEN_TANKS)
+                .add(GCItems.SMALL_OXYGEN_TANK)
+                .add(GCItems.MEDIUM_OXYGEN_TANK)
+                .add(GCItems.LARGE_OXYGEN_TANK)
+                .add(GCItems.INFINITE_OXYGEN_TANK);
+
+        // Other accessories
+        tag(GCTags.PARACHUTES)
+                .add(GCItems.PARACHUTE.get(DyeColor.WHITE))
+                .add(GCItems.PARACHUTE.get(DyeColor.ORANGE))
+                .add(GCItems.PARACHUTE.get(DyeColor.MAGENTA))
+                .add(GCItems.PARACHUTE.get(DyeColor.LIGHT_BLUE))
+                .add(GCItems.PARACHUTE.get(DyeColor.YELLOW))
+                .add(GCItems.PARACHUTE.get(DyeColor.LIME))
+                .add(GCItems.PARACHUTE.get(DyeColor.PINK))
+                .add(GCItems.PARACHUTE.get(DyeColor.GRAY))
+                .add(GCItems.PARACHUTE.get(DyeColor.LIGHT_GRAY))
+                .add(GCItems.PARACHUTE.get(DyeColor.CYAN))
+                .add(GCItems.PARACHUTE.get(DyeColor.PURPLE))
+                .add(GCItems.PARACHUTE.get(DyeColor.BLUE))
+                .add(GCItems.PARACHUTE.get(DyeColor.BROWN))
+                .add(GCItems.PARACHUTE.get(DyeColor.GREEN))
+                .add(GCItems.PARACHUTE.get(DyeColor.RED))
+                .add(GCItems.PARACHUTE.get(DyeColor.BLACK));
+        tag(GCTags.FREQUENCY_MODULES)
+                .add(GCItems.FREQUENCY_MODULE);
+        tag(GCTags.SHIELD_CONTROLLERS)
+                .add(GCItems.SHIELD_CONTROLLER);
+        tag(GCTags.ACCESSORIES)
+                .addTag(GCTags.FREQUENCY_MODULES)
+                .addTag(GCTags.PARACHUTES)
+                .addTag(GCTags.SHIELD_CONTROLLERS);
 
         tag(GCTags.ALUMINUM_INGOTS)
                 .add(GCItems.ALUMINUM_INGOT);

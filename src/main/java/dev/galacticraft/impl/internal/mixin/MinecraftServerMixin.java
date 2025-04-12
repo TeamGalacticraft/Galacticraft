@@ -26,8 +26,10 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import dev.galacticraft.api.accessor.SatelliteAccessor;
+import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.dynamicdimensions.api.event.DynamicDimensionLoadCallback;
+import dev.galacticraft.dynamicdimensions.impl.registry.RegistryUtil;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.mod.Constant;
@@ -75,11 +77,15 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
     @Override
     public void galacticraft$addSatellite(ResourceLocation id, CelestialBody<SatelliteConfig, SatelliteType> satellite) {
         this.satellites.put(id, satellite);
+        RegistryUtil.registerUnfreeze(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id, satellite);
+        Constant.LOGGER.info("Added satellite with id {}", id);
     }
 
     @Override
     public void galacticraft$removeSatellite(ResourceLocation id) {
         this.satellites.remove(id);
+        RegistryUtil.unregister(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id);
+        Constant.LOGGER.info("Removed satellite with id {}", id);
     }
 
     @Inject(method = "saveEverything", at = @At("RETURN"))
@@ -118,8 +124,7 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
                         continue;
                     }
                     CelestialBody<SatelliteConfig, SatelliteType> satellite = new CelestialBody<>(SatelliteType.INSTANCE, decode.getOrThrow().getFirst());
-                    this.satellites.put(id, satellite);
-                    Constant.LOGGER.info("Added satellite with id {}", id);
+                    this.galacticraft$addSatellite(id, satellite);
 
                     LevelStem levelStem = satellite.config().getOptions();
                     dynamicDimensionLoader.loadDynamicDimension(id, levelStem.generator(), levelStem.type().value());

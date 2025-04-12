@@ -34,6 +34,8 @@ import dev.galacticraft.mod.client.particle.*;
 import dev.galacticraft.mod.client.render.block.entity.GCBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.dimension.GCDimensionEffects;
 import dev.galacticraft.mod.client.render.entity.*;
+import dev.galacticraft.mod.client.render.entity.feature.OxygenMaskRenderLayer;
+import dev.galacticraft.mod.client.render.entity.feature.OxygenTanksRenderLayer;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import dev.galacticraft.mod.client.render.entity.rocket.RocketEntityRenderer;
 import dev.galacticraft.mod.client.render.item.RocketItemRenderer;
@@ -66,11 +68,15 @@ import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.particle.SplashParticle;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.material.Fluids;
 
 @Environment(EnvType.CLIENT)
@@ -209,7 +215,10 @@ public class GalacticraftClient implements ClientModInitializer {
         InventoryTabRegistry.INSTANCE.register(GCItems.ROCKET.getDefaultInstance(), () -> ClientPlayNetworking.send(new OpenRocketPayload()), player -> player.getVehicle() instanceof RocketEntity, RocketMenu.class);
 
         LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
-
+            if (entityType == EntityType.PLAYER) {
+                registrationHelper.register(new OxygenMaskRenderLayer<Player, EntityModel<Player>>((RenderLayerParent<Player, EntityModel<Player>>) entityRenderer));
+                registrationHelper.register(new OxygenTanksRenderLayer<Player, EntityModel<Player>>((RenderLayerParent<Player, EntityModel<Player>>) entityRenderer));
+            }
         });
         GCRenderTypes.init();
         ModelLoadingPlugin.register(GCModelLoader.INSTANCE);

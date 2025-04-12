@@ -32,6 +32,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -208,28 +209,28 @@ public class GCItems {
     // GALACTICRAFT INVENTORY
     public static final GCRegistry.ColorSet<ParachuteItem> PARACHUTE = ITEMS.registerColored(Constant.Item.PARACHUTE, color -> new ParachuteItem(color, new Item.Properties().stacksTo(1)));
 
-    public static final Item OXYGEN_MASK = ITEMS.register(Constant.Item.OXYGEN_MASK, new OxygenMaskItem(new Item.Properties()));
-    public static final Item OXYGEN_GEAR = ITEMS.register(Constant.Item.OXYGEN_GEAR, new OxygenGearItem(new Item.Properties()));
+    public static final Item OXYGEN_MASK = ITEMS.register(Constant.Item.OXYGEN_MASK, new AccessoryItem(new Item.Properties()));
+    public static final Item OXYGEN_GEAR = ITEMS.register(Constant.Item.OXYGEN_GEAR, new AccessoryItem(new Item.Properties()));
 
     public static final Item SMALL_OXYGEN_TANK = ITEMS.register(Constant.Item.SMALL_OXYGEN_TANK, new OxygenTankItem(new Item.Properties(), 1620 * 10)); // 16200 ticks
     public static final Item MEDIUM_OXYGEN_TANK = ITEMS.register(Constant.Item.MEDIUM_OXYGEN_TANK, new OxygenTankItem(new Item.Properties(), 1620 * 20)); //32400 ticks
     public static final Item LARGE_OXYGEN_TANK = ITEMS.register(Constant.Item.LARGE_OXYGEN_TANK, new OxygenTankItem(new Item.Properties(), 1620 * 30)); //48600 ticks
-    public static final Item INFINITE_OXYGEN_TANK = ITEMS.register(Constant.Item.INFINITE_OXYGEN_TANK, new InfiniteOxygenTankItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
+    public static final Item INFINITE_OXYGEN_TANK = ITEMS.register(Constant.Item.INFINITE_OXYGEN_TANK, new InfiniteOxygenTankItem(new Item.Properties().rarity(Rarity.EPIC)));
 
     public static final Item SHIELD_CONTROLLER = ITEMS.register(Constant.Item.SHIELD_CONTROLLER, new AccessoryItem(new Item.Properties()));
-    public static final Item FREQUENCY_MODULE = ITEMS.register(Constant.Item.FREQUENCY_MODULE, new FrequencyModuleItem(new Item.Properties()));
+    public static final Item FREQUENCY_MODULE = ITEMS.register(Constant.Item.FREQUENCY_MODULE, new AccessoryItem(new Item.Properties()));
 
-    public static final Item EMERGENCY_KIT = registerGeneric(Constant.Item.EMERGENCY_KIT);
+    public static final Item EMERGENCY_KIT = ITEMS.register(Constant.Item.EMERGENCY_KIT, new EmergencyKitItem(new Item.Properties().stacksTo(1)));
 
-    public static final Item THERMAL_PADDING_HELMET = ITEMS.register(Constant.Item.THERMAL_PADDING_HELMET, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.HELMET));
-    public static final Item THERMAL_PADDING_CHESTPIECE = ITEMS.register(Constant.Item.THERMAL_PADDING_CHESTPIECE, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.CHESTPLATE));
-    public static final Item THERMAL_PADDING_LEGGINGS = ITEMS.register(Constant.Item.THERMAL_PADDING_LEGGINGS, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.LEGGINGS));
-    public static final Item THERMAL_PADDING_BOOTS = ITEMS.register(Constant.Item.THERMAL_PADDING_BOOTS, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.BOOTS));
+    public static final Item THERMAL_PADDING_HELMET = ITEMS.register(Constant.Item.THERMAL_PADDING_HELMET, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item THERMAL_PADDING_CHESTPIECE = ITEMS.register(Constant.Item.THERMAL_PADDING_CHESTPIECE, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item THERMAL_PADDING_LEGGINGS = ITEMS.register(Constant.Item.THERMAL_PADDING_LEGGINGS, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item THERMAL_PADDING_BOOTS = ITEMS.register(Constant.Item.THERMAL_PADDING_BOOTS, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
 
-    public static final Item ISOTHERMAL_PADDING_HELMET = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_HELMET, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.HELMET));
-    public static final Item ISOTHERMAL_PADDING_CHESTPIECE = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_CHESTPIECE, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.CHESTPLATE));
-    public static final Item ISOTHERMAL_PADDING_LEGGINGS = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_LEGGINGS, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.LEGGINGS));
-    public static final Item ISOTHERMAL_PADDING_BOOTS = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_BOOTS, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.BOOTS));
+    public static final Item ISOTHERMAL_PADDING_HELMET = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_HELMET, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item ISOTHERMAL_PADDING_CHESTPIECE = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_CHESTPIECE, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item ISOTHERMAL_PADDING_LEGGINGS = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_LEGGINGS, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item ISOTHERMAL_PADDING_BOOTS = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_BOOTS, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
 
     // VEHICLES
     public static final Item BUGGY = ITEMS.register(Constant.Item.BUGGY, new BuggyItem(new Item.Properties().stacksTo(1)));
