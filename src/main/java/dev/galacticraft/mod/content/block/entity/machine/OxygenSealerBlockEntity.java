@@ -24,7 +24,6 @@ package dev.galacticraft.mod.content.block.entity.machine;
 
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.gas.Gases;
-import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
@@ -46,7 +45,6 @@ import dev.galacticraft.mod.machine.SealerManager;
 import dev.galacticraft.mod.screen.OxygenSealerMenu;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
@@ -108,22 +106,19 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public void setLevel(Level world) {
-        super.setLevel(world);
+    public void setLevel(Level level) {
+        super.setLevel(level);
         this.sealCheckTimer = SEAL_CHECK_TIME;
-        Holder<CelestialBody<?, ?>> holder = world.galacticraft$getCelestialBody();
-        this.oxygenWorld = holder == null || holder.value().atmosphere().breathable();
-        if (!world.isClientSide) {
-            if (level != null) {
-                SealerManager manager = ((GCLevelAccessor) level).getSealerManager();
-                manager.addSealer(this, Objects.requireNonNull(Objects.requireNonNull(world.getServer()).getLevel(world.dimension())));
-            }
+        this.oxygenWorld = level.getDefaultBreathable();
+        if (!level.isClientSide && level != null) {
+            SealerManager manager = ((GCLevelAccessor) level).getSealerManager();
+            manager.addSealer(this, Objects.requireNonNull(Objects.requireNonNull(level.getServer()).getLevel(level.dimension())));
         }
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        super.tickConstant(world, pos, state, profiler);
+    protected void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(level, pos, state, profiler);
         profiler.push("extract_resources");
         this.chargeFromSlot(CHARGE_SLOT);
         this.takeFluidFromSlot(OXYGEN_INPUT_SLOT, OXYGEN_TANK, Gases.OXYGEN);
@@ -187,15 +182,15 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected void tickDisabled(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        super.tickDisabled(world, pos, state, profiler);
+    protected void tickDisabled(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickDisabled(level, pos, state, profiler);
     }
 
     @Override
     public void setRemoved() {
         super.setRemoved();
         if (this.level != null && !this.level.isClientSide) {
-            SealerManager manager = ((GCLevelAccessor) level).getSealerManager();
+            SealerManager manager = ((GCLevelAccessor) this.level).getSealerManager();
             manager.removeSealer(this, (ServerLevel) this.level);
         }
     }

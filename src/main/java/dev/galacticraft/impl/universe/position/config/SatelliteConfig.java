@@ -35,8 +35,6 @@ import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.mod.util.StreamCodecs;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -47,7 +45,7 @@ import java.util.Optional;
 
 public class SatelliteConfig implements CelestialBodyConfig {
     private ResourceLocation id;
-    private Component customName;
+    private String customName;
     private Optional<ResourceKey<CelestialBody<?, ?>>> parent;
     private CelestialPosition<?, ?> position;
     private CelestialDisplay<?, ?> display;
@@ -62,7 +60,7 @@ public class SatelliteConfig implements CelestialBodyConfig {
 
     public static final Codec<SatelliteConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("id").forGetter(SatelliteConfig::getId),
-            ComponentSerialization.CODEC.fieldOf("custom_name").forGetter(SatelliteConfig::getCustomName),
+            Codec.STRING.fieldOf("custom_name").forGetter(SatelliteConfig::getCustomName),
             CelestialBody.CODEC.optionalFieldOf("parent").forGetter(SatelliteConfig::getParent),
             CelestialPosition.CODEC.fieldOf("position").forGetter(SatelliteConfig::getPosition),
             CelestialDisplay.CODEC.fieldOf("display").forGetter(SatelliteConfig::getDisplay),
@@ -79,7 +77,7 @@ public class SatelliteConfig implements CelestialBodyConfig {
 
     public SatelliteConfig(
             ResourceLocation id,
-            Component customName,
+            String customName,
             Optional<ResourceKey<CelestialBody<?, ?>>> parent,
             CelestialPosition<?, ?> position,
             CelestialDisplay<?, ?> display,
@@ -108,7 +106,7 @@ public class SatelliteConfig implements CelestialBodyConfig {
 
     // Getters
     public ResourceLocation getId() { return id; }
-    public Component getCustomName() { return customName; }
+    public String getCustomName() { return customName; }
     public Optional<ResourceKey<CelestialBody<?, ?>>> getParent() { return parent; }
     public CelestialPosition<?, ?> getPosition() { return position; }
     public CelestialDisplay<?, ?> getDisplay() { return display; }
@@ -123,7 +121,7 @@ public class SatelliteConfig implements CelestialBodyConfig {
 
     // Setters (optional, use as needed)
     public void setId(ResourceLocation id) { this.id = id; }
-    public void setCustomName(Component customName) { this.customName = customName; }
+    public void setCustomName(String customName) { this.customName = customName; }
     public void setParent(Optional<ResourceKey<CelestialBody<?, ?>>> parent) { this.parent = parent; }
     public void setPosition(CelestialPosition<?, ?> position) { this.position = position; }
     public void setDisplay(CelestialDisplay<?, ?> display) { this.display = display; }

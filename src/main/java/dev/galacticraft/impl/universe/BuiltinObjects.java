@@ -31,6 +31,7 @@ import dev.galacticraft.impl.universe.celestialbody.landable.teleporter.type.Dir
 import dev.galacticraft.impl.universe.celestialbody.landable.teleporter.type.FixedCelestialTeleporterType;
 import dev.galacticraft.impl.universe.celestialbody.type.DecorativePlanetType;
 import dev.galacticraft.impl.universe.celestialbody.type.PlanetType;
+import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.impl.universe.celestialbody.type.StarType;
 import dev.galacticraft.impl.universe.display.type.EmptyCelestialDisplayType;
 import dev.galacticraft.impl.universe.display.type.IconCelestialDisplayType;
@@ -66,6 +67,7 @@ public class BuiltinObjects {
         Registry.register(BuiltInAddonRegistries.CELESTIAL_BODY_TYPE, Constant.id("star"), StarType.INSTANCE);
         Registry.register(BuiltInAddonRegistries.CELESTIAL_BODY_TYPE, Constant.id("planet"), PlanetType.INSTANCE);
         Registry.register(BuiltInAddonRegistries.CELESTIAL_BODY_TYPE, Constant.id("decorative_planet"), DecorativePlanetType.INSTANCE);
+        Registry.register(BuiltInAddonRegistries.CELESTIAL_BODY_TYPE, Constant.id("satellite"), SatelliteType.INSTANCE);
 
         Registry.register(BuiltInAddonRegistries.CELESTIAL_TELEPORTER_TYPE, Constant.id("direct"), DirectCelestialTeleporterType.INSTANCE);
         Registry.register(BuiltInAddonRegistries.CELESTIAL_TELEPORTER_TYPE, Constant.id("fixed"), FixedCelestialTeleporterType.INSTANCE);

@@ -43,6 +43,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -126,6 +127,12 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
 
     @Inject(method = "decreaseAirSupply", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getAttribute(Lnet/minecraft/core/Holder;)Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;"), cancellable = true)
     private void galacticraft_modifyAirLevel(int air, CallbackInfoReturnable<Integer> cir) {
+        AttributeInstance attribute = ((LivingEntity) (Object) this).getAttribute(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE);
+        if (attribute != null && attribute.getValue() >= 0.99D) {
+            this.lastHurtBySuffocationTimestamp = this.tickCount;
+            cir.setReturnValue(this.increaseAirSupply(air));
+        }
+
         if (this.galacticraft$hasMaskAndGear()) {
             InventoryStorage tankInv = InventoryStorage.of(galacticraft$getOxygenTanks(), null);
             for (int i = 0; i < tankInv.getSlotCount(); i++) {
@@ -136,6 +143,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
                             transaction.commit();
                             this.lastHurtBySuffocationTimestamp = this.tickCount;
                             cir.setReturnValue(this.increaseAirSupply(air));
+                            return;
                         }
                     }
                 }
@@ -159,6 +167,29 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
                     }
                 }
             }
+        }
+    }
+
+    @Inject(method = "canFreeze", at = @At(value = "HEAD"), cancellable = true)
+    private void galacticraft_canFreezeThermalPadding(CallbackInfoReturnable<Boolean> cir) {
+        if ((Entity) this instanceof Player player) {
+            Container inv = player.galacticraft$getThermalArmor();
+            for (int slot = 0; slot < inv.getContainerSize(); slot++) {
+                if (inv.getItem(slot).is(ItemTags.FREEZE_IMMUNE_WEARABLES)) {
+                    cir.setReturnValue(false);
+                    return;
+                }
+            }
+        }
+    }
+    
+    @Override
+    public void galacticraft$onEquipAccessory(ItemStack previous, ItemStack incoming) {
+        if ((incoming.isEmpty() && previous.isEmpty()) || ItemStack.isSameItemSameComponents(previous, incoming) || this.firstTick) {
+            return;
+        }
+        if (!this.level().isClientSide() && !this.isSpectator() && !this.isSilent() && incoming.getItem() instanceof Accessory accessory) {
+            this.level().playSeededSound(null, this.getX(), this.getY(), this.getZ(), accessory.getEquipSound(), this.getSoundSource(), 1.0f, 1.0f, this.random.nextLong());
         }
     }
 

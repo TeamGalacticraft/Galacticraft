@@ -31,14 +31,18 @@ import net.minecraft.world.item.Item;
 public class GCItemTags {
     public static final TagKey<Item> WRENCHES = commonTag("tools/wrench");
 
+    public static final TagKey<Item> THERMAL_HEAD = galacticraftTag("thermal/head");
+    public static final TagKey<Item> THERMAL_CHEST = galacticraftTag("thermal/chest");
+    public static final TagKey<Item> THERMAL_PANTS = galacticraftTag("thermal/pants");
+    public static final TagKey<Item> THERMAL_BOOTS = galacticraftTag("thermal/boots");
+    public static final TagKey<Item> OXYGEN_MASKS = galacticraftTag("oxygen/mask");
+    public static final TagKey<Item> OXYGEN_GEAR = galacticraftTag("oxygen/gear");
+    public static final TagKey<Item> OXYGEN_TANKS = galacticraftTag("oxygen/tank");
     public static final TagKey<Item> ACCESSORIES = galacticraftTag("accessories");
-    public static final TagKey<Item> OXYGEN_MASKS = galacticraftTag("accessories/oxygen_mask");
-    public static final TagKey<Item> OXYGEN_GEAR = galacticraftTag("accessories/oxygen_gear");
-    public static final TagKey<Item> OXYGEN_TANKS = galacticraftTag("accessories/oxygen_tank");
-    public static final TagKey<Item> PARACHUTES = galacticraftTag("accessories/parachute");
-    public static final TagKey<Item> FREQUENCY_MODULES = galacticraftTag("accessories/frequency_module");
-    public static final TagKey<Item> SHIELD_CONTROLLERS = galacticraftTag("accessories/shield_controller");
-    
+    public static final TagKey<Item> PARACHUTES = galacticraftTag("parachutes");
+    public static final TagKey<Item> FREQUENCY_MODULES = galacticraftTag("frequency_modules");
+    public static final TagKey<Item> SHIELD_CONTROLLERS = galacticraftTag("shield_controllers");
+
     public static final TagKey<Item> BATTERIES = commonTag("batteries");
 
     public static final TagKey<Item> SILICONS = commonTag("silicon");

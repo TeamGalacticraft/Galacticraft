@@ -128,8 +128,15 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
     protected List<CelestialBody<?, ?>> getChildren(CelestialBody<?, ?> celestialBody) {
         if (celestialBody != null) {
-            List<CelestialBody<?, ?>> list = celestialBodies.stream().filter(celestialBodyType -> celestialBodyType.parent().isPresent() && celestialBodyType.parentValue(celestialBodies) == celestialBody).collect(Collectors.toList());
-            list.addAll(getVisibleSatellitesForCelestialBody(celestialBody));
+            List<CelestialBody<?, ?>> list = celestialBodies.stream()
+                    .filter(body -> !body.isSatellite() && body.parent().isPresent() && body.parentValue(celestialBodies) == celestialBody)
+                    .collect(Collectors.toList());
+
+            List<CelestialBody<SatelliteConfig, SatelliteType>> satellites = this.getVisibleSatellitesForCelestialBody(celestialBody);
+            if (satellites.size() > 0) {
+                list.add(satellites.get(0));
+            }
+
             list.sort((o1, o2) -> Float.compare(o1.position().lineScale(), o2.position().lineScale()));
             return list;
         }
@@ -167,12 +174,10 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
                 return true;
             }
-        } else {
-            if (key == GLFW.GLFW_KEY_ENTER) {
-                // Keyboard shortcut - teleport to dimension by pressing 'Enter'
-                this.teleportToSelectedBody();
-                return true;
-            }
+        } else if (key == GLFW.GLFW_KEY_ENTER) {
+            // Keyboard shortcut - teleport to dimension by pressing 'Enter'
+            this.teleportToSelectedBody();
+            return true;
         }
 
         return super.keyPressed(key, scanCode, modifiers);
@@ -194,7 +199,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
     }
 
     protected boolean canCreateSpaceStation(CelestialBody<?, ?> atBody) {
-        if (!atBody.type().isOrbitable()) {
+        if (!atBody.isOrbitable()) {
             return false;
         }
         SatelliteRecipe recipe = ((Orbitable) atBody.type()).satelliteRecipe(atBody.config());
@@ -240,13 +245,21 @@ public class CelestialSelectionScreen extends CelestialScreen {
             if (this.data == null || this.data.canTravel(manager, this.fromBody, this.selectedBody)) {
                 try {
                     assert this.minecraft != null;
-                    if (this.selectedBody.type().isSatellite()) {
+                    String fromName;
+                    if (this.selectedBody.isSatellite()) {
                         SatelliteConfig config = (SatelliteConfig) this.selectedBody.config();
                         ClientPlayNetworking.send(new PlanetTeleportPayload(config.getId()));
+
+                        fromName = config.getCustomName();
+                        if (fromName.length() == 0) {
+                            fromName = Component.translatable(Translations.Ui.SPACE_STATION_NAME, config.getOwnershipData().username()).getString();
+                        }
                     } else {
                         ClientPlayNetworking.send(new PlanetTeleportPayload(celestialBodies.getKey(this.selectedBody)));
+
+                        fromName = I18n.get(((TranslatableContents) this.selectedBody.name().getContents()).getKey());
                     }
-                    this.minecraft.setScreen(new SpaceTravelScreen(isSatellite(selectedBody) ? ((Satellite) this.selectedBody.type()).getCustomName(this.selectedBody.config()).getString() : ((TranslatableContents) this.selectedBody.name().getContents()).getKey(), ((Landable) this.selectedBody.type()).world(this.selectedBody.config())));
+                    this.minecraft.setScreen(new SpaceTravelScreen(fromName, ((Landable) this.selectedBody.type()).world(this.selectedBody.config())));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -330,7 +343,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
 //                        Integer spacestationID = this.spaceStationIDs.get(strName);
 //                        if (spacestationID == null) spacestationID = this.spaceStationIDs.get(strName.toLowerCase());
                         CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody;
-                        selectedSatellite.type().setCustomName(Component.translatable(this.renamingString), selectedSatellite.config());
+                        selectedSatellite.type().setCustomName(this.renamingString, selectedSatellite.config());
 //                        RegistryKey<World> spacestationID = selectedSatellite.getWorld();
 //                        this.spaceStationMap.get(getSatelliteParentID(selectedSatellite)).get(strName).setStationName(this.renamingString);
 //	                    	this.spaceStationNames.put(strName, this.renamingString);
@@ -705,7 +718,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
                         if (this.renamingString == null) {
                             CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody;
                             String playerName = this.minecraft.player.getName().getString();
-                            this.renamingString = selectedSatellite.type().getCustomName(selectedSatellite.config()).getString();
+                            this.renamingString = selectedSatellite.type().getCustomName(selectedSatellite.config());
                         }
 
                         str = this.renamingString;
@@ -948,7 +961,11 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
             if (scale > 0) {
                 color = 0xe0e0e0;
-                texture.drawText(I18n.get(((TranslatableContents) child.name().getContents()).getKey()), 7 + xOffset, yOffsetBase + yOffset + 2, color, false);
+                String key = ((TranslatableContents) child.name().getContents()).getKey();
+                if (child.isSatellite()) {
+                    key += "s";
+                }
+                texture.drawText(I18n.get(key), 7 + xOffset, yOffsetBase + yOffset + 2, color, false);
             }
 
             yOffset += 14;

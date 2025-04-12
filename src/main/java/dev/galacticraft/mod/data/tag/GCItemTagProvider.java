@@ -84,6 +84,8 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.HEAVY_DUTY_BOOTS)
                 .add(GCItems.DESH_BOOTS)
                 .add(GCItems.TITANIUM_BOOTS);
+
+        // Thermal armor
         this.tag(ItemTags.FREEZE_IMMUNE_WEARABLES)
                 .add(GCItems.THERMAL_PADDING_BOOTS)
                 .add(GCItems.THERMAL_PADDING_LEGGINGS)
@@ -93,10 +95,20 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.ISOTHERMAL_PADDING_LEGGINGS)
                 .add(GCItems.ISOTHERMAL_PADDING_CHESTPIECE)
                 .add(GCItems.ISOTHERMAL_PADDING_HELMET);
+        this.tag(GCItemTags.THERMAL_HEAD)
+                .add(GCItems.THERMAL_PADDING_HELMET)
+                .add(GCItems.ISOTHERMAL_PADDING_HELMET);
+        this.tag(GCItemTags.THERMAL_CHEST)
+                .add(GCItems.THERMAL_PADDING_CHESTPIECE)
+                .add(GCItems.ISOTHERMAL_PADDING_CHESTPIECE);
+        this.tag(GCItemTags.THERMAL_PANTS)
+                .add(GCItems.THERMAL_PADDING_LEGGINGS)
+                .add(GCItems.ISOTHERMAL_PADDING_LEGGINGS);
+        this.tag(GCItemTags.THERMAL_BOOTS)
+                .add(GCItems.THERMAL_PADDING_BOOTS)
+                .add(GCItems.ISOTHERMAL_PADDING_BOOTS);
 
-        this.tag(GCItemTags.WRENCHES)
-                .add(GCItems.STANDARD_WRENCH);
-
+        // Oxygen equipment
         this.tag(GCItemTags.OXYGEN_MASKS)
                 .add(GCItems.OXYGEN_MASK);
         this.tag(GCItemTags.OXYGEN_GEAR)
@@ -107,6 +119,7 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.LARGE_OXYGEN_TANK)
                 .add(GCItems.INFINITE_OXYGEN_TANK);
 
+        // Other accessories
         this.tag(GCItemTags.PARACHUTES)
                 .add(GCItems.PARACHUTE.get(DyeColor.WHITE))
                 .add(GCItems.PARACHUTE.get(DyeColor.ORANGE))
@@ -124,18 +137,17 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.PARACHUTE.get(DyeColor.GREEN))
                 .add(GCItems.PARACHUTE.get(DyeColor.RED))
                 .add(GCItems.PARACHUTE.get(DyeColor.BLACK));
-
-        this.tag(GCItemTags.FREQUENCY_MODULES)
+        tag(GCItemTags.FREQUENCY_MODULES)
                 .add(GCItems.FREQUENCY_MODULE);
-        this.tag(GCItemTags.SHIELD_CONTROLLERS)
+        tag(GCItemTags.SHIELD_CONTROLLERS)
                 .add(GCItems.SHIELD_CONTROLLER);
-        this.tag(GCItemTags.ACCESSORIES)
-                .addTag(GCItemTags.OXYGEN_MASKS)
-                .addTag(GCItemTags.OXYGEN_GEAR)
-                .addTag(GCItemTags.OXYGEN_TANKS)
-                .addTag(GCItemTags.PARACHUTES)
+        tag(GCItemTags.ACCESSORIES)
                 .addTag(GCItemTags.FREQUENCY_MODULES)
+                .addTag(GCItemTags.PARACHUTES)
                 .addTag(GCItemTags.SHIELD_CONTROLLERS);
+
+        this.tag(GCItemTags.WRENCHES)
+                .add(GCItems.STANDARD_WRENCH);
 
         this.tag(GCItemTags.BATTERIES)
                 .add(GCItems.BATTERY)

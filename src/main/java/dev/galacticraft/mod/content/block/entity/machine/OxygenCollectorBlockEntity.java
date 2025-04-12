@@ -24,7 +24,6 @@ package dev.galacticraft.mod.content.block.entity.machine;
 
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.gas.Gases;
-import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
@@ -46,7 +45,6 @@ import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.OxygenCollectorMenu;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
@@ -93,13 +91,12 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public void setLevel(Level world) {
-        super.setLevel(world);
-        Holder<CelestialBody<?, ?>> body = world.galacticraft$getCelestialBody();
-        this.oxygenWorld = body == null || body.value().atmosphere().breathable();
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        this.oxygenWorld = level.getDefaultBreathable();
     }
 
-    private int collectOxygen(@NotNull ServerLevel world, @NotNull BlockPos pos) {
+    private int collectOxygen(@NotNull ServerLevel level, @NotNull BlockPos pos) {
         if (!this.oxygenWorld) {
             int minX = pos.getX() - 5;
             int minY = pos.getY() - 5;
@@ -111,12 +108,12 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
             float leafBlocks = 0;
 
             for (BlockPos pos1 : BlockPos.betweenClosed(minX, minY, minZ, maxX, maxY, maxZ)) {
-                BlockState state = world.getBlockState(pos1);
+                BlockState state = level.getBlockState(pos1);
                 if (state.isAir()) {
                     continue;
                 }
 
-                leafBlocks += OxygenBlockDataManager.getOxygen(world, pos1, state);
+                leafBlocks += OxygenBlockDataManager.getOxygen(level, pos1, state);
             }
 
             if (leafBlocks < 2) return 0;
@@ -128,8 +125,8 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        super.tickConstant(world, pos, state, profiler);
+    protected void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(level, pos, state, profiler);
         this.chargeFromSlot(CHARGE_SLOT);
     }
 
@@ -143,7 +140,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
         try {
             if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate())) {
                 profiler.push("collect");
-                this.collectionAmount = collectOxygen(level, pos);
+                this.collectionAmount = this.collectOxygen(level, pos);
                 profiler.pop();
                 if (this.collectionAmount > 0) {
                     this.energyStorage().extract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate());

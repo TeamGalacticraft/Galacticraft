@@ -606,15 +606,19 @@ public class GCTranslationProvider extends TranslationProvider {
     }
 
     protected void generateTagTranslations() {
-        this.tag(GCItemTags.WRENCHES, "Wrenches");
-
-        this.tag(GCItemTags.ACCESSORIES, "Galacticraft Accessories");
+        this.tag(GCItemTags.THERMAL_HEAD, "Thermal Padding Helmets");
+        this.tag(GCItemTags.THERMAL_CHEST, "Thermal Padding Chestpieces");
+        this.tag(GCItemTags.THERMAL_PANTS, "Thermal Padding Pants");
+        this.tag(GCItemTags.THERMAL_BOOTS, "Thermal Padding Boots");
         this.tag(GCItemTags.OXYGEN_MASKS, "Oxygen Masks");
         this.tag(GCItemTags.OXYGEN_GEAR, "Oxygen Gear");
         this.tag(GCItemTags.OXYGEN_TANKS, "Oxygen Tanks");
         this.tag(GCItemTags.PARACHUTES, "Parachutes");
         this.tag(GCItemTags.FREQUENCY_MODULES, "Frequency Modules");
         this.tag(GCItemTags.SHIELD_CONTROLLERS, "Shield Controllers");
+        this.tag(GCItemTags.ACCESSORIES, "Galacticraft Accessories");
+
+        this.tag(GCItemTags.WRENCHES, "Wrenches");
 
         this.tag(GCItemTags.BATTERIES, "Batteries");
 
@@ -791,6 +795,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(CelestialBody.VENUS, "Venus");
         this.add(CelestialBody.VENUS_DESC, "");
         this.add(CelestialBody.SATELLITE, "Satellite");
+        this.add(CelestialBody.SATELLITES, "Satellites");
         this.add(CelestialBody.SATELLITE_DESC, "");
     }
 
