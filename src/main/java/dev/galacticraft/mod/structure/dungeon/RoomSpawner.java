@@ -50,32 +50,32 @@ public class RoomSpawner extends RoomEmpty {
     public void postProcess(WorldGenLevel worldIn, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource random, BoundingBox boundingBox, ChunkPos pos, BlockPos pivot) {
         super.postProcess(worldIn, structureManager, chunkGenerator, random, boundingBox, pos, pivot);
 //        if (super.postProcess(worldIn, structureManager, chunkGenerator, random, boundingBox, pos, pivot)) {
-            for (int i = 1; i <= this.sizeX - 1; ++i) {
-                for (int j = 1; j <= this.sizeY - 1; ++j) {
-                    for (int k = 1; k <= this.sizeZ - 1; ++k) {
-                        if (random.nextFloat() < 0.05F) {
-                            this.placeBlock(worldIn, Blocks.COBWEB.defaultBlockState(), i, j, k, boundingBox);
-                        }
+        for (int i = 1; i <= this.sizeX - 1; ++i) {
+            for (int j = 1; j <= this.sizeY - 1; ++j) {
+                for (int k = 1; k <= this.sizeZ - 1; ++k) {
+                    if (random.nextFloat() < 0.05F) {
+                        this.placeBlock(worldIn, Blocks.COBWEB.defaultBlockState(), i, j, k, boundingBox);
                     }
                 }
             }
+        }
 
-            this.placeBlock(worldIn, Blocks.SPAWNER.defaultBlockState(), 1, 0, 1, boundingBox);
-            this.placeBlock(worldIn, Blocks.SPAWNER.defaultBlockState(), this.sizeX - 1, 0, this.sizeZ - 1, boundingBox);
+        this.placeBlock(worldIn, Blocks.SPAWNER.defaultBlockState(), 1, 0, 1, boundingBox);
+        this.placeBlock(worldIn, Blocks.SPAWNER.defaultBlockState(), this.sizeX - 1, 0, this.sizeZ - 1, boundingBox);
 
-            BlockPos blockpos = new BlockPos(this.getWorldX(1, 1), this.getWorldY(0), this.getWorldZ(1, 1));
-            Spawner spawner = (Spawner) worldIn.getBlockEntity(blockpos);
+        BlockPos blockpos = new BlockPos(this.getWorldX(1, 1), this.getWorldY(0), this.getWorldZ(1, 1));
+        Spawner spawner = (Spawner) worldIn.getBlockEntity(blockpos);
 
-            if (spawner != null) {
-                spawner.setEntityId(getMob(random), random);
-            }
+        if (spawner != null) {
+            spawner.setEntityId(getMob(random), random);
+        }
 
-            blockpos = new BlockPos(this.getWorldX(this.sizeX - 1, this.sizeZ - 1), this.getWorldY(0), this.getWorldZ(this.sizeX - 1, this.sizeZ - 1));
-            spawner = (Spawner) worldIn.getBlockEntity(blockpos);
+        blockpos = new BlockPos(this.getWorldX(this.sizeX - 1, this.sizeZ - 1), this.getWorldY(0), this.getWorldZ(this.sizeX - 1, this.sizeZ - 1));
+        spawner = (Spawner) worldIn.getBlockEntity(blockpos);
 
-            if (spawner != null) {
-                spawner.setEntityId(getMob(random), random);
-            }
+        if (spawner != null) {
+            spawner.setEntityId(getMob(random), random);
+        }
 
 //        }
 

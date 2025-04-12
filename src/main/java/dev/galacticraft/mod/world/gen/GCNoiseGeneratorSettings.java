@@ -146,11 +146,11 @@ public class GCNoiseGeneratorSettings {
                                         )
                                 ).abs(),
                                 DensityFunctions.interpolated(
-                                       DensityFunctions.rangeChoice(
-                                               y, -25, 51,
-                                               DensityFunctions.noise(noiseLookup.getOrThrow(Noises.ORE_VEIN_B), 4, 4),
-                                               DensityFunctions.zero()
-                                           )
+                                        DensityFunctions.rangeChoice(
+                                                y, -25, 51,
+                                                DensityFunctions.noise(noiseLookup.getOrThrow(Noises.ORE_VEIN_B), 4, 4),
+                                                DensityFunctions.zero()
+                                        )
                                 ).abs()
                         )
                 ), // veinRidged

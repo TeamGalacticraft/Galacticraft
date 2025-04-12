@@ -23,14 +23,18 @@
 package dev.galacticraft.impl.internal.mixin.client;
 
 import dev.galacticraft.api.client.accessor.ClientSatelliteAccessor;
+import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.dynamicdimensions.impl.registry.RegistryUtil;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 import java.util.ArrayList;
@@ -44,6 +48,9 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientSatelliteAc
     private final @Unique Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> satellites = new HashMap<>();
     private final @Unique List<SatelliteListener> listeners = new ArrayList<>();
 
+    @Shadow
+    public abstract RegistryAccess.Frozen registryAccess();
+
     @Override
     public Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> galacticraft$getSatellites() {
         return this.satellites;
@@ -52,6 +59,7 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientSatelliteAc
     @Override
     public void galacticraft$addSatellite(ResourceLocation id, CelestialBody<SatelliteConfig, SatelliteType> satellite) {
         this.satellites.put(id, satellite);
+        RegistryUtil.registerUnfreeze(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id, satellite);
         for (SatelliteListener listener : this.listeners) {
             listener.onSatelliteUpdated(satellite, true);
         }
@@ -60,6 +68,7 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientSatelliteAc
     @Override
     public void galacticraft$removeSatellite(ResourceLocation id) {
         CelestialBody<SatelliteConfig, SatelliteType> removed = this.satellites.remove(id);
+        RegistryUtil.unregister(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id);
         for (SatelliteListener listener : this.listeners) {
             listener.onSatelliteUpdated(removed, false);
         }

@@ -39,6 +39,7 @@ import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.dynamicdimensions.api.DynamicDimensionRegistry;
 import dev.galacticraft.impl.network.s2c.AddSatellitePayload;
 import dev.galacticraft.impl.universe.BuiltinObjects;
+import dev.galacticraft.impl.universe.celestialbody.config.StarConfig;
 import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
 import dev.galacticraft.impl.universe.display.config.ring.DefaultCelestialRingDisplayConfig;
 import dev.galacticraft.impl.universe.display.type.IconCelestialDisplayType;
@@ -47,11 +48,15 @@ import dev.galacticraft.impl.universe.position.config.OrbitalCelestialPositionCo
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.impl.universe.position.type.OrbitalCelestialPositionType;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.client.render.dimension.AsteroidSkyRenderer;
 import dev.galacticraft.mod.data.gen.SatelliteChunkGenerator;
+import dev.galacticraft.mod.tag.GCTags;
 import dev.galacticraft.mod.util.Translations;
 import dev.galacticraft.mod.world.biome.GCBiomes;
+import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -60,7 +65,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.progress.ChunkProgressListener;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -75,6 +79,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.OptionalLong;
 
 public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements Satellite<SatelliteConfig>, Tiered<SatelliteConfig> {
@@ -96,7 +101,10 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
         public void stop() {
         }
     };
-    private static final GasComposition EMPTY_GAS_COMPOSITION = new GasComposition.Builder().build();
+    private static final GasComposition EMPTY_GAS_COMPOSITION = new GasComposition.Builder()
+            .temperature(-2.0)
+            .pressure(0)
+            .build();
     private static final Component NAME = Component.translatable(Translations.CelestialBody.SATELLITE);
     private static final Component DESCRIPTION = Component.translatable(Translations.CelestialBody.SATELLITE_DESC);
 
@@ -105,34 +113,54 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
     }
 
     @ApiStatus.Internal
-    public static CelestialBody<SatelliteConfig, SatelliteType> registerSatellite(@NotNull MinecraftServer server, @NotNull ServerPlayer player, Holder<CelestialBody<?, ?>> parent, StructureTemplate structure) {
-        ResourceLocation id = ResourceLocation.parse(parent.unwrapKey().get().location() + "_" + player.getScoreboardName().toLowerCase(Locale.ROOT));
-        DimensionType type = new DimensionType(OptionalLong.empty(), true, false, false, true, 1, false, false, 0, 256, 256, TagKey.create(Registries.BLOCK, Constant.id("infiniburn_space")), Constant.id("space_sky"), 0, new DimensionType.MonsterSettings(false, true, UniformInt.of(0, 7), 0));
+    public static CelestialBody<SatelliteConfig, SatelliteType> registerSatellite(@NotNull MinecraftServer server, @NotNull ServerPlayer player, ResourceKey<CelestialBody<?, ?>> parent, StructureTemplate structure, Registry<CelestialBody<?, ?>> celestialBodyRegistry) {
+        ResourceLocation id = ResourceLocation.parse(parent.location() + "_" + player.getScoreboardName().toLowerCase(Locale.ROOT));
+        DimensionType type = new DimensionType(
+                OptionalLong.empty(), // fixedTime
+                true, // hasSkyLight
+                false, // hasCeiling
+                false, // ultraWarm
+                false, // natural
+                1.0, // coordinateScale
+                false, // bedWorks
+                false, // respawnAnchorWorks
+                0, // minY
+                256, // height
+                256, // logicalHeight
+                GCTags.INFINIBURN_SATELLITE, // infiniburn
+                Constant.id("satellite"), // effectsLocation
+                0, // ambientLight
+                new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)
+        );
         SatelliteChunkGenerator chunkGenerator = new SatelliteChunkGenerator(server.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(GCBiomes.SPACE), structure);
         SatelliteOwnershipData ownershipData = SatelliteOwnershipData.create(player.getUUID(), player.getScoreboardName(), new LinkedList<>(), false);
         CelestialPosition<?, ?> position = new CelestialPosition<>(OrbitalCelestialPositionType.INSTANCE, new OrbitalCelestialPositionConfig(1550, 10.0f, 0.0F, false));
-        CelestialDisplay<?, ?> display = new CelestialDisplay<>(IconCelestialDisplayType.INSTANCE, new IconCelestialDisplayConfig(Constant.id("satellite"), 0, 0, 16, 16));
+        CelestialDisplay<?, ?> display = new CelestialDisplay<>(IconCelestialDisplayType.INSTANCE, new IconCelestialDisplayConfig(Constant.CelestialBody.SPACE_STATION, 0, 0, 16, 16));
         CelestialRingDisplay<?, ?> ring = new CelestialRingDisplay<>(DefaultCelestialRingDisplayType.INSTANCE, new DefaultCelestialRingDisplayConfig());
         ResourceKey<Level> key = ResourceKey.create(Registries.DIMENSION, id);
         DynamicDimensionRegistry registry = DynamicDimensionRegistry.from(server);
         assert server.getLevel(key) == null : "World already registered?!";
         assert registry.anyDimensionExists(id) : "Dimension Type already registered?!";
-        return create(id, server, parent, position, display, ring, chunkGenerator, type, ownershipData, player.getGameProfile().getName() + "'s Space Station");
+        return create(id, server, parent, position, display, ring, chunkGenerator, type, ownershipData, "", celestialBodyRegistry, key);
     }
 
     @ApiStatus.Internal
-    public static CelestialBody<SatelliteConfig, SatelliteType> create(ResourceLocation id, MinecraftServer server, Holder<CelestialBody<?, ?>> parent, CelestialPosition<?, ?> position, CelestialDisplay<?, ?> display, CelestialRingDisplay<?, ?> ring,
-                                                                       ChunkGenerator generator, DimensionType type, SatelliteOwnershipData ownershipData, String name) {
+    public static CelestialBody<SatelliteConfig, SatelliteType> create(ResourceLocation id, MinecraftServer server, ResourceKey<CelestialBody<?, ?>> parentResourceKey, CelestialPosition<?, ?> position, CelestialDisplay<?, ?> display, CelestialRingDisplay<?, ?> ring,
+                                                                       ChunkGenerator generator, DimensionType type, SatelliteOwnershipData ownershipData, String name, Registry<CelestialBody<?, ?>> celestialBodyRegistry, ResourceKey<Level> key) {
         Constant.LOGGER.debug("Attempting to create a world dynamically ({})", id);
-
-        ((DynamicDimensionRegistry)server).createDynamicDimension(id, generator, type);
 
         Holder<CelestialTeleporter<?, ?>> direct = server.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_TELEPORTER).getHolderOrThrow(BuiltinObjects.DIRECT_CELESTIAL_TELEPORTER);
 
-        SatelliteConfig config = new SatelliteConfig(parent, parent.value().galaxy(), position, display, ring, ownershipData, ResourceKey.create(Registries.DIMENSION, id), direct, EMPTY_GAS_COMPOSITION, 0.0f, parent.value().type() instanceof Tiered<?> ? ((Tiered) parent.value().type()).accessWeight(parent.value().config()) : 1, new LevelStem(Holder.direct(type), generator));
-        config.customName(Component.translatable(name));
+        CelestialBody<?, ?> parent = celestialBodyRegistry.get(parentResourceKey);
+
+        // DimensionRenderingRegistry.registerSkyRenderer(key, AsteroidSkyRenderer.INSTANCE);
+
+        assert parent != null;
+        SatelliteConfig config = new SatelliteConfig(id, name, Optional.of(parentResourceKey), position, display, ring, ownershipData, ResourceKey.create(Registries.DIMENSION, id), direct, EMPTY_GAS_COMPOSITION, 1.0f, parent.type() instanceof Tiered<?> ? ((Tiered) parent.type()).accessWeight(parent.config()) : 1, new LevelStem(Holder.direct(type), generator));
         CelestialBody<SatelliteConfig, SatelliteType> satellite = INSTANCE.configure(config);
+
         ((SatelliteAccessor) server).galacticraft$addSatellite(id, satellite);
+        ((DynamicDimensionRegistry) server).createDynamicDimension(id, generator, type);
 
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             ServerPlayNetworking.send(player, new AddSatellitePayload(id, satellite.config()));
@@ -146,13 +174,19 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
     }
 
     @Override
-    public @Nullable Holder<CelestialBody<?, ?>> parent(SatelliteConfig config) {
-        return config.parent();
+    public @Nullable Optional<ResourceKey<CelestialBody<?, ?>>> parent(SatelliteConfig config) {
+        return config.getParent();
     }
 
     @Override
-    public @NotNull Holder<Galaxy> galaxy(SatelliteConfig config) {
-        return config.galaxy();
+    public @NotNull Optional<ResourceKey<Galaxy>> galaxy(Registry<CelestialBody<?, ?>> registry, SatelliteConfig config) {
+        if (config.getParent().isPresent()) {
+            CelestialBody<?, ?> body = registry.get(config.getParent().get());
+            if (body != null && body.type() instanceof StarType starType) {
+                return starType.galaxy(registry, (StarConfig) body.config());
+            }
+        }
+        return Optional.empty();
     }
 
     @Override
@@ -162,57 +196,57 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
 
     @Override
     public @NotNull CelestialPosition<?, ?> position(SatelliteConfig config) {
-        return config.position();
+        return config.getPosition();
     }
 
     @Override
     public @NotNull CelestialDisplay<?, ?> display(SatelliteConfig config) {
-        return config.display();
+        return config.getDisplay();
     }
 
     @Override
     public @NotNull CelestialRingDisplay<?, ?> ring(SatelliteConfig config) {
-        return config.ring();
+        return config.getRing();
     }
 
     @Override
     public SatelliteOwnershipData ownershipData(SatelliteConfig config) {
-        return config.ownershipData();
+        return config.getOwnershipData();
     }
 
     @Override
-    public void setCustomName(@NotNull Component text, SatelliteConfig config) {
-        config.customName(text);
+    public void setCustomName(@NotNull String text, SatelliteConfig config) {
+        config.setCustomName(text);
     }
 
     @Override
-    public @NotNull Component getCustomName(SatelliteConfig config) {
-        return config.customName();
+    public @NotNull String getCustomName(SatelliteConfig config) {
+        return config.getCustomName();
     }
 
     @Override
     public @NotNull ResourceKey<Level> world(SatelliteConfig config) {
-        return config.world();
+        return config.getWorld();
     }
 
     @Override
     public Holder<CelestialTeleporter<?, ?>> teleporter(SatelliteConfig config) {
-        return config.teleporter();
+        return config.getTeleporter();
     }
 
     @Override
     public @NotNull GasComposition atmosphere(SatelliteConfig config) {
-        return config.atmosphere();
+        return config.getAtmosphere();
     }
 
     @Override
     public float gravity(SatelliteConfig config) {
-        return config.gravity();
+        return config.getGravity();
     }
 
     @Override
     public int accessWeight(SatelliteConfig config) {
-        return config.accessWeight();
+        return config.getAccessWeight();
     }
 
     @Override

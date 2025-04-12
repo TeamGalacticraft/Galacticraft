@@ -25,7 +25,6 @@ package dev.galacticraft.api.component;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.rocket.RocketData;
-import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.StreamCodecs;
 import net.minecraft.core.Registry;
@@ -36,7 +35,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.world.item.EitherHolder;
 
 import java.util.function.UnaryOperator;
 
@@ -70,5 +68,6 @@ public class GCDataComponents {
         return Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Constant.id(id), op.apply(DataComponentType.builder()).build());
     }
 
-    public static void init() {}
+    public static void init() {
+    }
 }

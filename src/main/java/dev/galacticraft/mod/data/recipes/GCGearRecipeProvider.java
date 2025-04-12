@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.data.recipes;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
@@ -251,7 +250,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern("S")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
                 .save(output);
-        
+
         // Smithing Recipes
         titaniumSmithing(output, GCItems.DESH_CHESTPLATE, RecipeCategory.COMBAT, GCItems.TITANIUM_CHESTPLATE);
         titaniumSmithing(output, GCItems.DESH_LEGGINGS, RecipeCategory.COMBAT, GCItems.TITANIUM_LEGGINGS);

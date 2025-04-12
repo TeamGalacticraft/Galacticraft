@@ -47,15 +47,15 @@ public class AdvancedSolarPanelBlockEntityRenderer implements BlockEntityRendere
     private final ModelPart panel;
     private final ModelPart pole;
     private float tilt;
-    public static final float SPEED = (float)Math.toRadians(0.5F);
-    public static final float DAWN = 4.0F * (float)Math.PI / 3.0F;
-    public static final float SUNRISE = 1.5F * (float)Math.PI;
+    public static final float SPEED = (float) Math.toRadians(0.5F);
+    public static final float DAWN = 4.0F * (float) Math.PI / 3.0F;
+    public static final float SUNRISE = 1.5F * (float) Math.PI;
     public static final float NOON = 0.0F;
-    public static final float SUNSET = 0.5F * (float)Math.PI;
-    public static final float DUSK = 2.0F * (float)Math.PI / 3.0F;
-    public static final float MIDNIGHT = (float)Math.PI;
-    public static final float MIN = 5.0F * (float)Math.PI / 3.0F;
-    public static final float MAX = (float)Math.PI / 3.0F;
+    public static final float SUNSET = 0.5F * (float) Math.PI;
+    public static final float DUSK = 2.0F * (float) Math.PI / 3.0F;
+    public static final float MIDNIGHT = (float) Math.PI;
+    public static final float MIN = 5.0F * (float) Math.PI / 3.0F;
+    public static final float MAX = (float) Math.PI / 3.0F;
 
     public AdvancedSolarPanelBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
         ModelPart root = context.bakeLayer(GCEntityModelLayer.SOLAR_PANEL);

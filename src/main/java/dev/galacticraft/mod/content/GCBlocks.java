@@ -26,10 +26,7 @@ import dev.galacticraft.machinelib.api.block.SimpleMachineBlock;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.block.boss.BossSpawner;
-import dev.galacticraft.mod.content.block.decoration.IronGratingBlock;
-import dev.galacticraft.mod.content.block.decoration.LightPanelBlock;
-import dev.galacticraft.mod.content.block.decoration.LunarCartographyTableBlock;
-import dev.galacticraft.mod.content.block.decoration.VacuumGlassBlock;
+import dev.galacticraft.mod.content.block.decoration.*;
 import dev.galacticraft.mod.content.block.environment.*;
 import dev.galacticraft.mod.content.block.machine.*;
 import dev.galacticraft.mod.content.block.special.*;
@@ -47,6 +44,7 @@ import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FlattenableBlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.valueproviders.ConstantInt;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -99,6 +97,8 @@ public class GCBlocks {
     public static final DecorationSet TIN_DECORATION = BLOCKS.registerDecoration(Constant.Block.TIN_DECORATION, BlockBehaviour.Properties.of().mapColor(MapColor.GLOW_LICHEN).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops(), 2.5F, 3.0F);
     public static final DecorationSet TITANIUM_DECORATION = BLOCKS.registerDecoration(Constant.Block.TITANIUM_DECORATION, BlockBehaviour.Properties.of().mapColor(MapColor.CLAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops(), 2.5F, 3.0F);
     public static final DecorationSet DARK_DECORATION = BLOCKS.registerDecoration(Constant.Block.DARK_DECORATION, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops(), 2.5F, 3.0F);
+
+    public static final Block CANNED_FOOD = BLOCKS.register(Constant.Block.CANNED_FOOD, new CannedFoodBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).strength(0.5F, 0.5F).noOcclusion()));
 
     // MOON NATURAL
     public static final Block MOON_TURF = BLOCKS.registerWithItem(Constant.Block.MOON_TURF, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).strength(0.5F, 0.5F)));
@@ -180,6 +180,7 @@ public class GCBlocks {
     public static final Block ASTEROID_ROCK = BLOCKS.registerWithItem(Constant.Block.ASTEROID_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BLACK).instrument(NoteBlockInstrument.BASEDRUM).destroyTime(3.0F).requiresCorrectToolForDrops()));
     public static final Block ASTEROID_ROCK_1 = BLOCKS.registerWithItem(Constant.Block.ASTEROID_ROCK_1, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).instrument(NoteBlockInstrument.BASEDRUM).destroyTime(3.0F).requiresCorrectToolForDrops())); // todo naming
     public static final Block ASTEROID_ROCK_2 = BLOCKS.registerWithItem(Constant.Block.ASTEROID_ROCK_2, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.DEEPSLATE).instrument(NoteBlockInstrument.BASEDRUM).destroyTime(3.0F).requiresCorrectToolForDrops()));
+    public static final Block DENSE_ICE = BLOCKS.registerWithItem(Constant.Block.DENSE_ICE, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.ICE).instrument(NoteBlockInstrument.BASEDRUM).destroyTime(1.0F).requiresCorrectToolForDrops()));
 
     // VENUS NATURAL
     public static final Block SOFT_VENUS_ROCK = BLOCKS.registerWithItem(Constant.Block.SOFT_VENUS_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.PODZOL).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F)));
@@ -241,6 +242,7 @@ public class GCBlocks {
     public static final Block ASTEROID_IRON_ORE = BLOCKS.registerWithItem(Constant.Block.ASTEROID_IRON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(ASTEROID_ROCK, 3.5F, 3.0F)));
     public static final Block ASTEROID_ALUMINUM_ORE = BLOCKS.registerWithItem(Constant.Block.ASTEROID_ALUMINUM_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(ASTEROID_ROCK, 3.5F, 3.0F)));
     public static final Block ILMENITE_ORE = BLOCKS.registerWithItem(Constant.Block.ILMENITE_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(ASTEROID_ROCK, 3.0F, 5.0F)));
+    public static final Block ASTEROID_SILICON_ORE = BLOCKS.registerWithItem(Constant.Block.ASTEROID_SILICON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(ASTEROID_ROCK, 3.5F, 3.0F)));
 
     public static final Block VENUS_COPPER_ORE = BLOCKS.registerWithItem(Constant.Block.VENUS_COPPER_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(SOFT_VENUS_ROCK, 5.0F, 5.0F)));
     public static final Block VENUS_TIN_ORE = BLOCKS.registerWithItem(Constant.Block.VENUS_TIN_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(SOFT_VENUS_ROCK, 5.0F, 5.0F)));
@@ -327,10 +329,11 @@ public class GCBlocks {
     public static final Block OXYGEN_COMPRESSOR = BLOCKS.registerWithItem(Constant.Block.OXYGEN_COMPRESSOR, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.OXYGEN_COMPRESSOR)));
     public static final Block OXYGEN_STORAGE_MODULE = BLOCKS.registerWithItem(Constant.Block.OXYGEN_STORAGE_MODULE, new ResourceStorageBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.OXYGEN_STORAGE_MODULE)));
     public static final Block FUEL_LOADER = BLOCKS.registerWithItem(Constant.Block.FUEL_LOADER, new FuelLoaderBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
+    public static final Block FOOD_CANNER = BLOCKS.registerWithItem(Constant.Block.FOOD_CANNER, new FoodCannerBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops()));
 
     public static final AirlockBlock AIR_LOCK_FRAME = BLOCKS.registerWithItem(Constant.Block.AIR_LOCK_FRAME, new AirlockBlock(false, BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).mapColor(MapColor.COLOR_GRAY)));
     public static final AirlockBlock AIR_LOCK_CONTROLLER = BLOCKS.registerWithItem(Constant.Block.AIR_LOCK_CONTROLLER, new AirlockBlock(true, BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).mapColor(MapColor.COLOR_GRAY)));
-    public static final Block AIR_LOCK_SEAL = BLOCKS.register(Constant.Block.AIR_LOCK_SEAL, new Block(BlockBehaviour.Properties.ofFullCopy(AIR_LOCK_FRAME)));
+    public static final Block AIR_LOCK_SEAL = BLOCKS.register(Constant.Block.AIR_LOCK_SEAL, new AirlockSealBlock(BlockBehaviour.Properties.ofFullCopy(AIR_LOCK_FRAME).strength(-1.0f, 3600000.0f).noLootTable().isValidSpawn(GCBlocks::never)));
 
     public static void register() {
         FlammableBlockRegistry.getDefaultInstance().add(FUEL, 80, 130);
@@ -346,6 +349,10 @@ public class GCBlocks {
     }
 
     private static boolean never(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+        return false;
+    }
+
+    private static boolean never(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, EntityType<?> entityType) {
         return false;
     }
 

@@ -4,5 +4,5 @@
     "translate": "jukebox_song.galacticraft.legacy_mimas"
   },
   "length_in_seconds": 130.0,
-  "sound_event": "galacticraft:music.legacy.mimas"
+  "sound_event": "galacticraft:music_disc.legacy.mimas"
 }

@@ -45,7 +45,7 @@ public class GCConfiguredCarvers {
     public static final ResourceKey<ConfiguredWorldCarver<?>> MOON_CRATER_CARVER = key(Constant.Carver.MOON_CRATER_CARVER);
     public static final ResourceKey<ConfiguredWorldCarver<?>> MOON_HIGHLANDS_CAVE_CARVER = key(Constant.Carver.MOON_HIGHLANDS_CAVE_CARVER);
     public static final ResourceKey<ConfiguredWorldCarver<?>> MOON_MARE_CAVE_CARVER = key(Constant.Carver.MOON_MARE_CAVE_CARVER);
-    
+
     @Contract(pure = true)
     private static @NotNull ResourceKey<ConfiguredWorldCarver<?>> key(String s) {
         return Constant.key(Registries.CONFIGURED_CARVER, s);

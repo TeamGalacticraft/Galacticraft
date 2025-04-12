@@ -24,12 +24,12 @@ package dev.galacticraft.mod.data.recipes;
 
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.recipe.EmergencyKitRecipe;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
@@ -130,6 +130,8 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .pattern("RWR")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_ALUMINUM), has(GCItems.COMPRESSED_ALUMINUM))
                 .save(output);
+
+        SpecialRecipeBuilder.special(EmergencyKitRecipe::new).save(output, "emergency_kit");
 
 
         // Misc crafting materials
@@ -409,41 +411,6 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .pattern("C")
                 .pattern("C")
                 .unlockedBy(getHasName(GCItems.MOON_CHEESE_WHEEL), has(GCItems.MOON_CHEESE_WHEEL))
-                .save(output);
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CANNED_DEHYDRATED_APPLE)
-                .requires(GCItems.TIN_CANISTER)
-                .requires(Items.APPLE)
-                .requires(Items.APPLE)
-                .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItems.TIN_CANISTER))
-                .save(output);
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CANNED_DEHYDRATED_POTATO)
-                .requires(GCItems.TIN_CANISTER)
-                .requires(Items.POTATO)
-                .requires(Items.POTATO)
-                .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItems.TIN_CANISTER))
-                .save(output);
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CANNED_DEHYDRATED_CARROT)
-                .requires(GCItems.TIN_CANISTER)
-                .requires(Items.CARROT)
-                .requires(Items.CARROT)
-                .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItems.TIN_CANISTER))
-                .save(output);
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CANNED_DEHYDRATED_MELON)
-                .requires(GCItems.TIN_CANISTER)
-                .requires(Items.MELON_SLICE)
-                .requires(Items.MELON_SLICE)
-                .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItems.TIN_CANISTER))
-                .save(output);
-
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CANNED_BEEF)
-                .requires(GCItems.TIN_CANISTER)
-                .requires(GCItems.GROUND_BEEF)
-                .requires(GCItems.GROUND_BEEF)
-                .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItems.TIN_CANISTER))
                 .save(output);
     }
 

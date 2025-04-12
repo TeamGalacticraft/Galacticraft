@@ -43,8 +43,9 @@ public class CapesLoader {
         public String name;
     }
 
-    public static HashMap<String,String> UUID_CAPE_MAP = new HashMap<>();
-    private static final Type PLAYER_CAPE_DATA_TYPE = new TypeToken<List<PlayerCapeData>>(){}.getType();
+    public static HashMap<String, String> UUID_CAPE_MAP = new HashMap<>();
+    private static final Type PLAYER_CAPE_DATA_TYPE = new TypeToken<List<PlayerCapeData>>() {
+    }.getType();
 
     public static void load() {
         Util.backgroundExecutor().execute(() -> {
@@ -66,7 +67,7 @@ public class CapesLoader {
             } catch (IOException e) {
                 Constant.LOGGER.warn("Failed to load capes.", e);
             }
-            Constant.LOGGER.info("Loaded capes for {} players. (Took {}ms)", UUID_CAPE_MAP.size(), System.currentTimeMillis()-startLoad);
+            Constant.LOGGER.info("Loaded capes for {} players. (Took {}ms)", UUID_CAPE_MAP.size(), System.currentTimeMillis() - startLoad);
         });
     }
 }

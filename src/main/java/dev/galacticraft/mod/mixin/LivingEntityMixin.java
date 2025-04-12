@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.CryogenicAccessor;
@@ -32,8 +34,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.tags.EntityTypeTags;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -48,8 +48,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
@@ -61,9 +59,11 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
             LivingEntity.class, EntityDataSerializers.BOOLEAN
     );
 
-    @Shadow public abstract void setYHeadRot(float f);
+    @Shadow
+    public abstract void setYHeadRot(float f);
 
-    @Unique public int cryogenicChamberCooldown;
+    @Unique
+    public int cryogenicChamberCooldown;
 
     public LivingEntityMixin(EntityType<?> entityType, Level level) {
         super(entityType, level);

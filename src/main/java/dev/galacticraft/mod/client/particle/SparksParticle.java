@@ -52,7 +52,7 @@ public class SparksParticle extends TextureSheetParticle {
         this.zd += zSpeed;
         this.rCol = 255F / 255F;
         this.gCol = 255F / 255F;
-        this.bCol =  0F / 255F + this.random.nextFloat() / 6;
+        this.bCol = 0F / 255F + this.random.nextFloat() / 6;
         this.quadSize *= 0.15F * 3;
         this.lifetime = (int) 50.0D;
         this.lifetime = (int) (this.lifetime * 1.0F);

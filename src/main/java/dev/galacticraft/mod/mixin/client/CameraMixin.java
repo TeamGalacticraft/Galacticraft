@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.mixin.client;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import dev.galacticraft.mod.content.block.entity.CryogenicChamberBlockEntity;
 import dev.galacticraft.mod.content.block.entity.CryogenicChamberPartBlockEntity;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
@@ -40,15 +42,14 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.sugar.Local;
 
 @Mixin(Camera.class)
 public abstract class CameraMixin {
     @Shadow
     protected abstract void setRotation(float f, float g);
 
-    @Shadow protected abstract void move(float f, float g, float h);
+    @Shadow
+    protected abstract void move(float f, float g, float h);
 
     @Unique
     private static float sleepDirectionToRotationCryo(Direction direction) {

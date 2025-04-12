@@ -36,6 +36,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BubbleEntity extends Entity {
     public static final String TAG_SIZE = "size";
     private static final EntityDataAccessor<Float> DATA_SIZE_ID = SynchedEntityData.defineId(BubbleEntity.class, EntityDataSerializers.FLOAT);
+
     public BubbleEntity(EntityType<?> type, Level world) {
         super(type, world);
     }

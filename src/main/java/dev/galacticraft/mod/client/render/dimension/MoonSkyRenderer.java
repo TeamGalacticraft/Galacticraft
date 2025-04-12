@@ -25,11 +25,9 @@ package dev.galacticraft.mod.client.render.dimension;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
-import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
 public class MoonSkyRenderer extends SpaceSkyRenderer {

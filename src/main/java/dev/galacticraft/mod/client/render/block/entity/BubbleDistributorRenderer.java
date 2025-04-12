@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.client.render.block.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.GCModel;
 import dev.galacticraft.mod.client.model.GCModelLoader;

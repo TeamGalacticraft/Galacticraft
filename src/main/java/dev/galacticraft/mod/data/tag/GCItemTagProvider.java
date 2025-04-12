@@ -31,6 +31,7 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 
 import java.util.concurrent.CompletableFuture;
@@ -80,6 +81,67 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.TITANIUM_LEGGINGS)
                 .add(GCItems.TITANIUM_BOOTS);
 
+        // Thermal armor
+        tag(ItemTags.FREEZE_IMMUNE_WEARABLES)
+                .add(GCItems.THERMAL_PADDING_BOOTS)
+                .add(GCItems.THERMAL_PADDING_LEGGINGS)
+                .add(GCItems.THERMAL_PADDING_CHESTPIECE)
+                .add(GCItems.THERMAL_PADDING_HELMET)
+                .add(GCItems.ISOTHERMAL_PADDING_BOOTS)
+                .add(GCItems.ISOTHERMAL_PADDING_LEGGINGS)
+                .add(GCItems.ISOTHERMAL_PADDING_CHESTPIECE)
+                .add(GCItems.ISOTHERMAL_PADDING_HELMET);
+        tag(GCTags.THERMAL_HEAD)
+                .add(GCItems.THERMAL_PADDING_HELMET)
+                .add(GCItems.ISOTHERMAL_PADDING_HELMET);
+        tag(GCTags.THERMAL_CHEST)
+                .add(GCItems.THERMAL_PADDING_CHESTPIECE)
+                .add(GCItems.ISOTHERMAL_PADDING_CHESTPIECE);
+        tag(GCTags.THERMAL_PANTS)
+                .add(GCItems.THERMAL_PADDING_LEGGINGS)
+                .add(GCItems.ISOTHERMAL_PADDING_LEGGINGS);
+        tag(GCTags.THERMAL_BOOTS)
+                .add(GCItems.THERMAL_PADDING_BOOTS)
+                .add(GCItems.ISOTHERMAL_PADDING_BOOTS);
+
+        // Oxygen equipment
+        tag(GCTags.OXYGEN_MASKS)
+                .add(GCItems.OXYGEN_MASK);
+        tag(GCTags.OXYGEN_GEAR)
+                .add(GCItems.OXYGEN_GEAR);
+        tag(GCTags.OXYGEN_TANKS)
+                .add(GCItems.SMALL_OXYGEN_TANK)
+                .add(GCItems.MEDIUM_OXYGEN_TANK)
+                .add(GCItems.LARGE_OXYGEN_TANK)
+                .add(GCItems.INFINITE_OXYGEN_TANK);
+
+        // Other accessories
+        tag(GCTags.PARACHUTES)
+                .add(GCItems.PARACHUTE.get(DyeColor.WHITE))
+                .add(GCItems.PARACHUTE.get(DyeColor.ORANGE))
+                .add(GCItems.PARACHUTE.get(DyeColor.MAGENTA))
+                .add(GCItems.PARACHUTE.get(DyeColor.LIGHT_BLUE))
+                .add(GCItems.PARACHUTE.get(DyeColor.YELLOW))
+                .add(GCItems.PARACHUTE.get(DyeColor.LIME))
+                .add(GCItems.PARACHUTE.get(DyeColor.PINK))
+                .add(GCItems.PARACHUTE.get(DyeColor.GRAY))
+                .add(GCItems.PARACHUTE.get(DyeColor.LIGHT_GRAY))
+                .add(GCItems.PARACHUTE.get(DyeColor.CYAN))
+                .add(GCItems.PARACHUTE.get(DyeColor.PURPLE))
+                .add(GCItems.PARACHUTE.get(DyeColor.BLUE))
+                .add(GCItems.PARACHUTE.get(DyeColor.BROWN))
+                .add(GCItems.PARACHUTE.get(DyeColor.GREEN))
+                .add(GCItems.PARACHUTE.get(DyeColor.RED))
+                .add(GCItems.PARACHUTE.get(DyeColor.BLACK));
+        tag(GCTags.FREQUENCY_MODULES)
+                .add(GCItems.FREQUENCY_MODULE);
+        tag(GCTags.SHIELD_CONTROLLERS)
+                .add(GCItems.SHIELD_CONTROLLER);
+        tag(GCTags.ACCESSORIES)
+                .addTag(GCTags.FREQUENCY_MODULES)
+                .addTag(GCTags.PARACHUTES)
+                .addTag(GCTags.SHIELD_CONTROLLERS);
+
         tag(GCTags.ALUMINUM_INGOTS)
                 .add(GCItems.ALUMINUM_INGOT);
         tag(GCTags.RAW_ALUMINUM_ORES)
@@ -101,7 +163,7 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         tag(GCTags.COMPRESSED_TIN)
                 .add(GCItems.COMPRESSED_TIN);
 
-        tag(ItemTags.CREEPER_DROP_MUSIC_DISCS)
+        tag(GCTags.EVOLVED_CREEPER_DROP_MUSIC_DISCS)
                 .add(GCItems.LEGACY_MUSIC_DISC_MARS)
                 .add(GCItems.LEGACY_MUSIC_DISC_MIMAS)
                 .add(GCItems.LEGACY_MUSIC_DISC_ORBIT)
@@ -109,19 +171,19 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         // Ore Tags
         tag(ConventionalItemTags.ORES).add(
-                GCBlocks.MARS_IRON_ORE.asItem(), GCBlocks.ASTEROID_IRON_ORE.asItem(),
-                GCBlocks.MOON_COPPER_ORE.asItem(), GCBlocks.LUNASLATE_COPPER_ORE.asItem(), GCBlocks.MARS_COPPER_ORE.asItem(), GCBlocks.VENUS_COPPER_ORE.asItem(),
-                GCBlocks.SILICON_ORE.asItem(), GCBlocks.DEEPSLATE_SILICON_ORE.asItem(),
-                GCBlocks.FALLEN_METEOR.asItem(),
-                GCBlocks.MOON_CHEESE_ORE.asItem(),
-                GCBlocks.LUNAR_SAPPHIRE_ORE.asItem(),
-                GCBlocks.OLIVINE_BASALT.asItem(), GCBlocks.RICH_OLIVINE_BASALT.asItem(),
-                GCBlocks.TIN_ORE.asItem(), GCBlocks.DEEPSLATE_TIN_ORE.asItem(), GCBlocks.MOON_TIN_ORE.asItem(), GCBlocks.LUNASLATE_TIN_ORE.asItem(), GCBlocks.MARS_TIN_ORE.asItem(), GCBlocks.VENUS_TIN_ORE.asItem(),
                 GCBlocks.ALUMINUM_ORE.asItem(), GCBlocks.DEEPSLATE_ALUMINUM_ORE.asItem(), GCBlocks.ASTEROID_ALUMINUM_ORE.asItem(), GCBlocks.VENUS_ALUMINUM_ORE.asItem(),
+                GCBlocks.MOON_CHEESE_ORE.asItem(),
+                GCBlocks.MOON_COPPER_ORE.asItem(), GCBlocks.LUNASLATE_COPPER_ORE.asItem(), GCBlocks.MARS_COPPER_ORE.asItem(), GCBlocks.VENUS_COPPER_ORE.asItem(),
                 GCBlocks.DESH_ORE.asItem(),
-                GCBlocks.ILMENITE_ORE.asItem(),
+                GCBlocks.FALLEN_METEOR.asItem(),
                 GCBlocks.GALENA_ORE.asItem(),
-                GCBlocks.SOLAR_ORE.asItem()
+                GCBlocks.ILMENITE_ORE.asItem(),
+                GCBlocks.MARS_IRON_ORE.asItem(), GCBlocks.ASTEROID_IRON_ORE.asItem(),
+                GCBlocks.OLIVINE_BASALT.asItem(), GCBlocks.RICH_OLIVINE_BASALT.asItem(),
+                GCBlocks.LUNAR_SAPPHIRE_ORE.asItem(),
+                GCBlocks.SILICON_ORE.asItem(), GCBlocks.DEEPSLATE_SILICON_ORE.asItem(), GCBlocks.ASTEROID_SILICON_ORE.asItem(),
+                GCBlocks.SOLAR_ORE.asItem(),
+                GCBlocks.TIN_ORE.asItem(), GCBlocks.DEEPSLATE_TIN_ORE.asItem(), GCBlocks.MOON_TIN_ORE.asItem(), GCBlocks.LUNASLATE_TIN_ORE.asItem(), GCBlocks.MARS_TIN_ORE.asItem(), GCBlocks.VENUS_TIN_ORE.asItem()
         );
 
         tag(ConventionalItemTags.GEMS)
@@ -133,6 +195,16 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         tag(ItemTags.MEAT)
                 .add(GCItems.GROUND_BEEF)
                 .add(GCItems.BEEF_PATTY);
+
+        // Food Tags
+        tag(ConventionalItemTags.FOODS).add(
+                GCItems.MOON_CHEESE_CURD,
+                GCItems.MOON_CHEESE_SLICE,
+                GCItems.BURGER_BUN,
+                GCItems.GROUND_BEEF,
+                GCItems.BEEF_PATTY,
+                GCItems.CHEESEBURGER
+        );
     }
 
     protected FabricTagProvider<Item>.FabricTagBuilder tag(TagKey<Item> tag) {

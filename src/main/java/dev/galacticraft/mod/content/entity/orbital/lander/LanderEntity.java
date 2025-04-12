@@ -53,9 +53,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -446,7 +446,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
                 setYRot(getYRot() + 0.5F * turnFactor);
 
             if (jumping) {
-                var deltaM = getDeltaMovement();;
+                var deltaM = getDeltaMovement();
                 setDeltaMovement(deltaM.x(), Math.min(deltaM.y() + 0.03F, getY() < level().getHeight(Heightmap.Types.WORLD_SURFACE, getBlockX(), getBlockZ()) + 35 ? -0.15 : -1.0), deltaM.z());
             }
 

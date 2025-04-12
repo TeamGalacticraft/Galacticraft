@@ -37,6 +37,7 @@ import java.util.OptionalLong;
 public class GCDimensionTypes {
     public static final ResourceKey<DimensionType> MOON = key("moon");
     public static final ResourceKey<DimensionType> VENUS = key("venus");
+    public static final ResourceKey<DimensionType> ASTEROID = key("asteroid");
 
     public static void bootstrapRegistries(BootstrapContext<DimensionType> context) {
         context.register(MOON, new DimensionType(
@@ -48,7 +49,7 @@ public class GCDimensionTypes {
                 1.0, // coordinateScale
                 true, // bedWorks (doesn't explode, we can cancel working later)
                 false, // respawnAnchorWorks (doesn't explode, we can cancel working later)
-                -64, // minY
+                -32, // minY
                 384, // height
                 384, // logicalHeight
                 GCTags.INFINIBURN_MOON, // infiniburn
@@ -66,12 +67,29 @@ public class GCDimensionTypes {
                 1.0, // coordinateScale
                 true, // bedWorks (doesn't explode, we can cancel working later)
                 false, // respawnAnchorWorks (doesn't explode, we can cancel working later)
-                -64, // minY
+                -32, // minY
                 384, // height
                 384, // logicalHeight
                 GCTags.INFINIBURN_VENUS, // infiniburn
                 Constant.id("venus"), // effectsLocation // fixme
                 0.1F, // ambientLight
+                new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)
+        ));
+        context.register(ASTEROID, new DimensionType(
+                OptionalLong.empty(), // fixedTime
+                false, // hasSkyLight
+                false, // hasCeiling
+                false, // ultraWarm
+                false, // natural
+                1.0,  // coordinateScale
+                false, // bedWorks
+                false, // respawnAnchorWorks
+                -64, // minY
+                384, // height
+                384, // logicalHeight
+                GCTags.INFINIBURN_ASTEROID, // infiniburn
+                Constant.id("asteroid"), // effectsLocation // fixme
+                0.05F, // ambientLight
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)
         ));
     }

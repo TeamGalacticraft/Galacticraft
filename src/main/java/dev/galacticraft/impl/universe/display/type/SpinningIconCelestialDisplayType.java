@@ -32,6 +32,7 @@ import org.joml.Vector4f;
 
 public class SpinningIconCelestialDisplayType extends IconCelestialDisplayType {
     public static final SpinningIconCelestialDisplayType INSTANCE = new SpinningIconCelestialDisplayType(IconCelestialDisplayConfig.CODEC);
+
     protected SpinningIconCelestialDisplayType(Codec<IconCelestialDisplayConfig> codec) {
         super(codec);
     }

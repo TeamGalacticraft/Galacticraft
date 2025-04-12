@@ -27,6 +27,7 @@ import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry;
+import dev.galacticraft.mod.content.item.OxygenTankItem;
 import dev.galacticraft.mod.storage.PlaceholderItemStorage;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
@@ -39,10 +40,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 
 import static dev.galacticraft.mod.content.GCBlocks.*;
 import static dev.galacticraft.mod.content.item.GCItems.*;
@@ -57,51 +55,14 @@ public class GCCreativeModeTabs {
                 output.accept(OXYGEN_MASK);
                 output.accept(OXYGEN_GEAR);
 
-                try (Transaction t = Transaction.openOuter()) {
-                    PlaceholderItemStorage itemStorage = new PlaceholderItemStorage();
-                    ContainerItemContext context = ContainerItemContext.ofSingleSlot(itemStorage);
-
-                    output.accept(SMALL_OXYGEN_TANK);//todo: set directly
-                    itemStorage.setItem(SMALL_OXYGEN_TANK);
-                    OxygenTankItem smallTankItem = (OxygenTankItem) SMALL_OXYGEN_TANK.asItem();
-                    long smallCapacity = smallTankItem.capacity;
-                    long insertedSmall;
-
-                    do {
-                        insertedSmall = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), smallCapacity, t);
-                    } while (insertedSmall > 0 && smallCapacity > 0);
-
-                    output.accept(itemStorage.variant.toStack());
-
-                    output.accept(MEDIUM_OXYGEN_TANK);
-                    itemStorage.setItem(MEDIUM_OXYGEN_TANK);
-                    OxygenTankItem mediumTankItem = (OxygenTankItem) MEDIUM_OXYGEN_TANK.asItem();
-                    long mediumCapacity = mediumTankItem.capacity;
-                    long insertedMedium;
-
-                    do {
-                        insertedMedium = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), mediumCapacity, t);
-                        mediumCapacity -= insertedMedium;
-                    } while (insertedMedium > 0 && mediumCapacity > 0);
-
-                    output.accept(itemStorage.variant.toStack());
-
-                    output.accept(LARGE_OXYGEN_TANK);
-                    itemStorage.setItem(LARGE_OXYGEN_TANK);
-                    OxygenTankItem largeTankItem = (OxygenTankItem) LARGE_OXYGEN_TANK.asItem();
-                    long largeCapacity = largeTankItem.capacity;
-                    long insertedLarge;
-
-                    do {
-                        insertedLarge = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), largeCapacity, t);
-                        largeCapacity -= insertedLarge;
-                    } while (insertedLarge > 0 && largeCapacity > 0);
-
-                    output.accept(itemStorage.variant.toStack());
-                }
-
-
+                output.accept(SMALL_OXYGEN_TANK);
+                output.accept(OxygenTankItem.getFullTank(SMALL_OXYGEN_TANK));
+                output.accept(MEDIUM_OXYGEN_TANK);
+                output.accept(OxygenTankItem.getFullTank(MEDIUM_OXYGEN_TANK));
+                output.accept(LARGE_OXYGEN_TANK);
+                output.accept(OxygenTankItem.getFullTank(LARGE_OXYGEN_TANK));
                 output.accept(INFINITE_OXYGEN_TANK);
+
                 output.accept(SENSOR_GLASSES);
                 output.accept(FREQUENCY_MODULE);
                 PARACHUTE.colorMap().values().forEach(output::accept);
@@ -194,11 +155,7 @@ public class GCCreativeModeTabs {
                 output.accept(BEEF_PATTY);
                 output.accept(CHEESEBURGER);
 
-                output.accept(CANNED_DEHYDRATED_APPLE);
-                output.accept(CANNED_DEHYDRATED_CARROT);
-                output.accept(CANNED_DEHYDRATED_MELON);
-                output.accept(CANNED_DEHYDRATED_POTATO);
-                output.accept(CANNED_BEEF);
+
                 output.accept(THROWABLE_METEOR_CHUNK);
                 output.accept(HOT_THROWABLE_METEOR_CHUNK);
 
@@ -389,6 +346,7 @@ public class GCCreativeModeTabs {
                 output.accept(ASTEROID_ROCK);
                 output.accept(ASTEROID_ROCK_1);
                 output.accept(ASTEROID_ROCK_2);
+                output.accept(DENSE_ICE);
 
                 // VENUS NATURAL
                 output.accept(SOFT_VENUS_ROCK);
@@ -433,7 +391,6 @@ public class GCCreativeModeTabs {
 
                 // ORES
                 output.accept(MARS_IRON_ORE);
-                output.accept(ASTEROID_IRON_ORE);
 
                 output.accept(MOON_COPPER_ORE);
                 output.accept(LUNASLATE_COPPER_ORE);
@@ -449,6 +406,10 @@ public class GCCreativeModeTabs {
                 output.accept(LUNASLATE_TIN_ORE);
                 output.accept(MARS_TIN_ORE);
                 output.accept(VENUS_TIN_ORE);
+
+                output.accept(ASTEROID_IRON_ORE);
+                output.accept(ASTEROID_SILICON_ORE);
+
 
                 output.accept(ALUMINUM_ORE);
                 output.accept(DEEPSLATE_ALUMINUM_ORE);
@@ -507,6 +468,27 @@ public class GCCreativeModeTabs {
                 // MACHINES
             }).build();
 
+    public static final CreativeModeTab CANNED_FOOD_GROUP = FabricItemGroup
+            .builder()
+            .icon(() -> new ItemStack(GCItems.CANNED_FOOD))
+            .title(Component.translatable(Translations.ItemGroup.CANNED_FOOD))
+            .displayItems((parameters, output) -> {
+                output.accept(EMPTY_CAN);
+                // For every edible food create a creative item of that canned food type
+                for (Item item : BuiltInRegistries.ITEM) {
+                    if (item.components().has(DataComponents.FOOD)) {
+                        if (!(item instanceof CannedFoodItem)) {
+                            // Create new canned food item with empty components
+                            ItemStack cannedFoodItem = GCItems.CANNED_FOOD.getDefaultInstance();
+                            // Add the default itemstack of the edible item into the canned foods components
+                            CannedFoodItem.add(cannedFoodItem, new ItemStack(item, CannedFoodItem.MAX_FOOD));
+                            // Add the item to the creative tab
+                            output.accept(cannedFoodItem);
+                        }
+                    }
+                }
+            }).build();
+
     public static final CreativeModeTab MACHINES_GROUP = FabricItemGroup
             .builder()
             .icon(() -> new ItemStack(COAL_GENERATOR))
@@ -529,6 +511,9 @@ public class GCCreativeModeTabs {
                 output.accept(OXYGEN_COMPRESSOR);
                 output.accept(OXYGEN_STORAGE_MODULE);
                 output.accept(FUEL_LOADER);
+                output.accept(FOOD_CANNER);
+                output.accept(AIR_LOCK_FRAME);
+                output.accept(AIR_LOCK_CONTROLLER);
             }).build();
 
     public static void registerSpawnEggs() {
@@ -556,6 +541,7 @@ public class GCCreativeModeTabs {
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Item.ITEM_GROUP), ITEMS_GROUP);
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Block.ITEM_GROUP_BLOCKS), BLOCKS_GROUP);
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Block.ITEM_GROUP_MACHINES), MACHINES_GROUP);
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Constant.id(Constant.Item.ITEM_GROUP_CANS), CANNED_FOOD_GROUP);
         registerSpawnEggs();
     }
 }

@@ -31,10 +31,4 @@ public class GCFoodComponent {
     public static final FoodProperties GROUND_BEEF = new FoodProperties.Builder().nutrition(3).saturationModifier(0.6F).build();
     public static final FoodProperties BEEF_PATTY = new FoodProperties.Builder().nutrition(4).saturationModifier(0.8F).build();
     public static final FoodProperties CHEESEBURGER = new FoodProperties.Builder().nutrition(14).saturationModifier(1.0F).build();
-
-    public static final FoodProperties DEHYDRATED_APPLE = new FoodProperties.Builder().nutrition(8).saturationModifier(0.3F).build();
-    public static final FoodProperties DEHYDRATED_CARROT = new FoodProperties.Builder().nutrition(8).saturationModifier(0.6F).build();
-    public static final FoodProperties DEHYDRATED_MELON = new FoodProperties.Builder().nutrition(4).saturationModifier(0.3F).build();
-    public static final FoodProperties DEHYDRATED_POTATO = new FoodProperties.Builder().nutrition(2).saturationModifier(0.3F).build();
-    public static final FoodProperties CANNED_BEEF = new FoodProperties.Builder().nutrition(8).saturationModifier(0.6F).build();
 }

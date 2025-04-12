@@ -29,9 +29,6 @@ import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.RocketPrefabs;
-import dev.galacticraft.api.rocket.part.RocketBooster;
-import dev.galacticraft.api.rocket.part.RocketEngine;
-import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
@@ -40,11 +37,8 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.EitherHolder;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-
-import java.util.Optional;
 
 public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer {
     private final RocketEntity rocket = new RocketEntity(GCEntityTypes.ROCKET, null); // Fake rocket entity for rendering
@@ -52,40 +46,50 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
     @Override
     public void render(ItemStack stack, ItemDisplayContext mode, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
         RocketData data = stack.has(GCDataComponents.ROCKET_DATA) ? stack.get(GCDataComponents.ROCKET_DATA) : RocketPrefabs.MISSING;
-        rocket.setLevel(Minecraft.getInstance().level);
+        ClientLevel level = Minecraft.getInstance().level;
+        rocket.setLevel(level);
         rocket.setData(data);
         rocket.setOldPosAndRot();
         matrices.pushPose();
-        ClientLevel level = Minecraft.getInstance().level;
-        if (mode == ItemDisplayContext.GUI) {
-            matrices.scale(0.25f, 0.25f, 0.25f);
-            matrices.translate(1.5, 2, 2);
-            matrices.mulPose(Axis.ZP.rotationDegrees(55));
-            matrices.mulPose(Axis.XP.rotationDegrees(45));
-            matrices.mulPose(Axis.YP.rotation((float) (level.getGameTime() * 66.666666666666 / 1000.0F)));
-        } else if (mode == ItemDisplayContext.FIRST_PERSON_LEFT_HAND || mode == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND) {
-            matrices.mulPose(Axis.YP.rotationDegrees(45));
-            matrices.scale(2F, 2F, 2F);
-            matrices.mulPose(Axis.XP.rotation(Mth.HALF_PI));
-            matrices.mulPose(Axis.ZN.rotation(0.65F));
-            matrices.translate(0.5F, -0.5F, -2.6);
-        } else if (mode == ItemDisplayContext.THIRD_PERSON_LEFT_HAND || mode == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND) {
-            matrices.mulPose(Axis.ZN.rotation(Mth.HALF_PI));
-            matrices.mulPose(Axis.YP.rotation(Mth.HALF_PI));
-            matrices.translate(0F, 0F, .2F);
-            matrices.mulPose(Axis.XN.rotation(0.2F));
-            matrices.mulPose(Axis.ZP.rotation(0.3F));
-            matrices.mulPose(Axis.ZN.rotation(0.65F));
-            matrices.translate(-.0, -.8F, -.8F);
-        } else if (mode == ItemDisplayContext.GROUND) {
-            matrices.scale(0.2f, 0.2f, 0.2f);
-            matrices.translate(2, 3, 2);
-        } else {
-            matrices.scale(0.5f, 0.5f, 0.5f);
-            matrices.translate(1, 0, 0);
+
+        switch (mode) {
+            case ItemDisplayContext.THIRD_PERSON_LEFT_HAND:
+                matrices.mulPose(Axis.XP.rotation(Mth.HALF_PI - 0.2F));
+                matrices.mulPose(Axis.ZN.rotation(Mth.HALF_PI - 0.4F));
+                matrices.mulPose(Axis.YP.rotation(Mth.PI));
+                matrices.translate(-0.4F, 0.0F, 0.5F);
+                break;
+            case ItemDisplayContext.THIRD_PERSON_RIGHT_HAND:
+                matrices.mulPose(Axis.XP.rotation(Mth.HALF_PI - 0.2F));
+                matrices.mulPose(Axis.ZN.rotation(Mth.HALF_PI + 0.2F));
+                matrices.mulPose(Axis.YP.rotation(Mth.PI));
+                matrices.translate(0.1F, -1.6F, 0.5F);
+                break;
+            case ItemDisplayContext.FIRST_PERSON_LEFT_HAND:
+            case ItemDisplayContext.FIRST_PERSON_RIGHT_HAND:
+                matrices.scale(2.0F, 2.0F, 2.0F);
+                matrices.mulPose(Axis.YP.rotationDegrees(45));
+                matrices.mulPose(Axis.XP.rotation(Mth.HALF_PI + 0.2F));
+                matrices.mulPose(Axis.ZN.rotation(0.65F));
+                matrices.translate(0.5F, -2.0F, -2.0F);
+                break;
+            case ItemDisplayContext.GUI:
+                matrices.translate(0.7F, 0.35F, 0.0F);
+                matrices.scale(0.25F, 0.25F, 0.25F);
+                matrices.mulPose(Axis.ZP.rotationDegrees(55));
+                matrices.mulPose(Axis.XP.rotationDegrees(45));
+                matrices.mulPose(Axis.YP.rotation((float) (level.getGameTime() * 66.666666666666 / 1000.0F)));
+                break;
+            case ItemDisplayContext.FIXED:
+                matrices.translate(0.5F, 0.0F, 0.4F);
+                matrices.scale(0.25F, 0.25F, 0.25F);
+                break;
+            case ItemDisplayContext.GROUND:
+            default:
+                matrices.translate(0.5F, 0.5F, 0.5F);
+                matrices.scale(0.2F, 0.2F, 0.2F);
         }
         RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
-        matrices.translate(0.0D, -1.75D, 0.0D);
 
         data.engine().ifPresent(part -> {
             matrices.pushPose();
@@ -93,7 +97,7 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
             matrices.popPose();
         });
 
-        matrices.translate(0.0D, 0.5, 0.0D);
+        matrices.translate(0.0F, 0.5F, 0.0F);
 
         data.booster().ifPresent(part -> {
             matrices.pushPose();
@@ -107,7 +111,7 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
             matrices.popPose();
         });
 
-        matrices.translate(0.0D, 1.0D, 0.0D);
+        matrices.translate(0.0F, 1.0F, 0.0F);
 
         data.body().ifPresent(part -> {
             matrices.pushPose();
@@ -115,7 +119,7 @@ public class RocketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
             matrices.popPose();
         });
 
-        matrices.translate(0.0D, 1.75, 0.0D);
+        matrices.translate(0.0F, 1.75F, 0.0F);
 
         data.cone().ifPresent(part -> {
             matrices.pushPose();

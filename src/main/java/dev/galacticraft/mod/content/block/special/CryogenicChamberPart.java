@@ -198,7 +198,7 @@ public class CryogenicChamberPart extends BaseEntityBlock {
     public boolean propagatesSkylightDown(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
         return true;
     }
-    
+
     @Override
     public boolean isPossibleToRespawnInThis(BlockState blockState) {
         return true;

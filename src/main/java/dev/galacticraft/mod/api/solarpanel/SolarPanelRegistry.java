@@ -23,14 +23,11 @@
 package dev.galacticraft.mod.api.solarpanel;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.solarpanel.LightSource;
 import dev.galacticraft.mod.api.block.entity.SolarPanel;
 import dev.galacticraft.mod.api.block.entity.SolarPanel.SolarPanelSource;
 import dev.galacticraft.mod.content.GCLightSources;
 import dev.galacticraft.mod.content.GCSolarPanelStates;
-import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;

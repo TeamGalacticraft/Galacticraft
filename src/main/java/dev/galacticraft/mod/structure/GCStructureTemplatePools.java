@@ -42,6 +42,7 @@ import java.util.function.Function;
 
 public final class GCStructureTemplatePools {
     private static final ResourceKey<StructureTemplatePool> EMPTY = ResourceKey.create(Registries.TEMPLATE_POOL, ResourceLocation.withDefaultNamespace("empty"));
+
     public static final class Moon {
         public static final class PillagerOutpost {
             public static final ResourceKey<StructureTemplatePool> ENTRANCE = key("moon_pillager_outpost/entrances");
@@ -79,9 +80,9 @@ public final class GCStructureTemplatePools {
         Holder<StructureProcessorList> emptyList = context.lookup(Registries.PROCESSOR_LIST).getOrThrow(ProcessorLists.EMPTY);
 
         context.register(Moon.PillagerOutpost.ENTRANCE, new StructureTemplatePool(empty, ImmutableList.of(
-                    Pair.of(single(Constant.id("moon_pillager_outpost/entrance/entrance_1"), emptyList), 5),
-                    Pair.of(StructurePoolElement.empty(), 1)
-            ), Projection.RIGID));
+                Pair.of(single(Constant.id("moon_pillager_outpost/entrance/entrance_1"), emptyList), 5),
+                Pair.of(StructurePoolElement.empty(), 1)
+        ), Projection.RIGID));
 
         context.register(Moon.PillagerOutpost.BASE, new StructureTemplatePool(
                 templateLookup.getOrThrow(Moon.PillagerOutpost.BASE_TERMINATORS),
@@ -172,7 +173,7 @@ public final class GCStructureTemplatePools {
                 ),
                 Projection.RIGID
         ));
-        
+
         context.register(Moon.Village.STARTS, new StructureTemplatePool(
                 empty,
                 ImmutableList.of(
@@ -183,7 +184,7 @@ public final class GCStructureTemplatePools {
                 ),
                 Projection.RIGID
         ));
-        
+
         context.register(Moon.Village.ANIMALS, new StructureTemplatePool(
                 empty,
                 ImmutableList.of(

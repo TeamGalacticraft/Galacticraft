@@ -47,9 +47,12 @@ public record PlanetTeleportPayload(ResourceLocation id) implements C2SPayload {
     public void handle(ServerPlayNetworking.@NotNull Context context) {
         if (context.player().galacticraft$isCelestialScreenActive()) {
             CelestialBody<?, ?> body = ((SatelliteAccessor) context.server()).galacticraft$getSatellites().get(id);
-            Holder<CelestialBody<?, ?>> fromBody = context.player().level().galacticraft$getCelestialBody();
-            if (body == null) body = context.server().registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).get(id);
-            GCEventHandlers.onPlayerChangePlanets(context.server(), context.player(), body, fromBody.value());
+            Holder<CelestialBody<?, ?>> holder = context.player().level().galacticraft$getCelestialBody();
+            CelestialBody<?, ?> fromBody = holder != null ? holder.value() : null;
+            if (body == null) {
+                body = context.server().registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).get(id);
+            }
+            GCEventHandlers.onPlayerChangePlanets(context.server(), context.player(), body, fromBody);
         } else {
             context.player().connection.disconnect(Component.translatable(Translations.DimensionTp.INVALID_PACKET));
         }

@@ -48,7 +48,8 @@ public class TooltipUtil {
     public static final Style DEFAULT_STYLE = Constant.Text.GRAY_STYLE;
     private static final Component PRESS_SHIFT = Component.translatable(Translations.Tooltip.PRESS_SHIFT).withStyle(Constant.Text.DARK_GRAY_STYLE);
 
-    private TooltipUtil() {}
+    private TooltipUtil() {
+    }
 
     public static void appendLshiftTooltip(String resourceId, List<Component> tooltip) {
         Minecraft minecraft = Minecraft.getInstance();
@@ -77,22 +78,28 @@ public class TooltipUtil {
         tooltip.add(Component.translatable(resourceId, value).setStyle(Constant.Text.GRAY_STYLE));
     }
 
-    public static void appendRemainingTooltip(String resourceId, long amount, long capacity, List<Component> tooltip) {
-        Component remaining = Component.literal(NUMBER_FORMAT.format(amount) + "/" + NUMBER_FORMAT.format(capacity))
+    public static Component formatRemaining(long amount, long capacity) {
+        return Component.literal(NUMBER_FORMAT.format(amount) + "/" + NUMBER_FORMAT.format(capacity))
                 .setStyle(Constant.Text.getStorageLevelStyle(1.0 - ((double) amount / (double) capacity)));
-        appendLabeledTooltip(resourceId, remaining, tooltip);
     }
 
-    public static void appendFluidRemainingTooltip(String resourceId, long amount, long capacity, List<Component> tooltip) {
+    public static Component formatFluidRemaining(long amount, long capacity) {
         Component unit = Component.empty();
         if (!Screen.hasShiftDown()) {
             amount = (long) ((double) amount / (double) (FluidConstants.BUCKET / 1000));
             capacity = (long) ((double) capacity / (double) (FluidConstants.BUCKET / 1000));
             unit = Component.translatable(Translations.Ui.MILLIBUCKETS);
         }
-        Component remaining = Component.literal(NUMBER_FORMAT.format(amount) + "/" + NUMBER_FORMAT.format(capacity)).append(unit)
+        return Component.literal(NUMBER_FORMAT.format(amount) + "/" + NUMBER_FORMAT.format(capacity)).append(unit)
                 .setStyle(Constant.Text.getStorageLevelStyle(1.0 - ((double) amount / (double) capacity)));
-        appendLabeledTooltip(resourceId, remaining, tooltip);
+    }
+
+    public static void appendRemainingTooltip(String resourceId, long amount, long capacity, List<Component> tooltip) {
+        appendLabeledTooltip(resourceId, TooltipUtil.formatRemaining(amount, capacity), tooltip);
+    }
+
+    public static void appendFluidRemainingTooltip(String resourceId, long amount, long capacity, List<Component> tooltip) {
+        appendLabeledTooltip(resourceId, TooltipUtil.formatFluidRemaining(amount, capacity), tooltip);
     }
 
     public static void appendInfiniteCapacityTooltip(String resourceId, List<Component> tooltip) {

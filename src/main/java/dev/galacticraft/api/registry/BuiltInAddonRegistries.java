@@ -35,7 +35,8 @@ import net.minecraft.core.DefaultedMappedRegistry;
 import net.minecraft.core.WritableRegistry;
 
 public final class BuiltInAddonRegistries {
-    private BuiltInAddonRegistries() {}
+    private BuiltInAddonRegistries() {
+    }
 
     public static final WritableRegistry<CelestialPositionType<?>> CELESTIAL_POSITION_TYPE = FabricRegistryBuilder.from(
             new DefaultedMappedRegistry<>(Constant.id("static").toString(),

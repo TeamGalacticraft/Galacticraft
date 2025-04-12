@@ -44,7 +44,7 @@ public non-sealed interface RocketBody<C extends RocketBodyConfig, T extends Roc
     Codec<Holder<RocketBody<?, ?>>> CODEC = RegistryFileCodec.create(RocketRegistries.ROCKET_BODY, DIRECT_CODEC);
     Codec<HolderSet<RocketBody<?, ?>>> LIST_CODEC = RegistryCodecs.homogeneousList(RocketRegistries.ROCKET_BODY, DIRECT_CODEC);
     StreamCodec<RegistryFriendlyByteBuf, Holder<RocketBody<?, ?>>> STREAM_CODEC = StreamCodecs.ofHolder(RocketRegistries.ROCKET_BODY);
-    
+
     Codec<EitherHolder<RocketBody<?, ?>>> EITHER_CODEC = EitherHolder.codec(RocketRegistries.ROCKET_BODY, CODEC);
     StreamCodec<RegistryFriendlyByteBuf, EitherHolder<RocketBody<?, ?>>> EITHER_STREAM_CODEC = EitherHolder.streamCodec(RocketRegistries.ROCKET_BODY, STREAM_CODEC);
 
@@ -55,6 +55,7 @@ public non-sealed interface RocketBody<C extends RocketBodyConfig, T extends Roc
 
     /**
      * Returns the maximum number of passengers allowed on this rocket.
+     *
      * @return the maximum number of passengers allowed on this rocket.
      */
     @Contract(pure = true)

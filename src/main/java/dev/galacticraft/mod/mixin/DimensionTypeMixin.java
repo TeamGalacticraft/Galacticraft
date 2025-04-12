@@ -37,7 +37,8 @@ import java.util.OptionalLong;
 
 @Mixin(DimensionType.class)
 public class DimensionTypeMixin {
-    @Unique private boolean isMoon;
+    @Unique
+    private boolean isMoon;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void gc$initDimType(OptionalLong optionalLong, boolean bl, boolean bl2, boolean bl3, boolean bl4, double d, boolean bl5, boolean bl6, int i, int j, int k, TagKey tagKey, ResourceLocation resourceLocation, float f, DimensionType.MonsterSettings monsterSettings, CallbackInfo ci) {
