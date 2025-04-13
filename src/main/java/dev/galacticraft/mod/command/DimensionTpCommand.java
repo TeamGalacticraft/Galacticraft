@@ -130,6 +130,12 @@ public class DimensionTpCommand {
      */
     static Vec3 getValidTeleportPos(ServerLevel level, Entity entity) {
         if (entity.level() == level) return entity.position();
+
+        Holder<CelestialBody<?, ?>> holder = level.galacticraft$getCelestialBody();
+        if (holder != null && holder.value().isSatellite()) {
+            return new Vec3(10.5, 62.0, 3.5);
+        }
+
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         pos.set(entity.blockPosition());
 

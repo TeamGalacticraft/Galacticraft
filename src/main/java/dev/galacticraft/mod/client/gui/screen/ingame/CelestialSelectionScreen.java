@@ -325,7 +325,8 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
         if (this.selectedBody != null && !this.mapMode) {
             if (a) {
-                if (!(isSatellite(this.selectedBody)) || !this.selectedStationOwner.isEmpty()) {
+                assert this.minecraft != null;
+                if ((!isSatellite(this.selectedBody) || ((Satellite) this.selectedBody.type()).ownershipData(this.selectedBody.config()).canAccess(this.minecraft.player))) {
                     this.teleportToSelectedBody();
                 }
                 clickHandled = true;
