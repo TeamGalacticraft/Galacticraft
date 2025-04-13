@@ -308,29 +308,30 @@ public class EvolvedSkeletonBossModel extends EntityModel<SkeletonBoss> implemen
 
     @Override
     public void setupAnim(SkeletonBoss boss, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
-        final float floatPI = 3.1415927F;
-        this.upperHead.yRot = headYaw / Mth.RAD_TO_DEG;
-        this.upperHead.xRot = headPitch / Mth.RAD_TO_DEG;
-        this.rightArm.xRot = Mth.cos(limbAngle * 0.6662F + floatPI) * 2.0F * limbDistance * 0.5F;
+        final float headYawRad = headYaw * Mth.DEG_TO_RAD;
+        final float headPitchRad = headPitch * Mth.DEG_TO_RAD;
+        this.upperHead.yRot = headYawRad;
+        this.upperHead.xRot = headPitchRad;
+        this.rightArm.xRot = Mth.cos(limbAngle * 0.6662F + Mth.PI) * 2.0F * limbDistance * 0.5F;
         this.leftArm.xRot = Mth.cos(limbAngle * 0.6662F) * 2.0F * limbDistance * 0.5F;
         this.rightArm.zRot = 0.0F;
         this.leftArm.zRot = 0.0F;
         this.rightLeg.xRot = Mth.cos(limbAngle * 0.6662F) * 1.4F * limbDistance;
-        this.leftLeg.xRot = Mth.cos(limbAngle * 0.6662F + floatPI) * 1.4F * limbDistance;
+        this.leftLeg.xRot = Mth.cos(limbAngle * 0.6662F + Mth.PI) * 1.4F * limbDistance;
         this.rightLeg.yRot = 0.0F;
         this.leftLeg.yRot = 0.0F;
 
         if (this.riding) {
-            this.rightArm.xRot += -(floatPI / 5F);
-            this.leftArm.xRot += -(floatPI / 5F);
-            this.rightLeg.xRot = -(floatPI * 2F / 5F);
-            this.leftLeg.xRot = -(floatPI * 2F / 5F);
-            this.rightLeg.yRot = floatPI / 10F;
-            this.leftLeg.yRot = -(floatPI / 10F);
+            this.rightArm.xRot += -Mth.PI / 5.0F;
+            this.leftArm.xRot += -Mth.PI / 5.0F;
+            this.rightLeg.xRot = -Mth.TWO_PI / 5.0F;
+            this.leftLeg.xRot = -Mth.TWO_PI / 5.0F;
+            this.rightLeg.yRot = Mth.PI / 10.0F;
+            this.leftLeg.yRot = -Mth.PI / 10.0F;
         }
 
-        this.rightArm.yRot = headYaw / Mth.RAD_TO_DEG;
-        this.leftArm.yRot = headYaw / Mth.RAD_TO_DEG;
+        this.rightArm.yRot = headYawRad;
+        this.leftArm.yRot = headYawRad;
         float var7;
         float var8;
 
@@ -349,21 +350,21 @@ public class EvolvedSkeletonBossModel extends EntityModel<SkeletonBoss> implemen
             var7 *= var7;
             var7 *= var7;
             var7 = 1.0F - var7;
-            var8 = Mth.sin(var7 * floatPI);
-            final float var9 = Mth.sin(this.attackTime * floatPI) * -(this.upperHead.xRot - 0.7F) * 0.75F;
+            var8 = Mth.sin(var7 * Mth.PI);
+            final float var9 = Mth.sin(this.attackTime * Mth.PI) * -(this.upperHead.xRot - 0.7F) * 0.75F;
             this.rightArm.xRot = (float) (this.rightArm.xRot - (var8 * 1.2D + var9));
             this.rightArm.yRot += this.spine.yRot * 2.0F;
-            this.rightArm.zRot = Mth.sin(this.attackTime * floatPI) * -0.4F;
+            this.rightArm.zRot = Mth.sin(this.attackTime * Mth.PI) * -0.4F;
         }
 
-        final float f6 = Mth.sin(this.attackTime * floatPI);
-        final float f7 = Mth.sin((1.0F - (1.0F - this.attackTime) * (1.0F - this.attackTime)) * floatPI);
+        final float f6 = Mth.sin(this.attackTime * Mth.PI);
+        final float f7 = Mth.sin((1.0F - (1.0F - this.attackTime) * (1.0F - this.attackTime)) * Mth.PI);
         this.rightArm.zRot = 0.0F;
         this.leftArm.zRot = 0.0F;
-        this.rightArm.yRot = 0.5F * (headYaw / Mth.RAD_TO_DEG) + -(0.1F - f6 * 0.6F);
-        this.leftArm.yRot = 0.5F * (headYaw / Mth.RAD_TO_DEG) + 0.1F - f6 * 0.6F;
-        this.rightArm.xRot = -(floatPI / 2F);
-        this.leftArm.xRot = -(floatPI / 2F);
+        this.rightArm.yRot = 0.5F * headYawRad + -(0.1F - f6 * 0.6F);
+        this.leftArm.yRot = 0.5F * headYawRad + 0.1F - f6 * 0.6F;
+        this.rightArm.xRot = -Mth.HALF_PI;
+        this.leftArm.xRot = -Mth.HALF_PI;
         this.rightArm.xRot -= f6 * 1.2F - f7 * 0.4F;
         this.leftArm.xRot -= f6 * 1.2F - f7 * 0.4F;
         this.rightArm.zRot += Mth.cos(animationProgress * 0.09F) * 0.05F + 0.05F;
@@ -372,8 +373,8 @@ public class EvolvedSkeletonBossModel extends EntityModel<SkeletonBoss> implemen
         this.leftArm.xRot -= Mth.sin(animationProgress * 0.067F) * 0.05F;
 
         if (boss.deathTime > 0) {
-            this.leftArm.xRot = -(floatPI / 2F) + (float) (Math.pow(boss.deathTime, 2) / 5.0F) / 3.0F / Mth.RAD_TO_DEG;
-            this.rightArm.xRot = -(floatPI / 2F) + (float) (Math.pow(boss.deathTime, 2) / 5.0F) / 2.0F / Mth.RAD_TO_DEG;
+            this.leftArm.xRot = -Mth.HALF_PI + (float) (Math.pow(boss.deathTime, 2) / 5.0F) * Mth.DEG_TO_RAD / 3.0F;
+            this.rightArm.xRot = -Mth.HALF_PI + (float) (Math.pow(boss.deathTime, 2) / 5.0F) * Mth.DEG_TO_RAD / 2.0F;
         }
 
         if (boss.throwTimer + boss.postThrowDelay > 0) {

@@ -112,8 +112,8 @@ public class BuggyRenderer extends EntityRenderer<Buggy> {
         matrices.pushPose();
         matrices.translate(-1.178F, 4.1F, -2.397F);
         int ticks = buggy.tickCount + buggy.getId() * 10000;
-        matrices.mulPose(Axis.XP.rotationDegrees((float) Math.sin(ticks * 0.05) * 50.0F));
-        matrices.mulPose(Axis.ZP.rotationDegrees((float) Math.cos(ticks * 0.1) * 50.0F));
+        matrices.mulPose(Axis.XP.rotationDegrees(Mth.sin(ticks * 0.05F) * 50.0F));
+        matrices.mulPose(Axis.ZP.rotationDegrees(Mth.cos(ticks * 0.1F) * 50.0F));
         this.buggyModel.render(matrices, RADAR_DISH, consumer, light, OverlayTexture.NO_OVERLAY);
         matrices.popPose();
 
