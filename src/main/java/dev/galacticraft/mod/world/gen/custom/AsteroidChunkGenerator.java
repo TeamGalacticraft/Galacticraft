@@ -398,12 +398,12 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
                         } else if (distance <= core.thickness) {
                             if (rand.nextBoolean()) {
                                 primer.setBlockState(new BlockPos(x, y, z), asteroidCore, false);
-//	                        	blockArray[index] = core.block;
-//	                            metaArray[index] = core.meta;
+//                              blockArray[index] = core.block;
+//                              metaArray[index] = core.meta;
                             } else {
                                 primer.setBlockState(new BlockPos(x, y, z), asteroidRock0, false);
-//	                        	blockArray[index] = this.ASTEROID_STONE;
-//	                            metaArray[index] = this.ASTEROID_STONE_META_0;
+//                              blockArray[index] = this.ASTEROID_STONE;
+//                              metaArray[index] = this.ASTEROID_STONE_META_0;
                             }
                         } else if (shell != null && distance >= shellThickness) {
                             primer.setBlockState(new BlockPos(x, y, z), asteroidShell, false);

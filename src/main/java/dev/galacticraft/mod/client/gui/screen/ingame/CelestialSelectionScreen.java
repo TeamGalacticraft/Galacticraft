@@ -340,14 +340,14 @@ public class CelestialSelectionScreen extends CelestialScreen {
                         assert this.minecraft != null;
                         assert this.minecraft.player != null;
                         String strName = this.minecraft.player.getName().getString();
-//                        Integer spacestationID = this.spaceStationIDs.get(strName);
-//                        if (spacestationID == null) spacestationID = this.spaceStationIDs.get(strName.toLowerCase());
+                        // Integer spacestationID = this.spaceStationIDs.get(strName);
+                        // if (spacestationID == null) spacestationID = this.spaceStationIDs.get(strName.toLowerCase());
                         CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody;
                         selectedSatellite.type().setCustomName(this.renamingString, selectedSatellite.config());
-//                        RegistryKey<World> spacestationID = selectedSatellite.getWorld();
-//                        this.spaceStationMap.get(getSatelliteParentID(selectedSatellite)).get(strName).setStationName(this.renamingString);
-//	                    	this.spaceStationNames.put(strName, this.renamingString);
-//                            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_RENAME_SPACE_STATION, GCCoreUtil.getWorld(this.minecraft.level), new Object[]{this.renamingString, spacestationID})); //TODO SS ID PACKET
+                        // RegistryKey<World> spacestationID = selectedSatellite.getWorld();
+                        // this.spaceStationMap.get(getSatelliteParentID(selectedSatellite)).get(strName).setStationName(this.renamingString);
+                        // this.spaceStationNames.put(strName, this.renamingString);
+                        // GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_RENAME_SPACE_STATION, GCCoreUtil.getWorld(this.minecraft.level), new Object[]{this.renamingString, spacestationID})); //TODO SS ID PACKET
                         this.renamingSpaceStation = false;
                     }
                     // Cancel
