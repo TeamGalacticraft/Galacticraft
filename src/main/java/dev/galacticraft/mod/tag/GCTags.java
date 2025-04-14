@@ -93,6 +93,9 @@ public class GCTags {
     public static final TagKey<Item> EVOLVED_CREEPER_DROP_MUSIC_DISCS = TagKey.create(Registries.ITEM, Constant.id("evolved_creeper_drop_music_discs"));
 
     public static final TagKey<Structure> MOON_RUINS = TagKey.create(Registries.STRUCTURE, Constant.id("moon_ruins"));
+    public static final TagKey<Structure> COMMON_METEOR = TagKey.create(Registries.STRUCTURE, Constant.id("common_meteor"));
+    public static final TagKey<Structure> UNCOMMON_METEOR = TagKey.create(Registries.STRUCTURE, Constant.id("uncommon_meteor"));
+    public static final TagKey<Structure> RARE_METEORS = TagKey.create(Registries.STRUCTURE, Constant.id("rare_meteors"));
 
     public static final TagKey<DimensionType> FOOTPRINTS_DIMENSIONS = TagKey.create(Registries.DIMENSION_TYPE, Constant.id("footprints"));
     public static final TagKey<DimensionType> SPACE = TagKey.create(Registries.DIMENSION_TYPE, Constant.id("space"));
