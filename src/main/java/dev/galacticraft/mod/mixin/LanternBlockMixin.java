@@ -44,8 +44,8 @@ public abstract class LanternBlockMixin extends Block {
     @Deprecated
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean moved) {
         super.onPlace(state, level, pos, oldState, moved);
-        if (!level.getDefaultBreathable()) {
-            if (state.getBlock() == Blocks.LANTERN) {
+        if (!level.isBreathable(pos)) {
+            if (state.getBlock() instanceof LanternBlock lantern && lantern != GCBlocks.GLOWSTONE_LANTERN) {
                 level.setBlockAndUpdate(pos, GCBlocks.UNLIT_LANTERN.defaultBlockState().setValue(LanternBlock.HANGING, state.getValue(LanternBlock.HANGING)).setValue(LanternBlock.WATERLOGGED, state.getValue(LanternBlock.WATERLOGGED)));
             }
             level.addParticle(ParticleTypes.SMOKE, pos.getX(), pos.getY(), pos.getZ(), 0.0D, 0.0D, 0.0D);
