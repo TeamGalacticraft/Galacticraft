@@ -6,7 +6,7 @@
       "item": "galacticraft:moon_cheese_curd"
     },
     "M": {
-      "item": "minecraft:milk_bucket"
+      "tag": "c:buckets/milk"
     }
   },
   "pattern": [

@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_advanced_wafer": {
+    "has_meteoric_iron_ingot": {
       "conditions": {
         "items": [
           {
-            "items": "galacticraft:advanced_wafer"
+            "items": "galacticraft:meteoric_iron_ingot"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_advanced_wafer"
+      "has_meteoric_iron_ingot"
     ]
   ],
   "rewards": {

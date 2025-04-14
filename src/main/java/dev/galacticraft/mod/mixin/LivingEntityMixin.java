@@ -27,7 +27,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.CryogenicAccessor;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCDimensionTypeTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
@@ -153,7 +153,7 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
 
     @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isFallFlying()Z"))
     private boolean gc$canStartFallFlying(boolean original) {
-        return this.level().galacticraft$hasDimensionTypeTag(GCTags.VACUUM) ? false : original;
+        return this.level().galacticraft$hasDimensionTypeTag(GCDimensionTypeTags.VACUUM) ? false : original;
     }
 
     @ModifyArg(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V", ordinal = 6), index = 0)

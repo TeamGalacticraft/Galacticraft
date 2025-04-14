@@ -6,10 +6,10 @@
       "tag": "c:chests/wooden"
     },
     "I": {
-      "tag": "c:plates/iron"
+      "item": "galacticraft:compressed_iron"
     },
     "S": {
-      "tag": "c:plates/steel"
+      "item": "galacticraft:compressed_steel"
     }
   },
   "pattern": [

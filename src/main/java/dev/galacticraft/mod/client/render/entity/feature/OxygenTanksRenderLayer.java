@@ -26,7 +26,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.client.model.EndermanModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.IllagerModel;
@@ -116,8 +116,8 @@ public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityMode
 
         if (livingEntity instanceof Player player) {
             Container inv = livingEntity.galacticraft$getOxygenTanks();
-            hasTank1 = inv.getItem(0).is(GCTags.OXYGEN_TANKS);
-            hasTank2 = inv.getItem(1).is(GCTags.OXYGEN_TANKS);
+            hasTank1 = inv.getItem(0).is(GCItemTags.OXYGEN_TANKS);
+            hasTank2 = inv.getItem(1).is(GCItemTags.OXYGEN_TANKS);
             if (hasTank1) {
                 tankSize1 = inv.getItem(0).getDescriptionId().replace("item.galacticraft.", "");
             }

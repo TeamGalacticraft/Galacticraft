@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.world.dimension;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCBlockTags;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
@@ -52,7 +52,7 @@ public class GCDimensionTypes {
                 -32, // minY
                 384, // height
                 384, // logicalHeight
-                GCTags.INFINIBURN_MOON, // infiniburn
+                GCBlockTags.INFINIBURN_MOON, // infiniburn
                 Constant.id("moon"), // fixme: GCDimensionEffects somehow seems to load client classes
                 0.1f, // ambientLight
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)
@@ -70,7 +70,7 @@ public class GCDimensionTypes {
                 -32, // minY
                 384, // height
                 384, // logicalHeight
-                GCTags.INFINIBURN_VENUS, // infiniburn
+                GCBlockTags.INFINIBURN_VENUS, // infiniburn
                 Constant.id("venus"), // effectsLocation // fixme
                 0.1F, // ambientLight
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)
@@ -87,7 +87,7 @@ public class GCDimensionTypes {
                 -64, // minY
                 384, // height
                 384, // logicalHeight
-                GCTags.INFINIBURN_ASTEROID, // infiniburn
+                GCBlockTags.INFINIBURN_ASTEROID, // infiniburn
                 Constant.id("asteroid"), // effectsLocation // fixme
                 0.05F, // ambientLight
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)

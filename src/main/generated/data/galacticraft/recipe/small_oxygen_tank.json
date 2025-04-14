@@ -6,7 +6,7 @@
       "item": "galacticraft:compressed_copper"
     },
     "T": {
-      "item": "galacticraft:tin_canister"
+      "tag": "c:canisters/tin"
     },
     "W": {
       "item": "minecraft:lime_wool"

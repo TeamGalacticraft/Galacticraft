@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCDimensionTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FireworkRocketItem;
@@ -40,6 +40,6 @@ public abstract class FireworkRocketItemMixin extends Item {
 
     @ModifyExpressionValue(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isFallFlying()Z"))
     private boolean gc$useFireworkInVacuum(boolean original, Level level, Player player, InteractionHand interactionHand) {
-        return level.galacticraft$hasDimensionTypeTag(GCTags.VACUUM) ? false : original;
+        return level.galacticraft$hasDimensionTypeTag(GCDimensionTypeTags.VACUUM) ? false : original;
     }
 }

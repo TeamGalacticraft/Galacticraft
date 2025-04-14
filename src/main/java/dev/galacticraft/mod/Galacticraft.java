@@ -40,7 +40,7 @@ import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.structure.GCStructurePieceTypes;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.*;
 import dev.galacticraft.mod.village.GCVillagerProfessions;
 import dev.galacticraft.mod.village.MoonVillagerTypes;
 import dev.galacticraft.mod.world.biome.source.GCMultiNoiseBiomeSourceParameterLists;
@@ -63,7 +63,13 @@ public class Galacticraft implements ModInitializer {
         long startInitTime = System.currentTimeMillis();
         Constant.LOGGER.info("Starting initialization.");
         GCChunkGenerator.register();
-        GCTags.register();
+        GCBiomeTags.register();
+        GCBlockTags.register();
+        GCDimensionTypeTags.register();
+        GCEntityTypeTags.register();
+        GCFluidTags.register();
+        GCItemTags.register();
+        GCStructureTags.register();
         GCFluids.register();
         GCBlocks.register();
         GCFluids.registerFluidVariantAttributes(); // Must be called after GCBlocks.register() so that grates can work

@@ -24,7 +24,7 @@ package dev.galacticraft.mod.world.gen.feature;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCBlockTags;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
@@ -40,11 +40,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class GCOreConfiguredFeature {
-    public static final RuleTest BASE_STONE_MOON = new TagMatchTest(GCTags.BASE_STONE_MOON);
+    public static final RuleTest BASE_STONE_MOON = new TagMatchTest(GCBlockTags.BASE_STONE_MOON);
     public static final RuleTest STONE_ORE_REPLACEABLE = new TagMatchTest(BlockTags.STONE_ORE_REPLACEABLES);
     public static final RuleTest DEEPSLATE_ORE_REPLACEABLE = new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES);
-    public static final RuleTest MOON_STONE_ORE_REPLACEABLE = new TagMatchTest(GCTags.MOON_STONE_ORE_REPLACEABLES);
-    public static final RuleTest LUNASLATE_ORE_REPLACEABLE = new TagMatchTest(GCTags.LUNASLATE_ORE_REPLACEABLES);
+    public static final RuleTest MOON_STONE_ORE_REPLACEABLE = new TagMatchTest(GCBlockTags.MOON_STONE_ORE_REPLACEABLES);
+    public static final RuleTest LUNASLATE_ORE_REPLACEABLE = new TagMatchTest(GCBlockTags.LUNASLATE_ORE_REPLACEABLES);
 
     public static final List<OreConfiguration.TargetBlockState> TIN_ORES = List.of(OreConfiguration.target(STONE_ORE_REPLACEABLE, GCBlocks.TIN_ORE.defaultBlockState()), OreConfiguration.target(DEEPSLATE_ORE_REPLACEABLE, GCBlocks.DEEPSLATE_TIN_ORE.defaultBlockState()));
     public static final List<OreConfiguration.TargetBlockState> ALUMINUM_ORES = List.of(OreConfiguration.target(STONE_ORE_REPLACEABLE, GCBlocks.ALUMINUM_ORE.defaultBlockState()), OreConfiguration.target(DEEPSLATE_ORE_REPLACEABLE, GCBlocks.DEEPSLATE_ALUMINUM_ORE.defaultBlockState()));
@@ -86,12 +86,15 @@ public class GCOreConfiguredFeature {
 
     public static void bootstrapRegistries(BootstrapContext<ConfiguredFeature<?, ?>> context) {
         // OVERWORLD
+        // OVERWORLD
         context.register(ORE_SILICON_SMALL, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(SILICON_ORES, 6, 0.5F)));
         context.register(ORE_SILICON_LARGE, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(SILICON_ORES, 9, 0.7F)));
         context.register(ORE_TIN, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(TIN_ORES, 7)));
         context.register(ORE_TIN_SMALL, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(TIN_ORES, 3)));
         context.register(ORE_ALUMINUM, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(ALUMINUM_ORES, 7)));
         context.register(ORE_ALUMINUM_SMALL, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(ALUMINUM_ORES, 3)));
+
+        // MOON
 
         // MOON
         context.register(BASALT_DISK_MOON, new ConfiguredFeature<>(Feature.ORE, new OreConfiguration(BASE_STONE_MOON, GCBlocks.MOON_BASALT.defaultBlockState(), 33)));
