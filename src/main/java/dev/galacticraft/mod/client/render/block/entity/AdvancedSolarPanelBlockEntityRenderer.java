@@ -71,7 +71,7 @@ public class AdvancedSolarPanelBlockEntityRenderer implements BlockEntityRendere
         matrices.pushPose();
         matrices.translate(0.5F, 1.0F, 0.5F);
         RenderSystem.setShaderTexture(0, AdvancedSolarPanelBlockEntityRenderer.TEXTURE);
-        this.render(matrices, vertexConsumers.getBuffer(RenderType.entityCutout(TEXTURE)), light, overlay, blockEntity.getLevel(), tickDelta, true, blockEntity.nightCollection());
+        this.render(matrices, vertexConsumers.getBuffer(RenderType.entityCutout(TEXTURE)), light, overlay, blockEntity.getLevel(), tickDelta, blockEntity.isActive(), blockEntity.nightCollection());
         matrices.popPose();
     }
 
