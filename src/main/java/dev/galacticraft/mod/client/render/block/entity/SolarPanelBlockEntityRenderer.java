@@ -27,8 +27,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.block.entity.AbstractSolarPanelBlockEntity;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
-import dev.galacticraft.mod.content.block.entity.machine.BasicSolarPanelBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelPart;
@@ -43,12 +43,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 
 @Environment(EnvType.CLIENT)
-public class BasicSolarPanelBlockEntityRenderer implements BlockEntityRenderer<BasicSolarPanelBlockEntity> {
+public class SolarPanelBlockEntityRenderer implements BlockEntityRenderer<AbstractSolarPanelBlockEntity> {
     private static final ResourceLocation TEXTURE = Constant.id("textures/model/solar_panel.png");
     private final ModelPart panel;
     private final ModelPart pole;
 
-    public BasicSolarPanelBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
+    public SolarPanelBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
         ModelPart root = context.bakeLayer(GCEntityModelLayer.SOLAR_PANEL);
         this.panel = root.getChild(Constant.ModelPartName.SOLAR_PANEL_PANEL);
         this.pole = root.getChild(Constant.ModelPartName.SOLAR_PANEL_POLE);
@@ -70,22 +70,23 @@ public class BasicSolarPanelBlockEntityRenderer implements BlockEntityRenderer<B
     }
 
     @Override
-    public void render(BasicSolarPanelBlockEntity blockEntity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
+    public void render(AbstractSolarPanelBlockEntity blockEntity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
         light = LevelRenderer.getLightColor(blockEntity.getLevel(), blockEntity.getBlockPos().relative(Direction.UP, 3));
 
         matrices.pushPose();
         matrices.translate(0.5F, 1.0F, 0.5F);
-        RenderSystem.setShaderTexture(0, BasicSolarPanelBlockEntityRenderer.TEXTURE);
-        this.render(matrices, vertexConsumers.getBuffer(RenderType.entityCutout(TEXTURE)), light, overlay);
+        RenderSystem.setShaderTexture(0, SolarPanelBlockEntityRenderer.TEXTURE);
+        this.render(matrices, vertexConsumers.getBuffer(RenderType.entityCutout(TEXTURE)), light, overlay, blockEntity.getTilt(tickDelta));
         matrices.popPose();
     }
 
-    public void render(PoseStack matrices, VertexConsumer vertexConsumer, int light, int overlay) {
+    public void render(PoseStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float tilt) {
         this.pole.render(matrices, vertexConsumer, light, overlay);
         matrices.translate(0.0F, 1.5F, 0.0F);
 
         matrices.mulPose(Axis.ZP.rotationDegrees(180.0F));
         matrices.mulPose(Axis.YP.rotationDegrees(-90.0F));
+        matrices.mulPose(Axis.XP.rotation(tilt));
 
         this.panel.render(matrices, vertexConsumer, light, overlay);
     }
