@@ -144,7 +144,7 @@ public abstract class TranslationProvider implements DataProvider {
         return baseKey;
     }
 
-    private static @NotNull String normalizeName(String id) {
+    protected static @NotNull String normalizeName(String id) {
         char[] chars = id.toCharArray();
         boolean capitalize = true;
         for (int i = 0; i < chars.length; i++) {

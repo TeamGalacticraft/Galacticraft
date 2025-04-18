@@ -38,6 +38,7 @@ public class GCModelTemplates {
     public static final ModelTemplate GLASS_FLUID_PIPE = create("template_glass_fluid_pipe", GCTextureSlot.COLOR);
     public static final ModelTemplate FLUID_PIPE_WALKWAY = create("template_fluid_pipe_walkway", GCTextureSlot.COLOR);
     public static final ModelTemplate ROCKET_LAUNCH_PAD_PART = create("rocket_launch_pad_part", TextureSlot.PARTICLE, TextureSlot.TOP, TextureSlot.BOTTOM, TextureSlot.SIDE);
+    public static final ModelTemplate PIPE_INVENTORY = createItem("template_pipe", "", TextureSlot.LAYER0);
 
     private static ModelTemplate create(String string, TextureSlot... textureSlots) {
         return new ModelTemplate(Optional.of(Constant.id("block/" + string)), Optional.empty(), textureSlots);
@@ -45,5 +46,9 @@ public class GCModelTemplates {
 
     private static ModelTemplate create(String string, String suffix, TextureSlot... textureSlots) {
         return new ModelTemplate(Optional.of(Constant.id("block/" + string)), Optional.of(suffix), textureSlots);
+    }
+
+    private static ModelTemplate createItem(String name, String suffix, TextureSlot... textureSlots) {
+        return new ModelTemplate(Optional.of(Constant.id("item/" + name)), Optional.of(suffix), textureSlots);
     }
 }

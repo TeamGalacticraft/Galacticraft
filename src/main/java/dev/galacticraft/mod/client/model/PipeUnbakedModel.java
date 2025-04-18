@@ -25,6 +25,7 @@ package dev.galacticraft.mod.client.model;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -32,10 +33,14 @@ import java.util.Collections;
 import java.util.function.Function;
 
 public class PipeUnbakedModel implements UnbakedModel {
-    public static final PipeUnbakedModel INSTANCE = new PipeUnbakedModel();
+    private final ResourceLocation texture;
+
+    public PipeUnbakedModel(ResourceLocation texture) {
+        this.texture = texture;
+    }
 
     @Override
-    public Collection<ResourceLocation> getDependencies() {
+    public @NotNull Collection<ResourceLocation> getDependencies() {
         return Collections.emptyList();
     }
 
@@ -46,6 +51,6 @@ public class PipeUnbakedModel implements UnbakedModel {
     @Nullable
     @Override
     public BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> textureGetter, ModelState state) {
-        return PipeBakedModel.getInstance(textureGetter);
+        return new PipeBakedModel(textureGetter, this.texture);
     }
 }

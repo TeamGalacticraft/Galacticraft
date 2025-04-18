@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "tag": "c:dyes/magenta"
+    },
+    "P": {
+      "item": "galacticraft:glass_fluid_pipe"
+    }
+  },
+  "pattern": [
+    "PPP",
+    "PDP",
+    "PPP"
+  ],
+  "result": {
+    "count": 8,
+    "id": "galacticraft:magenta_glass_fluid_pipe"
+  }
+}
