@@ -37,6 +37,7 @@ public class RocketRecipeBuilder extends GCRecipeBuilder {
     private int bodyHeight;
     private Ingredient body, cone, engine, fins;
     private Ingredient boosters = Ingredient.EMPTY;
+    private Ingredient storage = Ingredient.EMPTY;
     private RocketData rocketData;
 
     protected RocketRecipeBuilder(ItemLike result, int count) {
@@ -102,6 +103,16 @@ public class RocketRecipeBuilder extends GCRecipeBuilder {
         return this;
     }
 
+    public RocketRecipeBuilder storage(ItemLike storage) {
+        this.storage = Ingredient.of(storage);
+        return this;
+    }
+
+    public RocketRecipeBuilder storage(TagKey<Item> storage) {
+        this.storage = Ingredient.of(storage);
+        return this;
+    }
+
     public RocketRecipeBuilder rocketData(RocketData rocketData) {
         this.rocketData = rocketData;
         return this;
@@ -115,6 +126,6 @@ public class RocketRecipeBuilder extends GCRecipeBuilder {
 
         ItemStack result = new ItemStack(this.result, this.count);
         result.set(GCDataComponents.ROCKET_DATA, this.rocketData);
-        return new RocketRecipe(this.group, result, this.bodyHeight, this.body, this.cone, this.engine, this.fins, this.boosters);
+        return new RocketRecipe(this.group, result, this.bodyHeight, this.body, this.cone, this.engine, this.fins, this.boosters, this.storage);
     }
 }
