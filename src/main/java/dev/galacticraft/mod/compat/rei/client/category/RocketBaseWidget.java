@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.compat.rei.client.category;
 
-import com.mojang.blaze3d.platform.Lighting;
 import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import net.minecraft.client.gui.GuiGraphics;
@@ -43,7 +42,6 @@ public class RocketBaseWidget extends Widget {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        Lighting.setupForFlatItems();
         graphics.blit(ROCKET_WORKBENCH_DISPLAY_TEXTURE, this.startPoint.x, this.startPoint.y, ROCKET_WORKBENCH_U, ROCKET_WORKBENCH_V, ROCKET_WORKBENCH_WIDTH, ROCKET_WORKBENCH_HEIGHT);
     }
 

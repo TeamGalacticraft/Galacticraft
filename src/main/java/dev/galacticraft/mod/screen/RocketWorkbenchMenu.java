@@ -97,7 +97,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
 
     protected void addSlots() {
         RocketRecipe recipe = this.recipe.value();
-        int bodyHeight = this.recipe.value().bodyHeight();
+        int bodyHeight = recipe.bodyHeight();
         int y = this.coneY();
         int centerX = SCREEN_CENTER_BASE_X - 36;
 

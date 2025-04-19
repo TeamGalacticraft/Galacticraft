@@ -757,6 +757,8 @@ public interface Constant {
         int ROCKET_WORKBENCH_V = 20;
         int ROCKET_WORKBENCH_WIDTH = 162;
         int ROCKET_WORKBENCH_HEIGHT = 145;
+        int CHEST_SLOT_U = 177;
+        int CHEST_SLOT_V = 0;
 
         int ROCKET_PREVIEW_X = 133 - ROCKET_WORKBENCH_U;
         int ROCKET_PREVIEW_Y = 100 - ROCKET_WORKBENCH_V;

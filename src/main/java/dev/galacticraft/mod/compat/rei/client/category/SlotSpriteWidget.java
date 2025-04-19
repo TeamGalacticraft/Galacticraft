@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.compat.rei.client.category;
 
-import com.mojang.blaze3d.platform.Lighting;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.widgets.Slot;
@@ -51,7 +50,6 @@ public class SlotSpriteWidget extends Slot {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         if (this.target.getCurrentEntry().isEmpty()) {
-            Lighting.setupForFlatItems();
             graphics.blit(this.sprite, this.startPoint.x, this.startPoint.y, 0, 0.0F, 0.0F, 16, 16, 16, 16);
         }
         this.target.render(graphics, mouseX, mouseY, delta);

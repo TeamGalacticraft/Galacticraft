@@ -245,14 +245,14 @@ dependencies {
     multicompat(group = "me.shedaniel",
             api = "RoughlyEnoughItems-api-fabric",
             extra = "RoughlyEnoughItems-default-plugin-fabric",
-            runtime = "RoughlyEnoughItems-fabric",
+            // runtime = "RoughlyEnoughItems-fabric",
             version = reiVersion) {
         exclude(group = "net.fabricmc.fabric-api")
     }
 
     multicompat(group = "mezz.jei",
-            api = "jei-1.21-common-api",
-            extra = "jei-1.21-fabric-api",
+            api = "jei-$minecraftVersion-common-api",
+            extra = "jei-$minecraftVersion-fabric-api",
 //            runtime = "jei-$minecraftVersion-fabric", // we already have REI at runtime
             version = jeiVersion) {
         exclude(group = "net.fabricmc.fabric-api")
