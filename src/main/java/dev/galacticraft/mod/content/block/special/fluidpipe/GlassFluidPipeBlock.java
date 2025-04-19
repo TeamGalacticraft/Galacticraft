@@ -22,20 +22,19 @@
 
 package dev.galacticraft.mod.content.block.special.fluidpipe;
 
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.FluidPipeBlock;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
-import dev.galacticraft.mod.util.DirectionUtil;
-import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FluidState;
@@ -68,26 +67,6 @@ public class GlassFluidPipeBlock extends FluidPipeBlock implements FluidLoggable
     }
 
     @Override
-    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos fromPos, boolean notify) {
-        super.neighborChanged(blockState, level, blockPos, block, fromPos, notify);
-
-        if (level.getBlockEntity(blockPos) instanceof PipeBlockEntity glassPipe) {
-            var direction = DirectionUtil.fromNormal(fromPos.getX() - blockPos.getX(), fromPos.getY() - blockPos.getY(), fromPos.getZ() - blockPos.getZ());
-
-            if (direction != null) {
-                if (!level.isClientSide
-                        && glassPipe.getConnections()[direction.ordinal()]
-                        != (glassPipe.getConnections()[direction.ordinal()]
-                        = glassPipe.canConnect(direction) && FluidUtil.canAccessFluid(level, fromPos, direction))
-                ) {
-                    level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
-                    glassPipe.setChanged();
-                }
-            }
-        }
-    }
-
-    @Override
     public @NotNull BlockState getStateForPlacement(BlockPlaceContext ctx) {
         BlockState state = super.getStateForPlacement(ctx);
         state = FluidLoggable.applyFluidState(ctx.getLevel(), state, ctx.getClickedPos());
@@ -103,6 +82,11 @@ public class GlassFluidPipeBlock extends FluidPipeBlock implements FluidLoggable
     @Override
     protected @NotNull FluidState getFluidState(BlockState state) {
         return FluidLoggable.createFluidState(state);
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends PipeBlock> codec() {
+        return this.simpleCodec(GlassFluidPipeBlock::new);
     }
 
     @Override

@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.api.block;
 
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
@@ -44,36 +45,26 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.StateHolder;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class FluidPipeBlock extends PipeBlock implements EntityBlock {
-//    public static final MapCodec<FluidPipe> CODEC = RecordCodecBuilder.mapCodec(
-//            instance -> instance.group(BlockBehaviour.Properties.CODEC.fieldOf("properties").forGetter(BlockBehaviour::properties)).apply(instance, ))
+import java.util.function.BiFunction;
 
+public abstract class FluidPipeBlock extends PipeShapedBlock implements EntityBlock {
     public final PipeColor color;
 
     public FluidPipeBlock(Properties settings, PipeColor color) {
         super(0.125f, settings.pushReaction(PushReaction.BLOCK));
         this.color = color;
-    }
-
-    protected boolean hasConnectionOnSide(Direction side, BlockState state) {
-        return true;
     }
 
     @Override
@@ -122,23 +113,12 @@ public abstract class FluidPipeBlock extends PipeBlock implements EntityBlock {
     }
 
     @Override
-    public @NotNull BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        BlockState state = this.defaultBlockState();
-
-        for (Direction direction : Direction.values()) {
-            BlockPos neighborPos = ctx.getClickedPos().relative(direction);
-            Block neighbor = ctx.getLevel().getBlockState(neighborPos).getBlock();
-
-            if (neighbor instanceof FluidPipeBlock pipe && !this.color.canConnectTo(pipe.color)) {
-                continue;
-            }
-
-            if (FluidUtil.canAccessFluid(ctx.getLevel(), neighborPos, direction)) {
-                state = state.setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction), true);
-            }
+    protected boolean canConnectTo(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos, BlockState thisState, BlockState neighborState) {
+        if (neighborState.getBlock() instanceof FluidPipeBlock pipe && !this.color.canConnectTo(pipe.color)) {
+            return false;
+        } else {
+            return FluidUtil.canAccessFluid(level, neighborPos, direction);
         }
-
-        return state;
     }
 
     @Override
@@ -171,52 +151,17 @@ public abstract class FluidPipeBlock extends PipeBlock implements EntityBlock {
         }
     }
 
-    @Override
-    protected MapCodec<? extends PipeBlock> codec() {
-        return null; // idk man
-    }
-
-    public boolean shouldConnectTo(BlockState thisState, Direction side, BlockState neighborState, BlockPos neighborPos, Level level) {
-        Block neighbor = neighborState.getBlock();
-
-        if (neighbor instanceof FluidPipeBlock pipe && !this.color.canConnectTo(pipe.color)) {
-            return false;
-        }
-
-        return this.hasConnectionOnSide(side, thisState) && FluidUtil.canAccessFluid(level, neighborPos, side);
-    }
-
-    protected BlockState updateConnection(BlockState currentState, Direction side, BlockState neighborState, BlockPos neighborPos, Level level) {
-        BooleanProperty directionProperty = PipeBlock.PROPERTY_BY_DIRECTION.get(side);
-        return currentState.setValue(directionProperty, this.shouldConnectTo(currentState, side, neighborState, neighborPos, level));
+    protected<T extends FluidPipeBlock> MapCodec<T> simpleCodec(BiFunction<BlockBehaviour.Properties, PipeColor, T> generator) {
+        return RecordCodecBuilder.mapCodec(instance -> instance.group(
+                BlockBehaviour.Properties.CODEC.fieldOf("properties").forGetter(BlockBehaviour::properties),
+                PipeColor.CODEC.fieldOf("color").forGetter(FluidPipeBlock::color)
+        ).apply(instance, generator));
     }
 
     @Override
-    protected @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos pos, BlockPos neighborPos) {
-        if (levelAccessor instanceof Level level) {
-            return this.updateConnection(state, direction, neighborState, neighborPos, level);
-        }
-
-        return state;
-    }
-
-    @Override
-    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos neighborPos, boolean notify) {
-        super.neighborChanged(state, level, pos, block, neighborPos, notify);
-
-        Direction direction = Direction.fromDelta(neighborPos.getX() - pos.getX(), neighborPos.getY() - pos.getY(), neighborPos.getZ() - pos.getZ());
-        if (direction == null)
-            return;
-
-        BlockState neighborState = level.getBlockState(neighborPos);
-
-        BlockState newState = this.updateConnection(state, direction, neighborState, neighborPos, level);
-        if (newState != state) {
-            level.setBlockAndUpdate(pos, newState);
-
-            if (level.getBlockEntity(pos) instanceof FluidPipe pipe) {
-                pipe.updateConnection(newState, pos, neighborPos, direction);
-            }
+    protected void onConnectionChanged(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos, BlockState newState, BlockState neighborState) {
+        if (level.getBlockEntity(thisPos) instanceof FluidPipe pipe) {
+            pipe.updateConnection(newState, thisPos, neighborPos, direction);
         }
     }
 
@@ -242,23 +187,13 @@ public abstract class FluidPipeBlock extends PipeBlock implements EntityBlock {
         return this.setColor(state, level, pos, PipeColor.fromDye(dye));
     }
 
+    protected PipeColor color() {
+        return this.color;
+    }
+
     @Nullable
     @Override
     public abstract PipeBlockEntity newBlockEntity(BlockPos pos, BlockState state);
 
     protected abstract Block getMatchingBlock(PipeColor color);
-
-    protected static <O, S extends StateHolder<O,S>> S applyDefaultState(S state) {
-        return state
-                .setValue(PipeBlock.NORTH, Boolean.FALSE)
-                .setValue(PipeBlock.EAST, Boolean.FALSE)
-                .setValue(PipeBlock.SOUTH, Boolean.FALSE)
-                .setValue(PipeBlock.WEST, Boolean.FALSE)
-                .setValue(PipeBlock.UP, Boolean.FALSE)
-                .setValue(PipeBlock.DOWN, Boolean.FALSE);
-    }
-
-    protected static <O, S extends StateHolder<O,S>> void addStateDefinitions(StateDefinition.Builder<O, S> builder) {
-        builder.add(PipeBlock.NORTH, PipeBlock.EAST, PipeBlock.SOUTH, PipeBlock.WEST, PipeBlock.UP, PipeBlock.DOWN);
-    }
 }

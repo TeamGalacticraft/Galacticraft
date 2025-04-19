@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.api.block.entity;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.world.item.DyeColor;
 
 public enum PipeColor {
@@ -42,6 +43,15 @@ public enum PipeColor {
     RED("red"),
     BLACK("black"),
     CLEAR("clear");
+
+    public static final Codec<PipeColor> CODEC = Codec.STRING.xmap(s -> {
+        for (PipeColor color : PipeColor.values()) {
+            if (color.name.equals(s)) {
+                return color;
+            }
+        }
+        return null;
+    }, color -> color.name);
 
     private final String name;
 

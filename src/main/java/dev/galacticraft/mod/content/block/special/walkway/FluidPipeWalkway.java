@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.special.walkway;
 
+import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.FluidPipeBlock;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
@@ -41,6 +42,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FluidState;
@@ -52,7 +54,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 public class FluidPipeWalkway extends FluidPipeBlock implements FluidLoggable {
-//    public static final MapCodec<FluidPipeWalkway> CODEC = simpleCodec(FluidPipeWalkway::new);
     private static final VoxelShape[] SHAPES = new VoxelShape[64];
 
     public FluidPipeWalkway(Properties settings, PipeColor color) {
@@ -64,13 +65,13 @@ public class FluidPipeWalkway extends FluidPipeBlock implements FluidLoggable {
         this.registerDefaultState(state);
     }
 
-//    @Override
-//    protected MapCodec<? extends Block> codec() {
-//        return CODEC;
-//    }
-
     private static int getFacingMask(Direction direction) {
         return 1 << direction.get3DDataValue();
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends PipeBlock> codec() {
+        return this.simpleCodec(FluidPipeWalkway::new);
     }
 
     @Override
