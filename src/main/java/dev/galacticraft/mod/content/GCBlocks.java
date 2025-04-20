@@ -60,17 +60,6 @@ import java.util.function.ToIntFunction;
 public class GCBlocks {
     public static final GCBlockRegistry BLOCKS = new GCBlockRegistry();
 
-    // TORCHES
-    // These 2 torches are special, it's need to register early so others can use dropsLike() reference
-    public static final Block GLOWSTONE_TORCH = BLOCKS.register(Constant.Block.GLOWSTONE_TORCH, new GlowstoneTorchBlock(BlockBehaviour.Properties.of().noCollission().instabreak().lightLevel(blockStatex -> 14).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY)));
-    public static final Block UNLIT_TORCH = BLOCKS.register(Constant.Block.UNLIT_TORCH, new UnlitTorchBlock(BlockBehaviour.Properties.of().noCollission().instabreak().lightLevel(blockStatex -> 0).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY)));
-    public static final Block GLOWSTONE_WALL_TORCH = BLOCKS.register(Constant.Block.GLOWSTONE_WALL_TORCH, new GlowstoneWallTorchBlock(BlockBehaviour.Properties.ofFullCopy(GLOWSTONE_TORCH).dropsLike(GLOWSTONE_TORCH)));
-    public static final Block UNLIT_WALL_TORCH = BLOCKS.register(Constant.Block.UNLIT_WALL_TORCH, new UnlitWallTorchBlock(BlockBehaviour.Properties.ofFullCopy(UNLIT_TORCH).dropsLike(UNLIT_TORCH)));
-
-    // LANTERNS
-    public static final Block GLOWSTONE_LANTERN = BLOCKS.registerWithItem(Constant.Block.GLOWSTONE_LANTERN, new GlowstoneLanternBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.LANTERN)));
-    public static final Block UNLIT_LANTERN = BLOCKS.registerWithItem(Constant.Block.UNLIT_LANTERN, new UnlitLanternBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.LANTERN).lightLevel(state -> 0)));
-
     // FLUIDS
     public static final LiquidBlock CRUDE_OIL = BLOCKS.register(Constant.Block.CRUDE_OIL,
             new CrudeOilBlock(GCFluids.CRUDE_OIL, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK)
@@ -108,72 +97,70 @@ public class GCBlocks {
     public static final Block MOON_DUNGEON_BRICK = BLOCKS.registerWithItem(Constant.Block.MOON_DUNGEON_BRICK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 2.5F).requiresCorrectToolForDrops()));
 
     public static final Block MOON_ROCK = BLOCKS.registerWithItem(Constant.Block.MOON_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F).requiresCorrectToolForDrops()));
-    public static final Block MOON_ROCK_SLAB = BLOCKS.registerWithItem(Constant.Block.MOON_ROCK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(MOON_ROCK).strength(2.5F, 6.0F)));
     public static final Block MOON_ROCK_STAIRS = BLOCKS.registerWithItem(Constant.Block.MOON_ROCK_STAIRS, new StairBlock(MOON_ROCK.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(MOON_ROCK)));
+    public static final Block MOON_ROCK_SLAB = BLOCKS.registerWithItem(Constant.Block.MOON_ROCK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(MOON_ROCK).strength(2.5F, 6.0F)));
     public static final Block MOON_ROCK_WALL = BLOCKS.registerWithItem(Constant.Block.MOON_ROCK_WALL, new WallBlock(BlockBehaviour.Properties.ofFullCopy(MOON_ROCK)));
 
     public static final Block MOON_ROCK_BRICK = BLOCKS.registerWithItem(Constant.Block.MOON_ROCK_BRICK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F).requiresCorrectToolForDrops()));
-    public static final Block MOON_ROCK_BRICK_SLAB = BLOCKS.registerWithItem(Constant.Block.MOON_ROCK_BRICK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(MOON_ROCK_BRICK).strength(2.5F, 6.0F)));
     public static final Block MOON_ROCK_BRICK_STAIRS = BLOCKS.registerWithItem(Constant.Block.MOON_ROCK_BRICK_STAIRS, new StairBlock(MOON_ROCK_BRICK.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(MOON_ROCK_BRICK)));
+    public static final Block MOON_ROCK_BRICK_SLAB = BLOCKS.registerWithItem(Constant.Block.MOON_ROCK_BRICK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(MOON_ROCK_BRICK).strength(2.5F, 6.0F)));
     public static final Block MOON_ROCK_BRICK_WALL = BLOCKS.registerWithItem(Constant.Block.MOON_ROCK_BRICK_WALL, new WallBlock(BlockBehaviour.Properties.ofFullCopy(MOON_ROCK_BRICK)));
 
     public static final Block CRACKED_MOON_ROCK_BRICK = BLOCKS.registerWithItem(Constant.Block.CRACKED_MOON_ROCK_BRICK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F).requiresCorrectToolForDrops()));
-    public static final Block CRACKED_MOON_ROCK_BRICK_SLAB = BLOCKS.registerWithItem(Constant.Block.CRACKED_MOON_ROCK_BRICK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(CRACKED_MOON_ROCK_BRICK).strength(2.5F, 6.0F)));
     public static final Block CRACKED_MOON_ROCK_BRICK_STAIRS = BLOCKS.registerWithItem(Constant.Block.CRACKED_MOON_ROCK_BRICK_STAIRS, new StairBlock(CRACKED_MOON_ROCK_BRICK.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(CRACKED_MOON_ROCK_BRICK)));
+    public static final Block CRACKED_MOON_ROCK_BRICK_SLAB = BLOCKS.registerWithItem(Constant.Block.CRACKED_MOON_ROCK_BRICK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(CRACKED_MOON_ROCK_BRICK).strength(2.5F, 6.0F)));
     public static final Block CRACKED_MOON_ROCK_BRICK_WALL = BLOCKS.registerWithItem(Constant.Block.CRACKED_MOON_ROCK_BRICK_WALL, new WallBlock(BlockBehaviour.Properties.ofFullCopy(CRACKED_MOON_ROCK_BRICK)));
 
     public static final Block POLISHED_MOON_ROCK = BLOCKS.registerWithItem(Constant.Block.POLISHED_MOON_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F).requiresCorrectToolForDrops()));
-    public static final Block POLISHED_MOON_ROCK_SLAB = BLOCKS.registerWithItem(Constant.Block.POLISHED_MOON_ROCK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(POLISHED_MOON_ROCK).strength(2.5F, 6.0F)));
     public static final Block POLISHED_MOON_ROCK_STAIRS = BLOCKS.registerWithItem(Constant.Block.POLISHED_MOON_ROCK_STAIRS, new StairBlock(POLISHED_MOON_ROCK.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(POLISHED_MOON_ROCK)));
+    public static final Block POLISHED_MOON_ROCK_SLAB = BLOCKS.registerWithItem(Constant.Block.POLISHED_MOON_ROCK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(POLISHED_MOON_ROCK).strength(2.5F, 6.0F)));
     public static final Block POLISHED_MOON_ROCK_WALL = BLOCKS.registerWithItem(Constant.Block.POLISHED_MOON_ROCK_WALL, new WallBlock(BlockBehaviour.Properties.ofFullCopy(POLISHED_MOON_ROCK)));
 
     public static final Block CHISELED_MOON_ROCK_BRICK = BLOCKS.registerWithItem(Constant.Block.CHISELED_MOON_ROCK_BRICK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F).requiresCorrectToolForDrops()));
     public static final Block MOON_ROCK_PILLAR = BLOCKS.registerWithItem(Constant.Block.MOON_ROCK_PILLAR, new RotatedPillarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F).requiresCorrectToolForDrops()));
 
     public static final Block COBBLED_MOON_ROCK = BLOCKS.registerWithItem(Constant.Block.COBBLED_MOON_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F).requiresCorrectToolForDrops()));
-    public static final Block COBBLED_MOON_ROCK_SLAB = BLOCKS.registerWithItem(Constant.Block.COBBLED_MOON_ROCK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(COBBLED_MOON_ROCK).strength(2.5F, 6.0F)));
     public static final Block COBBLED_MOON_ROCK_STAIRS = BLOCKS.registerWithItem(Constant.Block.COBBLED_MOON_ROCK_STAIRS, new StairBlock(COBBLED_MOON_ROCK.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(COBBLED_MOON_ROCK)));
+    public static final Block COBBLED_MOON_ROCK_SLAB = BLOCKS.registerWithItem(Constant.Block.COBBLED_MOON_ROCK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(COBBLED_MOON_ROCK).strength(2.5F, 6.0F)));
     public static final Block COBBLED_MOON_ROCK_WALL = BLOCKS.registerWithItem(Constant.Block.COBBLED_MOON_ROCK_WALL, new WallBlock(BlockBehaviour.Properties.ofFullCopy(COBBLED_MOON_ROCK)));
 
     public static final Block LUNASLATE = BLOCKS.registerWithItem(Constant.Block.LUNASLATE, new RotatedPillarBlock(BlockBehaviour.Properties.of().mapColor(MapColor.DEEPSLATE).instrument(NoteBlockInstrument.BASEDRUM).strength(3.0F, 6.0F).requiresCorrectToolForDrops().sound(SoundType.DEEPSLATE)));
-    public static final Block LUNASLATE_SLAB = BLOCKS.registerWithItem(Constant.Block.LUNASLATE_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(LUNASLATE)));
     public static final Block LUNASLATE_STAIRS = BLOCKS.registerWithItem(Constant.Block.LUNASLATE_STAIRS, new StairBlock(LUNASLATE.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(LUNASLATE)));
+    public static final Block LUNASLATE_SLAB = BLOCKS.registerWithItem(Constant.Block.LUNASLATE_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(LUNASLATE)));
     public static final Block LUNASLATE_WALL = BLOCKS.registerWithItem(Constant.Block.LUNASLATE_WALL, new WallBlock(BlockBehaviour.Properties.ofFullCopy(LUNASLATE)));
 
     public static final Block COBBLED_LUNASLATE = BLOCKS.registerWithItem(Constant.Block.COBBLED_LUNASLATE, new Block(BlockBehaviour.Properties.ofFullCopy(LUNASLATE).strength(3.5F, 6.0F)));
-    public static final Block COBBLED_LUNASLATE_SLAB = BLOCKS.registerWithItem(Constant.Block.COBBLED_LUNASLATE_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(COBBLED_LUNASLATE)));
     public static final Block COBBLED_LUNASLATE_STAIRS = BLOCKS.registerWithItem(Constant.Block.COBBLED_LUNASLATE_STAIRS, new StairBlock(COBBLED_LUNASLATE.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(COBBLED_LUNASLATE)));
+    public static final Block COBBLED_LUNASLATE_SLAB = BLOCKS.registerWithItem(Constant.Block.COBBLED_LUNASLATE_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(COBBLED_LUNASLATE)));
     public static final Block COBBLED_LUNASLATE_WALL = BLOCKS.registerWithItem(Constant.Block.COBBLED_LUNASLATE_WALL, new WallBlock(BlockBehaviour.Properties.ofFullCopy(COBBLED_LUNASLATE)));
 
     public static final Block MOON_BASALT = BLOCKS.registerWithItem(Constant.Block.MOON_BASALT, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F).requiresCorrectToolForDrops()));
-    public static final Block MOON_BASALT_SLAB = BLOCKS.registerWithItem(Constant.Block.MOON_BASALT_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(MOON_BASALT).strength(2.5F, 6.0F)));
     public static final Block MOON_BASALT_STAIRS = BLOCKS.registerWithItem(Constant.Block.MOON_BASALT_STAIRS, new StairBlock(MOON_BASALT.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(MOON_BASALT)));
+    public static final Block MOON_BASALT_SLAB = BLOCKS.registerWithItem(Constant.Block.MOON_BASALT_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(MOON_BASALT).strength(2.5F, 6.0F)));
     public static final Block MOON_BASALT_WALL = BLOCKS.registerWithItem(Constant.Block.MOON_BASALT_WALL, new WallBlock(BlockBehaviour.Properties.ofFullCopy(MOON_BASALT)));
 
     public static final Block MOON_BASALT_BRICK = BLOCKS.registerWithItem(Constant.Block.MOON_BASALT_BRICK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.5F, 6.0F).requiresCorrectToolForDrops()));
-    public static final Block MOON_BASALT_BRICK_SLAB = BLOCKS.registerWithItem(Constant.Block.MOON_BASALT_BRICK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(MOON_BASALT_BRICK).strength(3.0F, 6.0F)));
     public static final Block MOON_BASALT_BRICK_STAIRS = BLOCKS.registerWithItem(Constant.Block.MOON_BASALT_BRICK_STAIRS, new StairBlock(MOON_BASALT_BRICK.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(MOON_BASALT_BRICK)));
+    public static final Block MOON_BASALT_BRICK_SLAB = BLOCKS.registerWithItem(Constant.Block.MOON_BASALT_BRICK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(MOON_BASALT_BRICK).strength(3.0F, 6.0F)));
     public static final Block MOON_BASALT_BRICK_WALL = BLOCKS.registerWithItem(Constant.Block.MOON_BASALT_BRICK_WALL, new WallBlock(BlockBehaviour.Properties.ofFullCopy(MOON_BASALT_BRICK)));
 
     public static final Block CRACKED_MOON_BASALT_BRICK = BLOCKS.registerWithItem(Constant.Block.CRACKED_MOON_BASALT_BRICK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F).requiresCorrectToolForDrops()));
-    public static final Block CRACKED_MOON_BASALT_BRICK_SLAB = BLOCKS.registerWithItem(Constant.Block.CRACKED_MOON_BASALT_BRICK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(CRACKED_MOON_BASALT_BRICK).strength(2.5F, 6.0F)));
     public static final Block CRACKED_MOON_BASALT_BRICK_STAIRS = BLOCKS.registerWithItem(Constant.Block.CRACKED_MOON_BASALT_BRICK_STAIRS, new StairBlock(CRACKED_MOON_BASALT_BRICK.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(CRACKED_MOON_BASALT_BRICK)));
+    public static final Block CRACKED_MOON_BASALT_BRICK_SLAB = BLOCKS.registerWithItem(Constant.Block.CRACKED_MOON_BASALT_BRICK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(CRACKED_MOON_BASALT_BRICK).strength(2.5F, 6.0F)));
     public static final Block CRACKED_MOON_BASALT_BRICK_WALL = BLOCKS.registerWithItem(Constant.Block.CRACKED_MOON_BASALT_BRICK_WALL, new WallBlock(BlockBehaviour.Properties.ofFullCopy(CRACKED_MOON_BASALT_BRICK)));
-
-    public static final Block FALLEN_METEOR = BLOCKS.registerWithItem(Constant.Block.FALLEN_METEOR, new FallenMeteorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F).randomTicks().noOcclusion().sound(SoundType.BASALT).requiresCorrectToolForDrops()));
 
     // MARS NATURAL
     public static final Block MARS_SURFACE_ROCK = BLOCKS.registerWithItem(Constant.Block.MARS_SURFACE_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).instrument(NoteBlockInstrument.BASEDRUM).destroyTime(2.2F).requiresCorrectToolForDrops()));
     public static final Block MARS_SUB_SURFACE_ROCK = BLOCKS.registerWithItem(Constant.Block.MARS_SUB_SURFACE_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).instrument(NoteBlockInstrument.BASEDRUM).destroyTime(2.6F).requiresCorrectToolForDrops()));
 
     public static final Block MARS_STONE = BLOCKS.registerWithItem(Constant.Block.MARS_STONE, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).instrument(NoteBlockInstrument.BASEDRUM).destroyTime(3.0F).requiresCorrectToolForDrops()));
-    public static final Block MARS_STONE_SLAB = BLOCKS.registerWithItem(Constant.Block.MARS_STONE_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(MARS_STONE).strength(3.5F, 6.0F)));
     public static final Block MARS_STONE_STAIRS = BLOCKS.registerWithItem(Constant.Block.MARS_STONE_STAIRS, new StairBlock(MARS_STONE.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(MARS_STONE)));
+    public static final Block MARS_STONE_SLAB = BLOCKS.registerWithItem(Constant.Block.MARS_STONE_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(MARS_STONE).strength(3.5F, 6.0F)));
     public static final Block MARS_STONE_WALL = BLOCKS.registerWithItem(Constant.Block.MARS_STONE_WALL, new WallBlock(BlockBehaviour.Properties.ofFullCopy(MARS_STONE)));
 
     public static final Block MARS_COBBLESTONE = BLOCKS.registerWithItem(Constant.Block.MARS_COBBLESTONE, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).instrument(NoteBlockInstrument.BASEDRUM).destroyTime(3.0F).requiresCorrectToolForDrops()));
-    public static final Block MARS_COBBLESTONE_SLAB = BLOCKS.registerWithItem(Constant.Block.MARS_COBBLESTONE_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(MARS_COBBLESTONE).strength(3.5F, 6.0F)));
     public static final Block MARS_COBBLESTONE_STAIRS = BLOCKS.registerWithItem(Constant.Block.MARS_COBBLESTONE_STAIRS, new StairBlock(MARS_COBBLESTONE.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(MARS_COBBLESTONE)));
+    public static final Block MARS_COBBLESTONE_SLAB = BLOCKS.registerWithItem(Constant.Block.MARS_COBBLESTONE_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(MARS_COBBLESTONE).strength(3.5F, 6.0F)));
     public static final Block MARS_COBBLESTONE_WALL = BLOCKS.registerWithItem(Constant.Block.MARS_COBBLESTONE_WALL, new WallBlock(BlockBehaviour.Properties.ofFullCopy(MARS_COBBLESTONE)));
 
     // ASTEROID NATURAL
@@ -190,35 +177,6 @@ public class GCBlocks {
     public static final Block PUMICE = BLOCKS.registerWithItem(Constant.Block.PUMICE, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_YELLOW).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F).requiresCorrectToolForDrops()));
     public static final Block VAPOR_SPOUT = BLOCKS.registerWithItem(Constant.Block.VAPOR_SPOUT, new VaporSpoutBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 2.0F).requiresCorrectToolForDrops()));
 
-    // MISC DECOR
-    public static final Block WALKWAY = BLOCKS.registerWithItem(Constant.Block.WALKWAY, new WalkwayBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(5.0f, 5.0f).sound(SoundType.METAL).requiresCorrectToolForDrops()));
-    public static final Block FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.FLUID_PIPE_WALKWAY, new FluidPipeWalkway(BlockBehaviour.Properties.ofFullCopy(WALKWAY)));
-    public static final Block WIRE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.WIRE_WALKWAY, new WireWalkway(BlockBehaviour.Properties.ofFullCopy(WALKWAY)));
-    public static final Block TIN_LADDER = BLOCKS.registerWithItem(Constant.Block.TIN_LADDER, new TinLadderBlock(BlockBehaviour.Properties.of().forceSolidOff().noOcclusion().pushReaction(PushReaction.DESTROY).strength(1.0f, 1.0f).sound(SoundType.METAL).requiresCorrectToolForDrops()));
-    public static final Block IRON_GRATING = BLOCKS.registerWithItem(Constant.Block.IRON_GRATING, new IronGratingBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(2.5f, 6.0f).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
-
-    // SPECIAL
-    public static final Block ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.ALUMINUM_WIRE, new AluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).mapColor(MapColor.NONE).forceSolidOn()));
-    public static final Block SEALABLE_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.SEALABLE_ALUMINUM_WIRE, new SealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(ALUMINUM_DECORATION.block())));
-    public static final Block HEAVY_SEALABLE_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE, new HeavySealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(ALUMINUM_DECORATION.block())));
-    public static final Block GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.GLASS_FLUID_PIPE, new GlassFluidPipeBlock(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).sound(SoundType.GLASS).requiresCorrectToolForDrops().forceSolidOn()));
-    public static final Block FUELING_PAD = BLOCKS.registerWithItem(Constant.Block.FUELING_PAD, new FuelPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 10.0F).requiresCorrectToolForDrops()));
-    public static final Block ROCKET_LAUNCH_PAD = BLOCKS.registerWithItem(Constant.Block.ROCKET_LAUNCH_PAD, new LaunchPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 10.0F).requiresCorrectToolForDrops()));
-    public static final Block ROCKET_WORKBENCH = BLOCKS.registerWithItem(Constant.Block.ROCKET_WORKBENCH, new RocketWorkbench(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F)));
-    public static final Block PARACHEST = BLOCKS.registerWithItem(Constant.Block.PARACHEST, new ParachestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST)));
-
-    // LIGHT PANELS
-    public static final Block SQUARE_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.SQUARE_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)));
-    public static final Block SPOTLIGHT_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.SPOTLIGHT_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL), 3.0f));
-    public static final Block LINEAR_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.LINEAR_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL), 5.0f));
-    public static final Block DASHED_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.DASHED_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL), 1.0f));
-    public static final Block DIAGONAL_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.DIAGONAL_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL), 1.0f));
-
-    // VACUUM GLASS
-    public static final Block VACUUM_GLASS = BLOCKS.registerWithItem(Constant.Block.VACUUM_GLASS, new VacuumGlassBlock(BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.GLASS)));
-    public static final Block CLEAR_VACUUM_GLASS = BLOCKS.registerWithItem(Constant.Block.CLEAR_VACUUM_GLASS, new VacuumGlassBlock(BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.GLASS)));
-    public static final Block STRONG_VACUUM_GLASS = BLOCKS.registerWithItem(Constant.Block.STRONG_VACUUM_GLASS, new VacuumGlassBlock(BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.GLASS)));
-
     // ORES
     public static final Block SILICON_ORE = BLOCKS.registerWithItem(Constant.Block.SILICON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(Blocks.STONE, 3.0F, 3.0F)));
     public static final Block DEEPSLATE_SILICON_ORE = BLOCKS.registerWithItem(Constant.Block.DEEPSLATE_SILICON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(Blocks.DEEPSLATE, 4.5F, 3.0F)));
@@ -233,6 +191,7 @@ public class GCBlocks {
     public static final Block LUNASLATE_TIN_ORE = BLOCKS.registerWithItem(Constant.Block.LUNASLATE_TIN_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(LUNASLATE, 5.0F, 5.0F)));
     public static final Block MOON_CHEESE_ORE = BLOCKS.registerWithItem(Constant.Block.MOON_CHEESE_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(MOON_ROCK, 3.0F, 5.0F)));
     public static final Block LUNAR_SAPPHIRE_ORE = BLOCKS.registerWithItem(Constant.Block.LUNAR_SAPPHIRE_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(MOON_ROCK, 3.0F, 5.0F)));
+    public static final Block FALLEN_METEOR = BLOCKS.registerWithItem(Constant.Block.FALLEN_METEOR, new FallenMeteorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F).randomTicks().noOcclusion().sound(SoundType.BASALT).requiresCorrectToolForDrops()));
 
     public static final Block MARS_IRON_ORE = BLOCKS.registerWithItem(Constant.Block.MARS_IRON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(MARS_STONE, 3.5F, 3.0F)));
     public static final Block MARS_COPPER_ORE = BLOCKS.registerWithItem(Constant.Block.MARS_COPPER_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(MARS_STONE, 5.0F, 5.0F)));
@@ -298,6 +257,35 @@ public class GCBlocks {
     // MOON VILLAGER SPECIAL
     public static final Block LUNAR_CARTOGRAPHY_TABLE = BLOCKS.registerWithItem(Constant.Block.LUNAR_CARTOGRAPHY_TABLE, new LunarCartographyTableBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).ignitedByLava().instrument(NoteBlockInstrument.BASS).strength(2.5F).sound(SoundType.WOOD)));
 
+    // MISC DECOR
+    public static final Block WALKWAY = BLOCKS.registerWithItem(Constant.Block.WALKWAY, new WalkwayBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0f, 5.0f).sound(SoundType.METAL).requiresCorrectToolForDrops()));
+    public static final Block FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.FLUID_PIPE_WALKWAY, new FluidPipeWalkway(BlockBehaviour.Properties.ofFullCopy(WALKWAY)));
+    public static final Block WIRE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.WIRE_WALKWAY, new WireWalkway(BlockBehaviour.Properties.ofFullCopy(WALKWAY)));
+    public static final Block TIN_LADDER = BLOCKS.registerWithItem(Constant.Block.TIN_LADDER, new TinLadderBlock(BlockBehaviour.Properties.of().forceSolidOff().noOcclusion().pushReaction(PushReaction.DESTROY).strength(1.0f, 1.0f).sound(SoundType.METAL).requiresCorrectToolForDrops()));
+    public static final Block IRON_GRATING = BLOCKS.registerWithItem(Constant.Block.IRON_GRATING, new IronGratingBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(2.5f, 6.0f).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
+
+    // SPECIAL
+    public static final Block ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.ALUMINUM_WIRE, new AluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).forceSolidOn()));
+    public static final Block SEALABLE_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.SEALABLE_ALUMINUM_WIRE, new SealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(TIN_DECORATION.block())));
+    public static final Block HEAVY_SEALABLE_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE, new HeavySealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(TIN_DECORATION.block())));
+    public static final Block GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.GLASS_FLUID_PIPE, new GlassFluidPipeBlock(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).sound(SoundType.GLASS).requiresCorrectToolForDrops().forceSolidOn()));
+    public static final Block ROCKET_LAUNCH_PAD = BLOCKS.registerWithItem(Constant.Block.ROCKET_LAUNCH_PAD, new LaunchPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 10.0F).requiresCorrectToolForDrops()));
+    public static final Block FUELING_PAD = BLOCKS.registerWithItem(Constant.Block.FUELING_PAD, new FuelPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 10.0F).requiresCorrectToolForDrops()));
+    public static final Block ROCKET_WORKBENCH = BLOCKS.registerWithItem(Constant.Block.ROCKET_WORKBENCH, new RocketWorkbench(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F)));
+    public static final Block PARACHEST = BLOCKS.registerWithItem(Constant.Block.PARACHEST, new ParachestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST)));
+
+    // LIGHT PANELS
+    public static final Block SQUARE_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.SQUARE_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)));
+    public static final Block SPOTLIGHT_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.SPOTLIGHT_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL), 3.0f));
+    public static final Block LINEAR_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.LINEAR_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL), 5.0f));
+    public static final Block DASHED_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.DASHED_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL), 1.0f));
+    public static final Block DIAGONAL_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.DIAGONAL_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL), 1.0f));
+
+    // VACUUM GLASS
+    public static final Block VACUUM_GLASS = BLOCKS.registerWithItem(Constant.Block.VACUUM_GLASS, new VacuumGlassBlock(BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.GLASS)));
+    public static final Block CLEAR_VACUUM_GLASS = BLOCKS.registerWithItem(Constant.Block.CLEAR_VACUUM_GLASS, new VacuumGlassBlock(BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.GLASS)));
+    public static final Block STRONG_VACUUM_GLASS = BLOCKS.registerWithItem(Constant.Block.STRONG_VACUUM_GLASS, new VacuumGlassBlock(BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.GLASS)));
+
     // MISC WORLD GEN
     public static final Block CAVERNOUS_VINES = BLOCKS.registerWithItem(Constant.Block.CAVERNOUS_VINES, new CavernousVinesBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).randomTicks().noCollission().lightLevel(CavernousVines.emission(8)).instabreak().sound(SoundType.CAVE_VINES).pushReaction(PushReaction.DESTROY)));
     public static final Block CAVERNOUS_VINES_PLANT = BLOCKS.register(Constant.Block.CAVERNOUS_VINES_PLANT, new CavernousVinesPlantBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).noCollission().lightLevel(CavernousVines.emission(8)).instabreak().sound(SoundType.CAVE_VINES).pushReaction(PushReaction.DESTROY).dropsLike(CAVERNOUS_VINES)));
@@ -322,18 +310,28 @@ public class GCBlocks {
     public static final Block ELECTRIC_FURNACE = BLOCKS.registerWithItem(Constant.Block.ELECTRIC_FURNACE, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.ELECTRIC_FURNACE)));
     public static final Block ELECTRIC_ARC_FURNACE = BLOCKS.registerWithItem(Constant.Block.ELECTRIC_ARC_FURNACE, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.ELECTRIC_ARC_FURNACE)));
     public static final Block REFINERY = BLOCKS.registerWithItem(Constant.Block.REFINERY, new RefineryBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
+    public static final Block FUEL_LOADER = BLOCKS.registerWithItem(Constant.Block.FUEL_LOADER, new FuelLoaderBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
     public static final Block OXYGEN_COLLECTOR = BLOCKS.registerWithItem(Constant.Block.OXYGEN_COLLECTOR, new OxygenCollectorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
     public static final Block OXYGEN_SEALER = BLOCKS.registerWithItem(Constant.Block.OXYGEN_SEALER, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.OXYGEN_SEALER)));
     public static final Block OXYGEN_BUBBLE_DISTRIBUTOR = BLOCKS.registerWithItem(Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR)));
     public static final Block OXYGEN_DECOMPRESSOR = BLOCKS.registerWithItem(Constant.Block.OXYGEN_DECOMPRESSOR, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.OXYGEN_DECOMPRESSOR)));
     public static final Block OXYGEN_COMPRESSOR = BLOCKS.registerWithItem(Constant.Block.OXYGEN_COMPRESSOR, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.OXYGEN_COMPRESSOR)));
     public static final Block OXYGEN_STORAGE_MODULE = BLOCKS.registerWithItem(Constant.Block.OXYGEN_STORAGE_MODULE, new ResourceStorageBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.OXYGEN_STORAGE_MODULE)));
-    public static final Block FUEL_LOADER = BLOCKS.registerWithItem(Constant.Block.FUEL_LOADER, new FuelLoaderBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
     public static final Block FOOD_CANNER = BLOCKS.registerWithItem(Constant.Block.FOOD_CANNER, new FoodCannerBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops()));
 
     public static final AirlockBlock AIR_LOCK_FRAME = BLOCKS.registerWithItem(Constant.Block.AIR_LOCK_FRAME, new AirlockBlock(false, BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).mapColor(MapColor.COLOR_GRAY)));
     public static final AirlockBlock AIR_LOCK_CONTROLLER = BLOCKS.registerWithItem(Constant.Block.AIR_LOCK_CONTROLLER, new AirlockBlock(true, BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).mapColor(MapColor.COLOR_GRAY)));
     public static final Block AIR_LOCK_SEAL = BLOCKS.register(Constant.Block.AIR_LOCK_SEAL, new AirlockSealBlock(BlockBehaviour.Properties.ofFullCopy(AIR_LOCK_FRAME).strength(-1.0f, 3600000.0f).noLootTable().isValidSpawn(GCBlocks::never)));
+
+    // TORCHES
+    public static final Block GLOWSTONE_TORCH = BLOCKS.register(Constant.Block.GLOWSTONE_TORCH, new GlowstoneTorchBlock(BlockBehaviour.Properties.of().noCollission().instabreak().lightLevel(blockStatex -> 14).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY)));
+    public static final Block UNLIT_TORCH = BLOCKS.register(Constant.Block.UNLIT_TORCH, new UnlitTorchBlock(BlockBehaviour.Properties.of().noCollission().instabreak().lightLevel(blockStatex -> 0).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY)));
+    public static final Block GLOWSTONE_WALL_TORCH = BLOCKS.register(Constant.Block.GLOWSTONE_WALL_TORCH, new GlowstoneWallTorchBlock(BlockBehaviour.Properties.ofFullCopy(GLOWSTONE_TORCH).dropsLike(GLOWSTONE_TORCH)));
+    public static final Block UNLIT_WALL_TORCH = BLOCKS.register(Constant.Block.UNLIT_WALL_TORCH, new UnlitWallTorchBlock(BlockBehaviour.Properties.ofFullCopy(UNLIT_TORCH).dropsLike(UNLIT_TORCH)));
+
+    // LANTERNS - Don't use registerWithItem in order for the torches to be before the lanterns
+    public static final Block GLOWSTONE_LANTERN = BLOCKS.register(Constant.Block.GLOWSTONE_LANTERN, new GlowstoneLanternBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.LANTERN)));
+    public static final Block UNLIT_LANTERN = BLOCKS.register(Constant.Block.UNLIT_LANTERN, new UnlitLanternBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.LANTERN).lightLevel(state -> 0)));
 
     public static void register() {
         FlammableBlockRegistry.getDefaultInstance().add(FUEL, 80, 130);

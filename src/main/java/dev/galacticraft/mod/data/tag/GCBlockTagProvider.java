@@ -380,8 +380,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         String decoSetId;
         for (GCBlockRegistry.DecorationSet decorationSet : decorations) {
-            slabBuilder.add(decorationSet.slab(), decorationSet.detailedSlab());
             stairsBuilder.add(decorationSet.stairs(), decorationSet.detailedStairs());
+            slabBuilder.add(decorationSet.slab(), decorationSet.detailedSlab());
             wallBuilder.add(decorationSet.wall(), decorationSet.detailedWall());
 
             decoSetId = decorationSet.block().getDescriptionId();

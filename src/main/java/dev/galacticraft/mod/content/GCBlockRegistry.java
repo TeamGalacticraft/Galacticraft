@@ -53,35 +53,35 @@ public class GCBlockRegistry extends GCRegistry<Block> {
     public DecorationSet registerDecoration(String id, BlockBehaviour.Properties properties, float slabHardness, float slabResistance) {
         Block decoration = register(id, new Block(properties));
         BlockBehaviour.Properties slabProperties = BlockBehaviour.Properties.ofFullCopy(decoration).strength(slabHardness, slabResistance);
-        SlabBlock decorationSlab = register(id + "_slab", new SlabBlock(slabProperties));
         StairBlock decorationStairs = register(id + "_stairs", new StairBlock(decoration.defaultBlockState(), properties));
+        SlabBlock decorationSlab = register(id + "_slab", new SlabBlock(slabProperties));
         WallBlock decorationWall = register(id + "_wall", new WallBlock(properties));
         Block detailedDecoration = register("detailed_" + id, new Block(properties));
-        SlabBlock detailedDecorationSlab = register("detailed_" + id + "_slab", new SlabBlock(slabProperties));
         StairBlock detailedDecorationStairs = register("detailed_" + id + "_stairs", new StairBlock(detailedDecoration.defaultBlockState(), properties));
+        SlabBlock detailedDecorationSlab = register("detailed_" + id + "_slab", new SlabBlock(slabProperties));
         WallBlock detailedDecorationWall = register("detailed_" + id + "_wall", new WallBlock(properties));
         Item.Properties itemProperties = new Item.Properties();
         BlockItem decorationItem = ITEMS.register(id, new BlockItem(decoration, itemProperties));
-        BlockItem decorationSlabItem = ITEMS.register(id + "_slab", new BlockItem(decorationSlab, itemProperties));
         BlockItem decorationStairsItem = ITEMS.register(id + "_stairs", new BlockItem(decorationStairs, itemProperties));
+        BlockItem decorationSlabItem = ITEMS.register(id + "_slab", new BlockItem(decorationSlab, itemProperties));
         BlockItem decorationWallItem = ITEMS.register(id + "_wall", new BlockItem(decorationWall, itemProperties));
         BlockItem detailedDecorationItem = ITEMS.register("detailed_" + id, new BlockItem(detailedDecoration, itemProperties));
-        BlockItem detailedDecorationSlabItem = ITEMS.register("detailed_" + id + "_slab", new BlockItem(detailedDecorationSlab, itemProperties));
         BlockItem detailedDecorationStairsItem = ITEMS.register("detailed_" + id + "_stairs", new BlockItem(detailedDecorationStairs, itemProperties));
+        BlockItem detailedDecorationSlabItem = ITEMS.register("detailed_" + id + "_slab", new BlockItem(detailedDecorationSlab, itemProperties));
         BlockItem detailedDecorationWallItem = ITEMS.register("detailed_" + id + "_wall", new BlockItem(detailedDecorationWall, itemProperties));
         DecorationSet decorationSet = new DecorationSet(
-                decoration, decorationSlab, decorationStairs, decorationWall, detailedDecoration, detailedDecorationSlab, detailedDecorationStairs, detailedDecorationWall,
-                decorationItem, decorationSlabItem, decorationStairsItem, decorationWallItem, detailedDecorationItem, detailedDecorationSlabItem, detailedDecorationStairsItem, detailedDecorationWallItem
+                decoration, decorationStairs, decorationSlab, decorationWall, detailedDecoration, detailedDecorationStairs, detailedDecorationSlab, detailedDecorationWall,
+                decorationItem, decorationStairsItem, decorationSlabItem, decorationWallItem, detailedDecorationItem, detailedDecorationStairsItem, detailedDecorationSlabItem, detailedDecorationWallItem
         );
         // Fabric registry sync issue?
         if (FabricDataGenHelper.ENABLED) {
             Item.BY_BLOCK.put(decoration, decorationItem);
-            Item.BY_BLOCK.put(decorationSlab, decorationSlabItem);
             Item.BY_BLOCK.put(decorationStairs, decorationStairsItem);
+            Item.BY_BLOCK.put(decorationSlab, decorationSlabItem);
             Item.BY_BLOCK.put(decorationWall, decorationWallItem);
             Item.BY_BLOCK.put(detailedDecoration, detailedDecorationItem);
-            Item.BY_BLOCK.put(detailedDecorationSlab, detailedDecorationSlabItem);
             Item.BY_BLOCK.put(detailedDecorationStairs, detailedDecorationStairsItem);
+            Item.BY_BLOCK.put(detailedDecorationSlab, detailedDecorationSlabItem);
             Item.BY_BLOCK.put(detailedDecorationWall, detailedDecorationWallItem);
         }
         this.decorations.add(decorationSet);
@@ -93,10 +93,10 @@ public class GCBlockRegistry extends GCRegistry<Block> {
     }
 
     public record DecorationSet(
-            Block block, SlabBlock slab, StairBlock stairs, WallBlock wall,
-            Block detailedBlock, SlabBlock detailedSlab, StairBlock detailedStairs, WallBlock detailedWall,
-            BlockItem item, BlockItem slabItem, BlockItem stairsItem, BlockItem wallItem,
-            BlockItem detailedItem, BlockItem detailedSlabItem, BlockItem detailedStairsItem, BlockItem detailedWallItem
+            Block block, StairBlock stairs, SlabBlock slab, WallBlock wall,
+            Block detailedBlock, StairBlock detailedStairs, SlabBlock detailedSlab, WallBlock detailedWall,
+            BlockItem item, BlockItem stairsItem, BlockItem slabItem, BlockItem wallItem,
+            BlockItem detailedItem, BlockItem detailedStairsItem, BlockItem detailedSlabItem, BlockItem detailedWallItem
     ) implements ItemLike {
         @Override
         public Item asItem() {
