@@ -36,6 +36,7 @@ import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
+import dev.galacticraft.machinelib.api.util.ItemStackUtil;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
@@ -167,6 +168,18 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
     @Override
     protected @NotNull MachineStatus workingStatus(RecipeHolder<FabricationRecipe> recipe) {
         return GCMachineStatuses.FABRICATING;
+    }
+
+    @Override
+    protected @Nullable RecipeHolder<FabricationRecipe> findValidRecipe(@NotNull Level world) {
+        if (ItemStackUtil.create(this.itemStorage().slot(DIAMOND_SLOT)).is(ConventionalItemTags.DIAMOND_GEMS)
+                && ItemStackUtil.create(this.itemStorage().slot(SILICON_SLOT_1)).is(GCItemTags.SILICONS)
+                && ItemStackUtil.create(this.itemStorage().slot(SILICON_SLOT_2)).is(GCItemTags.SILICONS)
+                && ItemStackUtil.create(this.itemStorage().slot(REDSTONE_SLOT)).is(ConventionalItemTags.REDSTONE_DUSTS)) {
+            return super.findValidRecipe(world);
+        }
+
+        return null;
     }
 
     @Override
