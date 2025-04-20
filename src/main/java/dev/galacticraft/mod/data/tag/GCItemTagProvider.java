@@ -163,6 +163,10 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         tag(GCTags.COMPRESSED_TIN)
                 .add(GCItems.COMPRESSED_TIN);
 
+        tag(GCTags.ROCKET_STORAGE_UPGRADE_ITEMS)
+                .forceAddTag(ConventionalItemTags.WOODEN_CHESTS)
+                .forceAddTag(ConventionalItemTags.WOODEN_BARRELS);
+
         tag(GCTags.EVOLVED_CREEPER_DROP_MUSIC_DISCS)
                 .add(GCItems.LEGACY_MUSIC_DISC_MARS)
                 .add(GCItems.LEGACY_MUSIC_DISC_MIMAS)

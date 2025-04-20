@@ -230,11 +230,6 @@ public class GCItems {
                     ResourceLocation.withDefaultNamespace("item/empty_slot_pickaxe")),
             List.of(ResourceLocation.withDefaultNamespace("item/empty_slot_ingot"))
     ));
-    // 		this.appliesTo = component;
-    //		this.ingredients = component2;
-    //		this.upgradeDescription = component3;
-    //		this.baseSlotDescription = component4;
-    //		this.additionsSlotDescription = component5;
 
     // VEHICLES
     public static final Item ROCKET = ITEMS.register(Constant.Item.ROCKET, new RocketItem(new Item.Properties()

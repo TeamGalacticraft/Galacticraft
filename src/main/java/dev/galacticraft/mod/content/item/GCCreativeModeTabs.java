@@ -411,6 +411,10 @@ public class GCCreativeModeTabs {
                 tier1.set(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1);
                 output.accept(tier1);
 
+                var tier1Storage = new ItemStack(ROCKET);
+                tier1Storage.set(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1_STORAGE_UPGRADE);
+                output.accept(tier1Storage);
+
                 var creativeRocket = new ItemStack(ROCKET);
                 creativeRocket.set(GCDataComponents.CREATIVE, true);
                 creativeRocket.set(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1);

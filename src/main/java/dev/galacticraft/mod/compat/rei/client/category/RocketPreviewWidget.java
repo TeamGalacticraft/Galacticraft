@@ -22,11 +22,14 @@
 
 package dev.galacticraft.mod.compat.rei.client.category;
 
+import com.mojang.blaze3d.platform.Lighting;
+import dev.galacticraft.mod.client.gui.screen.ingame.RocketWorkbenchScreen;
+import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.util.Mth;
+import net.minecraft.client.gui.screens.inventory.SmithingScreen;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -34,21 +37,19 @@ import java.util.List;
 
 import static dev.galacticraft.mod.Constant.RecipeViewer.*;
 
-public class BaseWidget extends Widget {
+public class RocketPreviewWidget extends Widget {
     private final Point startPoint;
+    private final RocketEntity entity;
 
-    public BaseWidget(Point startPoint) {
+    public RocketPreviewWidget(Point startPoint, RocketEntity entity) {
         this.startPoint = startPoint;
+        this.entity = entity;
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        graphics.blit(RECIPE_VIEWER_DISPLAY_TEXTURE, this.startPoint.x, this.startPoint.y, COMPRESSOR_U, COMPRESSOR_V, COMPRESSOR_WIDTH, COMPRESSOR_HEIGHT);
-
-        int height = Mth.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D);
-        graphics.blit(RECIPE_VIEWER_DISPLAY_TEXTURE, this.startPoint.x + 2, this.startPoint.y + 21 + (14 - height), 82, 77 + (14 - height), 14, height);
-        int width = Mth.ceil((double) (System.currentTimeMillis() / 250L) % 24.0D);
-        graphics.blit(RECIPE_VIEWER_DISPLAY_TEXTURE, this.startPoint.x + 24, this.startPoint.y + 18, 82, 91, width, 17);
+        this.entity.setYRot(this.entity.getYRot() + delta);
+        RocketWorkbenchScreen.renderEntityInInventory(graphics, this.startPoint.x + ROCKET_PREVIEW_X, this.startPoint.y + ROCKET_PREVIEW_Y, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, this.entity);
     }
 
     @Override

@@ -149,6 +149,17 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
                 .save(output);
 
+        RocketRecipeBuilder.create(GCItems.ROCKET)
+                .rocketData(RocketPrefabs.TIER_1_STORAGE_UPGRADE)
+                .cone(GCItems.NOSE_CONE)
+                .body(GCItems.TIER_1_HEAVY_DUTY_PLATE)
+                .bodyHeight(4)
+                .fins(GCItems.ROCKET_FIN)
+                .engine(GCItems.ROCKET_ENGINE)
+                .storage(GCTags.ROCKET_STORAGE_UPGRADE_ITEMS)
+                .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                .save(output, getItemName(GCItems.ROCKET) + "_with_storage_upgrade");
+
         // TODO: Rocket Parts
     }
 

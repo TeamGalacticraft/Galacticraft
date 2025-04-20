@@ -27,6 +27,8 @@ import org.jetbrains.annotations.NotNull;
 public interface SolarPanel {
     boolean @NotNull [/*9*/] getBlockage();
 
+    float getTilt(float tickDelta);
+
     boolean followsSun();
 
     boolean nightCollection();

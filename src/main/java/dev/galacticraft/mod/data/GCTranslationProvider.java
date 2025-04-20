@@ -82,6 +82,7 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(RecipeCategory.CIRCUIT_FABRICATOR, "Circuit Fabricating");
         this.add(RecipeCategory.COMPRESSOR, "Compressing");
+        this.add(RecipeCategory.ROCKET_WORKBENCH, "Rocket Crafting");
 
         this.add(BannerPattern.ROCKET + ".white", "White Rocket");
         this.add(BannerPattern.ROCKET + ".orange", "Orange Rocket");
@@ -629,6 +630,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCTags.COMPRESSED_STEEL, "Steel Plates");
         this.tag(GCTags.COMPRESSED_IRON, "Iron Plates");
         this.tag(GCTags.COMPRESSED_TIN, "Tin Plates");
+
+        this.tag(GCTags.ROCKET_STORAGE_UPGRADE_ITEMS, "Rocket Storage Upgrade Items");
         this.tag(GCTags.EVOLVED_CREEPER_DROP_MUSIC_DISCS, "Evolved Creeper Music Disc Drops");
     }
 
