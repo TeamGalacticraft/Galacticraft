@@ -333,6 +333,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .requires(GCItemTags.ALUMINUM_INGOTS)
                 .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_BRONZE)
+                .unlockedBy(getHasName(GCItems.COMPRESSED_COPPER), has(GCItems.COMPRESSED_COPPER))
                 .requires(GCItems.COMPRESSED_COPPER)
                 .requires(GCItems.COMPRESSED_TIN)
                 .save(output);
@@ -352,6 +353,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .requires(ConventionalItemTags.IRON_INGOTS)
                 .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_METEORIC_IRON)
+                .unlockedBy(getHasName(GCItems.METEORIC_IRON_INGOT), has(GCItems.METEORIC_IRON_INGOT))
                 .requires(GCItems.METEORIC_IRON_INGOT)
                 .requires(GCItems.METEORIC_IRON_INGOT)
                 .save(output);
@@ -362,11 +364,12 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .requires(ItemTags.COALS)
                 .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_STEEL)
+                .unlockedBy("has_steel_ingot", has(GCItemTags.STEEL_INGOTS))
                 .requires(GCItemTags.STEEL_INGOTS)
                 .requires(GCItemTags.STEEL_INGOTS)
                 .save(output, BuiltInRegistries.ITEM.getKey(GCItems.COMPRESSED_STEEL).withSuffix("_from_ingots"));
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_TIN)
-                .unlockedBy(getHasName(GCItems.TIN_INGOT), has(GCItems.TIN_INGOT))
+                .unlockedBy(getHasName(GCItems.TIN_INGOT), has(GCItemTags.TIN_INGOTS))
                 .requires(GCItemTags.TIN_INGOTS)
                 .requires(GCItemTags.TIN_INGOTS)
                 .save(output);
@@ -406,10 +409,10 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .save(output);
 
         CircuitFabricatorRecipeBuilder.create(GCItems.BLUE_SOLAR_WAFER, 9)
-                .requires(Items.LAPIS_LAZULI)
+                .requires(ConventionalItemTags.LAPIS_GEMS)
                 .save(output);
         CircuitFabricatorRecipeBuilder.create(GCItems.SOLAR_ARRAY_WAFER, 3)
-                .requires(GCItems.SOLAR_DUST)
+                .requires(GCItemTags.SOLAR_DUSTS)
                 .save(output);
     }
 

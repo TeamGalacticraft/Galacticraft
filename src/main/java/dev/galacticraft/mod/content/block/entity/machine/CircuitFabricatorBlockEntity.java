@@ -44,6 +44,7 @@ import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -83,15 +84,15 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.DIAMOND)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(62, 47)
-                            .filter(ResourceFilters.ofResource(GCItems.SILICON))
+                            .filter(ResourceFilters.itemTag(GCItemTags.SILICONS))
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.SILICON)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(62, 65)
-                            .filter(ResourceFilters.ofResource(GCItems.SILICON))
+                            .filter(ResourceFilters.itemTag(GCItemTags.SILICONS))
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.SILICON)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(107, 72)
-                            .filter(ResourceFilters.ofResource(Items.REDSTONE))
+                            .filter(ResourceFilters.itemTag(ConventionalItemTags.REDSTONE_DUSTS))
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.DUST)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(134, 17),
@@ -166,18 +167,6 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
     @Override
     protected @NotNull MachineStatus workingStatus(RecipeHolder<FabricationRecipe> recipe) {
         return GCMachineStatuses.FABRICATING;
-    }
-
-    @Override
-    protected @Nullable RecipeHolder<FabricationRecipe> findValidRecipe(@NotNull Level world) {
-        if (this.itemStorage().slot(DIAMOND_SLOT).contains(Items.DIAMOND)
-                && this.itemStorage().slot(SILICON_SLOT_1).contains(GCItems.SILICON)
-                && this.itemStorage().slot(SILICON_SLOT_2).contains(GCItems.SILICON)
-                && this.itemStorage().slot(REDSTONE_SLOT).contains(Items.REDSTONE)) {
-            return super.findValidRecipe(world);
-        }
-
-        return null;
     }
 
     @Override

@@ -25,12 +25,14 @@ package dev.galacticraft.mod.compat.rei.common.display;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
+import dev.galacticraft.mod.tag.GCItemTags;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.InputIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -69,10 +71,10 @@ public class DefaultFabricationDisplay extends BasicDisplay {
     private static List<EntryIngredient> getInputs(@Nullable RecipeHolder<FabricationRecipe> recipe) {
         if (recipe == null) return Collections.emptyList();
         List<EntryIngredient> list = new ArrayList<>(5);
-        list.add(EntryIngredients.of(Items.DIAMOND));
-        list.add(EntryIngredients.of(GCItems.SILICON));
-        list.add(EntryIngredients.of(GCItems.SILICON));
-        list.add(EntryIngredients.of(Items.REDSTONE));
+        list.add(EntryIngredients.ofItemTag(ConventionalItemTags.DIAMOND_GEMS));
+        list.add(EntryIngredients.ofItemTag(GCItemTags.SILICONS));
+        list.add(EntryIngredients.ofItemTag(GCItemTags.SILICONS));
+        list.add(EntryIngredients.ofItemTag(ConventionalItemTags.REDSTONE_DUSTS));
         list.add(EntryIngredients.ofIngredient(recipe.value().getIngredients().get(0)));
         return list;
     }
