@@ -29,6 +29,8 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
 public class GCBlockTags {
+    public static final TagKey<Block> FOOTPRINTS = galacticraftTag("footprints");
+
     public static final TagKey<Block> INFINIBURN_MOON = galacticraftTag("infiniburn_moon");
     public static final TagKey<Block> INFINIBURN_VENUS = galacticraftTag("infiniburn_venus");
     public static final TagKey<Block> INFINIBURN_ASTEROID = galacticraftTag("infiniburn_asteroid");
@@ -95,7 +97,6 @@ public class GCBlockTags {
     public static final TagKey<Block> RAW_TITANIUM_BLOCKS = commonTag("storage_blocks/raw_titanium");
 
     public static final TagKey<Block> MACHINES = galacticraftTag("machines");
-    public static final TagKey<Block> FOOTPRINTS = galacticraftTag("footprints");
 
     public static final TagKey<Block> SLABS = galacticraftTag("slabs");
     public static final TagKey<Block> STAIRS = galacticraftTag("stairs");

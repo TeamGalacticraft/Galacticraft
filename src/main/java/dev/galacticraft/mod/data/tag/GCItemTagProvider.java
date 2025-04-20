@@ -423,11 +423,11 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .addTag(GCItemTags.FUEL_BUCKETS)
                 .addTag(GCItemTags.SULFURIC_ACID_BUCKETS);
 
-        this.copy(GCBlockTags.SLABS, GCItemTags.SLABS);
         this.copy(GCBlockTags.STAIRS, GCItemTags.STAIRS);
+        this.copy(GCBlockTags.SLABS, GCItemTags.SLABS);
         this.copy(GCBlockTags.WALLS, GCItemTags.WALLS);
-        this.tag(ItemTags.SLABS).addTag(GCItemTags.SLABS);
         this.tag(ItemTags.STAIRS).addTag(GCItemTags.STAIRS);
+        this.tag(ItemTags.SLABS).addTag(GCItemTags.SLABS);
         this.tag(ItemTags.WALLS).addTag(GCItemTags.WALLS);
 
         this.tag(ConventionalItemTags.STONES)
