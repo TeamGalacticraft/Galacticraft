@@ -137,11 +137,11 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.PARACHUTE.get(DyeColor.GREEN))
                 .add(GCItems.PARACHUTE.get(DyeColor.RED))
                 .add(GCItems.PARACHUTE.get(DyeColor.BLACK));
-        tag(GCItemTags.FREQUENCY_MODULES)
+        this.tag(GCItemTags.FREQUENCY_MODULES)
                 .add(GCItems.FREQUENCY_MODULE);
-        tag(GCItemTags.SHIELD_CONTROLLERS)
+        this.tag(GCItemTags.SHIELD_CONTROLLERS)
                 .add(GCItems.SHIELD_CONTROLLER);
-        tag(GCItemTags.ACCESSORIES)
+        this.tag(GCItemTags.ACCESSORIES)
                 .addTag(GCItemTags.FREQUENCY_MODULES)
                 .addTag(GCItemTags.PARACHUTES)
                 .addTag(GCItemTags.SHIELD_CONTROLLERS);
@@ -152,6 +152,10 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         this.tag(GCItemTags.BATTERIES)
                 .add(GCItems.BATTERY)
                 .add(GCItems.INFINITE_BATTERY);
+
+        this.tag(GCItemTags.ROCKET_STORAGE_UPGRADE_ITEMS)
+                .forceAddTag(ConventionalItemTags.WOODEN_CHESTS)
+                .forceAddTag(ConventionalItemTags.WOODEN_BARRELS);
 
         this.tag(ConventionalItemTags.MUSIC_DISCS)
                 .add(GCItems.LEGACY_MUSIC_DISC_MARS)

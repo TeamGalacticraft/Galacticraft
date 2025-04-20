@@ -26,7 +26,6 @@ import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -34,21 +33,16 @@ import java.util.List;
 
 import static dev.galacticraft.mod.Constant.RecipeViewer.*;
 
-public class BaseWidget extends Widget {
+public class RocketBaseWidget extends Widget {
     private final Point startPoint;
 
-    public BaseWidget(Point startPoint) {
+    public RocketBaseWidget(Point startPoint) {
         this.startPoint = startPoint;
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        graphics.blit(RECIPE_VIEWER_DISPLAY_TEXTURE, this.startPoint.x, this.startPoint.y, COMPRESSOR_U, COMPRESSOR_V, COMPRESSOR_WIDTH, COMPRESSOR_HEIGHT);
-
-        int height = Mth.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D);
-        graphics.blit(RECIPE_VIEWER_DISPLAY_TEXTURE, this.startPoint.x + 2, this.startPoint.y + 21 + (14 - height), 82, 77 + (14 - height), 14, height);
-        int width = Mth.ceil((double) (System.currentTimeMillis() / 250L) % 24.0D);
-        graphics.blit(RECIPE_VIEWER_DISPLAY_TEXTURE, this.startPoint.x + 24, this.startPoint.y + 18, 82, 91, width, 17);
+        graphics.blit(ROCKET_WORKBENCH_DISPLAY_TEXTURE, this.startPoint.x, this.startPoint.y, ROCKET_WORKBENCH_U, ROCKET_WORKBENCH_V, ROCKET_WORKBENCH_WIDTH, ROCKET_WORKBENCH_HEIGHT);
     }
 
     @Override

@@ -128,6 +128,7 @@ public class GCItemTags {
     public static final TagKey<Item> CHEESE_FOODS = commonTag("foods/cheese");
     public static final TagKey<Item> CANNED_FOODS = commonTag("foods/canned");
 
+    public static final TagKey<Item> ROCKET_STORAGE_UPGRADE_ITEMS = galacticraftTag("rocket_storage_upgrade_items");
     public static final TagKey<Item> EVOLVED_CREEPER_DROP_MUSIC_DISCS = galacticraftTag("evolved_creeper_drop_music_discs");
 
     public static final TagKey<Item> SLABS = galacticraftTag("slabs");

@@ -82,6 +82,7 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(RecipeCategory.CIRCUIT_FABRICATOR, "Circuit Fabricating");
         this.add(RecipeCategory.COMPRESSOR, "Compressing");
+        this.add(RecipeCategory.ROCKET_WORKBENCH, "Rocket Crafting");
 
         this.add(BannerPattern.ROCKET + ".white", "White Rocket");
         this.add(BannerPattern.ROCKET + ".orange", "Orange Rocket");
@@ -705,6 +706,8 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.tag(GCItemTags.CHEESE_FOODS, "Cheese Foods");
         this.tag(GCItemTags.CANNED_FOODS, "Canned Foods");
+
+        this.tag(GCItemTags.ROCKET_STORAGE_UPGRADE_ITEMS, "Rocket Storage Upgrade Items");
 
         this.tag(GCItemTags.EVOLVED_CREEPER_DROP_MUSIC_DISCS, "Evolved Creeper Music Disc Drops");
 

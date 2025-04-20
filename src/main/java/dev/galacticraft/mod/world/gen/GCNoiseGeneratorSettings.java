@@ -57,7 +57,7 @@ public class GCNoiseGeneratorSettings {
 //                -32,
 //                false,
 //                false,
-//                true,
+//                false,
 //                false
 //        ));
 
@@ -71,7 +71,7 @@ public class GCNoiseGeneratorSettings {
                 -32,
                 false,
                 false,
-                true,
+                false,
                 false
         ));
     }
@@ -128,33 +128,9 @@ public class GCNoiseGeneratorSettings {
                         )
                 ), // initialDensityWithoutJaggedness
                 DensityFunctions.blendDensity(GCDensityFunctions.getFunction(densityLookup, GCDensityFunctions.Moon.FINAL_DENSITY)), // finalDensity
-                DensityFunctions.interpolated(
-                        DensityFunctions.rangeChoice(
-                                y, -25, 51,
-                                DensityFunctions.noise(noiseLookup.getOrThrow(Noises.ORE_VEININESS), 1.5, 1.5),
-                                DensityFunctions.zero()
-                        )
-                ), // veinToggle
-                DensityFunctions.add(
-                        DensityFunctions.constant(-0.07999999821186066),
-                        DensityFunctions.max(
-                                DensityFunctions.interpolated(
-                                        DensityFunctions.rangeChoice(
-                                                y, -25, 51,
-                                                DensityFunctions.noise(noiseLookup.getOrThrow(Noises.ORE_VEIN_A), 4, 4),
-                                                DensityFunctions.zero()
-                                        )
-                                ).abs(),
-                                DensityFunctions.interpolated(
-                                        DensityFunctions.rangeChoice(
-                                                y, -25, 51,
-                                                DensityFunctions.noise(noiseLookup.getOrThrow(Noises.ORE_VEIN_B), 4, 4),
-                                                DensityFunctions.zero()
-                                        )
-                                ).abs()
-                        )
-                ), // veinRidged
-                DensityFunctions.noise(noiseLookup.getOrThrow(Noises.ORE_GAP)) // veinGap
+                DensityFunctions.zero(), // veinToggle
+                DensityFunctions.zero(), // veinRidged
+                DensityFunctions.zero()  // veinGap
         );
     }
 

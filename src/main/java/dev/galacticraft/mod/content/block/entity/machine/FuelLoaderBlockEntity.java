@@ -65,6 +65,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FuelLoaderBlockEntity extends MachineBlockEntity {
     public static final long TRANSFER_RATE = 500;
     public static final int CHARGE_SLOT = 0;
@@ -105,10 +108,11 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     private BlockPos connectionPos = BlockPos.ZERO;
     private int amount = 0;
     public Dockable linkedRocket = null;
-    private Direction check = null;
+    private List<Direction> check = new ArrayList<Direction>();
 
     public FuelLoaderBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.FUEL_LOADER, pos, state, SPEC);
+        Direction.stream().forEach(direction -> this.check.add(direction));
     }
 
     @NotNull
@@ -154,17 +158,19 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
 
     @Override
     public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        if (this.check != null) {
-            BlockPos launchPad = this.worldPosition.relative(this.check);
-            if (this.level.getBlockState(launchPad).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD) {
-                launchPad = launchPad.offset(AbstractLaunchPad.partToCenterPos(level.getBlockState(launchPad).getValue(AbstractLaunchPad.PART)));
-                if (this.level.getBlockState(launchPad).getBlock() instanceof AbstractLaunchPad
-                        && this.level.getBlockState(launchPad).getValue(AbstractLaunchPad.PART) == AbstractLaunchPad.Part.CENTER
-                        && this.level.getBlockEntity(launchPad) instanceof LaunchPadBlockEntity) {
-                    this.connectionPos = launchPad;
+        if (this.check.size() > 0) {
+            for (Direction direction : this.check) {
+                BlockPos launchPad = this.worldPosition.relative(direction);
+                if (this.level.getBlockState(launchPad).getBlock() == GCBlocks.ROCKET_LAUNCH_PAD) {
+                    launchPad = launchPad.offset(AbstractLaunchPad.partToCenterPos(level.getBlockState(launchPad).getValue(AbstractLaunchPad.PART)));
+                    if (this.level.getBlockState(launchPad).getBlock() instanceof AbstractLaunchPad
+                            && this.level.getBlockState(launchPad).getValue(AbstractLaunchPad.PART) == AbstractLaunchPad.Part.CENTER
+                            && this.level.getBlockEntity(launchPad) instanceof LaunchPadBlockEntity) {
+                        this.connectionPos = launchPad;
+                    }
                 }
             }
-            this.check = null;
+            this.check.clear();
         }
 
         if (this.level.isLoaded(this.connectionPos) && this.level.getBlockEntity(this.connectionPos) instanceof LaunchPadBlockEntity launchPad) {
@@ -198,7 +204,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     }
 
     public void updateConnections(Direction direction) {
-        this.check = direction;
+        this.check.add(direction);
     }
 
     @Override

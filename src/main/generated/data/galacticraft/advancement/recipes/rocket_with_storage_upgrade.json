@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_compressed_bronze": {
+    "has_heavy_plating": {
       "conditions": {
         "items": [
           {
-            "items": "galacticraft:compressed_bronze"
+            "items": "galacticraft:heavy_plating"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "galacticraft:heavy_plating_flipped"
+        "recipe": "minecraft:rocket_with_storage_upgrade"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_compressed_bronze"
+      "has_heavy_plating"
     ]
   ],
   "rewards": {
     "recipes": [
-      "galacticraft:heavy_plating_flipped"
+      "minecraft:rocket_with_storage_upgrade"
     ]
   }
 }

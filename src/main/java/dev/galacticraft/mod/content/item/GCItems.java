@@ -191,11 +191,6 @@ public class GCItems {
                     ResourceLocation.withDefaultNamespace("item/empty_slot_pickaxe")),
             List.of(ResourceLocation.withDefaultNamespace("item/empty_slot_ingot"))
     ));
-    // 		this.appliesTo = component;
-    //		this.ingredients = component2;
-    //		this.upgradeDescription = component3;
-    //		this.baseSlotDescription = component4;
-    //		this.additionsSlotDescription = component5;
 
     // BATTERIES
     public static final Item BATTERY = ITEMS.register(Constant.Item.BATTERY, new BatteryItem(new Item.Properties().stacksTo(1), 15000, 500));
