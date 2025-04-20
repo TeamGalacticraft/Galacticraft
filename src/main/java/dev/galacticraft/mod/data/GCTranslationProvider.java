@@ -1013,12 +1013,12 @@ public class GCTranslationProvider extends TranslationProvider {
 
     protected void decorationSet(DecorationSet decoSet, String translation) {
         this.block(decoSet.block(), translation);
-        this.block(decoSet.slab(), translation + " Slab");
         this.block(decoSet.stairs(), translation + " Stairs");
+        this.block(decoSet.slab(), translation + " Slab");
         this.block(decoSet.wall(), translation + " Wall");
         this.block(decoSet.detailedBlock(), "Detailed " + translation);
-        this.block(decoSet.detailedSlab(), "Detailed " + translation + " Slab");
         this.block(decoSet.detailedStairs(), "Detailed " + translation + " Stairs");
+        this.block(decoSet.detailedSlab(), "Detailed " + translation + " Slab");
         this.block(decoSet.detailedWall(), "Detailed " + translation + " Wall");
     }
 
