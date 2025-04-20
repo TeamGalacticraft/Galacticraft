@@ -55,14 +55,25 @@ public class AirlockBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        if (controller)
+        if (this.controller)
             return new AirlockControllerBlockEntity(blockPos, blockState);
         return null;
     }
 
     @Override
+    public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState newState, boolean moved) {
+        if (this.controller) {
+            BlockEntity blockEntity = level.getBlockEntity(blockPos);
+            if (blockEntity instanceof AirlockControllerBlockEntity airlockController) {
+                airlockController.unsealAirLock();
+            }
+        }
+        super.onRemove(blockState, level, blockPos, newState, moved);
+    }
+
+    @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-        if (!controller)
+        if (!this.controller)
             return InteractionResult.PASS;
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;

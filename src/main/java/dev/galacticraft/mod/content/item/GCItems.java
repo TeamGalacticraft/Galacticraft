@@ -26,19 +26,13 @@ import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.*;
-import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.GCEntityTypes;
-import dev.galacticraft.mod.content.GCFluids;
-import dev.galacticraft.mod.content.GCJukeboxSongs;
-import dev.galacticraft.mod.content.GCRegistry;
-import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -197,11 +191,6 @@ public class GCItems {
                     ResourceLocation.withDefaultNamespace("item/empty_slot_pickaxe")),
             List.of(ResourceLocation.withDefaultNamespace("item/empty_slot_ingot"))
     ));
-    // 		this.appliesTo = component;
-    //		this.ingredients = component2;
-    //		this.upgradeDescription = component3;
-    //		this.baseSlotDescription = component4;
-    //		this.additionsSlotDescription = component5;
 
     // BATTERIES
     public static final Item BATTERY = ITEMS.register(Constant.Item.BATTERY, new BatteryItem(new Item.Properties().stacksTo(1), 15000, 500));
@@ -215,28 +204,28 @@ public class GCItems {
     // GALACTICRAFT INVENTORY
     public static final GCRegistry.ColorSet<ParachuteItem> PARACHUTE = ITEMS.registerColored(Constant.Item.PARACHUTE, color -> new ParachuteItem(color, new Item.Properties().stacksTo(1)));
 
-    public static final Item OXYGEN_MASK = ITEMS.register(Constant.Item.OXYGEN_MASK, new OxygenMaskItem(new Item.Properties()));
-    public static final Item OXYGEN_GEAR = ITEMS.register(Constant.Item.OXYGEN_GEAR, new OxygenGearItem(new Item.Properties()));
+    public static final Item OXYGEN_MASK = ITEMS.register(Constant.Item.OXYGEN_MASK, new AccessoryItem(new Item.Properties()));
+    public static final Item OXYGEN_GEAR = ITEMS.register(Constant.Item.OXYGEN_GEAR, new AccessoryItem(new Item.Properties()));
 
     public static final Item SMALL_OXYGEN_TANK = ITEMS.register(Constant.Item.SMALL_OXYGEN_TANK, new OxygenTankItem(new Item.Properties(), 1620 * 10)); // 16200 ticks
     public static final Item MEDIUM_OXYGEN_TANK = ITEMS.register(Constant.Item.MEDIUM_OXYGEN_TANK, new OxygenTankItem(new Item.Properties(), 1620 * 20)); //32400 ticks
     public static final Item LARGE_OXYGEN_TANK = ITEMS.register(Constant.Item.LARGE_OXYGEN_TANK, new OxygenTankItem(new Item.Properties(), 1620 * 30)); //48600 ticks
-    public static final Item INFINITE_OXYGEN_TANK = ITEMS.register(Constant.Item.INFINITE_OXYGEN_TANK, new InfiniteOxygenTankItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
+    public static final Item INFINITE_OXYGEN_TANK = ITEMS.register(Constant.Item.INFINITE_OXYGEN_TANK, new InfiniteOxygenTankItem(new Item.Properties().rarity(Rarity.EPIC)));
 
     public static final Item SHIELD_CONTROLLER = ITEMS.register(Constant.Item.SHIELD_CONTROLLER, new AccessoryItem(new Item.Properties()));
-    public static final Item FREQUENCY_MODULE = ITEMS.register(Constant.Item.FREQUENCY_MODULE, new FrequencyModuleItem(new Item.Properties()));
+    public static final Item FREQUENCY_MODULE = ITEMS.register(Constant.Item.FREQUENCY_MODULE, new AccessoryItem(new Item.Properties()));
 
-    public static final Item EMERGENCY_KIT = registerGeneric(Constant.Item.EMERGENCY_KIT);
+    public static final Item EMERGENCY_KIT = ITEMS.register(Constant.Item.EMERGENCY_KIT, new EmergencyKitItem(new Item.Properties().stacksTo(1)));
 
-    public static final Item THERMAL_PADDING_HELMET = ITEMS.register(Constant.Item.THERMAL_PADDING_HELMET, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.HELMET));
-    public static final Item THERMAL_PADDING_CHESTPIECE = ITEMS.register(Constant.Item.THERMAL_PADDING_CHESTPIECE, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.CHESTPLATE));
-    public static final Item THERMAL_PADDING_LEGGINGS = ITEMS.register(Constant.Item.THERMAL_PADDING_LEGGINGS, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.LEGGINGS));
-    public static final Item THERMAL_PADDING_BOOTS = ITEMS.register(Constant.Item.THERMAL_PADDING_BOOTS, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.BOOTS));
+    public static final Item THERMAL_PADDING_HELMET = ITEMS.register(Constant.Item.THERMAL_PADDING_HELMET, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item THERMAL_PADDING_CHESTPIECE = ITEMS.register(Constant.Item.THERMAL_PADDING_CHESTPIECE, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item THERMAL_PADDING_LEGGINGS = ITEMS.register(Constant.Item.THERMAL_PADDING_LEGGINGS, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item THERMAL_PADDING_BOOTS = ITEMS.register(Constant.Item.THERMAL_PADDING_BOOTS, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
 
-    public static final Item ISOTHERMAL_PADDING_HELMET = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_HELMET, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.HELMET));
-    public static final Item ISOTHERMAL_PADDING_CHESTPIECE = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_CHESTPIECE, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.CHESTPLATE));
-    public static final Item ISOTHERMAL_PADDING_LEGGINGS = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_LEGGINGS, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.LEGGINGS));
-    public static final Item ISOTHERMAL_PADDING_BOOTS = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_BOOTS, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.BOOTS));
+    public static final Item ISOTHERMAL_PADDING_HELMET = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_HELMET, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item ISOTHERMAL_PADDING_CHESTPIECE = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_CHESTPIECE, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item ISOTHERMAL_PADDING_LEGGINGS = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_LEGGINGS, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item ISOTHERMAL_PADDING_BOOTS = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_BOOTS, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
 
     // VEHICLES
     public static final Item BUGGY = ITEMS.register(Constant.Item.BUGGY, new BuggyItem(new Item.Properties().stacksTo(1)));
@@ -276,8 +265,9 @@ public class GCItems {
     public static final Item LEGACY_MUSIC_DISC_ORBIT = ITEMS.register(Constant.Item.LEGACY_MUSIC_DISC_ORBIT, new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(GCJukeboxSongs.ORBIT)));
     public static final Item LEGACY_MUSIC_DISC_SPACERACE = ITEMS.register(Constant.Item.LEGACY_MUSIC_DISC_SPACERACE, new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(GCJukeboxSongs.SPACERACE)));
 
-    public static final CannedFoodItem CANNED_FOOD = ITEMS.register(Constant.Item.CANNED_FOOD, new CannedFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(0).saturationModifier(0).build()).stacksTo(1)));
+    // CANNED FOOD
     public static final CannedFoodItem EMPTY_CAN = ITEMS.register(Constant.Item.EMPTY_CAN, new CannedFoodItem(new Item.Properties().food(null)));
+    public static final CannedFoodItem CANNED_FOOD = ITEMS.register(Constant.Item.CANNED_FOOD, new CannedFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(0).saturationModifier(0).build()).stacksTo(1)));
 
     // SPAWN EGGS
     public static final Item MOON_VILLAGER_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.MOON_VILLAGER, new SpawnEggItem(GCEntityTypes.MOON_VILLAGER, 0x74a3cf, 0xba2500, new Item.Properties()));

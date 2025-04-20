@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "galacticraft:item/canned_food_template",
+    "layer0": "galacticraft:item/canned_food",
     "layer1": "galacticraft:item/canned_food_label"
   }
 }

@@ -27,6 +27,7 @@ import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry;
+import dev.galacticraft.mod.content.item.OxygenTankItem;
 import dev.galacticraft.mod.storage.PlaceholderItemStorage;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
@@ -54,51 +55,14 @@ public class GCCreativeModeTabs {
                 output.accept(OXYGEN_MASK);
                 output.accept(OXYGEN_GEAR);
 
-                try (Transaction t = Transaction.openOuter()) {
-                    PlaceholderItemStorage itemStorage = new PlaceholderItemStorage();
-                    ContainerItemContext context = ContainerItemContext.ofSingleSlot(itemStorage);
-
-                    output.accept(SMALL_OXYGEN_TANK);//todo: set directly
-                    itemStorage.setItem(SMALL_OXYGEN_TANK);
-                    OxygenTankItem smallTankItem = (OxygenTankItem) SMALL_OXYGEN_TANK.asItem();
-                    long smallCapacity = smallTankItem.capacity;
-                    long insertedSmall;
-
-                    do {
-                        insertedSmall = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), smallCapacity, t);
-                    } while (insertedSmall > 0 && smallCapacity > 0);
-
-                    output.accept(itemStorage.variant.toStack());
-
-                    output.accept(MEDIUM_OXYGEN_TANK);
-                    itemStorage.setItem(MEDIUM_OXYGEN_TANK);
-                    OxygenTankItem mediumTankItem = (OxygenTankItem) MEDIUM_OXYGEN_TANK.asItem();
-                    long mediumCapacity = mediumTankItem.capacity;
-                    long insertedMedium;
-
-                    do {
-                        insertedMedium = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), mediumCapacity, t);
-                        mediumCapacity -= insertedMedium;
-                    } while (insertedMedium > 0 && mediumCapacity > 0);
-
-                    output.accept(itemStorage.variant.toStack());
-
-                    output.accept(LARGE_OXYGEN_TANK);
-                    itemStorage.setItem(LARGE_OXYGEN_TANK);
-                    OxygenTankItem largeTankItem = (OxygenTankItem) LARGE_OXYGEN_TANK.asItem();
-                    long largeCapacity = largeTankItem.capacity;
-                    long insertedLarge;
-
-                    do {
-                        insertedLarge = context.find(FluidStorage.ITEM).insert(FluidVariant.of(Gases.OXYGEN), largeCapacity, t);
-                        largeCapacity -= insertedLarge;
-                    } while (insertedLarge > 0 && largeCapacity > 0);
-
-                    output.accept(itemStorage.variant.toStack());
-                }
-
-
+                output.accept(SMALL_OXYGEN_TANK);
+                output.accept(OxygenTankItem.getFullTank(SMALL_OXYGEN_TANK));
+                output.accept(MEDIUM_OXYGEN_TANK);
+                output.accept(OxygenTankItem.getFullTank(MEDIUM_OXYGEN_TANK));
+                output.accept(LARGE_OXYGEN_TANK);
+                output.accept(OxygenTankItem.getFullTank(LARGE_OXYGEN_TANK));
                 output.accept(INFINITE_OXYGEN_TANK);
+
                 output.accept(SENSOR_GLASSES);
                 output.accept(FREQUENCY_MODULE);
                 PARACHUTE.colorMap().values().forEach(output::accept);
@@ -110,6 +74,10 @@ public class GCCreativeModeTabs {
                 var tier1 = new ItemStack(ROCKET);
                 tier1.set(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1);
                 output.accept(tier1);
+
+                var tier1Storage = new ItemStack(ROCKET);
+                tier1Storage.set(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1_STORAGE_UPGRADE);
+                output.accept(tier1Storage);
 
                 var creativeRocket = new ItemStack(ROCKET);
                 creativeRocket.set(GCDataComponents.CREATIVE, true);
@@ -509,15 +477,15 @@ public class GCCreativeModeTabs {
             .title(Component.translatable(Translations.ItemGroup.CANNED_FOOD))
             .displayItems((parameters, output) -> {
                 output.accept(EMPTY_CAN);
-                //For every edible food create a creative item of that canned food type
+                // For every edible food create a creative item of that canned food type
                 for (Item item : BuiltInRegistries.ITEM) {
                     if (item.components().has(DataComponents.FOOD)) {
                         if (!(item instanceof CannedFoodItem)) {
-                            //create new canned food item with empty components
+                            // Create new canned food item with empty components
                             ItemStack cannedFoodItem = GCItems.CANNED_FOOD.getDefaultInstance();
-                            //add the default itemstack of the edible item into the canned foods components
-                            CannedFoodItem.add(cannedFoodItem, item.getDefaultInstance());
-                            //add the item to the creative tab
+                            // Add the default itemstack of the edible item into the canned foods components
+                            CannedFoodItem.add(cannedFoodItem, new ItemStack(item, CannedFoodItem.MAX_FOOD));
+                            // Add the item to the creative tab
                             output.accept(cannedFoodItem);
                         }
                     }

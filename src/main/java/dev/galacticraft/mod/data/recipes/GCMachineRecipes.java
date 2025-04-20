@@ -376,21 +376,12 @@ public class GCMachineRecipes extends FabricRecipeProvider {
 
         ShapedCompressorRecipeBuilder.create(GCItems.TIER_1_HEAVY_DUTY_PLATE, 2)
                 .unlockedBy(getHasName(GCItems.COMPRESSED_BRONZE), has(GCItems.COMPRESSED_BRONZE))
-                .define('B', GCItems.COMPRESSED_BRONZE)
-                .define('A', GCItems.COMPRESSED_ALUMINUM)
                 .define('S', GCItems.COMPRESSED_STEEL)
-                .pattern("BAS")
-                .pattern("BAS")
+                .define('A', GCItems.COMPRESSED_ALUMINUM)
+                .define('B', GCItems.COMPRESSED_BRONZE)
+                .pattern("SAB")
+                .pattern("SAB")
                 .save(output);
-
-        ShapedCompressorRecipeBuilder.create(GCItems.TIER_1_HEAVY_DUTY_PLATE, 2)
-                .unlockedBy(getHasName(GCItems.COMPRESSED_BRONZE), has(GCItems.COMPRESSED_BRONZE))
-                .define('B', GCItems.COMPRESSED_BRONZE)
-                .define('A', GCItems.COMPRESSED_ALUMINUM)
-                .define('S', GCItems.COMPRESSED_STEEL)
-                .pattern("SAB")
-                .pattern("SAB")
-                .save(output, BuiltInRegistries.ITEM.getKey(GCItems.TIER_1_HEAVY_DUTY_PLATE).withSuffix("_flipped"));
 
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.TIER_2_HEAVY_DUTY_PLATE)
                 .unlockedBy(getHasName(GCItems.COMPRESSED_METEORIC_IRON), has(GCItems.COMPRESSED_METEORIC_IRON))

@@ -55,4 +55,12 @@ public interface LevelOxygenAccessor {
     default void setBreathableChunk(LevelChunk chunk, int x, int y, int z, boolean value) {
         throw new RuntimeException("This should be overridden by mixin!");
     }
+
+    default boolean getDefaultBreathable() {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
+
+    default void setDefaultBreathable(boolean breathable) {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
 }

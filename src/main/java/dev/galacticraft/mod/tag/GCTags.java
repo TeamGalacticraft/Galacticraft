@@ -48,6 +48,7 @@ public class GCTags {
     public static final TagKey<Block> INFINIBURN_MOON = TagKey.create(Registries.BLOCK, Constant.id("infiniburn_moon"));
     public static final TagKey<Block> INFINIBURN_VENUS = TagKey.create(Registries.BLOCK, Constant.id("infiniburn_venus"));
     public static final TagKey<Block> INFINIBURN_ASTEROID = TagKey.create(Registries.BLOCK, Constant.id("infiniburn_asteroid"));
+    public static final TagKey<Block> INFINIBURN_SATELLITE = TagKey.create(Registries.BLOCK, Constant.id("infiniburn_satellite"));
     public static final TagKey<Block> BASE_STONE_MOON = TagKey.create(Registries.BLOCK, Constant.id("base_stone_moon"));
     public static final TagKey<Block> MOON_CARVER_REPLACEABLES = TagKey.create(Registries.BLOCK, Constant.id("moon_carver_replaceables"));
     public static final TagKey<Block> MOON_CRATER_CARVER_REPLACEABLES = TagKey.create(Registries.BLOCK, Constant.id("moon_crater_carver_replaceables"));
@@ -65,6 +66,18 @@ public class GCTags {
     public static final TagKey<Biome> MOON_RUINS_HAS_STRUCTURE = TagKey.create(Registries.BIOME, Constant.id("has_structure/moon_ruins"));
     public static final TagKey<Biome> MOON_BOSS_HAS_STRUCTURE = TagKey.create(Registries.BIOME, Constant.id("has_structure/moon_boss"));
 
+    public static final TagKey<Item> THERMAL_HEAD = galacticraftTag("thermal/head");
+    public static final TagKey<Item> THERMAL_CHEST = galacticraftTag("thermal/chest");
+    public static final TagKey<Item> THERMAL_PANTS = galacticraftTag("thermal/pants");
+    public static final TagKey<Item> THERMAL_BOOTS = galacticraftTag("thermal/boots");
+    public static final TagKey<Item> OXYGEN_MASKS = galacticraftTag("oxygen/mask");
+    public static final TagKey<Item> OXYGEN_GEAR = galacticraftTag("oxygen/gear");
+    public static final TagKey<Item> OXYGEN_TANKS = galacticraftTag("oxygen/tank");
+    public static final TagKey<Item> ACCESSORIES = galacticraftTag("accessories");
+    public static final TagKey<Item> PARACHUTES = galacticraftTag("parachutes");
+    public static final TagKey<Item> FREQUENCY_MODULES = galacticraftTag("frequency_modules");
+    public static final TagKey<Item> SHIELD_CONTROLLERS = galacticraftTag("shield_controllers");
+
     public static final TagKey<Item> ALUMINUM_INGOTS = commonTag("ingots/aluminum");
     public static final TagKey<Item> RAW_ALUMINUM_ORES = commonTag("raw_materials/aluminum");
     public static final TagKey<Item> LEAD_INGOTS = commonTag("ingots/lead");
@@ -77,7 +90,8 @@ public class GCTags {
     public static final TagKey<Item> COMPRESSED_IRON = commonTag("plates/iron");
     public static final TagKey<Item> COMPRESSED_TIN = commonTag("plates/tin");
 
-    public static final TagKey<Item> EVOLVED_CREEPER_DROP_MUSIC_DISCS = TagKey.create(Registries.ITEM, Constant.id("evolved_creeper_drop_music_discs"));
+    public static final TagKey<Item> ROCKET_STORAGE_UPGRADE_ITEMS = galacticraftTag("rocket_storage_upgrade_items");
+    public static final TagKey<Item> EVOLVED_CREEPER_DROP_MUSIC_DISCS = galacticraftTag("evolved_creeper_drop_music_discs");
 
     public static final TagKey<Structure> MOON_RUINS = TagKey.create(Registries.STRUCTURE, Constant.id("moon_ruins"));
 
@@ -90,6 +104,10 @@ public class GCTags {
 
     public static TagKey<Item> commonTag(String path) {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, path));
+    }
+
+    public static TagKey<Item> galacticraftTag(String path) {
+        return TagKey.create(Registries.ITEM, Constant.id(path));
     }
 
     public static void register() {

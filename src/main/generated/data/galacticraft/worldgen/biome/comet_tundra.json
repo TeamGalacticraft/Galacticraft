@@ -73,6 +73,18 @@
         "maxCount": 4,
         "minCount": 4,
         "weight": 100
+      },
+      {
+        "type": "galacticraft:evolved_enderman",
+        "maxCount": 4,
+        "minCount": 1,
+        "weight": 10
+      },
+      {
+        "type": "galacticraft:evolved_witch",
+        "maxCount": 1,
+        "minCount": 1,
+        "weight": 5
       }
     ],
     "underground_water_creature": [],

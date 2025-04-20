@@ -633,7 +633,7 @@ public class GCModelProvider extends FabricModelProvider {
 
         // BATTERIES
         generator.generateFlatItem(GCItems.BATTERY, ModelTemplates.FLAT_ITEM);
-        this.createRainbowLayeredItem(generator, GCItems.INFINITE_BATTERY, Constant.Item.INFINITE_INDICATOR);
+        this.createLayeredItem(generator, GCItems.INFINITE_BATTERY, Constant.Item.INFINITE_INDICATOR);
 
         // FLUID BUCKETS
         generator.generateFlatItem(GCItems.CRUDE_OIL_BUCKET, ModelTemplates.FLAT_ITEM);
@@ -649,7 +649,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.SMALL_OXYGEN_TANK, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.MEDIUM_OXYGEN_TANK, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.LARGE_OXYGEN_TANK, ModelTemplates.FLAT_ITEM);
-        this.createRainbowLayeredItem(generator, GCItems.INFINITE_OXYGEN_TANK, Constant.Item.INFINITE_INDICATOR);
+        this.createLayeredItem(generator, GCItems.INFINITE_OXYGEN_TANK, Constant.Item.INFINITE_INDICATOR);
 
         generator.generateFlatItem(GCItems.SHIELD_CONTROLLER, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.FREQUENCY_MODULE, ModelTemplates.FLAT_ITEM);
@@ -696,6 +696,10 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.LEGACY_MUSIC_DISC_ORBIT, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.LEGACY_MUSIC_DISC_SPACERACE, ModelTemplates.FLAT_ITEM);
 
+        // CANNED FOOD
+        generator.generateFlatItem(GCItems.EMPTY_CAN, ModelTemplates.FLAT_ITEM);
+        this.createLayeredItem(generator, GCItems.CANNED_FOOD, Constant.Item.CANNED_FOOD_LABEL);
+
         // SPAWN EGGS
         generator.generateFlatItem(GCItems.MOON_VILLAGER_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
         generator.generateFlatItem(GCItems.EVOLVED_ZOMBIE_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
@@ -715,7 +719,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.ARCH_GREY_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
     }
 
-    private void createRainbowLayeredItem(ItemModelGenerators generator, Item item, String overlay) {
+    private void createLayeredItem(ItemModelGenerators generator, Item item, String overlay) {
         generator.generateLayeredItem(ModelLocationUtils.getModelLocation(item), TextureMapping.getItemTexture(item), Constant.id(overlay).withPrefix("item/"));
     }
 

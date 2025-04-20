@@ -26,12 +26,16 @@ import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.jei.category.JEICompressingCategory;
 import dev.galacticraft.mod.compat.jei.category.JEIFabricationCategory;
+import dev.galacticraft.mod.compat.jei.category.JEIRocketCategory;
+import dev.galacticraft.mod.compat.jei.replacers.EmergencyKitRecipeMaker;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.recipe.EmergencyKitRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
@@ -39,8 +43,16 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
+
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 @JeiPlugin
 public class GCJEIPlugin implements IModPlugin {
@@ -54,6 +66,7 @@ public class GCJEIPlugin implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.CIRCUIT_FABRICATOR), GCJEIRecipeTypes.FABRICATION);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.COMPRESSOR), GCJEIRecipeTypes.COMPRESSING);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_COMPRESSOR), GCJEIRecipeTypes.COMPRESSING);
+        registration.addRecipeCatalyst(new ItemStack(GCBlocks.ROCKET_WORKBENCH), GCJEIRecipeTypes.ROCKET);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_ARC_FURNACE), RecipeTypes.BLASTING);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_FURNACE), RecipeTypes.SMELTING);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.COMPRESSOR), RecipeTypes.FUELING);
@@ -64,7 +77,8 @@ public class GCJEIPlugin implements IModPlugin {
         IGuiHelper helper = registration.getJeiHelpers().getGuiHelper();
         registration.addRecipeCategories(
                 new JEIFabricationCategory(helper),
-                new JEICompressingCategory(helper)
+                new JEICompressingCategory(helper),
+                new JEIRocketCategory(helper)
         );
     }
 
@@ -80,5 +94,35 @@ public class GCJEIPlugin implements IModPlugin {
 
         registration.addRecipes(GCJEIRecipeTypes.FABRICATION, manager.getAllRecipesFor(GCRecipes.FABRICATION_TYPE).stream().map(RecipeHolder::value).toList());
         registration.addRecipes(GCJEIRecipeTypes.COMPRESSING, manager.getAllRecipesFor(GCRecipes.COMPRESSING_TYPE).stream().map(RecipeHolder::value).toList());
+        registration.addRecipes(GCJEIRecipeTypes.ROCKET, manager.getAllRecipesFor(GCRecipes.ROCKET_TYPE).stream().map(RecipeHolder::value).toList());
+
+        IJeiHelpers jeiHelpers = registration.getJeiHelpers();
+        var craftingRecipes = manager.getAllRecipesFor(RecipeType.CRAFTING);;
+        var specialCraftingRecipes = replaceSpecialCraftingRecipes(craftingRecipes, jeiHelpers);
+        registration.addRecipes(RecipeTypes.CRAFTING, specialCraftingRecipes);
+    }
+
+    private static List<RecipeHolder<CraftingRecipe>> replaceSpecialCraftingRecipes(List<RecipeHolder<CraftingRecipe>> unhandledCraftingRecipes, IJeiHelpers jeiHelpers) {
+        Map<Class<? extends CraftingRecipe>, Supplier<List<RecipeHolder<CraftingRecipe>>>> replacers = new IdentityHashMap<>();
+        replacers.put(EmergencyKitRecipe.class, EmergencyKitRecipeMaker::createRecipes);
+
+        return unhandledCraftingRecipes.stream()
+            .map(RecipeHolder::value)
+            .map(CraftingRecipe::getClass)
+            .distinct()
+            .filter(replacers::containsKey)
+            // distinct + this limit will ensure we stop iterating early if we find all the recipes we're looking for.
+            .limit(replacers.size())
+            .flatMap(recipeClass -> {
+                var supplier = replacers.get(recipeClass);
+                try {
+                    return supplier.get()
+                        .stream();
+                } catch (RuntimeException e) {
+                    Constant.LOGGER.error("Failed to create JEI recipes for {}", recipeClass, e);
+                    return Stream.of();
+                }
+            })
+            .toList();
     }
 }

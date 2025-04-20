@@ -25,7 +25,6 @@ package dev.galacticraft.mod.data.tag;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.block.GCBlock;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
@@ -56,13 +55,15 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.MOON_SURFACE_ROCK)
                 .add(GCBlocks.MOON_BASALT)
                 .add(GCBlocks.MOON_DIRT)
-                .add(GCBlocks.MOON_TURF);
+                .add(GCBlocks.MOON_TURF)
+                .add(GCBlocks.LUNASLATE);
         this.tag(GCTags.MOON_CRATER_CARVER_REPLACEABLES)
                 .add(GCBlocks.MOON_ROCK)
                 .add(GCBlocks.MOON_SURFACE_ROCK)
                 .add(GCBlocks.MOON_BASALT)
                 .add(GCBlocks.MOON_DIRT)
-                .add(GCBlocks.MOON_TURF);
+                .add(GCBlocks.MOON_TURF)
+                .add(GCBlocks.LUNASLATE);
         this.tag(GCTags.MOON_STONE_ORE_REPLACEABLES)
                 .add(GCBlocks.MOON_ROCK);
                 // .add(GCBlocks.MOON_BASALT);

@@ -27,16 +27,20 @@ import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.machinelib.impl.Constant.TextureCoordinate;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultCompressingCategory;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultFabricationCategory;
+import dev.galacticraft.mod.compat.rei.client.category.DefaultRocketCategory;
+import dev.galacticraft.mod.compat.rei.client.filler.EmergencyKitRecipeFiller;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultShapedCompressingDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultShapelessCompressingDisplay;
+import dev.galacticraft.mod.compat.rei.common.display.DefaultRocketDisplay;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
 import dev.galacticraft.mod.recipe.ShapelessCompressingRecipe;
+import dev.galacticraft.mod.recipe.RocketRecipe;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
@@ -46,6 +50,7 @@ import me.shedaniel.rei.api.client.registry.screen.ExclusionZones;
 import me.shedaniel.rei.api.client.registry.transfer.TransferHandlerRegistry;
 import me.shedaniel.rei.api.client.registry.transfer.simple.SimpleTransferHandler;
 import me.shedaniel.rei.api.common.util.EntryStacks;
+import me.shedaniel.rei.plugin.client.categories.crafting.filler.CraftingRecipeFiller;
 import me.shedaniel.rei.plugin.common.BuiltinPlugin;
 import net.minecraft.world.level.ItemLike;
 
@@ -53,16 +58,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GalacticraftREIClientPlugin implements REIClientPlugin {
+    private static final CraftingRecipeFiller<?>[] CRAFTING_RECIPE_FILLERS = new CraftingRecipeFiller[]{
+            new EmergencyKitRecipeFiller()
+    };
+
     @Override
     public void registerCategories(CategoryRegistry registry) {
         registry.add(new DefaultFabricationCategory());
         registry.add(new DefaultCompressingCategory());
+        registry.add(new DefaultRocketCategory());
 
         registry.addWorkstations(GalacticraftREIServerPlugin.CIRCUIT_FABRICATION, EntryStacks.of(GCBlocks.CIRCUIT_FABRICATOR));
         registry.addWorkstations(GalacticraftREIServerPlugin.COMPRESSING, EntryStacks.of(GCBlocks.COMPRESSOR), EntryStacks.of(GCBlocks.ELECTRIC_COMPRESSOR));
+        registry.addWorkstations(GalacticraftREIServerPlugin.ROCKET, EntryStacks.of(GCBlocks.ROCKET_WORKBENCH));
         registry.addWorkstations(BuiltinPlugin.BLASTING, EntryStacks.of(GCBlocks.ELECTRIC_ARC_FURNACE));
         registry.addWorkstations(BuiltinPlugin.SMELTING, EntryStacks.of(GCBlocks.ELECTRIC_FURNACE));
         registry.addWorkstations(BuiltinPlugin.FUEL, EntryStacks.of(GCBlocks.COMPRESSOR));
+
+        for (CraftingRecipeFiller<?> filler : CRAFTING_RECIPE_FILLERS) {
+            filler.registerCategories(registry);
+        }
     }
 
     @Override
@@ -70,6 +85,11 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
         registry.registerRecipeFiller(FabricationRecipe.class, GCRecipes.FABRICATION_TYPE, DefaultFabricationDisplay::new);
         registry.registerRecipeFiller(ShapedCompressingRecipe.class, GCRecipes.COMPRESSING_TYPE, DefaultShapedCompressingDisplay::new);
         registry.registerRecipeFiller(ShapelessCompressingRecipe.class, GCRecipes.COMPRESSING_TYPE, DefaultShapelessCompressingDisplay::new);
+        registry.registerRecipeFiller(RocketRecipe.class, GCRecipes.ROCKET_TYPE, DefaultRocketDisplay::new);
+
+        for (CraftingRecipeFiller<?> filler : CRAFTING_RECIPE_FILLERS) {
+            filler.registerDisplays(registry);
+        }
     }
 
     @Override
@@ -98,5 +118,7 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
                 new SimpleTransferHandler.IntRange(1, 10)));
         registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.CIRCUIT_FABRICATION,
                 new SimpleTransferHandler.IntRange(1, 6)));
+        registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.ROCKET,
+                new SimpleTransferHandler.IntRange(1, 15)));
     }
 }

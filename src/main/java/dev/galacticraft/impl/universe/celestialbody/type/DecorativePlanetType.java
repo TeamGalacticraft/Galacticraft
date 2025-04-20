@@ -32,15 +32,19 @@ import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.impl.universe.celestialbody.config.DecorativePlanetConfig;
-import net.minecraft.core.Holder;
+import dev.galacticraft.impl.universe.celestialbody.config.StarConfig;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class DecorativePlanet extends CelestialBodyType<DecorativePlanetConfig> implements Orbitable<DecorativePlanetConfig> {
-    public static final DecorativePlanet INSTANCE = new DecorativePlanet();
+import java.util.Optional;
 
-    private DecorativePlanet() {
+public class DecorativePlanetType extends CelestialBodyType<DecorativePlanetConfig> implements Orbitable<DecorativePlanetConfig> {
+    public static final DecorativePlanetType INSTANCE = new DecorativePlanetType();
+
+    private DecorativePlanetType() {
         super(DecorativePlanetConfig.CODEC);
     }
 
@@ -50,13 +54,19 @@ public class DecorativePlanet extends CelestialBodyType<DecorativePlanetConfig> 
     }
 
     @Override
-    public @Nullable Holder<CelestialBody<?, ?>> parent(DecorativePlanetConfig config) {
+    public @Nullable Optional<ResourceKey<CelestialBody<?, ?>>> parent(DecorativePlanetConfig config) {
         return config.parent();
     }
 
     @Override
-    public @NotNull Holder<Galaxy> galaxy(DecorativePlanetConfig config) {
-        return config.parent().value().galaxy();
+    public @NotNull Optional<ResourceKey<Galaxy>> galaxy(Registry<CelestialBody<?, ?>> registry, DecorativePlanetConfig config) {
+        if (config.parent().isPresent()) {
+            CelestialBody<?, ?> body = registry.get(config.parent().get());
+            if (body != null && body.type() instanceof StarType starType) {
+                return starType.galaxy(registry, (StarConfig) body.config());
+            }
+        }
+        return Optional.empty();
     }
 
     @Override

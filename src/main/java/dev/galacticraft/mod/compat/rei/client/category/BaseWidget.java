@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.compat.rei.client.category;
 
-import com.mojang.blaze3d.platform.Lighting;
 import me.shedaniel.math.Point;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import net.minecraft.client.gui.GuiGraphics;
@@ -36,16 +35,14 @@ import java.util.List;
 import static dev.galacticraft.mod.Constant.RecipeViewer.*;
 
 public class BaseWidget extends Widget {
-
     private final Point startPoint;
 
-    BaseWidget(Point startPoint) {
+    public BaseWidget(Point startPoint) {
         this.startPoint = startPoint;
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        Lighting.setupForFlatItems();
         graphics.blit(RECIPE_VIEWER_DISPLAY_TEXTURE, this.startPoint.x, this.startPoint.y, COMPRESSOR_U, COMPRESSOR_V, COMPRESSOR_WIDTH, COMPRESSOR_HEIGHT);
 
         int height = Mth.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D);
