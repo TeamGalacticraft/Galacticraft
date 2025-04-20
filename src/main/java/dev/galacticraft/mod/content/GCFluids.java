@@ -67,8 +67,8 @@ public class GCFluids {
         ));
         FluidVariantAttributes.register(SULFURIC_ACID, new GCFluidAttribute(
                 Component.translatable(GCBlocks.SULFURIC_ACID.getDescriptionId())
-                        .setStyle(Constant.Text.YELLOW_STYLE),
-                FluidConstants.LAVA_VISCOSITY,
+                        .setStyle(Constant.Text.GREEN_STYLE),
+                FluidConstants.WATER_VISCOSITY,
                 false
         ));
         FluidVariantAttributes.register(LIQUID_OXYGEN, new GCFluidAttribute(
