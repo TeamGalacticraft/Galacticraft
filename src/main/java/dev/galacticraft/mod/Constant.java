@@ -719,6 +719,7 @@ public interface Constant {
 
     interface RecipeViewer {
         ResourceLocation RECIPE_VIEWER_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
+        ResourceLocation ROCKET_WORKBENCH_DISPLAY_TEXTURE = id("textures/gui/rocket_workbench.png");
 
         int CIRCUIT_FABRICATOR_U = 0;
         int CIRCUIT_FABRICATOR_V = 0;
@@ -749,6 +750,18 @@ public interface Constant {
         int FUEL_Y = 31;
         int COMPRESSED_X = 127;
         int COMPRESSED_Y = 20;
+
+        int ROCKET_WORKBENCH_U = 6;
+        int ROCKET_WORKBENCH_V = 20;
+        int ROCKET_WORKBENCH_WIDTH = 162;
+        int ROCKET_WORKBENCH_HEIGHT = 145;
+        int CHEST_SLOT_U = 177;
+        int CHEST_SLOT_V = 0;
+
+        int ROCKET_PREVIEW_X = 133 - ROCKET_WORKBENCH_U;
+        int ROCKET_PREVIEW_Y = 100 - ROCKET_WORKBENCH_V;
+        int ROCKET_OUTPUT_X = 119;
+        int ROCKET_OUTPUT_Y = 115;
     }
 
     interface SlotSprite {

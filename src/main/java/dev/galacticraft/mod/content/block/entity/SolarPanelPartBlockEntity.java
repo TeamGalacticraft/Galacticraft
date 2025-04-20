@@ -54,6 +54,11 @@ public class SolarPanelPartBlockEntity extends BlockEntity implements MultiBlock
     }
 
     @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        return this.saveWithoutMetadata(registryLookup);
+    }
+
+    @Override
     public void setBasePos(BlockPos basePos) {
         this.basePos = basePos;
         this.setChanged();

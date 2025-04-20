@@ -22,18 +22,20 @@
 
 package dev.galacticraft.mod.content.block.entity;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.screen.AirlockControllerMenu;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -158,15 +160,16 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
 
         boolean facingNorth = (this.lastProtocol.maxX - this.lastProtocol.minX) == 0;
 
-        if (!this.level.getBlockState(new BlockPos(x, y, z)).is(GCBlocks.AIR_LOCK_SEAL)) {
-//            this.level.playSound(null, x, y, z, GCSounds.openAirLock, SoundSource.BLOCKS, 1.0F, 1.0F);
+        BlockPos pos = new BlockPos(x, y, z);
+        if (this.level.getBlockState(pos).isAir()) {
+            this.level.playSound(null, pos, GCSounds.PLAYER_CLOSEAIRLOCK, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
 
         if (this.horizontalModeEnabled) {
             if (this.protocol.minY == this.protocol.maxY && this.protocol.minX != this.protocol.maxX && this.protocol.minZ != this.protocol.maxZ) {
                 for (x = this.protocol.minX + 1; x <= this.protocol.maxX - 1; x++) {
                     for (z = this.protocol.minZ + 1; z <= this.protocol.maxZ - 1; z++) {
-                        BlockPos pos = new BlockPos(x, y, z);
+                        pos = new BlockPos(x, y, z);
                         if (this.level.getBlockState(pos).isAir()) {
                             if (facingNorth) {
                                 this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.EAST), 3);
@@ -181,7 +184,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
             if (this.protocol.minX != this.protocol.maxX) {
                 for (x = this.protocol.minX + 1; x <= this.protocol.maxX - 1; x++) {
                     for (y = this.protocol.minY + 1; y <= this.protocol.maxY - 1; y++) {
-                        BlockPos pos = new BlockPos(x, y, z);
+                        pos = new BlockPos(x, y, z);
                         if (this.level.getBlockState(pos).isAir()) {
                             if (facingNorth) {
                                 this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.EAST), 3);
@@ -194,7 +197,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
             } else if (this.protocol.minZ != this.protocol.maxZ) {
                 for (z = this.protocol.minZ + 1; z <= this.protocol.maxZ - 1; z++) {
                     for (y = this.protocol.minY + 1; y <= this.protocol.maxY - 1; y++) {
-                        BlockPos pos = new BlockPos(x, y, z);
+                        pos = new BlockPos(x, y, z);
                         if (this.level.getBlockState(pos).isAir()) {
                             if (facingNorth) {
                                 this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.EAST), 3);
@@ -218,10 +221,8 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
         int z = this.lastProtocol.minZ + (this.lastProtocol.maxZ - this.lastProtocol.minZ) / 2;
 
         BlockPos pos = new BlockPos(x, y, z);
-        BlockState state = this.level.getBlockState(pos);
-
-        if (!(state.getBlock() instanceof AirBlock)) {
-//            this.level().playSound(null, x, y, z, GCSounds.closeAirLock, SoundSource.BLOCKS, 1.0F, 1.0F); TODO: Sound
+        if (this.level.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
+            this.level.playSound(null, pos, GCSounds.PLAYER_OPENAIRLOCK, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
 
         boolean sealedSide = false;

@@ -102,7 +102,7 @@ public class FootprintRenderer {
 
             Vec3 cameraPos = context.camera().getPosition();
             float x = (float) (footprint.position.x - cameraPos.x);
-            float y = (float) (footprint.position.y - cameraPos.y) + 0.001F;
+            float y = (float) (footprint.position.y - cameraPos.y) + 0.01F * (1.01F - ageScale);
             float z = (float) (footprint.position.z - cameraPos.z);
 
             poseStack.translate(x, y, z);

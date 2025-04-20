@@ -29,11 +29,13 @@ import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.util.Translations;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -41,12 +43,10 @@ import net.minecraft.world.item.Items;
 import static dev.galacticraft.mod.Constant.RecipeViewer.*;
 
 public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe> {
-
-    private final IDrawable icon, background;
+    private final IDrawable icon;
 
     public JEIFabricationCategory(IGuiHelper helper) {
         this.icon = helper.createDrawableItemStack(new ItemStack(GCBlocks.CIRCUIT_FABRICATOR));
-        this.background = helper.createDrawable(RECIPE_VIEWER_DISPLAY_TEXTURE, CIRCUIT_FABRICATOR_U, CIRCUIT_FABRICATOR_V, CIRCUIT_FABRICATOR_WIDTH, CIRCUIT_FABRICATOR_HEIGHT);
     }
 
     @Override
@@ -60,8 +60,13 @@ public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe
     }
 
     @Override
-    public IDrawable getBackground() {
-        return this.background;
+    public int getWidth() {
+        return CIRCUIT_FABRICATOR_WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return CIRCUIT_FABRICATOR_HEIGHT;
     }
 
     @Override
@@ -85,4 +90,9 @@ public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe
         builder.addSlot(RecipeIngredientRole.OUTPUT, WAFER_X, WAFER_Y)
                 .addItemStack(recipe.getResultItem(null)); //fixme
     }
+
+	@Override
+	public void draw(FabricationRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+        graphics.blit(RECIPE_VIEWER_DISPLAY_TEXTURE, 0, 0, CIRCUIT_FABRICATOR_U, CIRCUIT_FABRICATOR_V, CIRCUIT_FABRICATOR_WIDTH, CIRCUIT_FABRICATOR_HEIGHT);
+	}
 }

@@ -25,25 +25,30 @@ package dev.galacticraft.mod.compat.jei.category;
 import dev.galacticraft.mod.compat.jei.GCJEIRecipeTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
+import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
 import dev.galacticraft.mod.util.Translations;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 import static dev.galacticraft.mod.Constant.RecipeViewer.*;
 
 public class JEICompressingCategory implements IRecipeCategory<CompressingRecipe> {
-    private final IDrawable icon, background;
+    private final IDrawable icon;
+    private final ICraftingGridHelper craftingGridHelper;
 
     public JEICompressingCategory(IGuiHelper helper) {
         this.icon = helper.createDrawableItemStack(new ItemStack(GCBlocks.COMPRESSOR));
-        this.background = helper.createDrawable(RECIPE_VIEWER_DISPLAY_TEXTURE, COMPRESSOR_U, COMPRESSOR_V, COMPRESSOR_HEIGHT, COMPRESSOR_WIDTH);
+		this.craftingGridHelper = helper.createCraftingGridHelper();
     }
 
     @Override
@@ -57,8 +62,13 @@ public class JEICompressingCategory implements IRecipeCategory<CompressingRecipe
     }
 
     @Override
-    public IDrawable getBackground() {
-        return this.background;
+    public int getWidth() {
+        return COMPRESSOR_WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return COMPRESSOR_HEIGHT;
     }
 
     @Override
@@ -68,7 +78,20 @@ public class JEICompressingCategory implements IRecipeCategory<CompressingRecipe
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, CompressingRecipe recipe, IFocusGroup focuses) {
+		int width = 0;
+		int height = 0;
+        if (recipe instanceof ShapedCompressingRecipe shapedRecipe) {
+            width = shapedRecipe.getWidth();
+            height = shapedRecipe.getHeight();
+        }
+		this.craftingGridHelper.createAndSetIngredients(builder, recipe.getIngredients(), width, height);
+
         builder.addSlot(RecipeIngredientRole.OUTPUT, COMPRESSED_X, COMPRESSED_Y)
                 .addItemStack(recipe.getResultItem(null)); //fixme
     }
+
+	@Override
+	public void draw(CompressingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+        graphics.blit(RECIPE_VIEWER_DISPLAY_TEXTURE, 0, 0, COMPRESSOR_U, COMPRESSOR_V, COMPRESSOR_WIDTH, COMPRESSOR_HEIGHT);
+	}
 }
