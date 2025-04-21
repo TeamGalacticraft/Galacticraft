@@ -70,12 +70,11 @@ public class DefaultFabricationDisplay extends BasicDisplay {
 
     private static List<EntryIngredient> getInputs(@Nullable RecipeHolder<FabricationRecipe> recipe) {
         if (recipe == null) return Collections.emptyList();
-        List<EntryIngredient> list = new ArrayList<>(5);
-        list.add(EntryIngredients.ofItemTag(ConventionalItemTags.DIAMOND_GEMS));
-        list.add(EntryIngredients.ofItemTag(GCItemTags.SILICONS));
-        list.add(EntryIngredients.ofItemTag(GCItemTags.SILICONS));
-        list.add(EntryIngredients.ofItemTag(ConventionalItemTags.REDSTONE_DUSTS));
-        list.add(EntryIngredients.ofIngredient(recipe.value().getIngredients().get(0)));
+        int n = recipe.value().getIngredients().size();
+        List<EntryIngredient> list = new ArrayList<>(n);
+        for (int i = 0; i < n; i++) {
+            list.add(EntryIngredients.ofIngredient(recipe.value().getIngredients().get(i)));
+        }
         return list;
     }
 

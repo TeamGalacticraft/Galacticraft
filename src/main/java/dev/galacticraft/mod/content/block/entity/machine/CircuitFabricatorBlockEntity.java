@@ -45,8 +45,6 @@ import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
-import dev.galacticraft.mod.tag.GCItemTags;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
@@ -81,19 +79,19 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(31, 17)
-                            .filter(ResourceFilters.itemTag(ConventionalItemTags.DIAMOND_GEMS))
+                            .filter(ResourceFilters.itemTag(FabricationRecipe.DIAMOND_SLOT_TAG))
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.DIAMOND)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(62, 47)
-                            .filter(ResourceFilters.itemTag(GCItemTags.SILICONS))
+                            .filter(ResourceFilters.itemTag(FabricationRecipe.SILICON_SLOT_1_TAG))
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.SILICON)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(62, 65)
-                            .filter(ResourceFilters.itemTag(GCItemTags.SILICONS))
+                            .filter(ResourceFilters.itemTag(FabricationRecipe.SILICON_SLOT_2_TAG))
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.SILICON)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(107, 72)
-                            .filter(ResourceFilters.itemTag(ConventionalItemTags.REDSTONE_DUSTS))
+                            .filter(ResourceFilters.itemTag(FabricationRecipe.REDSTONE_SLOT_TAG))
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.DUST)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(134, 17),
@@ -137,7 +135,13 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
 
     @Override
     protected @NotNull RecipeInput craftingInv() {
-        return RecipeHelper.input(this.itemStorage().slot(INPUT_SLOT));
+        return RecipeHelper.input(
+                this.itemStorage().slot(DIAMOND_SLOT),
+                this.itemStorage().slot(SILICON_SLOT_1),
+                this.itemStorage().slot(SILICON_SLOT_2),
+                this.itemStorage().slot(REDSTONE_SLOT),
+                this.itemStorage().slot(INPUT_SLOT)
+        );
     }
 
     @Override
@@ -168,18 +172,6 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
     @Override
     protected @NotNull MachineStatus workingStatus(RecipeHolder<FabricationRecipe> recipe) {
         return GCMachineStatuses.FABRICATING;
-    }
-
-    @Override
-    protected @Nullable RecipeHolder<FabricationRecipe> findValidRecipe(@NotNull Level world) {
-        if (ItemStackUtil.create(this.itemStorage().slot(DIAMOND_SLOT)).is(ConventionalItemTags.DIAMOND_GEMS)
-                && ItemStackUtil.create(this.itemStorage().slot(SILICON_SLOT_1)).is(GCItemTags.SILICONS)
-                && ItemStackUtil.create(this.itemStorage().slot(SILICON_SLOT_2)).is(GCItemTags.SILICONS)
-                && ItemStackUtil.create(this.itemStorage().slot(REDSTONE_SLOT)).is(ConventionalItemTags.REDSTONE_DUSTS)) {
-            return super.findValidRecipe(world);
-        }
-
-        return null;
     }
 
     @Override
