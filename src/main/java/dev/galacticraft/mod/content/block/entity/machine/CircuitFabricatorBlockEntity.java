@@ -36,11 +36,9 @@ import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
-import dev.galacticraft.machinelib.api.util.ItemStackUtil;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
@@ -53,10 +51,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -134,6 +130,12 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
     }
 
     @Override
+    protected void outputStacks(@NotNull RecipeHolder<FabricationRecipe> recipe) {
+        ItemStack output = recipe.value().getResultItem(this.level.registryAccess());
+        this.itemStorage().slot(OUTPUT_SLOT).insert(output.getItem(), output.getComponentsPatch(), output.getCount());
+    }
+
+    @Override
     protected @NotNull RecipeInput craftingInv() {
         return RecipeHelper.input(
                 this.itemStorage().slot(DIAMOND_SLOT),
@@ -142,12 +144,6 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
                 this.itemStorage().slot(REDSTONE_SLOT),
                 this.itemStorage().slot(INPUT_SLOT)
         );
-    }
-
-    @Override
-    protected void outputStacks(@NotNull RecipeHolder<FabricationRecipe> recipe) {
-        ItemStack output = recipe.value().getResultItem(this.level.registryAccess());
-        this.itemStorage().slot(OUTPUT_SLOT).insert(output.getItem(), output.getComponentsPatch(), output.getCount());
     }
 
     @Override
