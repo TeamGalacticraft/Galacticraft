@@ -6,10 +6,10 @@
       "tag": "c:ingots/aluminum"
     },
     "B": {
-      "item": "minecraft:stone_button"
+      "tag": "minecraft:stone_buttons"
     },
     "F": {
-      "item": "minecraft:furnace"
+      "tag": "c:player_workstations/furnaces"
     },
     "L": {
       "item": "minecraft:lever"

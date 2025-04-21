@@ -9,7 +9,7 @@
       "tag": "c:ingots/copper"
     },
     "F": {
-      "item": "minecraft:furnace"
+      "tag": "c:player_workstations/furnaces"
     },
     "W": {
       "item": "galacticraft:aluminum_wire"
