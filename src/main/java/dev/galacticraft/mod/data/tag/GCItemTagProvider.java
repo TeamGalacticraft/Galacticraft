@@ -463,10 +463,6 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCBlocks.ASTEROID_ROCK_1.asItem())
                 .add(GCBlocks.ASTEROID_ROCK_2.asItem());
 
-        this.tag(ConventionalItemTags.PLAYER_WORKSTATIONS_FURNACES)
-                .add(GCBlocks.ELECTRIC_FURNACE.asItem())
-                .add(GCBlocks.ELECTRIC_ARC_FURNACE.asItem());
-
         this.tag(ConventionalItemTags.VILLAGER_JOB_SITES)
                 .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE.asItem());
     }

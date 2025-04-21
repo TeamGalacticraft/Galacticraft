@@ -338,10 +338,6 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 GCBlocks.ROCKET_WORKBENCH
         );
 
-        this.tag(ConventionalBlockTags.PLAYER_WORKSTATIONS_FURNACES)
-                .add(GCBlocks.ELECTRIC_FURNACE)
-                .add(GCBlocks.ELECTRIC_ARC_FURNACE);
-
         this.tag(ConventionalBlockTags.VILLAGER_JOB_SITES)
                 .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
 
