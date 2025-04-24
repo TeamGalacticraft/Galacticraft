@@ -42,7 +42,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 public record RocketSpawnPacket(EntityType<?> eType, int id, UUID uuid, double x, double y, double z, float xRot,
-                                float yRot, RocketData data) implements S2CPayload {
+                                float yRot, RocketData data, long fuel) implements S2CPayload {
     public static final StreamCodec<RegistryFriendlyByteBuf, RocketSpawnPacket> STREAM_CODEC = StreamCodecs.composite(
             ByteBufCodecs.registry(Registries.ENTITY_TYPE),
             RocketSpawnPacket::eType,
@@ -62,6 +62,8 @@ public record RocketSpawnPacket(EntityType<?> eType, int id, UUID uuid, double x
             RocketSpawnPacket::yRot,
             RocketData.STREAM_CODEC,
             RocketSpawnPacket::data,
+            StreamCodecs.LONG,
+            RocketSpawnPacket::fuel,
             RocketSpawnPacket::new
     );
 
@@ -86,6 +88,7 @@ public record RocketSpawnPacket(EntityType<?> eType, int id, UUID uuid, double x
                 entity.setUUID(uuid);
 
                 entity.setData(data);
+                entity.setFuel(fuel);
 
                 level.addEntity(entity);
             }
