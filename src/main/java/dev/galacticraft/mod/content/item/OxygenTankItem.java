@@ -41,7 +41,6 @@ import java.util.List;
 
 public class OxygenTankItem extends AccessoryItem {
     public final long capacity;
-    public final boolean isInfinite;
 
     public static StorageView<FluidVariant> getStorage(ItemStack stack) {
         StorageView<FluidVariant> storage = (StorageView<FluidVariant>) ContainerItemContext.withConstant(stack).find(FluidStorage.ITEM);
@@ -70,12 +69,11 @@ public class OxygenTankItem extends AccessoryItem {
     public OxygenTankItem(Properties settings, int capacity) {
         super(settings.durability(capacity));
         this.capacity = capacity;
-        this.isInfinite = capacity == Integer.MAX_VALUE;
     }
 
     @Override
     public boolean isBarVisible(ItemStack stack) {
-        return !isInfinite;
+        return true;
     }
 
     @Override
@@ -108,10 +106,13 @@ public class OxygenTankItem extends AccessoryItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
-        StorageView<FluidVariant> storage = OxygenTankItem.getStorage(stack);
-        if (!isInfinite) {
-            TooltipUtil.appendFluidRemainingTooltip(Translations.Tooltip.OXYGEN_REMAINING, storage.getAmount(), storage.getCapacity(), tooltip);
-        }
+        this.appendOxygenTankTooltip(stack, context, tooltip, type);
         super.appendHoverText(stack, context, tooltip, type);
     }
+
+    protected void appendOxygenTankTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
+        StorageView<FluidVariant> storage = OxygenTankItem.getStorage(stack);
+        TooltipUtil.appendFluidRemainingTooltip(Translations.Tooltip.OXYGEN_REMAINING, storage.getAmount(), storage.getCapacity(), tooltip);
+    }
+
 }

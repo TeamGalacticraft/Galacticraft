@@ -59,10 +59,9 @@ public class InfiniteOxygenTankItem extends OxygenTankItem implements Storage<Fl
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
+    protected void appendOxygenTankTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
         TooltipUtil.appendInfiniteCapacityTooltip(Translations.Tooltip.OXYGEN_REMAINING, tooltip);
         TooltipUtil.appendCreativeTooltip(tooltip, Constant.Text.LIGHT_PURPLE_STYLE);
-        super.appendHoverText(stack, context, tooltip, type);
     }
 
     @Override
@@ -86,6 +85,11 @@ public class InfiniteOxygenTankItem extends OxygenTankItem implements Storage<Fl
             return l;
         }
         return 0;
+    }
+
+    @Override
+    public boolean isBarVisible(ItemStack stack) {
+        return false;
     }
 
     @Override
