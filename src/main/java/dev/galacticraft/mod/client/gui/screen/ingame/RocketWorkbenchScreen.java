@@ -48,7 +48,7 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
     private static final int NORMAL_SLOT_V = 224;
     private static final int NORMAL_SLOT_SIZE = 18;
 
-    private static final int UI_WIDTH = 248;
+    private static final int UI_WIDTH = 176;
     private static final int MAIN_UI_WIDTH = 176;
     private static final int UI_HEIGHT = 249;
 
