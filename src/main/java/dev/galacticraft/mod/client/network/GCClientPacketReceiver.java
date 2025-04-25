@@ -35,7 +35,6 @@ public class GCClientPacketReceiver {
         register(BubbleSizePayload.TYPE);
         register(BubbleUpdatePayload.TYPE);
         register(OpenCelestialScreenPayload.TYPE);
-        register(RocketSpawnPacket.TYPE);
         register(FootprintPacket.TYPE);
         register(FootprintRemovedPacket.TYPE);
         register(ResetPerspectivePacket.TYPE);
