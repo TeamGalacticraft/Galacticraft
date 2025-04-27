@@ -292,6 +292,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
 
         this.tag(BlockTags.NEEDS_STONE_TOOL)
+                .forceAddTag(GCTags.MACHINES)
                 .add(
                         GCBlocks.IRON_GRATING,
                         GCBlocks.WALKWAY,
