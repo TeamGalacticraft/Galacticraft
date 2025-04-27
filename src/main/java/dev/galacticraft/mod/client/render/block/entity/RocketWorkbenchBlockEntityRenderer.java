@@ -43,7 +43,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.resources.ResourceLocation;
-import org.joml.Vector3f;
 
 @Environment(EnvType.CLIENT)
 public class RocketWorkbenchBlockEntityRenderer implements BlockEntityRenderer<RocketWorkbenchBlockEntity> {
