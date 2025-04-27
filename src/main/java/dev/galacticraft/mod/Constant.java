@@ -1064,6 +1064,20 @@ public interface Constant {
         String SOLAR_PANEL_PANEL_VERTICAL_1 = "solar_panel_panel_vertical_1";
         String SOLAR_PANEL_PANEL_VERTICAL_2 = "solar_panel_panel_vertical_2";
         String SOLAR_PANEL_PANEL_VERTICAL_3 = "solar_panel_panel_vertical_3";
+        String ROCKET_WORKBENCH_TOP = "rocket_workbench_top";
+        String ROCKET_WORKBENCH_PLIER_TOOL = "rocket_workbench_plier_tool";
+        String ROCKET_WORKBENCH_PLIER_TOOL_ARM = "rocket_workbench_plier_tool_arm";
+        String ROCKET_WORKBENCH_PLIER_TOOL_SMALL_ARM = "rocket_workbench_plier_tool_small_arm";
+        String ROCKET_WORKBENCH_PLIER_TOOL_PLIERS = "rocket_workbench_plier_tool_pliers";
+        String ROCKET_WORKBENCH_DRILL_TOOL = "rocket_workbench_drill_tool";
+        String ROCKET_WORKBENCH_DRILL_TOOL_SMALL_ARM = "rocket_workbench_drill_tool_small_arm";
+        String ROCKET_WORKBENCH_DRILL_TOOL_DRILL = "rocket_workbench_drill_tool_drill";
+        String ROCKET_WORKBENCH_DRILL_TOOL_DRILL_BIT = "rocket_workbench_drill_tool_drill_bit";
+        String ROCKET_WORKBENCH_FLASHLIGHT = "rocket_workbench_flashlight";
+        String ROCKET_WORKBENCH_FLASHLIGHT_LIGHT = "rocket_workbench_flashlight_light";
+        String ROCKET_WORKBENCH_FLASHLIGHT_HANDLE = "rocket_workbench_flashlight_handle";
+        String ROCKET_WORKBENCH_FLASHLIGHT_HOLDER = "rocket_workbench_flashlight_holder";
+        String ROCKET_WORKBENCH_DISPLAY = "rocket_workbench_display";
     }
 
     // Used in Data Generator

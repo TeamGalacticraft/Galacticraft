@@ -1,6 +1,6 @@
 # Blender v2.76 (sub 0) OBJ File: 'workbench.blend'
 # www.blender.org
-mtllib workbench.mtl
+mtllib nasa_workbench.mtl
 o Cube
 v 0.000000 0.000000 1.000000
 v 0.000000 1.000000 1.000000
