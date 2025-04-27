@@ -1,5 +1,4 @@
 {
-	"parent": "minecraft:block/block",
 	"credit": "Made with Blockbench",
 	"texture_size": [64, 64],
 	"textures": {
@@ -90,8 +89,8 @@
 		},
 		{
 			"name": "drill",
-			"from": [6, 11, 14],
-			"to": [10, 15, 22],
+			"from": [6, 11, 13],
+			"to": [10, 15, 21],
 			"faces": {
 				"north": {"uv": [2, 13, 3, 12], "texture": "#1"},
 				"east": {"uv": [1, 15, 0, 13], "rotation": 90, "texture": "#1"},
@@ -103,8 +102,8 @@
 		},
 		{
 			"name": "drill_bit",
-			"from": [8, 12.5, 10],
-			"to": [8, 13.5, 14],
+			"from": [8, 12.5, 9],
+			"to": [8, 13.5, 13],
 			"faces": {
 				"east": {"uv": [0, 2.75, 0.25, 1.75], "rotation": 90, "texture": "#1"},
 				"west": {"uv": [0.25, 1.75, 0.5, 2.75], "rotation": 90, "texture": "#1"}
@@ -170,22 +169,22 @@
 	"display": {
         "gui": {
             "rotation": [ 30, -45, 0 ],
-            "translation": [ 0, 2, 0],
+            "translation": [ 0, 2, 0 ],
             "scale":[ 0.375, 0.375, 0.375 ]
         },
         "ground": {
             "rotation": [ 0, 0, 0 ],
-            "translation": [ 0, 7, 0],
+            "translation": [ 0, 7, 0 ],
             "scale":[ 0.25, 0.25, 0.25 ]
         },
         "fixed": {
             "rotation": [ 0, 90, 0 ],
-            "translation": [ 0, 0, 0],
-            "scale":[ 0.5, 0.5, 0.5 ]
+            "translation": [ 0, 1, 0 ],
+            "scale":[ 0.375, 0.375, 0.375 ]
         },
         "thirdperson_righthand": {
             "rotation": [ 75, 135, 0 ],
-            "translation": [ 0, 2.5, 2],
+            "translation": [ 0, 2.5, 5 ],
             "scale": [ 0.375, 0.375, 0.375 ]
         },
         "firstperson_righthand": {

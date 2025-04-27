@@ -81,7 +81,7 @@ public class RocketWorkbenchBlockEntityRenderer implements BlockEntityRenderer<R
 
         PartDefinition flashlightArm = modelPartData.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_FLASHLIGHT_HOLDER, CubeListBuilder.create().texOffs(56, 0).addBox(-1.0F, -14.0F, -0.5F, 1, 14, 1, CubeDeformation.NONE), PartPose.rotation(0.0F, 0.0F, 202.5F * Mth.DEG_TO_RAD));
         PartDefinition flashlight = modelPartData.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_FLASHLIGHT_HANDLE, CubeListBuilder.create().texOffs(0, 40).addBox(-2.0F, -1.0F, -1.0F, 4, 2, 2, CubeDeformation.NONE), PartPose.rotation(0.0F, 0.0F, Mth.PI));
-        flashlight.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_FLASHLIGHT_LIGHT, CubeListBuilder.create().texOffs(0, 32).addBox(-4.0F, -2.0F, -2.0F, 2, 4, 4, CubeDeformation.NONE), PartPose.rotation(0.0F, Mth.PI, Mth.PI));
+        flashlight.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_FLASHLIGHT_LIGHT, CubeListBuilder.create().texOffs(0, 32).addBox(-4.0F, -2.0F, -2.0F, 2, 4, 4, CubeDeformation.NONE), PartPose.ZERO);
 
         modelPartData.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_DISPLAY, CubeListBuilder.create().texOffs(16, 48).addBox(0.0F, -6.0F, -4.0F, 1, 6, 8, CubeDeformation.NONE), PartPose.rotation(0.0F, 0.0F, 202.5F * Mth.DEG_TO_RAD));
         return LayerDefinition.create(modelData, 64, 64);
@@ -120,7 +120,7 @@ public class RocketWorkbenchBlockEntityRenderer implements BlockEntityRenderer<R
         matrices.popPose();
 
         matrices.pushPose();
-        matrices.translate(0.5F, 0.875F, 1.3125F);
+        matrices.translate(0.5F, 0.875F, 1.25F);
         this.drillTool.render(matrices, vertexConsumer, light, overlay);
         matrices.popPose();
 
