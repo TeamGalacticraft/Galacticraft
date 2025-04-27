@@ -47,6 +47,7 @@ import static dev.galacticraft.mod.Constant.RecipeViewer.*;
 
 @Environment(EnvType.CLIENT)
 public class DefaultFabricationCategory implements DisplayCategory<DefaultFabricationDisplay> {
+
     @Override
     public CategoryIdentifier<? extends DefaultFabricationDisplay> getCategoryIdentifier() {
         return GalacticraftREIServerPlugin.CIRCUIT_FABRICATION;

@@ -85,6 +85,10 @@ public class TooltipUtil {
 
     public static Component formatFluidRemaining(long amount, long capacity) {
         Component unit = Component.empty();
+        if (amount == Long.MAX_VALUE) {
+            return Component.translatable(Translations.Tooltip.INFINITE)
+                    .setStyle(Style.EMPTY.withColor(ColorUtil.getRainbow()));
+        }
         if (!Screen.hasShiftDown()) {
             amount = (long) ((double) amount / (double) (FluidConstants.BUCKET / 1000));
             capacity = (long) ((double) capacity / (double) (FluidConstants.BUCKET / 1000));

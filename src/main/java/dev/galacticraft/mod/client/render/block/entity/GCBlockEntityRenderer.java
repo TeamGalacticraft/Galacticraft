@@ -27,8 +27,8 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 
 public class GCBlockEntityRenderer {
     public static void register() {
-        BlockEntityRenderers.register(GCBlockEntityTypes.BASIC_SOLAR_PANEL, BasicSolarPanelBlockEntityRenderer::new);
-        BlockEntityRenderers.register(GCBlockEntityTypes.ADVANCED_SOLAR_PANEL, AdvancedSolarPanelBlockEntityRenderer::new);
+        BlockEntityRenderers.register(GCBlockEntityTypes.BASIC_SOLAR_PANEL, SolarPanelBlockEntityRenderer::new);
+        BlockEntityRenderers.register(GCBlockEntityTypes.ADVANCED_SOLAR_PANEL, SolarPanelBlockEntityRenderer::new);
         BlockEntityRenderers.register(GCBlockEntityTypes.GLASS_FLUID_PIPE, FluidPipeBlockEntityRenderer::new);
         BlockEntityRenderers.register(GCBlockEntityTypes.OXYGEN_BUBBLE_DISTRIBUTOR, BubbleDistributorRenderer::new);
         //BlockEntityRenderers.register(GCBlockEntityTypes.CANNED_FOOD, CannedFoodBlockEntityRenderer::new);

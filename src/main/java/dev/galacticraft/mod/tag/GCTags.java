@@ -91,7 +91,8 @@ public class GCTags {
     public static final TagKey<Item> COMPRESSED_TIN = commonTag("plates/tin");
     public static final TagKey<Item> STAINED_GLASS_FLUID_PIPES = TagKey.create(Registries.ITEM, Constant.id("stained_glass_fluid_pipes"));
 
-    public static final TagKey<Item> EVOLVED_CREEPER_DROP_MUSIC_DISCS = TagKey.create(Registries.ITEM, Constant.id("evolved_creeper_drop_music_discs"));
+    public static final TagKey<Item> ROCKET_STORAGE_UPGRADE_ITEMS = galacticraftTag("rocket_storage_upgrade_items");
+    public static final TagKey<Item> EVOLVED_CREEPER_DROP_MUSIC_DISCS = galacticraftTag("evolved_creeper_drop_music_discs");
 
     public static final TagKey<Structure> MOON_RUINS = TagKey.create(Registries.STRUCTURE, Constant.id("moon_ruins"));
 

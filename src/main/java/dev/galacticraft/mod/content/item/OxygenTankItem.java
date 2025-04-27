@@ -30,19 +30,12 @@ import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 
 import java.util.List;
 
@@ -113,8 +106,13 @@ public class OxygenTankItem extends AccessoryItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
-        StorageView<FluidVariant> storage = OxygenTankItem.getStorage(stack);
-        TooltipUtil.appendFluidRemainingTooltip(Translations.Tooltip.OXYGEN_REMAINING, storage.getAmount(), storage.getCapacity(), tooltip);
+        this.appendOxygenTankTooltip(stack, context, tooltip, type);
         super.appendHoverText(stack, context, tooltip, type);
     }
+
+    protected void appendOxygenTankTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
+        StorageView<FluidVariant> storage = OxygenTankItem.getStorage(stack);
+        TooltipUtil.appendFluidRemainingTooltip(Translations.Tooltip.OXYGEN_REMAINING, storage.getAmount(), storage.getCapacity(), tooltip);
+    }
+
 }

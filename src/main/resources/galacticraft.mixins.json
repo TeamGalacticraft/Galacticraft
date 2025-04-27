@@ -14,7 +14,6 @@
     "EntityMixin",
     "FireworkRocketItemMixin",
     "FlowingFluidMixin",
-    "GiveCommandMixin",
     "ItemEntityMixin",
     "ItemStackMixin",
     "LanternBlockMixin",

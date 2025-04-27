@@ -125,7 +125,6 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
                 var part = level.getBlockEntity(otherPart);
                 assert part != null; // This will never be null because level.setBlockState will put a blockentity there.
                 ((MultiBlockPart) part).setBasePos(blockPos);
-                part.setChanged();
             }
         }
     }

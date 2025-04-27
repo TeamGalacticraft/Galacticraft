@@ -32,16 +32,15 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
 import java.util.Iterator;
 import java.util.List;
 
-public class InfiniteOxygenTankItem extends AccessoryItem implements Storage<FluidVariant>, StorageView<FluidVariant> {
+public class InfiniteOxygenTankItem extends OxygenTankItem implements Storage<FluidVariant>, StorageView<FluidVariant> {
     public InfiniteOxygenTankItem(Properties settings) {
-        super(settings);
+        super(settings, Integer.MAX_VALUE);
     }
 
     @Override
@@ -60,10 +59,9 @@ public class InfiniteOxygenTankItem extends AccessoryItem implements Storage<Flu
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
+    protected void appendOxygenTankTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
         TooltipUtil.appendInfiniteCapacityTooltip(Translations.Tooltip.OXYGEN_REMAINING, tooltip);
         TooltipUtil.appendCreativeTooltip(tooltip, Constant.Text.LIGHT_PURPLE_STYLE);
-        super.appendHoverText(stack, context, tooltip, type);
     }
 
     @Override
@@ -87,6 +85,11 @@ public class InfiniteOxygenTankItem extends AccessoryItem implements Storage<Flu
             return l;
         }
         return 0;
+    }
+
+    @Override
+    public boolean isBarVisible(ItemStack stack) {
+        return false;
     }
 
     @Override

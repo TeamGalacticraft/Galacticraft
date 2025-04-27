@@ -204,13 +204,9 @@ public abstract class EntityMixin implements EntityAccessor {
         if (motionSqrd > 0.001 && this.level.dimensionTypeRegistration().is(GCTags.FOOTPRINTS_DIMENSIONS) && getVehicle() == null && !isFlying) {
             // If it has been long enough since the last step
             if (galacticraft$getDistanceSinceLastStep() > 0.35) {
-                Vector3d pos = new Vector3d(getX(), getY(), getZ());
-                // Set the footprint position to the block below and add
-                // random number to stop z-fighting
-                pos.y = Mth.floor(getY()) + random.nextFloat() / 100.0F;
+                Vector3d pos = new Vector3d(getX(), Math.floor(getY()), getZ());
 
-                // Adjust footprint to left or right depending on step
-                // count
+                // Adjust footprint to left or right depending on step count
                 switch (galacticraft$getLastStep()) {
                     case 0:
                         pos.add(new Vector3d(Math.sin(Math.toRadians(-getYRot() + 90)) * 0.25, 0, Math.cos(Math.toRadians(-getYRot() + 90)) * 0.25));

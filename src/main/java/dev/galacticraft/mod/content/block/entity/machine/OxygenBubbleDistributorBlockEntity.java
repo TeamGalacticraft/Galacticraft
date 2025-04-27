@@ -179,7 +179,6 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     @Override
     protected void tickDisabled(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         this.distributeOxygenToArea(this.prevSize, this.oxygenWorld); // REVIEW: Inefficient?
-        this.size = 0; // I believe this is needed to allow multiple bubbles in a level?
         this.trySyncSize(level, pos, profiler);
 
         super.tickDisabled(level, pos, state, profiler);

@@ -26,6 +26,7 @@ import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.jei.category.JEICompressingCategory;
 import dev.galacticraft.mod.compat.jei.category.JEIFabricationCategory;
+import dev.galacticraft.mod.compat.jei.category.JEIRocketCategory;
 import dev.galacticraft.mod.compat.jei.replacers.EmergencyKitRecipeMaker;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.recipe.EmergencyKitRecipe;
@@ -65,6 +66,7 @@ public class GCJEIPlugin implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.CIRCUIT_FABRICATOR), GCJEIRecipeTypes.FABRICATION);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.COMPRESSOR), GCJEIRecipeTypes.COMPRESSING);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_COMPRESSOR), GCJEIRecipeTypes.COMPRESSING);
+        registration.addRecipeCatalyst(new ItemStack(GCBlocks.ROCKET_WORKBENCH), GCJEIRecipeTypes.ROCKET);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_ARC_FURNACE), RecipeTypes.BLASTING);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_FURNACE), RecipeTypes.SMELTING);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.COMPRESSOR), RecipeTypes.FUELING);
@@ -75,7 +77,8 @@ public class GCJEIPlugin implements IModPlugin {
         IGuiHelper helper = registration.getJeiHelpers().getGuiHelper();
         registration.addRecipeCategories(
                 new JEIFabricationCategory(helper),
-                new JEICompressingCategory(helper)
+                new JEICompressingCategory(helper),
+                new JEIRocketCategory(helper)
         );
     }
 
@@ -91,6 +94,7 @@ public class GCJEIPlugin implements IModPlugin {
 
         registration.addRecipes(GCJEIRecipeTypes.FABRICATION, manager.getAllRecipesFor(GCRecipes.FABRICATION_TYPE).stream().map(RecipeHolder::value).toList());
         registration.addRecipes(GCJEIRecipeTypes.COMPRESSING, manager.getAllRecipesFor(GCRecipes.COMPRESSING_TYPE).stream().map(RecipeHolder::value).toList());
+        registration.addRecipes(GCJEIRecipeTypes.ROCKET, manager.getAllRecipesFor(GCRecipes.ROCKET_TYPE).stream().map(RecipeHolder::value).toList());
 
         IJeiHelpers jeiHelpers = registration.getJeiHelpers();
         var craftingRecipes = manager.getAllRecipesFor(RecipeType.CRAFTING);;
