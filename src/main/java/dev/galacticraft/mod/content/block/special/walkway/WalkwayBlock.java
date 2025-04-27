@@ -100,7 +100,7 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
             if (SHAPES[index] != null) {
                 return Shapes.or(SHAPES[index], shapes.toArray(VoxelShape[]::new));
             }
-            return Shapes.or(SHAPES[index] = ConnectingBlockUtil.createWalkwayShape(walkway.getDirection()), shapes.toArray(VoxelShape[]::new));
+            return Shapes.or(SHAPES[index] = ConnectingBlockUtil.WALKWAY_SHAPES.get(walkway.getDirection()), shapes.toArray(VoxelShape[]::new));
         }
         return ConnectingBlockUtil.WALKWAY_TOP;
     }

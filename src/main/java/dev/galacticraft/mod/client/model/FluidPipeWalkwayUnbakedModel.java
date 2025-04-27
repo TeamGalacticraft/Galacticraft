@@ -38,8 +38,12 @@ import java.util.List;
 import java.util.function.Function;
 
 public class FluidPipeWalkwayUnbakedModel implements UnbakedModel {
-    public static final FluidPipeWalkwayUnbakedModel INSTANCE = new FluidPipeWalkwayUnbakedModel();
     private static final List<ResourceLocation> COLORED_FLUID_PIPE_WALKWAY = Util.make(Lists.newArrayList(), list -> list.addAll(Arrays.stream(DyeColor.values()).map(color -> Constant.id("block/" + color + "_fluid_pipe_walkway")).collect(ImmutableList.toImmutableList())));
+    private final ResourceLocation pipeTexture;
+
+    public FluidPipeWalkwayUnbakedModel(ResourceLocation pipeTexture) {
+        this.pipeTexture = pipeTexture;
+    }
 
     @Override
     public Collection<ResourceLocation> getDependencies() {
@@ -53,6 +57,6 @@ public class FluidPipeWalkwayUnbakedModel implements UnbakedModel {
     @Nullable
     @Override
     public BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> textureGetter, ModelState state) {
-        return FluidPipeWalkwayBakedModel.getInstance(baker, textureGetter, state);
+        return new FluidPipeWalkwayBakedModel(baker, textureGetter, state, this.pipeTexture);
     }
 }

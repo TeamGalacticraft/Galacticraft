@@ -26,15 +26,11 @@ import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.FluidPipeBlock;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
-import dev.galacticraft.mod.api.block.entity.Walkway;
-import dev.galacticraft.mod.api.pipe.FluidPipe;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.networked.FluidPipeWalkwayBlockEntity;
-import dev.galacticraft.mod.content.block.special.fluidpipe.GlassFluidPipeBlock;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
-import dev.galacticraft.mod.util.DirectionUtil;
-import dev.galacticraft.mod.util.FluidUtil;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -45,16 +41,19 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+import java.util.HashMap;
 
 public class FluidPipeWalkway extends FluidPipeBlock implements FluidLoggable {
-    private static final VoxelShape[] SHAPES = new VoxelShape[64];
+    protected static HashMap<Pair<Integer, Direction>, VoxelShape> SHAPES;
 
     public FluidPipeWalkway(Properties settings, PipeColor color) {
         super(settings, color);
@@ -62,11 +61,19 @@ public class FluidPipeWalkway extends FluidPipeBlock implements FluidLoggable {
         BlockState state = this.getStateDefinition().any();
         state = FluidLoggable.applyDefaultState(state);
         state = FluidPipeBlock.applyDefaultState(state);
+        state.setValue(BlockStateProperties.FACING, Direction.UP);
         this.registerDefaultState(state);
-    }
 
-    private static int getFacingMask(Direction direction) {
-        return 1 << direction.get3DDataValue();
+        SHAPES = Util.make(new HashMap<>(), map -> {
+            for (int pipeAabb = 0; pipeAabb < Math.pow(2, 6); pipeAabb++) {
+                for (Direction platformDirection : Direction.values()) {
+                    map.put(Pair.of(pipeAabb, platformDirection), Shapes.or(
+                            this.shapeByIndex[pipeAabb],
+                            ConnectingBlockUtil.WALKWAY_SHAPES.get(platformDirection)
+                    ));
+                }
+            }
+        });
     }
 
     @Override
@@ -76,14 +83,18 @@ public class FluidPipeWalkway extends FluidPipeBlock implements FluidLoggable {
 
     @Override
     public @NotNull VoxelShape getShape(BlockState blockState, BlockGetter level, BlockPos blockPos, CollisionContext context) {
-        if (level.getBlockEntity(blockPos) instanceof FluidPipeWalkwayBlockEntity walkway) {
-            var index = getFacingMask(walkway.getDirection());
-            if (SHAPES[index] != null) {
-                return ConnectingBlockUtil.getVoxelShape(walkway, GlassFluidPipeBlock.NORTH, GlassFluidPipeBlock.SOUTH, GlassFluidPipeBlock.EAST, GlassFluidPipeBlock.WEST, GlassFluidPipeBlock.UP, GlassFluidPipeBlock.DOWN, SHAPES[index]);
-            }
-            return ConnectingBlockUtil.getVoxelShape(walkway, GlassFluidPipeBlock.NORTH, GlassFluidPipeBlock.SOUTH, GlassFluidPipeBlock.EAST, GlassFluidPipeBlock.WEST, GlassFluidPipeBlock.UP, GlassFluidPipeBlock.DOWN, SHAPES[index] = ConnectingBlockUtil.createWalkwayShape(walkway.getDirection()));
-        }
-        return ConnectingBlockUtil.WALKWAY_TOP;
+        return SHAPES.get(Pair.of(this.getAABBIndex(blockState), blockState.getValue(BlockStateProperties.FACING)));
+//        return Shapes.join(
+//                super.getShape(blockState, level, blockPos, context),
+//                ConnectingBlockUtil.WALKWAY_SHAPES.get(blockState.getValue(BlockStateProperties.FACING)),
+////                ConnectingBlockUtil.createWalkwayShape(Direction.UP),
+//                BooleanOp.OR
+//        );
+    }
+
+    @Override
+    protected boolean canConnectTo(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos, BlockState thisState, BlockState neighborState) {
+        return super.canConnectTo(level, thisPos, direction, neighborPos, thisState, neighborState);
     }
 
     @Override
@@ -95,36 +106,7 @@ public class FluidPipeWalkway extends FluidPipeBlock implements FluidLoggable {
     @Override
     public @NotNull BlockState updateShape(BlockState blockState, Direction facing, BlockState neighborState, LevelAccessor level, BlockPos blockPos, BlockPos neighborPos) {
         FluidLoggable.tryScheduleFluidTick(level, blockState, blockPos);
-        return blockState;
-    }
-
-    @Override
-    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos fromPos, boolean notify) {
-        super.neighborChanged(blockState, level, blockPos, block, fromPos, notify);
-        var distance = fromPos.subtract(blockPos);
-
-        if (Math.abs(distance.getX() + distance.getY() + distance.getZ()) == 1 && level.getBlockEntity(blockPos) instanceof Walkway walkway) {
-            var direction = DirectionUtil.fromNormal(distance);
-            if (direction != walkway.getDirection()) {
-                if (level.getBlockEntity(blockPos.relative(direction)) instanceof FluidPipe pipe) {
-                    if (pipe.canConnect(direction.getOpposite())) {
-                        if (walkway.getConnections()[direction.ordinal()] != (walkway.getConnections()[direction.ordinal()] = true)) {
-                            level.neighborChanged(blockPos.relative(direction), blockState.getBlock(), blockPos);
-                            level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
-                        }
-                        return;
-                    }
-                } else if (FluidUtil.canAccessFluid(level, blockPos.relative(direction), direction)) {
-                    if (walkway.getConnections()[direction.ordinal()] != (walkway.getConnections()[direction.ordinal()] = true)) {
-                        level.neighborChanged(blockPos.relative(direction), blockState.getBlock(), blockPos);
-                        level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
-                    }
-                    return;
-                }
-            }
-            walkway.getConnections()[Objects.requireNonNull(direction).ordinal()] = false;
-            level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
-        }
+        return super.updateShape(blockState, facing, neighborState, level, blockPos, neighborPos);
     }
 
     @Override
@@ -136,6 +118,7 @@ public class FluidPipeWalkway extends FluidPipeBlock implements FluidLoggable {
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
         FluidPipeBlock.addStateDefinitions(stateBuilder);
         FluidLoggable.addStateDefinitions(stateBuilder);
+        stateBuilder.add(BlockStateProperties.FACING);
     }
 
     @Override

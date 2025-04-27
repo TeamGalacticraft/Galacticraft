@@ -181,22 +181,6 @@ public class GCBlocks {
     public static final Block PUMICE = BLOCKS.registerWithItem(Constant.Block.PUMICE, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_YELLOW).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F).requiresCorrectToolForDrops()));
     public static final Block VAPOR_SPOUT = BLOCKS.registerWithItem(Constant.Block.VAPOR_SPOUT, new VaporSpoutBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 2.0F).requiresCorrectToolForDrops()));
 
-    // MISC DECOR
-    public static final Block WALKWAY = BLOCKS.registerWithItem(Constant.Block.WALKWAY, new WalkwayBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(5.0f, 5.0f).sound(SoundType.METAL).requiresCorrectToolForDrops()));
-    public static final Block FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.FLUID_PIPE_WALKWAY, new FluidPipeWalkway(BlockBehaviour.Properties.ofFullCopy(WALKWAY), PipeColor.CLEAR));
-    public static final Block WIRE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.WIRE_WALKWAY, new WireWalkway(BlockBehaviour.Properties.ofFullCopy(WALKWAY)));
-    public static final Block TIN_LADDER = BLOCKS.registerWithItem(Constant.Block.TIN_LADDER, new TinLadderBlock(BlockBehaviour.Properties.of().forceSolidOff().noOcclusion().pushReaction(PushReaction.DESTROY).strength(1.0f, 1.0f).sound(SoundType.METAL).requiresCorrectToolForDrops()));
-    public static final Block IRON_GRATING = BLOCKS.registerWithItem(Constant.Block.IRON_GRATING, new IronGratingBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(2.5f, 6.0f).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
-
-    // SPECIAL
-    public static final Block ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.ALUMINUM_WIRE, new AluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).mapColor(MapColor.NONE)));
-    public static final Block SEALABLE_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.SEALABLE_ALUMINUM_WIRE, new SealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(ALUMINUM_DECORATION.block())));
-    public static final Block HEAVY_SEALABLE_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE, new HeavySealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(ALUMINUM_DECORATION.block())));
-    public static final Block FUELING_PAD = BLOCKS.registerWithItem(Constant.Block.FUELING_PAD, new FuelPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 10.0F).requiresCorrectToolForDrops()));
-    public static final Block ROCKET_LAUNCH_PAD = BLOCKS.registerWithItem(Constant.Block.ROCKET_LAUNCH_PAD, new LaunchPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 10.0F).requiresCorrectToolForDrops()));
-    public static final Block ROCKET_WORKBENCH = BLOCKS.registerWithItem(Constant.Block.ROCKET_WORKBENCH, new RocketWorkbench(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F)));
-    public static final Block PARACHEST = BLOCKS.registerWithItem(Constant.Block.PARACHEST, new ParachestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST)));
-
     // GLASS FLUID PIPES
     public static final Block GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.GLASS_FLUID_PIPE, new GlassFluidPipeBlock(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).sound(SoundType.GLASS).requiresCorrectToolForDrops().forceSolidOn(), PipeColor.CLEAR));
     public static final Block WHITE_GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.WHITE_GLASS_FLUID_PIPE, new GlassFluidPipeBlock(GLASS_FLUID_PIPE.properties(), PipeColor.WHITE));
@@ -235,18 +219,6 @@ public class GCBlocks {
         map.put(PipeColor.RED, RED_GLASS_FLUID_PIPE);
         map.put(PipeColor.BLACK, BLACK_GLASS_FLUID_PIPE);
     });
-
-    // LIGHT PANELS
-    public static final Block SQUARE_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.SQUARE_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)));
-    public static final Block SPOTLIGHT_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.SPOTLIGHT_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL), 3.0f));
-    public static final Block LINEAR_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.LINEAR_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL), 5.0f));
-    public static final Block DASHED_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.DASHED_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL), 1.0f));
-    public static final Block DIAGONAL_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.DIAGONAL_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL), 1.0f));
-
-    // VACUUM GLASS
-    public static final Block VACUUM_GLASS = BLOCKS.registerWithItem(Constant.Block.VACUUM_GLASS, new VacuumGlassBlock(BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.GLASS)));
-    public static final Block CLEAR_VACUUM_GLASS = BLOCKS.registerWithItem(Constant.Block.CLEAR_VACUUM_GLASS, new VacuumGlassBlock(BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.GLASS)));
-    public static final Block STRONG_VACUUM_GLASS = BLOCKS.registerWithItem(Constant.Block.STRONG_VACUUM_GLASS, new VacuumGlassBlock(BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.GLASS)));
 
     // ORES
     public static final Block SILICON_ORE = BLOCKS.registerWithItem(Constant.Block.SILICON_ORE, new DropExperienceBlock(ConstantInt.of(0), oreSettings(Blocks.STONE, 3.0F, 3.0F)));
@@ -330,7 +302,7 @@ public class GCBlocks {
 
     // MISC DECOR
     public static final Block WALKWAY = BLOCKS.registerWithItem(Constant.Block.WALKWAY, new WalkwayBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0f, 5.0f).sound(SoundType.METAL).requiresCorrectToolForDrops()));
-    public static final Block FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.FLUID_PIPE_WALKWAY, new FluidPipeWalkway(BlockBehaviour.Properties.ofFullCopy(WALKWAY)));
+    public static final Block FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.FLUID_PIPE_WALKWAY, new FluidPipeWalkway(BlockBehaviour.Properties.ofFullCopy(WALKWAY), PipeColor.CLEAR));
     public static final Block WIRE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.WIRE_WALKWAY, new WireWalkway(BlockBehaviour.Properties.ofFullCopy(WALKWAY)));
     public static final Block TIN_LADDER = BLOCKS.registerWithItem(Constant.Block.TIN_LADDER, new TinLadderBlock(BlockBehaviour.Properties.of().forceSolidOff().noOcclusion().pushReaction(PushReaction.DESTROY).strength(1.0f, 1.0f).sound(SoundType.METAL).requiresCorrectToolForDrops()));
     public static final Block IRON_GRATING = BLOCKS.registerWithItem(Constant.Block.IRON_GRATING, new IronGratingBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(2.5f, 6.0f).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
@@ -339,7 +311,6 @@ public class GCBlocks {
     public static final Block ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.ALUMINUM_WIRE, new AluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).forceSolidOn()));
     public static final Block SEALABLE_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.SEALABLE_ALUMINUM_WIRE, new SealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(TIN_DECORATION.block())));
     public static final Block HEAVY_SEALABLE_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE, new HeavySealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(TIN_DECORATION.block())));
-    public static final Block GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.GLASS_FLUID_PIPE, new GlassFluidPipeBlock(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).sound(SoundType.GLASS).requiresCorrectToolForDrops().forceSolidOn()));
     public static final Block ROCKET_LAUNCH_PAD = BLOCKS.registerWithItem(Constant.Block.ROCKET_LAUNCH_PAD, new LaunchPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 10.0F).requiresCorrectToolForDrops()));
     public static final Block FUELING_PAD = BLOCKS.registerWithItem(Constant.Block.FUELING_PAD, new FuelPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 10.0F).requiresCorrectToolForDrops()));
     public static final Block ROCKET_WORKBENCH = BLOCKS.registerWithItem(Constant.Block.ROCKET_WORKBENCH, new RocketWorkbench(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F)));

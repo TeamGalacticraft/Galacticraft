@@ -62,7 +62,6 @@ public class GCResourceReloadListener implements SimpleSynchronousResourceReload
         WireBakedModel.invalidate();
         WalkwayBakedModel.invalidate();
         WireWalkwayBakedModel.invalidate();
-        FluidPipeWalkwayBakedModel.invalidate();
         BubbleEntityRenderer.bubbleModel = null;
 
         FluidRenderHandler oxygen = (view, pos, state) -> new TextureAtlasSprite[]{
