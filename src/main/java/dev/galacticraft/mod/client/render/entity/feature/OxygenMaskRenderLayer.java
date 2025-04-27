@@ -45,6 +45,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Zombie;
@@ -102,7 +103,7 @@ public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel
         if (body != null) {
             this.pipe = root.getChild(Constant.ModelPartName.OXYGEN_PIPE);
             if (rotate) {
-                this.pipe.xRot = (float) (Math.PI / 2.0);
+                this.pipe.xRot = Mth.HALF_PI;
             }
         } else {
             this.pipe = null;
@@ -129,8 +130,8 @@ public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel
         }
 
         if (this.mask != null && hasMask) {
-            this.mask.yRot = headYaw * (float) (Math.PI / 180.0);
-            this.mask.xRot = headPitch * (float) (Math.PI / 180.0);
+            this.mask.yRot = headYaw * Mth.DEG_TO_RAD;
+            this.mask.xRot = headPitch * Mth.DEG_TO_RAD;
             this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
         if (this.pipe != null && hasGear) {

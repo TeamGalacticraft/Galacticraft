@@ -47,6 +47,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.AbstractIllager;
@@ -97,7 +98,7 @@ public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityMode
         this.tanks = modelPartData.bake(32, 32);
 
         if (rotate) {
-            float angle = (float) (Math.PI / 2.0);
+            float angle = Mth.HALF_PI;
             this.tanks.getChild(Constant.Item.SMALL_OXYGEN_TANK).xRot = angle;
             this.tanks.getChild(Constant.Item.MEDIUM_OXYGEN_TANK).xRot = angle;
             this.tanks.getChild(Constant.Item.LARGE_OXYGEN_TANK).xRot = angle;
