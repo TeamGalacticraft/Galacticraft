@@ -24,6 +24,7 @@ package dev.galacticraft.mod.data.recipes;
 
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.recipe.EmergencyKitRecipe;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
@@ -129,6 +130,8 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .pattern("RWR")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_ALUMINUM), has(GCItems.COMPRESSED_ALUMINUM))
                 .save(output);
+
+        SpecialRecipeBuilder.special(EmergencyKitRecipe::new).save(output, "emergency_kit");
 
 
         // Misc crafting materials

@@ -55,13 +55,15 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.MOON_SURFACE_ROCK)
                 .add(GCBlocks.MOON_BASALT)
                 .add(GCBlocks.MOON_DIRT)
-                .add(GCBlocks.MOON_TURF);
+                .add(GCBlocks.MOON_TURF)
+                .add(GCBlocks.LUNASLATE);
         this.tag(GCTags.MOON_CRATER_CARVER_REPLACEABLES)
                 .add(GCBlocks.MOON_ROCK)
                 .add(GCBlocks.MOON_SURFACE_ROCK)
                 .add(GCBlocks.MOON_BASALT)
                 .add(GCBlocks.MOON_DIRT)
-                .add(GCBlocks.MOON_TURF);
+                .add(GCBlocks.MOON_TURF)
+                .add(GCBlocks.LUNASLATE);
         this.tag(GCTags.MOON_STONE_ORE_REPLACEABLES)
                 .add(GCBlocks.MOON_ROCK);
                 // .add(GCBlocks.MOON_BASALT);
@@ -155,8 +157,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(wall);
 
         for (GCBlockRegistry.DecorationSet decorationSet : decorations) {
-            slabBuilder.add(decorationSet.slab(), decorationSet.detailedSlab());
             stairsBuilder.add(decorationSet.stairs(), decorationSet.detailedStairs());
+            slabBuilder.add(decorationSet.slab(), decorationSet.detailedSlab());
             wallBuilder.add(decorationSet.wall(), decorationSet.detailedWall());
         }
 

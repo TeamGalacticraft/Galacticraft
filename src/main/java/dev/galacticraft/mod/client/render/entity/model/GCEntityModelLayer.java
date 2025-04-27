@@ -24,7 +24,7 @@ package dev.galacticraft.mod.client.render.entity.model;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.*;
-import dev.galacticraft.mod.client.render.block.entity.BasicSolarPanelBlockEntityRenderer;
+import dev.galacticraft.mod.client.render.block.entity.SolarPanelBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.block.entity.RocketWorkbenchBlockEntityRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -57,7 +57,7 @@ public class GCEntityModelLayer {
 
         EntityModelLayerRegistry.registerModelLayer(SKELETON_BOSS, EvolvedSkeletonBossModel::createBodyLayer);
 
-        EntityModelLayerRegistry.registerModelLayer(SOLAR_PANEL, BasicSolarPanelBlockEntityRenderer::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(SOLAR_PANEL, SolarPanelBlockEntityRenderer::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(ROCKET_WORKBENCH, RocketWorkbenchBlockEntityRenderer::getTexturedModelData);
     }
 }

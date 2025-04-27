@@ -22,37 +22,18 @@
 
 package dev.galacticraft.mod.screen;
 
-import com.mojang.datafixers.util.Pair;
-import dev.galacticraft.api.gas.Gases;
-import dev.galacticraft.machinelib.api.filter.ResourceFilter;
-import dev.galacticraft.machinelib.api.filter.ResourceFilters;
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.item.OxygenGearItem;
-import dev.galacticraft.mod.content.item.OxygenMaskItem;
-import dev.galacticraft.mod.content.item.ThermalArmorItem;
+import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.screen.slot.AccessorySlot;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 public class GCPlayerInventoryMenu extends AbstractContainerMenu {
-    private static final ResourceLocation[] EMPTY_ARMOR_SLOT_IDS = new ResourceLocation[]{
-            Constant.SlotSprite.THERMAL_BOOTS,
-            Constant.SlotSprite.THERMAL_PANTS,
-            Constant.SlotSprite.THERMAL_CHEST,
-            Constant.SlotSprite.THERMAL_HEAD
-    };
-    private static final EquipmentSlot[] EQUIPMENT_SLOT_ORDER = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
-    public static final int OXYGEN_TANK_1_SLOT = 4;
-    public static final int OXYGEN_TANK_2_SLOT = 5;
+    public static final int[] COLUMNS = {8, 80, 98};
 
     public final Container inventory;
 
@@ -64,42 +45,9 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
         this.player = player;
         this.inventory = player.galacticraft$getGearInv();
 
-        for (int slotY = 0; slotY < 4; ++slotY) {
-            EquipmentSlot slot = EQUIPMENT_SLOT_ORDER[slotY];
-            int finalSlotY = slotY;
-            this.addSlot(new Slot(inventory, finalSlotY, 8, 8 + slotY * 18) {
-                @Override
-                public int getMaxStackSize() {
-                    return 1;
-                }
-
-                @Override
-                public boolean mayPlace(ItemStack stack) {
-                    return slot == getPreferredEquipmentSlot(stack);
-                }
-
-                @Override
-                public boolean mayPickup(Player player) {
-                    return GCPlayerInventoryMenu.this.player == player;
-                }
-
-                @Override
-                public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-                    return Pair.of(InventoryMenu.BLOCK_ATLAS, EMPTY_ARMOR_SLOT_IDS[slot.getIndex()]);
-                }
-            });
-        }
-
-        this.addSlot(new OxygenTankSlot(inventory, OXYGEN_TANK_1_SLOT, 80, 8 + 2 * 18));
-        this.addSlot(new OxygenTankSlot(inventory, OXYGEN_TANK_2_SLOT, 80, 8 + 3 * 18));
-
-        this.addSlot(new AccessorySlot(inventory, 6, 80, 8, OxygenMaskItem.class, Constant.SlotSprite.OXYGEN_MASK));
-        this.addSlot(new AccessorySlot(inventory, 7, 80, 8 + 18, OxygenGearItem.class, Constant.SlotSprite.OXYGEN_GEAR));
-
-        int accessorySlot = 0;
-        for (int i = 8; i < 12; i++) {
-            this.addSlot(new AccessorySlot(inventory, i, 80 + 18, 8 + accessorySlot * 18));
-            accessorySlot++;
+        // Galacticraft inv
+        for (int i = 0; i < 12; ++i) {
+            this.addSlot(new AccessorySlot(inventory, player, i, COLUMNS[i / 4], 8 + (i % 4) * 18, GCAccessorySlots.SLOT_TAGS.get(i), GCAccessorySlots.SLOT_SPRITES.get(i)));
         }
 
         // Player main inv
@@ -119,40 +67,9 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
         this(syncId, inv, inv.player);
     }
 
-    private EquipmentSlot getPreferredEquipmentSlot(ItemStack stack) {
-        Item item_1 = stack.getItem();
-        if (item_1 instanceof ThermalArmorItem thermalArmorItem)
-            return thermalArmorItem.getSlotGroup().getSlot();
-        return this.player.getEquipmentSlotForItem(stack);
-    }
-
     @Override
     public boolean stillValid(Player player) {
         return player.getUUID().equals(this.player.getUUID());
-    }
-
-    private static class OxygenTankSlot extends Slot {
-        private static final ResourceFilter<Item> FILTER = ResourceFilters.canExtractFluid(Gases.OXYGEN);
-
-        public OxygenTankSlot(Container gearInventory, int slotId, int x, int y) {
-            super(gearInventory, slotId, x, y);
-        }
-
-        @Override
-        public boolean mayPlace(ItemStack stack) {
-            return FILTER.test(stack.getItem(), stack.getComponentsPatch());
-        }
-
-        @Override
-        public int getMaxStackSize() {
-            return 1;
-        }
-
-        @Nullable
-        @Override
-        public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-            return Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.OXYGEN_TANK);
-        }
     }
 
     @Override
@@ -168,19 +85,20 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
             // 4-5 (2): GC, oxygen tank slots;
             // 6-11 (6): GC, accessory slots;
             // 12-38 (27): MC, non-hotbar inventory slots;
-            // 39-48 (9): MC, hotbar slots.
+            // 39-47 (9): MC, hotbar slots.
             if (index < 12) {
-                if (!this.moveItemStackTo(stackFrom, 12, 48, false)) {
+                if (!this.moveItemStackTo(stackFrom, 39, 48, false) &&
+                    !this.moveItemStackTo(stackFrom, 12, 39, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (index < 39) {
-                if (!this.moveItemStackTo(stackFrom, 0, 8, true) &&
-                        !this.moveItemStackTo(stackFrom, 39, 48, false)) {
+                if (!this.moveItemStackTo(stackFrom, 0, 12, false) &&
+                    !this.moveItemStackTo(stackFrom, 39, 48, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (index < 49) {
-                if (!this.moveItemStackTo(stackFrom, 0, 8, true) &&
-                        !this.moveItemStackTo(stackFrom, 12, 39, false)) {
+                if (!this.moveItemStackTo(stackFrom, 0, 12, false) &&
+                    !this.moveItemStackTo(stackFrom, 12, 39, false)) {
                     return ItemStack.EMPTY;
                 }
             }

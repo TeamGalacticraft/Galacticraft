@@ -25,8 +25,8 @@ package dev.galacticraft.mod.content.block.entity;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
+import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -55,7 +55,7 @@ public class RocketWorkbenchBlockEntity extends BlockEntity implements ExtendedS
     public final SimpleContainer chests = new SimpleContainer(1) {
         @Override
         public boolean canPlaceItem(int slot, ItemStack stack) {
-            return stack.is(ConventionalItemTags.WOODEN_CHESTS) || stack.is(ConventionalItemTags.WOODEN_BARRELS);
+            return stack.is(GCTags.ROCKET_STORAGE_UPGRADE_ITEMS);
         }
 
         @Override
