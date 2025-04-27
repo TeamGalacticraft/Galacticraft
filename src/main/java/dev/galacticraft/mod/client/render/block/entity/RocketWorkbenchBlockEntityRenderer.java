@@ -29,6 +29,7 @@ import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
+import dev.galacticraft.mod.content.block.special.RocketWorkbench;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelPart;
@@ -70,7 +71,7 @@ public class RocketWorkbenchBlockEntityRenderer implements BlockEntityRenderer<R
         PartDefinition modelPartData = modelData.getRoot();
         modelPartData.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_TOP, CubeListBuilder.create().texOffs(0, 32).addBox(2.0F, -4.0F, -14.0F, 12, 4, 12, CubeDeformation.NONE), PartPose.rotation(Mth.PI, 0.0F, 0.0F));
 
-        modelPartData.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_PLIER_TOOL_ARM, CubeListBuilder.create().texOffs(48, 32).addBox(6.0F, -15.0F, -4.0F, 4, 16, 4, CubeDeformation.NONE), PartPose.rotation(157.5F * Mth.DEG_TO_RAD, 0.0F, 0.0F));
+        modelPartData.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_PLIER_TOOL_ARM, CubeListBuilder.create().texOffs(48, 32).addBox(-2.0F, -15.0F, -4.0F, 4, 16, 4, CubeDeformation.NONE), PartPose.rotation(157.5F * Mth.DEG_TO_RAD, 0.0F, 0.0F));
         PartDefinition plierSmallArm = modelPartData.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_PLIER_TOOL_SMALL_ARM, CubeListBuilder.create().texOffs(48, 0).addBox(-1.0F, -12.0F, -1.0F, 2, 13, 2, CubeDeformation.NONE), PartPose.rotation(Mth.PI, 0.0F, 0.0F));
         plierSmallArm.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_PLIER_TOOL_PLIERS, CubeListBuilder.create().texOffs(0, 0).addBox(-2.0F, -2.0F, 12.01F, 4, 4, 3, CubeDeformation.NONE), PartPose.rotation(Mth.HALF_PI, Mth.PI, 0.0F));
 
@@ -78,20 +79,22 @@ public class RocketWorkbenchBlockEntityRenderer implements BlockEntityRenderer<R
         PartDefinition drillTool = modelPartData.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_DRILL_TOOL_DRILL, CubeListBuilder.create().texOffs(0, 48).addBox(-2.0F, -2.0F, -2.0F, 4, 8, 4, CubeDeformation.NONE), PartPose.rotation(Mth.HALF_PI, Mth.PI, 0.0F));
         drillTool.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_DRILL_TOOL_DRILL_BIT, CubeListBuilder.create().texOffs(0, 6).addBox(0.0F, 6.0F, -0.5F, 0, 4, 1, CubeDeformation.NONE), PartPose.ZERO);
 
-        PartDefinition flashlightArm = modelPartData.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_FLASHLIGHT_HOLDER, CubeListBuilder.create().texOffs(56, 0).addBox(-1.0F, -14.0F, 7.5F, 1, 14, 1, CubeDeformation.NONE), PartPose.rotation(0.0F, 0.0F, 202.5F * Mth.DEG_TO_RAD));
+        PartDefinition flashlightArm = modelPartData.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_FLASHLIGHT_HOLDER, CubeListBuilder.create().texOffs(56, 0).addBox(-1.0F, -14.0F, -0.5F, 1, 14, 1, CubeDeformation.NONE), PartPose.rotation(0.0F, 0.0F, 202.5F * Mth.DEG_TO_RAD));
         PartDefinition flashlight = modelPartData.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_FLASHLIGHT_HANDLE, CubeListBuilder.create().texOffs(0, 40).addBox(-2.0F, -1.0F, -1.0F, 4, 2, 2, CubeDeformation.NONE), PartPose.rotation(0.0F, Mth.PI, 0.0F));
         flashlight.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_FLASHLIGHT_LIGHT, CubeListBuilder.create().texOffs(0, 32).addBox(-4.0F, -2.0F, -2.0F, 2, 4, 4, CubeDeformation.NONE), PartPose.ZERO);
 
-        modelPartData.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_DISPLAY, CubeListBuilder.create().texOffs(16, 48).addBox(0.0F, -6.0F, 4.0F, 1, 6, 8, CubeDeformation.NONE), PartPose.rotation(0.0F, 0.0F, 202.5F * Mth.DEG_TO_RAD));
+        modelPartData.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_DISPLAY, CubeListBuilder.create().texOffs(16, 48).addBox(0.0F, -6.0F, -4.0F, 1, 6, 8, CubeDeformation.NONE), PartPose.rotation(0.0F, 0.0F, 202.5F * Mth.DEG_TO_RAD));
         return LayerDefinition.create(modelData, 64, 64);
     }
 
     @Override
     public void render(RocketWorkbenchBlockEntity blockEntity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
         light = LevelRenderer.getLightColor(blockEntity.getLevel(), blockEntity.getBlockPos().relative(Direction.UP, 1));
+        Direction facing = blockEntity.getBlockState().getValue(RocketWorkbench.FACING);
 
         matrices.pushPose();
         matrices.translate(0.0F, 1.0F, 0.0F);
+        matrices.rotateAround(Axis.YP.rotationDegrees(90.0F - facing.toYRot()), 0.5F, 0.0F, 0.5F);
         RenderSystem.setShaderTexture(0, RocketWorkbenchBlockEntityRenderer.TEXTURE);
         this.render(matrices, vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(TEXTURE)), light, overlay);
         matrices.popPose();
@@ -100,7 +103,11 @@ public class RocketWorkbenchBlockEntityRenderer implements BlockEntityRenderer<R
     public void render(PoseStack matrices, VertexConsumer vertexConsumer, int light, int overlay) {
         this.top.render(matrices, vertexConsumer, light, overlay);
 
+        matrices.pushPose();
+        matrices.translate(0.5F, 0.0F, 0.0F);
         this.plierArm.render(matrices, vertexConsumer, light, overlay);
+        matrices.popPose();
+
         matrices.pushPose();
         matrices.mulPose(Axis.XP.rotationDegrees(40.0F));
         matrices.translate(0.5F, 0.55F, -0.69F);
@@ -118,7 +125,7 @@ public class RocketWorkbenchBlockEntityRenderer implements BlockEntityRenderer<R
         matrices.popPose();
 
         matrices.pushPose();
-        matrices.translate(0.125F, 0.0F, 0.0F);
+        matrices.translate(0.125F, 0.0F, 0.5F);
         this.flashlightArm.render(matrices, vertexConsumer, light, overlay);
         matrices.popPose();
 
@@ -129,7 +136,7 @@ public class RocketWorkbenchBlockEntityRenderer implements BlockEntityRenderer<R
         matrices.popPose();
 
         matrices.pushPose();
-        matrices.translate(1.0F, 0.0F, 0.0F);
+        matrices.translate(1.0F, 0.0F, 0.5F);
         this.display.render(matrices, vertexConsumer, light, overlay);
         matrices.popPose();
     }

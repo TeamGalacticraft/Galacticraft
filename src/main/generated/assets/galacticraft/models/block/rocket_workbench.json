@@ -3,7 +3,6 @@
   "textures": {
     "bottom": "galacticraft:block/rocket_workbench_bottom",
     "side": "galacticraft:block/rocket_workbench_side",
-    "top": "galacticraft:block/rocket_workbench_top",
-    "particle": "galacticraft:block/machine"
+    "top": "galacticraft:block/rocket_workbench_top"
   }
 }

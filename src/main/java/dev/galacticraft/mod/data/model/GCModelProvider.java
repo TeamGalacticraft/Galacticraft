@@ -36,6 +36,7 @@ import dev.galacticraft.mod.content.block.environment.CavernousVines;
 import dev.galacticraft.mod.content.block.machine.FuelLoaderBlock;
 import dev.galacticraft.mod.content.block.machine.ResourceStorageBlock;
 import dev.galacticraft.mod.content.block.special.ParachestBlock;
+import dev.galacticraft.mod.content.block.special.RocketWorkbench;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -149,7 +150,6 @@ public class GCModelProvider extends FabricModelProvider {
         createLaunchPadBlock(GCBlocks.FUELING_PAD, generator);
         createLaunchPadBlock(GCBlocks.ROCKET_LAUNCH_PAD, generator);
         this.createRocketWorkbench(generator);
-        // generator.createNonTemplateModelBlock(GCBlocks.ROCKET_WORKBENCH);
         generator.createNonTemplateModelBlock(GCBlocks.FALLEN_METEOR);
 
         // LIGHT PANELS
@@ -468,7 +468,15 @@ public class GCModelProvider extends FabricModelProvider {
                 .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(block, "_bottom"))
                 .put(TextureSlot.TOP, TextureMapping.getBlockTexture(block, "_top"))
                 .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block, "_side"));
-        generator.createTrivialBlock(block, textureMapping, ModelTemplates.CUBE_BOTTOM_TOP);
+        ResourceLocation resourceLocation = ModelTemplates.CUBE_BOTTOM_TOP.create(block, textureMapping, generator.modelOutput);
+
+        var workbench = MultiPartGenerator.multiPart(block);
+        Direction.Plane.HORIZONTAL.forEach(state -> {
+            workbench.with(Condition.condition().term(RocketWorkbench.FACING, state), Variant.variant()
+                    .with(VariantProperties.Y_ROT, getRotationFromDirection(state))
+                    .with(VariantProperties.MODEL, resourceLocation));
+        });
+        generator.blockStateOutput.accept(workbench);
     }
 
     private void createParachests(BlockModelGenerators generator) {

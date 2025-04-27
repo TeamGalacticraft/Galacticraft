@@ -1,7 +1,40 @@
 {
-  "variants": {
-    "": {
-      "model": "galacticraft:block/rocket_workbench"
+  "multipart": [
+    {
+      "apply": {
+        "model": "galacticraft:block/rocket_workbench",
+        "y": 0
+      },
+      "when": {
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/rocket_workbench",
+        "y": 90
+      },
+      "when": {
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/rocket_workbench",
+        "y": 180
+      },
+      "when": {
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/rocket_workbench",
+        "y": 270
+      },
+      "when": {
+        "facing": "west"
+      }
     }
-  }
+  ]
 }
