@@ -106,7 +106,15 @@ public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        var fluidState = context.getLevel().getFluidState(context.getClickedPos());
+        Level level = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+
+        // Prevent placing walkway inside the player
+        if (!level.isUnobstructed(null, Shapes.block().move(pos.getX(), pos.getY(), pos.getZ()))) {
+            return null;
+        }
+
+        var fluidState = level.getFluidState(pos);
         return this.defaultBlockState()
                 .setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType()))
                 .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1))
