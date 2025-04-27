@@ -1,0 +1,9 @@
+{
+    "parent": "block/block",
+    "galacticraft:obj": true,
+    "obj": "galacticraft:models/block/nasa_workbench.obj",
+    "mtl": "galacticraft:models/block/nasa_workbench.mtl",
+    "textures": {
+      "particle": "galacticraft:block/machine"
+    }
+  }
