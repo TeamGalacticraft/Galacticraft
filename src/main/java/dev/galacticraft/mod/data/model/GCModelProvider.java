@@ -477,6 +477,7 @@ public class GCModelProvider extends FabricModelProvider {
                     .with(VariantProperties.MODEL, resourceLocation));
         });
         generator.blockStateOutput.accept(workbench);
+        generator.skipAutoItemBlock(block);
     }
 
     private void createParachests(BlockModelGenerators generator) {
