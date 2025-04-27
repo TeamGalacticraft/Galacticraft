@@ -33,14 +33,13 @@ import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberPart;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
-import dev.galacticraft.mod.content.item.OxygenTankItem;
+import dev.galacticraft.mod.content.item.InfiniteOxygenTankItem;
 import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -137,15 +136,12 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
 
         if (this.galacticraft$hasMaskAndGear()) {
             InventoryStorage tankInv = InventoryStorage.of(galacticraft$getOxygenTanks(), null);
-            for (int i = 0; i < tankInv.getSlotCount(); i++) {
+            for (int i = 1; i < tankInv.getSlotCount(); i++) {
                 ItemStack stack = tankInv.getSlot(i).getResource().toStack();
-                if (stack.getItem() instanceof OxygenTankItem) {
-                    StorageView<FluidVariant> view = OxygenTankItem.getStorage(stack);
-                    if (view.getCapacity() == Long.MAX_VALUE) {
-                        this.lastHurtBySuffocationTimestamp = this.tickCount;
-                        cir.setReturnValue(this.increaseAirSupply(air));
-                        return;
-                    }
+                if (stack.getItem() instanceof InfiniteOxygenTankItem) {
+                    this.lastHurtBySuffocationTimestamp = this.tickCount;
+                    cir.setReturnValue(this.increaseAirSupply(air));
+                    return;
                 }
             }
             for (int i = 0; i < tankInv.getSlotCount(); i++) {
