@@ -30,6 +30,7 @@ import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
@@ -41,9 +42,6 @@ import java.util.UUID;
 import java.util.function.IntFunction;
 
 public class LaunchPadBlockEntity extends BlockEntity implements FuelDock {
-    public static final String ENTITY_UUID = "entity_uuid";
-    public static final String TYPE = "type";
-
     private UUID entityUUID = null;
     private @Nullable Dockable docked;
     private Type type;
@@ -69,23 +67,22 @@ public class LaunchPadBlockEntity extends BlockEntity implements FuelDock {
 
     @Override
     public BlockPos getDockPos() {
-        return getBlockPos();
+        return this.getBlockPos();
     }
 
     public Dockable getDockedEntity() {
-        return docked;
-    }
-
-    public boolean hasDockedEntity() {
         if (this.entityUUID != null) {
             if (this.docked == null && this.level instanceof ServerLevel) {
-                this.docked = (Rocket) ((ServerLevel) this.level).getEntity(this.entityUUID);
+                this.docked = (Dockable) ((ServerLevel) this.level).getEntity(this.entityUUID);
             }
         } else {
             this.docked = null;
         }
+        return this.docked;
+    }
 
-        return this.docked != null;
+    public boolean hasDockedEntity() {
+        return this.getDockedEntity() != null;
     }
 
     @Override
@@ -93,37 +90,39 @@ public class LaunchPadBlockEntity extends BlockEntity implements FuelDock {
         super.loadAdditional(nbt, registryLookup);
         this.entityUUID = null;
         this.docked = null;
-        this.type = Type.byName(nbt.getString(TYPE));
+        this.type = Type.byName(nbt.getString("Type"));
 
-        if (nbt.contains(Constant.Nbt.ROCKET_UUID)) {
-            this.entityUUID = nbt.getUUID(Constant.Nbt.ROCKET_UUID);
+        if (nbt.hasUUID(Constant.Nbt.DOCKED_UUID)) {
+            this.entityUUID = nbt.getUUID(Constant.Nbt.DOCKED_UUID);
             if (this.level instanceof ServerLevel) {
-                this.docked = (Rocket) ((ServerLevel) this.level).getEntity(this.entityUUID);
+                this.docked = (Dockable) ((ServerLevel) this.level).getEntity(this.entityUUID);
             }
         }
     }
 
     @Override
     protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
-        if (this.entityUUID != null) nbt.putUUID(ENTITY_UUID, entityUUID);
-        nbt.putString(TYPE, type.getSerializedName());
         super.saveAdditional(nbt, registryLookup);
+        if (this.entityUUID != null) nbt.putUUID(Constant.Nbt.DOCKED_UUID, this.entityUUID);
+        nbt.putString("Type", type.getSerializedName());
+    }
+
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
-        CompoundTag nbt = super.getUpdateTag(registryLookup);
-        if (this.entityUUID != null) nbt.putUUID(ENTITY_UUID, this.entityUUID);
-        nbt.putString(TYPE, type.getSerializedName());
-        return nbt;
+        return this.saveWithoutMetadata(registryLookup);
     }
 
     public UUID getDockedUUID() {
-        return entityUUID;
+        return this.entityUUID;
     }
 
     public Type getPadType() {
-        return type;
+        return this.type;
     }
 
     public enum Type implements StringRepresentable {

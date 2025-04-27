@@ -64,8 +64,10 @@ public class ParachestBlock extends GCBlock implements EntityBlock {
 
     public ParachestBlock(Properties properties) {
         super(properties);
-        registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH)
-                .setValue(COLOR, DyeColor.WHITE));
+        this.registerDefaultState(this.getStateDefinition().any()
+                .setValue(FACING, Direction.NORTH)
+                .setValue(COLOR, DyeColor.WHITE)
+        );
     }
 
     @Override

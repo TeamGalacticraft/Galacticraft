@@ -80,8 +80,7 @@ public class StandardWrenchItem extends Item {
             BlockPos pos = context.getClickedPos();
             this.use(player, world.getBlockState(pos), world, pos, context.getHand(), context.getItemInHand());
         }
-
-        return InteractionResult.SUCCESS;
+        return InteractionResult.sidedSuccess(world.isClientSide);
     }
 
     private void use(Player player, BlockState state, LevelAccessor world, BlockPos pos, InteractionHand hand, ItemStack stack) {
@@ -126,15 +125,15 @@ public class StandardWrenchItem extends Item {
                     world.setBlock(pos, newState, 3);
                 }
             }
-            stack.hurtAndBreak(2, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
+            stack.hurtAndBreak(1, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
         } else if (block.getStateDefinition().getProperty("axis") instanceof EnumProperty property) {
             BlockState newState = cycle(state, property, player.isShiftKeyDown());
             world.setBlock(pos, newState, 3);
-            stack.hurtAndBreak(2, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
+            stack.hurtAndBreak(1, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
         } else if (block.getStateDefinition().getProperty("rotation") instanceof IntegerProperty property) {
             BlockState newState = cycle(state, property, player.isShiftKeyDown());
             world.setBlock(pos, newState, 3);
-            stack.hurtAndBreak(2, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
+            stack.hurtAndBreak(1, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
         }
     }
 

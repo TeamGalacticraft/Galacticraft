@@ -71,7 +71,7 @@ public class SolarPanelBlockEntityRenderer implements BlockEntityRenderer<Abstra
 
     @Override
     public void render(AbstractSolarPanelBlockEntity blockEntity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
-        light = LevelRenderer.getLightColor(blockEntity.getLevel(), blockEntity.getBlockPos().relative(Direction.UP, 3));
+        light = LevelRenderer.getLightColor(blockEntity.getLevel(), blockEntity.getBlockPos().relative(Direction.UP, 2));
 
         matrices.pushPose();
         matrices.translate(0.5F, 1.0F, 0.5F);
