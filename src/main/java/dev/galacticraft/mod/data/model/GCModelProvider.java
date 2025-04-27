@@ -464,19 +464,16 @@ public class GCModelProvider extends FabricModelProvider {
     private void createRocketWorkbench(BlockModelGenerators generator) {
         var block = GCBlocks.ROCKET_WORKBENCH;
         var textureMapping = new TextureMapping()
-                .put(TextureSlot.PARTICLE, ResourceLocation.parse("galacticraft:block/machine"))
                 .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(block, "_bottom"))
                 .put(TextureSlot.TOP, TextureMapping.getBlockTexture(block, "_top"))
                 .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block, "_side"));
         ResourceLocation resourceLocation = ModelTemplates.CUBE_BOTTOM_TOP.create(block, textureMapping, generator.modelOutput);
 
-        var workbench = MultiPartGenerator.multiPart(block);
-        Direction.Plane.HORIZONTAL.forEach(state -> {
-            workbench.with(Condition.condition().term(RocketWorkbench.FACING, state), Variant.variant()
-                    .with(VariantProperties.Y_ROT, getRotationFromDirection(state))
-                    .with(VariantProperties.MODEL, resourceLocation));
-        });
-        generator.blockStateOutput.accept(workbench);
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(RocketWorkbench.FACING)
+                .generate(dir -> Variant.variant()
+                        .with(VariantProperties.Y_ROT, getRotationFromDirection(dir))
+                        .with(VariantProperties.MODEL, resourceLocation))
+        ));
         generator.skipAutoItemBlock(block);
     }
 
