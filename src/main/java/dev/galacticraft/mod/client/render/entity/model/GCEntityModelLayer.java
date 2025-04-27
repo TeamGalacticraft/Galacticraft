@@ -36,13 +36,16 @@ public class GCEntityModelLayer {
     public static final ModelLayerLocation OLI_GRUB = new ModelLayerLocation(Constant.id("oli_grub"), "main");
     public static final ModelLayerLocation GREY = new ModelLayerLocation(Constant.id("grey"), "main");
     public static final ModelLayerLocation ARCH_GREY = new ModelLayerLocation(Constant.id("arch_grey"), "main");
-    public static final ModelLayerLocation SOLAR_PANEL = new ModelLayerLocation(Constant.id("solar_panel"), "main");
-    public static final ModelLayerLocation ROCKET_WORKBENCH = new ModelLayerLocation(Constant.id("rocket_workbench"), "main");
     public static final ModelLayerLocation LANDER = new ModelLayerLocation(Constant.id("lander"), "main");
     public static final ModelLayerLocation PARACHEST = new ModelLayerLocation(Constant.id("parachest"), "main");
     public static final ModelLayerLocation MOON_VILLAGER = new ModelLayerLocation(Constant.id("moon_villager"), "main");
+
     // Bosses
     public static final ModelLayerLocation SKELETON_BOSS = new ModelLayerLocation(Constant.id("skeleton_boss"), "main");
+
+    // Block Entity Renderers
+    public static final ModelLayerLocation SOLAR_PANEL = new ModelLayerLocation(Constant.id("solar_panel"), "main");
+    public static final ModelLayerLocation ROCKET_WORKBENCH = new ModelLayerLocation(Constant.id("rocket_workbench"), "main");
 
     public static void register() {
         EntityModelLayerRegistry.registerModelLayer(GAZER, GazerEntityModel::createBodyLayer);
