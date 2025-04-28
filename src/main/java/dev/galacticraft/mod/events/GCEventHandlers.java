@@ -73,7 +73,7 @@ public class GCEventHandlers {
 
     private static InteractionResultHolder<ItemStack> onPlayerUseItem(Player player, Level level, InteractionHand hand) {
         ItemStack heldItem = player.getItemInHand(hand);
-        if (heldItem.getComponents().has(DataComponents.FOOD)) {
+        if (CannedFoodItem.canAddToCan(heldItem.getItem())) {
             boolean oxygenWorld = level.getDefaultBreathable();
             Vec3 playerEyePos = player.getEyePosition();
 

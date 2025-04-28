@@ -209,6 +209,9 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 GCItems.BEEF_PATTY,
                 GCItems.CHEESEBURGER
         );
+
+        tag(GCTags.UNCANNABLE_FOODS)
+                .forceAddTag(ConventionalItemTags.DRINKS);
     }
 
     protected FabricTagProvider<Item>.FabricTagBuilder tag(TagKey<Item> tag) {

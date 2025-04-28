@@ -92,7 +92,7 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
             for (int x = 0; x < columns; x++) {
                 slots.add(ItemResourceSlot.builder(TransferType.INPUT)
                         .pos(xOffset + (x * 18), yOffset + (y * 18))
-                        .filter((item, tag) -> item != null && item.components().has(DataComponents.FOOD) && !(item instanceof CannedFoodItem)));
+                        .filter((item, tag) -> CannedFoodItem.canAddToCan(item)));
             }
         }
         return slots;

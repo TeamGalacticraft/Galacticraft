@@ -147,7 +147,7 @@ public interface Translations {
 
     interface Items {
         String EMPTY_CAN = "item.galacticraft.empty_can";
-        String CANNED_FOOD = "item.galacticraft.canned_food";
+        String CANNED_FOOD_TEMPLATE = "item.galacticraft.canned_food.template";
     }
 
     interface CelestialBody {
