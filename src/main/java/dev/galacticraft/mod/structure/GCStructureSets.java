@@ -24,6 +24,7 @@ package dev.galacticraft.mod.structure;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.world.gen.structure.GCStructures;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.Registries;
@@ -36,6 +37,7 @@ import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStruct
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
 
+import java.util.List;
 import java.util.Optional;
 
 public class GCStructureSets {
@@ -43,6 +45,15 @@ public class GCStructureSets {
         public static final ResourceKey<StructureSet> PILLAGER_BASE = ResourceKey.create(Registries.STRUCTURE_SET, Constant.id("moon_pillager_bases"));
         public static final ResourceKey<StructureSet> RUINS = ResourceKey.create(Registries.STRUCTURE_SET, Constant.id("moon_ruins"));
         public static final ResourceKey<StructureSet> BOSS = ResourceKey.create(Registries.STRUCTURE_SET, Constant.id("moon_boss"));
+    }
+
+    public static final class Meteors {
+        public static final ResourceKey<StructureSet> COMMON_METEORS = key("common_meteors");
+        public static final ResourceKey<StructureSet> UNCOMMON_METEORS = key("uncommon_meteors");
+        public static final ResourceKey<StructureSet> RARE_METEORS = key("rare_meteors");
+    }
+    private static ResourceKey<StructureSet> key(String id) {
+        return ResourceKey.create(Registries.STRUCTURE_SET, Constant.id(id));
     }
 
     public static void bootstrapRegistries(BootstrapContext<StructureSet> context) {
@@ -66,6 +77,39 @@ public class GCStructureSets {
                 32,
                 8,
                 RandomSpreadType.LINEAR
+        )));
+
+        context.register(Meteors.COMMON_METEORS, new StructureSet(List.of(
+                new StructureSet.StructureSelectionEntry(structureLookup.getOrThrow(GCStructures.Meteors.SMALL_METEOR), 1)
+        ), new RandomSpreadStructurePlacement(
+                Vec3i.ZERO,
+                StructurePlacement.FrequencyReductionMethod.DEFAULT,
+                1.0F, // 100% frequency
+                8372619, //salt
+                Optional.empty(), //exclusion zone?
+                8, 4, RandomSpreadType.LINEAR
+        )));
+
+        context.register(Meteors.UNCOMMON_METEORS, new StructureSet(List.of(
+                new StructureSet.StructureSelectionEntry(structureLookup.getOrThrow(GCStructures.Meteors.LARGE_METEOR), 1)
+        ), new RandomSpreadStructurePlacement(
+                Vec3i.ZERO,
+                StructurePlacement.FrequencyReductionMethod.DEFAULT,
+                1.0F, // 100% frequency
+                9572822, //salt
+                Optional.empty(), //exclusion zone?
+                32, 8, RandomSpreadType.LINEAR
+        )));
+
+        context.register(Meteors.RARE_METEORS, new StructureSet(List.of(
+                new StructureSet.StructureSelectionEntry(structureLookup.getOrThrow(GCStructures.Meteors.EXTREME_METEOR), 1)
+        ), new RandomSpreadStructurePlacement(
+                Vec3i.ZERO,
+                StructurePlacement.FrequencyReductionMethod.DEFAULT,
+                1.0F, // 100% frequency
+                9679240, //salt
+                Optional.empty(), //exclusion zone?
+                128, 32, RandomSpreadType.LINEAR
         )));
     }
 }
