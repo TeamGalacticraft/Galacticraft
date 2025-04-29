@@ -230,9 +230,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
     @Override
     public void onPadDestroyed() {
-        var rocket = new ItemStack(GCItems.ROCKET);
-        rocket.applyComponents(this.getRocketData().asPatch());
-        this.spawnAtLocation(rocket);
+        this.spawnAtLocation(this.getDropItem());
         this.remove(RemovalReason.DISCARDED);
     }
 
@@ -247,11 +245,16 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     }
 
     @Override
+    public ItemStack getDropItem() {
+        ItemStack rocket = new ItemStack(GCItems.ROCKET);
+        rocket.applyComponents(this.getRocketData().asPatch());
+        return rocket;
+    }
+
+    @Override
     public void dropItems(DamageSource damageSource, boolean exploded) {
         if (!exploded) {
-            var rocket = new ItemStack(GCItems.ROCKET);
-            rocket.applyComponents(this.getRocketData().asPatch());
-            this.spawnAtLocation(rocket);
+            this.spawnAtLocation(this.getDropItem());
         }
         this.remove(RemovalReason.KILLED);
     }
