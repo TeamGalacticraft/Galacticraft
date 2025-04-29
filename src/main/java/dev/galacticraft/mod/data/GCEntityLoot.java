@@ -25,7 +25,7 @@ package dev.galacticraft.mod.data;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCRegistry;
 import dev.galacticraft.mod.data.loot.GCEntityLootSubProvider;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.EntityTypeTags;
@@ -93,7 +93,7 @@ public class GCEntityLoot extends GCEntityLootSubProvider {
                         )
                         .withPool(
                                 LootPool.lootPool()
-                                        .add(TagEntry.expandTag(GCTags.EVOLVED_CREEPER_DROP_MUSIC_DISCS))
+                                        .add(TagEntry.expandTag(GCItemTags.EVOLVED_CREEPER_DROP_MUSIC_DISCS))
                                         .when(LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.ATTACKER, EntityPredicate.Builder.entity().of(EntityTypeTags.SKELETONS)))
                         )
         );

@@ -24,7 +24,6 @@ package dev.galacticraft.mod.compat.rei.common.display;
 
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.recipe.RocketRecipe;
-import dev.galacticraft.mod.tag.GCTags;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;

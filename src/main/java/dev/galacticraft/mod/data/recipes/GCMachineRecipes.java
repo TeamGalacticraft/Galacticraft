@@ -27,7 +27,7 @@ import dev.galacticraft.mod.api.data.recipe.ShapedCompressorRecipeBuilder;
 import dev.galacticraft.mod.api.data.recipe.ShapelessCompressorRecipeBuilder;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
@@ -76,38 +76,38 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.CIRCUIT_FABRICATOR)
-                .define('A', GCItems.ALUMINUM_INGOT)
+                .define('A', GCItemTags.ALUMINUM_INGOTS)
                 .define('L', Items.LEVER)
-                .define('B', Items.STONE_BUTTON)
-                .define('F', Items.FURNACE)
+                .define('B', ItemTags.STONE_BUTTONS)
+                .define('F', ConventionalItemTags.PLAYER_WORKSTATIONS_FURNACES)
                 .define('W', GCBlocks.ALUMINUM_WIRE)
                 .define('R', Items.REDSTONE_TORCH)
                 .pattern("ALA")
                 .pattern("BFB")
                 .pattern("WRW")
-                .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItems.ALUMINUM_INGOT))
+                .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItemTags.ALUMINUM_INGOTS))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.COAL_GENERATOR)
                 .define('C', ConventionalItemTags.COPPER_INGOTS)
-                .define('A', GCItems.ALUMINUM_INGOT)
-                .define('F', Items.FURNACE)
+                .define('A', GCItemTags.ALUMINUM_INGOTS)
+                .define('F', ConventionalItemTags.PLAYER_WORKSTATIONS_FURNACES)
                 .define('W', GCBlocks.ALUMINUM_WIRE)
                 .pattern("CCC")
                 .pattern("AFA")
                 .pattern("AWA")
-                .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItems.ALUMINUM_INGOT))
+                .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItemTags.ALUMINUM_INGOTS))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.COMPRESSOR)
-                .define('I', GCItems.ALUMINUM_INGOT)
+                .define('I', GCItemTags.ALUMINUM_INGOTS)
                 .define('A', Items.ANVIL)
                 .define('C', ConventionalItemTags.COPPER_INGOTS)
                 .define('W', GCItems.BASIC_WAFER)
                 .pattern("IAI")
                 .pattern("ICI")
                 .pattern("IWI")
-                .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItems.ALUMINUM_INGOT))
+                .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItemTags.ALUMINUM_INGOTS))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.ELECTRIC_ARC_FURNACE)
@@ -118,7 +118,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("HHH")
                 .pattern("HEH")
                 .pattern("MWM")
-                .unlockedBy(getHasName(GCItems.ADVANCED_WAFER), has(GCItems.ADVANCED_WAFER))
+                .unlockedBy(getHasName(GCItems.METEORIC_IRON_INGOT), has(GCItems.METEORIC_IRON_INGOT))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.ELECTRIC_COMPRESSOR)
@@ -130,7 +130,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("SAS")
                 .pattern("SBS")
                 .pattern("IWI")
-                .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItems.ALUMINUM_INGOT))
+                .unlockedBy(getHasName(GCItems.ADVANCED_WAFER), has(GCItems.ADVANCED_WAFER))
                 .save(output);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.ELECTRIC_COMPRESSOR)
                 .define('S', GCItems.COMPRESSED_STEEL)
@@ -141,12 +141,12 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("STS")
                 .pattern("SCS")
                 .pattern("IWI")
-                .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItems.ALUMINUM_INGOT))
+                .unlockedBy(getHasName(GCItems.ADVANCED_WAFER), has(GCItems.ADVANCED_WAFER))
                 .save(output, BuiltInRegistries.ITEM.getKey(GCBlocks.ELECTRIC_COMPRESSOR.asItem()).withSuffix("_upgrade"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.ELECTRIC_FURNACE)
                 .define('S', GCItems.COMPRESSED_STEEL)
-                .define('F', Items.FURNACE)
+                .define('F', ConventionalItemTags.PLAYER_WORKSTATIONS_FURNACES)
                 .define('A', GCItems.COMPRESSED_ALUMINUM)
                 .define('W', GCItems.BASIC_WAFER)
                 .pattern("SSS")
@@ -172,7 +172,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("SFS")
                 .pattern("VAV")
                 .pattern("SFS")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
+                .unlockedBy(getHasName(GCItems.OXYGEN_FAN), has(GCItems.OXYGEN_FAN))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.OXYGEN_COLLECTOR)
@@ -266,20 +266,20 @@ public class GCMachineRecipes extends FabricRecipeProvider {
 
         // Wires + Pipes
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.GLASS_FLUID_PIPE, 6)
-                .define('X', Items.GLASS_PANE)
+                .define('X', ConventionalItemTags.GLASS_PANES_COLORLESS)
                 .pattern("XXX")
                 .pattern("   ")
                 .pattern("XXX")
-                .unlockedBy(getHasName(Items.GLASS_PANE), has(Items.GLASS_PANE))
+                .unlockedBy(getHasName(Items.GLASS_PANE), has(ConventionalItemTags.GLASS_PANES_COLORLESS))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.ALUMINUM_WIRE, 6)
                 .define('W', Items.WHITE_WOOL)
-                .define('A', GCItems.ALUMINUM_INGOT)
+                .define('A', GCItemTags.ALUMINUM_INGOTS)
                 .pattern("WWW")
                 .pattern("AAA")
                 .pattern("WWW")
-                .unlockedBy(getHasName(Items.GLASS_PANE), has(Items.GLASS_PANE))
+                .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItemTags.ALUMINUM_INGOTS))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.SEALABLE_ALUMINUM_WIRE, 6)
@@ -302,11 +302,11 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("TTT")
                 .pattern("WTW")
                 .pattern("WWW")
-                .unlockedBy(getHasName(GCBlocks.WALKWAY), has(GCBlocks.WALKWAY))
+                .unlockedBy(getHasName(GCItems.COMPRESSED_TITANIUM), has(GCItems.COMPRESSED_TITANIUM))
                 .save(output);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, GCBlocks.WIRE_WALKWAY)
-                .requires(GCItems.COMPRESSED_TITANIUM)
+                .requires(GCBlocks.WALKWAY)
                 .requires(GCBlocks.ALUMINUM_WIRE)
                 .unlockedBy(getHasName(GCBlocks.WALKWAY), has(GCBlocks.WALKWAY))
                 .save(output, BuiltInRegistries.ITEM.getKey(GCBlocks.WIRE_WALKWAY.asItem()).withSuffix("_shapeless"));
@@ -317,22 +317,23 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("TTT")
                 .pattern("PTP")
                 .pattern("PPP")
-                .unlockedBy(getHasName(GCBlocks.WALKWAY), has(GCBlocks.WALKWAY))
+                .unlockedBy(getHasName(GCItems.COMPRESSED_TITANIUM), has(GCItems.COMPRESSED_TITANIUM))
                 .save(output);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, GCBlocks.FLUID_PIPE_WALKWAY)
-                .requires(GCItems.COMPRESSED_TITANIUM)
+                .requires(GCBlocks.WALKWAY)
                 .requires(GCBlocks.GLASS_FLUID_PIPE)
                 .unlockedBy(getHasName(GCBlocks.WALKWAY), has(GCBlocks.WALKWAY))
                 .save(output, BuiltInRegistries.ITEM.getKey(GCBlocks.FLUID_PIPE_WALKWAY.asItem()).withSuffix("_shapeless"));
 
         // Compressor
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_ALUMINUM)
-                .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItems.ALUMINUM_INGOT))
-                .requires(GCTags.ALUMINUM_INGOTS)
-                .requires(GCTags.ALUMINUM_INGOTS)
+                .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItemTags.ALUMINUM_INGOTS))
+                .requires(GCItemTags.ALUMINUM_INGOTS)
+                .requires(GCItemTags.ALUMINUM_INGOTS)
                 .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_BRONZE)
+                .unlockedBy(getHasName(GCItems.COMPRESSED_COPPER), has(GCItems.COMPRESSED_COPPER))
                 .requires(GCItems.COMPRESSED_COPPER)
                 .requires(GCItems.COMPRESSED_TIN)
                 .save(output);
@@ -344,6 +345,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_DESH)
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
                 .requires(GCItems.DESH_INGOT)
+                .requires(GCItems.DESH_INGOT)
                 .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_IRON)
                 .unlockedBy(getHasName(Items.IRON_INGOT), has(ConventionalItemTags.IRON_INGOTS))
@@ -351,6 +353,8 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .requires(ConventionalItemTags.IRON_INGOTS)
                 .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_METEORIC_IRON)
+                .unlockedBy(getHasName(GCItems.METEORIC_IRON_INGOT), has(GCItems.METEORIC_IRON_INGOT))
+                .requires(GCItems.METEORIC_IRON_INGOT)
                 .requires(GCItems.METEORIC_IRON_INGOT)
                 .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_STEEL)
@@ -360,13 +364,14 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .requires(ItemTags.COALS)
                 .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_STEEL)
-                .requires(GCTags.STEEL_INGOTS)
-                .requires(GCTags.STEEL_INGOTS)
+                .unlockedBy("has_steel_ingot", has(GCItemTags.STEEL_INGOTS))
+                .requires(GCItemTags.STEEL_INGOTS)
+                .requires(GCItemTags.STEEL_INGOTS)
                 .save(output, BuiltInRegistries.ITEM.getKey(GCItems.COMPRESSED_STEEL).withSuffix("_from_ingots"));
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_TIN)
-                .unlockedBy(getHasName(GCItems.TIN_INGOT), has(GCItems.TIN_INGOT))
-                .requires(GCTags.TIN_INGOTS)
-                .requires(GCTags.TIN_INGOTS)
+                .unlockedBy(getHasName(GCItems.TIN_INGOT), has(GCItemTags.TIN_INGOTS))
+                .requires(GCItemTags.TIN_INGOTS)
+                .requires(GCItemTags.TIN_INGOTS)
                 .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_TITANIUM)
                 .unlockedBy(getHasName(GCItems.TITANIUM_INGOT), has(GCItems.TITANIUM_INGOT))
@@ -404,10 +409,10 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .save(output);
 
         CircuitFabricatorRecipeBuilder.create(GCItems.BLUE_SOLAR_WAFER, 9)
-                .requires(Items.LAPIS_LAZULI)
+                .requires(ConventionalItemTags.LAPIS_GEMS)
                 .save(output);
         CircuitFabricatorRecipeBuilder.create(GCItems.SOLAR_ARRAY_WAFER, 3)
-                .requires(GCItems.SOLAR_DUST)
+                .requires(GCItemTags.SOLAR_DUSTS)
                 .save(output);
     }
 

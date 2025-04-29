@@ -27,7 +27,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.client.model.EndermanModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HierarchicalModel;
@@ -118,8 +118,8 @@ public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel
 
         if (livingEntity instanceof Player player) {
             Container inv = livingEntity.galacticraft$getGearInv();
-            hasMask = inv.getItem(GCAccessorySlots.OXYGEN_MASK_SLOT).is(GCTags.OXYGEN_MASKS);
-            hasGear = inv.getItem(GCAccessorySlots.OXYGEN_GEAR_SLOT).is(GCTags.OXYGEN_GEAR);
+            hasMask = inv.getItem(GCAccessorySlots.OXYGEN_MASK_SLOT).is(GCItemTags.OXYGEN_MASKS);
+            hasGear = inv.getItem(GCAccessorySlots.OXYGEN_GEAR_SLOT).is(GCItemTags.OXYGEN_GEAR);
         } else if (livingEntity instanceof Zombie) {
             Zombie zombie = (Zombie) entity;
             if (zombie.isBaby()) {

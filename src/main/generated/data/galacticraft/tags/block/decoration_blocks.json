@@ -1,0 +1,13 @@
+{
+  "values": [
+    "#galacticraft:decoration_blocks/aluminum",
+    "#galacticraft:decoration_blocks/bronze",
+    "#galacticraft:decoration_blocks/copper",
+    "#galacticraft:decoration_blocks/iron",
+    "#galacticraft:decoration_blocks/meteoric_iron",
+    "#galacticraft:decoration_blocks/steel",
+    "#galacticraft:decoration_blocks/tin",
+    "#galacticraft:decoration_blocks/titanium",
+    "#galacticraft:decoration_blocks/dark"
+  ]
+}

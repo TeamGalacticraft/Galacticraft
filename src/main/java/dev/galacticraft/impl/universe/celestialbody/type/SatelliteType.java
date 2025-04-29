@@ -50,7 +50,7 @@ import dev.galacticraft.impl.universe.position.type.OrbitalCelestialPositionType
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.render.dimension.AsteroidSkyRenderer;
 import dev.galacticraft.mod.data.gen.SatelliteChunkGenerator;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCBlockTags;
 import dev.galacticraft.mod.util.Translations;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
@@ -127,7 +127,7 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
                 0, // minY
                 256, // height
                 256, // logicalHeight
-                GCTags.INFINIBURN_SATELLITE, // infiniburn
+                GCBlockTags.INFINIBURN_SATELLITE, // infiniburn
                 Constant.id("satellite"), // effectsLocation
                 0, // ambientLight
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)

@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft:olivine_block"
+          "name": "minecraft:air"
         }
       ],
       "rolls": 1.0

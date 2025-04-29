@@ -27,7 +27,7 @@ import dev.galacticraft.mod.content.CannedFoodTooltip;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.decoration.CannedFoodBlock;
 import dev.galacticraft.mod.content.block.entity.decoration.CannedFoodBlockEntity;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.item.v1.FabricItemStack;
 import net.minecraft.ChatFormatting;
@@ -360,7 +360,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
     public static boolean canAddToCan(Item item) {
         if (item != null && item.components().has(DataComponents.FOOD)) {
             if (!(item instanceof CannedFoodItem)) {
-                return !item.getDefaultInstance().is(GCTags.UNCANNABLE_FOODS);
+                return !item.getDefaultInstance().is(GCItemTags.UNCANNABLE_FOODS);
             }
         }
         return false;
