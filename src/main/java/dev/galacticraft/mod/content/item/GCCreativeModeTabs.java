@@ -497,15 +497,13 @@ public class GCCreativeModeTabs {
                 output.accept(EMPTY_CAN);
                 // For every edible food create a creative item of that canned food type
                 for (Item item : BuiltInRegistries.ITEM) {
-                    if (item.components().has(DataComponents.FOOD)) {
-                        if (!(item instanceof CannedFoodItem)) {
-                            // Create new canned food item with empty components
-                            ItemStack cannedFoodItem = GCItems.CANNED_FOOD.getDefaultInstance();
-                            // Add the default itemstack of the edible item into the canned foods components
-                            CannedFoodItem.add(cannedFoodItem, new ItemStack(item, CannedFoodItem.MAX_FOOD));
-                            // Add the item to the creative tab
-                            output.accept(cannedFoodItem);
-                        }
+                    if (CannedFoodItem.canAddToCan(item)) {
+                        // Create new canned food item with empty components
+                        ItemStack cannedFoodItem = GCItems.CANNED_FOOD.getDefaultInstance();
+                        // Add the default itemstack of the edible item into the canned foods components
+                        CannedFoodItem.add(cannedFoodItem, new ItemStack(item, CannedFoodItem.MAX_FOOD));
+                        // Add the item to the creative tab
+                        output.accept(cannedFoodItem);
                     }
                 }
             }).build();

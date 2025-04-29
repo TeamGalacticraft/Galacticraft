@@ -392,7 +392,13 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCBlocks.MOON_CHEESE_WHEEL.asItem())
                 .add(GCItems.CHEESEBURGER);
         this.tag(ConventionalItemTags.FOODS)
-                .addTag(GCItemTags.CHEESE_FOODS);
+                .addTag(GCItemTags.CHEESE_FOODS)
+                .addTag(GCItemTags.CANNED_FOODS);
+
+        this.tag(GCItemTags.CANNED_FOODS)
+                .add(GCItems.CANNED_FOOD);
+        this.tag(GCItemTags.UNCANNABLE_FOODS)
+                .forceAddTag(ConventionalItemTags.DRINKS);
 
         this.tag(ItemTags.WOLF_FOOD)
                 .add(GCItems.MOON_CHEESE_CURD)

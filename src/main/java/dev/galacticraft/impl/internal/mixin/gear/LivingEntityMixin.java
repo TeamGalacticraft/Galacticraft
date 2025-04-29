@@ -33,6 +33,7 @@ import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberPart;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
+import dev.galacticraft.mod.content.item.InfiniteOxygenTankItem;
 import dev.galacticraft.mod.tag.GCFluidTags;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -135,6 +136,14 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
 
         if (this.galacticraft$hasMaskAndGear()) {
             InventoryStorage tankInv = InventoryStorage.of(galacticraft$getOxygenTanks(), null);
+            for (int i = 1; i < tankInv.getSlotCount(); i++) {
+                ItemStack stack = tankInv.getSlot(i).getResource().toStack();
+                if (stack.getItem() instanceof InfiniteOxygenTankItem) {
+                    this.lastHurtBySuffocationTimestamp = this.tickCount;
+                    cir.setReturnValue(this.increaseAirSupply(air));
+                    return;
+                }
+            }
             for (int i = 0; i < tankInv.getSlotCount(); i++) {
                 Storage<FluidVariant> storage = ContainerItemContext.ofSingleSlot(tankInv.getSlot(i)).find(FluidStorage.ITEM);
                 if (storage != null) {
@@ -182,7 +191,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
             }
         }
     }
-    
+
     @Override
     public void galacticraft$onEquipAccessory(ItemStack previous, ItemStack incoming) {
         if ((incoming.isEmpty() && previous.isEmpty()) || ItemStack.isSameItemSameComponents(previous, incoming) || this.firstTick) {

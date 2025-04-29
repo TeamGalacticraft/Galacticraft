@@ -73,8 +73,7 @@ public class GCEventHandlers {
 
     private static InteractionResultHolder<ItemStack> onPlayerUseItem(Player player, Level level, InteractionHand hand) {
         ItemStack heldItem = player.getItemInHand(hand);
-        if (heldItem.getComponents().has(DataComponents.FOOD)) {
-            boolean oxygenWorld = level.getDefaultBreathable();
+        if (CannedFoodItem.canAddToCan(heldItem.getItem())) {
             Vec3 playerEyePos = player.getEyePosition();
 
             if (player.galacticraft$hasMask()) {
@@ -84,7 +83,7 @@ public class GCEventHandlers {
                     player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_WITH_MASK).withStyle(Constant.Text.RED_STYLE), true);
                     return InteractionResultHolder.fail(heldItem);
                 }
-            } else if (!oxygenWorld && !level.isBreathable(new BlockPos((int) Math.floor(playerEyePos.x), (int) Math.floor(playerEyePos.y), (int) Math.floor(playerEyePos.z)))) { //sealed atmosphere check. they dont have a mask on so make sure they can breathe before eating
+            } else if (!level.getDefaultBreathable() && !level.isBreathable(new BlockPos((int) Math.floor(playerEyePos.x), (int) Math.floor(playerEyePos.y), (int) Math.floor(playerEyePos.z)))) { //sealed atmosphere check. they dont have a mask on so make sure they can breathe before eating
                 player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_IN_NO_ATMOSPHERE).withStyle(Constant.Text.RED_STYLE), true);
                 return InteractionResultHolder.fail(player.getItemInHand(hand));
             }
