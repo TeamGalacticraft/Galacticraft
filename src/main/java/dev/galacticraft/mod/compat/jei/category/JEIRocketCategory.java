@@ -138,11 +138,11 @@ public class JEIRocketCategory implements IRecipeCategory<RocketRecipe> {
                 .addItemStack(recipe.getResultItem(null)); //fixme
     }
 
-	@Override
-	public void draw(RocketRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+    @Override
+    public void draw(RocketRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
         graphics.blit(ROCKET_WORKBENCH_DISPLAY_TEXTURE, 0, 0, ROCKET_WORKBENCH_U, ROCKET_WORKBENCH_V, ROCKET_WORKBENCH_WIDTH, ROCKET_WORKBENCH_HEIGHT);
 
         ROCKET_ENTITY.setYRot(ROCKET_ENTITY.getYRot() + 0.2F);
         RocketWorkbenchScreen.renderEntityInInventory(graphics, ROCKET_PREVIEW_X, ROCKET_PREVIEW_Y, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, ROCKET_ENTITY);
-	}
+    }
 }

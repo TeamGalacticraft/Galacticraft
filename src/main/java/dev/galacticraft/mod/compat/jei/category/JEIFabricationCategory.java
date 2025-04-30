@@ -89,8 +89,8 @@ public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe
                 .addItemStack(recipe.getResultItem(null)); //fixme
     }
 
-	@Override
-	public void draw(FabricationRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+    @Override
+    public void draw(FabricationRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
         graphics.blit(RECIPE_VIEWER_DISPLAY_TEXTURE, 0, 0, CIRCUIT_FABRICATOR_U, CIRCUIT_FABRICATOR_V, CIRCUIT_FABRICATOR_WIDTH, CIRCUIT_FABRICATOR_HEIGHT);
-	}
+    }
 }
