@@ -61,6 +61,7 @@ public class EvolvedIllagerMaskRenderLayer<T extends AbstractIllager, M extends 
             this.pipe = null;
             return;
         }
+
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
         if (head != null) {

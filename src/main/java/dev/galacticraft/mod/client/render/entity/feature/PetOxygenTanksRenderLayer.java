@@ -27,13 +27,10 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
 import dev.galacticraft.mod.tag.GCItemTags;
-import net.minecraft.client.model.EndermanModel;
+import net.minecraft.client.model.CatModel;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.IllagerModel;
-import net.minecraft.client.model.HierarchicalModel;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.SpiderModel;
-import net.minecraft.client.model.WitchModel;
+import net.minecraft.client.model.ParrotModel;
+import net.minecraft.client.model.WolfModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartNames;
 import net.minecraft.client.model.geom.PartPose;
@@ -49,42 +46,40 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.animal.Wolf;
-import net.minecraft.world.entity.monster.AbstractIllager;
-import net.minecraft.world.entity.monster.Witch;
-import net.minecraft.world.entity.monster.Zombie;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
-public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
+public class PetOxygenTanksRenderLayer<T extends TamableAnimal, M extends EntityModel<T>> extends RenderLayer<T, M> {
     private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/oxygen_tanks.png");
     private final @Nullable ModelPart tanks;
-    private float xRot = 0.0F;
+    private float xRot = Mth.HALF_PI;
     private float tankY = 0.0F;
+    private float tankZ = 0.0F;
 
-    public OxygenTanksRenderLayer(RenderLayerParent<T, M> context) {
+    public PetOxygenTanksRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
         ModelPart root, body;
-        float x = 0.0F;
-        float y = context.getModel() instanceof EndermanModel ? 2.0F : 1.0F;
-        float z = context.getModel() instanceof IllagerModel || context.getModel() instanceof WitchModel ? 3.01F : 2.01F;
-        if (context.getModel() instanceof SpiderModel model) {
-            root = model.root();
-            body = root.getChild("body1");
-            this.xRot = Mth.HALF_PI;
-            y = -5.0F;
-            z = 4.01F;
-        } else if (context.getModel() instanceof HierarchicalModel<?> model) {
+        float x = -2.0F;
+        float y = 0.0F;
+        float z = 0.0F;
+        if (context.getModel() instanceof AnimalModelAgeableListModel model) {
+            body = model.callGetBodyParts().iterator().next();
+
+            if (context.getModel() instanceof WolfModel) {
+                y = -4.0F;
+                z = 3.0F;
+            } else if (context.getModel() instanceof CatModel) {
+                y = 4.0F;
+                z = -2.0F;
+            }
+        } else if (context.getModel() instanceof ParrotModel model) {
             root = model.root();
             body = root.getChild(PartNames.BODY);
-        } else if (context.getModel() instanceof HumanoidModel<?> model) {
-            body = model.body;
-        } else if (context.getModel() instanceof AnimalModelAgeableListModel model) {
-            body = model.callGetBodyParts().iterator().next();
-            this.xRot = Mth.HALF_PI;
+            this.xRot = 0.4937F;
+            z = 1.0F;
         } else {
             this.tanks = null;
             return;
@@ -100,7 +95,8 @@ public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityMode
         }
 
         this.tanks = modelPartData.bake(32, 32);
-        this.tankY = this.tanks.getChild(Constant.Item.MEDIUM_OXYGEN_TANK).y;
+        this.tankY = this.tanks.getChild(Constant.Item.SMALL_OXYGEN_TANK).y;
+        this.tankZ = this.tanks.getChild(Constant.Item.SMALL_OXYGEN_TANK).z;
     }
 
     @Override
@@ -108,51 +104,34 @@ public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityMode
         if (this.tanks == null) return;
 
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
-        LivingEntity livingEntity = (LivingEntity) entity;
-        ModelPart tank1 = null;
-        ModelPart tank2 = null;
+        TamableAnimal animal = (TamableAnimal) entity;
+        ModelPart tank = this.tanks.getChild(Constant.Item.SMALL_OXYGEN_TANK);
 
-        if (livingEntity instanceof Player player) {
-            Container inv = livingEntity.galacticraft$getOxygenTanks();
-            if (inv.getItem(0).is(GCItemTags.OXYGEN_TANKS)) {
-                tank1 = this.tanks.getChild(inv.getItem(0).getDescriptionId().replace("item.galacticraft.", ""));
+        if (tank != null) {
+            float angle = this.xRot;
+            float y = this.tankY;
+            float z = this.tankZ;
+            if (animal.isInSittingPose()) {
+                if (animal instanceof Wolf) {
+                    angle = 0.7853982F;
+                    y += 4.0F;
+                    z -= 2.0F;
+                } else if (animal instanceof Cat) {
+                    angle = 0.7853982F;
+                    y -= 4.1F;
+                    z += 4.9F;
+                } else if (animal instanceof Parrot) {
+                    // y += 1.0F;
+                    z += 1.0F;
+                }
+            } else if (animal.isCrouching() && animal instanceof Cat) {
+                y += 1.0F;
             }
-            if (inv.getItem(1).is(GCItemTags.OXYGEN_TANKS)) {
-                tank2 = this.tanks.getChild(inv.getItem(1).getDescriptionId().replace("item.galacticraft.", ""));
-            }
-        } else if (livingEntity instanceof AbstractIllager || livingEntity instanceof Witch) {
-            tank1 = this.tanks.getChild(Constant.Item.LARGE_OXYGEN_TANK);
-            tank2 = this.tanks.getChild(Constant.Item.LARGE_OXYGEN_TANK);
-        } else if (livingEntity instanceof Cat || livingEntity instanceof Parrot) {
-            tank1 = this.tanks.getChild(Constant.Item.SMALL_OXYGEN_TANK);
-            tank2 = null;
-            matrices.translate(-0.125F, 0.0F, 0.0F);
-        } else {
-            tank1 = this.tanks.getChild(Constant.Item.MEDIUM_OXYGEN_TANK);
-            tank2 = this.tanks.getChild(Constant.Item.MEDIUM_OXYGEN_TANK);
 
-            if (livingEntity instanceof Zombie zombie && zombie.isBaby()) {
-                matrices.scale(0.75F, 0.75F, 0.75F);
-            }
-        }
-
-        float angle = this.xRot;
-        float y = this.tankY;
-        if (livingEntity.isCrouching()) {
-            angle += 0.5F;
-            y += 3.2F;
-        }
-
-        if (tank1 != null) {
-            tank1.xRot = angle;
-            tank1.y = y;
-            tank1.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
-        }
-        if (tank2 != null) {
-            matrices.translate(-0.25F, 0.0F, 0.0F);
-            tank2.xRot = angle;
-            tank2.y = y;
-            tank2.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+            tank.xRot = angle;
+            tank.y = y;
+            tank.z = z;
+            tank.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
     }
 

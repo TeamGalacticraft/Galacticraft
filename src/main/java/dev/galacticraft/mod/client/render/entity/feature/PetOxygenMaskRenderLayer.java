@@ -28,10 +28,10 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
 import dev.galacticraft.mod.tag.GCItemTags;
-import net.minecraft.client.model.EndermanModel;
+import net.minecraft.client.model.CatModel;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.HierarchicalModel;
-import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.ParrotModel;
+import net.minecraft.client.model.WolfModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartNames;
 import net.minecraft.client.model.geom.PartPose;
@@ -47,46 +47,59 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.Zombie;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.Parrot;
+import net.minecraft.world.entity.animal.Wolf;
 import org.jetbrains.annotations.Nullable;
 
-public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/oxygen_gear.png");
+public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityModel<T>> extends RenderLayer<T, M> {
+    private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/pet_gear.png");
     private final @Nullable ModelPart head;
+    private final @Nullable ModelPart realHead;
+    private final @Nullable ModelPart feather;
     private final @Nullable ModelPart mask;
     private final @Nullable ModelPart pipe;
     private float xRot = 0.0F;
     private float pipeY = 0.0F;
 
-    public OxygenMaskRenderLayer(RenderLayerParent<T, M> context) {
+    public PetOxygenMaskRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
         ModelPart root, head, body;
-        float y = context.getModel() instanceof EndermanModel ? -2.0F : -3.0F;
-        if (context.getModel() instanceof HierarchicalModel<?> model) {
+        ModelPart realHead = null;
+        ModelPart feather = null;
+        float y = 0.0F;
+        float z = 0.0F;
+        if (context.getModel() instanceof AnimalModelAgeableListModel model) {
+            head = model.callGetHeadParts().iterator().next();
+            body = model.callGetBodyParts().iterator().next();
+
+            if (context.getModel() instanceof WolfModel) {
+                realHead = head.getChild("real_head");
+                PartDefinition maskPart = modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create(), PartPose.offset(-1.0F, 13.5F, -7.0F));
+                maskPart.addOrReplaceChild(Constant.ModelPartName.REAL_OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-3.0F, -5.0F, -6.0F, 8, 8, 8, new CubeDeformation(0.1F)), PartPose.ZERO);
+            } else if (context.getModel() instanceof CatModel) {
+                modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 18).addBox(-3.5F, -4.0F, -4.9F, 7, 7, 7, CubeDeformation.NONE), PartPose.offset(head.x, head.y, head.z));
+            }
+        } else if (context.getModel() instanceof ParrotModel model) {
             root = model.root();
             head = root.getChild(PartNames.HEAD);
             body = root.getChild(PartNames.BODY);
-        } else if (context.getModel() instanceof HumanoidModel<?> model) {
-            head = model.head;
-            body = model.body;
-        } else if (context.getModel() instanceof AnimalModelAgeableListModel model) {
-            head = model.callGetHeadParts().iterator().next();
-            body = model.callGetBodyParts().iterator().next();
-            this.xRot = Mth.HALF_PI;
+            feather = head.getChild("feather");
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(32, 22).addBox(-2.5F, -3.75F, -3.5F, 5, 5, 5, CubeDeformation.NONE), PartPose.offset(head.x, head.y, head.z));
+            this.xRot = 0.4937F;
+            z = 1.0F;
         } else {
             this.mask = null;
             this.pipe = null;
             this.head = null;
+            this.realHead = null;
+            this.feather = null;
             return;
         }
 
-        MeshDefinition modelData = new MeshDefinition();
-        PartDefinition modelPartData = modelData.getRoot();
-        if (head != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -9.0F, -5.0F, 10, 10, 10, new CubeDeformation(-0.1F)), PartPose.offset(head.x, head.y, head.z));
-        }
         if (body != null) {
             modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 6).addBox(-2.0F, y, 1.0F, 4, 6, 8, CubeDeformation.NONE), PartPose.offsetAndRotation(body.x, body.y, body.z, this.xRot, 0.0F, 0.0F));
         }
@@ -107,34 +120,33 @@ public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel
         } else {
             this.pipe = null;
         }
+
+        this.realHead = realHead;
+        this.feather = feather;
     }
 
     @Override
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
-        LivingEntity livingEntity = (LivingEntity) entity;
+        TamableAnimal animal = (TamableAnimal) entity;
         boolean hasMask = true;
-        boolean hasGear = true;
-
-        if (livingEntity instanceof Player player) {
-            Container inv = livingEntity.galacticraft$getGearInv();
-            hasMask = inv.getItem(GCAccessorySlots.OXYGEN_MASK_SLOT).is(GCItemTags.OXYGEN_MASKS);
-            hasGear = inv.getItem(GCAccessorySlots.OXYGEN_GEAR_SLOT).is(GCItemTags.OXYGEN_GEAR);
-        } else if (livingEntity instanceof Zombie zombie && zombie.isBaby()) {
-            matrices.scale(0.75F, 0.75F, 0.75F);
-            matrices.translate(0.0F, 1.0F, 0.0F);
-        }
+        boolean hasGear = false;
 
         if (this.mask != null && hasMask) {
             this.mask.copyFrom(this.head);
+            if (this.realHead != null) {
+                this.mask.getChild(Constant.ModelPartName.REAL_OXYGEN_MASK).zRot = this.realHead.zRot;
+            }
             this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
         if (this.pipe != null && hasGear) {
-            boolean crouching = livingEntity.isCrouching();
-            this.pipe.xRot = this.xRot + (crouching ? 0.5F : 0.0F);
-            this.pipe.y = this.pipeY + (crouching ? 3.2F : 0.0F);
+            this.pipe.xRot = this.xRot;
+            this.pipe.y = this.pipeY + (animal.isCrouching() ? 2.0F : 0.0F);
             this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
+        if (this.feather != null) {
+            this.feather.visible = !hasMask;
+        } 
     }
 
     @Override

@@ -61,6 +61,7 @@ public class EvolvedSpiderMaskRenderLayer<T extends EvolvedSpiderEntity, M exten
             this.pipe = null;
             return;
         }
+
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
         if (head != null) {

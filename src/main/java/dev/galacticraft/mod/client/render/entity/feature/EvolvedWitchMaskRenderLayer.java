@@ -61,6 +61,7 @@ public class EvolvedWitchMaskRenderLayer<T extends Witch, M extends WitchModel<T
             this.pipe = null;
             return;
         }
+
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
         if (head != null) {
