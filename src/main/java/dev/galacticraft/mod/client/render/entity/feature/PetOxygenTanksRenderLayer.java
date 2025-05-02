@@ -108,6 +108,12 @@ public class PetOxygenTanksRenderLayer<T extends TamableAnimal, M extends Entity
         ModelPart tank = this.tanks.getChild(Constant.Item.SMALL_OXYGEN_TANK);
 
         if (tank != null) {
+            matrices.pushPose();
+            if (animal.isBaby()) {
+                matrices.scale(0.5F, 0.5F, 0.5F);
+                matrices.translate(0.0F, 1.5F, 0.0F);
+            }
+
             float angle = this.xRot;
             float y = this.tankY;
             float z = this.tankZ;
@@ -132,6 +138,7 @@ public class PetOxygenTanksRenderLayer<T extends TamableAnimal, M extends Entity
             tank.y = y;
             tank.z = z;
             tank.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+            matrices.popPose();
         }
     }
 

@@ -132,6 +132,16 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
         boolean hasMask = true;
         boolean hasGear = false;
 
+        matrices.pushPose();
+        if (animal.isBaby()) {
+            if (animal instanceof Wolf) {
+                matrices.translate(0.0F, 0.3125F, 0.125F);
+            } else if (animal instanceof Cat) {
+                matrices.scale(0.75F, 0.75F, 0.75F);
+                matrices.translate(0.0F, 0.625F, 0.25F);
+            }
+        }
+
         if (this.mask != null && hasMask) {
             this.mask.copyFrom(this.head);
             if (this.realHead != null) {
@@ -146,7 +156,8 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
         }
         if (this.feather != null) {
             this.feather.visible = !hasMask;
-        } 
+        }
+        matrices.popPose();
     }
 
     @Override

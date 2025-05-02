@@ -116,6 +116,7 @@ public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel
         boolean hasMask = true;
         boolean hasGear = true;
 
+        matrices.pushPose();
         if (livingEntity instanceof Player player) {
             Container inv = livingEntity.galacticraft$getGearInv();
             hasMask = inv.getItem(GCAccessorySlots.OXYGEN_MASK_SLOT).is(GCItemTags.OXYGEN_MASKS);
@@ -135,6 +136,7 @@ public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel
             this.pipe.y = this.pipeY + (crouching ? 3.2F : 0.0F);
             this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
+        matrices.popPose();
     }
 
     @Override

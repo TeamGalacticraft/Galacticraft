@@ -112,6 +112,7 @@ public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityMode
         ModelPart tank1 = null;
         ModelPart tank2 = null;
 
+        matrices.pushPose();
         if (livingEntity instanceof Player player) {
             Container inv = livingEntity.galacticraft$getOxygenTanks();
             if (inv.getItem(0).is(GCItemTags.OXYGEN_TANKS)) {
@@ -154,6 +155,7 @@ public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityMode
             tank2.y = y;
             tank2.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
+        matrices.popPose();
     }
 
     @Override
