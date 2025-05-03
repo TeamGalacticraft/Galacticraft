@@ -44,7 +44,6 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Cat;
@@ -54,19 +53,17 @@ import org.jetbrains.annotations.Nullable;
 
 public class PetOxygenTanksRenderLayer<T extends TamableAnimal, M extends EntityModel<T>> extends RenderLayer<T, M> {
     private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/oxygen_tanks.png");
+    private final @Nullable ModelPart body;
     private final @Nullable ModelPart tanks;
-    private float xRot = Mth.HALF_PI;
-    private float tankY = 0.0F;
-    private float tankZ = 0.0F;
 
     public PetOxygenTanksRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
-        ModelPart root, body;
+        ModelPart root;
         float x = -2.0F;
         float y = 0.0F;
         float z = 0.0F;
         if (context.getModel() instanceof AnimalModelAgeableListModel model) {
-            body = model.callGetBodyParts().iterator().next();
+            this.body = model.callGetBodyParts().iterator().next();
 
             if (context.getModel() instanceof WolfModel) {
                 y = -4.0F;
@@ -77,26 +74,24 @@ public class PetOxygenTanksRenderLayer<T extends TamableAnimal, M extends Entity
             }
         } else if (context.getModel() instanceof ParrotModel model) {
             root = model.root();
-            body = root.getChild(PartNames.BODY);
-            this.xRot = 0.4937F;
-            z = 1.0F;
+            this.body = root.getChild(PartNames.BODY);
+            z = 1.5F;
         } else {
+            this.body = null;
             this.tanks = null;
             return;
         }
 
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
-        if (body != null) {
-            modelPartData.addOrReplaceChild(Constant.Item.SMALL_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 0).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.offsetAndRotation(body.x, body.y, body.z, this.xRot, 0.0F, 0.0F));
-            modelPartData.addOrReplaceChild(Constant.Item.MEDIUM_OXYGEN_TANK, CubeListBuilder.create().texOffs(16, 0).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.offsetAndRotation(body.x, body.y, body.z, this.xRot, 0.0F, 0.0F));
-            modelPartData.addOrReplaceChild(Constant.Item.LARGE_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 16).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.offsetAndRotation(body.x, body.y, body.z, this.xRot, 0.0F, 0.0F));
-            modelPartData.addOrReplaceChild(Constant.Item.INFINITE_OXYGEN_TANK, CubeListBuilder.create().texOffs(16, 16).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.offsetAndRotation(body.x, body.y, body.z, this.xRot, 0.0F, 0.0F));
+        if (this.body != null) {
+            modelPartData.addOrReplaceChild(Constant.Item.SMALL_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 0).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
+            modelPartData.addOrReplaceChild(Constant.Item.MEDIUM_OXYGEN_TANK, CubeListBuilder.create().texOffs(16, 0).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
+            modelPartData.addOrReplaceChild(Constant.Item.LARGE_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 16).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
+            modelPartData.addOrReplaceChild(Constant.Item.INFINITE_OXYGEN_TANK, CubeListBuilder.create().texOffs(16, 16).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
         }
 
         this.tanks = modelPartData.bake(32, 32);
-        this.tankY = this.tanks.getChild(Constant.Item.SMALL_OXYGEN_TANK).y;
-        this.tankZ = this.tanks.getChild(Constant.Item.SMALL_OXYGEN_TANK).z;
     }
 
     @Override
@@ -114,29 +109,7 @@ public class PetOxygenTanksRenderLayer<T extends TamableAnimal, M extends Entity
                 matrices.translate(0.0F, 1.5F, 0.0F);
             }
 
-            float angle = this.xRot;
-            float y = this.tankY;
-            float z = this.tankZ;
-            if (animal.isInSittingPose()) {
-                if (animal instanceof Wolf) {
-                    angle = 0.7853982F;
-                    y += 4.0F;
-                    z -= 2.0F;
-                } else if (animal instanceof Cat) {
-                    angle = 0.7853982F;
-                    y -= 4.1F;
-                    z += 4.9F;
-                } else if (animal instanceof Parrot) {
-                    // y += 1.0F;
-                    z += 1.0F;
-                }
-            } else if (animal.isCrouching() && animal instanceof Cat) {
-                y += 1.0F;
-            }
-
-            tank.xRot = angle;
-            tank.y = y;
-            tank.z = z;
+            tank.copyFrom(this.body);
             tank.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
             matrices.popPose();
         }

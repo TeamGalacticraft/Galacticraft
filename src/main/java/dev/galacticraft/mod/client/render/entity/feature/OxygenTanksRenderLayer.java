@@ -61,46 +61,47 @@ import org.jetbrains.annotations.Nullable;
 
 public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
     private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/oxygen_tanks.png");
+    private final @Nullable ModelPart body;
     private final @Nullable ModelPart tanks;
     private float xRot = 0.0F;
-    private float tankY = 0.0F;
 
     public OxygenTanksRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
-        ModelPart root, body;
+        ModelPart root;
         float x = 0.0F;
         float y = context.getModel() instanceof EndermanModel ? 2.0F : 1.0F;
         float z = context.getModel() instanceof IllagerModel || context.getModel() instanceof WitchModel ? 3.01F : 2.01F;
         if (context.getModel() instanceof SpiderModel model) {
             root = model.root();
-            body = root.getChild("body1");
+            this.body = root.getChild("body1");
             this.xRot = Mth.HALF_PI;
             y = -5.0F;
             z = 4.01F;
         } else if (context.getModel() instanceof HierarchicalModel<?> model) {
             root = model.root();
-            body = root.getChild(PartNames.BODY);
+            this.body = root.getChild(PartNames.BODY);
         } else if (context.getModel() instanceof HumanoidModel<?> model) {
-            body = model.body;
+            this.body = model.body;
         } else if (context.getModel() instanceof AnimalModelAgeableListModel model) {
-            body = model.callGetBodyParts().iterator().next();
+            this.body = model.callGetBodyParts().iterator().next();
             this.xRot = Mth.HALF_PI;
         } else {
+            this.body = null;
             this.tanks = null;
             return;
         }
 
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
-        if (body != null) {
-            modelPartData.addOrReplaceChild(Constant.Item.SMALL_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 0).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.offsetAndRotation(body.x, body.y, body.z, this.xRot, 0.0F, 0.0F));
-            modelPartData.addOrReplaceChild(Constant.Item.MEDIUM_OXYGEN_TANK, CubeListBuilder.create().texOffs(16, 0).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.offsetAndRotation(body.x, body.y, body.z, this.xRot, 0.0F, 0.0F));
-            modelPartData.addOrReplaceChild(Constant.Item.LARGE_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 16).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.offsetAndRotation(body.x, body.y, body.z, this.xRot, 0.0F, 0.0F));
-            modelPartData.addOrReplaceChild(Constant.Item.INFINITE_OXYGEN_TANK, CubeListBuilder.create().texOffs(16, 16).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.offsetAndRotation(body.x, body.y, body.z, this.xRot, 0.0F, 0.0F));
+        if (this.body != null) {
+            modelPartData.addOrReplaceChild(Constant.Item.SMALL_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 0).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
+            modelPartData.addOrReplaceChild(Constant.Item.MEDIUM_OXYGEN_TANK, CubeListBuilder.create().texOffs(16, 0).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
+            modelPartData.addOrReplaceChild(Constant.Item.LARGE_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 16).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
+            modelPartData.addOrReplaceChild(Constant.Item.INFINITE_OXYGEN_TANK, CubeListBuilder.create().texOffs(16, 16).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
+
         }
 
         this.tanks = modelPartData.bake(32, 32);
-        this.tankY = this.tanks.getChild(Constant.Item.MEDIUM_OXYGEN_TANK).y;
     }
 
     @Override
@@ -124,35 +125,29 @@ public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityMode
         } else if (livingEntity instanceof AbstractIllager || livingEntity instanceof Witch) {
             tank1 = this.tanks.getChild(Constant.Item.LARGE_OXYGEN_TANK);
             tank2 = this.tanks.getChild(Constant.Item.LARGE_OXYGEN_TANK);
-        } else if (livingEntity instanceof Cat || livingEntity instanceof Parrot) {
-            tank1 = this.tanks.getChild(Constant.Item.SMALL_OXYGEN_TANK);
-            tank2 = null;
-            matrices.translate(-0.125F, 0.0F, 0.0F);
         } else {
             tank1 = this.tanks.getChild(Constant.Item.MEDIUM_OXYGEN_TANK);
             tank2 = this.tanks.getChild(Constant.Item.MEDIUM_OXYGEN_TANK);
 
             if (livingEntity instanceof Zombie zombie && zombie.isBaby()) {
                 matrices.scale(0.75F, 0.75F, 0.75F);
+                matrices.translate(0.0F, 1.0F, 0.0F);
             }
         }
 
-        float angle = this.xRot;
-        float y = this.tankY;
-        if (livingEntity.isCrouching()) {
-            angle += 0.5F;
-            y += 3.2F;
-        }
-
         if (tank1 != null) {
-            tank1.xRot = angle;
-            tank1.y = y;
+            tank1.copyFrom(this.body);
+            if (this.xRot != 0.0F) {
+                tank1.xRot = this.xRot;
+            }
             tank1.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
         if (tank2 != null) {
             matrices.translate(-0.25F, 0.0F, 0.0F);
-            tank2.xRot = angle;
-            tank2.y = y;
+            tank2.copyFrom(this.body);
+            if (this.xRot != 0.0F) {
+                tank1.xRot = this.xRot;
+            }
             tank2.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
         matrices.popPose();

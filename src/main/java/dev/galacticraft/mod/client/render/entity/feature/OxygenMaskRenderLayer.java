@@ -45,7 +45,6 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Zombie;
@@ -56,57 +55,43 @@ public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel
     private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/oxygen_gear.png");
     private final @Nullable ModelPart head;
     private final @Nullable ModelPart mask;
+    private final @Nullable ModelPart body;
     private final @Nullable ModelPart pipe;
-    private float xRot = 0.0F;
-    private float pipeY = 0.0F;
 
     public OxygenMaskRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
-        ModelPart root, head, body;
+        ModelPart root;
         float y = context.getModel() instanceof EndermanModel ? -2.0F : -3.0F;
         if (context.getModel() instanceof HierarchicalModel<?> model) {
             root = model.root();
-            head = root.getChild(PartNames.HEAD);
-            body = root.getChild(PartNames.BODY);
+            this.head = root.getChild(PartNames.HEAD);
+            this.body = root.getChild(PartNames.BODY);
         } else if (context.getModel() instanceof HumanoidModel<?> model) {
-            head = model.head;
-            body = model.body;
+            this.head = model.head;
+            this.body = model.body;
         } else if (context.getModel() instanceof AnimalModelAgeableListModel model) {
-            head = model.callGetHeadParts().iterator().next();
-            body = model.callGetBodyParts().iterator().next();
-            this.xRot = Mth.HALF_PI;
+            this.head = model.callGetHeadParts().iterator().next();
+            this.body = model.callGetBodyParts().iterator().next();
         } else {
-            this.mask = null;
-            this.pipe = null;
             this.head = null;
+            this.mask = null;
+            this.body = null;
+            this.pipe = null;
             return;
         }
 
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
-        if (head != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -9.0F, -5.0F, 10, 10, 10, new CubeDeformation(-0.1F)), PartPose.offset(head.x, head.y, head.z));
+        if (this.head != null) {
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -9.0F, -5.0F, 10, 10, 10, new CubeDeformation(-0.1F)), PartPose.ZERO);
         }
-        if (body != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 6).addBox(-2.0F, y, 1.0F, 4, 6, 8, CubeDeformation.NONE), PartPose.offsetAndRotation(body.x, body.y, body.z, this.xRot, 0.0F, 0.0F));
+        if (this.body != null) {
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 6).addBox(-2.0F, y, 1.0F, 4, 6, 8, CubeDeformation.NONE), PartPose.ZERO);
         }
 
         root = modelPartData.bake(64, 32);
-
-        if (head != null) {
-            this.mask = root.getChild(Constant.ModelPartName.OXYGEN_MASK);
-            this.head = head;
-        } else {
-            this.mask = null;
-            this.head = null;
-        }
-
-        if (body != null) {
-            this.pipe = root.getChild(Constant.ModelPartName.OXYGEN_PIPE);
-            this.pipeY = this.pipe.y;
-        } else {
-            this.pipe = null;
-        }
+        this.mask = this.head != null ? root.getChild(Constant.ModelPartName.OXYGEN_MASK) : null;
+        this.pipe = this.body != null ? root.getChild(Constant.ModelPartName.OXYGEN_PIPE) : null;
     }
 
     @Override
@@ -131,9 +116,7 @@ public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel
             this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
         if (this.pipe != null && hasGear) {
-            boolean crouching = livingEntity.isCrouching();
-            this.pipe.xRot = this.xRot + (crouching ? 0.5F : 0.0F);
-            this.pipe.y = this.pipeY + (crouching ? 3.2F : 0.0F);
+            this.pipe.copyFrom(this.body);
             this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
         matrices.popPose();
