@@ -117,10 +117,12 @@ public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityMode
         if (livingEntity instanceof Player player) {
             Container inv = livingEntity.galacticraft$getOxygenTanks();
             if (inv.getItem(0).is(GCItemTags.OXYGEN_TANKS)) {
-                tank1 = this.tanks.getChild(inv.getItem(0).getDescriptionId().replace("item.galacticraft.", ""));
+                String tankSize = inv.getItem(0).getDescriptionId().replace("item.galacticraft.", "");
+                tank1 = this.tanks.hasChild(tankSize) ? this.tanks.getChild(tankSize) : null;
             }
             if (inv.getItem(1).is(GCItemTags.OXYGEN_TANKS)) {
-                tank2 = this.tanks.getChild(inv.getItem(1).getDescriptionId().replace("item.galacticraft.", ""));
+                String tankSize = inv.getItem(1).getDescriptionId().replace("item.galacticraft.", "");
+                tank2 = this.tanks.hasChild(tankSize) ? this.tanks.getChild(tankSize) : null;
             }
         } else if (livingEntity instanceof AbstractIllager || livingEntity instanceof Witch) {
             tank1 = this.tanks.getChild(Constant.Item.LARGE_OXYGEN_TANK);

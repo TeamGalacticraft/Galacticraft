@@ -26,13 +26,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
-import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.client.model.CatModel;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.ParrotModel;
 import net.minecraft.client.model.WolfModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.PartNames;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
@@ -44,10 +41,8 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Cat;
-import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.animal.Wolf;
 import org.jetbrains.annotations.Nullable;
 
@@ -72,10 +67,6 @@ public class PetOxygenTanksRenderLayer<T extends TamableAnimal, M extends Entity
                 y = 4.0F;
                 z = -2.0F;
             }
-        } else if (context.getModel() instanceof ParrotModel model) {
-            root = model.root();
-            this.body = root.getChild(PartNames.BODY);
-            z = 1.5F;
         } else {
             this.body = null;
             this.tanks = null;

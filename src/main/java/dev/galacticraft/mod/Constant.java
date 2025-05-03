@@ -967,6 +967,9 @@ public interface Constant {
         String CHANGE_COUNT = "Modified";
         String OXYGEN = "Inversion";
         String GEAR_INV = "GearInv";
+        String HAS_MASK = "HasMask";
+        String HAS_GEAR = "HasGear";
+        String OXYGEN_TANK = "OxygenTank";
         String BLOCK_ENTITY_TAG = "BlockEntityTag";
         String NO_DROP = "NoDrop";
         String OWNER = "Owner";

@@ -22,6 +22,7 @@
     "LivingEntityMixin",
     "ModelProviderMixin",
     "MultiNoiseBiomeSourceParameterListPresetAccessor",
+    "ParrotMixin",
     "PlayerMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
@@ -43,6 +44,7 @@
     "client.LivingEntityRendererMixin",
     "client.LocalPlayerMixin",
     "client.MinecraftMixin",
+    "client.ParrotOnShoulderLayerMixin",
     "client.PauseMenuScreenMixin",
     "client.ScreenEffectRendererMixin",
     "client.SpriteContentAccessor"

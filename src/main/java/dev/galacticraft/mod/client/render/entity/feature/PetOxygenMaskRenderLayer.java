@@ -25,15 +25,11 @@ package dev.galacticraft.mod.client.render.entity.feature;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
-import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.client.model.CatModel;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.ParrotModel;
 import net.minecraft.client.model.WolfModel;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.PartNames;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
@@ -45,10 +41,8 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Cat;
-import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.animal.Wolf;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,7 +50,6 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
     private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/pet_gear.png");
     private final @Nullable ModelPart head;
     private final @Nullable ModelPart realHead;
-    private final @Nullable ModelPart feather;
     private final @Nullable ModelPart mask;
     private final @Nullable ModelPart body;
     private final @Nullable ModelPart pipe;
@@ -67,9 +60,6 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
         PartDefinition modelPartData = modelData.getRoot();
         ModelPart root;
         ModelPart realHead = null;
-        ModelPart feather = null;
-        float y = 0.0F;
-        float z = 0.0F;
         if (context.getModel() instanceof AnimalModelAgeableListModel model) {
             this.head = model.callGetHeadParts().iterator().next();
             this.body = model.callGetBodyParts().iterator().next();
@@ -81,17 +71,9 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
             } else if (context.getModel() instanceof CatModel) {
                 modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 18).addBox(-3.5F, -4.0F, -4.9F, 7, 7, 7, CubeDeformation.NONE), PartPose.ZERO);
             }
-        } else if (context.getModel() instanceof ParrotModel model) {
-            root = model.root();
-            this.head = root.getChild(PartNames.HEAD);
-            this.body = root.getChild(PartNames.BODY);
-            feather = this.head.getChild("feather");
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(32, 22).addBox(-2.5F, -3.75F, -3.5F, 5, 5, 5, CubeDeformation.NONE), PartPose.ZERO);
-            z = 1.0F;
         } else {
             this.head = null;
             this.realHead = null;
-            this.feather = null;
             this.mask = null;
             this.body = null;
             this.pipe = null;
@@ -99,12 +81,11 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
         }
 
         if (this.body != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 6).addBox(-2.0F, y, 1.0F, 4, 6, 8, CubeDeformation.NONE), PartPose.ZERO);
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 6).addBox(-2.0F, 0.0F, 1.0F, 4, 6, 8, CubeDeformation.NONE), PartPose.ZERO);
         }
 
         root = modelPartData.bake(64, 32);
         this.realHead = realHead;
-        this.feather = feather;
         this.mask = this.head != null ? root.getChild(Constant.ModelPartName.OXYGEN_MASK) : null;
         this.pipe = this.body != null ? root.getChild(Constant.ModelPartName.OXYGEN_PIPE) : null;
     }
@@ -136,9 +117,6 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
         if (this.pipe != null && hasGear) {
             this.pipe.copyFrom(this.body);
             this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
-        }
-        if (this.feather != null) {
-            this.feather.visible = !hasMask;
         }
         matrices.popPose();
     }
