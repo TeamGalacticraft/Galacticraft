@@ -53,6 +53,7 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
     private final @Nullable ModelPart mask;
     private final @Nullable ModelPart body;
     private final @Nullable ModelPart pipe;
+    private final @Nullable ModelPart pipeSitting;
 
     public PetOxygenMaskRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
@@ -68,8 +69,12 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
                 realHead = this.head.getChild("real_head");
                 PartDefinition maskPart = modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create(), PartPose.offset(-1.0F, 13.5F, -7.0F));
                 maskPart.addOrReplaceChild(Constant.ModelPartName.REAL_OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-3.0F, -5.0F, -6.0F, 8, 8, 8, new CubeDeformation(0.1F)), PartPose.ZERO);
+                modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(48, 0).addBox(0.0F, -11.0F, 2.0F, 0, 9, 8, CubeDeformation.NONE), PartPose.ZERO);
+                modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE_SITTING, CubeListBuilder.create().texOffs(32, 0).addBox(0.0F, -11.0F, 2.0F, 0, 9, 8, CubeDeformation.NONE), PartPose.ZERO);
             } else if (context.getModel() instanceof CatModel) {
                 modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 18).addBox(-3.5F, -4.0F, -4.9F, 7, 7, 7, CubeDeformation.NONE), PartPose.ZERO);
+                modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(48, 18).addBox(0.0F, 0.0F, -3.0F, 0, 6, 8, CubeDeformation.NONE), PartPose.ZERO);
+                modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE_SITTING, CubeListBuilder.create().texOffs(32, 18).addBox(0.0F, 0.0F, -3.0F, 0, 6, 8, CubeDeformation.NONE), PartPose.ZERO);
             }
         } else {
             this.head = null;
@@ -77,17 +82,15 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
             this.mask = null;
             this.body = null;
             this.pipe = null;
+            this.pipeSitting = null;
             return;
-        }
-
-        if (this.body != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 6).addBox(-2.0F, 0.0F, 1.0F, 4, 6, 8, CubeDeformation.NONE), PartPose.ZERO);
         }
 
         root = modelPartData.bake(64, 32);
         this.realHead = realHead;
         this.mask = this.head != null ? root.getChild(Constant.ModelPartName.OXYGEN_MASK) : null;
         this.pipe = this.body != null ? root.getChild(Constant.ModelPartName.OXYGEN_PIPE) : null;
+        this.pipeSitting = this.body != null ? root.getChild(Constant.ModelPartName.OXYGEN_PIPE_SITTING) : null;
     }
 
     @Override
@@ -95,7 +98,7 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
         TamableAnimal animal = (TamableAnimal) entity;
         boolean hasMask = true;
-        boolean hasGear = false;
+        boolean hasGear = true;
 
         matrices.pushPose();
         if (animal.isBaby()) {
@@ -114,9 +117,14 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
             }
             this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
-        if (this.pipe != null && hasGear) {
-            this.pipe.copyFrom(this.body);
-            this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+        if (hasGear) {
+            if (this.pipeSitting != null && animal.isInSittingPose()) {
+                this.pipeSitting.copyFrom(this.body);
+                this.pipeSitting.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+            } else if (this.pipe != null) {
+                this.pipe.copyFrom(this.body);
+                this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+            }
         }
         matrices.popPose();
     }

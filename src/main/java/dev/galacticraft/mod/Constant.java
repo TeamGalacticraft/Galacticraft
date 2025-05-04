@@ -1056,6 +1056,7 @@ public interface Constant {
         String OXYGEN_MASK = "oxygen_mask";
         String REAL_OXYGEN_MASK = "real_oxygen_mask";
         String OXYGEN_PIPE = "oxygen_pipe";
+        String OXYGEN_PIPE_SITTING = "oxygen_pipe_sitting";
         String OXYGEN_TANK = "oxygen_tank";
         String ILLAGER_NOSE_COMPARTMENT = "illager_nose_compartment";
         String MOON_VILLAGER_BRAIN = "moon_villager_brain";

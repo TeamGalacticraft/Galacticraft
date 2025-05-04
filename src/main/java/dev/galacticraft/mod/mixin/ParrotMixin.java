@@ -43,7 +43,7 @@ public abstract class ParrotMixin extends LivingEntity {
     public void galacticraft$addOxygenSetupData(CompoundTag compoundTag, CallbackInfo ci) {
         // TODO: Check what gear the parrot is actually wearing
         compoundTag.putBoolean(Constant.Nbt.HAS_MASK, true);
-        compoundTag.putBoolean(Constant.Nbt.HAS_GEAR, false);
+        compoundTag.putBoolean(Constant.Nbt.HAS_GEAR, true);
         compoundTag.putString(Constant.Nbt.OXYGEN_TANK, Constant.Item.SMALL_OXYGEN_TANK);
     }
 }

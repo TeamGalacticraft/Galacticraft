@@ -82,7 +82,7 @@ public class ParrotOxygenGearRenderLayer<T extends LivingEntity, M extends Entit
         }
 
         modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-2.5F, -3.75F, -3.5F, 5, 5, 5, CubeDeformation.NONE), PartPose.ZERO);
-        modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(20, 0).addBox(-2.0F, 0.0F, 1.0F, 4, 6, 8, CubeDeformation.NONE), PartPose.ZERO);
+        modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(21, -1).addBox(0.0F, -4.0F, 1.5F, 0, 6, 5, CubeDeformation.NONE), PartPose.ZERO);
         modelPartData.addOrReplaceChild(Constant.Item.SMALL_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 10).addBox(-1.5F, 0.0F, 1.5F, 3, 6, 3, CubeDeformation.NONE), PartPose.ZERO);
         modelPartData.addOrReplaceChild(Constant.Item.MEDIUM_OXYGEN_TANK, CubeListBuilder.create().texOffs(12, 10).addBox(-1.5F, 0.0F, 1.5F, 3, 6, 3, CubeDeformation.NONE), PartPose.ZERO);
         modelPartData.addOrReplaceChild(Constant.Item.LARGE_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 21).addBox(-1.5F, 0.0F, 1.5F, 3, 6, 3, CubeDeformation.NONE), PartPose.ZERO);
@@ -101,7 +101,7 @@ public class ParrotOxygenGearRenderLayer<T extends LivingEntity, M extends Entit
             return;
         } else {
             matrices.pushPose();
-            this.render(matrices, vertexConsumers, light, entity, headYaw, headPitch, true, false, Constant.Item.SMALL_OXYGEN_TANK);
+            this.render(matrices, vertexConsumers, light, entity, headYaw, headPitch, true, true, Constant.Item.SMALL_OXYGEN_TANK);
             matrices.popPose();
         }
     }
