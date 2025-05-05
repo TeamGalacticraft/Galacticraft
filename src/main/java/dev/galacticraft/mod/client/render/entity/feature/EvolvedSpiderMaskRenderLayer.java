@@ -91,6 +91,7 @@ public class EvolvedSpiderMaskRenderLayer<T extends EvolvedSpiderEntity, M exten
         }
         if (this.pipe != null) {
             this.pipe.copyFrom(this.body);
+            this.pipe.xRot += Mth.HALF_PI;
             this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
     }
