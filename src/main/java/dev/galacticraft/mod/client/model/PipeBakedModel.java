@@ -80,41 +80,41 @@ public class PipeBakedModel implements BakedModel {
         }
         var meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
         var emitter = meshBuilder.getEmitter();
-        emitter.square(Direction.DOWN, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).color(-1, -1, -1, -1).uv(1, 12, 0).uv(2, 16, 0).uv(3, 16, 4).uv(0, 12, 4).cullFace(Direction.DOWN).emit();
-        emitter.square(Direction.WEST, 0.6f, 0.4f, 0.4f, 0.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 0, 0).uv(2, 4, 0).uv(3, 4, 8).uv(0, 0, 8).emit();
-        emitter.square(Direction.EAST, 0.6f, 0.4f, 0.4f, 0.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 4, 0).uv(2, 8, 0).uv(3, 8, 8).uv(0, 4, 8).emit();
-        emitter.square(Direction.SOUTH, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).color(-1, -1, -1, -1).uv(1, 8, 0).uv(2, 12, 0).uv(3, 12, 8).uv(0, 8, 8).emit();
-        emitter.square(Direction.NORTH, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).color(-1, -1, -1, -1).uv(1, 4, 0).uv(2, 8, 0).uv(3, 8, 8).uv(0, 4, 8).emit();
+        emitter.square(Direction.DOWN, 6.0f/16.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f - 6.0f/16.0f, 0.0f).color(-1, -1, -1, -1).uv(1, 12, 0).uv(2, 16, 0).uv(3, 16, 4).uv(0, 12, 4).cullFace(Direction.DOWN).emit();
+        emitter.square(Direction.WEST, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 6.0f/16.0f, 0.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 0, 0).uv(2, 4, 0).uv(3, 4, 8).uv(0, 0, 8).emit();
+        emitter.square(Direction.EAST, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 6.0f/16.0f, 0.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 4, 0).uv(2, 8, 0).uv(3, 8, 8).uv(0, 4, 8).emit();
+        emitter.square(Direction.SOUTH, 6.0f/16.0f, 0.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 8, 0).uv(2, 12, 0).uv(3, 12, 8).uv(0, 8, 8).emit();
+        emitter.square(Direction.NORTH, 6.0f/16.0f, 0.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 4, 0).uv(2, 8, 0).uv(3, 8, 8).uv(0, 4, 8).emit();
         this.down = meshBuilder.build();
-        emitter.square(Direction.UP, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).color(-1, -1, -1, -1).uv(1, 12, 0).uv(2, 16, 0).uv(3, 16, 4).uv(0, 12, 4).cullFace(Direction.UP).emit();
-        emitter.square(Direction.EAST, 0.6f, 1.0f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(1, 0, 8).uv(2, 4, 8).uv(3, 4, 16).uv(0, 0, 16).emit();
-        emitter.square(Direction.WEST, 0.6f, 1.0f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(1, 4, 8).uv(2, 8, 8).uv(3, 8, 16).uv(0, 4, 16).emit();
-        emitter.square(Direction.NORTH, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 8, 8).uv(2, 12, 8).uv(3, 12, 16).uv(0, 8, 16).emit();
-        emitter.square(Direction.SOUTH, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 4, 8).uv(2, 8, 8).uv(3, 8, 16).uv(0, 4, 16).emit();
+        emitter.square(Direction.UP, 6.0f/16.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f - 6.0f/16.0f, 0.0f).color(-1, -1, -1, -1).uv(1, 12, 0).uv(2, 16, 0).uv(3, 16, 4).uv(0, 12, 4).cullFace(Direction.UP).emit();
+        emitter.square(Direction.EAST, 1.0f - 6.0f/16.0f, 1.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 0, 8).uv(2, 4, 8).uv(3, 4, 16).uv(0, 0, 16).emit();
+        emitter.square(Direction.WEST, 1.0f - 6.0f/16.0f, 1.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 4, 8).uv(2, 8, 8).uv(3, 8, 16).uv(0, 4, 16).emit();
+        emitter.square(Direction.NORTH, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 8, 8).uv(2, 12, 8).uv(3, 12, 16).uv(0, 8, 16).emit();
+        emitter.square(Direction.SOUTH, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 4, 8).uv(2, 8, 8).uv(3, 8, 16).uv(0, 4, 16).emit();
         this.up = meshBuilder.build();
-        emitter.square(Direction.NORTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).color(-1, -1, -1, -1).uv(1, 12, 0).uv(2, 16, 0).uv(3, 16, 4).uv(0, 12, 4).cullFace(Direction.NORTH).emit();
-        emitter.square(Direction.WEST, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 0, 0).uv(1, 4, 0).uv(2, 4, 8).uv(3, 0, 8).emit();
-        emitter.square(Direction.EAST, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 4, 0).uv(1, 8, 0).uv(2, 8, 8).uv(3, 4, 8).emit();
-        emitter.square(Direction.DOWN, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).color(-1, -1, -1, -1).uv(1, 8, 0).uv(2, 12, 0).uv(3, 12, 8).uv(0, 8, 8).emit();
-        emitter.square(Direction.UP, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 4, 0).uv(2, 8, 0).uv(3, 8, 8).uv(0, 4, 8).emit();
+        emitter.square(Direction.NORTH, 6.0f/16.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f - 6.0f/16.0f, 0.0f).color(-1, -1, -1, -1).uv(1, 12, 0).uv(2, 16, 0).uv(3, 16, 4).uv(0, 12, 4).cullFace(Direction.NORTH).emit();
+        emitter.square(Direction.WEST, 0.0f, 6.0f/16.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 0, 0).uv(1, 4, 0).uv(2, 4, 8).uv(3, 0, 8).emit();
+        emitter.square(Direction.EAST, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 1.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 4, 0).uv(1, 8, 0).uv(2, 8, 8).uv(3, 4, 8).emit();
+        emitter.square(Direction.DOWN, 6.0f/16.0f, 0.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 8, 0).uv(2, 12, 0).uv(3, 12, 8).uv(0, 8, 8).emit();
+        emitter.square(Direction.UP, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 4, 0).uv(2, 8, 0).uv(3, 8, 8).uv(0, 4, 8).emit();
         this.north = meshBuilder.build();
-        emitter.square(Direction.SOUTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).color(-1, -1, -1, -1).uv(1, 12, 0).uv(2, 16, 0).uv(3, 16, 4).uv(0, 12, 4).cullFace(Direction.SOUTH).emit();
-        emitter.square(Direction.EAST, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 0, 8).uv(1, 4, 8).uv(2, 4, 16).uv(3, 0, 16).emit();
-        emitter.square(Direction.WEST, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 4, 8).uv(1, 8, 8).uv(2, 8, 16).uv(3, 4, 16).emit();
-        emitter.square(Direction.UP, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).color(-1, -1, -1, -1).uv(1, 8, 8).uv(2, 12, 8).uv(3, 12, 16).uv(0, 8, 16).emit();
-        emitter.square(Direction.DOWN, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 4, 8).uv(2, 8, 8).uv(3, 8, 16).uv(0, 4, 16).emit();
+        emitter.square(Direction.SOUTH, 6.0f/16.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f - 6.0f/16.0f, 0.0f).color(-1, -1, -1, -1).uv(1, 12, 0).uv(2, 16, 0).uv(3, 16, 4).uv(0, 12, 4).cullFace(Direction.SOUTH).emit();
+        emitter.square(Direction.EAST, 0.0f, 6.0f/16.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 0, 8).uv(1, 4, 8).uv(2, 4, 16).uv(3, 0, 16).emit();
+        emitter.square(Direction.WEST, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 1.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 4, 8).uv(1, 8, 8).uv(2, 8, 16).uv(3, 4, 16).emit();
+        emitter.square(Direction.UP, 6.0f/16.0f, 0.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 8, 8).uv(2, 12, 8).uv(3, 12, 16).uv(0, 8, 16).emit();
+        emitter.square(Direction.DOWN, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 4, 8).uv(2, 8, 8).uv(3, 8, 16).uv(0, 4, 16).emit();
         this.south = meshBuilder.build();
-        emitter.square(Direction.WEST, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).color(-1, -1, -1, -1).uv(0, 12, 0).uv(1, 16, 0).uv(2, 16, 4).uv(3, 12, 4).cullFace(Direction.WEST).emit();
-        emitter.square(Direction.NORTH, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 0, 0).uv(1, 4, 0).uv(2, 4, 8).uv(3, 0, 8).emit();
-        emitter.square(Direction.SOUTH, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 4, 0).uv(1, 8, 0).uv(2, 8, 8).uv(3, 4, 8).emit();
-        emitter.square(Direction.UP, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 8, 0).uv(1, 12, 0).uv(2, 12, 8).uv(3, 8, 8).emit();
-        emitter.square(Direction.DOWN, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 4, 0).uv(1, 8, 0).uv(2, 8, 8).uv(3, 4, 8).emit();
+        emitter.square(Direction.WEST, 6.0f/16.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f - 6.0f/16.0f, 0.0f).color(-1, -1, -1, -1).uv(0, 12, 0).uv(1, 16, 0).uv(2, 16, 4).uv(3, 12, 4).cullFace(Direction.WEST).emit();
+        emitter.square(Direction.NORTH, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 1.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 0, 0).uv(1, 4, 0).uv(2, 4, 8).uv(3, 0, 8).emit();
+        emitter.square(Direction.SOUTH, 0.0f, 6.0f/16.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 4, 0).uv(1, 8, 0).uv(2, 8, 8).uv(3, 4, 8).emit();
+        emitter.square(Direction.UP, 0.0f, 6.0f/16.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 8, 0).uv(1, 12, 0).uv(2, 12, 8).uv(3, 8, 8).emit();
+        emitter.square(Direction.DOWN, 0.0f, 6.0f/16.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 4, 0).uv(1, 8, 0).uv(2, 8, 8).uv(3, 4, 8).emit();
         this.west = meshBuilder.build();
-        emitter.square(Direction.EAST, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).color(-1, -1, -1, -1).uv(0, 12, 0).uv(1, 16, 0).uv(2, 16, 4).uv(3, 12, 4).cullFace(Direction.EAST).emit();
-        emitter.square(Direction.SOUTH, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 0, 8).uv(1, 4, 8).uv(2, 4, 16).uv(3, 0, 16).emit();
-        emitter.square(Direction.NORTH, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 4, 8).uv(1, 8, 8).uv(2, 8, 16).uv(3, 4, 16).emit();
-        emitter.square(Direction.DOWN, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 8, 8).uv(1, 12, 8).uv(2, 12, 16).uv(3, 8, 16).emit();
-        emitter.square(Direction.UP, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 4, 8).uv(1, 8, 8).uv(2, 8, 16).uv(3, 4, 16).emit();
+        emitter.square(Direction.EAST, 6.0f/16.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f - 6.0f/16.0f, 0.0f).color(-1, -1, -1, -1).uv(0, 12, 0).uv(1, 16, 0).uv(2, 16, 4).uv(3, 12, 4).cullFace(Direction.EAST).emit();
+        emitter.square(Direction.SOUTH, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 1.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 0, 8).uv(1, 4, 8).uv(2, 4, 16).uv(3, 0, 16).emit();
+        emitter.square(Direction.NORTH, 0.0f, 6.0f/16.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 4, 8).uv(1, 8, 8).uv(2, 8, 16).uv(3, 4, 16).emit();
+        emitter.square(Direction.DOWN, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 1.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 8, 8).uv(1, 12, 8).uv(2, 12, 16).uv(3, 8, 16).emit();
+        emitter.square(Direction.UP, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 1.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 4, 8).uv(1, 8, 8).uv(2, 8, 16).uv(3, 4, 16).emit();
         this.east = meshBuilder.build();
     }
 
@@ -144,7 +144,7 @@ public class PipeBakedModel implements BakedModel {
         if (connections[direction.get3DDataValue()]) {
             mesh.outputTo(emitter);
         } else {
-            emitter.square(direction, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 12, 0).uv(1, 16, 0).uv(2, 16, 4).uv(3, 12, 4).emit();
+            emitter.square(direction, 6.0f/16.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 12, 0).uv(1, 16, 0).uv(2, 16, 4).uv(3, 12, 4).emit();
         }
     }
 

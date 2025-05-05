@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2024 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,6 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.WalkwayBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
-import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -47,11 +45,9 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -59,54 +55,16 @@ import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public class WalkwayBakedModel implements BakedModel {
-    private static WalkwayBakedModel instance = null;
 
+    private static WalkwayBakedModel instance = null;
+    private BakedModel walkway;
+    private final TextureAtlasSprite sprite;
     public static final ResourceLocation WALKWAY_PLATFORM = Constant.id("block/walkway");
     private static final ResourceLocation WALKWAY_TEXTURE = Constant.id("block/walkway");
-    private final BakedModel platform;
-    private final Mesh down;
-    private final Mesh up;
-    private final Mesh north;
-    private final Mesh south;
-    private final Mesh west;
-    private final Mesh east;
-    private final TextureAtlasSprite sprite;
 
-    protected WalkwayBakedModel(ModelBaker loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer) {
-        this.platform = loader.getModel(WALKWAY_PLATFORM).bake(loader, textureGetter, rotationContainer);
+    public WalkwayBakedModel(ModelBaker baker, Function<Material, TextureAtlasSprite> textureGetter, ModelState state) {
         this.sprite = textureGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, WALKWAY_TEXTURE));
-        var meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
-        var emitter = meshBuilder.getEmitter();
-        emitter.square(Direction.WEST, 0.6f, 0.4f, 0.4f, 0.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.EAST, 0.6f, 0.4f, 0.4f, 0.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.SOUTH, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.NORTH, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        this.down = meshBuilder.build();
-        emitter.square(Direction.EAST, 0.6f, 1.0f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.WEST, 0.6f, 1.0f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.NORTH, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.SOUTH, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        this.up = meshBuilder.build();
-        emitter.square(Direction.WEST, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.EAST, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.DOWN, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.UP, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        this.north = meshBuilder.build();
-        emitter.square(Direction.EAST, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.WEST, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.UP, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.DOWN, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        this.south = meshBuilder.build();
-        emitter.square(Direction.NORTH, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.SOUTH, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.UP, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.DOWN, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        this.west = meshBuilder.build();
-        emitter.square(Direction.SOUTH, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.NORTH, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.DOWN, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        emitter.square(Direction.UP, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
-        this.east = meshBuilder.build();
+        this.walkway = baker.getModel(WALKWAY_PLATFORM).bake(baker, textureGetter, state);
     }
 
     @Override
@@ -115,58 +73,11 @@ public class WalkwayBakedModel implements BakedModel {
     }
 
     @Override
-    public void emitBlockQuads(BlockAndTintGetter getter, BlockState blockState, BlockPos blockPos, Supplier<RandomSource> randomSupplier, RenderContext context) {
-        var emitter = context.getEmitter();
-
-        if (getter.getBlockEntity(blockPos) instanceof WalkwayBlockEntity walkway) {
-            var x = 0;
-            var y = 0;
-            switch (walkway.getDirection()) {
-                case DOWN -> x = 180;
-                case NORTH -> x = 270;
-                case SOUTH -> x = 90;
-                case EAST -> {
-                    x = 90;
-                    y = 90;
-                }
-                case WEST -> {
-                    x = 90;
-                    y = 270;
-                }
-            }
-
-            Transform.INSTANCE.setQuaternions(Axis.XP.rotationDegrees(x), Axis.YP.rotationDegrees(y));
-            context.pushTransform(Transform.INSTANCE);
-            this.platform.emitBlockQuads(getter, blockState, blockPos, randomSupplier, context);
-            context.popTransform();
-
-            if (walkway.getConnections()[0]) {
-                this.down.outputTo(emitter);
-            }
-            if (walkway.getConnections()[1]) {
-                this.up.outputTo(emitter);
-            }
-            if (walkway.getConnections()[2]) {
-                this.north.outputTo(emitter);
-            }
-            if (walkway.getConnections()[3]) {
-                this.south.outputTo(emitter);
-            }
-            if (walkway.getConnections()[4]) {
-                this.west.outputTo(emitter);
-            }
-            if (walkway.getConnections()[5]) {
-                this.east.outputTo(emitter);
-            }
-        }
-    }
-
-    @Override
     public void emitItemQuads(ItemStack itemStack, Supplier<RandomSource> randomSupplier, RenderContext context) {
     }
 
     @Override
-    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState blockState, @Nullable Direction direction, RandomSource random) {
+    public List<BakedQuad> getQuads(@Nullable BlockState blockState, @Nullable Direction direction, RandomSource random) {
         return Collections.emptyList();
     }
 
@@ -214,6 +125,88 @@ public class WalkwayBakedModel implements BakedModel {
 
     public static void invalidate() {
         instance = null;
+    }
+
+    public BakedModel getWalkway() {
+        return walkway;
+    }
+
+    @Override
+    public void emitBlockQuads(BlockAndTintGetter getter, BlockState blockState, BlockPos blockpos, Supplier<RandomSource> randomSupplier, RenderContext context) {
+        var emitter = context.getEmitter();
+        int X = blockpos.getX();
+        int Y = blockpos.getY();
+        int Z = blockpos.getZ();
+        boolean up =getter.getBlockEntity(new BlockPos(X, Y + 1, Z)) instanceof WalkwayBlockEntity walkway2 && walkway2.getDirection() != Direction.DOWN;
+        boolean down =getter.getBlockEntity(new BlockPos(X, Y - 1, Z)) instanceof WalkwayBlockEntity walkway2 && walkway2.getDirection() != Direction.UP;
+        boolean north =getter.getBlockEntity(new BlockPos(X, Y, Z - 1)) instanceof WalkwayBlockEntity walkway2 && walkway2.getDirection() != Direction.SOUTH;
+        boolean south =getter.getBlockEntity(new BlockPos(X, Y, Z + 1)) instanceof WalkwayBlockEntity walkway2 && walkway2.getDirection() != Direction.NORTH;
+        boolean east =getter.getBlockEntity(new BlockPos(X + 1, Y, Z)) instanceof WalkwayBlockEntity walkway2 && walkway2.getDirection() != Direction.WEST;
+        boolean west =getter.getBlockEntity(new BlockPos(X - 1, Y, Z)) instanceof WalkwayBlockEntity walkway2 && walkway2.getDirection() != Direction.EAST;
+        RenderContext.QuadTransform walkwayTransform = quad -> {
+            quad.spriteBake(this.sprite, MutableQuadView.BAKE_LOCK_UV);
+            return true;
+        };
+        context.pushTransform(walkwayTransform);
+        if (getter.getBlockEntity(blockpos) instanceof WalkwayBlockEntity walkway) {
+            if (walkway.getDirection() != Direction.UP && up) {
+                emitter.square(Direction.EAST, 1.0f - 6.0f/16.0f, 1.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+                emitter.square(Direction.WEST, 1.0f - 6.0f/16.0f, 1.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+                emitter.square(Direction.SOUTH, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+                emitter.square(Direction.NORTH, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+            }
+            if (walkway.getDirection() != Direction.DOWN && down) {
+                emitter.square(Direction.EAST, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 6.0f/16.0f, 0.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+                emitter.square(Direction.WEST, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 6.0f/16.0f, 0.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+                emitter.square(Direction.SOUTH, 6.0f/16.0f, 0.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+                emitter.square(Direction.NORTH, 6.0f/16.0f, 0.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+            }
+            if (walkway.getDirection() != Direction.EAST && east) {
+                emitter.square(Direction.SOUTH, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 1.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+                emitter.square(Direction.NORTH, 0.0f, 6.0f/16.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+                emitter.square(Direction.UP, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 1.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+                emitter.square(Direction.DOWN, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 1.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+            }
+            if (walkway.getDirection() != Direction.WEST && west) {
+                emitter.square(Direction.SOUTH, 0.0f, 6.0f/16.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+                emitter.square(Direction.NORTH, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 1.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+                emitter.square(Direction.UP, 0.0f, 6.0f/16.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+                emitter.square(Direction.DOWN, 0.0f, 6.0f/16.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+            }
+            if (walkway.getDirection() != Direction.NORTH && north) {
+                emitter.square(Direction.EAST, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 1.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+                emitter.square(Direction.WEST, 0.0f, 6.0f/16.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+                emitter.square(Direction.UP, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+                emitter.square(Direction.DOWN, 6.0f/16.0f, 0.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+            }
+            if (walkway.getDirection() != Direction.SOUTH && south) {
+                emitter.square(Direction.EAST, 0.0f, 6.0f/16.0f, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+                emitter.square(Direction.WEST, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 1.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(0, 6, 4).uv(1, 9, 4).uv(2, 9, 11).uv(3, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+                emitter.square(Direction.UP, 6.0f/16.0f, 0.0f, 1.0f - 6.0f/16.0f, 6.0f/16.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+                emitter.square(Direction.DOWN, 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f - 6.0f/16.0f, 1.0f, 6.0f/16.0f).color(-1, -1, -1, -1).uv(1, 6, 4).uv(2, 9, 4).uv(3, 9, 11).uv(0, 6, 11).spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV).emit();
+            }
+            context.popTransform();
+                var x = 0;
+                var y = 0;
+                switch (walkway.getDirection()) {
+                    case DOWN -> x = 180;
+                    case NORTH -> x = 270;
+                    case SOUTH -> x = 90;
+                    case EAST -> {
+                        x = 90;
+                        y = 90;
+                    }
+                    case WEST -> {
+                        x = 90;
+                        y = 270;
+                    }
+                }
+
+                Transform.INSTANCE.setQuaternions(Axis.XP.rotationDegrees(x), Axis.YP.rotationDegrees(y));
+                context.pushTransform(Transform.INSTANCE);
+                this.walkway.emitBlockQuads(getter, blockState, blockpos, randomSupplier, context);
+                context.popTransform();
+        }
     }
 
     public enum Transform implements RenderContext.QuadTransform {
