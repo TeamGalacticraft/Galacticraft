@@ -29,7 +29,6 @@ import dev.galacticraft.mod.client.gui.overlay.CountdownOverlay;
 import dev.galacticraft.mod.client.gui.overlay.LanderOverlay;
 import dev.galacticraft.mod.client.gui.overlay.OxygenOverlay;
 import dev.galacticraft.mod.client.gui.overlay.RocketOverlay;
-import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
 import dev.galacticraft.mod.client.render.FootprintRenderer;
 import dev.galacticraft.mod.client.sounds.RocketSound;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
@@ -39,7 +38,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.world.phys.Vec3;
 
 public class ClientEventHandler {
     public static void init() {
@@ -61,11 +59,6 @@ public class ClientEventHandler {
     public static void clientTick(Minecraft client) {
         OxygenOverlay.clientTick();
         LanderOverlay.clientTick();
-        if (Minecraft.getInstance().screen instanceof CelestialSelectionScreen)
-        {
-            assert Minecraft.getInstance().player != null;
-            Minecraft.getInstance().player.setDeltaMovement(new Vec3(0D,0D,0D));
-        }
         GCKeyBinds.handleKeybinds(client);
     }
 

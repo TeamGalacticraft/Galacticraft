@@ -253,6 +253,11 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
         this.translationX = 0.0F;
         this.translationY = 0.0F;
 
+        if (Minecraft.getInstance().screen instanceof CelestialSelectionScreen) {
+            assert Minecraft.getInstance().player != null;
+            Minecraft.getInstance().player.setDeltaMovement(new Vec3(0.0D, 0.0D, 0.0D));
+        }
+
         this.keyboardTranslation();
     }
 
