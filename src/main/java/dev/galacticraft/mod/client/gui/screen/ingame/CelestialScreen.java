@@ -64,7 +64,6 @@ import org.lwjgl.glfw.GLFW;
 import java.util.*;
 
 import static dev.galacticraft.mod.Constant.CelestialScreen.*;
-import static dev.galacticraft.mod.Constant.ESCAPE_HEIGHT;
 import static dev.galacticraft.mod.Constant.REENTRY_HEIGHT;
 
 @SuppressWarnings({"DataFlowIssue"})
