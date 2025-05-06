@@ -64,6 +64,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.*;
 
 import static dev.galacticraft.mod.Constant.CelestialScreen.*;
+import static dev.galacticraft.mod.Constant.ESCAPE_HEIGHT;
 
 @SuppressWarnings({"DataFlowIssue"})
 @Environment(EnvType.CLIENT)
@@ -252,7 +253,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
     public void tick() {
         this.translationX = 0.0F;
         this.translationY = 0.0F;
-        if (this.minecraft.player != null) {
+        if (this.minecraft.player != null && this.minecraft.player.getY() >= ESCAPE_HEIGHT) {
             this.minecraft.player.setDeltaMovement(new Vec3(0.0D, 0.0D, 0.0D));
         }
         this.keyboardTranslation();
