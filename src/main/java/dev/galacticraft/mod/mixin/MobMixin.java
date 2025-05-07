@@ -22,48 +22,34 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.network.c2s.OpenPetInventoryPayload;
-import dev.galacticraft.mod.tag.GCItemTags;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(Parrot.class)
-public abstract class ParrotMixin extends TamableAnimal implements GearInventoryProvider {
+@Mixin(Mob.class)
+public abstract class MobMixin extends LivingEntity {
 
-    ParrotMixin() {
+    MobMixin() {
         super(null, null);
     }
 
-    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"), cancellable = true)
-    public void galacticraft$addOxygenSetupData(CompoundTag compoundTag, CallbackInfo ci) {
-        Container inv = this.galacticraft$getGearInv();
-        compoundTag.putBoolean(Constant.Nbt.HAS_MASK, inv.getItem(1).is(GCItemTags.OXYGEN_MASKS));
-        compoundTag.putBoolean(Constant.Nbt.HAS_GEAR, inv.getItem(2).is(GCItemTags.OXYGEN_GEAR));
-        if (inv.getItem(3).is(GCItemTags.OXYGEN_TANKS)) {
-            String tankSize = inv.getItem(3).getDescriptionId().replace("item.galacticraft.", "");
-            compoundTag.putString(Constant.Nbt.OXYGEN_TANK, tankSize);
-        }
-    }
-
-    @Inject(method = "mobInteract", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/Parrot;isFlying()Z"), cancellable = true)
+    @Inject(method = "mobInteract", at = @At("HEAD"), cancellable = true)
     public void galacticraft$openPetInventoryScreen(Player player, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResult> cir) {
-        if (player.isSecondaryUseActive() && this.isTame() && this.isOwnedBy(player)) {
-            ClientPlayNetworking.send(new OpenPetInventoryPayload(this.getId()));
-            cir.setReturnValue(InteractionResult.sidedSuccess(this.level().isClientSide));
+        if ((Object) this instanceof TamableAnimal animal) {
+            if (player.isSecondaryUseActive() && animal.isTame() && animal.isOwnedBy(player)) {
+                ClientPlayNetworking.send(new OpenPetInventoryPayload(animal.getId()));
+                cir.setReturnValue(InteractionResult.sidedSuccess(this.level().isClientSide));
+            }
         }
     }
 }

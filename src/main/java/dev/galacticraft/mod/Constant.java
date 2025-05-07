@@ -575,6 +575,7 @@ public interface Constant {
         ResourceLocation ROCKET_SELECTION = id("textures/gui/rocket_part_selection.png");
 
         ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
+        ResourceLocation PET_INVENTORY_SCREEN = id("textures/gui/pet_inventory_screen.png");
         ResourceLocation ROCKET_INVENTORY = id("textures/gui/rocket.png");
         ResourceLocation OVERLAY = id("textures/gui/overlay.png");
         ResourceLocation WARNING_SIGN = id("textures/gui/warning.png");
@@ -907,6 +908,7 @@ public interface Constant {
         String COMPRESSOR_MENU = "compressor_menu";
         String ELECTRIC_COMPRESSOR_MENU = "electric_compressor_menu";
         String PLAYER_INVENTORY_MENU = "player_inventory_menu";
+        String PET_INVENTORY_MENU = "pet_inventory_menu";
         String ENERGY_STORAGE_MODULE_MENU = "energy_storage_module_menu";
         String REFINERY_MENU = "refinery_menu";
         String ELECTRIC_FURNACE_MENU = "electric_furnace_menu";

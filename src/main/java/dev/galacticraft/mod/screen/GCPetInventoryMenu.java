@@ -25,29 +25,63 @@ package dev.galacticraft.mod.screen;
 import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.screen.slot.AccessorySlot;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.ticks.ContainerSingleItem;
 
-public class GCPlayerInventoryMenu extends AbstractContainerMenu {
-    public static final int[] COLUMNS = {8, 80, 98};
-
+public class GCPetInventoryMenu extends AbstractContainerMenu {
     public final Container inventory;
 
     public final Player player;
 
-    public GCPlayerInventoryMenu(int syncId, Inventory playerInventory, Player player) {
-        super(GCMenuTypes.PLAYER_INV_GC, syncId);
+    public final TamableAnimal animal;
+
+    private final Container armorContainer = new ContainerSingleItem(){
+
+        @Override
+        public ItemStack getTheItem() {
+            return GCPetInventoryMenu.this.animal.getBodyArmorItem();
+        }
+
+        @Override
+        public void setTheItem(ItemStack itemStack) {
+            GCPetInventoryMenu.this.animal.setBodyArmorItem(itemStack);
+        }
+
+        @Override
+        public void setChanged() {
+        }
+
+        @Override
+        public boolean stillValid(Player player) {
+            return GCPetInventoryMenu.this.stillValid(player);
+        }
+    };
+
+    protected GCPetInventoryMenu(int syncId, Inventory playerInventory, int petId) {
+        this(syncId, playerInventory, playerInventory.player, (TamableAnimal) playerInventory.player.level().getEntity(petId));
+    }
+
+    public GCPetInventoryMenu(int syncId, Inventory playerInventory, Player player, TamableAnimal animal) {
+        super(GCMenuTypes.PET_INV_GC, syncId);
 
         this.player = player;
-        this.inventory = player.galacticraft$getGearInv();
+        this.animal = animal;
+        this.inventory = animal.galacticraft$getGearInv();
+
+        this.addSlot(new AccessorySlot(inventory, animal, 0, 8, 18));
 
         // Galacticraft inv
-        for (int i = 0; i < 12; ++i) {
-            this.addSlot(new AccessorySlot(inventory, player, i, COLUMNS[i / 4], 8 + (i % 4) * 18, GCAccessorySlots.SLOT_TAGS.get(i), GCAccessorySlots.SLOT_SPRITES.get(i)));
+        for (int i = 4; i < 7; ++i) {
+            this.addSlot(new AccessorySlot(inventory, animal, i, 80, (i % 4 + 1) * 18, GCAccessorySlots.SLOT_TAGS.get(i), GCAccessorySlots.SLOT_SPRITES.get(i)));
         }
 
         // Player main inv
@@ -61,15 +95,27 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
         for (int slotY = 0; slotY < 9; ++slotY) {
             this.addSlot(new Slot(playerInventory, slotY, 8 + slotY * 18, 142));
         }
-    }
 
-    public GCPlayerInventoryMenu(int syncId, Inventory inv) {
-        this(syncId, inv, inv.player);
+        // Wolf armor
+        if (animal instanceof Wolf wolf) {
+            this.addSlot(new Slot(this.armorContainer, 0, 8, 36) {
+
+                @Override
+                public boolean mayPlace(ItemStack itemStack) {
+                    return itemStack.is(Items.WOLF_ARMOR);
+                }
+
+                @Override
+                public boolean isActive() {
+                    return wolf.canUseSlot(EquipmentSlot.BODY);
+                }
+            });
+        }
     }
 
     @Override
     public boolean stillValid(Player player) {
-        return player.getUUID().equals(this.player.getUUID());
+        return player.getUUID().equals(this.player.getUUID()) && player.canInteractWithEntity(this.animal, 4.0);
     }
 
     @Override
@@ -81,25 +127,24 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
             stack = stackFrom.copy();
 
             // Index of Indexes :)
-            // 0-3 (4): GC, thermal armor slots;
-            // 4-5 (2): GC, oxygen mask/gear slots;
-            // 6-7 (2): GC, oxygen tank slots;
-            // 8-11 (6): GC, accessory slots;
-            // 12-38 (27): MC, non-hotbar inventory slots;
-            // 39-47 (9): MC, hotbar slots.
-            if (index < 12) {
-                if (!this.moveItemStackTo(stackFrom, 39, 48, false) &&
-                    !this.moveItemStackTo(stackFrom, 12, 39, false)) {
+            // 0 (1): GC, thermal armor slots;
+            // 1-2 (2): GC, oxygen mask/gear slots;
+            // 3 (1): GC, oxygen tank slots;
+            // 4-30 (27): MC, non-hotbar inventory slots;
+            // 31-39 (9): MC, hotbar slots.
+            if (index < 4) {
+                if (!this.moveItemStackTo(stackFrom, 31, 40, false) &&
+                    !this.moveItemStackTo(stackFrom, 4, 31, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (index < 39) {
-                if (!this.moveItemStackTo(stackFrom, 0, 12, false) &&
-                    !this.moveItemStackTo(stackFrom, 39, 48, false)) {
+            } else if (index < 31) {
+                if (!this.moveItemStackTo(stackFrom, 0, 4, false) &&
+                    !this.moveItemStackTo(stackFrom, 31, 40, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (index < 48) {
-                if (!this.moveItemStackTo(stackFrom, 0, 12, false) &&
-                    !this.moveItemStackTo(stackFrom, 12, 39, false)) {
+            } else if (index < 40) {
+                if (!this.moveItemStackTo(stackFrom, 0, 4, false) &&
+                    !this.moveItemStackTo(stackFrom, 4, 31, false)) {
                     return ItemStack.EMPTY;
                 }
             }

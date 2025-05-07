@@ -26,6 +26,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.client.model.CatModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.WolfModel;
@@ -41,6 +42,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Wolf;
@@ -91,7 +93,13 @@ public class PetOxygenTanksRenderLayer<T extends TamableAnimal, M extends Entity
 
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
         TamableAnimal animal = (TamableAnimal) entity;
-        ModelPart tank = this.tanks.getChild(Constant.Item.SMALL_OXYGEN_TANK);
+
+        Container inv = animal.galacticraft$getOxygenTanks();
+        String tankSize = null;
+        if (inv.getItem(0).is(GCItemTags.OXYGEN_TANKS)) {
+            tankSize = inv.getItem(0).getDescriptionId().replace("item.galacticraft.", "");
+        }
+        ModelPart tank = this.tanks.hasChild(tankSize) ? this.tanks.getChild(tankSize) : null;
 
         if (tank != null) {
             matrices.pushPose();

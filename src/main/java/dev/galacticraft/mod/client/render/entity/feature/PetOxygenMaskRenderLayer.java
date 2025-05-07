@@ -26,6 +26,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.client.model.CatModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.WolfModel;
@@ -41,9 +42,11 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityModel<T>> extends RenderLayer<T, M> {
@@ -97,8 +100,20 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
         TamableAnimal animal = (TamableAnimal) entity;
-        boolean hasMask = true;
-        boolean hasGear = true;
+
+        Container inv = animal.galacticraft$getAccessories();
+        boolean hasMask = false;
+        boolean hasGear = false;
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            ItemStack itemStack = inv.getItem(i);
+            if (!hasMask && itemStack.is(GCItemTags.OXYGEN_MASKS)) {
+                hasMask = true;
+                if (hasGear) break;
+            } else if (!hasGear && itemStack.is(GCItemTags.OXYGEN_GEAR)) {
+                hasGear = true;
+                if (hasMask) break;
+            }
+        }
 
         matrices.pushPose();
         if (animal.isBaby()) {

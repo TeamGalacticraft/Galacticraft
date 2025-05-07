@@ -25,6 +25,7 @@ package dev.galacticraft.mod.client.render.entity.feature;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.ParrotModel;
 import net.minecraft.client.model.PlayerModel;
@@ -43,6 +44,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Parrot;
@@ -100,8 +102,16 @@ public class ParrotOxygenGearRenderLayer<T extends LivingEntity, M extends Entit
             this.renderOnShoulder(matrices, vertexConsumers, light, entity, limbAngle, limbDistance, headYaw, headPitch, false);
             return;
         } else {
+            Container inv = entity.galacticraft$getGearInv();
+            boolean hasMask = inv.getItem(1).is(GCItemTags.OXYGEN_MASKS);
+            boolean hasGear = inv.getItem(2).is(GCItemTags.OXYGEN_GEAR);
+            String tankSize = null;
+            if (inv.getItem(3).is(GCItemTags.OXYGEN_TANKS)) {
+                tankSize = inv.getItem(3).getDescriptionId().replace("item.galacticraft.", "");
+            }
+
             matrices.pushPose();
-            this.render(matrices, vertexConsumers, light, entity, headYaw, headPitch, true, true, Constant.Item.SMALL_OXYGEN_TANK);
+            this.render(matrices, vertexConsumers, light, entity, headYaw, headPitch, hasMask, hasGear, tankSize);
             matrices.popPose();
         }
     }

@@ -49,10 +49,11 @@ public interface GearInventoryProvider {
     }
 
     default boolean galacticraft$hasMaskAndGear() {
+        Container inv = this.galacticraft$getAccessories();
         boolean mask = false;
         boolean gear = false;
-        for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
-            ItemStack itemStack = this.galacticraft$getAccessories().getItem(i);
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            ItemStack itemStack = inv.getItem(i);
             if (!mask && itemStack.is(GCItemTags.OXYGEN_MASKS)) {
                 mask = true;
                 if (gear) break;

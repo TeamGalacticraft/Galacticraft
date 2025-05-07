@@ -56,6 +56,7 @@ import dev.galacticraft.mod.network.c2s.OpenGcInventoryPayload;
 import dev.galacticraft.mod.network.c2s.OpenRocketPayload;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
+import dev.galacticraft.mod.screen.GCPetInventoryMenu;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
 import dev.galacticraft.mod.screen.RocketMenu;
 import net.fabricmc.api.ClientModInitializer;
@@ -111,6 +112,7 @@ public class GalacticraftClient implements ClientModInitializer {
         MenuScreens.register(GCMenuTypes.FOOD_CANNER, FoodCannerScreen::new);
         MenuScreens.register(GCMenuTypes.OXYGEN_DECOMPRESSOR, OxygenDecompressorScreen::new);
         MenuScreens.register(GCMenuTypes.PLAYER_INV_GC, GCPlayerInventoryScreen::new);
+        MenuScreens.register(GCMenuTypes.PET_INV_GC, GCPetInventoryScreen::new);
         MenuScreens.register(GCMenuTypes.OXYGEN_BUBBLE_DISTRIBUTOR, OxygenBubbleDistributorScreen::new);
         MenuScreens.register(GCMenuTypes.OXYGEN_STORAGE_MODULE, OxygenStorageModuleScreen::new);
         MenuScreens.register(GCMenuTypes.OXYGEN_SEALER, OxygenSealerScreen::new);

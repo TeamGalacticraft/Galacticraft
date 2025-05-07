@@ -20,6 +20,7 @@
     "LanternBlockMixin",
     "LevelMixin",
     "LivingEntityMixin",
+    "MobMixin",
     "ModelProviderMixin",
     "MultiNoiseBiomeSourceParameterListPresetAccessor",
     "ParrotMixin",

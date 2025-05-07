@@ -83,7 +83,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
         LivingEntity entity = ((LivingEntity) (Object) this);
         AttributeInstance attribute = entity.getAttribute(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE);
         if (!entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(entity.getEyeHeight(entity.getPose())))) && !(attribute != null && attribute.getValue() >= 0.99D)) {
-            if (!entity.isEyeInFluid(GCFluidTags.NON_BREATHABLE) && (!(entity instanceof Player player) || !player.getAbilities().invulnerable)) {
+            if (!entity.isEyeInFluid(GCFluidTags.NON_BREATHABLE) && !(entity instanceof Player player && player.getAbilities().invulnerable)) {
                 entity.setAirSupply(this.decreaseAirSupply(entity.getAirSupply()));
                 if (entity.getAirSupply() == -20) {
                     entity.setAirSupply(0);
@@ -181,13 +181,11 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
 
     @Inject(method = "canFreeze", at = @At(value = "HEAD"), cancellable = true)
     private void galacticraft_canFreezeThermalPadding(CallbackInfoReturnable<Boolean> cir) {
-        if ((Entity) this instanceof Player player) {
-            Container inv = player.galacticraft$getThermalArmor();
-            for (int slot = 0; slot < inv.getContainerSize(); slot++) {
-                if (inv.getItem(slot).is(ItemTags.FREEZE_IMMUNE_WEARABLES)) {
-                    cir.setReturnValue(false);
-                    return;
-                }
+        Container inv = this.galacticraft$getThermalArmor();
+        for (int slot = 0; slot < inv.getContainerSize(); slot++) {
+            if (inv.getItem(slot).is(ItemTags.FREEZE_IMMUNE_WEARABLES)) {
+                cir.setReturnValue(false);
+                return;
             }
         }
     }
