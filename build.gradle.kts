@@ -104,6 +104,7 @@ base.archivesName.set(modName)
 loom {
     accessWidenerPath.set(project.file("src/main/resources/galacticraft.accesswidener"))
     mixin.add(sourceSets.main.get(), "galacticraft.refmap.json")
+    mixin.add(sourceSets.test.get(), "galacticraft-test.refmap.json")
 
     runs {
         getByName("client") {
