@@ -48,12 +48,10 @@ import dev.galacticraft.impl.universe.position.config.OrbitalCelestialPositionCo
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.impl.universe.position.type.OrbitalCelestialPositionType;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.render.dimension.AsteroidSkyRenderer;
 import dev.galacticraft.mod.data.gen.SatelliteChunkGenerator;
 import dev.galacticraft.mod.tag.GCBlockTags;
 import dev.galacticraft.mod.util.Translations;
 import dev.galacticraft.mod.world.biome.GCBiomes;
-import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;

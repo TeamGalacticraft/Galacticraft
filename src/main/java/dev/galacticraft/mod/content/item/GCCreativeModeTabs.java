@@ -23,19 +23,12 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.component.GCDataComponents;
-import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry;
-import dev.galacticraft.mod.content.item.OxygenTankItem;
-import dev.galacticraft.mod.storage.PlaceholderItemStorage;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -286,7 +279,7 @@ public class GCCreativeModeTabs {
             .builder()
             .icon(() -> new ItemStack(CANVAS))
             .title(Component.translatable(Translations.ItemGroup.ITEMS))
-            .displayItems((parameters, output) -> {                
+            .displayItems((parameters, output) -> {
                 // BATTERIES
                 output.accept(BATTERY);
                 output.accept(INFINITE_BATTERY);

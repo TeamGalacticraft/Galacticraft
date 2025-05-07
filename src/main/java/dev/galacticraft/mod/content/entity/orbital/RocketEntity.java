@@ -66,12 +66,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -501,7 +498,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                             new DamageSource(this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.CRASH_LANDING)),
                             new ExplosionDamageCalculator(),
                             this.position().x + (this.level().random.nextDouble() - 0.5 * 4),
-                            this.position().y + (this.level().random.nextDouble() * 3), 
+                            this.position().y + (this.level().random.nextDouble() * 3),
                             this.position().z + (this.level().random.nextDouble() - 0.5 * 4),
                             10.0F,
                             createFire,
@@ -691,7 +688,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
             } else if (right) {
                 setYRot(Mth.wrapDegrees(getYRot() + turnFactor));
             }
-            
+
             if (jumping) {
                 setZRot(Mth.wrapDegrees(getZRot() - turnFactor));
             } else if (shiftKeyDown) {

@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.content.block.special.launchpad;
 
-import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.FuelDock;
 import dev.galacticraft.mod.api.entity.Dockable;
