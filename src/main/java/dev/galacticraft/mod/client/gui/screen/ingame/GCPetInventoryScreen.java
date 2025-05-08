@@ -50,7 +50,7 @@ public class GCPetInventoryScreen extends AbstractContainerScreen<GCPetInventory
     @Override
     protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
         if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 129, this.topPos + 18, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT)) {
-            Storage<FluidVariant> storage = ContainerItemContext.withConstant(this.menu.inventory.getItem(GCAccessorySlots.OXYGEN_TANK_1_SLOT)).find(FluidStorage.ITEM);
+            Storage<FluidVariant> storage = ContainerItemContext.withConstant(this.menu.inventory.getItem(3)).find(FluidStorage.ITEM);
             if (storage != null) {
                 long capacity = 0;
                 long amount = 0;
@@ -61,19 +61,6 @@ public class GCPetInventoryScreen extends AbstractContainerScreen<GCPetInventory
                     }
                 }
                 graphics.renderTooltip(this.font, Component.translatable(Translations.Ui.OXYGEN_TANK_1_LEVEL, TooltipUtil.formatFluidRemaining(amount, capacity)), mouseX, mouseY);
-            }
-        } else if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 152, this.topPos + 18, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT)) {
-            Storage<FluidVariant> storage = ContainerItemContext.withConstant(this.menu.inventory.getItem(GCAccessorySlots.OXYGEN_TANK_2_SLOT)).find(FluidStorage.ITEM);
-            if (storage != null) {
-                long capacity = 0;
-                long amount = 0;
-                for (StorageView<FluidVariant> view : storage) {
-                    if (view.isResourceBlank() || view.getResource().getFluid() == Gases.OXYGEN) {
-                        capacity += view.getCapacity();
-                        amount += view.getAmount();
-                    }
-                }
-                graphics.renderTooltip(this.font, Component.translatable(Translations.Ui.OXYGEN_TANK_2_LEVEL, TooltipUtil.formatFluidRemaining(amount, capacity)), mouseX, mouseY);
             }
         }
         super.renderTooltip(graphics, mouseX, mouseY);
@@ -90,7 +77,7 @@ public class GCPetInventoryScreen extends AbstractContainerScreen<GCPetInventory
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         graphics.blit(Constant.ScreenTexture.PET_INVENTORY_SCREEN, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
-        Storage<FluidVariant> storage1 = ContainerItemContext.withConstant(this.menu.inventory.getItem(GCAccessorySlots.OXYGEN_TANK_1_SLOT)).find(FluidStorage.ITEM);
+        Storage<FluidVariant> storage1 = ContainerItemContext.withConstant(this.menu.inventory.getItem(3)).find(FluidStorage.ITEM);
         if (storage1 != null) {
             long capacity = 0;
             long amount = 0;

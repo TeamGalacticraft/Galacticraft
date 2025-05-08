@@ -81,7 +81,7 @@ public class GCPetInventoryMenu extends AbstractContainerMenu {
 
         // Galacticraft inv
         for (int i = 4; i < 7; ++i) {
-            this.addSlot(new AccessorySlot(inventory, animal, i, 80, (i % 4 + 1) * 18, GCAccessorySlots.SLOT_TAGS.get(i), GCAccessorySlots.SLOT_SPRITES.get(i)));
+            this.addSlot(new AccessorySlot(inventory, animal, i - 3, 80, (i % 4 + 1) * 18, GCAccessorySlots.SLOT_TAGS.get(i), GCAccessorySlots.SLOT_SPRITES.get(i)));
         }
 
         // Player main inv

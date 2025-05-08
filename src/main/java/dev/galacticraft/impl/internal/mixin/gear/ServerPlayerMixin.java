@@ -59,25 +59,29 @@ public abstract class ServerPlayerMixin implements GearInventoryProvider {
     @Unique
     private SimpleContainer galacticraft_createGearInventory() {
         SimpleContainer inv = new GearInventory();
-        inv.addListener((inventory) -> {
-            ItemStack[] stacks = new ItemStack[inventory.getContainerSize()];
-            for (int i = 0; i < inventory.getContainerSize(); i++) {
-                stacks[i] = inventory.getItem(i);
-            }
-            ServerPlayer player = (ServerPlayer) (Object) this;
-            GearInvPayload payload = new GearInvPayload(player.getId(), stacks);
-
-            if (this.connection != null) {
-                Collection<ServerPlayer> tracking = PlayerLookup.tracking(player);
-                if (!tracking.contains(player)) {
-                    ServerPlayNetworking.send(player, payload);
-                }
-                for (ServerPlayer remote : tracking) {
-                    ServerPlayNetworking.send(remote, payload);
-                }
-            }
-        });
+        inv.addListener((inventory) -> this.syncGearToClients(inventory));
+        // this.syncGearToClients(inv);
         return inv;
+    }
+
+    @Unique
+    private void syncGearToClients(Container inventory) {
+        ItemStack[] stacks = new ItemStack[inventory.getContainerSize()];
+        for (int i = 0; i < inventory.getContainerSize(); i++) {
+            stacks[i] = inventory.getItem(i);
+        }
+        ServerPlayer player = (ServerPlayer) (Object) this;
+        GearInvPayload payload = new GearInvPayload(player.getId(), stacks);
+
+        if (this.connection != null) {
+            Collection<ServerPlayer> tracking = PlayerLookup.tracking(player);
+            if (!tracking.contains(player)) {
+                ServerPlayNetworking.send(player, payload);
+            }
+            for (ServerPlayer remote : tracking) {
+                ServerPlayNetworking.send(remote, payload);
+            }
+        }
     }
 
     @Override
@@ -102,11 +106,11 @@ public abstract class ServerPlayerMixin implements GearInventoryProvider {
 
     @Override
     public void galacticraft$writeGearToNbt(CompoundTag tag) {
-        tag.put(Constant.Nbt.GEAR_INV, this.galacticraft$getGearInv().createTag(this.serverLevel().registryAccess()));
+        tag.put(Constant.Nbt.GEAR_INV, this.gearInv.createTag(this.serverLevel().registryAccess()));
     }
 
     @Override
     public void galacticraft$readGearFromNbt(CompoundTag tag) {
-        this.galacticraft$getGearInv().fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND), this.serverLevel().registryAccess());
+        this.gearInv.fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND), this.serverLevel().registryAccess());
     }
 }

@@ -26,7 +26,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
-import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.client.model.CatModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.WolfModel;
@@ -101,20 +100,6 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
         TamableAnimal animal = (TamableAnimal) entity;
 
-        Container inv = animal.galacticraft$getAccessories();
-        boolean hasMask = false;
-        boolean hasGear = false;
-        for (int i = 0; i < inv.getContainerSize(); i++) {
-            ItemStack itemStack = inv.getItem(i);
-            if (!hasMask && itemStack.is(GCItemTags.OXYGEN_MASKS)) {
-                hasMask = true;
-                if (hasGear) break;
-            } else if (!hasGear && itemStack.is(GCItemTags.OXYGEN_GEAR)) {
-                hasGear = true;
-                if (hasMask) break;
-            }
-        }
-
         matrices.pushPose();
         if (animal.isBaby()) {
             if (animal instanceof Wolf) {
@@ -125,14 +110,14 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
             }
         }
 
-        if (this.mask != null && hasMask) {
+        if (this.mask != null && animal.galacticraft$hasMask()) {
             this.mask.copyFrom(this.head);
             if (this.realHead != null) {
                 this.mask.getChild(Constant.ModelPartName.REAL_OXYGEN_MASK).zRot = this.realHead.zRot;
             }
             this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
-        if (hasGear) {
+        if (animal.galacticraft$hasGear()) {
             if (this.pipeSitting != null && animal.isInSittingPose()) {
                 this.pipeSitting.copyFrom(this.body);
                 this.pipeSitting.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);

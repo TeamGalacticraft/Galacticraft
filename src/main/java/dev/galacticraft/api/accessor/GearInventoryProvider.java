@@ -75,6 +75,24 @@ public interface GearInventoryProvider {
         return false;
     }
 
+    default boolean galacticraft$hasGear() {
+        for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
+            ItemStack itemStack = this.galacticraft$getAccessories().getItem(i);
+            if (itemStack.is(GCItemTags.OXYGEN_GEAR)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    default String galacticraft$tankSize(int i) {
+        ItemStack itemStack = this.galacticraft$getOxygenTanks().getItem(i);
+        if (itemStack.is(GCItemTags.OXYGEN_TANKS)) {
+            return itemStack.getDescriptionId().replace("item.galacticraft.", "");
+        }
+        return "";
+    }
+
     default void galacticraft$writeGearToNbt(CompoundTag tag) {
         throw new RuntimeException("This should be overridden by mixin!");
     }

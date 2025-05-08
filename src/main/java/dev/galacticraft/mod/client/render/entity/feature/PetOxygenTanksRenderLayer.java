@@ -94,11 +94,7 @@ public class PetOxygenTanksRenderLayer<T extends TamableAnimal, M extends Entity
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
         TamableAnimal animal = (TamableAnimal) entity;
 
-        Container inv = animal.galacticraft$getOxygenTanks();
-        String tankSize = null;
-        if (inv.getItem(0).is(GCItemTags.OXYGEN_TANKS)) {
-            tankSize = inv.getItem(0).getDescriptionId().replace("item.galacticraft.", "");
-        }
+        String tankSize = animal.galacticraft$tankSize(0);
         ModelPart tank = this.tanks.hasChild(tankSize) ? this.tanks.getChild(tankSize) : null;
 
         if (tank != null) {

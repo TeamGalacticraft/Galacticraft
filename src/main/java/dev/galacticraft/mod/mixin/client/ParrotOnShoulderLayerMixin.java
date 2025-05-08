@@ -34,6 +34,7 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.player.Player;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -43,11 +44,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ParrotOnShoulderLayer.class)
 public abstract class ParrotOnShoulderLayerMixin<T extends Player> extends RenderLayer<T, PlayerModel<T>> {
     @Shadow
-    public final ParrotModel model;
+    @Final
+    public ParrotModel model;
 
-    private ParrotOnShoulderLayerMixin(RenderLayerParent<T, PlayerModel<T>> renderLayerParent, EntityModelSet entityModelSet) {
-        super(renderLayerParent);
-        this.model = new ParrotModel(entityModelSet.bakeLayer(ModelLayers.PARROT));
+    ParrotOnShoulderLayerMixin() {
+        super(null);
     }
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/player/Player;FFFFZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;byString(Ljava/lang/String;)Ljava/util/Optional;"), cancellable = true)
