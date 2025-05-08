@@ -186,8 +186,8 @@ public class WireWalkwayBakedModel implements BakedModel {
                 }
             }
 
-            WalkwayBakedModel.Transform.INSTANCE.setQuaternions(Axis.XP.rotationDegrees(x), Axis.YP.rotationDegrees(y));
-            context.pushTransform(WalkwayBakedModel.Transform.INSTANCE);
+//            WalkwayBakedModel.Transform.INSTANCE.setQuaternions(Axis.XP.rotationDegrees(x), Axis.YP.rotationDegrees(y));
+//            context.pushTransform(WalkwayBakedModel.Transform.INSTANCE);
             this.walkway.emitBlockQuads(getter, blockState, blockPos, randomSupplier, context);
             context.popTransform();
 

@@ -125,7 +125,7 @@ public abstract class FluidPipeBlock extends PipeShapedBlock implements EntityBl
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.setPlacedBy(level, pos, state, placer, itemStack);
 
-        if (level.getBlockEntity(pos) instanceof GlassFluidPipeBlockEntity glassPipe && placer instanceof Player player) {
+        if (level.getBlockEntity(pos) instanceof PipeBlockEntity fluidPipe && placer instanceof Player player) {
             var changed = false;
             for (var interactionHand : InteractionHand.values()) {
                 var stack = player.getItemInHand(interactionHand);
@@ -142,10 +142,10 @@ public abstract class FluidPipeBlock extends PipeShapedBlock implements EntityBl
 
             // Regular Stuff
             for (var direction : Constant.Misc.DIRECTIONS) {
-                changed |= glassPipe.getConnections()[direction.ordinal()] = glassPipe.canConnect(direction) && FluidUtil.canAccessFluid(level, pos.relative(direction), direction);
+                changed |= fluidPipe.getConnections()[direction.ordinal()] = fluidPipe.canConnect(direction) && FluidUtil.canAccessFluid(level, pos.relative(direction), direction);
             }
             if (changed) {
-                glassPipe.setChanged();
+                fluidPipe.setChanged();
                 level.sendBlockUpdated(pos, state, state, Block.UPDATE_IMMEDIATE);
             }
         }

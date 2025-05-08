@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.client.model;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.block.entity.Connected;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
@@ -236,28 +237,25 @@ public class PipeBakedModel implements BakedModel {
     public void emitBlockQuads(BlockAndTintGetter getter, BlockState blockState, BlockPos blockPos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         var emitter = context.getEmitter();
 
-        for (Map.Entry<Direction, BooleanProperty> entry : PipeBlock.PROPERTY_BY_DIRECTION.entrySet()) {
-            Direction direction = entry.getKey();
-            BooleanProperty property = entry.getValue();
-            try {
-                if (blockState.getValue(property)) {
+        if (getter.getBlockEntity(blockPos) instanceof Connected pipe) {
+            boolean[] connections = pipe.getConnections();
+            for (Direction direction : Direction.values()) {
+                boolean connected = connections[direction.get3DDataValue()];
+                if (connected) {
                     this.meshes.get(direction).outputTo(emitter);
                 } else {
                     emitter
-                            .square(direction, 0.375f, 0.375f, 0.625f, 0.625f, 0.375f)
-                            .uv(0, 0, 6)
-                            .uv(1, 0, 10)
-                            .uv(2, 4, 10)
-                            .uv(3, 4, 6)
-                            .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
-                            .color(-1, -1, -1, -1).emit();
+                        .square(direction, 0.375f, 0.375f, 0.625f, 0.625f, 0.375f)
+                        .uv(0, 0, 6)
+                        .uv(1, 0, 10)
+                        .uv(2, 4, 10)
+                        .uv(3, 4, 6)
+                        .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                        .color(-1, -1, -1, -1).emit();
                 }
-            } catch (IllegalArgumentException e) {
-                Constant.LOGGER.warn("Tried to apply PipeBakedModel to block state that doesn't have property '{}'", direction);
             }
         }
     }
-
     @Override
     public void emitItemQuads(ItemStack itemStack, Supplier<RandomSource> randomSupplier, RenderContext context) {
     }

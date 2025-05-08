@@ -60,7 +60,6 @@ public class GCResourceReloadListener implements SimpleSynchronousResourceReload
     public void onResourceManagerReload(ResourceManager resourceManager) {
         var atlas = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS);
         WireBakedModel.invalidate();
-        WalkwayBakedModel.invalidate();
         WireWalkwayBakedModel.invalidate();
         BubbleEntityRenderer.bubbleModel = null;
 

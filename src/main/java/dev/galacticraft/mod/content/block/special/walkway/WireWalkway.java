@@ -24,7 +24,9 @@ package dev.galacticraft.mod.content.block.special.walkway;
 
 import com.google.common.collect.Lists;
 import dev.galacticraft.mod.api.block.FluidLoggable;
+import dev.galacticraft.mod.api.block.PipeShapedBlock;
 import dev.galacticraft.mod.api.block.WireBlock;
+import dev.galacticraft.mod.api.block.entity.Connected;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import dev.galacticraft.mod.content.block.entity.networked.WireWalkwayBlockEntity;
@@ -43,6 +45,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -59,10 +62,11 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
 
     public WireWalkway(Properties settings) {
         super(settings);
-        this.registerDefaultState(this.getStateDefinition().any()
-                .setValue(FLUID, INVALID)
-                .setValue(FlowingFluid.LEVEL, 8)
-                .setValue(FlowingFluid.FALLING, false));
+        BlockState defaultState = this.getStateDefinition().any();
+        defaultState = FluidLoggable.applyDefaultState(defaultState);
+        defaultState = PipeShapedBlock.applyDefaultState(defaultState);
+        defaultState = defaultState.setValue(BlockStateProperties.FACING, Direction.UP);
+        this.registerDefaultState(defaultState);
     }
 
     private static int getFacingMask(Direction direction) {
@@ -103,11 +107,12 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        var fluidState = context.getLevel().getFluidState(context.getClickedPos());
-        return this.defaultBlockState()
-                .setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType()))
-                .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1))
-                .setValue(FlowingFluid.FALLING, fluidState.hasProperty(FlowingFluid.FALLING) ? fluidState.getValue(FlowingFluid.FALLING) : false);
+        BlockState state = super.getStateForPlacement(context);
+        state = FluidLoggable.applyFluidState(context.getLevel(), state, context.getClickedPos());
+        if (context.getPlayer() != null) {
+            state = state.setValue(BlockStateProperties.FACING, Direction.orderedByNearest(context.getPlayer())[0].getOpposite());
+        }
+        return state;
     }
 
     @Override
@@ -161,7 +166,9 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
 
     @Override
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(FLUID, FlowingFluid.LEVEL, FlowingFluid.FALLING);
+        FluidLoggable.addStateDefinitions(stateBuilder);
+        PipeShapedBlock.addStateDefinitions(stateBuilder);
+        stateBuilder.add(BlockStateProperties.FACING);
     }
 
     @Override

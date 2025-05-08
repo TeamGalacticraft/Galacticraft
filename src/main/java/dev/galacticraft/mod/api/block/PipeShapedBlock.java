@@ -11,6 +11,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.StateHolder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,15 +65,74 @@ public abstract class PipeShapedBlock extends PipeBlock {
             Level level = ctx.getLevel();
             BlockPos neighborPos = ctx.getClickedPos().relative(direction);
 
-            if (this.canConnectTo(level, ctx.getClickedPos(), direction, neighborPos, state, level.getBlockState(neighborPos))) {
-                state = state.setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction), true);
+            BlockState neighborState = level.getBlockState(neighborPos);
+            if (this.canConnectTo(level, ctx.getClickedPos(), direction, neighborPos, state, neighborState)) {
+                if (neighborState.getBlock() instanceof PipeShapedBlock neighborPipe) {
+                    if (neighborPipe.canConnectTo(level, neighborPos, direction.getOpposite(), ctx.getClickedPos(), neighborState, state)) {
+                        state = state.setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction), true);
+                    }
+                } else {
+                    state = state.setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction), true);
+                }
             }
         }
 
         return state;
     }
 
-    protected static <O, S extends StateHolder<O,S>> S applyDefaultState(S state) {
+    public static VoxelShape[] makeShapes(float radius) {
+        Direction[] directions = Direction.values();
+
+        float f = 0.5F - radius;
+        float g = 0.5F + radius;
+        VoxelShape voxelShape = Block.box(
+                (double)(f * 16.0F), (double)(f * 16.0F), (double)(f * 16.0F), (double)(g * 16.0F), (double)(g * 16.0F), (double)(g * 16.0F)
+        );
+        VoxelShape[] voxelShapes = new VoxelShape[directions.length];
+
+        for (int i = 0; i < directions.length; i++) {
+            Direction direction = directions[i];
+            voxelShapes[i] = Shapes.box(
+                    0.5 + Math.min((double)(-radius), (double)direction.getStepX() * 0.5),
+                    0.5 + Math.min((double)(-radius), (double)direction.getStepY() * 0.5),
+                    0.5 + Math.min((double)(-radius), (double)direction.getStepZ() * 0.5),
+                    0.5 + Math.max((double)radius, (double)direction.getStepX() * 0.5),
+                    0.5 + Math.max((double)radius, (double)direction.getStepY() * 0.5),
+                    0.5 + Math.max((double)radius, (double)direction.getStepZ() * 0.5)
+            );
+        }
+
+        VoxelShape[] voxelShapes2 = new VoxelShape[64];
+
+        for (int j = 0; j < 64; j++) {
+            VoxelShape voxelShape2 = voxelShape;
+
+            for (int k = 0; k < directions.length; k++) {
+                if ((j & 1 << k) != 0) {
+                    voxelShape2 = Shapes.or(voxelShape2, voxelShapes[k]);
+                }
+            }
+
+            voxelShapes2[j] = voxelShape2;
+        }
+
+        return voxelShapes2;
+    }
+
+    public static int generateAABBIndex(BlockState state) {
+        int i = 0;
+
+        Direction[] directions = Direction.values();
+        for (int j = 0; j < directions.length; j++) {
+            if (state.getValue(PROPERTY_BY_DIRECTION.get(directions[j]))) {
+                i |= 1 << j;
+            }
+        }
+
+        return i;
+    }
+
+    public static <O, S extends StateHolder<O,S>> S applyDefaultState(S state) {
         return state
                 .setValue(PipeBlock.NORTH, Boolean.FALSE)
                 .setValue(PipeBlock.EAST, Boolean.FALSE)
@@ -80,7 +142,7 @@ public abstract class PipeShapedBlock extends PipeBlock {
                 .setValue(PipeBlock.DOWN, Boolean.FALSE);
     }
 
-    protected static <O, S extends StateHolder<O,S>> void addStateDefinitions(StateDefinition.Builder<O, S> builder) {
+    public static <O, S extends StateHolder<O,S>> void addStateDefinitions(StateDefinition.Builder<O, S> builder) {
         builder.add(PipeBlock.NORTH, PipeBlock.EAST, PipeBlock.SOUTH, PipeBlock.WEST, PipeBlock.UP, PipeBlock.DOWN);
     }
 }

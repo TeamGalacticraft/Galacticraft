@@ -53,8 +53,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 
 public class FluidPipeWalkway extends FluidPipeBlock implements FluidLoggable {
-    protected static HashMap<Pair<Integer, Direction>, VoxelShape> SHAPES;
-
     public FluidPipeWalkway(Properties settings, PipeColor color) {
         super(settings, color);
 
@@ -63,17 +61,6 @@ public class FluidPipeWalkway extends FluidPipeBlock implements FluidLoggable {
         state = FluidPipeBlock.applyDefaultState(state);
         state.setValue(BlockStateProperties.FACING, Direction.UP);
         this.registerDefaultState(state);
-
-        SHAPES = Util.make(new HashMap<>(), map -> {
-            for (int pipeAabb = 0; pipeAabb < Math.pow(2, 6); pipeAabb++) {
-                for (Direction platformDirection : Direction.values()) {
-                    map.put(Pair.of(pipeAabb, platformDirection), Shapes.or(
-                            this.shapeByIndex[pipeAabb],
-                            ConnectingBlockUtil.WALKWAY_SHAPES.get(platformDirection)
-                    ));
-                }
-            }
-        });
     }
 
     @Override
@@ -83,24 +70,17 @@ public class FluidPipeWalkway extends FluidPipeBlock implements FluidLoggable {
 
     @Override
     public @NotNull VoxelShape getShape(BlockState blockState, BlockGetter level, BlockPos blockPos, CollisionContext context) {
-        return SHAPES.get(Pair.of(this.getAABBIndex(blockState), blockState.getValue(BlockStateProperties.FACING)));
-//        return Shapes.join(
-//                super.getShape(blockState, level, blockPos, context),
-//                ConnectingBlockUtil.WALKWAY_SHAPES.get(blockState.getValue(BlockStateProperties.FACING)),
-////                ConnectingBlockUtil.createWalkwayShape(Direction.UP),
-//                BooleanOp.OR
-//        );
+        return WalkwayBlock.SHAPES.get(Pair.of(this.getAABBIndex(blockState), blockState.getValue(BlockStateProperties.FACING)));
     }
 
     @Override
-    protected boolean canConnectTo(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos, BlockState thisState, BlockState neighborState) {
-        return super.canConnectTo(level, thisPos, direction, neighborPos, thisState, neighborState);
-    }
-
-    @Override
-    public @NotNull BlockState getStateForPlacement(BlockPlaceContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
-        return FluidLoggable.applyFluidState(context.getLevel(), state, context.getClickedPos());
+        state = FluidLoggable.applyFluidState(context.getLevel(), state, context.getClickedPos());
+        if (context.getPlayer() != null) {
+            state = state.setValue(BlockStateProperties.FACING, Direction.orderedByNearest(context.getPlayer())[0].getOpposite());
+        }
+        return state;
     }
 
     @Override

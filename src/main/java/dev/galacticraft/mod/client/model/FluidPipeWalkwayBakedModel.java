@@ -22,26 +22,17 @@
 
 package dev.galacticraft.mod.client.model;
 
-import com.google.common.collect.Maps;
-import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.block.entity.networked.FluidPipeWalkwayBlockEntity;
-import dev.galacticraft.mod.content.block.special.fluidpipe.GlassFluidPipeBlock;
 import dev.galacticraft.mod.content.block.special.walkway.FluidPipeWalkway;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.Util;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -55,33 +46,21 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public class FluidPipeWalkwayBakedModel implements BakedModel {
-    private static final ResourceLocation WALKWAY_TEXTURE = Constant.id("block/walkway");
-    private static final Map<PipeColor, Material> COLOR_SPRITE_ID_MAP = Util.make(Maps.newEnumMap(PipeColor.class), map -> {
-        for (var color : PipeColor.values()) {
-            map.put(color, new Material(InventoryMenu.BLOCK_ATLAS, Constant.id("block/glass_fluid_pipe/" + color.getName())));
-        }
-    });
-    private final PipeBakedModel pipeModel;
-    private final Map<PipeColor, BakedModel> coloredWalkway = Maps.newHashMap();
-    private final Map<PipeColor, TextureAtlasSprite> colorSpriteMap = Maps.newEnumMap(PipeColor.class);
+    private static final ResourceLocation WALKWAY = Constant.id("block/walkway");
+    private final BakedModel pipeModel;
+    private final BakedModel walkwayModel;
     private final TextureAtlasSprite walkwaySprite;
 
     public FluidPipeWalkwayBakedModel(ModelBaker loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer, ResourceLocation pipeTexture) {
-        this.walkwaySprite = textureGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, WALKWAY_TEXTURE));
-        for (var color : PipeColor.values()) {
-            var pipeWalkway = Constant.id("block/" + color + "_fluid_pipe_walkway");
-            this.coloredWalkway.put(color, loader.getModel(pipeWalkway).bake(loader, textureGetter, rotationContainer));
-            this.colorSpriteMap.put(color, textureGetter.apply(COLOR_SPRITE_ID_MAP.get(color)));
-        }
-        var meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
+        this.walkwaySprite = textureGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, WALKWAY));
 
-        this.pipeModel = new PipeBakedModel(textureGetter, pipeTexture);
+        this.pipeModel = new PipeUnbakedModel(pipeTexture).bake(loader, textureGetter, BlockModelRotation.X0_Y0);
+        this.walkwayModel = loader.getModel(WALKWAY).bake(loader, textureGetter, rotationContainer);
     }
 
     @Override
@@ -91,33 +70,9 @@ public class FluidPipeWalkwayBakedModel implements BakedModel {
 
     @Override
     public void emitBlockQuads(BlockAndTintGetter getter, BlockState blockState, BlockPos blockPos, Supplier<RandomSource> randomSupplier, RenderContext context) {
-        var emitter = context.getEmitter();
-
         if (getter.getBlockEntity(blockPos) instanceof FluidPipeWalkwayBlockEntity pipe && blockState.getBlock() instanceof FluidPipeWalkway block) {
-            var x = 0;
-            var y = 0;
-            var connections = pipe.getConnections();
-
-            switch (pipe.getDirection()) {
-                case DOWN -> x = 180;
-                case NORTH -> x = 270;
-                case SOUTH -> x = 90;
-                case EAST -> {
-                    x = 90;
-                    y = 90;
-                }
-                case WEST -> {
-                    x = 90;
-                    y = 270;
-                }
-            }
-
-            WalkwayBakedModel.Transform.INSTANCE.setQuaternions(Axis.XP.rotationDegrees(x), Axis.YP.rotationDegrees(y));
-            context.pushTransform(WalkwayBakedModel.Transform.INSTANCE);
-            this.coloredWalkway.get(block.color).emitBlockQuads(getter, blockState, blockPos, randomSupplier, context);
-            context.popTransform();
-
             this.pipeModel.emitBlockQuads(getter, blockState, blockPos, randomSupplier, context);
+            this.walkwayModel.emitBlockQuads(getter, blockState, blockPos, randomSupplier, context);
         }
     }
 
