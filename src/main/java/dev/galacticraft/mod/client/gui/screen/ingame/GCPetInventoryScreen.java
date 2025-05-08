@@ -43,6 +43,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
 public class GCPetInventoryScreen extends AbstractContainerScreen<GCPetInventoryMenu> {
+    private static final int NORMAL_SLOT_U = 7;
+    private static final int NORMAL_SLOT_V = 141;
+    private static final int NORMAL_SLOT_SIZE = 18;
+
     public GCPetInventoryScreen(GCPetInventoryMenu handler, Inventory inv, Component title) {
         super(handler, inv, handler.animal.getDisplayName());
     }
@@ -50,7 +54,7 @@ public class GCPetInventoryScreen extends AbstractContainerScreen<GCPetInventory
     @Override
     protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
         if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 129, this.topPos + 18, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT)) {
-            Storage<FluidVariant> storage = ContainerItemContext.withConstant(this.menu.inventory.getItem(3)).find(FluidStorage.ITEM);
+            Storage<FluidVariant> storage = ContainerItemContext.withConstant(this.menu.inventory.getItem(2)).find(FluidStorage.ITEM);
             if (storage != null) {
                 long capacity = 0;
                 long amount = 0;
@@ -77,7 +81,12 @@ public class GCPetInventoryScreen extends AbstractContainerScreen<GCPetInventory
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         graphics.blit(Constant.ScreenTexture.PET_INVENTORY_SCREEN, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
-        Storage<FluidVariant> storage1 = ContainerItemContext.withConstant(this.menu.inventory.getItem(3)).find(FluidStorage.ITEM);
+
+        if (this.menu.wolfArmorSlot != null) {
+            graphics.blit(Constant.ScreenTexture.PET_INVENTORY_SCREEN, this.leftPos + this.menu.wolfArmorSlot.x - 1, this.topPos + this.menu.wolfArmorSlot.y - 1, NORMAL_SLOT_U, NORMAL_SLOT_V, NORMAL_SLOT_SIZE, NORMAL_SLOT_SIZE);
+        }
+
+        Storage<FluidVariant> storage1 = ContainerItemContext.withConstant(this.menu.inventory.getItem(2)).find(FluidStorage.ITEM);
         if (storage1 != null) {
             long capacity = 0;
             long amount = 0;

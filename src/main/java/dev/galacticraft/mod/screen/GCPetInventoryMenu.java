@@ -22,8 +22,11 @@
 
 package dev.galacticraft.mod.screen;
 
+import com.mojang.datafixers.util.Pair;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.screen.slot.AccessorySlot;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.TamableAnimal;
@@ -36,6 +39,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.ticks.ContainerSingleItem;
+import org.jetbrains.annotations.Nullable;
 
 public class GCPetInventoryMenu extends AbstractContainerMenu {
     public final Container inventory;
@@ -66,6 +70,8 @@ public class GCPetInventoryMenu extends AbstractContainerMenu {
         }
     };
 
+    public final @Nullable Slot wolfArmorSlot;
+
     protected GCPetInventoryMenu(int syncId, Inventory playerInventory, int petId) {
         this(syncId, playerInventory, playerInventory.player, (TamableAnimal) playerInventory.player.level().getEntity(petId));
     }
@@ -77,12 +83,13 @@ public class GCPetInventoryMenu extends AbstractContainerMenu {
         this.animal = animal;
         this.inventory = animal.galacticraft$getGearInv();
 
-        this.addSlot(new AccessorySlot(inventory, animal, 0, 8, 18));
-
         // Galacticraft inv
-        for (int i = 4; i < 7; ++i) {
-            this.addSlot(new AccessorySlot(inventory, animal, i - 3, 80, (i % 4 + 1) * 18, GCAccessorySlots.SLOT_TAGS.get(i), GCAccessorySlots.SLOT_SPRITES.get(i)));
+        for (int i = 0; i < 3; ++i) {
+            this.addSlot(new AccessorySlot(inventory, animal, i, 80, (i + 1) * 18, GCAccessorySlots.SLOT_TAGS.get(i), GCAccessorySlots.SLOT_SPRITES.get(i)));
         }
+
+        int i = GCAccessorySlots.THERMAL_ARMOR_SLOT_START + 1;
+        this.addSlot(new AccessorySlot(inventory, animal, 3, 8, 18, GCAccessorySlots.SLOT_TAGS.get(i), GCAccessorySlots.SLOT_SPRITES.get(i)));
 
         // Player main inv
         for (int slotY = 0; slotY < 3; ++slotY) {
@@ -98,7 +105,8 @@ public class GCPetInventoryMenu extends AbstractContainerMenu {
 
         // Wolf armor
         if (animal instanceof Wolf wolf) {
-            this.addSlot(new Slot(this.armorContainer, 0, 8, 36) {
+            this.wolfArmorSlot = this.addSlot(new Slot(this.armorContainer, 0, 8, 36) {
+                private final Pair<ResourceLocation, ResourceLocation> background = Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.WOLF_ARMOR);
 
                 @Override
                 public boolean mayPlace(ItemStack itemStack) {
@@ -109,7 +117,14 @@ public class GCPetInventoryMenu extends AbstractContainerMenu {
                 public boolean isActive() {
                     return wolf.canUseSlot(EquipmentSlot.BODY);
                 }
+
+                @Override
+                public @Nullable Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
+                    return this.background;
+                }
             });
+        } else {
+            this.wolfArmorSlot = null;
         }
     }
 
@@ -127,23 +142,26 @@ public class GCPetInventoryMenu extends AbstractContainerMenu {
             stack = stackFrom.copy();
 
             // Index of Indexes :)
-            // 0 (1): GC, thermal armor slots;
-            // 1-2 (2): GC, oxygen mask/gear slots;
-            // 3 (1): GC, oxygen tank slots;
+            // 0-1 (2): GC, oxygen mask/gear slots;
+            // 2 (1): GC, oxygen tank slots;
+            // 3 (1): GC, thermal armor slot;
             // 4-30 (27): MC, non-hotbar inventory slots;
-            // 31-39 (9): MC, hotbar slots.
-            if (index < 4) {
+            // 31-39 (9): MC, hotbar slots;
+            // 40 (1): GC, wolf armor slot.
+            if (index < 4 || index == 40) {
                 if (!this.moveItemStackTo(stackFrom, 31, 40, false) &&
                     !this.moveItemStackTo(stackFrom, 4, 31, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (index < 31) {
                 if (!this.moveItemStackTo(stackFrom, 0, 4, false) &&
+                    (this.wolfArmorSlot == null || !this.moveItemStackTo(stackFrom, 40, 41, false)) &&
                     !this.moveItemStackTo(stackFrom, 31, 40, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (index < 40) {
                 if (!this.moveItemStackTo(stackFrom, 0, 4, false) &&
+                    (this.wolfArmorSlot == null || !this.moveItemStackTo(stackFrom, 40, 41, false)) &&
                     !this.moveItemStackTo(stackFrom, 4, 31, false)) {
                     return ItemStack.EMPTY;
                 }

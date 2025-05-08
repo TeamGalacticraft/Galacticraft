@@ -293,12 +293,12 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         }
 
         @Override
-        public @Nullable com.mojang.datafixers.util.Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
+        public @Nullable Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
             return this.background;
         }
 
         public FilteredSlot withBackground(ResourceLocation background) {
-            this.background = new Pair<>(InventoryMenu.BLOCK_ATLAS, background);
+            this.background = Pair.of(InventoryMenu.BLOCK_ATLAS, background);
             return this;
         }
     }

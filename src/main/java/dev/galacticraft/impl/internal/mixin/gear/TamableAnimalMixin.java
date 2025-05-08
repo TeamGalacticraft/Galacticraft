@@ -75,9 +75,9 @@ public abstract class TamableAnimalMixin extends Entity implements GearInventory
     );
 
     private final @Unique SimpleContainer gearInv = this.galacticraft_createGearInventory();
-    private final @Unique Container tankInv = MappedInventory.create(this.gearInv, 3);
-    private final @Unique Container thermalArmorInv = MappedInventory.create(this.gearInv, 0);
-    private final @Unique Container accessoryInv = MappedInventory.create(this.gearInv, 1, 2);
+    private final @Unique Container tankInv = MappedInventory.create(this.gearInv, 2);
+    private final @Unique Container thermalArmorInv = MappedInventory.create(this.gearInv, 3);
+    private final @Unique Container accessoryInv = MappedInventory.create(this.gearInv, 0, 1);
 
     TamableAnimalMixin() {
         super(null, null);
@@ -118,11 +118,11 @@ public abstract class TamableAnimalMixin extends Entity implements GearInventory
             return;
         }
 
-        this.entityData.set(DATA_HAS_MASK_ID, inventory.getItem(1).is(GCItemTags.OXYGEN_MASKS));
-        this.entityData.set(DATA_HAS_GEAR_ID, inventory.getItem(2).is(GCItemTags.OXYGEN_GEAR));
+        this.entityData.set(DATA_HAS_MASK_ID, inventory.getItem(0).is(GCItemTags.OXYGEN_MASKS));
+        this.entityData.set(DATA_HAS_GEAR_ID, inventory.getItem(1).is(GCItemTags.OXYGEN_GEAR));
         String tankSize = "";
-        if (inventory.getItem(3).is(GCItemTags.OXYGEN_TANKS)) {
-            tankSize = inventory.getItem(3).getDescriptionId().replace("item.galacticraft.", "");
+        if (inventory.getItem(2).is(GCItemTags.OXYGEN_TANKS)) {
+            tankSize = inventory.getItem(2).getDescriptionId().replace("item.galacticraft.", "");
         }
         this.entityData.set(DATA_TANK_SIZE_ID, tankSize);
 
@@ -134,7 +134,6 @@ public abstract class TamableAnimalMixin extends Entity implements GearInventory
         GearInvPayload payload = new GearInvPayload(animal.getId(), stacks);
 
         Collection<ServerPlayer> tracking = PlayerLookup.tracking(animal);
-        Constant.LOGGER.info(tracking.size());
         for (ServerPlayer remote : tracking) {
             ServerPlayNetworking.send(remote, payload);
         }

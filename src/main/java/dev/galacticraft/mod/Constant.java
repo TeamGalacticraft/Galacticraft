@@ -773,10 +773,7 @@ public interface Constant {
         ResourceLocation DIAMOND = ResourceLocation.withDefaultNamespace("item/empty_slot_diamond");
         ResourceLocation DUST = ResourceLocation.withDefaultNamespace("item/empty_slot_redstone_dust");
         ResourceLocation SILICON = id("slot/silicon");
-        ResourceLocation THERMAL_HEAD = id("slot/thermal_helmet");
-        ResourceLocation THERMAL_CHEST = id("slot/thermal_chestpiece");
-        ResourceLocation THERMAL_PANTS = id("slot/thermal_leggings");
-        ResourceLocation THERMAL_BOOTS = id("slot/thermal_boots");
+
         ResourceLocation OXYGEN_MASK = id("slot/oxygen_mask");
         ResourceLocation OXYGEN_GEAR = id("slot/oxygen_gear");
         ResourceLocation OXYGEN_TANK = id("slot/oxygen_tank");
@@ -784,6 +781,11 @@ public interface Constant {
         ResourceLocation PARACHUTE = id("slot/parachute");
         ResourceLocation SHIELD_CONTROLLER = id("slot/shield_controller");
         ResourceLocation GENERIC_ACCESSORY = null;
+        ResourceLocation THERMAL_HEAD = id("slot/thermal_helmet");
+        ResourceLocation THERMAL_CHEST = id("slot/thermal_chestpiece");
+        ResourceLocation THERMAL_PANTS = id("slot/thermal_leggings");
+        ResourceLocation THERMAL_BOOTS = id("slot/thermal_boots");
+        ResourceLocation WOLF_ARMOR = id("slot/wolf_armor");
 
         ResourceLocation ROCKET_CONE = id("slot/rocket_cone");
         ResourceLocation ROCKET_PLATING = id("slot/rocket_plating");

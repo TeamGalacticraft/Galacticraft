@@ -22,13 +22,19 @@
 
 package dev.galacticraft.mod.mixin;
 
+import dev.galacticraft.api.item.Accessory;
+import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.network.c2s.OpenPetInventoryPayload;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -42,10 +48,36 @@ public abstract class ParrotMixin extends TamableAnimal {
     }
 
     @Inject(method = "mobInteract", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/Parrot;isFlying()Z"), cancellable = true)
-    public void galacticraft$openPetInventoryScreen(Player player, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResult> cir) {
-        if (player.isSecondaryUseActive() && this.isTame() && this.isOwnedBy(player)) {
-            ClientPlayNetworking.send(new OpenPetInventoryPayload(this.getId()));
-            cir.setReturnValue(InteractionResult.sidedSuccess(this.level().isClientSide));
+    public void galacticraft$openPetInventoryScreen(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
+        // super.mobInteract(player, hand);
+        if (this.isTame() && this.isOwnedBy(player)) {
+            ItemStack itemStack = player.getItemInHand(hand);
+            if (player.isSecondaryUseActive()) {
+                ClientPlayNetworking.send(new OpenPetInventoryPayload(this.getId()));
+                cir.setReturnValue(InteractionResult.sidedSuccess(this.level().isClientSide));
+            } else if (itemStack.getItem() instanceof Accessory) {
+                Container inv = this.galacticraft$getGearInv();
+                for (int slot = 0; slot < inv.getContainerSize(); ++slot) {
+                    int i = (slot == GCAccessorySlots.PET_THERMAL_SLOT) ? GCAccessorySlots.THERMAL_ARMOR_SLOT_START + 1 : slot;
+                    if (itemStack.is(GCAccessorySlots.SLOT_TAGS.get(i))) {
+                        ItemStack itemStack2 = inv.getItem(slot);
+                        if (ItemStack.matches(itemStack, itemStack2)) {
+                            cir.setReturnValue(InteractionResult.FAIL);
+                            return;
+                        }
+                        if (!this.level().isClientSide()) {
+                            player.awardStat(Stats.ITEM_USED.get(itemStack.getItem()));
+                        }
+                        player.galacticraft$onEquipAccessory(itemStack2, itemStack);
+                        ItemStack itemStack3 = itemStack2.isEmpty() ? itemStack : itemStack2.copyAndClear();
+                        ItemStack itemStack4 = player.isCreative() ? itemStack.copy() : itemStack.copyAndClear();
+                        inv.setItem(slot, itemStack4);
+                        player.setItemInHand(hand, itemStack3);
+                        cir.setReturnValue(InteractionResult.sidedSuccess(this.level().isClientSide));
+                        return;
+                    }
+                }
+            }
         }
     }
 }
