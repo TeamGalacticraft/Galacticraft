@@ -28,6 +28,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.BossEvent;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -93,8 +94,8 @@ public abstract class AbstractBossEntity extends Monster {
 //                }
 //            }
 //        }
-//
-//        if (this.deathTime == 200 && !this.world.isRemote) {
+
+       if (this.deathTime == 200 && !this.level().isClientSide) {
 //            i = 20;
 //
 //            while (i > 0) {
@@ -144,9 +145,10 @@ public abstract class AbstractBossEntity extends Monster {
 //            }
 //
 //            this.dropKey();
-//
-//            super.setDead();
-//
+
+            this.level().broadcastEntityEvent(this, (byte)60);
+            this.remove(Entity.RemovalReason.KILLED);
+
 //            if (this.spawner != null) {
 //                // Note: spawner.isBossDefeated is true, so it's properly dead
 //                this.spawner.isBossDefeated = true;
@@ -157,7 +159,7 @@ public abstract class AbstractBossEntity extends Monster {
 //                    this.spawner.lastKillTime = MinecraftServer.getCurrentTimeMillis();
 //                }
 //            }
-//        }
+       }
     }
 
     @Override
