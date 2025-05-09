@@ -25,9 +25,7 @@ package dev.galacticraft.mod.client.render.entity.feature;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
-import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.client.model.EndermanModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HierarchicalModel;
@@ -45,10 +43,8 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Zombie;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
@@ -97,25 +93,18 @@ public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel
     @Override
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
-        LivingEntity livingEntity = (LivingEntity) entity;
-        boolean hasMask = true;
-        boolean hasGear = true;
 
         matrices.pushPose();
-        if (livingEntity instanceof Player player) {
-            Container inv = livingEntity.galacticraft$getGearInv();
-            hasMask = inv.getItem(GCAccessorySlots.OXYGEN_MASK_SLOT).is(GCItemTags.OXYGEN_MASKS);
-            hasGear = inv.getItem(GCAccessorySlots.OXYGEN_GEAR_SLOT).is(GCItemTags.OXYGEN_GEAR);
-        } else if (livingEntity instanceof Zombie zombie && zombie.isBaby()) {
+        if (entity instanceof Zombie zombie && zombie.isBaby()) {
             matrices.scale(0.75F, 0.75F, 0.75F);
             matrices.translate(0.0F, 1.0F, 0.0F);
         }
 
-        if (this.mask != null && hasMask) {
+        if (this.mask != null && entity.galacticraft$hasMask()) {
             this.mask.copyFrom(this.head);
             this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
-        if (this.pipe != null && hasGear) {
+        if (this.pipe != null && entity.galacticraft$hasGear()) {
             this.pipe.copyFrom(this.body);
             this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }

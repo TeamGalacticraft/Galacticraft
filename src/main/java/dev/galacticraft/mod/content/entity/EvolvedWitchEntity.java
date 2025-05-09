@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.entity;
 
+import dev.galacticraft.mod.Constant;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.level.Level;
@@ -29,5 +30,25 @@ import net.minecraft.world.level.Level;
 public class EvolvedWitchEntity extends Witch {
     public EvolvedWitchEntity(EntityType<? extends EvolvedWitchEntity> entityType, Level world) {
         super(entityType, world);
+    }
+
+    @Override
+    public boolean galacticraft$hasMaskAndGear() {
+        return true;
+    }
+
+    @Override
+    public boolean galacticraft$hasMask() {
+        return true;
+    }
+
+    @Override
+    public boolean galacticraft$hasGear() {
+        return true;
+    }
+
+    @Override
+    public String galacticraft$tankSize(int i) {
+        return Constant.Item.LARGE_OXYGEN_TANK;
     }
 }

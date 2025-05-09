@@ -84,11 +84,11 @@ public class EvolvedWitchMaskRenderLayer<T extends Witch, M extends WitchModel<T
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
 
-        if (this.mask != null) {
+        if (this.mask != null && entity.galacticraft$hasMask()) {
             this.mask.copyFrom(this.head);
             this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
-        if (this.pipe != null) {
+        if (this.pipe != null && entity.galacticraft$hasGear()) {
             this.pipe.copyFrom(this.body);
             this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }

@@ -84,12 +84,12 @@ public class EvolvedSpiderMaskRenderLayer<T extends EvolvedSpiderEntity, M exten
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
 
-        if (this.mask != null) {
+        if (this.mask != null && entity.galacticraft$hasMask()) {
             this.mask.copyFrom(this.head);
             this.mask.xRot += Mth.HALF_PI;
             this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
-        if (this.pipe != null) {
+        if (this.pipe != null && entity.galacticraft$hasGear()) {
             this.pipe.copyFrom(this.body);
             this.pipe.xRot += Mth.HALF_PI;
             this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);

@@ -102,12 +102,8 @@ public class ParrotOxygenGearRenderLayer<T extends LivingEntity, M extends Entit
             this.renderOnShoulder(matrices, vertexConsumers, light, entity, limbAngle, limbDistance, headYaw, headPitch, false);
             return;
         } else {
-            boolean hasMask = entity.galacticraft$hasMask();
-            boolean hasGear = entity.galacticraft$hasGear();
-            String tankSize = entity.galacticraft$tankSize(0);
-
             matrices.pushPose();
-            this.render(matrices, vertexConsumers, light, entity, headYaw, headPitch, hasMask, hasGear, tankSize);
+            this.render(matrices, vertexConsumers, light, entity, headYaw, headPitch, entity.galacticraft$hasMask(), entity.galacticraft$hasGear(), entity.galacticraft$tankSize(0));
             matrices.popPose();
         }
     }

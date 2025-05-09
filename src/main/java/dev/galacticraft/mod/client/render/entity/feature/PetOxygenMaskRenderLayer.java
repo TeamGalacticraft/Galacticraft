@@ -100,33 +100,46 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
         TamableAnimal animal = (TamableAnimal) entity;
 
-        matrices.pushPose();
-        if (animal.isBaby()) {
-            if (animal instanceof Wolf) {
-                matrices.translate(0.0F, 0.3125F, 0.125F);
-            } else if (animal instanceof Cat) {
-                matrices.scale(0.75F, 0.75F, 0.75F);
-                matrices.translate(0.0F, 0.625F, 0.25F);
-            }
-        }
-
         if (this.mask != null && animal.galacticraft$hasMask()) {
+            matrices.pushPose();
+            if (animal.isBaby()) {
+                if (animal instanceof Wolf) {
+                    matrices.translate(0.0F, 0.3125F, 0.125F);
+                } else if (animal instanceof Cat) {
+                    matrices.scale(0.75F, 0.75F, 0.75F);
+                    matrices.translate(0.0F, 0.625F, 0.25F);
+                }
+            }
+
             this.mask.copyFrom(this.head);
             if (this.realHead != null) {
                 this.mask.getChild(Constant.ModelPartName.REAL_OXYGEN_MASK).zRot = this.realHead.zRot;
             }
             this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+            matrices.popPose();
         }
+
         if (animal.galacticraft$hasGear()) {
+            matrices.pushPose();
+            if (animal.isBaby()) {
+                matrices.scale(0.5F, 0.5F, 0.5F);
+                matrices.translate(0.0F, 1.5F, 0.0F);
+            }
+
             if (this.pipeSitting != null && animal.isInSittingPose()) {
                 this.pipeSitting.copyFrom(this.body);
+                if (animal instanceof Cat) {
+                    this.pipeSitting.y += 2.12132F;
+                    this.pipeSitting.z += 2.12132F;
+                }
                 this.pipeSitting.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
             } else if (this.pipe != null) {
                 this.pipe.copyFrom(this.body);
+                this.pipe.z += animal instanceof Cat ? 3.0F : 0.0F;
                 this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
             }
+            matrices.popPose();
         }
-        matrices.popPose();
     }
 
     @Override

@@ -26,7 +26,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
-import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.client.model.EndermanModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.IllagerModel;
@@ -48,15 +47,8 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Cat;
-import net.minecraft.world.entity.animal.Parrot;
-import net.minecraft.world.entity.animal.Wolf;
-import net.minecraft.world.entity.monster.AbstractIllager;
-import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.monster.Zombie;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
@@ -109,32 +101,16 @@ public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityMode
         if (this.tanks == null) return;
 
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
-        LivingEntity livingEntity = (LivingEntity) entity;
-        ModelPart tank1 = null;
-        ModelPart tank2 = null;
+
+        String tankSize1 = entity.galacticraft$tankSize(0);
+        String tankSize2 = entity.galacticraft$tankSize(1);
+        ModelPart tank1 = this.tanks.hasChild(tankSize1) ? this.tanks.getChild(tankSize1) : null;
+        ModelPart tank2 = this.tanks.hasChild(tankSize2) ? this.tanks.getChild(tankSize2) : null;
 
         matrices.pushPose();
-        if (livingEntity instanceof Player player) {
-            Container inv = livingEntity.galacticraft$getOxygenTanks();
-            if (inv.getItem(0).is(GCItemTags.OXYGEN_TANKS)) {
-                String tankSize = inv.getItem(0).getDescriptionId().replace("item.galacticraft.", "");
-                tank1 = this.tanks.hasChild(tankSize) ? this.tanks.getChild(tankSize) : null;
-            }
-            if (inv.getItem(1).is(GCItemTags.OXYGEN_TANKS)) {
-                String tankSize = inv.getItem(1).getDescriptionId().replace("item.galacticraft.", "");
-                tank2 = this.tanks.hasChild(tankSize) ? this.tanks.getChild(tankSize) : null;
-            }
-        } else if (livingEntity instanceof AbstractIllager || livingEntity instanceof Witch) {
-            tank1 = this.tanks.getChild(Constant.Item.LARGE_OXYGEN_TANK);
-            tank2 = this.tanks.getChild(Constant.Item.LARGE_OXYGEN_TANK);
-        } else {
-            tank1 = this.tanks.getChild(Constant.Item.MEDIUM_OXYGEN_TANK);
-            tank2 = this.tanks.getChild(Constant.Item.MEDIUM_OXYGEN_TANK);
-
-            if (livingEntity instanceof Zombie zombie && zombie.isBaby()) {
-                matrices.scale(0.75F, 0.75F, 0.75F);
-                matrices.translate(0.0F, 1.0F, 0.0F);
-            }
+        if (entity instanceof Zombie zombie && zombie.isBaby()) {
+            matrices.scale(0.75F, 0.75F, 0.75F);
+            matrices.translate(0.0F, 1.0F, 0.0F);
         }
 
         if (tank1 != null) {

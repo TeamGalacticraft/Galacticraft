@@ -114,4 +114,24 @@ public class EvolvedCreeperEntity extends Creeper {
         }
         super.onSyncedDataUpdated(data);
     }
+
+    @Override
+    public boolean galacticraft$hasMaskAndGear() {
+        return true;
+    }
+
+    @Override
+    public boolean galacticraft$hasMask() {
+        return true;
+    }
+
+    @Override
+    public boolean galacticraft$hasGear() {
+        return true;
+    }
+
+    @Override
+    public String galacticraft$tankSize(int i) {
+        return Constant.Item.MEDIUM_OXYGEN_TANK;
+    }
 }

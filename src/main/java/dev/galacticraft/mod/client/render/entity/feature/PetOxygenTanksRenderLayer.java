@@ -26,7 +26,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
-import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.client.model.CatModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.WolfModel;
@@ -42,10 +41,8 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Cat;
-import net.minecraft.world.entity.animal.Wolf;
 import org.jetbrains.annotations.Nullable;
 
 public class PetOxygenTanksRenderLayer<T extends TamableAnimal, M extends EntityModel<T>> extends RenderLayer<T, M> {
@@ -105,6 +102,14 @@ public class PetOxygenTanksRenderLayer<T extends TamableAnimal, M extends Entity
             }
 
             tank.copyFrom(this.body);
+            if (animal instanceof Cat) {
+                if (animal.isInSittingPose()) {
+                    tank.y += 2.12132F;
+                    tank.z += 2.12132F;
+                } else {
+                    tank.z += 3.0F;
+                }
+            }
             tank.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
             matrices.popPose();
         }
