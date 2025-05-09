@@ -26,6 +26,7 @@ import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.impl.internal.inventory.MappedInventory;
 import dev.galacticraft.impl.network.s2c.GearInvPayload;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.world.inventory.GearInventory;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -102,6 +103,55 @@ public abstract class ServerPlayerMixin implements GearInventoryProvider {
     @Override
     public Container galacticraft$getAccessories() {
         return this.accessoryInv;
+    }
+
+    @Override
+    public boolean galacticraft$hasMaskAndGear() {
+        Container inv = this.galacticraft$getAccessories();
+        boolean mask = false;
+        boolean gear = false;
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            ItemStack itemStack = inv.getItem(i);
+            if (!mask && itemStack.is(GCItemTags.OXYGEN_MASKS)) {
+                mask = true;
+                if (gear) break;
+            } else if (!gear && itemStack.is(GCItemTags.OXYGEN_GEAR)) {
+                gear = true;
+                if (mask) break;
+            }
+        }
+        return mask && gear;
+    }
+
+    @Override
+    public boolean galacticraft$hasMask() {
+        for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
+            ItemStack itemStack = this.galacticraft$getAccessories().getItem(i);
+            if (itemStack.is(GCItemTags.OXYGEN_MASKS)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean galacticraft$hasGear() {
+        for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
+            ItemStack itemStack = this.galacticraft$getAccessories().getItem(i);
+            if (itemStack.is(GCItemTags.OXYGEN_GEAR)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public String galacticraft$tankSize(int i) {
+        ItemStack itemStack = this.galacticraft$getOxygenTanks().getItem(i);
+        if (itemStack.is(GCItemTags.OXYGEN_TANKS)) {
+            return itemStack.getDescriptionId().replace("item.galacticraft.", "");
+        }
+        return "";
     }
 
     @Override

@@ -33,11 +33,6 @@ public class EvolvedEvokerEntity extends Evoker {
     }
 
     @Override
-    public boolean galacticraft$hasMaskAndGear() {
-        return true;
-    }
-
-    @Override
     public boolean galacticraft$hasMask() {
         return true;
     }

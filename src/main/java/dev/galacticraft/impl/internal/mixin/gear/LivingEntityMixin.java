@@ -220,6 +220,21 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
         return GalacticraftAPI.EMPTY_INV;
     }
 
+    @Override
+    public boolean galacticraft$hasMask() {
+        return false;
+    }
+
+    @Override
+    public boolean galacticraft$hasGear() {
+        return false;
+    }
+
+    @Override
+    public String galacticraft$tankSize(int i) {
+        return "";
+    }
+
     @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
     private void galacticraft_writeGearInventory(CompoundTag nbt, CallbackInfo ci) {
         this.galacticraft$writeGearToNbt(nbt);

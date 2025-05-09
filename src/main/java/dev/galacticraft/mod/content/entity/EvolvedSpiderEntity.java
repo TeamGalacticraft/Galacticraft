@@ -33,11 +33,6 @@ public class EvolvedSpiderEntity extends Spider {
     }
 
     @Override
-    public boolean galacticraft$hasMaskAndGear() {
-        return true;
-    }
-
-    @Override
     public boolean galacticraft$hasMask() {
         return true;
     }

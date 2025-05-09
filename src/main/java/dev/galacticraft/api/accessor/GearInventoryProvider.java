@@ -22,7 +22,6 @@
 
 package dev.galacticraft.api.accessor;
 
-import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -49,48 +48,19 @@ public interface GearInventoryProvider {
     }
 
     default boolean galacticraft$hasMaskAndGear() {
-        Container inv = this.galacticraft$getAccessories();
-        boolean mask = false;
-        boolean gear = false;
-        for (int i = 0; i < inv.getContainerSize(); i++) {
-            ItemStack itemStack = inv.getItem(i);
-            if (!mask && itemStack.is(GCItemTags.OXYGEN_MASKS)) {
-                mask = true;
-                if (gear) break;
-            } else if (!gear && itemStack.is(GCItemTags.OXYGEN_GEAR)) {
-                gear = true;
-                if (mask) break;
-            }
-        }
-        return mask && gear;
+        return this.galacticraft$hasMask() && this.galacticraft$hasGear();
     }
 
     default boolean galacticraft$hasMask() {
-        for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
-            ItemStack itemStack = this.galacticraft$getAccessories().getItem(i);
-            if (itemStack.is(GCItemTags.OXYGEN_MASKS)) {
-                return true;
-            }
-        }
-        return false;
+        throw new RuntimeException("This should be overridden by mixin!");
     }
 
     default boolean galacticraft$hasGear() {
-        for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
-            ItemStack itemStack = this.galacticraft$getAccessories().getItem(i);
-            if (itemStack.is(GCItemTags.OXYGEN_GEAR)) {
-                return true;
-            }
-        }
-        return false;
+        throw new RuntimeException("This should be overridden by mixin!");
     }
 
     default String galacticraft$tankSize(int i) {
-        ItemStack itemStack = this.galacticraft$getOxygenTanks().getItem(i);
-        if (itemStack.is(GCItemTags.OXYGEN_TANKS)) {
-            return itemStack.getDescriptionId().replace("item.galacticraft.", "");
-        }
-        return "";
+        throw new RuntimeException("This should be overridden by mixin!");
     }
 
     default void galacticraft$writeGearToNbt(CompoundTag tag) {

@@ -39,11 +39,6 @@ public class EvolvedZombieEntity extends Zombie {
     }
 
     @Override
-    public boolean galacticraft$hasMaskAndGear() {
-        return true;
-    }
-
-    @Override
     public boolean galacticraft$hasMask() {
         return true;
     }

@@ -25,9 +25,7 @@ package dev.galacticraft.mod.mixin.client;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.client.model.ParrotModel;
-import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.renderer.entity.layers.ParrotOnShoulderLayer;
-import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Final;
@@ -38,14 +36,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ParrotOnShoulderLayer.class)
-public abstract class ParrotOnShoulderLayerMixin<T extends Player> extends RenderLayer<T, PlayerModel<T>> {
+public abstract class ParrotOnShoulderLayerMixin<T extends Player> {
     @Shadow
     @Final
     public ParrotModel model;
-
-    ParrotOnShoulderLayerMixin() {
-        super(null);
-    }
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/player/Player;FFFFZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;byString(Ljava/lang/String;)Ljava/util/Optional;"), cancellable = true)
     private void galacticraft$hideFeather(CallbackInfo ci, @Local CompoundTag compoundTag) {
