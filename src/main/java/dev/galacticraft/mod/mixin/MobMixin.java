@@ -24,10 +24,9 @@ package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.accessor.PetInventoryOpener;
 import dev.galacticraft.mod.content.GCAccessorySlots;
-import dev.galacticraft.mod.network.c2s.OpenPetInventoryPayload;
 import dev.galacticraft.mod.tag.GCItemTags;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
@@ -54,8 +53,8 @@ public abstract class MobMixin extends LivingEntity {
         if ((Object) this instanceof TamableAnimal animal && animal.isTame() && animal.isOwnedBy(player)) {
             ItemStack itemStack = player.getItemInHand(hand);
             if (player.isSecondaryUseActive()) {
-                ClientPlayNetworking.send(new OpenPetInventoryPayload(animal.getId()));
-                cir.setReturnValue(InteractionResult.sidedSuccess(this.level().isClientSide));
+                ((PetInventoryOpener) player).galacticraft$sendOpenPetInventory(animal.getId());
+                cir.setReturnValue(InteractionResult.SUCCESS_NO_ITEM_USED);
             } else if (itemStack.getItem() instanceof Accessory) {
                 Container inv = animal.galacticraft$getGearInv();
                 for (int slot = 0; slot < inv.getContainerSize(); ++slot) {

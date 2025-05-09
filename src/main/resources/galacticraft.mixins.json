@@ -47,6 +47,7 @@
     "client.MinecraftMixin",
     "client.ParrotOnShoulderLayerMixin",
     "client.PauseMenuScreenMixin",
+    "client.PlayerMixin",
     "client.ScreenEffectRendererMixin",
     "client.SpriteContentAccessor"
   ],
