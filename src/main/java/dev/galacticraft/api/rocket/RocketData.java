@@ -61,7 +61,7 @@ public record RocketData(
             @Nullable EitherHolder<RocketEngine<?, ?>> engine,
             @Nullable EitherHolder<RocketUpgrade<?, ?>> upgrade,
             int color) {
-        this(Optional.ofNullable(cone), Optional.ofNullable(body), Optional.ofNullable(fin), Optional.ofNullable(booster), Optional.ofNullable(engine), Optional.ofNullable(upgrade), color);
+        this(Optional.ofNullable(cone), Optional.ofNullable(body), Optional.ofNullable(fin), Optional.ofNullable(booster), Optional.ofNullable(engine), Optional.ofNullable(upgrade), Optional.of(color).orElse(0xFFFFFFFF));
     }
 
     public static final Codec<RocketData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -71,7 +71,7 @@ public record RocketData(
             RocketBooster.EITHER_CODEC.optionalFieldOf("booster").forGetter(RocketData::booster),
             RocketEngine.EITHER_CODEC.optionalFieldOf("engine").forGetter(RocketData::engine),
             RocketUpgrade.EITHER_CODEC.optionalFieldOf("upgrade").forGetter(RocketData::upgrade),
-            Codec.INT.fieldOf("color").forGetter(RocketData::color)
+            Codec.INT.optionalFieldOf("color", 0xFFFFFFFF).forGetter(RocketData::color)
     ).apply(instance, RocketData::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, RocketData> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistriesTrusted(CODEC);
