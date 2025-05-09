@@ -29,6 +29,7 @@ import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -146,7 +147,7 @@ public abstract class AbstractBossEntity extends Monster {
 //
 //            this.dropKey();
 
-            this.level().broadcastEntityEvent(this, (byte)60);
+            this.level().broadcastEntityEvent(this, EntityEvent.POOF);
             this.remove(Entity.RemovalReason.KILLED);
 
 //            if (this.spawner != null) {
