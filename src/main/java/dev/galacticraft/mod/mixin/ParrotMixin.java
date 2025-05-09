@@ -25,7 +25,6 @@ package dev.galacticraft.mod.mixin;
 import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.mod.accessor.PetInventoryOpener;
 import dev.galacticraft.mod.content.GCAccessorySlots;
-import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
