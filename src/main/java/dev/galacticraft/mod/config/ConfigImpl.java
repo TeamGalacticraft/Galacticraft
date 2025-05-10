@@ -607,7 +607,6 @@ public class ConfigImpl implements Config {
                     .build()
             );
 
-            // TODO: If set to 0, disable the player oxygen system
             lifeSupport.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
                     Component.translatable(Translations.Config.PLAYER_OXYGEN_CONSUMPTION_RATE),

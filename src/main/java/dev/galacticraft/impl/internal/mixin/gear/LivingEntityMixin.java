@@ -50,6 +50,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -81,16 +82,19 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"))
     private void galacticraft_oxygenCheck(CallbackInfo ci) {
         LivingEntity entity = ((LivingEntity) (Object) this);
+        if (entity.galacticraft$oxygenConsumptionRate() == 0) return;
         AttributeInstance attribute = entity.getAttribute(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE);
         if (!entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(entity.getEyeHeight(entity.getPose())))) && !(attribute != null && attribute.getValue() >= 0.99D)) {
             if (!entity.isEyeInFluid(GCFluidTags.NON_BREATHABLE) && !(entity instanceof Player player && player.getAbilities().invulnerable)) {
                 entity.setAirSupply(this.decreaseAirSupply(entity.getAirSupply()));
                 if (entity.getAirSupply() == -20) {
                     entity.setAirSupply(0);
+                    this.lastHurtBySuffocationTimestamp = this.tickCount;
                     entity.hurt(new DamageSource(entity.level().registryAccess()
                             .registryOrThrow(Registries.DAMAGE_TYPE)
                             .getHolderOrThrow(GCDamageTypes.SUFFOCATION)), 2.0f);
                 } else if (this.tickCount - this.lastHurtBySuffocationTimestamp > 20) {
+                    // A small amount of depressurization damage
                     this.lastHurtBySuffocationTimestamp = this.tickCount;
                     entity.hurt(new DamageSource(entity.level().registryAccess()
                             .registryOrThrow(Registries.DAMAGE_TYPE)
@@ -103,6 +107,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     @ModifyExpressionValue(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z", ordinal = 0))
     private boolean galacticraft_testForBreathability(boolean original) {
         LivingEntity entity = (LivingEntity) (Object) this;
+        if (entity.galacticraft$oxygenConsumptionRate() == 0) return false;
         if ((entity.getVehicle() instanceof LanderEntity) || (entity.getInBlockState().getBlock() instanceof CryogenicChamberBlock) || (entity.getInBlockState().getBlock() instanceof CryogenicChamberPart)) {
             this.lastHurtBySuffocationTimestamp = this.tickCount;
             return false;
@@ -111,24 +116,16 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     }
 
     @ModifyExpressionValue(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;canBreatheUnderwater()Z"))
-    private boolean galacticraft_suffocationDamage(boolean original) {
+    private boolean galacticraft_drowningDamage(boolean original) {
+        // Return whether the player should take drowning damage
         return original || !this.isEyeInFluid(GCFluidTags.NON_BREATHABLE);
-    }
-
-    @Inject(method = "tick", at = @At(value = "RETURN"))
-    private void tickAccessories(CallbackInfo ci) {
-        LivingEntity thisEntity = ((LivingEntity) (Object) this);
-        for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
-            ItemStack stack = this.galacticraft$getAccessories().getItem(i);
-            if (stack.getItem() instanceof Accessory accessory) {
-                accessory.tick(thisEntity);
-            }
-        }
     }
 
     @Inject(method = "decreaseAirSupply", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getAttribute(Lnet/minecraft/core/Holder;)Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;"), cancellable = true)
     private void galacticraft_modifyAirLevel(int air, CallbackInfoReturnable<Integer> cir) {
         LivingEntity entity = ((LivingEntity) (Object) this);
+        long rate = entity.galacticraft$oxygenConsumptionRate();
+        if (rate == 0) return;
         AttributeInstance attribute = entity.getAttribute(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE);
         if ((attribute != null && attribute.getValue() >= 0.99D) || entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(entity.getEyeHeight(entity.getPose()))))) {
             this.lastHurtBySuffocationTimestamp = this.tickCount;
@@ -147,7 +144,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
                 Storage<FluidVariant> storage = ContainerItemContext.ofSingleSlot(tankInv.getSlot(i)).find(FluidStorage.ITEM);
                 if (storage != null) {
                     try (Transaction transaction = Transaction.openOuter()) {
-                        if (storage.extract(FluidVariant.of(Gases.OXYGEN), entity.galacticraft$oxygenConsumptionRate(), transaction) > 0) {
+                        if (storage.extract(FluidVariant.of(Gases.OXYGEN), rate, transaction) > 0) {
                             transaction.commit();
                             this.lastHurtBySuffocationTimestamp = this.tickCount;
                             cir.setReturnValue(this.increaseAirSupply(air));
@@ -155,6 +152,17 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
                         }
                     }
                 }
+            }
+        }
+    }
+
+    @Inject(method = "tick", at = @At(value = "RETURN"))
+    private void tickAccessories(CallbackInfo ci) {
+        LivingEntity thisEntity = ((LivingEntity) (Object) this);
+        for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
+            ItemStack stack = this.galacticraft$getAccessories().getItem(i);
+            if (stack.getItem() instanceof Accessory accessory) {
+                accessory.tick(thisEntity);
             }
         }
     }

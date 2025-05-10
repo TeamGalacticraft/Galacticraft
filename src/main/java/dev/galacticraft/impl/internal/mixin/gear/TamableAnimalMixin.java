@@ -43,6 +43,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.OwnableEntity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Parrot;
@@ -182,7 +183,10 @@ public abstract class TamableAnimalMixin extends Entity implements GearInventory
     @Override
     public long galacticraft$oxygenConsumptionRate() {
         TamableAnimal animal = (TamableAnimal) (Object) this;
-        if (animal instanceof Wolf) {
+        LivingEntity owner = animal.getOwner();
+        if (owner != null && !owner.isSpectator() && animal.distanceToSqr(owner) >= 4096.0) {
+            return 0;
+        } else if (animal instanceof Wolf) {
             return Galacticraft.CONFIG.wolfOxygenConsumptionRate();
         } else if (animal instanceof Cat) {
             return Galacticraft.CONFIG.catOxygenConsumptionRate();
