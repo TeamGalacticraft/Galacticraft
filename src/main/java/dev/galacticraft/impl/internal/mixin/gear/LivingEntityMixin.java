@@ -128,13 +128,12 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
 
     @Inject(method = "decreaseAirSupply", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getAttribute(Lnet/minecraft/core/Holder;)Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;"), cancellable = true)
     private void galacticraft_modifyAirLevel(int air, CallbackInfoReturnable<Integer> cir) {
-        AttributeInstance attribute = ((LivingEntity) (Object) this).getAttribute(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE);
-        if (attribute != null && attribute.getValue() >= 0.99D) {
+        LivingEntity entity = ((LivingEntity) (Object) this);
+        AttributeInstance attribute = entity.getAttribute(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE);
+        if ((attribute != null && attribute.getValue() >= 0.99D) || entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(entity.getEyeHeight(entity.getPose()))))) {
             this.lastHurtBySuffocationTimestamp = this.tickCount;
             cir.setReturnValue(this.increaseAirSupply(air));
-        }
-
-        if (this.galacticraft$hasMaskAndGear()) {
+        } else if (this.galacticraft$hasMaskAndGear()) {
             InventoryStorage tankInv = InventoryStorage.of(galacticraft$getOxygenTanks(), null);
             for (int i = 1; i < tankInv.getSlotCount(); i++) {
                 ItemStack stack = tankInv.getSlot(i).getResource().toStack();
