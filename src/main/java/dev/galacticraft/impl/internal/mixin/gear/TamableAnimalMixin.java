@@ -204,6 +204,5 @@ public abstract class TamableAnimalMixin extends Entity implements GearInventory
     @Override
     public void galacticraft$readGearFromNbt(CompoundTag tag) {
         this.gearInv.fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND), this.registryAccess());
-        this.gearInv.setChanged();
     }
 }

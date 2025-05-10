@@ -23,13 +23,23 @@
 package dev.galacticraft.impl.internal.mixin.gear;
 
 import dev.galacticraft.api.accessor.GearInventoryProvider;
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.impl.internal.inventory.MappedInventory;
 import dev.galacticraft.impl.network.s2c.GearInvPayload;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.world.inventory.GearInventory;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
@@ -37,15 +47,21 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Collection;
 
 @Mixin(ServerPlayer.class)
-public abstract class ServerPlayerMixin implements GearInventoryProvider {
+public abstract class ServerPlayerMixin extends Player implements GearInventoryProvider {
     @Shadow
     public ServerGamePacketListenerImpl connection;
 
@@ -56,6 +72,68 @@ public abstract class ServerPlayerMixin implements GearInventoryProvider {
     private final @Unique Container tankInv = MappedInventory.create(this.gearInv, 2, 3);
     private final @Unique Container thermalArmorInv = MappedInventory.create(this.gearInv, 8, 9, 10, 11);
     private final @Unique Container accessoryInv = MappedInventory.create(this.gearInv, 0, 1, 4, 5, 6, 7);
+
+    ServerPlayerMixin() {
+        super(null, null, 0.0F, null);
+    }
+
+    @Inject(method = "tick", at = @At("TAIL"))
+    private void galacticraft_parrotOxygenCheck(CallbackInfo ci) {
+        if (!this.level().isBreathable(this.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(this.getPose()))))) {
+            Long rate = Galacticraft.CONFIG.parrotOxygenConsumptionRate();
+            CompoundTag leftParrot = this.getShoulderEntityLeft();
+            if (!leftParrot.isEmpty()) {
+                SimpleContainer inv = new GearInventory();
+                inv.fromTag(leftParrot.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND), this.registryAccess());
+                InventoryStorage tankInv = InventoryStorage.of(inv, null);
+                Storage<FluidVariant> storage = ContainerItemContext.ofSingleSlot(tankInv.getSlot(GCAccessorySlots.OXYGEN_TANK_1_SLOT)).find(FluidStorage.ITEM);
+                if (storage != null) {
+                    try (Transaction transaction = Transaction.openOuter()) {
+                        if (storage.extract(FluidVariant.of(Gases.OXYGEN), rate, transaction) > 0) {
+                            transaction.commit();
+                            leftParrot.put(Constant.Nbt.GEAR_INV, inv.createTag(this.registryAccess()));
+                            this.setShoulderEntityLeft(leftParrot);
+                        } else {
+                            this.galacticraft$respawnEntityOnShoulder(leftParrot);
+                            this.setShoulderEntityLeft(new CompoundTag());
+                        }
+                    }
+                }
+            }
+            CompoundTag rightParrot = this.getShoulderEntityRight();
+            if (!rightParrot.isEmpty()) {
+                SimpleContainer inv = new GearInventory();
+                inv.fromTag(rightParrot.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND), this.registryAccess());
+                InventoryStorage tankInv = InventoryStorage.of(inv, null);
+                Storage<FluidVariant> storage = ContainerItemContext.ofSingleSlot(tankInv.getSlot(GCAccessorySlots.OXYGEN_TANK_1_SLOT)).find(FluidStorage.ITEM);
+                if (storage != null) {
+                    try (Transaction transaction = Transaction.openOuter()) {
+                        if (storage.extract(FluidVariant.of(Gases.OXYGEN), rate, transaction) > 0) {
+                            transaction.commit();
+                            rightParrot.put(Constant.Nbt.GEAR_INV, inv.createTag(this.registryAccess()));
+                            this.setShoulderEntityRight(rightParrot);
+                        } else {
+                            this.galacticraft$respawnEntityOnShoulder(rightParrot);
+                            this.setShoulderEntityRight(new CompoundTag());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Unique
+    private void galacticraft$respawnEntityOnShoulder(CompoundTag compoundTag) {
+        if (!this.level().isClientSide && !compoundTag.isEmpty()) {
+            EntityType.create(compoundTag, this.level()).ifPresent(entity -> {
+                if (entity instanceof TamableAnimal animal) {
+                    animal.setOwnerUUID(this.uuid);
+                }
+                entity.setPos(this.getX(), this.getY() + 0.7D, this.getZ());
+                ((ServerLevel) this.level()).addWithUUID(entity);
+            });
+        }
+    }
 
     @Unique
     private SimpleContainer galacticraft_createGearInventory() {

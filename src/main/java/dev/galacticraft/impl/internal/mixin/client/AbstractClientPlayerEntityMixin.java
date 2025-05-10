@@ -177,11 +177,11 @@ public abstract class AbstractClientPlayerEntityMixin implements ClientResearchA
 
     @Override
     public void galacticraft$writeGearToNbt(CompoundTag tag) {
-        tag.put(Constant.Nbt.GEAR_INV, this.galacticraft$getGearInv().createTag(((Entity) (Object) this).registryAccess()));
+        tag.put(Constant.Nbt.GEAR_INV, this.gearInv.createTag(((Entity) (Object) this).registryAccess()));
     }
 
     @Override
     public void galacticraft$readGearFromNbt(CompoundTag tag) {
-        this.galacticraft$getGearInv().fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND), ((Entity) (Object) this).registryAccess());
+        this.gearInv.fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND), ((Entity) (Object) this).registryAccess());
     }
 }
