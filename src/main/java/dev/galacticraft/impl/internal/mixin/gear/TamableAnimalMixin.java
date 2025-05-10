@@ -26,6 +26,7 @@ import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.impl.internal.inventory.MappedInventory;
 import dev.galacticraft.impl.network.s2c.GearInvPayload;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.world.inventory.GearInventory;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -43,6 +44,9 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.Parrot;
+import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -173,6 +177,19 @@ public abstract class TamableAnimalMixin extends Entity implements GearInventory
     public String galacticraft$tankSize(int i) {
         if (i != 0) return "";
         return this.entityData.get(DATA_TANK_SIZE_ID);
+    }
+
+    @Override
+    public long galacticraft$oxygenConsumptionRate() {
+        TamableAnimal animal = (TamableAnimal) (Object) this;
+        if (animal instanceof Wolf) {
+            return Galacticraft.CONFIG.wolfOxygenConsumptionRate();
+        } else if (animal instanceof Cat) {
+            return Galacticraft.CONFIG.catOxygenConsumptionRate();
+        } else if (animal instanceof Parrot) {
+            return Galacticraft.CONFIG.parrotOxygenConsumptionRate();
+        }
+        return Galacticraft.CONFIG.playerOxygenConsumptionRate();
     }
 
     @Override

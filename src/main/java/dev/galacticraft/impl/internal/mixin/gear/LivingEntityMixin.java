@@ -147,7 +147,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
                 Storage<FluidVariant> storage = ContainerItemContext.ofSingleSlot(tankInv.getSlot(i)).find(FluidStorage.ITEM);
                 if (storage != null) {
                     try (Transaction transaction = Transaction.openOuter()) {
-                        if (storage.extract(FluidVariant.of(Gases.OXYGEN), Galacticraft.CONFIG.playerOxygenConsuptionRate(), transaction) > 0) {
+                        if (storage.extract(FluidVariant.of(Gases.OXYGEN), entity.galacticraft$oxygenConsumptionRate(), transaction) > 0) {
                             transaction.commit();
                             this.lastHurtBySuffocationTimestamp = this.tickCount;
                             cir.setReturnValue(this.increaseAirSupply(air));
@@ -232,6 +232,11 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     @Override
     public String galacticraft$tankSize(int i) {
         return "";
+    }
+
+    @Override
+    public long galacticraft$oxygenConsumptionRate() {
+        return Galacticraft.CONFIG.playerOxygenConsumptionRate();
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))

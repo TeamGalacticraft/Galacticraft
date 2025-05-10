@@ -63,6 +63,10 @@ public interface GearInventoryProvider {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
+    default long galacticraft$oxygenConsumptionRate() {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
+
     default void galacticraft$writeGearToNbt(CompoundTag tag) {
         throw new RuntimeException("This should be overridden by mixin!");
     }
