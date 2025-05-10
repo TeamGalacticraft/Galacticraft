@@ -20,34 +20,29 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin;
+package dev.galacticraft.mod.mixin.client;
 
-import dev.galacticraft.mod.accessor.CryogenicAccessor;
-import dev.galacticraft.mod.accessor.PetInventoryOpener;
-import net.minecraft.world.entity.LivingEntity;
+import com.llamalad7.mixinextras.sugar.Local;
+import dev.galacticraft.mod.Constant;
+import net.minecraft.client.model.ParrotModel;
+import net.minecraft.client.renderer.entity.layers.ParrotOnShoulderLayer;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Player.class)
-public abstract class PlayerMixin extends LivingEntity implements CryogenicAccessor, PetInventoryOpener {
-
-    PlayerMixin() {
-        super(null, null);
-    }
-
+@Mixin(ParrotOnShoulderLayer.class)
+public abstract class ParrotOnShoulderLayerMixin<T extends Player> {
     @Shadow
-    public abstract boolean isCreative();
+    @Final
+    public ParrotModel model;
 
-    @Inject(method = "stopSleepInBed", at = @At(value = "HEAD"))
-    private void gc$shouldSetCryoCooldown(boolean bl, boolean bl2, CallbackInfo ci) {
-        if (!((Player) (Object) this).level().isClientSide() && !this.isCreative() && this.isInCryoSleep()) {
-            ((Player) (Object) this).heal(5.0F);
-
-            this.setCryogenicChamberCooldown(6000);
-        }
+    @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/player/Player;FFFFZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;byString(Ljava/lang/String;)Ljava/util/Optional;"), cancellable = true)
+    private void galacticraft$hideFeather(CallbackInfo ci, @Local CompoundTag compoundTag) {
+        this.model.root().getChild("head").getChild("feather").visible = !compoundTag.getBoolean(Constant.Nbt.HAS_MASK);
     }
 }

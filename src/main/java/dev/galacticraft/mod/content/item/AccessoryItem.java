@@ -24,6 +24,7 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.mod.content.GCAccessorySlots;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.dispenser.BlockSource;
@@ -37,6 +38,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -59,17 +62,19 @@ public class AccessoryItem extends Item implements Accessory {
 
     public static boolean dispenseAccessory(BlockSource blockSource, ItemStack itemStack) {
         BlockPos blockPos = blockSource.pos().relative(blockSource.state().getValue(DispenserBlock.FACING));
-        List<Player> list = blockSource.level().getEntitiesOfClass(Player.class, new AABB(blockPos), EntitySelector.NO_SPECTATORS);
+        List<LivingEntity> list = blockSource.level().getEntitiesOfClass(LivingEntity.class, new AABB(blockPos),
+                EntitySelector.NO_SPECTATORS.and(entity -> entity instanceof Player || (entity instanceof TamableAnimal animal && animal.isTame())));
         if (list.isEmpty()) {
             return false;
         }
-        Player player = (Player)list.get(0);
-        Container inv = player.galacticraft$getGearInv();
+        LivingEntity entity = (LivingEntity) list.get(0);
+        Container inv = entity.galacticraft$getGearInv();
         for (int slot = 0; slot < inv.getContainerSize(); ++slot) {
-            if (inv.getItem(slot).isEmpty() && itemStack.is(GCAccessorySlots.SLOT_TAGS.get(slot))) {
+            int i = (slot == GCAccessorySlots.PET_THERMAL_SLOT && entity instanceof TamableAnimal) ? GCAccessorySlots.THERMAL_ARMOR_SLOT_START + 1 : slot;
+            if (inv.getItem(slot).isEmpty() && itemStack.is(GCAccessorySlots.SLOT_TAGS.get(i))) {
                 ItemStack itemStack2 = itemStack.split(1);
                 inv.setItem(slot, itemStack2);
-                player.galacticraft$onEquipAccessory(itemStack, itemStack2);
+                entity.galacticraft$onEquipAccessory(itemStack, itemStack2);
                 return true;
             }
         }
@@ -97,7 +102,7 @@ public class AccessoryItem extends Item implements Accessory {
         for (int slot = 0; slot < inv.getContainerSize(); ++slot) {
             if (itemStack.is(GCAccessorySlots.SLOT_TAGS.get(slot))) {
                 ItemStack itemStack2 = inv.getItem(slot);
-                if (8 <= slot && slot < 11 && !itemStack2.isEmpty()) {
+                if (GCAccessorySlots.ACCESSORY_SLOT_START <= slot && slot < GCAccessorySlots.ACCESSORY_SLOT_END && !itemStack2.isEmpty()) {
                     continue;
                 }
                 if (ItemStack.matches(itemStack, itemStack2) || (itemStack2.getItem() instanceof OxygenTankItem && OxygenTankItem.getStorage(itemStack2).getAmount() > 0)) {
@@ -109,10 +114,10 @@ public class AccessoryItem extends Item implements Accessory {
                 if (!level.isClientSide()) {
                     player.awardStat(Stats.ITEM_USED.get(itemStack.getItem()));
                 }
+                player.galacticraft$onEquipAccessory(itemStack2, itemStack);
                 ItemStack itemStack3 = itemStack2.isEmpty() ? itemStack : itemStack2.copyAndClear();
                 ItemStack itemStack4 = player.isCreative() ? itemStack.copy() : itemStack.copyAndClear();
                 inv.setItem(slot, itemStack4);
-                player.galacticraft$onEquipAccessory(itemStack3, itemStack4);
                 return InteractionResultHolder.sidedSuccess(itemStack3, level.isClientSide());
             }
         }
