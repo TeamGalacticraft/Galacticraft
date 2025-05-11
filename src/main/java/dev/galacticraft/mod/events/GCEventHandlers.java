@@ -161,7 +161,6 @@ public class GCEventHandlers {
         }
     }
 
-
     public static void onPlayerTick(Player player) {
 
     }
