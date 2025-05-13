@@ -63,7 +63,19 @@ public interface Config {
 
     long oxygenDecompressorEnergyConsumptionRate();
 
-    long playerOxygenConsuptionRate();
+    long smallOxygenTankCapacity();
+
+    long mediumOxygenTankCapacity();
+
+    long largeOxygenTankCapacity();
+
+    long playerOxygenConsumptionRate();
+
+    long wolfOxygenConsumptionRate();
+
+    long catOxygenConsumptionRate();
+
+    long parrotOxygenConsumptionRate();
 
     double bossHealthMultiplier();
 
