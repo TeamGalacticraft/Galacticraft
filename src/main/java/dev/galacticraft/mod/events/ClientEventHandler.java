@@ -31,6 +31,7 @@ import dev.galacticraft.mod.client.gui.overlay.LanderOverlay;
 import dev.galacticraft.mod.client.gui.overlay.OxygenOverlay;
 import dev.galacticraft.mod.client.gui.overlay.RocketOverlay;
 import dev.galacticraft.mod.client.render.FootprintRenderer;
+import dev.galacticraft.mod.client.render.GCBlockOutlineRenderer;
 import dev.galacticraft.mod.client.render.dimension.AsteroidSkyRenderer;
 import dev.galacticraft.mod.client.sounds.RocketSound;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
@@ -50,6 +51,7 @@ public class ClientEventHandler {
         RocketEvents.STAGE_CHANGED.register(ClientEventHandler::rocketLaunchSound);
         ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register(ClientEventHandler::initializeSatelliteSkybox);
         ClientTickEvents.END_CLIENT_TICK.register(ClientEventHandler::clientTick);
+        WorldRenderEvents.BLOCK_OUTLINE.register(GCBlockOutlineRenderer::renderBlockOutlines);
         WorldRenderEvents.LAST.register(FootprintRenderer::renderFootprints);
         ClientTickEvents.END_WORLD_TICK.register(ClientEventHandler::tickFootprints);
         HudRenderCallback.EVENT.register(OxygenOverlay::onHudRender);
