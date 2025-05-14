@@ -349,7 +349,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.COMPRESSED_IRON), has(GCItems.COMPRESSED_IRON))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BUGGY_WHEEL)
+        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.BUGGY_WHEEL)
                 .define('L', ConventionalItemTags.LEATHERS)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .pattern(" L ")
@@ -358,7 +358,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BUGGY_SEAT)
+        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.BUGGY_SEAT)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('I', GCItems.COMPRESSED_IRON)
                 .pattern("  S")
@@ -367,7 +367,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BUGGY_STORAGE)
+        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.BUGGY_STORAGE)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('I', GCItems.COMPRESSED_IRON)
                 .define('C', ConventionalItemTags.WOODEN_CHESTS)
