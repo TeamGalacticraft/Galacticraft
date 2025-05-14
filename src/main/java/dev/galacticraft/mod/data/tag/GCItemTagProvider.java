@@ -470,6 +470,8 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .addTag(GCItemTags.LUNASLATE_COBBLESTONES)
                 .addTag(GCItemTags.MARS_COBBLESTONES);
 
+        this.copy(GCBlockTags.ASTEROID_ROCKS, GCItemTags.ASTEROID_ROCKS);
+
         this.tag(ItemTags.STONE_TOOL_MATERIALS)
                 .add(GCBlocks.COBBLED_MOON_ROCK.asItem())
                 .add(GCBlocks.COBBLED_LUNASLATE.asItem())

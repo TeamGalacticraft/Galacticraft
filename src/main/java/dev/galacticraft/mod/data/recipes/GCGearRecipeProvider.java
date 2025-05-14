@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.data.recipes;
 
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
@@ -261,8 +262,17 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
         titaniumSmithing(output, GCItems.DESH_HOE, RecipeCategory.TOOLS, GCItems.TITANIUM_HOE);
         titaniumSmithing(output, GCItems.DESH_SHOVEL, RecipeCategory.TOOLS, GCItems.TITANIUM_SHOVEL);
 
-        // Other Items
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE, 2)
+                .define('D', ConventionalItemTags.DIAMOND_GEMS)
+                .define('T', GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE)
+                .define('A', GCItemTags.ASTEROID_ROCKS)
+                .pattern("DTD")
+                .pattern("DAD")
+                .pattern("DDD")
+                .unlockedBy(getHasName(GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE), has(GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE))
+                .save(output);
 
+        // Other Items
         ShapelessRecipeBuilder.shapeless(RecipeCategory.COMBAT, GCItems.THROWABLE_METEOR_CHUNK, 3)
                 .requires(GCItems.RAW_METEORIC_IRON)
                 .unlockedBy(getHasName(GCItems.RAW_METEORIC_IRON), has(GCItems.RAW_METEORIC_IRON))

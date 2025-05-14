@@ -265,6 +265,37 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.FUEL_BUCKET), has(GCItems.FUEL_BUCKET))
                 .save(output);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.AIR_LOCK_FRAME, 4)
+                .define('A', GCItems.COMPRESSED_ALUMINUM)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .define('C', GCItems.OXYGEN_CONCENTRATOR)
+                .pattern("AAA")
+                .pattern("SCS")
+                .pattern("AAA")
+                .unlockedBy(getHasName(GCItems.OXYGEN_CONCENTRATOR), has(GCItems.OXYGEN_CONCENTRATOR))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.AIR_LOCK_CONTROLLER)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .define('M', GCItems.COMPRESSED_METEORIC_IRON)
+                .define('W', GCItems.BASIC_WAFER)
+                .pattern("SSS")
+                .pattern("MWM")
+                .pattern("SSS")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_METEORIC_IRON), has(GCItems.COMPRESSED_METEORIC_IRON))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.CRYOGENIC_CHAMBER)
+                .define('D', GCItems.COMPRESSED_DESH)
+                .define('P', GCItems.TIER_2_HEAVY_DUTY_PLATE)
+                .define('T', Items.TINTED_GLASS)
+                .define('B', ItemTags.BEDS)
+                .pattern("DTT")
+                .pattern("DBT")
+                .pattern("DPT")
+                .unlockedBy(getHasName(GCItems.TIER_2_HEAVY_DUTY_PLATE), has(GCItems.TIER_2_HEAVY_DUTY_PLATE))
+                .save(output);
+
         // Pipes from panes
         for (PipeColor color : PipeColor.values()) {
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.GLASS_FLUID_PIPES.get(color), 6)
@@ -302,7 +333,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
 
         // Wires
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.ALUMINUM_WIRE, 6)
-                .define('W', Items.WHITE_WOOL)
+                .define('W', ItemTags.WOOL)
                 .define('A', GCItemTags.ALUMINUM_INGOTS)
                 .pattern("WWW")
                 .pattern("AAA")

@@ -297,6 +297,14 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(Items.COPPER_INGOT), has(ConventionalItemTags.COPPER_INGOTS))
                 .save(output);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.EMPTY_CAN, 2)
+                .define('X', GCItemTags.ALUMINUM_INGOTS)
+                .pattern("X X")
+                .pattern("X X")
+                .pattern("XXX")
+                .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItemTags.ALUMINUM_INGOTS))
+                .save(output);
+
         ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCBlocks.ROCKET_LAUNCH_PAD, 9)
                 .define('C', GCItems.COMPRESSED_IRON)
                 .define('I', ConventionalItemTags.STORAGE_BLOCKS_IRON)

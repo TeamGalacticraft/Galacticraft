@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_heavy_plating_t2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:heavy_plating_t2"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraft:cryogenic_chamber"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_heavy_plating_t2"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraft:cryogenic_chamber"
+    ]
+  }
+}

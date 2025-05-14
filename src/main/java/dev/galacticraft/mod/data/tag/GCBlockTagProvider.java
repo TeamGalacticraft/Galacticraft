@@ -334,6 +334,11 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .addTag(GCBlockTags.LUNASLATE_COBBLESTONES)
                 .addTag(GCBlockTags.MARS_COBBLESTONES);
 
+        this.tag(GCBlockTags.ASTEROID_ROCKS)
+                .add(GCBlocks.ASTEROID_ROCK)
+                .add(GCBlocks.ASTEROID_ROCK_1)
+                .add(GCBlocks.ASTEROID_ROCK_2);
+
         this.tag(BlockTags.ICE)
                 .add(GCBlocks.DENSE_ICE);
 

@@ -108,6 +108,8 @@ public class GCBlockTags {
     public static final TagKey<Block> LUNASLATE_COBBLESTONES = commonTag("cobblestones/lunaslate");
     public static final TagKey<Block> MARS_COBBLESTONES = commonTag("cobblestones/mars");
 
+    public static final TagKey<Block> ASTEROID_ROCKS = galacticraftTag("asteroid_rocks");
+
     public static final TagKey<Block> DECORATION_BLOCKS = galacticraftTag("decoration_blocks");
     public static final TagKey<Block> ALUMINUM_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/aluminum");
     public static final TagKey<Block> BRONZE_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/bronze");

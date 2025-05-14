@@ -143,6 +143,8 @@ public class GCItemTags {
     public static final TagKey<Item> LUNASLATE_COBBLESTONES = commonTag("cobblestones/lunaslate");
     public static final TagKey<Item> MARS_COBBLESTONES = commonTag("cobblestones/mars");
 
+    public static final TagKey<Item> ASTEROID_ROCKS = galacticraftTag("asteroid_rocks");
+
     public static final TagKey<Item> OIL_BUCKETS = commonTag("buckets/oil");
     public static final TagKey<Item> FUEL_BUCKETS = commonTag("buckets/fuel");
     public static final TagKey<Item> SULFURIC_ACID_BUCKETS = commonTag("buckets/sulfuric_acid");
