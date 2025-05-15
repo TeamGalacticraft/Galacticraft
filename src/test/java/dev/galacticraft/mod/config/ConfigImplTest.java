@@ -20,11 +20,9 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.gametest;
+package dev.galacticraft.mod.config;
 
-import dev.galacticraft.machinelib.api.gametest.SimpleGameTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.BasicTest;
-import dev.galacticraft.mod.config.ConfigImpl;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -37,31 +35,31 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ConfigTestSuite extends SimpleGameTest {
+class ConfigImplTest {
     private static final File CONFIG_FILE = Path.of(".", ".test_config.json").toFile();
 
-    @BasicTest(batch = "config")
+    @Test
     public void create() {
         new ConfigImpl(CONFIG_FILE);
         // constructor creates a new config (when it doesn't exist)
         assertTrue(CONFIG_FILE.exists());
     }
 
-    @BasicTest(batch = "config")
+    @Test
     public void load() {
         writeConfig(
-            """
-            {
-                "debug_log": true
-            }
-            """
+                """
+                {
+                    "debug_log": true
+                }
+                """
         );
 
         ConfigImpl config = new ConfigImpl(CONFIG_FILE);
         assertTrue(config.isDebugLogEnabled());
     }
 
-    @BasicTest(batch = "config")
+    @Test
     public void modify() {
         ConfigImpl config = new ConfigImpl(CONFIG_FILE);
         config.setDebugLog(true);
@@ -74,7 +72,7 @@ public class ConfigTestSuite extends SimpleGameTest {
         assertTrue(config.isDebugLogEnabled());
     }
 
-    @BasicTest(batch = "config")
+    @Test
     public void invalidConfigDoesNotModify() {
         ConfigImpl config = new ConfigImpl(CONFIG_FILE);
         config.setDebugLog(true);
