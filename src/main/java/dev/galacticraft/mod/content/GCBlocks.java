@@ -300,13 +300,6 @@ public class GCBlocks {
     // MOON VILLAGER SPECIAL
     public static final Block LUNAR_CARTOGRAPHY_TABLE = BLOCKS.registerWithItem(Constant.Block.LUNAR_CARTOGRAPHY_TABLE, new LunarCartographyTableBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).ignitedByLava().instrument(NoteBlockInstrument.BASS).strength(2.5F).sound(SoundType.WOOD)));
 
-    // MISC DECOR
-    public static final Block WALKWAY = BLOCKS.registerWithItem(Constant.Block.WALKWAY, new Walkway(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0f, 5.0f).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
-    public static final Block FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.FLUID_PIPE_WALKWAY, new GlassFluidPipeWalkwayBlock(BlockBehaviour.Properties.ofFullCopy(WALKWAY), PipeColor.CLEAR));
-    public static final Block WIRE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.WIRE_WALKWAY, new WireWalkwayBlock(BlockBehaviour.Properties.ofFullCopy(WALKWAY)));
-    public static final Block TIN_LADDER = BLOCKS.registerWithItem(Constant.Block.TIN_LADDER, new TinLadderBlock(BlockBehaviour.Properties.of().forceSolidOff().noOcclusion().pushReaction(PushReaction.DESTROY).strength(1.0f, 1.0f).sound(SoundType.METAL).requiresCorrectToolForDrops()));
-    public static final Block IRON_GRATING = BLOCKS.registerWithItem(Constant.Block.IRON_GRATING, new IronGratingBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(2.5f, 6.0f).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
-
     // SPECIAL
     public static final Block ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.ALUMINUM_WIRE, new AluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).forceSolidOn()));
     public static final Block SEALABLE_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.SEALABLE_ALUMINUM_WIRE, new SealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(TIN_DECORATION.block())));
@@ -315,6 +308,13 @@ public class GCBlocks {
     public static final Block FUELING_PAD = BLOCKS.registerWithItem(Constant.Block.FUELING_PAD, new FuelPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 10.0F).requiresCorrectToolForDrops()));
     public static final Block ROCKET_WORKBENCH = BLOCKS.registerWithItem(Constant.Block.ROCKET_WORKBENCH, new RocketWorkbench(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F).requiresCorrectToolForDrops()));
     public static final Block PARACHEST = BLOCKS.registerWithItem(Constant.Block.PARACHEST, new ParachestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST)));
+
+    // MISC DECOR
+    public static final Block WALKWAY = BLOCKS.registerWithItem(Constant.Block.WALKWAY, new Walkway(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0f, 5.0f).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
+    public static final Block FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.FLUID_PIPE_WALKWAY, new GlassFluidPipeWalkwayBlock(BlockBehaviour.Properties.ofFullCopy(GLASS_FLUID_PIPE), PipeColor.CLEAR));
+    public static final Block WIRE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.WIRE_WALKWAY, new WireWalkwayBlock(BlockBehaviour.Properties.ofFullCopy(ALUMINUM_WIRE)));
+    public static final Block TIN_LADDER = BLOCKS.registerWithItem(Constant.Block.TIN_LADDER, new TinLadderBlock(BlockBehaviour.Properties.of().forceSolidOff().noOcclusion().pushReaction(PushReaction.DESTROY).strength(1.0f, 1.0f).sound(SoundType.METAL).requiresCorrectToolForDrops()));
+    public static final Block IRON_GRATING = BLOCKS.registerWithItem(Constant.Block.IRON_GRATING, new IronGratingBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(2.5f, 6.0f).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
 
     // LIGHT PANELS
     public static final Block SQUARE_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.SQUARE_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)));
