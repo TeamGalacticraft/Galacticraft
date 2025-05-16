@@ -26,7 +26,6 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCBlockTags;
 import dev.galacticraft.mod.tag.GCItemTags;
-import dev.galacticraft.mod.tag.GCTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
@@ -153,7 +152,7 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.STANDARD_WRENCH);
 
         Item[] stainedGlassFluidPipes = GCBlocks.GLASS_FLUID_PIPES.values().stream().filter(b -> b != GCBlocks.GLASS_FLUID_PIPE).map(Block::asItem).toArray(Item[]::new);
-        this.tag(GCTags.STAINED_GLASS_FLUID_PIPES)
+        this.tag(GCItemTags.STAINED_GLASS_FLUID_PIPES)
                 .add(stainedGlassFluidPipes);
         this.tag(ConventionalItemTags.DYED)
                 .add(stainedGlassFluidPipes);

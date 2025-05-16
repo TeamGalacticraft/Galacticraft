@@ -314,7 +314,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
 
         // Wash fluid pipes
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.GLASS_FLUID_PIPE, 8)
-                .define('P', GCTags.STAINED_GLASS_FLUID_PIPES)
+                .define('P', GCItemTags.STAINED_GLASS_FLUID_PIPES)
                 .define('W', Items.WATER_BUCKET)
                 .pattern("PPP")
                 .pattern("PWP")
