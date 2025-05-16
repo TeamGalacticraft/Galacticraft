@@ -143,7 +143,6 @@ public class GCModelProvider extends FabricModelProvider {
 
 //        //todo: generate these
         generator.skipAutoItemBlock(GCBlocks.ALUMINUM_WIRE);
-        generator.skipAutoItemBlock(GCBlocks.GLASS_FLUID_PIPE);
         generator.skipAutoItemBlock(GCBlocks.MOON_CHEESE_WHEEL);
 //        generator.delegateItemModel(GCBlocks.ALUMINUM_WIRE, ModelLocationUtils.getModelLocation(GCBlocks.ALUMINUM_WIRE, "_inventory"));
 //        generator.delegateItemModel(GCBlocks.GLASS_FLUID_PIPE, ModelLocationUtils.getModelLocation(GCBlocks.GLASS_FLUID_PIPE, "_inventory"));
@@ -620,6 +619,10 @@ public class GCModelProvider extends FabricModelProvider {
         for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
             GCModelTemplates.PIPE_INVENTORY.create(ModelLocationUtils.getModelLocation(pipe.asItem()), TextureMapping.layer0(pipe), generator.output);
         }
+
+        GCModelTemplates.WALKWAY_INVENTORY.create(ModelLocationUtils.getModelLocation(GCBlocks.WALKWAY.asItem()), TextureMapping.defaultTexture(Constant.id("block/walkway_connector")), generator.output);
+        GCModelTemplates.WALKWAY_INVENTORY.create(ModelLocationUtils.getModelLocation(GCBlocks.FLUID_PIPE_WALKWAY.asItem()), TextureMapping.defaultTexture(Constant.id("block/glass_fluid_pipe")), generator.output);
+        GCModelTemplates.WALKWAY_INVENTORY.create(ModelLocationUtils.getModelLocation(GCBlocks.WIRE_WALKWAY.asItem()), TextureMapping.defaultTexture(Constant.id("block/aluminum_wire")), generator.output);
 
         // FOOD
         generator.generateFlatItem(GCItems.MOON_CHEESE_CURD, ModelTemplates.FLAT_ITEM);

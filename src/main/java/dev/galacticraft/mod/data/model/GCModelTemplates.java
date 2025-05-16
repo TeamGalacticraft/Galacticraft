@@ -39,7 +39,7 @@ public class GCModelTemplates {
     public static final ModelTemplate FLUID_PIPE_WALKWAY = create("block/template_fluid_pipe_walkway", GCTextureSlot.COLOR);
     public static final ModelTemplate ROCKET_LAUNCH_PAD_PART = create("block/rocket_launch_pad_part", TextureSlot.PARTICLE, TextureSlot.TOP, TextureSlot.BOTTOM, TextureSlot.SIDE);
     public static final ModelTemplate PIPE_INVENTORY = create("item/template_pipe", TextureSlot.LAYER0);
-    public static final ModelTemplate WALKWAY_CENTER = create(Constant.BakedModel.WALKWAY_CENTER_MARKER.getPath(), TextureSlot.TEXTURE);
+    public static final ModelTemplate WALKWAY_INVENTORY = create("item/template_walkway_inventory", TextureSlot.TEXTURE);
 
     private static ModelTemplate create(String name, TextureSlot... textureSlots) {
         return new ModelTemplate(Optional.of(Constant.id(name)), Optional.empty(), textureSlots);

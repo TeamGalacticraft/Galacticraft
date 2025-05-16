@@ -66,8 +66,7 @@ public class GCApiLookupProviders {
 
     @SuppressWarnings("rawtypes")
     private static final BlockEntityType[] PIPE_TYPES = new BlockEntityType[]{
-            GCBlockEntityTypes.GLASS_FLUID_PIPE,
-            GCBlockEntityTypes.FLUID_PIPE_WALKWAY
+            GCBlockEntityTypes.GLASS_FLUID_PIPE
     };
 
     public static void register() {
