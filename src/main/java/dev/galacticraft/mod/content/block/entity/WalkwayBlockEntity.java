@@ -24,14 +24,17 @@ package dev.galacticraft.mod.content.block.entity;
 
 import dev.galacticraft.mod.api.block.entity.Connected;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 public class WalkwayBlockEntity extends BlockEntity implements Connected {
     private final boolean[] connections = new boolean[6];
@@ -52,7 +55,23 @@ public class WalkwayBlockEntity extends BlockEntity implements Connected {
         }
 
         BlockState neighborState = this.level.getBlockState(neighborPos);
-        this.connections[direction.ordinal()] = neighborState.isFaceSturdy(this.level, neighborPos, direction.getOpposite(), SupportType.CENTER);
+        this.connections[direction.ordinal()] = neighborState.is(GCBlocks.WALKWAY) || neighborState.isFaceSturdy(this.level, neighborPos, direction.getOpposite(), SupportType.CENTER);
+    }
+
+    @Override
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider registryLookup) {
+        super.loadAdditional(compound, registryLookup);
+        this.readConnectionNbt(compound);
+
+        if (this.level != null && this.level.isClientSide) {
+            this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_IMMEDIATE);
+        }
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider registryLookup) {
+        super.saveAdditional(compound, registryLookup);
+        this.writeConnectionNbt(compound);
     }
 
     @Override
@@ -61,7 +80,7 @@ public class WalkwayBlockEntity extends BlockEntity implements Connected {
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
         return this.saveWithoutMetadata(registryLookup);
     }
 }

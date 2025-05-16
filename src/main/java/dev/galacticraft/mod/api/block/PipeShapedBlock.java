@@ -3,6 +3,8 @@ package dev.galacticraft.mod.api.block;
 import dev.galacticraft.mod.api.block.entity.Connected;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -52,6 +54,15 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
     }
 
     @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        super.setPlacedBy(level, pos, state, placer, itemStack);
+
+        for (Direction direction : Direction.values()) {
+            this.updateConnection(state, pos, direction, pos.relative(direction), level);
+        }
+    }
+
+    @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos neighborPos, boolean notify) {
         super.neighborChanged(state, level, pos, block, neighborPos, notify);
 
@@ -68,14 +79,17 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
     @Override
     protected @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos pos, BlockPos neighborPos) {
         if (levelAccessor instanceof Level level) {
-            this.updateConnection(state, pos, direction, neighborPos, level);
+            if (this.updateConnection(state, pos, direction, neighborPos, level)) {
+                level.updateNeighborsAtExceptFromFacing(pos, state.getBlock(), direction);
+                this.onConnectionChanged(level, pos, direction, neighborPos);
+            }
         }
 
         return state;
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    protected @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         if (world.getBlockEntity(pos) instanceof Connected connected) {
             return this.shapes[generateAABBIndex(connected)];
         }
