@@ -28,7 +28,7 @@ import dev.galacticraft.mod.api.block.FluidPipeBlock;
 import dev.galacticraft.mod.api.block.entity.Connected;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.block.entity.networked.FluidPipeWalkwayBlockEntity;
+import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -98,7 +98,7 @@ public class GlassFluidPipeWalkwayBlock extends FluidPipeBlock implements FluidL
     @Override
     @Nullable
     public PipeBlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new FluidPipeWalkwayBlockEntity(blockPos, blockState);
+        return new GlassFluidPipeBlockEntity(blockPos, blockState);
     }
 
     @Override
