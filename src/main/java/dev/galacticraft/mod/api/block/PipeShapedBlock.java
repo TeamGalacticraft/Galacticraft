@@ -1,34 +1,54 @@
 package dev.galacticraft.mod.api.block;
 
+import dev.galacticraft.mod.api.block.entity.Connected;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.PipeBlock;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.StateHolder;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class PipeShapedBlock extends PipeBlock {
-    protected PipeShapedBlock(float radius, Properties properties) {
-        super(radius, properties);
+public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extends Block implements EntityBlock {
+    public final VoxelShape[] shapes;
+
+    protected PipeShapedBlock(float radius, BlockBehaviour.Properties properties) {
+        super(properties);
+        this.shapes = makeShapes(radius);
     }
 
-    abstract protected boolean canConnectTo(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos, BlockState thisState, BlockState neighborState);
+    @Override
+    abstract public @Nullable BE newBlockEntity(BlockPos pos, BlockState state);
 
-    abstract protected void onConnectionChanged(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos, BlockState newState, BlockState neighborState);
+    abstract public boolean canConnectTo(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos, BlockState thisState);
 
-    protected BlockState updateConnection(BlockState currentState, BlockPos pos, Direction side, BlockPos neighborPos, BlockState neighborState, Level level) {
-        BooleanProperty directionProperty = PipeBlock.PROPERTY_BY_DIRECTION.get(side);
-        return currentState.setValue(directionProperty, this.canConnectTo(level, pos, side, neighborPos, currentState, neighborState));
+    abstract protected void onConnectionChanged(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos);
+
+    protected boolean updateConnection(BlockState currentState, BlockPos pos, Direction side, BlockPos neighborPos, Level level) {
+        if (level.getBlockEntity(pos) instanceof Connected pipe) {
+            boolean canConnect = this.canConnectTo(level, pos, side, neighborPos, currentState);
+
+            BlockState neighborState = level.getBlockState(neighborPos);
+            if (neighborState.getBlock() instanceof PipeShapedBlock<?> neighbor) {
+                canConnect &= neighbor.canConnectTo(level, neighborPos, side.getOpposite(), pos, neighborState);
+            }
+
+            boolean currentlyConnected = pipe.getConnections()[side.get3DDataValue()];
+            pipe.getConnections()[side.get3DDataValue()] = canConnect;
+            return canConnect != currentlyConnected;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -39,45 +59,27 @@ public abstract class PipeShapedBlock extends PipeBlock {
         if (direction == null)
             return;
 
-        BlockState neighborState = level.getBlockState(neighborPos);
-
-        BlockState newState = this.updateConnection(state, pos, direction, neighborPos, neighborState, level);
-        if (newState != state) {
-            level.setBlockAndUpdate(pos, newState);
-            this.onConnectionChanged(level, pos, direction, neighborPos, newState, neighborState);
+        if (this.updateConnection(state, pos, direction, neighborPos, level)) {
+            level.updateNeighborsAtExceptFromFacing(pos, state.getBlock(), direction);
+            this.onConnectionChanged(level, pos, direction, neighborPos);
         }
     }
 
     @Override
     protected @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos pos, BlockPos neighborPos) {
         if (levelAccessor instanceof Level level) {
-            return this.updateConnection(state, pos, direction, neighborPos, neighborState, level);
+            this.updateConnection(state, pos, direction, neighborPos, level);
         }
 
         return state;
     }
 
     @Override
-    public @Nullable BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        BlockState state = this.defaultBlockState();
-
-        for (Direction direction : Direction.values()) {
-            Level level = ctx.getLevel();
-            BlockPos neighborPos = ctx.getClickedPos().relative(direction);
-
-            BlockState neighborState = level.getBlockState(neighborPos);
-            if (this.canConnectTo(level, ctx.getClickedPos(), direction, neighborPos, state, neighborState)) {
-                if (neighborState.getBlock() instanceof PipeShapedBlock neighborPipe) {
-                    if (neighborPipe.canConnectTo(level, neighborPos, direction.getOpposite(), ctx.getClickedPos(), neighborState, state)) {
-                        state = state.setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction), true);
-                    }
-                } else {
-                    state = state.setValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction), true);
-                }
-            }
+    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        if (world.getBlockEntity(pos) instanceof Connected connected) {
+            return this.shapes[generateAABBIndex(connected)];
         }
-
-        return state;
+        return this.shapes[0];
     }
 
     public static VoxelShape[] makeShapes(float radius) {
@@ -86,19 +88,19 @@ public abstract class PipeShapedBlock extends PipeBlock {
         float f = 0.5F - radius;
         float g = 0.5F + radius;
         VoxelShape voxelShape = Block.box(
-                (double)(f * 16.0F), (double)(f * 16.0F), (double)(f * 16.0F), (double)(g * 16.0F), (double)(g * 16.0F), (double)(g * 16.0F)
+                f * 16.0F, f * 16.0F, f * 16.0F, g * 16.0F, g * 16.0F, g * 16.0F
         );
         VoxelShape[] voxelShapes = new VoxelShape[directions.length];
 
         for (int i = 0; i < directions.length; i++) {
             Direction direction = directions[i];
             voxelShapes[i] = Shapes.box(
-                    0.5 + Math.min((double)(-radius), (double)direction.getStepX() * 0.5),
-                    0.5 + Math.min((double)(-radius), (double)direction.getStepY() * 0.5),
-                    0.5 + Math.min((double)(-radius), (double)direction.getStepZ() * 0.5),
-                    0.5 + Math.max((double)radius, (double)direction.getStepX() * 0.5),
-                    0.5 + Math.max((double)radius, (double)direction.getStepY() * 0.5),
-                    0.5 + Math.max((double)radius, (double)direction.getStepZ() * 0.5)
+                    0.5 + Math.min(-radius, (double)direction.getStepX() * 0.5),
+                    0.5 + Math.min(-radius, (double)direction.getStepY() * 0.5),
+                    0.5 + Math.min(-radius, (double)direction.getStepZ() * 0.5),
+                    0.5 + Math.max(radius, (double)direction.getStepX() * 0.5),
+                    0.5 + Math.max(radius, (double)direction.getStepY() * 0.5),
+                    0.5 + Math.max(radius, (double)direction.getStepZ() * 0.5)
             );
         }
 
@@ -119,12 +121,12 @@ public abstract class PipeShapedBlock extends PipeBlock {
         return voxelShapes2;
     }
 
-    public static int generateAABBIndex(BlockState state) {
+    public static int generateAABBIndex(Connected connected) {
         int i = 0;
 
         Direction[] directions = Direction.values();
         for (int j = 0; j < directions.length; j++) {
-            if (state.getValue(PROPERTY_BY_DIRECTION.get(directions[j]))) {
+            if (connected.getConnections()[directions[j].ordinal()]) {
                 i |= 1 << j;
             }
         }
@@ -133,16 +135,9 @@ public abstract class PipeShapedBlock extends PipeBlock {
     }
 
     public static <O, S extends StateHolder<O,S>> S applyDefaultState(S state) {
-        return state
-                .setValue(PipeBlock.NORTH, Boolean.FALSE)
-                .setValue(PipeBlock.EAST, Boolean.FALSE)
-                .setValue(PipeBlock.SOUTH, Boolean.FALSE)
-                .setValue(PipeBlock.WEST, Boolean.FALSE)
-                .setValue(PipeBlock.UP, Boolean.FALSE)
-                .setValue(PipeBlock.DOWN, Boolean.FALSE);
+        return state;
     }
 
     public static <O, S extends StateHolder<O,S>> void addStateDefinitions(StateDefinition.Builder<O, S> builder) {
-        builder.add(PipeBlock.NORTH, PipeBlock.EAST, PipeBlock.SOUTH, PipeBlock.WEST, PipeBlock.UP, PipeBlock.DOWN);
     }
 }

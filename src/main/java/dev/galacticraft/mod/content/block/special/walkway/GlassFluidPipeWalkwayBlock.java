@@ -25,61 +25,55 @@ package dev.galacticraft.mod.content.block.special.walkway;
 import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.FluidPipeBlock;
+import dev.galacticraft.mod.api.block.entity.Connected;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.networked.FluidPipeWalkwayBlockEntity;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
-import dev.galacticraft.mod.util.ConnectingBlockUtil;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-
-public class FluidPipeWalkway extends FluidPipeBlock implements FluidLoggable {
-    public FluidPipeWalkway(Properties settings, PipeColor color) {
+public class GlassFluidPipeWalkwayBlock extends FluidPipeBlock implements FluidLoggable, WalkwayBlock {
+    public GlassFluidPipeWalkwayBlock(Properties settings, PipeColor color) {
         super(settings, color);
 
         BlockState state = this.getStateDefinition().any();
         state = FluidLoggable.applyDefaultState(state);
         state = FluidPipeBlock.applyDefaultState(state);
-        state.setValue(BlockStateProperties.FACING, Direction.UP);
+        state = WalkwayBlock.applyDefaultState(state);
         this.registerDefaultState(state);
     }
 
     @Override
-    protected @NotNull MapCodec<? extends PipeBlock> codec() {
-        return this.simpleCodec(FluidPipeWalkway::new);
+    protected @NotNull MapCodec<? extends FluidPipeBlock> codec() {
+        return this.simpleCodec(GlassFluidPipeWalkwayBlock::new);
     }
 
     @Override
     public @NotNull VoxelShape getShape(BlockState blockState, BlockGetter level, BlockPos blockPos, CollisionContext context) {
-        return WalkwayBlock.SHAPES.get(Pair.of(this.getAABBIndex(blockState), blockState.getValue(BlockStateProperties.FACING)));
+        if (level.getBlockEntity(blockPos) instanceof Connected connected) {
+            return WalkwayBlock.getShape(connected, blockState);
+        }
+        return Shapes.empty();
     }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
         state = FluidLoggable.applyFluidState(context.getLevel(), state, context.getClickedPos());
-        if (context.getPlayer() != null) {
-            state = state.setValue(BlockStateProperties.FACING, Direction.orderedByNearest(context.getPlayer())[0].getOpposite());
-        }
+        state = WalkwayBlock.applyStateForPlacement(state, context);
         return state;
     }
 
@@ -98,7 +92,7 @@ public class FluidPipeWalkway extends FluidPipeBlock implements FluidLoggable {
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
         FluidPipeBlock.addStateDefinitions(stateBuilder);
         FluidLoggable.addStateDefinitions(stateBuilder);
-        stateBuilder.add(BlockStateProperties.FACING);
+        WalkwayBlock.addStateDefinitions(stateBuilder);
     }
 
     @Override

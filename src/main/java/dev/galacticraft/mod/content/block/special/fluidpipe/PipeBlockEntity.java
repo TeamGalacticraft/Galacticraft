@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.content.block.special.fluidpipe;
 
-import dev.galacticraft.mod.api.block.entity.PipeColor;
+import dev.galacticraft.mod.api.block.PipeShapedBlock;
 import dev.galacticraft.mod.api.pipe.FluidPipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
 import dev.galacticraft.mod.api.pipe.impl.PipeNetworkImpl;
@@ -38,7 +38,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -56,10 +55,6 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
     public PipeBlockEntity(BlockEntityType<? extends PipeBlockEntity> type, BlockPos pos, BlockState state, long maxTransferRate) {
         super(type, pos, state);
         this.maxTransferRate = maxTransferRate;
-
-        for (Direction direction : Direction.values()) {
-            this.connections[direction.get3DDataValue()] = state.getValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction));
-        }
     }
 
     @Override
@@ -109,8 +104,8 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
 
     @Override
     public void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction) {
-        boolean connected = state.getValue(PipeBlock.PROPERTY_BY_DIRECTION.get(direction));
-        if (this.connections[direction.get3DDataValue()] != connected) {
+        boolean connected = ((PipeShapedBlock)state.getBlock()).canConnectTo(this.level, pos, direction, neighborPos, state);
+        if (this.isConnected(direction) != connected) {
             this.connections[direction.get3DDataValue()] = connected;
 
             if (this.network == null || this.network.markedForRemoval()) {
@@ -144,8 +139,6 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
     public @NotNull Iterator<StorageView<FluidVariant>> iterator() {
         return Collections.emptyIterator();
     }
-
-    protected abstract Block getMatchingBlock(PipeColor color);
 
     @Override
     protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {

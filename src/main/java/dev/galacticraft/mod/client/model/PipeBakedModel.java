@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.client.model;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.Connected;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -45,9 +44,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,17 +56,19 @@ import java.util.function.Supplier;
 public class PipeBakedModel implements BakedModel {
     private final TextureAtlasSprite sprite;
     private final Map<Direction, Mesh> meshes;
+    private final float radius;
 
-    public PipeBakedModel(Function<Material, TextureAtlasSprite> textureGetter, ResourceLocation texture) {
+    public PipeBakedModel(Function<Material, TextureAtlasSprite> textureGetter, ResourceLocation texture, float radius) {
         this.sprite = textureGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, texture));
         this.meshes = new EnumMap<>(Direction.class);
+        this.radius = radius;
 
         MeshBuilder meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
         QuadEmitter emitter = meshBuilder.getEmitter();
 
         for (Direction direction : new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST}) {
             emitter
-                    .square(direction, 0.375f, 0.0f, 0.625f, 0.375f, 0.375f)
+                    .square(direction, 0.5f-radius, 0.0f, 0.5f+radius, 0.5f-radius, 0.5f-radius)
                     .uv(0, 0, 10)
                     .uv(1, 0, 16)
                     .uv(2, 4, 16)
@@ -81,7 +80,7 @@ public class PipeBakedModel implements BakedModel {
 
         for (Direction direction : new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST}) {
             emitter
-                    .square(direction, 0.375f, 0.625f, 0.625f, 1.0f, 0.375f)
+                    .square(direction, 0.5f-radius, 0.5f+radius, 0.5f+radius, 1.0f, 0.5f-radius)
                     .uv(0, 0, 0)
                     .uv(1, 0, 6)
                     .uv(2, 4, 6)
@@ -92,7 +91,7 @@ public class PipeBakedModel implements BakedModel {
         this.meshes.put(Direction.UP, meshBuilder.build());
 
         emitter
-                .square(Direction.WEST, 0, 0.375f, 0.375f, 0.625f, 0.375f)
+                .square(Direction.WEST, 0, 0.5f-radius, 0.5f-radius, 0.5f+radius, 0.5f-radius)
                 .uv(0, 0, 0)
                 .uv(1, 4, 0)
                 .uv(2, 4, 6)
@@ -100,7 +99,7 @@ public class PipeBakedModel implements BakedModel {
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
-                .square(Direction.UP, 0.375f, 0.625f, 0.625f, 1, 0.375f)
+                .square(Direction.UP, 0.5f-radius, 0.5f+radius, 0.5f+radius, 1, 0.5f-radius)
                 .uv(0, 0, 0)
                 .uv(1, 0, 6)
                 .uv(2, 4, 6)
@@ -108,7 +107,7 @@ public class PipeBakedModel implements BakedModel {
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
-                .square(Direction.EAST, 0.625f, 0.375f, 1, 0.625f, 0.375f)
+                .square(Direction.EAST, 0.5f+radius, 0.5f-radius, 1, 0.5f+radius, 0.5f-radius)
                 .uv(0, 0, 10)
                 .uv(1, 4, 10)
                 .uv(2, 4, 16)
@@ -116,7 +115,7 @@ public class PipeBakedModel implements BakedModel {
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
-                .square(Direction.DOWN, 0.375f, 0, 0.625f, 0.375f, 0.375f)
+                .square(Direction.DOWN, 0.5f-radius, 0, 0.5f+radius, 0.5f-radius, 0.5f-radius)
                 .uv(0, 0, 10)
                 .uv(1, 0, 16)
                 .uv(2, 4, 16)
@@ -126,7 +125,7 @@ public class PipeBakedModel implements BakedModel {
         this.meshes.put(Direction.NORTH, meshBuilder.build());
 
         emitter
-                .square(Direction.WEST, 0.625f, 0.375f, 1, 0.625f, 0.375f)
+                .square(Direction.WEST, 0.5f+radius, 0.5f-radius, 1, 0.5f+radius, 0.5f-radius)
                 .uv(0, 0, 10)
                 .uv(1, 4, 10)
                 .uv(2, 4, 16)
@@ -134,7 +133,7 @@ public class PipeBakedModel implements BakedModel {
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
-                .square(Direction.EAST, 0, 0.375f, 0.375f, 0.625f, 0.375f)
+                .square(Direction.EAST, 0, 0.5f-radius, 0.5f-radius, 0.5f+radius, 0.5f-radius)
                 .uv(0, 0, 0)
                 .uv(1, 4, 0)
                 .uv(2, 4, 6)
@@ -142,7 +141,7 @@ public class PipeBakedModel implements BakedModel {
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
-                .square(Direction.UP, 0.375f, 0, 0.625f, 0.375f, 0.375f)
+                .square(Direction.UP, 0.5f-radius, 0, 0.5f+radius, 0.5f-radius, 0.5f-radius)
                 .uv(0, 0, 10)
                 .uv(1, 0, 16)
                 .uv(2, 4, 16)
@@ -150,7 +149,7 @@ public class PipeBakedModel implements BakedModel {
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
-                .square(Direction.DOWN, 0.375f, 0.625f, 0.625f, 1, 0.375f)
+                .square(Direction.DOWN, 0.5f-radius, 0.5f+radius, 0.5f+radius, 1, 0.5f-radius)
                 .uv(0, 0, 0)
                 .uv(1, 0, 6)
                 .uv(2, 4, 6)
@@ -160,7 +159,7 @@ public class PipeBakedModel implements BakedModel {
         this.meshes.put(Direction.SOUTH, meshBuilder.build());
 
         emitter
-                .square(Direction.NORTH, 0, 0.375f, 0.375f, 0.625f, 0.375f)
+                .square(Direction.NORTH, 0, 0.5f-radius, 0.5f-radius, 0.5f+radius, 0.5f-radius)
                 .uv(0, 0, 0)
                 .uv(1, 4, 0)
                 .uv(2, 4, 6)
@@ -168,7 +167,7 @@ public class PipeBakedModel implements BakedModel {
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
-                .square(Direction.SOUTH, 0.625f, 0.375f, 1, 0.625f, 0.375f)
+                .square(Direction.SOUTH, 0.5f+radius, 0.5f-radius, 1, 0.5f+radius, 0.5f-radius)
                 .uv(0, 0, 10)
                 .uv(1, 4, 10)
                 .uv(2, 4, 16)
@@ -176,7 +175,7 @@ public class PipeBakedModel implements BakedModel {
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
-                .square(Direction.UP, 0.625f, 0.375f, 1, 0.625f, 0.375f)
+                .square(Direction.UP, 0.5f+radius, 0.5f-radius, 1, 0.5f+radius, 0.5f-radius)
                 .uv(0, 4, 10)
                 .uv(1, 0, 10)
                 .uv(2, 0, 16)
@@ -184,7 +183,7 @@ public class PipeBakedModel implements BakedModel {
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
-                .square(Direction.DOWN, 0.625f, 0.375f, 1, 0.625f, 0.375f)
+                .square(Direction.DOWN, 0.5f+radius, 0.5f-radius, 1, 0.5f+radius, 0.5f-radius)
                 .uv(0, 4, 10)
                 .uv(1, 0, 10)
                 .uv(2, 0, 16)
@@ -194,7 +193,7 @@ public class PipeBakedModel implements BakedModel {
         this.meshes.put(Direction.EAST, meshBuilder.build());
 
         emitter
-                .square(Direction.NORTH, 0.625f, 0.375f, 1, 0.625f, 0.375f)
+                .square(Direction.NORTH, 0.5f+radius, 0.5f-radius, 1, 0.5f+radius, 0.5f-radius)
                 .uv(0, 0, 10)
                 .uv(1, 4, 10)
                 .uv(2, 4, 16)
@@ -202,7 +201,7 @@ public class PipeBakedModel implements BakedModel {
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
-                .square(Direction.SOUTH, 0, 0.375f, 0.375f, 0.625f, 0.375f)
+                .square(Direction.SOUTH, 0, 0.5f-radius, 0.5f-radius, 0.5f+radius, 0.5f-radius)
                 .uv(0, 0, 0)
                 .uv(1, 4, 0)
                 .uv(2, 4, 6)
@@ -210,7 +209,7 @@ public class PipeBakedModel implements BakedModel {
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
-                .square(Direction.UP, 0, 0.375f, 0.375f, 0.625f, 0.375f)
+                .square(Direction.UP, 0, 0.5f-radius, 0.5f-radius, 0.5f+radius, 0.5f-radius)
                 .uv(0, 4, 0)
                 .uv(1, 0, 0)
                 .uv(2, 0, 6)
@@ -218,7 +217,7 @@ public class PipeBakedModel implements BakedModel {
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
-                .square(Direction.DOWN, 0, 0.375f, 0.375f, 0.625f, 0.375f)
+                .square(Direction.DOWN, 0, 0.5f-radius, 0.5f-radius, 0.5f+radius, 0.5f-radius)
                 .uv(0, 4, 0)
                 .uv(1, 0, 0)
                 .uv(2, 0, 6)
@@ -238,14 +237,12 @@ public class PipeBakedModel implements BakedModel {
         var emitter = context.getEmitter();
 
         if (getter.getBlockEntity(blockPos) instanceof Connected pipe) {
-            boolean[] connections = pipe.getConnections();
             for (Direction direction : Direction.values()) {
-                boolean connected = connections[direction.get3DDataValue()];
-                if (connected) {
+                if (pipe.isConnected(direction)) {
                     this.meshes.get(direction).outputTo(emitter);
                 } else {
                     emitter
-                        .square(direction, 0.375f, 0.375f, 0.625f, 0.625f, 0.375f)
+                        .square(direction, 0.5f-this.radius, 0.5f-this.radius, 0.5f+this.radius, 0.5f+this.radius, 0.5f-this.radius)
                         .uv(0, 0, 6)
                         .uv(1, 0, 10)
                         .uv(2, 4, 10)

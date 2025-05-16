@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.content.block.special.walkway;
 
-import com.google.common.collect.Lists;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.PipeShapedBlock;
 import dev.galacticraft.mod.api.block.WireBlock;
@@ -30,12 +29,9 @@ import dev.galacticraft.mod.api.block.entity.Connected;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import dev.galacticraft.mod.content.block.entity.networked.WireWalkwayBlockEntity;
-import dev.galacticraft.mod.content.block.special.aluminumwire.tier1.AluminumWireBlock;
-import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import dev.galacticraft.mod.util.DirectionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -46,26 +42,25 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
 import java.util.Objects;
 
-public class WireWalkway extends WireBlock implements FluidLoggable {
+public class WireWalkwayBlock extends WireBlock implements FluidLoggable, WalkwayBlock {
     private static final VoxelShape[] SHAPES = new VoxelShape[64];
 
-    public WireWalkway(Properties settings) {
-        super(settings);
+    public WireWalkwayBlock(Properties settings) {
+        super(0.125f, settings);
         BlockState defaultState = this.getStateDefinition().any();
         defaultState = FluidLoggable.applyDefaultState(defaultState);
         defaultState = PipeShapedBlock.applyDefaultState(defaultState);
-        defaultState = defaultState.setValue(BlockStateProperties.FACING, Direction.UP);
+        defaultState = WalkwayBlock.applyDefaultState(defaultState);
         this.registerDefaultState(defaultState);
     }
 
@@ -75,34 +70,10 @@ public class WireWalkway extends WireBlock implements FluidLoggable {
 
     @Override
     public @NotNull VoxelShape getShape(BlockState blockState, BlockGetter level, BlockPos blockPos, CollisionContext context) {
-        if (level.getBlockEntity(blockPos) instanceof WireWalkwayBlockEntity walkway) {
-            var index = getFacingMask(walkway.getDirection());
-            var shapes = Lists.newArrayList(ConnectingBlockUtil.WALKWAY_TOP);
-
-            if (walkway.getConnections()[2]) {
-                shapes.add(AluminumWireBlock.NORTH);
-            }
-            if (walkway.getConnections()[3]) {
-                shapes.add(AluminumWireBlock.SOUTH);
-            }
-            if (walkway.getConnections()[5]) {
-                shapes.add(AluminumWireBlock.EAST);
-            }
-            if (walkway.getConnections()[4]) {
-                shapes.add(AluminumWireBlock.WEST);
-            }
-            if (walkway.getConnections()[1]) {
-                shapes.add(AluminumWireBlock.UP);
-            }
-            if (walkway.getConnections()[0]) {
-                shapes.add(AluminumWireBlock.DOWN);
-            }
-            if (SHAPES[index] != null) {
-                return Shapes.or(SHAPES[index], shapes.toArray(VoxelShape[]::new));
-            }
-            return Shapes.or(SHAPES[index] = ConnectingBlockUtil.WALKWAY_SHAPES.get(walkway.getDirection()), shapes.toArray(VoxelShape[]::new));
+        if (level.getBlockEntity(blockPos) instanceof Connected connected) {
+            return WalkwayBlock.getShape(connected, blockState);
         }
-        return ConnectingBlockUtil.WALKWAY_TOP;
+        return WalkwayBlock.SHAPES.get(Pair.of(0, Direction.UP));
     }
 
     @Override

@@ -33,16 +33,16 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.api.EnergyStorage;
 
-public abstract class WireBlock extends Block implements EntityBlock {
-    public WireBlock(Properties settings) {
-        super(settings.pushReaction(PushReaction.BLOCK));
+public abstract class WireBlock extends PipeShapedBlock<WireBlockEntity> {
+    public WireBlock(float radius, Properties settings) {
+        super(radius, settings.pushReaction(PushReaction.BLOCK));
     }
 
     @Override
@@ -69,6 +69,18 @@ public abstract class WireBlock extends Block implements EntityBlock {
                 wire.updateConnection(state, pos, neighborPos, direction);
             }
         }
+    }
+
+    @Override
+    protected void onConnectionChanged(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos) {
+        if (level.getBlockEntity(thisPos) instanceof WireBlockEntity pipe) {
+            pipe.updateConnection(level.getBlockState(thisPos), thisPos, neighborPos, direction);
+        }
+    }
+
+    @Override
+    public boolean canConnectTo(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos, BlockState thisState) {
+        return EnergyStorage.SIDED.find(level, neighborPos, direction.getOpposite()) != null;
     }
 
     @Nullable

@@ -29,7 +29,6 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.api.block.entity.Pullable;
 import dev.galacticraft.mod.api.pipe.FluidPipe;
-import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
 import dev.galacticraft.mod.content.item.StandardWrenchItem;
 import dev.galacticraft.mod.util.FluidUtil;
@@ -59,7 +58,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiFunction;
 
-public abstract class FluidPipeBlock extends PipeShapedBlock implements EntityBlock {
+public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> implements EntityBlock {
     public final PipeColor color;
 
     public FluidPipeBlock(Properties settings, PipeColor color) {
@@ -99,11 +98,6 @@ public abstract class FluidPipeBlock extends PipeShapedBlock implements EntityBl
                 this.setColor(state, level, pos, PipeColor.CLEAR);
                 return ItemInteractionResult.SUCCESS;
             } else if (stack.getItem() instanceof StandardWrenchItem && pipeEntity instanceof Pullable pullablePipe) {
-                var stack2 = stack.copy();
-
-                stack2.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
-
-                player.setItemInHand(hand, stack2);
                 pullablePipe.setPull(!pullablePipe.isPull());
                 return ItemInteractionResult.SUCCESS;
             }
@@ -113,8 +107,8 @@ public abstract class FluidPipeBlock extends PipeShapedBlock implements EntityBl
     }
 
     @Override
-    protected boolean canConnectTo(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos, BlockState thisState, BlockState neighborState) {
-        if (neighborState.getBlock() instanceof FluidPipeBlock pipe && !this.color.canConnectTo(pipe.color)) {
+    public boolean canConnectTo(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos, BlockState thisState) {
+        if (level.getBlockState(neighborPos).getBlock() instanceof FluidPipeBlock pipe && !this.color.canConnectTo(pipe.color)) {
             return false;
         } else {
             return FluidUtil.canAccessFluid(level, neighborPos, direction);
@@ -159,9 +153,9 @@ public abstract class FluidPipeBlock extends PipeShapedBlock implements EntityBl
     }
 
     @Override
-    protected void onConnectionChanged(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos, BlockState newState, BlockState neighborState) {
+    protected void onConnectionChanged(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos) {
         if (level.getBlockEntity(thisPos) instanceof FluidPipe pipe) {
-            pipe.updateConnection(newState, thisPos, neighborPos, direction);
+            pipe.updateConnection(level.getBlockState(thisPos), thisPos, neighborPos, direction);
         }
     }
 

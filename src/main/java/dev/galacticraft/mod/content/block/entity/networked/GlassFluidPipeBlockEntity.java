@@ -23,16 +23,13 @@
 package dev.galacticraft.mod.content.block.entity.networked;
 
 import dev.galacticraft.mod.api.block.entity.Connected;
-import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.api.block.entity.Pullable;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Connected, Pullable {
@@ -64,8 +61,4 @@ public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Connec
         this.pull = pull;
     }
 
-    @Override
-    protected Block getMatchingBlock(PipeColor color) {
-        return GCBlocks.GLASS_FLUID_PIPES.get(color);
-    }
 }

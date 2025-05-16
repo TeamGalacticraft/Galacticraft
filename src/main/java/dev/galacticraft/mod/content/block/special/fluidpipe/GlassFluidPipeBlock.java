@@ -34,10 +34,10 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.PipeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -67,6 +67,11 @@ public class GlassFluidPipeBlock extends FluidPipeBlock implements FluidLoggable
     }
 
     @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return super.getShape(state, world, pos, context);
+    }
+
+    @Override
     public @NotNull BlockState getStateForPlacement(BlockPlaceContext ctx) {
         BlockState state = super.getStateForPlacement(ctx);
         state = FluidLoggable.applyFluidState(ctx.getLevel(), state, ctx.getClickedPos());
@@ -85,7 +90,7 @@ public class GlassFluidPipeBlock extends FluidPipeBlock implements FluidLoggable
     }
 
     @Override
-    protected @NotNull MapCodec<? extends PipeBlock> codec() {
+    protected @NotNull MapCodec<? extends FluidPipeBlock> codec() {
         return this.simpleCodec(GlassFluidPipeBlock::new);
     }
 

@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.client.model;
 
-import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.networked.WireWalkwayBlockEntity;
 import net.fabricmc.api.EnvType;
@@ -189,7 +188,7 @@ public class WireWalkwayBakedModel implements BakedModel {
 //            WalkwayBakedModel.Transform.INSTANCE.setQuaternions(Axis.XP.rotationDegrees(x), Axis.YP.rotationDegrees(y));
 //            context.pushTransform(WalkwayBakedModel.Transform.INSTANCE);
             this.walkway.emitBlockQuads(getter, blockState, blockPos, randomSupplier, context);
-            context.popTransform();
+//            context.popTransform();
 
             this.emitBlockQuadsDirection(emitter, connections, this.down, this.smallDown, Direction.DOWN);
             this.emitBlockQuadsDirection(emitter, connections, this.up, this.smallUp, Direction.UP);

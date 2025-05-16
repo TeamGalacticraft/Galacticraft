@@ -24,7 +24,7 @@ package dev.galacticraft.mod.client.model;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.networked.FluidPipeWalkwayBlockEntity;
-import dev.galacticraft.mod.content.block.special.walkway.FluidPipeWalkway;
+import dev.galacticraft.mod.content.block.special.walkway.GlassFluidPipeWalkwayBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -59,7 +59,7 @@ public class FluidPipeWalkwayBakedModel implements BakedModel {
     public FluidPipeWalkwayBakedModel(ModelBaker loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer, ResourceLocation pipeTexture) {
         this.walkwaySprite = textureGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, WALKWAY));
 
-        this.pipeModel = new PipeUnbakedModel(pipeTexture).bake(loader, textureGetter, BlockModelRotation.X0_Y0);
+        this.pipeModel = new PipeUnbakedModel(pipeTexture, 0.125f).bake(loader, textureGetter, BlockModelRotation.X0_Y0);
         this.walkwayModel = loader.getModel(WALKWAY).bake(loader, textureGetter, rotationContainer);
     }
 
@@ -70,7 +70,7 @@ public class FluidPipeWalkwayBakedModel implements BakedModel {
 
     @Override
     public void emitBlockQuads(BlockAndTintGetter getter, BlockState blockState, BlockPos blockPos, Supplier<RandomSource> randomSupplier, RenderContext context) {
-        if (getter.getBlockEntity(blockPos) instanceof FluidPipeWalkwayBlockEntity pipe && blockState.getBlock() instanceof FluidPipeWalkway block) {
+        if (getter.getBlockEntity(blockPos) instanceof FluidPipeWalkwayBlockEntity pipe && blockState.getBlock() instanceof GlassFluidPipeWalkwayBlock block) {
             this.pipeModel.emitBlockQuads(getter, blockState, blockPos, randomSupplier, context);
             this.walkwayModel.emitBlockQuads(getter, blockState, blockPos, randomSupplier, context);
         }

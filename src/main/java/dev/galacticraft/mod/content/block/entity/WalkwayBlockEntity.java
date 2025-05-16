@@ -24,15 +24,14 @@ package dev.galacticraft.mod.content.block.entity;
 
 import dev.galacticraft.mod.api.block.entity.Connected;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class WalkwayBlockEntity extends BlockEntity implements Connected {
     private final boolean[] connections = new boolean[6];
@@ -48,15 +47,12 @@ public class WalkwayBlockEntity extends BlockEntity implements Connected {
 
     @Override
     public void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction) {
-        if (state.getValue(BlockStateProperties.FACING) != direction) {
-            BlockState neighborState = this.level.getBlockState(neighborPos);
-            if (neighborState.is(GCBlocks.FLUID_PIPE_WALKWAY)) {
-                if (neighborState.getValue(BlockStateProperties.FACING) != direction.getOpposite()) {
-                    this.getConnections()[direction.ordinal()] = true;
-                }
-            }
+        if (this.level == null) {
+            return;
         }
-        this.getConnections()[direction.ordinal()] = false;
+
+        BlockState neighborState = this.level.getBlockState(neighborPos);
+        this.connections[direction.ordinal()] = neighborState.isFaceSturdy(this.level, neighborPos, direction.getOpposite(), SupportType.CENTER);
     }
 
     @Override

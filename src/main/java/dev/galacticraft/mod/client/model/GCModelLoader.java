@@ -88,11 +88,6 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
 
     @Override
     public void onInitializeModelLoader(Context pluginContext) {
-
-        for (var color : DyeColor.values()) {
-            pluginContext.addModels(Constant.id("block/" + color + "_fluid_pipe_walkway"));
-        }
-
         pluginContext.modifyModelAfterBake().register((model, context) -> {
             if (context.resourceId() != null && context.resourceId().equals(CANNED_FOOD_MODEL)) {
                 return new CannedFoodBakedModel(model);
@@ -105,14 +100,20 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
 
             for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
                 if (ModelLocationUtils.getModelLocation(pipe).equals(resourceId)) {
-                    return new PipeUnbakedModel(resourceId);
+                    return new PipeUnbakedModel(resourceId, 0.125f);
                 }
             }
 
             if (Constant.BakedModel.WIRE_MARKER.equals(resourceId)) {
                 return WireUnbakedModel.INSTANCE;
             } else if (Constant.BakedModel.WALKWAY_CONNECTOR_MARKER.equals(resourceId)) {
-                return new PipeUnbakedModel(Constant.id("block/walkway_connector"));
+                return new PipeUnbakedModel(Constant.id("block/walkway_connector"), 0.125f);
+            } else if (Constant.BakedModel.WALKWAY_CENTER_MARKER.equals(resourceId)) {
+                return new WalkwayCenterModel(Constant.id("block/walkway_connector"));
+            } else if (Constant.BakedModel.PIPE_WALKWAY_CENTER_MARKER.equals(resourceId)) {
+                return new WalkwayCenterModel(Constant.id("block/glass_fluid_pipe"));
+            } else if (Constant.BakedModel.WIRE_WALKWAY_CENTER_MARKER.equals(resourceId)) {
+                return new WalkwayCenterModel(Constant.id("block/aluminum_wire"));
             } else if (Constant.BakedModel.VACUUM_GLASS_MODEL.equals(resourceId)) {
                 return VacuumGlassUnbakedModel.INSTANCE;
             } else if (PARACHEST_ITEM.equals(resourceId)) {
