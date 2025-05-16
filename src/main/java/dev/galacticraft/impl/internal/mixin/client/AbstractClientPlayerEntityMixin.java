@@ -25,7 +25,7 @@ package dev.galacticraft.impl.internal.mixin.client;
 import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.impl.accessor.SoundSystemAccessor;
 import dev.galacticraft.impl.client.accessor.ClientResearchAccessor;
 import dev.galacticraft.impl.internal.inventory.MappedInventory;
@@ -77,7 +77,7 @@ public abstract class AbstractClientPlayerEntityMixin implements ClientResearchA
             if (volume != 1.0F) {
                 for (int i = 0; i < inventory.getContainerSize(); i++) {
                     ItemStack stack = inventory.getItem(i);
-                    if (stack.is(GCTags.FREQUENCY_MODULES) || (stack.getItem() instanceof Accessory accessory && accessory.enablesHearing())) {
+                    if (stack.is(GCItemTags.FREQUENCY_MODULES) || (stack.getItem() instanceof Accessory accessory && accessory.enablesHearing())) {
                         volume = 1.0F;
                         break;
                     }

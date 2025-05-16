@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.content;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -40,18 +40,18 @@ public class GCAccessorySlots {
     public static final List<ResourceLocation> SLOT_SPRITES = new ArrayList<ResourceLocation>();
 
     public static void register() {
-        SLOT_TAGS.add(GCTags.THERMAL_HEAD);
-        SLOT_TAGS.add(GCTags.THERMAL_CHEST);
-        SLOT_TAGS.add(GCTags.THERMAL_PANTS);
-        SLOT_TAGS.add(GCTags.THERMAL_BOOTS);
-        SLOT_TAGS.add(GCTags.OXYGEN_MASKS);
-        SLOT_TAGS.add(GCTags.OXYGEN_GEAR);
-        SLOT_TAGS.add(GCTags.OXYGEN_TANKS);
-        SLOT_TAGS.add(GCTags.OXYGEN_TANKS);
-        SLOT_TAGS.add(GCTags.ACCESSORIES);
-        SLOT_TAGS.add(GCTags.ACCESSORIES);
-        SLOT_TAGS.add(GCTags.ACCESSORIES);
-        SLOT_TAGS.add(GCTags.ACCESSORIES);
+        SLOT_TAGS.add(GCItemTags.THERMAL_HEAD);
+        SLOT_TAGS.add(GCItemTags.THERMAL_CHEST);
+        SLOT_TAGS.add(GCItemTags.THERMAL_PANTS);
+        SLOT_TAGS.add(GCItemTags.THERMAL_BOOTS);
+        SLOT_TAGS.add(GCItemTags.OXYGEN_MASKS);
+        SLOT_TAGS.add(GCItemTags.OXYGEN_GEAR);
+        SLOT_TAGS.add(GCItemTags.OXYGEN_TANKS);
+        SLOT_TAGS.add(GCItemTags.OXYGEN_TANKS);
+        SLOT_TAGS.add(GCItemTags.ACCESSORIES);
+        SLOT_TAGS.add(GCItemTags.ACCESSORIES);
+        SLOT_TAGS.add(GCItemTags.ACCESSORIES);
+        SLOT_TAGS.add(GCItemTags.ACCESSORIES);
 
         SLOT_SPRITES.add(Constant.SlotSprite.THERMAL_HEAD);
         SLOT_SPRITES.add(Constant.SlotSprite.THERMAL_CHEST);

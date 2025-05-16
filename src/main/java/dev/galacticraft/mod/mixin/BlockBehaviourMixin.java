@@ -25,7 +25,7 @@ package dev.galacticraft.mod.mixin;
 import dev.galacticraft.mod.content.item.StandardWrenchItem;
 import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCBlockTags;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
@@ -57,7 +57,7 @@ public abstract class BlockBehaviourMixin {
 
     @Inject(method = "onRemove", at = @At("TAIL"))
     private void handleFootprints(Level level, BlockPos pos, BlockState newState, boolean movedByPiston, CallbackInfo ci) {
-        if (is(GCTags.FOOTPRINTS)) {
+        if (is(GCBlockTags.FOOTPRINTS)) {
             FootprintManager footprintManager = level.galacticraft$getFootprintManager();
             Long2ObjectMap<List<Footprint>> footprintChunkMap = footprintManager.getFootprints();
 

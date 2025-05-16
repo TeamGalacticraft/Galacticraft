@@ -6,7 +6,7 @@
       "item": "galacticraft:compressed_iron"
     },
     "I": {
-      "item": "minecraft:iron_block"
+      "tag": "c:storage_blocks/iron"
     }
   },
   "pattern": [

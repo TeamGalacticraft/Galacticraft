@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "G": {
-      "item": "minecraft:glowstone_dust"
+      "tag": "c:dusts/glowstone"
     },
     "S": {
-      "item": "minecraft:stick"
+      "tag": "c:rods/wooden"
     }
   },
   "pattern": [

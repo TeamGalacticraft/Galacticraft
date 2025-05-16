@@ -6,10 +6,10 @@
       "item": "galacticraft:oxygen_fan"
     },
     "M": {
-      "item": "galacticraft:meteoric_iron_ingot"
+      "item": "galacticraft:compressed_meteoric_iron"
     },
     "S": {
-      "item": "minecraft:slime_ball"
+      "tag": "c:slime_balls"
     },
     "W": {
       "item": "galacticraft:advanced_wafer"

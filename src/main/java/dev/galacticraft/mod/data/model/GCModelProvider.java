@@ -35,6 +35,7 @@ import dev.galacticraft.mod.content.block.environment.CavernousVines;
 import dev.galacticraft.mod.content.block.machine.FuelLoaderBlock;
 import dev.galacticraft.mod.content.block.machine.ResourceStorageBlock;
 import dev.galacticraft.mod.content.block.special.ParachestBlock;
+import dev.galacticraft.mod.content.block.special.RocketWorkbench;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -151,7 +152,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE);
         createLaunchPadBlock(GCBlocks.FUELING_PAD, generator);
         createLaunchPadBlock(GCBlocks.ROCKET_LAUNCH_PAD, generator);
-        generator.createNonTemplateModelBlock(GCBlocks.ROCKET_WORKBENCH);
+        this.createRocketWorkbench(generator);
         generator.createNonTemplateModelBlock(GCBlocks.FALLEN_METEOR);
 
         // LIGHT PANELS
@@ -475,6 +476,22 @@ public class GCModelProvider extends FabricModelProvider {
         var block = GCBlocks.AIR_LOCK_CONTROLLER;
         var textureMapping = TextureMapping.column(TextureMapping.getBlockTexture(block), TextureMapping.getBlockTexture(GCBlocks.AIR_LOCK_FRAME));
         generator.createTrivialBlock(block, textureMapping, ModelTemplates.CUBE_COLUMN);
+    }
+
+    private void createRocketWorkbench(BlockModelGenerators generator) {
+        var block = GCBlocks.ROCKET_WORKBENCH;
+        var textureMapping = new TextureMapping()
+                .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(block, "_bottom"))
+                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(block, "_top"))
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block, "_side"));
+        ResourceLocation resourceLocation = ModelTemplates.CUBE_BOTTOM_TOP.create(block, textureMapping, generator.modelOutput);
+
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(RocketWorkbench.FACING)
+                .generate(dir -> Variant.variant()
+                        .with(VariantProperties.Y_ROT, getRotationFromDirection(dir))
+                        .with(VariantProperties.MODEL, resourceLocation))
+        ));
+        generator.skipAutoItemBlock(block);
     }
 
     private void createParachests(BlockModelGenerators generator) {

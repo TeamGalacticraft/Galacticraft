@@ -40,6 +40,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.monster.Witch;
 import org.jetbrains.annotations.Nullable;
 
@@ -90,8 +91,8 @@ public class EvolvedWitchMaskRenderLayer<T extends Witch, M extends WitchModel<T
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
 
         if (this.mask != null) {
-            this.mask.yRot = headYaw * (float) (Math.PI / 180.0);
-            this.mask.xRot = headPitch * (float) (Math.PI / 180.0);
+            this.mask.yRot = headYaw * Mth.DEG_TO_RAD;
+            this.mask.xRot = headPitch * Mth.DEG_TO_RAD;
             this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
         if (this.pipe != null) {

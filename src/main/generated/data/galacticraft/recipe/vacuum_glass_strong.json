@@ -6,7 +6,7 @@
       "item": "galacticraft:compressed_aluminum"
     },
     "G": {
-      "item": "minecraft:glass"
+      "tag": "c:glass_blocks/colorless"
     }
   },
   "pattern": [

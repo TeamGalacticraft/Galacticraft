@@ -32,7 +32,7 @@ import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
@@ -446,7 +446,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.AMBIENT_THERMAL_CONTROLLER, "Ambient Thermal Controller");
 
         // FOOD
-        this.item(GCItems.CANNED_FOOD, "Canned %s");
+        this.add(Items.CANNED_FOOD_TEMPLATE, "Canned %s");
+        this.item(GCItems.CANNED_FOOD, "Canned Food");
         this.item(GCItems.EMPTY_CAN, "Empty Can");
 
         this.item(GCItems.MOON_CHEESE_CURD, "Moon Cheese Curd");
@@ -616,32 +617,122 @@ public class GCTranslationProvider extends TranslationProvider {
     }
 
     protected void generateTagTranslations() {
-        this.tag(GCTags.THERMAL_HEAD, "Thermal Padding Helmets");
-        this.tag(GCTags.THERMAL_CHEST, "Thermal Padding Chestpieces");
-        this.tag(GCTags.THERMAL_PANTS, "Thermal Padding Pants");
-        this.tag(GCTags.THERMAL_BOOTS, "Thermal Padding Boots");
-        this.tag(GCTags.OXYGEN_MASKS, "Oxygen Masks");
-        this.tag(GCTags.OXYGEN_GEAR, "Oxygen Gear");
-        this.tag(GCTags.OXYGEN_TANKS, "Oxygen Tanks");
-        this.tag(GCTags.PARACHUTES, "Parachutes");
-        this.tag(GCTags.FREQUENCY_MODULES, "Frequency Modules");
-        this.tag(GCTags.SHIELD_CONTROLLERS, "Shield Controllers");
-        this.tag(GCTags.ACCESSORIES, "Galacticraft Accessories");
+        this.tag(GCItemTags.THERMAL_HEAD, "Thermal Padding Helmets");
+        this.tag(GCItemTags.THERMAL_CHEST, "Thermal Padding Chestpieces");
+        this.tag(GCItemTags.THERMAL_PANTS, "Thermal Padding Pants");
+        this.tag(GCItemTags.THERMAL_BOOTS, "Thermal Padding Boots");
+        this.tag(GCItemTags.OXYGEN_MASKS, "Oxygen Masks");
+        this.tag(GCItemTags.OXYGEN_GEAR, "Oxygen Gear");
+        this.tag(GCItemTags.OXYGEN_TANKS, "Oxygen Tanks");
+        this.tag(GCItemTags.PARACHUTES, "Parachutes");
+        this.tag(GCItemTags.FREQUENCY_MODULES, "Frequency Modules");
+        this.tag(GCItemTags.SHIELD_CONTROLLERS, "Shield Controllers");
+        this.tag(GCItemTags.ACCESSORIES, "Galacticraft Accessories");
 
-        this.tag(GCTags.ALUMINUM_INGOTS, "Aluminum Ingots");
-        this.tag(GCTags.RAW_ALUMINUM_ORES, "Raw Aluminum");
-        this.tag(GCTags.LEAD_INGOTS, "Lead Ingots");
-        this.tag(GCTags.RAW_LEAD_ORES, "Raw Lead");
-        this.tag(GCTags.SILICONS, "Silicon");
-        this.tag(GCTags.STEEL_INGOTS, "Steel Ingots");
-        this.tag(GCTags.TIN_INGOTS, "Tin Ingots");
-        this.tag(GCTags.RAW_TIN_ORES, "Raw Tin");
-        this.tag(GCTags.COMPRESSED_STEEL, "Steel Plates");
-        this.tag(GCTags.COMPRESSED_IRON, "Iron Plates");
-        this.tag(GCTags.COMPRESSED_TIN, "Tin Plates");
+        this.tag(GCItemTags.WRENCHES, "Wrenches");
 
-        this.tag(GCTags.ROCKET_STORAGE_UPGRADE_ITEMS, "Rocket Storage Upgrade Items");
-        this.tag(GCTags.EVOLVED_CREEPER_DROP_MUSIC_DISCS, "Evolved Creeper Music Disc Drops");
+        this.tag(GCItemTags.BATTERIES, "Batteries");
+
+        this.tag(GCItemTags.SILICONS, "Silicon");
+        this.tag(GCItemTags.OLIVINE_SHARDS, "Olivine Shards");
+        this.tag(GCItemTags.LUNAR_SAPPHIRES, "Lunar Sapphires");
+
+        this.tag(GCItemTags.ALUMINUM_ORES, "Aluminum Ores");
+        this.tag(GCItemTags.CHEESE_ORES, "Cheese Ores");
+        this.tag(GCItemTags.DESH_ORES, "Desh Ores");
+        this.tag(GCItemTags.LEAD_ORES, "Lead Ores");
+        this.tag(GCItemTags.LUNAR_SAPPHIRE_ORES, "Lunar Sapphire Ores");
+        this.tag(GCItemTags.METEORIC_IRON_ORES, "Meteoric Iron Ores");
+        this.tag(GCItemTags.OLIVINE_ORES, "Olivine Ores");
+        this.tag(GCItemTags.SILICON_ORES, "Silicon Ores");
+        this.tag(GCItemTags.SOLAR_ORES, "Solar Dust Ores");
+        this.tag(GCItemTags.TIN_ORES, "Tin Ores");
+        this.tag(GCItemTags.TITANIUM_ORES, "Titanium Ores");
+
+        this.tag(GCItemTags.ALUMINUM_BLOCKS, "Aluminum Blocks");
+        this.tag(GCItemTags.DESH_BLOCKS, "Desh Blocks");
+        this.tag(GCItemTags.LEAD_BLOCKS, "Lead Blocks");
+        this.tag(GCItemTags.METEORIC_IRON_BLOCKS, "Meteoric Iron Blocks");
+        this.tag(GCItemTags.TIN_BLOCKS, "Tin Blocks");
+        this.tag(GCItemTags.TITANIUM_BLOCKS, "Titanium Blocks");
+
+        this.tag(GCItemTags.SILICON_BLOCKS, "Silicon Blocks");
+        this.tag(GCItemTags.CHEESE_BLOCKS, "Cheese Blocks");
+        this.tag(GCItemTags.LUNAR_SAPPHIRE_BLOCKS, "Lunar Sapphire Blocks");
+        this.tag(GCItemTags.OLIVINE_BLOCKS, "Olivine Blocks");
+
+        this.tag(GCItemTags.RAW_ALUMINUM_BLOCKS, "Raw Aluminum Blocks");
+        this.tag(GCItemTags.RAW_DESH_BLOCKS, "Raw Desh Blocks");
+        this.tag(GCItemTags.RAW_LEAD_BLOCKS, "Raw Lead Blocks");
+        this.tag(GCItemTags.RAW_METEORIC_IRON_BLOCKS, "Raw Meteoric Iron Blocks");
+        this.tag(GCItemTags.RAW_TIN_BLOCKS, "Raw Tin Blocks");
+        this.tag(GCItemTags.RAW_TITANIUM_BLOCKS, "Raw Titanium Blocks");
+
+        this.tag(GCItemTags.ALUMINUM_INGOTS, "Aluminum Ingots");
+        this.tag(GCItemTags.DESH_INGOTS, "Desh Ingots");
+        this.tag(GCItemTags.LEAD_INGOTS, "Lead Ingots");
+        this.tag(GCItemTags.METEORIC_IRON_INGOTS, "Meteoric Iron Ingots");
+        this.tag(GCItemTags.STEEL_INGOTS, "Steel Ingots");
+        this.tag(GCItemTags.TIN_INGOTS, "Tin Ingots");
+        this.tag(GCItemTags.TITANIUM_INGOTS, "Titanium Ingots");
+
+        this.tag(GCItemTags.ALUMINUM_RAW_MATERIALS, "Raw Aluminum");
+        this.tag(GCItemTags.DESH_RAW_MATERIALS, "Raw Desh");
+        this.tag(GCItemTags.LEAD_RAW_MATERIALS, "Raw Lead");
+        this.tag(GCItemTags.METEORIC_IRON_RAW_MATERIALS, "Raw Meteoric Iron");
+        this.tag(GCItemTags.TIN_RAW_MATERIALS, "Raw Tin");
+        this.tag(GCItemTags.TITANIUM_RAW_MATERIALS, "Raw Titanium");
+
+        this.tag(GCItemTags.ALUMINUM_NUGGETS, "Aluminum Nuggets");
+        this.tag(GCItemTags.DESH_NUGGETS, "Desh Nuggets");
+        this.tag(GCItemTags.LEAD_NUGGETS, "Lead Nuggets");
+        this.tag(GCItemTags.METEORIC_IRON_NUGGETS, "Meteoric Iron Nuggets");
+        this.tag(GCItemTags.TIN_NUGGETS, "Tin Nuggets");
+        this.tag(GCItemTags.TITANIUM_NUGGETS, "Titanium Nuggets");
+
+        this.tag(GCItemTags.PLATES, "Metal Plates");
+        this.tag(GCItemTags.ALUMINUM_PLATES, "Compressed Aluminum");
+        this.tag(GCItemTags.BRONZE_PLATES, "Compressed Bronze");
+        this.tag(GCItemTags.COPPER_PLATES, "Compressed Copper");
+        this.tag(GCItemTags.DESH_PLATES, "Compressed Desh");
+        this.tag(GCItemTags.IRON_PLATES, "Compressed Iron");
+        this.tag(GCItemTags.METEORIC_IRON_PLATES, "Compressed Meteoric Iron");
+        this.tag(GCItemTags.STEEL_PLATES, "Compressed Steel");
+        this.tag(GCItemTags.TIN_PLATES, "Compressed Tin");
+        this.tag(GCItemTags.TITANIUM_PLATES, "Compressed Titanium");
+        this.tag(GCItemTags.HEAVY_DUTY_PLATES, "Heavy Duty Plates");
+        this.tag(GCItemTags.TIER_1_HEAVY_DUTY_PLATES, "Tier 1 Heavy Duty Plates");
+        this.tag(GCItemTags.TIER_2_HEAVY_DUTY_PLATES, "Tier 2 Heavy Duty Plates");
+        this.tag(GCItemTags.TIER_3_HEAVY_DUTY_PLATES, "Tier 3 Heavy Duty Plates");
+
+        this.tag(GCItemTags.DESH_RODS, "Desh Rods");
+        this.tag(GCItemTags.STEEL_RODS, "Steel Rods");
+
+        this.tag(GCItemTags.CANISTERS, "Canisters");
+        this.tag(GCItemTags.COPPER_CANISTERS, "Copper Canisters");
+        this.tag(GCItemTags.TIN_CANISTERS, "Tin Canisters");
+
+        this.tag(GCItemTags.SOLAR_DUSTS, "Solar Dusts");
+
+        this.tag(GCItemTags.CHEESE_FOODS, "Cheese Foods");
+        this.tag(GCItemTags.CANNED_FOODS, "Canned Foods");
+        this.tag(GCItemTags.UNCANNABLE_FOODS, "Uncannable Foods");
+
+        this.tag(GCItemTags.ROCKET_STORAGE_UPGRADE_ITEMS, "Rocket Storage Upgrade Items");
+
+        this.tag(GCItemTags.EVOLVED_CREEPER_DROP_MUSIC_DISCS, "Evolved Creeper Music Disc Drops");
+
+        this.tag(GCItemTags.OIL_BUCKETS, "Oil Buckets");
+        this.tag(GCItemTags.FUEL_BUCKETS, "Fuel Buckets");
+        this.tag(GCItemTags.SULFURIC_ACID_BUCKETS, "Sulfuric Acid Buckets");
+
+        this.tag(GCItemTags.SLABS, "Galacticraft Slabs");
+        this.tag(GCItemTags.STAIRS, "Galacticraft Stairs");
+        this.tag(GCItemTags.WALLS, "Galacticraft Walls");
+
+        this.tag(GCItemTags.MOON_COBBLESTONES, "Moon Cobblestones");
+        this.tag(GCItemTags.LUNASLATE_COBBLESTONES, "Lunaslate Cobblestones");
+        this.tag(GCItemTags.MARS_COBBLESTONES, "Mars Cobblestones");
     }
 
     protected void generateGasTranslations() {

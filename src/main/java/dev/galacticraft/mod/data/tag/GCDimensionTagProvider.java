@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.data.tag;
 
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCDimensionTypeTags;
 import dev.galacticraft.mod.world.dimension.GCDimensionTypes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
@@ -40,13 +40,14 @@ public class GCDimensionTagProvider extends FabricTagProvider<DimensionType> {
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
-        tag(GCTags.FOOTPRINTS_DIMENSIONS)
+        this.tag(GCDimensionTypeTags.FOOTPRINTS_DIMENSIONS)
                 .add(GCDimensionTypes.MOON);
-        tag(GCTags.SPACE)
+        this.tag(GCDimensionTypeTags.SPACE)
                 .add(GCDimensionTypes.MOON)
                 .add(GCDimensionTypes.VENUS)
                 .add(GCDimensionTypes.ASTEROID);
-        tag(GCTags.VACUUM)
-                .add(GCDimensionTypes.MOON);
+        tag(GCDimensionTypeTags.VACUUM)
+                .add(GCDimensionTypes.MOON)
+                .add(GCDimensionTypes.ASTEROID);
     }
 }

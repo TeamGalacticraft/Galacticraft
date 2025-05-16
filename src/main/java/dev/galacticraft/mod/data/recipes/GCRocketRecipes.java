@@ -26,13 +26,15 @@ import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.api.data.recipe.RocketRecipeBuilder;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,7 +49,7 @@ public class GCRocketRecipes extends FabricRecipeProvider {
     public void buildRecipes(RecipeOutput output) {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.ROCKET_WORKBENCH)
                 .define('S', GCItems.COMPRESSED_STEEL)
-                .define('C', Items.CRAFTING_TABLE)
+                .define('C', ConventionalItemTags.PLAYER_WORKSTATIONS_CRAFTING_TABLES)
                 .define('L', Items.LEVER)
                 .define('W', GCItems.ADVANCED_WAFER)
                 .define('R', Items.REDSTONE_TORCH)
@@ -77,7 +79,7 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ROCKET_FIN)
-                .define('S', GCTags.COMPRESSED_STEEL)
+                .define('S', GCItems.COMPRESSED_STEEL)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
                 .pattern(" S ")
                 .pattern("PSP")
@@ -105,10 +107,10 @@ public class GCRocketRecipes extends FabricRecipeProvider {
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ROCKET_ENGINE)
                 .define('F', Items.FLINT_AND_STEEL)
-                .define('B', Items.STONE_BUTTON)
+                .define('B', ItemTags.STONE_BUTTONS)
                 .define('V', GCItems.OXYGEN_VENT)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
-                .define('T', GCItems.TIN_CANISTER)
+                .define('T', GCItemTags.TIN_CANISTERS)
                 .pattern(" FB")
                 .pattern("PTP")
                 .pattern("PVP")
@@ -117,10 +119,10 @@ public class GCRocketRecipes extends FabricRecipeProvider {
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.HEAVY_ROCKET_ENGINE)
                 .define('F', Items.FLINT_AND_STEEL)
-                .define('B', Items.STONE_BUTTON)
+                .define('B', ItemTags.STONE_BUTTONS)
                 .define('V', GCItems.OXYGEN_VENT)
                 .define('P', GCItems.TIER_3_HEAVY_DUTY_PLATE)
-                .define('T', GCItems.TIN_CANISTER)
+                .define('T', GCItemTags.TIN_CANISTERS)
                 .pattern(" FB")
                 .pattern("PTP")
                 .pattern("PVP")
@@ -130,7 +132,7 @@ public class GCRocketRecipes extends FabricRecipeProvider {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ROCKET_BOOSTER)
                 .define('M', GCItems.COMPRESSED_METEORIC_IRON)
                 .define('Y', Items.YELLOW_WOOL)
-                .define('F', GCItems.FUEL_BUCKET)
+                .define('F', GCItemTags.FUEL_BUCKETS)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
                 .define('V', GCItems.OXYGEN_VENT)
                 .pattern("MYM")
@@ -156,7 +158,7 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .bodyHeight(4)
                 .fins(GCItems.ROCKET_FIN)
                 .engine(GCItems.ROCKET_ENGINE)
-                .storage(GCTags.ROCKET_STORAGE_UPGRADE_ITEMS)
+                .storage(GCItemTags.ROCKET_STORAGE_UPGRADE_ITEMS)
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
                 .save(output, getItemName(GCItems.ROCKET) + "_with_storage_upgrade");
 

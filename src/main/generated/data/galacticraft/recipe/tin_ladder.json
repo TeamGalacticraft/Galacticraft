@@ -3,7 +3,7 @@
   "category": "building",
   "key": {
     "T": {
-      "item": "galacticraft:tin_ingot"
+      "tag": "c:ingots/tin"
     }
   },
   "pattern": [

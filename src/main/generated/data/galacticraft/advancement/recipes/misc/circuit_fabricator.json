@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "galacticraft:aluminum_ingot"
+            "items": "#c:ingots/aluminum"
           }
         ]
       },

@@ -48,7 +48,7 @@ public class JEICompressingCategory implements IRecipeCategory<CompressingRecipe
 
     public JEICompressingCategory(IGuiHelper helper) {
         this.icon = helper.createDrawableItemStack(new ItemStack(GCBlocks.COMPRESSOR));
-		this.craftingGridHelper = helper.createCraftingGridHelper();
+        this.craftingGridHelper = helper.createCraftingGridHelper();
     }
 
     @Override
@@ -78,20 +78,20 @@ public class JEICompressingCategory implements IRecipeCategory<CompressingRecipe
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, CompressingRecipe recipe, IFocusGroup focuses) {
-		int width = 0;
-		int height = 0;
+        int width = 0;
+        int height = 0;
         if (recipe instanceof ShapedCompressingRecipe shapedRecipe) {
             width = shapedRecipe.getWidth();
             height = shapedRecipe.getHeight();
         }
-		this.craftingGridHelper.createAndSetIngredients(builder, recipe.getIngredients(), width, height);
+        this.craftingGridHelper.createAndSetIngredients(builder, recipe.getIngredients(), width, height);
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, COMPRESSED_X, COMPRESSED_Y)
                 .addItemStack(recipe.getResultItem(null)); //fixme
     }
 
-	@Override
-	public void draw(CompressingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+    @Override
+    public void draw(CompressingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
         graphics.blit(RECIPE_VIEWER_DISPLAY_TEXTURE, 0, 0, COMPRESSOR_U, COMPRESSOR_V, COMPRESSOR_WIDTH, COMPRESSOR_HEIGHT);
-	}
+    }
 }

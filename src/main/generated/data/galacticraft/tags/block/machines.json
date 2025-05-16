@@ -10,14 +10,14 @@
     "galacticraft:electric_furnace",
     "galacticraft:electric_arc_furnace",
     "galacticraft:refinery",
+    "galacticraft:fuel_loader",
     "galacticraft:oxygen_collector",
     "galacticraft:oxygen_sealer",
     "galacticraft:oxygen_bubble_distributor",
     "galacticraft:oxygen_decompressor",
     "galacticraft:oxygen_compressor",
-    "galacticraft:food_canner",
     "galacticraft:oxygen_storage_module",
-    "galacticraft:fuel_loader",
+    "galacticraft:food_canner",
     "galacticraft:rocket_workbench"
   ]
 }

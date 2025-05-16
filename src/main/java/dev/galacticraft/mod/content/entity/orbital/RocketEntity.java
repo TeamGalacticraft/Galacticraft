@@ -46,7 +46,7 @@ import dev.galacticraft.mod.events.RocketEvents;
 import dev.galacticraft.mod.network.s2c.OpenCelestialScreenPayload;
 import dev.galacticraft.mod.particle.EntityParticleOption;
 import dev.galacticraft.mod.particle.GCParticleTypes;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCFluidTags;
 import dev.galacticraft.mod.util.FluidUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -230,9 +230,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
     @Override
     public void onPadDestroyed() {
-        var rocket = new ItemStack(GCItems.ROCKET);
-        rocket.applyComponents(this.getRocketData().asPatch());
-        this.spawnAtLocation(rocket);
+        this.spawnAtLocation(this.getDropItem());
         this.remove(RemovalReason.DISCARDED);
     }
 
@@ -247,11 +245,16 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     }
 
     @Override
+    public ItemStack getDropItem() {
+        ItemStack rocket = new ItemStack(GCItems.ROCKET);
+        rocket.applyComponents(this.getRocketData().asPatch());
+        return rocket;
+    }
+
+    @Override
     public void dropItems(DamageSource damageSource, boolean exploded) {
         if (!exploded) {
-            var rocket = new ItemStack(GCItems.ROCKET);
-            rocket.applyComponents(this.getRocketData().asPatch());
-            this.spawnAtLocation(rocket);
+            this.spawnAtLocation(this.getDropItem());
         }
         this.remove(RemovalReason.KILLED);
     }
@@ -435,7 +438,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                     }
                 }
             } else if (getLaunchStage() == LaunchStage.LAUNCHED) {
-                if (!debugMode && (isTankEmpty() || !this.getTank().getResource().getFluid().is(GCTags.FUEL))) {
+                if (!debugMode && (isTankEmpty() || !this.getTank().getResource().getFluid().is(GCFluidTags.FUEL))) {
                     this.setLaunchStage(LaunchStage.FAILED);
                 } else {
                     try (Transaction t = Transaction.openOuter()) {
