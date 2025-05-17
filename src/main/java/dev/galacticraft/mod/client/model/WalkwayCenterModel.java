@@ -1,5 +1,6 @@
 package dev.galacticraft.mod.client.model;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.Connected;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -10,7 +11,6 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.Util;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
@@ -41,7 +41,7 @@ public class WalkwayCenterModel implements UnbakedModel {
     }
 
     @Override
-    public Collection<ResourceLocation> getDependencies() {
+    public @NotNull Collection<ResourceLocation> getDependencies() {
         return List.of();
     }
 
@@ -277,6 +277,8 @@ public class WalkwayCenterModel implements UnbakedModel {
                 if (!connected.isConnected(facing)) {
                     this.meshes.get(facing).outputTo(context.getEmitter());
                 }
+            } else {
+                Constant.LOGGER.warn("Walkway center model loaded for block that's not a Connected entity");
             }
         }
 
