@@ -53,7 +53,7 @@ public class AluminumWireBlock extends WireBlock {
     public static final VoxelShape NONE = box(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);    // 6x6x6 box in the center.
 
     public AluminumWireBlock(Properties settings) {
-        super(settings);
+        super(0.125f, settings);
     }
 
     @Override

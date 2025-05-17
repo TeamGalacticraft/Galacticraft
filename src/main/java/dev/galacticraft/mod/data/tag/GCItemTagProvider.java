@@ -34,6 +34,8 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -148,6 +150,12 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         this.tag(GCItemTags.WRENCHES)
                 .add(GCItems.STANDARD_WRENCH);
+
+        Item[] stainedGlassFluidPipes = GCBlocks.GLASS_FLUID_PIPES.values().stream().filter(b -> b != GCBlocks.GLASS_FLUID_PIPE).map(Block::asItem).toArray(Item[]::new);
+        this.tag(GCItemTags.STAINED_GLASS_FLUID_PIPES)
+                .add(stainedGlassFluidPipes);
+        this.tag(ConventionalItemTags.DYED)
+                .add(stainedGlassFluidPipes);
 
         this.tag(GCItemTags.BATTERIES)
                 .add(GCItems.BATTERY)
@@ -473,7 +481,7 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE.asItem());
     }
 
-    protected FabricTagProvider<Item>.FabricTagBuilder tag(TagKey<Item> tag) {
+    protected FabricTagProvider<Item>.@NotNull FabricTagBuilder tag(TagKey<Item> tag) {
         return this.getOrCreateTagBuilder(tag);
     }
 }

@@ -36,6 +36,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -429,7 +430,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         List<GCBlockRegistry.DecorationSet> decorations = GCBlocks.BLOCKS.getDecorations();
 
         Map<String, TagKey<Block>> decoTags = new HashMap<>();
- 
+
         decoTags.put("aluminum_decoration", GCBlockTags.ALUMINUM_DECORATION_BLOCKS);
         decoTags.put("bronze_decoration", GCBlockTags.BRONZE_DECORATION_BLOCKS);
         decoTags.put("copper_decoration", GCBlockTags.COPPER_DECORATION_BLOCKS);
@@ -477,6 +478,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(stairs)
                 .add(slabs)
                 .add(walls)
+                .add(GCBlocks.GLASS_FLUID_PIPES.values().toArray(new Block[17]))
                 .add(
                         GCBlocks.MARS_IRON_ORE,
                         GCBlocks.ASTEROID_IRON_ORE,
@@ -523,7 +525,6 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.AIR_LOCK_CONTROLLER,
                         GCBlocks.SEALABLE_ALUMINUM_WIRE,
                         GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE,
-                        GCBlocks.GLASS_FLUID_PIPE,
 
                         GCBlocks.SILICON_BLOCK,
                         GCBlocks.METEORIC_IRON_BLOCK,
@@ -674,7 +675,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forEach(replaceableTagAppender::add);
     }
 
-    protected FabricTagProvider<Block>.FabricTagBuilder tag(TagKey<Block> tag) {
+    protected FabricTagProvider<Block>.@NotNull FabricTagBuilder tag(TagKey<Block> tag) {
         return this.getOrCreateTagBuilder(tag);
     }
 }

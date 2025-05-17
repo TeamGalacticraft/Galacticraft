@@ -17,7 +17,6 @@
     "components": {
       "galacticraft:rocket_data": {
         "body": "galacticraft:tier_1",
-        "color": -1,
         "cone": "galacticraft:tier_1",
         "engine": "galacticraft:tier_1",
         "fin": "galacticraft:tier_1",

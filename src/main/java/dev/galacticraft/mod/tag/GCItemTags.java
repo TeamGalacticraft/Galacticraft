@@ -42,6 +42,7 @@ public class GCItemTags {
     public static final TagKey<Item> PARACHUTES = galacticraftTag("parachutes");
     public static final TagKey<Item> FREQUENCY_MODULES = galacticraftTag("frequency_modules");
     public static final TagKey<Item> SHIELD_CONTROLLERS = galacticraftTag("shield_controllers");
+    public static final TagKey<Item> STAINED_GLASS_FLUID_PIPES = TagKey.create(Registries.ITEM, Constant.id("stained_glass_fluid_pipes"));
 
     public static final TagKey<Item> BATTERIES = commonTag("batteries");
 

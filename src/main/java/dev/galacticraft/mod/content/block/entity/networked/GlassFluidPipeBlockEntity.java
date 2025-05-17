@@ -22,18 +22,28 @@
 
 package dev.galacticraft.mod.content.block.entity.networked;
 
-import dev.galacticraft.mod.api.block.entity.Colored;
 import dev.galacticraft.mod.api.block.entity.Connected;
 import dev.galacticraft.mod.api.block.entity.Pullable;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colored, Connected, Pullable {
+import java.util.ArrayList;
+import java.util.List;
+
+public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Connected, Pullable {
+    public static final List<Block> COMPATIBLE_BLOCKS = Util.make(new ArrayList<>(), list -> {
+        list.addAll(GCBlocks.GLASS_FLUID_PIPES.values());
+        list.add(GCBlocks.FLUID_PIPE_WALKWAY);
+    });
+
     private boolean pull;
 
     public GlassFluidPipeBlockEntity(BlockPos pos, BlockState state) {
@@ -61,4 +71,5 @@ public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Colore
     public void setPull(boolean pull) {
         this.pull = pull;
     }
+
 }

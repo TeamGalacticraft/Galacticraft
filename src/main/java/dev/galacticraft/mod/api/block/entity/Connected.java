@@ -33,15 +33,19 @@ public interface Connected {
 
     void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction);
 
+    default boolean isConnected(Direction direction) {
+        return this.getConnections()[direction.get3DDataValue()];
+    }
+
     default void writeConnectionNbt(CompoundTag nbt) {
         for (Direction direction : Constant.Misc.DIRECTIONS) {
-            nbt.putBoolean(direction.getSerializedName(), this.getConnections()[direction.ordinal()]);
+            nbt.putBoolean(direction.getSerializedName(), this.isConnected(direction));
         }
     }
 
     default void readConnectionNbt(CompoundTag nbt) {
         for (Direction direction : Constant.Misc.DIRECTIONS) {
-            this.getConnections()[direction.ordinal()] = nbt.getBoolean(direction.getSerializedName());
+            this.getConnections()[direction.get3DDataValue()] = nbt.getBoolean(direction.getSerializedName());
         }
     }
 }

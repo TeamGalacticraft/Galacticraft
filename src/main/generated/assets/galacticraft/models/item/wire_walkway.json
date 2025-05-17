@@ -1,3 +1,6 @@
 {
-  "parent": "galacticraft:block/wire_walkway"
+  "parent": "galacticraft:item/template_walkway_inventory",
+  "textures": {
+    "texture": "galacticraft:block/aluminum_wire"
+  }
 }
