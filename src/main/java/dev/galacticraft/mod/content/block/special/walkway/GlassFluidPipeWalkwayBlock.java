@@ -40,7 +40,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,7 +50,6 @@ public class GlassFluidPipeWalkwayBlock extends FluidPipeBlock implements FluidL
 
         BlockState state = this.getStateDefinition().any();
         state = FluidLoggable.applyDefaultState(state);
-        state = FluidPipeBlock.applyDefaultState(state);
         state = WalkwayBlock.applyDefaultState(state);
         this.registerDefaultState(state);
     }
@@ -66,7 +64,7 @@ public class GlassFluidPipeWalkwayBlock extends FluidPipeBlock implements FluidL
         if (level.getBlockEntity(blockPos) instanceof Connected connected) {
             return WalkwayBlock.getShape(connected, blockState);
         }
-        return Shapes.empty();
+        return WalkwayBlock.getShape(blockState);
     }
 
     @Override
@@ -90,7 +88,6 @@ public class GlassFluidPipeWalkwayBlock extends FluidPipeBlock implements FluidL
 
     @Override
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
-        FluidPipeBlock.addStateDefinitions(stateBuilder);
         FluidLoggable.addStateDefinitions(stateBuilder);
         WalkwayBlock.addStateDefinitions(stateBuilder);
     }

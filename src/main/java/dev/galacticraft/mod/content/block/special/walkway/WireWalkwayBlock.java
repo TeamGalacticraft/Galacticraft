@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.block.special.walkway;
 
 import dev.galacticraft.mod.api.block.FluidLoggable;
-import dev.galacticraft.mod.api.block.PipeShapedBlock;
 import dev.galacticraft.mod.api.block.WireBlock;
 import dev.galacticraft.mod.api.block.entity.Connected;
 import dev.galacticraft.mod.api.wire.Wire;
@@ -45,7 +44,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
@@ -53,19 +51,12 @@ import team.reborn.energy.api.EnergyStorage;
 import java.util.Objects;
 
 public class WireWalkwayBlock extends WireBlock implements FluidLoggable, WalkwayBlock {
-    private static final VoxelShape[] SHAPES = new VoxelShape[64];
-
     public WireWalkwayBlock(Properties settings) {
         super(0.125f, settings);
         BlockState defaultState = this.getStateDefinition().any();
         defaultState = FluidLoggable.applyDefaultState(defaultState);
-        defaultState = PipeShapedBlock.applyDefaultState(defaultState);
         defaultState = WalkwayBlock.applyDefaultState(defaultState);
         this.registerDefaultState(defaultState);
-    }
-
-    private static int getFacingMask(Direction direction) {
-        return 1 << direction.get3DDataValue();
     }
 
     @Override
@@ -73,7 +64,7 @@ public class WireWalkwayBlock extends WireBlock implements FluidLoggable, Walkwa
         if (level.getBlockEntity(blockPos) instanceof Connected connected) {
             return WalkwayBlock.getShape(connected, blockState);
         }
-        return WalkwayBlock.SHAPES.get(Pair.of(0, Direction.UP));
+        return WalkwayBlock.getShape(blockState);
     }
 
     @Override
@@ -138,8 +129,7 @@ public class WireWalkwayBlock extends WireBlock implements FluidLoggable, Walkwa
     @Override
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
         FluidLoggable.addStateDefinitions(stateBuilder);
-        PipeShapedBlock.addStateDefinitions(stateBuilder);
-        stateBuilder.add(BlockStateProperties.FACING);
+        WalkwayBlock.addStateDefinitions(stateBuilder);
     }
 
     @Override

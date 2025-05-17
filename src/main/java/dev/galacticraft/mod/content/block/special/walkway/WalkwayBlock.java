@@ -58,7 +58,13 @@ public interface WalkwayBlock {
     });
 
     static @NotNull VoxelShape getShape(Connected connected, BlockState blockState) {
-        return WalkwayBlock.SHAPES.get(Pair.of(PipeShapedBlock.generateAABBIndex(connected), blockState.getValue(BlockStateProperties.FACING)));
+        return SHAPES.get(Pair.of(PipeShapedBlock.generateAABBIndex(connected), blockState.getValue(BlockStateProperties.FACING)));
+    }
+
+    // Returns a shape with all connections active
+    // Should be used when no block entity is available, like when the game is checking if the player is obstructing placement
+    static @NotNull VoxelShape getShape(BlockState blockState) {
+        return SHAPES.get(Pair.of(63, blockState.getValue(BlockStateProperties.FACING)));
     }
 
     static @NotNull BlockState applyStateForPlacement(BlockState state, BlockPlaceContext context) {
