@@ -104,13 +104,15 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
 
     @Override
     public void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction) {
-        boolean connected = ((PipeShapedBlock)state.getBlock()).canConnectTo(this.level, pos, direction, neighborPos, state);
+        boolean connected = ((PipeShapedBlock<?>)state.getBlock()).canConnectTo(this.level, pos, direction, neighborPos, state);
         if (this.isConnected(direction) != connected) {
             this.connections[direction.get3DDataValue()] = connected;
+        }
 
-            if (this.network == null || this.network.markedForRemoval()) {
-                this.createNetwork();
-            }
+        if (this.network == null || this.network.markedForRemoval()) {
+            this.createNetwork();
+        }
+        if (this.network != null) {
             this.network.updateConnection(pos, neighborPos, direction);
         }
     }
