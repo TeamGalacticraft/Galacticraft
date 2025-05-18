@@ -85,7 +85,10 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
                 }
             }
         }
-        graphics.blit(this.lightSources.get(this.menu.getSource()).location(), this.leftPos + LIGHT_SOURCE_X, this.topPos + LIGHT_SOURCE_Y, 0, 0, LIGHT_SOURCE_WIDTH, LIGHT_SOURCE_HEIGHT, 32, 32);
+        ResourceLocation location = this.lightSources.get(this.menu.getSource()).location();
+        if (location != null) {
+            graphics.blit(location, this.leftPos + LIGHT_SOURCE_X, this.topPos + LIGHT_SOURCE_Y, 0, 0, LIGHT_SOURCE_WIDTH, LIGHT_SOURCE_HEIGHT, 32, 32);
+        }
     }
 
     @Override
