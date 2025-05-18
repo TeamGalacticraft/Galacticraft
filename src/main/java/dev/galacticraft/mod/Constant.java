@@ -719,6 +719,15 @@ public interface Constant {
         ResourceLocation NEPTUNE = id("textures/gui/celestialbodies/neptune.png");
     }
 
+    interface Skybox {
+        ResourceLocation SUN = ResourceLocation.withDefaultNamespace("textures/environment/sun.png");
+        ResourceLocation SUN_MOON = id("textures/environment/sun_moon.png");
+        ResourceLocation SUN_VENUS = id("textures/environment/sun_venus.png");
+        ResourceLocation EARTH = id("textures/environment/earth.png");
+        ResourceLocation CLOUDS = id("textures/environment/clouds.png");
+        ResourceLocation ATMOSPHERE = id("textures/environment/atmosphere.png");
+    }
+
     interface RecipeViewer {
         ResourceLocation RECIPE_VIEWER_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
         ResourceLocation ROCKET_WORKBENCH_DISPLAY_TEXTURE = id("textures/gui/rocket_workbench.png");

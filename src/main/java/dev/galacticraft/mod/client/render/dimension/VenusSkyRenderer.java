@@ -274,7 +274,7 @@ public class VenusSkyRenderer implements DimensionRenderingRegistry.SkyRenderer 
         BufferUploader.drawWithShader(buffer.buildOrThrow());
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.1F);
         f10 = this.sunSize;
-        RenderSystem.setShaderTexture(0, CelestialBodyTextures.SUN_VENUS);
+        RenderSystem.setShaderTexture(0, Constant.Skybox.SUN_VENUS);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         buffer.addVertex(last2, -f10, 100.0F, -f10).setUv(0.0F, 0.0F)

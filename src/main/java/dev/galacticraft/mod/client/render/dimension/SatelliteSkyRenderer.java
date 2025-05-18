@@ -34,7 +34,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
 public class SatelliteSkyRenderer extends SpaceSkyRenderer {
-    public static final SatelliteSkyRenderer INSTANCE = new SatelliteSkyRenderer(CelestialBodyTextures.EARTH);
+    public static final SatelliteSkyRenderer INSTANCE = new SatelliteSkyRenderer(Constant.Skybox.EARTH);
     private final ResourceLocation parentBody;
 
     public SatelliteSkyRenderer(ResourceLocation parentBody) {
@@ -117,7 +117,7 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
         matrices.pushPose();
         matrix = matrices.last().pose();
 
-        RenderSystem.setShaderTexture(0, CelestialBodyTextures.CLOUDS);
+        RenderSystem.setShaderTexture(0, Constant.Skybox.CLOUDS);
         float u0 = (-2.0F * context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks())) % 1;
         float u1 = u0 + 1.0F;
         buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
@@ -139,7 +139,7 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
                 GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO
         );
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, CelestialBodyTextures.ATMOSPHERE);
+        RenderSystem.setShaderTexture(0, Constant.Skybox.ATMOSPHERE);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         size = 400.0F;
         buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);

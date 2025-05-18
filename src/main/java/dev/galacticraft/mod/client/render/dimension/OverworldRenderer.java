@@ -187,7 +187,7 @@ public class OverworldRenderer {
         );
         r = 30.0F;
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, CelestialBodyTextures.SUN);
+        RenderSystem.setShaderTexture(0, Constant.Skybox.SUN);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         Matrix4f matrix4f1 = poseStack.last().pose();
         BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
