@@ -26,6 +26,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
+import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.Minecraft;
@@ -288,7 +289,7 @@ public class VenusSkyRenderer implements DimensionRenderingRegistry.SkyRenderer 
         poseStack.mulPose(Axis.ZP.rotationDegrees(40.0F));
         poseStack.mulPose(Axis.XP.rotationDegrees(200F));
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1F);
-        RenderSystem.setShaderTexture(0, CelestialBodyTextures.EARTH);
+        RenderSystem.setShaderTexture(0, Constant.CelestialBody.EARTH);
         buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         buffer.addVertex(last2, -f10, -100.0F, f10).setUv(0, 1.0F)
                 .addVertex(last2, f10, -100.0F, f10).setUv(1.0F, 1.0F)

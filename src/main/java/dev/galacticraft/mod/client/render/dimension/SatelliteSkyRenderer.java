@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.client.render.dimension;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
@@ -33,7 +34,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
 public class SatelliteSkyRenderer extends SpaceSkyRenderer {
-    public static final SatelliteSkyRenderer INSTANCE = new SatelliteSkyRenderer(Constant.CelestialBody.EARTH_NO_CLOUDS);
+    public static final SatelliteSkyRenderer INSTANCE = new SatelliteSkyRenderer(CelestialBodyTextures.EARTH);
     private final ResourceLocation parentBody;
 
     public SatelliteSkyRenderer(ResourceLocation parentBody) {
@@ -48,6 +49,7 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
 
         PoseStack matrices = new PoseStack();
         matrices.mulPose(context.positionMatrix());
+        Tesselator tesselator = Tesselator.getInstance();
 
         context.profiler().push("stars");
         matrices.pushPose();
@@ -71,11 +73,25 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
         float size = 6.0F;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, Constant.CelestialBody.SOL);
-        BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.addVertex(matrix, -size, 100.0F, -size).setUv(0.0F, 0.0F)
-                .addVertex(matrix, size, 100.0F, -size).setUv(1.0F, 0.0F)
-                .addVertex(matrix, size, 100.0F, size).setUv(1.0F, 1.0F)
-                .addVertex(matrix, -size, 100.0F, size).setUv(0.0F, 1.0F);
+        BufferBuilder buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.addVertex(matrix, -size, 100.0F, -size).setUv(1.0F, 0.0F)
+                .addVertex(matrix, size, 100.0F, -size).setUv(0.0F, 0.0F)
+                .addVertex(matrix, size, 100.0F, size).setUv(0.0F, 1.0F)
+                .addVertex(matrix, -size, 100.0F, size).setUv(1.0F, 1.0F);
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
+
+        context.profiler().pop();
+        context.profiler().push("moon");
+
+        matrices.mulPose(Axis.XP.rotationDegrees(180.0F));
+
+        size = 6.0F;
+        RenderSystem.setShaderTexture(0, Constant.CelestialBody.MOON);
+        buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.addVertex(matrix, -size, 100.0F, -size).setUv(1.0F, 1.0F)
+                .addVertex(matrix, size, 100.0F, -size).setUv(0.0F, 1.0F)
+                .addVertex(matrix, size, 100.0F, size).setUv(0.0F, 0.0F)
+                .addVertex(matrix, -size, 100.0F, size).setUv(1.0F, 0.0F);
         BufferUploader.drawWithShader(buffer.buildOrThrow());
 
         matrices.popPose();
@@ -87,7 +103,7 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
 
         RenderSystem.setShaderTexture(0, this.parentBody);
         size = 200.0F;
-        buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         buffer.addVertex(matrix, -size, -100.0F, size).setUv(0.0F, 1.0F)
                 .addVertex(matrix, size, -100.0F, size).setUv(1.0F, 1.0F)
                 .addVertex(matrix, size, -100.0F, -size).setUv(1.0F, 0.0F)
@@ -101,11 +117,10 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
         matrices.pushPose();
         matrix = matrices.last().pose();
 
-        RenderSystem.setShaderTexture(0, Constant.CelestialBody.CLOUDS);
-        size = 200.0F;
+        RenderSystem.setShaderTexture(0, CelestialBodyTextures.CLOUDS);
         float u0 = (-2.0F * context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks())) % 1;
         float u1 = u0 + 1.0F;
-        buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         buffer.addVertex(matrix, -size, -97.5F, size).setUv(u0, 1.0F)
                 .addVertex(matrix, size, -97.5F, size).setUv(u1, 1.0F)
                 .addVertex(matrix, size, -97.5F, -size).setUv(u1, 0.0F)
@@ -115,7 +130,32 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
         context.profiler().pop();
         matrices.popPose();
 
+        context.profiler().push("atmosphere");
+        matrices.pushPose();
+        matrix = matrices.last().pose();
+
+        RenderSystem.enableBlend();
+        RenderSystem.blendFuncSeparate(
+                GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO
+        );
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, CelestialBodyTextures.ATMOSPHERE);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        size = 400.0F;
+        buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.addVertex(matrix, -size, -95.0F, size).setUv(0.0F, 1.0F)
+                .addVertex(matrix, size, -95.0F, size).setUv(1.0F, 1.0F)
+                .addVertex(matrix, size, -95.0F, -size).setUv(1.0F, 0.0F)
+                .addVertex(matrix, -size, -95.0F, -size).setUv(0.0F, 0.0F);
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
+
+        context.profiler().pop();
+        matrices.popPose();
+
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.depthMask(true);
+        RenderSystem.disableBlend();
+        RenderSystem.defaultBlendFunc();
         context.profiler().pop();
     }
 }

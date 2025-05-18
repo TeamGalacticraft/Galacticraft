@@ -232,7 +232,7 @@ public class OverworldRenderer {
             poseStack.scale(scale, 1.0F, scale);
             poseStack.translate(0.0F, -(float) player.getY(), 0.0F);
 
-            RenderSystem.setShaderTexture(0, CelestialBodyTextures.EARTH);
+            RenderSystem.setShaderTexture(0, Constant.CelestialBody.EARTH);
 
             size = 1.0F;
 
@@ -250,13 +250,10 @@ public class OverworldRenderer {
             poseStack.popPose();
         }
 
-
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
         RenderSystem.depthMask(true);
-
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         RenderSystem.disableBlend();
+        RenderSystem.defaultBlendFunc();
     }
 
     public static Vec3 getFogColor(ClientLevel level, Camera camera, float f) {

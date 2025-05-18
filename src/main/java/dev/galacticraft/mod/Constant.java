@@ -703,8 +703,6 @@ public interface Constant {
         ResourceLocation MERCURY = id("textures/gui/celestialbodies/mercury.png");
         ResourceLocation VENUS = id("textures/gui/celestialbodies/venus.png");
         ResourceLocation EARTH = id("textures/gui/celestialbodies/earth.png");
-        ResourceLocation EARTH_NO_CLOUDS = Constant.id("textures/environment/earth_no_clouds.png");
-        ResourceLocation CLOUDS = Constant.id("textures/environment/clouds.png");
         ResourceLocation SPACE_STATION = id("textures/gui/celestialbodies/space_station.png");
         ResourceLocation MOON = id("textures/gui/celestialbodies/moon.png");
         ResourceLocation MARS = id("textures/gui/celestialbodies/mars.png");

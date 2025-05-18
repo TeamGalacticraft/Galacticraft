@@ -30,8 +30,8 @@ public final class CelestialBodyTextures {
     public static final ResourceLocation SUN_MOON = Constant.id("textures/environment/sun_moon.png");
     public static final ResourceLocation SUN = ResourceLocation.withDefaultNamespace("textures/environment/sun.png");
     public static final ResourceLocation EARTH = Constant.id("textures/environment/earth.png");
-    public static final ResourceLocation EARTH_NO_CLOUDS = Constant.id("textures/environment/earth_no_clouds.png");
     public static final ResourceLocation CLOUDS = Constant.id("textures/environment/clouds.png");
+    public static final ResourceLocation ATMOSPHERE = Constant.id("textures/environment/atmosphere.png");
 
     private CelestialBodyTextures() {
     }

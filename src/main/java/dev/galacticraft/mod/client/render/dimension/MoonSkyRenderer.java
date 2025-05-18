@@ -25,6 +25,7 @@ package dev.galacticraft.mod.client.render.dimension;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
+import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
@@ -86,7 +87,7 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
         matrices.mulPose(Axis.XP.rotationDegrees(earthRotation + 200.0F));
         matrices.mulPose(Axis.YP.rotationDegrees(180.0F));
 
-        RenderSystem.setShaderTexture(0, CelestialBodyTextures.EARTH);
+        RenderSystem.setShaderTexture(0, Constant.CelestialBody.EARTH);
 
         buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         buffer.addVertex(matrix, -size, -100.0F, size).setUv(0.0F, 1.0F)
