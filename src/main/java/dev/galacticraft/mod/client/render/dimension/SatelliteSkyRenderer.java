@@ -31,6 +31,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 
 public class SatelliteSkyRenderer extends SpaceSkyRenderer {
@@ -102,7 +103,8 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
         matrix = matrices.last().pose();
 
         RenderSystem.setShaderTexture(0, this.parentBody);
-        size = 200.0F;
+        double r = (Constant.SPACE_HEIGHT + (float) context.camera().getPosition().y()) / 75.0D;
+        size = (float) (2500.0D * Math.tan(Math.asin(1.0D / (1.0D + r))));
         buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         buffer.addVertex(matrix, -size, -100.0F, size).setUv(0.0F, 1.0F)
                 .addVertex(matrix, size, -100.0F, size).setUv(1.0F, 1.0F)
@@ -141,7 +143,7 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, Constant.Skybox.ATMOSPHERE);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        size = 400.0F;
+        size *= 2.0F;
         buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         buffer.addVertex(matrix, -size, -95.0F, size).setUv(0.0F, 1.0F)
                 .addVertex(matrix, size, -95.0F, size).setUv(1.0F, 1.0F)
