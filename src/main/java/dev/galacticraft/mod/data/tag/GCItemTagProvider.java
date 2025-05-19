@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.data.tag;
 
+import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCBlockTags;
@@ -34,9 +35,10 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
 public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
@@ -151,7 +153,7 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         this.tag(GCItemTags.WRENCHES)
                 .add(GCItems.STANDARD_WRENCH);
 
-        Item[] stainedGlassFluidPipes = GCBlocks.GLASS_FLUID_PIPES.values().stream().filter(b -> b != GCBlocks.GLASS_FLUID_PIPE).map(Block::asItem).toArray(Item[]::new);
+        Item[] stainedGlassFluidPipes = Arrays.stream(DyeColor.values()).map(PipeColor::fromDye).map(GCBlocks.GLASS_FLUID_PIPES::get).map(ItemLike::asItem).toArray(Item[]::new);
         this.tag(GCItemTags.STAINED_GLASS_FLUID_PIPES)
                 .add(stainedGlassFluidPipes);
         this.tag(ConventionalItemTags.DYED)
