@@ -22,14 +22,24 @@
 
 package dev.galacticraft.mod.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import dev.galacticraft.api.registry.AddonRegistries;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.api.universe.celestialbody.landable.Landable;
+import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.EntityAccessor;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.tag.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
@@ -257,5 +267,22 @@ public abstract class EntityMixin implements EntityAccessor {
     @Override
     public void galacticraft$setLastStep(int lastStep) {
         this.lastStep = lastStep;
+    }
+
+    @WrapOperation(method = "checkBelowWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;onBelowWorld()V"))
+    private void galacticraft$onBelowWorld(Entity entity, Operation<Void> original) {
+        Holder<CelestialBody<?, ?>> holder = entity.level().galacticraft$getCelestialBody();
+        CelestialBody fromBody = holder != null ? holder.value() : null;
+        if (fromBody != null && fromBody.isSatellite() && fromBody.parent().isPresent()) {
+            Registry<CelestialBody<?, ?>> celestialBodies = entity.level().registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY);
+            CelestialBody body = fromBody.parentValue(celestialBodies);
+            if (body.type() instanceof Landable landable) {
+                if (entity.level() instanceof ServerLevel level) {
+                    ((CelestialTeleporter) landable.teleporter(body.config()).value()).onEnterAtmosphere(level.getServer().getLevel(landable.world(body.config())), entity, body, fromBody);
+                }
+                return;
+            }
+        }
+        original.call(entity);
     }
 }

@@ -71,9 +71,9 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
 
         Matrix4f matrix = matrices.last().pose();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        float size = 6.0F;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, Constant.CelestialBody.SOL);
+        float size = 6.0F;
         BufferBuilder buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         buffer.addVertex(matrix, -size, 100.0F, -size).setUv(1.0F, 0.0F)
                 .addVertex(matrix, size, 100.0F, -size).setUv(0.0F, 0.0F)
@@ -86,8 +86,8 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
 
         matrices.mulPose(Axis.XP.rotationDegrees(180.0F));
 
-        size = 6.0F;
         RenderSystem.setShaderTexture(0, Constant.CelestialBody.MOON);
+        size = 6.0F;
         buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         buffer.addVertex(matrix, -size, 100.0F, -size).setUv(1.0F, 1.0F)
                 .addVertex(matrix, size, 100.0F, -size).setUv(0.0F, 1.0F)
@@ -98,13 +98,38 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
         matrices.popPose();
         context.profiler().pop();
 
+        context.profiler().push("atmosphere");
+        matrices.pushPose();
+        matrix = matrices.last().pose();
+        
+        double r = (context.camera().getPosition().y() + 2048.0D) / 128.0D;
+        size = (float) (6000.0D * Math.tan(Math.asin(1.0D / (1.0D + r))));
+
+        RenderSystem.enableBlend();
+        RenderSystem.blendFuncSeparate(
+                GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO
+        );
+        RenderSystem.setShaderTexture(0, Constant.Skybox.ATMOSPHERE);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.addVertex(matrix, -size, -101.0F, size).setUv(0.0F, 1.0F)
+                .addVertex(matrix, size, -101.0F, size).setUv(1.0F, 1.0F)
+                .addVertex(matrix, size, -101.0F, -size).setUv(1.0F, 0.0F)
+                .addVertex(matrix, -size, -101.0F, -size).setUv(0.0F, 0.0F);
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
+
+        matrices.popPose();
+        context.profiler().pop();
+
+        RenderSystem.disableBlend();
+        RenderSystem.defaultBlendFunc();
+
         context.profiler().push("earth");
         matrices.pushPose();
         matrix = matrices.last().pose();
 
         RenderSystem.setShaderTexture(0, this.parentBody);
-        double r = (Constant.SPACE_HEIGHT + (float) context.camera().getPosition().y()) / 75.0D;
-        size = (float) (2500.0D * Math.tan(Math.asin(1.0D / (1.0D + r))));
+        size *= 0.5F;
         buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         buffer.addVertex(matrix, -size, -100.0F, size).setUv(0.0F, 1.0F)
                 .addVertex(matrix, size, -100.0F, size).setUv(1.0F, 1.0F)
@@ -112,47 +137,26 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
                 .addVertex(matrix, -size, -100.0F, -size).setUv(0.0F, 0.0F);
         BufferUploader.drawWithShader(buffer.buildOrThrow());
 
-        context.profiler().pop();
         matrices.popPose();
+        context.profiler().pop();
 
         context.profiler().push("clouds");
         matrices.pushPose();
         matrix = matrices.last().pose();
 
         RenderSystem.setShaderTexture(0, Constant.Skybox.CLOUDS);
+        float height = -100.0F + 50.0F * Mth.invSqrt((float) (context.camera().getPosition().y() + 448.0D));
         float u0 = (-2.0F * context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks())) % 1;
         float u1 = u0 + 1.0F;
         buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.addVertex(matrix, -size, -97.5F, size).setUv(u0, 1.0F)
-                .addVertex(matrix, size, -97.5F, size).setUv(u1, 1.0F)
-                .addVertex(matrix, size, -97.5F, -size).setUv(u1, 0.0F)
-                .addVertex(matrix, -size, -97.5F, -size).setUv(u0, 0.0F);
+        buffer.addVertex(matrix, -size, height, size).setUv(u0, 1.0F)
+                .addVertex(matrix, size, height, size).setUv(u1, 1.0F)
+                .addVertex(matrix, size, height, -size).setUv(u1, 0.0F)
+                .addVertex(matrix, -size, height, -size).setUv(u0, 0.0F);
         BufferUploader.drawWithShader(buffer.buildOrThrow());
 
-        context.profiler().pop();
         matrices.popPose();
-
-        context.profiler().push("atmosphere");
-        matrices.pushPose();
-        matrix = matrices.last().pose();
-
-        RenderSystem.enableBlend();
-        RenderSystem.blendFuncSeparate(
-                GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO
-        );
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, Constant.Skybox.ATMOSPHERE);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        size *= 2.0F;
-        buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.addVertex(matrix, -size, -95.0F, size).setUv(0.0F, 1.0F)
-                .addVertex(matrix, size, -95.0F, size).setUv(1.0F, 1.0F)
-                .addVertex(matrix, size, -95.0F, -size).setUv(1.0F, 0.0F)
-                .addVertex(matrix, -size, -95.0F, -size).setUv(0.0F, 0.0F);
-        BufferUploader.drawWithShader(buffer.buildOrThrow());
-
         context.profiler().pop();
-        matrices.popPose();
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.depthMask(true);

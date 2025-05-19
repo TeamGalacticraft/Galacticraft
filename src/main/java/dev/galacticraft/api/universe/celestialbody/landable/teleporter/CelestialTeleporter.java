@@ -33,10 +33,10 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
 import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 
 /**
- * This class is for determining how a celestial should handle a player teleporting to it.
+ * This class is for determining how a celestial should handle an entity teleporting to it.
  * Such as making custom landing sequences.
  */
 public record CelestialTeleporter<C extends CelestialTeleporterConfig, T extends CelestialTeleporterType<C>>(T type, C config) {
@@ -46,11 +46,11 @@ public record CelestialTeleporter<C extends CelestialTeleporterConfig, T extends
 
     /**
      * @param level    The current world for the celestial body
-     * @param player   The player.
+     * @param entity   The entity.
      * @param body     The celestial body being landed on.
-     * @param fromBody The previous celestial body the player is traveling from.
+     * @param fromBody The previous celestial body the entity is traveling from.
      */
-    public void onEnterAtmosphere(ServerLevel level, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody) {
-        this.type.onEnterAtmosphere(level, player, body, fromBody, this.config);
+    public void onEnterAtmosphere(ServerLevel level, Entity entity, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody) {
+        this.type.onEnterAtmosphere(level, entity, body, fromBody, this.config);
     }
 }
