@@ -720,6 +720,7 @@ public interface Constant {
     }
 
     interface Skybox {
+        ResourceLocation MOON_PHASES = ResourceLocation.withDefaultNamespace("textures/environment/moon_phases.png");
         ResourceLocation SUN = ResourceLocation.withDefaultNamespace("textures/environment/sun.png");
         ResourceLocation SUN_MOON = id("textures/environment/sun_moon.png");
         ResourceLocation SUN_VENUS = id("textures/environment/sun_venus.png");
