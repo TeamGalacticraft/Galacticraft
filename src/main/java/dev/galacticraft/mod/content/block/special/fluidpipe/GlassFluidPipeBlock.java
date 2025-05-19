@@ -43,26 +43,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class GlassFluidPipeBlock extends FluidPipeBlock implements FluidLoggable {
-    public static final VoxelShape NORTH = box(6, 6, 0, 10, 10, 10);
-    public static final VoxelShape EAST = box(6, 6, 6, 16, 10, 10);
-    public static final VoxelShape SOUTH = box(6, 6, 6, 10, 10, 16);
-    public static final VoxelShape WEST = box(0, 6, 6, 10, 10, 10);
-    public static final VoxelShape UP = box(6, 6, 6, 10, 16, 10);
-    public static final VoxelShape DOWN = box(6, 0, 6, 10, 10, 10);
-    public static final VoxelShape NONE = box(6, 6, 6, 10, 10, 10);
-
     public GlassFluidPipeBlock(Properties settings, PipeColor color) {
         super(settings, color);
 
         BlockState state = this.getStateDefinition().any();
-        state = FluidPipeBlock.applyDefaultState(state);
         state = FluidLoggable.applyDefaultState(state);
         this.registerDefaultState(state);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> compositeStateBuilder) {
-        FluidPipeBlock.addStateDefinitions(compositeStateBuilder);
         FluidLoggable.addStateDefinitions(compositeStateBuilder);
     }
 

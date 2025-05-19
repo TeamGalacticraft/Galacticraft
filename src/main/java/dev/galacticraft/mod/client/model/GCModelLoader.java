@@ -104,7 +104,7 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
                 }
             }
 
-            if (Constant.BakedModel.WIRE_MARKER.equals(resourceId)) {
+            if (ModelLocationUtils.getModelLocation(GCBlocks.ALUMINUM_WIRE).equals(resourceId)) {
                 return new PipeUnbakedModel(Constant.id("block/aluminum_wire"), 0.125f);
             } else if (Constant.BakedModel.WALKWAY_CONNECTOR_MARKER.equals(resourceId)) {
                 return new PipeUnbakedModel(Constant.id("block/walkway_connector"), 0.125f);
