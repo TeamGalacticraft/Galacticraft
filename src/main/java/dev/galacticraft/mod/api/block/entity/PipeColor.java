@@ -75,4 +75,11 @@ public enum PipeColor {
     public String toString() {
         return this.name;
     }
+
+    public static PipeColor[] byRainbowOrder() {
+        return new PipeColor[] {
+                CLEAR, WHITE, LIGHT_GRAY, GRAY, BLACK, BROWN, RED, ORANGE, YELLOW,
+                LIME, GREEN, CYAN, LIGHT_BLUE, BLUE, PURPLE, MAGENTA, PINK
+        };
+    }
 }
