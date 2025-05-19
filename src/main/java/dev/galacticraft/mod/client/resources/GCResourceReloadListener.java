@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.client.resources;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.model.*;
 import dev.galacticraft.mod.client.render.entity.BubbleEntityRenderer;
 import dev.galacticraft.mod.content.GCFluids;
 import net.fabricmc.api.EnvType;
@@ -59,8 +58,6 @@ public class GCResourceReloadListener implements SimpleSynchronousResourceReload
     @Override
     public void onResourceManagerReload(ResourceManager resourceManager) {
         var atlas = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS);
-        WireBakedModel.invalidate();
-        WireWalkwayBakedModel.invalidate();
         BubbleEntityRenderer.bubbleModel = null;
 
         FluidRenderHandler oxygen = (view, pos, state) -> new TextureAtlasSprite[]{

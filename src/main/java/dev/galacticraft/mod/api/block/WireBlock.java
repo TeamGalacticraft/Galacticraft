@@ -73,8 +73,8 @@ public abstract class WireBlock extends PipeShapedBlock<WireBlockEntity> {
 
     @Override
     protected void onConnectionChanged(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos) {
-        if (level.getBlockEntity(thisPos) instanceof WireBlockEntity pipe) {
-            pipe.updateConnection(level.getBlockState(thisPos), thisPos, neighborPos, direction);
+        if (level.getBlockEntity(thisPos) instanceof WireBlockEntity wire) {
+            wire.updateConnection(level.getBlockState(thisPos), thisPos, neighborPos, direction);
         }
     }
 

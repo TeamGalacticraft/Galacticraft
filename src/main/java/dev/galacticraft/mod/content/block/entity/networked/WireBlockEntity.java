@@ -119,7 +119,9 @@ public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage 
         if (this.network == null || this.network.markedForRemoval()) {
             this.createNetwork();
         }
-        this.network.updateConnection(pos, neighborPos, direction);
+        if (this.network != null) {
+            this.network.updateConnection(pos, neighborPos, direction);
+        }
     }
 
     @Override
