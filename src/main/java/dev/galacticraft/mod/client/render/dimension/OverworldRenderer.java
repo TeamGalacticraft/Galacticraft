@@ -54,6 +54,7 @@ public class OverworldRenderer {
     @Nullable
     private VertexBuffer starBuffer4;
     private Minecraft minecraft = Minecraft.getInstance();
+    protected final EarthManager earthManager = new EarthManager();
 
     public OverworldRenderer() {
         RandomSource rand = RandomSource.create(10842L);
@@ -85,22 +86,16 @@ public class OverworldRenderer {
         final float var21 = Math.max(1.0F - theta * 4.0F, 0.0F);
 
         final Vec3 skyColor = this.minecraft.level.getSkyColor(this.minecraft.gameRenderer.getMainCamera().getPosition(), partialTicks);
-        float i = (float) skyColor.x * var21;
-        float x = (float) skyColor.y * var21;
-        float var5 = (float) skyColor.z * var21;
-        float z;
+        float x = (float) skyColor.x * var21;
+        float y = (float) skyColor.y * var21;
+        float z = (float) skyColor.z * var21;
 
         FogRenderer.levelFogColor();
-        RenderSystem.setShaderColor(i, x, var5, 1.0F);
+        RenderSystem.setShaderColor(x, y, z, 1.0F);
         RenderSystem.depthMask(false);
-        RenderSystem.setShaderColor(i, x, var5, 1.0F);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         final float[] sunriseColors = this.minecraft.level.effects().getSunriseColor(this.minecraft.level.getTimeOfDay(partialTicks), partialTicks);
-        float var9;
-        float size;
-        float rand1;
-        float r;
 
         if (sunriseColors != null) {
             final float sunsetModInv = Math.min(1.0F, Math.max(1.0F - theta * 50.0F, 0.0F));
@@ -110,21 +105,20 @@ public class OverworldRenderer {
             poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
             poseStack.mulPose(Axis.YP.rotationDegrees(Mth.sin(this.minecraft.level.getSunAngle(partialTicks)) < 0.0F ? 180.0F : 0.0F));
             poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
-            z = sunriseColors[0] * sunsetModInv;
-            var9 = sunriseColors[1] * sunsetModInv;
-            size = sunriseColors[2] * sunsetModInv;
-            float rand3;
+            x = sunriseColors[0] * sunsetModInv;
+            y = sunriseColors[1] * sunsetModInv;
+            z = sunriseColors[2] * sunsetModInv;
 
             BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
 
-            buffer.addVertex(0.0F, 100.0F, 0.0F).setColor(z * sunsetModInv, var9 * sunsetModInv, size * sunsetModInv, sunriseColors[3]);
-            final byte phi = 16;
+            buffer.addVertex(0.0F, 100.0F, 0.0F).setColor(x * sunsetModInv, y * sunsetModInv, z * sunsetModInv, sunriseColors[3]);
 
-            for (int var27 = 0; var27 <= phi; ++var27) {
-                rand3 = (float) (var27 * (Math.PI * 2) / phi);
-                final float xx = Mth.sin(rand3);
-                final float rand5 = Mth.cos(rand3);
-                buffer.addVertex(xx * 120.0F, rand5 * 120.0F, -rand5 * 40.0F * sunriseColors[3]).setColor(sunriseColors[0] * sunsetModInv, sunriseColors[1] * sunsetModInv, sunriseColors[2] * sunsetModInv, 0.0F);
+            float angle;
+            for (int i = 0; i <= 16; ++i) {
+                angle = i * Mth.TWO_PI / 16.0F;
+                final float s = Mth.sin(angle);
+                final float c = Mth.cos(angle);
+                buffer.addVertex(s * 120.0F, c * 120.0F, -c * 40.0F * sunriseColors[3]).setColor(x, y, z, 0.0F);
             }
 
             BufferUploader.drawWithShader(buffer.buildOrThrow());
@@ -136,12 +130,8 @@ public class OverworldRenderer {
         );
 
         poseStack.pushPose();
-        z = 1.0F - this.minecraft.level.getRainLevel(partialTicks);
-        var9 = 0.0F;
-        size = 0.0F;
-        rand1 = 0.0F;
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, z);
-        poseStack.translate(var9, size, rand1);
+        float alpha = 1.0F - this.minecraft.level.getRainLevel(partialTicks);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
         poseStack.mulPose(Axis.YP.rotationDegrees(-90.0F));
 
         poseStack.mulPose(Axis.XP.rotationDegrees(this.minecraft.level.getTimeOfDay(partialTicks) * 360.0F));
@@ -150,9 +140,8 @@ public class OverworldRenderer {
         // Draw stars
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
-        float threshold;
         Vec3 vec = getFogColor(this.minecraft.level, camera, partialTicks);
-        threshold = Math.max(0.1F, (float) vec.length() - 0.1F);
+        float threshold = Math.max(0.1F, (float) vec.length() - 0.1F);
         float var20 = ((float) playerHeight - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) / ((float) Constant.ESCAPE_HEIGHT - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT);
         var20 = Mth.sqrt(var20);
         float bright1 = Math.min(0.9F, var20 * 3);
@@ -185,70 +174,45 @@ public class OverworldRenderer {
         RenderSystem.blendFuncSeparate(
                 GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO
         );
-        r = 30.0F;
+        float size = 30.0F;
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, Constant.Skybox.SUN);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         Matrix4f matrix4f1 = poseStack.last().pose();
         BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.addVertex(matrix4f1, -r, 100.0F, -r).setUv(0.0F, 0.0F)
-                .addVertex(matrix4f1, r, 100.0F, -r).setUv(1.0F, 0.0F)
-                .addVertex(matrix4f1, r, 100.0F, r).setUv(1.0F, 1.0F)
-                .addVertex(matrix4f1, -r, 100.0F, r).setUv(0.0F, 1.0F);
+        buffer.addVertex(matrix4f1, -size, 100.0F, -size).setUv(0.0F, 0.0F)
+                .addVertex(matrix4f1, size, 100.0F, -size).setUv(1.0F, 0.0F)
+                .addVertex(matrix4f1, size, 100.0F, size).setUv(1.0F, 1.0F)
+                .addVertex(matrix4f1, -size, 100.0F, size).setUv(0.0F, 1.0F);
         BufferUploader.drawWithShader(buffer.buildOrThrow());
 
         // Draw moon
-        r = 40.0F;
+        size = 40.0F;
         RenderSystem.setShaderTexture(0, MOON_LOCATION);
-        float sinphi = this.minecraft.level.getMoonPhase();
-        final int cosphi = (int) (sinphi % 4);
-        final int var29 = (int) (sinphi / 4 % 2);
-        final float yy = (cosphi) / 4.0F;
-        final float rand7 = (var29) / 2.0F;
-        final float zz = (cosphi + 1) / 4.0F;
-        final float rand9 = (var29 + 1) / 2.0F;
+        final float phase = this.minecraft.level.getMoonPhase();
+        final int u = (int) (phase % 4);
+        final int v = (int) (phase / 4 % 2);
+        final float u0 = u / 4.0F;
+        final float u1 = (u + 1) / 4.0F;
+        final float v0 = v / 2.0F;
+        final float v1 = (v + 1) / 2.0F;
         buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.addVertex(matrix4f1, -r, -100.0F, r).setUv(zz, rand9)
-                .addVertex(matrix4f1, r, -100.0F, r).setUv(yy, rand9)
-                .addVertex(matrix4f1, r, -100.0F, -r).setUv(yy, rand7)
-                .addVertex(matrix4f1, -r, -100.0F, -r).setUv(zz, rand7);
+        buffer.addVertex(matrix4f1, -size, -100.0F, size).setUv(u1, v1)
+                .addVertex(matrix4f1, size, -100.0F, size).setUv(u0, v1)
+                .addVertex(matrix4f1, size, -100.0F, -size).setUv(u0, v0)
+                .addVertex(matrix4f1, -size, -100.0F, -size).setUv(u1, v0);
         BufferUploader.drawWithShader(buffer.buildOrThrow());
 
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.disableBlend();
         poseStack.popPose();
-        RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 1.0F);
 
-        double heightOffset = playerHeight - 64;
-
-        if (heightOffset > this.minecraft.options.getEffectiveRenderDistance() * 16) {
-            theta *= 400.0F;
-
-            final float sinth = Math.max(Math.min(theta / 100.0F - 0.2F, 0.5F), 0.0F);
-
-            poseStack.pushPose();
-            float scale = 850 * (0.25F - theta / 10000.0F);
-            scale = Math.max(scale, 0.2F);
-            poseStack.scale(scale, 1.0F, scale);
-            poseStack.translate(0.0F, -(float) player.getY(), 0.0F);
-
-            RenderSystem.setShaderTexture(0, Constant.CelestialBody.EARTH);
-
-            size = 1.0F;
-
-            RenderSystem.setShaderColor(sinth, sinth, sinth, 1.0F);
-            buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-
-            float zoomIn = 0.0F;
-            float cornerB = 1.0F - zoomIn;
-            Matrix4f matrix4f2 = poseStack.last().pose();
-            buffer.addVertex(matrix4f2, -size, 0, size).setUv(zoomIn, cornerB)
-                    .addVertex(matrix4f2, size, 0, size).setUv(cornerB, cornerB)
-                    .addVertex(matrix4f2, size, 0, -size).setUv(cornerB, zoomIn)
-                    .addVertex(matrix4f2, -size, 0, -size).setUv(zoomIn, zoomIn);
-            BufferUploader.drawWithShader(buffer.buildOrThrow());
-            poseStack.popPose();
-        }
+        float f = Mth.clamp(3.0F * theta, 0.0F, 1.0F);
+        Vec3 vec3 = this.minecraft.level.getSkyColor(camera.getPosition(), partialTicks);
+        float color = Mth.clamp(Mth.cos(this.minecraft.level.getTimeOfDay(partialTicks) * Mth.TWO_PI) * 2.0F + 0.5F, 0.25F, 1.0F);
+        x = Mth.clampedLerp(f, (float) vec3.x, color);
+        y = Mth.clampedLerp(f, (float) vec3.y, color);
+        z = Mth.clampedLerp(f, (float) vec3.z, color);
+        RenderSystem.setShaderColor(x, y, z, 1.0F);
+        this.earthManager.render(poseStack, this.minecraft.level, 2.0D * (playerHeight - 64.0D), partialTicks);
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.depthMask(true);
