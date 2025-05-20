@@ -79,28 +79,24 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
 
     @Override
     protected @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (level.getBlockEntity(pos) instanceof PipeBlockEntity pipeEntity) {
-            if (stack.getItem() instanceof DyeItem dye) {
-                var stack2 = stack.copy();
-                var color = PipeColor.fromDye(dye.getDyeColor());
-                if (this.color == color) {
-                    return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
-                }
-
-                if (!player.getAbilities().instabuild) {
-                    stack2.shrink(1);
-                }
-                player.setItemInHand(hand, stack2);
-                level.setBlockAndUpdate(pos, this.setColor(state, color));
-
-                return ItemInteractionResult.SUCCESS;
-            } else if (stack.is(Items.WET_SPONGE) && this.color != PipeColor.CLEAR) {
-                level.setBlockAndUpdate(pos, this.setColor(state, PipeColor.CLEAR));
-                return ItemInteractionResult.SUCCESS;
-            } else if (stack.getItem() instanceof StandardWrenchItem && pipeEntity instanceof Pullable pullablePipe) {
-                pullablePipe.setPull(!pullablePipe.isPull());
-                return ItemInteractionResult.SUCCESS;
+        if (stack.getItem() instanceof DyeItem dye) {
+            PipeColor color = PipeColor.fromDye(dye.getDyeColor());
+            if (this.color == color) {
+                return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
             }
+            level.setBlockAndUpdate(pos, this.setColor(state, color));
+
+            ItemStack newStack = stack.copy();
+            newStack.consume(1, player);
+            player.setItemInHand(hand, newStack);
+
+            return ItemInteractionResult.SUCCESS;
+        } else if (stack.is(Items.WET_SPONGE) && this.color != PipeColor.CLEAR) {
+            level.setBlockAndUpdate(pos, this.setColor(state, PipeColor.CLEAR));
+            return ItemInteractionResult.SUCCESS;
+        } else if (stack.getItem() instanceof StandardWrenchItem && level.getBlockEntity(pos) instanceof Pullable pullablePipe) {
+            pullablePipe.setPull(!pullablePipe.isPull());
+            return ItemInteractionResult.SUCCESS;
         }
 
         return super.useItemOn(stack, state, level, pos, player, hand, hit);
