@@ -57,7 +57,7 @@ public class GlassFluidPipeBlock extends FluidPipeBlock implements FluidLoggable
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    protected @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return super.getShape(state, world, pos, context);
     }
 

@@ -135,9 +135,6 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
             }
 
             // Regular Stuff
-            for (var direction : Constant.Misc.DIRECTIONS) {
-//                changed |= fluidPipe.getConnections()[direction.ordinal()] = fluidPipe.canConnect(direction) && FluidUtil.canAccessFluid(level, pos.relative(direction), direction);
-            }
             if (changed) {
                 fluidPipe.setChanged();
                 level.sendBlockUpdated(pos, state, state, Block.UPDATE_IMMEDIATE);
@@ -184,10 +181,6 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
     protected PipeColor color() {
         return this.color;
     }
-
-    @Nullable
-    @Override
-    public abstract PipeBlockEntity newBlockEntity(BlockPos pos, BlockState state);
 
     protected abstract Block getMatchingBlock(PipeColor color);
 }

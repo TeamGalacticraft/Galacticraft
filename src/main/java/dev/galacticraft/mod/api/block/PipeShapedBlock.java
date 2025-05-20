@@ -35,8 +35,6 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.StateHolder;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -52,11 +50,11 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
     }
 
     @Override
-    abstract public @Nullable BE newBlockEntity(BlockPos pos, BlockState state);
+    public abstract @Nullable BE newBlockEntity(BlockPos pos, BlockState state);
 
-    abstract public boolean canConnectTo(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos, BlockState thisState);
+    public abstract boolean canConnectTo(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos, BlockState thisState);
 
-    abstract protected void onConnectionChanged(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos);
+    protected abstract void onConnectionChanged(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos);
 
     protected boolean updateConnection(BlockState currentState, BlockPos pos, Direction side, BlockPos neighborPos, Level level) {
         if (level.getBlockEntity(pos) instanceof Connected pipe) {
@@ -169,12 +167,5 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
         }
 
         return i;
-    }
-
-    public static <O, S extends StateHolder<O,S>> S applyDefaultState(S state) {
-        return state;
-    }
-
-    public static <O, S extends StateHolder<O,S>> void addStateDefinitions(StateDefinition.Builder<O, S> builder) {
     }
 }
