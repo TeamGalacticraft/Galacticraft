@@ -22,16 +22,13 @@
 
 package dev.galacticraft.mod.content.block.special.aluminumwire.tier1;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.WireBlock;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
-import dev.galacticraft.mod.util.DirectionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -39,7 +36,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FluidState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import team.reborn.energy.api.EnergyStorage;
 
 public class AluminumWireBlock extends WireBlock implements FluidLoggable {
     public AluminumWireBlock(Properties settings) {
@@ -48,38 +44,6 @@ public class AluminumWireBlock extends WireBlock implements FluidLoggable {
         BlockState defaultState = this.getStateDefinition().any();
         defaultState = FluidLoggable.applyDefaultState(defaultState);
         this.registerDefaultState(defaultState);
-    }
-
-    @Override
-    public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState oldState, boolean notify) {
-        super.onPlace(blockState, level, blockPos, oldState, notify);
-
-        if (level.getBlockEntity(blockPos) instanceof WireBlockEntity wire) {
-            var changed = false;
-            for (var direction : Constant.Misc.DIRECTIONS) {
-                changed |= wire.getConnections()[direction.ordinal()] = wire.canConnect(direction) && EnergyStorage.SIDED.find(level, blockPos.relative(direction), direction.getOpposite()) != null;
-            }
-            if (changed) {
-                wire.setChanged();
-                level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
-            }
-        }
-    }
-
-    @Override
-    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos neighborPos, boolean notify) {
-        super.neighborChanged(blockState, level, blockPos, block, neighborPos, notify);
-
-        if (level.getBlockEntity(blockPos) instanceof WireBlockEntity wire) {
-            var direction = DirectionUtil.fromNormal(neighborPos.getX() - blockPos.getX(), neighborPos.getY() - blockPos.getY(), neighborPos.getZ() - blockPos.getZ());
-
-            if (direction != null) {
-                if (!level.isClientSide && wire.getConnections()[direction.ordinal()] != (wire.getConnections()[direction.ordinal()] = wire.canConnect(direction) && EnergyStorage.SIDED.find(level, neighborPos, direction.getOpposite()) != null)) {
-                    level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
-                    wire.setChanged();
-                }
-            }
-        }
     }
 
     @Override

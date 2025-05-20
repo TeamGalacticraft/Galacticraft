@@ -38,12 +38,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -91,11 +91,11 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
                     stack2.shrink(1);
                 }
                 player.setItemInHand(hand, stack2);
-                this.setColor(state, level, pos, color);
+                level.setBlockAndUpdate(pos, this.setColor(state, color));
 
                 return ItemInteractionResult.SUCCESS;
             } else if (stack.is(Items.WET_SPONGE) && this.color != PipeColor.CLEAR) {
-                this.setColor(state, level, pos, PipeColor.CLEAR);
+                level.setBlockAndUpdate(pos, this.setColor(state, PipeColor.CLEAR));
                 return ItemInteractionResult.SUCCESS;
             } else if (stack.getItem() instanceof StandardWrenchItem && pipeEntity instanceof Pullable pullablePipe) {
                 pullablePipe.setPull(!pullablePipe.isPull());
@@ -116,30 +116,25 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
     }
 
     @Override
-    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        super.setPlacedBy(level, pos, state, placer, itemStack);
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        BlockState state = super.getStateForPlacement(ctx);
+        if (ctx.getPlayer() == null) {
+            return state;
+        }
 
-        if (level.getBlockEntity(pos) instanceof PipeBlockEntity fluidPipe && placer instanceof Player player) {
-            var changed = false;
-            for (var interactionHand : InteractionHand.values()) {
-                var stack = player.getItemInHand(interactionHand);
+        Player player = ctx.getPlayer();
+        for (InteractionHand hand : InteractionHand.values()) {
+            ItemStack stack = player.getItemInHand(hand);
+            if (stack.getItem() instanceof DyeItem dye && PipeColor.fromDye(dye.getDyeColor()) != this.color) {
+                ItemStack newStack = stack.copy();
+                newStack.consume(1, player);
+                player.setItemInHand(hand, newStack);
 
-                if (stack.getItem() instanceof DyeItem dye && PipeColor.fromDye(dye.getDyeColor()) != this.color) {
-                    this.setColor(state, level, pos, dye.getDyeColor());
-                    var copy = stack.copy();
-                    copy.consume(1, player);
-
-                    player.setItemInHand(interactionHand, copy);
-                    changed = true;
-                }
-            }
-
-            // Regular Stuff
-            if (changed) {
-                fluidPipe.setChanged();
-                level.sendBlockUpdated(pos, state, state, Block.UPDATE_IMMEDIATE);
+                return this.setColor(state, dye.getDyeColor());
             }
         }
+
+        return state;
     }
 
     protected<T extends FluidPipeBlock> MapCodec<T> simpleCodec(BiFunction<BlockBehaviour.Properties, PipeColor, T> generator) {
@@ -157,25 +152,21 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
     }
 
     // Taken from AE2's Color Applicator implementation
-    public boolean setColor(BlockState state, Level level, BlockPos pos, PipeColor color) {
-        if (color == this.color)
-            return false;
-
+    public BlockState setColor(BlockState state, PipeColor color) {
         BlockState newState = this.getMatchingBlock(color).defaultBlockState();
         for (Property<?> property : newState.getProperties()) {
             newState = copyProperty(state, newState, property);
         }
-        level.setBlockAndUpdate(pos, newState);
 
-        return true;
+        return newState;
     }
 
     private static <T extends Comparable<T>> BlockState copyProperty(BlockState oldState, BlockState newState, Property<T> property) {
         return newState.setValue(property, oldState.getValue(property));
     }
 
-    protected boolean setColor(BlockState state, Level level, BlockPos pos, DyeColor dye) {
-        return this.setColor(state, level, pos, PipeColor.fromDye(dye));
+    protected BlockState setColor(BlockState state, DyeColor dye) {
+        return this.setColor(state, PipeColor.fromDye(dye));
     }
 
     protected PipeColor color() {

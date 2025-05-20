@@ -109,13 +109,6 @@ public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage 
 
     @Override
     public void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction) {
-        boolean connected = this.canConnect(direction) && EnergyStorage.SIDED.find(this.level, neighborPos, direction.getOpposite()) != null;
-        if (this.connections[direction.get3DDataValue()] != connected) {
-            this.connections[direction.get3DDataValue()] = connected;
-            this.level.sendBlockUpdated(pos, state, state, 0);
-            this.level.updateNeighborsAt(pos, state.getBlock());
-        }
-
         if (this.network == null || this.network.markedForRemoval()) {
             this.createNetwork();
         }

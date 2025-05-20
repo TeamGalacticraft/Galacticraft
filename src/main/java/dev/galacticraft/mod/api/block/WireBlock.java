@@ -32,7 +32,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
@@ -54,21 +53,6 @@ public abstract class WireBlock extends PipeShapedBlock<WireBlockEntity> {
             }
         }
         return super.useWithoutItem(state, level, pos, player, hit);
-    }
-
-    @Override
-    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos neighborPos, boolean notify) {
-        super.neighborChanged(state, level, pos, block, neighborPos, notify);
-        if (!level.isClientSide) {
-            var wire = (Wire) level.getBlockEntity(pos);
-            assert wire != null;
-            Direction direction = Direction.fromDelta(neighborPos.getX() - pos.getX(), neighborPos.getY() - pos.getY(), neighborPos.getZ() - pos.getZ());
-            assert direction != null;
-
-            if (wire.canConnect(direction)) {
-                wire.updateConnection(state, pos, neighborPos, direction);
-            }
-        }
     }
 
     @Override

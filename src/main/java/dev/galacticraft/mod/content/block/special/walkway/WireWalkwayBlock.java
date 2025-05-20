@@ -25,15 +25,12 @@ package dev.galacticraft.mod.content.block.special.walkway;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.WireBlock;
 import dev.galacticraft.mod.api.block.entity.Connected;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
-import dev.galacticraft.mod.content.block.entity.networked.WireWalkwayBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -76,15 +73,6 @@ public class WireWalkwayBlock extends WireBlock implements FluidLoggable, Walkwa
     }
 
     @Override
-    public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity livingEntity, ItemStack itemStack) {
-        super.setPlacedBy(level, blockPos, blockState, livingEntity, itemStack);
-        if (level.getBlockEntity(blockPos) instanceof WireWalkwayBlockEntity walkway) {
-            walkway.setDirection(Direction.orderedByNearest(livingEntity)[0].getOpposite());
-            level.updateNeighborsAt(blockPos, blockState.getBlock());
-        }
-    }
-
-    @Override
     public @NotNull BlockState updateShape(BlockState blockState, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos blockPos, BlockPos neighborPos) {
         FluidLoggable.tryScheduleFluidTick(level, blockState, blockPos);
         return blockState;
@@ -104,6 +92,6 @@ public class WireWalkwayBlock extends WireBlock implements FluidLoggable, Walkwa
     @Override
     @Nullable
     public WireBlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new WireWalkwayBlockEntity(blockPos, blockState);
+        return WireBlockEntity.createT1(GCBlockEntityTypes.WIRE_T1, blockPos, blockState);
     }
 }
