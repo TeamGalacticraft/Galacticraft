@@ -67,7 +67,7 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
 
             boolean currentlyConnected = pipe.getConnections()[side.get3DDataValue()];
             pipe.getConnections()[side.get3DDataValue()] = canConnect;
-            level.blockEntityChanged(pos);
+            level.sendBlockUpdated(pos, currentState, currentState, Block.UPDATE_IMMEDIATE);
             return canConnect != currentlyConnected;
         } else {
             return false;
