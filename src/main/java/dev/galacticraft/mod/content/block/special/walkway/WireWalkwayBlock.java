@@ -25,10 +25,8 @@ package dev.galacticraft.mod.content.block.special.walkway;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.WireBlock;
 import dev.galacticraft.mod.api.block.entity.Connected;
-import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import dev.galacticraft.mod.content.block.entity.networked.WireWalkwayBlockEntity;
-import dev.galacticraft.mod.util.DirectionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,16 +38,12 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import team.reborn.energy.api.EnergyStorage;
-
-import java.util.Objects;
 
 public class WireWalkwayBlock extends WireBlock implements FluidLoggable, WalkwayBlock {
     public WireWalkwayBlock(Properties settings) {
@@ -77,9 +71,7 @@ public class WireWalkwayBlock extends WireBlock implements FluidLoggable, Walkwa
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
         state = FluidLoggable.applyFluidState(context.getLevel(), state, context.getClickedPos());
-        if (context.getPlayer() != null) {
-            state = state.setValue(BlockStateProperties.FACING, Direction.orderedByNearest(context.getPlayer())[0].getOpposite());
-        }
+        state = WalkwayBlock.applyStateForPlacement(state, context);
         return state;
     }
 
@@ -96,35 +88,6 @@ public class WireWalkwayBlock extends WireBlock implements FluidLoggable, Walkwa
     public @NotNull BlockState updateShape(BlockState blockState, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos blockPos, BlockPos neighborPos) {
         FluidLoggable.tryScheduleFluidTick(level, blockState, blockPos);
         return blockState;
-    }
-
-    @Override
-    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos neighborPos, boolean notify) {
-        super.neighborChanged(blockState, level, blockPos, block, neighborPos, notify);
-        var distance = neighborPos.subtract(blockPos);
-
-        if (Math.abs(distance.getX() + distance.getY() + distance.getZ()) == 1 && level.getBlockEntity(blockPos) instanceof WireWalkwayBlockEntity walkway) {
-            var direction = DirectionUtil.fromNormal(distance);
-            if (direction != walkway.getDirection()) {
-                if (level.getBlockEntity(blockPos.relative(direction)) instanceof Wire wire && wire instanceof WireWalkwayBlockEntity) {
-                    if (wire.canConnect(direction.getOpposite())) {
-                        if (walkway.getConnections()[direction.ordinal()] != (walkway.getConnections()[direction.ordinal()] = true)) {
-                            level.neighborChanged(blockPos.relative(direction), blockState.getBlock(), blockPos);
-                            level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
-                        }
-                        return;
-                    }
-                } else if (EnergyStorage.SIDED.find(level, blockPos.relative(direction), direction.getOpposite()) != null) {
-                    if (walkway.getConnections()[direction.ordinal()] != (walkway.getConnections()[direction.ordinal()] = true)) {
-                        level.neighborChanged(blockPos.relative(direction), blockState.getBlock(), blockPos);
-                        level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
-                    }
-                    return;
-                }
-            }
-            walkway.getConnections()[Objects.requireNonNull(direction).ordinal()] = false;
-            level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
-        }
     }
 
     @Override

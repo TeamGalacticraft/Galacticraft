@@ -32,17 +32,19 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class Walkway extends PipeShapedBlock<WalkwayBlockEntity> implements WalkwayBlock {
+public class Walkway extends PipeShapedBlock<WalkwayBlockEntity> implements WalkwayBlock, FluidLoggable {
     public Walkway(Properties properties) {
         super(0.125f, properties);
 
@@ -77,6 +79,17 @@ public class Walkway extends PipeShapedBlock<WalkwayBlockEntity> implements Walk
         state = FluidLoggable.applyFluidState(context.getLevel(), state, context.getClickedPos());
         state = WalkwayBlock.applyStateForPlacement(state, context);
         return state;
+    }
+
+    @Override
+    protected @NotNull FluidState getFluidState(BlockState state) {
+        return FluidLoggable.createFluidState(state);
+    }
+
+    @Override
+    protected @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos pos, BlockPos neighborPos) {
+        FluidLoggable.tryScheduleFluidTick(levelAccessor, state, pos);
+        return super.updateShape(state, direction, neighborState, levelAccessor, pos, neighborPos);
     }
 
     @Override
