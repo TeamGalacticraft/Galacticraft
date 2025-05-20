@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_glass_fluid_pipe": {
+    "has_glass_pane": {
       "conditions": {
         "items": [
           {
-            "items": "galacticraft:glass_fluid_pipe"
+            "items": "minecraft:glass_pane"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_glass_fluid_pipe"
+      "has_glass_pane"
     ]
   ],
   "rewards": {

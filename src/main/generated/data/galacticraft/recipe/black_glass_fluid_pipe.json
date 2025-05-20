@@ -2,20 +2,17 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "D": {
-      "tag": "c:dyes/black"
-    },
-    "P": {
-      "item": "galacticraft:glass_fluid_pipe"
+    "X": {
+      "item": "minecraft:black_stained_glass_pane"
     }
   },
   "pattern": [
-    "PPP",
-    "PDP",
-    "PPP"
+    "XXX",
+    "   ",
+    "XXX"
   ],
   "result": {
-    "count": 8,
+    "count": 6,
     "id": "galacticraft:black_glass_fluid_pipe"
   }
 }

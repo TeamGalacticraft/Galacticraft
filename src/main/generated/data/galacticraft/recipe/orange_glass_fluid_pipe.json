@@ -2,20 +2,17 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "D": {
-      "tag": "c:dyes/orange"
-    },
-    "P": {
-      "item": "galacticraft:glass_fluid_pipe"
+    "X": {
+      "item": "minecraft:orange_stained_glass_pane"
     }
   },
   "pattern": [
-    "PPP",
-    "PDP",
-    "PPP"
+    "XXX",
+    "   ",
+    "XXX"
   ],
   "result": {
-    "count": 8,
+    "count": 6,
     "id": "galacticraft:orange_glass_fluid_pipe"
   }
 }

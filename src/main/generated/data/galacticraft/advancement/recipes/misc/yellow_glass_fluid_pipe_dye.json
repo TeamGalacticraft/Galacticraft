@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "galacticraft:wash_stained_glass_fluid_pipe"
+        "recipe": "galacticraft:yellow_glass_fluid_pipe_dye"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "galacticraft:wash_stained_glass_fluid_pipe"
+      "galacticraft:yellow_glass_fluid_pipe_dye"
     ]
   }
 }
