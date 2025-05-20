@@ -24,14 +24,12 @@ package dev.galacticraft.mod.content.block.entity;
 
 import dev.galacticraft.mod.api.block.entity.Connected;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -50,12 +48,7 @@ public class WalkwayBlockEntity extends BlockEntity implements Connected {
 
     @Override
     public void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction) {
-        if (this.level == null) {
-            return;
-        }
 
-        BlockState neighborState = this.level.getBlockState(neighborPos);
-        this.connections[direction.ordinal()] = neighborState.is(GCBlocks.WALKWAY) || neighborState.isFaceSturdy(this.level, neighborPos, direction.getOpposite(), SupportType.CENTER);
     }
 
     @Override
