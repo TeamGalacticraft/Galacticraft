@@ -92,7 +92,6 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
             return;
 
         if (this.updateConnection(state, pos, direction, neighborPos, level)) {
-            level.updateNeighborsAtExceptFromFacing(pos, state.getBlock(), direction);
             this.onConnectionChanged(level, pos, direction, neighborPos);
         }
     }
@@ -101,7 +100,6 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
     protected @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos pos, BlockPos neighborPos) {
         if (levelAccessor instanceof Level level) {
             if (this.updateConnection(state, pos, direction, neighborPos, level)) {
-                level.updateNeighborsAtExceptFromFacing(pos, state.getBlock(), direction);
                 this.onConnectionChanged(level, pos, direction, neighborPos);
             }
         }
