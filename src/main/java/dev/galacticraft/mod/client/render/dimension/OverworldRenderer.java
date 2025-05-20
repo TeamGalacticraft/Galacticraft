@@ -74,18 +74,14 @@ public class OverworldRenderer extends SpaceSkyRenderer {
     }
 
     public void renderOverworldSky(Player player, Matrix4f matrix4f, Matrix4f projectionMatrix, float partialTicks, Camera camera, boolean bl, Runnable runnable) {
-        runnable.run();
         PoseStack poseStack = new PoseStack();
         poseStack.mulPose(matrix4f);
         Tesselator tesselator = Tesselator.getInstance();
 
-        float theta = Mth.sqrt(((float) (player.getY()) - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) / 200.0F);
-        final float skyModifier = 0.0F; // Math.max(1.0F - 0.29F * theta, 0.0F);
-
-        final Vec3 skyColor = this.minecraft.level.getSkyColor(camera.getPosition(), partialTicks);
-        float x = (float) skyColor.x * skyModifier;
-        float y = (float) skyColor.y * skyModifier;
-        float z = (float) skyColor.z * skyModifier;
+        final Vec3 skyColor = this.getFogColor(this.minecraft.level, partialTicks, camera.getPosition());
+        float x = (float) skyColor.x;
+        float y = (float) skyColor.y;
+        float z = (float) skyColor.z;
 
         FogRenderer.levelFogColor();
         RenderSystem.depthMask(false);
@@ -94,7 +90,7 @@ public class OverworldRenderer extends SpaceSkyRenderer {
         this.skyBuffer.drawWithShader(poseStack.last().pose(), projectionMatrix, RenderSystem.getShader());
         VertexBuffer.unbind();
         RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
+        // RenderSystem.defaultBlendFunc();
         // final float[] sunriseColors = this.minecraft.level.effects().getSunriseColor(this.minecraft.level.getTimeOfDay(partialTicks), partialTicks);
 
         // if (sunriseColors != null) {
@@ -130,14 +126,14 @@ public class OverworldRenderer extends SpaceSkyRenderer {
         );
 
         poseStack.pushPose();
-        float alpha = 1.0F - this.minecraft.level.getRainLevel(partialTicks);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F); // alpha);
+        // float alpha = 1.0F - this.minecraft.level.getRainLevel(partialTicks);
+        // RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F); // alpha);
         poseStack.mulPose(Axis.YP.rotationDegrees(-90.0F));
         poseStack.mulPose(Axis.XP.rotationDegrees(this.minecraft.level.getTimeOfDay(partialTicks) * 360.0F));
 
         // Draw stars
-        RenderSystem.disableBlend();
-        RenderSystem.defaultBlendFunc();
+        // RenderSystem.disableBlend();
+        // RenderSystem.defaultBlendFunc();
         // RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
         // Vec3 vec = getFogColor(this.minecraft.level, partialTicks, camera.getPosition());
@@ -188,7 +184,7 @@ public class OverworldRenderer extends SpaceSkyRenderer {
 
         float color = Mth.clamp(Mth.cos(this.minecraft.level.getTimeOfDay(partialTicks) * Mth.TWO_PI) * 2.0F + 0.5F, 0.25F, 1.0F);
         RenderSystem.setShaderColor(color, color, color, 1.0F);
-        this.earthManager.render(poseStack, this.minecraft.level, 2.0D * (playerHeight - 64.0D), partialTicks);
+        this.earthManager.render(poseStack, this.minecraft.level, 2.0D * (player.getY() - 64.0D), partialTicks);
 
         poseStack.popPose();
 
@@ -199,11 +195,10 @@ public class OverworldRenderer extends SpaceSkyRenderer {
     }
 
     public static Vec3 getFogColor(ClientLevel level, float partialTicks, Vec3 cameraPos) {
-        // float heightOffset = ((float) (cameraPos.y()) - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) / 200.0F;
-        // heightOffset = Math.max(1.0F - 0.29F * Mth.sqrt(heightOffset), 0.0F);
+        float heightOffset = ((float) (cameraPos.y()) - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) / 200.0F;
+        heightOffset = Math.max(1.0F - 0.75F * Mth.sqrt(heightOffset), 0.0F);
 
-        // Vec3 skyColor = level.getSkyColor(cameraPos, partialTicks);
-        // return skyColor.scale(heightOffset);
-        return new Vec3(0.0, 0.0, 0.0);
+        Vec3 skyColor = level.getSkyColor(cameraPos, partialTicks);
+        return skyColor.scale(heightOffset);
     }
 }

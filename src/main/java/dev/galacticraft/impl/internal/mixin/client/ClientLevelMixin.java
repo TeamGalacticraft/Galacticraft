@@ -47,9 +47,8 @@ public class ClientLevelMixin {
             return gcEffects.getSkyColor((ClientLevel) (Object) this, partialTick);
         } else if (pos.y() > Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) {
             float heightOffset = ((float) (pos.y()) - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) / 200.0F;
-            heightOffset = Math.max(1.0F - 0.29F * Mth.sqrt(heightOffset), 0.0F);
-            // return original.scale(heightOffset);
-            return new Vec3(0.0, 0.0, 0.0);
+            heightOffset = Math.max(1.0F - 0.75F * Mth.sqrt(heightOffset), 0.0F);
+            return original.scale(heightOffset);
         }
         return original;
     }

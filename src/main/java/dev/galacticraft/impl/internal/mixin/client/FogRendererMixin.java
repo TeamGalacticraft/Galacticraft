@@ -42,7 +42,7 @@ public class FogRendererMixin {
         if (level.effects() instanceof GalacticDimensionEffects gcEffects) {
             return gcEffects.getFogColor(level, partialTicks, cameraPos, fetcher);
         } else if (4.0F * cameraPos.y() > Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) {
-            return OverworldRenderer.getFogColor(level, partialTicks, cameraPos.scale(4.0).add(2.0, 2.0, 2.0));
+            return OverworldRenderer.getFogColor(level, partialTicks, cameraPos.scale(4.9).subtract(2.0, 45.0, 2.0));
         }
         return original.call(cameraPos, fetcher);
     }

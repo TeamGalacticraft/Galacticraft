@@ -79,7 +79,7 @@ public class EarthManager {
         matrix = matrices.last().pose();
 
         RenderSystem.setShaderTexture(0, Constant.Skybox.CLOUDS);
-        float height = -100.0F + 0.01F * size;
+        float height = -100.0F + (float) ((size * 25.0D) / y);
         float u0 = (-2.0F * level.getTimeOfDay(partialTicks)) % 1;
         float u1 = u0 + 1.0F;
         buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
