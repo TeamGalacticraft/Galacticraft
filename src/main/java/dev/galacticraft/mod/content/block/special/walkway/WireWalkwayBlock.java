@@ -75,7 +75,7 @@ public class WireWalkwayBlock extends WireBlock implements FluidLoggable, Walkwa
     @Override
     public @NotNull BlockState updateShape(BlockState blockState, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos blockPos, BlockPos neighborPos) {
         FluidLoggable.tryScheduleFluidTick(level, blockState, blockPos);
-        return blockState;
+        return super.updateShape(blockState, direction, neighborState, level, blockPos, neighborPos);
     }
 
     @Override
