@@ -84,7 +84,7 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
             if (this.color == color) {
                 return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
             }
-            level.setBlockAndUpdate(pos, this.setColor(state, color));
+            this.setColorAndBlock(level, pos, state, color);
 
             ItemStack newStack = stack.copy();
             newStack.consume(1, player);
@@ -92,7 +92,7 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
 
             return ItemInteractionResult.SUCCESS;
         } else if (stack.is(Items.WET_SPONGE) && this.color != PipeColor.CLEAR) {
-            level.setBlockAndUpdate(pos, this.setColor(state, PipeColor.CLEAR));
+            this.setColorAndBlock(level, pos, state, PipeColor.CLEAR);
             return ItemInteractionResult.SUCCESS;
         } else if (stack.getItem() instanceof StandardWrenchItem && level.getBlockEntity(pos) instanceof Pullable pullablePipe) {
             pullablePipe.setPull(!pullablePipe.isPull());
@@ -163,6 +163,14 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
 
     protected BlockState setColor(BlockState state, DyeColor dye) {
         return this.setColor(state, PipeColor.fromDye(dye));
+    }
+
+    protected void setColorAndBlock(Level level, BlockPos pos, BlockState state, PipeColor color) {
+        BlockState newState = this.setColor(state, color);
+        level.setBlockAndUpdate(pos, newState);
+        for (Direction direction : Direction.values()) {
+            ((FluidPipeBlock)newState.getBlock()).updateConnection(newState, pos, direction, pos.relative(direction), level);
+        }
     }
 
     protected PipeColor color() {
