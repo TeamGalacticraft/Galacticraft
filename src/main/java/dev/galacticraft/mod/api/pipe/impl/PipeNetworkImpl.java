@@ -263,9 +263,14 @@ public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSna
 
     @Override
     public String toString() {
+        StringBuilder builder = new StringBuilder("[").append(pipes.size()).append(";");
+        for (BlockPos pos : pipes.keySet()) {
+            builder.append(String.format(" (%d,%d,%d),", pos.getX(), pos.getY(), pos.getZ()));
+        }
+        builder.append("]");
         return "PipeNetworkImpl{" +
                 "level=" + level.dimension().location() +
-                ", pipes=" + pipes +
+                ", pipes=" + builder +
                 ", markedForRemoval=" + markedForRemoval +
                 ", maxTransferRate=" + maxTransferRate +
                 ", tickId=" + tickId +
