@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.data.tag;
 
+import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCBlockTags;
@@ -34,7 +35,10 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
 public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
@@ -148,6 +152,12 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         this.tag(GCItemTags.WRENCHES)
                 .add(GCItems.STANDARD_WRENCH);
+
+        Item[] stainedGlassFluidPipes = Arrays.stream(DyeColor.values()).map(PipeColor::fromDye).map(GCBlocks.GLASS_FLUID_PIPES::get).map(ItemLike::asItem).toArray(Item[]::new);
+        this.tag(GCItemTags.STAINED_GLASS_FLUID_PIPES)
+                .add(stainedGlassFluidPipes);
+        this.tag(ConventionalItemTags.DYED)
+                .add(stainedGlassFluidPipes);
 
         this.tag(GCItemTags.BATTERIES)
                 .add(GCItems.BATTERY)
@@ -473,7 +483,7 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE.asItem());
     }
 
-    protected FabricTagProvider<Item>.FabricTagBuilder tag(TagKey<Item> tag) {
+    protected FabricTagProvider<Item>.@NotNull FabricTagBuilder tag(TagKey<Item> tag) {
         return this.getOrCreateTagBuilder(tag);
     }
 }

@@ -36,6 +36,7 @@ import com.mojang.serialization.JsonOps;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.event.RocketAtlasCallback;
 import dev.galacticraft.mod.client.resources.RocketTextureManager;
+import dev.galacticraft.mod.content.GCBlocks;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.Util;
@@ -45,6 +46,7 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.model.AtlasSet;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.data.models.model.ModelLocationUtils;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -52,6 +54,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.Block;
 
 import java.io.Reader;
 import java.util.*;
@@ -85,11 +88,6 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
 
     @Override
     public void onInitializeModelLoader(Context pluginContext) {
-
-        for (var color : DyeColor.values()) {
-            pluginContext.addModels(Constant.id("block/" + color + "_fluid_pipe_walkway"));
-        }
-
         pluginContext.modifyModelAfterBake().register((model, context) -> {
             if (context.resourceId() != null && context.resourceId().equals(CANNED_FOOD_MODEL)) {
                 return new CannedFoodBakedModel(model);
@@ -100,17 +98,22 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
         pluginContext.resolveModel().register(context -> {
             var resourceId = context.id();
 
+            for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
+                if (ModelLocationUtils.getModelLocation(pipe).equals(resourceId)) {
+                    return new PipeUnbakedModel(resourceId, 0.125f);
+                }
+            }
 
-            if (Constant.BakedModel.WIRE_MARKER.equals(resourceId)) {
-                return WireUnbakedModel.INSTANCE;
-            } else if (Constant.BakedModel.WALKWAY_MARKER.equals(resourceId)) {
-                return WalkwayUnbakedModel.INSTANCE;
-            } else if (Constant.BakedModel.WIRE_WALKWAY_MARKER.equals(resourceId)) {
-                return WireWalkwayUnbakedModel.INSTANCE;
-            } else if (Constant.BakedModel.FLUID_PIPE_WALKWAY_MARKER.equals(resourceId)) {
-                return FluidPipeWalkwayUnbakedModel.INSTANCE;
-            } else if (Constant.BakedModel.GLASS_FLUID_PIPE_MARKER.equals(resourceId)) {
-                return PipeUnbakedModel.INSTANCE;
+            if (ModelLocationUtils.getModelLocation(GCBlocks.ALUMINUM_WIRE).equals(resourceId)) {
+                return new PipeUnbakedModel(Constant.id("block/aluminum_wire"), 0.125f);
+            } else if (Constant.BakedModel.WALKWAY_CONNECTOR_MARKER.equals(resourceId)) {
+                return new PipeUnbakedModel(Constant.id("block/walkway_connector"), 0.125f);
+            } else if (Constant.BakedModel.WALKWAY_CENTER_MARKER.equals(resourceId)) {
+                return new WalkwayCenterModel(Constant.id("block/walkway_connector"));
+            } else if (Constant.BakedModel.PIPE_WALKWAY_CENTER_MARKER.equals(resourceId)) {
+                return new WalkwayCenterModel(Constant.id("block/glass_fluid_pipe"));
+            } else if (Constant.BakedModel.WIRE_WALKWAY_CENTER_MARKER.equals(resourceId)) {
+                return new WalkwayCenterModel(Constant.id("block/aluminum_wire"));
             } else if (Constant.BakedModel.VACUUM_GLASS_MODEL.equals(resourceId)) {
                 return VacuumGlassUnbakedModel.INSTANCE;
             } else if (PARACHEST_ITEM.equals(resourceId)) {

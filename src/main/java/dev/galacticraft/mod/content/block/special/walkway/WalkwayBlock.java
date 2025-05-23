@@ -22,172 +22,63 @@
 
 package dev.galacticraft.mod.content.block.special.walkway;
 
-import com.google.common.collect.Lists;
-import dev.galacticraft.mod.api.block.FluidLoggable;
-import dev.galacticraft.mod.content.block.entity.WalkwayBlockEntity;
+import dev.galacticraft.mod.api.block.PipeShapedBlock;
+import dev.galacticraft.mod.api.block.entity.Connected;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
-import dev.galacticraft.mod.util.DirectionUtil;
-import net.minecraft.core.BlockPos;
+import net.minecraft.Util;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.material.FlowingFluid;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.level.block.state.StateHolder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
+import java.util.HashMap;
+import java.util.Map;
 
-public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
-    private static final int OFFSET = 2;
-    private static final VoxelShape NORTH = box(8 - OFFSET, 8 - OFFSET, 0, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
-    private static final VoxelShape EAST = box(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 16, 8 + OFFSET, 8 + OFFSET);
-    private static final VoxelShape SOUTH = box(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 16);
-    private static final VoxelShape WEST = box(0, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
-    private static final VoxelShape UP = box(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 16, 8 + OFFSET);
-    private static final VoxelShape DOWN = box(8 - OFFSET, 0, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
-    private static final VoxelShape[] SHAPES = new VoxelShape[64];
+public interface WalkwayBlock {
+    // Maps connection state (from PipeShapedBlock.generateAABBIndex()) and walkway facing direction to the right VoxelShape
+    Map<Pair<Integer, Direction>, VoxelShape> SHAPES = Util.make(new HashMap<>(), map -> {
+        float pipeRadius = 0.125f;
+        VoxelShape[] pipeShapes = PipeShapedBlock.makeShapes(pipeRadius);
 
-    public WalkwayBlock(Properties settings) {
-        super(settings);
-        this.registerDefaultState(this.getStateDefinition().any()
-                .setValue(FLUID, INVALID)
-                .setValue(FlowingFluid.LEVEL, 8)
-                .setValue(FlowingFluid.FALLING, false));
-    }
-
-    private static int getFacingMask(Direction direction) {
-        return 1 << direction.get3DDataValue();
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState blockState, BlockGetter level, BlockPos blockPos, CollisionContext context) {
-        if (level.getBlockEntity(blockPos) instanceof WalkwayBlockEntity walkway) {
-            var index = getFacingMask(walkway.getDirection());
-            var shapes = Lists.newArrayList(ConnectingBlockUtil.WALKWAY_TOP);
-
-            if (walkway.getConnections()[2]) {
-                shapes.add(NORTH);
+        for (int pipeAabb = 0; pipeAabb < Math.pow(2, 6); pipeAabb++) {
+            for (Direction platformDirection : Direction.values()) {
+                map.put(Pair.of(pipeAabb, platformDirection), Shapes.or(
+                        pipeShapes[pipeAabb],
+                        ConnectingBlockUtil.WALKWAY_SHAPES.get(platformDirection)
+                ));
             }
-            if (walkway.getConnections()[3]) {
-                shapes.add(SOUTH);
-            }
-            if (walkway.getConnections()[5]) {
-                shapes.add(EAST);
-            }
-            if (walkway.getConnections()[4]) {
-                shapes.add(WEST);
-            }
-            if (walkway.getConnections()[1]) {
-                shapes.add(UP);
-            }
-            if (walkway.getConnections()[0]) {
-                shapes.add(DOWN);
-            }
-            if (SHAPES[index] != null) {
-                return Shapes.or(SHAPES[index], shapes.toArray(VoxelShape[]::new));
-            }
-            return Shapes.or(SHAPES[index] = ConnectingBlockUtil.createWalkwayShape(walkway.getDirection()), shapes.toArray(VoxelShape[]::new));
         }
-        return ConnectingBlockUtil.WALKWAY_TOP;
+    });
+
+    static @NotNull VoxelShape getShape(Connected connected, BlockState blockState) {
+        return SHAPES.get(Pair.of(PipeShapedBlock.generateAABBIndex(connected), blockState.getValue(BlockStateProperties.FACING)));
     }
 
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        Level level = context.getLevel();
-        BlockPos pos = context.getClickedPos();
-
-        // Prevent placing walkway inside the player
-        if (!level.isUnobstructed(null, Shapes.block().move(pos.getX(), pos.getY(), pos.getZ()))) {
-            return null;
-        }
-
-        var fluidState = level.getFluidState(pos);
-        return this.defaultBlockState()
-                .setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType()))
-                .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1))
-                .setValue(FlowingFluid.FALLING, fluidState.hasProperty(FlowingFluid.FALLING) ? fluidState.getValue(FlowingFluid.FALLING) : false);
+    // Returns a shape with all connections active
+    // Should be used when no block entity is available, like when the game is checking if the player is obstructing placement
+    static @NotNull VoxelShape getShape(BlockState blockState) {
+        return SHAPES.get(Pair.of(63, blockState.getValue(BlockStateProperties.FACING)));
     }
 
-    @Override
-    public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity livingEntity, ItemStack itemStack) {
-        super.setPlacedBy(level, blockPos, blockState, livingEntity, itemStack);
-        if (level.getBlockEntity(blockPos) instanceof WalkwayBlockEntity walkway) {
-            walkway.setDirection(Direction.orderedByNearest(livingEntity)[0].getOpposite());
-            level.updateNeighborsAt(blockPos, blockState.getBlock());
+    static @NotNull BlockState applyStateForPlacement(BlockState state, BlockPlaceContext context) {
+        if (context.getPlayer() != null) {
+            state = state.setValue(BlockStateProperties.FACING, Direction.orderedByNearest(context.getPlayer())[0].getOpposite());
         }
+        return state;
     }
 
-    @Override
-    public BlockState updateShape(BlockState blockState, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos blockPos, BlockPos neighborPos) {
-        if (!this.isEmpty(blockState)) {
-            level.scheduleTick(blockPos, BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)), BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)).getTickDelay(level));
-        }
-        return blockState;
+    static <O, S extends StateHolder<O,S>> S applyDefaultState(S state) {
+        return state.setValue(BlockStateProperties.FACING, Direction.UP);
     }
 
-    @Override
-    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos fromPos, boolean notify) {
-        super.neighborChanged(blockState, level, blockPos, block, fromPos, notify);
-        var distance = fromPos.subtract(blockPos);
-
-        if (Math.abs(distance.getX() + distance.getY() + distance.getZ()) == 1 && level.getBlockEntity(blockPos) instanceof WalkwayBlockEntity walkway) {
-//            walkway.updateConnection(DirectionUtil.fromNormal(distance));
-            var direction = DirectionUtil.fromNormal(distance);
-
-            if (level.getBlockEntity(fromPos) instanceof WalkwayBlockEntity walkway2 && walkway2.getDirection() != null) {
-                if (!fromPos.relative(walkway2.getDirection()).equals(blockPos)) {
-                    if (!blockPos.relative(walkway.getDirection()).equals(fromPos)) {
-                        if (walkway.getConnections()[direction.ordinal()] != (walkway.getConnections()[direction.ordinal()] = true)) {
-                            level.neighborChanged(blockPos.relative(direction), blockState.getBlock(), blockPos);
-                            level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
-                        }
-                        return;
-                    }
-                }
-            }
-            walkway.getConnections()[Objects.requireNonNull(direction).ordinal()] = false;
-            level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
-        }
-    }
-
-    @Override
-    public FluidState getFluidState(BlockState blockState) {
-        if (this.isEmpty(blockState)) {
-            return EMPTY_STATE;
-        }
-
-        var state1 = BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)).defaultFluidState();
-
-        if (state1.getValues().containsKey(FlowingFluid.LEVEL)) {
-            state1 = state1.setValue(FlowingFluid.LEVEL, blockState.getValue(FlowingFluid.LEVEL));
-        }
-        if (state1.getValues().containsKey(FlowingFluid.FALLING)) {
-            state1 = state1.setValue(FlowingFluid.FALLING, blockState.getValue(FlowingFluid.FALLING));
-        }
-        return state1;
-    }
-
-    @Override
-    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FLUID, FlowingFluid.LEVEL, FlowingFluid.FALLING);
-    }
-
-    @Override
-    @Nullable
-    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new WalkwayBlockEntity(blockPos, blockState);
+    static void addStateDefinitions(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(BlockStateProperties.FACING);
     }
 }
