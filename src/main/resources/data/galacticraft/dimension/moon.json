@@ -7,10 +7,10 @@
           "parameters": {
             "weirdness": [
               -1,
-              1
+              0.8
             ],
             "continentalness": [
-              -1.2,
+              0.1,
               1
             ],
             "erosion": [
@@ -37,11 +37,11 @@
           "parameters": {
             "weirdness": [
               -1,
-              1
+              0.8
             ],
             "continentalness": [
-              -1.2,
-              1
+              -0.19,
+              0.1
             ],
             "erosion": [
               -0.375,
@@ -67,18 +67,18 @@
           "parameters": {
             "weirdness": [
               -1,
-              1
+              0.4
             ],
             "continentalness": [
-              -1.2,
-              1
+              -1.05,
+              -0.19
             ],
             "erosion": [
               0.05,
               1
             ],
             "temperature": [
-              -1,
+              -0.45,
               1
             ],
             "humidity": [
@@ -92,6 +92,66 @@
             "offset": 0
           },
           "biome": "galacticraft:basaltic_mare"
+        },
+        {
+          "biome": "galacticraft:olivine_spikes",
+          "parameters": {
+            "temperature": [
+              -1,
+              1
+            ],
+            "humidity": [
+              -1,
+              1
+            ],
+            "continentalness": [
+              -0.455,
+              1
+            ],
+            "erosion": [
+              -1,
+              0.05
+            ],
+            "weirdness": [
+              0.8,
+              1
+            ],
+            "depth": [
+              0,
+              0
+            ],
+            "offset": 0
+          }
+        },
+        {
+          "biome": "galacticraft:comet_tundra",
+          "parameters": {
+            "temperature": [
+              -1,
+              0
+            ],
+            "humidity": [
+              -1,
+              1
+            ],
+            "continentalness": [
+              -1.05,
+              -0.19
+            ],
+            "erosion": [
+              0.05,
+              1
+            ],
+            "weirdness": [
+              0.4,
+              1
+            ],
+            "depth": [
+              0,
+              0
+            ],
+            "offset": 0
+          }
         }
       ],
       "type": "minecraft:multi_noise"
