@@ -1,8 +1,7 @@
 {
   "carvers": {
     "air": [
-      "galacticraft:moon_crater_carver",
-      "galacticraft:moon_canyon_carver"
+      "galacticraft:cheese_cave_carver"
     ]
   },
   "downfall": 0,

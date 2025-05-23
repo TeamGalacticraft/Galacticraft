@@ -46,6 +46,9 @@ public class GCConfiguredCarvers {
     public static final ResourceKey<ConfiguredWorldCarver<?>> MOON_HIGHLANDS_CAVE_CARVER = key(Constant.Carver.MOON_HIGHLANDS_CAVE_CARVER);
     public static final ResourceKey<ConfiguredWorldCarver<?>> MOON_MARE_CAVE_CARVER = key(Constant.Carver.MOON_MARE_CAVE_CARVER);
 
+    // --- OLIVINE BIOME CARVER ---
+    public static final ResourceKey<ConfiguredWorldCarver<?>> OLIVINE_CAVE_CARVER = key(Constant.Carver.OLIVINE_CAVE_CARVER);
+
     @Contract(pure = true)
     private static @NotNull ResourceKey<ConfiguredWorldCarver<?>> key(String s) {
         return Constant.key(Registries.CONFIGURED_CARVER, s);
@@ -96,6 +99,17 @@ public class GCConfiguredCarvers {
                 UniformFloat.of(0.7f, 1.4f),
                 UniformFloat.of(0.8f, 1.3f),
                 UniformFloat.of(-1.0f, -0.4f)
+        )));
+
+        context.register(OLIVINE_CAVE_CARVER, GCCarvers.LUNAR_CAVE.configured(new CaveCarverConfiguration(
+                0.25f, // Higher chance to generate more features
+                UniformHeight.of(VerticalAnchor.aboveBottom(8), VerticalAnchor.absolute(180)),
+                UniformFloat.of(0.15f, 1.2f), // Slightly wider range for variation
+                VerticalAnchor.aboveBottom(-64),
+                HolderSet.direct(), // Add replaceables if needed
+                UniformFloat.of(1.0f, 2.2f), // Wider beams
+                UniformFloat.of(1.0f, 2.0f), // Taller vertical span
+                UniformFloat.of(-1.0f, -0.5f) // Floor noise
         )));
     }
 }

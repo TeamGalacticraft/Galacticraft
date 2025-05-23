@@ -1096,6 +1096,8 @@ public interface Constant {
         String MOON_CRATER_CARVER = "moon_crater_carver";
         String MOON_HIGHLANDS_CAVE_CARVER = "moon_highlands_cave_carver";
         String MOON_MARE_CAVE_CARVER = "moon_mare_cave_carver";
+        // --- OLIVINE BIOME CARVER ---
+        String OLIVINE_CAVE_CARVER = "olivine_cave_carver";
     }
 
     interface Packet {

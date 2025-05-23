@@ -187,7 +187,7 @@
               "then_run": {
                 "type": "minecraft:block",
                 "result_state": {
-                  "Name": "minecraft:grass_block"
+                  "Name": "galacticraft:moon_turf"
                 }
               }
             },
@@ -202,7 +202,7 @@
               "then_run": {
                 "type": "minecraft:block",
                 "result_state": {
-                  "Name": "minecraft:stone"
+                  "Name": "galacticraft:moon_rock"
                 }
               }
             },
@@ -217,7 +217,7 @@
               "then_run": {
                 "type": "minecraft:block",
                 "result_state": {
-                  "Name": "minecraft:red_wool"
+                  "Name": "galacticraft:moon_basalt"
                 }
               }
             }
@@ -255,7 +255,7 @@
               "type": "minecraft:condition",
               "if_true": {
                 "type": "minecraft:stone_depth",
-                "offset": 40,
+                "offset": 0,
                 "surface_type": "floor",
                 "add_surface_depth": true,
                 "secondary_depth_range": 0
@@ -317,15 +317,15 @@
                           "type": "minecraft:condition",
                           "if_true": {
                             "type": "minecraft:stone_depth",
-                            "offset": 20,
+                            "offset": 0,
                             "surface_type": "floor",
                             "add_surface_depth": false,
-                            "secondary_depth_range": 0
+                            "secondary_depth_range": 7
                           },
                           "then_run": {
                             "type": "minecraft:block",
                             "result_state": {
-                              "Name": "minecraft:red_wool"
+                              "Name": "minecraft:spruce_log"
                             }
                           }
                         }

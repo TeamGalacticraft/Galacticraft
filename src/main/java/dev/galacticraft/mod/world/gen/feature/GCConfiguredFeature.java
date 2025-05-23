@@ -36,8 +36,14 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 public class GCConfiguredFeature {
     public static final ResourceKey<ConfiguredFeature<?, ?>> OIL_LAKE = ResourceKey.create(Registries.CONFIGURED_FEATURE, Constant.id("oil_lake"));
 
+    // --- OLIVINE BIOME ---
+    public static final ResourceKey<ConfiguredFeature<?, ?>> OLIVINE_BEAM = ResourceKey.create(Registries.CONFIGURED_FEATURE, Constant.id("olivine_beam"));
+
     public static void bootstrapRegistries(BootstrapContext<ConfiguredFeature<?, ?>> context) {
         context.register(OIL_LAKE, new ConfiguredFeature<>(Feature.LAKE,
                 new LakeFeature.Configuration(BlockStateProvider.simple(GCBlocks.CRUDE_OIL), BlockStateProvider.simple(Blocks.STONE))));
+
+        context.register(OLIVINE_BEAM,
+                new ConfiguredFeature<>(GCFeatures.OLIVINE_BEAM, net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration.INSTANCE));
     }
 }
