@@ -184,6 +184,7 @@ public interface Translations {
         String ENERGY_REMAINING = "tooltip.galacticraft.energy_remaining";
         String GLOWSTONE_LANTERN = "tooltip.galacticraft.glowstone_lantern";
         String GLOWSTONE_TORCH = "tooltip.galacticraft.glowstone_torch";
+        String MOON_CHEESE_WHEEL = "tooltip.galacticraft.moon_cheese_wheel";
         String INFINITE = "tooltip.galacticraft.infinite";
         String OXYGEN_REMAINING = "tooltip.galacticraft.oxygen_remaining";
         String PRESS_SHIFT = "tooltip.galacticraft.press_shift";
