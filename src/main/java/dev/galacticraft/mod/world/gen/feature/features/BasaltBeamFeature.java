@@ -33,11 +33,15 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
-public class OlivineBeamFeature extends Feature<NoneFeatureConfiguration> {
-    private static final BlockState OLIVINE_BLOCK = Blocks.BLUE_WOOL.defaultBlockState(); // placeholder
-    private static final int MAX_BEAM_LENGTH = 30;
+public class BasaltBeamFeature extends Feature<NoneFeatureConfiguration> {
+    private static final BlockState BASALT_BLOCK = Blocks.BLACK_WOOL.defaultBlockState(); // placeholder for basalt
+    private static final BlockState ORE_BLOCK = Blocks.YELLOW_WOOL.defaultBlockState();   // placeholder for rich olivine basalt
 
-    public OlivineBeamFeature(Codec<NoneFeatureConfiguration> codec) {
+    private static final int MAX_BEAM_LENGTH = 20;
+    private static final int MIN_BEAM_LENGTH = 6;
+    private static final int MAX_RADIUS = 2;
+
+    public BasaltBeamFeature(Codec<NoneFeatureConfiguration> codec) {
         super(codec);
     }
 
@@ -48,21 +52,22 @@ public class OlivineBeamFeature extends Feature<NoneFeatureConfiguration> {
         RandomSource random = context.random();
 
         Direction direction = Direction.Plane.HORIZONTAL.getRandomDirection(random);
-        int length = 8 + random.nextInt(MAX_BEAM_LENGTH - 8);
-        int thickness = 1 + random.nextInt(2);
+        int length = MIN_BEAM_LENGTH + random.nextInt(MAX_BEAM_LENGTH - MIN_BEAM_LENGTH + 1);
+        int radius = 1 + random.nextInt(MAX_RADIUS);
 
         BlockPos.MutableBlockPos pos = origin.mutable();
 
         for (int i = 0; i < length; i++) {
-            for (int dx = -thickness; dx <= thickness; dx++) {
-                for (int dy = -thickness; dy <= thickness; dy++) {
+            for (int dx = -radius; dx <= radius; dx++) {
+                for (int dy = -radius; dy <= radius; dy++) {
                     BlockPos target = pos.offset(
                             direction.getStepX() * i + dx,
                             dy,
                             direction.getStepZ() * i + dx
                     );
                     if (level.isEmptyBlock(target) || level.getBlockState(target).isAir()) {
-                        level.setBlock(target, OLIVINE_BLOCK, 2);
+                        BlockState toPlace = random.nextInt(10) == 0 ? ORE_BLOCK : BASALT_BLOCK;
+                        level.setBlock(target, toPlace, 2);
                     }
                 }
             }

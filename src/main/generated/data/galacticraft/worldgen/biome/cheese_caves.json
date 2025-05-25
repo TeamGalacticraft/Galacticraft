@@ -1,15 +1,11 @@
 {
-  "carvers": {
-    "air": [
-      "galacticraft:cheese_cave_carver"
-    ]
-  },
-  "downfall": 0,
+  "carvers": {},
+  "downfall": 0.0,
   "effects": {
     "fog_color": 10518688,
     "mood_sound": {
       "block_search_extent": 8,
-      "offset": 2,
+      "offset": 2.0,
       "sound": "minecraft:ambient.cave",
       "tick_delay": 6000
     },
@@ -90,5 +86,5 @@
     "water_ambient": [],
     "water_creature": []
   },
-  "temperature": 2
+  "temperature": 2.0
 }

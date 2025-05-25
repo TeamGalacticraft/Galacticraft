@@ -42,7 +42,9 @@ public final class GCBiomes {
         public static final ResourceKey<Biome> BASALTIC_MARE = key("basaltic_mare");
         public static final ResourceKey<Biome> LUNAR_HIGHLANDS = key("lunar_highlands");
         public static final ResourceKey<Biome> LUNAR_LOWLANDS = key("lunar_lowlands");
-        public static final ResourceKey<Biome> OLIVINE_SPIKES = key("olivine_spikes");
+        public static final ResourceKey<Biome> CHEESE_CAVES = key("cheese_caves");
+        public static final ResourceKey<Biome> OLIVINE_CAVES = key("olivine_caves");
+        public static final ResourceKey<Biome> GLACIAL_CAVERNS = key("glacial_caverns");
     }
 
     public static final class Venus {
@@ -81,7 +83,9 @@ public final class GCBiomes {
         context.register(Moon.BASALTIC_MARE, MoonBiomes.createBasalticMare(featureLookup, carverLookup));
         context.register(Moon.LUNAR_HIGHLANDS, MoonBiomes.createLunarHighlands(featureLookup, carverLookup));
         context.register(Moon.LUNAR_LOWLANDS, MoonBiomes.createLunarLowlands(featureLookup, carverLookup));
-        context.register(Moon.OLIVINE_SPIKES, MoonBiomes.createOlivineSpikes(featureLookup, carverLookup));
+        context.register(Moon.CHEESE_CAVES, MoonBiomes.createCheeseCaves(featureLookup, carverLookup));
+        context.register(Moon.OLIVINE_CAVES, MoonBiomes.createOlivineCaves(featureLookup, carverLookup));
+        context.register(Moon.GLACIAL_CAVERNS, MoonBiomes.createGlacialCaverns(featureLookup, carverLookup));
 
         context.register(Venus.VENUS_VALLEY, VenusBiomes.venus(featureLookup, carverLookup));
         context.register(Venus.VENUS_FLAT, VenusBiomes.venus(featureLookup, carverLookup));

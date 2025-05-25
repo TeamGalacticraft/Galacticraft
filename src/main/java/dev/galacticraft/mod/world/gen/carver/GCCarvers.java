@@ -34,7 +34,7 @@ public class GCCarvers {
     public static final WorldCarver<CraterCarverConfig> CRATERS = new CraterCarver(CraterCarverConfig.CRATER_CODEC);
 
     // --- OLIVINE BIOME CARVER ---
-    public static final WorldCarver<CaveCarverConfiguration> OLIVINE_CAVE = new LunarCaveCarver(CaveCarverConfiguration.CODEC);
+    public static final WorldCarver<CaveCarverConfiguration> OLIVINE_CAVE = new OlivineCaveCarver(CaveCarverConfiguration.CODEC);
 
     public static void register() {
         Registry.register(BuiltInRegistries.CARVER, Constant.id("lunar_cave"), LUNAR_CAVE);

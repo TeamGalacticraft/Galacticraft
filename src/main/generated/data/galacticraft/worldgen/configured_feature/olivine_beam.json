@@ -1,18 +1,4 @@
 {
   "type": "galacticraft:olivine_beam",
-  "config": {
-    "discard_chance_on_air_exposure": 0,
-    "size": 32,
-    "targets": [
-      {
-        "state": {
-          "Name": "minecraft:red_wool"
-        },
-        "target": {
-          "predicate_type": "minecraft:tag_match",
-          "tag": "galacticraft:moon_basalt_replaceables"
-        }
-      }
-    ]
-  }
+  "config": {}
 }

@@ -101,15 +101,15 @@ public class GCConfiguredCarvers {
                 UniformFloat.of(-1.0f, -0.4f)
         )));
 
-        context.register(OLIVINE_CAVE_CARVER, GCCarvers.LUNAR_CAVE.configured(new CaveCarverConfiguration(
-                0.25f, // Higher chance to generate more features
+        context.register(OLIVINE_CAVE_CARVER, GCCarvers.OLIVINE_CAVE.configured(new CaveCarverConfiguration(
+                0.25f,
                 UniformHeight.of(VerticalAnchor.aboveBottom(8), VerticalAnchor.absolute(180)),
-                UniformFloat.of(0.15f, 1.2f), // Slightly wider range for variation
+                UniformFloat.of(0.15f, 1.2f),
                 VerticalAnchor.aboveBottom(-64),
-                HolderSet.direct(), // Add replaceables if needed
-                UniformFloat.of(1.0f, 2.2f), // Wider beams
-                UniformFloat.of(1.0f, 2.0f), // Taller vertical span
-                UniformFloat.of(-1.0f, -0.5f) // Floor noise
+                HolderSet.direct(), // can insert replaceable block tags here if needed
+                UniformFloat.of(1.0f, 2.2f),
+                UniformFloat.of(1.0f, 2.0f),
+                UniformFloat.of(-1.0f, -0.5f)
         )));
     }
 }

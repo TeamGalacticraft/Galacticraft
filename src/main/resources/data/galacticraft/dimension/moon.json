@@ -7,15 +7,15 @@
           "parameters": {
             "weirdness": [
               -1,
-              0.5
+              1
             ],
             "continentalness": [
-              0.1,
+              0.4,
               1
             ],
             "erosion": [
               -1,
-              -0.375
+              1
             ],
             "temperature": [
               -1,
@@ -40,12 +40,12 @@
               1
             ],
             "continentalness": [
-              -0.19,
-              0.1
+              -0.1,
+              0.4
             ],
             "erosion": [
-              -0.375,
-              0.05
+              -1,
+              1
             ],
             "temperature": [
               -1,
@@ -67,18 +67,18 @@
           "parameters": {
             "weirdness": [
               -1,
-              0.4
+              1
             ],
             "continentalness": [
-              -1.05,
-              -0.19
+              -0.8,
+              -0.1
             ],
             "erosion": [
-              0.05,
+              -1,
               1
             ],
             "temperature": [
-              -0.45,
+              -1,
               1
             ],
             "humidity": [
@@ -97,7 +97,7 @@
           "biome": "galacticraft:olivine_caves",
           "parameters": {
             "temperature": [
-              -0.45,
+              -1,
               1
             ],
             "humidity": [
@@ -105,19 +105,19 @@
               1
             ],
             "continentalness": [
-              -1.05,
-              -0.19
+              -0.8,
+              -0.1
             ],
             "erosion": [
-              0.05,
+              -1,
               1
             ],
             "weirdness": [
-              0.9,
+              -1,
               1
             ],
             "depth": [
-              0,
+              0.0390625,
               0.546875
             ],
             "offset": 0
@@ -128,22 +128,22 @@
           "parameters": {
             "temperature": [
               -1,
-              0
+              1
             ],
             "humidity": [
               -1,
               1
             ],
             "continentalness": [
-              -1.05,
-              -0.19
+              -1,
+              -0.8
             ],
             "erosion": [
-              0.05,
+              -1,
               1
             ],
             "weirdness": [
-              0.4,
+              -1,
               1
             ],
             "depth": [
@@ -158,26 +158,26 @@
           "parameters": {
             "temperature": [
               -1,
-              -0.5
+              1
             ],
             "humidity": [
               -1,
-              -0.2
+              1
             ],
             "continentalness": [
-              -1.05,
-              -0.19
+              -1,
+              -0.8
             ],
             "erosion": [
-              0.05,
+              -1,
               1
             ],
             "weirdness": [
-              0.3,
+              -1,
               1
             ],
             "depth": [
-              0,
+              0.0390625,
               0.3125
             ],
             "offset": 0
@@ -191,19 +191,19 @@
               1
             ],
             "humidity": [
-              0.6,
+              -1,
               1
             ],
             "continentalness": [
-              -0.19,
+              -0.1,
               1
             ],
             "erosion": [
               -1,
-              0.05
+              1
             ],
             "weirdness": [
-              0.8,
+              -1,
               1
             ],
             "depth": [

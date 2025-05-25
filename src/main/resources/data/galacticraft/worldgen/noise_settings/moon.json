@@ -1,11 +1,7 @@
 {
   "aquifers_enabled": false,
-  "default_block": {
-    "Name": "minecraft:stone"
-  },
-  "default_fluid": {
-    "Name": "minecraft:air"
-  },
+  "default_block": { "Name": "minecraft:stone" },
+  "default_fluid": { "Name": "minecraft:air" },
   "disable_mob_generation": false,
   "legacy_random_source": false,
   "noise": {
@@ -18,73 +14,14 @@
     "barrier": 1,
     "continents": "minecraft:overworld/continents",
     "depth": "minecraft:overworld/depth",
-    "erosion": "galacticraft:moon/erosion",
+    "erosion": "minecraft:overworld/erosion",
     "final_density": {
       "type": "minecraft:blend_density",
       "argument": "galacticraft:moon/final_density"
     },
     "fluid_level_floodedness": 0,
     "fluid_level_spread": 0,
-    "initial_density_without_jaggedness": {
-      "type": "minecraft:add",
-      "argument1": 0.1171875,
-      "argument2": {
-        "type": "minecraft:mul",
-        "argument1": {
-          "type": "minecraft:y_clamped_gradient",
-          "from_value": 0,
-          "from_y": -30,
-          "to_value": 1,
-          "to_y": -40
-        },
-        "argument2": {
-          "type": "minecraft:add",
-          "argument1": -0.1171875,
-          "argument2": {
-            "type": "minecraft:add",
-            "argument1": -0.078125,
-            "argument2": {
-              "type": "minecraft:mul",
-              "argument1": {
-                "type": "minecraft:y_clamped_gradient",
-                "from_value": 1,
-                "from_y": 240,
-                "to_value": 0,
-                "to_y": 256
-              },
-              "argument2": {
-                "type": "minecraft:add",
-                "argument1": 0.078125,
-                "argument2": {
-                  "type": "minecraft:clamp",
-                  "input": {
-                    "type": "minecraft:add",
-                    "argument1": -0.703125,
-                    "argument2": {
-                      "type": "minecraft:mul",
-                      "argument1": 4,
-                      "argument2": {
-                        "type": "minecraft:quarter_negative",
-                        "argument": {
-                          "type": "minecraft:mul",
-                          "argument1": "minecraft:overworld/depth",
-                          "argument2": {
-                            "type": "minecraft:cache_2d",
-                            "argument": "minecraft:overworld/factor"
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "max": 64,
-                  "min": -30
-                }
-              }
-            }
-          }
-        }
-      }
-    },
+    "initial_density_without_jaggedness": 0,
     "lava": 0,
     "ridges": "minecraft:overworld/ridges",
     "temperature": {
@@ -102,7 +39,7 @@
       "shift_x": "minecraft:shift_x",
       "shift_y": 0,
       "shift_z": "minecraft:shift_z",
-      "xz_scale": 0,
+      "xz_scale": 0.25,
       "y_scale": 0
     },
     "vein_gap": 0,
@@ -111,56 +48,7 @@
   },
   "ore_veins_enabled": false,
   "sea_level": -32,
-  "spawn_target": [
-    {
-      "continentalness": [
-        -0.11,
-        1
-      ],
-      "depth": 0,
-      "erosion": [
-        -1,
-        1
-      ],
-      "humidity": [
-        -1,
-        1
-      ],
-      "offset": 0,
-      "temperature": [
-        -1,
-        1
-      ],
-      "weirdness": [
-        -1,
-        -0.16
-      ]
-    },
-    {
-      "continentalness": [
-        -0.11,
-        1
-      ],
-      "depth": 0,
-      "erosion": [
-        -1,
-        1
-      ],
-      "humidity": [
-        -1,
-        1
-      ],
-      "offset": 0,
-      "temperature": [
-        -1,
-        1
-      ],
-      "weirdness": [
-        0.16,
-        1
-      ]
-    }
-  ],
+  "spawn_target": [],
   "surface_rule": {
     "type": "minecraft:sequence",
     "sequence": [
@@ -168,197 +56,38 @@
         "type": "minecraft:condition",
         "if_true": {
           "type": "minecraft:biome",
-          "biome_is": [
-            "galacticraft:basaltic_mare",
-            "galacticraft:lunar_lowlands"
-          ]
-        },
-        "then_run": {
-          "type": "minecraft:sequence",
-          "sequence": [
-            {
-              "type": "minecraft:condition",
-              "if_true": {
-                "type": "minecraft:noise_threshold",
-                "noise": "galacticraft:moon/erosion",
-                "min_threshold": 0.035,
-                "max_threshold": 0.0465
-              },
-              "then_run": {
-                "type": "minecraft:block",
-                "result_state": {
-                  "Name": "galacticraft:moon_turf"
-                }
-              }
-            },
-            {
-              "type": "minecraft:condition",
-              "if_true": {
-                "type": "minecraft:noise_threshold",
-                "noise": "galacticraft:moon/erosion",
-                "min_threshold": 0.039,
-                "max_threshold": 0.0545
-              },
-              "then_run": {
-                "type": "minecraft:block",
-                "result_state": {
-                  "Name": "galacticraft:moon_rock"
-                }
-              }
-            },
-            {
-              "type": "minecraft:condition",
-              "if_true": {
-                "type": "minecraft:noise_threshold",
-                "noise": "galacticraft:moon/erosion",
-                "min_threshold": 0.0545,
-                "max_threshold": 0.069
-              },
-              "then_run": {
-                "type": "minecraft:block",
-                "result_state": {
-                  "Name": "galacticraft:moon_basalt"
-                }
-              }
-            }
-          ]
-        }
-      },
-      {
-        "type": "minecraft:condition",
-        "if_true": {
-          "type": "minecraft:vertical_gradient",
-          "random_name": "minecraft:bedrock_floor",
-          "true_at_and_below": {
-            "above_bottom": 0
-          },
-          "false_at_and_above": {
-            "above_bottom": 5
-          }
+          "biome_is": ["galacticraft:lunar_highlands"]
         },
         "then_run": {
           "type": "minecraft:block",
-          "result_state": {
-            "Name": "minecraft:bedrock"
-          }
+          "result_state": { "Name": "galacticraft:moon_turf" }
         }
       },
       {
         "type": "minecraft:condition",
         "if_true": {
-          "type": "minecraft:above_preliminary_surface"
-        },
-        "then_run": {
-          "type": "minecraft:sequence",
-          "sequence": [
-            {
-              "type": "minecraft:condition",
-              "if_true": {
-                "type": "minecraft:stone_depth",
-                "offset": 0,
-                "surface_type": "floor",
-                "add_surface_depth": true,
-                "secondary_depth_range": 0
-              },
-              "then_run": {
-                "type": "minecraft:sequence",
-                "sequence": [
-                  {
-                    "type": "minecraft:condition",
-                    "if_true": {
-                      "type": "minecraft:not",
-                      "invert": {
-                        "type": "minecraft:biome",
-                        "biome_is": [
-                          "galacticraft:basaltic_mare"
-                        ]
-                      }
-                    },
-                    "then_run": {
-                      "type": "minecraft:sequence",
-                      "sequence": [
-                        {
-                          "type": "minecraft:condition",
-                          "if_true": {
-                            "type": "minecraft:stone_depth",
-                            "offset": 0,
-                            "surface_type": "floor",
-                            "add_surface_depth": false,
-                            "secondary_depth_range": 0
-                          },
-                          "then_run": {
-                            "type": "minecraft:block",
-                            "result_state": {
-                              "Name": "minecraft:grass_block"
-                            }
-                          }
-                        },
-                        {
-                          "type": "minecraft:block",
-                          "result_state": {
-                            "Name": "minecraft:dirt"
-                          }
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "type": "minecraft:condition",
-                    "if_true": {
-                      "type": "minecraft:biome",
-                      "biome_is": [
-                        "galacticraft:basaltic_mare"
-                      ]
-                    },
-                    "then_run": {
-                      "type": "minecraft:sequence",
-                      "sequence": [
-                        {
-                          "type": "minecraft:condition",
-                          "if_true": {
-                            "type": "minecraft:stone_depth",
-                            "offset": 0,
-                            "surface_type": "floor",
-                            "add_surface_depth": false,
-                            "secondary_depth_range": 7
-                          },
-                          "then_run": {
-                            "type": "minecraft:block",
-                            "result_state": {
-                              "Name": "minecraft:spruce_log"
-                            }
-                          }
-                        }
-                      ]
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      },
-      {
-        "type": "minecraft:condition",
-        "if_true": {
-          "type": "minecraft:vertical_gradient",
-          "random_name": "minecraft:lunaslate",
-          "true_at_and_below": {
-            "absolute": -4
-          },
-          "false_at_and_above": {
-            "absolute": 4
-          }
+          "type": "minecraft:biome",
+          "biome_is": ["galacticraft:lunar_lowlands"]
         },
         "then_run": {
           "type": "minecraft:block",
-          "result_state": {
-            "Name": "minecraft:deepslate",
-            "Properties": {
-              "axis": "y"
-            }
-          }
+          "result_state": { "Name": "galacticraft:moon_rock" }
         }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:biome",
+          "biome_is": ["galacticraft:basaltic_mare"]
+        },
+        "then_run": {
+          "type": "minecraft:block",
+          "result_state": { "Name": "galacticraft:aluminum_decoration" }
+        }
+      },
+      {
+        "type": "minecraft:block",
+        "result_state": { "Name": "minecraft:stone" }
       }
     ]
   }

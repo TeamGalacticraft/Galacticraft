@@ -1,25 +1,25 @@
 {
-  "type": "add",
+  "type": "minecraft:add",
   "argument1": {
-    "type": "mul",
-    "argument1": 4,
+    "type": "minecraft:mul",
+    "argument1": 4.0,
     "argument2": {
-      "type": "quarter_negative",
+      "type": "minecraft:quarter_negative",
       "argument": {
-        "type": "mul",
+        "type": "minecraft:mul",
         "argument1": {
-          "type": "add",
+          "type": "minecraft:add",
           "argument1": "minecraft:overworld/depth",
           "argument2": {
-            "type": "mul",
+            "type": "minecraft:mul",
             "argument1": "minecraft:overworld/jaggedness",
             "argument2": {
-              "type": "half_negative",
+              "type": "minecraft:half_negative",
               "argument": {
-                "type": "noise",
+                "type": "minecraft:noise",
                 "noise": "minecraft:jagged",
-                "xz_scale": 1000,
-                "y_scale": 0
+                "xz_scale": 1000.0,
+                "y_scale": 0.0
               }
             }
           }
@@ -29,12 +29,12 @@
     }
   },
   "argument2": {
-    "type": "clamp",
-    "min": 0.09999999999999998,
-    "max": 0.05,
+    "type": "minecraft:clamp",
     "input": {
-      "type": "squeeze",
+      "type": "minecraft:squeeze",
       "argument": "minecraft:overworld/base_3d_noise"
-    }
+    },
+    "max": 0.05,
+    "min": 0.09999999999999998
   }
 }

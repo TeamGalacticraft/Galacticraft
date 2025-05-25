@@ -30,17 +30,36 @@ import net.minecraft.world.level.levelgen.synth.NormalNoise;
 
 public class GCNoiseData {
     public static final ResourceKey<NormalNoise.NoiseParameters> EROSION = createKey("moon/erosion");
+    public static final ResourceKey<NormalNoise.NoiseParameters> EROSION_BIOME = createKey("moon/erosion_biome");
     public static final ResourceKey<NormalNoise.NoiseParameters> BASALT_MARE = createKey("moon/basalt_mare");
     public static final ResourceKey<NormalNoise.NoiseParameters> BASALT_MARE_HEIGHT = createKey("moon/basalt_mare_height");
+
+    public static final ResourceKey<NormalNoise.NoiseParameters> NOODLE = createKey("noodle");
+    public static final ResourceKey<NormalNoise.NoiseParameters> NOODLE_THICKNESS = createKey("noodle_thickness");
+    public static final ResourceKey<NormalNoise.NoiseParameters> NOODLE_RIDGE_A = createKey("noodle_ridge_a");
+    public static final ResourceKey<NormalNoise.NoiseParameters> NOODLE_RIDGE_B = createKey("noodle_ridge_b");
+
+    public static final ResourceKey<NormalNoise.NoiseParameters> MOON_TEMPERATURE = createKey("moon/temperature");
+    public static final ResourceKey<NormalNoise.NoiseParameters> MOON_VEGETATION = createKey("moon/vegetation");
 
     private static ResourceKey<NormalNoise.NoiseParameters> createKey(String id) {
         return ResourceKey.create(Registries.NOISE, Constant.id(id));
     }
 
     public static void bootstrapRegistries(BootstrapContext<NormalNoise.NoiseParameters> context) {
-//        register(context, EROSION, -11, 1, 1, 0, 1, 1);
-//        register(context, BASALT_MARE, 5, 0, 0.1, 0.2, 0.1, 0, 0, 0, 0);
-//        register(context, BASALT_MARE_HEIGHT, -12, 0.3);
+        register(context, NOODLE, -8, 1.0); // base noise
+        register(context, NOODLE_THICKNESS, -8, 1.0); // controls thickness
+        register(context, NOODLE_RIDGE_A, -8, 1.0); // left ridge
+        register(context, NOODLE_RIDGE_B, -8, 1.0); // right ridge
+
+        register(context, EROSION, -9, 1, 1, 0, 1, 1);
+        register(context, EROSION_BIOME, -11, 1, 1, 0, 1, 1);
+        register(context, BASALT_MARE, 5, 0, 0.1, 0.2, 0.1, 0, 0, 0, 0);
+        register(context, BASALT_MARE_HEIGHT, -12, 0.3);
+
+        register(context, MOON_TEMPERATURE, -7, 1.0);
+        register(context, MOON_VEGETATION, -7, 1.0);
+
     }
 
     private static void register(

@@ -4,7 +4,7 @@
     "floor_level": {
       "type": "minecraft:uniform",
       "max_exclusive": -0.4,
-      "min_inclusive": -1
+      "min_inclusive": -1.0
     },
     "horizontal_radius_multiplier": {
       "type": "minecraft:uniform",

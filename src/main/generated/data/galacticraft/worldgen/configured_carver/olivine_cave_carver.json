@@ -3,39 +3,37 @@
   "config": {
     "floor_level": {
       "type": "minecraft:uniform",
-      "min_inclusive": -1.0,
-      "max_exclusive": -0.3
+      "max_exclusive": -0.5,
+      "min_inclusive": -1.0
     },
     "horizontal_radius_multiplier": {
       "type": "minecraft:uniform",
-      "min_inclusive": 0.8,
-      "max_exclusive": 2.2
-    },
-    "vertical_radius_multiplier": {
-      "type": "minecraft:uniform",
-      "min_inclusive": 0.6,
-      "max_exclusive": 2
-    },
-    "yScale": {
-      "type": "minecraft:uniform",
-      "min_inclusive": 0.2,
-      "max_exclusive": 1.3
-    },
-    "y": {
-      "type": "minecraft:uniform",
-      "min_inclusive": {
-        "absolute": 10
-      },
-      "max_inclusive": {
-        "absolute": 80
-      }
+      "max_exclusive": 2.2,
+      "min_inclusive": 1.0
     },
     "lava_level": {
       "above_bottom": -64
     },
-    "probability": 0.15,
-    "replaceable": [
-      "galacticraft:moon_basalt"
-    ]
+    "probability": 0.25,
+    "replaceable": [],
+    "vertical_radius_multiplier": {
+      "type": "minecraft:uniform",
+      "max_exclusive": 2.0,
+      "min_inclusive": 1.0
+    },
+    "y": {
+      "type": "minecraft:uniform",
+      "max_inclusive": {
+        "absolute": 180
+      },
+      "min_inclusive": {
+        "above_bottom": 8
+      }
+    },
+    "yScale": {
+      "type": "minecraft:uniform",
+      "max_exclusive": 1.2,
+      "min_inclusive": 0.15
+    }
   }
 }

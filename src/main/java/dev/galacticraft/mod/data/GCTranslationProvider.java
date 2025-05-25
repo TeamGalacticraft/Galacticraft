@@ -809,7 +809,6 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(GCBiomes.Moon.COMET_TUNDRA, "Comet Tundra");
         this.add(GCBiomes.Moon.LUNAR_HIGHLANDS, "Lunar Highlands");
         this.add(GCBiomes.Moon.LUNAR_LOWLANDS, "Lunar Lowlands");
-        this.add(GCBiomes.Moon.OLIVINE_SPIKES, "Olivine Spikes");
         this.add(GCBiomes.SPACE, "Space");
         this.add(GCBiomes.Venus.VENUS_FLAT, "Venus Flat");
         this.add(GCBiomes.Venus.VENUS_MOUNTAIN, "Venus Mountain");

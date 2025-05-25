@@ -84,6 +84,8 @@ public class GCMultiNoiseBiomeSourceParameterLists {
     private static final Parameter WEIRDNESS_H_PLAINS = Parameter.span(0.4F, 0.56666666F);
     private static final Parameter WEIRDNESS_H_MOUNTAINS = Parameter.span(0.56666666F, 0.7666667F);
 
+    private static final Parameter SURFACE = Parameter.span(0F, 0F);
+
     public static final ResourceLocation MOON_PRESET_ID = Constant.id("moon");
     public static final ResourceLocation VENUS_PRESET_ID = Constant.id("venus");
     public static final ResourceLocation ASTEROID_PRESET_ID = Constant.id("asteroid");
@@ -104,39 +106,78 @@ public class GCMultiNoiseBiomeSourceParameterLists {
     @Contract("_ -> new")
     private static <T> Climate.@NotNull ParameterList<T> generateMoon(Function<ResourceKey<Biome>, T> biomeRegistry) {
         ImmutableList.Builder<Pair<Climate.ParameterPoint, T>> builder = ImmutableList.builder();
+
+        // Surface biomes
         writeBiomeParameters(builder::add,
-                HOT,
-                DRY,
-                Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS),
-                MIN_EROSION,
-                WEIRDNESS_H_MIXED,
+                FULL_RANGE,
+                FULL_RANGE,
+                Parameter.span(0.4F, 1.0F),
+                FULL_RANGE,
+                FULL_RANGE,
+                SURFACE,
                 0.0F,
                 biomeRegistry.apply(GCBiomes.Moon.LUNAR_HIGHLANDS));
+
         writeBiomeParameters(builder::add,
-                HOT,
-                DRY,
-                Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS),
-                MIN_EROSION,
-                WEIRDNESS_L_MIXED,
+                FULL_RANGE,
+                FULL_RANGE,
+                Parameter.span(-0.1F, 0.4F),
+                FULL_RANGE,
+                FULL_RANGE,
+                SURFACE,
+                0.0F,
+                biomeRegistry.apply(GCBiomes.Moon.LUNAR_LOWLANDS));
+
+        writeBiomeParameters(builder::add,
+                FULL_RANGE,
+                FULL_RANGE,
+                Parameter.span(-0.8F, -0.1F),
+                FULL_RANGE,
+                FULL_RANGE,
+                SURFACE,
                 0.0F,
                 biomeRegistry.apply(GCBiomes.Moon.BASALTIC_MARE));
+
         writeBiomeParameters(builder::add,
-                HOT,
-                DRY,
-                Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS),
-                MIN_EROSION,
-                WEIRDNESS_L_MIXED,
+                FULL_RANGE,
+                FULL_RANGE,
+                Parameter.span(-1F, -0.8F),
+                FULL_RANGE,
+                FULL_RANGE,
+                SURFACE,
                 0.0F,
                 biomeRegistry.apply(GCBiomes.Moon.COMET_TUNDRA));
+
+        // Underground biomes
         writeBiomeParameters(builder::add,
                 FULL_RANGE,
                 FULL_RANGE,
-                Climate.Parameter.span(-1.2F, -1.05F),
+                Parameter.span(-0.8F, -0.1F),
                 FULL_RANGE,
                 FULL_RANGE,
+                Parameter.span(0.0390625F, 0.546875F),
                 0.0F,
-                biomeRegistry.apply(GCBiomes.Moon.OLIVINE_SPIKES)
-        );
+                biomeRegistry.apply(GCBiomes.Moon.OLIVINE_CAVES));
+
+        writeBiomeParameters(builder::add,
+                FULL_RANGE,
+                FULL_RANGE,
+                Parameter.span(-1F, -0.8F),
+                FULL_RANGE,
+                FULL_RANGE,
+                Parameter.span(0.0390625F, 0.3125F),
+                0F,
+                biomeRegistry.apply(GCBiomes.Moon.GLACIAL_CAVERNS));
+
+        writeBiomeParameters(builder::add,
+                FULL_RANGE,
+                FULL_RANGE,
+                Parameter.span(-0.1F, 1.0F),
+                FULL_RANGE,
+                FULL_RANGE,
+                Parameter.span(0.234375F, 0.46875F),
+                0F,
+                biomeRegistry.apply(GCBiomes.Moon.CHEESE_CAVES));
 
         return new Climate.ParameterList<>(builder.build());
     }
@@ -150,6 +191,7 @@ public class GCMultiNoiseBiomeSourceParameterLists {
                 Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS),
                 MIN_EROSION,
                 WEIRDNESS_H_MIXED,
+                SURFACE,
                 0.0F,
                 biomeRegistry.apply(GCBiomes.Venus.VENUS_MOUNTAIN));
         writeBiomeParameters(builder::add,
@@ -158,6 +200,7 @@ public class GCMultiNoiseBiomeSourceParameterLists {
                 Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS),
                 MIN_EROSION,
                 WEIRDNESS_L_MIXED,
+                SURFACE,
                 0.0F,
                 biomeRegistry.apply(GCBiomes.Venus.VENUS_FLAT));
         writeBiomeParameters(builder::add,
@@ -166,6 +209,7 @@ public class GCMultiNoiseBiomeSourceParameterLists {
                 Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS),
                 MIN_EROSION,
                 WEIRDNESS_L_MIXED,
+                SURFACE,
                 0.0F,
                 biomeRegistry.apply(GCBiomes.Venus.VENUS_VALLEY));
 
@@ -181,6 +225,7 @@ public class GCMultiNoiseBiomeSourceParameterLists {
                 Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS),
                 MIN_EROSION,
                 WEIRDNESS_H_MIXED,
+                SURFACE,
                 0.0F,
                 biomeRegistry.apply(GCBiomes.Asteroid.ASTEROID_FIELD));
 
@@ -194,18 +239,13 @@ public class GCMultiNoiseBiomeSourceParameterLists {
             Parameter continentalness,
             Parameter erosion,
             Parameter weirdness,
+            Parameter depth,
             float offset,
             T biome
     ) {
         parameters.accept(
                 Pair.of(
-                        Climate.parameters(temperature, humidity, continentalness, erosion, Parameter.point(0.0F), weirdness, offset),
-                        biome
-                )
-        );
-        parameters.accept(
-                Pair.of(
-                        Climate.parameters(temperature, humidity, continentalness, erosion, Parameter.point(1.0F), weirdness, offset),
+                        Climate.parameters(temperature, humidity, continentalness, erosion, depth, weirdness, offset),
                         biome
                 )
         );
