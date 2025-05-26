@@ -164,11 +164,11 @@ public class GCDensityFunctions {
         float highLandsContinentalnessMinimum = 0.3f;
 
         float lowToHighLandsRange = 0.05f;
+        float mareToLowLandsRange = 0.1f;
 
         DensityFunction continentalness = getFunction(vanillaRegistry, NoiseRouterData.CONTINENTS);
 
         Holder.Reference<NormalNoise.NoiseParameters> erosionHolder = noiseRegistry.getOrThrow(GCNoiseData.EROSION);
-        Holder.Reference<DensityFunction> continentalnessHolder = vanillaRegistry.getOrThrow(NoiseRouterData.CONTINENTS);
 
         DensityFunction cometNoise = make2DNoise(5, shiftX, shiftZ, erosionHolder);
         DensityFunction mareNoise = make2DNoise(5, shiftX, shiftZ, erosionHolder);
@@ -181,57 +181,70 @@ public class GCDensityFunctions {
         DensityFunction highLandsNoisedHeightUnclamped = clampedNoisedHeight(highLandsHeight, variationHighLands, highLandsNoise, y);
 
         DensityFunction normalizedLowToHighLands = normalizeInRange(continentalness, highLandsContinentalnessMinimum - lowToHighLandsRange, highLandsContinentalnessMinimum + lowToHighLandsRange);
+        DensityFunction normalizedMareToLowLands = normalizeInRange(continentalness, lowLandsContinentalnessMinimum - mareToLowLandsRange, lowLandsContinentalnessMinimum + mareToLowLandsRange);
 
         CubicSpline<DensityFunctions.Spline.Point, DensityFunctions.Spline.Coordinate> lowToHighLandsSpline = CubicSpline
                 .builder(new DensityFunctions.Spline.Coordinate(Holder.direct(normalizedLowToHighLands)))
-                .addPoint(-0.7f, 0f, 0.0f)
+                .addPoint(-1f, 0f, 0.0f)
                 .addPoint(-0.2f, 0.1f, 0.0f)
                 .addPoint(0f, 0.5f, 0.0f)
                 .addPoint(0.2f, 0.9f, 0.0f)
-                .addPoint(0.7f, 1f, 0.0f)
+                .addPoint(1f, 1f, 0.0f)
+                .build();
+
+        CubicSpline<DensityFunctions.Spline.Point, DensityFunctions.Spline.Coordinate> mareToLowLandsSpline = CubicSpline
+                .builder(new DensityFunctions.Spline.Coordinate(Holder.direct(normalizedMareToLowLands)))
+                .addPoint(-1f, 0f, 0.0f)
+                .addPoint(-0.7f, 0.3f, 0.0f)
+                .addPoint(0f, 0.5f, 0.0f)
+                .addPoint(0.7f, 0.7f, 0.0f)
+                .addPoint(1f, 1f, 0.0f)
                 .build();
 
         DensityFunction lowToHighLandsSplineModifier = DensityFunctions.spline(lowToHighLandsSpline);
-
-        lowToHighLandsSplineModifier = DensityFunctions.rangeChoice(
-                normalizedLowToHighLands,
-                -1.0f, -0.7f,
-                DensityFunctions.constant(0),
-                lowToHighLandsSplineModifier
-        );
-
-        lowToHighLandsSplineModifier = DensityFunctions.rangeChoice(
-                normalizedLowToHighLands,
-                0.7f, 1f,
-                DensityFunctions.constant(1),
-                lowToHighLandsSplineModifier
-        );
+        DensityFunction mareToLowLandsSplineModifier = DensityFunctions.spline(mareToLowLandsSpline);
 
         // Blend target heights before converting to density
-        DensityFunction blendedNoisedHeightClamped = heightToDensity(interpolated(DensityFunctions.lerp(
+        DensityFunction blendedLowToHighLandsNoisedHeightClamped = heightToDensity(interpolated(DensityFunctions.lerp(
                 lowToHighLandsSplineModifier,
                 lowLandsNoisedHeightUnclamped,
                 highLandsNoisedHeightUnclamped
         )), y);
 
+        DensityFunction blendedMareToLowLandsNoisedHeightClamped = heightToDensity(interpolated(DensityFunctions.lerp(
+                mareToLowLandsSplineModifier,
+                mareNoisedHeightUnclamped,
+                lowLandsNoisedHeightUnclamped
+        )), y);
+
         // Use range choice to get noise + base height
-        DensityFunction finalDensity = DensityFunctions.rangeChoice(
+        DensityFunction finalDensity = rangeChoice(
                 continentalness,
                 cometContinentalnessMinimum, mareContinentalnessMinimum,
-                heightToDensity(cometNoisedHeightUnclamped, y),
-                DensityFunctions.rangeChoice(
+                heightToDensity(cometNoisedHeightUnclamped, y), // comet tundra base height
+
+                rangeChoice(
                         continentalness,
-                        mareContinentalnessMinimum, lowLandsContinentalnessMinimum,
-                        heightToDensity(mareNoisedHeightUnclamped, y),
-                        DensityFunctions.rangeChoice(
+                        mareContinentalnessMinimum, lowLandsContinentalnessMinimum - mareToLowLandsRange,
+                        heightToDensity(mareNoisedHeightUnclamped, y), // basaltic mare base height
+
+                        rangeChoice(
                                 continentalness,
-                                lowLandsContinentalnessMinimum, highLandsContinentalnessMinimum - lowToHighLandsRange, // cutoff before blend
-                                heightToDensity(lowLandsNoisedHeightUnclamped, y),
-                                DensityFunctions.rangeChoice(
+                                lowLandsContinentalnessMinimum - mareToLowLandsRange, lowLandsContinentalnessMinimum + mareToLowLandsRange,
+                                blendedMareToLowLandsNoisedHeightClamped, // basaltic mare blended to lunar low lands
+
+                                rangeChoice(
                                         continentalness,
-                                        highLandsContinentalnessMinimum + lowToHighLandsRange, 1.0,
-                                        heightToDensity(highLandsNoisedHeightUnclamped, y),
-                                        blendedNoisedHeightClamped // this is only used within the blend zone
+                                        lowLandsContinentalnessMinimum + mareToLowLandsRange, highLandsContinentalnessMinimum - lowToHighLandsRange,
+                                        heightToDensity(lowLandsNoisedHeightUnclamped, y), // lunar low lands base height
+
+                                        rangeChoice(
+                                                continentalness,
+                                                highLandsContinentalnessMinimum - lowToHighLandsRange, highLandsContinentalnessMinimum + lowToHighLandsRange,
+                                                blendedLowToHighLandsNoisedHeightClamped, // lunar low lands blended to lunar high lands
+
+                                                heightToDensity(highLandsNoisedHeightUnclamped, y) // lunar high lands base height
+                                        )
                                 )
                         )
                 )
@@ -302,13 +315,6 @@ public class GCDensityFunctions {
                 DensityFunctions.constant(-1.0)
         );
 
-        // Only keep values inside [min, max], else return 0
-        return DensityFunctions.rangeChoice(
-                value,
-                min,
-                max,
-                scaled,
-                DensityFunctions.constant(0.0)
-        );
+        return scaled.clamp(-1, 1);
     }
 }
