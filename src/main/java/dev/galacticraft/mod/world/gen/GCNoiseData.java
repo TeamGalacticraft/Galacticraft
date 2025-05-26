@@ -34,6 +34,8 @@ public class GCNoiseData {
     public static final ResourceKey<NormalNoise.NoiseParameters> BASALT_MARE = createKey("moon/basalt_mare");
     public static final ResourceKey<NormalNoise.NoiseParameters> BASALT_MARE_HEIGHT = createKey("moon/basalt_mare_height");
 
+    public static final ResourceKey<NormalNoise.NoiseParameters> TERRAIN_VARIATION = createKey("moon/terrain_variation");
+
     public static final ResourceKey<NormalNoise.NoiseParameters> NOODLE = createKey("noodle");
     public static final ResourceKey<NormalNoise.NoiseParameters> NOODLE_THICKNESS = createKey("noodle_thickness");
     public static final ResourceKey<NormalNoise.NoiseParameters> NOODLE_RIDGE_A = createKey("noodle_ridge_a");
@@ -60,6 +62,7 @@ public class GCNoiseData {
         register(context, MOON_TEMPERATURE, -7, 1.0);
         register(context, MOON_VEGETATION, -7, 1.0);
 
+        register(context, TERRAIN_VARIATION, -8, 1.0, 0.5, 0.25);
     }
 
     private static void register(
