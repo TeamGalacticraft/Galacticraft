@@ -36,6 +36,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.List;
 import java.util.Map;
@@ -64,11 +65,14 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.MOON_TURF)
                 .add(GCBlocks.LUNASLATE);
         this.tag(GCBlockTags.MOON_CRATER_CARVER_REPLACEABLES)
+                .add(Blocks.AIR) //fixme debug values remove when done
+                .add(Blocks.CAVE_AIR) //this as well
                 .add(GCBlocks.MOON_ROCK)
                 .add(GCBlocks.MOON_SURFACE_ROCK)
                 .add(GCBlocks.MOON_BASALT)
                 .add(GCBlocks.MOON_DIRT)
                 .add(GCBlocks.MOON_TURF)
+                .add(GCBlocks.DENSE_ICE)
                 .add(GCBlocks.LUNASLATE);
 
         this.tag(GCBlockTags.MOON_STONE_ORE_REPLACEABLES)

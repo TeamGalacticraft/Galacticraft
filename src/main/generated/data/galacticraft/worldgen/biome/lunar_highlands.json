@@ -2,6 +2,7 @@
   "carvers": {
     "air": [
       "galacticraft:moon_highlands_cave_carver",
+      "minecraft:cave",
       "galacticraft:moon_crater_carver",
       "galacticraft:moon_canyon_carver"
     ]

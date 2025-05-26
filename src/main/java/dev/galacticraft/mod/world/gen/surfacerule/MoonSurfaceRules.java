@@ -27,25 +27,29 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import dev.galacticraft.mod.world.gen.GCNoiseData;
+import dev.galacticraft.mod.world.gen.ShiftedScaledNoiseThresholdConditionSource;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.levelgen.SurfaceRules;
+import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.SurfaceRules.ConditionSource;
 import net.minecraft.world.level.levelgen.SurfaceRules.RuleSource;
-import net.minecraft.world.level.levelgen.VerticalAnchor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import static dev.galacticraft.mod.world.gen.GCDensityFunctions.getFunction;
+
 public class MoonSurfaceRules {
-    private static final ConditionSource IS_TUNDRA = biome(GCBiomes.Moon.COMET_TUNDRA);
-    private static final ConditionSource IS_MARE = biome(GCBiomes.Moon.BASALTIC_MARE);
-    private static final ConditionSource IS_LOWLANDS = biome(GCBiomes.Moon.LUNAR_LOWLANDS);
-    private static final ConditionSource IS_HIGHLANDS = biome(GCBiomes.Moon.LUNAR_HIGHLANDS);
+    private static final ConditionSource IS_TUNDRA = continentalnessInRange(-1.2, -0.455);
+    private static final ConditionSource IS_MARE = continentalnessInRange(-0.455, -0.21);
+    private static final ConditionSource IS_LOWLANDS = continentalnessInRange(-0.21, 0.25);
+    private static final ConditionSource IS_HIGHLANDS = continentalnessInRange(0.25, 1); //todo tweak these until painting works better
+    private static final ConditionSource IS_BLENDING = continentalnessInRange(0.25, 0.35);
 
     private static final RuleSource BEDROCK = block(Blocks.BEDROCK);
     private static final RuleSource LUNASLATE = block(GCBlocks.LUNASLATE);
@@ -57,8 +61,15 @@ public class MoonSurfaceRules {
     private static final RuleSource DENSE_ICE = block(GCBlocks.DENSE_ICE);
     private static final RuleSource DEBUG_STATE = block(GCBlocks.ALUMINUM_DECORATION.block());
 
+    private static final RuleSource QUATERNARY_MATERIAL = SurfaceRules.sequence(
+            SurfaceRules.ifTrue(IS_TUNDRA, MOON_BASALT),
+            SurfaceRules.ifTrue(IS_MARE, MOON_BASALT),
+            SurfaceRules.ifTrue(IS_LOWLANDS, MOON_ROCK),
+            SurfaceRules.ifTrue(IS_HIGHLANDS, MOON_ROCK)
+    );
+
     private static final RuleSource TERTIARY_MATERIAL = SurfaceRules.sequence(
-            SurfaceRules.ifTrue(IS_TUNDRA, MOON_ROCK),
+            SurfaceRules.ifTrue(IS_TUNDRA, MOON_BASALT),
             SurfaceRules.ifTrue(IS_MARE, MOON_BASALT),
             SurfaceRules.ifTrue(IS_LOWLANDS, MOON_ROCK),
             SurfaceRules.ifTrue(IS_HIGHLANDS, MOON_ROCK)
@@ -89,7 +100,7 @@ public class MoonSurfaceRules {
     public static @NotNull RuleSource createDefaultRule() {
         return SurfaceRules.sequence(
                 SurfaceRules.ifTrue(
-                        SurfaceRules.isBiome(GCBiomes.Moon.BASALTIC_MARE, GCBiomes.Moon.LUNAR_LOWLANDS),
+                        SurfaceRules.isBiome(GCBiomes.Moon.BASALTIC_MARE, GCBiomes.Moon.LUNAR_LOWLANDS, GCBiomes.Moon.LUNAR_HIGHLANDS),
                         SurfaceRules.sequence(
                                 SurfaceRules.ifTrue(
                                         SurfaceRules.noiseCondition(GCNoiseData.EROSION, 0.035, 0.0465),
@@ -106,6 +117,7 @@ public class MoonSurfaceRules {
                         )
                 ), // Rings, I think?
                 SurfaceRules.ifTrue(SurfaceRules.verticalGradient("bedrock_floor", VerticalAnchor.bottom(), VerticalAnchor.aboveBottom(5)), BEDROCK),
+                SurfaceRules.ifTrue(IS_BLENDING, MOON_SURFACE_ROCK),
                 SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), SURFACE_GENERATION),
                 SurfaceRules.ifTrue(SurfaceRules.verticalGradient("lunaslate", VerticalAnchor.absolute(-4), VerticalAnchor.absolute(4)), LUNASLATE)
         );
@@ -125,6 +137,15 @@ public class MoonSurfaceRules {
     @Contract("_ -> new")
     public static SurfaceRules.@NotNull ConditionSource biome(@NotNull ResourceKey<Biome> @NotNull ... keys) {
         return SurfaceRules.isBiome(keys);
+    }
+
+    public static SurfaceRules.@NotNull ConditionSource continentalnessInRange(double min, double max) {
+        return new ShiftedScaledNoiseThresholdConditionSource(
+                Noises.CONTINENTALNESS,
+                0.25,
+                min,
+                max
+        );
     }
 
     public static void register() {

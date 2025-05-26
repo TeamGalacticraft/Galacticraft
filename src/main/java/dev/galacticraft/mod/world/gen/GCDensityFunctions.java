@@ -120,9 +120,7 @@ public class GCDensityFunctions {
 
         // --- EROSION ---
 
-        DensityFunction erosion = registerAndWrap(context, Moon.EROSION, DensityFunctions.flatCache(DensityFunctions.shiftedNoise2d(shiftX, shiftZ, 0.25, noiseRegistry.getOrThrow(GCNoiseData.EROSION))));
-
-        DensityFunction erosionLowRes = registerAndWrap(context, Moon.EROSION_BIOME, DensityFunctions.flatCache(DensityFunctions.shiftedNoise2d(shiftX, shiftZ, 0.25, noiseRegistry.getOrThrow(GCNoiseData.EROSION_BIOME))));
+        context.register(Moon.EROSION, DensityFunctions.flatCache(DensityFunctions.shiftedNoise2d(shiftX, shiftZ, 0.25, noiseRegistry.getOrThrow(GCNoiseData.EROSION))));
 
         // --- SLOPED CHEESE ---
 

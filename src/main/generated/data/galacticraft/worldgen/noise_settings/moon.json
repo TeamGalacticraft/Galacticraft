@@ -114,7 +114,8 @@
           "type": "minecraft:biome",
           "biome_is": [
             "galacticraft:basaltic_mare",
-            "galacticraft:lunar_lowlands"
+            "galacticraft:lunar_lowlands",
+            "galacticraft:lunar_highlands"
           ]
         },
         "then_run": {
@@ -190,6 +191,22 @@
       {
         "type": "minecraft:condition",
         "if_true": {
+          "type": "minecraft:shifted_scaled_noise_threshold",
+          "max_threshold": 0.35,
+          "min_threshold": 0.25,
+          "noise": "minecraft:continentalness",
+          "xz_scale": 0.25
+        },
+        "then_run": {
+          "type": "minecraft:block",
+          "result_state": {
+            "Name": "galacticraft:moon_surface_rock"
+          }
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
           "type": "minecraft:above_preliminary_surface"
         },
         "then_run": {
@@ -210,10 +227,11 @@
                   {
                     "type": "minecraft:condition",
                     "if_true": {
-                      "type": "minecraft:biome",
-                      "biome_is": [
-                        "galacticraft:comet_tundra"
-                      ]
+                      "type": "minecraft:shifted_scaled_noise_threshold",
+                      "max_threshold": -0.455,
+                      "min_threshold": -1.2,
+                      "noise": "minecraft:continentalness",
+                      "xz_scale": 0.25
                     },
                     "then_run": {
                       "type": "minecraft:block",
@@ -225,10 +243,11 @@
                   {
                     "type": "minecraft:condition",
                     "if_true": {
-                      "type": "minecraft:biome",
-                      "biome_is": [
-                        "galacticraft:basaltic_mare"
-                      ]
+                      "type": "minecraft:shifted_scaled_noise_threshold",
+                      "max_threshold": -0.21,
+                      "min_threshold": -0.455,
+                      "noise": "minecraft:continentalness",
+                      "xz_scale": 0.25
                     },
                     "then_run": {
                       "type": "minecraft:block",
@@ -240,10 +259,11 @@
                   {
                     "type": "minecraft:condition",
                     "if_true": {
-                      "type": "minecraft:biome",
-                      "biome_is": [
-                        "galacticraft:lunar_lowlands"
-                      ]
+                      "type": "minecraft:shifted_scaled_noise_threshold",
+                      "max_threshold": 0.25,
+                      "min_threshold": -0.21,
+                      "noise": "minecraft:continentalness",
+                      "xz_scale": 0.25
                     },
                     "then_run": {
                       "type": "minecraft:block",
@@ -255,10 +275,11 @@
                   {
                     "type": "minecraft:condition",
                     "if_true": {
-                      "type": "minecraft:biome",
-                      "biome_is": [
-                        "galacticraft:lunar_highlands"
-                      ]
+                      "type": "minecraft:shifted_scaled_noise_threshold",
+                      "max_threshold": 1.0,
+                      "min_threshold": 0.25,
+                      "noise": "minecraft:continentalness",
+                      "xz_scale": 0.25
                     },
                     "then_run": {
                       "type": "minecraft:block",
@@ -285,10 +306,11 @@
                   {
                     "type": "minecraft:condition",
                     "if_true": {
-                      "type": "minecraft:biome",
-                      "biome_is": [
-                        "galacticraft:comet_tundra"
-                      ]
+                      "type": "minecraft:shifted_scaled_noise_threshold",
+                      "max_threshold": -0.455,
+                      "min_threshold": -1.2,
+                      "noise": "minecraft:continentalness",
+                      "xz_scale": 0.25
                     },
                     "then_run": {
                       "type": "minecraft:block",
@@ -300,10 +322,11 @@
                   {
                     "type": "minecraft:condition",
                     "if_true": {
-                      "type": "minecraft:biome",
-                      "biome_is": [
-                        "galacticraft:basaltic_mare"
-                      ]
+                      "type": "minecraft:shifted_scaled_noise_threshold",
+                      "max_threshold": -0.21,
+                      "min_threshold": -0.455,
+                      "noise": "minecraft:continentalness",
+                      "xz_scale": 0.25
                     },
                     "then_run": {
                       "type": "minecraft:block",
@@ -315,10 +338,11 @@
                   {
                     "type": "minecraft:condition",
                     "if_true": {
-                      "type": "minecraft:biome",
-                      "biome_is": [
-                        "galacticraft:lunar_lowlands"
-                      ]
+                      "type": "minecraft:shifted_scaled_noise_threshold",
+                      "max_threshold": 0.25,
+                      "min_threshold": -0.21,
+                      "noise": "minecraft:continentalness",
+                      "xz_scale": 0.25
                     },
                     "then_run": {
                       "type": "minecraft:block",
@@ -330,10 +354,11 @@
                   {
                     "type": "minecraft:condition",
                     "if_true": {
-                      "type": "minecraft:biome",
-                      "biome_is": [
-                        "galacticraft:lunar_highlands"
-                      ]
+                      "type": "minecraft:shifted_scaled_noise_threshold",
+                      "max_threshold": 1.0,
+                      "min_threshold": 0.25,
+                      "noise": "minecraft:continentalness",
+                      "xz_scale": 0.25
                     },
                     "then_run": {
                       "type": "minecraft:block",
@@ -360,25 +385,11 @@
                   {
                     "type": "minecraft:condition",
                     "if_true": {
-                      "type": "minecraft:biome",
-                      "biome_is": [
-                        "galacticraft:comet_tundra"
-                      ]
-                    },
-                    "then_run": {
-                      "type": "minecraft:block",
-                      "result_state": {
-                        "Name": "galacticraft:moon_rock"
-                      }
-                    }
-                  },
-                  {
-                    "type": "minecraft:condition",
-                    "if_true": {
-                      "type": "minecraft:biome",
-                      "biome_is": [
-                        "galacticraft:basaltic_mare"
-                      ]
+                      "type": "minecraft:shifted_scaled_noise_threshold",
+                      "max_threshold": -0.455,
+                      "min_threshold": -1.2,
+                      "noise": "minecraft:continentalness",
+                      "xz_scale": 0.25
                     },
                     "then_run": {
                       "type": "minecraft:block",
@@ -390,10 +401,27 @@
                   {
                     "type": "minecraft:condition",
                     "if_true": {
-                      "type": "minecraft:biome",
-                      "biome_is": [
-                        "galacticraft:lunar_lowlands"
-                      ]
+                      "type": "minecraft:shifted_scaled_noise_threshold",
+                      "max_threshold": -0.21,
+                      "min_threshold": -0.455,
+                      "noise": "minecraft:continentalness",
+                      "xz_scale": 0.25
+                    },
+                    "then_run": {
+                      "type": "minecraft:block",
+                      "result_state": {
+                        "Name": "galacticraft:moon_basalt"
+                      }
+                    }
+                  },
+                  {
+                    "type": "minecraft:condition",
+                    "if_true": {
+                      "type": "minecraft:shifted_scaled_noise_threshold",
+                      "max_threshold": 0.25,
+                      "min_threshold": -0.21,
+                      "noise": "minecraft:continentalness",
+                      "xz_scale": 0.25
                     },
                     "then_run": {
                       "type": "minecraft:block",
@@ -405,10 +433,11 @@
                   {
                     "type": "minecraft:condition",
                     "if_true": {
-                      "type": "minecraft:biome",
-                      "biome_is": [
-                        "galacticraft:lunar_highlands"
-                      ]
+                      "type": "minecraft:shifted_scaled_noise_threshold",
+                      "max_threshold": 1.0,
+                      "min_threshold": 0.25,
+                      "noise": "minecraft:continentalness",
+                      "xz_scale": 0.25
                     },
                     "then_run": {
                       "type": "minecraft:block",
