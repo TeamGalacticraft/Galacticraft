@@ -287,7 +287,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                     .pattern("PDP")
                     .pattern("PPP")
                     .unlockedBy(getHasName(GCBlocks.GLASS_FLUID_PIPE), has(GCBlocks.GLASS_FLUID_PIPE))
-                    .save(output, RecipeBuilder.getDefaultRecipeId(pipe).withSuffix("_dye"));
+                    .save(output, RecipeBuilder.getDefaultRecipeId(pipe).withPrefix("dye_"));
         }
 
         // Wash fluid pipes
@@ -341,7 +341,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.FLUID_PIPE_WALKWAY, 5)
                 .define('T', GCItems.COMPRESSED_TITANIUM)
-                .define('P', GCBlocks.GLASS_FLUID_PIPE)
+                .define('P', GCItemTags.GLASS_FLUID_PIPES)
                 .pattern("TTT")
                 .pattern("PTP")
                 .pattern("PPP")
@@ -350,7 +350,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, GCBlocks.FLUID_PIPE_WALKWAY)
                 .requires(GCBlocks.WALKWAY)
-                .requires(GCBlocks.GLASS_FLUID_PIPE)
+                .requires(GCItemTags.GLASS_FLUID_PIPES)
                 .unlockedBy(getHasName(GCBlocks.WALKWAY), has(GCBlocks.WALKWAY))
                 .save(output, BuiltInRegistries.ITEM.getKey(GCBlocks.FLUID_PIPE_WALKWAY.asItem()).withSuffix("_shapeless"));
 

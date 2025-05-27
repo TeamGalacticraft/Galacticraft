@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "P": {
-      "tag": "galacticraft:stained_glass_fluid_pipes"
+      "tag": "galacticraft:glass_fluid_pipes/stained"
     },
     "W": {
       "item": "minecraft:water_bucket"

@@ -60,7 +60,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_GEAR)
-                .define('Y', GCBlocks.GLASS_FLUID_PIPE)
+                .define('Y', GCItemTags.GLASS_FLUID_PIPES)
                 .define('X', GCItems.OXYGEN_CONCENTRATOR)
                 .pattern(" Y ")
                 .pattern("YXY")
