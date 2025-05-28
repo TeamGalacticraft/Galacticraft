@@ -22,24 +22,56 @@
 
 package dev.galacticraft.mod.data.tag;
 
+import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.GCRegistry;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCBlockTags;
 import dev.galacticraft.mod.tag.GCItemTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
+import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
     public GCItemTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture, FabricTagProvider.BlockTagProvider blockTags) {
         super(output, completableFuture, blockTags);
+    }
+
+    public static final Map<DyeColor, TagKey<Item>> DYED_ITEM_TAGS = Util.make(new EnumMap<>(DyeColor.class), map -> {
+        map.put(DyeColor.WHITE, ConventionalItemTags.WHITE_DYED);
+        map.put(DyeColor.ORANGE, ConventionalItemTags.ORANGE_DYED);
+        map.put(DyeColor.MAGENTA, ConventionalItemTags.MAGENTA_DYED);
+        map.put(DyeColor.LIGHT_BLUE, ConventionalItemTags.LIGHT_BLUE_DYED);
+        map.put(DyeColor.YELLOW, ConventionalItemTags.YELLOW_DYED);
+        map.put(DyeColor.LIME, ConventionalItemTags.LIME_DYED);
+        map.put(DyeColor.PINK, ConventionalItemTags.PINK_DYED);
+        map.put(DyeColor.GRAY, ConventionalItemTags.GRAY_DYED);
+        map.put(DyeColor.LIGHT_GRAY, ConventionalItemTags.LIGHT_GRAY_DYED);
+        map.put(DyeColor.CYAN, ConventionalItemTags.CYAN_DYED);
+        map.put(DyeColor.PURPLE, ConventionalItemTags.PURPLE_DYED);
+        map.put(DyeColor.BLUE, ConventionalItemTags.BLUE_DYED);
+        map.put(DyeColor.BROWN, ConventionalItemTags.BROWN_DYED);
+        map.put(DyeColor.GREEN, ConventionalItemTags.GREEN_DYED);
+        map.put(DyeColor.RED, ConventionalItemTags.RED_DYED);
+        map.put(DyeColor.BLACK, ConventionalItemTags.BLACK_DYED);
+    });
+
+    protected<T extends ItemLike> void addColorSet(GCRegistry.ColorSet<T> set) {
+        for (Map.Entry<DyeColor, TagKey<Item>> entry : DYED_ITEM_TAGS.entrySet()) {
+            this.tag(entry.getValue()).add(set.get(entry.getKey()).asItem());
+        }
     }
 
     @Override
@@ -148,6 +180,14 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         this.tag(GCItemTags.WRENCHES)
                 .add(GCItems.STANDARD_WRENCH);
+
+        this.tag(GCItemTags.GLASS_FLUID_PIPES).add(GCBlocks.GLASS_FLUID_PIPE.asItem()).addTag(GCItemTags.STAINED_GLASS_FLUID_PIPES);
+        for (Map.Entry<DyeColor, TagKey<Item>> entry : DYED_ITEM_TAGS.entrySet()) {
+            PipeColor color = PipeColor.fromDye(entry.getKey());
+            Item pipe = GCBlocks.GLASS_FLUID_PIPES.get(color).asItem();
+            this.tag(GCItemTags.STAINED_GLASS_FLUID_PIPES).add(pipe);
+            this.tag(entry.getValue()).add(pipe);
+        }
 
         this.tag(GCItemTags.BATTERIES)
                 .add(GCItems.BATTERY)
@@ -404,22 +444,7 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.MOON_CHEESE_CURD)
                 .add(GCItems.MOON_CHEESE_SLICE);
 
-        this.tag(ConventionalItemTags.WHITE_DYED).add(GCItems.PARACHUTE.get(DyeColor.WHITE));
-        this.tag(ConventionalItemTags.ORANGE_DYED).add(GCItems.PARACHUTE.get(DyeColor.ORANGE));
-        this.tag(ConventionalItemTags.MAGENTA_DYED).add(GCItems.PARACHUTE.get(DyeColor.MAGENTA));
-        this.tag(ConventionalItemTags.LIGHT_BLUE_DYED).add(GCItems.PARACHUTE.get(DyeColor.LIGHT_BLUE));
-        this.tag(ConventionalItemTags.YELLOW_DYED).add(GCItems.PARACHUTE.get(DyeColor.YELLOW));
-        this.tag(ConventionalItemTags.LIME_DYED).add(GCItems.PARACHUTE.get(DyeColor.LIME));
-        this.tag(ConventionalItemTags.PINK_DYED).add(GCItems.PARACHUTE.get(DyeColor.PINK));
-        this.tag(ConventionalItemTags.GRAY_DYED).add(GCItems.PARACHUTE.get(DyeColor.GRAY));
-        this.tag(ConventionalItemTags.LIGHT_GRAY_DYED).add(GCItems.PARACHUTE.get(DyeColor.LIGHT_GRAY));
-        this.tag(ConventionalItemTags.CYAN_DYED).add(GCItems.PARACHUTE.get(DyeColor.CYAN));
-        this.tag(ConventionalItemTags.PURPLE_DYED).add(GCItems.PARACHUTE.get(DyeColor.PURPLE));
-        this.tag(ConventionalItemTags.BLUE_DYED).add(GCItems.PARACHUTE.get(DyeColor.BLUE));
-        this.tag(ConventionalItemTags.BROWN_DYED).add(GCItems.PARACHUTE.get(DyeColor.BROWN));
-        this.tag(ConventionalItemTags.GREEN_DYED).add(GCItems.PARACHUTE.get(DyeColor.GREEN));
-        this.tag(ConventionalItemTags.RED_DYED).add(GCItems.PARACHUTE.get(DyeColor.RED));
-        this.tag(ConventionalItemTags.BLACK_DYED).add(GCItems.PARACHUTE.get(DyeColor.BLACK));
+        this.addColorSet(GCItems.PARACHUTE);
 
         this.tag(GCItemTags.OIL_BUCKETS).add(GCItems.CRUDE_OIL_BUCKET);
         this.tag(GCItemTags.FUEL_BUCKETS).add(GCItems.FUEL_BUCKET);
@@ -473,7 +498,7 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE.asItem());
     }
 
-    protected FabricTagProvider<Item>.FabricTagBuilder tag(TagKey<Item> tag) {
+    protected FabricTagProvider<Item>.@NotNull FabricTagBuilder tag(TagKey<Item> tag) {
         return this.getOrCreateTagBuilder(tag);
     }
 }

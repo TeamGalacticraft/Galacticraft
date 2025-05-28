@@ -59,5 +59,5 @@ public interface PipeNetwork {
 
     void markForRemoval();
 
-    boolean isCompatibleWith(@NotNull Pipe pipe);
+    boolean isCompatibleWith(@NotNull FluidPipe pipe);
 }

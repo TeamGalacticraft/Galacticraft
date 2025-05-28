@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.data.recipes;
 
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.api.data.recipe.CircuitFabricatorRecipeBuilder;
 import dev.galacticraft.mod.api.data.recipe.ShapedCompressorRecipeBuilder;
 import dev.galacticraft.mod.api.data.recipe.ShapelessCompressorRecipeBuilder;
@@ -33,12 +35,11 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
@@ -264,15 +265,42 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.FUEL_BUCKET), has(GCItems.FUEL_BUCKET))
                 .save(output);
 
-        // Wires + Pipes
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.GLASS_FLUID_PIPE, 6)
-                .define('X', ConventionalItemTags.GLASS_PANES_COLORLESS)
-                .pattern("XXX")
-                .pattern("   ")
-                .pattern("XXX")
-                .unlockedBy(getHasName(Items.GLASS_PANE), has(ConventionalItemTags.GLASS_PANES_COLORLESS))
-                .save(output);
+        // Pipes from panes
+        for (PipeColor color : PipeColor.values()) {
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.GLASS_FLUID_PIPES.get(color), 6)
+                    .define('X', color.glassPane())
+                    .pattern("XXX")
+                    .pattern("   ")
+                    .pattern("XXX")
+                    .unlockedBy(getHasName(Items.GLASS_PANE), has(Items.GLASS_PANE))
+                    .save(output);
+        }
 
+        // Dye fluid pipes
+        for (DyeColor dye : DyeColor.values()) {
+            PipeColor color = PipeColor.fromDye(dye);
+            ItemLike pipe = GCBlocks.GLASS_FLUID_PIPES.get(color);
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, pipe, 8)
+                    .define('P', GCBlocks.GLASS_FLUID_PIPE)
+                    .define('D', color.dye())
+                    .pattern("PPP")
+                    .pattern("PDP")
+                    .pattern("PPP")
+                    .unlockedBy(getHasName(GCBlocks.GLASS_FLUID_PIPE), has(GCBlocks.GLASS_FLUID_PIPE))
+                    .save(output, RecipeBuilder.getDefaultRecipeId(pipe).withPrefix("dye_"));
+        }
+
+        // Wash fluid pipes
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.GLASS_FLUID_PIPE, 8)
+                .define('P', GCItemTags.STAINED_GLASS_FLUID_PIPES)
+                .define('W', Items.WATER_BUCKET)
+                .pattern("PPP")
+                .pattern("PWP")
+                .pattern("PPP")
+                .unlockedBy(getHasName(GCBlocks.GLASS_FLUID_PIPE), has(GCBlocks.GLASS_FLUID_PIPE))
+                .save(output, Constant.id("_wash_stained_glass_fluid_pipe")); // Leading _ here makes REI show it after the pane recipe
+
+        // Wires
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.ALUMINUM_WIRE, 6)
                 .define('W', Items.WHITE_WOOL)
                 .define('A', GCItemTags.ALUMINUM_INGOTS)
@@ -313,7 +341,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCBlocks.FLUID_PIPE_WALKWAY, 5)
                 .define('T', GCItems.COMPRESSED_TITANIUM)
-                .define('P', GCBlocks.GLASS_FLUID_PIPE)
+                .define('P', GCItemTags.GLASS_FLUID_PIPES)
                 .pattern("TTT")
                 .pattern("PTP")
                 .pattern("PPP")
@@ -322,7 +350,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, GCBlocks.FLUID_PIPE_WALKWAY)
                 .requires(GCBlocks.WALKWAY)
-                .requires(GCBlocks.GLASS_FLUID_PIPE)
+                .requires(GCItemTags.GLASS_FLUID_PIPES)
                 .unlockedBy(getHasName(GCBlocks.WALKWAY), has(GCBlocks.WALKWAY))
                 .save(output, BuiltInRegistries.ITEM.getKey(GCBlocks.FLUID_PIPE_WALKWAY.asItem()).withSuffix("_shapeless"));
 

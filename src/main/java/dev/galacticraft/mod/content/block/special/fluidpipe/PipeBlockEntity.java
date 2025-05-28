@@ -22,11 +22,9 @@
 
 package dev.galacticraft.mod.content.block.special.fluidpipe;
 
-import dev.galacticraft.mod.api.block.entity.PipeColor;
-import dev.galacticraft.mod.api.pipe.Pipe;
+import dev.galacticraft.mod.api.pipe.FluidPipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
 import dev.galacticraft.mod.api.pipe.impl.PipeNetworkImpl;
-import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
@@ -42,14 +40,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.Iterator;
 
-public abstract class PipeBlockEntity extends BlockEntity implements Pipe, Storage<FluidVariant> {
+public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, Storage<FluidVariant> {
     private @Nullable PipeNetwork network = null;
-    private PipeColor color = PipeColor.CLEAR;
     private final long maxTransferRate; // 1 bucket per second
     private final boolean[] connections = new boolean[6];
 
@@ -105,17 +103,12 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe, Stora
 
     @Override
     public void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction) {
-        boolean connected = this.canConnect(direction) && FluidUtil.canAccessFluid(this.level, neighborPos, direction);
-        if (this.connections[direction.get3DDataValue()] != connected) {
-            this.connections[direction.get3DDataValue()] = connected;
-            this.level.sendBlockUpdated(pos, state, state, 0);
-            this.level.updateNeighborsAt(pos, state.getBlock());
-        }
-
         if (this.network == null || this.network.markedForRemoval()) {
             this.createNetwork();
         }
-        this.network.updateConnection(pos, neighborPos, direction);
+        if (this.network != null) {
+            this.network.updateConnection(pos, neighborPos, direction);
+        }
     }
 
     @Override
@@ -134,34 +127,18 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe, Stora
     }
 
     @Override
-    public boolean supportsExtraction() {
-        return true;
-    }
-
-    @Override
     public boolean supportsInsertion() {
         return this.maxTransferRate > 0;
     }
 
     @Override
-    public Iterator<StorageView<FluidVariant>> iterator() {
+    public @NotNull Iterator<StorageView<FluidVariant>> iterator() {
         return Collections.emptyIterator();
-    }
-
-    @Override
-    public PipeColor getColor() {
-        return this.color;
-    }
-
-    @Override
-    public void setColor(PipeColor color) {
-        this.color = color;
     }
 
     @Override
     protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         super.loadAdditional(nbt, registryLookup);
-        this.readColorNbt(nbt);
         this.readConnectionNbt(nbt);
 
         if (this.level != null && this.level.isClientSide) {
@@ -172,7 +149,6 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe, Stora
     @Override
     protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         super.saveAdditional(nbt, registryLookup);
-        this.writeColorNbt(nbt);
         this.writeConnectionNbt(nbt);
     }
 
@@ -182,7 +158,7 @@ public abstract class PipeBlockEntity extends BlockEntity implements Pipe, Stora
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
         return this.saveWithoutMetadata(registryLookup);
     }
 }

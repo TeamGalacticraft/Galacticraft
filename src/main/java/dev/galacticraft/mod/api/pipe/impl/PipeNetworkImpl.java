@@ -23,7 +23,8 @@
 package dev.galacticraft.mod.api.pipe.impl;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.pipe.Pipe;
+import dev.galacticraft.mod.api.block.FluidPipeBlock;
+import dev.galacticraft.mod.api.pipe.FluidPipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
@@ -37,6 +38,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -64,10 +66,10 @@ public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSna
         this.addPipe(pos, null);
     }
 
-    private void addPipe(@NotNull BlockPos pos, @Nullable Pipe pipe) {
+    private void addPipe(@NotNull BlockPos pos, @Nullable FluidPipe pipe) {
         assert !this.markedForRemoval;
         if (pipe == null) {
-            pipe = (Pipe) this.level.getBlockEntity(pos);
+            pipe = (FluidPipe) this.level.getBlockEntity(pos);
         }
         assert pipe != null : "Attempted to add pipe that does not exist!";
         assert pos.equals(((BlockEntity) pipe).getBlockPos());
@@ -82,13 +84,16 @@ public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSna
         pipe.setNetwork(this);
         this.pipes.put(pos, null);
 
+        FluidPipeBlock pipeBlock = (FluidPipeBlock) this.level.getBlockState(pos).getBlock();
+
         for (Direction direction : Constant.Misc.DIRECTIONS) {
             if (pipe.canConnect(direction)) {
                 BlockPos adjacentPos = pos.relative(direction);
+                Block adjacentBlock = this.level.getBlockState(adjacentPos).getBlock();
                 BlockEntity blockEntity = level.getBlockEntity(adjacentPos);
                 if (blockEntity != null && !blockEntity.isRemoved()) {
-                    if (blockEntity instanceof Pipe adjacent) {
-                        if (!pipe.canConnectTo(adjacent)) continue;
+                    if (blockEntity instanceof FluidPipe adjacent && adjacentBlock instanceof FluidPipeBlock adjacentPipe) {
+                        if (!pipeBlock.color.canConnectTo(adjacentPipe.color)) continue;
                         if (this.isCompatibleWith(adjacent)) {
                             if (adjacent.getNetwork() != this && adjacent.canConnect(direction.getOpposite())) {
                                 this.addPipe(adjacentPos, adjacent);
@@ -124,12 +129,12 @@ public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSna
             return;
         }
 
-        List<Pipe> adjacent = new ArrayList<>(6);
+        List<FluidPipe> adjacent = new ArrayList<>(6);
 
         for (Direction direction : Constant.Misc.DIRECTIONS) {
             BlockPos adjacentPipePos = removedPos.relative(direction);
             if (this.pipes.containsKey(adjacentPipePos)) {
-                Pipe pipe1 = (Pipe) Objects.requireNonNull(this.level.getBlockEntity(adjacentPipePos));
+                FluidPipe pipe1 = (FluidPipe) Objects.requireNonNull(this.level.getBlockEntity(adjacentPipePos));
                 if (pipe1.canConnect(direction.getOpposite())) {
                     adjacent.add(pipe1); // Don't bother testing if it was unable to connect
                 }
@@ -143,7 +148,7 @@ public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSna
 
         this.markForRemoval();
 
-        for (Pipe pipe1 : adjacent) {
+        for (FluidPipe pipe1 : adjacent) {
             if (pipe1.getNetwork() == this) {
                 pipe1.setNetwork(null);
                 pipe1.forceCreateNetwork();
@@ -156,7 +161,7 @@ public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSna
         assert this.pipes.containsKey(pipePos);
         assert !this.markedForRemoval;
 
-        if (this.level.getBlockEntity(adjacentPos) instanceof Pipe pipe && this.isCompatibleWith(pipe)) {
+        if (this.level.getBlockEntity(adjacentPos) instanceof FluidPipe pipe && this.isCompatibleWith(pipe)) {
             if (!this.pipes.containsKey(adjacentPos)) {
                 this.addPipe(adjacentPos, pipe);
             }
@@ -252,15 +257,20 @@ public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSna
     }
 
     @Override
-    public boolean isCompatibleWith(@NotNull Pipe pipe) {
+    public boolean isCompatibleWith(@NotNull FluidPipe pipe) {
         return this.getMaxTransferRate() == pipe.getMaxTransferRate();
     }
 
     @Override
     public String toString() {
+        StringBuilder builder = new StringBuilder("[").append(pipes.size()).append(";");
+        for (BlockPos pos : pipes.keySet()) {
+            builder.append(String.format(" (%d,%d,%d),", pos.getX(), pos.getY(), pos.getZ()));
+        }
+        builder.append("]");
         return "PipeNetworkImpl{" +
                 "level=" + level.dimension().location() +
-                ", pipes=" + pipes +
+                ", pipes=" + builder +
                 ", markedForRemoval=" + markedForRemoval +
                 ", maxTransferRate=" + maxTransferRate +
                 ", tickId=" + tickId +
