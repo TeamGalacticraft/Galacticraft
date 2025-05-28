@@ -30,16 +30,19 @@ import dev.galacticraft.mod.tag.GCBlockTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
+import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
@@ -48,6 +51,25 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     public GCBlockTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
+
+    public static final Map<DyeColor, TagKey<Block>> DYED_BLOCK_TAGS = Util.make(new EnumMap<>(DyeColor.class), map -> {
+        map.put(DyeColor.WHITE, ConventionalBlockTags.WHITE_DYED);
+        map.put(DyeColor.ORANGE, ConventionalBlockTags.ORANGE_DYED);
+        map.put(DyeColor.MAGENTA, ConventionalBlockTags.MAGENTA_DYED);
+        map.put(DyeColor.LIGHT_BLUE, ConventionalBlockTags.LIGHT_BLUE_DYED);
+        map.put(DyeColor.YELLOW, ConventionalBlockTags.YELLOW_DYED);
+        map.put(DyeColor.LIME, ConventionalBlockTags.LIME_DYED);
+        map.put(DyeColor.PINK, ConventionalBlockTags.PINK_DYED);
+        map.put(DyeColor.GRAY, ConventionalBlockTags.GRAY_DYED);
+        map.put(DyeColor.LIGHT_GRAY, ConventionalBlockTags.LIGHT_GRAY_DYED);
+        map.put(DyeColor.CYAN, ConventionalBlockTags.CYAN_DYED);
+        map.put(DyeColor.PURPLE, ConventionalBlockTags.PURPLE_DYED);
+        map.put(DyeColor.BLUE, ConventionalBlockTags.BLUE_DYED);
+        map.put(DyeColor.BROWN, ConventionalBlockTags.BROWN_DYED);
+        map.put(DyeColor.GREEN, ConventionalBlockTags.GREEN_DYED);
+        map.put(DyeColor.RED, ConventionalBlockTags.RED_DYED);
+        map.put(DyeColor.BLACK, ConventionalBlockTags.BLACK_DYED);
+    });
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
@@ -339,6 +361,14 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 GCBlocks.FOOD_CANNER,
                 GCBlocks.ROCKET_WORKBENCH
         );
+
+        this.tag(GCBlockTags.GLASS_FLUID_PIPES).add(GCBlocks.GLASS_FLUID_PIPE).addTag(GCBlockTags.STAINED_GLASS_FLUID_PIPES);
+        for (Map.Entry<DyeColor, TagKey<Block>> entry : DYED_BLOCK_TAGS.entrySet()) {
+            PipeColor color = PipeColor.fromDye(entry.getKey());
+            Block pipe = GCBlocks.GLASS_FLUID_PIPES.get(color);
+            this.tag(entry.getValue()).add(pipe);
+            this.tag(GCBlockTags.STAINED_GLASS_FLUID_PIPES).add(pipe);
+        }
 
         this.tag(ConventionalBlockTags.VILLAGER_JOB_SITES)
                 .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
