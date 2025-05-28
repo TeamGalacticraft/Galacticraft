@@ -44,7 +44,8 @@
     "client.LocalPlayerMixin",
     "client.MinecraftMixin",
     "client.ModelManagerMixin",
-    "client.PauseMenuScreenMixin"
+    "client.PauseMenuScreenMixin",
+    "client.SpriteContentAccessor"
   ],
   "minVersion": "0.8.0",
   "injectors": {
