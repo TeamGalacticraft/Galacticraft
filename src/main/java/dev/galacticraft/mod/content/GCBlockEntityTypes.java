@@ -27,13 +27,12 @@ import dev.galacticraft.mod.Constant.Block;
 import dev.galacticraft.mod.content.block.entity.*;
 import dev.galacticraft.mod.content.block.entity.decoration.CannedFoodBlockEntity;
 import dev.galacticraft.mod.content.block.entity.machine.*;
-import dev.galacticraft.mod.content.block.entity.networked.FluidPipeWalkwayBlockEntity;
 import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
-import dev.galacticraft.mod.content.block.entity.networked.WireWalkwayBlockEntity;
 import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlockEntity;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class GCBlockEntityTypes {
@@ -44,12 +43,10 @@ public class GCBlockEntityTypes {
     public static final BlockEntityType<AdvancedSolarPanelBlockEntity> ADVANCED_SOLAR_PANEL = BlockEntityType.Builder.of(AdvancedSolarPanelBlockEntity::new, GCBlocks.ADVANCED_SOLAR_PANEL).build();
 
     // WIRES, PIPES, WALKWAYS
-    public static final BlockEntityType<WireBlockEntity> WIRE_T1 = BlockEntityType.Builder.of((pos, state) -> WireBlockEntity.createT1(GCBlockEntityTypes.WIRE_T1, pos, state), GCBlocks.ALUMINUM_WIRE, GCBlocks.SEALABLE_ALUMINUM_WIRE).build();
+    public static final BlockEntityType<WireBlockEntity> WIRE_T1 = BlockEntityType.Builder.of((pos, state) -> WireBlockEntity.createT1(GCBlockEntityTypes.WIRE_T1, pos, state), GCBlocks.ALUMINUM_WIRE, GCBlocks.SEALABLE_ALUMINUM_WIRE, GCBlocks.WIRE_WALKWAY).build();
     public static final BlockEntityType<WireBlockEntity> WIRE_T2 = BlockEntityType.Builder.of((pos, state) -> WireBlockEntity.createT2(GCBlockEntityTypes.WIRE_T2, pos, state), /*GCBlocks.HEAVY_ALUMINUM_WIRE,*/ GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE).build();
-    public static final BlockEntityType<GlassFluidPipeBlockEntity> GLASS_FLUID_PIPE = BlockEntityType.Builder.of(GlassFluidPipeBlockEntity::new, GCBlocks.GLASS_FLUID_PIPE).build();
+    public static final BlockEntityType<GlassFluidPipeBlockEntity> GLASS_FLUID_PIPE = BlockEntityType.Builder.of(GlassFluidPipeBlockEntity::new, GlassFluidPipeBlockEntity.COMPATIBLE_BLOCKS.toArray(new Block[0])).build();
     public static final BlockEntityType<WalkwayBlockEntity> WALKWAY = BlockEntityType.Builder.of(WalkwayBlockEntity::new, GCBlocks.WALKWAY).build();
-    public static final BlockEntityType<WireWalkwayBlockEntity> WIRE_WALKWAY = BlockEntityType.Builder.of(WireWalkwayBlockEntity::new, GCBlocks.WIRE_WALKWAY).build();
-    public static final BlockEntityType<FluidPipeWalkwayBlockEntity> FLUID_PIPE_WALKWAY = BlockEntityType.Builder.of(FluidPipeWalkwayBlockEntity::new, GCBlocks.FLUID_PIPE_WALKWAY).build();
 
     // MACHINES
     public static final BlockEntityType<CircuitFabricatorBlockEntity> CIRCUIT_FABRICATOR = BlockEntityType.Builder.of(CircuitFabricatorBlockEntity::new, GCBlocks.CIRCUIT_FABRICATOR).build();
@@ -98,8 +95,6 @@ public class GCBlockEntityTypes {
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.HEAVY_ALUMINUM_WIRE), WIRE_T2);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.GLASS_FLUID_PIPE), GLASS_FLUID_PIPE);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.WALKWAY), WALKWAY);
-        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.WIRE_WALKWAY), WIRE_WALKWAY);
-        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.FLUID_PIPE_WALKWAY), FLUID_PIPE_WALKWAY);
 
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.CIRCUIT_FABRICATOR), CIRCUIT_FABRICATOR);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.COMPRESSOR), COMPRESSOR);

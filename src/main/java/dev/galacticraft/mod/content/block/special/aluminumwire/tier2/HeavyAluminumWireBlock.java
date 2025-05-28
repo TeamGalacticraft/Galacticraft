@@ -41,6 +41,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
@@ -58,7 +59,7 @@ public class HeavyAluminumWireBlock extends WireBlock {
     private static final VoxelShape NONE = box(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);    // 6x6x6 box in the center.
 
     public HeavyAluminumWireBlock(Properties settings) {
-        super(settings);
+        super(0.1875f, settings);
         registerDefaultState(this.getStateDefinition().any()
                 .setValue(BlockStateProperties.NORTH, false).setValue(BlockStateProperties.EAST, false)
                 .setValue(BlockStateProperties.SOUTH, false).setValue(BlockStateProperties.WEST, false)
@@ -66,7 +67,7 @@ public class HeavyAluminumWireBlock extends WireBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState blockState, BlockGetter blockView, BlockPos blockPos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(BlockState blockState, BlockGetter blockView, BlockPos blockPos, CollisionContext context) {
         ArrayList<VoxelShape> shapes = new ArrayList<>();
 
         if (blockState.getValue(BlockStateProperties.NORTH)) {

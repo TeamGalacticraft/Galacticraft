@@ -22,17 +22,15 @@
 
 package dev.galacticraft.mod.client.model;
 
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.entity.PipeColor;
-import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
+import dev.galacticraft.mod.api.block.entity.Connected;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
+import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.Util;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -41,6 +39,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
@@ -49,73 +48,183 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public class PipeBakedModel implements BakedModel {
-    private static PipeBakedModel instance = null;
+    private final TextureAtlasSprite sprite;
+    private final Map<Direction, Mesh> meshes;
+    private final float radius;
 
-    public static final Map<PipeColor, Material> COLOR_SPRITE_ID_MAP = Util.make(new EnumMap<>(PipeColor.class), map -> {
-        for (var color : PipeColor.values()) {
-            map.put(color, new Material(InventoryMenu.BLOCK_ATLAS, Constant.id("block/glass_fluid_pipe/" + color.getName())));
+    public PipeBakedModel(Function<Material, TextureAtlasSprite> textureGetter, ResourceLocation texture, float radius) {
+        this.sprite = textureGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, texture));
+        this.meshes = new EnumMap<>(Direction.class);
+        this.radius = radius;
+
+        MeshBuilder meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
+        QuadEmitter emitter = meshBuilder.getEmitter();
+
+        for (Direction direction : new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST}) {
+            emitter
+                    .square(direction, 0.5f-radius, 0.0f, 0.5f+radius, 0.5f-radius, 0.5f-radius)
+                    .uv(0, 0, 10)
+                    .uv(1, 0, 16)
+                    .uv(2, 4, 16)
+                    .uv(3, 4, 10)
+                    .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                    .color(-1, -1, -1, -1).emit();
         }
-    });
+        this.meshes.put(Direction.DOWN, meshBuilder.build());
 
-    public final Map<PipeColor, TextureAtlasSprite> colorSpriteMap = new EnumMap<>(PipeColor.class);
-    private final Mesh down;
-    private final Mesh up;
-    private final Mesh north;
-    private final Mesh south;
-    private final Mesh west;
-    private final Mesh east;
-
-    protected PipeBakedModel(Function<Material, TextureAtlasSprite> textureGetter) {
-        for (var color : PipeColor.values()) {
-            this.colorSpriteMap.put(color, textureGetter.apply(COLOR_SPRITE_ID_MAP.get(color)));
+        for (Direction direction : new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST}) {
+            emitter
+                    .square(direction, 0.5f-radius, 0.5f+radius, 0.5f+radius, 1.0f, 0.5f-radius)
+                    .uv(0, 0, 0)
+                    .uv(1, 0, 6)
+                    .uv(2, 4, 6)
+                    .uv(3, 4, 0)
+                    .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                    .color(-1, -1, -1, -1).emit();
         }
-        var meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
-        var emitter = meshBuilder.getEmitter();
-        emitter.square(Direction.DOWN, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).color(-1, -1, -1, -1).uv(1, 12, 0).uv(2, 16, 0).uv(3, 16, 4).uv(0, 12, 4).cullFace(Direction.DOWN).emit();
-        emitter.square(Direction.WEST, 0.6f, 0.4f, 0.4f, 0.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 0, 0).uv(2, 4, 0).uv(3, 4, 8).uv(0, 0, 8).emit();
-        emitter.square(Direction.EAST, 0.6f, 0.4f, 0.4f, 0.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 4, 0).uv(2, 8, 0).uv(3, 8, 8).uv(0, 4, 8).emit();
-        emitter.square(Direction.SOUTH, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).color(-1, -1, -1, -1).uv(1, 8, 0).uv(2, 12, 0).uv(3, 12, 8).uv(0, 8, 8).emit();
-        emitter.square(Direction.NORTH, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).color(-1, -1, -1, -1).uv(1, 4, 0).uv(2, 8, 0).uv(3, 8, 8).uv(0, 4, 8).emit();
-        this.down = meshBuilder.build();
-        emitter.square(Direction.UP, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).color(-1, -1, -1, -1).uv(1, 12, 0).uv(2, 16, 0).uv(3, 16, 4).uv(0, 12, 4).cullFace(Direction.UP).emit();
-        emitter.square(Direction.EAST, 0.6f, 1.0f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(1, 0, 8).uv(2, 4, 8).uv(3, 4, 16).uv(0, 0, 16).emit();
-        emitter.square(Direction.WEST, 0.6f, 1.0f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(1, 4, 8).uv(2, 8, 8).uv(3, 8, 16).uv(0, 4, 16).emit();
-        emitter.square(Direction.NORTH, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 8, 8).uv(2, 12, 8).uv(3, 12, 16).uv(0, 8, 16).emit();
-        emitter.square(Direction.SOUTH, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 4, 8).uv(2, 8, 8).uv(3, 8, 16).uv(0, 4, 16).emit();
-        this.up = meshBuilder.build();
-        emitter.square(Direction.NORTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).color(-1, -1, -1, -1).uv(1, 12, 0).uv(2, 16, 0).uv(3, 16, 4).uv(0, 12, 4).cullFace(Direction.NORTH).emit();
-        emitter.square(Direction.WEST, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 0, 0).uv(1, 4, 0).uv(2, 4, 8).uv(3, 0, 8).emit();
-        emitter.square(Direction.EAST, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 4, 0).uv(1, 8, 0).uv(2, 8, 8).uv(3, 4, 8).emit();
-        emitter.square(Direction.DOWN, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).color(-1, -1, -1, -1).uv(1, 8, 0).uv(2, 12, 0).uv(3, 12, 8).uv(0, 8, 8).emit();
-        emitter.square(Direction.UP, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 4, 0).uv(2, 8, 0).uv(3, 8, 8).uv(0, 4, 8).emit();
-        this.north = meshBuilder.build();
-        emitter.square(Direction.SOUTH, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).color(-1, -1, -1, -1).uv(1, 12, 0).uv(2, 16, 0).uv(3, 16, 4).uv(0, 12, 4).cullFace(Direction.SOUTH).emit();
-        emitter.square(Direction.EAST, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 0, 8).uv(1, 4, 8).uv(2, 4, 16).uv(3, 0, 16).emit();
-        emitter.square(Direction.WEST, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 4, 8).uv(1, 8, 8).uv(2, 8, 16).uv(3, 4, 16).emit();
-        emitter.square(Direction.UP, 0.4f, 0.0f, 0.6f, 0.4f, 0.4f).color(-1, -1, -1, -1).uv(1, 8, 8).uv(2, 12, 8).uv(3, 12, 16).uv(0, 8, 16).emit();
-        emitter.square(Direction.DOWN, 0.4f, 0.6f, 0.6f, 1.0f, 0.4f).color(-1, -1, -1, -1).uv(1, 4, 8).uv(2, 8, 8).uv(3, 8, 16).uv(0, 4, 16).emit();
-        this.south = meshBuilder.build();
-        emitter.square(Direction.WEST, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).color(-1, -1, -1, -1).uv(0, 12, 0).uv(1, 16, 0).uv(2, 16, 4).uv(3, 12, 4).cullFace(Direction.WEST).emit();
-        emitter.square(Direction.NORTH, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 0, 0).uv(1, 4, 0).uv(2, 4, 8).uv(3, 0, 8).emit();
-        emitter.square(Direction.SOUTH, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 4, 0).uv(1, 8, 0).uv(2, 8, 8).uv(3, 4, 8).emit();
-        emitter.square(Direction.UP, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 8, 0).uv(1, 12, 0).uv(2, 12, 8).uv(3, 8, 8).emit();
-        emitter.square(Direction.DOWN, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 4, 0).uv(1, 8, 0).uv(2, 8, 8).uv(3, 4, 8).emit();
-        this.west = meshBuilder.build();
-        emitter.square(Direction.EAST, 0.4f, 0.4f, 0.6f, 0.6f, 0.0f).color(-1, -1, -1, -1).uv(0, 12, 0).uv(1, 16, 0).uv(2, 16, 4).uv(3, 12, 4).cullFace(Direction.EAST).emit();
-        emitter.square(Direction.SOUTH, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 0, 8).uv(1, 4, 8).uv(2, 4, 16).uv(3, 0, 16).emit();
-        emitter.square(Direction.NORTH, 0.0f, 0.4f, 0.4f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 4, 8).uv(1, 8, 8).uv(2, 8, 16).uv(3, 4, 16).emit();
-        emitter.square(Direction.DOWN, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 8, 8).uv(1, 12, 8).uv(2, 12, 16).uv(3, 8, 16).emit();
-        emitter.square(Direction.UP, 0.6f, 0.4f, 1.0f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 4, 8).uv(1, 8, 8).uv(2, 8, 16).uv(3, 4, 16).emit();
-        this.east = meshBuilder.build();
+        this.meshes.put(Direction.UP, meshBuilder.build());
+
+        emitter
+                .square(Direction.WEST, 0, 0.5f-radius, 0.5f-radius, 0.5f+radius, 0.5f-radius)
+                .uv(0, 0, 0)
+                .uv(1, 4, 0)
+                .uv(2, 4, 6)
+                .uv(3, 0, 6)
+                .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                .color(-1, -1, -1, -1).emit();
+        emitter
+                .square(Direction.UP, 0.5f-radius, 0.5f+radius, 0.5f+radius, 1, 0.5f-radius)
+                .uv(0, 0, 0)
+                .uv(1, 0, 6)
+                .uv(2, 4, 6)
+                .uv(3, 4, 0)
+                .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                .color(-1, -1, -1, -1).emit();
+        emitter
+                .square(Direction.EAST, 0.5f+radius, 0.5f-radius, 1, 0.5f+radius, 0.5f-radius)
+                .uv(0, 0, 10)
+                .uv(1, 4, 10)
+                .uv(2, 4, 16)
+                .uv(3, 0, 16)
+                .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                .color(-1, -1, -1, -1).emit();
+        emitter
+                .square(Direction.DOWN, 0.5f-radius, 0, 0.5f+radius, 0.5f-radius, 0.5f-radius)
+                .uv(0, 0, 10)
+                .uv(1, 0, 16)
+                .uv(2, 4, 16)
+                .uv(3, 4, 10)
+                .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                .color(-1, -1, -1, -1).emit();
+        this.meshes.put(Direction.NORTH, meshBuilder.build());
+
+        emitter
+                .square(Direction.WEST, 0.5f+radius, 0.5f-radius, 1, 0.5f+radius, 0.5f-radius)
+                .uv(0, 0, 10)
+                .uv(1, 4, 10)
+                .uv(2, 4, 16)
+                .uv(3, 0, 16)
+                .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                .color(-1, -1, -1, -1).emit();
+        emitter
+                .square(Direction.EAST, 0, 0.5f-radius, 0.5f-radius, 0.5f+radius, 0.5f-radius)
+                .uv(0, 0, 0)
+                .uv(1, 4, 0)
+                .uv(2, 4, 6)
+                .uv(3, 0, 6)
+                .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                .color(-1, -1, -1, -1).emit();
+        emitter
+                .square(Direction.UP, 0.5f-radius, 0, 0.5f+radius, 0.5f-radius, 0.5f-radius)
+                .uv(0, 0, 10)
+                .uv(1, 0, 16)
+                .uv(2, 4, 16)
+                .uv(3, 4, 10)
+                .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                .color(-1, -1, -1, -1).emit();
+        emitter
+                .square(Direction.DOWN, 0.5f-radius, 0.5f+radius, 0.5f+radius, 1, 0.5f-radius)
+                .uv(0, 0, 0)
+                .uv(1, 0, 6)
+                .uv(2, 4, 6)
+                .uv(3, 4, 0)
+                .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                .color(-1, -1, -1, -1).emit();
+        this.meshes.put(Direction.SOUTH, meshBuilder.build());
+
+        emitter
+                .square(Direction.NORTH, 0, 0.5f-radius, 0.5f-radius, 0.5f+radius, 0.5f-radius)
+                .uv(0, 0, 0)
+                .uv(1, 4, 0)
+                .uv(2, 4, 6)
+                .uv(3, 0, 6)
+                .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                .color(-1, -1, -1, -1).emit();
+        emitter
+                .square(Direction.SOUTH, 0.5f+radius, 0.5f-radius, 1, 0.5f+radius, 0.5f-radius)
+                .uv(0, 0, 10)
+                .uv(1, 4, 10)
+                .uv(2, 4, 16)
+                .uv(3, 0, 16)
+                .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                .color(-1, -1, -1, -1).emit();
+        emitter
+                .square(Direction.UP, 0.5f+radius, 0.5f-radius, 1, 0.5f+radius, 0.5f-radius)
+                .uv(0, 4, 10)
+                .uv(1, 0, 10)
+                .uv(2, 0, 16)
+                .uv(3, 4, 16)
+                .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                .color(-1, -1, -1, -1).emit();
+        emitter
+                .square(Direction.DOWN, 0.5f+radius, 0.5f-radius, 1, 0.5f+radius, 0.5f-radius)
+                .uv(0, 4, 10)
+                .uv(1, 0, 10)
+                .uv(2, 0, 16)
+                .uv(3, 4, 16)
+                .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                .color(-1, -1, -1, -1).emit();
+        this.meshes.put(Direction.EAST, meshBuilder.build());
+
+        emitter
+                .square(Direction.NORTH, 0.5f+radius, 0.5f-radius, 1, 0.5f+radius, 0.5f-radius)
+                .uv(0, 0, 10)
+                .uv(1, 4, 10)
+                .uv(2, 4, 16)
+                .uv(3, 0, 16)
+                .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                .color(-1, -1, -1, -1).emit();
+        emitter
+                .square(Direction.SOUTH, 0, 0.5f-radius, 0.5f-radius, 0.5f+radius, 0.5f-radius)
+                .uv(0, 0, 0)
+                .uv(1, 4, 0)
+                .uv(2, 4, 6)
+                .uv(3, 0, 6)
+                .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                .color(-1, -1, -1, -1).emit();
+        emitter
+                .square(Direction.UP, 0, 0.5f-radius, 0.5f-radius, 0.5f+radius, 0.5f-radius)
+                .uv(0, 4, 0)
+                .uv(1, 0, 0)
+                .uv(2, 0, 6)
+                .uv(3, 4, 6)
+                .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                .color(-1, -1, -1, -1).emit();
+        emitter
+                .square(Direction.DOWN, 0, 0.5f-radius, 0.5f-radius, 0.5f+radius, 0.5f-radius)
+                .uv(0, 4, 0)
+                .uv(1, 0, 0)
+                .uv(2, 0, 6)
+                .uv(3, 4, 6)
+                .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                .color(-1, -1, -1, -1).emit();
+        this.meshes.put(Direction.WEST, meshBuilder.build());
     }
 
     @Override
@@ -127,33 +236,29 @@ public class PipeBakedModel implements BakedModel {
     public void emitBlockQuads(BlockAndTintGetter getter, BlockState blockState, BlockPos blockPos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         var emitter = context.getEmitter();
 
-        if (getter.getBlockEntity(blockPos) instanceof GlassFluidPipeBlockEntity pipe) {
-            ColorTransform.INSTANCE.setSprite(this.colorSpriteMap.get(pipe.getColor()));
-            context.pushTransform(ColorTransform.INSTANCE);
-            this.emitBlockQuadsDirection(emitter, pipe.getConnections(), this.down, Direction.DOWN);
-            this.emitBlockQuadsDirection(emitter, pipe.getConnections(), this.up, Direction.UP);
-            this.emitBlockQuadsDirection(emitter, pipe.getConnections(), this.north, Direction.NORTH);
-            this.emitBlockQuadsDirection(emitter, pipe.getConnections(), this.south, Direction.SOUTH);
-            this.emitBlockQuadsDirection(emitter, pipe.getConnections(), this.west, Direction.WEST);
-            this.emitBlockQuadsDirection(emitter, pipe.getConnections(), this.east, Direction.EAST);
-            context.popTransform();
+        if (getter.getBlockEntity(blockPos) instanceof Connected pipe) {
+            for (Direction direction : Direction.values()) {
+                if (pipe.isConnected(direction)) {
+                    this.meshes.get(direction).outputTo(emitter);
+                } else {
+                    emitter
+                        .square(direction, 0.5f-this.radius, 0.5f-this.radius, 0.5f+this.radius, 0.5f+this.radius, 0.5f-this.radius)
+                        .uv(0, 0, 6)
+                        .uv(1, 0, 10)
+                        .uv(2, 4, 10)
+                        .uv(3, 4, 6)
+                        .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                        .color(-1, -1, -1, -1).emit();
+                }
+            }
         }
     }
-
-    private void emitBlockQuadsDirection(QuadEmitter emitter, boolean[] connections, Mesh mesh, Direction direction) {
-        if (connections[direction.get3DDataValue()]) {
-            mesh.outputTo(emitter);
-        } else {
-            emitter.square(direction, 0.4f, 0.4f, 0.6f, 0.6f, 0.4f).color(-1, -1, -1, -1).uv(0, 12, 0).uv(1, 16, 0).uv(2, 16, 4).uv(3, 12, 4).emit();
-        }
-    }
-
     @Override
     public void emitItemQuads(ItemStack itemStack, Supplier<RandomSource> randomSupplier, RenderContext context) {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState blockState, @Nullable Direction direction, RandomSource random) {
+    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState blockState, @Nullable Direction direction, RandomSource random) {
         return Collections.emptyList();
     }
 
@@ -179,7 +284,7 @@ public class PipeBakedModel implements BakedModel {
 
     @Override
     public @NotNull TextureAtlasSprite getParticleIcon() {
-        return this.colorSpriteMap.get(PipeColor.CLEAR);
+        return this.sprite;
     }
 
     @Override
@@ -190,17 +295,6 @@ public class PipeBakedModel implements BakedModel {
     @Override
     public @NotNull ItemOverrides getOverrides() {
         return ItemOverrides.EMPTY;
-    }
-
-    public static PipeBakedModel getInstance(Function<Material, TextureAtlasSprite> spriteFunction) {
-        if (instance == null) {
-            return instance = new PipeBakedModel(spriteFunction);
-        }
-        return instance;
-    }
-
-    public static void invalidate() {
-        instance = null;
     }
 
     public enum ColorTransform implements RenderContext.QuadTransform {

@@ -6,7 +6,7 @@
       "item": "galacticraft:walkway"
     },
     {
-      "item": "galacticraft:glass_fluid_pipe"
+      "tag": "galacticraft:glass_fluid_pipes"
     }
   ],
   "result": {

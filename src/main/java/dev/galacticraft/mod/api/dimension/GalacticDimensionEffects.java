@@ -58,6 +58,6 @@ public abstract class GalacticDimensionEffects extends DimensionSpecialEffects {
 
     @Override
     public Vec3 getBrightnessDependentFogColor(Vec3 fogColor, float brightness) {
-        return null;
+        return Vec3.ZERO;
     }
 }
