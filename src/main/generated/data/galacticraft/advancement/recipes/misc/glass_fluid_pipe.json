@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#c:glass_panes/colorless"
+            "items": "minecraft:glass_pane"
           }
         ]
       },
