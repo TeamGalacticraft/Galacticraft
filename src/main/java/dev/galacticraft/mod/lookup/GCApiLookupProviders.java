@@ -25,7 +25,7 @@ package dev.galacticraft.mod.lookup;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.item.SingleVariantFixedItemBackedFluidStorage;
-import dev.galacticraft.mod.api.pipe.Pipe;
+import dev.galacticraft.mod.api.pipe.FluidPipe;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -54,27 +54,26 @@ public class GCApiLookupProviders {
             GCBlockEntityTypes.OXYGEN_SEALER,
             GCBlockEntityTypes.OXYGEN_BUBBLE_DISTRIBUTOR,
             GCBlockEntityTypes.ENERGY_STORAGE_MODULE,
+            GCBlockEntityTypes.FOOD_CANNER,
             GCBlockEntityTypes.OXYGEN_STORAGE_MODULE
     };
     @SuppressWarnings("rawtypes")
     private static final BlockEntityType[] WIRE_TYPES = new BlockEntityType[]{
             GCBlockEntityTypes.WIRE_T1,
 //            GCBlocksEntityType.WIRE_T2,
-            GCBlockEntityTypes.WIRE_WALKWAY
     };
 
     @SuppressWarnings("rawtypes")
     private static final BlockEntityType[] PIPE_TYPES = new BlockEntityType[]{
-            GCBlockEntityTypes.GLASS_FLUID_PIPE,
-            GCBlockEntityTypes.FLUID_PIPE_WALKWAY
+            GCBlockEntityTypes.GLASS_FLUID_PIPE
     };
 
     public static void register() {
         MachineBlockEntity.registerProviders(MACHINE_BLOCKS);
 
         FluidStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
-            if (direction == null || !((Pipe) blockEntity).canConnect(direction)) return null;
-            return ((Pipe) blockEntity).getInsertable();
+            if (direction == null || !((FluidPipe) blockEntity).canConnect(direction)) return null;
+            return ((FluidPipe) blockEntity).getInsertable();
         }, PIPE_TYPES);
 
         EnergyStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {

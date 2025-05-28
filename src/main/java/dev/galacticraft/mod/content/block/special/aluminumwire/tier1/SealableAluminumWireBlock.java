@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class SealableAluminumWireBlock extends WireBlock {
     public SealableAluminumWireBlock(Properties settings) {
-        super(settings);
+        super(0.5f, settings);
     }
 
     @Override

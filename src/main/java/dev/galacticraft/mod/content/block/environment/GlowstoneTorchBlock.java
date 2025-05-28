@@ -39,6 +39,7 @@ import java.util.List;
 
 public class GlowstoneTorchBlock extends TorchBlock {
     public static final MapCodec<GlowstoneTorchBlock> CODEC = simpleCodec(GlowstoneTorchBlock::new);
+
     public GlowstoneTorchBlock(Properties settings) {
         super(null, settings);
     }

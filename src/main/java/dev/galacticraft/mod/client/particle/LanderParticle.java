@@ -35,6 +35,7 @@ import net.minecraft.util.Mth;
 public class LanderParticle extends TextureSheetParticle {
     private float smokeParticleScale;
     private final SpriteSet sprites;
+
     protected LanderParticle(ClientLevel clientLevel, double x, double y, double z, double mX, double mY, double mZ, SpriteSet sprites) {
         super(clientLevel, x, y, z, mX, mY, mZ);
         this.xd *= 0.10000000149011612D;

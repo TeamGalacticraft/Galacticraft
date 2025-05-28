@@ -53,7 +53,7 @@ public class GCStructureSets {
                 structureLookup.getOrThrow(GCStructures.Moon.BOSS),
                 new RandomSpreadStructurePlacement(32, 8, RandomSpreadType.LINEAR, 52532672)
         ));
-        context.register(Moon.RUINS,  new StructureSet(
+        context.register(Moon.RUINS, new StructureSet(
                 structureLookup.getOrThrow(GCStructures.Moon.RUINS),
                 new RandomSpreadStructurePlacement(32, 8, RandomSpreadType.LINEAR, 38245864)
         ));

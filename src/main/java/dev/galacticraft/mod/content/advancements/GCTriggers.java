@@ -36,5 +36,6 @@ public class GCTriggers {
     public static final FindMoonBossTrigger FIND_MOON_BOSS = TRIGGERS.register(Triggers.FIND_MOON_BOSS, new FindMoonBossTrigger());
     public static final CreateSpaceStationTrigger CREATE_SPACE_STATION = TRIGGERS.register(Triggers.CREATE_SPACE_STATION, new CreateSpaceStationTrigger());
 
-    public static void register() {}
+    public static void register() {
+    }
 }

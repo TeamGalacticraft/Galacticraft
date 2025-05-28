@@ -25,62 +25,73 @@ package dev.galacticraft.impl.universe.position.config;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.gas.GasComposition;
-import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.satellite.SatelliteOwnershipData;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.api.universe.display.CelestialDisplay;
 import dev.galacticraft.api.universe.display.ring.CelestialRingDisplay;
-import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.mod.util.StreamCodecs;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.LevelStem;
 
-import java.util.Objects;
+import java.util.Optional;
 
-public final class SatelliteConfig implements CelestialBodyConfig {
+public class SatelliteConfig implements CelestialBodyConfig {
+    private ResourceLocation id;
+    private String customName;
+    private Optional<ResourceKey<CelestialBody<?, ?>>> parent;
+    private CelestialPosition<?, ?> position;
+    private CelestialDisplay<?, ?> display;
+    private CelestialRingDisplay<?, ?> ring;
+    private SatelliteOwnershipData ownershipData;
+    private ResourceKey<Level> world;
+    private Holder<CelestialTeleporter<?, ?>> teleporter;
+    private GasComposition atmosphere;
+    private float gravity;
+    private int accessWeight;
+    private LevelStem options;
+
     public static final Codec<SatelliteConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            CelestialBody.CODEC.fieldOf("parent").forGetter(SatelliteConfig::parent),
-            Galaxy.CODEC.fieldOf("galaxy").forGetter(SatelliteConfig::galaxy),
-            CelestialPosition.CODEC.fieldOf("position").forGetter(SatelliteConfig::position),
-            CelestialDisplay.CODEC.fieldOf("display").forGetter(SatelliteConfig::display),
-            CelestialRingDisplay.CODEC.fieldOf("ring").forGetter(SatelliteConfig::ring),
-            SatelliteOwnershipData.CODEC.fieldOf("ownership_data").forGetter(SatelliteConfig::ownershipData),
-            ResourceKey.codec(Registries.DIMENSION).fieldOf("world").forGetter(SatelliteConfig::world),
-            RegistryFileCodec.create(AddonRegistries.CELESTIAL_TELEPORTER, CelestialTeleporter.DIRECT_CODEC).fieldOf("teleporter").forGetter(SatelliteConfig::teleporter),
-            GasComposition.CODEC.fieldOf("atmosphere").forGetter(SatelliteConfig::atmosphere),
-            Codec.FLOAT.fieldOf("gravity").forGetter(SatelliteConfig::gravity),
-            Codec.INT.fieldOf("accessWeight").forGetter(SatelliteConfig::accessWeight),
-            LevelStem.CODEC.fieldOf("dimension_options").forGetter(SatelliteConfig::dimensionOptions)
+            ResourceLocation.CODEC.fieldOf("id").forGetter(SatelliteConfig::getId),
+            Codec.STRING.fieldOf("custom_name").forGetter(SatelliteConfig::getCustomName),
+            CelestialBody.CODEC.optionalFieldOf("parent").forGetter(SatelliteConfig::getParent),
+            CelestialPosition.CODEC.fieldOf("position").forGetter(SatelliteConfig::getPosition),
+            CelestialDisplay.CODEC.fieldOf("display").forGetter(SatelliteConfig::getDisplay),
+            CelestialRingDisplay.CODEC.fieldOf("ring").forGetter(SatelliteConfig::getRing),
+            SatelliteOwnershipData.CODEC.fieldOf("ownership_data").forGetter(SatelliteConfig::getOwnershipData),
+            Level.RESOURCE_KEY_CODEC.fieldOf("world").forGetter(SatelliteConfig::getWorld),
+            CelestialTeleporter.CODEC.fieldOf("teleporter").forGetter(SatelliteConfig::getTeleporter),
+            GasComposition.CODEC.fieldOf("atmosphere").forGetter(SatelliteConfig::getAtmosphere),
+            Codec.FLOAT.fieldOf("gravity").forGetter(SatelliteConfig::getGravity),
+            Codec.INT.fieldOf("access_weight").forGetter(SatelliteConfig::getAccessWeight),
+            LevelStem.CODEC.fieldOf("options").forGetter(SatelliteConfig::getOptions)
     ).apply(instance, SatelliteConfig::new));
     public static final StreamCodec<RegistryFriendlyByteBuf, SatelliteConfig> STREAM_CODEC = StreamCodecs.wrapCodec(CODEC);
 
-    private final Holder<CelestialBody<?, ?>> parent;
-    private final Holder<Galaxy> galaxy;
-    private final CelestialPosition<?, ?> position;
-    private final CelestialDisplay<?, ?> display;
-    private final CelestialRingDisplay<?, ?> ring;
-    private final SatelliteOwnershipData ownershipData;
-    private final ResourceKey<Level> world;
-    private final Holder<CelestialTeleporter<?, ?>> teleporter;
-    private final GasComposition atmosphere;
-    private final float gravity;
-    private final int accessWeight;
-    private final LevelStem options;
-    private Component customName = Component.empty();
-
-    public SatelliteConfig(Holder<CelestialBody<?, ?>> parent, Holder<Galaxy> galaxy, CelestialPosition<?, ?> position, CelestialDisplay<?, ?> display, CelestialRingDisplay<?, ?> ring, SatelliteOwnershipData ownershipData, ResourceKey<Level> world, Holder<CelestialTeleporter<?, ?>> teleporter, GasComposition atmosphere, float gravity, int accessWeight, LevelStem options) {
+    public SatelliteConfig(
+            ResourceLocation id,
+            String customName,
+            Optional<ResourceKey<CelestialBody<?, ?>>> parent,
+            CelestialPosition<?, ?> position,
+            CelestialDisplay<?, ?> display,
+            CelestialRingDisplay<?, ?> ring,
+            SatelliteOwnershipData ownershipData,
+            ResourceKey<Level> world,
+            Holder<CelestialTeleporter<?, ?>> teleporter,
+            GasComposition atmosphere,
+            float gravity,
+            int accessWeight,
+            LevelStem options) {
+        this.id = id;
+        this.customName = customName;
         this.parent = parent;
-        this.galaxy = galaxy;
         this.position = position;
         this.display = display;
         this.ring = ring;
@@ -93,68 +104,33 @@ public final class SatelliteConfig implements CelestialBodyConfig {
         this.options = options;
     }
 
-    public Holder<CelestialBody<?, ?>> parent() {return parent;}
+    // Getters
+    public ResourceLocation getId() { return id; }
+    public String getCustomName() { return customName; }
+    public Optional<ResourceKey<CelestialBody<?, ?>>> getParent() { return parent; }
+    public CelestialPosition<?, ?> getPosition() { return position; }
+    public CelestialDisplay<?, ?> getDisplay() { return display; }
+    public CelestialRingDisplay<?, ?> getRing() { return ring; }
+    public SatelliteOwnershipData getOwnershipData() { return ownershipData; }
+    public ResourceKey<Level> getWorld() { return world; }
+    public Holder<CelestialTeleporter<?, ?>> getTeleporter() { return teleporter; }
+    public GasComposition getAtmosphere() { return atmosphere; }
+    public float getGravity() { return gravity; }
+    public int getAccessWeight() { return accessWeight; }
+    public LevelStem getOptions() { return options; }
 
-    public Holder<Galaxy> galaxy() {return galaxy;}
-
-    public CelestialPosition<?, ?> position() {return position;}
-
-    public CelestialDisplay<?, ?> display() {return display;}
-
-    public CelestialRingDisplay<?, ?> ring() {return ring;}
-
-    public SatelliteOwnershipData ownershipData() {return ownershipData;}
-
-    public Component customName() {return customName;}
-
-    public void customName(Component name) {this.customName = name;}
-
-    public ResourceKey<Level> world() {return world;}
-
-    public Holder<CelestialTeleporter<?, ?>> teleporter() {return teleporter;}
-
-    public GasComposition atmosphere() {return atmosphere;}
-
-    public float gravity() {return gravity;}
-
-    public int accessWeight() {return accessWeight;}
-
-    public LevelStem dimensionOptions() {return options;}
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        SatelliteConfig that = (SatelliteConfig) obj;
-        return Objects.equals(this.parent, that.parent) &&
-                Objects.equals(this.galaxy, that.galaxy) &&
-                Objects.equals(this.position, that.position) &&
-                Objects.equals(this.display, that.display) &&
-                Objects.equals(this.ownershipData, that.ownershipData) &&
-                Objects.equals(this.customName, that.customName) &&
-                Objects.equals(this.world, that.world) &&
-                Objects.equals(this.atmosphere, that.atmosphere) &&
-                Float.floatToIntBits(this.gravity) == Float.floatToIntBits(that.gravity) &&
-                this.accessWeight == that.accessWeight;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(parent, galaxy, position, display, ownershipData, customName, world, atmosphere, gravity, accessWeight);
-    }
-
-    @Override
-    public String toString() {
-        return "SatelliteConfig[" +
-                "parent=" + parent + ", " +
-                "galaxy=" + galaxy + ", " +
-                "position=" + position + ", " +
-                "display=" + display + ", " +
-                "ownershipData=" + ownershipData + ", " +
-                "customName=" + customName + ", " +
-                "world=" + world + ", " +
-                "atmosphere=" + atmosphere + ", " +
-                "gravity=" + gravity + ", " +
-                "accessWeight=" + accessWeight + ']';
-    }
+    // Setters (optional, use as needed)
+    public void setId(ResourceLocation id) { this.id = id; }
+    public void setCustomName(String customName) { this.customName = customName; }
+    public void setParent(Optional<ResourceKey<CelestialBody<?, ?>>> parent) { this.parent = parent; }
+    public void setPosition(CelestialPosition<?, ?> position) { this.position = position; }
+    public void setDisplay(CelestialDisplay<?, ?> display) { this.display = display; }
+    public void setRing(CelestialRingDisplay<?, ?> ring) { this.ring = ring; }
+    public void setOwnershipData(SatelliteOwnershipData ownershipData) { this.ownershipData = ownershipData; }
+    public void setWorld(ResourceKey<Level> world) { this.world = world; }
+    public void setTeleporter(Holder<CelestialTeleporter<?, ?>> teleporter) { this.teleporter = teleporter; }
+    public void setAtmosphere(GasComposition atmosphere) { this.atmosphere = atmosphere; }
+    public void setGravity(float gravity) { this.gravity = gravity; }
+    public void setAccessWeight(int accessWeight) { this.accessWeight = accessWeight; }
+    public void setOptions(LevelStem options) { this.options = options; }
 }

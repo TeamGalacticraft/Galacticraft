@@ -9,11 +9,12 @@
     "BlockBehaviourMixin",
     "BucketItemAccessor",
     "BucketItemMixin",
+    "CakeBlockMixin",
     "DimensionTransitionMixin",
     "DimensionTypeMixin",
     "EntityMixin",
+    "FireworkRocketItemMixin",
     "FlowingFluidMixin",
-    "GiveCommandMixin",
     "ItemEntityMixin",
     "ItemStackMixin",
     "LanternBlockMixin",
@@ -24,8 +25,7 @@
     "PlayerMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
-    "TorchBlockMixin",
-    "client.ClientPacketListenerMixin"
+    "TorchBlockMixin"
   ],
   "client": [
     "client.AbstractClientPlayerMixin",
@@ -35,6 +35,8 @@
     "client.BlockModelMixin$DeserializerMixin",
     "client.CameraMixin",
     "client.ClientLevelMixin",
+    "client.ClientPacketListenerMixin",
+    "client.FabricItemMixin",
     "client.FogRendererMixin",
     "client.HumanoidModelMixin",
     "client.LevelRendererMixin",
@@ -42,7 +44,8 @@
     "client.LocalPlayerMixin",
     "client.MinecraftMixin",
     "client.ModelManagerMixin",
-    "client.PauseMenuScreenMixin"
+    "client.PauseMenuScreenMixin",
+    "client.SpriteContentAccessor"
   ],
   "minVersion": "0.8.0",
   "injectors": {

@@ -6,7 +6,7 @@
       "item": "galacticraft:heavy_plating"
     },
     "S": {
-      "tag": "c:plates/steel"
+      "item": "galacticraft:compressed_steel"
     }
   },
   "pattern": [

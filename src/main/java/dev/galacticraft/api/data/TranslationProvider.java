@@ -105,7 +105,7 @@ public abstract class TranslationProvider implements DataProvider {
     }
 
     protected void enchantment(Enchantment enchantment, String translation) {
-        this.add(((TranslatableContents)enchantment.description().getContents()).getKey(), translation);
+        this.add(((TranslatableContents) enchantment.description().getContents()).getKey(), translation);
     }
 
     protected void stat(ResourceLocation id, String translation) {
@@ -144,7 +144,7 @@ public abstract class TranslationProvider implements DataProvider {
         return baseKey;
     }
 
-    private static @NotNull String normalizeName(String id) {
+    protected static @NotNull String normalizeName(String id) {
         char[] chars = id.toCharArray();
         boolean capitalize = true;
         for (int i = 0; i < chars.length; i++) {

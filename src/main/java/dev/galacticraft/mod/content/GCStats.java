@@ -40,5 +40,6 @@ public class GCStats {
         return resourceLocation;
     }
 
-    public static void register() {}
+    public static void register() {
+    }
 }

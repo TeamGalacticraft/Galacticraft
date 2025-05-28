@@ -23,5 +23,5 @@
 package dev.galacticraft.mod.content.entity;
 
 public interface ScalableFuelLevel {
-    int getScaledFuelLevel(int scale);
+    float getScaledFuelLevel(float scale);
 }

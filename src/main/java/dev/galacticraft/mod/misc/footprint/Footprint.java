@@ -25,15 +25,12 @@ package dev.galacticraft.mod.misc.footprint;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.StreamCodecs;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
 
@@ -84,33 +81,6 @@ public class Footprint {
         int mainPosX = Mth.floor(position.x());
         int mainPosY = Mth.floor(position.y());
         int mainPosZ = Mth.floor(position.z());
-        BlockPos posMain = new BlockPos(mainPosX, mainPosY, mainPosZ);
-
-        // If the footprint is hovering over air...
-        if (level.getBlockState(posMain).isAir()) {
-            position.x += (playerCenter.x - mainPosX);
-            position.z += (playerCenter.z - mainPosZ);
-
-            BlockPos pos1 = new BlockPos(Mth.floor(position.x()), Mth.floor(position.y()), Mth.floor(position.z()));
-            // If the footprint is still over air....
-            BlockState b2 = level.getBlockState(pos1);
-            if (b2.isAir()) {
-                for (Direction direction : Direction.values()) {
-                    BlockPos offsetPos = posMain.relative(direction);
-                    if (direction != Direction.DOWN && direction != Direction.UP) {
-                        if (!level.getBlockState(offsetPos).isAir()) {
-                            position.x += direction.getStepX();
-                            position.z += direction.getStepZ();
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        mainPosX = Mth.floor(position.x());
-        mainPosZ = Mth.floor(position.z());
-        ;
 
         double x0 = (Math.sin((45 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.x;
         double x1 = (Math.sin((135 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.x;

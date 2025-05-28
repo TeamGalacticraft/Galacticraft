@@ -3,13 +3,13 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "galacticraft:aluminum_ingot"
+      "tag": "c:ingots/aluminum"
     },
     "C": {
       "tag": "c:ingots/copper"
     },
     "F": {
-      "item": "minecraft:furnace"
+      "tag": "c:player_workstations/furnaces"
     },
     "W": {
       "item": "galacticraft:aluminum_wire"

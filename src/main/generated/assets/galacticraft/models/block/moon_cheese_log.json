@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "galacticraft:block/moon_cheese_log_top",
+    "side": "galacticraft:block/moon_cheese_log_side"
+  }
+}

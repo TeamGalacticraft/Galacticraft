@@ -1,0 +1,30 @@
+{
+    "credit": "Made with Blockbench",
+    "parent": "galacticraft:item/template_wire",
+    "elements": [
+        {
+            "from": [2, 4, 6],
+            "to": [8, 8, 10],
+            "rotation": {"angle": 0, "axis": "y", "origin": [2, 4, 6]},
+            "faces": {
+                "north": {"uv": [0, 0, 4, 6], "rotation": 90, "texture": "#layer0"},
+                "south": {"uv": [0, 0, 4, 6], "rotation": 90, "texture": "#layer0"},
+                "west": {"uv": [0, 6, 4, 10], "texture": "#layer0"},
+                "up": {"uv": [0, 0, 4, 6], "rotation": 90, "texture": "#layer0"},
+                "down": {"uv": [0, 0, 4, 6], "rotation": 90, "texture": "#layer0"}
+            }
+        },
+        {
+            "from": [8, 4, 6],
+            "to": [14, 8, 10],
+            "rotation": {"angle": 0, "axis": "y", "origin": [8, 4, 6]},
+            "faces": {
+                "north": {"uv": [0, 10, 4, 16], "rotation": 90, "texture": "#layer0"},
+                "east": {"uv": [0, 6, 4, 10], "texture": "#layer0"},
+                "south": {"uv": [0, 10, 4, 16], "rotation": 90, "texture": "#layer0"},
+                "up": {"uv": [0, 10, 4, 16], "rotation": 90, "texture": "#layer0"},
+                "down": {"uv": [0, 10, 4, 16], "rotation": 90, "texture": "#layer0"}
+            }
+        }
+    ]
+}

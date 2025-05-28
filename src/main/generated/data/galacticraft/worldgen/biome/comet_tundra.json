@@ -18,7 +18,7 @@
       "max_delay": 24000,
       "min_delay": 12000,
       "replace_current_music": false,
-      "sound": "galacticraft:music.music_moon"
+      "sound": "galacticraft:music.moon"
     },
     "sky_color": 0,
     "water_color": 4159204,
@@ -36,7 +36,10 @@
       "galacticraft:ore_copper_large_moon",
       "galacticraft:ore_tin_small_moon",
       "galacticraft:ore_tin_middle_moon",
-      "galacticraft:ore_tin_upper_moon"
+      "galacticraft:ore_tin_upper_moon",
+      "galacticraft:ore_cheese_moon",
+      "galacticraft:ore_cheese_large_moon",
+      "galacticraft:ore_lunar_sapphire_moon"
     ]
   ],
   "has_precipitation": false,
@@ -70,6 +73,18 @@
         "maxCount": 4,
         "minCount": 4,
         "weight": 100
+      },
+      {
+        "type": "galacticraft:evolved_enderman",
+        "maxCount": 4,
+        "minCount": 1,
+        "weight": 10
+      },
+      {
+        "type": "galacticraft:evolved_witch",
+        "maxCount": 1,
+        "minCount": 1,
+        "weight": 5
       }
     ],
     "underground_water_creature": [],

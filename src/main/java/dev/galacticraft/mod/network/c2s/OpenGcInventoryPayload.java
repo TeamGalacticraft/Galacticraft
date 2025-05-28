@@ -36,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
 
 public record OpenGcInventoryPayload() implements C2SPayload {
     public static final OpenGcInventoryPayload INSTANCE = new OpenGcInventoryPayload();
-    public static final StreamCodec<ByteBuf, OpenGcInventoryPayload> STREAM_CODEC = StreamCodec.unit(INSTANCE);;
+    public static final StreamCodec<ByteBuf, OpenGcInventoryPayload> STREAM_CODEC = StreamCodec.unit(INSTANCE);
     public static final ResourceLocation ID = Constant.id("open_gc_inventory");
     public static final Type<OpenGcInventoryPayload> TYPE = new Type<>(ID);
 

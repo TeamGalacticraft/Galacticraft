@@ -23,6 +23,7 @@
 package dev.galacticraft.mod;
 
 import dev.galacticraft.api.client.tabs.InventoryTabRegistry;
+import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.mod.client.GCKeyBinds;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.GCModelLoader;
@@ -33,14 +34,16 @@ import dev.galacticraft.mod.client.particle.*;
 import dev.galacticraft.mod.client.render.block.entity.GCBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.dimension.GCDimensionEffects;
 import dev.galacticraft.mod.client.render.entity.*;
+import dev.galacticraft.mod.client.render.entity.feature.OxygenMaskRenderLayer;
+import dev.galacticraft.mod.client.render.entity.feature.OxygenTanksRenderLayer;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import dev.galacticraft.mod.client.render.entity.rocket.RocketEntityRenderer;
 import dev.galacticraft.mod.client.render.item.RocketItemRenderer;
 import dev.galacticraft.mod.client.render.rocket.GalacticraftRocketPartRenderers;
 import dev.galacticraft.mod.client.resources.GCResourceReloadListener;
 import dev.galacticraft.mod.client.resources.RocketTextureManager;
-import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.GCEntityTypes;
+import dev.galacticraft.mod.client.util.ColorUtil;
+import dev.galacticraft.mod.content.*;
 import dev.galacticraft.mod.content.block.environment.FallenMeteorBlock;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -59,20 +62,28 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
+import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
+import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.particle.SplashParticle;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.material.Fluids;
 
 @Environment(EnvType.CLIENT)
 public class GalacticraftClient implements ClientModInitializer {
+
+    private boolean colorsInitialized = false;
+
     @Override
     public void onInitializeClient() {
         long startInitTime = System.currentTimeMillis();
@@ -92,6 +103,7 @@ public class GalacticraftClient implements ClientModInitializer {
         MenuScreens.register(GCMenuTypes.ENERGY_STORAGE_MODULE, EnergyStorageModuleScreen::new);
         MenuScreens.register(GCMenuTypes.OXYGEN_COLLECTOR, OxygenCollectorScreen::new);
         MenuScreens.register(GCMenuTypes.OXYGEN_COMPRESSOR, OxygenCompressorScreen::new);
+        MenuScreens.register(GCMenuTypes.FOOD_CANNER, FoodCannerScreen::new);
         MenuScreens.register(GCMenuTypes.OXYGEN_DECOMPRESSOR, OxygenDecompressorScreen::new);
         MenuScreens.register(GCMenuTypes.PLAYER_INV_GC, GCPlayerInventoryScreen::new);
         MenuScreens.register(GCMenuTypes.OXYGEN_BUBBLE_DISTRIBUTOR, OxygenBubbleDistributorScreen::new);
@@ -134,7 +146,6 @@ public class GalacticraftClient implements ClientModInitializer {
         GCKeyBinds.register();
 
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.TIN_LADDER, RenderType.cutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.GLASS_FLUID_PIPE, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.WALKWAY, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.WIRE_WALKWAY, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.FLUID_PIPE_WALKWAY, RenderType.cutout());
@@ -148,13 +159,21 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.CAVERNOUS_VINES, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.CAVERNOUS_VINES_PLANT, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.OLIVINE_CLUSTER, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.MOON_CHEESE_LEAVES, RenderType.cutoutMipped());
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), GCBlocks.VACUUM_GLASS, GCBlocks.CLEAR_VACUUM_GLASS, GCBlocks.STRONG_VACUUM_GLASS);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), GCBlocks.CRYOGENIC_CHAMBER, GCBlocks.CRYOGENIC_CHAMBER_PART, GCBlocks.PLAYER_TRANSPORT_TUBE);
 
+        for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
+            BlockRenderLayerMap.INSTANCE.putBlock(pipe, RenderType.translucent());
+        }
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.GLASS_FLUID_PIPE, RenderType.cutout());
+
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_CRUDE_OIL, DrippingCrudeOilProvider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.FALLING_CRUDE_OIL, FallingCrudeOilProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_FUEL, DrippingFuelProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.FALLING_FUEL, FallingFuelProvider::new);
-        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_CRUDE_OIL, DrippingOilProvider::new);
-        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.FALLING_CRUDE_OIL, FallingCrudeOilProvider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_SULFURIC_ACID, DrippingSulfuricAcidProvider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.FALLING_SULFURIC_ACID, FallingSulfuricAcidProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.CRYOGENIC_PARTICLE, CryoFreezeParticle.Provider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.LANDER_FLAME_PARTICLE, LanderParticle.Provider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.SPARK_PARTICLE, SparksParticle.Provider::new);
@@ -162,22 +181,54 @@ public class GalacticraftClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.LAUNCH_FLAME, LaunchFlameParticle.Provider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.LAUNCH_FLAME_LAUNCHED, LaunchFlameParticle.LaunchedProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.ACID_VAPOR_PARTICLE, AcidVaporParticle.Provider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.SPLASH_VENUS, SplashParticle.Provider::new);
 
         FluidRenderHandlerRegistry.INSTANCE.get(Fluids.WATER); // Workaround for classloading order bug
 
+        FluidRenderHandler oil = new SimpleFluidRenderHandler(
+                Constant.Fluid.fluidId(Constant.Fluid.CRUDE_OIL_STILL),
+                Constant.Fluid.fluidId(Constant.Fluid.CRUDE_OIL_FLOWING)
+        );
+        FluidRenderHandler fuel = new SimpleFluidRenderHandler(
+                Constant.Fluid.fluidId(Constant.Fluid.FUEL_STILL),
+                Constant.Fluid.fluidId(Constant.Fluid.FUEL_FLOWING)
+        );
+        FluidRenderHandler sulfuricAcid = new SimpleFluidRenderHandler(
+                Constant.Fluid.fluidId(Constant.Fluid.SULFURIC_ACID_STILL),
+                Constant.Fluid.fluidId(Constant.Fluid.SULFURIC_ACID_FLOWING)
+        );
+
+        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.CRUDE_OIL, GCFluids.FLOWING_CRUDE_OIL, oil);
+        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FUEL, GCFluids.FLOWING_FUEL, fuel);
+        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.SULFURIC_ACID, GCFluids.FLOWING_SULFURIC_ACID, sulfuricAcid);
+
+        BlockRenderLayerMap.INSTANCE.putFluids(RenderType.translucent(), GCFluids.FUEL, GCFluids.FLOWING_FUEL);
+        BlockRenderLayerMap.INSTANCE.putFluids(RenderType.translucent(), GCFluids.SULFURIC_ACID, GCFluids.FLOWING_SULFURIC_ACID);
+
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> FallenMeteorBlock.colorMultiplier(state, world, pos), GCBlocks.FALLEN_METEOR);
+        ColorProviderRegistry.ITEM.register((stack, layer) -> layer != 1 ? -1 : ColorUtil.getRainbowOpaque(), GCItems.INFINITE_BATTERY, GCItems.INFINITE_OXYGEN_TANK);
+        ColorProviderRegistry.ITEM.register((stack, layer) -> layer != 1 ? -1 : stack.getOrDefault(GCDataComponents.COLOR, 0) + 0xFF000000, GCItems.CANNED_FOOD);
+
         BuiltinItemRendererRegistry.INSTANCE.register(GCItems.ROCKET, new RocketItemRenderer());
 
         InventoryTabRegistry.INSTANCE.register(GCItems.OXYGEN_MASK.getDefaultInstance(), () -> ClientPlayNetworking.send(new OpenGcInventoryPayload()), GCPlayerInventoryMenu.class);
         InventoryTabRegistry.INSTANCE.register(GCItems.ROCKET.getDefaultInstance(), () -> ClientPlayNetworking.send(new OpenRocketPayload()), player -> player.getVehicle() instanceof RocketEntity, RocketMenu.class);
 
         LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
-
+            if (entityType == EntityType.PLAYER) {
+                registrationHelper.register(new OxygenMaskRenderLayer<Player, EntityModel<Player>>((RenderLayerParent<Player, EntityModel<Player>>) entityRenderer));
+                registrationHelper.register(new OxygenTanksRenderLayer<Player, EntityModel<Player>>((RenderLayerParent<Player, EntityModel<Player>>) entityRenderer));
+            }
         });
-
+        GCRenderTypes.init();
         ModelLoadingPlugin.register(GCModelLoader.INSTANCE);
 
-        GCRenderTypes.init();
+        TooltipComponentCallback.EVENT.register(data -> {
+            if (data instanceof CannedFoodTooltip canned) {
+                return new ClientCannedFoodTooltip(canned);
+            }
+            return null;
+        });
 
         Constant.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

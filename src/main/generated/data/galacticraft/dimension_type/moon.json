@@ -1,6 +1,6 @@
 {
   "ambient_light": 0.1,
-  "bed_works": false,
+  "bed_works": true,
   "coordinate_scale": 1.0,
   "effects": "galacticraft:moon",
   "has_ceiling": false,
@@ -9,7 +9,7 @@
   "height": 384,
   "infiniburn": "#galacticraft:infiniburn_moon",
   "logical_height": 384,
-  "min_y": -64,
+  "min_y": -32,
   "monster_spawn_block_light_limit": 0,
   "monster_spawn_light_level": {
     "type": "minecraft:uniform",

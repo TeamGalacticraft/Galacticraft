@@ -30,13 +30,26 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 
 public class TooltipUtil {
+    private static final NumberFormat NUMBER_FORMAT = NumberFormat.getNumberInstance();
+
+    static {
+        if (NUMBER_FORMAT instanceof DecimalFormat fmt) {
+            fmt.setRoundingMode(RoundingMode.FLOOR);
+        }
+        NUMBER_FORMAT.setGroupingUsed(true);
+    }
+
     public static final Style DEFAULT_STYLE = Constant.Text.GRAY_STYLE;
     private static final Component PRESS_SHIFT = Component.translatable(Translations.Tooltip.PRESS_SHIFT).withStyle(Constant.Text.DARK_GRAY_STYLE);
 
-    private TooltipUtil() {}
+    private TooltipUtil() {
+    }
 
     public static void appendLshiftTooltip(String resourceId, List<Component> tooltip) {
         Minecraft minecraft = Minecraft.getInstance();
@@ -65,24 +78,36 @@ public class TooltipUtil {
         tooltip.add(Component.translatable(resourceId, value).setStyle(Constant.Text.GRAY_STYLE));
     }
 
-    public static void appendRemainingTooltip(String resourceId, long amount, long capacity, List<Component> tooltip) {
-        Component remaining = Component.literal(amount + "/" + capacity).setStyle(Constant.Text.getStorageLevelStyle(1.0 - ((double) amount / (double) capacity)));
-        appendLabeledTooltip(resourceId, remaining, tooltip);
+    public static Component formatRemaining(long amount, long capacity) {
+        return Component.literal(NUMBER_FORMAT.format(amount) + "/" + NUMBER_FORMAT.format(capacity))
+                .setStyle(Constant.Text.getStorageLevelStyle(1.0 - ((double) amount / (double) capacity)));
     }
 
-    public static void appendFluidRemainingTooltip(String resourceId, long amount, long capacity, List<Component> tooltip) {
+    public static Component formatFluidRemaining(long amount, long capacity) {
         Component unit = Component.empty();
+        if (amount == Long.MAX_VALUE) {
+            return Component.translatable(Translations.Tooltip.INFINITE)
+                    .setStyle(Style.EMPTY.withColor(ColorUtil.getRainbow()));
+        }
         if (!Screen.hasShiftDown()) {
             amount = (long) ((double) amount / (double) (FluidConstants.BUCKET / 1000));
             capacity = (long) ((double) capacity / (double) (FluidConstants.BUCKET / 1000));
             unit = Component.translatable(Translations.Ui.MILLIBUCKETS);
         }
-        Component remaining = Component.literal(amount + "/" + capacity).append(unit).setStyle(Constant.Text.getStorageLevelStyle(1.0 - ((double) amount / (double) capacity)));
-        appendLabeledTooltip(resourceId, remaining, tooltip);
+        return Component.literal(NUMBER_FORMAT.format(amount) + "/" + NUMBER_FORMAT.format(capacity)).append(unit)
+                .setStyle(Constant.Text.getStorageLevelStyle(1.0 - ((double) amount / (double) capacity)));
+    }
+
+    public static void appendRemainingTooltip(String resourceId, long amount, long capacity, List<Component> tooltip) {
+        appendLabeledTooltip(resourceId, TooltipUtil.formatRemaining(amount, capacity), tooltip);
+    }
+
+    public static void appendFluidRemainingTooltip(String resourceId, long amount, long capacity, List<Component> tooltip) {
+        appendLabeledTooltip(resourceId, TooltipUtil.formatFluidRemaining(amount, capacity), tooltip);
     }
 
     public static void appendInfiniteCapacityTooltip(String resourceId, List<Component> tooltip) {
-        Component infinite = Component.translatable(Translations.Tooltip.INFINITE).setStyle(Style.EMPTY.withColor(ColorUtil.getRainbow(15000)));
+        Component infinite = Component.translatable(Translations.Tooltip.INFINITE).setStyle(Style.EMPTY.withColor(ColorUtil.getRainbow()));
         appendLabeledTooltip(resourceId, infinite, tooltip);
     }
 }

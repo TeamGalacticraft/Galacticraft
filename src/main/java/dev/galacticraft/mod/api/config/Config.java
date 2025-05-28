@@ -43,6 +43,12 @@ public interface Config {
 
     long oxygenCollectorEnergyConsumptionRate();
 
+    long oxygenSealerEnergyConsumptionRate();
+
+    long oxygenSealerOxygenConsumptionRate();
+
+    long maxSealingPower();
+
     long refineryEnergyConsumptionRate();
 
     long electricFurnaceEnergyConsumptionRate();
@@ -52,6 +58,8 @@ public interface Config {
     long machineEnergyStorageSize();
 
     long oxygenCompressorEnergyConsumptionRate();
+
+    long foodCannerEnergyConsumptionRate();
 
     long oxygenDecompressorEnergyConsumptionRate();
 

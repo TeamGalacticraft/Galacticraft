@@ -73,7 +73,7 @@ public class CircuitFabricatorScreen extends MachineScreen<CircuitFabricatorBloc
     private static final int SENARY_PROGRESS_V = 220;
     private static final int SENARY_PROGRESS_X = 158;
     private static final int SENARY_PROGRESS_Y = 56;
-    
+
     private static final float A = 24;
     private static final float B = 20;
     private static final float C = 18;

@@ -28,8 +28,12 @@ import net.minecraft.ChatFormatting;
 
 public final class GCMachineStatuses {
     public static final MachineStatus COLLECTING = MachineStatus.create(Translations.MachineStatus.COLLECTING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    public static final MachineStatus CANNING = MachineStatus.create(Translations.MachineStatus.CANNING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    public static final MachineStatus TRANSFERRING_CAN = MachineStatus.create(Translations.MachineStatus.TRANSFERRING_CAN, ChatFormatting.GREEN, MachineStatus.Type.PARTIALLY_WORKING);
+    public static final MachineStatus NO_FOOD = MachineStatus.create(Translations.MachineStatus.NO_FOOD, ChatFormatting.RED, MachineStatus.Type.MISSING_ITEMS);
     public static final MachineStatus PARTIALLY_BLOCKED = MachineStatus.create(Translations.MachineStatus.PARTIALLY_BLOCKED, ChatFormatting.GRAY, MachineStatus.Type.PARTIALLY_WORKING);
     public static final MachineStatus BLOCKED = MachineStatus.create(Translations.MachineStatus.BLOCKED, ChatFormatting.RED, MachineStatus.Type.OTHER);
+    public static final MachineStatus MISSING_EMPTY_CAN = MachineStatus.create(Translations.MachineStatus.MISSING_EMPTY_CAN, ChatFormatting.RED, MachineStatus.Type.MISSING_ITEMS);
     public static final MachineStatus NIGHT = MachineStatus.create(Translations.MachineStatus.NIGHT, ChatFormatting.DARK_BLUE, MachineStatus.Type.PARTIALLY_WORKING);
     public static final MachineStatus RAIN = MachineStatus.create(Translations.MachineStatus.RAIN, ChatFormatting.BLUE, MachineStatus.Type.PARTIALLY_WORKING);
     public static final MachineStatus THUNDER = MachineStatus.create(Translations.MachineStatus.THUNDER, ChatFormatting.GRAY, MachineStatus.Type.PARTIALLY_WORKING);
@@ -47,7 +51,7 @@ public final class GCMachineStatuses {
     public static final MachineStatus DECOMPRESSING = MachineStatus.create(Translations.MachineStatus.DECOMPRESSING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
     public static final MachineStatus EMPTY_OXYGEN_TANK = MachineStatus.create(Translations.MachineStatus.EMPTY_OXYGEN_TANK, ChatFormatting.RED, MachineStatus.Type.MISSING_RESOURCE);
     public static final MachineStatus ALREADY_SEALED = MachineStatus.create(Translations.MachineStatus.ALREADY_SEALED, ChatFormatting.RED, MachineStatus.Type.OTHER);
-    public static final MachineStatus AREA_TOO_LARGE = MachineStatus.create(Translations.MachineStatus.AREA_TOO_LARGE, ChatFormatting.RED, MachineStatus.Type.OTHER);
+    public static final MachineStatus AREA_TOO_LARGE = MachineStatus.create(Translations.MachineStatus.AREA_TOO_LARGE, ChatFormatting.RED, MachineStatus.Type.PARTIALLY_WORKING);
     public static final MachineStatus SEALED = MachineStatus.create(Translations.MachineStatus.SEALED, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
     public static final MachineStatus DISTRIBUTING = MachineStatus.create(Translations.MachineStatus.DISTRIBUTING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
     public static final MachineStatus LOADING = MachineStatus.create(Translations.MachineStatus.DISTRIBUTING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
@@ -67,5 +71,6 @@ public final class GCMachineStatuses {
      */
     public static final MachineStatus ROCKET_IS_FULL = MachineStatus.create(Translations.MachineStatus.ROCKET_IS_FULL, ChatFormatting.GOLD, MachineStatus.Type.OUTPUT_FULL);
 
-    public static void register() {}
+    public static void register() {
+    }
 }

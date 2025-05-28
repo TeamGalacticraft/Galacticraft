@@ -23,10 +23,11 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
-import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
+import dev.galacticraft.mod.screen.OxygenSealerMenu;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -36,15 +37,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
 @Environment(EnvType.CLIENT)
-public class OxygenSealerScreen extends MachineScreen<OxygenSealerBlockEntity, MachineMenu<OxygenSealerBlockEntity>> {
-    public OxygenSealerScreen(MachineMenu<OxygenSealerBlockEntity> handler, Inventory inv, Component title) {
+public class OxygenSealerScreen extends MachineScreen<OxygenSealerBlockEntity, OxygenSealerMenu> {
+    public OxygenSealerScreen(OxygenSealerMenu handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.OXYGEN_SEALER_SCREEN);
-    }
-
-    @Override
-    protected void init() {
-        super.init();
-        this.titleLabelX += 20;
     }
 
     @Override
@@ -53,5 +48,12 @@ public class OxygenSealerScreen extends MachineScreen<OxygenSealerBlockEntity, M
 
         MachineStatus status = this.menu.state.getStatus();
         graphics.drawString(this.font, Component.translatable(Translations.Ui.MACHINE_STATUS, status != null ? status.getText() : Component.empty()), this.leftPos + 50, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
+        if (status != null) {
+            if (!status.equals(GCMachineStatuses.BLOCKED)) {
+                int sealCheckTime = this.menu.sealTickTime;
+                //TODO: make this a bar that goes down over time to match gc4's sealer screen?
+                graphics.drawString(this.font, Component.literal("Sealer Recheck: ").append(String.valueOf(sealCheckTime)), this.leftPos + 50, this.topPos + 50, ChatFormatting.YELLOW.getColor(), false);
+            }
+        }
     }
 }

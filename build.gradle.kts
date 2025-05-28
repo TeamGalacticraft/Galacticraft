@@ -47,6 +47,7 @@ val jeiVersion               = project.property("jei.version").toString()
 val badpacketsVersion        = project.property("badpackets.version").toString()
 val wthitVersion             = project.property("wthit.version").toString()
 val architecturyVersion      = project.property("architectury.version").toString()
+val appleskinVersion         = project.property("appleskin.version").toString()
 val objVersion               = project.property("obj.version").toString()
 
 plugins {
@@ -54,8 +55,8 @@ plugins {
     `maven-publish`
     id("fabric-loom") version("1.7-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
-    id("org.ajoberstar.grgit") version("5.2.2")
-    id("dev.galacticraft.mojarn") version("0.5.0+13")
+    id("org.ajoberstar.grgit") version("5.3.0")
+    id("dev.galacticraft.mojarn") version("0.6.0+18")
 }
 
 java {
@@ -195,6 +196,11 @@ repositories {
             includeGroup("mezz.jei")
         }
     }
+    maven("https://maven.ryanliptak.com/") {
+        content {
+            includeGroup("squeek.appleskin")
+        }
+    }
 }
 
 configurations {
@@ -234,18 +240,19 @@ dependencies {
     "compat"("me.shedaniel.cloth:cloth-config-fabric:$clothConfigVersion")
     "compat"("mcp.mobius.waila:wthit:fabric-$wthitVersion")
     "compat"("dev.architectury:architectury-fabric:$architecturyVersion") // required for REI fluid support
+    "compat"("squeek.appleskin:appleskin-fabric:$appleskinVersion")
 
     multicompat(group = "me.shedaniel",
             api = "RoughlyEnoughItems-api-fabric",
             extra = "RoughlyEnoughItems-default-plugin-fabric",
-            runtime = "RoughlyEnoughItems-fabric",
+            // runtime = "RoughlyEnoughItems-fabric",
             version = reiVersion) {
         exclude(group = "net.fabricmc.fabric-api")
     }
 
     multicompat(group = "mezz.jei",
-            api = "jei-1.21-common-api",
-            extra = "jei-1.21-fabric-api",
+            api = "jei-$minecraftVersion-common-api",
+            extra = "jei-$minecraftVersion-fabric-api",
 //            runtime = "jei-$minecraftVersion-fabric", // we already have REI at runtime
             version = jeiVersion) {
         exclude(group = "net.fabricmc.fabric-api")

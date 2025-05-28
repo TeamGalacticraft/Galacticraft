@@ -1,0 +1,49 @@
+{
+  "type": "galacticraft:planet",
+  "config": {
+    "parent": "galacticraft:sol",
+    "access_weight": 2,
+    "atmosphere": {
+      "composition": {},
+      "pressure": 0.0,
+      "temperature": -2.0
+    },
+    "celestial_handler": "galacticraft:default",
+    "day_length": 99999999,
+    "day_temperature": -2,
+    "description": {
+      "translate": "planet.galacticraft.asteroid.description"
+    },
+    "display": {
+      "type": "galacticraft:spinning_icon",
+      "config": {
+        "height": 16,
+        "scale": 1.0,
+        "texture": "galacticraft:textures/gui/celestialbodies/asteroid.png",
+        "u": 0,
+        "v": 0,
+        "width": 16
+      }
+    },
+    "gravity": 0.1,
+    "name": {
+      "translate": "planet.galacticraft.asteroid"
+    },
+    "night_temperature": -2,
+    "position": {
+      "type": "galacticraft:orbital",
+      "config": {
+        "distance": 1.375,
+        "orbit_time": 45.0,
+        "phase_shift": 0.0,
+        "planet": true
+      }
+    },
+    "ring": {
+      "type": "galacticraft:asteroid",
+      "config": {}
+    },
+    "teleporter": "galacticraft:lander",
+    "world": "galacticraft:asteroid"
+  }
+}

@@ -127,13 +127,13 @@ public class GCBlockFamilies {
 
     private static DecorationFamily decoration(GCBlockRegistry.DecorationSet decorationSet) {
         BlockFamily original = builder(decorationSet.block())
-                .slab(decorationSet.slab())
                 .stairs(decorationSet.stairs())
+                .slab(decorationSet.slab())
                 .wall(decorationSet.wall())
                 .getFamily();
         BlockFamily detailed = builder(decorationSet.detailedBlock())
-                .slab(decorationSet.detailedSlab())
                 .stairs(decorationSet.detailedStairs())
+                .slab(decorationSet.detailedSlab())
                 .getFamily();
         return new DecorationFamily(original, detailed);
     }
@@ -142,5 +142,6 @@ public class GCBlockFamilies {
         return MAP.values().stream();
     }
 
-    public record DecorationFamily(BlockFamily original, BlockFamily detailed) {}
+    public record DecorationFamily(BlockFamily original, BlockFamily detailed) {
+    }
 }

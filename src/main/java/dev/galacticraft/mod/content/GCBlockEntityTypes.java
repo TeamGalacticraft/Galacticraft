@@ -23,16 +23,15 @@
 package dev.galacticraft.mod.content;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Constant.Block;
 import dev.galacticraft.mod.content.block.entity.*;
+import dev.galacticraft.mod.content.block.entity.decoration.CannedFoodBlockEntity;
 import dev.galacticraft.mod.content.block.entity.machine.*;
-import dev.galacticraft.mod.content.block.entity.networked.FluidPipeWalkwayBlockEntity;
 import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
-import dev.galacticraft.mod.content.block.entity.networked.WireWalkwayBlockEntity;
 import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlockEntity;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class GCBlockEntityTypes {
@@ -43,12 +42,10 @@ public class GCBlockEntityTypes {
     public static final BlockEntityType<AdvancedSolarPanelBlockEntity> ADVANCED_SOLAR_PANEL = BlockEntityType.Builder.of(AdvancedSolarPanelBlockEntity::new, GCBlocks.ADVANCED_SOLAR_PANEL).build();
 
     // WIRES, PIPES, WALKWAYS
-    public static final BlockEntityType<WireBlockEntity> WIRE_T1 = BlockEntityType.Builder.of((pos, state) -> WireBlockEntity.createT1(GCBlockEntityTypes.WIRE_T1, pos, state), GCBlocks.ALUMINUM_WIRE, GCBlocks.SEALABLE_ALUMINUM_WIRE).build();
+    public static final BlockEntityType<WireBlockEntity> WIRE_T1 = BlockEntityType.Builder.of((pos, state) -> WireBlockEntity.createT1(GCBlockEntityTypes.WIRE_T1, pos, state), GCBlocks.ALUMINUM_WIRE, GCBlocks.SEALABLE_ALUMINUM_WIRE, GCBlocks.WIRE_WALKWAY).build();
     public static final BlockEntityType<WireBlockEntity> WIRE_T2 = BlockEntityType.Builder.of((pos, state) -> WireBlockEntity.createT2(GCBlockEntityTypes.WIRE_T2, pos, state), /*GCBlocks.HEAVY_ALUMINUM_WIRE,*/ GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE).build();
-    public static final BlockEntityType<GlassFluidPipeBlockEntity> GLASS_FLUID_PIPE = BlockEntityType.Builder.of(GlassFluidPipeBlockEntity::new, GCBlocks.GLASS_FLUID_PIPE).build();
+    public static final BlockEntityType<GlassFluidPipeBlockEntity> GLASS_FLUID_PIPE = BlockEntityType.Builder.of(GlassFluidPipeBlockEntity::new, GlassFluidPipeBlockEntity.COMPATIBLE_BLOCKS.toArray(new Block[0])).build();
     public static final BlockEntityType<WalkwayBlockEntity> WALKWAY = BlockEntityType.Builder.of(WalkwayBlockEntity::new, GCBlocks.WALKWAY).build();
-    public static final BlockEntityType<WireWalkwayBlockEntity> WIRE_WALKWAY = BlockEntityType.Builder.of(WireWalkwayBlockEntity::new, GCBlocks.WIRE_WALKWAY).build();
-    public static final BlockEntityType<FluidPipeWalkwayBlockEntity> FLUID_PIPE_WALKWAY = BlockEntityType.Builder.of(FluidPipeWalkwayBlockEntity::new, GCBlocks.FLUID_PIPE_WALKWAY).build();
 
     // MACHINES
     public static final BlockEntityType<CircuitFabricatorBlockEntity> CIRCUIT_FABRICATOR = BlockEntityType.Builder.of(CircuitFabricatorBlockEntity::new, GCBlocks.CIRCUIT_FABRICATOR).build();
@@ -57,6 +54,7 @@ public class GCBlockEntityTypes {
     public static final BlockEntityType<ElectricFurnaceBlockEntity> ELECTRIC_FURNACE = BlockEntityType.Builder.of(ElectricFurnaceBlockEntity::new, GCBlocks.ELECTRIC_FURNACE).build();
     public static final BlockEntityType<ElectricArcFurnaceBlockEntity> ELECTRIC_ARC_FURNACE = BlockEntityType.Builder.of(ElectricArcFurnaceBlockEntity::new, GCBlocks.ELECTRIC_ARC_FURNACE).build();
     public static final BlockEntityType<RefineryBlockEntity> REFINERY = BlockEntityType.Builder.of(RefineryBlockEntity::new, GCBlocks.REFINERY).build();
+    public static final BlockEntityType<FoodCannerBlockEntity> FOOD_CANNER = BlockEntityType.Builder.of(FoodCannerBlockEntity::new, GCBlocks.FOOD_CANNER).build();
 
     // OXYGEN MACHINES
     public static final BlockEntityType<OxygenCollectorBlockEntity> OXYGEN_COLLECTOR = BlockEntityType.Builder.of(OxygenCollectorBlockEntity::new, GCBlocks.OXYGEN_COLLECTOR).build();
@@ -80,9 +78,12 @@ public class GCBlockEntityTypes {
     public static final BlockEntityType<CryogenicChamberPartBlockEntity> CRYOGENIC_CHAMBER_PART = BlockEntityType.Builder.of(CryogenicChamberPartBlockEntity::new, GCBlocks.CRYOGENIC_CHAMBER_PART).build();
     public static final BlockEntityType<DungeonSpawnerBlockEntity> DUNGEON_BOSS_SPAWNER = BLOCK_ENTITIES.register(Constant.Block.BOSS_SPAWNER, BlockEntityType.Builder.of(DungeonSpawnerBlockEntity::new, GCBlocks.BOSS_SPAWNER).build());
 
+    // DECORATION
+    public static final BlockEntityType<CannedFoodBlockEntity> CANNED_FOOD = BlockEntityType.Builder.of(CannedFoodBlockEntity::new, GCBlocks.CANNED_FOOD).build();
+
     public static final BlockEntityType<AirlockControllerBlockEntity> AIRLOCK_CONTROLLER = BlockEntityType.Builder.of(AirlockControllerBlockEntity::new, GCBlocks.AIR_LOCK_CONTROLLER).build();
     public static final BlockEntityType<RocketWorkbenchBlockEntity> ROCKET_WORKBENCH = BlockEntityType.Builder.of(RocketWorkbenchBlockEntity::new, GCBlocks.ROCKET_WORKBENCH).build();
-    public static final BlockEntityType<TransportTubeBlockEntity> TRANSPORT_TUBE = BLOCK_ENTITIES.register(Block.PLAYER_TRANSPORT_TUBE, BlockEntityType.Builder.of(TransportTubeBlockEntity::new, GCBlocks.PLAYER_TRANSPORT_TUBE).build());
+    public static final BlockEntityType<TransportTubeBlockEntity> TRANSPORT_TUBE = BLOCK_ENTITIES.register(Constant.Block.PLAYER_TRANSPORT_TUBE, BlockEntityType.Builder.of(TransportTubeBlockEntity::new, GCBlocks.PLAYER_TRANSPORT_TUBE).build());
 
     public static void register() {
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.COAL_GENERATOR), COAL_GENERATOR);
@@ -93,8 +94,6 @@ public class GCBlockEntityTypes {
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.HEAVY_ALUMINUM_WIRE), WIRE_T2);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.GLASS_FLUID_PIPE), GLASS_FLUID_PIPE);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.WALKWAY), WALKWAY);
-        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.WIRE_WALKWAY), WIRE_WALKWAY);
-        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.FLUID_PIPE_WALKWAY), FLUID_PIPE_WALKWAY);
 
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.CIRCUIT_FABRICATOR), CIRCUIT_FABRICATOR);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.COMPRESSOR), COMPRESSOR);
@@ -106,6 +105,7 @@ public class GCBlockEntityTypes {
 
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.OXYGEN_COLLECTOR), OXYGEN_COLLECTOR);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.OXYGEN_COMPRESSOR), OXYGEN_COMPRESSOR);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.FOOD_CANNER), FOOD_CANNER);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.OXYGEN_DECOMPRESSOR), OXYGEN_DECOMPRESSOR);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.OXYGEN_SEALER), OXYGEN_SEALER);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR), OXYGEN_BUBBLE_DISTRIBUTOR);
@@ -119,6 +119,8 @@ public class GCBlockEntityTypes {
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.CRYOGENIC_CHAMBER), CRYOGENIC_CHAMBER);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.AIR_LOCK_CONTROLLER), AIRLOCK_CONTROLLER);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.ROCKET_WORKBENCH), ROCKET_WORKBENCH);
+
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Constant.id(Constant.Block.CANNED_FOOD), CANNED_FOOD);
     }
 
     private static void register(String id, BlockEntityType<?> type) {

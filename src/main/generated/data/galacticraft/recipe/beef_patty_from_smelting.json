@@ -2,7 +2,7 @@
   "type": "minecraft:smelting",
   "category": "food",
   "cookingtime": 200,
-  "experience": 1.0,
+  "experience": 0.35,
   "ingredient": {
     "item": "galacticraft:ground_beef"
   },

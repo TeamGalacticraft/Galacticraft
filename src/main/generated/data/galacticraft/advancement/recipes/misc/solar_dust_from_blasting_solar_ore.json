@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_solar_ore": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:solar_ore"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:solar_dust_from_blasting_solar_ore"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_solar_ore"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:solar_dust_from_blasting_solar_ore"
+    ]
+  }
+}

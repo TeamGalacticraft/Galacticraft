@@ -25,6 +25,7 @@ package dev.galacticraft.impl.internal.mixin.client;
 import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.impl.accessor.SoundSystemAccessor;
 import dev.galacticraft.impl.client.accessor.ClientResearchAccessor;
 import dev.galacticraft.impl.internal.inventory.MappedInventory;
@@ -52,38 +53,38 @@ import java.util.Set;
 
 @Mixin(AbstractClientPlayer.class)
 public abstract class AbstractClientPlayerEntityMixin implements ClientResearchAccessor, GearInventoryProvider {
-    @Shadow @Final public ClientLevel clientLevel;
+    @Shadow
+    @Final
+    public ClientLevel clientLevel;
 
-    @Shadow public abstract boolean isCreative();
+    @Shadow
+    public abstract boolean isCreative();
 
-    @Unique private final Set<ResourceLocation> unlockedResearch = new HashSet<>();
+    @Unique
+    private final Set<ResourceLocation> unlockedResearch = new HashSet<>();
 
     private final @Unique SimpleContainer gearInv = galacticraft_createGearInventory();
-    private final @Unique Container tankInv = MappedInventory.create(this.gearInv, 4, 5);
+    private final @Unique Container tankInv = MappedInventory.create(this.gearInv, 6, 7);
     private final @Unique Container thermalArmorInv = MappedInventory.create(this.gearInv, 0, 1, 2, 3);
-    private final @Unique Container accessoryInv = MappedInventory.create(this.gearInv, 6, 7, 8, 9, 10, 11);
+    private final @Unique Container accessoryInv = MappedInventory.create(this.gearInv, 4, 5, 8, 9, 10, 11);
 
     @Unique
     private SimpleContainer galacticraft_createGearInventory() {
         SimpleContainer inv = new GearInventory();
         inv.addListener((inventory) -> {
             Holder<CelestialBody<?, ?>> holder = this.clientLevel.galacticraft$getCelestialBody();
-            float pressure = holder != null ? holder.value().atmosphere().pressure() : 1.0f;
-            if (pressure != 1.0f) {
+            float volume = holder != null ? holder.value().atmosphere().pressure() : 1.0F;
+            if (volume != 1.0F) {
                 for (int i = 0; i < inventory.getContainerSize(); i++) {
                     ItemStack stack = inventory.getItem(i);
-                    if (stack.getItem() instanceof Accessory accessory && accessory.enablesHearing()) {
-                        ((SoundSystemAccessor) ((SoundManagerAccessor) Minecraft.getInstance().getSoundManager()).getSoundSystem())
-                                .galacticraft$updateAtmosphericVolumeMultiplier(1.0f);
-                        return;
-                    } else {
-                        ((SoundSystemAccessor) ((SoundManagerAccessor) Minecraft.getInstance().getSoundManager()).getSoundSystem())
-                                .galacticraft$updateAtmosphericVolumeMultiplier(pressure);
+                    if (stack.is(GCItemTags.FREQUENCY_MODULES) || (stack.getItem() instanceof Accessory accessory && accessory.enablesHearing())) {
+                        volume = 1.0F;
+                        break;
                     }
                 }
-            } else {
-                ((SoundSystemAccessor) ((SoundManagerAccessor) Minecraft.getInstance().getSoundManager()).getSoundSystem()).galacticraft$updateAtmosphericVolumeMultiplier(pressure);
             }
+            
+            ((SoundSystemAccessor) ((SoundManagerAccessor) Minecraft.getInstance().getSoundManager()).getSoundSystem()).galacticraft$updateAtmosphericVolumeMultiplier(volume);
         });
         return inv;
     }
@@ -127,11 +128,11 @@ public abstract class AbstractClientPlayerEntityMixin implements ClientResearchA
 
     @Override
     public void galacticraft$writeGearToNbt(CompoundTag tag) {
-        tag.put(Constant.Nbt.GEAR_INV, this.galacticraft$getGearInv().createTag(((Entity)(Object)this).registryAccess()));
+        tag.put(Constant.Nbt.GEAR_INV, this.galacticraft$getGearInv().createTag(((Entity) (Object) this).registryAccess()));
     }
 
     @Override
     public void galacticraft$readGearFromNbt(CompoundTag tag) {
-        this.galacticraft$getGearInv().fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND), ((Entity)(Object)this).registryAccess());
+        this.galacticraft$getGearInv().fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND), ((Entity) (Object) this).registryAccess());
     }
 }

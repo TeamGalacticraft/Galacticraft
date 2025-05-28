@@ -1,0 +1,23 @@
+{
+  "ambient_light": 0.05,
+  "bed_works": false,
+  "coordinate_scale": 1.0,
+  "effects": "galacticraft:asteroid",
+  "has_ceiling": false,
+  "has_raids": false,
+  "has_skylight": false,
+  "height": 384,
+  "infiniburn": "#galacticraft:infiniburn_asteroid",
+  "logical_height": 384,
+  "min_y": -64,
+  "monster_spawn_block_light_limit": 0,
+  "monster_spawn_light_level": {
+    "type": "minecraft:uniform",
+    "max_inclusive": 7,
+    "min_inclusive": 0
+  },
+  "natural": false,
+  "piglin_safe": false,
+  "respawn_anchor_works": false,
+  "ultrawarm": false
+}

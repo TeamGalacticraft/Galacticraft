@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.util;
 
 import dev.galacticraft.mod.api.block.entity.Connected;
+import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
@@ -34,9 +35,47 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 public class ConnectingBlockUtil {
     public static final VoxelShape WALKWAY_TOP = Block.box(6.0D, 6.0D, 6.0D, 10.0D, 10.0D, 10.0D);
-    private ConnectingBlockUtil() {}
+
+    public static final Map<Direction, VoxelShape> WALKWAY_SHAPES = Util.make(new EnumMap<>(Direction.class), map -> {
+        map.put(Direction.UP, Shapes.or(
+                WALKWAY_TOP,
+                Block.box(6.0D, 10.0D, 6.0D, 10.0D, 14.0D, 10.0D),
+                Block.box(0.0D, 13.0D, 0.0D, 16.0D, 16.0D, 16.0D))
+        );
+        map.put(Direction.DOWN, Shapes.or(
+                WALKWAY_TOP,
+                Block.box(6.0D, 2.0D, 6.0D, 10.0D, 6.0D, 10.0D),
+                Block.box(0.0D, 0.0D, 0.0D, 16.0D, 3.0D, 16.0D))
+        );
+        map.put(Direction.NORTH, Shapes.or(
+                WALKWAY_TOP,
+                Block.box(6.0D, 6.0D, 2.0D, 10.0D, 10.0D, 6.0D),
+                Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 3.0D))
+        );
+        map.put(Direction.SOUTH, Shapes.or(
+                WALKWAY_TOP,
+                Block.box(6.0D, 6.0D, 10.0D, 10.0D, 10.0D, 14.0D),
+                Block.box(0.0D, 0.0D, 13.0D, 16.0D, 16.0D, 16.0D))
+        );
+        map.put(Direction.EAST, Shapes.or(
+                WALKWAY_TOP,
+                Block.box(10.0D, 6.0D, 6.0D, 14.0D, 10.0D, 10.0D),
+                Block.box(13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D))
+        );
+        map.put(Direction.WEST, Shapes.or(
+                WALKWAY_TOP,
+                Block.box(2.0D, 6.0D, 6.0D, 6.0D, 10.0D, 10.0D),
+                Block.box(0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D))
+        );
+    });
+
+    private ConnectingBlockUtil() {
+    }
 
     public static BooleanProperty getBooleanProperty(Direction dir) {
         return switch (dir) {
@@ -98,48 +137,24 @@ public class ConnectingBlockUtil {
         return shape;
     }
 
-    public static VoxelShape createWalkwayShape(Direction facing) {
-        return switch (facing) {
-            case UP -> Shapes.or(
-                    WALKWAY_TOP,
-                    Block.box(6.0D, 10.0D, 6.0D, 10.0D, 14.0D, 10.0D),
-                    Block.box(0.0D, 13.0D, 0.0D, 16.0D, 16.0D, 16.0D));
-            case DOWN -> Shapes.or(
-                    WALKWAY_TOP,
-                    Block.box(6.0D, 2.0D, 6.0D, 10.0D, 6.0D, 10.0D),
-                    Block.box(0.0D, 0.0D, 0.0D, 16.0D, 3.0D, 16.0D));
-            case NORTH -> Shapes.or(
-                    WALKWAY_TOP,
-                    Block.box(6.0D, 6.0D, 2.0D, 10.0D, 10.0D, 6.0D),
-                    Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 3.0D));
-            case SOUTH -> Shapes.or(
-                    WALKWAY_TOP,
-                    Block.box(6.0D, 6.0D, 10.0D, 10.0D, 10.0D, 14.0D),
-                    Block.box(0.0D, 0.0D, 13.0D, 16.0D, 16.0D, 16.0D));
-            case EAST -> Shapes.or(
-                    WALKWAY_TOP,
-                    Block.box(10.0D, 6.0D, 6.0D, 14.0D, 10.0D, 10.0D),
-                    Block.box(13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D));
-            case WEST -> Shapes.or(
-                    WALKWAY_TOP,
-                    Block.box(2.0D, 6.0D, 6.0D, 6.0D, 10.0D, 10.0D),
-                    Block.box(0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D));
-        };
-    }
-
     public static BlockState rotateConnections(BlockState state, Rotation rotation) {
         return switch (rotation) {
-            case CLOCKWISE_180 -> state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.SOUTH)).setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.WEST)).setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.NORTH)).setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.EAST));
-            case COUNTERCLOCKWISE_90 -> state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.EAST)).setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.SOUTH)).setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.WEST)).setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.NORTH));
-            case CLOCKWISE_90 -> state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.WEST)).setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.NORTH)).setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.EAST)).setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.SOUTH));
+            case CLOCKWISE_180 ->
+                    state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.SOUTH)).setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.WEST)).setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.NORTH)).setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.EAST));
+            case COUNTERCLOCKWISE_90 ->
+                    state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.EAST)).setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.SOUTH)).setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.WEST)).setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.NORTH));
+            case CLOCKWISE_90 ->
+                    state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.WEST)).setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.NORTH)).setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.EAST)).setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.SOUTH));
             default -> state;
         };
     }
 
     public static BlockState mirror(BlockState state, Mirror mirror) {
         return switch (mirror) {
-            case LEFT_RIGHT -> state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.SOUTH)).setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.NORTH));
-            case FRONT_BACK -> state.setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.WEST)).setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.EAST));
+            case LEFT_RIGHT ->
+                    state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.SOUTH)).setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.NORTH));
+            case FRONT_BACK ->
+                    state.setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.WEST)).setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.EAST));
             case NONE -> state;
         };
     }

@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public record BasicRocketBodyConfig(ConfiguredTravelPredicate<?, ?> predicate, int maxPassengers, @Nullable RocketPartRecipe<?,?> recipe) implements RocketBodyConfig {
+public record BasicRocketBodyConfig(ConfiguredTravelPredicate<?, ?> predicate, int maxPassengers, @Nullable RocketPartRecipe<?, ?> recipe) implements RocketBodyConfig {
     public static final Codec<BasicRocketBodyConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ConfiguredTravelPredicate.DIRECT_CODEC.fieldOf("predicate").forGetter(BasicRocketBodyConfig::predicate),
             Codec.INT.fieldOf("max_passengers").forGetter(BasicRocketBodyConfig::maxPassengers),

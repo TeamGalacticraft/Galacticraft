@@ -32,6 +32,7 @@ import net.minecraft.world.item.ItemStack;
 public class RocketMenu extends AbstractContainerMenu {
     public final Player player;
     public final RocketEntity rocket;
+
     protected RocketMenu(int syncId, Inventory playerInventory, int id) {
         this(syncId, playerInventory, playerInventory.player, (RocketEntity) playerInventory.player.level().getEntity(id));
     }

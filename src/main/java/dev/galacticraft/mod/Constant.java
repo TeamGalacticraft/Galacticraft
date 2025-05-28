@@ -31,6 +31,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.ApiStatus;
@@ -43,7 +44,13 @@ public interface Constant {
     Logger LOGGER = LogManager.getLogger("Galacticraft");
 
     double RADIANS_TO_DEGREES = 180.0 / Math.PI;
+
     int OVERWORLD_SKYPROVIDER_STARTHEIGHT = 200;
+    int CLOUD_HEIGHT = 200;
+    int CLOUD_LIMIT = CLOUD_HEIGHT + 100;
+    int SPACE_HEIGHT = 1000;
+    int REENTRY_HEIGHT = 1100;
+    int ESCAPE_HEIGHT = 1200;
 
     @Contract(value = "_ -> new", pure = true)
     static @NotNull ResourceLocation id(String id) {
@@ -136,6 +143,7 @@ public interface Constant {
         String ASTEROID_ROCK = "asteroid_rock";
         String ASTEROID_ROCK_1 = "asteroid_rock_block_1";
         String ASTEROID_ROCK_2 = "asteroid_rock_block_2";
+        String DENSE_ICE = "dense_ice";
 
         String SOFT_VENUS_ROCK = "soft_venus_rock";
         String HARD_VENUS_ROCK = "hard_venus_rock";
@@ -145,19 +153,31 @@ public interface Constant {
         String VAPOR_SPOUT = "vapor_spout";
 
         // Ore
+        String MARS_IRON_ORE = "mars_iron_ore";
+        String MARS_TIN_ORE = "mars_tin_ore";
+        String MARS_COPPER_ORE = "mars_copper_ore";
+        String ASTEROID_IRON_ORE = "asteroid_iron_ore";
         String MOON_COPPER_ORE = "moon_copper_ore";
         String LUNASLATE_COPPER_ORE = "lunaslate_copper_ore";
-        String DESH_ORE = "desh_ore";
-        String ILMENITE_ORE = "ilmenite_ore";
+        String VENUS_COPPER_ORE = "venus_copper_ore";
         String SILICON_ORE = "silicon_ore";
         String DEEPSLATE_SILICON_ORE = "deepslate_silicon_ore";
         String TIN_ORE = "tin_ore";
         String DEEPSLATE_TIN_ORE = "deepslate_tin_ore";
         String MOON_TIN_ORE = "moon_tin_ore";
         String LUNASLATE_TIN_ORE = "lunaslate_tin_ore";
+        String ASTEROID_ALUMINUM_ORE = "asteroid_aluminum_ore";
+        String ASTEROID_SILICON_ORE = "asteroid_silicon_ore";
+        String VENUS_TIN_ORE = "venus_tin_ore";
         String ALUMINUM_ORE = "aluminum_ore";
         String DEEPSLATE_ALUMINUM_ORE = "deepslate_aluminum_ore";
+        String VENUS_ALUMINUM_ORE = "venus_aluminum_ore";
+        String MOON_CHEESE_ORE = "moon_cheese_ore";
+        String LUNAR_SAPPHIRE_ORE = "lunar_sapphire_ore";
+        String DESH_ORE = "desh_ore";
+        String ILMENITE_ORE = "ilmenite_ore";
         String GALENA_ORE = "galena_ore";
+        String SOLAR_ORE = "solar_ore";
 
         // Solid Blocks
         String SILICON_BLOCK = "silicon_block";
@@ -225,6 +245,10 @@ public interface Constant {
         String BOSS_SPAWNER = "boss_spawner";
 
         // Moon Cheese
+        String MOON_CHEESE_BLOCK = "moon_cheese_block";
+        String MOON_CHEESE_LOG = "moon_cheese_log";
+        String MOON_CHEESE_LEAVES = "moon_cheese_leaves";
+
         String MOON_CHEESE_WHEEL = "moon_cheese_wheel";
         String CANDLE_MOON_CHEESE_WHEEL = "candle_moon_cheese_wheel";
         String WHITE_CANDLE_MOON_CHEESE_WHEEL = "white_candle_moon_cheese_wheel";
@@ -258,17 +282,36 @@ public interface Constant {
         String OXYGEN_BUBBLE_DISTRIBUTOR = "oxygen_bubble_distributor";
         String OXYGEN_COLLECTOR = "oxygen_collector";
         String OXYGEN_COMPRESSOR = "oxygen_compressor";
+        String FOOD_CANNER = "food_canner";
         String OXYGEN_DECOMPRESSOR = "oxygen_decompressor";
         String OXYGEN_DETECTOR = "oxygen_detector";
         String OXYGEN_SEALER = "oxygen_sealer";
         String FLUID_PIPE = "fluid_pipe";
-        String GLASS_FLUID_PIPE = "glass_fluid_pipe";
         String REFINERY = "refinery";
         String TERRAFORMER = "terraformer";
         String DECONSTRUCTOR = "deconstructor";
         String WATER_ELECTROLYZER = "water_electrolyzer";
         String METHANE_SYNTHESIZIER = "methane_synthesizer";
         String GAS_LIQUEFIER = "gas_liquefier";
+
+        // Glass fluid pipes
+        String GLASS_FLUID_PIPE = "glass_fluid_pipe";
+        String WHITE_GLASS_FLUID_PIPE = "white_glass_fluid_pipe";
+        String ORANGE_GLASS_FLUID_PIPE = "orange_glass_fluid_pipe";
+        String MAGENTA_GLASS_FLUID_PIPE = "magenta_glass_fluid_pipe";
+        String LIGHT_BLUE_GLASS_FLUID_PIPE = "light_blue_glass_fluid_pipe";
+        String YELLOW_GLASS_FLUID_PIPE = "yellow_glass_fluid_pipe";
+        String LIME_GLASS_FLUID_PIPE = "lime_glass_fluid_pipe";
+        String PINK_GLASS_FLUID_PIPE = "pink_glass_fluid_pipe";
+        String GRAY_GLASS_FLUID_PIPE = "gray_glass_fluid_pipe";
+        String LIGHT_GRAY_GLASS_FLUID_PIPE = "light_gray_glass_fluid_pipe";
+        String CYAN_GLASS_FLUID_PIPE = "cyan_glass_fluid_pipe";
+        String PURPLE_GLASS_FLUID_PIPE = "purple_glass_fluid_pipe";
+        String BLUE_GLASS_FLUID_PIPE = "blue_glass_fluid_pipe";
+        String BROWN_GLASS_FLUID_PIPE = "brown_glass_fluid_pipe";
+        String GREEN_GLASS_FLUID_PIPE = "green_glass_fluid_pipe";
+        String RED_GLASS_FLUID_PIPE = "red_glass_fluid_pipe";
+        String BLACK_GLASS_FLUID_PIPE = "black_glass_fluid_pipe";
 
         // Pad Blocks
         String FUELING_PAD = "fueling_pad";
@@ -318,6 +361,7 @@ public interface Constant {
         String LUNAR_CARTOGRAPHY_TABLE = "lunar_cartography_table";
         String OXYGEN_STORAGE_MODULE = "oxygen_storage_module";
         String MOON_DIRT_PATH = "moon_dirt_path";
+        String CANNED_FOOD = "canned_food";
     }
 
     interface Fluid {
@@ -332,14 +376,19 @@ public interface Constant {
         String OXYGEN_GAS = "oxygen_gas";
         String LIQUID_OXYGEN = "liquid_oxygen";
 
-        static ResourceLocation getId(String s) {
-            return Constant.id("block/" + s);
+        static ResourceLocation fluidId(String s) {
+            return Constant.id("block/fluid/" + s);
         }
     }
 
     interface Item {
+        String ITEM_GROUP_CANS = "cans";
         String ITEM_GROUP = "items";
         String SILICON = "silicon";
+        String EMPTY_CAN = "empty_can";
+        String CANNED_FOOD = "canned_food";
+        String CANNED_FOOD_LABEL = "canned_food_label";
+        String RAW_SILICON = "raw_silicon";
         String RAW_METEORIC_IRON = "raw_meteoric_iron";
         String METEORIC_IRON_INGOT = "meteoric_iron_ingot";
         String METEORIC_IRON_NUGGET = "meteoric_iron_nugget";
@@ -386,6 +435,7 @@ public interface Constant {
         String SINGLE_SOLAR_MODULE = "single_solar_module";
         String FULL_SOLAR_PANEL = "full_solar_panel";
         String SOLAR_ARRAY_WAFER = "solar_array_wafer";
+        String SOLAR_ARRAY_PANEL = "solar_array_panel";
         String STEEL_POLE = "steel_pole";
         String COPPER_CANISTER = "copper_canister";
         String TIN_CANISTER = "tin_canister";
@@ -403,12 +453,6 @@ public interface Constant {
         String GROUND_BEEF = "ground_beef";
         String BEEF_PATTY = "beef_patty";
         String CHEESEBURGER = "cheeseburger";
-        //CANNED FOOD
-        String CANNED_DEHYDRATED_APPLE = "canned_dehydrated_apple";
-        String CANNED_DEHYDRATED_CARROT = "canned_dehydrated_carrot";
-        String CANNED_DEHYDRATED_MELON = "canned_dehydrated_melon";
-        String CANNED_DEHYDRATED_POTATO = "canned_dehydrated_potato";
-        String CANNED_BEEF = "canned_beef";
         //ROCKET PARTS
         String TIER_1_HEAVY_DUTY_PLATE = "heavy_plating";
         String TIER_2_HEAVY_DUTY_PLATE = "heavy_plating_t2";
@@ -453,6 +497,7 @@ public interface Constant {
         String TITANTIUM_UPGRADE_SMITHING_TEMPLATE = "titanium_upgrade_smithing_template";
         String BATTERY = "battery";
         String INFINITE_BATTERY = "infinite_battery";
+        String INFINITE_INDICATOR = "infinite_indicator";
 
         //Fluid buckets
         String CRUDE_OIL_BUCKET = "crude_oil_bucket";
@@ -472,6 +517,8 @@ public interface Constant {
         String MEDIUM_OXYGEN_TANK = "medium_oxygen_tank";
         String LARGE_OXYGEN_TANK = "large_oxygen_tank";
         String INFINITE_OXYGEN_TANK = "infinite_oxygen_tank";
+
+        String EMERGENCY_KIT = "emergency_kit";
 
         String THERMAL_PADDING_HELMET = "thermal_padding_helmet";
         String THERMAL_PADDING_CHESTPIECE = "thermal_padding_chestpiece";
@@ -496,10 +543,17 @@ public interface Constant {
         String LEGACY_MUSIC_DISC_MIMAS = "legacy_music_disc_mimas";
         String LEGACY_MUSIC_DISC_ORBIT = "legacy_music_disc_orbit";
         String LEGACY_MUSIC_DISC_SPACERACE = "legacy_music_disc_spacerace";
+
         String NOSE_CONE = "nose_cone";
         String HEAVY_NOSE_CONE = "heavy_nose_cone";
         String ROCKET_FIN = "rocket_fin";
+        String HEAVY_ROCKET_FIN = "heavy_rocket_fin";
         String ROCKET_ENGINE = "rocket_engine";
+        String HEAVY_ROCKET_ENGINE = "heavy_rocket_engine";
+        String ROCKET_BOOSTER = "rocket_booster";
+        String BUGGY_WHEEL = "buggy_wheel";
+        String BUGGY_SEAT = "buggy_seat";
+        String BUGGY_STORAGE = "buggy_storage";
         String BASIC_ROCKET_CONE_SCHEMATIC = "basic_rocket_cone_schematic";
         String BASIC_ROCKET_BODY_SCHEMATIC = "basic_rocket_body_schematic";
         String BASIC_ROCKET_FINS_SCHEMATIC = "basic_rocket_fins_schematic";
@@ -507,19 +561,21 @@ public interface Constant {
     }
 
     interface Particle {
-        String DRIPPING_FUEL = "dripping_fuel";
-        String FALLING_FUEL = "falling_fuel";
         String DRIPPING_CRUDE_OIL = "dripping_crude_oil";
         String FALLING_CRUDE_OIL = "falling_crude_oil";
+        String DRIPPING_FUEL = "dripping_fuel";
+        String FALLING_FUEL = "falling_fuel";
+        String DRIPPING_SULFURIC_ACID = "dripping_sulfuric_acid";
+        String FALLING_SULFURIC_ACID = "falling_sulfuric_acid";
+
         String CRYOGENIC_PARTICLE = "cryogenic_particle";
         String LANDER_FLAME = "lander_flame_particle";
         String SPARK = "spark";
-        String DRIPPING_SULFURIC_ACID = "dripping_sulfuric_acid";
-        String FALLING_SULFURIC_ACID = "falling_sulfuric_acid";
         String LAUNCH_SMOKE = "launch_smoke";
         String LAUNCH_FLAME = "launch_flame";
         String LAUNCH_FLAME_LAUNCHED = "launch_flame_launched";
         String ACID_VAPOR_PARTICLE = "acid_vapor";
+        String SPLASH_VENUS = "splash_venus";
     }
 
     interface ScreenTexture {
@@ -539,17 +595,123 @@ public interface Constant {
         ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
         ResourceLocation ROCKET_INVENTORY = id("textures/gui/rocket.png");
         ResourceLocation OVERLAY = id("textures/gui/overlay.png");
+        ResourceLocation WARNING_SIGN = id("textures/gui/warning.png");
 
-        ResourceLocation MAP_SCREEN = id("textures/gui/map.png");
-        ResourceLocation PLANET_ICONS = id("textures/gui/planet_icons.png");
         ResourceLocation BUBBLE_DISTRIBUTOR_SCREEN = id("textures/gui/oxygen_bubble_distributor_screen.png");
         ResourceLocation OXYGEN_COMPRESSOR_SCREEN = id("textures/gui/oxygen_compressor_screen.png");
+        ResourceLocation FOOD_CANNER_SCREEN = id("textures/gui/food_canner_screen.png");
         ResourceLocation OXYGEN_STORAGE_MODULE_SCREEN = id("textures/gui/oxygen_storage_module_screen.png");
         ResourceLocation OXYGEN_SEALER_SCREEN = id("textures/gui/oxygen_sealer_screen.png");
         ResourceLocation FUEL_LOADER_SCREEN = id("textures/gui/fuel_loader_screen.png");
         ResourceLocation SOLAR_PANEL_DAY = id("textures/gui/solar_panel/day.png");
         ResourceLocation SOLAR_PANEL_NIGHT = id("textures/gui/solar_panel/night.png");
         ResourceLocation SOLAR_PANEL_BLOCKED = id("textures/gui/solar_panel/blocked.png");
+    }
+
+    interface CelestialScreen {
+        ResourceLocation CELESTIAL_SELECTION = id("textures/gui/celestial_selection.png");
+        ResourceLocation CELESTIAL_SELECTION_1 = id("textures/gui/celestial_selection_1.png");
+        ResourceLocation SELECTION_CURSOR = id("textures/gui/selection_cursor.png");
+
+        ResourceLocation SOL = id("sol");
+
+        // String colours
+        int BLACK = FastColor.ARGB32.color(255, 0, 0, 0);
+        int GREY3 = FastColor.ARGB32.color(255, 120, 120, 120);
+        int GREY4 = FastColor.ARGB32.color(255, 140, 140, 140);
+        int GREY5 = FastColor.ARGB32.color(255, 150, 150, 150);
+        int GREY6 = FastColor.ARGB32.color(255, 165, 165, 165);
+        int WHITE = FastColor.ARGB32.color(255, 255, 255, 255);
+        int RED = FastColor.ARGB32.color(255, 255, 0, 0);
+        int RED3 = FastColor.ARGB32.color(255, 255, 100, 100);
+        int GREEN = FastColor.ARGB32.color(255, 0, 255, 0);
+        int GREEN1 = FastColor.ARGB32.color(255, 0, 255, 25);
+        int BLUE = FastColor.ARGB32.color(255, 0, 153, 255);
+        int YELLOW = FastColor.ARGB32.color(255, 255, 255, 0);
+
+        int BORDER_EDGE_TOP_LEFT = FastColor.ARGB32.color(255, 40, 40, 40);
+        int BORDER_EDGE_BOTTOM_RIGHT = FastColor.ARGB32.color(255, 80, 80, 80);
+        int BORDER_GREY = FastColor.ARGB32.color(255, 100, 100, 100);
+        int BORDER_Z = 9900;
+
+        int MAX_SPACE_STATION_NAME_LENGTH = 32;
+
+        int SELECTION_CURSOR_U = 0;
+        int SELECTION_CURSOR_V = 0;
+        int SELECTION_CURSOR_SIZE = 64;
+
+        int SIDE_PANEL_U = 0;
+        int SIDE_PANEL_V = 0;
+        int SIDE_PANEL_WIDTH = 95;
+        int SIDE_PANEL_HEIGHT = 137;
+
+        int CATALOG_U = 0;
+        int CATALOG_V = 197;
+        int CATALOG_WIDTH = 74;
+        int CATALOG_HEIGHT = 11;
+
+        int CATALOG_BACKING_U = 0;
+        int CATALOG_BACKING_V = 221;
+        int CATALOG_BACKING_WIDTH = 83;
+        int CATALOG_BACKING_HEIGHT = 12;
+
+        int ZOOM_INFO_TAB_U = 134;
+        int ZOOM_INFO_TAB_V = 67;
+        int ZOOM_INFO_TAB_WIDTH = 83;
+        int ZOOM_INFO_TAB_HEIGHT = 38;
+
+        int PROFILE_UPPER_TAB_U = 134;
+        int PROFILE_UPPER_TAB_V = 0;
+        int PROFILE_UPPER_TAB_WIDTH = 86;
+        int PROFILE_UPPER_TAB_HEIGHT = 15;
+
+        int PARENT_LABEL_U = 134;
+        int PARENT_LABEL_V = 151;
+        int PARENT_LABEL_WIDTH = 95;
+        int PARENT_LABEL_HEIGHT = 41;
+
+        int GRANDPARENT_LABEL_U = 134;
+        int GRANDPARENT_LABEL_V = 193;
+        int GRANDPARENT_LABEL_WIDTH = 93;
+        int GRANDPARENT_LABEL_HEIGHT = 17;
+
+        int SIDE_BUTTON_U = 134;
+        int SIDE_BUTTON_V = 223;
+        int SIDE_BUTTON_WIDTH = 92;
+        int SIDE_BUTTON_HEIGHT = 12;
+
+        int SIDE_BUTTON_GRADIENT_U = 0;
+        int SIDE_BUTTON_GRADIENT_V = 234;
+        int SIDE_BUTTON_GRADIENT_WIDTH = 86;
+        int SIDE_BUTTON_GRADIENTn_HEIGHT = 20;
+
+        int TOP_RIGHT_ACTION_BUTTON_U = 134;
+        int TOP_RIGHT_ACTION_BUTTON_V = 211;
+        int TOP_RIGHT_ACTION_BUTTON_WIDTH = 74;
+        int TOP_RIGHT_ACTION_BUTTON_HEIGHT = 11;
+
+        int TOPBAR_U = 134;
+        int TOPBAR_V = 138;
+        int TOPBAR_WIDTH = 94;
+        int TOPBAR_HEIGHT = 12;
+
+        int TOPBAR_SUB_U = 0;
+        int TOPBAR_SUB_V = 209;
+        int TOPBAR_SUB_WIDTH = 94;
+        int TOPBAR_SUB_HEIGHT = 11;
+
+        int CREATE_SS_PANEL_U = 0;
+        int CREATE_SS_PANEL_V = 137;
+        int CREATE_SS_PANEL_WIDTH = 93;
+        int CREATE_SS_PANEL_HEIGHT = 47;
+        int CREATE_SS_PANEL_CAP_U = 0;
+        int CREATE_SS_PANEL_CAP_V = 185;
+        int CREATE_SS_PANEL_CAP_WIDTH = 61;
+        int CREATE_SS_PANEL_CAP_HEIGHT = 4;
+        int CREATE_SS_PANEL_BUTTON_U = 134;
+        int CREATE_SS_PANEL_BUTTON_V = 236;
+        int CREATE_SS_PANEL_BUTTON_WIDTH = 93;
+        int CREATE_SS_PANEL_BUTTON_HEIGHT = 12;
     }
 
     interface CelestialBody {
@@ -577,6 +739,7 @@ public interface Constant {
 
     interface RecipeViewer {
         ResourceLocation RECIPE_VIEWER_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
+        ResourceLocation ROCKET_WORKBENCH_DISPLAY_TEXTURE = id("textures/gui/rocket_workbench.png");
 
         int CIRCUIT_FABRICATOR_U = 0;
         int CIRCUIT_FABRICATOR_V = 0;
@@ -607,6 +770,18 @@ public interface Constant {
         int FUEL_Y = 31;
         int COMPRESSED_X = 127;
         int COMPRESSED_Y = 20;
+
+        int ROCKET_WORKBENCH_U = 6;
+        int ROCKET_WORKBENCH_V = 20;
+        int ROCKET_WORKBENCH_WIDTH = 162;
+        int ROCKET_WORKBENCH_HEIGHT = 145;
+        int CHEST_SLOT_U = 177;
+        int CHEST_SLOT_V = 0;
+
+        int ROCKET_PREVIEW_X = 133 - ROCKET_WORKBENCH_U;
+        int ROCKET_PREVIEW_Y = 100 - ROCKET_WORKBENCH_V;
+        int ROCKET_OUTPUT_X = 119;
+        int ROCKET_OUTPUT_Y = 115;
     }
 
     interface SlotSprite {
@@ -622,6 +797,10 @@ public interface Constant {
         ResourceLocation OXYGEN_MASK = id("slot/oxygen_mask");
         ResourceLocation OXYGEN_GEAR = id("slot/oxygen_gear");
         ResourceLocation OXYGEN_TANK = id("slot/oxygen_tank");
+        ResourceLocation FREQUENCY_MODULE = id("slot/frequency_module");
+        ResourceLocation PARACHUTE = id("slot/parachute");
+        ResourceLocation SHIELD_CONTROLLER = id("slot/shield_controller");
+        ResourceLocation GENERIC_ACCESSORY = null;
 
         ResourceLocation ROCKET_CONE = id("slot/rocket_cone");
         ResourceLocation ROCKET_PLATING = id("slot/rocket_plating");
@@ -629,6 +808,7 @@ public interface Constant {
         ResourceLocation ROCKET_FIN = id("slot/rocket_fin");
         ResourceLocation ROCKET_ENGINE = id("slot/rocket_engine");
         ResourceLocation CHEST = id("slot/chest");
+        ResourceLocation FOOD_CAN = id("slot/food_can");
     }
 
     interface Entity {
@@ -735,7 +915,6 @@ public interface Constant {
         int ARROW_DOWN_Y = 118;
         int ARROW_DOWN_HOVER_X = 50;
         int ARROW_DOWN_HOVER_Y = 118;
-
     }
 
     interface Menu {
@@ -753,6 +932,7 @@ public interface Constant {
         String OXYGEN_COLLECTOR_MENU = "oxygen_collector_menu";
         String BUBBLE_DISTRIBUTOR_MENU = "bubble_distributor_menu";
         String OXYGEN_COMPRESSOR_MENU = "oxygen_compressor_menu";
+        String FOOD_CANNER_MENU = "food_canner_menu";
         String OXYGEN_DECOMPRESSOR_MENU = "oxygen_decompressor_menu";
         String OXYGEN_STORAGE_MODULE_MENU = "oxygen_storage_module_menu";
         String OXYGEN_SEALER_MENU = "oxygen_sealer_menu";
@@ -809,6 +989,9 @@ public interface Constant {
         String NO_DROP = "NoDrop";
         String OWNER = "Owner";
         String PROGRESS = "Progress";
+        String TRANSFERRING_CAN = "TransferringCan";
+        String TRANSFERRING_FOOD = "TransferringFood";
+        String STORAGE = "StorageStack";
         String SIZE = "Size";
         String MAX_SIZE = "MaxSize";
         String VISIBLE = "Visible";
@@ -835,8 +1018,10 @@ public interface Constant {
         String SHAPED = "Shaped";
         String ITEMS = "Items";
         String GASES = "Gases";
-        String CRYOGENIC_COOLDOWN = "cryogenic_cooldown";
-        String ROCKET_UUID = "RocketUuid";
+        String CRYOGENIC_COOLDOWN = "CryogenicCooldown";
+        String DOCKED_UUID = "DockedUuid";
+        String CAN_CONTENTS = "CanContents";
+        String CAN_COUNT = "CanCount";
     }
 
     interface Chunk {
@@ -877,14 +1062,16 @@ public interface Constant {
             String COMPRESSING_SHAPELESS = "compressing_shapeless";
             String COMPRESSING_SHAPED = "compressing_shaped";
             String ROCKET = "rocket";
+            String EMERGENCY_KIT = "crafting_special_emergencykit";
         }
     }
 
     @Environment(EnvType.CLIENT)
     interface ModelPartName {
         String OXYGEN_MASK = "oxygen_mask";
-        String OXYGEN_TANK = "oxygen_tank";
         String OXYGEN_PIPE = "oxygen_pipe";
+        String OXYGEN_TANK = "oxygen_tank";
+        String ILLAGER_NOSE_COMPARTMENT = "illager_nose_compartment";
         String MOON_VILLAGER_BRAIN = "moon_villager_brain";
         String SOLAR_PANEL_POLE = "solar_panel_pole";
         String SOLAR_PANEL_PANEL = "solar_panel_panel";
@@ -895,16 +1082,34 @@ public interface Constant {
         String SOLAR_PANEL_PANEL_VERTICAL_1 = "solar_panel_panel_vertical_1";
         String SOLAR_PANEL_PANEL_VERTICAL_2 = "solar_panel_panel_vertical_2";
         String SOLAR_PANEL_PANEL_VERTICAL_3 = "solar_panel_panel_vertical_3";
+        String ROCKET_WORKBENCH_TOP = "rocket_workbench_top";
+        String ROCKET_WORKBENCH_PLIER_TOOL = "rocket_workbench_plier_tool";
+        String ROCKET_WORKBENCH_PLIER_TOOL_ARM = "rocket_workbench_plier_tool_arm";
+        String ROCKET_WORKBENCH_PLIER_TOOL_SMALL_ARM = "rocket_workbench_plier_tool_small_arm";
+        String ROCKET_WORKBENCH_PLIER_TOOL_PLIERS = "rocket_workbench_plier_tool_pliers";
+        String ROCKET_WORKBENCH_DRILL_TOOL = "rocket_workbench_drill_tool";
+        String ROCKET_WORKBENCH_DRILL_TOOL_SMALL_ARM = "rocket_workbench_drill_tool_small_arm";
+        String ROCKET_WORKBENCH_DRILL_TOOL_DRILL = "rocket_workbench_drill_tool_drill";
+        String ROCKET_WORKBENCH_DRILL_TOOL_DRILL_BIT = "rocket_workbench_drill_tool_drill_bit";
+        String ROCKET_WORKBENCH_FLASHLIGHT = "rocket_workbench_flashlight";
+        String ROCKET_WORKBENCH_FLASHLIGHT_LIGHT = "rocket_workbench_flashlight_light";
+        String ROCKET_WORKBENCH_FLASHLIGHT_HANDLE = "rocket_workbench_flashlight_handle";
+        String ROCKET_WORKBENCH_FLASHLIGHT_HOLDER = "rocket_workbench_flashlight_holder";
+        String ROCKET_WORKBENCH_DISPLAY = "rocket_workbench_display";
     }
 
     // Used in Data Generator
     interface BakedModel {
-        ResourceLocation WALKWAY_MARKER = id("autogenerated/walkway");
+        ResourceLocation WALKWAY_CONNECTOR_MARKER = id("autogenerated/walkway_connector");
+        ResourceLocation WALKWAY_CENTER_MARKER = id("autogenerated/walkway_center");
+        ResourceLocation PIPE_WALKWAY_CENTER_MARKER = id("autogenerated/glass_fluid_pipe_walkway_center");
+        ResourceLocation WIRE_WALKWAY_CENTER_MARKER = id("autogenerated/aluminum_wire_walkway_center");
         ResourceLocation FLUID_PIPE_WALKWAY_MARKER = id("autogenerated/fluid_pipe_walkway");
         ResourceLocation WIRE_WALKWAY_MARKER = id("autogenerated/wire_walkway");
         ResourceLocation WIRE_MARKER = id("autogenerated/aluminum_wire");
         ResourceLocation GLASS_FLUID_PIPE_MARKER = id("autogenerated/glass_fluid_pipe");
         ResourceLocation VACUUM_GLASS_MODEL = id("vacuum_glass");
+        ResourceLocation CANNED_FOOD = id("block/canned_food_model");
     }
 
     interface Carver {
@@ -945,9 +1150,8 @@ public interface Constant {
     }
 
     interface Attachments {
-        ResourceLocation SERVER_PLAYER = id("server_player");
-        ResourceLocation CLIENT_PLAYER = id("client_player");
-        ResourceLocation LEVEL = id("level");
+        String SERVER_PLAYER = "server_player";
+        String CLIENT_PLAYER = "client_player";
     }
 
     interface Teleporters {

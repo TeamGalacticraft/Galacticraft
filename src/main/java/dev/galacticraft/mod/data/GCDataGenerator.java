@@ -28,6 +28,7 @@ import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.impl.universe.galaxy.GalaxyImpl;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCCelestialBodies;
+import dev.galacticraft.mod.content.GCJukeboxSongs;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.GCTeleporterTypes;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
@@ -75,14 +76,14 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(GCRocketRecipes::new);
 
         // tags
+        GCBlockTagProvider blockTags = pack.addProvider(GCBlockTagProvider::new);
+        pack.addProvider((output, wrapperLookup) -> new GCItemTagProvider(output, wrapperLookup, blockTags));
         pack.addProvider(GCBannerTagProvider::new);
         pack.addProvider(GCBiomeTagProvider::new);
-        pack.addProvider(GCBlockTagProvider::new);
         pack.addProvider(GCDamageTypeTagProvider::new);
         pack.addProvider(GCDimensionTagProvider::new);
         pack.addProvider(GCEntityTypeTagProvider::new);
         pack.addProvider(GCFluidTagProvider::new);
-        pack.addProvider(GCItemTagProvider::new);
         pack.addProvider(GCStructureTagProvider::new);
 
         // world generation
@@ -110,6 +111,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(BootstrapDataProvider.create("Celestial Teleporters", GCTeleporterTypes::bootstrapRegistries));
 
         // misc
+        pack.addProvider(BootstrapDataProvider.create("Jukebox Songs", GCJukeboxSongs::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Banner Patterns", GCBannerPatterns::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Damage Types", GCDamageTypes::bootstrapRegistries));
 

@@ -2,7 +2,7 @@
   "type": "minecraft:smelting",
   "category": "misc",
   "cookingtime": 200,
-  "experience": 0.7,
+  "experience": 0.85,
   "group": "desh_ingot",
   "ingredient": {
     "item": "galacticraft:desh_ore"

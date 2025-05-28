@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.client.resources;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.model.*;
 import dev.galacticraft.mod.client.render.entity.BubbleEntityRenderer;
 import dev.galacticraft.mod.content.GCFluids;
 import net.fabricmc.api.EnvType;
@@ -59,35 +58,13 @@ public class GCResourceReloadListener implements SimpleSynchronousResourceReload
     @Override
     public void onResourceManagerReload(ResourceManager resourceManager) {
         var atlas = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS);
-        WireBakedModel.invalidate();
-        WalkwayBakedModel.invalidate();
-        WireWalkwayBakedModel.invalidate();
-        PipeBakedModel.invalidate();
-        FluidPipeWalkwayBakedModel.invalidate();
-        FluidRenderHandler oil = (view, pos, state) -> new TextureAtlasSprite[]{
-                atlas.apply(Constant.id("block/fluid/crude_oil_still")), 
-                atlas.apply(Constant.id("block/fluid/crude_oil_flowing"))
-        };
-        FluidRenderHandler fuel = (view, pos, state) -> new TextureAtlasSprite[]{
-                atlas.apply(Constant.id("block/fluid/fuel_still")), 
-                atlas.apply(Constant.id("block/fluid/fuel_flowing"))
-        };
-        FluidRenderHandler sulfuricAcid = (view, pos, state) -> new TextureAtlasSprite[]{
-                atlas.apply(Constant.id("block/fluid/sulfuric_acid_still")),
-                atlas.apply(Constant.id("block/fluid/sulfuric_acid_flowing"))
-        };
+        BubbleEntityRenderer.bubbleModel = null;
+
         FluidRenderHandler oxygen = (view, pos, state) -> new TextureAtlasSprite[]{
-                atlas.apply(Constant.id("block/fluid/oxygen")), 
-                atlas.apply(Constant.id("block/fluid/oxygen"))
+                atlas.apply(Constant.Fluid.fluidId(Constant.Fluid.LIQUID_OXYGEN)),
+                atlas.apply(Constant.Fluid.fluidId(Constant.Fluid.LIQUID_OXYGEN))
         };
 
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.CRUDE_OIL, oil);
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FLOWING_CRUDE_OIL, oil);
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FUEL, fuel);
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FLOWING_FUEL, fuel);
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.SULFURIC_ACID, sulfuricAcid);
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FLOWING_SULFURIC_ACID, sulfuricAcid);
         FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.LIQUID_OXYGEN, oxygen);
-        BubbleEntityRenderer.bubbleModel = null;
     }
 }

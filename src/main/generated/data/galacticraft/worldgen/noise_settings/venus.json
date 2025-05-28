@@ -39,7 +39,7 @@
     "vein_ridged": 0.0,
     "vein_toggle": 0.0
   },
-  "ore_veins_enabled": true,
+  "ore_veins_enabled": false,
   "sea_level": -32,
   "spawn_target": [
     {

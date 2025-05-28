@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.world.dimension;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCBlockTags;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
@@ -37,23 +37,24 @@ import java.util.OptionalLong;
 public class GCDimensionTypes {
     public static final ResourceKey<DimensionType> MOON = key("moon");
     public static final ResourceKey<DimensionType> VENUS = key("venus");
+    public static final ResourceKey<DimensionType> ASTEROID = key("asteroid");
 
     public static void bootstrapRegistries(BootstrapContext<DimensionType> context) {
         context.register(MOON, new DimensionType(
-                OptionalLong.empty(),
-                true,
-                false,
-                false,
-                true,
-                1.0,
-                false,
-                false,
-                -64,
-                384,
-                384,
-                GCTags.INFINIBURN_MOON,
+                OptionalLong.empty(), // fixedTime
+                true, // hasSkyLight
+                false, // hasCeiling
+                false, // ultraWarm
+                true, // natural
+                1.0, // coordinateScale
+                true, // bedWorks (doesn't explode, we can cancel working later)
+                false, // respawnAnchorWorks (doesn't explode, we can cancel working later)
+                -32, // minY
+                384, // height
+                384, // logicalHeight
+                GCBlockTags.INFINIBURN_MOON, // infiniburn
                 Constant.id("moon"), // fixme: GCDimensionEffects somehow seems to load client classes
-                0.1f,
+                0.1f, // ambientLight
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)
         ));
 
@@ -63,15 +64,32 @@ public class GCDimensionTypes {
                 false, // hasCeiling
                 false, // ultraWarm
                 false, // natural
+                1.0, // coordinateScale
+                true, // bedWorks (doesn't explode, we can cancel working later)
+                false, // respawnAnchorWorks (doesn't explode, we can cancel working later)
+                -32, // minY
+                384, // height
+                384, // logicalHeight
+                GCBlockTags.INFINIBURN_VENUS, // infiniburn
+                Constant.id("venus"), // effectsLocation // fixme
+                0.1F, // ambientLight
+                new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)
+        ));
+        context.register(ASTEROID, new DimensionType(
+                OptionalLong.empty(), // fixedTime
+                false, // hasSkyLight
+                false, // hasCeiling
+                false, // ultraWarm
+                false, // natural
                 1.0,  // coordinateScale
                 false, // bedWorks
                 false, // respawnAnchorWorks
                 -64, // minY
                 384, // height
                 384, // logicalHeight
-                GCTags.INFINIBURN_VENUS, // infiniburn
-                Constant.id("venus"), // effectsLocation // fixme
-                0.1F, // ambientLight
+                GCBlockTags.INFINIBURN_ASTEROID, // infiniburn
+                Constant.id("asteroid"), // effectsLocation // fixme
+                0.05F, // ambientLight
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)
         ));
     }

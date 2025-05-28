@@ -47,7 +47,7 @@ public non-sealed interface RocketEngine<C extends RocketEngineConfig, T extends
 
     Codec<EitherHolder<RocketEngine<?, ?>>> EITHER_CODEC = EitherHolder.codec(RocketRegistries.ROCKET_ENGINE, CODEC);
     StreamCodec<RegistryFriendlyByteBuf, EitherHolder<RocketEngine<?, ?>>> EITHER_STREAM_CODEC = EitherHolder.streamCodec(RocketRegistries.ROCKET_ENGINE, STREAM_CODEC);
-    
+
     @Contract(pure = true, value = "_, _ -> new")
     static @NotNull <C extends RocketEngineConfig, T extends RocketEngineType<C>> RocketEngine<C, T> create(@NotNull C config, @NotNull T type) {
         return new RocketEngineImpl<>(config, type);

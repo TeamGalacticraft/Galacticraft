@@ -133,6 +133,6 @@ public class EntranceCrater extends SizedPiece {
 
     @Override
     public DungeonPiece getNextPiece(DungeonStart startPiece, RandomSource random) {
-        return new RoomEntrance(this.configuration, random, this.boundingBox.minX() + this.boundingBox.getXSpan() / 2, this.boundingBox.minZ() + this.boundingBox.getZSpan() / 2, getGenDepth() +1);
+        return new RoomEntrance(this.configuration, random, this.boundingBox.minX() + this.boundingBox.getXSpan() / 2, this.boundingBox.minZ() + this.boundingBox.getZSpan() / 2, getGenDepth() + 1);
     }
 }
