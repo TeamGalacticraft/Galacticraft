@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "X": {
-      "item": "minecraft:glass_pane"
+      "tag": "c:glass_panes/colorless"
     }
   },
   "pattern": [

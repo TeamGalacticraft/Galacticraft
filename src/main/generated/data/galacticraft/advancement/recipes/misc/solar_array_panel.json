@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_solar_array_wafer": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:solar_array_wafer"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraft:solar_array_panel"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_solar_array_wafer"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraft:solar_array_panel"
+    ]
+  }
+}

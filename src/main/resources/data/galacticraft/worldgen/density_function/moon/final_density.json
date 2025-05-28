@@ -52,7 +52,7 @@
             "argument1": {
               //[df-editor]:{"pos":[-1483,-175],"collapsed":false}
               "type": "y_clamped_gradient",
-              "from_y": -64,
+              "from_y": -32,
               "to_y": 190,
               "from_value": 1,
               "to_value": -1
@@ -71,7 +71,7 @@
             "argument1": {
               //[df-editor]:{"pos":[-1038,326],"collapsed":false}
               "type": "y_clamped_gradient",
-              "from_y": -64,
+              "from_y": -32,
               "to_y": 212,
               "from_value": 1,
               "to_value": -1

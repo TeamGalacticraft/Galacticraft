@@ -41,9 +41,11 @@ public abstract class ItemEntityMixin extends Entity {
         super(entityType, level);
     }
 
-    @Shadow public abstract ItemStack getItem();
+    @Shadow
+    public abstract ItemStack getItem();
 
-    @Shadow public abstract void setItem(ItemStack stack);
+    @Shadow
+    public abstract void setItem(ItemStack stack);
 
     @Inject(at = @At("RETURN"), method = "tick")
     void coolMeteorChunk(CallbackInfo ci) {

@@ -32,6 +32,7 @@ import net.minecraft.core.Holder;
 
 public final class OrTravelPredicateType extends TravelPredicateType<OrTravelPredicateConfig> {
     public static final OrTravelPredicateType INSTANCE = new OrTravelPredicateType(OrTravelPredicateConfig.CODEC);
+
     private OrTravelPredicateType(Codec<OrTravelPredicateConfig> configCodec) {
         super(configCodec);
     }

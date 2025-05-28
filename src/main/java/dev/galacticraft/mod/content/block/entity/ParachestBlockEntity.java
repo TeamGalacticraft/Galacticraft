@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.content.block.entity;
 
-import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.entity.ScalableFuelLevel;
 import dev.galacticraft.mod.screen.ParachestMenu;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
@@ -107,10 +107,10 @@ public class ParachestBlockEntity extends RandomizableContainerBlockEntity imple
     }
 
     @Override
-    public int getScaledFuelLevel(int scale) {
-        final double fuelLevel = this.tank.getResource().isBlank() ? 0 : this.tank.getAmount();
+    public float getScaledFuelLevel(float scale) {
+        final float fuelLevel = this.tank.getResource().isBlank() ? 0 : this.tank.getAmount();
 
-        return (int) (fuelLevel * scale / this.tank.getCapacity());
+        return fuelLevel * scale / this.tank.getCapacity();
     }
 
     public void tick() {

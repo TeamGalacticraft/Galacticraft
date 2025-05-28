@@ -30,10 +30,10 @@ import net.minecraft.sounds.SoundEvent;
 
 public class GCSounds {
     private static final GCRegistry<SoundEvent> SOUNDS = new GCRegistry<>(BuiltInRegistries.SOUND_EVENT);
-    public static final Holder.Reference<SoundEvent> MUSIC_MOON = register("music.music_moon");
-    public static final Holder.Reference<SoundEvent> MUSIC_CREDITS = register("music.music_credits");
-    public static final Holder.Reference<SoundEvent> MUSIC_ORBIT = register("music.music_orbit");
-    public static final Holder.Reference<SoundEvent> MUSIC_MARS = register("music.music_mars");
+    public static final Holder.Reference<SoundEvent> MUSIC_MOON = register("music.moon");
+    public static final Holder.Reference<SoundEvent> MUSIC_CREDITS = register("music.credits");
+    public static final Holder.Reference<SoundEvent> MUSIC_ORBIT = register("music.orbit");
+    public static final Holder.Reference<SoundEvent> MUSIC_MARS = register("music.mars");
     public static final SoundEvent PLAYER_UNLOCKCHEST = SoundEvent.createVariableRangeEvent(Constant.id("player.unlockchest"));
     public static final SoundEvent PLAYER_PARACHUTE = SoundEvent.createVariableRangeEvent(Constant.id("player.parachute"));
     public static final SoundEvent PLAYER_OPENAIRLOCK = SoundEvent.createVariableRangeEvent(Constant.id("player.openairlock"));
@@ -50,10 +50,10 @@ public class GCSounds {
     public static final SoundEvent METEOR_CHUNK_THROW = SoundEvent.createVariableRangeEvent(Constant.id("entity.throwable_meteor_chunk.throw"));
 
     // Legacy Discs
-    public static final SoundEvent MUSIC_LEGACY_MARS = SoundEvent.createVariableRangeEvent(Constant.id("music.legacy.mars"));
-    public static final SoundEvent MUSIC_LEGACY_MIMAS = SoundEvent.createVariableRangeEvent(Constant.id("music.legacy.mimas"));
-    public static final SoundEvent MUSIC_LEGACY_ORBIT = SoundEvent.createVariableRangeEvent(Constant.id("music.legacy.orbit"));
-    public static final SoundEvent MUSIC_LEGACY_SPACERACE = SoundEvent.createVariableRangeEvent(Constant.id("music.legacy.spacerace"));
+    public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_MARS = register("music_disc.legacy.mars");
+    public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_MIMAS = register("music_disc.legacy.mimas");
+    public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_ORBIT = register("music_disc.legacy.orbit");
+    public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_SPACERACE = register("music_disc.legacy.spacerace");
 
     public static Holder.Reference<SoundEvent> register(String id) {
         return SOUNDS.registerForHolder(id, SoundEvent.createVariableRangeEvent(Constant.id(id)));
@@ -74,11 +74,5 @@ public class GCSounds {
         Registry.register(BuiltInRegistries.SOUND_EVENT, AMBIENCE_SCARYSCAPE.getLocation(), AMBIENCE_SCARYSCAPE);
         Registry.register(BuiltInRegistries.SOUND_EVENT, SHUTTLE_SHUTTLE.getLocation(), SHUTTLE_SHUTTLE);
         Registry.register(BuiltInRegistries.SOUND_EVENT, METEOR_CHUNK_THROW.getLocation(), METEOR_CHUNK_THROW);
-
-        // Legacy Discs
-        Registry.register(BuiltInRegistries.SOUND_EVENT, MUSIC_LEGACY_MARS.getLocation(), MUSIC_LEGACY_MARS);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, MUSIC_LEGACY_MIMAS.getLocation(), MUSIC_LEGACY_MIMAS);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, MUSIC_LEGACY_ORBIT.getLocation(), MUSIC_LEGACY_ORBIT);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, MUSIC_LEGACY_SPACERACE.getLocation(), MUSIC_LEGACY_SPACERACE);
     }
 }

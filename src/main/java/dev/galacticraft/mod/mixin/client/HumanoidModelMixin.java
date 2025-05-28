@@ -70,64 +70,49 @@ public class HumanoidModelMixin<T extends LivingEntity> {
     public ModelPart hat;
 
     @Shadow
+    public HumanoidModel.ArmPose leftArmPose;
+
+    @Shadow
     public HumanoidModel.ArmPose rightArmPose;
 
     @Inject(at = @At("HEAD"), method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V")
     private void standInRocketGC(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo ci) {
-        if (((HumanoidModel<T>) (Object) this).riding) {
-            if (livingEntity.getVehicle() instanceof RocketEntity) {
-                ((HumanoidModel<T>) (Object) this).riding = false;
-            }
+        if (((HumanoidModel<T>) (Object) this).riding && livingEntity.getVehicle() instanceof RocketEntity) {
+            ((HumanoidModel<T>) (Object) this).riding = false;
+        }
+    }
+
+    @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getMainArm()Lnet/minecraft/world/entity/HumanoidArm;"))
+    private void gc$modifyPlayerAnim(LivingEntity entity, float f, float g, float h, float i, float j, CallbackInfo ci) {
+        Holder<CelestialBody<?, ?>> holder = entity.level().galacticraft$getCelestialBody();
+        if (holder != null && holder.value().gravity() < 0.8) {
+            float angularSwingArm = Mth.cos(f * 0.1162F) * 2.0F * g;
+            this.leftArm.xRot = angularSwingArm;
+            this.rightArm.xRot = -angularSwingArm;
+
+            float angularSwingLeg = Mth.cos(f * 0.1162F * 2.0F) * 1.4F * g;
+            this.leftLeg.xRot = -angularSwingLeg;
+            this.rightLeg.xRot = angularSwingLeg;
         }
     }
 
     @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
-    private void gc$modifyPlayerAnim(LivingEntity entity, float f, float g, float h, float i, float j, CallbackInfo ci) {
-        Holder<CelestialBody<?, ?>> holder = entity.level().galacticraft$getCelestialBody();
-        if (holder != null && holder.value().gravity() < 0.8) {
-            float speedModifier = 0.1162F * 2;
-
-            final float floatPI = 3.1415927F;
-
-            float angularSwingArm = Mth.cos(f * (speedModifier / 2));
-            float rightMod = this.rightArmPose == HumanoidModel.ArmPose.ITEM ? 1 : 2;
-            this.rightArm.xRot -= Mth.cos(f * 0.6662F + floatPI) * rightMod * g * 0.5F;
-            this.leftArm.xRot -= Mth.cos(f * 0.6662F) * 2.0F * g * 0.5F;
-            this.rightArm.xRot += -angularSwingArm * 4.0F * g * 0.5F;
-            this.leftArm.xRot += angularSwingArm * 4.0F * g * 0.5F;
-            this.leftLeg.xRot -= Mth.cos(f * 0.6662F + floatPI) * 1.4F * g;
-            this.leftLeg.xRot += Mth.cos(f * 0.1162F * 2 + floatPI) * 1.4F * g;
-            this.rightLeg.xRot -= Mth.cos(f * 0.6662F) * 1.4F * g;
-            this.rightLeg.xRot += Mth.cos(f * 0.1162F * 2) * 1.4F * g;
-        }
-
+    private void gc$overridePlayerAnim(LivingEntity entity, float f, float g, float h, float i, float j, CallbackInfo ci) {
         if (entity.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof RocketItem || entity.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof RocketItem) {
             float armXRot = Mth.PI + 0.3F;
-            this.leftArm.xRot = armXRot;
-            this.leftArm.yRot = 0.0F;
-            this.leftArm.zRot = Mth.PI / 10.0F;
-
-            this.rightArm.xRot = armXRot;
-            this.rightArm.yRot = 0.0F;
-            this.rightArm.zRot = (float) -Math.PI / 10.0F;
+            float armZRot = 0.1F * Mth.PI;
+            this.leftArm.setRotation(armXRot, 0.0F, armZRot);
+            this.rightArm.setRotation(armXRot, 0.0F, -armZRot);
         }
 
-
         if (entity.isInCryoSleep()) { // TODO: possibly cleaner way of doing this?
-            this.hat.xRot = 45F;
-            this.hat.yRot = 0;
-            this.head.xRot = 45F;
-            this.head.yRot = 0;
-            this.leftArm.xRot = 0;
-            this.leftArm.yRot = 0;
-            this.rightArm.xRot = 0;
-            this.rightArm.yRot = 0;
-            this.leftLeg.xRot = 0;
-            this.leftLeg.yRot = 0;
-            this.rightLeg.xRot = 0;
-            this.rightLeg.yRot = 0;
-            this.body.xRot = 0;
-            this.body.yRot = 0;
+            this.head.setRotation(45.0F, 0.0F, 0.0F);
+            this.hat.setRotation(45.0F, 0.0F, 0.0F);
+            this.body.setRotation(0.0F, 0.0F, 0.0F);
+            this.leftArm.setRotation(0.0F, 0.0F, 0.0F);
+            this.rightArm.setRotation(0.0F, 0.0F, 0.0F);
+            this.leftLeg.setRotation(0.0F, 0.0F, 0.0F);
+            this.rightLeg.setRotation(0.0F, 0.0F, 0.0F);
         }
     }
 }

@@ -1,19 +1,15 @@
 {
   "values": [
-    "galacticraft:silicon_ore",
-    "galacticraft:deepslate_silicon_ore",
-    "galacticraft:moon_copper_ore",
-    "galacticraft:lunaslate_copper_ore",
-    "galacticraft:olivine_basalt",
-    "galacticraft:rich_olivine_basalt",
-    "galacticraft:tin_ore",
-    "galacticraft:deepslate_tin_ore",
-    "galacticraft:moon_tin_ore",
-    "galacticraft:lunaslate_tin_ore",
-    "galacticraft:aluminum_ore",
-    "galacticraft:deepslate_aluminum_ore",
-    "galacticraft:desh_ore",
-    "galacticraft:ilmenite_ore",
-    "galacticraft:galena_ore"
+    "#c:ores/silicon",
+    "#c:ores/tin",
+    "#c:ores/aluminum",
+    "#c:ores/cheese",
+    "#c:ores/lunar_sapphire",
+    "#c:ores/olivine",
+    "#c:ores/meteoric_iron",
+    "#c:ores/desh",
+    "#c:ores/titanium",
+    "#c:ores/lead",
+    "#c:ores/solar_dust"
   ]
 }

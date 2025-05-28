@@ -61,6 +61,11 @@ public class IronGratingBlock extends Block implements FluidLoggable {
                 .setValue(FlowingFluid.FALLING, false));
     }
 
+    @Override
+    protected boolean skipRendering(BlockState state, BlockState stateFrom, Direction axisDirection) {
+        return stateFrom.is(this) && state.getValue(STATE) == stateFrom.getValue(STATE) || super.skipRendering(state, stateFrom, axisDirection);
+    }
+
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {

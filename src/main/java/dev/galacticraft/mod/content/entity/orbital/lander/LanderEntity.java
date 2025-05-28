@@ -26,7 +26,7 @@ import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.entity.IgnoreShift;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.attachments.GCPlayer;
+import dev.galacticraft.mod.attachments.GCServerPlayer;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.entity.ControllableEntity;
@@ -53,9 +53,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -89,7 +89,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
     public LanderEntity(ServerPlayer player) {
         this(GCEntityTypes.LANDER, player.level());
 
-        GCPlayer gcPlayer = GCPlayer.get(player);
+        GCServerPlayer gcPlayer = GCServerPlayer.get(player);
         this.inventory = NonNullList.withSize(gcPlayer.getRocketStacks().size() + 1, ItemStack.EMPTY);
         this.storage = InventoryStorage.of(this, null);
         this.tank.variant = FluidVariant.of(GCFluids.FUEL);
@@ -331,10 +331,10 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
     }
 
     @Override
-    public int getScaledFuelLevel(int scale) {
-        final double fuelLevel = this.tank.getResource().isBlank() ? 0 : this.tank.getAmount();
+    public float getScaledFuelLevel(float scale) {
+        final float fuelLevel = this.tank.getResource().isBlank() ? 0 : this.tank.getAmount();
 
-        return (int) (fuelLevel * scale / tank.getCapacity());
+        return fuelLevel * scale / tank.getCapacity();
     }
 
     @Override
@@ -446,7 +446,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
                 setYRot(getYRot() + 0.5F * turnFactor);
 
             if (jumping) {
-                var deltaM = getDeltaMovement();;
+                var deltaM = getDeltaMovement();
                 setDeltaMovement(deltaM.x(), Math.min(deltaM.y() + 0.03F, getY() < level().getHeight(Heightmap.Types.WORLD_SURFACE, getBlockX(), getBlockZ()) + 35 ? -0.15 : -1.0), deltaM.z());
             }
 

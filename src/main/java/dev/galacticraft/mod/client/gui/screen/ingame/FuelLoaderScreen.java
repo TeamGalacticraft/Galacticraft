@@ -73,12 +73,6 @@ public class FuelLoaderScreen extends MachineScreen<FuelLoaderBlockEntity, FuelL
     protected void renderMachineBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.renderMachineBackground(graphics, mouseX, mouseY, delta);
 
-        FluidResourceSlot slot = this.menu.fluidStorage.slot(FuelLoaderBlockEntity.FUEL_TANK);
-        if (!slot.isEmpty()) {
-            GraphicsUtil.drawFluid(graphics, this.leftPos + TANK_OVERLAY_X, this.topPos + TANK_OVERLAY_Y, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT, slot.getCapacity(), FluidVariant.of(slot.getResource(), slot.getComponents()), slot.getAmount());
-            graphics.blit(Constant.ScreenTexture.FUEL_LOADER_SCREEN, this.leftPos + TANK_OVERLAY_X, this.topPos + TANK_OVERLAY_Y, TANK_OVERLAY_U, TANK_OVERLAY_V, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT);
-        }
-
         if (this.menu.rocketCapacity == 0) {
             graphics.blit(Constant.ScreenTexture.FUEL_LOADER_SCREEN, this.leftPos + RED_CROSS_X, this.topPos + RED_CROSS_Y, RED_CROSS_U, RED_CROSS_V, RED_CROSS_WIDTH, RED_CROSS_HEIGHT);
         }
@@ -103,6 +97,16 @@ public class FuelLoaderScreen extends MachineScreen<FuelLoaderBlockEntity, FuelL
 
         if (!list.isEmpty()) {
             setTooltipForNextRenderPass(Lists.transform(list, Component::getVisualOrderText));
+        }
+    }
+
+    @Override
+    protected void drawTanks(GuiGraphics graphics, int mouseX, int mouseY) {
+        super.drawTanks(graphics, mouseX, mouseY);
+        
+        FluidResourceSlot slot = this.menu.fluidStorage.slot(FuelLoaderBlockEntity.FUEL_TANK);
+        if (!slot.isEmpty()) {
+            graphics.blit(Constant.ScreenTexture.FUEL_LOADER_SCREEN, this.leftPos + TANK_OVERLAY_X, this.topPos + TANK_OVERLAY_Y, TANK_OVERLAY_U, TANK_OVERLAY_V, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT);
         }
     }
 }

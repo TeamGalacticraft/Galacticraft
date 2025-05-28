@@ -26,13 +26,17 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import dev.galacticraft.api.accessor.SatelliteAccessor;
+import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.dynamicdimensions.api.event.DynamicDimensionLoadCallback;
+import dev.galacticraft.dynamicdimensions.impl.registry.RegistryUtil;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.util.NbtType;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.*;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.dimension.LevelStem;
@@ -55,9 +59,15 @@ import java.util.Map;
 
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin implements SatelliteAccessor {
-    @Unique private final Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> satellites = new HashMap<>();
+    @Unique
+    private final Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> satellites = new HashMap<>();
 
-    @Shadow @Final protected LevelStorageSource.LevelStorageAccess storageSource;
+    @Shadow
+    @Final
+    protected LevelStorageSource.LevelStorageAccess storageSource;
+
+    @Shadow
+    public abstract RegistryAccess.Frozen registryAccess();
 
     @Override
     public @Unmodifiable Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> galacticraft$getSatellites() {
@@ -67,19 +77,24 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
     @Override
     public void galacticraft$addSatellite(ResourceLocation id, CelestialBody<SatelliteConfig, SatelliteType> satellite) {
         this.satellites.put(id, satellite);
+        RegistryUtil.registerUnfreeze(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id, satellite);
+        Constant.LOGGER.info("Added satellite with id {}", id);
     }
 
     @Override
     public void galacticraft$removeSatellite(ResourceLocation id) {
         this.satellites.remove(id);
+        RegistryUtil.unregister(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id);
+        Constant.LOGGER.info("Removed satellite with id {}", id);
     }
 
     @Inject(method = "saveEverything", at = @At("RETURN"))
     private void galacticraft_saveSatellites(boolean suppressLogs, boolean bl, boolean bl2, CallbackInfoReturnable<Boolean> cir) {
         Path path = this.storageSource.getLevelPath(LevelResource.ROOT);
         ListTag nbt = new ListTag();
+        RegistryOps<Tag> ops = RegistryOps.create(NbtOps.INSTANCE, this.registryAccess());
         for (Map.Entry<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> entry : this.satellites.entrySet()) {
-            CompoundTag compound = (CompoundTag) SatelliteConfig.CODEC.encode(entry.getValue().config(), NbtOps.INSTANCE, new CompoundTag()).getOrThrow();
+            CompoundTag compound = (CompoundTag) SatelliteConfig.CODEC.encode(entry.getValue().config(), ops, new CompoundTag()).getOrThrow();
             compound.putString("id", entry.getKey().toString());
             nbt.add(compound);
         }
@@ -92,33 +107,33 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
         }
     }
 
-    @Inject(method = "runServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;initServer()Z", shift = At.Shift.AFTER))
-    private void galacticraft_loadSatellites(CallbackInfo ci) {
+    @Override
+    public void galacticraft$loadSatellites(DynamicDimensionLoadCallback.DynamicDimensionLoader dynamicDimensionLoader) {
         Path worldFile = this.storageSource.getLevelPath(LevelResource.ROOT);
         if (Files.exists(worldFile.resolve("satellites.dat"))) {
             try {
                 ListTag nbt = NbtIo.readCompressed(worldFile.resolve("satellites.dat"), NbtAccounter.unlimitedHeap()).getList("satellites", NbtType.COMPOUND);
+                RegistryOps<Tag> ops = RegistryOps.create(NbtOps.INSTANCE, this.registryAccess());
+                Constant.LOGGER.info("Loading {} satellites", nbt.size());
                 for (Tag compound : nbt) {
                     assert compound instanceof CompoundTag : "Not a compound?!";
                     ResourceLocation id = ResourceLocation.parse(((CompoundTag) compound).getString("id"));
-                    DataResult<Pair<SatelliteConfig, Tag>> decode = SatelliteConfig.CODEC.decode(NbtOps.INSTANCE, compound);
+                    DataResult<Pair<SatelliteConfig, Tag>> decode = SatelliteConfig.CODEC.decode(ops, compound);
                     if (decode.error().isPresent()) {
                         Constant.LOGGER.error("Skipping satellite '{}' - {}", id, decode.error().get().message());
                         continue;
                     }
-                    this.satellites.put(id, new CelestialBody<>(SatelliteType.INSTANCE, decode.getOrThrow().getFirst()));
+                    CelestialBody<SatelliteConfig, SatelliteType> satellite = new CelestialBody<>(SatelliteType.INSTANCE, decode.getOrThrow().getFirst());
+                    this.galacticraft$addSatellite(id, satellite);
+
+                    LevelStem levelStem = satellite.config().getOptions();
+                    dynamicDimensionLoader.loadDynamicDimension(id, levelStem.generator(), levelStem.type().value());
                 }
             } catch (Throwable exception) {
                 throw new RuntimeException("Failed to read satellite data!", exception);
             }
-        }
-    }
-
-    @Override
-    public void galacticraft$loadSatellites(DynamicDimensionLoadCallback.DynamicDimensionLoader dynamicDimensionLoader) {
-        for (Map.Entry<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> entry : this.satellites.entrySet()) {
-            LevelStem levelStem = entry.getValue().config().dimensionOptions();
-            dynamicDimensionLoader.loadDynamicDimension(entry.getKey(), levelStem.generator(), levelStem.type().value());
+        } else {
+            Constant.LOGGER.info("File not found: satellites.dat");
         }
     }
 }

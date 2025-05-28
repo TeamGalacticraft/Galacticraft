@@ -22,17 +22,18 @@
 
 package dev.galacticraft.mod.attachments;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Constant.Attachments;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 
 @SuppressWarnings("UnstableApiUsage")
 public final class GCAttachments {
-    public static final AttachmentType<GCPlayer> PLAYER = AttachmentRegistry.create(Attachments.SERVER_PLAYER, builder ->
-            builder.persistent(GCPlayer.CODEC)
-            .copyOnDeath());
+    public static final AttachmentType<GCServerPlayer> SERVER_PLAYER = AttachmentRegistry.<GCServerPlayer>builder()
+            .persistent(GCServerPlayer.CODEC)
+            .copyOnDeath()
+            .buildAndRegister(Constant.id(Attachments.SERVER_PLAYER));
 
-    public static final AttachmentType<GCClientPlayer> CLIENT_PLAYER = AttachmentRegistry.create(Attachments.CLIENT_PLAYER);
-
-    public static final AttachmentType<GCLevel> LEVEL = AttachmentRegistry.create(Attachments.LEVEL);
+    public static final AttachmentType<GCClientPlayer> CLIENT_PLAYER = AttachmentRegistry.<GCClientPlayer>builder()
+            .buildAndRegister(Constant.id(Attachments.CLIENT_PLAYER));
 }

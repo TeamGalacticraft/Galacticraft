@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.content.block.special;
 
 import com.mojang.serialization.MapCodec;
-import dev.galacticraft.mod.attachments.GCPlayer;
+import dev.galacticraft.mod.attachments.GCServerPlayer;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.TransportTubeBlockEntity;
@@ -38,10 +38,10 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -96,7 +96,7 @@ public class TransportTube extends BaseEntityBlock {
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand interactionHand, BlockHitResult hit) {
         if (stack.is(GCBlocks.PLAYER_TRANSPORT_TUBE.asItem())) {
-            GCPlayer gcPlayer = GCPlayer.get(player);
+            GCServerPlayer gcPlayer = GCServerPlayer.get(player);
             if (gcPlayer.isBuildingHyperloop()) {
                 gcPlayer.setBuildingHyperloop(false);
 
@@ -127,7 +127,7 @@ public class TransportTube extends BaseEntityBlock {
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         if (placer instanceof Player player) {
-            GCPlayer gcPlayer = GCPlayer.get(player);
+            GCServerPlayer gcPlayer = GCServerPlayer.get(player);
 
         }
     }

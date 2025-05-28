@@ -1,6 +1,16 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
+    "has_compressed_copper": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:compressed_copper"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "has_the_recipe": {
       "conditions": {
         "recipe": "galacticraft:compressed_bronze"
@@ -10,7 +20,8 @@
   },
   "requirements": [
     [
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_compressed_copper"
     ]
   ],
   "rewards": {

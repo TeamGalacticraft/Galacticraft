@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "galacticraft:compressed_iron"
+    },
+    "S": {
+      "item": "galacticraft:compressed_steel"
+    }
+  },
+  "pattern": [
+    "  S",
+    " IS",
+    "SSS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:buggy_seat"
+  }
+}

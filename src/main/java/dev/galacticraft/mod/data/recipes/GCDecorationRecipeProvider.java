@@ -24,10 +24,11 @@ package dev.galacticraft.mod.data.recipes;
 
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
@@ -49,16 +50,16 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
     @Override
     public void buildRecipes(RecipeOutput output) {
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCItems.GLOWSTONE_TORCH, 4)
-                .define('G', Items.GLOWSTONE_DUST)
-                .define('S', Items.STICK)
+                .define('G', ConventionalItemTags.GLOWSTONE_DUSTS)
+                .define('S', ConventionalItemTags.WOODEN_RODS)
                 .pattern("G")
                 .pattern("S")
-                .unlockedBy(getHasName(Items.GLOWSTONE_DUST), has(Items.GLOWSTONE_DUST))
+                .unlockedBy(getHasName(Items.GLOWSTONE_DUST), has(ConventionalItemTags.GLOWSTONE_DUSTS))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.GLOWSTONE_LANTERN)
                 .define('G', GCItems.GLOWSTONE_TORCH)
-                .define('I', Items.IRON_NUGGET)
+                .define('I', ConventionalItemTags.IRON_NUGGETS)
                 .pattern("III")
                 .pattern("IGI")
                 .pattern("III")
@@ -67,25 +68,25 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
 
         // Vacuum glass
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.VACUUM_GLASS)
-                .define('G', Items.GLASS)
-                .define('T', GCItems.TIN_INGOT)
+                .define('G', ConventionalItemTags.GLASS_BLOCKS_COLORLESS)
+                .define('T', GCItemTags.TIN_INGOTS)
                 .pattern("TGT")
                 .pattern("GGG")
                 .pattern("TGT")
-                .unlockedBy(getHasName(GCItems.TIN_INGOT), has(GCItems.TIN_INGOT))
+                .unlockedBy(getHasName(GCItems.TIN_INGOT), has(GCItemTags.TIN_INGOTS))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.CLEAR_VACUUM_GLASS)
-                .define('G', Items.GLASS)
-                .define('A', GCItems.ALUMINUM_INGOT)
+                .define('G', ConventionalItemTags.GLASS_BLOCKS_COLORLESS)
+                .define('A', GCItemTags.ALUMINUM_INGOTS)
                 .pattern("AGA")
                 .pattern("GGG")
                 .pattern("AGA")
-                .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItems.ALUMINUM_INGOT))
+                .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItemTags.ALUMINUM_INGOTS))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.STRONG_VACUUM_GLASS)
-                .define('G', Items.GLASS)
+                .define('G', ConventionalItemTags.GLASS_BLOCKS_COLORLESS)
                 .define('A', GCItems.COMPRESSED_ALUMINUM)
                 .pattern("AGA")
                 .pattern("GGG")
@@ -95,7 +96,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
 
         // Light panels
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.DASHED_LIGHT_PANEL)
-                .define('S', Items.GLASS_PANE)
+                .define('S', ConventionalItemTags.GLASS_PANES_COLORLESS)
                 .define('G', GCItems.GLOWSTONE_TORCH)
                 .define('T', GCItems.COMPRESSED_STEEL)
                 .pattern("SGS")
@@ -104,7 +105,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.DIAGONAL_LIGHT_PANEL)
-                .define('S', Items.GLASS_PANE)
+                .define('S', ConventionalItemTags.GLASS_PANES_COLORLESS)
                 .define('G', GCItems.GLOWSTONE_TORCH)
                 .define('T', GCItems.COMPRESSED_STEEL)
                 .pattern(" S")
@@ -113,18 +114,8 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.DIAGONAL_LIGHT_PANEL)
-                .define('S', Items.GLASS_PANE)
-                .define('G', GCItems.GLOWSTONE_TORCH)
-                .define('T', GCItems.COMPRESSED_STEEL)
-                .pattern(" S")
-                .pattern("SG")
-                .pattern(" T")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
-                .save(output, BuiltInRegistries.ITEM.getKey(GCBlocks.DIAGONAL_LIGHT_PANEL.asItem()).withSuffix("_flipped"));
-
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.SPOTLIGHT_LIGHT_PANEL)
-                .define('S', Items.GLASS_PANE)
+                .define('S', ConventionalItemTags.GLASS_PANES_COLORLESS)
                 .define('G', GCItems.GLOWSTONE_TORCH)
                 .define('T', GCItems.COMPRESSED_STEEL)
                 .pattern("S S")
@@ -134,7 +125,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.SQUARE_LIGHT_PANEL)
-                .define('S', Items.GLASS_PANE)
+                .define('S', ConventionalItemTags.GLASS_PANES_COLORLESS)
                 .define('G', GCItems.GLOWSTONE_TORCH)
                 .define('T', GCItems.COMPRESSED_STEEL)
                 .pattern("SSS")
@@ -144,7 +135,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.LINEAR_LIGHT_PANEL)
-                .define('S', Items.GLASS_PANE)
+                .define('S', ConventionalItemTags.GLASS_PANES_COLORLESS)
                 .define('G', GCItems.GLOWSTONE_TORCH)
                 .define('T', GCItems.COMPRESSED_STEEL)
                 .pattern("S S")
@@ -162,11 +153,11 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, GCBlocks.TIN_LADDER, 6)
-                .define('T', GCItems.TIN_INGOT)
+                .define('T', GCItemTags.TIN_INGOTS)
                 .pattern("T T")
                 .pattern("TTT")
                 .pattern("T T")
-                .unlockedBy(getHasName(GCItems.TIN_INGOT), has(GCItems.TIN_INGOT))
+                .unlockedBy(getHasName(GCItems.TIN_INGOT), has(GCItemTags.TIN_INGOTS))
                 .save(output);
 
         // Metal decoration blocks

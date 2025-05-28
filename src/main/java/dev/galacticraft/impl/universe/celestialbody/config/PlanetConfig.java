@@ -43,17 +43,28 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public record PlanetConfig(@NotNull Component name, @NotNull Component description,
-                           @NotNull Holder<CelestialBody<?, ?>> parent,
-                           @NotNull CelestialPosition<?, ?> position, @NotNull CelestialDisplay<?, ?> display, @NotNull CelestialRingDisplay<?, ?> ring,
-                           @NotNull ResourceKey<Level> world, Holder<CelestialTeleporter<?, ?>> teleporter, @NotNull GasComposition atmosphere, float gravity,
-                           CelestialHandler celestialHandler,
-                           int accessWeight, int dayTemperature, int nightTemperature, long dayLength,
-                           @Nullable SatelliteRecipe satelliteRecipe) implements CelestialBodyConfig {
+public record PlanetConfig(
+        @NotNull Component name,
+        @NotNull Component description,
+        @NotNull Optional<ResourceKey<CelestialBody<?, ?>>> parent,
+        @NotNull CelestialPosition<?, ?> position,
+        @NotNull CelestialDisplay<?, ?> display,
+        @NotNull CelestialRingDisplay<?, ?> ring,
+        @NotNull ResourceKey<Level> world,
+        Holder<CelestialTeleporter<?, ?>> teleporter,
+        @NotNull GasComposition atmosphere,
+        float gravity,
+        CelestialHandler celestialHandler,
+        int accessWeight,
+        int dayTemperature,
+        int nightTemperature,
+        long dayLength,
+        @Nullable SatelliteRecipe satelliteRecipe
+) implements CelestialBodyConfig {
     public static final Codec<PlanetConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ComponentSerialization.CODEC.fieldOf("name").forGetter(PlanetConfig::name),
             ComponentSerialization.CODEC.fieldOf("description").forGetter(PlanetConfig::description),
-            CelestialBody.CODEC.fieldOf("parent").forGetter(PlanetConfig::parent),
+            CelestialBody.CODEC.optionalFieldOf("parent").forGetter(PlanetConfig::parent),
             CelestialPosition.CODEC.fieldOf("position").forGetter(PlanetConfig::position),
             CelestialDisplay.CODEC.fieldOf("display").forGetter(PlanetConfig::display),
             CelestialRingDisplay.CODEC.fieldOf("ring").forGetter(PlanetConfig::ring),
@@ -69,7 +80,7 @@ public record PlanetConfig(@NotNull Component name, @NotNull Component descripti
             SatelliteRecipe.CODEC.optionalFieldOf("satellite_recipe").forGetter(c -> Optional.ofNullable(c.satelliteRecipe))
     ).apply(instance, PlanetConfig::new));
 
-    private PlanetConfig(Component name, Component description, Holder<CelestialBody<?, ?>> parent, CelestialPosition<?, ?> position, CelestialDisplay<?, ?> display, CelestialRingDisplay<?, ?> ring, ResourceKey<Level> world, Holder<CelestialTeleporter<?, ?>> teleporter, GasComposition atmosphere, float gravity, CelestialHandler celestialHandler, int accessWeight, int dayTemperature, int nightTemperature, long dayLength, Optional<SatelliteRecipe> satelliteRecipe) {
+    private PlanetConfig(Component name, Component description, Optional<ResourceKey<CelestialBody<?, ?>>> parent, CelestialPosition<?, ?> position, CelestialDisplay<?, ?> display, CelestialRingDisplay<?, ?> ring, ResourceKey<Level> world, Holder<CelestialTeleporter<?, ?>> teleporter, GasComposition atmosphere, float gravity, CelestialHandler celestialHandler, int accessWeight, int dayTemperature, int nightTemperature, long dayLength, Optional<SatelliteRecipe> satelliteRecipe) {
         this(name, description, parent, position, display, ring, world, teleporter, atmosphere, gravity, celestialHandler, accessWeight, dayTemperature, nightTemperature, dayLength, satelliteRecipe.orElse(null));
     }
 }

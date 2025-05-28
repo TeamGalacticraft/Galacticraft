@@ -1,9 +1,0 @@
-{
-  "parent": "block/block",
-  "galacticraft:obj": true,
-  "obj": "galacticraft:models/block/workbench.obj",
-  "mtl": "galacticraft:models/block/workbench.mtl",
-  "textures": {
-    "particle": "galacticraft:block/machine"
-  }
-}

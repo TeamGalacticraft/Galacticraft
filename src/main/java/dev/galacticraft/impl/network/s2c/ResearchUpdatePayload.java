@@ -47,7 +47,7 @@ public record ResearchUpdatePayload(boolean add, List<ResourceLocation> ids) imp
 
     @Override
     public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
-        return () -> ((ClientResearchAccessor)context.player()).galacticraft$updateResearch(this.add, this.ids);
+        return () -> ((ClientResearchAccessor) context.player()).galacticraft$updateResearch(this.add, this.ids);
     }
 
     @Override

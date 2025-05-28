@@ -57,7 +57,7 @@ public class ElectricCompressorScreen extends MachineScreen<ElectricCompressorBl
     }
 
     protected void drawCraftProgressBar(GuiGraphics graphics) {
-        float progressScale = (float)this.menu.getProgress() / (float)this.menu.getMaxProgress();
+        float progressScale = (float) this.menu.getProgress() / (float) this.menu.getMaxProgress();
         int width = Mth.ceil(PROGRESS_WIDTH * progressScale);
         RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
         DrawableUtil.drawProgressTexture(graphics.pose(), this.leftPos + PROGRESS_X, this.topPos + PROGRESS_Y, PROGRESS_U, PROGRESS_V, width, PROGRESS_HEIGHT);

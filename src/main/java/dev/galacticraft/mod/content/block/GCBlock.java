@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.block;
 
 import dev.galacticraft.mod.util.TooltipUtil;
-import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -60,6 +59,6 @@ public class GCBlock extends Block {
     @Override
     public MenuProvider getMenuProvider(BlockState blockState, Level level, BlockPos blockPos) {
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
-        return blockEntity instanceof MenuProvider ? (MenuProvider)blockEntity : null;
+        return blockEntity instanceof MenuProvider ? (MenuProvider) blockEntity : null;
     }
 }

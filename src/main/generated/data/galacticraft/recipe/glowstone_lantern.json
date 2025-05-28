@@ -6,7 +6,7 @@
       "item": "galacticraft:glowstone_torch"
     },
     "I": {
-      "item": "minecraft:iron_nugget"
+      "tag": "c:nuggets/iron"
     }
   },
   "pattern": [

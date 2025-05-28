@@ -63,7 +63,7 @@ public class Buggy extends GCVehicle implements ContainerListener, ControllableE
     private int timeClimbing;
     private boolean shouldClimb;
 
-    protected SimpleContainer inventory;;
+    protected SimpleContainer inventory;
 
     public Buggy(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -118,7 +118,7 @@ public class Buggy extends GCVehicle implements ContainerListener, ControllableE
             simpleContainer.removeListener(this);
             int size = Math.min(simpleContainer.getContainerSize(), this.inventory.getContainerSize());
 
-            for(int j = 0; j < size; ++j) {
+            for (int j = 0; j < size; ++j) {
                 ItemStack itemStack = simpleContainer.getItem(j);
                 if (!itemStack.isEmpty()) {
                     this.inventory.setItem(j, itemStack.copy());
@@ -160,7 +160,7 @@ public class Buggy extends GCVehicle implements ContainerListener, ControllableE
         super.tick();
         if (this.level().isClientSide) {
             Vec3 delta = getDeltaMovement();
-            this.wheelRotationX += (float)Math.sqrt(delta.x * delta.x + delta.z * delta.z) * 150.0F * (this.speed < 0 ? 1 : -1);
+            this.wheelRotationX += (float) Math.sqrt(delta.x * delta.x + delta.z * delta.z) * 150.0F * (this.speed < 0 ? 1 : -1);
             this.wheelRotationX %= 360;
             this.wheelRotationZ = Math.max(-30.0F, Math.min(30.0F, this.wheelRotationZ * 0.9F));
         }

@@ -35,27 +35,27 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilde
 import java.util.Optional;
 
 public class MoonRuinsStructure extends Structure {
-   public static final MapCodec<MoonRuinsStructure> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-           StructureSettings.CODEC.fieldOf("config").forGetter((moonRuinsStructure) -> moonRuinsStructure.settings)
-   ).apply(instance, MoonRuinsStructure::new));
+    public static final MapCodec<MoonRuinsStructure> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+            StructureSettings.CODEC.fieldOf("config").forGetter((moonRuinsStructure) -> moonRuinsStructure.settings)
+    ).apply(instance, MoonRuinsStructure::new));
 
-   public MoonRuinsStructure(Structure.StructureSettings codec) {
-      super(codec);
-   }
+    public MoonRuinsStructure(Structure.StructureSettings codec) {
+        super(codec);
+    }
 
-   private static void addPieces(StructurePiecesBuilder collector, Structure.GenerationContext context) {
-      BlockPos blockPos = new BlockPos(context.chunkPos().getMinBlockX(), 90, context.chunkPos().getMinBlockZ());
-      Rotation blockRotation = Rotation.getRandom(context.random());
-      MoonRuinsGenerator.addPiecesToStructure(context.structureTemplateManager(), blockPos, blockRotation, collector, context.random());
-   }
+    private static void addPieces(StructurePiecesBuilder collector, Structure.GenerationContext context) {
+        BlockPos blockPos = new BlockPos(context.chunkPos().getMinBlockX(), 90, context.chunkPos().getMinBlockZ());
+        Rotation blockRotation = Rotation.getRandom(context.random());
+        MoonRuinsGenerator.addPiecesToStructure(context.structureTemplateManager(), blockPos, blockRotation, collector, context.random());
+    }
 
-   @Override
-   public Optional<Structure.GenerationStub> findGenerationPoint(Structure.GenerationContext context) {
-      return onTopOfChunkCenter(context, Heightmap.Types.WORLD_SURFACE_WG, collector -> addPieces(collector, context));
-   }
+    @Override
+    public Optional<Structure.GenerationStub> findGenerationPoint(Structure.GenerationContext context) {
+        return onTopOfChunkCenter(context, Heightmap.Types.WORLD_SURFACE_WG, collector -> addPieces(collector, context));
+    }
 
-   @Override
-   public StructureType<?> type() {
-      return GCStructureTypes.MOON_RUINS;
-   }
+    @Override
+    public StructureType<?> type() {
+        return GCStructureTypes.MOON_RUINS;
+    }
 }

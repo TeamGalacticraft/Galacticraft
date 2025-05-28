@@ -1,4 +1,5 @@
-{   "parent": "block/block",
+{
+  "parent": "block/block",
   "textures": {
     "particle": "galacticraft:block/moon_dirt",
     "top": "galacticraft:block/moon_dirt_path_top",

@@ -64,30 +64,13 @@ public class GCResourceReloadListener implements SimpleSynchronousResourceReload
         WireWalkwayBakedModel.invalidate();
         PipeBakedModel.invalidate();
         FluidPipeWalkwayBakedModel.invalidate();
-        FluidRenderHandler oil = (view, pos, state) -> new TextureAtlasSprite[]{
-                atlas.apply(Constant.id("block/fluid/crude_oil_still")), 
-                atlas.apply(Constant.id("block/fluid/crude_oil_flowing"))
-        };
-        FluidRenderHandler fuel = (view, pos, state) -> new TextureAtlasSprite[]{
-                atlas.apply(Constant.id("block/fluid/fuel_still")), 
-                atlas.apply(Constant.id("block/fluid/fuel_flowing"))
-        };
-        FluidRenderHandler sulfuricAcid = (view, pos, state) -> new TextureAtlasSprite[]{
-                atlas.apply(Constant.id("block/fluid/sulfuric_acid_still")),
-                atlas.apply(Constant.id("block/fluid/sulfuric_acid_flowing"))
-        };
+        BubbleEntityRenderer.bubbleModel = null;
+
         FluidRenderHandler oxygen = (view, pos, state) -> new TextureAtlasSprite[]{
-                atlas.apply(Constant.id("block/fluid/oxygen")), 
-                atlas.apply(Constant.id("block/fluid/oxygen"))
+                atlas.apply(Constant.Fluid.fluidId(Constant.Fluid.LIQUID_OXYGEN)),
+                atlas.apply(Constant.Fluid.fluidId(Constant.Fluid.LIQUID_OXYGEN))
         };
 
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.CRUDE_OIL, oil);
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FLOWING_CRUDE_OIL, oil);
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FUEL, fuel);
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FLOWING_FUEL, fuel);
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.SULFURIC_ACID, sulfuricAcid);
-        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FLOWING_SULFURIC_ACID, sulfuricAcid);
         FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.LIQUID_OXYGEN, oxygen);
-        BubbleEntityRenderer.bubbleModel = null;
     }
 }
