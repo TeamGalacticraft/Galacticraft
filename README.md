@@ -4,6 +4,8 @@
 [![](https://img.shields.io/discord/775251052517523467.svg?colorB=5865F2&label=discord&style=flat-square&logo=discord&logoColor=azure)][discord]
 [![](https://img.shields.io/twitch/status/galacticraftdev.svg?style=flat-square&logo=twitch&logoColor=azure)][twitch]
 
+**English** | [中文](README_cn.md)
+
 # Galacticraft 5
 The classic Minecraft space mod, rewritten from the ground up for modern versions of the game.
 
@@ -37,6 +39,6 @@ but before you start please read our [contributing guidelines][contributing].\
 Pull requests require at least one team member's approving review, and a successful build before they will be merged.
 
 [actions]: https://github.com/TeamGalacticraft/Galacticraft/actions/workflows/build.yml
-[contributing]: https://github.com/TeamGalacticraft/Galacticraft/blob/main/.github/CONTRIBUTING.md
+[contributing]: https://github.com/TeamGalacticraft/Galacticraft/blob/main/docs/CONTRIBUTING.md
 [discord]: https://discord.gg/n3QqhMYyFK
 [twitch]: https://twitch.tv/galacticraftdev
