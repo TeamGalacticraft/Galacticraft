@@ -617,6 +617,8 @@ public class GCTranslationProvider extends TranslationProvider {
     }
 
     protected void generateTagTranslations() {
+        this.tag(GCItemTags.WRENCHES, "Wrenches");
+
         this.tag(GCItemTags.THERMAL_HEAD, "Thermal Padding Helmets");
         this.tag(GCItemTags.THERMAL_CHEST, "Thermal Padding Chestpieces");
         this.tag(GCItemTags.THERMAL_PANTS, "Thermal Padding Pants");
@@ -624,12 +626,13 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.OXYGEN_MASKS, "Oxygen Masks");
         this.tag(GCItemTags.OXYGEN_GEAR, "Oxygen Gear");
         this.tag(GCItemTags.OXYGEN_TANKS, "Oxygen Tanks");
+        this.tag(GCItemTags.ACCESSORIES, "Galacticraft Accessories");
         this.tag(GCItemTags.PARACHUTES, "Parachutes");
         this.tag(GCItemTags.FREQUENCY_MODULES, "Frequency Modules");
         this.tag(GCItemTags.SHIELD_CONTROLLERS, "Shield Controllers");
-        this.tag(GCItemTags.ACCESSORIES, "Galacticraft Accessories");
 
-        this.tag(GCItemTags.WRENCHES, "Wrenches");
+        this.tag(GCItemTags.GLASS_FLUID_PIPES, "Glass Fluid Pipes");
+        this.tag(GCItemTags.STAINED_GLASS_FLUID_PIPES, "Stained Glass Fluid Pipes");
 
         this.tag(GCItemTags.BATTERIES, "Batteries");
 
