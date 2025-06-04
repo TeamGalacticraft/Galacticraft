@@ -29,7 +29,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.Optional;
 
-public record IconCelestialDisplayConfig(ResourceLocation texture, int u, int v, int width, int height, float scale, Optional<Decoration> decoration) implements CelestialDisplayConfig {
+public record IconCelestialDisplayConfig(ResourceLocation texture, int u, int v, int width, int height, float scale, Optional<Decoration> decoration, Optional<ResourceLocation> rocketOverlay) implements CelestialDisplayConfig {
     public static final Codec<IconCelestialDisplayConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("texture").forGetter(IconCelestialDisplayConfig::texture),
             Codec.INT.fieldOf("u").forGetter(IconCelestialDisplayConfig::u),
@@ -37,15 +37,20 @@ public record IconCelestialDisplayConfig(ResourceLocation texture, int u, int v,
             Codec.INT.fieldOf("width").forGetter(IconCelestialDisplayConfig::width),
             Codec.INT.fieldOf("height").forGetter(IconCelestialDisplayConfig::height),
             Codec.FLOAT.fieldOf("scale").forGetter(IconCelestialDisplayConfig::scale),
-            Decoration.CODEC.optionalFieldOf("decoration").forGetter(IconCelestialDisplayConfig::decoration)
+            Decoration.CODEC.optionalFieldOf("decoration").forGetter(IconCelestialDisplayConfig::decoration),
+            ResourceLocation.CODEC.optionalFieldOf("rocket_overlay").forGetter(IconCelestialDisplayConfig::rocketOverlay)
     ).apply(instance, IconCelestialDisplayConfig::new));
 
-    public IconCelestialDisplayConfig(ResourceLocation texture, int u, int v, int width, int height, float scale) {
-        this(texture, u, v, width, height, scale, Optional.empty());
+    public IconCelestialDisplayConfig(ResourceLocation texture, int u, int v, int width, int height, float scale, Optional<Decoration> decoration) {
+        this(texture, u, v, width, height, scale, decoration, Optional.empty());
+    }
+
+    public IconCelestialDisplayConfig(ResourceLocation texture, int u, int v, int width, int height, ResourceLocation rocketOverlay) {
+        this(texture, u, v, width, height, 1, Optional.empty(), Optional.of(rocketOverlay));
     }
 
     public IconCelestialDisplayConfig(ResourceLocation texture, int u, int v, int width, int height) {
-        this(texture, u, v, width, height, 1);
+        this(texture, u, v, width, height, 1, Optional.empty(), Optional.empty());
     }
 
     public record Decoration(ResourceLocation texture, float xScale, float yScale, float widthScale, float heightScale,

@@ -53,7 +53,7 @@ val objVersion               = project.property("obj.version").toString()
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("1.7-SNAPSHOT")
+    id("fabric-loom") version("1.10-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
     id("org.ajoberstar.grgit") version("5.2.2")
     id("dev.galacticraft.mojarn") version("0.5.0+13")
@@ -220,11 +220,12 @@ configurations {
 dependencies {
     // Minecraft, Mappings, Loader
     minecraft("com.mojang:minecraft:$minecraftVersion")
-    mappings(if (!isCi && yarnBuild.isNotEmpty()) {
-        mojarn.mappings("net.fabricmc:yarn:$minecraftVersion+build.$yarnBuild:v2")
-    } else {
-        loom.officialMojangMappings()
-    })
+//    mappings(if (!isCi && yarnBuild.isNotEmpty()) {
+//        mojarn.mappings("net.fabricmc:yarn:$minecraftVersion+build.$yarnBuild:v2")
+//    } else {
+//        loom.officialMojangMappings()
+//    })
+    mappings("net.fabricmc:yarn:1.21.1+build.3:v2")
     modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
 

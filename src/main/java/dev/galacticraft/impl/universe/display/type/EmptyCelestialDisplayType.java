@@ -24,7 +24,9 @@ package dev.galacticraft.impl.universe.display.type;
 
 import dev.galacticraft.api.universe.display.CelestialDisplayType;
 import dev.galacticraft.impl.universe.display.config.EmptyCelestialDisplayConfig;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector4f;
 
 public class EmptyCelestialDisplayType extends CelestialDisplayType<EmptyCelestialDisplayConfig> {
@@ -37,5 +39,10 @@ public class EmptyCelestialDisplayType extends CelestialDisplayType<EmptyCelesti
     @Override
     public Vector4f render(GuiGraphics graphics, int size, double mouseX, double mouseY, float delta, EmptyCelestialDisplayConfig config) {
         return NULL_VECTOR;
+    }
+
+    @Override
+    public ResourceLocation rocketOverlay(EmptyCelestialDisplayConfig config) {
+        return Constant.CelestialOverlay.EARTH;
     }
 }

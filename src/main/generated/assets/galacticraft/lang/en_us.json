@@ -762,6 +762,7 @@
   "ui.galacticraft.space_race_manager.team_color_1": "Change",
   "ui.galacticraft.space_race_manager.team_color_2": "Team",
   "ui.galacticraft.space_race_manager.team_color_3": "Color",
+  "ui.galacticraft.space_station_name": "%s's Space Station",
   "ui.galacticraft.status.already_sealed": "Already Sealed",
   "ui.galacticraft.status.area_too_large": "Area Too Large",
   "ui.galacticraft.status.blocked": "Blocked",

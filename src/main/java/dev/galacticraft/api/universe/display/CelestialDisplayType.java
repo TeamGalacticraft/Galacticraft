@@ -27,6 +27,7 @@ import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector4f;
 
 public abstract class CelestialDisplayType<C extends CelestialDisplayConfig> {
@@ -39,6 +40,13 @@ public abstract class CelestialDisplayType<C extends CelestialDisplayConfig> {
 
     @Environment(EnvType.CLIENT)
     public abstract Vector4f render(GuiGraphics graphics, int size, double mouseX, double mouseY, float delta, C config);
+
+    /**
+     * Returns the texture used in the take-off gui on the side of the screen see {@link dev.galacticraft.mod.client.gui.overlay.RocketOverlay}
+     *
+     * @return the texture used in the take-off gui on the side of the screen see {@link dev.galacticraft.mod.client.gui.overlay.RocketOverlay}
+     */
+    public abstract ResourceLocation rocketOverlay(C config);
 
     public MapCodec<CelestialDisplay<C, CelestialDisplayType<C>>> codec() {
         return this.codec;

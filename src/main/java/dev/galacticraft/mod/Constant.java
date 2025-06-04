@@ -719,6 +719,13 @@ public interface Constant {
         ResourceLocation NEPTUNE = id("textures/gui/celestialbodies/neptune.png");
     }
 
+    interface CelestialOverlay {
+        ResourceLocation EARTH = Constant.id("textures/gui/rocket/overworld_rocket_gui.png");
+        ResourceLocation MOON = Constant.id("textures/gui/rocket/moon_rocket_gui.png");
+        ResourceLocation MARS = Constant.id("textures/gui/rocket/mars_rocket_gui.png");
+        ResourceLocation VENUS = Constant.id("textures/gui/rocket/venus_rocket_gui.png");
+    }
+
     interface RecipeViewer {
         ResourceLocation RECIPE_VIEWER_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
 

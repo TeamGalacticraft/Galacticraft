@@ -25,6 +25,7 @@ package dev.galacticraft.mod.client.gui.overlay;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import net.minecraft.client.DeltaTracker;
@@ -34,6 +35,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 
@@ -41,7 +43,6 @@ import net.minecraft.world.entity.player.Player;
  * Displays the rocket's progress to the left of the screen
  */
 public class RocketOverlay {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/gui/overworld_rocket_gui.png");
     private static ResourceLocation playerHead;
 
     /**
@@ -64,10 +65,11 @@ public class RocketOverlay {
             playerHead = mc.getSkinManager().getInsecureSkin(mc.player.getGameProfile()).texture();
         }
         if (Minecraft.getInstance().player.getVehicle() instanceof RocketEntity rocketEntity) {
+            Holder<CelestialBody<?, ?>> body = rocketEntity.level().galacticraft$getCelestialBody();
             final int height = mc.getWindow().getGuiScaledHeight();
             RenderSystem.depthMask(true);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.setShaderTexture(0, TEXTURE);
+            RenderSystem.setShaderTexture(0, body != null ? body.value().display().rocketOverlay() : Constant.CelestialOverlay.EARTH);
 
             float var1 = 0F;
             float var2 = height / 2 - 170 / 2;
@@ -116,7 +118,7 @@ public class RocketOverlay {
 
             try {
                 MultiBufferSource.BufferSource source = Minecraft.getInstance().renderBuffers().bufferSource();
-                spaceshipRender.render(rocketEntity, rocketEntity.getYRot(), delta.getGameTimeDeltaTicks(), graphics.pose(), source, LightTexture.FULL_BRIGHT);
+                spaceshipRender.render(rocketEntity, 0, 0, graphics.pose(), source, LightTexture.FULL_BRIGHT);
                 source.endBatch();
             } catch (Exception e) {
                 e.printStackTrace();
