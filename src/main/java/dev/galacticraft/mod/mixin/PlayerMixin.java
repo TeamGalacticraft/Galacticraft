@@ -22,8 +22,10 @@
 
 package dev.galacticraft.mod.mixin;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.CryogenicAccessor;
 import dev.galacticraft.mod.accessor.PetInventoryOpener;
+import dev.galacticraft.mod.content.entity.orbital.AdvancedVehicle;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
@@ -48,6 +50,13 @@ public abstract class PlayerMixin extends LivingEntity implements CryogenicAcces
             ((Player) (Object) this).heal(5.0F);
 
             this.setCryogenicChamberCooldown(6000);
+        }
+    }
+
+    @Inject(method = "removeEntitiesOnShoulder", at = @At(value = "HEAD"), cancellable = true)
+    private void gc$removeEntitiesOnShoulder(CallbackInfo ci) {
+        if (this.getVehicle() instanceof AdvancedVehicle || this.getY() >= Constant.REENTRY_HEIGHT) {
+            ci.cancel();
         }
     }
 }
