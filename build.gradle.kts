@@ -220,12 +220,11 @@ configurations {
 dependencies {
     // Minecraft, Mappings, Loader
     minecraft("com.mojang:minecraft:$minecraftVersion")
-//    mappings(if (!isCi && yarnBuild.isNotEmpty()) {
-//        mojarn.mappings("net.fabricmc:yarn:$minecraftVersion+build.$yarnBuild:v2")
-//    } else {
-//        loom.officialMojangMappings()
-//    })
-    mappings("net.fabricmc:yarn:1.21.1+build.3:v2")
+    mappings(if (!isCi && yarnBuild.isNotEmpty()) {
+        mojarn.mappings("net.fabricmc:yarn:$minecraftVersion+build.$yarnBuild:v2")
+    } else {
+        loom.officialMojangMappings()
+    })
     modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
 
