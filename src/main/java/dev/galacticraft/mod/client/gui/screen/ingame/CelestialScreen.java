@@ -63,6 +63,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.*;
 
 import static dev.galacticraft.mod.Constant.CelestialScreen.*;
+import static dev.galacticraft.mod.Constant.REENTRY_HEIGHT;
 
 @SuppressWarnings({"DataFlowIssue"})
 @Environment(EnvType.CLIENT)
@@ -251,7 +252,9 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
     public void tick() {
         this.translationX = 0.0F;
         this.translationY = 0.0F;
-
+        if (this.minecraft.player != null && this.minecraft.player.getY() >= REENTRY_HEIGHT) {
+            this.minecraft.player.setDeltaMovement(new Vec3(0.0D, 0.0D, 0.0D));
+        }
         this.keyboardTranslation();
     }
 
@@ -555,7 +558,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
     }
 
     protected boolean isSatellite(CelestialBody<?, ?> selectedBody) {
-        return selectedBody != null && selectedBody.type().isSatellite();
+        return selectedBody != null && selectedBody.isSatellite();
     }
 
     public void setBlackBackground(GuiGraphics graphics) {

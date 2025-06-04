@@ -38,6 +38,15 @@ public class RocketPrefabs {
             null,
             0xFFFFFFFF
     );
+    public static final RocketData TIER_1_STORAGE_UPGRADE = new RocketData(
+            new EitherHolder<>(GCRocketParts.TIER_1_CONE),
+            new EitherHolder<>(GCRocketParts.TIER_1_BODY),
+            new EitherHolder<>(GCRocketParts.TIER_1_FIN),
+            null,
+            new EitherHolder<>(GCRocketParts.TIER_1_ENGINE),
+            new EitherHolder<>(GCRocketParts.STORAGE_UPGRADE),
+            0xFFFFFFFF
+    );
     // Same as t1 for now
     public static final RocketData TIER_2 = new RocketData(
             new EitherHolder<>(GCRocketParts.TIER_1_CONE),

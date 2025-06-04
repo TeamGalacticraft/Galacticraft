@@ -6,7 +6,7 @@
       "item": "galacticraft:compressed_aluminum"
     },
     "F": {
-      "item": "minecraft:furnace"
+      "tag": "c:player_workstations/furnaces"
     },
     "S": {
       "item": "galacticraft:compressed_steel"

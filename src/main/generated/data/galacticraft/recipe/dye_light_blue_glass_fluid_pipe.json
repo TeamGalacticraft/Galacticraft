@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "tag": "c:dyes/light_blue"
+    },
+    "P": {
+      "item": "galacticraft:glass_fluid_pipe"
+    }
+  },
+  "pattern": [
+    "PPP",
+    "PDP",
+    "PPP"
+  ],
+  "result": {
+    "count": 8,
+    "id": "galacticraft:light_blue_glass_fluid_pipe"
+  }
+}

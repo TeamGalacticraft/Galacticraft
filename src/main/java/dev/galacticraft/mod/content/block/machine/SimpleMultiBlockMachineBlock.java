@@ -62,7 +62,6 @@ public class SimpleMultiBlockMachineBlock extends MultiBlockMachineBlock {
             BlockEntity part = level.getBlockEntity(otherPart);
             assert part != null; // This will never be null because world.setBlockState will put a blockentity there.
             ((MultiBlockPart) part).setBasePos(blockPos);
-            part.setChanged();
         }
     }
 

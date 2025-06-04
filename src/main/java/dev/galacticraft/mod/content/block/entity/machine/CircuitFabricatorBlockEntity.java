@@ -39,12 +39,10 @@ import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
@@ -53,10 +51,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -79,19 +75,19 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(31, 17)
-                            .filter(ResourceFilters.itemTag(ConventionalItemTags.DIAMOND_GEMS))
+                            .filter(ResourceFilters.itemTag(FabricationRecipe.DIAMOND_SLOT_TAG))
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.DIAMOND)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(62, 47)
-                            .filter(ResourceFilters.ofResource(GCItems.SILICON))
+                            .filter(ResourceFilters.itemTag(FabricationRecipe.SILICON_SLOT_1_TAG))
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.SILICON)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(62, 65)
-                            .filter(ResourceFilters.ofResource(GCItems.SILICON))
+                            .filter(ResourceFilters.itemTag(FabricationRecipe.SILICON_SLOT_2_TAG))
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.SILICON)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(107, 72)
-                            .filter(ResourceFilters.ofResource(Items.REDSTONE))
+                            .filter(ResourceFilters.itemTag(FabricationRecipe.REDSTONE_SLOT_TAG))
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.DUST)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(134, 17),
@@ -134,14 +130,20 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
     }
 
     @Override
-    protected @NotNull RecipeInput craftingInv() {
-        return RecipeHelper.input(this.itemStorage().slot(INPUT_SLOT));
-    }
-
-    @Override
     protected void outputStacks(@NotNull RecipeHolder<FabricationRecipe> recipe) {
         ItemStack output = recipe.value().getResultItem(this.level.registryAccess());
         this.itemStorage().slot(OUTPUT_SLOT).insert(output.getItem(), output.getComponentsPatch(), output.getCount());
+    }
+
+    @Override
+    protected @NotNull RecipeInput craftingInv() {
+        return RecipeHelper.input(
+                this.itemStorage().slot(DIAMOND_SLOT),
+                this.itemStorage().slot(SILICON_SLOT_1),
+                this.itemStorage().slot(SILICON_SLOT_2),
+                this.itemStorage().slot(REDSTONE_SLOT),
+                this.itemStorage().slot(INPUT_SLOT)
+        );
     }
 
     @Override
@@ -166,18 +168,6 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
     @Override
     protected @NotNull MachineStatus workingStatus(RecipeHolder<FabricationRecipe> recipe) {
         return GCMachineStatuses.FABRICATING;
-    }
-
-    @Override
-    protected @Nullable RecipeHolder<FabricationRecipe> findValidRecipe(@NotNull Level world) {
-        if (this.itemStorage().slot(DIAMOND_SLOT).contains(Items.DIAMOND)
-                && this.itemStorage().slot(SILICON_SLOT_1).contains(GCItems.SILICON)
-                && this.itemStorage().slot(SILICON_SLOT_2).contains(GCItems.SILICON)
-                && this.itemStorage().slot(REDSTONE_SLOT).contains(Items.REDSTONE)) {
-            return super.findValidRecipe(world);
-        }
-
-        return null;
     }
 
     @Override

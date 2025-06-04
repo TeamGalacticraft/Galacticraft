@@ -1,5 +1,6 @@
 {
   "values": [
+    "#galacticraft:machines",
     "galacticraft:iron_grating",
     "galacticraft:walkway",
     "galacticraft:wire_walkway",
@@ -16,7 +17,6 @@
     "galacticraft:lunaslate_tin_ore",
     "galacticraft:mars_tin_ore",
     "galacticraft:venus_tin_ore",
-    "galacticraft:asteroid_silicon_ore",
     "galacticraft:aluminum_ore",
     "galacticraft:deepslate_aluminum_ore",
     "galacticraft:asteroid_aluminum_ore",

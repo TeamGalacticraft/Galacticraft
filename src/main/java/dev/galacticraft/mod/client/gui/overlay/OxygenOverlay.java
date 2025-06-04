@@ -24,7 +24,6 @@ package dev.galacticraft.mod.client.gui.overlay;
 
 import com.mojang.blaze3d.platform.Window;
 import dev.galacticraft.api.gas.Gases;
-import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.machinelib.api.util.StorageHelper;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
@@ -37,7 +36,6 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.Container;
@@ -54,8 +52,7 @@ public class OxygenOverlay {
                 return;
             }
 
-            Holder<CelestialBody<?, ?>> body = mc.level.galacticraft$getCelestialBody();
-            boolean nonBreathable = (body != null) && !body.value().atmosphere().breathable();
+            boolean nonBreathable = !mc.level.getDefaultBreathable();
             boolean hasMaskAndGear = mc.player.galacticraft$hasMaskAndGear();
             if (nonBreathable || hasMaskAndGear) {
                 boolean hasOxygen = false;

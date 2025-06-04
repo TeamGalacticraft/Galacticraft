@@ -1,7 +1,20 @@
 {
   "variants": {
-    "": {
-      "model": "galacticraft:block/rocket_workbench"
+    "facing=east": {
+      "model": "galacticraft:block/rocket_workbench",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "galacticraft:block/rocket_workbench",
+      "y": 0
+    },
+    "facing=south": {
+      "model": "galacticraft:block/rocket_workbench",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "galacticraft:block/rocket_workbench",
+      "y": 270
     }
   }
 }

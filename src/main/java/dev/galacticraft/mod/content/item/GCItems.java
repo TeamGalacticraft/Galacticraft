@@ -32,6 +32,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -48,108 +49,98 @@ public class GCItems {
     public static final Item GLOWSTONE_TORCH = ITEMS.register(Constant.Block.GLOWSTONE_TORCH, new StandingAndWallBlockItem(GCBlocks.GLOWSTONE_TORCH, GCBlocks.GLOWSTONE_WALL_TORCH, new Item.Properties(), Direction.DOWN));
     public static final Item UNLIT_TORCH = ITEMS.register(Constant.Block.UNLIT_TORCH, new StandingAndWallBlockItem(GCBlocks.UNLIT_TORCH, GCBlocks.UNLIT_WALL_TORCH, new Item.Properties(), Direction.DOWN));
 
+    // LANTERNS
+    public static final Item GLOWSTONE_LANTERN = ITEMS.register(Constant.Block.GLOWSTONE_LANTERN, new BlockItem(GCBlocks.GLOWSTONE_LANTERN, new Item.Properties()));
+    public static final Item UNLIT_LANTERN = ITEMS.register(Constant.Block.UNLIT_LANTERN, new BlockItem(GCBlocks.UNLIT_LANTERN, new Item.Properties()));
+
     // MATERIALS
     public static final Item SILICON = registerGeneric(Constant.Item.SILICON);
 
-    public static final Item RAW_METEORIC_IRON = registerGeneric(Constant.Item.RAW_METEORIC_IRON);
-    public static final Item METEORIC_IRON_INGOT = registerGeneric(Constant.Item.METEORIC_IRON_INGOT);
-    public static final Item METEORIC_IRON_NUGGET = registerGeneric(Constant.Item.METEORIC_IRON_NUGGET);
-    public static final Item COMPRESSED_METEORIC_IRON = registerGeneric(Constant.Item.COMPRESSED_METEORIC_IRON);
+    public static final Item LUNAR_SAPPHIRE = registerGeneric(Constant.Item.LUNAR_SAPPHIRE);
 
     public static final Item OLIVINE_SHARD = registerGeneric(Constant.Item.OLIVINE_SHARD);
-
-    public static final Item RAW_DESH = registerGeneric(Constant.Item.RAW_DESH);
-    public static final Item DESH_INGOT = registerGeneric(Constant.Item.DESH_INGOT);
-    public static final Item DESH_NUGGET = registerGeneric(Constant.Item.DESH_NUGGET);
-    public static final Item COMPRESSED_DESH = registerGeneric(Constant.Item.COMPRESSED_DESH);
-
-    public static final Item RAW_LEAD = registerGeneric(Constant.Item.RAW_LEAD);
-    public static final Item LEAD_INGOT = registerGeneric(Constant.Item.LEAD_INGOT);
-    public static final Item LEAD_NUGGET = registerGeneric(Constant.Item.LEAD_NUGGET);
-
-    public static final Item RAW_ALUMINUM = registerGeneric(Constant.Item.RAW_ALUMINUM);
-    public static final Item ALUMINUM_INGOT = registerGeneric(Constant.Item.ALUMINUM_INGOT);
-    public static final Item ALUMINUM_NUGGET = registerGeneric(Constant.Item.ALUMINUM_NUGGET);
-    public static final Item COMPRESSED_ALUMINUM = registerGeneric(Constant.Item.COMPRESSED_ALUMINUM);
 
     public static final Item RAW_TIN = registerGeneric(Constant.Item.RAW_TIN);
     public static final Item TIN_INGOT = registerGeneric(Constant.Item.TIN_INGOT);
     public static final Item TIN_NUGGET = registerGeneric(Constant.Item.TIN_NUGGET);
     public static final Item COMPRESSED_TIN = registerGeneric(Constant.Item.COMPRESSED_TIN);
 
+    public static final Item RAW_ALUMINUM = registerGeneric(Constant.Item.RAW_ALUMINUM);
+    public static final Item ALUMINUM_INGOT = registerGeneric(Constant.Item.ALUMINUM_INGOT);
+    public static final Item ALUMINUM_NUGGET = registerGeneric(Constant.Item.ALUMINUM_NUGGET);
+    public static final Item COMPRESSED_ALUMINUM = registerGeneric(Constant.Item.COMPRESSED_ALUMINUM);
+
+    public static final Item RAW_METEORIC_IRON = registerGeneric(Constant.Item.RAW_METEORIC_IRON);
+    public static final Item METEORIC_IRON_INGOT = registerGeneric(Constant.Item.METEORIC_IRON_INGOT);
+    public static final Item METEORIC_IRON_NUGGET = registerGeneric(Constant.Item.METEORIC_IRON_NUGGET);
+    public static final Item COMPRESSED_METEORIC_IRON = registerGeneric(Constant.Item.COMPRESSED_METEORIC_IRON);
+
+    public static final Item RAW_DESH = registerGeneric(Constant.Item.RAW_DESH);
+    public static final Item DESH_INGOT = registerGeneric(Constant.Item.DESH_INGOT);
+    public static final Item DESH_NUGGET = registerGeneric(Constant.Item.DESH_NUGGET);
+    public static final Item COMPRESSED_DESH = registerGeneric(Constant.Item.COMPRESSED_DESH);
+
     public static final Item RAW_TITANIUM = registerGeneric(Constant.Item.RAW_TITANIUM);
     public static final Item TITANIUM_INGOT = registerGeneric(Constant.Item.TITANIUM_INGOT);
     public static final Item TITANIUM_NUGGET = registerGeneric(Constant.Item.TITANIUM_NUGGET);
     public static final Item COMPRESSED_TITANIUM = registerGeneric(Constant.Item.COMPRESSED_TITANIUM);
 
-    public static final Item COMPRESSED_BRONZE = registerGeneric(Constant.Item.COMPRESSED_BRONZE);
+    public static final Item RAW_LEAD = registerGeneric(Constant.Item.RAW_LEAD);
+    public static final Item LEAD_INGOT = registerGeneric(Constant.Item.LEAD_INGOT);
+    public static final Item LEAD_NUGGET = registerGeneric(Constant.Item.LEAD_NUGGET);
+
     public static final Item COMPRESSED_COPPER = registerGeneric(Constant.Item.COMPRESSED_COPPER);
+    public static final Item COMPRESSED_BRONZE = registerGeneric(Constant.Item.COMPRESSED_BRONZE);
     public static final Item COMPRESSED_IRON = registerGeneric(Constant.Item.COMPRESSED_IRON);
     public static final Item COMPRESSED_STEEL = registerGeneric(Constant.Item.COMPRESSED_STEEL);
-
-    public static final Item LUNAR_SAPPHIRE = registerGeneric(Constant.Item.LUNAR_SAPPHIRE);
-    public static final Item DESH_STICK = registerGeneric(Constant.Item.DESH_STICK);
-    public static final Item CARBON_FRAGMENTS = registerGeneric(Constant.Item.CARBON_FRAGMENTS);
-    public static final Item SOLAR_DUST = registerGeneric(Constant.Item.SOLAR_DUST);
-    public static final Item BASIC_WAFER = registerGeneric(Constant.Item.BASIC_WAFER);
-    public static final Item ADVANCED_WAFER = registerGeneric(Constant.Item.ADVANCED_WAFER);
-    public static final Item BEAM_CORE = registerGeneric(Constant.Item.BEAM_CORE);
-    public static final Item CANVAS = registerGeneric(Constant.Item.CANVAS);
-
-    public static final Item FLUID_MANIPULATOR = registerGeneric(Constant.Item.FLUID_MANIPULATOR);
-    public static final Item OXYGEN_CONCENTRATOR = registerGeneric(Constant.Item.OXYGEN_CONCENTRATOR);
-    public static final Item OXYGEN_FAN = registerGeneric(Constant.Item.OXYGEN_FAN);
-    public static final Item OXYGEN_VENT = registerGeneric(Constant.Item.OXYGEN_VENT);
-    public static final Item SENSOR_LENS = registerGeneric(Constant.Item.SENSOR_LENS);
-    public static final Item BLUE_SOLAR_WAFER = registerGeneric(Constant.Item.BLUE_SOLAR_WAFER);
-    public static final Item SINGLE_SOLAR_MODULE = registerGeneric(Constant.Item.SINGLE_SOLAR_MODULE);
-    public static final Item FULL_SOLAR_PANEL = registerGeneric(Constant.Item.FULL_SOLAR_PANEL);
-    public static final Item SOLAR_ARRAY_WAFER = registerGeneric(Constant.Item.SOLAR_ARRAY_WAFER);
-    public static final Item SOLAR_ARRAY_PANEL = registerGeneric(Constant.Item.SOLAR_ARRAY_PANEL);
-    public static final Item STEEL_POLE = registerGeneric(Constant.Item.STEEL_POLE);
-    public static final Item COPPER_CANISTER = registerGeneric(Constant.Item.COPPER_CANISTER);
-    public static final Item TIN_CANISTER = registerGeneric(Constant.Item.TIN_CANISTER);
-    public static final Item THERMAL_CLOTH = registerGeneric(Constant.Item.THERMAL_CLOTH);
-    public static final Item ISOTHERMAL_FABRIC = registerGeneric(Constant.Item.ISOTHERMAL_FABRIC);
-    public static final Item ORION_DRIVE = registerGeneric(Constant.Item.ORION_DRIVE);
-    public static final Item ATMOSPHERIC_VALVE = registerGeneric(Constant.Item.ATMOSPHERIC_VALVE);
-    public static final Item AMBIENT_THERMAL_CONTROLLER = registerGeneric(Constant.Item.AMBIENT_THERMAL_CONTROLLER);
-
-    // FOOD
-    public static final Item MOON_CHEESE_WHEEL = ITEMS.register(Constant.Item.MOON_CHEESE_WHEEL, new BlockItem(GCBlocks.MOON_CHEESE_WHEEL, new Item.Properties())); // Special case
-    public static final Item MOON_CHEESE_CURD = ITEMS.register(Constant.Item.MOON_CHEESE_CURD, new Item(new Item.Properties().food(GCFoodComponent.MOON_CHEESE_CURD)));
-    public static final Item MOON_CHEESE_SLICE = ITEMS.register(Constant.Item.MOON_CHEESE_SLICE, new Item(new Item.Properties().food(GCFoodComponent.MOON_CHEESE_SLICE)));
-    public static final Item BURGER_BUN = ITEMS.register(Constant.Item.BURGER_BUN, new Item(new Item.Properties().food(GCFoodComponent.BURGER_BUN)));
-    public static final Item GROUND_BEEF = ITEMS.register(Constant.Item.GROUND_BEEF, new Item(new Item.Properties().food(GCFoodComponent.GROUND_BEEF)));
-    public static final Item BEEF_PATTY = ITEMS.register(Constant.Item.BEEF_PATTY, new Item(new Item.Properties().food(GCFoodComponent.BEEF_PATTY)));
-    public static final Item CHEESEBURGER = ITEMS.register(Constant.Item.CHEESEBURGER, new Item(new Item.Properties().food(GCFoodComponent.CHEESEBURGER)));
 
     // ROCKET PLATES
     public static final Item TIER_1_HEAVY_DUTY_PLATE = registerGeneric(Constant.Item.TIER_1_HEAVY_DUTY_PLATE);
     public static final Item TIER_2_HEAVY_DUTY_PLATE = registerGeneric(Constant.Item.TIER_2_HEAVY_DUTY_PLATE);
     public static final Item TIER_3_HEAVY_DUTY_PLATE = registerGeneric(Constant.Item.TIER_3_HEAVY_DUTY_PLATE);
 
+    public static final Item STEEL_POLE = registerGeneric(Constant.Item.STEEL_POLE);
+    public static final Item DESH_STICK = registerGeneric(Constant.Item.DESH_STICK);
+    public static final Item COPPER_CANISTER = registerGeneric(Constant.Item.COPPER_CANISTER);
+    public static final Item TIN_CANISTER = registerGeneric(Constant.Item.TIN_CANISTER);
+
+    public static final Item BASIC_WAFER = registerGeneric(Constant.Item.BASIC_WAFER);
+    public static final Item ADVANCED_WAFER = registerGeneric(Constant.Item.ADVANCED_WAFER);
+    public static final Item BLUE_SOLAR_WAFER = registerGeneric(Constant.Item.BLUE_SOLAR_WAFER);
+    public static final Item SINGLE_SOLAR_MODULE = registerGeneric(Constant.Item.SINGLE_SOLAR_MODULE);
+    public static final Item FULL_SOLAR_PANEL = registerGeneric(Constant.Item.FULL_SOLAR_PANEL);
+    public static final Item SOLAR_DUST = registerGeneric(Constant.Item.SOLAR_DUST);
+    public static final Item SOLAR_ARRAY_WAFER = registerGeneric(Constant.Item.SOLAR_ARRAY_WAFER);
+    public static final Item SOLAR_ARRAY_PANEL = registerGeneric(Constant.Item.SOLAR_ARRAY_PANEL);
+
+    public static final Item OXYGEN_CONCENTRATOR = registerGeneric(Constant.Item.OXYGEN_CONCENTRATOR);
+    public static final Item OXYGEN_FAN = registerGeneric(Constant.Item.OXYGEN_FAN);
+    public static final Item OXYGEN_VENT = registerGeneric(Constant.Item.OXYGEN_VENT);
+
+    public static final Item CANVAS = registerGeneric(Constant.Item.CANVAS);
+    public static final Item THERMAL_CLOTH = registerGeneric(Constant.Item.THERMAL_CLOTH);
+    public static final Item ISOTHERMAL_FABRIC = registerGeneric(Constant.Item.ISOTHERMAL_FABRIC);
+
+    public static final Item BEAM_CORE = registerGeneric(Constant.Item.BEAM_CORE);
+    public static final Item SENSOR_LENS = registerGeneric(Constant.Item.SENSOR_LENS);
+    public static final Item CARBON_FRAGMENTS = registerGeneric(Constant.Item.CARBON_FRAGMENTS);
+    public static final Item ATMOSPHERIC_VALVE = registerGeneric(Constant.Item.ATMOSPHERIC_VALVE);
+    public static final Item FLUID_MANIPULATOR = registerGeneric(Constant.Item.FLUID_MANIPULATOR);
+    public static final Item AMBIENT_THERMAL_CONTROLLER = registerGeneric(Constant.Item.AMBIENT_THERMAL_CONTROLLER);
+    public static final Item ORION_DRIVE = registerGeneric(Constant.Item.ORION_DRIVE);
+    
+    // FOOD
+    public static final Item MOON_CHEESE_CURD = ITEMS.register(Constant.Item.MOON_CHEESE_CURD, new Item(new Item.Properties().food(GCFoodComponent.MOON_CHEESE_CURD)));
+    public static final Item MOON_CHEESE_WHEEL = ITEMS.register(Constant.Item.MOON_CHEESE_WHEEL, new BlockItem(GCBlocks.MOON_CHEESE_WHEEL, new Item.Properties())); // Special case
+    public static final Item MOON_CHEESE_SLICE = ITEMS.register(Constant.Item.MOON_CHEESE_SLICE, new Item(new Item.Properties().food(GCFoodComponent.MOON_CHEESE_SLICE)));
+    public static final Item GROUND_BEEF = ITEMS.register(Constant.Item.GROUND_BEEF, new Item(new Item.Properties().food(GCFoodComponent.GROUND_BEEF)));
+    public static final Item BEEF_PATTY = ITEMS.register(Constant.Item.BEEF_PATTY, new Item(new Item.Properties().food(GCFoodComponent.BEEF_PATTY)));
+    public static final Item BURGER_BUN = ITEMS.register(Constant.Item.BURGER_BUN, new Item(new Item.Properties().food(GCFoodComponent.BURGER_BUN)));
+    public static final Item CHEESEBURGER = ITEMS.register(Constant.Item.CHEESEBURGER, new Item(new Item.Properties().food(GCFoodComponent.CHEESEBURGER)));
+
     // THROWABLE METEOR CHUNKS
     public static final Item THROWABLE_METEOR_CHUNK = ITEMS.register(Constant.Item.THROWABLE_METEOR_CHUNK, new ThrowableMeteorChunkItem(new Item.Properties().stacksTo(16)));
     public static final Item HOT_THROWABLE_METEOR_CHUNK = ITEMS.register(Constant.Item.HOT_THROWABLE_METEOR_CHUNK, new HotThrowableMeteorChunkItem(new Item.Properties().stacksTo(16)));
-
-    // ARMOR
-    public static final Item HEAVY_DUTY_HELMET = ITEMS.register(Constant.Item.HEAVY_DUTY_HELMET, new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1)));
-    public static final Item HEAVY_DUTY_CHESTPLATE = ITEMS.register(Constant.Item.HEAVY_DUTY_CHESTPLATE, new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1)));
-    public static final Item HEAVY_DUTY_LEGGINGS = ITEMS.register(Constant.Item.HEAVY_DUTY_LEGGINGS, new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1)));
-    public static final Item HEAVY_DUTY_BOOTS = ITEMS.register(Constant.Item.HEAVY_DUTY_BOOTS, new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1)));
-
-    public static final Item DESH_HELMET = ITEMS.register(Constant.Item.DESH_HELMET, new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1)));
-    public static final Item DESH_CHESTPLATE = ITEMS.register(Constant.Item.DESH_CHESTPLATE, new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1)));
-    public static final Item DESH_LEGGINGS = ITEMS.register(Constant.Item.DESH_LEGGINGS, new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1)));
-    public static final Item DESH_BOOTS = ITEMS.register(Constant.Item.DESH_BOOTS, new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1)));
-
-    public static final Item TITANIUM_HELMET = ITEMS.register(Constant.Item.TITANIUM_HELMET, new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1)));
-    public static final Item TITANIUM_CHESTPLATE = ITEMS.register(Constant.Item.TITANIUM_CHESTPLATE, new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1)));
-    public static final Item TITANIUM_LEGGINGS = ITEMS.register(Constant.Item.TITANIUM_LEGGINGS, new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1)));
-    public static final Item TITANIUM_BOOTS = ITEMS.register(Constant.Item.TITANIUM_BOOTS, new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1)));
-
-    public static final Item SENSOR_GLASSES = ITEMS.register(Constant.Item.SENSOR_GLASSES, new ArmorItem(GCArmorMaterials.SENSOR_GLASSES, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1)));
 
     // TOOLS + WEAPONS
     public static final Item HEAVY_DUTY_SWORD = ITEMS.register(Constant.Item.HEAVY_DUTY_SWORD, new BrittleSwordItem(GCTiers.STEEL, new Item.Properties().attributes(SwordItem.createAttributes(GCTiers.STEEL, 3, -2.4F))));
@@ -172,6 +163,55 @@ public class GCItems {
 
     public static final Item STANDARD_WRENCH = ITEMS.register(Constant.Item.STANDARD_WRENCH, new StandardWrenchItem(new Item.Properties().durability(256)));
 
+    // ARMOR
+    public static final Item HEAVY_DUTY_HELMET = ITEMS.register(Constant.Item.HEAVY_DUTY_HELMET, new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1)));
+    public static final Item HEAVY_DUTY_CHESTPLATE = ITEMS.register(Constant.Item.HEAVY_DUTY_CHESTPLATE, new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1)));
+    public static final Item HEAVY_DUTY_LEGGINGS = ITEMS.register(Constant.Item.HEAVY_DUTY_LEGGINGS, new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1)));
+    public static final Item HEAVY_DUTY_BOOTS = ITEMS.register(Constant.Item.HEAVY_DUTY_BOOTS, new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1)));
+
+    public static final Item DESH_HELMET = ITEMS.register(Constant.Item.DESH_HELMET, new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1)));
+    public static final Item DESH_CHESTPLATE = ITEMS.register(Constant.Item.DESH_CHESTPLATE, new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1)));
+    public static final Item DESH_LEGGINGS = ITEMS.register(Constant.Item.DESH_LEGGINGS, new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1)));
+    public static final Item DESH_BOOTS = ITEMS.register(Constant.Item.DESH_BOOTS, new ArmorItem(GCArmorMaterials.DESH, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1)));
+
+    public static final Item TITANIUM_HELMET = ITEMS.register(Constant.Item.TITANIUM_HELMET, new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1)));
+    public static final Item TITANIUM_CHESTPLATE = ITEMS.register(Constant.Item.TITANIUM_CHESTPLATE, new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.CHESTPLATE, new Item.Properties().stacksTo(1)));
+    public static final Item TITANIUM_LEGGINGS = ITEMS.register(Constant.Item.TITANIUM_LEGGINGS, new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.LEGGINGS, new Item.Properties().stacksTo(1)));
+    public static final Item TITANIUM_BOOTS = ITEMS.register(Constant.Item.TITANIUM_BOOTS, new ArmorItem(GCArmorMaterials.TITANIUM, ArmorItem.Type.BOOTS, new Item.Properties().stacksTo(1)));
+
+    public static final Item SENSOR_GLASSES = ITEMS.register(Constant.Item.SENSOR_GLASSES, new ArmorItem(GCArmorMaterials.SENSOR_GLASSES, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1)));
+
+    // THERMAL PADDING
+    public static final Item THERMAL_PADDING_HELMET = ITEMS.register(Constant.Item.THERMAL_PADDING_HELMET, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item THERMAL_PADDING_CHESTPIECE = ITEMS.register(Constant.Item.THERMAL_PADDING_CHESTPIECE, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item THERMAL_PADDING_LEGGINGS = ITEMS.register(Constant.Item.THERMAL_PADDING_LEGGINGS, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item THERMAL_PADDING_BOOTS = ITEMS.register(Constant.Item.THERMAL_PADDING_BOOTS, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+
+    public static final Item ISOTHERMAL_PADDING_HELMET = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_HELMET, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item ISOTHERMAL_PADDING_CHESTPIECE = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_CHESTPIECE, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item ISOTHERMAL_PADDING_LEGGINGS = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_LEGGINGS, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+    public static final Item ISOTHERMAL_PADDING_BOOTS = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_BOOTS, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
+
+    // BATTERIES
+    public static final Item BATTERY = ITEMS.register(Constant.Item.BATTERY, new BatteryItem(new Item.Properties().stacksTo(1), 15000, 500));
+    public static final Item INFINITE_BATTERY = ITEMS.register(Constant.Item.INFINITE_BATTERY, new InfiniteBatteryItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
+
+    // GALACTICRAFT INVENTORY
+    public static final Item SMALL_OXYGEN_TANK = ITEMS.register(Constant.Item.SMALL_OXYGEN_TANK, new OxygenTankItem(new Item.Properties(), 1620 * 10)); // 16200 ticks
+    public static final Item MEDIUM_OXYGEN_TANK = ITEMS.register(Constant.Item.MEDIUM_OXYGEN_TANK, new OxygenTankItem(new Item.Properties(), 1620 * 20)); //32400 ticks
+    public static final Item LARGE_OXYGEN_TANK = ITEMS.register(Constant.Item.LARGE_OXYGEN_TANK, new OxygenTankItem(new Item.Properties(), 1620 * 30)); //48600 ticks
+    public static final Item INFINITE_OXYGEN_TANK = ITEMS.register(Constant.Item.INFINITE_OXYGEN_TANK, new InfiniteOxygenTankItem(new Item.Properties().rarity(Rarity.EPIC)));
+
+    public static final Item OXYGEN_MASK = ITEMS.register(Constant.Item.OXYGEN_MASK, new AccessoryItem(new Item.Properties()));
+    public static final Item OXYGEN_GEAR = ITEMS.register(Constant.Item.OXYGEN_GEAR, new AccessoryItem(new Item.Properties()));
+
+    public static final Item FREQUENCY_MODULE = ITEMS.register(Constant.Item.FREQUENCY_MODULE, new AccessoryItem(new Item.Properties()));
+    public static final Item SHIELD_CONTROLLER = ITEMS.register(Constant.Item.SHIELD_CONTROLLER, new AccessoryItem(new Item.Properties()));
+
+    public static final GCRegistry.ColorSet<ParachuteItem> PARACHUTE = ITEMS.registerColored(Constant.Item.PARACHUTE, color -> new ParachuteItem(color, new Item.Properties().stacksTo(1)));
+
+    public static final Item EMERGENCY_KIT = ITEMS.register(Constant.Item.EMERGENCY_KIT, new EmergencyKitItem(new Item.Properties().stacksTo(1)));
+
     // SMITHING TEMPLATES
     public static final Item TITANTIUM_UPGRADE_SMITHING_TEMPLATE = ITEMS.register(Constant.Item.TITANTIUM_UPGRADE_SMITHING_TEMPLATE, new SmithingTemplateItem(
             Component.translatable(Translations.Misc.UPGRADE_TITANIUM_APPLIES_TO).withStyle(Constant.Text.BLUE_STYLE),
@@ -190,52 +230,12 @@ public class GCItems {
                     ResourceLocation.withDefaultNamespace("item/empty_slot_pickaxe")),
             List.of(ResourceLocation.withDefaultNamespace("item/empty_slot_ingot"))
     ));
-    // 		this.appliesTo = component;
-    //		this.ingredients = component2;
-    //		this.upgradeDescription = component3;
-    //		this.baseSlotDescription = component4;
-    //		this.additionsSlotDescription = component5;
-
-    // BATTERIES
-    public static final Item BATTERY = ITEMS.register(Constant.Item.BATTERY, new BatteryItem(new Item.Properties().stacksTo(1), 15000, 500));
-    public static final Item INFINITE_BATTERY = ITEMS.register(Constant.Item.INFINITE_BATTERY, new InfiniteBatteryItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
-
-    // FLUID BUCKETS
-    public static final Item CRUDE_OIL_BUCKET = ITEMS.register(Constant.Item.CRUDE_OIL_BUCKET, new BucketItem(GCFluids.CRUDE_OIL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
-    public static final Item FUEL_BUCKET = ITEMS.register(Constant.Item.FUEL_BUCKET, new BucketItem(GCFluids.FUEL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
-    public static final Item SULFURIC_ACID_BUCKET = ITEMS.register(Constant.Item.SULFURIC_ACID_BUCKET, new BucketItem(GCFluids.SULFURIC_ACID, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
-
-    // GALACTICRAFT INVENTORY
-    public static final GCRegistry.ColorSet<ParachuteItem> PARACHUTE = ITEMS.registerColored(Constant.Item.PARACHUTE, color -> new ParachuteItem(color, new Item.Properties().stacksTo(1)));
-
-    public static final Item OXYGEN_MASK = ITEMS.register(Constant.Item.OXYGEN_MASK, new OxygenMaskItem(new Item.Properties()));
-    public static final Item OXYGEN_GEAR = ITEMS.register(Constant.Item.OXYGEN_GEAR, new OxygenGearItem(new Item.Properties()));
-
-    public static final Item SMALL_OXYGEN_TANK = ITEMS.register(Constant.Item.SMALL_OXYGEN_TANK, new OxygenTankItem(new Item.Properties(), 1620 * 10)); // 16200 ticks
-    public static final Item MEDIUM_OXYGEN_TANK = ITEMS.register(Constant.Item.MEDIUM_OXYGEN_TANK, new OxygenTankItem(new Item.Properties(), 1620 * 20)); //32400 ticks
-    public static final Item LARGE_OXYGEN_TANK = ITEMS.register(Constant.Item.LARGE_OXYGEN_TANK, new OxygenTankItem(new Item.Properties(), 1620 * 30)); //48600 ticks
-    public static final Item INFINITE_OXYGEN_TANK = ITEMS.register(Constant.Item.INFINITE_OXYGEN_TANK, new InfiniteOxygenTankItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
-
-    public static final Item SHIELD_CONTROLLER = ITEMS.register(Constant.Item.SHIELD_CONTROLLER, new AccessoryItem(new Item.Properties()));
-    public static final Item FREQUENCY_MODULE = ITEMS.register(Constant.Item.FREQUENCY_MODULE, new FrequencyModuleItem(new Item.Properties()));
-
-    public static final Item EMERGENCY_KIT = registerGeneric(Constant.Item.EMERGENCY_KIT);
-
-    public static final Item THERMAL_PADDING_HELMET = ITEMS.register(Constant.Item.THERMAL_PADDING_HELMET, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.HELMET));
-    public static final Item THERMAL_PADDING_CHESTPIECE = ITEMS.register(Constant.Item.THERMAL_PADDING_CHESTPIECE, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.CHESTPLATE));
-    public static final Item THERMAL_PADDING_LEGGINGS = ITEMS.register(Constant.Item.THERMAL_PADDING_LEGGINGS, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.LEGGINGS));
-    public static final Item THERMAL_PADDING_BOOTS = ITEMS.register(Constant.Item.THERMAL_PADDING_BOOTS, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.BOOTS));
-
-    public static final Item ISOTHERMAL_PADDING_HELMET = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_HELMET, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.HELMET));
-    public static final Item ISOTHERMAL_PADDING_CHESTPIECE = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_CHESTPIECE, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.CHESTPLATE));
-    public static final Item ISOTHERMAL_PADDING_LEGGINGS = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_LEGGINGS, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.LEGGINGS));
-    public static final Item ISOTHERMAL_PADDING_BOOTS = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_BOOTS, new ThermalArmorItem(new Item.Properties(), ArmorItem.Type.BOOTS));
 
     // VEHICLES
-    public static final Item BUGGY = ITEMS.register(Constant.Item.BUGGY, new BuggyItem(new Item.Properties().stacksTo(1)));
     public static final Item ROCKET = ITEMS.register(Constant.Item.ROCKET, new RocketItem(new Item.Properties()
             .component(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1)
             .stacksTo(1)));
+    public static final Item BUGGY = ITEMS.register(Constant.Item.BUGGY, new BuggyItem(new Item.Properties().stacksTo(1)));
 
     // ROCKET PARTS
     public static final Item NOSE_CONE = registerGeneric(Constant.Item.NOSE_CONE);
@@ -268,6 +268,11 @@ public class GCItems {
     public static final Item LEGACY_MUSIC_DISC_MIMAS = ITEMS.register(Constant.Item.LEGACY_MUSIC_DISC_MIMAS, new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(GCJukeboxSongs.MIMAS)));
     public static final Item LEGACY_MUSIC_DISC_ORBIT = ITEMS.register(Constant.Item.LEGACY_MUSIC_DISC_ORBIT, new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(GCJukeboxSongs.ORBIT)));
     public static final Item LEGACY_MUSIC_DISC_SPACERACE = ITEMS.register(Constant.Item.LEGACY_MUSIC_DISC_SPACERACE, new Item(new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(GCJukeboxSongs.SPACERACE)));
+
+    // FLUID BUCKETS
+    public static final Item CRUDE_OIL_BUCKET = ITEMS.register(Constant.Item.CRUDE_OIL_BUCKET, new BucketItem(GCFluids.CRUDE_OIL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final Item FUEL_BUCKET = ITEMS.register(Constant.Item.FUEL_BUCKET, new BucketItem(GCFluids.FUEL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final Item SULFURIC_ACID_BUCKET = ITEMS.register(Constant.Item.SULFURIC_ACID_BUCKET, new BucketItem(GCFluids.SULFURIC_ACID, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
     // CANNED FOOD
     public static final CannedFoodItem EMPTY_CAN = ITEMS.register(Constant.Item.EMPTY_CAN, new CannedFoodItem(new Item.Properties().food(null)));

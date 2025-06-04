@@ -27,6 +27,7 @@ import dev.galacticraft.mod.content.CannedFoodTooltip;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.decoration.CannedFoodBlock;
 import dev.galacticraft.mod.content.block.entity.decoration.CannedFoodBlockEntity;
+import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.item.v1.FabricItemStack;
 import net.minecraft.ChatFormatting;
@@ -39,8 +40,11 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -53,9 +57,11 @@ import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -75,44 +81,42 @@ public class CannedFoodItem extends Item implements FabricItemStack {
 
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
-        Level world = context.getLevel();
+        Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
-        BlockState clickedState = world.getBlockState(pos);
+        BlockState clickedState = level.getBlockState(pos);
         ItemStack stack = context.getItemInHand();
         Direction face = context.getClickedFace();
+        Player player = context.getPlayer();
         Block clickedBlock = clickedState.getBlock();
 
-        if (clickedBlock instanceof CannedFoodBlock) {
-            BlockEntity be = world.getBlockEntity(pos);
+        if (this.canInsertCan(level, pos, clickedBlock instanceof CannedFoodBlock)) {
+            BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof CannedFoodBlockEntity canEntity) {
-                int currentCans = canEntity.getCanCount();
-                if (currentCans < MAX_CANS) {
-                    canEntity.addCanItem(stack.copyWithCount(1)); // Store canned food item
-                    stack.consume(1, context.getPlayer());
-                    return InteractionResult.SUCCESS;
-                }
+                canEntity.addCanItem(stack.copyWithCount(1)); // Store canned food item
+                this.playEvent(level, pos, player, clickedState);
+                stack.consume(1, player);
+                return InteractionResult.SUCCESS;
             }
         }
 
         BlockPos below = pos.relative(face).below();
-        BlockState belowState = world.getBlockState(below);
+        BlockState belowState = level.getBlockState(below);
 
-        if (belowState.getBlock() instanceof CannedFoodBlock) {
-            BlockEntity be = world.getBlockEntity(below);
-            if (be instanceof CannedFoodBlockEntity canEntity) {
-                if (canEntity.getCanCount() < MAX_CANS) {
-                    return InteractionResult.FAIL;
-                }
-            }
-        } else if (!belowState.isFaceSturdy(world, below, Direction.UP, SupportType.FULL)) {
+        if (this.canInsertCan(level, below, belowState.getBlock() instanceof CannedFoodBlock)) {
+            return InteractionResult.FAIL;
+        } else if (!belowState.isFaceSturdy(level, below, Direction.UP, SupportType.FULL)) {
             return InteractionResult.FAIL;
         }
         BlockPos placementPos = pos.relative(face);
-        BlockState oldState = world.getBlockState(placementPos);
-        if (oldState.isAir()) {
+        BlockState oldState = level.getBlockState(placementPos);
+        if (oldState.isAir() || oldState.is(GCBlocks.CANNED_FOOD)) {
+            if (!this.canInsertCan(level, placementPos, true)) {
+                return InteractionResult.FAIL;
+            }
             BlockState newState = GCBlocks.CANNED_FOOD.defaultBlockState().setValue(CannedFoodBlock.FACING, context.getHorizontalDirection().getOpposite());
-            world.setBlock(placementPos, newState, Block.UPDATE_ALL);
-            BlockEntity be = world.getBlockEntity(placementPos);
+            level.setBlock(placementPos, newState, Block.UPDATE_ALL);
+            this.playEvent(level, placementPos, player, newState);
+            BlockEntity be = level.getBlockEntity(placementPos);
             if (be instanceof CannedFoodBlockEntity canEntity) {
                 if (stack.has(GCDataComponents.COLOR)) {
                     canEntity.addCanItem(stack.copyWithCount(1));
@@ -121,10 +125,26 @@ public class CannedFoodItem extends Item implements FabricItemStack {
                     canEntity.addCanItem(stack.copyWithCount(1));
                 }
             }
-            stack.consume(1, context.getPlayer());
+            stack.consume(1, player);
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.FAIL;
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
+        ItemStack itemStack = player.getItemInHand(interactionHand);
+        if (isCannedFoodItem(itemStack)) {
+            FoodProperties foodProperties = getCanFoodProperties(itemStack, player);
+            if (foodProperties != null) {
+                if (player.canEat(foodProperties.canAlwaysEat())) {
+                    player.startUsingItem(interactionHand);
+                    return InteractionResultHolder.consume(itemStack);
+                }
+                return InteractionResultHolder.fail(itemStack);
+            }
+        }
+        return InteractionResultHolder.pass(player.getItemInHand(interactionHand));
     }
 
     @Override
@@ -132,6 +152,22 @@ public class CannedFoodItem extends Item implements FabricItemStack {
         if (!level.isClientSide) {
             int consumingItems = getItemsToBeConsumed(itemStack, (Player) livingEntity);
             DataComponentMap components = itemStack.getComponents();
+            List<ItemStack> stream = getContents(itemStack);
+            int toConsume = consumingItems;
+            for (ItemStack foodItemStack : stream) {
+                int itemCount = Math.min(foodItemStack.getCount(), toConsume);
+                Item foodItem = foodItemStack.getItem();
+                ItemStack foodItemCopy = foodItemStack.copy();
+                foodItemCopy.remove(DataComponents.FOOD);
+                for (int i = 0; i < itemCount; i++) {
+                    foodItem.finishUsingItem(foodItemCopy, level, livingEntity);
+                    if (livingEntity instanceof ServerPlayer serverPlayer) {
+                        serverPlayer.awardStat(Stats.ITEM_USED.get(foodItem));
+                    }
+                }
+                toConsume -= itemCount;
+                if (toConsume == 0) break;
+            }
             super.finishUsingItem(itemStack, level, livingEntity);
             if (livingEntity instanceof ServerPlayer serverPlayer) {
                 CriteriaTriggers.CONSUME_ITEM.trigger(serverPlayer, itemStack);
@@ -173,7 +209,6 @@ public class CannedFoodItem extends Item implements FabricItemStack {
         super.onCraftedBy(stack, world, player);
     }
 
-
     @Override
     public @NotNull Component getName(ItemStack stack) {
         if (getContents(stack).isEmpty()) {
@@ -181,12 +216,12 @@ public class CannedFoodItem extends Item implements FabricItemStack {
         } else {
             String result = summarizeTopN(getContents(stack).stream()
                     .map(CannedFoodItem::getItemDisplayName), 3);
-            return Component.translatable(Translations.Items.CANNED_FOOD, result);
+            return Component.translatable(Translations.Items.CANNED_FOOD_TEMPLATE, result);
         }
     }
 
     public static String summarizeTopN(Stream<String> stream, int n) {
-        List<String> list = stream.limit(n + 1).collect(Collectors.toList());
+        List<String> list = stream.distinct().limit(n + 1).collect(Collectors.toList());
         boolean hasMore = list.size() > n;
         if (hasMore) {
             list = list.subList(0, n);
@@ -269,7 +304,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
                 int iter = -1;
 
                 for (int i = 0; i < cannedFoodItems.size(); i++) {
-                    if (cannedFoodItems.get(i).getItem().toString().equals(itemStack2.getItem().toString())) {
+                    if (ItemStack.isSameItemSameComponents(cannedFoodItems.get(i).copyWithCount(k), itemStack2)) {
                         iter = i;
                     }
                 }
@@ -303,8 +338,8 @@ public class CannedFoodItem extends Item implements FabricItemStack {
 
             // Avoid crashing if the resource manager isn't ready
             int color = getAverageColor(texture);
-            int red = (color >> 16) & 0xFF;
-            int green = (color >> 8) & 0xFF;
+            int red = color >> 16 & 0xFF;
+            int green = color >> 8 & 0xFF;
             int blue = color & 0xFF;
 
             sumRed += red;
@@ -319,9 +354,17 @@ public class CannedFoodItem extends Item implements FabricItemStack {
         int avgGreen = (int) (sumGreen / count);
         int avgBlue = (int) (sumBlue / count);
 
-        return (avgRed << 16) | (avgGreen << 8) | avgBlue;
+        return avgRed << 16 | avgGreen << 8 | avgBlue;
     }
 
+    public static boolean canAddToCan(Item item) {
+        if (item != null && item.components().has(DataComponents.FOOD)) {
+            if (!(item instanceof CannedFoodItem)) {
+                return !item.getDefaultInstance().is(GCItemTags.UNCANNABLE_FOODS);
+            }
+        }
+        return false;
+    }
 
     public static List<ItemStack> addToCan(List<ItemStack> items, ItemStack can) {
         int size = getSize(can);
@@ -371,31 +414,52 @@ public class CannedFoodItem extends Item implements FabricItemStack {
     }
 
     public static FoodProperties getCanFoodProperties(ItemStack stack, Player player) {
-        int playerHunger = 0;
-        if (player != null) {
-            playerHunger = player.getFoodData().getFoodLevel();
-        }
+        int playerHunger = player != null ? player.getFoodData().getFoodLevel() : 0;
         int nutritionRequired = 20 - playerHunger;
         int canNutrition = 0;
         float canSaturation = 0f;
+        boolean alwaysEdible = true;
+        boolean fastFood = true;
+        List<ItemStack> contents = getContents(stack);
         if (nutritionRequired != 0) {
-            List<ItemStack> stream = getContents(stack);
-            for (ItemStack foodItem : stream) {
+            FoodProperties.Builder builder = new FoodProperties.Builder();
+            for (ItemStack foodItem : contents) {
                 FoodProperties foodProperties = foodItem.get(DataComponents.FOOD);
                 assert foodProperties != null;
                 int itemCount = foodItem.getCount();
                 for (int i = 0; i < itemCount; i++) {
                     canNutrition += foodProperties.nutrition();
                     canSaturation += foodProperties.saturation();
+                    alwaysEdible = alwaysEdible && foodProperties.canAlwaysEat();
+                    fastFood = fastFood && foodProperties.eatSeconds() == 0.8F;
+                    for (FoodProperties.PossibleEffect entry : foodProperties.effects()) {
+                        builder.effect(entry.effect(), entry.probability());
+                    }
                     if (canNutrition >= nutritionRequired) {
-                        return new FoodProperties.Builder().nutrition(canNutrition).saturationModifier(canSaturation).build();
+                        if (alwaysEdible) builder.alwaysEdible();
+                        if (fastFood) builder.fast();
+                        return builder.nutrition(canNutrition).saturationModifier(canSaturation).build();
                     }
                 }
             }
-            if (canNutrition == 0) {
-                return null;
-            } else {
-                return new FoodProperties.Builder().nutrition(canNutrition).saturationModifier(canSaturation).build();
+            if (canNutrition != 0 || alwaysEdible) {
+                if (alwaysEdible) builder.alwaysEdible();
+                if (fastFood) builder.fast();
+                return builder.nutrition(canNutrition).saturationModifier(canSaturation).build();
+            }
+        } else if (!contents.isEmpty()) {
+            ItemStack foodItem = contents.get(0);
+            FoodProperties foodProperties = foodItem.get(DataComponents.FOOD);
+            assert foodProperties != null;
+            if (foodProperties.canAlwaysEat()) {
+                FoodProperties.Builder builder = new FoodProperties.Builder();
+                builder.nutrition(foodProperties.nutrition());
+                builder.saturationModifier(foodProperties.saturation());
+                if (foodProperties.eatSeconds() == 0.8F) builder.fast();
+                for (FoodProperties.PossibleEffect entry : foodProperties.effects()) {
+                    builder.effect(entry.effect(), entry.probability());
+                }
+                return builder.alwaysEdible().build();
             }
         }
         return null;
@@ -403,8 +467,8 @@ public class CannedFoodItem extends Item implements FabricItemStack {
 
     public static int getTotalNutrition(ItemStack stack) {
         int canNutrition = 0;
-        List<ItemStack> stream = getContents(stack);
-        for (ItemStack foodItem : stream) {
+        List<ItemStack> contents = getContents(stack);
+        for (ItemStack foodItem : contents) {
             FoodProperties foodProperties = foodItem.get(DataComponents.FOOD);
             assert foodProperties != null;
             int itemCount = foodItem.getCount();
@@ -416,16 +480,13 @@ public class CannedFoodItem extends Item implements FabricItemStack {
     }
 
     public static int getItemsToBeConsumed(ItemStack stack, Player player) {
-        int playerHunger = 0;
-        if (player != null) {
-            playerHunger = player.getFoodData().getFoodLevel();
-        }
+        int playerHunger = player != null ? player.getFoodData().getFoodLevel() : 0;
         int nutritionRequired = 20 - playerHunger;
         int canNutrition = 0;
         int itemsToBeConsumed = 0;
+        List<ItemStack> contents = getContents(stack);
         if (nutritionRequired != 0) {
-            List<ItemStack> stream = getContents(stack);
-            for (ItemStack foodItem : stream) {
+            for (ItemStack foodItem : contents) {
                 FoodProperties foodProperties = foodItem.get(DataComponents.FOOD);
                 int itemCount = foodItem.getCount();
                 for (int i = 0; i < itemCount; i++) {
@@ -436,7 +497,29 @@ public class CannedFoodItem extends Item implements FabricItemStack {
                     }
                 }
             }
+        } else if (!contents.isEmpty()) {
+            ItemStack itemStack = contents.get(0);
+            FoodProperties foodProperties = itemStack.get(DataComponents.FOOD);
+            assert foodProperties != null;
+            if (foodProperties.canAlwaysEat()) return 1;
         }
         return itemsToBeConsumed;
+    }
+
+    private boolean canInsertCan(Level level, BlockPos blockPos, boolean canPlace) {
+        if (canPlace) {
+            BlockEntity be = level.getBlockEntity(blockPos);
+            if (be instanceof CannedFoodBlockEntity canEntity) {
+                return canEntity.getCanCount() < MAX_CANS;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private void playEvent(Level level, BlockPos blockPos, Player player, BlockState blockState) {
+        SoundType soundType = blockState.getSoundType();
+        level.playSound(player, blockPos, blockState.getSoundType().getPlaceSound(), SoundSource.BLOCKS, (soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
+        level.gameEvent(GameEvent.BLOCK_PLACE, blockPos, GameEvent.Context.of(player, blockState));
     }
 }

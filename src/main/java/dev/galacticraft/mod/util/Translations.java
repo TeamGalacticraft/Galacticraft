@@ -34,6 +34,7 @@ public interface Translations {
     interface RecipeCategory {
         String CIRCUIT_FABRICATOR = "category.recipe_viewer.circuit_fabricator";
         String COMPRESSOR = "category.recipe_viewer.compressing";
+        String ROCKET_WORKBENCH = "category.recipe_viewer.rocket";
     }
 
     interface BannerPattern {
@@ -146,7 +147,7 @@ public interface Translations {
 
     interface Items {
         String EMPTY_CAN = "item.galacticraft.empty_can";
-        String CANNED_FOOD = "item.galacticraft.canned_food";
+        String CANNED_FOOD_TEMPLATE = "item.galacticraft.canned_food.template";
     }
 
     interface CelestialBody {
@@ -174,6 +175,7 @@ public interface Translations {
         String VENUS_DESC = "planet.galacticraft.venus.description";
         String VENUS = "planet.galacticraft.venus";
         String SATELLITE = "ui.galacticraft.satellite";
+        String SATELLITES = "ui.galacticraft.satellites";
         String SATELLITE_DESC = "ui.galacticraft.satellite.description";
     }
 

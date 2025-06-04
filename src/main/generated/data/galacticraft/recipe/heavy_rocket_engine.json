@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "B": {
-      "item": "minecraft:stone_button"
+      "tag": "minecraft:stone_buttons"
     },
     "F": {
       "item": "minecraft:flint_and_steel"
@@ -12,7 +12,7 @@
       "item": "galacticraft:heavy_plating_t3"
     },
     "T": {
-      "item": "galacticraft:tin_canister"
+      "tag": "c:canisters/tin"
     },
     "V": {
       "item": "galacticraft:oxygen_vent"

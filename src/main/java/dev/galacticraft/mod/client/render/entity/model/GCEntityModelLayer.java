@@ -24,7 +24,8 @@ package dev.galacticraft.mod.client.render.entity.model;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.*;
-import dev.galacticraft.mod.client.render.block.entity.BasicSolarPanelBlockEntityRenderer;
+import dev.galacticraft.mod.client.render.block.entity.SolarPanelBlockEntityRenderer;
+import dev.galacticraft.mod.client.render.block.entity.RocketWorkbenchBlockEntityRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 
@@ -35,12 +36,16 @@ public class GCEntityModelLayer {
     public static final ModelLayerLocation OLI_GRUB = new ModelLayerLocation(Constant.id("oli_grub"), "main");
     public static final ModelLayerLocation GREY = new ModelLayerLocation(Constant.id("grey"), "main");
     public static final ModelLayerLocation ARCH_GREY = new ModelLayerLocation(Constant.id("arch_grey"), "main");
-    public static final ModelLayerLocation SOLAR_PANEL = new ModelLayerLocation(Constant.id("solar_panel"), "main");
     public static final ModelLayerLocation LANDER = new ModelLayerLocation(Constant.id("lander"), "main");
     public static final ModelLayerLocation PARACHEST = new ModelLayerLocation(Constant.id("parachest"), "main");
     public static final ModelLayerLocation MOON_VILLAGER = new ModelLayerLocation(Constant.id("moon_villager"), "main");
+
     // Bosses
     public static final ModelLayerLocation SKELETON_BOSS = new ModelLayerLocation(Constant.id("skeleton_boss"), "main");
+
+    // Block Entity Renderers
+    public static final ModelLayerLocation SOLAR_PANEL = new ModelLayerLocation(Constant.id("solar_panel"), "main");
+    public static final ModelLayerLocation ROCKET_WORKBENCH = new ModelLayerLocation(Constant.id("rocket_workbench"), "main");
 
     public static void register() {
         EntityModelLayerRegistry.registerModelLayer(GAZER, GazerEntityModel::createBodyLayer);
@@ -55,6 +60,7 @@ public class GCEntityModelLayer {
 
         EntityModelLayerRegistry.registerModelLayer(SKELETON_BOSS, EvolvedSkeletonBossModel::createBodyLayer);
 
-        EntityModelLayerRegistry.registerModelLayer(SOLAR_PANEL, BasicSolarPanelBlockEntityRenderer::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(SOLAR_PANEL, SolarPanelBlockEntityRenderer::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(ROCKET_WORKBENCH, RocketWorkbenchBlockEntityRenderer::getTexturedModelData);
     }
 }

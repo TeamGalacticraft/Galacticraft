@@ -45,10 +45,11 @@ public class RocketRecipe implements Recipe<RecipeInput> {
     private final Ingredient body;
     private final Ingredient fins;
     private final Ingredient boosters;
+    private final Ingredient storage;
 
     private final int bodyHeight;
 
-    public RocketRecipe(String group, ItemStack result, int bodyHeight, Ingredient body, Ingredient cone, Ingredient engine, Ingredient fins, Ingredient boosters) {
+    public RocketRecipe(String group, ItemStack result, int bodyHeight, Ingredient body, Ingredient cone, Ingredient engine, Ingredient fins, Ingredient boosters, Ingredient storage) {
         this.group = group;
         this.result = result;
 
@@ -58,6 +59,7 @@ public class RocketRecipe implements Recipe<RecipeInput> {
         this.engine = engine;
         this.fins = fins;
         this.boosters = boosters;
+        this.storage = storage;
     }
 
     @Override
@@ -77,6 +79,10 @@ public class RocketRecipe implements Recipe<RecipeInput> {
             ingredients.add(this.fins);
 
         ingredients.add(this.engine);
+
+        if (!this.storage.isEmpty()) {
+            ingredients.add(this.storage);
+        }
 
         return ingredients;
     }
@@ -131,6 +137,11 @@ public class RocketRecipe implements Recipe<RecipeInput> {
         return this.group;
     }
 
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
     public ItemStack result() {
         return result;
     }
@@ -155,6 +166,10 @@ public class RocketRecipe implements Recipe<RecipeInput> {
         return boosters;
     }
 
+    public Ingredient storage() {
+        return storage;
+    }
+
     public int bodyHeight() {
         return bodyHeight;
     }
@@ -170,7 +185,8 @@ public class RocketRecipe implements Recipe<RecipeInput> {
                 Ingredient.CODEC.fieldOf("cone").forGetter(r -> r.cone),
                 Ingredient.CODEC.fieldOf("engine").forGetter(r -> r.engine),
                 Ingredient.CODEC.fieldOf("fins").forGetter(r -> r.fins),
-                Ingredient.CODEC.optionalFieldOf("boosters", Ingredient.EMPTY).forGetter(recipe -> recipe.boosters)
+                Ingredient.CODEC.optionalFieldOf("boosters", Ingredient.EMPTY).forGetter(recipe -> recipe.boosters),
+                Ingredient.CODEC.optionalFieldOf("storage", Ingredient.EMPTY).forGetter(recipe -> recipe.storage)
         ).apply(instance, RocketRecipe::new));
 
         // RocketRecipe has too many fields for StreamCodec.composite oops
@@ -181,6 +197,7 @@ public class RocketRecipe implements Recipe<RecipeInput> {
                         ByteBufCodecs.STRING_UTF8.decode(buf),
                         ItemStack.STREAM_CODEC.decode(buf),
                         ByteBufCodecs.INT.decode(buf),
+                        Ingredient.CONTENTS_STREAM_CODEC.decode(buf),
                         Ingredient.CONTENTS_STREAM_CODEC.decode(buf),
                         Ingredient.CONTENTS_STREAM_CODEC.decode(buf),
                         Ingredient.CONTENTS_STREAM_CODEC.decode(buf),
@@ -199,6 +216,7 @@ public class RocketRecipe implements Recipe<RecipeInput> {
                 Ingredient.CONTENTS_STREAM_CODEC.encode(buf, r.engine);
                 Ingredient.CONTENTS_STREAM_CODEC.encode(buf, r.fins);
                 Ingredient.CONTENTS_STREAM_CODEC.encode(buf, r.boosters);
+                Ingredient.CONTENTS_STREAM_CODEC.encode(buf, r.storage);
             }
         };
 

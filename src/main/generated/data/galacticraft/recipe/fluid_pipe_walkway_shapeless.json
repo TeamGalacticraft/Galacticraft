@@ -3,10 +3,10 @@
   "category": "misc",
   "ingredients": [
     {
-      "item": "galacticraft:compressed_titanium"
+      "item": "galacticraft:walkway"
     },
     {
-      "item": "galacticraft:glass_fluid_pipe"
+      "tag": "galacticraft:glass_fluid_pipes"
     }
   ],
   "result": {
