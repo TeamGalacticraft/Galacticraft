@@ -190,7 +190,10 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
         long rate = entity.galacticraft$oxygenConsumptionRate();
         if (rate == 0) return;
         AttributeInstance attribute = entity.getAttribute(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE);
-        if ((attribute != null && attribute.getValue() >= 0.99D) || entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(entity.getEyeHeight(entity.getPose()))))) {
+        if (!this.isEyeInFluid(GCFluidTags.NON_BREATHABLE) && (
+                (attribute != null && attribute.getValue() >= 0.99D) ||
+                entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(entity.getEyeHeight(entity.getPose()))))
+        )) {
             this.lastHurtBySuffocationTimestamp = this.tickCount;
             cir.setReturnValue(this.increaseAirSupply(air));
         } else if (this.galacticraft$hasMaskAndGear()) {
