@@ -25,14 +25,10 @@ package dev.galacticraft.impl.internal.mixin.gear;
 import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.impl.internal.inventory.MappedInventory;
-import dev.galacticraft.impl.network.s2c.GearInvPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCAccessorySlots;
-import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.world.inventory.GearInventory;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -44,13 +40,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -58,13 +52,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Collection;
-
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin extends Player implements GearInventoryProvider {
-    @Shadow
-    public ServerGamePacketListenerImpl connection;
-
     @Shadow
     public abstract ServerLevel serverLevel();
 
@@ -135,34 +124,6 @@ public abstract class ServerPlayerMixin extends Player implements GearInventoryP
         }
     }
 
-    @Unique
-    private SimpleContainer galacticraft_createGearInventory() {
-        SimpleContainer inv = new GearInventory();
-        inv.addListener((inventory) -> this.syncGearToClients(inventory));
-        // this.syncGearToClients(inv);
-        return inv;
-    }
-
-    @Unique
-    private void syncGearToClients(Container inventory) {
-        ItemStack[] stacks = new ItemStack[inventory.getContainerSize()];
-        for (int i = 0; i < inventory.getContainerSize(); i++) {
-            stacks[i] = inventory.getItem(i);
-        }
-        ServerPlayer player = (ServerPlayer) (Object) this;
-        GearInvPayload payload = new GearInvPayload(player.getId(), stacks);
-
-        if (this.connection != null) {
-            Collection<ServerPlayer> tracking = PlayerLookup.tracking(player);
-            if (!tracking.contains(player)) {
-                ServerPlayNetworking.send(player, payload);
-            }
-            for (ServerPlayer remote : tracking) {
-                ServerPlayNetworking.send(remote, payload);
-            }
-        }
-    }
-
     @Override
     public SimpleContainer galacticraft$getGearInv() {
         return this.gearInv;
@@ -181,55 +142,6 @@ public abstract class ServerPlayerMixin extends Player implements GearInventoryP
     @Override
     public Container galacticraft$getAccessories() {
         return this.accessoryInv;
-    }
-
-    @Override
-    public boolean galacticraft$hasMaskAndGear() {
-        Container inv = this.galacticraft$getAccessories();
-        boolean mask = false;
-        boolean gear = false;
-        for (int i = 0; i < inv.getContainerSize(); i++) {
-            ItemStack itemStack = inv.getItem(i);
-            if (!mask && itemStack.is(GCItemTags.OXYGEN_MASKS)) {
-                mask = true;
-                if (gear) break;
-            } else if (!gear && itemStack.is(GCItemTags.OXYGEN_GEAR)) {
-                gear = true;
-                if (mask) break;
-            }
-        }
-        return mask && gear;
-    }
-
-    @Override
-    public boolean galacticraft$hasMask() {
-        for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
-            ItemStack itemStack = this.galacticraft$getAccessories().getItem(i);
-            if (itemStack.is(GCItemTags.OXYGEN_MASKS)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean galacticraft$hasGear() {
-        for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
-            ItemStack itemStack = this.galacticraft$getAccessories().getItem(i);
-            if (itemStack.is(GCItemTags.OXYGEN_GEAR)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public String galacticraft$tankSize(int i) {
-        ItemStack itemStack = this.galacticraft$getOxygenTanks().getItem(i);
-        if (itemStack.is(GCItemTags.OXYGEN_TANKS)) {
-            return itemStack.getDescriptionId().replace("item.galacticraft.", "");
-        }
-        return "";
     }
 
     @Override

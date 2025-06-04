@@ -973,7 +973,8 @@ public interface Constant {
         String GEAR_INV = "GearInv";
         String HAS_MASK = "HasMask";
         String HAS_GEAR = "HasGear";
-        String OXYGEN_TANK = "OxygenTank";
+        String OXYGEN_TANK_1 = "OxygenTank1";
+        String OXYGEN_TANK_2 = "OxygenTank2";
         String BLOCK_ENTITY_TAG = "BlockEntityTag";
         String NO_DROP = "NoDrop";
         String OWNER = "Owner";

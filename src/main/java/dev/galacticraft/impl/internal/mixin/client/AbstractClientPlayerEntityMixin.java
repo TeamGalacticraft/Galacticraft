@@ -63,13 +63,13 @@ public abstract class AbstractClientPlayerEntityMixin implements ClientResearchA
     @Unique
     private final Set<ResourceLocation> unlockedResearch = new HashSet<>();
 
-    private final @Unique SimpleContainer gearInv = galacticraft_createGearInventory();
+    private final @Unique SimpleContainer gearInv = this.galacticraft_createGearInventory();
     private final @Unique Container tankInv = MappedInventory.create(this.gearInv, 2, 3);
     private final @Unique Container thermalArmorInv = MappedInventory.create(this.gearInv, 8, 9, 10, 11);
     private final @Unique Container accessoryInv = MappedInventory.create(this.gearInv, 0, 1, 4, 5, 6, 7);
 
-    @Unique
-    private SimpleContainer galacticraft_createGearInventory() {
+    @Override
+    public SimpleContainer galacticraft_createGearInventory() {
         SimpleContainer inv = new GearInventory();
         inv.addListener((inventory) -> {
             Holder<CelestialBody<?, ?>> holder = this.clientLevel.galacticraft$getCelestialBody();
@@ -124,55 +124,6 @@ public abstract class AbstractClientPlayerEntityMixin implements ClientResearchA
     @Override
     public Container galacticraft$getAccessories() {
         return this.accessoryInv;
-    }
-
-    @Override
-    public boolean galacticraft$hasMaskAndGear() {
-        Container inv = this.galacticraft$getAccessories();
-        boolean mask = false;
-        boolean gear = false;
-        for (int i = 0; i < inv.getContainerSize(); i++) {
-            ItemStack itemStack = inv.getItem(i);
-            if (!mask && itemStack.is(GCItemTags.OXYGEN_MASKS)) {
-                mask = true;
-                if (gear) break;
-            } else if (!gear && itemStack.is(GCItemTags.OXYGEN_GEAR)) {
-                gear = true;
-                if (mask) break;
-            }
-        }
-        return mask && gear;
-    }
-
-    @Override
-    public boolean galacticraft$hasMask() {
-        for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
-            ItemStack itemStack = this.galacticraft$getAccessories().getItem(i);
-            if (itemStack.is(GCItemTags.OXYGEN_MASKS)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean galacticraft$hasGear() {
-        for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
-            ItemStack itemStack = this.galacticraft$getAccessories().getItem(i);
-            if (itemStack.is(GCItemTags.OXYGEN_GEAR)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public String galacticraft$tankSize(int i) {
-        ItemStack itemStack = this.galacticraft$getOxygenTanks().getItem(i);
-        if (itemStack.is(GCItemTags.OXYGEN_TANKS)) {
-            return itemStack.getDescriptionId().replace("item.galacticraft.", "");
-        }
-        return "";
     }
 
     @Override

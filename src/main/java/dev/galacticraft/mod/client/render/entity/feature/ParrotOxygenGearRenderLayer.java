@@ -157,7 +157,7 @@ public class ParrotOxygenGearRenderLayer<T extends LivingEntity, M extends Entit
         EntityType.byString(compoundTag.getString("id")).filter(entityType -> entityType == EntityType.PARROT).ifPresent(entityType -> {
                 matrices.pushPose();
                 matrices.translate(leftShoulder ? 0.4F : -0.4F, player.isCrouching() ? -1.3F : -1.5F, 0.0F);
-                this.render(matrices, vertexConsumers, light, entity, headYaw, headPitch, compoundTag.getBoolean(Constant.Nbt.HAS_MASK), compoundTag.getBoolean(Constant.Nbt.HAS_GEAR), compoundTag.getString(Constant.Nbt.OXYGEN_TANK));
+                this.render(matrices, vertexConsumers, light, entity, headYaw, headPitch, compoundTag.getBoolean(Constant.Nbt.HAS_MASK), compoundTag.getBoolean(Constant.Nbt.HAS_GEAR), compoundTag.getString(Constant.Nbt.OXYGEN_TANK_1));
                 matrices.popPose();
         });
     }
