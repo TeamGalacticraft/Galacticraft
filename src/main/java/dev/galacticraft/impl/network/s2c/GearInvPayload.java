@@ -56,9 +56,11 @@ public record GearInvPayload(int entityId, ItemStack[] items) implements S2CPayl
     @Override
     public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
         return () -> {
-            Container container = ((GearInventoryProvider) Objects.requireNonNull(context.client().level.getEntity(this.entityId))).galacticraft$getGearInv();
-            for (int i = 0; i < this.items.length; i++) {
-                container.setItem(i, this.items[i]);
+            if (context.client().level.getEntity(this.entityId) instanceof GearInventoryProvider provider && provider != null) {
+                Container container = provider.galacticraft$getGearInv();
+                for (int i = 0; i < this.items.length; i++) {
+                    container.setItem(i, this.items[i]);
+                }
             }
         };
     }
