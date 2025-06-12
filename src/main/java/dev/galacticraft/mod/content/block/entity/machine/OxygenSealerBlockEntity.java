@@ -38,10 +38,8 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.accessor.GCLevelAccessor;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
-import dev.galacticraft.mod.machine.SealerManager;
 import dev.galacticraft.mod.screen.OxygenSealerMenu;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
@@ -55,8 +53,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
 public class OxygenSealerBlockEntity extends MachineBlockEntity {
     public static final int CHARGE_SLOT = 0;
     public static final int OXYGEN_INPUT_SLOT = 1;
@@ -64,7 +60,6 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
 
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(20);
     public static final int SEAL_CHECK_TIME = 20;
-    public static final int SEALER_RANGE = 16;
 
     private int sealCheckTimer = SEAL_CHECK_TIME;
     private boolean isSealed = false;
@@ -98,8 +93,6 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
             )
     );
 
-    private boolean oxygenWorld = false;
-
 
     public OxygenSealerBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.OXYGEN_SEALER, pos, state, SPEC);
@@ -109,10 +102,8 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     public void setLevel(Level level) {
         super.setLevel(level);
         this.sealCheckTimer = SEAL_CHECK_TIME;
-        this.oxygenWorld = level.getDefaultBreathable();
-        if (!level.isClientSide && level != null) {
-            SealerManager manager = ((GCLevelAccessor) level).getSealerManager();
-            manager.addSealer(this, Objects.requireNonNull(Objects.requireNonNull(level.getServer()).getLevel(level.dimension())));
+        if (!level.isClientSide) {
+            level.galacticraft$getSealerManager().addSealer(this);
         }
     }
 
@@ -128,12 +119,10 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         // Check if the machine has enough energy
-        SealerManager manager = ((GCLevelAccessor) level).getSealerManager();
         if (!this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenSealerEnergyConsumptionRate())) {
             //recalculate area to avoid issues with fake oxygen
             if (this.hasEnergy) {
                 this.hasEnergy = false;
-                manager.recalculateSealingStatus(pos, level);
             }
             return MachineStatuses.NOT_ENOUGH_ENERGY;
         }
@@ -144,7 +133,6 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
             //recalculate area to avoid issues with fake oxygen
             if (this.hasOxygen) {
                 this.hasOxygen = false;
-                manager.recalculateSealingStatus(pos, level);
             }
             return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
         }
@@ -154,27 +142,23 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
             //recalculate area to avoid issues with fake oxygen
             if (!this.blocked) {
                 this.blocked = true;
-                manager.recalculateSealingStatus(pos, level);
             }
             return GCMachineStatuses.BLOCKED;
         }
         this.blocked = false;
 
-        // Update sealing status periodically
+        // Timer for display on UI
         if (this.sealCheckTimer-- <= 0) {
             this.sealCheckTimer = SEAL_CHECK_TIME;
-            manager.recalculateSealingStatus(pos, level);
         }
 
-        // Consume oxygen if sealed
-        if (this.hasOxygen) {
-            this.consumeOxygen();
-        }
         if (this.hasEnergy) {
             this.consumeEnergy();
         }
 
         if (this.isSealed) {
+            // Consume oxygen if sealed
+            this.consumeOxygen();
             return GCMachineStatuses.SEALED;
         } else {
             return GCMachineStatuses.AREA_TOO_LARGE;
@@ -190,8 +174,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     public void setRemoved() {
         super.setRemoved();
         if (this.level != null && !this.level.isClientSide) {
-            SealerManager manager = ((GCLevelAccessor) this.level).getSealerManager();
-            manager.removeSealer(this, (ServerLevel) this.level);
+            this.level.galacticraft$getSealerManager().removeSealer(this);
         }
     }
 
