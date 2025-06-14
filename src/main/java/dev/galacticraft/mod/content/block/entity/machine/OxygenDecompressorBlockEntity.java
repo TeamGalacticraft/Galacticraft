@@ -83,7 +83,7 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
                     0
             ),
             MachineFluidStorage.spec(
-                    FluidResourceSlot.builder(TransferType.OUTPUT)
+                    FluidResourceSlot.builder(TransferType.STRICT_OUTPUT)
                             .pos(31, 8)
                             .capacity(OxygenDecompressorBlockEntity.MAX_OXYGEN)
                             .filter(ResourceFilters.ofResource(Gases.OXYGEN))
