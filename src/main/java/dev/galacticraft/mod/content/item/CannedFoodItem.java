@@ -81,13 +81,22 @@ public class CannedFoodItem extends Item implements FabricItemStack {
 
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
+        ItemStack stack = context.getItemInHand();
+        Player player = context.getPlayer();
+
+        if (getItemsToBeConsumed(stack, player) > 0 && !player.isSecondaryUseActive()) {
+            // Don't place down the can if the player is able to eat from the can
+            // and if the player is not holding down the shift key
+            return InteractionResult.PASS;
+        }
+
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
         BlockState clickedState = level.getBlockState(pos);
-        ItemStack stack = context.getItemInHand();
         Direction face = context.getClickedFace();
-        Player player = context.getPlayer();
         Block clickedBlock = clickedState.getBlock();
+
+        // TODO: prevent can from being placed if the new hitbox would collide with an entity
 
         if (this.canInsertCan(level, pos, clickedBlock instanceof CannedFoodBlock)) {
             BlockEntity be = level.getBlockEntity(pos);
