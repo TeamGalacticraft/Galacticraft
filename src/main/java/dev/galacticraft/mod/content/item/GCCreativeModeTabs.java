@@ -285,6 +285,9 @@ public class GCCreativeModeTabs {
             .displayItems((parameters, output) -> {                
                 // BATTERIES
                 output.accept(BATTERY);
+                ItemStack chargedBattery = new ItemStack(BATTERY);
+                BATTERY.setStoredEnergy(chargedBattery, BATTERY.getEnergyCapacity(chargedBattery));
+                output.accept(chargedBattery);
                 output.accept(INFINITE_BATTERY);
 
                 output.accept(SMALL_OXYGEN_TANK);

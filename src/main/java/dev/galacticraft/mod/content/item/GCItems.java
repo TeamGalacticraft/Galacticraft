@@ -193,7 +193,7 @@ public class GCItems {
     public static final Item ISOTHERMAL_PADDING_BOOTS = ITEMS.register(Constant.Item.ISOTHERMAL_PADDING_BOOTS, new AccessoryItem(new Item.Properties(), SoundEvents.ARMOR_EQUIP_LEATHER));
 
     // BATTERIES
-    public static final Item BATTERY = ITEMS.register(Constant.Item.BATTERY, new BatteryItem(new Item.Properties().stacksTo(1), 15000, 500));
+    public static final BatteryItem BATTERY = ITEMS.register(Constant.Item.BATTERY, new BatteryItem(new Item.Properties().stacksTo(1), 15000, 500));
     public static final Item INFINITE_BATTERY = ITEMS.register(Constant.Item.INFINITE_BATTERY, new InfiniteBatteryItem(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC)));
 
     // GALACTICRAFT INVENTORY
