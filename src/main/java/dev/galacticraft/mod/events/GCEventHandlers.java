@@ -40,7 +40,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -169,7 +168,6 @@ public class GCEventHandlers {
         FootprintManager footprintManager = level.galacticraft$getFootprintManager();
         if (!footprintManager.footprintBlockChanges.isEmpty()) {
             for (GlobalPos targetPoint : footprintManager.footprintBlockChanges) {
-                ;
                 if (level.dimension().location().equals(targetPoint.dimension().location())) {
                     long packedPos = ChunkPos.asLong(targetPoint.pos());
                     PlayerLookup.around(level, targetPoint.pos(), 50).forEach(player -> {
@@ -180,5 +178,6 @@ public class GCEventHandlers {
 
             footprintManager.footprintBlockChanges.clear();
         }
+        level.galacticraft$getSealerManager().tick();
     }
 }
