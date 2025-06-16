@@ -43,6 +43,7 @@ import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemCustomDataPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.ItemSubPredicates;
+import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.PlayerInteractTrigger;
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.advancements.critereon.StartRidingTrigger;
@@ -444,6 +445,62 @@ public class GCAdvancementProvider extends FabricAdvancementProvider {
                 )
                 .addCriterion("create_space_station", CreateSpaceStationTrigger.TriggerInstance.created())
                 .save(consumer, Constant.MOD_ID + "/space_station");
+
+        AdvancementHolder moonDungeonAdvancement = Advancement.Builder.advancement().parent(moonAdvancement)
+                .display(
+                        GCBlocks.MOON_DUNGEON_BRICK,
+                        title(MOON_DUNGEON),
+                        description(MOON_DUNGEON),
+                        null,
+                        AdvancementType.GOAL,
+                        true,
+                        true,
+                        false
+                )
+                .addCriterion("found_moon_dungeon", FindMoonBossTrigger.TriggerInstance.found())
+                .save(consumer, Constant.MOD_ID + "/moon_dungeon");
+
+        AdvancementHolder moonDungeonKeyAdvancement = Advancement.Builder.advancement().parent(moonDungeonAdvancement)
+                .display(
+                        Items.TRIAL_KEY,
+                        title(MOON_DUNGEON_KEY),
+                        description(MOON_DUNGEON_KEY),
+                        null,
+                        AdvancementType.CHALLENGE,
+                        true,
+                        true,
+                        false
+                )
+                .addCriterion("moon_dungeon_key", InventoryChangeTrigger.TriggerInstance.hasItems(GCBlocks.BOSS_SPAWNER))
+                .save(consumer, Constant.MOD_ID + "/moon_dungeon_key");
+
+        AdvancementHolder buggySchematicAdvancement = Advancement.Builder.advancement().parent(moonDungeonKeyAdvancement)
+                .display(
+                        GCItems.MOON_BUGGY_SCHEMATIC,
+                        title(BUGGY_SCHEMATIC),
+                        description(BUGGY_SCHEMATIC),
+                        null,
+                        AdvancementType.TASK,
+                        true,
+                        true,
+                        false
+                )
+                .addCriterion("buggy_schematic", InventoryChangeTrigger.TriggerInstance.hasItems(GCItems.MOON_BUGGY_SCHEMATIC))
+                .save(consumer, Constant.MOD_ID + "/buggy_schematic");
+
+        AdvancementHolder buggyAdvancement = Advancement.Builder.advancement().parent(buggySchematicAdvancement)
+                .display(
+                        GCItems.BUGGY,
+                        title(BUGGY),
+                        description(BUGGY),
+                        null,
+                        AdvancementType.GOAL,
+                        true,
+                        true,
+                        false
+                )
+                .addCriterion("crafted_buggy", InventoryChangeTrigger.TriggerInstance.hasItems(GCItems.BUGGY))
+                .save(consumer, Constant.MOD_ID + "/buggy");
     }
 
     private static Component title(String translationKey) {
