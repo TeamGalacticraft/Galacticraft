@@ -1,0 +1,41 @@
+{
+  "parent": "minecraft:galacticraft/moon",
+  "criteria": {
+    "feed_wolf_cheese": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:wolf"
+            }
+          }
+        ],
+        "item": {
+          "items": "#c:foods/cheese"
+        }
+      },
+      "trigger": "minecraft:player_interacted_with_entity"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.galacticraft.cheese_tax.description"
+    },
+    "hidden": true,
+    "icon": {
+      "count": 1,
+      "id": "galacticraft:moon_cheese_slice"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.cheese_tax.title"
+    }
+  },
+  "requirements": [
+    [
+      "feed_wolf_cheese"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

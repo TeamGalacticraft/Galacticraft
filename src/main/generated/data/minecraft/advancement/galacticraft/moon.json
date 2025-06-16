@@ -1,0 +1,30 @@
+{
+  "parent": "minecraft:galacticraft/launch_rocket",
+  "criteria": {
+    "reached_moon": {
+      "conditions": {
+        "to": "galacticraft:moon"
+      },
+      "trigger": "minecraft:changed_dimension"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.galacticraft.moon.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "galacticraft:moon_turf"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.moon.title"
+    }
+  },
+  "requirements": [
+    [
+      "reached_moon"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:galacticraft/fuel_loader",
+  "criteria": {
+    "launch_rocket": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "galacticraft:rocket"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:started_riding"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.galacticraft.launch_rocket.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "minecraft:flint_and_steel"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.launch_rocket.title"
+    }
+  },
+  "requirements": [
+    [
+      "launch_rocket"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
