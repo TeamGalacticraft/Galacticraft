@@ -23,7 +23,6 @@
     "description": {
       "translate": "advancement.galacticraft.cheese_tax.description"
     },
-    "hidden": true,
     "icon": {
       "count": 1,
       "id": "galacticraft:moon_cheese_slice"

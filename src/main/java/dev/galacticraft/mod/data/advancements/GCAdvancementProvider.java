@@ -373,6 +373,20 @@ public class GCAdvancementProvider extends FabricAdvancementProvider {
                 .addCriterion("craft_fuel_loader", InventoryChangeTrigger.TriggerInstance.hasItems(GCBlocks.FUEL_LOADER))
                 .save(consumer, Constant.MOD_ID + "/fuel_loader");
 
+        AdvancementHolder leaveRocketAdvancement = Advancement.Builder.advancement().parent(fuelLoaderAdvancement)
+                .display(
+                        Items.CLOCK,
+                        title(LEAVE_ROCKET_DURING_COUNTDOWN),
+                        description(LEAVE_ROCKET_DURING_COUNTDOWN),
+                        null,
+                        AdvancementType.GOAL,
+                        true,
+                        true,
+                        true
+                )
+                .addCriterion("leave_rocket_during_countdown", LeaveRocketDuringCountdownTrigger.TriggerInstance.left())
+                .save(consumer, Constant.MOD_ID + "/leave_rocket");
+
         AdvancementHolder launchRocketAdvancement = Advancement.Builder.advancement().parent(fuelLoaderAdvancement)
                 .display(
                         Items.FLINT_AND_STEEL,
@@ -424,7 +438,7 @@ public class GCAdvancementProvider extends FabricAdvancementProvider {
                         AdvancementType.TASK,
                         true,
                         true,
-                        true
+                        false
                 )
                 .addCriterion("feed_wolf_cheese", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
                         ItemPredicate.Builder.item().of(GCItemTags.CHEESE_FOODS),

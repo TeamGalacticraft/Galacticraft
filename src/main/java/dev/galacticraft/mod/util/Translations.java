@@ -45,6 +45,7 @@ public interface Translations {
         String ROCKET_WORKBENCH = "advancement.galacticraft.rocket_workbench";
         String ROCKET = "advancement.galacticraft.rocket";
         String FUEL_LOADER = "advancement.galacticraft.fuel_loader";
+        String LEAVE_ROCKET_DURING_COUNTDOWN = "advancement.galacticraft.leave_rocket_during_countdown";
         String LAUNCH_ROCKET = "advancement.galacticraft.launch_rocket";
         String MOON = "advancement.galacticraft.moon";
         String EAT_MOON_CHEESE_CURD = "advancement.galacticraft.eat_moon_cheese_curd";
