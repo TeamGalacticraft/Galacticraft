@@ -1140,6 +1140,11 @@ public class GCTranslationProvider extends TranslationProvider {
         this.advancement(Advancements.MOON, "The Moon!", "Land on the Moon");
         this.advancement(Advancements.EAT_MOON_CHEESE_CURD, "It's Like No Cheese I've Ever Tasted...", "Eat moon cheese curd");
         this.advancement(Advancements.CHEESE_TAX, "Cheese Tax", "Give cheese to a pet wolf");
+        this.advancement(Advancements.SPACE_STATION, "Space Station", "Create your own space station!");
+        this.advancement(Advancements.MOON_DUNGEON, "Worse than a Wither", "Find an evolved skeleton boss in a moon dungeon");
+        this.advancement(Advancements.MOON_DUNGEON_KEY, "I Has the Key", "Kill the boss in the moon dungeon, and steal its key");
+        this.advancement(Advancements.BUGGY_SCHEMATIC, "Glitchy Schematic", "Obtain a moon buggy schematic");
+        this.advancement(Advancements.BUGGY, "Buggy", "Weld a moon buggy together");
     }
 
     protected void decorationSet(DecorationSet decoSet, String translation) {

@@ -2,18 +2,7 @@
   "parent": "minecraft:galacticraft/fuel_loader",
   "criteria": {
     "launch_rocket": {
-      "conditions": {
-        "player": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type": "galacticraft:rocket"
-            }
-          }
-        ]
-      },
-      "trigger": "minecraft:started_riding"
+      "trigger": "galacticraft:launch_rocket"
     }
   },
   "display": {

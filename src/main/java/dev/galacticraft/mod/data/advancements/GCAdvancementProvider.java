@@ -26,7 +26,7 @@ import dev.galacticraft.api.component.GCItemSubPredicates;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
-import dev.galacticraft.mod.content.advancements.critereon.ItemFullTankPredicate;
+import dev.galacticraft.mod.content.advancements.critereon.*;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.item.OxygenTankItem;
 import dev.galacticraft.mod.tag.GCItemTags;
@@ -383,8 +383,7 @@ public class GCAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         false
                 )
-                // TODO: replace with custom trigger for when the rocket is in the LaunchStage.LAUNCHED state
-                .addCriterion("launch_rocket", StartRidingTrigger.TriggerInstance.playerStartsRiding(EntityPredicate.Builder.entity().of(GCEntityTypes.ROCKET)))
+                .addCriterion("launch_rocket", LaunchRocketTrigger.TriggerInstance.launched())
                 .save(consumer, Constant.MOD_ID + "/launch_rocket");
 
         AdvancementHolder moonAdvancement = Advancement.Builder.advancement().parent(launchRocketAdvancement)
@@ -431,6 +430,20 @@ public class GCAdvancementProvider extends FabricAdvancementProvider {
                         Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(EntityType.WOLF)))
                 ))
                 .save(consumer, Constant.MOD_ID + "/cheese_tax");
+
+        AdvancementHolder spaceStationAdvancement = Advancement.Builder.advancement().parent(moonAdvancement)
+                .display(
+                        GCItems.FULL_SOLAR_PANEL,
+                        title(SPACE_STATION),
+                        description(SPACE_STATION),
+                        null,
+                        AdvancementType.CHALLENGE,
+                        true,
+                        true,
+                        false
+                )
+                .addCriterion("create_space_station", CreateSpaceStationTrigger.TriggerInstance.created())
+                .save(consumer, Constant.MOD_ID + "/space_station");
     }
 
     private static Component title(String translationKey) {
