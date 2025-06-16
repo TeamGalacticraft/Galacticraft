@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:galacticraft/moon",
+  "parent": "minecraft:galacticraft/eat_moon_cheese_curd",
   "criteria": {
     "feed_wolf_cheese": {
       "conditions": {

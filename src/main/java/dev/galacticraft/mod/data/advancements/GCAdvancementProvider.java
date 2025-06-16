@@ -415,7 +415,7 @@ public class GCAdvancementProvider extends FabricAdvancementProvider {
                 .addCriterion("eat_moon_cheese_curd", ConsumeItemTrigger.TriggerInstance.usedItem(GCItems.MOON_CHEESE_CURD))
                 .save(consumer, Constant.MOD_ID + "/eat_moon_cheese_curd");
 
-        AdvancementHolder cheeseTaxAdvancement = Advancement.Builder.advancement().parent(moonAdvancement)
+        AdvancementHolder cheeseTaxAdvancement = Advancement.Builder.advancement().parent(eatMoonCheeseCurdAdvancement)
                 .display(
                         GCItems.MOON_CHEESE_SLICE,
                         title(CHEESE_TAX),
