@@ -47,9 +47,9 @@ import static dev.galacticraft.mod.world.gen.GCDensityFunctions.getFunction;
 public class MoonSurfaceRules {
     private static final ConditionSource IS_TUNDRA = continentalnessInRange(-1.2, -0.455);
     private static final ConditionSource IS_MARE = continentalnessInRange(-0.455, -0.21);
+    private static final ConditionSource MARE_TO_LOWLANDS = continentalnessInRange(-0.21, -0.19);
     private static final ConditionSource IS_LOWLANDS = continentalnessInRange(-0.21, 0.25);
     private static final ConditionSource IS_HIGHLANDS = continentalnessInRange(0.25, 1); //todo tweak these until painting works better
-    private static final ConditionSource IS_BLENDING = continentalnessInRange(0.25, 0.35);
 
     private static final RuleSource BEDROCK = block(Blocks.BEDROCK);
     private static final RuleSource LUNASLATE = block(GCBlocks.LUNASLATE);
@@ -76,6 +76,7 @@ public class MoonSurfaceRules {
     );
 
     private static final RuleSource SECONDARY_MATERIAL = SurfaceRules.sequence(
+            SurfaceRules.ifTrue(MARE_TO_LOWLANDS, MOON_ROCK),
             SurfaceRules.ifTrue(IS_TUNDRA, DENSE_ICE),
             SurfaceRules.ifTrue(IS_MARE, MOON_BASALT),
             SurfaceRules.ifTrue(IS_LOWLANDS, MOON_DIRT),
@@ -83,6 +84,7 @@ public class MoonSurfaceRules {
     );
 
     private static final RuleSource PRIMARY_MATERIAL = SurfaceRules.sequence(
+            SurfaceRules.ifTrue(MARE_TO_LOWLANDS, MOON_ROCK),
             SurfaceRules.ifTrue(IS_TUNDRA, DENSE_ICE),
             SurfaceRules.ifTrue(IS_MARE, MOON_BASALT),
             SurfaceRules.ifTrue(IS_LOWLANDS, MOON_TURF),
@@ -99,25 +101,7 @@ public class MoonSurfaceRules {
 
     public static @NotNull RuleSource createDefaultRule() {
         return SurfaceRules.sequence(
-                SurfaceRules.ifTrue(
-                        SurfaceRules.isBiome(GCBiomes.Moon.BASALTIC_MARE, GCBiomes.Moon.LUNAR_LOWLANDS, GCBiomes.Moon.LUNAR_HIGHLANDS),
-                        SurfaceRules.sequence(
-                                SurfaceRules.ifTrue(
-                                        SurfaceRules.noiseCondition(GCNoiseData.EROSION, 0.035, 0.0465),
-                                        MOON_TURF
-                                ),
-                                SurfaceRules.ifTrue(
-                                        SurfaceRules.noiseCondition(GCNoiseData.EROSION, 0.039, 0.0545),
-                                        MOON_ROCK
-                                ),
-                                SurfaceRules.ifTrue(
-                                        SurfaceRules.noiseCondition(GCNoiseData.EROSION, 0.0545, 0.069),
-                                        MOON_BASALT
-                                )
-                        )
-                ), // Rings, I think?
                 SurfaceRules.ifTrue(SurfaceRules.verticalGradient("bedrock_floor", VerticalAnchor.bottom(), VerticalAnchor.aboveBottom(5)), BEDROCK),
-                SurfaceRules.ifTrue(IS_BLENDING, MOON_SURFACE_ROCK),
                 SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), SURFACE_GENERATION),
                 SurfaceRules.ifTrue(SurfaceRules.verticalGradient("lunaslate", VerticalAnchor.absolute(-4), VerticalAnchor.absolute(4)), LUNASLATE)
         );

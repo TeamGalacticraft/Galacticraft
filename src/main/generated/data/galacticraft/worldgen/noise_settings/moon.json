@@ -111,67 +111,6 @@
       {
         "type": "minecraft:condition",
         "if_true": {
-          "type": "minecraft:biome",
-          "biome_is": [
-            "galacticraft:basaltic_mare",
-            "galacticraft:lunar_lowlands",
-            "galacticraft:lunar_highlands"
-          ]
-        },
-        "then_run": {
-          "type": "minecraft:sequence",
-          "sequence": [
-            {
-              "type": "minecraft:condition",
-              "if_true": {
-                "type": "minecraft:noise_threshold",
-                "max_threshold": 0.0465,
-                "min_threshold": 0.035,
-                "noise": "galacticraft:moon/erosion"
-              },
-              "then_run": {
-                "type": "minecraft:block",
-                "result_state": {
-                  "Name": "galacticraft:moon_turf"
-                }
-              }
-            },
-            {
-              "type": "minecraft:condition",
-              "if_true": {
-                "type": "minecraft:noise_threshold",
-                "max_threshold": 0.0545,
-                "min_threshold": 0.039,
-                "noise": "galacticraft:moon/erosion"
-              },
-              "then_run": {
-                "type": "minecraft:block",
-                "result_state": {
-                  "Name": "galacticraft:moon_rock"
-                }
-              }
-            },
-            {
-              "type": "minecraft:condition",
-              "if_true": {
-                "type": "minecraft:noise_threshold",
-                "max_threshold": 0.069,
-                "min_threshold": 0.0545,
-                "noise": "galacticraft:moon/erosion"
-              },
-              "then_run": {
-                "type": "minecraft:block",
-                "result_state": {
-                  "Name": "galacticraft:moon_basalt"
-                }
-              }
-            }
-          ]
-        }
-      },
-      {
-        "type": "minecraft:condition",
-        "if_true": {
           "type": "minecraft:vertical_gradient",
           "false_at_and_above": {
             "above_bottom": 5
@@ -185,22 +124,6 @@
           "type": "minecraft:block",
           "result_state": {
             "Name": "minecraft:bedrock"
-          }
-        }
-      },
-      {
-        "type": "minecraft:condition",
-        "if_true": {
-          "type": "minecraft:shifted_scaled_noise_threshold",
-          "max_threshold": 0.35,
-          "min_threshold": 0.25,
-          "noise": "minecraft:continentalness",
-          "xz_scale": 0.25
-        },
-        "then_run": {
-          "type": "minecraft:block",
-          "result_state": {
-            "Name": "galacticraft:moon_surface_rock"
           }
         }
       },
@@ -224,6 +147,22 @@
               "then_run": {
                 "type": "minecraft:sequence",
                 "sequence": [
+                  {
+                    "type": "minecraft:condition",
+                    "if_true": {
+                      "type": "minecraft:shifted_scaled_noise_threshold",
+                      "max_threshold": -0.19,
+                      "min_threshold": -0.21,
+                      "noise": "minecraft:continentalness",
+                      "xz_scale": 0.25
+                    },
+                    "then_run": {
+                      "type": "minecraft:block",
+                      "result_state": {
+                        "Name": "galacticraft:moon_rock"
+                      }
+                    }
+                  },
                   {
                     "type": "minecraft:condition",
                     "if_true": {
@@ -303,6 +242,22 @@
               "then_run": {
                 "type": "minecraft:sequence",
                 "sequence": [
+                  {
+                    "type": "minecraft:condition",
+                    "if_true": {
+                      "type": "minecraft:shifted_scaled_noise_threshold",
+                      "max_threshold": -0.19,
+                      "min_threshold": -0.21,
+                      "noise": "minecraft:continentalness",
+                      "xz_scale": 0.25
+                    },
+                    "then_run": {
+                      "type": "minecraft:block",
+                      "result_state": {
+                        "Name": "galacticraft:moon_rock"
+                      }
+                    }
+                  },
                   {
                     "type": "minecraft:condition",
                     "if_true": {
