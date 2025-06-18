@@ -20,13 +20,13 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.compat;
+package dev.galacticraft.mod.compat.waila.config;
 
-import mcp.mobius.waila.api.IRegistrar;
-import mcp.mobius.waila.api.IWailaPlugin;
+import dev.galacticraft.mod.Constant;
+import net.minecraft.resources.ResourceLocation;
 
-public class GalacticraftWailaPlugin implements IWailaPlugin {
-    @Override
-    public void register(IRegistrar registrar) {
-    }
+import java.util.Map;
+
+public final class Options {
+    public static final ResourceLocation OXYGEN_LEVEL = Constant.id("oxygen_level.enabled");
 }

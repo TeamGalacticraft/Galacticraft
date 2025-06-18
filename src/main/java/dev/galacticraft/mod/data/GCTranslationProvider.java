@@ -72,6 +72,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.generateMachineStatusTranslations();
         this.generateCelestialSelectionTranslations();
         this.generateUiTranslations();
+        this.generateWailaTranslations();
         this.generateStatsTranslations();
 
         // Tabs in the creative inventory
@@ -1110,6 +1111,12 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(Ui.TOTAL_NUTRITION, "Total Nutrition: %s");
         this.add(Ui.SPACE_STATION_NAME, "%s's Space Station");
+    }
+
+    protected void generateWailaTranslations() {
+        this.add(Waila.PLUGIN_GALACTICRAFT, "Galacticraft");
+        this.add(Waila.SHOW_OXYGEN_LEVEL, "Show Oxygen Tank Levels");
+        this.add(Waila.OXYGEN_TANK_LABEL, "O₂ Tank %s");
     }
 
     protected void generateStatsTranslations() {

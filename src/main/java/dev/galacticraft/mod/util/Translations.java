@@ -37,6 +37,12 @@ public interface Translations {
         String ROCKET_WORKBENCH = "category.recipe_viewer.rocket";
     }
 
+    interface Waila {
+        String OXYGEN_TANK_LABEL = "tooltip.galacticraft.waila_oxygen_tank";
+        String PLUGIN_GALACTICRAFT = "config.waila.plugin_galacticraft";
+        String SHOW_OXYGEN_LEVEL = "config.waila.plugin_galacticraft.oxygen_level.enabled";
+    }
+
     interface BannerPattern {
         String ROCKET = "block.galacticraft.banner.rocket";
     }
