@@ -827,6 +827,8 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(Chat.CANNOT_EAT_IN_NO_ATMOSPHERE, "You can't eat that while holding your breath.");
         this.add(Chat.CANNOT_EAT_WITH_MASK, "You can't eat that while wearing a mask.");
+        this.add(Chat.CANNOT_FEED_IN_NO_ATMOSPHERE, "You can't feed a pet that is holding its breath.");
+        this.add(Chat.CANNOT_FEED_WITH_MASK, "You can't feed that to your pet while it is wearing a mask.");
 
         this.add(Subtitles.THROW_METEOR_CHUNK, "Meteor Chunk flies");
 

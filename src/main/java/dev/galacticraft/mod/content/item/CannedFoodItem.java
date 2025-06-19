@@ -263,11 +263,16 @@ public class CannedFoodItem extends Item implements FabricItemStack {
         }
     }
 
+    public static ItemStack getFirst(ItemStack stack) {
+        List<ItemStack> contents = getContents(stack);
+        return contents.isEmpty() ? ItemStack.EMPTY : contents.get(0);
+    }
+
     public static boolean isCannedFoodItem(ItemStack stack) {
         return stack.getItem() instanceof CannedFoodItem;
     }
 
-    private static void removeOne(ItemStack stack) {
+    public static void removeOne(ItemStack stack) {
         ItemContainerContents itemContainerContents = stack.get(DataComponents.CONTAINER);
         assert itemContainerContents != null;
 

@@ -313,6 +313,8 @@
   "chat.galacticraft.bed_fail": "Uh oh, what if the oxygen runs out when I am asleep? I'll need a Cryogenic Chamber to sleep in space!",
   "chat.galacticraft.cannot_eat_in_no_atmosphere": "You can't eat that while holding your breath.",
   "chat.galacticraft.cannot_eat_with_mask": "You can't eat that while wearing a mask.",
+  "chat.galacticraft.cannot_feed_in_no_atmosphere": "You can't feed a pet that is holding its breath.",
+  "chat.galacticraft.cannot_feed_with_mask": "You can't feed that to your pet while it is wearing a mask.",
   "chat.galacticraft.chamber_hot": "The chamber is way too hot right now! It needs %s seconds to cool down before I sleep again.",
   "chat.galacticraft.chamber_obstructed": "This cryogenic chamber is obstructed",
   "chat.galacticraft.chamber_occupied": "This cryogenic chamber is occupied",

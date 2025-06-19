@@ -63,6 +63,8 @@ public interface Translations {
         String ROCKET_WARNING = "chat.galacticraft.rocket.warning";
         String CANNOT_EAT_IN_NO_ATMOSPHERE = "chat.galacticraft.cannot_eat_in_no_atmosphere";
         String CANNOT_EAT_WITH_MASK = "chat.galacticraft.cannot_eat_with_mask";
+        String CANNOT_FEED_IN_NO_ATMOSPHERE = "chat.galacticraft.cannot_feed_in_no_atmosphere";
+        String CANNOT_FEED_WITH_MASK = "chat.galacticraft.cannot_feed_with_mask";
     }
 
     interface Subtitles {
