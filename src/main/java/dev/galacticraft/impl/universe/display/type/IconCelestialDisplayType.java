@@ -23,14 +23,15 @@
 package dev.galacticraft.impl.universe.display.type;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.universe.display.CelestialDisplayType;
 import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.util.Graphics;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL32C;
 
@@ -42,7 +43,7 @@ public class IconCelestialDisplayType extends CelestialDisplayType<IconCelestial
     }
 
     @Override
-    public Vector4f render(GuiGraphics graphics, Tesselator tesselator, int size, double mouseX, double mouseY, float delta, IconCelestialDisplayConfig config) {
+    public Vector4f render(GuiGraphics graphics, int size, double mouseX, double mouseY, float delta, IconCelestialDisplayConfig config) {
         float realSize = config.scale() * size;
         AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(config.texture());
         texture.bind();
@@ -58,5 +59,10 @@ public class IconCelestialDisplayType extends CelestialDisplayType<IconCelestial
         });
 
         return new Vector4f(config.scale() * -size, config.scale() * -size, (config.scale() * size) * 2, (config.scale() * size) * 2);
+    }
+
+    @Override
+    public ResourceLocation rocketOverlay(IconCelestialDisplayConfig config) {
+        return config.rocketOverlay().orElse(Constant.CelestialOverlay.EARTH);
     }
 }

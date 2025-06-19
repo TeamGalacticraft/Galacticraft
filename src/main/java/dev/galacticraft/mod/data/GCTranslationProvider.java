@@ -24,6 +24,7 @@ package dev.galacticraft.mod.data;
 
 import dev.galacticraft.api.data.TranslationProvider;
 import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
@@ -42,6 +43,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -235,6 +237,13 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.ROCKET_LAUNCH_PAD, "Rocket Launch Pad");
         this.block(GCBlocks.ROCKET_WORKBENCH, "Rocket Workbench");
         this.block(GCBlocks.PARACHEST, "Parachest");
+
+        for (Map.Entry<PipeColor, Block> entry : GCBlocks.GLASS_FLUID_PIPES.entrySet()) {
+            PipeColor color = entry.getKey();
+            if (color != PipeColor.CLEAR) {
+                this.block(entry.getValue(), TranslationProvider.normalizeName(color.getName()) + " Stained Glass Fluid Pipe");
+            }
+        }
 
         // LIGHT PANELS
         this.block(GCBlocks.SQUARE_LIGHT_PANEL, "Light Panel (Square)");
@@ -609,6 +618,8 @@ public class GCTranslationProvider extends TranslationProvider {
     }
 
     protected void generateTagTranslations() {
+        this.tag(GCItemTags.WRENCHES, "Wrenches");
+
         this.tag(GCItemTags.THERMAL_HEAD, "Thermal Padding Helmets");
         this.tag(GCItemTags.THERMAL_CHEST, "Thermal Padding Chestpieces");
         this.tag(GCItemTags.THERMAL_PANTS, "Thermal Padding Pants");
@@ -616,12 +627,13 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.OXYGEN_MASKS, "Oxygen Masks");
         this.tag(GCItemTags.OXYGEN_GEAR, "Oxygen Gear");
         this.tag(GCItemTags.OXYGEN_TANKS, "Oxygen Tanks");
+        this.tag(GCItemTags.ACCESSORIES, "Galacticraft Accessories");
         this.tag(GCItemTags.PARACHUTES, "Parachutes");
         this.tag(GCItemTags.FREQUENCY_MODULES, "Frequency Modules");
         this.tag(GCItemTags.SHIELD_CONTROLLERS, "Shield Controllers");
-        this.tag(GCItemTags.ACCESSORIES, "Galacticraft Accessories");
 
-        this.tag(GCItemTags.WRENCHES, "Wrenches");
+        this.tag(GCItemTags.GLASS_FLUID_PIPES, "Glass Fluid Pipes");
+        this.tag(GCItemTags.STAINED_GLASS_FLUID_PIPES, "Stained Glass Fluid Pipes");
 
         this.tag(GCItemTags.BATTERIES, "Batteries");
 

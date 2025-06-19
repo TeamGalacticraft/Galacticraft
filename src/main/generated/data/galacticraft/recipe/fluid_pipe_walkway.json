@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "P": {
-      "item": "galacticraft:glass_fluid_pipe"
+      "tag": "galacticraft:glass_fluid_pipes"
     },
     "T": {
       "item": "galacticraft:compressed_titanium"

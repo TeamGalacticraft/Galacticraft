@@ -14,6 +14,7 @@
       "type": "galacticraft:icon",
       "config": {
         "height": 16,
+        "rocket_overlay": "galacticraft:textures/gui/rocket/mars_rocket_gui.png",
         "scale": 1.0,
         "texture": "galacticraft:textures/gui/celestialbodies/mars.png",
         "u": 0,

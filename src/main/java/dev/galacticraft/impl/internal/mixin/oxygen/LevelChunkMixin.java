@@ -84,7 +84,7 @@ public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygen
         if (this.dirtySections != 0b0) {
             int count = 0;
             for (int i = 0; i < this.sections.length; i++) {
-                if ((this.dirtySections & (0b1 << i++)) != 0) {
+                if ((this.dirtySections & (0b1 << i)) != 0) {
                     count++;
                 }
             }
@@ -93,7 +93,7 @@ public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygen
 
             int idx = 0;
             for (byte i = 0; i < this.sections.length; i++) {
-                if ((this.dirtySections & (0b1 << i++)) != 0) {
+                if ((this.dirtySections & (0b1 << i)) != 0) {
                     BitSet data1 = ((ChunkSectionOxygenAccessor) this.sections[i]).galacticraft$getBits();
                     data[idx++] = new OxygenUpdatePayload.OxygenData(i, data1 == null ? new BitSet(0) : data1);
                 }

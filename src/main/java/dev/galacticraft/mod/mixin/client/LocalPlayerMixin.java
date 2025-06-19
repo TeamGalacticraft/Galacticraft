@@ -67,11 +67,9 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer {
     @Inject(at = @At("RETURN"), method = "aiStep")
     private void gcRocketJumpCheck(CallbackInfo ci) {
         LocalPlayer player = (LocalPlayer) (Object) this;
-        if (player.isPassenger()) {
-            if (player.getVehicle() instanceof ControllableEntity controllable) {
-                controllable.inputTick(input.leftImpulse, input.forwardImpulse, input.up, input.down, input.left, input.right, input.jumping, input.shiftKeyDown);
-                ClientPlayNetworking.send(new ControlEntityPayload(input.leftImpulse, input.forwardImpulse, input.up, input.down, input.left, input.right, input.jumping, input.shiftKeyDown));
-            }
+        if (player.isPassenger() && player.getVehicle() instanceof ControllableEntity controllable) {
+            controllable.inputTick(input.leftImpulse, input.forwardImpulse, input.up, input.down, input.left, input.right, input.jumping, input.shiftKeyDown);
+            ClientPlayNetworking.send(new ControlEntityPayload(input.leftImpulse, input.forwardImpulse, input.up, input.down, input.left, input.right, input.jumping, input.shiftKeyDown));
         }
     }
 

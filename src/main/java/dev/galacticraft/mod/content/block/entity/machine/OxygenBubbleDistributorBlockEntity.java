@@ -87,7 +87,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
                     0
             ),
             MachineFluidStorage.spec(
-                    FluidResourceSlot.builder(TransferType.INPUT)
+                    FluidResourceSlot.builder(TransferType.STRICT_INPUT)
                             .pos(31, 8)
                             .capacity(OxygenBubbleDistributorBlockEntity.MAX_OXYGEN)
                             .filter(ResourceFilters.ofResource(Gases.OXYGEN))

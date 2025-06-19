@@ -22,19 +22,23 @@
 
 package dev.galacticraft.api.universe.display;
 
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.registry.BuiltInAddonRegistries;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector4f;
 
 public record CelestialDisplay<C extends CelestialDisplayConfig, T extends CelestialDisplayType<C>>(T type, C config) {
     public static final Codec<CelestialDisplay<?, ?>> CODEC = BuiltInAddonRegistries.CELESTIAL_DISPLAY_TYPE.byNameCodec().dispatch(CelestialDisplay::type, CelestialDisplayType::codec);
 
     @Environment(EnvType.CLIENT)
-    public Vector4f render(GuiGraphics graphics, Tesselator tesselator, int scale, double mouseX, double mouseY, float delta) {
-        return this.type().render(graphics, tesselator, scale, mouseX, mouseY, delta, this.config());
+    public Vector4f render(GuiGraphics graphics, int scale, double mouseX, double mouseY, float delta) {
+        return this.type().render(graphics, scale, mouseX, mouseY, delta, this.config());
+    }
+
+    public ResourceLocation rocketOverlay() {
+        return this.type().rocketOverlay(this.config());
     }
 }
