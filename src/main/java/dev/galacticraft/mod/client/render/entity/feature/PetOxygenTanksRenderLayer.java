@@ -96,20 +96,22 @@ public class PetOxygenTanksRenderLayer<T extends TamableAnimal, M extends Entity
 
         if (tank != null) {
             matrices.pushPose();
+            tank.copyFrom(this.body);
+
             if (animal.isBaby()) {
                 matrices.scale(0.5F, 0.5F, 0.5F);
                 matrices.translate(0.0F, 1.5F, 0.0F);
-            }
 
-            tank.copyFrom(this.body);
-            if (animal instanceof Cat) {
-                if (animal.isInSittingPose()) {
-                    tank.y += 2.12132F;
-                    tank.z += 2.12132F;
-                } else {
-                    tank.z += 3.0F;
+                if (animal instanceof Cat) {
+                    if (animal.isInSittingPose()) {
+                        tank.y += 2.12132F;
+                        tank.z += 2.12132F;
+                    } else {
+                        tank.z += 3.0F;
+                    }
                 }
             }
+
             tank.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
             matrices.popPose();
         }

@@ -120,25 +120,28 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
         }
 
         if (animal.galacticraft$hasGear()) {
-            matrices.pushPose();
-            if (animal.isBaby()) {
-                matrices.scale(0.5F, 0.5F, 0.5F);
-                matrices.translate(0.0F, 1.5F, 0.0F);
-            }
+            ModelPart oxygenPipe = animal.isInSittingPose() ? this.pipeSitting : this.pipe;
+            if (oxygenPipe != null) {
+                matrices.pushPose();
+                oxygenPipe.copyFrom(this.body);
 
-            if (this.pipeSitting != null && animal.isInSittingPose()) {
-                this.pipeSitting.copyFrom(this.body);
-                if (animal instanceof Cat) {
-                    this.pipeSitting.y += 2.12132F;
-                    this.pipeSitting.z += 2.12132F;
+                if (animal.isBaby()) {
+                    matrices.scale(0.5F, 0.5F, 0.5F);
+                    matrices.translate(0.0F, 1.5F, 0.0F);
+
+                    if (animal instanceof Cat) {
+                        if (animal.isInSittingPose()) {
+                            oxygenPipe.y += 2.12132F;
+                            oxygenPipe.z += 2.12132F;
+                        } else {
+                            oxygenPipe.z += 3.0F;
+                        }
+                    }
                 }
-                this.pipeSitting.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
-            } else if (this.pipe != null) {
-                this.pipe.copyFrom(this.body);
-                this.pipe.z += animal instanceof Cat ? 3.0F : 0.0F;
-                this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+
+                oxygenPipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+                matrices.popPose();
             }
-            matrices.popPose();
         }
     }
 
