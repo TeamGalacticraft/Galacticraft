@@ -35,8 +35,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 public record GearInvPayload(int entityId, ItemStack[] items) implements S2CPayload {
     public static final ResourceLocation ID = Constant.id("gear_inv");
     public static final Type<GearInvPayload> TYPE = new Type<>(ID);

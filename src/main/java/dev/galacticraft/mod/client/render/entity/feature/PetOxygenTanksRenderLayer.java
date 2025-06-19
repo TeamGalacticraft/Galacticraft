@@ -52,7 +52,6 @@ public class PetOxygenTanksRenderLayer<T extends TamableAnimal, M extends Entity
 
     public PetOxygenTanksRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
-        ModelPart root;
         float x = -2.0F;
         float y = 0.0F;
         float z = 0.0F;

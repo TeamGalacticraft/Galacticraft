@@ -24,7 +24,6 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.mod.content.GCAccessorySlots;
-import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.dispenser.BlockSource;
