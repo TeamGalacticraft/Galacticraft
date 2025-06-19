@@ -25,8 +25,6 @@ package dev.galacticraft.mod.compat.waila.config;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.Map;
-
 public final class Options {
     public static final ResourceLocation OXYGEN_LEVEL = Constant.id("oxygen_level.enabled");
 }
