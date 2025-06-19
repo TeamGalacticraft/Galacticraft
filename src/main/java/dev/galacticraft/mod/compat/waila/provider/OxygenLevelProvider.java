@@ -55,7 +55,7 @@ public enum OxygenLevelProvider implements IEntityComponentProvider {
 
     @Override
     public void appendBody(ITooltip tooltip, IEntityAccessor accessor, IPluginConfig config) {
-        // if (!config.getBoolean(Options.OXYGEN_LEVEL)) return;
+        if (!config.getBoolean(Options.OXYGEN_LEVEL)) return;
 
         LivingEntity entity = accessor.getEntity();
         Container tankInv = entity.galacticraft$getOxygenTanks();

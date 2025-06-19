@@ -41,7 +41,7 @@ public abstract class ParrotOnShoulderLayerMixin<T extends Player> {
     @Final
     public ParrotModel model;
 
-    @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/player/Player;FFFFZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;byString(Ljava/lang/String;)Ljava/util/Optional;"), cancellable = true)
+    @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/player/Player;FFFFZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;byString(Ljava/lang/String;)Ljava/util/Optional;"))
     private void galacticraft$hideFeather(CallbackInfo ci, @Local CompoundTag compoundTag) {
         this.model.root().getChild("head").getChild("feather").visible = !compoundTag.getBoolean(Constant.Nbt.HAS_MASK);
     }
