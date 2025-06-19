@@ -32,8 +32,6 @@ import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
-import java.util.List;
-
 public class EmergencyKitRecipe extends CustomRecipe {
     public EmergencyKitRecipe(CraftingBookCategory craftingBookCategory) {
         super(craftingBookCategory);

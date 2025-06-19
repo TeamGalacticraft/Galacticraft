@@ -67,12 +67,6 @@ public class ScreenEffectRendererMixin {
         float f = LightTexture.getBrightness(minecraft.player.level().dimensionType(), minecraft.player.level().getMaxLocalRawBrightness(blockPos));
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(f, f, f, 0.1f);
-        float f2 = 4.0f;
-        float f3 = -1.0f;
-        float f4 = 1.0f;
-        float f5 = -1.0f;
-        float f6 = 1.0f;
-        float f7 = -0.5f;
         float f8 = -minecraft.player.getYRot() / 64.0f;
         float f9 = minecraft.player.getXRot() / 64.0f;
         Matrix4f matrix4f = poseStack.last().pose();

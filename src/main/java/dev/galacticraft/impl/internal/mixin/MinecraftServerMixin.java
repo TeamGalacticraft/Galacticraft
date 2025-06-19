@@ -33,7 +33,6 @@ import dev.galacticraft.dynamicdimensions.impl.registry.RegistryUtil;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.*;
 import net.minecraft.resources.RegistryOps;
@@ -49,7 +48,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.nio.file.Files;
@@ -112,7 +110,7 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
         Path worldFile = this.storageSource.getLevelPath(LevelResource.ROOT);
         if (Files.exists(worldFile.resolve("satellites.dat"))) {
             try {
-                ListTag nbt = NbtIo.readCompressed(worldFile.resolve("satellites.dat"), NbtAccounter.unlimitedHeap()).getList("satellites", NbtType.COMPOUND);
+                ListTag nbt = NbtIo.readCompressed(worldFile.resolve("satellites.dat"), NbtAccounter.unlimitedHeap()).getList("satellites", Tag.TAG_COMPOUND);
                 RegistryOps<Tag> ops = RegistryOps.create(NbtOps.INSTANCE, this.registryAccess());
                 Constant.LOGGER.info("Loading {} satellites", nbt.size());
                 for (Tag compound : nbt) {
