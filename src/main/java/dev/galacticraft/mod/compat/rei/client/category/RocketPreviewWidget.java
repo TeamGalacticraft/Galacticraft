@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.compat.rei.client.category;
 
-import com.mojang.blaze3d.platform.Lighting;
 import dev.galacticraft.mod.client.gui.screen.ingame.RocketWorkbenchScreen;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import me.shedaniel.math.Point;

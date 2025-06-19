@@ -143,8 +143,8 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, GCItems.CARBON_FRAGMENTS, 3)
-                .requires(ConventionalItemTags.COAL)
-                .unlockedBy("has_coal", has(ConventionalItemTags.COAL))
+                .requires(ItemTags.COALS)
+                .unlockedBy("has_coal", has(ItemTags.COALS))
                 .save(output);
 
         SimpleCookingRecipeBuilder.generic(Ingredient.of(ItemTags.PLANKS), RecipeCategory.MISC, GCItems.CARBON_FRAGMENTS, 0.1f, 200, RecipeSerializer.SMELTING_RECIPE, SmeltingRecipe::new)
@@ -231,7 +231,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .define('P', GCItems.COMPRESSED_COPPER)
                 .define('A', GCItems.COMPRESSED_ALUMINUM)
                 .define('R', ConventionalItemTags.REDSTONE_DUSTS)
-                .define('C', ConventionalItemTags.COAL)
+                .define('C', ItemTags.COALS)
                 .pattern(" P ")
                 .pattern("ARA")
                 .pattern("ACA")
