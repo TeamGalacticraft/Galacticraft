@@ -74,6 +74,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.generateMachineStatusTranslations();
         this.generateCelestialSelectionTranslations();
         this.generateUiTranslations();
+        this.generateWailaTranslations();
         this.generateStatsTranslations();
 
         // Tabs in the creative inventory
@@ -838,6 +839,8 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(Chat.CANNOT_EAT_IN_NO_ATMOSPHERE, "You can't eat that while holding your breath.");
         this.add(Chat.CANNOT_EAT_WITH_MASK, "You can't eat that while wearing a mask.");
+        this.add(Chat.CANNOT_FEED_IN_NO_ATMOSPHERE, "You can't feed a pet that is holding its breath.");
+        this.add(Chat.CANNOT_FEED_WITH_MASK, "You can't feed that to your pet while it is wearing a mask.");
 
         this.add(Subtitles.THROW_METEOR_CHUNK, "Meteor Chunk flies");
 
@@ -928,14 +931,24 @@ public class GCTranslationProvider extends TranslationProvider {
     }
 
     protected void generateConfigTranslations() {
+        this.add(Config.TITLE, "Galacticraft Config");
+        this.add(Config.RESET, "Reset");
+
         this.add(Config.CLIENT, "Client");
         this.add(Config.SKYBOX, "Skybox");
+        this.add(Config.PLAYER, "Player");
+
         this.add(Config.COMMANDS, "Commands");
         this.add(Config.ENABLE_GC_HOUSTON, "Enable /gchouston");
+
         this.add(Config.DEBUG, "Debug");
         this.add(Config.HIDE_ALPHA_WARNING, "Hide Alpha Warning");
         this.add(Config.DEBUG_LOGGING, "Debug Logging");
+
         this.add(Config.ENERGY, "Energy");
+        this.add(Config.WIRES, "Wires");
+        this.add(Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT, "Heavy Wire Transfer Limit/t");
+        this.add(Config.WIRE_ENERGY_TRANSFER_LIMIT, "Wire Transfer Limit/t");
         this.add(Config.MACHINES, "Machines");
         this.add(Config.CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE, "Circuit Fabricator Energy Consumption Rate/t");
         this.add(Config.ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE, "Electric Compressor Energy Consumption Rate/t");
@@ -949,14 +962,19 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE, "Oxygen Decompressor Energy Consumption Rate/t");
         this.add(Config.REFINERY_ENERGY_CONSUMPTION_RATE, "Refinery Energy Consumption Rate/t");
         this.add(Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE, "Solar Panel Energy Production Rate/t");
-        this.add(Config.WIRES, "Wires");
-        this.add(Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT, "Heavy Wire Transfer Limit/t");
-        this.add(Config.WIRE_ENERGY_TRANSFER_LIMIT, "Wire Transfer Limit/t");
-        this.add(Config.PLAYER_LIFE_SUPPORT, "Life Support");
-        this.add(Config.PLAYER, "Player");
-        this.add(Config.PLAYER_OXYGEN_CONSUMPTION_RATE, "Oxygen Consumption Rate/t");
-        this.add(Config.RESET, "Reset");
-        this.add(Config.TITLE, "Galacticraft Config");
+
+        this.add(Config.LIFE_SUPPORT, "Life Support");
+        this.add(Config.SMALL_OXYGEN_TANK_CAPACITY, "Small Oxygen Tank Capacity");
+        this.add(Config.MEDIUM_OXYGEN_TANK_CAPACITY, "Medium Oxygen Tank Capacity");
+        this.add(Config.LARGE_OXYGEN_TANK_CAPACITY, "Large Oxygen Tank Capacity");
+        this.add(Config.PLAYER_OXYGEN_CONSUMPTION_RATE, "Player Oxygen Consumption Rate/t");
+        this.add(Config.WOLF_OXYGEN_CONSUMPTION_RATE, "Wolf Oxygen Consumption Rate/t");
+        this.add(Config.CAT_OXYGEN_CONSUMPTION_RATE, "Cat Oxygen Consumption Rate/t");
+        this.add(Config.PARROT_OXYGEN_CONSUMPTION_RATE, "Parrot Oxygen Consumption Rate/t");
+
+        this.add(Config.DIFFICULTY, "Difficulty");
+        this.add(Config.BOSS_HEALTH_MODIFIER, "Boss Health Modifier");
+        this.add(Config.BOSS_HEALTH_MODIFIER_DESC, "");
 
         this.add(Keybindings.ROCKET_INVENTORY, "Open Rocket Inventory");
         this.add(Keybindings.OPEN_CELESTIAL_SCREEN, "Open Celestial Map");
@@ -1107,6 +1125,12 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(Ui.TOTAL_NUTRITION, "Total Nutrition: %s");
         this.add(Ui.SPACE_STATION_NAME, "%s's Space Station");
+    }
+
+    protected void generateWailaTranslations() {
+        this.add(Waila.PLUGIN_GALACTICRAFT, "Galacticraft");
+        this.add(Waila.SHOW_OXYGEN_LEVEL, "Show Oxygen Tank Levels");
+        this.add(Waila.OXYGEN_TANK_LABEL, "O₂ Tank %s");
     }
 
     protected void generateStatsTranslations() {
