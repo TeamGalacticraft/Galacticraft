@@ -66,8 +66,8 @@ public class OxygenTankItem extends AccessoryItem {
         }
     }
 
-    public OxygenTankItem(Properties settings, int capacity) {
-        super(settings.durability(capacity));
+    public OxygenTankItem(Properties settings, long capacity) {
+        super(settings);
         this.capacity = capacity;
     }
 
