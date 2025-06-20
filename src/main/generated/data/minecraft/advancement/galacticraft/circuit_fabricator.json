@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:galacticraft/coal_generator",
+  "criteria": {
+    "craft_circuit_fabricator": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:circuit_fabricator"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.galacticraft.circuit_fabricator.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "galacticraft:circuit_fabricator"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.circuit_fabricator.title"
+    }
+  },
+  "requirements": [
+    [
+      "craft_circuit_fabricator"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

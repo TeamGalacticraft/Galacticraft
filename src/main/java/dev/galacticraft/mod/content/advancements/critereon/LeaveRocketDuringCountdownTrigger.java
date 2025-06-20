@@ -24,8 +24,9 @@ package dev.galacticraft.mod.content.advancements.critereon;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
-import dev.galacticraft.mod.content.entity.boss.SkeletonBoss;
+import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
@@ -34,14 +35,14 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Optional;
 
-public class FindMoonBossTrigger extends SimpleCriterionTrigger<FindMoonBossTrigger.TriggerInstance> {
+public class LeaveRocketDuringCountdownTrigger extends SimpleCriterionTrigger<LeaveRocketDuringCountdownTrigger.TriggerInstance> {
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;
     }
 
     public void trigger(ServerPlayer player) {
-        this.trigger(player, conditions -> !player.level().getEntitiesOfClass(SkeletonBoss.class, player.getBoundingBox().inflate(20)).isEmpty());
+        this.trigger(player, conditions -> true);
     }
 
     public record TriggerInstance(Optional<ContextAwarePredicate> player) implements SimpleCriterionTrigger.SimpleInstance {
@@ -53,8 +54,8 @@ public class FindMoonBossTrigger extends SimpleCriterionTrigger<FindMoonBossTrig
                         .apply(instance, TriggerInstance::new)
         );
 
-        public static Criterion<TriggerInstance> found() {
-            return GCTriggers.FIND_MOON_BOSS.createCriterion(new TriggerInstance(Optional.empty()));
+        public static Criterion<TriggerInstance> left() {
+            return GCTriggers.LEAVE_ROCKET_DURING_COUNTDOWN.createCriterion(new TriggerInstance(Optional.empty()));
         }
     }
 }
