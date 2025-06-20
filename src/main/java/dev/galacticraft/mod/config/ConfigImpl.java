@@ -581,7 +581,7 @@ public class ConfigImpl implements Config {
                     .setSaveConsumer(config::setSmallOxygenTankCapacity)
                     .setDefaultValue(FluidConstants.BUCKET)
                     .setMin(0)
-                    .setMax(Integer.MAX_VALUE)
+                    .setMax(Long.MAX_VALUE)
                     .build()
             );
 
@@ -592,7 +592,7 @@ public class ConfigImpl implements Config {
                     .setSaveConsumer(config::setMediumOxygenTankCapacity)
                     .setDefaultValue(2 * FluidConstants.BUCKET)
                     .setMin(0)
-                    .setMax(Integer.MAX_VALUE)
+                    .setMax(Long.MAX_VALUE)
                     .build()
             );
 
@@ -603,7 +603,7 @@ public class ConfigImpl implements Config {
                     .setSaveConsumer(config::setLargeOxygenTankCapacity)
                     .setDefaultValue(3 * FluidConstants.BUCKET)
                     .setMin(0)
-                    .setMax(Integer.MAX_VALUE)
+                    .setMax(Long.MAX_VALUE)
                     .build()
             );
 
