@@ -40,7 +40,7 @@ import java.util.List;
 
 public class InfiniteOxygenTankItem extends OxygenTankItem implements Storage<FluidVariant>, StorageView<FluidVariant> {
     public InfiniteOxygenTankItem(Properties settings) {
-        super(settings, Integer.MAX_VALUE);
+        super(settings, Long.MAX_VALUE);
     }
 
     @Override
