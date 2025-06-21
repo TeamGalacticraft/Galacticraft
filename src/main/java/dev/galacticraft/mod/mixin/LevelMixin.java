@@ -31,10 +31,10 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(Level.class)
 public class LevelMixin implements GCLevelAccessor {
     @Unique
-    private final SealerManager sealerManager = new SealerManager();
+    private final SealerManager sealerManager = new SealerManager((Level) (Object) this);
 
     @Override
-    public SealerManager getSealerManager() {
+    public SealerManager galacticraft$getSealerManager() {
         return sealerManager;
     }
 }

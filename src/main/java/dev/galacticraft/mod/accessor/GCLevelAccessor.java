@@ -26,7 +26,7 @@ import dev.galacticraft.mod.machine.SealerManager;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 
 public interface GCLevelAccessor {
-    SealerManager getSealerManager();
+    SealerManager galacticraft$getSealerManager();
 
     default FootprintManager galacticraft$getFootprintManager() {
         throw new RuntimeException("This should be overridden by mixin!"); // Hopefully this doesn't cause issues with mods with fake worlds
