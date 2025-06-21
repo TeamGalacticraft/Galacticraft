@@ -120,7 +120,6 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         // Check if the machine has enough energy
         if (!this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenSealerEnergyConsumptionRate())) {
-            //recalculate area to avoid issues with fake oxygen
             this.hasEnergy = false;
             return MachineStatuses.NOT_ENOUGH_ENERGY;
         }
@@ -128,14 +127,12 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
 
         // Check if the oxygen tank is empty
         if (this.fluidStorage().slot(OXYGEN_TANK).isEmpty()) {
-            //recalculate area to avoid issues with fake oxygen
             this.hasOxygen = false;
             return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
         }
         this.hasOxygen = true;
 
         if (!level.getBlockState(pos.offset(0, 1, 0)).isAir()) {
-            //recalculate area to avoid issues with fake oxygen
             this.blocked = true;
             return GCMachineStatuses.BLOCKED;
         }
