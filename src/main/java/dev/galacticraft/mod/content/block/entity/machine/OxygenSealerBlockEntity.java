@@ -61,7 +61,6 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(20);
     public static final int SEAL_CHECK_TIME = 20;
 
-    private int sealCheckTimer = SEAL_CHECK_TIME;
     private boolean isSealed = false;
     private boolean hasEnergy = false;
     private boolean hasOxygen = false;
@@ -190,7 +189,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     }
 
     public boolean hasOxygen() {
-        return this.hasEnergy;
+        return this.hasOxygen;
     }
 
     public boolean isBlocked() {
