@@ -101,7 +101,6 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     @Override
     public void setLevel(Level level) {
         super.setLevel(level);
-        this.sealCheckTimer = SEAL_CHECK_TIME;
         if (!level.isClientSide) {
             level.galacticraft$getSealerManager().addSealer(this);
         }
@@ -137,11 +136,6 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
             return GCMachineStatuses.BLOCKED;
         }
         this.blocked = false;
-
-        // Timer for display on UI
-        if (this.sealCheckTimer-- <= 0) {
-            this.sealCheckTimer = SEAL_CHECK_TIME;
-        }
 
         if (this.hasEnergy) {
             this.consumeEnergy();
@@ -204,6 +198,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     }
 
     public int getSealTickTime() {
-        return this.sealCheckTimer;
+        if (level == null) return 0;
+        return (int) (level.getGameTime() % SEAL_CHECK_TIME);
     }
 }
