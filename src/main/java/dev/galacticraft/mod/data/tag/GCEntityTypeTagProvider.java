@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.data.tag;
 
 import dev.galacticraft.mod.content.GCEntityTypes;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCEntityTypeTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -41,10 +41,10 @@ public class GCEntityTypeTagProvider extends IntrinsicHolderTagsProvider<EntityT
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
-        tag(GCTags.HAS_FOOTPRINTS)
+        this.tag(GCEntityTypeTags.HAS_FOOTPRINTS)
                 .add(EntityType.PLAYER);
 
-        tag(GCTags.HAS_OXYGEN_SETUP)
+        tag(GCEntityTypeTags.HAS_OXYGEN_SETUP)
                 .add(GCEntityTypes.EVOLVED_ZOMBIE)
                 .add(GCEntityTypes.EVOLVED_CREEPER)
                 .add(GCEntityTypes.EVOLVED_SKELETON)
@@ -55,7 +55,7 @@ public class GCEntityTypeTagProvider extends IntrinsicHolderTagsProvider<EntityT
                 .add(GCEntityTypes.EVOLVED_EVOKER)
                 .add(GCEntityTypes.EVOLVED_VINDICATOR);
         tag(EntityTypeTags.CAN_BREATHE_UNDER_WATER)
-                .addTag(GCTags.HAS_OXYGEN_SETUP);
+                .addTag(GCEntityTypeTags.HAS_OXYGEN_SETUP);
 
         tag(EntityTypeTags.IMPACT_PROJECTILES)
                 .add(GCEntityTypes.THROWABLE_METEOR_CHUNK);

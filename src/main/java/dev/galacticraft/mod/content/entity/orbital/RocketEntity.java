@@ -44,10 +44,9 @@ import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.events.RocketEvents;
 import dev.galacticraft.mod.network.s2c.OpenCelestialScreenPayload;
-import dev.galacticraft.mod.network.s2c.RocketSpawnPacket;
 import dev.galacticraft.mod.particle.EntityParticleOption;
 import dev.galacticraft.mod.particle.GCParticleTypes;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCFluidTags;
 import dev.galacticraft.mod.util.FluidUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -67,12 +66,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -95,16 +91,12 @@ import java.util.Optional;
 
 @SuppressWarnings("UnstableApiUsage")
 public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift, ControllableEntity {
-    private static final ResourceLocation NULL_ID = ResourceLocation.withDefaultNamespace("null");
     private static final EntityDataAccessor<LaunchStage> STAGE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.LAUNCH_STAGE);
-
     private static final EntityDataAccessor<Integer> TIME_AS_STATE = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Float> THRUST = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<RocketData> ROCKET_DATA = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.ROCKET_DATA);
+    private static final EntityDataAccessor<Long> FUEL = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.LONG);
 
-    public static final EntityDataAccessor<Float> THRUST = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.FLOAT);
-
-    public static final EntityDataAccessor<RocketData> ROCKET_DATA = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.ROCKET_DATA);
-
-    public static final EntityDataAccessor<Long> FUEL = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.LONG);
     private final boolean debugMode = false && FabricLoader.getInstance().isDevelopmentEnvironment();
 
     private FuelDock linkedPad = null;
@@ -235,9 +227,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
     @Override
     public void onPadDestroyed() {
-        var rocket = new ItemStack(GCItems.ROCKET);
-        rocket.applyComponents(this.getRocketData().asPatch());
-        this.spawnAtLocation(rocket);
+        this.spawnAtLocation(this.getDropItem());
         this.remove(RemovalReason.DISCARDED);
     }
 
@@ -252,11 +242,16 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     }
 
     @Override
+    public ItemStack getDropItem() {
+        ItemStack rocket = new ItemStack(GCItems.ROCKET);
+        rocket.applyComponents(this.getRocketData().asPatch());
+        return rocket;
+    }
+
+    @Override
     public void dropItems(DamageSource damageSource, boolean exploded) {
         if (!exploded) {
-            var rocket = new ItemStack(GCItems.ROCKET);
-            rocket.applyComponents(this.getRocketData().asPatch());
-            this.spawnAtLocation(rocket);
+            this.spawnAtLocation(this.getDropItem());
         }
         this.remove(RemovalReason.KILLED);
     }
@@ -336,13 +331,11 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
+
         builder.define(STAGE, LaunchStage.IDLE);
         builder.define(THRUST, 0.0F);
-
         builder.define(TIME_AS_STATE, 0);
-
         builder.define(ROCKET_DATA, RocketPrefabs.TIER_1);
-
         builder.define(FUEL, 0L);
     }
 
@@ -442,7 +435,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                     }
                 }
             } else if (getLaunchStage() == LaunchStage.LAUNCHED) {
-                if (!debugMode && (isTankEmpty() || !this.getTank().getResource().getFluid().is(GCTags.FUEL))) {
+                if (!debugMode && (isTankEmpty() || !this.getTank().getResource().getFluid().is(GCFluidTags.FUEL))) {
                     this.setLaunchStage(LaunchStage.FAILED);
                 } else {
                     try (Transaction t = Transaction.openOuter()) {
@@ -603,11 +596,11 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         }
 
         if (tag.contains("Thrust")) {
-            setThrust(tag.getFloat("Thrust"));
+            this.setThrust(tag.getFloat("Thrust"));
         }
 
         if (tag.contains("Fuel")) {
-            setFuel(tag.getLong("Fuel"));
+            this.setFuel(tag.getLong("Fuel"));
         }
 
         BlockEntity be = this.level().getBlockEntity(BlockPos.of(tag.getLong("Linked")));
@@ -625,11 +618,6 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         tag.putLong("Fuel", this.getFuel());
 
         if (this.linkedPad != null) tag.putLong("Linked", this.linkedPad.getDockPos().asLong());
-    }
-
-    @Override
-    public Packet getAddEntityPacket(ServerEntity serverEntity) {
-        return ServerPlayNetworking.createS2CPacket(new RocketSpawnPacket(getType(), getId(), this.uuid, getX(), getY(), getZ(), getXRot(), getYRot(), getRocketData()));
     }
 
     public int getTimeBeforeLaunch() {

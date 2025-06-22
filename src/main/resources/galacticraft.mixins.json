@@ -10,6 +10,7 @@
     "BlockBehaviourMixin",
     "BucketItemAccessor",
     "BucketItemMixin",
+    "CakeBlockMixin",
     "CampfireBlockMixin",
     "DimensionTransitionMixin",
     "DimensionTypeMixin",
@@ -18,7 +19,6 @@
     "FlintAndSteelItemMixin",
     "FireworkRocketItemMixin",
     "FlowingFluidMixin",
-    "GiveCommandMixin",
     "ItemEntityMixin",
     "ItemStackMixin",
     "LanternBlockMixin",
@@ -29,6 +29,7 @@
     "PlayerMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
+    "SpiderMixin",
     "TorchBlockMixin"
   ],
   "client": [

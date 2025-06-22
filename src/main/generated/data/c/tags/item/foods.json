@@ -1,10 +1,6 @@
 {
   "values": [
-    "galacticraft:moon_cheese_curd",
-    "galacticraft:moon_cheese_slice",
-    "galacticraft:burger_bun",
-    "galacticraft:ground_beef",
-    "galacticraft:beef_patty",
-    "galacticraft:cheeseburger"
+    "#c:foods/cheese",
+    "#c:foods/canned"
   ]
 }

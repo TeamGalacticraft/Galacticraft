@@ -27,7 +27,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.client.model.EndermanModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HierarchicalModel;
@@ -45,6 +45,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Zombie;
@@ -55,17 +56,14 @@ public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel
     private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/oxygen_gear.png");
     private final @Nullable ModelPart mask;
     private final @Nullable ModelPart pipe;
+    private float xRot = 0.0F;
+    private float maskY = 0.0F;
+    private float pipeY = 0.0F;
 
     public OxygenMaskRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
         ModelPart root, head, body;
-        boolean rotate = false;
-        float maskX = -5.0F;
-        float maskY = -9.0F;
-        float maskZ = -5.0F;
-        float pipeX = -2.0F;
-        float pipeY = context.getModel() instanceof EndermanModel ? -2.0F : -3.0F;
-        float pipeZ = 2.0F;
+        float y = context.getModel() instanceof EndermanModel ? -2.0F : -3.0F;
         if (context.getModel() instanceof HierarchicalModel<?> model) {
             root = model.root();
             head = root.getChild(PartNames.HEAD);
@@ -76,7 +74,7 @@ public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel
         } else if (context.getModel() instanceof AnimalModelAgeableListModel model) {
             head = model.callGetHeadParts().iterator().next();
             body = model.callGetBodyParts().iterator().next();
-            rotate = true;
+            this.xRot = Mth.HALF_PI;
         } else {
             this.mask = null;
             this.pipe = null;
@@ -85,25 +83,24 @@ public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
         if (head != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(maskX, maskY, maskZ, 10, 10, 10, new CubeDeformation(-0.1F)), PartPose.offset(head.x, head.y, head.z));
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -9.0F, -5.0F, 10, 10, 10, new CubeDeformation(-0.1F)), PartPose.offset(head.x, head.y, head.z));
         }
         if (body != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 6).addBox(pipeX, pipeY, pipeZ, 4, 6, 8, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 6).addBox(-2.0F, y, 1.0F, 4, 6, 8, CubeDeformation.NONE), PartPose.offsetAndRotation(body.x, body.y, body.z, this.xRot, 0.0F, 0.0F));
         }
 
         root = modelPartData.bake(64, 32);
 
         if (head != null) {
             this.mask = root.getChild(Constant.ModelPartName.OXYGEN_MASK);
+            this.maskY = this.mask.y;
         } else {
             this.mask = null;
         }
 
         if (body != null) {
             this.pipe = root.getChild(Constant.ModelPartName.OXYGEN_PIPE);
-            if (rotate) {
-                this.pipe.xRot = (float) (Math.PI / 2.0);
-            }
+            this.pipeY = this.pipe.y;
         } else {
             this.pipe = null;
         }
@@ -113,27 +110,34 @@ public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
         LivingEntity livingEntity = (LivingEntity) entity;
+        boolean crouching = livingEntity.isCrouching();
         boolean hasMask = true;
         boolean hasGear = true;
 
         if (livingEntity instanceof Player player) {
             Container inv = livingEntity.galacticraft$getGearInv();
-            hasMask = inv.getItem(GCAccessorySlots.OXYGEN_MASK_SLOT).is(GCTags.OXYGEN_MASKS);
-            hasGear = inv.getItem(GCAccessorySlots.OXYGEN_GEAR_SLOT).is(GCTags.OXYGEN_GEAR);
-        } else if (livingEntity instanceof Zombie) {
-            Zombie zombie = (Zombie) entity;
-            if (zombie.isBaby()) {
-                matrices.scale(0.75F, 0.75F, 0.75F);
-                matrices.translate(0.0F, 1.0F, 0.0F);
-            }
+            hasMask = inv.getItem(GCAccessorySlots.OXYGEN_MASK_SLOT).is(GCItemTags.OXYGEN_MASKS);
+            hasGear = inv.getItem(GCAccessorySlots.OXYGEN_GEAR_SLOT).is(GCItemTags.OXYGEN_GEAR);
+        } else if (livingEntity instanceof Zombie zombie && zombie.isBaby()) {
+            matrices.scale(0.75F, 0.75F, 0.75F);
+            matrices.translate(0.0F, 1.0F, 0.0F);
         }
 
         if (this.mask != null && hasMask) {
-            this.mask.yRot = headYaw * (float) (Math.PI / 180.0);
-            this.mask.xRot = headPitch * (float) (Math.PI / 180.0);
+            this.mask.yRot = headYaw * Mth.DEG_TO_RAD;
+            this.mask.xRot = headPitch * Mth.DEG_TO_RAD;
+
+            if (this.getParentModel() instanceof EndermanModel enderman) {
+                this.mask.y = this.maskY + (enderman.creepy ? -5.0F : 0.0F);
+            } else {
+                this.mask.y = this.maskY + (crouching ? 4.2F : 0.0F);
+            }
+
             this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
         if (this.pipe != null && hasGear) {
+            this.pipe.xRot = this.xRot + (crouching ? 0.5F : 0.0F);
+            this.pipe.y = this.pipeY + (crouching ? 3.2F : 0.0F);
             this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
     }

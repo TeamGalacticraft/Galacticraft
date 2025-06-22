@@ -35,7 +35,7 @@ public interface Colored {
         this.setColor(PipeColor.fromDye(dye));
     }
 
-    default boolean canConnectTo(Colored other) {
+    default boolean colorCompatible(Colored other) {
         return this.getColor() == other.getColor() || this.getColor() == PipeColor.CLEAR || other.getColor() == PipeColor.CLEAR;
     }
 

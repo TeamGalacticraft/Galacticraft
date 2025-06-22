@@ -97,7 +97,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
 
     protected void addSlots() {
         RocketRecipe recipe = this.recipe.value();
-        int bodyHeight = this.recipe.value().bodyHeight();
+        int bodyHeight = recipe.bodyHeight();
         int y = this.coneY();
         int centerX = SCREEN_CENTER_BASE_X - 36;
 
@@ -108,8 +108,8 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         this.bodySlots = new ArrayList<>();
         int nextSlot = 1;
         for (int i = 0; i < bodyHeight; i++) {
-            this.bodySlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, centerX - 17, 18 + 18*i + y, recipe.body()).withBackground(Constant.SlotSprite.ROCKET_PLATING)));
-            this.bodySlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot + 1, centerX + 1, 18 + 18*i + y, recipe.body()).withBackground(Constant.SlotSprite.ROCKET_PLATING)));
+            this.bodySlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, centerX - 17, 18 + 18 * i + y, recipe.body()).withBackground(Constant.SlotSprite.ROCKET_PLATING)));
+            this.bodySlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot + 1, centerX + 1, 18 + 18 * i + y, recipe.body()).withBackground(Constant.SlotSprite.ROCKET_PLATING)));
             nextSlot += 2;
         }
 
@@ -123,17 +123,17 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
 
         // Left fins
         this.finSlots = new ArrayList<>();
-        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, centerX - 35, 18*bodyHeight + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN)));
-        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot + 1, centerX - 35, 18*bodyHeight + 18 + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN)));
+        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, centerX - 35, 18 * bodyHeight + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN)));
+        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot + 1, centerX - 35, 18 * bodyHeight + 18 + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN)));
         nextSlot += 2;
 
         // Right fins
-        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, centerX + 19, 18*bodyHeight + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN)));
-        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot + 1, centerX + 19, 18*bodyHeight + 18 + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN)));
+        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, centerX + 19, 18 * bodyHeight + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN)));
+        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot + 1, centerX + 19, 18 * bodyHeight + 18 + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN)));
         nextSlot += 2;
 
         // Engine
-        this.engineSlot = this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, centerX - 8, 18*bodyHeight + 18 + y, recipe.engine()).withBackground(Constant.SlotSprite.ROCKET_ENGINE));
+        this.engineSlot = this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, centerX - 8, 18 * bodyHeight + 18 + y, recipe.engine()).withBackground(Constant.SlotSprite.ROCKET_ENGINE));
 
         // Chest
         this.addSlot(new FilteredSlot(this.workbench.chests, 0, 44, 140, stack -> this.workbench.chests.canPlaceItem(0, stack)).withBackground(Constant.SlotSprite.CHEST));
@@ -171,7 +171,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
     }
 
     private int coneY() {
-        return 81 - rocketHeight()/2;
+        return 81 - rocketHeight() / 2;
     }
 
     protected boolean isIngredient(ItemStack stack) {

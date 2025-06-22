@@ -1,47 +1,47 @@
 {
-	"parent": "minecraft:block/block",
-	"texture_size": [128, 128],
-	"textures": {
-		"cryo_chamber": "galacticraft:model/cryo_chamber",
-		"particle": "galacticraft:block/machine"
-	},
-	"elements": [
-		{
-			"from": [0, 0, 8],
-			"to": [16, 16, 16],
-			"faces": {
-				"north": {"uv": [1, 3, 3, 5], "texture": "#cryo_chamber"},
-				"east": {"uv": [0, 3, 1, 5], "texture": "#cryo_chamber"},
-				"south": {"uv": [4, 3, 6, 5], "texture": "#cryo_chamber"},
-				"west": {"uv": [3, 3, 4, 5], "texture": "#cryo_chamber"}
-			}
-		},
-		{
-			"from": [0, 0, 0],
-			"to": [16, 16, 8],
-			"faces": {
-				"north": {"uv": [1, 10, 3, 12], "texture": "#cryo_chamber"},
-				"east": {"uv": [0, 10, 1, 12], "texture": "#cryo_chamber"},
-				"west": {"uv": [3, 10, 4, 12], "texture": "#cryo_chamber"}
-			}
-		},
-		{
-			"from": [1, 0, 4],
-			"to": [15, 3, 8],
-			"faces": {
-				"north": {"uv": [6.5, 1.75, 8.25, 2.125], "texture": "#cryo_chamber"},
-				"east": {"uv": [6, 1.75, 6.5, 2.125], "texture": "#cryo_chamber"},
-				"west": {"uv": [8.25, 1.75, 8.75, 2.125], "texture": "#cryo_chamber"}
-			}
-		},
-		{
-			"from": [1, 15, 4],
-			"to": [15, 16, 8],
-			"faces": {
-				"north": {"uv": [6.5, 0.75, 8.25, 0.875], "texture": "#cryo_chamber"},
-				"east": {"uv": [6, 0.75, 6.5, 0.875], "texture": "#cryo_chamber"},
-				"west": {"uv": [8.25, 0.75, 8.75, 0.875], "texture": "#cryo_chamber"}
-			}
-		}
-	]
+    "parent": "minecraft:block/block",
+    "texture_size": [128, 128],
+    "textures": {
+        "cryo_chamber": "galacticraft:model/cryo_chamber",
+        "particle": "galacticraft:block/machine"
+    },
+    "elements": [
+        {
+            "from": [0, 0, 8],
+            "to": [16, 16, 16],
+            "faces": {
+                "north": {"uv": [1, 3, 3, 5], "texture": "#cryo_chamber"},
+                "east": {"uv": [0, 3, 1, 5], "texture": "#cryo_chamber"},
+                "south": {"uv": [4, 3, 6, 5], "texture": "#cryo_chamber"},
+                "west": {"uv": [3, 3, 4, 5], "texture": "#cryo_chamber"}
+            }
+        },
+        {
+            "from": [0, 0, 0],
+            "to": [16, 16, 8],
+            "faces": {
+                "north": {"uv": [1, 10, 3, 12], "texture": "#cryo_chamber"},
+                "east": {"uv": [0, 10, 1, 12], "texture": "#cryo_chamber"},
+                "west": {"uv": [3, 10, 4, 12], "texture": "#cryo_chamber"}
+            }
+        },
+        {
+            "from": [1, 0, 4],
+            "to": [15, 3, 8],
+            "faces": {
+                "north": {"uv": [6.5, 1.75, 8.25, 2.125], "texture": "#cryo_chamber"},
+                "east": {"uv": [6, 1.75, 6.5, 2.125], "texture": "#cryo_chamber"},
+                "west": {"uv": [8.25, 1.75, 8.75, 2.125], "texture": "#cryo_chamber"}
+            }
+        },
+        {
+            "from": [1, 15, 4],
+            "to": [15, 16, 8],
+            "faces": {
+                "north": {"uv": [6.5, 0.75, 8.25, 0.875], "texture": "#cryo_chamber"},
+                "east": {"uv": [6, 0.75, 6.5, 0.875], "texture": "#cryo_chamber"},
+                "west": {"uv": [8.25, 0.75, 8.75, 0.875], "texture": "#cryo_chamber"}
+            }
+        }
+    ]
 }

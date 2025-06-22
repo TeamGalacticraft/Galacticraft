@@ -287,13 +287,31 @@ public interface Constant {
         String OXYGEN_DETECTOR = "oxygen_detector";
         String OXYGEN_SEALER = "oxygen_sealer";
         String FLUID_PIPE = "fluid_pipe";
-        String GLASS_FLUID_PIPE = "glass_fluid_pipe";
         String REFINERY = "refinery";
         String TERRAFORMER = "terraformer";
         String DECONSTRUCTOR = "deconstructor";
         String WATER_ELECTROLYZER = "water_electrolyzer";
         String METHANE_SYNTHESIZIER = "methane_synthesizer";
         String GAS_LIQUEFIER = "gas_liquefier";
+
+        // Glass fluid pipes
+        String GLASS_FLUID_PIPE = "glass_fluid_pipe";
+        String WHITE_GLASS_FLUID_PIPE = "white_glass_fluid_pipe";
+        String ORANGE_GLASS_FLUID_PIPE = "orange_glass_fluid_pipe";
+        String MAGENTA_GLASS_FLUID_PIPE = "magenta_glass_fluid_pipe";
+        String LIGHT_BLUE_GLASS_FLUID_PIPE = "light_blue_glass_fluid_pipe";
+        String YELLOW_GLASS_FLUID_PIPE = "yellow_glass_fluid_pipe";
+        String LIME_GLASS_FLUID_PIPE = "lime_glass_fluid_pipe";
+        String PINK_GLASS_FLUID_PIPE = "pink_glass_fluid_pipe";
+        String GRAY_GLASS_FLUID_PIPE = "gray_glass_fluid_pipe";
+        String LIGHT_GRAY_GLASS_FLUID_PIPE = "light_gray_glass_fluid_pipe";
+        String CYAN_GLASS_FLUID_PIPE = "cyan_glass_fluid_pipe";
+        String PURPLE_GLASS_FLUID_PIPE = "purple_glass_fluid_pipe";
+        String BLUE_GLASS_FLUID_PIPE = "blue_glass_fluid_pipe";
+        String BROWN_GLASS_FLUID_PIPE = "brown_glass_fluid_pipe";
+        String GREEN_GLASS_FLUID_PIPE = "green_glass_fluid_pipe";
+        String RED_GLASS_FLUID_PIPE = "red_glass_fluid_pipe";
+        String BLACK_GLASS_FLUID_PIPE = "black_glass_fluid_pipe";
 
         // Pad Blocks
         String FUELING_PAD = "fueling_pad";
@@ -719,8 +737,16 @@ public interface Constant {
         ResourceLocation NEPTUNE = id("textures/gui/celestialbodies/neptune.png");
     }
 
+    interface CelestialOverlay {
+        ResourceLocation EARTH = Constant.id("textures/gui/rocket/overworld_rocket_gui.png");
+        ResourceLocation MOON = Constant.id("textures/gui/rocket/moon_rocket_gui.png");
+        ResourceLocation MARS = Constant.id("textures/gui/rocket/mars_rocket_gui.png");
+        ResourceLocation VENUS = Constant.id("textures/gui/rocket/venus_rocket_gui.png");
+    }
+
     interface RecipeViewer {
         ResourceLocation RECIPE_VIEWER_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
+        ResourceLocation ROCKET_WORKBENCH_DISPLAY_TEXTURE = id("textures/gui/rocket_workbench.png");
 
         int CIRCUIT_FABRICATOR_U = 0;
         int CIRCUIT_FABRICATOR_V = 0;
@@ -751,6 +777,18 @@ public interface Constant {
         int FUEL_Y = 31;
         int COMPRESSED_X = 127;
         int COMPRESSED_Y = 20;
+
+        int ROCKET_WORKBENCH_U = 6;
+        int ROCKET_WORKBENCH_V = 20;
+        int ROCKET_WORKBENCH_WIDTH = 162;
+        int ROCKET_WORKBENCH_HEIGHT = 145;
+        int CHEST_SLOT_U = 177;
+        int CHEST_SLOT_V = 0;
+
+        int ROCKET_PREVIEW_X = 133 - ROCKET_WORKBENCH_U;
+        int ROCKET_PREVIEW_Y = 100 - ROCKET_WORKBENCH_V;
+        int ROCKET_OUTPUT_X = 119;
+        int ROCKET_OUTPUT_Y = 115;
     }
 
     interface SlotSprite {
@@ -987,8 +1025,8 @@ public interface Constant {
         String SHAPED = "Shaped";
         String ITEMS = "Items";
         String GASES = "Gases";
-        String CRYOGENIC_COOLDOWN = "cryogenic_cooldown";
-        String ROCKET_UUID = "RocketUuid";
+        String CRYOGENIC_COOLDOWN = "CryogenicCooldown";
+        String DOCKED_UUID = "DockedUuid";
         String CAN_CONTENTS = "CanContents";
         String CAN_COUNT = "CanCount";
     }
@@ -1051,11 +1089,28 @@ public interface Constant {
         String SOLAR_PANEL_PANEL_VERTICAL_1 = "solar_panel_panel_vertical_1";
         String SOLAR_PANEL_PANEL_VERTICAL_2 = "solar_panel_panel_vertical_2";
         String SOLAR_PANEL_PANEL_VERTICAL_3 = "solar_panel_panel_vertical_3";
+        String ROCKET_WORKBENCH_TOP = "rocket_workbench_top";
+        String ROCKET_WORKBENCH_PLIER_TOOL = "rocket_workbench_plier_tool";
+        String ROCKET_WORKBENCH_PLIER_TOOL_ARM = "rocket_workbench_plier_tool_arm";
+        String ROCKET_WORKBENCH_PLIER_TOOL_SMALL_ARM = "rocket_workbench_plier_tool_small_arm";
+        String ROCKET_WORKBENCH_PLIER_TOOL_PLIERS = "rocket_workbench_plier_tool_pliers";
+        String ROCKET_WORKBENCH_DRILL_TOOL = "rocket_workbench_drill_tool";
+        String ROCKET_WORKBENCH_DRILL_TOOL_SMALL_ARM = "rocket_workbench_drill_tool_small_arm";
+        String ROCKET_WORKBENCH_DRILL_TOOL_DRILL = "rocket_workbench_drill_tool_drill";
+        String ROCKET_WORKBENCH_DRILL_TOOL_DRILL_BIT = "rocket_workbench_drill_tool_drill_bit";
+        String ROCKET_WORKBENCH_FLASHLIGHT = "rocket_workbench_flashlight";
+        String ROCKET_WORKBENCH_FLASHLIGHT_LIGHT = "rocket_workbench_flashlight_light";
+        String ROCKET_WORKBENCH_FLASHLIGHT_HANDLE = "rocket_workbench_flashlight_handle";
+        String ROCKET_WORKBENCH_FLASHLIGHT_HOLDER = "rocket_workbench_flashlight_holder";
+        String ROCKET_WORKBENCH_DISPLAY = "rocket_workbench_display";
     }
 
     // Used in Data Generator
     interface BakedModel {
-        ResourceLocation WALKWAY_MARKER = id("autogenerated/walkway");
+        ResourceLocation WALKWAY_CONNECTOR_MARKER = id("autogenerated/walkway_connector");
+        ResourceLocation WALKWAY_CENTER_MARKER = id("autogenerated/walkway_center");
+        ResourceLocation PIPE_WALKWAY_CENTER_MARKER = id("autogenerated/glass_fluid_pipe_walkway_center");
+        ResourceLocation WIRE_WALKWAY_CENTER_MARKER = id("autogenerated/aluminum_wire_walkway_center");
         ResourceLocation FLUID_PIPE_WALKWAY_MARKER = id("autogenerated/fluid_pipe_walkway");
         ResourceLocation WIRE_WALKWAY_MARKER = id("autogenerated/wire_walkway");
         ResourceLocation WIRE_MARKER = id("autogenerated/aluminum_wire");

@@ -29,7 +29,6 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -158,7 +157,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.SENSOR_GLASSES)
                 .define('D', ConventionalItemTags.DIAMOND_GEMS)
-                .define('S', Items.STRING)
+                .define('S', ConventionalItemTags.STRINGS)
                 .define('L', GCItems.SENSOR_LENS)
                 .define('M', GCItems.METEORIC_IRON_INGOT)
                 .pattern("SDS")
@@ -170,7 +169,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
         // Heavy-Duty Tools
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_SHOVEL)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
-                .define('S', Items.STICK)
+                .define('S', ConventionalItemTags.WOODEN_RODS)
                 .pattern("P")
                 .pattern("S")
                 .pattern("S")
@@ -178,7 +177,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .save(output);
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_PICKAXE)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
-                .define('S', Items.STICK)
+                .define('S', ConventionalItemTags.WOODEN_RODS)
                 .pattern("PPP")
                 .pattern(" S ")
                 .pattern(" S ")
@@ -186,7 +185,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .save(output);
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_AXE)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
-                .define('S', Items.STICK)
+                .define('S', ConventionalItemTags.WOODEN_RODS)
                 .pattern("PP")
                 .pattern("PS")
                 .pattern(" S")
@@ -194,7 +193,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .save(output);
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_HOE)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
-                .define('S', Items.STICK)
+                .define('S', ConventionalItemTags.WOODEN_RODS)
                 .pattern("PP")
                 .pattern(" S")
                 .pattern(" S")
@@ -202,7 +201,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .save(output);
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_SWORD)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
-                .define('S', Items.STICK)
+                .define('S', ConventionalItemTags.WOODEN_RODS)
                 .pattern("P")
                 .pattern("P")
                 .pattern("S")

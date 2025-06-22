@@ -42,7 +42,6 @@ import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.FoodCannerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -92,7 +91,7 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
             for (int x = 0; x < columns; x++) {
                 slots.add(ItemResourceSlot.builder(TransferType.INPUT)
                         .pos(xOffset + (x * 18), yOffset + (y * 18))
-                        .filter((item, tag) -> item != null && item.components().has(DataComponents.FOOD) && !(item instanceof CannedFoodItem)));
+                        .filter((item, tag) -> CannedFoodItem.canAddToCan(item)));
             }
         }
         return slots;

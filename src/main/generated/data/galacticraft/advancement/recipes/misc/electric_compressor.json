@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_aluminum_ingot": {
+    "has_advanced_wafer": {
       "conditions": {
         "items": [
           {
-            "items": "galacticraft:aluminum_ingot"
+            "items": "galacticraft:advanced_wafer"
           }
         ]
       },
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_aluminum_ingot"
+      "has_advanced_wafer"
     ]
   ],
   "rewards": {

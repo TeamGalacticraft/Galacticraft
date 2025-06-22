@@ -6,7 +6,7 @@
       "item": "galacticraft:glowstone_torch"
     },
     "S": {
-      "item": "minecraft:glass_pane"
+      "tag": "c:glass_panes/colorless"
     },
     "T": {
       "item": "galacticraft:compressed_steel"

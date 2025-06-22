@@ -26,7 +26,6 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.galacticraft.api.client.accessor.ClientSatelliteAccessor;
@@ -64,6 +63,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.*;
 
 import static dev.galacticraft.mod.Constant.CelestialScreen.*;
+import static dev.galacticraft.mod.Constant.REENTRY_HEIGHT;
 
 @SuppressWarnings({"DataFlowIssue"})
 @Environment(EnvType.CLIENT)
@@ -252,7 +252,9 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
     public void tick() {
         this.translationX = 0.0F;
         this.translationY = 0.0F;
-
+        if (this.minecraft.player != null && this.minecraft.player.getY() >= REENTRY_HEIGHT) {
+            this.minecraft.player.setDeltaMovement(new Vec3(0.0D, 0.0D, 0.0D));
+        }
         this.keyboardTranslation();
     }
 
@@ -518,7 +520,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
                 this.setupMatrix(body, matrices, moon ? 0.25F : 1.0F, delta);
                 CelestialDisplay<?, ?> display = body.display();
                 RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
-                Vector4f vector4f = display.render(graphics, Tesselator.getInstance(), getWidthForCelestialBody(body), mouseX, mouseY, delta);
+                Vector4f vector4f = display.render(graphics, getWidthForCelestialBody(body), mouseX, mouseY, delta);
                 Matrix4f planetMatrix = matrices.last().pose();
 
                 Matrix4f matrix0 = RenderSystem.getProjectionMatrix().mul(planetMatrix, planetMatrix);
