@@ -22,10 +22,13 @@
 
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenSyncer;
 import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
 import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
+import dev.galacticraft.mod.events.GCEventHandlers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.ChunkPos;
@@ -113,6 +116,15 @@ public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygen
 
     @Inject(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getBlock()Lnet/minecraft/world/level/block/Block;", ordinal = 0))
     private void resetAirOnBlockChange(BlockPos pos, BlockState blockState, boolean bl, CallbackInfoReturnable<BlockState> cir) {
-        this.galacticraft$setInverted(pos.getX() & 15, pos.getY(), pos.getZ() & 15, false);
+        if (blockState.isSolidRender(this.level, pos)) {
+            this.galacticraft$setInverted(pos.getX() & 15, pos.getY(), pos.getZ() & 15, false);
+        }
+    }
+
+    @WrapOperation(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;onPlace(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Z)V", ordinal = 0))
+    private void extinguishFire(BlockState newState, Level level, BlockPos pos, BlockState oldState, boolean bl, Operation<Void> original) {
+        if (level.isBreathable(pos) || !GCEventHandlers.extinguishFire(level, pos, newState)) {
+            original.call(newState, level, pos, oldState, bl);
+        }
     }
 }

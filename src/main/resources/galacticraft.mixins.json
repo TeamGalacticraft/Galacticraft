@@ -11,17 +11,13 @@
     "BucketItemAccessor",
     "BucketItemMixin",
     "CakeBlockMixin",
-    "CampfireBlockMixin",
     "DimensionTransitionMixin",
     "DimensionTypeMixin",
     "EntityMixin",
-    "FireChargeItemMixin",
-    "FlintAndSteelItemMixin",
     "FireworkRocketItemMixin",
     "FlowingFluidMixin",
     "ItemEntityMixin",
     "ItemStackMixin",
-    "LanternBlockMixin",
     "LevelMixin",
     "LivingEntityMixin",
     "ModelProviderMixin",
@@ -29,8 +25,7 @@
     "PlayerMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
-    "SpiderMixin",
-    "TorchBlockMixin"
+    "SpiderMixin"
   ],
   "client": [
     "client.AbstractClientPlayerMixin",

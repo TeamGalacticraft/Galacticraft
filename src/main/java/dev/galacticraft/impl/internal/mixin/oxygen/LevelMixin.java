@@ -28,6 +28,7 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.impl.internal.accessor.InternalLevelOxygenAccessor;
 import dev.galacticraft.mod.accessor.GCLevelAccessor;
+import dev.galacticraft.mod.events.GCEventHandlers;
 import dev.galacticraft.mod.machine.SealerManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -97,6 +98,10 @@ public abstract class LevelMixin implements LevelOxygenAccessor, InternalLevelOx
         assert x >= 0 && x < 16 && z >= 0 && z < 16;
         if (y < this.getMinBuildHeight() || y >= this.getMaxBuildHeight()) return;
         ((ChunkOxygenAccessor) chunk).galacticraft$setInverted(x, y, z, this.breathable ^ value);
+        if (!value) {
+            BlockPos blockPos = chunk.getPos().getBlockAt(x, y, z);
+            GCEventHandlers.extinguishFire((Level) (Object) this, blockPos, this.getBlockState(blockPos));
+        }
     }
 
     @Override

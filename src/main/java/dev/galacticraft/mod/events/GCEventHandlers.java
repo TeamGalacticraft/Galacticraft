@@ -26,6 +26,7 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberPart;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
@@ -40,10 +41,13 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -52,7 +56,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AbstractCandleBlock;
 import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CampfireBlock;
+import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.level.block.LanternBlock;
+import net.minecraft.world.level.block.TorchBlock;
+import net.minecraft.world.level.block.WallTorchBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
@@ -179,5 +191,25 @@ public class GCEventHandlers {
 
             footprintManager.footprintBlockChanges.clear();
         }
+    }
+
+    public static boolean extinguishFire(Level level, BlockPos pos, BlockState state) {
+        Block block = state.getBlock();
+        if (block instanceof WallTorchBlock && block != GCBlocks.GLOWSTONE_TORCH) {
+            level.setBlockAndUpdate(pos, GCBlocks.UNLIT_WALL_TORCH.defaultBlockState().setValue(WallTorchBlock.FACING, state.getValue(WallTorchBlock.FACING)));
+        } else if (block instanceof TorchBlock && block != GCBlocks.GLOWSTONE_WALL_TORCH) {
+            level.setBlockAndUpdate(pos, GCBlocks.UNLIT_TORCH.defaultBlockState());
+        } else if (block instanceof LanternBlock && block != GCBlocks.GLOWSTONE_LANTERN) {
+            level.setBlockAndUpdate(pos, GCBlocks.UNLIT_LANTERN.defaultBlockState().setValue(LanternBlock.HANGING, state.getValue(LanternBlock.HANGING)).setValue(LanternBlock.WATERLOGGED, state.getValue(LanternBlock.WATERLOGGED)));
+        } else if (state.hasProperty(BlockStateProperties.LIT)) {
+            level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.LIT, false));
+        } else if (block instanceof FireBlock) {
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+        } else {
+            return false;
+        }
+        level.addParticle(ParticleTypes.SMOKE, pos.getX(), pos.getY(), pos.getZ(), 0.0D, 0.0D, 0.0D);
+        level.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1.0F, 0.9F, false);
+        return true;
     }
 }
