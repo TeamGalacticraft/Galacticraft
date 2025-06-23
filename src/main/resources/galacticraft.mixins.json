@@ -4,7 +4,6 @@
   "plugin": "dev.galacticraft.mod.GalacticraftMixinPlugin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "AbstractCandleBlockMixin",
     "AbstractContainerMenuAccessor",
     "AbstractSkeletonEntityAccessor",
     "BlockBehaviourMixin",
