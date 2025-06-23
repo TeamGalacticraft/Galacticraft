@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.events;
 
+import dev.galacticraft.api.registry.ExtinguishableBlockRegistry;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
@@ -193,23 +194,17 @@ public class GCEventHandlers {
         }
     }
 
-    public static boolean extinguishFire(Level level, BlockPos pos, BlockState state) {
-        Block block = state.getBlock();
-        if (block instanceof WallTorchBlock && block != GCBlocks.GLOWSTONE_TORCH) {
-            level.setBlockAndUpdate(pos, GCBlocks.UNLIT_WALL_TORCH.defaultBlockState().setValue(WallTorchBlock.FACING, state.getValue(WallTorchBlock.FACING)));
-        } else if (block instanceof TorchBlock && block != GCBlocks.GLOWSTONE_WALL_TORCH) {
-            level.setBlockAndUpdate(pos, GCBlocks.UNLIT_TORCH.defaultBlockState());
-        } else if (block instanceof LanternBlock && block != GCBlocks.GLOWSTONE_LANTERN) {
-            level.setBlockAndUpdate(pos, GCBlocks.UNLIT_LANTERN.defaultBlockState().setValue(LanternBlock.HANGING, state.getValue(LanternBlock.HANGING)).setValue(LanternBlock.WATERLOGGED, state.getValue(LanternBlock.WATERLOGGED)));
-        } else if (state.hasProperty(BlockStateProperties.LIT)) {
-            level.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.LIT, false));
-        } else if (block instanceof FireBlock) {
-            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-        } else {
-            return false;
+    public static boolean extinguishFire(Level level, BlockPos pos, BlockState oldState) {
+        BlockState newState = ExtinguishableBlockRegistry.INSTANCE.transform(oldState);
+        if (newState != null) {
+            level.setBlockAndUpdate(pos, newState);
+            if (level instanceof ServerLevel serverLevel) {
+                double y = pos.getY() + oldState.getShape(level, pos).max(Direction.Axis.Y);
+                serverLevel.sendParticles(ParticleTypes.SMOKE, pos.getX() + 0.5D, y, pos.getZ() + 0.5D, 0, 0.0D, 0.1D, 0.0D, 0.0D);
+            }
+            level.playSound(null, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1.0F, 0.9F);
+            return true;
         }
-        level.addParticle(ParticleTypes.SMOKE, pos.getX(), pos.getY(), pos.getZ(), 0.0D, 0.0D, 0.0D);
-        level.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1.0F, 0.9F, false);
-        return true;
+        return false;
     }
 }
