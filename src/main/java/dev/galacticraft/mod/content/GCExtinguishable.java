@@ -139,11 +139,11 @@ public class GCExtinguishable {
     }
 
     public static void extinguishCampfire(ExtinguishableBlockRegistry.Context context) {
-        context.level().playSound(null, context.pos(), SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 0.1F, 1.0F);
+        context.level().playSound(null, context.pos(), SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 0.2F, 1.0F);
     }
 
     public static void extinguishFire(ExtinguishableBlockRegistry.Context context) {
         RandomSource randomSource = context.level().getRandom();
-        context.level().playSound(null, context.pos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.1F, 2.6F + (randomSource.nextFloat() - randomSource.nextFloat()) * 0.8F);
+        context.level().playSound(null, context.pos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.25F, 2.6F + (randomSource.nextFloat() - randomSource.nextFloat()) * 0.8F);
     }
 }
