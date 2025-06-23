@@ -56,13 +56,13 @@ public class GCExtinguishable {
 
         // Soul Fire
         ExtinguishableBlockRegistry.INSTANCE.add(Blocks.SOUL_LANTERN, state ->
-                GCBlocks.UNLIT_LANTERN.defaultBlockState().setValue(LanternBlock.HANGING, state.getValue(LanternBlock.HANGING)).setValue(LanternBlock.WATERLOGGED, state.getValue(LanternBlock.WATERLOGGED))
+                GCBlocks.UNLIT_SOUL_LANTERN.defaultBlockState().setValue(LanternBlock.HANGING, state.getValue(LanternBlock.HANGING)).setValue(LanternBlock.WATERLOGGED, state.getValue(LanternBlock.WATERLOGGED))
         );
         ExtinguishableBlockRegistry.INSTANCE.add(Blocks.SOUL_TORCH, state ->
-                GCBlocks.UNLIT_TORCH.defaultBlockState()
+                GCBlocks.UNLIT_SOUL_TORCH.defaultBlockState()
         );
         ExtinguishableBlockRegistry.INSTANCE.add(Blocks.SOUL_WALL_TORCH, state ->
-                GCBlocks.UNLIT_WALL_TORCH.defaultBlockState().setValue(WallTorchBlock.FACING, state.getValue(WallTorchBlock.FACING))
+                GCBlocks.UNLIT_SOUL_WALL_TORCH.defaultBlockState().setValue(WallTorchBlock.FACING, state.getValue(WallTorchBlock.FACING))
         );
         ExtinguishableBlockRegistry.INSTANCE.add(Blocks.SOUL_CAMPFIRE, state ->
                 state.setValue(BlockStateProperties.LIT, false)
