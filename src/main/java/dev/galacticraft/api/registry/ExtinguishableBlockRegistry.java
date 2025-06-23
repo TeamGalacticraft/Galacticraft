@@ -24,11 +24,14 @@ package dev.galacticraft.api.registry;
 
 import dev.galacticraft.impl.internal.block.ExtinguishableBlockRegistryImpl;
 import net.fabricmc.fabric.api.util.Block2ObjectMap;
+import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public interface ExtinguishableBlockRegistry extends Block2ObjectMap<ExtinguishableBlockRegistry.Entry> {
@@ -42,12 +45,28 @@ public interface ExtinguishableBlockRegistry extends Block2ObjectMap<Extinguisha
 		this.add(block, new Entry(transform));
 	}
 
+	default void add(Block block, BlockState transform, Consumer<Context> callback) {
+		this.add(block, state -> transform, callback);
+	}
+
+	default void add(Block block, Function<BlockState, BlockState> transform, Consumer<Context> callback) {
+		this.add(block, new Entry(transform, callback));
+	}
+
 	default void add(TagKey<Block> tag, BlockState transform) {
 		this.add(tag, state -> transform);
 	}
 
 	default void add(TagKey<Block> tag, Function<BlockState, BlockState> transform) {
 		this.add(tag, new Entry(transform));
+	}
+
+	default void add(TagKey<Block> tag, BlockState transform, Consumer<Context> callback) {
+		this.add(tag, state -> transform, callback);
+	}
+
+	default void add(TagKey<Block> tag, Function<BlockState, BlockState> transform, Consumer<Context> callback) {
+		this.add(tag, new Entry(transform, callback));
 	}
 
     default @Nullable BlockState transform(BlockState oldState) {
@@ -61,9 +80,16 @@ public interface ExtinguishableBlockRegistry extends Block2ObjectMap<Extinguisha
 
 	final class Entry {
 		private final Function<BlockState, BlockState> transform;
+		private final Consumer<Context> callback;
 
 		public Entry(Function<BlockState, BlockState> transform) {
 			this.transform = transform;
+            this.callback = context -> {};
+		}
+
+		public Entry(Function<BlockState, BlockState> transform, Consumer<Context> callback) {
+			this.transform = transform;
+            this.callback = callback;
 		}
 
 		public Function<BlockState, BlockState> getTransform() {
@@ -73,5 +99,15 @@ public interface ExtinguishableBlockRegistry extends Block2ObjectMap<Extinguisha
 		public BlockState transform(BlockState state) {
 			return this.transform.apply(state);
 		}
+
+		public Consumer<Context> getCallback() {
+			return this.callback;
+		}
+
+		public void callback(Context context) {
+			this.callback.accept(context);
+		}
 	}
+
+    public record Context(Level level, BlockPos pos, BlockState state) {}
 }

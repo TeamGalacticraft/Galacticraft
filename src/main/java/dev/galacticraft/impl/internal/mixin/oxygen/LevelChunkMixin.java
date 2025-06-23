@@ -123,7 +123,7 @@ public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygen
 
     @WrapOperation(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;onPlace(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Z)V", ordinal = 0))
     private void extinguishFire(BlockState newState, Level level, BlockPos pos, BlockState oldState, boolean bl, Operation<Void> original) {
-        if (level.isBreathable(pos) || !GCEventHandlers.extinguishFire(level, pos, newState)) {
+        if (level.isBreathable(pos) || !GCEventHandlers.extinguishBlock(level, pos, newState)) {
             original.call(newState, level, pos, oldState, bl);
         }
     }

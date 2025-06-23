@@ -100,7 +100,7 @@ public abstract class LevelMixin implements LevelOxygenAccessor, InternalLevelOx
         ((ChunkOxygenAccessor) chunk).galacticraft$setInverted(x, y, z, this.breathable ^ value);
         if (!value) {
             BlockPos blockPos = chunk.getPos().getBlockAt(x, y, z);
-            GCEventHandlers.extinguishFire((Level) (Object) this, blockPos, this.getBlockState(blockPos));
+            GCEventHandlers.extinguishBlock((Level) (Object) this, blockPos, this.getBlockState(blockPos));
         }
     }
 
