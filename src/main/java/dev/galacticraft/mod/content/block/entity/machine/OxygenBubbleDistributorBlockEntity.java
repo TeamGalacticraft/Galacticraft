@@ -177,9 +177,9 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
 
     @Override
     protected void tickDisabled(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        if (this.prevSize > 0) {
-            this.distributeOxygenToArea(this.prevSize, this.oxygenWorld);
-            this.prevSize = 0;
+        if (this.size > 0) {
+            this.distributeOxygenToArea(this.size, this.oxygenWorld);
+            this.setSize(0);
         }
         this.trySyncSize(level, pos, profiler);
 
