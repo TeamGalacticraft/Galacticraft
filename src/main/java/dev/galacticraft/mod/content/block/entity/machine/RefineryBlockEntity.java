@@ -35,6 +35,7 @@ import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
+import dev.galacticraft.machinelib.api.util.FluidSource;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
@@ -99,6 +100,8 @@ public class RefineryBlockEntity extends MachineBlockEntity {
             )
     );
 
+    private final FluidSource fluidSource = new FluidSource(this);
+
     public RefineryBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.REFINERY, pos, state, SPEC);
     }
@@ -114,11 +117,14 @@ public class RefineryBlockEntity extends MachineBlockEntity {
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        profiler.push("transfer");
+        this.fluidSource.trySpreadFluids(level, pos, state);
+
         FluidResourceSlot oilTank = this.fluidStorage().slot(OIL_TANK);
         if (oilTank.isEmpty()) return GCMachineStatuses.MISSING_OIL;
         FluidResourceSlot fuelTank = this.fluidStorage().slot(FUEL_TANK);
         if (fuelTank.isFull()) return GCMachineStatuses.FUEL_TANK_FULL;
-        profiler.push("transaction");
+        profiler.popPush("transaction");
         try {
             if (this.energyStorage().canExtract(Galacticraft.CONFIG.refineryEnergyConsumptionRate())) {
                 long space = fuelTank.tryInsert(GCFluids.FUEL, FluidConstants.BUCKET / 20 / 5);
