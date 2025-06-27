@@ -14,7 +14,8 @@ pluginManagement {
                 includeGroup("fabric-loom")
             }
         }
-        maven("https://repo.terradevelopment.net/repository/maven-releases/") {
+        maven("https://maven.teamgalacticraft.org") {
+            // https://repo.terradevelopment.net/repository/maven-releases/
             // https://maven.galacticraft.net/repository/maven-releases
             content {
                 includeGroup("dev.galacticraft")
