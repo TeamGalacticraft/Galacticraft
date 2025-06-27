@@ -56,7 +56,7 @@ plugins {
     id("fabric-loom") version("1.7-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
     id("org.ajoberstar.grgit") version("5.3.0")
-    id("dev.galacticraft.mojarn") version("0.6.0+18")
+    id("dev.galacticraft.mojarn") version("0.6.1+0")
 }
 
 java {
@@ -156,7 +156,8 @@ loom {
 
 repositories {
     mavenLocal()
-    maven("https://repo.terradevelopment.net/repository/maven-releases/") {
+    maven("https://maven.teamgalacticraft.org/") {
+        // https://repo.terradevelopment.net/repository/maven-releases/
         // https://maven.galacticraft.net/repository/maven-releases
         content {
             includeGroup("dev.galacticraft")
@@ -232,7 +233,7 @@ dependencies {
     include(implementation("de.javagl:obj:$objVersion")) {}
 
     "core"("dev.galacticraft:dynamicdimensions-fabric:$dynamicdimensionsVersion")
-    "core"("dev.galacticraft:MachineLib:$machineLibVersion")
+    "core"("dev.galacticraft:machinelib:$machineLibVersion")
     "core"("lol.bai:badpackets:fabric-$badpacketsVersion")
 
     // Optional Dependencies
