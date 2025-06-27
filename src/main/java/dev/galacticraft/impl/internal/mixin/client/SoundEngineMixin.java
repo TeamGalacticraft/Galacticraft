@@ -22,6 +22,9 @@
 
 package dev.galacticraft.impl.internal.mixin.client;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.audio.Listener;
 import dev.galacticraft.impl.accessor.SoundSystemAccessor;
 import net.fabricmc.api.EnvType;
@@ -35,8 +38,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(SoundEngine.class)
@@ -51,19 +52,20 @@ public abstract class SoundEngineMixin implements SoundSystemAccessor {
     @Shadow
     public abstract void updateCategoryVolume(SoundSource soundCategory, float volume);
 
-    @Inject(method = "calculateVolume(FLnet/minecraft/sounds/SoundSource;)F", at = @At("RETURN"), cancellable = true)
-    private void galacticraft_adjustVolumeToAtmosphere(float f, SoundSource soundSource, CallbackInfoReturnable<Float> cir) {
+    @ModifyReturnValue(method = "calculateVolume(FLnet/minecraft/sounds/SoundSource;)F", at = @At("RETURN"))
+    private float galacticraft_adjustVolumeToAtmosphere(float original, float f, SoundSource soundSource) {
         if (multiplier != 1.0f && soundSource != SoundSource.MASTER) {
-            cir.setReturnValue(Mth.clamp(cir.getReturnValueF() * this.multiplier, 0.0f, 2.0f));
+            return Mth.clamp(original * this.multiplier, 0.0f, 2.0f);
         }
+        return original;
     }
 
-    @Redirect(method = "play", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/sounds/SoundInstance;canStartSilent()Z", ordinal = 0))
-    private boolean galacticraft_shouldAlwaysPlay(SoundInstance soundInstance) {
+    @WrapOperation(method = "play", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/sounds/SoundInstance;canStartSilent()Z", ordinal = 0))
+    private boolean galacticraft_shouldAlwaysPlay(SoundInstance soundInstance, Operation<Boolean> original) {
         if (this.multiplier != 1.0f && soundInstance.getAttenuation() != SoundInstance.Attenuation.NONE) {
             return true;
         }
-        return soundInstance.canStartSilent();
+        return original.call(soundInstance);
     }
 
     @Override
