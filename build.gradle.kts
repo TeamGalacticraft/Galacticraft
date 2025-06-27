@@ -53,7 +53,7 @@ val objVersion               = project.property("obj.version").toString()
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("1.7-SNAPSHOT")
+    id("fabric-loom") version("1.10-SNAPSHOT")
     id("org.cadixdev.licenser") version("0.6.1")
     id("org.ajoberstar.grgit") version("5.3.0")
     id("dev.galacticraft.mojarn") version("0.6.0+18")
