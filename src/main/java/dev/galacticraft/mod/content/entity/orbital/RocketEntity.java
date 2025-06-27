@@ -498,7 +498,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                             new DamageSource(this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.CRASH_LANDING)),
                             new ExplosionDamageCalculator(),
                             this.position().x + (this.level().random.nextDouble() - 0.5 * 4),
-                            this.position().y + (this.level().random.nextDouble() * 3), 
+                            this.position().y + (this.level().random.nextDouble() * 3),
                             this.position().z + (this.level().random.nextDouble() - 0.5 * 4),
                             10.0F,
                             createFire,
@@ -688,7 +688,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
             } else if (right) {
                 setYRot(Mth.wrapDegrees(getYRot() + turnFactor));
             }
-            
+
             if (jumping) {
                 setZRot(Mth.wrapDegrees(getZRot() - turnFactor));
             } else if (shiftKeyDown) {

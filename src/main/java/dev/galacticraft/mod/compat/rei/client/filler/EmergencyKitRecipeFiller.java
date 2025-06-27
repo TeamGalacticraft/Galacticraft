@@ -32,8 +32,8 @@ import me.shedaniel.rei.plugin.common.displays.crafting.DefaultCustomShapelessDi
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EmergencyKitRecipeFiller implements CraftingRecipeFiller<EmergencyKitRecipe> {
     @Override
@@ -45,7 +45,7 @@ public class EmergencyKitRecipeFiller implements CraftingRecipeFiller<EmergencyK
                 List.of(EntryIngredients.of(GCItems.EMERGENCY_KIT)))
         );
     }
-    
+
     @Override
     public Class<EmergencyKitRecipe> getRecipeClass() {
         return EmergencyKitRecipe.class;

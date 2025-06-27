@@ -125,7 +125,7 @@ public class GCItemTags {
     public static final TagKey<Item> CANISTERS = commonTag("canisters");
     public static final TagKey<Item> COPPER_CANISTERS = commonTag("canisters/copper");
     public static final TagKey<Item> TIN_CANISTERS = commonTag("canisters/tin");
-    
+
     public static final TagKey<Item> SOLAR_DUSTS = commonTag("dusts/solar");
 
     public static final TagKey<Item> CHEESE_FOODS = commonTag("foods/cheese");
