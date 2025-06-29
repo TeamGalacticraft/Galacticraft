@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.events;
 
+import dev.galacticraft.api.registry.ExtinguishableBlockRegistry;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
@@ -179,5 +180,15 @@ public class GCEventHandlers {
 
             footprintManager.footprintBlockChanges.clear();
         }
+    }
+
+    public static boolean extinguishBlock(Level level, BlockPos pos, BlockState oldState) {
+        ExtinguishableBlockRegistry.Entry entry = ExtinguishableBlockRegistry.INSTANCE.get(oldState.getBlock());
+        if (entry == null) return false;
+        BlockState newState = entry.transform(oldState);
+        if (newState == null) return false;
+        level.setBlockAndUpdate(pos, newState);
+        entry.callback(new ExtinguishableBlockRegistry.Context(level, pos, oldState));
+        return true;
     }
 }

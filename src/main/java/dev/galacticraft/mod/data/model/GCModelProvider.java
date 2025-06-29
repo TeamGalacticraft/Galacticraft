@@ -90,10 +90,12 @@ public class GCModelProvider extends FabricModelProvider {
         // TORCHES
         generator.createNormalTorch(GCBlocks.GLOWSTONE_TORCH, GCBlocks.GLOWSTONE_WALL_TORCH);
         generator.createNormalTorch(GCBlocks.UNLIT_TORCH, GCBlocks.UNLIT_WALL_TORCH);
+        generator.createNormalTorch(GCBlocks.UNLIT_SOUL_TORCH, GCBlocks.UNLIT_SOUL_WALL_TORCH);
 
         // LANTERNS
         generator.createLantern(GCBlocks.GLOWSTONE_LANTERN);
         generator.createLantern(GCBlocks.UNLIT_LANTERN);
+        generator.createLantern(GCBlocks.UNLIT_SOUL_LANTERN);
 
         // MOON NATURAL
         this.createMoonTurf(generator);
