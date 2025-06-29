@@ -55,7 +55,6 @@ public class FoodCannerMenu extends MachineMenu<FoodCannerBlockEntity> {
         data.registerBoolean(this.be::getSecondRowConsumed, this::setSecondRowConsumed);
         data.registerBoolean(this.be::getThirdRowConsumed, this::setThirdRowConsumed);
         data.registerBoolean(this.be::getFourthRowConsumed, this::setFourthRowConsumed);
-
     }
 
     public int getProgress() {

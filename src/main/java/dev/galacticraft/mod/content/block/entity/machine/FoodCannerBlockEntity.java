@@ -89,6 +89,7 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
     private int progress = 0;
     private boolean transferringCan = false;
     private boolean transferringFood = false;
+    private boolean ejectCan = false;
     private boolean[] rowsConsumed = {false, false, false, false};
 
     private ItemStack storage;
@@ -117,7 +118,7 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
                         .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.FOOD_CAN))
         );
         storage.add(
-                ItemResourceSlot.builder(TransferType.STORAGE)
+                ItemResourceSlot.builder(TransferType.INTERNAL)
                         .pos(62, 40)
                         .capacity(1)
                         .filter(ResourceFilters.ofResource(GCItems.EMPTY_CAN))
@@ -160,23 +161,19 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        this.incrementProgress();
         if (this.noEnergy()) {
             return MachineStatuses.NOT_ENOUGH_ENERGY;
         }
-        if (this.inputSlotEmpty()) {
-            if (!this.transferringCan && this.storageSlotEmpty()) {
-                this.setProgress(0);
-                return GCMachineStatuses.MISSING_EMPTY_CAN;
-            }
-        }
+        this.incrementProgress();
         if (this.storageSlotEmpty()) {
-            if (this.getProgress() == 0 && !this.transferringCan) {
+            if (!this.transferringCan && this.inputSlotEmpty()) {
+                this.reset(0);
+                return GCMachineStatuses.MISSING_EMPTY_CAN;
+            } else if (this.getProgress() == 0 && !this.transferringCan) {
                 this.transferringCan = true;
                 this.itemStorage().slot(INPUT_SLOT).extractOne();
                 return GCMachineStatuses.TRANSFERRING_CAN;
-            }
-            if (this.getProgress() == START_ROW_1) {
+            } else if (this.getProgress() == START_ROW_1) {
                 if (this.transferringCan) {
                     if (this.transferringFood) {
                         this.itemStorage().slot(STORAGE_SLOT).insert(this.storage.getItem(), this.storage.getComponentsPatch(), 1);
@@ -186,10 +183,17 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
                     }
                     this.transferringCan = false;
                 } else {
-                    this.setProgress(0);
-                    this.resetConsumedRows();
+                    this.reset(0);
                     return GCMachineStatuses.MISSING_EMPTY_CAN;
                 }
+            }
+        } else if (this.ejectCan) {
+            this.ejectCan = false;
+            if (!this.transferringFood && !this.outputFull()) {
+                this.transferringCan = true;
+                this.reset(TRANSFER_OUTPUT);
+                this.itemStorage().slot(STORAGE_SLOT).extractOne();
+                return GCMachineStatuses.TRANSFERRING_CAN;
             }
         }
 
@@ -200,34 +204,23 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
             nonEmpty |= nonEmptyRows[row];
         }
 
-        if (this.progress < TRANSFER_OUTPUT && !CannedFoodItem.hasSpace(this.storage) && !this.transferringCan && !this.transferringFood) {
-            this.setProgress(TRANSFER_OUTPUT);
-        }
         if (!nonEmpty && !this.transferringCan && !this.transferringFood) {
-            this.setProgress(0);
-            this.resetConsumedRows();
+            this.reset(START_ROW_1);
             return GCMachineStatuses.NO_FOOD;
-            // if (this.storageContainsFood()) {
-            //     this.setProgress(0);
-            // } else {
-            //     return GCMachineStatuses.NO_FOOD;
-            // }
         }
 
         for (int row : ROW_ORDER) {
-            if (this.itemStorage().slot(STORAGE_SLOT).isEmpty() && this.transferringFood) {
-                this.setProgress(0);
+            if (this.storageSlotEmpty() && this.transferringFood) {
+                this.reset(0);
                 return GCMachineStatuses.MISSING_EMPTY_CAN;
             }
 
             if (this.getProgress() == ROW_PROGRESS[row]) {
                 this.transferringFood = false;
-                if (nonEmptyRows[row]) {
-                    if (CannedFoodItem.hasSpace(this.storage)) {
-                        this.transferringFood = true;
-                        this.transferRowToCan(row);
-                        return GCMachineStatuses.CANNING;
-                    }
+                if (nonEmptyRows[row] && CannedFoodItem.hasSpace(this.storage)) {
+                    this.transferringFood = true;
+                    this.transferRowToCan(row);
+                    return GCMachineStatuses.CANNING;
                 } else {
                     switch (row) {
                         case 0:
@@ -248,8 +241,10 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
                             } else if (this.getFirstRowConsumed() || this.getSecondRowConsumed()) {
                                 this.transferringFood = true;
                                 this.setProgress(FINAL_PROGRESS);
-                            } else {
+                            } else if (!CannedFoodItem.hasSpace(this.storage)) {
                                 this.setProgress(TRANSFER_OUTPUT);
+                            } else {
+                                this.reset(START_ROW_1);
                             }
                             break;
                         case 3:
@@ -260,40 +255,40 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
         }
 
         if (this.getProgress() == TRANSFER_OUTPUT) {
-            if (this.itemStorage().slot(STORAGE_SLOT).isEmpty() && this.transferringFood) {
-                this.setProgress(0);
-                this.resetConsumedRows();
+            if (this.storageSlotEmpty() && this.transferringFood) {
+                this.reset(0);
                 return GCMachineStatuses.MISSING_EMPTY_CAN;
             }
             this.transferringFood = false;
-            if (this.outputFull()) {
+            if (this.itemStorage().getItem(STORAGE_SLOT) != this.storage) {
+                this.itemStorage().slot(STORAGE_SLOT).extractOne();
+                this.itemStorage().slot(STORAGE_SLOT).insert(this.storage.getItem(), this.storage.getComponentsPatch(), 1);
+            }
+            if (CannedFoodItem.hasSpace(this.storage)) {
+                this.setProgress(START_ROW_1);
+                this.resetConsumedRows();
+                return nonEmpty ? MachineStatuses.IDLE : GCMachineStatuses.NO_FOOD;
+            } else if (this.outputFull()) {
                 if (this.storageSlotEmpty()) {
                     this.storage = GCItems.CANNED_FOOD.getDefaultInstance();
-                    this.resetConsumedRows();
-                    this.setProgress(0);
-                    return MachineStatuses.OUTPUT_FULL;
-                }
-                if (this.itemStorage().getItem(STORAGE_SLOT) != this.storage) {
-                    this.itemStorage().slot(STORAGE_SLOT).extractOne();
-                    this.itemStorage().slot(STORAGE_SLOT).insert(this.storage.getItem(), this.storage.getComponentsPatch(), 1);
-                }
-                if (CannedFoodItem.hasSpace(this.storage) && nonEmpty) {
-                    this.setProgress(START_ROW_1);
-                    this.resetConsumedRows();
+                    this.reset(0);
                 }
                 return MachineStatuses.OUTPUT_FULL;
+            } else {
+                this.transferringCan = true;
+                this.itemStorage().slot(STORAGE_SLOT).extractOne();
+                return GCMachineStatuses.TRANSFERRING_CAN;
             }
-            this.transferringCan = true;
-            this.itemStorage().slot(STORAGE_SLOT).extractOne();
-            return GCMachineStatuses.TRANSFERRING_CAN;
         }
 
         if (this.getProgress() == MAX_PROGRESS && this.transferringCan) {
             this.transferringCan = false;
+            if (ItemStack.isSameItemSameComponents(this.storage, GCItems.CANNED_FOOD.getDefaultInstance())) {
+                this.storage = GCItems.EMPTY_CAN.getDefaultInstance();
+            }
             this.itemStorage().slot(OUTPUT_SLOT).insert(this.storage.getItem(), this.storage.getComponentsPatch(), 1);
             this.storage = GCItems.CANNED_FOOD.getDefaultInstance();
-            this.resetConsumedRows();
-            this.setProgress(0);
+            this.reset(0);
             return MachineStatuses.OUTPUT_FULL;
         }
 
@@ -382,6 +377,15 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
 
     public void setProgress(int progress) {
         this.progress = progress;
+    }
+
+    public void reset(int progress) {
+        this.setProgress(progress);
+        this.resetConsumedRows();
+    }
+
+    public void ejectCan() {
+        this.ejectCan = true;
     }
 
     @Override

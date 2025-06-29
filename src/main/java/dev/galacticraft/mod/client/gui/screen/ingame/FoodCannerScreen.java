@@ -26,10 +26,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.FoodCannerBlockEntity;
+import dev.galacticraft.mod.network.c2s.EjectCanPayload;
 import dev.galacticraft.mod.screen.FoodCannerMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -109,6 +111,16 @@ public class FoodCannerScreen extends MachineScreen<FoodCannerBlockEntity, FoodC
     protected void renderMachineBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.renderMachineBackground(graphics, mouseX, mouseY, delta);
         this.drawProgressBar(graphics.pose());
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (mouseIn(mouseX, mouseY, this.leftPos + 62, this.topPos + 40, 18, 18)) {
+            ClientPlayNetworking.send(new EjectCanPayload());
+            this.playButtonSound();
+            return true;
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     private void draw(int x, int y, int drawX, int drawY, int width, int height, PoseStack matrices) {
