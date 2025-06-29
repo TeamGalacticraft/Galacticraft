@@ -365,6 +365,7 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
     private void incrementProgress() {
         if (this.isActive()) {
             this.progress += 1;
+            this.energyStorage().extract(Galacticraft.CONFIG.foodCannerEnergyConsumptionRate());
         }
         if (this.progress > MAX_PROGRESS) {
             this.setProgress(0);
