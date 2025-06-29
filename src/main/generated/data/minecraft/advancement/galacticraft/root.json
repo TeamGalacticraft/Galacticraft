@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "root": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "galacticraft:textures/gui/advancements/backgrounds/moon.png",
+    "description": {
+      "translate": "advancement.galacticraft.root.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "galacticraft:rocket"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancement.galacticraft.root.title"
+    }
+  },
+  "requirements": [
+    [
+      "root"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,0 +1,64 @@
+{
+  "parent": "minecraft:galacticraft/oxygen_compressor",
+  "criteria": {
+    "fill_large_oxygen_tank": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:large_oxygen_tank",
+            "predicates": {
+              "galacticraft:full_tank": {}
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "fill_medium_oxygen_tank": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:medium_oxygen_tank",
+            "predicates": {
+              "galacticraft:full_tank": {}
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "fill_small_oxygen_tank": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:small_oxygen_tank",
+            "predicates": {
+              "galacticraft:full_tank": {}
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.galacticraft.fill_tank.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "galacticraft:medium_oxygen_tank"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.fill_tank.title"
+    }
+  },
+  "requirements": [
+    [
+      "fill_small_oxygen_tank",
+      "fill_medium_oxygen_tank",
+      "fill_large_oxygen_tank"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

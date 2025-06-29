@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:galacticraft/fuel_loader",
+  "criteria": {
+    "leave_rocket_during_countdown": {
+      "trigger": "galacticraft:leave_rocket_during_countdown"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.galacticraft.leave_rocket_during_countdown.description"
+    },
+    "frame": "goal",
+    "hidden": true,
+    "icon": {
+      "count": 1,
+      "id": "minecraft:clock"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.leave_rocket_during_countdown.title"
+    }
+  },
+  "requirements": [
+    [
+      "leave_rocket_during_countdown"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

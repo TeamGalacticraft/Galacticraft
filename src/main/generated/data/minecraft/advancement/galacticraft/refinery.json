@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:galacticraft/oil",
+  "criteria": {
+    "craft_refinery": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:refinery"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.galacticraft.refinery.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "galacticraft:refinery"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.refinery.title"
+    }
+  },
+  "requirements": [
+    [
+      "craft_refinery"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

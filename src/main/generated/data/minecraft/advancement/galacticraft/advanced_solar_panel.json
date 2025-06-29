@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:galacticraft/basic_solar_panel",
+  "criteria": {
+    "craft_advanced_solar_panel": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:advanced_solar_panel"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.galacticraft.advanced_solar_panel.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "galacticraft:advanced_solar_panel"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.advanced_solar_panel.title"
+    }
+  },
+  "requirements": [
+    [
+      "craft_advanced_solar_panel"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

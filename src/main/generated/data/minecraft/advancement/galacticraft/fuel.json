@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:galacticraft/refinery",
+  "criteria": {
+    "refine_fuel": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:fuel_bucket"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.galacticraft.fuel.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "galacticraft:fuel_bucket"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.fuel.title"
+    }
+  },
+  "requirements": [
+    [
+      "refine_fuel"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
