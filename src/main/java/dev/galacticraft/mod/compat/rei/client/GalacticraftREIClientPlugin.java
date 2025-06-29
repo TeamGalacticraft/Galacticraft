@@ -25,6 +25,7 @@ package dev.galacticraft.mod.compat.rei.client;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.machinelib.impl.Constant.TextureCoordinate;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultCompressingCategory;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultFabricationCategory;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultRocketCategory;
@@ -45,13 +46,17 @@ import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
+import me.shedaniel.rei.api.client.registry.entry.CollapsibleEntryRegistry;
 import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
 import me.shedaniel.rei.api.client.registry.screen.ExclusionZones;
 import me.shedaniel.rei.api.client.registry.transfer.TransferHandlerRegistry;
 import me.shedaniel.rei.api.client.registry.transfer.simple.SimpleTransferHandler;
+import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import me.shedaniel.rei.plugin.client.categories.crafting.filler.CraftingRecipeFiller;
 import me.shedaniel.rei.plugin.common.BuiltinPlugin;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
 import java.util.ArrayList;
@@ -97,6 +102,12 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
         for (ItemLike item : GCItems.HIDDEN_ITEMS) {
             registry.removeEntry(EntryStacks.of(item));
         }
+    }
+
+    @Override
+    public void registerCollapsibleEntries(CollapsibleEntryRegistry registry) {
+        registry.group(Constant.id(Constant.Item.CANNED_FOOD), Component.translatable(GCItems.CANNED_FOOD.getDescriptionId()),
+                stack -> stack.getType() == VanillaEntryTypes.ITEM && stack.<ItemStack>castValue().is(GCItems.CANNED_FOOD));
     }
 
     @Override
