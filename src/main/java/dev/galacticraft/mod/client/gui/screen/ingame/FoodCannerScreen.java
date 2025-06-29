@@ -49,58 +49,58 @@ public class FoodCannerScreen extends MachineScreen<FoodCannerBlockEntity, FoodC
     private void drawProgressBar(PoseStack matrices) {
         if (this.menu.state.isActive()) {
             int progress = this.menu.getProgress();
-            if (progress >= 1 && progress < 10) {
+            if (progress > 0 && progress <= TRANSFER_INPUT) {
                 // Transferring empty can from top slot to middle slot
                 this.draw(68, 30, 180, 30, 3, progress, matrices);
                 return;
-            } else if (progress >= OUTPUT_PROGRESS) {
+            } else if (progress >= TRANSFER_OUTPUT) {
                 // Transferring full can from middle slot to bottom slot
-                this.draw(68, 57, 180, 57, 3, progress - 106, matrices);
+                this.draw(68, 57, 180, 57, 3, progress - (TRANSFER_OUTPUT - 1), matrices);
                 return;
             }
 
             if (this.menu.getFirstRowConsumed()) {
-                if (progress >= 10 && progress < 36) {
-                    this.draw(97, 19, 209, 73, Math.max(9 - progress, -11), 3, matrices);
-                    if (progress >= 20) {
-                        this.draw(86, 21, 224, 21, 3, progress - 19, matrices);
+                if (progress >= START_ROW_1 && progress < START_ROW_2 - 1) {
+                    this.draw(97, 19, 209, 73, Math.max(TRANSFER_INPUT - progress, -11), 3, matrices);
+                    if (progress > START_ROW_1 + 10) {
+                        this.draw(86, 21, 224, 21, 3, progress - START_ROW_1 - 10, matrices);
                     }
-                } else if (progress >= 36) {
+                } else if (progress >= START_ROW_2 - 1) {
                     this.draw(86, 19, 224, 19, 11, 19, matrices);
                 }
             }
 
-            if (this.menu.getSecondRowConsumed() && progress >= 36) {
-                this.draw(97, 37, 209, 73, Math.max(35 - progress, -11), 3, matrices);
-                if (progress >= 47) {
-                    this.draw(86, 39, 224, 39, 3, Math.min(progress - 46, 10), matrices);
+            if (this.menu.getSecondRowConsumed() && progress >= START_ROW_2) {
+                this.draw(97, 37, 209, 73, Math.max((START_ROW_2 - 1) - progress, -11), 3, matrices);
+                if (progress > START_ROW_2 + 10) {
+                    this.draw(86, 39, 224, 39, 3, Math.min(progress - START_ROW_2 - 10, 10), matrices);
                 }
-            } else if (this.menu.getFirstRowConsumed() && progress >= 45) {
-                this.draw(86, 38, 224, 38, 3, Math.min(progress - 44, 11), matrices);
+            } else if (this.menu.getFirstRowConsumed() && progress >= SKIP_ROW_2) {
+                this.draw(86, 38, 224, 38, 3, Math.min(progress - (SKIP_ROW_2 - 1), 11), matrices);
             }
 
-            if (this.menu.getThirdRowConsumed() && progress >= 78) {
-                this.draw(97, 55, 209, 73, Math.max(77 - progress, -11), 3, matrices);
-                if (progress >= 87) {
-                    this.draw(86, 56, 198, 56, 3, Math.max(86 - progress, -10), matrices);
+            if (this.menu.getThirdRowConsumed() && progress >= START_ROW_3) {
+                this.draw(97, 55, 209, 73, Math.max((START_ROW_3 - 1) - progress, -11), 3, matrices);
+                if (progress > START_ROW_3 + 10) {
+                    this.draw(86, 56, 198, 56, 3, Math.max(START_ROW_3 + 10 - progress, -10), matrices);
                 }
-            } else if (this.menu.getFourthRowConsumed() && progress >= 85) {
-                this.draw(86, 58, 240, 58, 3, Math.max(84 - progress, -12), matrices);
+            } else if (this.menu.getFourthRowConsumed() && progress >= SKIP_ROW_3) {
+                this.draw(86, 57, 240, 57, 3, Math.max((SKIP_ROW_3 - 1) - progress, -11), matrices);
             }
 
             if (this.menu.getFourthRowConsumed()) {
-                if (progress >= 53 && progress < 78) {
-                    this.draw(97, 73, 209, 73, Math.max(52 - progress, -11), 3, matrices);
-                    if (progress >= 63) {
-                        this.draw(86, 74, 240, 74, 3, 62 - progress, matrices);
+                if (progress >= START_ROW_4 && progress < START_ROW_3 - 1) {
+                    this.draw(97, 73, 209, 73, Math.max((START_ROW_4 - 1) - progress, -11), 3, matrices);
+                    if (progress > START_ROW_4 + 10) {
+                        this.draw(86, 74, 240, 74, 3, START_ROW_4 + 10 - progress, matrices);
                     }
-                } else if (progress >= 78) {
+                } else if (progress >= START_ROW_3 - 1) {
                     this.draw(86, 57, 240, 57, 11, 19, matrices);
                 }
             }
 
-            if (progress >= 97) {
-                this.draw(86, 46, 198, 46, Math.max(96 - progress, -7), 3, matrices);
+            if (progress >= FINAL_PROGRESS) {
+                this.draw(86, 46, 198, 46, Math.max((FINAL_PROGRESS - 1) - progress, -7), 3, matrices);
             }
         }
     }

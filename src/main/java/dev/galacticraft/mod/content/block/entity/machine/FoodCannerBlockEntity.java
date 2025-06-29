@@ -73,16 +73,18 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
     };
     public static final int[] ROW_ORDER = {0, 1, 3, 2};
 
-    public static final int R0 = 10;
-    public static final int R1 = 37;
-    public static final int R2 = 79;
-    public static final int R3 = 54;
-    public static final int[] ROW_PROGRESS = {10, 37, 79, 54};
-    public static final int SKIP_SECOND_ROW = 45;
-    public static final int SKIP_THIRD_ROW = 86;
-    public static final int FINAL_PROGRESS = 97;
-    public static final int OUTPUT_PROGRESS = 107;
-    public static final int MAX_PROGRESS = 116;
+    public static final int TRANSFER_INPUT = 9;
+    public static final int START_ROW_1 = TRANSFER_INPUT + 1;
+    public static final int START_ROW_2 = START_ROW_1 + 28;
+    public static final int SKIP_ROW_2 = START_ROW_2 + 9;
+    public static final int START_ROW_4 = START_ROW_2 + 21;
+    public static final int START_ROW_3 = START_ROW_4 + 27;
+    public static final int SKIP_ROW_3 = START_ROW_3 + 8;
+    public static final int FINAL_PROGRESS = START_ROW_3 + 21;
+    public static final int TRANSFER_OUTPUT = FINAL_PROGRESS + 7;
+    public static final int MAX_PROGRESS = TRANSFER_OUTPUT + 9;
+
+    public static final int[] ROW_PROGRESS = {START_ROW_1, START_ROW_2, START_ROW_3, START_ROW_4};
 
     private int progress = 0;
     private boolean transferringCan = false;
@@ -174,7 +176,7 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
                 this.itemStorage().slot(INPUT_SLOT).extractOne();
                 return GCMachineStatuses.TRANSFERRING_CAN;
             }
-            if (this.getProgress() == ROW_PROGRESS[0]) {
+            if (this.getProgress() == START_ROW_1) {
                 if (this.transferringCan) {
                     if (this.transferringFood) {
                         this.itemStorage().slot(STORAGE_SLOT).insert(this.storage.getItem(), this.storage.getComponentsPatch(), 1);
@@ -198,15 +200,18 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
             nonEmpty |= nonEmptyRows[row];
         }
 
-        if (this.progress < OUTPUT_PROGRESS && !CannedFoodItem.hasSpace(this.storage) && !this.transferringCan && !this.transferringFood) {
-            this.setProgress(OUTPUT_PROGRESS);
+        if (this.progress < TRANSFER_OUTPUT && !CannedFoodItem.hasSpace(this.storage) && !this.transferringCan && !this.transferringFood) {
+            this.setProgress(TRANSFER_OUTPUT);
         }
         if (!nonEmpty && !this.transferringCan && !this.transferringFood) {
-            if (this.storageContainsFood()) {
-                this.setProgress(OUTPUT_PROGRESS);
-            } else {
-                return GCMachineStatuses.NO_FOOD;
-            }
+            this.setProgress(0);
+            this.resetConsumedRows();
+            return GCMachineStatuses.NO_FOOD;
+            // if (this.storageContainsFood()) {
+            //     this.setProgress(0);
+            // } else {
+            //     return GCMachineStatuses.NO_FOOD;
+            // }
         }
 
         for (int row : ROW_ORDER) {
@@ -226,35 +231,35 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
                 } else {
                     switch (row) {
                         case 0:
-                            this.setProgress(ROW_PROGRESS[1]);
+                            this.setProgress(START_ROW_2);
                             break;
                         case 1:
                             if (this.getFirstRowConsumed()) {
                                 this.transferringFood = true;
-                                this.setProgress(SKIP_SECOND_ROW);
+                                this.setProgress(SKIP_ROW_2);
                             } else {
-                                this.setProgress(ROW_PROGRESS[3]);
+                                this.setProgress(START_ROW_4);
                             }
                             break;
                         case 2:
                             if (this.getFourthRowConsumed()) {
                                 this.transferringFood = true;
-                                this.setProgress(SKIP_THIRD_ROW);
+                                this.setProgress(SKIP_ROW_3);
                             } else if (this.getFirstRowConsumed() || this.getSecondRowConsumed()) {
                                 this.transferringFood = true;
                                 this.setProgress(FINAL_PROGRESS);
                             } else {
-                                this.setProgress(OUTPUT_PROGRESS);
+                                this.setProgress(TRANSFER_OUTPUT);
                             }
                             break;
                         case 3:
-                            this.setProgress(ROW_PROGRESS[2]);
+                            this.setProgress(START_ROW_3);
                     }
                 }
             }
         }
 
-        if (this.getProgress() == OUTPUT_PROGRESS) {
+        if (this.getProgress() == TRANSFER_OUTPUT) {
             if (this.itemStorage().slot(STORAGE_SLOT).isEmpty() && this.transferringFood) {
                 this.setProgress(0);
                 this.resetConsumedRows();
@@ -273,7 +278,7 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
                     this.itemStorage().slot(STORAGE_SLOT).insert(this.storage.getItem(), this.storage.getComponentsPatch(), 1);
                 }
                 if (CannedFoodItem.hasSpace(this.storage) && nonEmpty) {
-                    this.setProgress(ROW_PROGRESS[0]);
+                    this.setProgress(START_ROW_1);
                     this.resetConsumedRows();
                 }
                 return MachineStatuses.OUTPUT_FULL;
