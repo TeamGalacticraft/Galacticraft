@@ -132,7 +132,7 @@ public class RefineryBlockEntity extends MachineBlockEntity {
                     this.energyStorage().extract(Galacticraft.CONFIG.refineryEnergyConsumptionRate());
                     fuelTank.insert(GCFluids.FUEL, oilTank.extract(GCFluids.CRUDE_OIL, space));
                 }
-                return MachineStatuses.ACTIVE;
+                return GCMachineStatuses.REFINING;
             } else {
                 return MachineStatuses.NOT_ENOUGH_ENERGY;
             }

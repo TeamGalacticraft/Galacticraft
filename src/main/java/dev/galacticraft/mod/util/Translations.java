@@ -256,37 +256,38 @@ public interface Translations {
     }
 
     interface MachineStatus {
+        String GENERATING = "ui.galacticraft.status.generating";
+        String NO_FUEL = "ui.galacticraft.status.no_fuel";
+        String WARMING_UP = "ui.galacticraft.status.warming_up";
+        String COOLING_DOWN = "ui.galacticraft.status.cooling_down";
+        String PARTIALLY_GENERATING = "ui.galacticraft.status.partially_generating";
+        String NOT_GENERATING = "ui.galacticraft.status.not_generating";
+        String BLOCKED = "ui.galacticraft.status.blocked";
+        String FABRICATING = "ui.galacticraft.status.fabricating";
+        String COMPRESSING = "ui.galacticraft.status.compressing";
+        String SMELTING = "ui.galacticraft.status.smelting";
+        String NOT_ENOUGH_OXYGEN = "ui.galacticraft.status.not_enough_oxygen";
+        String COLLECTING = "ui.galacticraft.status.collecting";
+        String COMPRESSING_OXYGEN = "ui.galacticraft.status.compressing_oxygen";
+        String DECOMPRESSING = "ui.galacticraft.status.decompressing";
+        String MISSING_OXYGEN_TANK = "ui.galacticraft.status.missing_oxygen_tank";
+        String OXYGEN_TANK_FULL = "ui.galacticraft.status.oxygen_tank_full";
+        String EMPTY_OXYGEN_TANK = "ui.galacticraft.status.empty_oxygen_tank";
         String ALREADY_SEALED = "ui.galacticraft.status.already_sealed";
         String AREA_TOO_LARGE = "ui.galacticraft.status.area_too_large";
-        String BLOCKED = "ui.galacticraft.status.blocked";
-        String MISSING_EMPTY_CAN = "ui.galacticraft.status.missing_empty_can";
-        String COLLECTING = "ui.galacticraft.status.collecting";
-        String CANNING = "ui.galacticraft.status.canning";
-        String TRANSFERRING_CAN = "ui.galacticraft.status.transferring_can";
-        String NO_FOOD = "ui.galacticraft.status.no_food";
-        String COMPRESSING = "ui.galacticraft.status.compressing";
-        String COOLING_DOWN = "ui.galacticraft.status.cooling_down";
-        String DECOMPRESSING = "ui.galacticraft.status.decompressing";
-        String DISTRIBUTING = "ui.galacticraft.status.distributing";
-        String EMPTY_OXYGEN_TANK = "ui.galacticraft.status.empty_oxygen_tank";
-        String FABRICATING = "ui.galacticraft.status.fabricating";
-        String FUEL_TANK_FULL = "ui.galacticraft.status.fuel_tank_full";
-        String GENERATING = "ui.galacticraft.status.generating";
-        String LOADING = "ui.galacticraft.status.loading";
-        String MISSING_OIL = "ui.galacticraft.status.missing_oil";
-        String MISSING_OXYGEN_TANK = "ui.galacticraft.status.missing_oxygen_tank";
-        String NIGHT = "ui.galacticraft.status.night";
-        String NO_FUEL = "ui.galacticraft.status.no_fuel";
-        String NOT_ENOUGH_OXYGEN = "ui.galacticraft.status.not_enough_oxygen";
-        String OXYGEN_TANK_FULL = "ui.galacticraft.status.oxygen_tank_full";
-        String PARTIALLY_BLOCKED = "ui.galacticraft.status.partially_blocked";
-        String RAIN = "ui.galacticraft.status.rain";
-        String THUNDER = "ui.galacticraft.status.thunder";
         String SEALED = "ui.galacticraft.status.sealed";
-        String WARMING_UP = "ui.galacticraft.status.warming_up";
+        String DISTRIBUTING = "ui.galacticraft.status.distributing";
+        String REFINING = "ui.galacticraft.status.refining";
+        String MISSING_OIL = "ui.galacticraft.status.missing_oil";
+        String FUEL_TANK_FULL = "ui.galacticraft.status.fuel_tank_full";
+        String LOADING = "ui.galacticraft.status.loading";
         String NOT_ENOUGH_FUEL = "ui.galacticraft.status.not_enough_fuel";
         String NO_ROCKET = "ui.galacticraft.status.no_rocket";
         String ROCKET_IS_FULL = "ui.galacticraft.status.rocket_is_full";
+        String CANNING = "ui.galacticraft.status.canning";
+        String TRANSFERRING_CAN = "ui.galacticraft.status.transferring_can";
+        String NO_FOOD = "ui.galacticraft.status.no_food";
+        String MISSING_EMPTY_CAN = "ui.galacticraft.status.missing_empty_can";
     }
 
     interface CelestialSelection {

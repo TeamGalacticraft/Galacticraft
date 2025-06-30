@@ -1005,37 +1005,38 @@ public class GCTranslationProvider extends TranslationProvider {
     }
 
     protected void generateMachineStatusTranslations() {
+        this.add(MachineStatus.GENERATING, "Generating");
+        this.add(MachineStatus.NO_FUEL, "No Fuel");
+        this.add(MachineStatus.WARMING_UP, "Warming Up");
+        this.add(MachineStatus.COOLING_DOWN, "Cooling Down");
+        this.add(MachineStatus.PARTIALLY_GENERATING, "Partially Generating");
+        this.add(MachineStatus.NOT_GENERATING, "Not Generating");
+        this.add(MachineStatus.BLOCKED, "Blocked");
+        this.add(MachineStatus.FABRICATING, "Fabricating");
+        this.add(MachineStatus.COMPRESSING, "Compressing");
+        this.add(MachineStatus.SMELTING, "Smelting");
+        this.add(MachineStatus.NOT_ENOUGH_OXYGEN, "Not Enough Oxygen");
+        this.add(MachineStatus.COLLECTING, "Collecting");
+        this.add(MachineStatus.COMPRESSING_OXYGEN, "Compressing");
+        this.add(MachineStatus.DECOMPRESSING, "Decompressing");
+        this.add(MachineStatus.MISSING_OXYGEN_TANK, "Missing Oxygen Tank");
+        this.add(MachineStatus.OXYGEN_TANK_FULL, "Oxygen Tank Full");
+        this.add(MachineStatus.EMPTY_OXYGEN_TANK, "Empty Oxygen Tank");
         this.add(MachineStatus.ALREADY_SEALED, "Already Sealed");
         this.add(MachineStatus.AREA_TOO_LARGE, "Area Too Large");
-        this.add(MachineStatus.MISSING_EMPTY_CAN, "Missing Empty Can");
-        this.add(MachineStatus.NO_FOOD, "No Food");
-        this.add(MachineStatus.TRANSFERRING_CAN, "Transferring Can");
-        this.add(MachineStatus.CANNING, "Canning");
-        this.add(MachineStatus.BLOCKED, "Blocked");
-        this.add(MachineStatus.COLLECTING, "Collecting");
-        this.add(MachineStatus.COMPRESSING, "Compressing");
-        this.add(MachineStatus.COOLING_DOWN, "Cooling Down");
-        this.add(MachineStatus.DECOMPRESSING, "Decompressing");
-        this.add(MachineStatus.DISTRIBUTING, "Distributing");
-        this.add(MachineStatus.EMPTY_OXYGEN_TANK, "Empty Oxygen Tank");
-        this.add(MachineStatus.FABRICATING, "Fabricating");
-        this.add(MachineStatus.FUEL_TANK_FULL, "Fuel Tank Full");
-        this.add(MachineStatus.GENERATING, "Generating");
-        this.add(MachineStatus.LOADING, "Loading");
-        this.add(MachineStatus.MISSING_OIL, "Missing Oil");
-        this.add(MachineStatus.MISSING_OXYGEN_TANK, "Missing Oxygen Tank");
-        this.add(MachineStatus.NIGHT, "Night");
-        this.add(MachineStatus.NO_FUEL, "No Fuel");
-        this.add(MachineStatus.NOT_ENOUGH_OXYGEN, "Not Enough Oxygen");
-        this.add(MachineStatus.OXYGEN_TANK_FULL, "Oxygen Tank Full");
-        this.add(MachineStatus.PARTIALLY_BLOCKED, "Partially Blocked");
-        this.add(MachineStatus.RAIN, "Rain");
-        this.add(MachineStatus.THUNDER, "Thunder");
         this.add(MachineStatus.SEALED, "Sealed");
-        this.add(MachineStatus.WARMING_UP, "Warming Up");
+        this.add(MachineStatus.DISTRIBUTING, "Distributing");
+        this.add(MachineStatus.REFINING, "Refining");
+        this.add(MachineStatus.MISSING_OIL, "Missing Oil");
+        this.add(MachineStatus.FUEL_TANK_FULL, "Fuel Tank Full");
+        this.add(MachineStatus.LOADING, "Loading");
         this.add(MachineStatus.NOT_ENOUGH_FUEL, "Not Enough Fuel");
         this.add(MachineStatus.NO_ROCKET, "No Rocket");
         this.add(MachineStatus.ROCKET_IS_FULL, "Rocket Is Full");
+        this.add(MachineStatus.CANNING, "Canning");
+        this.add(MachineStatus.TRANSFERRING_CAN, "Transferring Can");
+        this.add(MachineStatus.NO_FOOD, "No Food");
+        this.add(MachineStatus.MISSING_EMPTY_CAN, "Missing Empty Can");
     }
 
     protected void generateCelestialSelectionTranslations() {
