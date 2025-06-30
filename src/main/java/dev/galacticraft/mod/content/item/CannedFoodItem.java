@@ -71,6 +71,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static dev.galacticraft.mod.content.item.GCItems.EMPTY_CAN;
 import static dev.galacticraft.mod.util.TextureUtils.getAverageColor;
 import static net.minecraft.data.models.model.TextureMapping.getItemTexture;
 
@@ -195,14 +196,14 @@ public class CannedFoodItem extends Item implements FabricItemStack {
             }
             if (itemStack.isEmpty()) {
                 if (getContents(can).isEmpty()) {
-                    can = this.getDefaultInstance();
+                    can = EMPTY_CAN.getDefaultInstance();
                 }
                 return can;
             } else {
                 if (livingEntity instanceof Player player) {
                     if (!player.getAbilities().instabuild) {
                         if (getContents(can).isEmpty()) {
-                            can = this.getDefaultInstance();
+                            can = EMPTY_CAN.getDefaultInstance();
                         }
                         if (!player.getInventory().add(can)) {
                             player.drop(can, false);
