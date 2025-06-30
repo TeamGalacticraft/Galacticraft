@@ -24,7 +24,11 @@ package dev.galacticraft.mod.recipe;
 
 import dev.galacticraft.mod.content.item.EmergencyKitItem;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.content.item.ParachuteItem;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
@@ -43,8 +47,18 @@ public class EmergencyKitRecipe extends CustomRecipe {
             return false;
         }
 
+        DyeColor color = null;
+        for (int i = 0; i < craftingInput.ingredientCount(); ++i) {
+            ItemStack itemStack = craftingInput.getItem(i);
+            if (itemStack.getItem() instanceof ParachuteItem parachute) {
+                color = parachute.getColor();
+                break;
+            }
+        }
+        if (color == null) return false;
+
         boolean[] found = new boolean[9];
-        for (ItemStack itemStack : EmergencyKitItem.getContents()) {
+        for (ItemStack itemStack : EmergencyKitItem.getContents(color)) {
             for (int i = 0; i < 9; ++i) {
                 if (found[i]) {
                     if (i == 8) {
@@ -65,7 +79,18 @@ public class EmergencyKitRecipe extends CustomRecipe {
 
     @Override
     public ItemStack assemble(CraftingInput craftingInput, HolderLookup.Provider provider) {
-        return GCItems.EMERGENCY_KIT.getDefaultInstance();
+        DyeColor color = DyeColor.RED;
+        for (int i = 0; i < craftingInput.ingredientCount(); ++i) {
+            ItemStack itemStack = craftingInput.getItem(i);
+            if (itemStack.getItem() instanceof ParachuteItem parachute) {
+                color = parachute.getColor();
+                break;
+            }
+        }
+
+        ItemStack output = GCItems.EMERGENCY_KIT.getDefaultInstance();
+        output.set(DataComponents.BASE_COLOR, color);
+        return output;
     }
 
     @Override
