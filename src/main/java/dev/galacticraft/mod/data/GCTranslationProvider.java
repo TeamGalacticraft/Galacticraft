@@ -725,10 +725,6 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.tag(GCItemTags.EVOLVED_CREEPER_DROP_MUSIC_DISCS, "Evolved Creeper Music Disc Drops");
 
-        this.tag(GCItemTags.OIL_BUCKETS, "Oil Buckets");
-        this.tag(GCItemTags.FUEL_BUCKETS, "Fuel Buckets");
-        this.tag(GCItemTags.SULFURIC_ACID_BUCKETS, "Sulfuric Acid Buckets");
-
         this.tag(GCItemTags.SLABS, "Galacticraft Slabs");
         this.tag(GCItemTags.STAIRS, "Galacticraft Stairs");
         this.tag(GCItemTags.WALLS, "Galacticraft Walls");
@@ -736,6 +732,12 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.MOON_COBBLESTONES, "Moon Cobblestones");
         this.tag(GCItemTags.LUNASLATE_COBBLESTONES, "Lunaslate Cobblestones");
         this.tag(GCItemTags.MARS_COBBLESTONES, "Mars Cobblestones");
+
+        this.tag(GCItemTags.ASTEROID_ROCKS, "Asteroid Rocks");
+
+        this.tag(GCItemTags.OIL_BUCKETS, "Oil Buckets");
+        this.tag(GCItemTags.FUEL_BUCKETS, "Fuel Buckets");
+        this.tag(GCItemTags.SULFURIC_ACID_BUCKETS, "Sulfuric Acid Buckets");
     }
 
     protected void generateGasTranslations() {
