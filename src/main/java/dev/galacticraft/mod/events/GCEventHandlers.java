@@ -75,19 +75,17 @@ public class GCEventHandlers {
         if (CannedFoodItem.canAddToCan(heldItem.getItem())) {
             Vec3 playerEyePos = player.getEyePosition();
 
-            if (player.galacticraft$hasMask()) {
-                if (heldItem.getItem() instanceof CannedFoodItem) {
-                    return InteractionResultHolder.pass(heldItem);
-                } else {
-                    player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_WITH_MASK).withStyle(Constant.Text.RED_STYLE), true);
-                    return InteractionResultHolder.fail(heldItem);
-                }
+            if (player.isCreative()) {
+                return InteractionResultHolder.pass(heldItem);
+            } else if (player.galacticraft$hasMask()) {
+                player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_WITH_MASK).withStyle(Constant.Text.RED_STYLE), true);
+                return InteractionResultHolder.fail(heldItem);
             } else if (!level.getDefaultBreathable() && !level.isBreathable(new BlockPos((int) Math.floor(playerEyePos.x), (int) Math.floor(playerEyePos.y), (int) Math.floor(playerEyePos.z)))) { //sealed atmosphere check. they dont have a mask on so make sure they can breathe before eating
                 player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_IN_NO_ATMOSPHERE).withStyle(Constant.Text.RED_STYLE), true);
-                return InteractionResultHolder.fail(player.getItemInHand(hand));
+                return InteractionResultHolder.fail(heldItem);
             }
         }
-        return InteractionResultHolder.pass(player.getItemInHand(hand));
+        return InteractionResultHolder.pass(heldItem);
     }
 
     public static InteractionResult allowCryogenicSleep(LivingEntity entity, BlockPos sleepingPos, BlockState state, boolean vanillaResult) {
