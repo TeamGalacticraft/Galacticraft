@@ -185,6 +185,13 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
         } else if (this.ejectCan) {
             this.ejectCan = false;
             if (!this.transferringCan && !this.transferringFood) {
+                ItemStack itemStack = this.currentCan();
+                if (ItemStack.isSameItemSameComponents(itemStack, CANNED_FOOD.getDefaultInstance())) {
+                    itemStack = EMPTY_CAN.getDefaultInstance();
+                }
+                if (!this.itemStorage().slot(OUTPUT_SLOT).canInsert(itemStack.getItem(), itemStack.getComponentsPatch(), 1)) {
+                    return MachineStatuses.OUTPUT_FULL;
+                }
                 this.transferringCan = true;
                 this.setProgress(TRANSFER_OUTPUT);
                 return GCMachineStatuses.TRANSFERRING_CAN;
