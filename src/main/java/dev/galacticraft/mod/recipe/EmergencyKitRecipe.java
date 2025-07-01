@@ -25,7 +25,6 @@ package dev.galacticraft.mod.recipe;
 import dev.galacticraft.mod.content.item.EmergencyKitItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.item.ParachuteItem;
-import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.DyeColor;
