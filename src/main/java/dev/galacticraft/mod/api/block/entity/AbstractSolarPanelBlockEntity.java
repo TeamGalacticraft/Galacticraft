@@ -53,8 +53,8 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
     public static final int CHARGE_SLOT = 0;
     protected final boolean[] blockage = new boolean[9];
     protected int blocked = 0;
-    public long currentEnergyGeneration = 0;
     private final EnergySource energySource = new EnergySource(this);
+    public long currentEnergyGeneration = 0;
     private long dayLength = 24000;
     private float tilt = NOON;
 
@@ -96,25 +96,25 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
         if (this.blocked >= 9) return GCMachineStatuses.BLOCKED;
         if (this.energyStorage().isFull()) return MachineStatuses.CAPACITOR_FULL;
         MachineStatus status = null;
-        double multiplier = blocked == 0 ? 1 : (9.0 - this.blocked) / 9.0;
-        if (this.blocked > 1) status = GCMachineStatuses.PARTIALLY_BLOCKED;
+        double multiplier = this.blocked == 0 ? 1 : (9.0 - this.blocked) / 9.0;
+        if (this.blocked > 0) status = GCMachineStatuses.PARTIALLY_GENERATING;
         if (level.isThundering()) {
-            if (status == null) status = GCMachineStatuses.THUNDER;
+            if (status == null) status = GCMachineStatuses.PARTIALLY_GENERATING;
             multiplier *= 0.1;
         } else if (level.isRaining()) {
-            if (status == null) status = GCMachineStatuses.RAIN;
+            if (status == null) status = GCMachineStatuses.PARTIALLY_GENERATING;
             multiplier *= 0.5;
         }
         long time = level.getDayTime() % this.dayLength;
         // Don't use this.isDay() because it returns false when it is thundering
-        if (time > this.dayLength / 2) status = GCMachineStatuses.NIGHT;
+        if (time > this.dayLength / 2) status = GCMachineStatuses.NOT_GENERATING;
         if (time > this.dayLength / 4) time = (long) (this.dayLength / 2) - time;
 
         profiler.push("transaction");
         this.currentEnergyGeneration = this.calculateEnergyProduction(time, multiplier);
         this.energyStorage().insert(this.currentEnergyGeneration);
         profiler.pop();
-        return status == null ? GCMachineStatuses.COLLECTING : status;
+        return status == null ? GCMachineStatuses.GENERATING : status;
     }
 
     protected abstract long calculateEnergyProduction(long time, double multiplier);

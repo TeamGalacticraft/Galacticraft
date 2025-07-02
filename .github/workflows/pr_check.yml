@@ -36,14 +36,14 @@ jobs:
       - name: Initialize build environment
         run: ./gradlew
 
-      - name: Check license headers
-        run: ./gradlew checkLicenses
+      - name: Spotless check
+        run: ./gradlew spotlessCheck
 
       - name: Build
         id: build
         if: ${{ !cancelled() }}
-        run: ./gradlew assemble testClasses -x checkLicenses
+        run: ./gradlew assemble testClasses -x spotlessCheck
 
       - name: Test
         if: ${{ steps.build.outcome == 'success' && !cancelled() }}
-        run: ./gradlew test -x checkLicenses
+        run: ./gradlew test -x spotlessCheck

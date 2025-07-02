@@ -121,7 +121,7 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
                     tank.insert(FluidVariant.of(Gases.OXYGEN), available, transaction);
                     transaction.commit();
                     profiler.pop();
-                    return GCMachineStatuses.COMPRESSING;
+                    return GCMachineStatuses.COMPRESSING_OXYGEN;
                 }
             } else {
                 profiler.pop();

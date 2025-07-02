@@ -41,10 +41,10 @@ import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 
 public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
@@ -333,6 +333,11 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .addTag(GCBlockTags.MOON_COBBLESTONES)
                 .addTag(GCBlockTags.LUNASLATE_COBBLESTONES)
                 .addTag(GCBlockTags.MARS_COBBLESTONES);
+
+        this.tag(GCBlockTags.ASTEROID_ROCKS)
+                .add(GCBlocks.ASTEROID_ROCK)
+                .add(GCBlocks.ASTEROID_ROCK_1)
+                .add(GCBlocks.ASTEROID_ROCK_2);
 
         this.tag(BlockTags.ICE)
                 .add(GCBlocks.DENSE_ICE);

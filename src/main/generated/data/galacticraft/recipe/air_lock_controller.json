@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "M": {
+      "item": "galacticraft:compressed_meteoric_iron"
+    },
+    "S": {
+      "item": "galacticraft:compressed_steel"
+    },
+    "W": {
+      "item": "galacticraft:basic_wafer"
+    }
+  },
+  "pattern": [
+    "SSS",
+    "MWM",
+    "SSS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:air_lock_controller"
+  }
+}

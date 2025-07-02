@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:galacticraft/root",
+  "criteria": {
+    "craft_coal_generator": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:coal_generator"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.galacticraft.coal_generator.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "galacticraft:coal_generator"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.coal_generator.title"
+    }
+  },
+  "requirements": [
+    [
+      "craft_coal_generator"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

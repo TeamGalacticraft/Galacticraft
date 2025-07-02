@@ -284,7 +284,7 @@ public class GCCreativeModeTabs {
             .builder()
             .icon(() -> new ItemStack(CANVAS))
             .title(Component.translatable(Translations.ItemGroup.ITEMS))
-            .displayItems((parameters, output) -> {                
+            .displayItems((parameters, output) -> {
                 // BATTERIES
                 output.accept(BATTERY);
                 ItemStack chargedBattery = new ItemStack(BATTERY);

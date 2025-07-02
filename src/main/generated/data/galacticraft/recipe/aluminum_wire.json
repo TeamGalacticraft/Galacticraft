@@ -6,7 +6,7 @@
       "tag": "c:ingots/aluminum"
     },
     "W": {
-      "item": "minecraft:white_wool"
+      "tag": "minecraft:wool"
     }
   },
   "pattern": [

@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:galacticraft/moon_dungeon_key",
+  "criteria": {
+    "buggy_schematic": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:moon_buggy_schematic"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.galacticraft.buggy_schematic.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "galacticraft:moon_buggy_schematic"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.buggy_schematic.title"
+    }
+  },
+  "requirements": [
+    [
+      "buggy_schematic"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

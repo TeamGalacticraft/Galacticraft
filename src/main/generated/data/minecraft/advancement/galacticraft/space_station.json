@@ -1,0 +1,27 @@
+{
+  "parent": "minecraft:galacticraft/moon",
+  "criteria": {
+    "create_space_station": {
+      "trigger": "galacticraft:create_space_station"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.galacticraft.space_station.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "galacticraft:full_solar_panel"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.space_station.title"
+    }
+  },
+  "requirements": [
+    [
+      "create_space_station"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

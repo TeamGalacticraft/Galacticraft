@@ -49,6 +49,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/white_chute",
+        "y": 0
+      },
+      "when": {
+        "color": "white",
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/white_chute",
+        "y": 180
+      },
+      "when": {
+        "color": "white",
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/white_chute",
         "y": 180
       },
       "when": {
@@ -69,6 +89,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/white_chute",
+        "y": 270
+      },
+      "when": {
+        "color": "white",
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/white_chute",
+        "y": 90
+      },
+      "when": {
+        "color": "white",
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/white_chute",
         "y": 90
       },
       "when": {
@@ -89,6 +129,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/orange_chute",
+        "y": 0
+      },
+      "when": {
+        "color": "orange",
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/orange_chute",
+        "y": 180
+      },
+      "when": {
+        "color": "orange",
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/orange_chute",
         "y": 180
       },
       "when": {
@@ -109,6 +169,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/orange_chute",
+        "y": 270
+      },
+      "when": {
+        "color": "orange",
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/orange_chute",
+        "y": 90
+      },
+      "when": {
+        "color": "orange",
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/orange_chute",
         "y": 90
       },
       "when": {
@@ -129,6 +209,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/magenta_chute",
+        "y": 0
+      },
+      "when": {
+        "color": "magenta",
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/magenta_chute",
+        "y": 180
+      },
+      "when": {
+        "color": "magenta",
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/magenta_chute",
         "y": 180
       },
       "when": {
@@ -149,6 +249,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/magenta_chute",
+        "y": 270
+      },
+      "when": {
+        "color": "magenta",
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/magenta_chute",
+        "y": 90
+      },
+      "when": {
+        "color": "magenta",
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/magenta_chute",
         "y": 90
       },
       "when": {
@@ -169,6 +289,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/light_blue_chute",
+        "y": 0
+      },
+      "when": {
+        "color": "light_blue",
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/light_blue_chute",
+        "y": 180
+      },
+      "when": {
+        "color": "light_blue",
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/light_blue_chute",
         "y": 180
       },
       "when": {
@@ -189,6 +329,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/light_blue_chute",
+        "y": 270
+      },
+      "when": {
+        "color": "light_blue",
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/light_blue_chute",
+        "y": 90
+      },
+      "when": {
+        "color": "light_blue",
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/light_blue_chute",
         "y": 90
       },
       "when": {
@@ -209,6 +369,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/yellow_chute",
+        "y": 0
+      },
+      "when": {
+        "color": "yellow",
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/yellow_chute",
+        "y": 180
+      },
+      "when": {
+        "color": "yellow",
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/yellow_chute",
         "y": 180
       },
       "when": {
@@ -229,6 +409,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/yellow_chute",
+        "y": 270
+      },
+      "when": {
+        "color": "yellow",
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/yellow_chute",
+        "y": 90
+      },
+      "when": {
+        "color": "yellow",
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/yellow_chute",
         "y": 90
       },
       "when": {
@@ -249,6 +449,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/lime_chute",
+        "y": 0
+      },
+      "when": {
+        "color": "lime",
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/lime_chute",
+        "y": 180
+      },
+      "when": {
+        "color": "lime",
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/lime_chute",
         "y": 180
       },
       "when": {
@@ -269,6 +489,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/lime_chute",
+        "y": 270
+      },
+      "when": {
+        "color": "lime",
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/lime_chute",
+        "y": 90
+      },
+      "when": {
+        "color": "lime",
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/lime_chute",
         "y": 90
       },
       "when": {
@@ -289,6 +529,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/pink_chute",
+        "y": 0
+      },
+      "when": {
+        "color": "pink",
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/pink_chute",
+        "y": 180
+      },
+      "when": {
+        "color": "pink",
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/pink_chute",
         "y": 180
       },
       "when": {
@@ -309,6 +569,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/pink_chute",
+        "y": 270
+      },
+      "when": {
+        "color": "pink",
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/pink_chute",
+        "y": 90
+      },
+      "when": {
+        "color": "pink",
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/pink_chute",
         "y": 90
       },
       "when": {
@@ -329,6 +609,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/gray_chute",
+        "y": 0
+      },
+      "when": {
+        "color": "gray",
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/gray_chute",
+        "y": 180
+      },
+      "when": {
+        "color": "gray",
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/gray_chute",
         "y": 180
       },
       "when": {
@@ -349,6 +649,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/gray_chute",
+        "y": 270
+      },
+      "when": {
+        "color": "gray",
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/gray_chute",
+        "y": 90
+      },
+      "when": {
+        "color": "gray",
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/gray_chute",
         "y": 90
       },
       "when": {
@@ -369,6 +689,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/light_gray_chute",
+        "y": 0
+      },
+      "when": {
+        "color": "light_gray",
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/light_gray_chute",
+        "y": 180
+      },
+      "when": {
+        "color": "light_gray",
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/light_gray_chute",
         "y": 180
       },
       "when": {
@@ -389,6 +729,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/light_gray_chute",
+        "y": 270
+      },
+      "when": {
+        "color": "light_gray",
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/light_gray_chute",
+        "y": 90
+      },
+      "when": {
+        "color": "light_gray",
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/light_gray_chute",
         "y": 90
       },
       "when": {
@@ -409,6 +769,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/cyan_chute",
+        "y": 0
+      },
+      "when": {
+        "color": "cyan",
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/cyan_chute",
+        "y": 180
+      },
+      "when": {
+        "color": "cyan",
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/cyan_chute",
         "y": 180
       },
       "when": {
@@ -429,6 +809,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/cyan_chute",
+        "y": 270
+      },
+      "when": {
+        "color": "cyan",
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/cyan_chute",
+        "y": 90
+      },
+      "when": {
+        "color": "cyan",
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/cyan_chute",
         "y": 90
       },
       "when": {
@@ -449,6 +849,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/purple_chute",
+        "y": 0
+      },
+      "when": {
+        "color": "purple",
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/purple_chute",
+        "y": 180
+      },
+      "when": {
+        "color": "purple",
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/purple_chute",
         "y": 180
       },
       "when": {
@@ -469,6 +889,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/purple_chute",
+        "y": 270
+      },
+      "when": {
+        "color": "purple",
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/purple_chute",
+        "y": 90
+      },
+      "when": {
+        "color": "purple",
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/purple_chute",
         "y": 90
       },
       "when": {
@@ -489,6 +929,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/blue_chute",
+        "y": 0
+      },
+      "when": {
+        "color": "blue",
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/blue_chute",
+        "y": 180
+      },
+      "when": {
+        "color": "blue",
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/blue_chute",
         "y": 180
       },
       "when": {
@@ -509,6 +969,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/blue_chute",
+        "y": 270
+      },
+      "when": {
+        "color": "blue",
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/blue_chute",
+        "y": 90
+      },
+      "when": {
+        "color": "blue",
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/blue_chute",
         "y": 90
       },
       "when": {
@@ -529,6 +1009,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/brown_chute",
+        "y": 0
+      },
+      "when": {
+        "color": "brown",
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/brown_chute",
+        "y": 180
+      },
+      "when": {
+        "color": "brown",
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/brown_chute",
         "y": 180
       },
       "when": {
@@ -549,6 +1049,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/brown_chute",
+        "y": 270
+      },
+      "when": {
+        "color": "brown",
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/brown_chute",
+        "y": 90
+      },
+      "when": {
+        "color": "brown",
+        "facing": "east"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/brown_chute",
         "y": 90
       },
       "when": {
@@ -569,6 +1089,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/green_chute",
+        "y": 0
+      },
+      "when": {
+        "color": "green",
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/green_chute",
+        "y": 180
+      },
+      "when": {
+        "color": "green",
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/green_chute",
         "y": 180
       },
       "when": {
@@ -584,6 +1124,26 @@
       "when": {
         "color": "green",
         "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/green_chute",
+        "y": 270
+      },
+      "when": {
+        "color": "green",
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/green_chute",
+        "y": 90
+      },
+      "when": {
+        "color": "green",
+        "facing": "east"
       }
     },
     {
@@ -609,6 +1169,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/red_chute",
+        "y": 0
+      },
+      "when": {
+        "color": "red",
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/red_chute",
+        "y": 180
+      },
+      "when": {
+        "color": "red",
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/red_chute",
         "y": 180
       },
       "when": {
@@ -624,6 +1204,26 @@
       "when": {
         "color": "red",
         "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/red_chute",
+        "y": 270
+      },
+      "when": {
+        "color": "red",
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/red_chute",
+        "y": 90
+      },
+      "when": {
+        "color": "red",
+        "facing": "east"
       }
     },
     {
@@ -649,6 +1249,26 @@
     {
       "apply": {
         "model": "galacticraft:block/parachest/black_chute",
+        "y": 0
+      },
+      "when": {
+        "color": "black",
+        "facing": "north"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/black_chute",
+        "y": 180
+      },
+      "when": {
+        "color": "black",
+        "facing": "south"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/black_chute",
         "y": 180
       },
       "when": {
@@ -664,6 +1284,26 @@
       "when": {
         "color": "black",
         "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/black_chute",
+        "y": 270
+      },
+      "when": {
+        "color": "black",
+        "facing": "west"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/parachest/black_chute",
+        "y": 90
+      },
+      "when": {
+        "color": "black",
+        "facing": "east"
       }
     },
     {
