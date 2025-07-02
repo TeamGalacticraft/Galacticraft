@@ -148,6 +148,7 @@ public interface Translations {
         String OXYGEN_SEALER_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_collector_oxygen_consumption_rate";
         String MAX_SEALING_POWER = "config.galacticraft.machines.max_sealing_power";
         String REFINERY_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.refinery_energy_consumption_rate";
+        String FUEL_LOADER_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.fuel_loader_energy_consumption_rate";
         String ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.electric_furnace_energy_consumption_rate";
         String ENERGY_STORAGE_MODULE_STORAGE_SIZE = "config.galacticraft.energy.machines.energy_storage_module_storage_size";
         String ENERGY_STORAGE_SIZE = "config.galacticraft.energy.machines.energy_storage_size";
@@ -313,6 +314,7 @@ public interface Translations {
         String REFINING = "ui.galacticraft.status.refining";
         String MISSING_OIL = "ui.galacticraft.status.missing_oil";
         String FUEL_TANK_FULL = "ui.galacticraft.status.fuel_tank_full";
+        String PREPARING = "ui.galacticraft.status.preparing";
         String LOADING = "ui.galacticraft.status.loading";
         String NOT_ENOUGH_FUEL = "ui.galacticraft.status.not_enough_fuel";
         String NO_ROCKET = "ui.galacticraft.status.no_rocket";

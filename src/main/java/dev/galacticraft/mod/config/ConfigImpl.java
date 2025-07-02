@@ -61,6 +61,7 @@ public class ConfigImpl implements Config {
     private long maxSealingPower = 1024;
     private long foodCannerEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long refineryEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
+    private long fuelLoaderEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long electricFurnaceEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
     private long energyStorageModuleStorageSize = 300_000;
     private long machineEnergyStorageSize = 30_000;
@@ -202,6 +203,15 @@ public class ConfigImpl implements Config {
 
     public void setRefineryEnergyConsumptionRate(long amount) {
         this.refineryEnergyConsumptionRate = amount;
+    }
+
+    @Override
+    public long fuelLoaderEnergyConsumptionRate() {
+        return fuelLoaderEnergyConsumptionRate;
+    }
+
+    public void setFuelLoaderEnergyConsumptionRate(long amount) {
+        this.fuelLoaderEnergyConsumptionRate = amount;
     }
 
     @Override
@@ -448,6 +458,15 @@ public class ConfigImpl implements Config {
                     config.refineryEnergyConsumptionRate())
                     .setSaveConsumer(config::setRefineryEnergyConsumptionRate)
                     .setDefaultValue(60)
+                    .build()
+            );
+
+            machines.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.FUEL_LOADER_ENERGY_CONSUMPTION_RATE),
+                    config.fuelLoaderEnergyConsumptionRate())
+                    .setSaveConsumer(config::setFuelLoaderEnergyConsumptionRate)
+                    .setDefaultValue(15)
                     .build()
             );
 

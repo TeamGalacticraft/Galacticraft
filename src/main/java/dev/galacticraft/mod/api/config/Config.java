@@ -51,6 +51,8 @@ public interface Config {
 
     long refineryEnergyConsumptionRate();
 
+    long fuelLoaderEnergyConsumptionRate();
+
     long electricFurnaceEnergyConsumptionRate();
 
     long energyStorageModuleStorageSize();

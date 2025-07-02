@@ -65,7 +65,8 @@ public final class GCMachineStatuses {
     public static final MachineStatus FUEL_TANK_FULL = MachineStatus.create(Translations.MachineStatus.FUEL_TANK_FULL, ChatFormatting.GOLD, MachineStatus.Type.OTHER);
 
     // Fuel Loader
-    public static final MachineStatus LOADING = MachineStatus.create(Translations.MachineStatus.DISTRIBUTING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    public static final MachineStatus PREPARING = MachineStatus.create(Translations.MachineStatus.PREPARING, ChatFormatting.YELLOW, MachineStatus.Type.OTHER);
+    public static final MachineStatus LOADING = MachineStatus.create(Translations.MachineStatus.LOADING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
     public static final MachineStatus NOT_ENOUGH_FUEL = MachineStatus.create(Translations.MachineStatus.NOT_ENOUGH_FUEL, ChatFormatting.RED, MachineStatus.Type.MISSING_FLUIDS);
     public static final MachineStatus NO_ROCKET = MachineStatus.create(Translations.MachineStatus.NO_ROCKET, ChatFormatting.RED, MachineStatus.Type.MISSING_RESOURCE);
     public static final MachineStatus ROCKET_IS_FULL = MachineStatus.create(Translations.MachineStatus.ROCKET_IS_FULL, ChatFormatting.GOLD, MachineStatus.Type.OUTPUT_FULL);

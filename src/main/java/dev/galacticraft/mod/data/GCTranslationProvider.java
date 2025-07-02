@@ -951,6 +951,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.FOOD_CANNER_ENERGY_CONSUMPTION_RATE, "Food Canner Energy Consumption Rate/t");
         this.add(Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE, "Oxygen Decompressor Energy Consumption Rate/t");
         this.add(Config.REFINERY_ENERGY_CONSUMPTION_RATE, "Refinery Energy Consumption Rate/t");
+        this.add(Config.FUEL_LOADER_ENERGY_CONSUMPTION_RATE, "Fuel Loader Energy Consumption Rate/t");
         this.add(Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE, "Solar Panel Energy Production Rate/t");
         this.add(Config.WIRES, "Wires");
         this.add(Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT, "Heavy Wire Transfer Limit/t");
@@ -1032,6 +1033,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(MachineStatus.REFINING, "Refining");
         this.add(MachineStatus.MISSING_OIL, "Missing Oil");
         this.add(MachineStatus.FUEL_TANK_FULL, "Fuel Tank Full");
+        this.add(MachineStatus.PREPARING, "Preparing");
         this.add(MachineStatus.LOADING, "Loading");
         this.add(MachineStatus.NOT_ENOUGH_FUEL, "Not Enough Fuel");
         this.add(MachineStatus.NO_ROCKET, "No Rocket");
