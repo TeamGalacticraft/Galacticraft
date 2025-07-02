@@ -22,20 +22,16 @@
 
 package dev.galacticraft.mod.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.galacticraft.mod.data.model.GCModelProvider;
 import net.minecraft.data.models.ModelProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
-
-import java.util.List;
 
 @Mixin(ModelProvider.class)
 public class ModelProviderMixin {
-    @Redirect(method = "run", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z"))
-    private boolean fixGcModelGen(List instance) {
-        if ((Object) this instanceof GCModelProvider)
-            return true;
-        return instance.isEmpty();
+    @ModifyExpressionValue(method = "run", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z"))
+    private boolean fixGcModelGen(boolean original) {
+        return original || (Object) this instanceof GCModelProvider;
     }
 }

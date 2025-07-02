@@ -39,6 +39,7 @@ import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -94,7 +95,7 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
 
     @Override
     protected @NotNull MachineStatus workingStatus(RecipeHolder<BlastingRecipe> recipe) {
-        return MachineStatuses.ACTIVE;
+        return GCMachineStatuses.SMELTING;
     }
 
     @Override

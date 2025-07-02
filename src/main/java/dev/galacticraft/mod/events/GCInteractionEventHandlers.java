@@ -64,7 +64,9 @@ public class GCInteractionEventHandlers {
         if (CannedFoodItem.canAddToCan(itemStack.getItem())) {
             Vec3 eyePos = player.getEyePosition();
 
-            if (player.galacticraft$hasMask()) {
+            if (player.isCreative()) {
+                return InteractionResultHolder.pass(itemStack);
+            } else if (player.galacticraft$hasMask()) {
                 player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_WITH_MASK).withStyle(Constant.Text.RED_STYLE), true);
                 return InteractionResultHolder.fail(itemStack);
             } else if (!level.getDefaultBreathable() && !level.isBreathable(new BlockPos((int) Math.floor(eyePos.x), (int) Math.floor(eyePos.y), (int) Math.floor(eyePos.z)))) { //sealed atmosphere check. they dont have a mask on so make sure they can breathe before eating

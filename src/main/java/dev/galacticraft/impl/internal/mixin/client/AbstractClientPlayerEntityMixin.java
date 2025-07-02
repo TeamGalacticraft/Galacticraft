@@ -25,11 +25,11 @@ package dev.galacticraft.impl.internal.mixin.client;
 import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.impl.accessor.SoundSystemAccessor;
 import dev.galacticraft.impl.client.accessor.ClientResearchAccessor;
 import dev.galacticraft.impl.internal.inventory.MappedInventory;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.world.inventory.GearInventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -83,7 +83,7 @@ public abstract class AbstractClientPlayerEntityMixin implements ClientResearchA
                     }
                 }
             }
-            
+
             ((SoundSystemAccessor) ((SoundManagerAccessor) Minecraft.getInstance().getSoundManager()).getSoundSystem()).galacticraft$updateAtmosphericVolumeMultiplier(volume);
         });
         return inv;

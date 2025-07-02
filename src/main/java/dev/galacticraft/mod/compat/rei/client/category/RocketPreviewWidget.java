@@ -34,7 +34,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+import static dev.galacticraft.mod.Constant.RecipeViewer.ROCKET_PREVIEW_X;
+import static dev.galacticraft.mod.Constant.RecipeViewer.ROCKET_PREVIEW_Y;
 
 public class RocketPreviewWidget extends Widget {
     private final Point startPoint;

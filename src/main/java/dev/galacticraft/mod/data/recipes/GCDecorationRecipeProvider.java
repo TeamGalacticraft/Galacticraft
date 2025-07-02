@@ -145,14 +145,14 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         // Misc decoration blocks
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, GCBlocks.IRON_GRATING, 4)
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.IRON_GRATING, 4)
                 .define('I', Items.IRON_BARS)
                 .pattern("II")
                 .pattern("II")
                 .unlockedBy(getHasName(Items.IRON_BARS), has(Items.IRON_BARS))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, GCBlocks.TIN_LADDER, 6)
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.TIN_LADDER, 6)
                 .define('T', GCItemTags.TIN_INGOTS)
                 .pattern("T T")
                 .pattern("TTT")
@@ -346,11 +346,11 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
     private static void decorationBlockVariants(RecipeOutput output, ItemLike base, ItemLike slab, ItemLike stairs, ItemLike wall) {
         slab(output, RecipeCategory.BUILDING_BLOCKS, slab, base);
         stairs(output, stairs, base);
-        wall(output, RecipeCategory.BUILDING_BLOCKS, wall, base);
+        wall(output, RecipeCategory.DECORATIONS, wall, base);
 
         stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, slab, base, 2);
         stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, stairs, base);
-        stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, wall, base);
+        stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, wall, base);
     }
 
     public static void pillar(RecipeOutput output, ItemLike pillar, ItemLike base) {

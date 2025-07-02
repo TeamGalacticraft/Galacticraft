@@ -22,6 +22,7 @@
 
 package dev.galacticraft.impl.internal.mixin.gravity;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.Entity;
@@ -29,7 +30,6 @@ import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Entity.class)
 public abstract class EntityGravityMixin {
@@ -39,9 +39,9 @@ public abstract class EntityGravityMixin {
     @Shadow
     private Level level;
 
-    @Redirect(method = "getGravity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getDefaultGravity()D"))
-    private double replaceGravity(Entity instance) {
+    @ModifyExpressionValue(method = "getGravity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getDefaultGravity()D"))
+    private double replaceGravity(double original) {
         Holder<CelestialBody<?, ?>> holder = this.level.galacticraft$getCelestialBody();
-        return (holder != null ? holder.value().gravity() : 1.0d) * this.getDefaultGravity();
+        return (holder != null ? holder.value().gravity() : 1.0d) * original;
     }
 }

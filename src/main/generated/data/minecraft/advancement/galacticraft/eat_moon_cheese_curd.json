@@ -1,0 +1,31 @@
+{
+  "parent": "minecraft:galacticraft/moon",
+  "criteria": {
+    "eat_moon_cheese_curd": {
+      "conditions": {
+        "item": {
+          "items": "galacticraft:moon_cheese_curd"
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.galacticraft.eat_moon_cheese_curd.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "galacticraft:moon_cheese_curd"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.eat_moon_cheese_curd.title"
+    }
+  },
+  "requirements": [
+    [
+      "eat_moon_cheese_curd"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
