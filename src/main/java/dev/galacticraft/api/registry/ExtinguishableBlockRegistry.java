@@ -37,37 +37,37 @@ import java.util.function.Function;
 public interface ExtinguishableBlockRegistry extends Block2ObjectMap<ExtinguishableBlockRegistry.Entry> {
     ExtinguishableBlockRegistry INSTANCE = new ExtinguishableBlockRegistryImpl();
 
-	default void add(Block block, BlockState transform) {
-		this.add(block, state -> transform);
-	}
+    default void add(Block block, BlockState transform) {
+        this.add(block, state -> transform);
+    }
 
-	default void add(Block block, Function<BlockState, BlockState> transform) {
-		this.add(block, new Entry(transform));
-	}
+    default void add(Block block, Function<BlockState, BlockState> transform) {
+        this.add(block, new Entry(transform));
+    }
 
-	default void add(Block block, BlockState transform, Consumer<Context> callback) {
-		this.add(block, state -> transform, callback);
-	}
+    default void add(Block block, BlockState transform, Consumer<Context> callback) {
+        this.add(block, state -> transform, callback);
+    }
 
-	default void add(Block block, Function<BlockState, BlockState> transform, Consumer<Context> callback) {
-		this.add(block, new Entry(transform, callback));
-	}
+    default void add(Block block, Function<BlockState, BlockState> transform, Consumer<Context> callback) {
+        this.add(block, new Entry(transform, callback));
+    }
 
-	default void add(TagKey<Block> tag, BlockState transform) {
-		this.add(tag, state -> transform);
-	}
+    default void add(TagKey<Block> tag, BlockState transform) {
+        this.add(tag, state -> transform);
+    }
 
-	default void add(TagKey<Block> tag, Function<BlockState, BlockState> transform) {
-		this.add(tag, new Entry(transform));
-	}
+    default void add(TagKey<Block> tag, Function<BlockState, BlockState> transform) {
+        this.add(tag, new Entry(transform));
+    }
 
-	default void add(TagKey<Block> tag, BlockState transform, Consumer<Context> callback) {
-		this.add(tag, state -> transform, callback);
-	}
+    default void add(TagKey<Block> tag, BlockState transform, Consumer<Context> callback) {
+        this.add(tag, state -> transform, callback);
+    }
 
-	default void add(TagKey<Block> tag, Function<BlockState, BlockState> transform, Consumer<Context> callback) {
-		this.add(tag, new Entry(transform, callback));
-	}
+    default void add(TagKey<Block> tag, Function<BlockState, BlockState> transform, Consumer<Context> callback) {
+        this.add(tag, new Entry(transform, callback));
+    }
 
     default @Nullable BlockState transform(BlockState oldState) {
         Entry entry = this.get(oldState.getBlock());
@@ -78,36 +78,36 @@ public interface ExtinguishableBlockRegistry extends Block2ObjectMap<Extinguisha
         return null;
     }
 
-	final class Entry {
-		private final Function<BlockState, BlockState> transform;
-		private final Consumer<Context> callback;
+    final class Entry {
+        private final Function<BlockState, BlockState> transform;
+        private final Consumer<Context> callback;
 
-		public Entry(Function<BlockState, BlockState> transform) {
-			this.transform = transform;
+        public Entry(Function<BlockState, BlockState> transform) {
+            this.transform = transform;
             this.callback = context -> {};
-		}
+        }
 
-		public Entry(Function<BlockState, BlockState> transform, Consumer<Context> callback) {
-			this.transform = transform;
+        public Entry(Function<BlockState, BlockState> transform, Consumer<Context> callback) {
+            this.transform = transform;
             this.callback = callback;
-		}
+        }
 
-		public Function<BlockState, BlockState> getTransform() {
-			return this.transform;
-		}
+        public Function<BlockState, BlockState> getTransform() {
+            return this.transform;
+        }
 
-		public BlockState transform(BlockState state) {
-			return this.transform.apply(state);
-		}
+        public BlockState transform(BlockState state) {
+            return this.transform.apply(state);
+        }
 
-		public Consumer<Context> getCallback() {
-			return this.callback;
-		}
+        public Consumer<Context> getCallback() {
+            return this.callback;
+        }
 
-		public void callback(Context context) {
-			this.callback.accept(context);
-		}
-	}
+        public void callback(Context context) {
+            this.callback.accept(context);
+        }
+    }
 
     public record Context(Level level, BlockPos pos, BlockState state) {}
 }

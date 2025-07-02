@@ -32,85 +32,84 @@ import net.minecraft.world.level.block.Block;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 public class ExtinguishableBlockRegistryImpl implements ExtinguishableBlockRegistry {
-	private static final ExtinguishableBlockRegistry.Entry REMOVED = new ExtinguishableBlockRegistry.Entry(state -> null);
+    private static final ExtinguishableBlockRegistry.Entry REMOVED = new ExtinguishableBlockRegistry.Entry(state -> null);
 
-	private final Map<Block, ExtinguishableBlockRegistry.Entry> registeredEntriesBlock = new HashMap<>();
-	private final Map<TagKey<Block>, ExtinguishableBlockRegistry.Entry> registeredEntriesTag = new HashMap<>();
-	private volatile Map<Block, ExtinguishableBlockRegistry.Entry> computedEntries = null;
+    private final Map<Block, ExtinguishableBlockRegistry.Entry> registeredEntriesBlock = new HashMap<>();
+    private final Map<TagKey<Block>, ExtinguishableBlockRegistry.Entry> registeredEntriesTag = new HashMap<>();
+    private volatile Map<Block, ExtinguishableBlockRegistry.Entry> computedEntries = null;
 
-	public ExtinguishableBlockRegistryImpl() {
-		// Reset computed values after tags change since they depend on tags.
-		CommonLifecycleEvents.TAGS_LOADED.register((registries, client) -> {
-		        this.computedEntries = null;
-		});
-	}
+    public ExtinguishableBlockRegistryImpl() {
+        // Reset computed values after tags change since they depend on tags.
+        CommonLifecycleEvents.TAGS_LOADED.register((registries, client) -> {
+                this.computedEntries = null;
+        });
+    }
 
-	private Map<Block, ExtinguishableBlockRegistry.Entry> getEntryMap() {
-		Map<Block, ExtinguishableBlockRegistry.Entry> map = this.computedEntries;
+    private Map<Block, ExtinguishableBlockRegistry.Entry> getEntryMap() {
+        Map<Block, ExtinguishableBlockRegistry.Entry> map = this.computedEntries;
 
-		if (map == null) {
-			map = new IdentityHashMap<>();
+        if (map == null) {
+            map = new IdentityHashMap<>();
 
-			// tags take precedence over blocks
-			for (TagKey<Block> tag : this.registeredEntriesTag.keySet()) {
-				ExtinguishableBlockRegistry.Entry entry = this.registeredEntriesTag.get(tag);
+            // tags take precedence over blocks
+            for (TagKey<Block> tag : this.registeredEntriesTag.keySet()) {
+                ExtinguishableBlockRegistry.Entry entry = this.registeredEntriesTag.get(tag);
 
-				for (Holder<Block> block : BuiltInRegistries.BLOCK.getTagOrEmpty(tag)) {
-					map.put(block.value(), entry);
-				}
-			}
+                for (Holder<Block> block : BuiltInRegistries.BLOCK.getTagOrEmpty(tag)) {
+                    map.put(block.value(), entry);
+                }
+            }
 
-			map.putAll(this.registeredEntriesBlock);
+            map.putAll(this.registeredEntriesBlock);
 
-			this.computedEntries = map;
-		}
+            this.computedEntries = map;
+        }
 
-		return map;
-	}
+        return map;
+    }
 
-	@Override
-	public Entry get(Block block) {
-		return this.getEntryMap().get(block);
-	}
+    @Override
+    public Entry get(Block block) {
+        return this.getEntryMap().get(block);
+    }
 
-	@Override
-	public void add(Block block, Entry value) {
-		registeredEntriesBlock.put(block, value);
+    @Override
+    public void add(Block block, Entry value) {
+        registeredEntriesBlock.put(block, value);
 
-		computedEntries = null;
-	}
+        computedEntries = null;
+    }
 
-	@Override
-	public void add(TagKey<Block> tag, Entry value) {
-		registeredEntriesTag.put(tag, value);
+    @Override
+    public void add(TagKey<Block> tag, Entry value) {
+        registeredEntriesTag.put(tag, value);
 
-		computedEntries = null;
-	}
+        computedEntries = null;
+    }
 
-	@Override
-	public void remove(Block block) {
-		add(block, REMOVED);
-	}
+    @Override
+    public void remove(Block block) {
+        add(block, REMOVED);
+    }
 
-	@Override
-	public void remove(TagKey<Block> tag) {
-		add(tag, REMOVED);
-	}
+    @Override
+    public void remove(TagKey<Block> tag) {
+        add(tag, REMOVED);
+    }
 
-	@Override
-	public void clear(Block block) {
-		registeredEntriesBlock.remove(block);
+    @Override
+    public void clear(Block block) {
+        registeredEntriesBlock.remove(block);
 
-		computedEntries = null;
-	}
+        computedEntries = null;
+    }
 
-	@Override
-	public void clear(TagKey<Block> tag) {
-		registeredEntriesTag.remove(tag);
+    @Override
+    public void clear(TagKey<Block> tag) {
+        registeredEntriesTag.remove(tag);
 
-		computedEntries = null;
-	}
+        computedEntries = null;
+    }
 }
