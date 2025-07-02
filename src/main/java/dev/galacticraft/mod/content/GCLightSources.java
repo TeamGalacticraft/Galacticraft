@@ -41,13 +41,13 @@ public class GCLightSources {
         DEFAULT_LIGHT_SOURCES.put(SolarPanelSource.DAY,
                 new LightSource(Constant.CelestialBody.SOL, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_SUN).setStyle(Constant.Text.YELLOW_STYLE), 1.0, 1.0));
         DEFAULT_LIGHT_SOURCES.put(SolarPanelSource.NIGHT,
-                new LightSource(Constant.CelestialBody.MOON, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_MOON).setStyle(Constant.Text.GRAY_STYLE), 0.07, 1.0));
+                new LightSource(Constant.CelestialBody.MOON, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_MOON).setStyle(Constant.Text.WHITE_STYLE), 0.07, 1.0));
         DEFAULT_LIGHT_SOURCES.put(SolarPanelSource.OVERCAST,
                 new LightSource(Constant.CelestialBody.SOL_OVERCAST, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_RAIN).setStyle(Constant.Text.BLUE_STYLE), 1.0, 2.0));
         DEFAULT_LIGHT_SOURCES.put(SolarPanelSource.STORMY,
                 new LightSource(Constant.CelestialBody.SOL_OVERCAST, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_THUNDER).setStyle(Constant.Text.DARK_GRAY_STYLE), 1.0, 10.0));
         DEFAULT_LIGHT_SOURCES.put(SolarPanelSource.NO_LIGHT_SOURCE,
-                new LightSource(null, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_NONE).setStyle(Constant.Text.WHITE_STYLE), 0.0, 1.0));
+                new LightSource(null, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_NONE).setStyle(Constant.Text.RED_STYLE), 0.0, 1.0));
 
         MOON_LIGHT_SOURCES.put(SolarPanelSource.DAY,
                 new LightSource(Constant.CelestialBody.SOL_FROM_MOON, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_SUN).setStyle(Constant.Text.YELLOW_STYLE), 1.0, 1.0));
@@ -58,7 +58,7 @@ public class GCLightSources {
         MOON_LIGHT_SOURCES.put(SolarPanelSource.STORMY,
                 new LightSource(null, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_NONE).setStyle(Constant.Text.DARK_GRAY_STYLE), 0.0, 1.0));
         MOON_LIGHT_SOURCES.put(SolarPanelSource.NO_LIGHT_SOURCE,
-                new LightSource(null, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_NONE).setStyle(Constant.Text.WHITE_STYLE), 0.0, 1.0));
+                new LightSource(null, Component.translatable(Translations.SolarPanel.LIGHT_SOURCE_NONE).setStyle(Constant.Text.RED_STYLE), 0.0, 1.0));
 
         SolarPanelRegistry.registerLightSources(GCDimensions.MOON, MOON_LIGHT_SOURCES);
     }

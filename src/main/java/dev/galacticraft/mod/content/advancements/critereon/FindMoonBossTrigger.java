@@ -24,7 +24,9 @@ package dev.galacticraft.mod.content.advancements.critereon;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.content.entity.boss.SkeletonBoss;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
@@ -42,13 +44,17 @@ public class FindMoonBossTrigger extends SimpleCriterionTrigger<FindMoonBossTrig
         this.trigger(player, conditions -> !player.level().getEntitiesOfClass(SkeletonBoss.class, player.getBoundingBox().inflate(20)).isEmpty());
     }
 
-    public record TriggerInstance(
-            Optional<ContextAwarePredicate> player) implements SimpleCriterionTrigger.SimpleInstance {
+    public record TriggerInstance(Optional<ContextAwarePredicate> player) implements SimpleCriterionTrigger.SimpleInstance {
+
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
                 instance -> instance.group(
                                 EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player)
                         )
                         .apply(instance, TriggerInstance::new)
         );
+
+        public static Criterion<TriggerInstance> found() {
+            return GCTriggers.FIND_MOON_BOSS.createCriterion(new TriggerInstance(Optional.empty()));
+        }
     }
 }

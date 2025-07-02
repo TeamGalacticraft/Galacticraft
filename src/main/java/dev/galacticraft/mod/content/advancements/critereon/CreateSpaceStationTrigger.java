@@ -24,6 +24,8 @@ package dev.galacticraft.mod.content.advancements.critereon;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.galacticraft.mod.content.advancements.GCTriggers;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
@@ -41,13 +43,17 @@ public class CreateSpaceStationTrigger extends SimpleCriterionTrigger<CreateSpac
         this.trigger(player, conditions -> true);
     }
 
-    public record TriggerInstance(
-            Optional<ContextAwarePredicate> player) implements SimpleCriterionTrigger.SimpleInstance {
+    public record TriggerInstance(Optional<ContextAwarePredicate> player) implements SimpleCriterionTrigger.SimpleInstance {
+
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
                 instance -> instance.group(
                                 EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player)
                         )
                         .apply(instance, TriggerInstance::new)
         );
+
+        public static Criterion<TriggerInstance> created() {
+            return GCTriggers.CREATE_SPACE_STATION.createCriterion(new TriggerInstance(Optional.empty()));
+        }
     }
 }

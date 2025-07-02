@@ -81,7 +81,6 @@ public class CircuitFabricatorScreen extends MachineScreen<CircuitFabricatorBloc
     private static final float D_2 = 44 + PROGRESS_SIZE;
     private static final float D = 65;
     private static final float E = 15;
-    private static final float F = (C + E) / C;
     private static final float[] SUMS = {
             A,
             A + B,
@@ -91,6 +90,7 @@ public class CircuitFabricatorScreen extends MachineScreen<CircuitFabricatorBloc
             A + B + C + D,
             A + B + C + D + E
     };
+    private static final float F = (C + E) / C;
 
     public CircuitFabricatorScreen(RecipeMachineMenu<RecipeInput, FabricationRecipe, CircuitFabricatorBlockEntity> handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);

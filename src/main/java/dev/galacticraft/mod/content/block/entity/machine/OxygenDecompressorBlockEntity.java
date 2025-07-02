@@ -49,6 +49,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
@@ -117,6 +118,9 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
         try {
             if (this.energyStorage().extractExact(Galacticraft.CONFIG.oxygenDecompressorEnergyConsumptionRate())) {
                 StorageHelper.move(FluidVariant.of(Gases.OXYGEN), tank, this.fluidStorage().slot(OXYGEN_TANK), Long.MAX_VALUE, null);
+                if (!this.fluidStorage().slot(OXYGEN_TANK).canInsert(Gases.OXYGEN, DataComponentPatch.EMPTY, 1)) {
+                    return GCMachineStatuses.OXYGEN_TANK_FULL;
+                }
                 return GCMachineStatuses.DECOMPRESSING;
             } else {
                 return MachineStatuses.NOT_ENOUGH_ENERGY;

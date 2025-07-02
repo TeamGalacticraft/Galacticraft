@@ -15,7 +15,6 @@ pluginManagement {
             }
         }
         maven("https://repo.terradevelopment.net/repository/maven-releases/") {
-            // https://maven.teamgalacticraft.org
             // https://maven.galacticraft.net/repository/maven-releases
             content {
                 includeGroup("dev.galacticraft")

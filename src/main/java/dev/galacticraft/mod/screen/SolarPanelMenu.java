@@ -88,12 +88,12 @@ public class SolarPanelMenu<Machine extends MachineBlockEntity & SolarPanel> ext
         return this.source;
     }
 
-    public long getCurrentEnergyGeneration() {
-        return this.energyGeneration;
-    }
-
     public void setSource(SolarPanel.@NotNull SolarPanelSource source) {
         this.source = source;
+    }
+
+    public long getCurrentEnergyGeneration() {
+        return this.energyGeneration;
     }
 
     public void setEnergyGeneration(long energyGeneration) {

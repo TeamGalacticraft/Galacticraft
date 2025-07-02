@@ -492,7 +492,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
             ItemStack foodItem = contents.get(0);
             FoodProperties foodProperties = foodItem.get(DataComponents.FOOD);
             assert foodProperties != null;
-            if (foodProperties.canAlwaysEat()) {
+            if (player.canEat(foodProperties.canAlwaysEat())) {
                 FoodProperties.Builder builder = new FoodProperties.Builder();
                 builder.nutrition(foodProperties.nutrition());
                 builder.saturationModifier(foodProperties.saturation());
@@ -542,7 +542,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
             ItemStack itemStack = contents.get(0);
             FoodProperties foodProperties = itemStack.get(DataComponents.FOOD);
             assert foodProperties != null;
-            if (foodProperties.canAlwaysEat()) return 1;
+            if (player.canEat(foodProperties.canAlwaysEat())) return 1;
         }
         return itemsToBeConsumed;
     }
@@ -572,7 +572,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
             ItemStack itemStack = contents.get(0);
             FoodProperties foodProperties = itemStack.get(DataComponents.FOOD);
             assert foodProperties != null;
-            if (foodProperties.canAlwaysEat()) {
+            if (player.canEat(foodProperties.canAlwaysEat())) {
                 itemsToBeConsumed.add(itemStack.copyWithCount(1));
             };
         }

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "galacticraft:asteroid_rocks"
+    },
+    "D": {
+      "tag": "c:gems/diamond"
+    },
+    "T": {
+      "item": "galacticraft:titanium_upgrade_smithing_template"
+    }
+  },
+  "pattern": [
+    "DTD",
+    "DAD",
+    "DDD"
+  ],
+  "result": {
+    "count": 2,
+    "id": "galacticraft:titanium_upgrade_smithing_template"
+  }
+}

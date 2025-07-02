@@ -70,7 +70,7 @@ public class AccessorySlot extends Slot {
     public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
         return this.icon;
     }
-    
+
     @Override
     public int getMaxStackSize() {
         return 1;
