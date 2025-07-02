@@ -63,13 +63,13 @@ public abstract class AbstractClientPlayerEntityMixin implements ClientResearchA
     @Unique
     private final Set<ResourceLocation> unlockedResearch = new HashSet<>();
 
-    private final @Unique SimpleContainer gearInv = galacticraft_createGearInventory();
-    private final @Unique Container tankInv = MappedInventory.create(this.gearInv, 6, 7);
-    private final @Unique Container thermalArmorInv = MappedInventory.create(this.gearInv, 0, 1, 2, 3);
-    private final @Unique Container accessoryInv = MappedInventory.create(this.gearInv, 4, 5, 8, 9, 10, 11);
+    private final @Unique SimpleContainer gearInv = this.galacticraft_createGearInventory();
+    private final @Unique Container tankInv = MappedInventory.create(this.gearInv, 2, 3);
+    private final @Unique Container thermalArmorInv = MappedInventory.create(this.gearInv, 8, 9, 10, 11);
+    private final @Unique Container accessoryInv = MappedInventory.create(this.gearInv, 0, 1, 4, 5, 6, 7);
 
-    @Unique
-    private SimpleContainer galacticraft_createGearInventory() {
+    @Override
+    public SimpleContainer galacticraft_createGearInventory() {
         SimpleContainer inv = new GearInventory();
         inv.addListener((inventory) -> {
             Holder<CelestialBody<?, ?>> holder = this.clientLevel.galacticraft$getCelestialBody();
@@ -128,11 +128,11 @@ public abstract class AbstractClientPlayerEntityMixin implements ClientResearchA
 
     @Override
     public void galacticraft$writeGearToNbt(CompoundTag tag) {
-        tag.put(Constant.Nbt.GEAR_INV, this.galacticraft$getGearInv().createTag(((Entity) (Object) this).registryAccess()));
+        tag.put(Constant.Nbt.GEAR_INV, this.gearInv.createTag(((Entity) (Object) this).registryAccess()));
     }
 
     @Override
     public void galacticraft$readGearFromNbt(CompoundTag tag) {
-        this.galacticraft$getGearInv().fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND), ((Entity) (Object) this).registryAccess());
+        this.gearInv.fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND), ((Entity) (Object) this).registryAccess());
     }
 }
