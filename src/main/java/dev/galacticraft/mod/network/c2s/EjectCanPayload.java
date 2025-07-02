@@ -20,29 +20,37 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.network;
+package dev.galacticraft.mod.network.c2s;
 
 import dev.galacticraft.impl.network.c2s.C2SPayload;
-import dev.galacticraft.mod.network.c2s.*;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.block.entity.machine.FoodCannerBlockEntity;
+import dev.galacticraft.mod.screen.FoodCannerMenu;
+import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
-/**
- * Handles server-bound (C2S) packets.
- */
-public class GCServerPacketReceivers {
-    public static void register() {
-        registerPacket(BubbleMaxPayload.TYPE);
-        registerPacket(BubbleVisibilityPayload.TYPE);
-        registerPacket(ControlEntityPayload.TYPE);
-        registerPacket(EjectCanPayload.TYPE);
-        registerPacket(OpenGcInventoryPayload.TYPE);
-        registerPacket(OpenRocketPayload.TYPE);
-        registerPacket(PlanetTeleportPayload.TYPE);
-        registerPacket(SatelliteCreationPayload.TYPE);
+public record EjectCanPayload() implements C2SPayload {
+    public static final EjectCanPayload INSTANCE = new EjectCanPayload();
+    public static final StreamCodec<ByteBuf, EjectCanPayload> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+    public static final ResourceLocation ID = Constant.id("eject_can");
+    public static final Type<EjectCanPayload> TYPE = new Type<>(ID);
+
+    @Override
+    public void handle(ServerPlayNetworking.@NotNull Context context) {
+        if (context.player().containerMenu instanceof FoodCannerMenu sHandler) {
+            FoodCannerBlockEntity machine = sHandler.be;
+            if (machine.getSecurity().hasAccess(context.player())) {
+                machine.ejectCan();
+            }
+        }
     }
 
-    public static <P extends C2SPayload> void registerPacket(CustomPacketPayload.Type<P> type) {
-        ServerPlayNetworking.registerGlobalReceiver(type, C2SPayload::handle);
+    @Override
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }
