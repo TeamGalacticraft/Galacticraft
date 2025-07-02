@@ -29,10 +29,8 @@ import dev.galacticraft.mod.content.item.OxygenTankItem;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.SingleComponentItemPredicate;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.Optional;
 
 public record ItemFullTankPredicate(MinMaxBounds.Ints amount) implements SingleComponentItemPredicate<Long> {
     public static final Codec<ItemFullTankPredicate> CODEC = RecordCodecBuilder.create(instance -> instance.group(MinMaxBounds.Ints.CODEC.optionalFieldOf("machinelib:amount", MinMaxBounds.Ints.ANY).forGetter(ItemFullTankPredicate::amount)).apply(instance, ItemFullTankPredicate::new));

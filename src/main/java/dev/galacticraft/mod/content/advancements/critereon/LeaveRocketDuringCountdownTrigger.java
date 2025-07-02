@@ -24,9 +24,7 @@ package dev.galacticraft.mod.content.advancements.critereon;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
-import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;

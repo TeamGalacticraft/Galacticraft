@@ -1137,7 +1137,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.advancement(Advancements.FILL_ALL_TANKS, "Oxygen Stockpile", "Fill up every kind of oxygen tank");
         this.advancement(Advancements.OXYGEN_GEAR, "All Set", "Create everything you need to breathe in space");
         this.advancement(Advancements.ROCKET_WORKBENCH, "Space Engineer", "Craft a rocket workbench");
-        this.advancement(Advancements.ROCKET, "We Have a rocket!", "Weld a rocket together");
+        this.advancement(Advancements.ROCKET, "We Have a Rocket!", "Weld a rocket together");
         this.advancement(Advancements.FUEL_LOADER, "Fill Her Up!", "Craft a fuel loader");
         this.advancement(Advancements.LEAVE_ROCKET_DURING_COUNTDOWN, "We've Forgotten the Crackers!", "Leave a rocket during the countdown");
         this.advancement(Advancements.LAUNCH_ROCKET, "We Have Liftoff", "Launch your first rocket");
