@@ -42,6 +42,7 @@ val clothConfigVersion       = project.property("cloth.config.version").toString
 val modMenuVersion           = project.property("modmenu.version").toString()
 val dynamicdimensionsVersion = project.property("dynamicdimensions.version").toString()
 val machineLibVersion        = project.property("machinelib.version").toString()
+val multiblockLibVersion     = project.property("multiblocklib.version").toString()
 val reiVersion               = project.property("rei.version").toString()
 val jeiVersion               = project.property("jei.version").toString()
 val badpacketsVersion        = project.property("badpackets.version").toString()
@@ -234,6 +235,7 @@ dependencies {
 
     "core"("dev.galacticraft:dynamicdimensions-fabric:$dynamicdimensionsVersion")
     "core"("dev.galacticraft:machinelib:$machineLibVersion")
+    "core"("dev.galacticraft:multiblocklib:$multiblockLibVersion")
     "core"("lol.bai:badpackets:fabric-$badpacketsVersion")
 
     // Optional Dependencies
