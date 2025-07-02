@@ -156,7 +156,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
     @Override
     public @NotNull BlockPos getLinkedPad() {
-        return linkedPad.getDockPos();
+        return this.linkedPad != null ? this.linkedPad.getDockPos() : BlockPos.ZERO;
     }
 
     @Override
@@ -367,6 +367,14 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     @Override
     public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
         return new Vec3(getX(), getY(), getZ() + 1f);
+    }
+
+    @Override
+    public void removePassenger(Entity entity) {
+        super.removePassenger(entity);
+        if (this.getLaunchStage() == LaunchStage.IGNITED && entity instanceof ServerPlayer player) {
+            GCTriggers.LEAVE_ROCKET_DURING_COUNTDOWN.trigger(player);
+        }
     }
 
     @Override

@@ -75,6 +75,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.generateCelestialSelectionTranslations();
         this.generateUiTranslations();
         this.generateStatsTranslations();
+        this.generateAdvancementsTranslations();
 
         // Tabs in the creative inventory
         this.add(ItemGroup.BLOCKS, "Galacticraft Blocks");
@@ -1117,6 +1118,39 @@ public class GCTranslationProvider extends TranslationProvider {
         this.stat(GCStats.INTERACT_WITH_ROCKET_WORKBENCH, "Interactions with Rocket Workbench");
     }
 
+    protected void generateAdvancementsTranslations() {
+        this.advancement(Advancements.ROOT, "Galacticraft", "Explore the Moon... and beyond!");
+        this.advancement(Advancements.COAL_GENERATOR, "Coal Power", "Craft a coal generator");
+        this.advancement(Advancements.CIRCUIT_FABRICATOR, "Fabricated", "Craft a circuit fabricator to make wafers");
+        this.advancement(Advancements.BASIC_WAFER, "Tasty Wafers", "Craft a basic wafer. (It's silicon so please don't eat it!)");
+        this.advancement(Advancements.ADVANCED_WAFER, "Golden Wafers", "Craft an advanced wafer. (You still can't eat it!)");
+        this.advancement(Advancements.BASIC_SOLAR_PANEL, "Free Energy", "Craft a basic solar panel");
+        this.advancement(Advancements.ADVANCED_SOLAR_PANEL, "Fast + Efficient", "Craft an advanced solar panel");
+        this.advancement(Advancements.COMPRESSOR, "Compressed", "Craft a compressor");
+        this.advancement(Advancements.ELECTRIC_COMPRESSOR, "Electrical Upgrade", "Craft an electric compressor");
+        this.advancement(Advancements.OIL, "Sticky Stuff", "Fall into some oil");
+        this.advancement(Advancements.REFINERY, "Time to Refine", "Craft a refinery");
+        this.advancement(Advancements.FUEL, "Rocket Fuel", "Refine oil in the refinery");
+        this.advancement(Advancements.OXYGEN_COLLECTOR, "Oxygen Not Included", "Craft an oxygen collector");
+        this.advancement(Advancements.OXYGEN_COMPRESSOR, "Compress the Air", "Craft an oxygen compressor");
+        this.advancement(Advancements.FILL_TANK, "Air 2 Go", "Fill up an oxygen tank");
+        this.advancement(Advancements.FILL_ALL_TANKS, "Oxygen Stockpile", "Fill up every kind of oxygen tank");
+        this.advancement(Advancements.OXYGEN_GEAR, "All Set", "Create everything you need to breathe in space");
+        this.advancement(Advancements.ROCKET_WORKBENCH, "Space Engineer", "Craft a rocket workbench");
+        this.advancement(Advancements.ROCKET, "We Have a rocket!", "Weld a rocket together");
+        this.advancement(Advancements.FUEL_LOADER, "Fill Her Up!", "Craft a fuel loader");
+        this.advancement(Advancements.LEAVE_ROCKET_DURING_COUNTDOWN, "We've Forgotten the Crackers!", "Leave a rocket during the countdown");
+        this.advancement(Advancements.LAUNCH_ROCKET, "We Have Liftoff", "Launch your first rocket");
+        this.advancement(Advancements.MOON, "The Moon!", "Land on the Moon");
+        this.advancement(Advancements.EAT_MOON_CHEESE_CURD, "It's Like No Cheese I've Ever Tasted...", "Eat moon cheese curd");
+        this.advancement(Advancements.CHEESE_TAX, "Cheese Tax", "Give cheese to a pet wolf");
+        this.advancement(Advancements.SPACE_STATION, "Space Station", "Create your own space station!");
+        this.advancement(Advancements.MOON_DUNGEON, "Worse than a Wither", "Find an evolved skeleton boss in a moon dungeon");
+        this.advancement(Advancements.MOON_DUNGEON_KEY, "I Has the Key", "Kill the boss in the moon dungeon, and steal its key");
+        this.advancement(Advancements.BUGGY_SCHEMATIC, "Glitchy Schematic", "Obtain a moon buggy schematic");
+        this.advancement(Advancements.BUGGY, "Buggy", "Weld a moon buggy together");
+    }
+
     protected void decorationSet(DecorationSet decoSet, String translation) {
         this.block(decoSet.block(), translation);
         this.block(decoSet.stairs(), translation + " Stairs");
@@ -1152,6 +1186,11 @@ public class GCTranslationProvider extends TranslationProvider {
 
     protected void rocketPart(ResourceKey<? extends RocketPart<?, ?>> key, String translation) {
         this.add(RocketPart.getKey(key), translation);
+    }
+
+    protected void advancement(String translationKey, String title, String description) {
+        this.add(translationKey + ".title", title);
+        this.add(translationKey + ".description", description);
     }
 
     @Override

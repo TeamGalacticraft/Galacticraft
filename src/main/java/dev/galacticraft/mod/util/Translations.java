@@ -24,6 +24,39 @@ package dev.galacticraft.mod.util;
 
 public interface Translations {
 
+    interface Advancements {
+        String ROOT = "advancement.galacticraft.root";
+        String COAL_GENERATOR = "advancement.galacticraft.coal_generator";
+        String CIRCUIT_FABRICATOR = "advancement.galacticraft.circuit_fabricator";
+        String BASIC_WAFER = "advancement.galacticraft.basic_wafer";
+        String ADVANCED_WAFER = "advancement.galacticraft.advanced_wafer";
+        String BASIC_SOLAR_PANEL = "advancement.galacticraft.basic_solar_panel";
+        String ADVANCED_SOLAR_PANEL = "advancement.galacticraft.advanced_solar_panel";
+        String COMPRESSOR = "advancement.galacticraft.compressor";
+        String ELECTRIC_COMPRESSOR = "advancement.galacticraft.electric_compressor";
+        String OIL = "advancement.galacticraft.oil";
+        String REFINERY = "advancement.galacticraft.refinery";
+        String FUEL = "advancement.galacticraft.fuel";
+        String OXYGEN_COLLECTOR = "advancement.galacticraft.oxygen_collector";
+        String OXYGEN_COMPRESSOR = "advancement.galacticraft.oxygen_compressor";
+        String FILL_TANK = "advancement.galacticraft.fill_tank";
+        String FILL_ALL_TANKS = "advancement.galacticraft.fill_all_tanks";
+        String OXYGEN_GEAR = "advancement.galacticraft.oxygen_gear";
+        String ROCKET_WORKBENCH = "advancement.galacticraft.rocket_workbench";
+        String ROCKET = "advancement.galacticraft.rocket";
+        String FUEL_LOADER = "advancement.galacticraft.fuel_loader";
+        String LEAVE_ROCKET_DURING_COUNTDOWN = "advancement.galacticraft.leave_rocket_during_countdown";
+        String LAUNCH_ROCKET = "advancement.galacticraft.launch_rocket";
+        String MOON = "advancement.galacticraft.moon";
+        String EAT_MOON_CHEESE_CURD = "advancement.galacticraft.eat_moon_cheese_curd";
+        String CHEESE_TAX = "advancement.galacticraft.cheese_tax";
+        String SPACE_STATION = "advancement.galacticraft.space_station";
+        String MOON_DUNGEON = "advancement.galacticraft.moon_dungeon";
+        String MOON_DUNGEON_KEY = "advancement.galacticraft.moon_dungeon_key";
+        String BUGGY_SCHEMATIC = "advancement.galacticraft.buggy_schematic";
+        String BUGGY = "advancement.galacticraft.buggy";
+    }
+
     interface ItemGroup {
         String ITEMS = "itemGroup.galacticraft.items";
         String BLOCKS = "itemGroup.galacticraft.blocks";
