@@ -105,8 +105,13 @@ public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<Si
     }
 
     @Override
+    public int decreaseProgressAmount() {
+        return 2;
+    }
+
+    @Override
     public int getProcessingTime(@NotNull RecipeHolder<SmeltingRecipe> recipe) {
-        return recipe.value().getCookingTime();
+        return (int) (recipe.value().getCookingTime() / 1.5F);
     }
 
     @Override
