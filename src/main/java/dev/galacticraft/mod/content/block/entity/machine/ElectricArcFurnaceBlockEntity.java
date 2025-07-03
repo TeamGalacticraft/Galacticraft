@@ -122,7 +122,11 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
     @Override
     protected void outputStacks(@NotNull RecipeHolder<BlastingRecipe> recipe) {
         ItemStack assembled = recipe.value().assemble(this.craftingInv(), this.level.registryAccess());
-        this.outputSlots.insertMatching(assembled.getItem(), assembled.getComponentsPatch(), assembled.getCount() * 2);
+        int count = assembled.getCount();
+        if (this.level.getRandom().nextFloat() < Galacticraft.CONFIG.electricArcFurnaceBonusChance()) {
+            ++count;
+        }
+        this.outputSlots.insertMatching(assembled.getItem(), assembled.getComponentsPatch(), count);
     }
 
     @Override

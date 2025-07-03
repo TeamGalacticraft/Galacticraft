@@ -31,6 +31,10 @@ public interface Config {
 
     long heavyWireTransferLimit();
 
+    long machineEnergyStorageSize();
+
+    long energyStorageModuleStorageSize();
+
     long coalGeneratorEnergyProductionRate();
 
     long solarPanelEnergyProductionRate();
@@ -39,9 +43,17 @@ public interface Config {
 
     long electricCompressorEnergyConsumptionRate();
 
+    long electricFurnaceEnergyConsumptionRate();
+
     long electricArcFurnaceEnergyConsumptionRate();
 
+    float electricArcFurnaceBonusChance();
+
     long oxygenCollectorEnergyConsumptionRate();
+
+    long oxygenCompressorEnergyConsumptionRate();
+
+    long oxygenDecompressorEnergyConsumptionRate();
 
     long oxygenSealerEnergyConsumptionRate();
 
@@ -53,17 +65,7 @@ public interface Config {
 
     long fuelLoaderEnergyConsumptionRate();
 
-    long electricFurnaceEnergyConsumptionRate();
-
-    long energyStorageModuleStorageSize();
-
-    long machineEnergyStorageSize();
-
-    long oxygenCompressorEnergyConsumptionRate();
-
     long foodCannerEnergyConsumptionRate();
-
-    long oxygenDecompressorEnergyConsumptionRate();
 
     long playerOxygenConsuptionRate();
 

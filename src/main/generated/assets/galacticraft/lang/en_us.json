@@ -420,6 +420,8 @@
   "config.galacticraft.energy.machines": "Machines",
   "config.galacticraft.energy.machines.circuit_fabricator_energy_consumption_rate": "Circuit Fabricator Energy Consumption Rate/t",
   "config.galacticraft.energy.machines.coal_generator_energy_production_rate": "Coal Generator Energy Production Rate/t",
+  "config.galacticraft.energy.machines.electric_arc_furnace_bonus_chance": "Electric Arc Furnace Bonus Chance",
+  "config.galacticraft.energy.machines.electric_arc_furnace_energy_consumption_rate": "Electric Arc Furnace Energy Consumption Rate/t",
   "config.galacticraft.energy.machines.electric_compressor_energy_consumption_rate": "Electric Compressor Energy Consumption Rate/t",
   "config.galacticraft.energy.machines.electric_furnace_energy_consumption_rate": "Electric Furnace Energy Consumption Rate/t",
   "config.galacticraft.energy.machines.energy_storage_module_storage_size": "Energy Storage Module Energy Storage Size",
