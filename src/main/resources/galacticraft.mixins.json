@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "AbstractContainerMenuAccessor",
+    "AbstractFurnaceBlockEntityMixin",
     "AbstractSkeletonEntityAccessor",
     "BlockBehaviourMixin",
     "BucketItemAccessor",

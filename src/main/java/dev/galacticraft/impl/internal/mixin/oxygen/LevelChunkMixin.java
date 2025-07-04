@@ -116,6 +116,7 @@ public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygen
 
     @Inject(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getBlock()Lnet/minecraft/world/level/block/Block;", ordinal = 0))
     private void resetAirOnBlockChange(BlockPos pos, BlockState blockState, boolean bl, CallbackInfoReturnable<BlockState> cir) {
+        // TODO: Better system for checking whether the oxygen should be reset
         if (blockState.isSolidRender(this.level, pos)) {
             this.galacticraft$setInverted(pos.getX() & 15, pos.getY(), pos.getZ() & 15, false);
         }

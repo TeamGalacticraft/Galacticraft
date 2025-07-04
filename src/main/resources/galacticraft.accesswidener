@@ -44,3 +44,4 @@ accessible field net/minecraft/client/renderer/LevelRenderer RAIN_DIAMETER I
 
 # private fields
 accessible field net/minecraft/client/renderer/LevelRenderer ticks I
+accessible field net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity litTime I
