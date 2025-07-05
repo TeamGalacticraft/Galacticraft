@@ -33,6 +33,7 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.block.machine.CompressorBlock;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
@@ -67,6 +68,7 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
 
     private long fuelSlotModification = -1;
     private boolean hasFuel = false;
+    private boolean lit = false;
 
     private static final StorageSpec SPEC = StorageSpec.of(
             MachineItemStorage.builder()
@@ -137,6 +139,15 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
             this.fuelLength = 0;
             this.fuelTime = 0;
         }
+
+        boolean lit = this.fuelLength > 0;
+        if (this.lit != lit) {
+            this.lit = lit;
+            BlockState blockState = this.level.getBlockState(this.worldPosition)
+                    .setValue(CompressorBlock.LIT, this.lit);
+            this.level.setBlock(this.worldPosition, blockState, 2);
+        }
+
     }
 
     @Override
@@ -158,6 +169,12 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
             }
         }
         return super.tick(level, pos, state, profiler);
+    }
+
+    @Override
+    public void updateActiveState(Level level, BlockPos pos, BlockState state, boolean active) {
+        this.lit = this.fuelLength > 0;
+        super.updateActiveState(level, pos, state.setValue(CompressorBlock.LIT, this.lit), active);
     }
 
     private boolean shouldExtinguish(Level level, BlockPos pos, BlockState state) {
@@ -190,6 +207,8 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
         super.loadAdditional(tag, lookup);
         this.fuelTime = tag.getInt(Constant.Nbt.FUEL_TIME);
         this.fuelLength = tag.getInt(Constant.Nbt.FUEL_LENGTH);
+
+        this.lit = this.fuelLength > 0;
     }
 
     @Override

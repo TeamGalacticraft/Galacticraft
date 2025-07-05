@@ -328,7 +328,7 @@ public class GCModelProvider extends FabricModelProvider {
                         .build()
         );
 
-        createActiveMachine(generator, GCBlocks.COMPRESSOR,
+        createCompressor(generator, GCBlocks.COMPRESSOR,
                 TextureProvider.builder(Constant.MOD_ID)
                         .sides("block/machine_side")
                         .front("block/compressor_active")
@@ -336,6 +336,10 @@ public class GCModelProvider extends FabricModelProvider {
                 TextureProvider.builder(Constant.MOD_ID)
                         .sides("block/machine_side")
                         .front("block/compressor")
+                        .build(),
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/compressor_lit")
                         .build()
         );
 
@@ -391,6 +395,19 @@ public class GCModelProvider extends FabricModelProvider {
                 .select(false, false, Variant.variant().with(VariantProperties.MODEL, inactive))
                 .select(true, false, Variant.variant().with(VariantProperties.MODEL, warming))
                 .select(false, true, Variant.variant().with(VariantProperties.MODEL, cooling))
+                .select(true, true, Variant.variant().with(VariantProperties.MODEL, active))
+        ));
+    }
+
+    private static void createCompressor(BlockModelGenerators generator, Block block, TextureProvider activeTex, TextureProvider inactiveTex, TextureProvider litTex) {
+        ResourceLocation inactive = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block), inactiveTex);
+        ResourceLocation active = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block, "_active"), activeTex);
+        ResourceLocation lit = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block, "_lit"), litTex);
+
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.properties(MachineBlock.ACTIVE, CoalGeneratorBlock.LIT)
+                .select(false, false, Variant.variant().with(VariantProperties.MODEL, inactive))
+                .select(true, false, Variant.variant().with(VariantProperties.MODEL, inactive))
+                .select(false, true, Variant.variant().with(VariantProperties.MODEL, lit))
                 .select(true, true, Variant.variant().with(VariantProperties.MODEL, active))
         ));
     }
