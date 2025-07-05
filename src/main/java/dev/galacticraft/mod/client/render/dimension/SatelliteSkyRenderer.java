@@ -27,26 +27,33 @@ import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
-public class MoonSkyRenderer extends SpaceSkyRenderer {
-    public static final MoonSkyRenderer INSTANCE = new MoonSkyRenderer();
+public class SatelliteSkyRenderer extends SpaceSkyRenderer {
+    public static final SatelliteSkyRenderer INSTANCE = new SatelliteSkyRenderer(Constant.Skybox.EARTH);
+    protected final EarthManager earthManager = new EarthManager();
+    private final ResourceLocation parentBody;
+
+    public SatelliteSkyRenderer(ResourceLocation parentBody) {
+        this.parentBody = parentBody;
+    }
 
     @Override
     public void render(WorldRenderContext context) {
-        context.profiler().push("moon_sky_render");
+        context.profiler().push("satellite_sky_renderer");
         RenderSystem.disableBlend();
         RenderSystem.depthMask(false);
 
         PoseStack matrices = new PoseStack();
         matrices.mulPose(context.positionMatrix());
+        Tesselator tesselator = Tesselator.getInstance();
 
         context.profiler().push("stars");
         matrices.pushPose();
-        matrices.mulPose(Axis.YP.rotationDegrees(-90.0F));
-        matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks()) * 360.0f));
+        matrices.mulPose(Axis.YP.rotationDegrees((context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks()) * 360.0f) - 90F));
+        matrices.mulPose(Axis.XP.rotationDegrees((context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks())) * 360.0f));
         matrices.mulPose(Axis.YP.rotationDegrees(-19.0F));
 
         this.starManager.render(matrices, context.projectionMatrix(), context.world(), context.tickCounter().getRealtimeDeltaTicks());
@@ -62,44 +69,41 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
 
         Matrix4f matrix = matrices.last().pose();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        float size = 15.0F;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, Constant.Skybox.SUN_MOON);
-        BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.addVertex(matrix, -size, 100.0F, -size).setUv(0.0F, 0.0F)
-                .addVertex(matrix, size, 100.0F, -size).setUv(1.0F, 0.0F)
-                .addVertex(matrix, size, 100.0F, size).setUv(1.0F, 1.0F)
-                .addVertex(matrix, -size, 100.0F, size).setUv(0.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, Constant.CelestialBody.SOL);
+        float size = 6.0F;
+        BufferBuilder buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.addVertex(matrix, -size, 100.0F, -size).setUv(1.0F, 0.0F)
+                .addVertex(matrix, size, 100.0F, -size).setUv(0.0F, 0.0F)
+                .addVertex(matrix, size, 100.0F, size).setUv(0.0F, 1.0F)
+                .addVertex(matrix, -size, 100.0F, size).setUv(1.0F, 1.0F);
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
+
+        context.profiler().pop();
+        context.profiler().push("moon");
+
+        matrices.mulPose(Axis.XP.rotationDegrees(180.0F));
+
+        RenderSystem.setShaderTexture(0, Constant.CelestialBody.MOON);
+        size = 6.0F;
+        buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.addVertex(matrix, -size, 100.0F, -size).setUv(1.0F, 1.0F)
+                .addVertex(matrix, size, 100.0F, -size).setUv(0.0F, 1.0F)
+                .addVertex(matrix, size, 100.0F, size).setUv(0.0F, 0.0F)
+                .addVertex(matrix, -size, 100.0F, size).setUv(1.0F, 0.0F);
         BufferUploader.drawWithShader(buffer.buildOrThrow());
 
         matrices.popPose();
         context.profiler().pop();
 
         context.profiler().push("earth");
-        matrices.pushPose();
-        matrix = matrices.last().pose();
-
-        size = 10.0F;
-        assert Minecraft.getInstance().player != null;
-        float earthRotation = (float) (context.world().getSharedSpawnPos().getZ() - Minecraft.getInstance().player.getZ()) * 0.01F;
-        matrices.scale(0.6F, 0.6F, 0.6F);
-        matrices.mulPose(Axis.XP.rotationDegrees((context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks()) * 360.0F) * 0.001F));
-        matrices.mulPose(Axis.XP.rotationDegrees(earthRotation + 200.0F));
-        matrices.mulPose(Axis.YP.rotationDegrees(180.0F));
-
-        RenderSystem.setShaderTexture(0, Constant.CelestialBody.EARTH);
-
-        buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.addVertex(matrix, -size, -100.0F, size).setUv(0.0F, 1.0F)
-                .addVertex(matrix, size, -100.0F, size).setUv(1.0F, 1.0F)
-                .addVertex(matrix, size, -100.0F, -size).setUv(1.0F, 0.0F)
-                .addVertex(matrix, -size, -100.0F, -size).setUv(0.0F, 0.0F);
-        BufferUploader.drawWithShader(buffer.buildOrThrow());
-
+        this.earthManager.render(matrices, context.world(), context.camera().getPosition().y() + 2048.0D, context.tickCounter().getRealtimeDeltaTicks());
         context.profiler().pop();
-        matrices.popPose();
 
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.depthMask(true);
+        RenderSystem.disableBlend();
+        RenderSystem.defaultBlendFunc();
         context.profiler().pop();
     }
 }
