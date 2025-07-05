@@ -104,8 +104,9 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
 
     /*
      * Energy stats:
-     * T1 machine: uses 30gj/t
-     * Coal Generator: generates 120gj/t (max heat)
+     * T1 machine: uses 30gJ/t
+     * Coal Generator: generates 120gJ/t (max heat)
+     * At max heat 1 Coal generates 44,160gJ
      */
 
     public CoalGeneratorBlockEntity(BlockPos pos, BlockState state) {

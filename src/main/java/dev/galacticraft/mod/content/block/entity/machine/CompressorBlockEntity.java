@@ -158,7 +158,7 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
             this.fuelTime = 0;
             RandomSource randomSource = level.getRandom();
             level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.25F, 2.6F + (randomSource.nextFloat() - randomSource.nextFloat()) * 0.8F);
-            
+
             return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
         }
         RecipeHolder<CompressingRecipe> recipe = this.getActiveRecipe();

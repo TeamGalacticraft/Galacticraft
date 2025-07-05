@@ -167,7 +167,6 @@ public class GCEventHandlers {
         FootprintManager footprintManager = level.galacticraft$getFootprintManager();
         if (!footprintManager.footprintBlockChanges.isEmpty()) {
             for (GlobalPos targetPoint : footprintManager.footprintBlockChanges) {
-                ;
                 if (level.dimension().location().equals(targetPoint.dimension().location())) {
                     long packedPos = ChunkPos.asLong(targetPoint.pos());
                     PlayerLookup.around(level, targetPoint.pos(), 50).forEach(player -> {
@@ -178,6 +177,7 @@ public class GCEventHandlers {
 
             footprintManager.footprintBlockChanges.clear();
         }
+        level.galacticraft$getSealerManager().tick();
     }
 
     public static boolean extinguishBlock(Level level, BlockPos pos, BlockState oldState) {

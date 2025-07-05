@@ -34,6 +34,7 @@ public class FuelLoaderMenu extends MachineMenu<FuelLoaderBlockEntity> {
     public long rocketAmount;
     public long rocketCapacity;
     public BlockPos connectionPos = BlockPos.ZERO;
+    private int progress;
 
     public FuelLoaderMenu(int syncId, ServerPlayer player, FuelLoaderBlockEntity machine) {
         super(GCMenuTypes.FUEL_LOADER, syncId, player, machine);
@@ -49,5 +50,14 @@ public class FuelLoaderMenu extends MachineMenu<FuelLoaderBlockEntity> {
         data.register(BlockPos.STREAM_CODEC, this.be::getConnectionPos, p -> this.connectionPos = p);
         data.registerLong(() -> this.be.linkedRocket == null ? 0 : this.be.linkedRocket.getFuelTankAmount(), l -> this.rocketAmount = l);
         data.registerLong(() -> this.be.linkedRocket == null ? 0 : this.be.linkedRocket.getFuelTankCapacity(), l -> this.rocketCapacity = l);
+        data.registerInt(this.be::getProgress, this::setProgress);
+    }
+
+    public int getProgress() {
+        return this.progress;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
     }
 }

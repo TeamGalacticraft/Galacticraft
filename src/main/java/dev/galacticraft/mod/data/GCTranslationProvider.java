@@ -934,35 +934,45 @@ public class GCTranslationProvider extends TranslationProvider {
     }
 
     protected void generateConfigTranslations() {
-        this.add(Config.CLIENT, "Client");
-        this.add(Config.SKYBOX, "Skybox");
-        this.add(Config.COMMANDS, "Commands");
-        this.add(Config.ENABLE_GC_HOUSTON, "Enable /gchouston");
+        this.add(Config.TITLE, "Galacticraft Config");
+        this.add(Config.RESET, "Reset");
+
         this.add(Config.DEBUG, "Debug");
-        this.add(Config.HIDE_ALPHA_WARNING, "Hide Alpha Warning");
         this.add(Config.DEBUG_LOGGING, "Debug Logging");
+        this.add(Config.HIDE_ALPHA_WARNING, "Hide Alpha Warning");
+
         this.add(Config.ENERGY, "Energy");
+
+        this.add(Config.WIRES, "Wires");
+        this.add(Config.WIRE_ENERGY_TRANSFER_LIMIT, "Wire Transfer Limit/t");
+        this.add(Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT, "Heavy Wire Transfer Limit/t");
+
         this.add(Config.MACHINES, "Machines");
+        this.add(Config.ENERGY_STORAGE_SIZE, "Default Machine Energy Storage Size");
+        this.add(Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE, "Energy Storage Module Energy Storage Size");
+        this.add(Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE, "Coal Generator Energy Production Rate/t");
+        this.add(Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE, "Solar Panel Energy Production Rate/t");
         this.add(Config.CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE, "Circuit Fabricator Energy Consumption Rate/t");
         this.add(Config.ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE, "Electric Compressor Energy Consumption Rate/t");
-        this.add(Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE, "Coal Generator Energy Production Rate/t");
         this.add(Config.ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE, "Electric Furnace Energy Consumption Rate/t");
-        this.add(Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE, "Energy Storage Module Energy Storage Size");
-        this.add(Config.ENERGY_STORAGE_SIZE, "Default Machine Energy Storage Size");
+        this.add(Config.ELECTRIC_ARC_FURNACE_ENERGY_CONSUMPTION_RATE, "Electric Arc Furnace Energy Consumption Rate/t");
+        this.add(Config.ELECTRIC_ARC_FURNACE_BONUS_CHANCE, "Electric Arc Furnace Bonus Chance");
         this.add(Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE, "Oxygen Collector Energy Consumption Rate/t");
         this.add(Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE, "Oxygen Compressor Energy Consumption Rate/t");
-        this.add(Config.FOOD_CANNER_ENERGY_CONSUMPTION_RATE, "Food Canner Energy Consumption Rate/t");
         this.add(Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE, "Oxygen Decompressor Energy Consumption Rate/t");
         this.add(Config.REFINERY_ENERGY_CONSUMPTION_RATE, "Refinery Energy Consumption Rate/t");
-        this.add(Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE, "Solar Panel Energy Production Rate/t");
-        this.add(Config.WIRES, "Wires");
-        this.add(Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT, "Heavy Wire Transfer Limit/t");
-        this.add(Config.WIRE_ENERGY_TRANSFER_LIMIT, "Wire Transfer Limit/t");
-        this.add(Config.PLAYER_LIFE_SUPPORT, "Life Support");
+        this.add(Config.FUEL_LOADER_ENERGY_CONSUMPTION_RATE, "Fuel Loader Energy Consumption Rate/t");
+        this.add(Config.FOOD_CANNER_ENERGY_CONSUMPTION_RATE, "Food Canner Energy Consumption Rate/t");
+
+        this.add(Config.CLIENT, "Client");
+        this.add(Config.SKYBOX, "Skybox");
+
         this.add(Config.PLAYER, "Player");
+        this.add(Config.PLAYER_LIFE_SUPPORT, "Life Support");
         this.add(Config.PLAYER_OXYGEN_CONSUMPTION_RATE, "Oxygen Consumption Rate/t");
-        this.add(Config.RESET, "Reset");
-        this.add(Config.TITLE, "Galacticraft Config");
+
+        this.add(Config.COMMANDS, "Commands");
+        this.add(Config.ENABLE_GC_HOUSTON, "Enable /gchouston");
 
         this.add(Keybindings.ROCKET_INVENTORY, "Open Rocket Inventory");
         this.add(Keybindings.OPEN_CELESTIAL_SCREEN, "Open Celestial Map");
@@ -1035,6 +1045,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(MachineStatus.REFINING, "Refining");
         this.add(MachineStatus.MISSING_OIL, "Missing Oil");
         this.add(MachineStatus.FUEL_TANK_FULL, "Fuel Tank Full");
+        this.add(MachineStatus.PREPARING, "Preparing");
         this.add(MachineStatus.LOADING, "Loading");
         this.add(MachineStatus.NOT_ENOUGH_FUEL, "Not Enough Fuel");
         this.add(MachineStatus.NO_ROCKET, "No Rocket");

@@ -27,9 +27,7 @@ import dev.galacticraft.api.accessor.LevelOxygenAccessor;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.impl.internal.accessor.InternalLevelOxygenAccessor;
-import dev.galacticraft.mod.accessor.GCLevelAccessor;
 import dev.galacticraft.mod.events.GCEventHandlers;
-import dev.galacticraft.mod.machine.SealerManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
@@ -69,8 +67,6 @@ public abstract class LevelMixin implements LevelOxygenAccessor, InternalLevelOx
 
     @Override
     public boolean isBreathable(int x, int y, int z) {
-        SealerManager manager = ((GCLevelAccessor) this).getSealerManager();
-        if (manager.isSealed(new BlockPos(x, y, z))) return true;
         if (this.validPosition(x, y, z)) {
             return this.isBreathableChunk(this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z)), x & 15, y, z & 15);
         }
