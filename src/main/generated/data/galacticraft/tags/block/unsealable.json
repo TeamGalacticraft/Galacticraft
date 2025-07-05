@@ -1,0 +1,19 @@
+{
+  "values": [
+    "#minecraft:leaves",
+    "minecraft:mangrove_roots",
+    "minecraft:copper_grate",
+    "minecraft:exposed_copper_grate",
+    "minecraft:weathered_copper_grate",
+    "minecraft:oxidized_copper_grate",
+    "minecraft:waxed_copper_grate",
+    "minecraft:waxed_exposed_copper_grate",
+    "minecraft:waxed_weathered_copper_grate",
+    "minecraft:waxed_oxidized_copper_grate",
+    "minecraft:spawner",
+    "minecraft:trial_spawner",
+    "minecraft:vault",
+    "galacticraft:boss_spawner",
+    "galacticraft:moon_cheese_leaves"
+  ]
+}

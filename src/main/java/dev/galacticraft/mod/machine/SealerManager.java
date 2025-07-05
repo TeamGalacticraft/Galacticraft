@@ -24,9 +24,11 @@ package dev.galacticraft.mod.machine;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
+import dev.galacticraft.mod.tag.GCBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.*;
 
@@ -64,8 +66,7 @@ public class SealerManager {
 
     public void tick() {
         // Update sealing status periodically
-        if (this.sealCheckTimer-- <= 0) {
-            this.sealCheckTimer = SEAL_CHECK_TIME;
+        if (this.level.getGameTime() % SEAL_CHECK_TIME == 0) {
             updateSealedBlocks();
         }
     }
@@ -97,7 +98,10 @@ public class SealerManager {
             while (!spaceToSeal.floodFillQueue.isEmpty()) {
                 BlockPos pos = spaceToSeal.floodFillQueue.pollFirst();
                 if (spaceToSeal.blocksToSeal.contains(pos)) continue;
-                if (!level.getBlockState(pos).isAir()) continue;
+                // TODO: Better check to account for non-full blocks
+                BlockState blockState = this.level.getBlockState(pos);
+                if (blockState.is(GCBlockTags.SEALABLE)) continue;
+                if (blockState.isCollisionShapeFullBlock(this.level, pos) && !blockState.is(GCBlockTags.UNSEALABLE)) continue;
 
                 spaceToSeal.blocksToSeal.add(pos);
                 for (Direction direction : Direction.values()) spaceToSeal.floodFillQueue.add(pos.relative(direction));

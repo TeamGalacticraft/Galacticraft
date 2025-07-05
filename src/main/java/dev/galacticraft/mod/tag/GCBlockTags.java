@@ -29,6 +29,9 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
 public class GCBlockTags {
+    public static final TagKey<Block> SEALABLE = galacticraftTag("sealable");
+    public static final TagKey<Block> UNSEALABLE = galacticraftTag("unsealable");
+
     public static final TagKey<Block> FOOTPRINTS = galacticraftTag("footprints");
 
     public static final TagKey<Block> INFINIBURN_MOON = galacticraftTag("infiniburn_moon");
