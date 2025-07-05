@@ -23,147 +23,128 @@
 package dev.galacticraft.mod.machine;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.*;
 
+import static dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity.SEAL_CHECK_TIME;
+
 public class SealerManager {
+
+    private static class SpaceToSeal {
+
+        private final List<OxygenSealerBlockEntity> sealers = new ArrayList<>();
+        private final Set<BlockPos> blocksToSeal = new HashSet<>();
+        private final Deque<BlockPos> floodFillQueue = new ArrayDeque<>();
+
+        public SpaceToSeal(OxygenSealerBlockEntity sealer) {
+            sealers.add(sealer);
+            floodFillQueue.add(sealer.getBlockPos().offset(0, 1, 0));
+        }
+
+        public boolean willSealSucceed() {
+            return floodFillQueue.isEmpty();
+        }
+
+    }
+
+    private final Level level;
     private final Map<BlockPos, OxygenSealerBlockEntity> sealers = new HashMap<>();
-
-    // Map of dimension -> sealed blocks
     private final Set<BlockPos> sealedBlocks = new HashSet<>();
+    private int sealCheckTimer = SEAL_CHECK_TIME;
 
-    public SealerManager() {
+    public SealerManager(Level level) {
+        this.level = level;
     }
 
-    public void onBlockChange(BlockPos pos, BlockState newState, ServerLevel level) {
-        ResourceKey<Level> dimension = level.dimension();
-        BlockPos sealerPos = findNearbySealer(pos, dimension);
-        if (sealerPos != null) {
-            recalculateSealingStatus(sealerPos, level);
+    private static final double MAX_SEALER_VOLUME = 1024;
+
+    public void tick() {
+        // Update sealing status periodically
+        if (this.sealCheckTimer-- <= 0) {
+            this.sealCheckTimer = SEAL_CHECK_TIME;
+            updateSealedBlocks();
         }
     }
 
-    public void addSealer(OxygenSealerBlockEntity sealer, ServerLevel level) {
-        ResourceKey<Level> dimension = level.dimension();
-        BlockPos pos = sealer.getBlockPos();
+    public void updateSealedBlocks() {
+        if (level.isClientSide) return;
 
-        Constant.LOGGER.info("Adding sealer at {} in dimension {}", pos, dimension.location());
-        this.sealers.put(pos, sealer);
-    }
+        // If the level is breathable oxygen sealers don't change anything
+        if (level.getDefaultBreathable()) return;
 
-    public void loadSealer(OxygenSealerBlockEntity sealer, ServerLevel level) {
-        addSealer(sealer, level);
-        BlockPos pos = sealer.getBlockPos();
-        recalculateSealingStatus(pos, level);
-    }
-
-    public void removeSealer(OxygenSealerBlockEntity sealer, ServerLevel level) {
-        ResourceKey<Level> dimension = level.dimension();
-        BlockPos pos = sealer.getBlockPos();
-
-        Constant.LOGGER.info("Removing sealer at {} in dimension {}", pos, dimension.location());
-        this.sealers.remove(pos);
-        recalculateSealingStatus(pos, level);
-    }
-
-    private BlockPos findNearbySealer(BlockPos pos, ResourceKey<Level> dimension) {
-        // Search for a sealer within the range in the same dimension
-        for (Map.Entry<BlockPos, OxygenSealerBlockEntity> entry : this.sealers.entrySet()) {
-            if (entry.getKey().distSqr(pos) <= OxygenSealerBlockEntity.SEALER_RANGE * OxygenSealerBlockEntity.SEALER_RANGE) {
-                return entry.getKey();
-            }
-        }
-        return null;
-    }
-
-    public void recalculateSealingStatus(BlockPos sealerPos, ServerLevel level) {
-        ResourceKey<Level> dimension = level.dimension();
-        if (!level.getServer().isReady() || !level.isLoaded(sealerPos)) {
+        if (level.getServer() != null && !level.getServer().isReady()) {
             Constant.LOGGER.info("World is not fully loaded, skipping sealing calculation");
             return;
         }
-        // Find all powered sealers in the same dimension
-        List<OxygenSealerBlockEntity> poweredSealers = new ArrayList<>();
-        Map<BlockPos, OxygenSealerBlockEntity> dimensionSealers = this.sealers;
-        for (OxygenSealerBlockEntity sealer : dimensionSealers.values()) {
-            if (sealer.hasEnergy() && sealer.hasOxygen() && !sealer.isBlocked()) {
-                poweredSealers.add(sealer);
-            }
-        }
 
-        // Calculate the maximum allowed room size
-        int maxRoomSize = (int) (Galacticraft.CONFIG.maxSealingPower() * poweredSealers.size());
+        // Reset all sealed blocks from the previous update to not be breathable
+        for (BlockPos pos : sealedBlocks) level.setBreathable(pos, false);
+        sealedBlocks.clear();
 
-        // Calculate the maximum possible room size
-        int maxPossibleRoomSize = (int) (Galacticraft.CONFIG.maxSealingPower() * dimensionSealers.size());
+        Set<SpaceToSeal> spacesToSeal = new HashSet<>();
+        for (Map.Entry<BlockPos, OxygenSealerBlockEntity> entry : this.sealers.entrySet()) {
+            OxygenSealerBlockEntity sealer = entry.getValue();
+            if (!sealer.hasEnergy()) continue;
+            if (!sealer.hasOxygen()) continue;
+            if (sealer.isBlocked()) continue;
 
-        // Perform flood fill to calculate room size from the block above the sealer
-        Set<BlockPos> sealedArea = new HashSet<>();
-        int roomSize = calculateRoomSize(sealerPos.offset(0, 1, 0), level, maxRoomSize, sealedArea);
-        // Update sealing status
-        boolean isSealed = roomSize <= maxRoomSize;
+            // Flood fill to find all blocks this sealer is trying to seal
+            SpaceToSeal spaceToSeal = new SpaceToSeal(sealer);
+            while (!spaceToSeal.floodFillQueue.isEmpty()) {
+                BlockPos pos = spaceToSeal.floodFillQueue.pollFirst();
+                if (spaceToSeal.blocksToSeal.contains(pos)) continue;
+                if (!level.getBlockState(pos).isAir()) continue;
 
-        for (OxygenSealerBlockEntity sealer : poweredSealers) {
-            sealer.setSealed(isSealed);
-        }
-        // Update the sealed blocks for this dimension
-        Set<BlockPos> dimensionSealedBlocks = this.sealedBlocks;
-        if (isSealed) {
-            dimensionSealedBlocks.addAll(sealedArea);
-        } else {
-            sealedArea = new HashSet<>();
-            calculateRoomSize(sealerPos.offset(0, 1, 0), level, maxPossibleRoomSize, sealedArea);
-            dimensionSealedBlocks.removeAll(sealedArea);
-        }
-    }
+                spaceToSeal.blocksToSeal.add(pos);
+                for (Direction direction : Direction.values()) spaceToSeal.floodFillQueue.add(pos.relative(direction));
 
-    private int calculateRoomSize(BlockPos startPos, ServerLevel level, int maxRoomSize, Set<BlockPos> sealedArea) {
-        // Use flood fill to calculate the room size
-        Queue<BlockPos> queue = new LinkedList<>();
-        Set<BlockPos> visited = new HashSet<>();
-        queue.add(startPos);
-        visited.add(startPos);
-        int roomSize = 0;
-
-        while (!queue.isEmpty() && roomSize < maxRoomSize + 1) {
-            BlockPos current = queue.poll();
-            roomSize++;
-            sealedArea.add(current); // Add the block to the sealed area
-
-            // Check adjacent blocks
-            for (Direction direction : Direction.values()) {
-                BlockPos neighbor = current.relative(direction);
-                if (!visited.contains(neighbor) && isAirOrSealableBlock(neighbor, level)) {
-                    visited.add(neighbor);
-                    queue.add(neighbor);
+                boolean willAlreadySeal = false;
+                for (SpaceToSeal otherSpace : spacesToSeal) {
+                    if (spaceToSeal == otherSpace) continue;
+                    if (!otherSpace.blocksToSeal.contains(pos)) continue;
+                    // We have encountered a block that another sealer is trying to seal,
+                    // so both sealers must be within the same space, so we combine them.
+                    spaceToSeal.sealers.addAll(otherSpace.sealers);
+                    spaceToSeal.blocksToSeal.addAll(otherSpace.blocksToSeal);
+                    spaceToSeal.floodFillQueue.addAll(otherSpace.floodFillQueue);
+                    willAlreadySeal = otherSpace.willSealSucceed();
+                    spacesToSeal.remove(otherSpace);
+                    break;
                 }
+                // If we just combined with a space that was already filled,
+                // we must be in the same space, so we don't need to continue flood fill
+                if (willAlreadySeal) break;
+
+                // If the space has become too large to fill, stop performing flood fill
+                if (spaceToSeal.blocksToSeal.size() > spaceToSeal.sealers.size() * MAX_SEALER_VOLUME) break;
             }
+            spacesToSeal.add(spaceToSeal);
         }
 
-        return roomSize;
+        for (SpaceToSeal spaceToSeal : spacesToSeal) {
+            for (OxygenSealerBlockEntity sealer : spaceToSeal.sealers) sealer.setSealed(spaceToSeal.willSealSucceed());
+            if (!spaceToSeal.willSealSucceed()) continue;
+            for (BlockPos pos : spaceToSeal.blocksToSeal) {
+                sealedBlocks.add(pos);
+                level.setBreathable(pos, true);
+            }
+        }
     }
 
-    private boolean isAirOrSealableBlock(BlockPos pos, ServerLevel level) {
-        // Check if the block is air or a block that can be part of a sealed room
-        BlockState state = level.getBlockState(pos);
-        return state.isAir();
+    public void addSealer(OxygenSealerBlockEntity sealer) {
+        BlockPos pos = sealer.getBlockPos();
+        Constant.LOGGER.info("Adding sealer at {} in dimension {}", pos, level.dimension().location());
+        this.sealers.put(pos, sealer);
     }
 
-    /**
-     * Checks if a block is currently sealed by a sealer in the same dimension.
-     *
-     * @param pos The position of the block to check.
-     * @return {@code true} if the block is sealed, {@code false} otherwise.
-     */
-    public boolean isSealed(BlockPos pos) {
-        return this.sealedBlocks.contains(pos);
+    public void removeSealer(OxygenSealerBlockEntity sealer) {
+        BlockPos pos = sealer.getBlockPos();
+        Constant.LOGGER.info("Removing sealer at {} in dimension {}", pos, level.dimension().location());
+        this.sealers.remove(pos);
     }
+
 }
