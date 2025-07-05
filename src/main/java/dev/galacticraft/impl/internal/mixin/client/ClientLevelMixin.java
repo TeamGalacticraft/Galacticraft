@@ -25,7 +25,6 @@ package dev.galacticraft.impl.internal.mixin.client;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.dimension.GalacticDimensionEffects;
-import dev.galacticraft.mod.client.render.dimension.OverworldRenderer;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.util.Mth;

@@ -42,7 +42,7 @@ public class DirectCelestialTeleporterType extends CelestialTeleporterType<Defau
             entity.teleportTo(level, 10.5F, 62.0F, 3.5F, null, 90.0F, 0.0F);
             return;
         }
-        
+
         int height = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, entity.getBlockX(), entity.getBlockZ());
         if (height == level.getMinBuildHeight()) {
             height = level.getMaxBuildHeight() * 2;
