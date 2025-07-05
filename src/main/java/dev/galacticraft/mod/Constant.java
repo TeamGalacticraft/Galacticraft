@@ -228,6 +228,9 @@ public interface Constant {
         String UNLIT_TORCH = "unlit_torch";
         String UNLIT_WALL_TORCH = "unlit_wall_torch";
         String UNLIT_LANTERN = "unlit_lantern";
+        String UNLIT_SOUL_TORCH = "unlit_soul_torch";
+        String UNLIT_SOUL_WALL_TORCH = "unlit_soul_wall_torch";
+        String UNLIT_SOUL_LANTERN = "unlit_soul_lantern";
         String CAVERNOUS_VINES = "cavernous_vines";
         String CAVERNOUS_VINES_PLANT = "cavernous_vines_plant";
         String WEB_TORCH = "web_torch";
