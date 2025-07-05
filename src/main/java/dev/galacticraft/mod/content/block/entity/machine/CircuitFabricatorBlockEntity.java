@@ -176,6 +176,11 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
     }
 
     @Override
+    public int decreaseProgressAmount() {
+        return 1;
+    }
+
+    @Override
     public @Nullable MachineMenu<? extends MachineBlockEntity> createMenu(int syncId, Inventory inv, Player player) {
         return new RecipeMachineMenu<>(
                 GCMenuTypes.CIRCUIT_FABRICATOR,
