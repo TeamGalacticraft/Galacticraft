@@ -25,6 +25,7 @@
     "PlayerMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
+    "SpiderMixin",
     "TorchBlockMixin"
   ],
   "client": [

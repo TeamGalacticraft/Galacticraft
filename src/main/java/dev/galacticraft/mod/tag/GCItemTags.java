@@ -43,6 +43,9 @@ public class GCItemTags {
     public static final TagKey<Item> FREQUENCY_MODULES = galacticraftTag("frequency_modules");
     public static final TagKey<Item> SHIELD_CONTROLLERS = galacticraftTag("shield_controllers");
 
+    public static final TagKey<Item> GLASS_FLUID_PIPES = galacticraftTag("glass_fluid_pipes");
+    public static final TagKey<Item> STAINED_GLASS_FLUID_PIPES = galacticraftTag("glass_fluid_pipes/stained");
+
     public static final TagKey<Item> BATTERIES = commonTag("batteries");
 
     public static final TagKey<Item> SILICONS = commonTag("silicon");
@@ -122,7 +125,7 @@ public class GCItemTags {
     public static final TagKey<Item> CANISTERS = commonTag("canisters");
     public static final TagKey<Item> COPPER_CANISTERS = commonTag("canisters/copper");
     public static final TagKey<Item> TIN_CANISTERS = commonTag("canisters/tin");
-    
+
     public static final TagKey<Item> SOLAR_DUSTS = commonTag("dusts/solar");
 
     public static final TagKey<Item> CHEESE_FOODS = commonTag("foods/cheese");
@@ -130,6 +133,7 @@ public class GCItemTags {
     public static final TagKey<Item> UNCANNABLE_FOODS = galacticraftTag("uncannable_foods");
 
     public static final TagKey<Item> ROCKET_STORAGE_UPGRADE_ITEMS = galacticraftTag("rocket_storage_upgrade_items");
+
     public static final TagKey<Item> EVOLVED_CREEPER_DROP_MUSIC_DISCS = galacticraftTag("evolved_creeper_drop_music_discs");
 
     public static final TagKey<Item> SLABS = galacticraftTag("slabs");
@@ -139,6 +143,8 @@ public class GCItemTags {
     public static final TagKey<Item> MOON_COBBLESTONES = commonTag("cobblestones/moon");
     public static final TagKey<Item> LUNASLATE_COBBLESTONES = commonTag("cobblestones/lunaslate");
     public static final TagKey<Item> MARS_COBBLESTONES = commonTag("cobblestones/mars");
+
+    public static final TagKey<Item> ASTEROID_ROCKS = galacticraftTag("asteroid_rocks");
 
     public static final TagKey<Item> OIL_BUCKETS = commonTag("buckets/oil");
     public static final TagKey<Item> FUEL_BUCKETS = commonTag("buckets/fuel");

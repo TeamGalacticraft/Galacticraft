@@ -29,6 +29,9 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
 public class GCBlockTags {
+    public static final TagKey<Block> SEALABLE = galacticraftTag("sealable");
+    public static final TagKey<Block> UNSEALABLE = galacticraftTag("unsealable");
+
     public static final TagKey<Block> FOOTPRINTS = galacticraftTag("footprints");
 
     public static final TagKey<Block> INFINIBURN_MOON = galacticraftTag("infiniburn_moon");
@@ -97,6 +100,8 @@ public class GCBlockTags {
     public static final TagKey<Block> RAW_TITANIUM_BLOCKS = commonTag("storage_blocks/raw_titanium");
 
     public static final TagKey<Block> MACHINES = galacticraftTag("machines");
+    public static final TagKey<Block> GLASS_FLUID_PIPES = galacticraftTag("glass_fluid_pipes");
+    public static final TagKey<Block> STAINED_GLASS_FLUID_PIPES = galacticraftTag("glass_fluid_pipes/stained");
 
     public static final TagKey<Block> SLABS = galacticraftTag("slabs");
     public static final TagKey<Block> STAIRS = galacticraftTag("stairs");
@@ -105,6 +110,8 @@ public class GCBlockTags {
     public static final TagKey<Block> MOON_COBBLESTONES = commonTag("cobblestones/moon");
     public static final TagKey<Block> LUNASLATE_COBBLESTONES = commonTag("cobblestones/lunaslate");
     public static final TagKey<Block> MARS_COBBLESTONES = commonTag("cobblestones/mars");
+
+    public static final TagKey<Block> ASTEROID_ROCKS = galacticraftTag("asteroid_rocks");
 
     public static final TagKey<Block> DECORATION_BLOCKS = galacticraftTag("decoration_blocks");
     public static final TagKey<Block> ALUMINUM_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/aluminum");

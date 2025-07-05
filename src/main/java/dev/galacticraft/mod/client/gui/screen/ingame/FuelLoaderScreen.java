@@ -23,6 +23,8 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.machinelib.client.api.util.DisplayUtil;
@@ -65,6 +67,12 @@ public class FuelLoaderScreen extends MachineScreen<FuelLoaderBlockEntity, FuelL
     public static final int TANK_OVERLAY_WIDTH = 38;
     public static final int TANK_OVERLAY_HEIGHT = 47;
 
+    public static final int L1 = 8;
+    public static final int L2 = 36;
+    public static final int L3 = 18;
+    public static final int L4 = 19;
+    public static final int LENGTH = L1 + L2 + L3 + L4;
+
     public FuelLoaderScreen(FuelLoaderMenu handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.FUEL_LOADER_SCREEN);
     }
@@ -82,6 +90,8 @@ public class FuelLoaderScreen extends MachineScreen<FuelLoaderBlockEntity, FuelL
         if (!DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + ROCKET_FACE_X, this.topPos + ROCKET_FACE_Y, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT)) {
             graphics.blit(Constant.ScreenTexture.FUEL_LOADER_SCREEN, this.leftPos + ROCKET_FACE_X, this.topPos + ROCKET_FACE_Y, ROCKET_FACE_U, ROCKET_FACE_V, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT);
         }
+
+        this.drawProgressBar(graphics.pose());
     }
 
     @Override
@@ -103,10 +113,41 @@ public class FuelLoaderScreen extends MachineScreen<FuelLoaderBlockEntity, FuelL
     @Override
     protected void drawTanks(GuiGraphics graphics, int mouseX, int mouseY) {
         super.drawTanks(graphics, mouseX, mouseY);
-        
+
         FluidResourceSlot slot = this.menu.fluidStorage.slot(FuelLoaderBlockEntity.FUEL_TANK);
         if (!slot.isEmpty()) {
             graphics.blit(Constant.ScreenTexture.FUEL_LOADER_SCREEN, this.leftPos + TANK_OVERLAY_X, this.topPos + TANK_OVERLAY_Y, TANK_OVERLAY_U, TANK_OVERLAY_V, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT);
+        }
+    }
+
+    private void drawProgressBar(PoseStack matrices) {
+        assert this.minecraft != null;
+        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.FUEL_LOADER_SCREEN);
+
+        if (this.menu.getProgress() == 0) {
+            return;
+        } else if (this.menu.getProgress() == FuelLoaderBlockEntity.MAX_PROGRESS) {
+            DrawableUtil.drawProgressTexture(matrices, this.leftPos + 86, this.topPos + 56, 176, 83, 56, 21);
+            return;
+        }
+
+        float progress = 0.5F * this.menu.getProgress();
+        DrawableUtil.drawProgressTexture(matrices, this.leftPos + 86, this.topPos + 69, 238, 96, 3, Math.min(L1, progress));
+
+        progress -= L1;
+        if (progress > 0) {
+            DrawableUtil.drawProgressTexture(matrices, this.leftPos + 88, this.topPos + 74, 178, 101, Math.min(L2, progress), 3);
+        } else return;
+
+        progress -= L2;
+        if (progress > 0) {
+            float min = Math.min(L3, progress);
+            DrawableUtil.drawProgressTexture(matrices, this.leftPos + 121, this.topPos + 74 - min, 247, 101 - min, 3, min);
+        } else return;
+
+        progress -= L3;
+        if (progress > 0) {
+            DrawableUtil.drawProgressTexture(matrices, this.leftPos + 123, this.topPos + 56, 213, 83, Math.min(L4, progress), 3);
         }
     }
 }

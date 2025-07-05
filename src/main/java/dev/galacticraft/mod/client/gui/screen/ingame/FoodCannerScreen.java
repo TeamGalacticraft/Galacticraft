@@ -26,13 +26,17 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.FoodCannerBlockEntity;
+import dev.galacticraft.mod.network.c2s.EjectCanPayload;
 import dev.galacticraft.mod.screen.FoodCannerMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+
+import static dev.galacticraft.mod.content.block.entity.machine.FoodCannerBlockEntity.*;
 
 @Environment(EnvType.CLIENT)
 public class FoodCannerScreen extends MachineScreen<FoodCannerBlockEntity, FoodCannerMenu> {
@@ -45,91 +49,61 @@ public class FoodCannerScreen extends MachineScreen<FoodCannerBlockEntity, FoodC
     }
 
     private void drawProgressBar(PoseStack matrices) {
-        if (this.menu.state.isActive()) {
-            int progress = this.menu.getProgress();
-            if (inBounds(progress, 1, 9)) {
-                //transferring can
-                draw(68, 30, 36, 189, 4, progress, matrices);
+        int progress = this.menu.getProgress();
+        if (progress == 0) {
+            return;
+        } else if (progress > 0 && progress <= TRANSFER_INPUT) {
+            // Transferring empty can from top slot to middle slot
+            this.draw(68, 30, 180, 30, 3, progress, matrices);
+            return;
+        } else if (progress >= TRANSFER_OUTPUT) {
+            // Transferring full can from middle slot to bottom slot
+            this.draw(68, 57, 180, 57, 3, progress - (TRANSFER_OUTPUT - 1), matrices);
+            return;
+        }
+
+        if (this.menu.getFirstRowConsumed()) {
+            if (progress >= START_ROW_1 && progress < START_ROW_2 - 1) {
+                this.draw(97, 19, 209, 73, Math.max(TRANSFER_INPUT - progress, -11), 3, matrices);
+                if (progress > START_ROW_1 + 10) {
+                    this.draw(86, 21, 224, 21, 3, progress - START_ROW_1 - 10, matrices);
+                }
+            } else if (progress >= START_ROW_2 - 1) {
+                this.draw(86, 19, 224, 19, 11, 19, matrices);
             }
-            if (this.menu.getFirstRowConsumed()) {
-                if (inBounds(progress, 10, 36)) {
-                    if (inBounds(progress, 10, 17)) {
-                        draw(97, 19, 65, 178, 9 - progress, 4, matrices);
-                    }
-                    if (progress > 17) {
-                        draw(89, 19, 57, 178, 8, 4, matrices);
-                    }
-                    if (inBounds(progress, 18, 19)) {
-                        draw(89, 19, 57, 178, 17 - progress, 3, matrices);
-                    }
-                    if (progress > 19) {
-                        draw(86, 19, 54, 178, 3, 3, matrices);
-                    }
-                    if (inBounds(progress, 20, 36)) {
-                        draw(86, 22, 54, 181, 4, progress - 19, matrices);
-                    }
-                }
-                if (inBounds(progress, 37, 106)) {
-                    draw(86, 19, 54, 178, 11, 20, matrices);
-                }
+        }
+
+        if (this.menu.getSecondRowConsumed() && progress >= START_ROW_2) {
+            this.draw(97, 37, 209, 73, Math.max((START_ROW_2 - 1) - progress, -11), 3, matrices);
+            if (progress > START_ROW_2 + 10) {
+                this.draw(86, 39, 224, 39, 3, Math.min(progress - START_ROW_2 - 10, 10), matrices);
             }
-            if (this.menu.getSecondRowConsumed()) {
-                if (inBounds(progress, 37, 44)) {
-                    draw(97, 39, 65, 198, 36 - progress, 2, matrices);
-                }
-                if (inBounds(progress, 45, 106)) {
-                    draw(89, 39, 57, 198, 8, 2, matrices);
-                }
+        } else if (this.menu.getFirstRowConsumed() && progress >= SKIP_ROW_2) {
+            this.draw(86, 38, 224, 38, 3, Math.min(progress - (SKIP_ROW_2 - 1), 11), matrices);
+        }
+
+        if (this.menu.getThirdRowConsumed() && progress >= START_ROW_3) {
+            this.draw(97, 55, 209, 73, Math.max((START_ROW_3 - 1) - progress, -11), 3, matrices);
+            if (progress > START_ROW_3 + 10) {
+                this.draw(86, 56, 198, 56, 3, Math.max(START_ROW_3 + 10 - progress, -10), matrices);
             }
-            if (this.menu.getThirdRowConsumed()) {
-                if (inBounds(progress, 79, 86)) {
-                    draw(97, 57, 65, 216, 78 - progress, 2, matrices);
+        } else if (this.menu.getFourthRowConsumed() && progress >= SKIP_ROW_3) {
+            this.draw(86, 57, 240, 57, 3, Math.max((SKIP_ROW_3 - 1) - progress, -11), matrices);
+        }
+
+        if (this.menu.getFourthRowConsumed()) {
+            if (progress >= START_ROW_4 && progress < START_ROW_3 - 1) {
+                this.draw(97, 73, 209, 73, Math.max((START_ROW_4 - 1) - progress, -11), 3, matrices);
+                if (progress > START_ROW_4 + 10) {
+                    this.draw(86, 74, 240, 74, 3, START_ROW_4 + 10 - progress, matrices);
                 }
-                if (inBounds(progress, 87, 106)) {
-                    draw(89, 57, 57, 216, 8, 2, matrices);
-                }
-                if (inBounds(progress, 87, 96)) {
-                    draw(87, 59, 55, 218, 2, 86 - progress, matrices);
-                }
-                if (inBounds(progress, 97, 106)) {
-                    draw(87, 59, 55, 218, 2, -10, matrices);
-                }
+            } else if (progress >= START_ROW_3 - 1) {
+                this.draw(86, 57, 240, 57, 11, 19, matrices);
             }
-            if (this.menu.getForthRowConsumed()) {
-                if (inBounds(progress, 53, 62)) {
-                    draw(97, 75, 65, 234, 52 - progress, 2, matrices);
-                }
-                if (inBounds(progress, 63, 106)) {
-                    draw(87, 75, 55, 234, 10, 2, matrices);
-                }
-                if (inBounds(progress, 63, 78)) {
-                    draw(87, 75, 55, 234, 2, 62 - progress, matrices);
-                }
-                if (inBounds(progress, 79, 106)) {
-                    draw(87, 75, 55, 234, 2, -16, matrices);
-                }
-                if (inBounds(progress, 87, 96)) {
-                    draw(87, 59, 55, 218, 2, 86 - progress, matrices);
-                }
-                if (inBounds(progress, 97, 106)) {
-                    draw(87, 59, 55, 218, 2, -10, matrices);
-                }
-            }
-            if (inBounds(progress, 45, 52)) {
-                draw(87, 39, 55, 198, 2, progress - 44, matrices);
-            }
-            if (this.menu.getFirstRowConsumed() || this.menu.getSecondRowConsumed()) {
-                if (inBounds(progress, 52, 106)) {
-                    draw(87, 39, 55, 198, 2, 8, matrices);
-                }
-            }
-            if (inBounds(progress, 97, 106)) {
-                draw(89, 47, 57, 206, 96 - progress, 2, matrices);
-            }
-            if (progress > 106) {
-                //transferring full can
-                draw(68, 57, 36, 216, 4, progress - 106, matrices);
-            }
+        }
+
+        if (progress >= FINAL_PROGRESS) {
+            this.draw(86, 46, 198, 46, Math.max((FINAL_PROGRESS - 1) - progress, -7), 3, matrices);
         }
     }
 
@@ -139,8 +113,14 @@ public class FoodCannerScreen extends MachineScreen<FoodCannerBlockEntity, FoodC
         this.drawProgressBar(graphics.pose());
     }
 
-    private boolean inBounds(int value, int min, int max) {
-        return (value >= min && value <= max);
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (mouseIn(mouseX, mouseY, this.leftPos + 62, this.topPos + 40, 18, 18)) {
+            ClientPlayNetworking.send(new EjectCanPayload());
+            this.playButtonSound();
+            return true;
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     private void draw(int x, int y, int drawX, int drawY, int width, int height, PoseStack matrices) {

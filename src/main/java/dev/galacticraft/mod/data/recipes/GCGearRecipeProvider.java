@@ -30,7 +30,6 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -76,27 +75,27 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.DESH_HELMET)
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.DESH_HELMET)
                 .define('D', GCItems.DESH_INGOT)
                 .pattern("DDD")
                 .pattern("D D")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.DESH_CHESTPLATE)
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.DESH_CHESTPLATE)
                 .define('D', GCItems.DESH_INGOT)
                 .pattern("D D")
                 .pattern("DDD")
                 .pattern("DDD")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.DESH_LEGGINGS)
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.DESH_LEGGINGS)
                 .define('D', GCItems.DESH_INGOT)
                 .pattern("DDD")
                 .pattern("D D")
                 .pattern("D D")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.DESH_BOOTS)
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.DESH_BOOTS)
                 .define('D', GCItems.DESH_INGOT)
                 .pattern("D D")
                 .pattern("D D")
@@ -263,8 +262,17 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
         titaniumSmithing(output, GCItems.DESH_HOE, RecipeCategory.TOOLS, GCItems.TITANIUM_HOE);
         titaniumSmithing(output, GCItems.DESH_SHOVEL, RecipeCategory.TOOLS, GCItems.TITANIUM_SHOVEL);
 
-        // Other Items
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE, 2)
+                .define('D', ConventionalItemTags.DIAMOND_GEMS)
+                .define('T', GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE)
+                .define('A', GCItemTags.ASTEROID_ROCKS)
+                .pattern("DTD")
+                .pattern("DAD")
+                .pattern("DDD")
+                .unlockedBy(getHasName(GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE), has(GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE))
+                .save(output);
 
+        // Other Items
         ShapelessRecipeBuilder.shapeless(RecipeCategory.COMBAT, GCItems.THROWABLE_METEOR_CHUNK, 3)
                 .requires(GCItems.RAW_METEORIC_IRON)
                 .unlockedBy(getHasName(GCItems.RAW_METEORIC_IRON), has(GCItems.RAW_METEORIC_IRON))
@@ -273,7 +281,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
         simpleCookingRecipe(output, "smelting", RecipeSerializer.SMELTING_RECIPE, SmeltingRecipe::new, 200, GCItems.THROWABLE_METEOR_CHUNK, GCItems.HOT_THROWABLE_METEOR_CHUNK, 0.1F);
         simpleCookingRecipe(output, "blasting", RecipeSerializer.BLASTING_RECIPE, BlastingRecipe::new, 100, GCItems.THROWABLE_METEOR_CHUNK, GCItems.HOT_THROWABLE_METEOR_CHUNK, 0.1F);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.STANDARD_WRENCH)
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.STANDARD_WRENCH)
                 .define('A', GCItems.COMPRESSED_ALUMINUM)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .pattern("  S")

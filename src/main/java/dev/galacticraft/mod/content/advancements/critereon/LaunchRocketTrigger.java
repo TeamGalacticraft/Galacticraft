@@ -25,7 +25,9 @@ package dev.galacticraft.mod.content.advancements.critereon;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.rocket.LaunchStage;
+import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
@@ -50,13 +52,17 @@ public class LaunchRocketTrigger extends SimpleCriterionTrigger<LaunchRocketTrig
         });
     }
 
-    public record TriggerInstance(
-            Optional<ContextAwarePredicate> player) implements SimpleCriterionTrigger.SimpleInstance {
+    public record TriggerInstance(Optional<ContextAwarePredicate> player) implements SimpleCriterionTrigger.SimpleInstance {
+
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
                 instance -> instance.group(
                                 EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player)
                         )
                         .apply(instance, TriggerInstance::new)
         );
+
+        public static Criterion<TriggerInstance> launched() {
+            return GCTriggers.LAUNCH_ROCKET.createCriterion(new TriggerInstance(Optional.empty()));
+        }
     }
 }

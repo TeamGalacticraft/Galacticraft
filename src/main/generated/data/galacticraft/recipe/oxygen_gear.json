@@ -6,7 +6,7 @@
       "item": "galacticraft:oxygen_concentrator"
     },
     "Y": {
-      "item": "galacticraft:glass_fluid_pipe"
+      "tag": "galacticraft:glass_fluid_pipes"
     }
   },
   "pattern": [

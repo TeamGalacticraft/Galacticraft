@@ -171,6 +171,11 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
     }
 
     @Override
+    protected int decreaseProgressAmount() {
+        return 1;
+    }
+
+    @Override
     public int getProcessingTime(@NotNull RecipeHolder<FabricationRecipe> recipe) {
         return recipe.value().getProcessingTime();
     }

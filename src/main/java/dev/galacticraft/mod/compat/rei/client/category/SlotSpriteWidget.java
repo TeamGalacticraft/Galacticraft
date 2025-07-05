@@ -100,7 +100,7 @@ public class SlotSpriteWidget extends Slot {
     public void setInteractableFavorites(boolean interactableFavorites) {
         this.target.setInteractableFavorites(interactableFavorites);
     }
-    
+
     public boolean isInteractableFavorites() {
         return this.target.isInteractableFavorites();
     }

@@ -23,23 +23,29 @@
 package dev.galacticraft.mod.data.tag;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.block.GCBlock;
 import dev.galacticraft.mod.tag.GCBlockTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
+import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
@@ -47,8 +53,49 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         super(output, registriesFuture);
     }
 
+    public static final Map<DyeColor, TagKey<Block>> DYED_BLOCK_TAGS = Util.make(new EnumMap<>(DyeColor.class), map -> {
+        map.put(DyeColor.WHITE, ConventionalBlockTags.WHITE_DYED);
+        map.put(DyeColor.ORANGE, ConventionalBlockTags.ORANGE_DYED);
+        map.put(DyeColor.MAGENTA, ConventionalBlockTags.MAGENTA_DYED);
+        map.put(DyeColor.LIGHT_BLUE, ConventionalBlockTags.LIGHT_BLUE_DYED);
+        map.put(DyeColor.YELLOW, ConventionalBlockTags.YELLOW_DYED);
+        map.put(DyeColor.LIME, ConventionalBlockTags.LIME_DYED);
+        map.put(DyeColor.PINK, ConventionalBlockTags.PINK_DYED);
+        map.put(DyeColor.GRAY, ConventionalBlockTags.GRAY_DYED);
+        map.put(DyeColor.LIGHT_GRAY, ConventionalBlockTags.LIGHT_GRAY_DYED);
+        map.put(DyeColor.CYAN, ConventionalBlockTags.CYAN_DYED);
+        map.put(DyeColor.PURPLE, ConventionalBlockTags.PURPLE_DYED);
+        map.put(DyeColor.BLUE, ConventionalBlockTags.BLUE_DYED);
+        map.put(DyeColor.BROWN, ConventionalBlockTags.BROWN_DYED);
+        map.put(DyeColor.GREEN, ConventionalBlockTags.GREEN_DYED);
+        map.put(DyeColor.RED, ConventionalBlockTags.RED_DYED);
+        map.put(DyeColor.BLACK, ConventionalBlockTags.BLACK_DYED);
+    });
+
     @Override
     protected void addTags(HolderLookup.Provider provider) {
+        this.tag(GCBlockTags.SEALABLE)
+                .add(GCBlocks.AIR_LOCK_SEAL)
+                .add(GCBlocks.ROCKET_WORKBENCH)
+                .add(GCBlocks.CRYOGENIC_CHAMBER)
+                .add(GCBlocks.CRYOGENIC_CHAMBER_PART);
+        this.tag(GCBlockTags.UNSEALABLE)
+                .forceAddTag(BlockTags.LEAVES)
+                .add(Blocks.MANGROVE_ROOTS)
+                .add(Blocks.COPPER_GRATE)
+                .add(Blocks.EXPOSED_COPPER_GRATE)
+                .add(Blocks.WEATHERED_COPPER_GRATE)
+                .add(Blocks.OXIDIZED_COPPER_GRATE)
+                .add(Blocks.WAXED_COPPER_GRATE)
+                .add(Blocks.WAXED_EXPOSED_COPPER_GRATE)
+                .add(Blocks.WAXED_WEATHERED_COPPER_GRATE)
+                .add(Blocks.WAXED_OXIDIZED_COPPER_GRATE)
+                .add(Blocks.SPAWNER)
+                .add(Blocks.TRIAL_SPAWNER)
+                .add(Blocks.VAULT)
+                .add(GCBlocks.BOSS_SPAWNER)
+                .add(GCBlocks.MOON_CHEESE_LEAVES);
+
         this.tag(GCBlockTags.FOOTPRINTS)
                 .add(GCBlocks.MOON_TURF);
 
@@ -310,6 +357,11 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .addTag(GCBlockTags.LUNASLATE_COBBLESTONES)
                 .addTag(GCBlockTags.MARS_COBBLESTONES);
 
+        this.tag(GCBlockTags.ASTEROID_ROCKS)
+                .add(GCBlocks.ASTEROID_ROCK)
+                .add(GCBlocks.ASTEROID_ROCK_1)
+                .add(GCBlocks.ASTEROID_ROCK_2);
+
         this.tag(BlockTags.ICE)
                 .add(GCBlocks.DENSE_ICE);
 
@@ -337,6 +389,14 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 GCBlocks.FOOD_CANNER,
                 GCBlocks.ROCKET_WORKBENCH
         );
+
+        this.tag(GCBlockTags.GLASS_FLUID_PIPES).add(GCBlocks.GLASS_FLUID_PIPE).addTag(GCBlockTags.STAINED_GLASS_FLUID_PIPES);
+        for (Map.Entry<DyeColor, TagKey<Block>> entry : DYED_BLOCK_TAGS.entrySet()) {
+            PipeColor color = PipeColor.fromDye(entry.getKey());
+            Block pipe = GCBlocks.GLASS_FLUID_PIPES.get(color);
+            this.tag(entry.getValue()).add(pipe);
+            this.tag(GCBlockTags.STAINED_GLASS_FLUID_PIPES).add(pipe);
+        }
 
         this.tag(ConventionalBlockTags.VILLAGER_JOB_SITES)
                 .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
@@ -429,7 +489,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         List<GCBlockRegistry.DecorationSet> decorations = GCBlocks.BLOCKS.getDecorations();
 
         Map<String, TagKey<Block>> decoTags = new HashMap<>();
- 
+
         decoTags.put("aluminum_decoration", GCBlockTags.ALUMINUM_DECORATION_BLOCKS);
         decoTags.put("bronze_decoration", GCBlockTags.BRONZE_DECORATION_BLOCKS);
         decoTags.put("copper_decoration", GCBlockTags.COPPER_DECORATION_BLOCKS);
@@ -477,6 +537,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(stairs)
                 .add(slabs)
                 .add(walls)
+                .add(Arrays.stream(PipeColor.byRainbowOrder()).map(GCBlocks.GLASS_FLUID_PIPES::get).toArray(Block[]::new))
                 .add(
                         GCBlocks.MARS_IRON_ORE,
                         GCBlocks.ASTEROID_IRON_ORE,
@@ -523,7 +584,6 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.AIR_LOCK_CONTROLLER,
                         GCBlocks.SEALABLE_ALUMINUM_WIRE,
                         GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE,
-                        GCBlocks.GLASS_FLUID_PIPE,
 
                         GCBlocks.SILICON_BLOCK,
                         GCBlocks.METEORIC_IRON_BLOCK,
@@ -674,7 +734,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .forEach(replaceableTagAppender::add);
     }
 
-    protected FabricTagProvider<Block>.FabricTagBuilder tag(TagKey<Block> tag) {
+    protected FabricTagProvider<Block>.@NotNull FabricTagBuilder tag(TagKey<Block> tag) {
         return this.getOrCreateTagBuilder(tag);
     }
 }

@@ -22,13 +22,11 @@
 
 package dev.galacticraft.mod.compat.jei.category;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.gui.screen.ingame.RocketWorkbenchScreen;
-import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.compat.jei.GCJEIRecipeTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
-import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.recipe.RocketRecipe;
 import dev.galacticraft.mod.util.Translations;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -37,7 +35,6 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
-import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
@@ -45,7 +42,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.SmithingScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import static dev.galacticraft.mod.Constant.RecipeViewer.*;
@@ -96,7 +92,7 @@ public class JEIRocketCategory implements IRecipeCategory<RocketRecipe> {
         builder.addInputSlot(centerX - 8, y)
                 .addIngredients(recipe.cone())
                 .setStandardSlotBackground();
-        
+
         // Body
         for (int i = 0; i < recipe.bodyHeight(); i++) {
             y += 18;

@@ -27,6 +27,7 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.util.StreamCodecs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -47,6 +48,7 @@ public record SatelliteCreationPayload(ResourceKey<CelestialBody<?, ?>> body) im
     @Override
     public void handle(ServerPlayNetworking.@NotNull Context context) {
         SatelliteType.registerSatellite(context.server(), context.player(), this.body, context.server().getStructureManager().get(Constant.Structure.SPACE_STATION).orElseThrow(), context.server().registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY));
+        GCTriggers.CREATE_SPACE_STATION.trigger(context.player());
     }
 
     @Override

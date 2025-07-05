@@ -24,7 +24,6 @@ package dev.galacticraft.mod.mixin;
 
 import com.google.common.collect.ImmutableList;
 import dev.galacticraft.mod.accessor.GCLevelAccessor;
-import dev.galacticraft.mod.machine.SealerManager;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.misc.footprint.ServerFootprintManager;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
@@ -92,10 +91,6 @@ public abstract class ServerLevelMixin extends Level implements GCLevelAccessor 
         if (newState.is(BlockTags.LEAVES)) {
             // Oxygen collector code update (if needed)
         }
-
-        // Notify the SealerManager about the block change
-        SealerManager manager = ((GCLevelAccessor) getLevel()).getSealerManager();
-        manager.onBlockChange(pos, newState, this.getLevel());
     }
 
     @Inject(method = "tickChunk", at = @At("HEAD"))

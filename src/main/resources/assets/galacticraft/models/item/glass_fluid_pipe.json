@@ -1,6 +1,0 @@
-{
-  "parent": "galacticraft:item/template_glass_fluid_pipe",
-  "textures": {
-    "texture": "galacticraft:block/glass_fluid_pipe/clear"
-  }
-}

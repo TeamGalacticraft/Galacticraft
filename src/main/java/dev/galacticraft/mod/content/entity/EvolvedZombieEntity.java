@@ -33,6 +33,16 @@ public class EvolvedZombieEntity extends Zombie {
     }
 
     @Override
+    public boolean isUnderWaterConverting() {
+        return false;
+    }
+
+    @Override
+    protected boolean convertsInWater() {
+        return false;
+    }
+
+    @Override
     protected boolean isSunBurnTick() {
         return super.isSunBurnTick() && this.level().getBiome(this.blockPosition()).is(GCBiomes.Moon.BASALTIC_MARE);
     }

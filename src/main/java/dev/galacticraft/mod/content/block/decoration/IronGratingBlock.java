@@ -26,7 +26,6 @@ import com.google.common.annotations.VisibleForTesting;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.StringRepresentable;
@@ -42,6 +41,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -69,24 +69,26 @@ public class IronGratingBlock extends Block implements FluidLoggable {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {
-        FluidState fluidState = blockPlaceContext.getLevel().getFluidState(blockPlaceContext.getClickedPos());
-        BlockPos blockPos = blockPlaceContext.getClickedPos();
-        BlockState blockState = this.defaultBlockState().setValue(STATE, State.LOWER).setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType())).setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1)).setValue(FlowingFluid.FALLING, fluidState.hasProperty(FlowingFluid.FALLING) ? fluidState.getValue(FlowingFluid.FALLING) : false);
+        BlockState state = this.defaultBlockState().setValue(STATE, State.LOWER);
+        state = FluidLoggable.applyFluidState(blockPlaceContext.getLevel(), state, blockPlaceContext.getClickedPos());
+
         Direction direction = blockPlaceContext.getClickedFace();
-        return direction != Direction.DOWN && (direction == Direction.UP || !(blockPlaceContext.getClickLocation().y - (double) blockPos.getY() > 0.5)) ? blockState : blockState.setValue(STATE, State.UPPER);
+        BlockPos blockPos = blockPlaceContext.getClickedPos();
+        if (direction != Direction.DOWN && (direction == Direction.UP || !(blockPlaceContext.getClickLocation().y - (double) blockPos.getY() > 0.5))) {
+            state.setValue(STATE, State.UPPER);
+        }
+
+        return state;
     }
 
     @Override
-    public VoxelShape getShape(BlockState blockState, BlockGetter blockView, BlockPos blockPos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(BlockState blockState, BlockGetter blockView, BlockPos blockPos, CollisionContext context) {
         return blockState.getValue(STATE) == State.UPPER ? UPPER_SHAPE : LOWER_SHAPE;
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborBlockState, LevelAccessor world, BlockPos blockPos, BlockPos neighborBlockPos) {
-        if (!this.isEmpty(state)) {
-            world.scheduleTick(blockPos, BuiltInRegistries.FLUID.get(state.getValue(FLUID)), BuiltInRegistries.FLUID.get(state.getValue(FLUID)).getTickDelay(world));
-        }
-
+    public @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborBlockState, LevelAccessor world, BlockPos blockPos, BlockPos neighborBlockPos) {
+        FluidLoggable.tryScheduleFluidTick(world, state, blockPos);
         return super.updateShape(state, direction, neighborBlockState, world, blockPos, neighborBlockPos);
     }
 
@@ -96,20 +98,12 @@ public class IronGratingBlock extends Block implements FluidLoggable {
     }
 
     @Override
-    public FluidState getFluidState(BlockState state) {
-        if (this.isEmpty(state)) return EMPTY_STATE;
-        FluidState state1 = BuiltInRegistries.FLUID.get(state.getValue(FLUID)).defaultFluidState();
-        if (state1.getValues().containsKey(FlowingFluid.LEVEL)) {
-            state1 = state1.setValue(FlowingFluid.LEVEL, state.getValue(FlowingFluid.LEVEL));
-        }
-        if (state1.getValues().containsKey(FlowingFluid.FALLING)) {
-            state1 = state1.setValue(FlowingFluid.FALLING, state.getValue(FlowingFluid.FALLING));
-        }
-        return state1;
+    public @NotNull FluidState getFluidState(BlockState state) {
+        return FluidLoggable.createFluidState(state);
     }
 
     @Override
-    public Optional<SoundEvent> getPickupSound() {
+    public @NotNull Optional<SoundEvent> getPickupSound() {
         return Fluids.WATER.getPickupSound();
     }
 

@@ -81,7 +81,7 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
                     0
             ),
             MachineFluidStorage.spec(
-                    FluidResourceSlot.builder(TransferType.INPUT)
+                    FluidResourceSlot.builder(TransferType.STRICT_INPUT)
                             .pos(31, 8)
                             .capacity(OxygenCompressorBlockEntity.MAX_OXYGEN)
                             .filter(ResourceFilters.ofResource(Gases.OXYGEN))
@@ -121,7 +121,7 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
                     tank.insert(FluidVariant.of(Gases.OXYGEN), available, transaction);
                     transaction.commit();
                     profiler.pop();
-                    return GCMachineStatuses.COMPRESSING;
+                    return GCMachineStatuses.COMPRESSING_OXYGEN;
                 }
             } else {
                 profiler.pop();

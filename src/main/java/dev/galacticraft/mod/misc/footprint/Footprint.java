@@ -79,7 +79,6 @@ public class Footprint {
         float footprintScale = 0.375F;
 
         int mainPosX = Mth.floor(position.x());
-        int mainPosY = Mth.floor(position.y());
         int mainPosZ = Mth.floor(position.z());
 
         double x0 = (Math.sin((45 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.x;

@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.content.block.entity;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCSounds;

@@ -31,19 +31,21 @@ import java.util.Optional;
 
 public class GCModelTemplates {
     public static final ModelTemplate SPAWN_EGG = ModelTemplates.createItem("template_spawn_egg");
-    public static final ModelTemplate DETAILED_WALL_POST = create("template_detailed_wall_post", "_post", TextureSlot.TOP, TextureSlot.BOTTOM, TextureSlot.SIDE);
-    public static final ModelTemplate DETAILED_WALL_LOW_SIDE = create("template_detailed_wall_side", "_side", TextureSlot.TOP, TextureSlot.BOTTOM, TextureSlot.SIDE);
-    public static final ModelTemplate DETAILED_WALL_TALL_SIDE = create("template_detailed_wall_side_tall", "_side_tall", TextureSlot.TOP, TextureSlot.BOTTOM, TextureSlot.SIDE);
-    public static final ModelTemplate DETAILED_WALL_INVENTORY = create("detailed_wall_inventory", "_inventory", TextureSlot.TOP, TextureSlot.BOTTOM, TextureSlot.SIDE);
-    public static final ModelTemplate GLASS_FLUID_PIPE = create("template_glass_fluid_pipe", GCTextureSlot.COLOR);
-    public static final ModelTemplate FLUID_PIPE_WALKWAY = create("template_fluid_pipe_walkway", GCTextureSlot.COLOR);
-    public static final ModelTemplate ROCKET_LAUNCH_PAD_PART = create("rocket_launch_pad_part", TextureSlot.PARTICLE, TextureSlot.TOP, TextureSlot.BOTTOM, TextureSlot.SIDE);
+    public static final ModelTemplate DETAILED_WALL_POST = create("block/template_detailed_wall_post", "_post", TextureSlot.TOP, TextureSlot.BOTTOM, TextureSlot.SIDE);
+    public static final ModelTemplate DETAILED_WALL_LOW_SIDE = create("block/template_detailed_wall_side", "_side", TextureSlot.TOP, TextureSlot.BOTTOM, TextureSlot.SIDE);
+    public static final ModelTemplate DETAILED_WALL_TALL_SIDE = create("block/template_detailed_wall_side_tall", "_side_tall", TextureSlot.TOP, TextureSlot.BOTTOM, TextureSlot.SIDE);
+    public static final ModelTemplate DETAILED_WALL_INVENTORY = create("block/detailed_wall_inventory", "_inventory", TextureSlot.TOP, TextureSlot.BOTTOM, TextureSlot.SIDE);
+    public static final ModelTemplate GLASS_FLUID_PIPE = create("block/template_glass_fluid_pipe", GCTextureSlot.COLOR);
+    public static final ModelTemplate FLUID_PIPE_WALKWAY = create("block/template_fluid_pipe_walkway", GCTextureSlot.COLOR);
+    public static final ModelTemplate ROCKET_LAUNCH_PAD_PART = create("block/rocket_launch_pad_part", TextureSlot.PARTICLE, TextureSlot.TOP, TextureSlot.BOTTOM, TextureSlot.SIDE);
+    public static final ModelTemplate PIPE_INVENTORY = create("item/template_pipe", TextureSlot.LAYER0);
+    public static final ModelTemplate WALKWAY_INVENTORY = create("item/template_walkway_inventory", TextureSlot.TEXTURE);
 
-    private static ModelTemplate create(String string, TextureSlot... textureSlots) {
-        return new ModelTemplate(Optional.of(Constant.id("block/" + string)), Optional.empty(), textureSlots);
+    private static ModelTemplate create(String name, TextureSlot... textureSlots) {
+        return new ModelTemplate(Optional.of(Constant.id(name)), Optional.empty(), textureSlots);
     }
 
-    private static ModelTemplate create(String string, String suffix, TextureSlot... textureSlots) {
-        return new ModelTemplate(Optional.of(Constant.id("block/" + string)), Optional.of(suffix), textureSlots);
+    private static ModelTemplate create(String name, String suffix, TextureSlot... textureSlots) {
+        return new ModelTemplate(Optional.of(Constant.id(name)), Optional.of(suffix), textureSlots);
     }
 }
