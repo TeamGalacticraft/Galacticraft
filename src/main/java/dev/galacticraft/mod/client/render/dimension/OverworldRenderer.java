@@ -135,18 +135,22 @@ public class OverworldRenderer extends SpaceSkyRenderer {
         // Vec3 vec = getFogColor(this.minecraft.level, partialTicks, camera.getPosition());
         // float threshold = Math.max(0.1F, (float) vec.length() - 0.1F);
         double playerHeight = player.getY();
-        // float var20 = Mth.sqrt(((float) playerHeight - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) / ((float) Constant.ESCAPE_HEIGHT - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT));
-        // float bright1 = Math.min(0.9F, var20 * 3);
+        float fade = Math.min(((float) playerHeight - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) / ((float) Constant.SPACE_HEIGHT - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT), 1.0F);
+        // float bright1 = Math.min(0.9F, Mth.sqrt(fade) * 3);
+
+        ClientLevel level = (ClientLevel) player.level();
+        float starBrightness = Math.max(level.getStarBrightness(partialTicks), fade);
+        this.starManager.render(poseStack, projectionMatrix, level, partialTicks, starBrightness);
 
         // if (bright1 > threshold) {
             // RenderSystem.setShaderColor(bright1, bright1, bright1, 1.0F);
 
-        // Draw sun
+        // Draw sun's halo
         RenderSystem.blendFuncSeparate(
                 GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO
         );
         float size = 30.0F;
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F - fade);
         RenderSystem.setShaderTexture(0, Constant.Skybox.SUN);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         Matrix4f matrix = poseStack.last().pose();
@@ -157,16 +161,32 @@ public class OverworldRenderer extends SpaceSkyRenderer {
                 .addVertex(matrix, -size, 100.0F, size).setUv(0.0F, 1.0F);
         BufferUploader.drawWithShader(buffer.buildOrThrow());
 
-        // Draw moon
-        size = 40.0F;
+        // Draw sun
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        size /= 4.0F;
+
+        buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.addVertex(matrix, -size, 100.0F, -size).setUv(0.375F, 0.375F)
+                .addVertex(matrix, size, 100.0F, -size).setUv(0.625F, 0.375F)
+                .addVertex(matrix, size, 100.0F, size).setUv(0.625F, 0.625F)
+                .addVertex(matrix, -size, 100.0F, size).setUv(0.375F, 0.625F);
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
+
+        // Draw moon's halo
+        RenderSystem.blendFuncSeparate(
+                GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO
+        );
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F - fade);
+        size = 20.0F;
         RenderSystem.setShaderTexture(0, Constant.Skybox.MOON_PHASES);
         final float phase = this.minecraft.level.getMoonPhase();
         final int u = (int) (phase % 4);
         final int v = (int) (phase / 4 % 2);
-        final float u0 = u / 4.0F;
-        final float u1 = (u + 1) / 4.0F;
-        final float v0 = v / 2.0F;
-        final float v1 = (v + 1) / 2.0F;
+        float u0 = u / 4.0F;
+        float u1 = (u + 1) / 4.0F;
+        float v0 = v / 2.0F;
+        float v1 = (v + 1) / 2.0F;
         buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         buffer.addVertex(matrix, -size, -100.0F, size).setUv(u1, v1)
                 .addVertex(matrix, size, -100.0F, size).setUv(u0, v1)
@@ -174,7 +194,21 @@ public class OverworldRenderer extends SpaceSkyRenderer {
                 .addVertex(matrix, -size, -100.0F, -size).setUv(u1, v0);
         BufferUploader.drawWithShader(buffer.buildOrThrow());
 
-        this.starManager.render(poseStack, projectionMatrix, player.level(), partialTicks);
+        // Draw moon
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        size /= 4.0F;
+        u0 += 0.375F / 4.0F;
+        u1 -= 0.375F / 4.0F;
+        v0 += 0.375F / 2.0F;
+        v1 -= 0.375F / 2.0F;
+
+        buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.addVertex(matrix, -size, -100.0F, size).setUv(u1, v1)
+                .addVertex(matrix, size, -100.0F, size).setUv(u0, v1)
+                .addVertex(matrix, size, -100.0F, -size).setUv(u0, v0)
+                .addVertex(matrix, -size, -100.0F, -size).setUv(u1, v0);
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
 
         poseStack.popPose();
 
