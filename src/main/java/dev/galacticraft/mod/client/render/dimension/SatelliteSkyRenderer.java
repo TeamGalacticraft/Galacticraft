@@ -71,7 +71,7 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
         Matrix4f matrix = matrices.last().pose();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, Constant.CelestialBody.SOL);
+        RenderSystem.setShaderTexture(0, Constant.CelestialBody.SOL_FROM_MOON);
         float size = 6.0F;
         BufferBuilder buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         buffer.addVertex(matrix, -size, 100.0F, -size).setUv(1.0F, 0.0F)

@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.client.render.dimension;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
@@ -62,8 +63,12 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
         matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(partialTicks) * 360.0f));
 
         Matrix4f matrix = matrices.last().pose();
+        RenderSystem.enableBlend();
+        RenderSystem.blendFuncSeparate(
+                GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO
+        );
+        float size = 30.0F;
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        float size = 15.0F;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, Constant.Skybox.SUN_MOON);
         BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
@@ -73,6 +78,16 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
                 .addVertex(matrix, -size, 100.0F, size).setUv(0.0F, 1.0F);
         BufferUploader.drawWithShader(buffer.buildOrThrow());
 
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        size /= 4.0F;
+        buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.addVertex(matrix, -size, 100.0F, -size).setUv(0.375F, 0.375F)
+                .addVertex(matrix, size, 100.0F, -size).setUv(0.625F, 0.375F)
+                .addVertex(matrix, size, 100.0F, size).setUv(0.625F, 0.625F)
+                .addVertex(matrix, -size, 100.0F, size).setUv(0.375F, 0.625F);
+        BufferUploader.drawWithShader(buffer.buildOrThrow());
+
+        RenderSystem.disableBlend();
         matrices.popPose();
         context.profiler().pop();
 
@@ -80,10 +95,9 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
         matrices.pushPose();
         matrix = matrices.last().pose();
 
-        size = 10.0F;
+        size = 20.0F;
         assert Minecraft.getInstance().player != null;
         float earthRotation = (float) (context.world().getSharedSpawnPos().getZ() - Minecraft.getInstance().player.getZ()) * 0.01F;
-        matrices.scale(0.6F, 0.6F, 0.6F);
         matrices.mulPose(Axis.XP.rotationDegrees((context.world().getTimeOfDay(partialTicks) * 360.0F) * 0.001F));
         matrices.mulPose(Axis.XP.rotationDegrees(earthRotation + 200.0F));
         matrices.mulPose(Axis.YP.rotationDegrees(180.0F));

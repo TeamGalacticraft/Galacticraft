@@ -163,14 +163,15 @@ public class OverworldRenderer extends SpaceSkyRenderer {
 
         // Draw sun
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, Math.min(5 * fade, 1.0F));
+        RenderSystem.setShaderTexture(0, Constant.CelestialBody.SOL_FROM_MOON);
         size /= 4.0F;
 
         buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.addVertex(matrix, -size, 100.0F, -size).setUv(0.375F, 0.375F)
-                .addVertex(matrix, size, 100.0F, -size).setUv(0.625F, 0.375F)
-                .addVertex(matrix, size, 100.0F, size).setUv(0.625F, 0.625F)
-                .addVertex(matrix, -size, 100.0F, size).setUv(0.375F, 0.625F);
+        buffer.addVertex(matrix, -size, 100.0F, -size).setUv(0.0F, 0.0F)
+                .addVertex(matrix, size, 100.0F, -size).setUv(1.0F, 0.0F)
+                .addVertex(matrix, size, 100.0F, size).setUv(1.0F, 1.0F)
+                .addVertex(matrix, -size, 100.0F, size).setUv(0.0F, 1.0F);
         BufferUploader.drawWithShader(buffer.buildOrThrow());
 
         // Draw moon's halo
@@ -212,7 +213,7 @@ public class OverworldRenderer extends SpaceSkyRenderer {
 
         poseStack.popPose();
 
-        float color = Mth.clamp(Mth.cos(this.minecraft.level.getTimeOfDay(partialTicks) * Mth.TWO_PI) * 2.0F + 0.5F, 0.25F, 1.0F);
+        float color = Mth.clamp(Mth.cos(this.minecraft.level.getTimeOfDay(partialTicks) * Mth.TWO_PI) * 2.0F + 0.5F, 0.5F, 1.0F);
         RenderSystem.setShaderColor(color, color, color, 1.0F);
         this.earthManager.render(poseStack, this.minecraft.level, 2.0D * (player.getY() - 64.0D), partialTicks, camera);
 
