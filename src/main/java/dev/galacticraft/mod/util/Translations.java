@@ -166,8 +166,8 @@ public interface Translations {
         String OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_collector_energy_consumption_rate";
         String OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_compressor_energy_consumption_rate";
         String OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_decompressor_energy_consumption_rate";
-        String OXYGEN_SEALER_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_collector_energy_consumption_rate";
-        String OXYGEN_SEALER_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_collector_oxygen_consumption_rate";
+        String OXYGEN_SEALER_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_sealer_energy_consumption_rate";
+        String OXYGEN_SEALER_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_sealer_oxygen_consumption_rate";
         String MAX_SEALING_POWER = "config.galacticraft.machines.max_sealing_power";
         String REFINERY_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.refinery_energy_consumption_rate";
         String FUEL_LOADER_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.fuel_loader_energy_consumption_rate";
