@@ -35,13 +35,14 @@ public class GCPackets {
         PayloadTypeRegistry.playS2C().register(OpenCelestialScreenPayload.TYPE, OpenCelestialScreenPayload.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(ResetPerspectivePacket.TYPE, ResetPerspectivePacket.STREAM_CODEC);
 
-        PayloadTypeRegistry.playC2S().register(ControlEntityPayload.TYPE, ControlEntityPayload.STREAM_CODEC);
-        PayloadTypeRegistry.playC2S().register(OpenRocketPayload.TYPE, OpenRocketPayload.STREAM_CODEC);
-        PayloadTypeRegistry.playC2S().register(SatelliteCreationPayload.TYPE, SatelliteCreationPayload.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(BubbleMaxPayload.TYPE, BubbleMaxPayload.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(BubbleVisibilityPayload.TYPE, BubbleVisibilityPayload.STREAM_CODEC);
-        PayloadTypeRegistry.playC2S().register(PlanetTeleportPayload.TYPE, PlanetTeleportPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playC2S().register(ControlEntityPayload.TYPE, ControlEntityPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playC2S().register(EjectCanPayload.TYPE, EjectCanPayload.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(OpenGcInventoryPayload.TYPE, OpenGcInventoryPayload.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(OpenPetInventoryPayload.TYPE, OpenPetInventoryPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playC2S().register(OpenRocketPayload.TYPE, OpenRocketPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playC2S().register(PlanetTeleportPayload.TYPE, PlanetTeleportPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playC2S().register(SatelliteCreationPayload.TYPE, SatelliteCreationPayload.STREAM_CODEC);
     }
 }

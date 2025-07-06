@@ -51,7 +51,6 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.context.UseOnContext;
@@ -71,6 +70,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static dev.galacticraft.mod.content.item.GCItems.EMPTY_CAN;
 import static dev.galacticraft.mod.util.TextureUtils.getAverageColor;
 import static net.minecraft.data.models.model.TextureMapping.getItemTexture;
 
@@ -195,14 +195,14 @@ public class CannedFoodItem extends Item implements FabricItemStack {
             }
             if (itemStack.isEmpty()) {
                 if (getContents(can).isEmpty()) {
-                    can = this.getDefaultInstance();
+                    can = EMPTY_CAN.getDefaultInstance();
                 }
                 return can;
             } else {
                 if (livingEntity instanceof Player player) {
                     if (!player.getAbilities().instabuild) {
                         if (getContents(can).isEmpty()) {
-                            can = this.getDefaultInstance();
+                            can = EMPTY_CAN.getDefaultInstance();
                         }
                         if (!player.getInventory().add(can)) {
                             player.drop(can, false);
@@ -387,22 +387,48 @@ public class CannedFoodItem extends Item implements FabricItemStack {
     public static List<ItemStack> addToCan(List<ItemStack> items, ItemStack can) {
         int size = getSize(can);
         int iter = 0;
-        if (size < MAX_FOOD) {
+        if (size < MAX_FOOD && !items.isEmpty()) {
             for (int i = 0; i < MAX_FOOD - size; i++) {
-                if (!items.isEmpty()) {
-                    if (iter > 3) {
-                        return items;
-                    }
-                    if (items.get(iter).getCount() == 0) {
-                        ++iter;
-                        i--;
-                    } else if (items.get(iter).getCount() > 1) {
-                        add(can, items.get(iter).copyWithCount(1));
-                        items.set(iter, items.get(iter).copyWithCount(items.get(iter).getCount() - 1));
+                ItemStack itemStack = items.get(iter).copy();
+                if (itemStack.getCount() == 0) {
+                    ++iter;
+                    i--;
+                } else if (itemStack.getCount() > 1) {
+                    add(can, itemStack.split(1));
+                    items.set(iter, itemStack);
+                } else {
+                    add(can, itemStack.copyWithCount(1));
+                    items.set(iter, ItemStack.EMPTY);
+                    ++iter;
+                }
+
+                if (iter > 3) return items;
+            }
+        }
+        return items;
+    }
+
+    public static List<ItemStack> addToCanEvenly(List<ItemStack> items, ItemStack can) {
+        int space = MAX_FOOD - getSize(can);
+        int n = items.size();
+        if (space > 0 && n > 0) {
+            int i = 0;
+            boolean changed = false;
+            while (space > 0) {
+                ItemStack itemStack = items.get(i).copy();
+                if (itemStack.getCount() > 0) {
+                    add(can, itemStack.split(1));
+                    items.set(i, itemStack);
+                    --space;
+                    changed = true;
+                }
+
+                if (++i == n) {
+                    if (!changed) {
+                        break;
                     } else {
-                        add(can, items.get(iter).copyWithCount(1));
-                        items.set(iter, Items.AIR.getDefaultInstance());
-                        ++iter;
+                        i = 0;
+                        changed = false;
                     }
                 }
             }
@@ -422,8 +448,8 @@ public class CannedFoodItem extends Item implements FabricItemStack {
         return size;
     }
 
-    public static boolean hasSpace(ItemStack can) {
-        return getSize(can) < MAX_FOOD;
+    public static boolean isFull(ItemStack can) {
+        return getSize(can) >= MAX_FOOD;
     }
 
     private static String getItemDisplayName(ItemStack itemStack) {

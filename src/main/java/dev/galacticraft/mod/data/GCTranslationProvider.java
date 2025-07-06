@@ -945,26 +945,34 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.ENABLE_GC_HOUSTON, "Enable /gchouston");
 
         this.add(Config.DEBUG, "Debug");
-        this.add(Config.HIDE_ALPHA_WARNING, "Hide Alpha Warning");
         this.add(Config.DEBUG_LOGGING, "Debug Logging");
+        this.add(Config.HIDE_ALPHA_WARNING, "Hide Alpha Warning");
 
         this.add(Config.ENERGY, "Energy");
+
         this.add(Config.WIRES, "Wires");
-        this.add(Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT, "Heavy Wire Transfer Limit/t");
         this.add(Config.WIRE_ENERGY_TRANSFER_LIMIT, "Wire Transfer Limit/t");
+        this.add(Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT, "Heavy Wire Transfer Limit/t");
+
         this.add(Config.MACHINES, "Machines");
+        this.add(Config.ENERGY_STORAGE_SIZE, "Default Machine Energy Storage Size");
+        this.add(Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE, "Energy Storage Module Energy Storage Size");
+        this.add(Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE, "Coal Generator Energy Production Rate/t");
+        this.add(Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE, "Solar Panel Energy Production Rate/t");
         this.add(Config.CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE, "Circuit Fabricator Energy Consumption Rate/t");
         this.add(Config.ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE, "Electric Compressor Energy Consumption Rate/t");
-        this.add(Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE, "Coal Generator Energy Production Rate/t");
         this.add(Config.ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE, "Electric Furnace Energy Consumption Rate/t");
-        this.add(Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE, "Energy Storage Module Energy Storage Size");
-        this.add(Config.ENERGY_STORAGE_SIZE, "Default Machine Energy Storage Size");
+        this.add(Config.ELECTRIC_ARC_FURNACE_ENERGY_CONSUMPTION_RATE, "Electric Arc Furnace Energy Consumption Rate/t");
+        this.add(Config.ELECTRIC_ARC_FURNACE_BONUS_CHANCE, "Electric Arc Furnace Bonus Chance");
         this.add(Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE, "Oxygen Collector Energy Consumption Rate/t");
         this.add(Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE, "Oxygen Compressor Energy Consumption Rate/t");
-        this.add(Config.FOOD_CANNER_ENERGY_CONSUMPTION_RATE, "Food Canner Energy Consumption Rate/t");
         this.add(Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE, "Oxygen Decompressor Energy Consumption Rate/t");
+        this.add(Config.OXYGEN_SEALER_ENERGY_CONSUMPTION_RATE, "Oxygen Sealer Energy Consumption Rate/t");
+        this.add(Config.OXYGEN_SEALER_OXYGEN_CONSUMPTION_RATE, "Oxygen Sealer Oxygen Consumption Rate/t");
+        this.add(Config.MAX_SEALING_POWER, "Maximum Sealing Power");
         this.add(Config.REFINERY_ENERGY_CONSUMPTION_RATE, "Refinery Energy Consumption Rate/t");
-        this.add(Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE, "Solar Panel Energy Production Rate/t");
+        this.add(Config.FUEL_LOADER_ENERGY_CONSUMPTION_RATE, "Fuel Loader Energy Consumption Rate/t");
+        this.add(Config.FOOD_CANNER_ENERGY_CONSUMPTION_RATE, "Food Canner Energy Consumption Rate/t");
 
         this.add(Config.LIFE_SUPPORT, "Life Support");
         this.add(Config.SMALL_OXYGEN_TANK_CAPACITY, "Small Oxygen Tank Capacity");
@@ -1050,6 +1058,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(MachineStatus.REFINING, "Refining");
         this.add(MachineStatus.MISSING_OIL, "Missing Oil");
         this.add(MachineStatus.FUEL_TANK_FULL, "Fuel Tank Full");
+        this.add(MachineStatus.PREPARING, "Preparing");
         this.add(MachineStatus.LOADING, "Loading");
         this.add(MachineStatus.NOT_ENOUGH_FUEL, "Not Enough Fuel");
         this.add(MachineStatus.NO_ROCKET, "No Rocket");
