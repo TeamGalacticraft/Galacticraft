@@ -42,7 +42,7 @@ public class LanderCelestialTeleporterType<Config extends CelestialTeleporterCon
 
     @Override
     public void onEnterAtmosphere(ServerLevel level, Entity entity, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody, Config config) {
-        entity.teleportTo(level, entity.getX(), Constant.REENTRY_HEIGHT, entity.getZ(), null, -90.0F, 45.0F);
+        entity.teleportTo(level, entity.getX(), Constant.REENTRY_HEIGHT, entity.getZ(), NO_RELATIVE_MOVEMENT, -90.0F, 45.0F);
         if (entity instanceof ServerPlayer player) {
             LanderEntity lander = new LanderEntity(player);
             level.addFreshEntity(lander);

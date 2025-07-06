@@ -82,6 +82,6 @@ public class OverworldCelestialTeleporterType<Config extends CelestialTeleporter
                 }
             }
         }
-        entity.teleportTo(level, entity.getX(), level.getMaxBuildHeight() + 20.0, entity.getZ(), null, entity.getYRot(), entity.getXRot());
+        entity.teleportTo(level, entity.getX(), level.getMaxBuildHeight() + 20.0, entity.getZ(), NO_RELATIVE_MOVEMENT, entity.getYRot(), entity.getXRot());
     }
 }

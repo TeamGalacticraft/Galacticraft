@@ -39,7 +39,7 @@ public class DirectCelestialTeleporterType extends CelestialTeleporterType<Defau
     @Override
     public void onEnterAtmosphere(ServerLevel level, Entity entity, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody, DefaultCelestialTeleporterConfig config) {
         if (body.isSatellite()) {
-            entity.teleportTo(level, 10.5F, 62.0F, 3.5F, null, 90.0F, 0.0F);
+            entity.teleportTo(level, 10.5F, 62.0F, 3.5F, NO_RELATIVE_MOVEMENT, 90.0F, 0.0F);
             return;
         }
 
@@ -48,6 +48,6 @@ public class DirectCelestialTeleporterType extends CelestialTeleporterType<Defau
             height = level.getMaxBuildHeight() * 2;
         }
 
-        entity.teleportTo(level, entity.getX(), height, entity.getZ(), null, entity.getYRot(), entity.getXRot());
+        entity.teleportTo(level, entity.getX(), height, entity.getZ(), NO_RELATIVE_MOVEMENT, entity.getYRot(), entity.getXRot());
     }
 }

@@ -62,6 +62,6 @@ public class FixedCelestialTeleporterType extends CelestialTeleporterType<FixedC
         if (pitch == 360.0f) {
             pitch = entity.getXRot();
         }
-        entity.teleportTo(level, x, y, z, null, yaw, pitch);
+        entity.teleportTo(level, x, y, z, NO_RELATIVE_MOVEMENT, yaw, pitch);
     }
 }

@@ -29,10 +29,15 @@ import dev.galacticraft.api.universe.celestialbody.landable.teleporter.Celestial
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.config.CelestialTeleporterConfig;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.RelativeMovement;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Collections;
+import java.util.Set;
 
 public abstract class CelestialTeleporterType<C extends CelestialTeleporterConfig> {
     private final MapCodec<CelestialTeleporter<C, CelestialTeleporterType<C>>> codec;
+    public static final Set<RelativeMovement> NO_RELATIVE_MOVEMENT = Collections.<RelativeMovement>emptySet();
 
     public CelestialTeleporterType(Codec<C> codec) {
         this.codec = codec.fieldOf("config").xmap((config) -> new CelestialTeleporter<>(this, config), CelestialTeleporter::config);
