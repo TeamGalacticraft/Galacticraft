@@ -27,6 +27,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.advancements.critereon.*;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.tag.GCDamageTypeTags;
 import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -34,12 +35,16 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.ChangeDimensionTrigger;
 import net.minecraft.advancements.critereon.ConsumeItemTrigger;
+import net.minecraft.advancements.critereon.DamagePredicate;
+import net.minecraft.advancements.critereon.DamageSourcePredicate;
 import net.minecraft.advancements.critereon.EnterBlockTrigger;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.PlayerHurtEntityTrigger;
 import net.minecraft.advancements.critereon.PlayerInteractTrigger;
 import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.advancements.critereon.TagPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
@@ -437,6 +442,24 @@ public class GCAdvancementProvider extends FabricAdvancementProvider {
                         Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(EntityType.WOLF)))
                 ))
                 .save(consumer, Constant.MOD_ID + "/cheese_tax");
+
+        AdvancementHolder throwMeteorChunkAdvancement = Advancement.Builder.advancement().parent(moonAdvancement)
+                .display(
+                        GCItems.HOT_THROWABLE_METEOR_CHUNK,
+                        title(THROW_METEOR_CHUNK),
+                        description(THROW_METEOR_CHUNK),
+                        null,
+                        AdvancementType.TASK,
+                        true,
+                        true,
+                        true
+                )
+                .addCriterion("throw_meteor_chunk", PlayerHurtEntityTrigger.TriggerInstance.playerHurtEntityWithDamage(
+                        DamagePredicate.Builder.damageInstance()
+                                .type(DamageSourcePredicate.Builder.damageType()
+                                .tag(TagPredicate.is(GCDamageTypeTags.IS_METEOR)))
+                ))
+                .save(consumer, Constant.MOD_ID + "/throw_meteor_chunk");
 
         AdvancementHolder spaceStationAdvancement = Advancement.Builder.advancement().parent(moonAdvancement)
                 .display(
