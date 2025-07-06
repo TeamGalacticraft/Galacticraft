@@ -46,17 +46,18 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
         RenderSystem.disableBlend();
         RenderSystem.depthMask(false);
 
+        float partialTicks = context.tickCounter().getGameTimeDeltaPartialTick(true);
         PoseStack matrices = new PoseStack();
         matrices.mulPose(context.positionMatrix());
         Tesselator tesselator = Tesselator.getInstance();
 
         context.profiler().push("stars");
         matrices.pushPose();
-        matrices.mulPose(Axis.YP.rotationDegrees((context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks()) * 360.0f) - 90F));
-        matrices.mulPose(Axis.XP.rotationDegrees((context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks())) * 360.0f));
+        matrices.mulPose(Axis.YP.rotationDegrees((context.world().getTimeOfDay(partialTicks) * 360.0f) - 90F));
+        matrices.mulPose(Axis.XP.rotationDegrees((context.world().getTimeOfDay(partialTicks)) * 360.0f));
         matrices.mulPose(Axis.YP.rotationDegrees(-19.0F));
 
-        this.starManager.render(matrices, context.projectionMatrix(), context.world(), context.tickCounter().getRealtimeDeltaTicks());
+        this.starManager.render(matrices, context.projectionMatrix(), context.world(), partialTicks);
 
         matrices.popPose();
         context.profiler().pop();
@@ -65,7 +66,7 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
         matrices.pushPose();
 
         matrices.mulPose(Axis.YP.rotationDegrees(-90.0F));
-        matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks()) * 360.0f));
+        matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(partialTicks) * 360.0f));
 
         Matrix4f matrix = matrices.last().pose();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -97,7 +98,7 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
         context.profiler().pop();
 
         context.profiler().push("earth");
-        this.earthManager.render(matrices, context.world(), context.camera().getPosition().y() + 2048.0D, context.tickCounter().getRealtimeDeltaTicks());
+        this.earthManager.render(matrices, context.world(), context.camera().getPosition().y() + 2048.0D, partialTicks, context.camera());
         context.profiler().pop();
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

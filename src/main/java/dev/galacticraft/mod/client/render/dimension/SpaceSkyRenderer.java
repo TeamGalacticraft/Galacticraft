@@ -32,16 +32,17 @@ public class SpaceSkyRenderer implements DimensionRenderingRegistry.SkyRenderer 
 
     @Override
     public void render(WorldRenderContext context) {
+        float partialTicks = context.tickCounter().getGameTimeDeltaPartialTick(true);
         PoseStack matrices = new PoseStack();
         matrices.mulPose(context.positionMatrix());
 
         context.profiler().push("stars");
         matrices.pushPose();
         matrices.mulPose(Axis.YP.rotationDegrees(-90.0F));
-        matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks()) * 360.0f));
+        matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(partialTicks) * 360.0f));
         matrices.mulPose(Axis.YP.rotationDegrees(-19.0F));
 
-        this.starManager.render(matrices, context.projectionMatrix(), context.world(), context.tickCounter().getRealtimeDeltaTicks());
+        this.starManager.render(matrices, context.projectionMatrix(), context.world(), partialTicks);
 
         matrices.popPose();
         context.profiler().pop();

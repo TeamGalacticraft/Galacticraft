@@ -26,17 +26,23 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.client.accessor.GameRendererAccessor;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.level.Level;
 import org.joml.Matrix4f;
 
 public class EarthManager {
-    public void render(PoseStack matrices, Level level, double y, float partialTicks) {
+    public void render(PoseStack matrices, Level level, double y, float partialTicks, Camera camera) {
         float size = (float) (6000.0D * Math.tan(Math.asin(128.0D / (128.0D + y))));
 
         matrices.pushPose();
         Matrix4f matrix = matrices.last().pose();
         Tesselator tesselator = Tesselator.getInstance();
+
+        Minecraft minecraft = Minecraft.getInstance();
+        ((GameRendererAccessor) minecraft.gameRenderer).galacticraft$overworldProjectionMatrix(partialTicks, camera);
 
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
