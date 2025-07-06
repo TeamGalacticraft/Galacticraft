@@ -39,6 +39,7 @@
     "client.ClientPacketListenerMixin",
     "client.FabricItemMixin",
     "client.FogRendererMixin",
+    "client.GameRendererMixin",
     "client.HumanoidModelMixin",
     "client.LevelRendererMixin",
     "client.LivingEntityRendererMixin",
