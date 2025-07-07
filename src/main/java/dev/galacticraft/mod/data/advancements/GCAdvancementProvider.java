@@ -27,20 +27,25 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.advancements.critereon.*;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.tag.GCDamageTypeTags;
 import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.ConsumeItemTrigger;
+import net.minecraft.advancements.critereon.DamagePredicate;
+import net.minecraft.advancements.critereon.DamageSourcePredicate;
 import net.minecraft.advancements.critereon.EnterBlockTrigger;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.NbtPredicate;
+import net.minecraft.advancements.critereon.PlayerHurtEntityTrigger;
 import net.minecraft.advancements.critereon.PlayerInteractTrigger;
 import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.advancements.critereon.TagPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -418,20 +423,6 @@ public class GCAdvancementProvider extends FabricAdvancementProvider {
                 ))
                 .save(consumer, Constant.MOD_ID + "/moon");
 
-        AdvancementHolder eatMoonCheeseCurdAdvancement = Advancement.Builder.advancement().parent(moonAdvancement)
-                .display(
-                        GCItems.MOON_CHEESE_CURD,
-                        title(EAT_MOON_CHEESE_CURD),
-                        description(EAT_MOON_CHEESE_CURD),
-                        null,
-                        AdvancementType.TASK,
-                        true,
-                        true,
-                        false
-                )
-                .addCriterion("eat_moon_cheese_curd", ConsumeItemTrigger.TriggerInstance.usedItem(GCItems.MOON_CHEESE_CURD))
-                .save(consumer, Constant.MOD_ID + "/eat_moon_cheese_curd");
-
         AdvancementHolder parrotLandingAdvancement = Advancement.Builder.advancement().parent(moonAdvancement)
                 .display(
                         Items.FEATHER,
@@ -452,6 +443,20 @@ public class GCAdvancementProvider extends FabricAdvancementProvider {
                 ))
                 .save(consumer, Constant.MOD_ID + "/parrot_landing");
 
+        AdvancementHolder eatMoonCheeseCurdAdvancement = Advancement.Builder.advancement().parent(moonAdvancement)
+                .display(
+                        GCItems.MOON_CHEESE_CURD,
+                        title(EAT_MOON_CHEESE_CURD),
+                        description(EAT_MOON_CHEESE_CURD),
+                        null,
+                        AdvancementType.TASK,
+                        true,
+                        true,
+                        false
+                )
+                .addCriterion("eat_moon_cheese_curd", ConsumeItemTrigger.TriggerInstance.usedItem(GCItems.MOON_CHEESE_CURD))
+                .save(consumer, Constant.MOD_ID + "/eat_moon_cheese_curd");
+
         AdvancementHolder cheeseTaxAdvancement = Advancement.Builder.advancement().parent(eatMoonCheeseCurdAdvancement)
                 .display(
                         GCItems.MOON_CHEESE_SLICE,
@@ -468,6 +473,24 @@ public class GCAdvancementProvider extends FabricAdvancementProvider {
                         Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(EntityType.WOLF)))
                 ))
                 .save(consumer, Constant.MOD_ID + "/cheese_tax");
+
+        AdvancementHolder throwMeteorChunkAdvancement = Advancement.Builder.advancement().parent(moonAdvancement)
+                .display(
+                        GCItems.HOT_THROWABLE_METEOR_CHUNK,
+                        title(THROW_METEOR_CHUNK),
+                        description(THROW_METEOR_CHUNK),
+                        null,
+                        AdvancementType.TASK,
+                        true,
+                        true,
+                        true
+                )
+                .addCriterion("throw_meteor_chunk", PlayerHurtEntityTrigger.TriggerInstance.playerHurtEntityWithDamage(
+                        DamagePredicate.Builder.damageInstance()
+                                .type(DamageSourcePredicate.Builder.damageType()
+                                .tag(TagPredicate.is(GCDamageTypeTags.IS_METEOR)))
+                ))
+                .save(consumer, Constant.MOD_ID + "/throw_meteor_chunk");
 
         AdvancementHolder spaceStationAdvancement = Advancement.Builder.advancement().parent(moonAdvancement)
                 .display(

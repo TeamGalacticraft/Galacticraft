@@ -868,6 +868,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(GcHouston.SUCCESS, "You have been rescued. Better luck next time...");
 
         this.deathBy(GCDamageTypes.CRASH_LANDING, "%s came in too hot");
+        this.deathBy(GCDamageTypes.METEOR_STRIKE, "%s was struck by a meteor",
+                "%s was struck by a meteor hurled by %s");
         this.deathBy(GCDamageTypes.OIL_BOOM, "%s tried to put out fire with a very flammable material",
                 "%s tried to put out fire with a very flammable material while trying to escape %s");
         this.deathBy(GCDamageTypes.SUFFOCATION, "%s died from lack of oxygen",
@@ -1175,9 +1177,10 @@ public class GCTranslationProvider extends TranslationProvider {
         this.advancement(Advancements.LEAVE_ROCKET_DURING_COUNTDOWN, "We've Forgotten the Crackers!", "Leave a rocket during the countdown");
         this.advancement(Advancements.LAUNCH_ROCKET, "We Have Liftoff", "Launch your first rocket");
         this.advancement(Advancements.MOON, "The Moon!", "Land on the Moon");
+        this.advancement(Advancements.PARROT_LANDING, "The Parrot has Landed", "Land on the moon with a parrot on your shoulder");
         this.advancement(Advancements.EAT_MOON_CHEESE_CURD, "It's Like No Cheese I've Ever Tasted...", "Eat moon cheese curd");
         this.advancement(Advancements.CHEESE_TAX, "Cheese Tax", "Give cheese to a pet wolf");
-        this.advancement(Advancements.PARROT_LANDING, "The Parrot has Landed", "Land on the moon with a parrot on your shoulder");
+        this.advancement(Advancements.THROW_METEOR_CHUNK, "Nice to Meteor You", "Hit a mob with a throwable meteor chunk");
         this.advancement(Advancements.SPACE_STATION, "Space Station", "Create your own space station!");
         this.advancement(Advancements.MOON_DUNGEON, "Worse than a Wither", "Find an evolved skeleton boss in a moon dungeon");
         this.advancement(Advancements.MOON_DUNGEON_KEY, "I Has the Key", "Kill the boss in the moon dungeon, and steal its key");
