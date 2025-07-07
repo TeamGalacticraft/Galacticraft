@@ -20,45 +20,25 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.internal.mixin.client;
+package dev.galacticraft.mod.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import dev.galacticraft.mod.api.dimension.GalacticDimensionEffects;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.DimensionSpecialEffects;
+import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec3;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(ClientLevel.class)
-public class ClientLevelMixin {
-    @Shadow
-    @Final
-    private DimensionSpecialEffects effects;
 
-    @Shadow
-    @Final
-    private Minecraft minecraft;
-
-    @Inject(method = "getSkyColor", at = @At("HEAD"), cancellable = true)
-    private void gc$getDimensionSkyColor(Vec3 pos, float partialTick, CallbackInfoReturnable<Vec3> cir) {
-        if (effects instanceof GalacticDimensionEffects gcEffects)
-            cir.setReturnValue(gcEffects.getSkyColor((ClientLevel) (Object) this, partialTick));
-    }
-
-    @ModifyReturnValue(method = "getSkyFlashTime", at = @At("RETURN"))
-    private int gc$hideLightningFlash(int original) {
-        Player player = this.minecraft.player;
+@Mixin(LightningBolt.class)
+public abstract class LightningBoltMixin {
+    @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;isClientSide()Z"))
+    private boolean gc$cancelThunder(boolean original) {
+        Player player = Minecraft.getInstance().player;
         if (player.getVehicle() instanceof RocketEntity && player.getVehicle().getY() > Constant.CLOUD_LIMIT) {
-            return 0;
+            return false;
         }
         return original;
     }
