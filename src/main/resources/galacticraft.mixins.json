@@ -35,6 +35,7 @@
     "client.BlockModelMixin",
     "client.BlockModelMixin$DeserializerMixin",
     "client.CameraMixin",
+    "client.CapeLayerMixin",
     "client.ClientLevelMixin",
     "client.ClientPacketListenerMixin",
     "client.FabricItemMixin",
