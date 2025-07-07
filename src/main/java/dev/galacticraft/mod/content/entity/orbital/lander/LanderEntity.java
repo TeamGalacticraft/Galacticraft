@@ -29,6 +29,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.attachments.GCServerPlayer;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
+import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.content.entity.ScalableFuelLevel;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
@@ -255,6 +256,12 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
                 );
 
                 discard();
+            } else {
+                for (Entity entity : this.getPassengers()) {
+                    if (entity instanceof ServerPlayer player) {
+                        GCTriggers.SAFE_LANDING.trigger(player);
+                    }
+                }
             }
         }
     }

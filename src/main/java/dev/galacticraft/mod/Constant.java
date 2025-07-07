@@ -1179,6 +1179,7 @@ public interface Constant {
     interface Triggers {
         String LEAVE_ROCKET_DURING_COUNTDOWN = "leave_rocket_during_countdown";
         String ROCKET_LAUNCH = "launch_rocket";
+        String SAFE_LANDING = "safe_landing";
         String FIND_MOON_BOSS = "boss_moon";
         String CREATE_SPACE_STATION = "create_space_station";
     }

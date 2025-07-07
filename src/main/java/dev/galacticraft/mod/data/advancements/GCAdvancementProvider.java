@@ -32,15 +32,17 @@ import dev.galacticraft.mod.world.dimension.GCDimensions;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancements.*;
-import net.minecraft.advancements.critereon.ChangeDimensionTrigger;
 import net.minecraft.advancements.critereon.ConsumeItemTrigger;
 import net.minecraft.advancements.critereon.EnterBlockTrigger;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.LocationPredicate;
+import net.minecraft.advancements.critereon.NbtPredicate;
 import net.minecraft.advancements.critereon.PlayerInteractTrigger;
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
@@ -53,8 +55,15 @@ import java.util.function.Consumer;
 import static dev.galacticraft.mod.util.Translations.Advancements.*;
 
 public class GCAdvancementProvider extends FabricAdvancementProvider {
+    private final CompoundTag PARROT_ON_LEFT_SHOULDER = new CompoundTag();
+    private final CompoundTag PARROT_ON_RIGHT_SHOULDER = new CompoundTag();
+
     public GCAdvancementProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registryLookup) {
         super(output, registryLookup);
+        CompoundTag parrot = new CompoundTag();
+        parrot.putString("id", "minecraft:parrot");
+        PARROT_ON_LEFT_SHOULDER.put("ShoulderEntityLeft", parrot);
+        PARROT_ON_RIGHT_SHOULDER.put("ShoulderEntityRight", parrot);
     }
 
     @Override
@@ -404,7 +413,9 @@ public class GCAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         false
                 )
-                .addCriterion("reached_moon", ChangeDimensionTrigger.TriggerInstance.changedDimensionTo(GCDimensions.MOON))
+                .addCriterion("moon_landing", SafeLandingTrigger.TriggerInstance.landed(
+                        LocationPredicate.Builder.inDimension(GCDimensions.MOON)
+                ))
                 .save(consumer, Constant.MOD_ID + "/moon");
 
         AdvancementHolder eatMoonCheeseCurdAdvancement = Advancement.Builder.advancement().parent(moonAdvancement)
@@ -420,6 +431,26 @@ public class GCAdvancementProvider extends FabricAdvancementProvider {
                 )
                 .addCriterion("eat_moon_cheese_curd", ConsumeItemTrigger.TriggerInstance.usedItem(GCItems.MOON_CHEESE_CURD))
                 .save(consumer, Constant.MOD_ID + "/eat_moon_cheese_curd");
+
+        AdvancementHolder parrotLandingAdvancement = Advancement.Builder.advancement().parent(moonAdvancement)
+                .display(
+                        Items.FEATHER,
+                        title(PARROT_LANDING),
+                        description(PARROT_LANDING),
+                        null,
+                        AdvancementType.CHALLENGE,
+                        true,
+                        true,
+                        false
+                )
+                .requirements(AdvancementRequirements.Strategy.OR)
+                .addCriterion("parrot_on_left_shoulder", SafeLandingTrigger.TriggerInstance.landed(
+                        EntityPredicate.Builder.entity().nbt(new NbtPredicate(PARROT_ON_LEFT_SHOULDER))
+                ))
+                .addCriterion("parrot_on_right_shoulder", SafeLandingTrigger.TriggerInstance.landed(
+                        EntityPredicate.Builder.entity().nbt(new NbtPredicate(PARROT_ON_RIGHT_SHOULDER))
+                ))
+                .save(consumer, Constant.MOD_ID + "/parrot_landing");
 
         AdvancementHolder cheeseTaxAdvancement = Advancement.Builder.advancement().parent(eatMoonCheeseCurdAdvancement)
                 .display(
