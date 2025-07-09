@@ -22,18 +22,58 @@
 
 package dev.galacticraft.mod.mixin.client;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.content.entity.orbital.AdvancedVehicle;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.layers.CapeLayer;
+import net.minecraft.core.Holder;
+import net.minecraft.util.Mth;
+import net.minecraft.world.Container;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(CapeLayer.class)
 public class CapeLayerMixin {
-    @ModifyExpressionValue(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F"))
-    private float galacticraft$limitBillowing(float original, @Local AbstractClientPlayer player) {
-        return player.getVehicle() instanceof AdvancedVehicle ? 0.0F : original;
+    @ModifyArgs(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F", ordinal = 2))
+    private void galacticraft$restrictCapeWithOxygenTanks(Args args, @Local AbstractClientPlayer player) {
+        Container inv = player.galacticraft$getOxygenTanks();
+        boolean tank1 = inv.getItem(0).is(GCItemTags.OXYGEN_TANKS);
+        boolean tank2 = inv.getItem(1).is(GCItemTags.OXYGEN_TANKS);
+        if (tank1 && tank2) {
+            args.set(0, 0.0F);
+        } else if (tank2 && !tank1) {
+            args.set(1, 0.0F);
+        } else if (tank1 && !tank2) {
+            args.set(2, 0.0F);
+        }
+    }
+
+    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;sin(F)F", ordinal = 1))
+    private float galacticraft$reduceFlappingFrequency(float angle, @Local AbstractClientPlayer player) {
+        Holder<CelestialBody<?, ?>> holder = player.level().galacticraft$getCelestialBody();
+        if (holder != null && holder.value().gravity() < 0.8) {
+            Container inv = player.galacticraft$getOxygenTanks();
+            if (inv.getItem(0).is(GCItemTags.OXYGEN_TANKS) || inv.getItem(1).is(GCItemTags.OXYGEN_TANKS)) {
+                angle /= 6.0F;
+            }
+        }
+        return angle;
+    }
+
+    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/math/Axis;rotationDegrees(F)Lorg/joml/Quaternionf;", ordinal = 0), remap = false)
+    private float galacticraft$limitBillowing(float angle, @Local AbstractClientPlayer player) {
+        if (player.getVehicle() instanceof AdvancedVehicle) {
+            return 0.0F;
+        }
+        Container inv = player.galacticraft$getOxygenTanks();
+        if (inv.getItem(0).is(GCItemTags.OXYGEN_TANKS) || inv.getItem(1).is(GCItemTags.OXYGEN_TANKS)) {
+            angle = Mth.clamp(0.5F * (angle - 4.0F), 0.0F, 18.0F);
+        }
+        return angle;
     }
 }
