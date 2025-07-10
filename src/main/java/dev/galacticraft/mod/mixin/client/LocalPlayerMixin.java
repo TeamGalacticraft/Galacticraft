@@ -108,7 +108,7 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer {
 
     @Inject(method = "removeVehicle", at = @At("HEAD"), cancellable = true)
     private void gc$exitAdvancedVehicle(CallbackInfo ci) {
-        Entity vehicle = getVehicle();
+        Entity vehicle = this.getVehicle();
         if (vehicle instanceof AdvancedVehicle) {
             this.minecraft.options.setCameraType(CameraType.FIRST_PERSON);
         }

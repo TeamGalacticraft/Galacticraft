@@ -1,0 +1,53 @@
+{
+  "parent": "minecraft:galacticraft/moon",
+  "criteria": {
+    "parrot_on_left_shoulder": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "nbt": "{ShoulderEntityLeft:{id:\"minecraft:parrot\"}}"
+            }
+          }
+        ]
+      },
+      "trigger": "galacticraft:safe_landing"
+    },
+    "parrot_on_right_shoulder": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "nbt": "{ShoulderEntityRight:{id:\"minecraft:parrot\"}}"
+            }
+          }
+        ]
+      },
+      "trigger": "galacticraft:safe_landing"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.galacticraft.parrot_landing.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "minecraft:feather"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.parrot_landing.title"
+    }
+  },
+  "requirements": [
+    [
+      "parrot_on_left_shoulder",
+      "parrot_on_right_shoulder"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "AbstractContainerMenuAccessor",
+    "AbstractHorseMixin",
     "AbstractSkeletonEntityAccessor",
+    "AnimalMixin",
     "BlockBehaviourMixin",
     "BucketItemAccessor",
     "BucketItemMixin",
@@ -47,7 +49,9 @@
     "client.LivingEntityRendererMixin",
     "client.LocalPlayerMixin",
     "client.MinecraftMixin",
+    "client.ParrotOnShoulderLayerMixin",
     "client.PauseMenuScreenMixin",
+    "client.PlayerMixin",
     "client.ScreenEffectRendererMixin",
     "client.SpriteContentAccessor"
   ],
