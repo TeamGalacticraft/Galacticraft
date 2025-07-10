@@ -78,7 +78,7 @@ public abstract class TamableAnimalMixin extends Entity implements GearInventory
     public long galacticraft$oxygenConsumptionRate() {
         TamableAnimal animal = (TamableAnimal) (Object) this;
         LivingEntity owner = animal.getOwner();
-        if (owner == null || (!owner.isSpectator() && animal.distanceToSqr(owner) >= 4096.0)) {
+        if (animal.isTame() && (owner == null || (!owner.isSpectator() && animal.distanceToSqr(owner) >= 4096.0))) {
             return 0;
         } else if (animal instanceof Wolf) {
             return Galacticraft.CONFIG.wolfOxygenConsumptionRate();
