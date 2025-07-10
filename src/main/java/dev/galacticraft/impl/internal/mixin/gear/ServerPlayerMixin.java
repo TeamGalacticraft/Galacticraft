@@ -52,15 +52,17 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static dev.galacticraft.mod.content.GCAccessorySlots.*;
+
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin extends Player implements GearInventoryProvider {
     @Shadow
     public abstract ServerLevel serverLevel();
 
     private final @Unique SimpleContainer gearInv = this.galacticraft_createGearInventory();
-    private final @Unique Container tankInv = MappedInventory.create(this.gearInv, 2, 3);
-    private final @Unique Container thermalArmorInv = MappedInventory.create(this.gearInv, 8, 9, 10, 11);
-    private final @Unique Container accessoryInv = MappedInventory.create(this.gearInv, 0, 1, 4, 5, 6, 7);
+    private final @Unique Container tankInv = MappedInventory.create(this.gearInv, OXYGEN_TANK_1_SLOT, OXYGEN_TANK_2_SLOT);
+    private final @Unique Container thermalArmorInv = MappedInventory.create(this.gearInv, THERMAL_ARMOR_SLOT_START, THERMAL_ARMOR_SLOT_START + 1, THERMAL_ARMOR_SLOT_START + 2, THERMAL_ARMOR_SLOT_START + 3);
+    private final @Unique Container accessoryInv = MappedInventory.create(this.gearInv, OXYGEN_MASK_SLOT, OXYGEN_GEAR_SLOT, ACCESSORY_SLOT_START, ACCESSORY_SLOT_START + 1, ACCESSORY_SLOT_START + 2, ACCESSORY_SLOT_START + 3);
 
     ServerPlayerMixin() {
         super(null, null, 0.0F, null);

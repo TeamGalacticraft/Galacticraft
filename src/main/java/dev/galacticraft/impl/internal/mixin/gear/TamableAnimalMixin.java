@@ -40,13 +40,15 @@ import net.minecraft.world.entity.animal.Wolf;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
+import static dev.galacticraft.mod.content.GCAccessorySlots.*;
+
 @Mixin(TamableAnimal.class)
 public abstract class TamableAnimalMixin extends Entity implements GearInventoryProvider, OwnableEntity {
 
     private final @Unique SimpleContainer gearInv = this.galacticraft_createGearInventory();
-    private final @Unique Container tankInv = MappedInventory.create(this.gearInv, 2);
-    private final @Unique Container thermalArmorInv = MappedInventory.create(this.gearInv, 3);
-    private final @Unique Container accessoryInv = MappedInventory.create(this.gearInv, 0, 1);
+    private final @Unique Container tankInv = MappedInventory.create(this.gearInv, OXYGEN_TANK_1_SLOT);
+    private final @Unique Container thermalArmorInv = MappedInventory.create(this.gearInv, PET_THERMAL_SLOT);
+    private final @Unique Container accessoryInv = MappedInventory.create(this.gearInv, OXYGEN_MASK_SLOT, OXYGEN_GEAR_SLOT);
 
     TamableAnimalMixin() {
         super(null, null);
@@ -76,7 +78,7 @@ public abstract class TamableAnimalMixin extends Entity implements GearInventory
     public long galacticraft$oxygenConsumptionRate() {
         TamableAnimal animal = (TamableAnimal) (Object) this;
         LivingEntity owner = animal.getOwner();
-        if (owner != null && !owner.isSpectator() && animal.distanceToSqr(owner) >= 4096.0) {
+        if (owner == null || (!owner.isSpectator() && animal.distanceToSqr(owner) >= 4096.0)) {
             return 0;
         } else if (animal instanceof Wolf) {
             return Galacticraft.CONFIG.wolfOxygenConsumptionRate();
