@@ -779,6 +779,15 @@ public interface Constant {
         int COMPRESSED_X = 127;
         int COMPRESSED_Y = 20;
 
+        int FOOD_CANNER_U = 0;
+        int FOOD_CANNER_V = 184;
+        int FOOD_CANNER_WIDTH = 108;
+        int FOOD_CANNER_HEIGHT = 72;
+        int GRID_X = 37;
+        int GRID_Y = 1;
+        int MIDDLE_SLOT_Y = 28;
+        int BOTTOM_SLOT_Y = 55;
+
         int ROCKET_WORKBENCH_U = 6;
         int ROCKET_WORKBENCH_V = 20;
         int ROCKET_WORKBENCH_WIDTH = 162;
@@ -1070,12 +1079,14 @@ public interface Constant {
     interface Recipe {
         String FABRICATION = "fabrication";
         String COMPRESSING = "compressing";
+        String CANNING = "canning";
         String ROCKET = "rocket";
 
         interface Serializer {
             String FABRICATION = "fabrication";
             String COMPRESSING_SHAPELESS = "compressing_shapeless";
             String COMPRESSING_SHAPED = "compressing_shaped";
+            String CANNING = "canning";
             String ROCKET = "rocket";
             String EMERGENCY_KIT = "crafting_special_emergencykit";
         }

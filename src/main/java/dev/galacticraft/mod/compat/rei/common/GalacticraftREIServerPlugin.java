@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.compat.rei.common;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.compat.rei.common.display.DefaultCanningDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultCompressingDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultRocketDisplay;
@@ -34,6 +35,7 @@ import me.shedaniel.rei.api.common.plugins.REIServerPlugin;
 public class GalacticraftREIServerPlugin implements REIServerPlugin {
     public static final CategoryIdentifier<DefaultFabricationDisplay> CIRCUIT_FABRICATION = CategoryIdentifier.of(Constant.MOD_ID, "plugins/circuit_fabricator");
     public static final CategoryIdentifier<DefaultCompressingDisplay> COMPRESSING = CategoryIdentifier.of(Constant.MOD_ID, "plugins/compressing");
+    public static final CategoryIdentifier<DefaultCanningDisplay> CANNING = CategoryIdentifier.of(Constant.MOD_ID, "plugins/canning");
 //    public static final CategoryIdentifier<DefaultCompressingDisplay> COAL_GENERATOR_FUEL = CategoryIdentifier.of(Constant.MOD_ID, "plugins/coal_generator_fuel");
     public static final CategoryIdentifier<DefaultRocketDisplay> ROCKET = CategoryIdentifier.of(Constant.MOD_ID, "plugins/rocket");
 
@@ -41,6 +43,7 @@ public class GalacticraftREIServerPlugin implements REIServerPlugin {
     public void registerDisplaySerializer(DisplaySerializerRegistry registry) {
         registry.register(CIRCUIT_FABRICATION, BasicDisplay.Serializer.ofSimple(DefaultFabricationDisplay::createRaw));
         registry.register(COMPRESSING, DefaultCompressingDisplay.Serializer.INSTANCE);
-        registry.register(ROCKET, BasicDisplay.Serializer.ofSimple(DefaultFabricationDisplay::createRaw));
+        registry.register(CANNING, BasicDisplay.Serializer.ofSimple(DefaultCanningDisplay::createRaw));
+        registry.register(ROCKET, BasicDisplay.Serializer.ofSimple(DefaultRocketDisplay::createRaw));
     }
 }
