@@ -224,6 +224,7 @@ public class GCCreativeModeTabs {
                 }
                 output.accept(ROCKET_LAUNCH_PAD);
                 output.accept(FUELING_PAD);
+                output.accept(ROCKET_WORKBENCH);
 
                 // MISC MACHINES
                 output.accept(CRYOGENIC_CHAMBER);
