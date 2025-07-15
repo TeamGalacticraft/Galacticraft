@@ -31,16 +31,18 @@ import net.minecraft.world.damagesource.DamageType;
 
 public class GCDamageTypes {
     public static final ResourceKey<DamageType> CRASH_LANDING = Constant.key(Registries.DAMAGE_TYPE, "crash_landing");
+    public static final ResourceKey<DamageType> METEOR_STRIKE = Constant.key(Registries.DAMAGE_TYPE, "meteor_strike");
     public static final ResourceKey<DamageType> OIL_BOOM = Constant.key(Registries.DAMAGE_TYPE, "oil_boom");
-    public static final ResourceKey<DamageType> VINE_POISON = Constant.key(Registries.DAMAGE_TYPE, "vine_poison");
     public static final ResourceKey<DamageType> SUFFOCATION = Constant.key(Registries.DAMAGE_TYPE, "suffocation");
     public static final ResourceKey<DamageType> SULFURIC_ACID = Constant.key(Registries.DAMAGE_TYPE, "sulfuric_acid");
+    public static final ResourceKey<DamageType> VINE_POISON = Constant.key(Registries.DAMAGE_TYPE, "vine_poison");
 
     public static void bootstrapRegistries(BootstrapContext<DamageType> context) {
         context.register(CRASH_LANDING, new DamageType("crash_landing", DamageScaling.ALWAYS, 0.1f));
+        context.register(METEOR_STRIKE, new DamageType("meteor_strike", 0.0f));
         context.register(OIL_BOOM, new DamageType("oil_boom", DamageScaling.ALWAYS, 0.1f));
-        context.register(VINE_POISON, new DamageType("vine_poison", 0.0f));
         context.register(SUFFOCATION, new DamageType("suffocation", 0.0f));
         context.register(SULFURIC_ACID, new DamageType("sulfuric_acid", 0.0f));
+        context.register(VINE_POISON, new DamageType("vine_poison", 0.0f));
     }
 }

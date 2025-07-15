@@ -1,11 +1,21 @@
 {
   "parent": "minecraft:galacticraft/launch_rocket",
   "criteria": {
-    "reached_moon": {
+    "moon_landing": {
       "conditions": {
-        "to": "galacticraft:moon"
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "dimension": "galacticraft:moon"
+              }
+            }
+          }
+        ]
       },
-      "trigger": "minecraft:changed_dimension"
+      "trigger": "galacticraft:safe_landing"
     }
   },
   "display": {
@@ -23,7 +33,7 @@
   },
   "requirements": [
     [
-      "reached_moon"
+      "moon_landing"
     ]
   ],
   "sends_telemetry_event": true

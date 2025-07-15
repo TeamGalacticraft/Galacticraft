@@ -67,7 +67,19 @@ public interface Config {
 
     long foodCannerEnergyConsumptionRate();
 
-    long playerOxygenConsuptionRate();
+    long smallOxygenTankCapacity();
+
+    long mediumOxygenTankCapacity();
+
+    long largeOxygenTankCapacity();
+
+    long playerOxygenConsumptionRate();
+
+    long wolfOxygenConsumptionRate();
+
+    long catOxygenConsumptionRate();
+
+    long parrotOxygenConsumptionRate();
 
     double bossHealthMultiplier();
 

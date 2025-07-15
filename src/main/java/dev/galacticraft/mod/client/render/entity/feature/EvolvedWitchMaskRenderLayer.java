@@ -40,62 +40,56 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.monster.Witch;
 import org.jetbrains.annotations.Nullable;
 
 public class EvolvedWitchMaskRenderLayer<T extends Witch, M extends WitchModel<T>> extends RenderLayer<T, M> {
     private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/witch_gear.png");
+    private final @Nullable ModelPart head;
     private final @Nullable ModelPart mask;
+    private final @Nullable ModelPart body;
     private final @Nullable ModelPart pipe;
 
     public EvolvedWitchMaskRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
-        ModelPart root, head, body;
+        ModelPart root;
         if (context.getModel() instanceof HierarchicalModel<?> model) {
             root = model.root();
-            head = root.getChild(PartNames.HEAD);
-            body = root.getChild(PartNames.BODY);
+            this.head = root.getChild(PartNames.HEAD);
+            this.body = root.getChild(PartNames.BODY);
         } else {
+            this.head = null;
             this.mask = null;
+            this.body = null;
             this.pipe = null;
             return;
         }
+
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
-        if (head != null) {
-            PartDefinition maskPartData = modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -9.0F, -5.0F, 10, 10, 10, new CubeDeformation(-0.1F)), PartPose.offset(head.x, head.y, head.z));
-            maskPartData.addOrReplaceChild(Constant.ModelPartName.ILLAGER_NOSE_COMPARTMENT, CubeListBuilder.create().texOffs(10, 23).addBox(-2.005F, -4.065F, -6.875F, 4, 6, 3, new CubeDeformation(-0.05F)), PartPose.offset(head.x, head.y, head.z));
+        if (this.head != null) {
+            PartDefinition maskPartData = modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -9.0F, -5.0F, 10, 10, 10, new CubeDeformation(-0.1F)), PartPose.ZERO);
+            maskPartData.addOrReplaceChild(Constant.ModelPartName.ILLAGER_NOSE_COMPARTMENT, CubeListBuilder.create().texOffs(10, 23).addBox(-2.005F, -4.065F, -6.875F, 4, 6, 3, new CubeDeformation(-0.05F)), PartPose.ZERO);
         }
-        if (body != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 6).addBox(-2.0F, -3.0F, 2.0F, 4, 6, 8, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+        if (this.body != null) {
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 6).addBox(-2.0F, -3.0F, 2.0F, 4, 6, 8, CubeDeformation.NONE), PartPose.ZERO);
         }
 
         root = modelPartData.bake(64, 32);
-
-        if (head != null) {
-            this.mask = root.getChild(Constant.ModelPartName.OXYGEN_MASK);
-        } else {
-            this.mask = null;
-        }
-
-        if (body != null) {
-            this.pipe = root.getChild(Constant.ModelPartName.OXYGEN_PIPE);
-        } else {
-            this.pipe = null;
-        }
+        this.mask = this.head != null ? root.getChild(Constant.ModelPartName.OXYGEN_MASK) : null;
+        this.pipe = this.body != null ? root.getChild(Constant.ModelPartName.OXYGEN_PIPE) : null;
     }
 
     @Override
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
 
-        if (this.mask != null) {
-            this.mask.yRot = headYaw * Mth.DEG_TO_RAD;
-            this.mask.xRot = headPitch * Mth.DEG_TO_RAD;
+        if (this.mask != null && entity.galacticraft$hasMask()) {
+            this.mask.copyFrom(this.head);
             this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
-        if (this.pipe != null) {
+        if (this.pipe != null && entity.galacticraft$hasGear()) {
+            this.pipe.copyFrom(this.body);
             this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
     }

@@ -33,8 +33,11 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -87,6 +90,16 @@ public class WireWalkwayBlock extends WireBlock implements FluidLoggable, Walkwa
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
         FluidLoggable.addStateDefinitions(stateBuilder);
         WalkwayBlock.addStateDefinitions(stateBuilder);
+    }
+
+    @Override
+    protected BlockState rotate(BlockState blockState, Rotation rotation) {
+        return (BlockState)blockState.setValue(BlockStateProperties.FACING, rotation.rotate(blockState.getValue(BlockStateProperties.FACING)));
+    }
+
+    @Override
+    protected BlockState mirror(BlockState blockState, Mirror mirror) {
+        return blockState.rotate(mirror.getRotation(blockState.getValue(BlockStateProperties.FACING)));
     }
 
     @Override
