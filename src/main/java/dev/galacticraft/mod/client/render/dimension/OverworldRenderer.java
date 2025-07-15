@@ -213,8 +213,8 @@ public class OverworldRenderer extends SpaceSkyRenderer {
 
         poseStack.popPose();
 
-        float color = Mth.clamp(Mth.cos(this.minecraft.level.getTimeOfDay(partialTicks) * Mth.TWO_PI) * 2.0F + 0.5F, 0.5F, 1.0F);
-        RenderSystem.setShaderColor(color, color, color, 1.0F);
+        float light = Mth.clamp(Mth.cos(this.minecraft.level.getTimeOfDay(partialTicks) * Mth.TWO_PI) * 2.0F + 1.5F, 0.5F, 1.0F);
+        RenderSystem.setShaderColor(light, light, light, 1.0F);
         this.earthManager.render(poseStack, this.minecraft.level, 2.0D * (player.getY() - 64.0D), partialTicks, camera);
 
         poseStack.popPose();

@@ -29,6 +29,7 @@ import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 
 public class SatelliteSkyRenderer extends SpaceSkyRenderer {
@@ -98,6 +99,8 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
         context.profiler().pop();
 
         context.profiler().push("earth");
+        float light = Mth.clamp(Mth.cos(context.world().getTimeOfDay(partialTicks) * Mth.TWO_PI) * 2.0F + 1.5F, 0.5F, 1.0F);
+        RenderSystem.setShaderColor(light, light, light, 1.0F);
         this.earthManager.render(matrices, context.world(), context.camera().getPosition().y() + 2048.0D, partialTicks, context.camera());
         context.profiler().pop();
 
