@@ -23,5 +23,5 @@
 package dev.galacticraft.api.item;
 
 public interface OxygenTank {
-    // I'm not sure what to put here yet
+    public String getTankSize();
 }

@@ -293,20 +293,12 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
         Container tankInv = this.galacticraft$getOxygenTanks();
         if (tankInv != null) {
             if (tankInv.getContainerSize() > 0) {
-                ItemStack itemStack = tankInv.getItem(0);
-                String tankSize = "";
-                if (itemStack.getItem() instanceof OxygenTank) {
-                    tankSize = itemStack.getDescriptionId().replace("item.galacticraft.", "");
-                }
+                String tankSize = tankInv.getItem(0).getItem() instanceof OxygenTank oxygenTank ? oxygenTank.getTankSize() : "";
                 this.entityData.set(DATA_TANK_1_SIZE_ID, tankSize);
             }
 
             if (tankInv.getContainerSize() > 1) {
-                ItemStack itemStack = tankInv.getItem(1);
-                String tankSize = "";
-                if (itemStack.getItem() instanceof OxygenTank) {
-                    tankSize = itemStack.getDescriptionId().replace("item.galacticraft.", "");
-                }
+                String tankSize = tankInv.getItem(1).getItem() instanceof OxygenTank oxygenTank ? oxygenTank.getTankSize() : "";
                 this.entityData.set(DATA_TANK_2_SIZE_ID, tankSize);
             }
         }

@@ -119,6 +119,11 @@ public class OxygenTankItem extends AccessoryItem implements OxygenTank {
     }
 
     @Override
+    public String getTankSize() {
+        return this.getDescriptionId().replace("item.galacticraft.", "");
+    }
+
+    @Override
     public boolean canEquipInSlot(ItemStack stack, int slot) {
         return stack.getItem() instanceof OxygenTank && (slot == OXYGEN_TANK_1_SLOT || slot == OXYGEN_TANK_2_SLOT);
     }
