@@ -54,7 +54,7 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
 
         context.profiler().push("stars");
         matrices.pushPose();
-        matrices.mulPose(Axis.ZP.rotationDegrees(context.world().getTimeOfDay(partialTicks) * 240.0f));
+        matrices.mulPose(Axis.ZP.rotationDegrees(context.world().getTimeOfDay(partialTicks) * 360.0f));
 
         this.starManager.render(matrices, context.projectionMatrix(), context.world(), partialTicks);
 
