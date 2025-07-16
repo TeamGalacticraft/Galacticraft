@@ -124,8 +124,7 @@ public class OverworldRenderer extends SpaceSkyRenderer {
         poseStack.pushPose();
         // float alpha = 1.0F - this.minecraft.level.getRainLevel(partialTicks);
         // RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F); // alpha);
-        poseStack.mulPose(Axis.YP.rotationDegrees(-90.0F));
-        poseStack.mulPose(Axis.XP.rotationDegrees(this.minecraft.level.getTimeOfDay(partialTicks) * 360.0F));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(this.minecraft.level.getTimeOfDay(partialTicks) * 360.0F));
 
         // Draw stars
         // RenderSystem.disableBlend();
@@ -189,10 +188,10 @@ public class OverworldRenderer extends SpaceSkyRenderer {
         float v0 = v / 2.0F;
         float v1 = (v + 1) / 2.0F;
         buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.addVertex(matrix, -size, -100.0F, size).setUv(u1, v1)
-                .addVertex(matrix, size, -100.0F, size).setUv(u0, v1)
-                .addVertex(matrix, size, -100.0F, -size).setUv(u0, v0)
-                .addVertex(matrix, -size, -100.0F, -size).setUv(u1, v0);
+        buffer.addVertex(matrix, -size, -100.0F, size).setUv(u0, v1)
+                .addVertex(matrix, size, -100.0F, size).setUv(u0, v0)
+                .addVertex(matrix, size, -100.0F, -size).setUv(u1, v0)
+                .addVertex(matrix, -size, -100.0F, -size).setUv(u1, v1);
         BufferUploader.drawWithShader(buffer.buildOrThrow());
 
         // Draw moon
@@ -205,10 +204,10 @@ public class OverworldRenderer extends SpaceSkyRenderer {
         v1 -= 0.375F / 2.0F;
 
         buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.addVertex(matrix, -size, -100.0F, size).setUv(u1, v1)
-                .addVertex(matrix, size, -100.0F, size).setUv(u0, v1)
-                .addVertex(matrix, size, -100.0F, -size).setUv(u0, v0)
-                .addVertex(matrix, -size, -100.0F, -size).setUv(u1, v0);
+        buffer.addVertex(matrix, -size, -100.0F, size).setUv(u0, v1)
+                .addVertex(matrix, size, -100.0F, size).setUv(u0, v0)
+                .addVertex(matrix, size, -100.0F, -size).setUv(u1, v0)
+                .addVertex(matrix, -size, -100.0F, -size).setUv(u1, v1);
         BufferUploader.drawWithShader(buffer.buildOrThrow());
 
         poseStack.popPose();

@@ -54,9 +54,7 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
 
         context.profiler().push("stars");
         matrices.pushPose();
-        matrices.mulPose(Axis.YP.rotationDegrees((context.world().getTimeOfDay(partialTicks) * 360.0f) - 90F));
-        matrices.mulPose(Axis.XP.rotationDegrees((context.world().getTimeOfDay(partialTicks)) * 360.0f));
-        matrices.mulPose(Axis.YP.rotationDegrees(-19.0F));
+        matrices.mulPose(Axis.ZP.rotationDegrees(context.world().getTimeOfDay(partialTicks) * 240.0f));
 
         this.starManager.render(matrices, context.projectionMatrix(), context.world(), partialTicks);
 
@@ -66,8 +64,7 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
         context.profiler().push("sun");
         matrices.pushPose();
 
-        matrices.mulPose(Axis.YP.rotationDegrees(-90.0F));
-        matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(partialTicks) * 360.0f));
+        matrices.mulPose(Axis.ZP.rotationDegrees(context.world().getTimeOfDay(partialTicks) * 360.0f));
 
         Matrix4f matrix = matrices.last().pose();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -84,15 +81,20 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
         context.profiler().pop();
         context.profiler().push("moon");
 
-        matrices.mulPose(Axis.XP.rotationDegrees(180.0F));
-
-        RenderSystem.setShaderTexture(0, Constant.CelestialBody.MOON);
+        RenderSystem.setShaderTexture(0, Constant.Skybox.MOON_PHASES);
         size = 6.0F;
+        final float phase = context.world().getMoonPhase();
+        final int u = (int) (phase % 4);
+        final int v = (int) (phase / 4 % 2);
+        final float u0 = (u + 0.375F) / 4.0F;
+        final float u1 = (u + 0.625F) / 4.0F;
+        final float v0 = (v + 0.375F) / 2.0F;
+        final float v1 = (v + 0.625F) / 2.0F;
         buffer = tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.addVertex(matrix, -size, 100.0F, -size).setUv(1.0F, 1.0F)
-                .addVertex(matrix, size, 100.0F, -size).setUv(0.0F, 1.0F)
-                .addVertex(matrix, size, 100.0F, size).setUv(0.0F, 0.0F)
-                .addVertex(matrix, -size, 100.0F, size).setUv(1.0F, 0.0F);
+        buffer.addVertex(matrix, -size, -100.0F, size).setUv(u0, v1)
+                .addVertex(matrix, size, -100.0F, size).setUv(u0, v0)
+                .addVertex(matrix, size, -100.0F, -size).setUv(u1, v0)
+                .addVertex(matrix, -size, -100.0F, -size).setUv(u1, v1);
         BufferUploader.drawWithShader(buffer.buildOrThrow());
 
         matrices.popPose();
