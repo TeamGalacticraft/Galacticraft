@@ -984,6 +984,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.WOLF_OXYGEN_CONSUMPTION_RATE, "Wolf Oxygen Consumption Rate/t");
         this.add(Config.CAT_OXYGEN_CONSUMPTION_RATE, "Cat Oxygen Consumption Rate/t");
         this.add(Config.PARROT_OXYGEN_CONSUMPTION_RATE, "Parrot Oxygen Consumption Rate/t");
+        this.add(Config.CANNOT_EAT_IN_NO_ATMOSPHERE, "Cannot Eat In No Atmosphere");
+        this.add(Config.CANNOT_EAT_WITH_MASK, "Cannot Eat With Mask Except From Cans");
 
         this.add(Config.DIFFICULTY, "Difficulty");
         this.add(Config.BOSS_HEALTH_MODIFIER, "Boss Health Modifier");

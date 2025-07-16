@@ -448,6 +448,8 @@
   "config.galacticraft.energy.wires.heavy_transfer_limit": "Heavy Wire Transfer Limit/t",
   "config.galacticraft.energy.wires.transfer_limit": "Wire Transfer Limit/t",
   "config.galacticraft.lifesupport": "Life Support",
+  "config.galacticraft.lifesupport.cannot_eat_in_no_atmosphere": "Cannot Eat In No Atmosphere",
+  "config.galacticraft.lifesupport.cannot_eat_with_mask": "Cannot Eat With Mask Except From Cans",
   "config.galacticraft.lifesupport.oxygen_consumption_rate.cat": "Cat Oxygen Consumption Rate/t",
   "config.galacticraft.lifesupport.oxygen_consumption_rate.parrot": "Parrot Oxygen Consumption Rate/t",
   "config.galacticraft.lifesupport.oxygen_consumption_rate.player": "Player Oxygen Consumption Rate/t",

@@ -81,6 +81,10 @@ public interface Config {
 
     long parrotOxygenConsumptionRate();
 
+    boolean cannotEatWithMask();
+
+    boolean cannotEatInNoAtmosphere();
+
     double bossHealthMultiplier();
 
     boolean enableGcHouston();

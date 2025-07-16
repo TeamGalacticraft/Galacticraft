@@ -183,6 +183,8 @@ public interface Translations {
         String WOLF_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.lifesupport.oxygen_consumption_rate.wolf";
         String CAT_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.lifesupport.oxygen_consumption_rate.cat";
         String PARROT_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.lifesupport.oxygen_consumption_rate.parrot";
+        String CANNOT_EAT_IN_NO_ATMOSPHERE = "config.galacticraft.lifesupport.cannot_eat_in_no_atmosphere";
+        String CANNOT_EAT_WITH_MASK = "config.galacticraft.lifesupport.cannot_eat_with_mask";
 
         String DIFFICULTY = "config.galacticraft.difficulty";
         String BOSS_HEALTH_MODIFIER = "config.galacticraft.difficulty.dungeon_boss_health_multiplier";
