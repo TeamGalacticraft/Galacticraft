@@ -25,7 +25,6 @@ package dev.galacticraft.mod.events;
 import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.PetInventoryOpener;
-import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
@@ -52,6 +51,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+
+import static dev.galacticraft.mod.content.GCAccessorySlots.*;
 
 public class GCInteractionEventHandlers {
     public static void init() {
@@ -97,8 +98,8 @@ public class GCInteractionEventHandlers {
     public static InteractionResult equipAccessory(Player player, Level level, InteractionHand hand, TamableAnimal animal, ItemStack itemStack) {
         Container inv = animal.galacticraft$getGearInv();
         for (int slot = 0; slot < inv.getContainerSize(); ++slot) {
-            int i = (slot == GCAccessorySlots.PET_THERMAL_SLOT) ? GCAccessorySlots.THERMAL_ARMOR_SLOT_START + 1 : slot;
-            if (itemStack.is(GCAccessorySlots.SLOT_TAGS.get(i))) {
+            int i = (slot == PET_THERMAL_SLOT) ? THERMAL_ARMOR_SLOT_START + 1 : slot;
+            if (itemStack.getItem() instanceof Accessory accessory && accessory.canEquipInSlot(itemStack, i)) {
                 ItemStack itemStack2 = inv.getItem(slot);
                 if (ItemStack.matches(itemStack, itemStack2)) {
                     return InteractionResult.FAIL;

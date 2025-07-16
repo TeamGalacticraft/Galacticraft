@@ -22,14 +22,16 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.screen.slot.AccessorySlot;
+import dev.galacticraft.mod.screen.slot.OxygenTankSlot;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+
+import static dev.galacticraft.mod.content.GCAccessorySlots.*;
 
 public class GCPlayerInventoryMenu extends AbstractContainerMenu {
     public static final int[] COLUMNS = {80, 98, 8};
@@ -46,7 +48,11 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
 
         // Galacticraft inv
         for (int i = 0; i < 12; ++i) {
-            this.addSlot(new AccessorySlot(inventory, player, i, COLUMNS[i / 4], 8 + (i % 4) * 18, GCAccessorySlots.SLOT_TAGS.get(i), GCAccessorySlots.SLOT_SPRITES.get(i)));
+            if (i == OXYGEN_TANK_1_SLOT || i == OXYGEN_TANK_2_SLOT) {
+                this.addSlot(new OxygenTankSlot(inventory, player, i, COLUMNS[i / 4], 8 + (i % 4) * 18));
+            } else {
+                this.addSlot(new AccessorySlot(inventory, player, i, COLUMNS[i / 4], 8 + (i % 4) * 18, SLOT_TAGS.get(i), SLOT_SPRITES.get(i)));
+            }
         }
 
         // Player main inv
