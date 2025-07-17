@@ -29,14 +29,13 @@ import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ClientLevel.class)
 public class ClientLevelMixin {
@@ -48,10 +47,16 @@ public class ClientLevelMixin {
     @Final
     private Minecraft minecraft;
 
-    @Inject(method = "getSkyColor", at = @At("HEAD"), cancellable = true)
-    private void gc$getDimensionSkyColor(Vec3 pos, float partialTick, CallbackInfoReturnable<Vec3> cir) {
-        if (effects instanceof GalacticDimensionEffects gcEffects)
-            cir.setReturnValue(gcEffects.getSkyColor((ClientLevel) (Object) this, partialTick));
+    @ModifyReturnValue(method = "getSkyColor", at = @At("RETURN"))
+    private Vec3 gc$getDimensionSkyColor(Vec3 original, Vec3 pos, float partialTick) {
+        if (effects instanceof GalacticDimensionEffects gcEffects) {
+            return gcEffects.getSkyColor((ClientLevel) (Object) this, partialTick);
+        } else if (pos.y() > Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) {
+            float heightOffset = ((float) (pos.y()) - Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) / 200.0F;
+            heightOffset = Math.max(1.0F - 0.75F * Mth.sqrt(heightOffset), 0.0F);
+            return original.scale(heightOffset);
+        }
+        return original;
     }
 
     @ModifyReturnValue(method = "getSkyFlashTime", at = @At("RETURN"))

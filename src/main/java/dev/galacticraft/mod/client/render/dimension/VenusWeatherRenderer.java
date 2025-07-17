@@ -63,7 +63,7 @@ public class VenusWeatherRenderer implements DimensionRenderingRegistry.WeatherR
         double camY = camPos.y();
         double camZ = camPos.z();
         ClientLevel level = context.world();
-        float partialTicks = context.tickCounter().getRealtimeDeltaTicks();
+        float partialTicks = context.tickCounter().getGameTimeDeltaPartialTick(true);
         float strength = level.getRainLevel(partialTicks);
 
         if (strength > 0.0F) {
