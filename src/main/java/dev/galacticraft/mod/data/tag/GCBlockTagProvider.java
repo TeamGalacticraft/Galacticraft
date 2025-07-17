@@ -38,6 +38,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -73,6 +74,28 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
+        this.tag(GCBlockTags.SEALABLE)
+                .add(GCBlocks.AIR_LOCK_SEAL)
+                .add(GCBlocks.ROCKET_WORKBENCH)
+                .add(GCBlocks.CRYOGENIC_CHAMBER)
+                .add(GCBlocks.CRYOGENIC_CHAMBER_PART);
+        this.tag(GCBlockTags.UNSEALABLE)
+                .forceAddTag(BlockTags.LEAVES)
+                .add(Blocks.MANGROVE_ROOTS)
+                .add(Blocks.COPPER_GRATE)
+                .add(Blocks.EXPOSED_COPPER_GRATE)
+                .add(Blocks.WEATHERED_COPPER_GRATE)
+                .add(Blocks.OXIDIZED_COPPER_GRATE)
+                .add(Blocks.WAXED_COPPER_GRATE)
+                .add(Blocks.WAXED_EXPOSED_COPPER_GRATE)
+                .add(Blocks.WAXED_WEATHERED_COPPER_GRATE)
+                .add(Blocks.WAXED_OXIDIZED_COPPER_GRATE)
+                .add(Blocks.SPAWNER)
+                .add(Blocks.TRIAL_SPAWNER)
+                .add(Blocks.VAULT)
+                .add(GCBlocks.BOSS_SPAWNER)
+                .add(GCBlocks.MOON_CHEESE_LEAVES);
+
         this.tag(GCBlockTags.FOOTPRINTS)
                 .add(GCBlocks.MOON_TURF);
 

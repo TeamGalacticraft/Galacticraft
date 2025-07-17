@@ -87,15 +87,15 @@ public class StandardWrenchItem extends Item {
                     BlockPos otherPos = pos.relative(ChestBlock.getConnectedDirection(state));
                     BlockState otherState = world.getBlockState(otherPos);
                     Direction facing = state.getValue(ChestBlock.FACING).getOpposite();
-                    world.setBlock(otherPos, state.setValue(ChestBlock.FACING, facing), 3);
-                    world.setBlock(pos, otherState.setValue(ChestBlock.FACING, facing), 3);
+                    world.setBlock(otherPos, state.setValue(ChestBlock.FACING, facing), Block.UPDATE_ALL);
+                    world.setBlock(pos, otherState.setValue(ChestBlock.FACING, facing), Block.UPDATE_ALL);
                     handled = true;
                 } else if (block instanceof BedBlock) {
                     BlockPos otherPos = pos.relative(BedBlock.getConnectedDirection(state));
                     BlockState otherState = world.getBlockState(otherPos);
                     Direction facing = state.getValue(BedBlock.FACING).getOpposite();
-                    world.setBlock(otherPos, state.setValue(BedBlock.FACING, facing), 18);
-                    world.setBlock(pos, otherState.setValue(BedBlock.FACING, facing), 3);
+                    world.setBlock(otherPos, state.setValue(BedBlock.FACING, facing), Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
+                    world.setBlock(pos, otherState.setValue(BedBlock.FACING, facing), Block.UPDATE_ALL);
                     handled = true;
                 } else if (block instanceof CryogenicChamberBlock || block instanceof CryogenicChamberPart) {
                     int offset = (block instanceof CryogenicChamberPart && state.getValue(CryogenicChamberPart.TOP)) ? -2 :
@@ -103,7 +103,7 @@ public class StandardWrenchItem extends Item {
                     for (int i = 0; i < 3; i++) {
                         BlockPos partPos = pos.above(i + offset);
                         BlockState newState = cycle(world.getBlockState(partPos), property, player.isShiftKeyDown());
-                        world.setBlock(partPos, newState, 3);
+                        world.setBlock(partPos, newState, Block.UPDATE_ALL);
                     }
                     handled = true;
                 } else {
@@ -115,17 +115,17 @@ public class StandardWrenchItem extends Item {
                                 .collect(Collectors.toList());
 
                         BlockState newState = cycle(state, property, sortedValues, player.isShiftKeyDown());
-                        world.setBlock(pos, newState, 3);
+                        world.setBlock(pos, newState, Block.UPDATE_ALL);
                         handled = true;
                     }
                 }
             } else if (block.getStateDefinition().getProperty("axis") instanceof EnumProperty property) {
                 BlockState newState = cycle(state, property, player.isShiftKeyDown());
-                world.setBlock(pos, newState, 3);
+                world.setBlock(pos, newState, Block.UPDATE_ALL);
                 handled = true;
             } else if (block.getStateDefinition().getProperty("rotation") instanceof IntegerProperty property) {
                 BlockState newState = cycle(state, property, player.isShiftKeyDown());
-                world.setBlock(pos, newState, 3);
+                world.setBlock(pos, newState, Block.UPDATE_ALL);
                 handled = true;
             }
 

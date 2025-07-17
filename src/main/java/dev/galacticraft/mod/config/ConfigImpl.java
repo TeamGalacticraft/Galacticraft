@@ -69,7 +69,15 @@ public class ConfigImpl implements Config {
     private long refineryEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
     private long fuelLoaderEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long foodCannerEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
-    private long playerOxygenConsumptionRate = FluidConstants.DROPLET;
+    private long smallOxygenTankCapacity = FluidConstants.BUCKET;
+    private long mediumOxygenTankCapacity = 2 * FluidConstants.BUCKET;
+    private long largeOxygenTankCapacity = 3 * FluidConstants.BUCKET;
+    private long playerOxygenConsumptionRate = 5 * FluidConstants.DROPLET;
+    private long wolfOxygenConsumptionRate = 3 * FluidConstants.DROPLET;
+    private long catOxygenConsumptionRate = 2 * FluidConstants.DROPLET;
+    private long parrotOxygenConsumptionRate = 1 * FluidConstants.DROPLET;
+    private boolean cannotEatInNoAtmosphere = true;
+    private boolean cannotEatWithMask = true;
     private double bossHealthMultiplier = 1.0;
     private boolean hideAlphaWarning = false;
     private boolean enableGcHouston = true;
@@ -284,12 +292,84 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public long playerOxygenConsuptionRate() {
+    public long smallOxygenTankCapacity() {
+        return this.smallOxygenTankCapacity;
+    }
+
+    public void setSmallOxygenTankCapacity(long capacity) {
+        this.smallOxygenTankCapacity = capacity;
+    }
+
+    @Override
+    public long mediumOxygenTankCapacity() {
+        return this.mediumOxygenTankCapacity;
+    }
+
+    public void setMediumOxygenTankCapacity(long capacity) {
+        this.mediumOxygenTankCapacity = capacity;
+    }
+
+    @Override
+    public long largeOxygenTankCapacity() {
+        return this.largeOxygenTankCapacity;
+    }
+
+    public void setLargeOxygenTankCapacity(long capacity) {
+        this.largeOxygenTankCapacity = capacity;
+    }
+
+    @Override
+    public long playerOxygenConsumptionRate() {
         return this.playerOxygenConsumptionRate;
     }
 
     public void setPlayerOxygenConsumptionRate(long amount) {
         this.playerOxygenConsumptionRate = amount;
+    }
+
+    @Override
+    public long wolfOxygenConsumptionRate() {
+        return this.wolfOxygenConsumptionRate;
+    }
+
+    public void setWolfOxygenConsumptionRate(long amount) {
+        this.wolfOxygenConsumptionRate = amount;
+    }
+
+    @Override
+    public long catOxygenConsumptionRate() {
+        return this.catOxygenConsumptionRate;
+    }
+
+    public void setCatOxygenConsumptionRate(long amount) {
+        this.catOxygenConsumptionRate = amount;
+    }
+
+    @Override
+    public long parrotOxygenConsumptionRate() {
+        return this.parrotOxygenConsumptionRate;
+    }
+
+    public void setParrotOxygenConsumptionRate(long amount) {
+        this.parrotOxygenConsumptionRate = amount;
+    }
+
+    @Override
+    public boolean cannotEatInNoAtmosphere() {
+        return this.cannotEatInNoAtmosphere;
+    }
+
+    public void setCannotEatInNoAtmosphere(boolean cannotEatInNoAtmosphere) {
+        this.cannotEatInNoAtmosphere = cannotEatInNoAtmosphere;
+    }
+
+    @Override
+    public boolean cannotEatWithMask() {
+        return this.cannotEatWithMask;
+    }
+
+    public void setCannotEatWithMask(boolean cannotEatWithMask) {
+        this.cannotEatWithMask = cannotEatWithMask;
     }
 
     @Override
@@ -559,26 +639,122 @@ public class ConfigImpl implements Config {
                     .build()
             );
 
+            machines.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE),
+                    config.oxygenDecompressorEnergyConsumptionRate())
+                    .setSaveConsumer(config::setOxygenDecompressorEnergyConsumptionRate)
+                    .setDefaultValue(15)
+                    .requireRestart()
+                    .build()
+            );
+
             SubCategoryBuilder skybox = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.SKYBOX));
 
-            SubCategoryBuilder lifeSupport = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.PLAYER_LIFE_SUPPORT));
 
-            // TODO: If set to 0, disable the player oxygen system
+            SubCategoryBuilder lifeSupport = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.LIFE_SUPPORT));
+
+            lifeSupport.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.SMALL_OXYGEN_TANK_CAPACITY),
+                    config.smallOxygenTankCapacity())
+                    .setSaveConsumer(config::setSmallOxygenTankCapacity)
+                    .setDefaultValue(FluidConstants.BUCKET)
+                    .setMin(0)
+                    .setMax(Long.MAX_VALUE)
+                    .build()
+            );
+
+            lifeSupport.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.MEDIUM_OXYGEN_TANK_CAPACITY),
+                    config.mediumOxygenTankCapacity())
+                    .setSaveConsumer(config::setMediumOxygenTankCapacity)
+                    .setDefaultValue(2 * FluidConstants.BUCKET)
+                    .setMin(0)
+                    .setMax(Long.MAX_VALUE)
+                    .build()
+            );
+
+            lifeSupport.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.LARGE_OXYGEN_TANK_CAPACITY),
+                    config.largeOxygenTankCapacity())
+                    .setSaveConsumer(config::setLargeOxygenTankCapacity)
+                    .setDefaultValue(3 * FluidConstants.BUCKET)
+                    .setMin(0)
+                    .setMax(Long.MAX_VALUE)
+                    .build()
+            );
+
             lifeSupport.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
                     Component.translatable(Translations.Config.PLAYER_OXYGEN_CONSUMPTION_RATE),
-                    config.playerOxygenConsuptionRate())
+                    config.playerOxygenConsumptionRate())
                     .setSaveConsumer(config::setPlayerOxygenConsumptionRate)
-                    .setDefaultValue(1)
+                    .setDefaultValue(5 * FluidConstants.DROPLET)
                     .setMin(0)
                     .setMax(100000)
                     .build()
             );
 
-            lifeSupport.add(new DoubleFieldBuilder(
+            lifeSupport.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.WOLF_OXYGEN_CONSUMPTION_RATE),
+                    config.wolfOxygenConsumptionRate())
+                    .setSaveConsumer(config::setWolfOxygenConsumptionRate)
+                    .setDefaultValue(3 * FluidConstants.DROPLET)
+                    .setMin(0)
+                    .setMax(100000)
+                    .build()
+            );
+
+            lifeSupport.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.CAT_OXYGEN_CONSUMPTION_RATE),
+                    config.catOxygenConsumptionRate())
+                    .setSaveConsumer(config::setCatOxygenConsumptionRate)
+                    .setDefaultValue(2 * FluidConstants.DROPLET)
+                    .setMin(0)
+                    .setMax(100000)
+                    .build()
+            );
+
+            lifeSupport.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.PARROT_OXYGEN_CONSUMPTION_RATE),
+                    config.parrotOxygenConsumptionRate())
+                    .setSaveConsumer(config::setParrotOxygenConsumptionRate)
+                    .setDefaultValue(1 * FluidConstants.DROPLET)
+                    .setMin(0)
+                    .setMax(100000)
+                    .build()
+            );
+
+            lifeSupport.add(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.CANNOT_EAT_IN_NO_ATMOSPHERE),
+                    config.cannotEatInNoAtmosphere())
+                    .setSaveConsumer(config::setCannotEatInNoAtmosphere)
+                    .setDefaultValue(true)
+                    .build()
+            );
+
+            lifeSupport.add(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.CANNOT_EAT_WITH_MASK),
+                    config.cannotEatWithMask())
+                    .setSaveConsumer(config::setCannotEatWithMask)
+                    .setDefaultValue(true)
+                    .build()
+            );
+
+            SubCategoryBuilder difficulty = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.DIFFICULTY));
+
+            difficulty.add(new DoubleFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
                     Component.translatable(Translations.Config.BOSS_HEALTH_MODIFIER),
-                    config.playerOxygenConsuptionRate())
+                    config.bossHealthMultiplier())
                     .setTooltip(Component.translatable(Translations.Config.BOSS_HEALTH_MODIFIER_DESC))
                     .setSaveConsumer(config::setBossHealthMultiplier)
                     .setDefaultValue(1)
@@ -587,7 +763,6 @@ public class ConfigImpl implements Config {
 
             b.getOrCreateCategory(Component.translatable(Translations.Config.DEBUG)).addEntry(dB.build());
             b.getOrCreateCategory(Component.translatable(Translations.Config.ENERGY)).addEntry(wires.build()).addEntry(machines.build());
-            b.getOrCreateCategory(Component.translatable(Translations.Config.PLAYER)).addEntry(lifeSupport.build());
 
             SubCategoryBuilder commands = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.COMMANDS));
 

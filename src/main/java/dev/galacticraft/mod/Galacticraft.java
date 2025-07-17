@@ -65,6 +65,7 @@ public class Galacticraft implements ModInitializer {
         GCChunkGenerator.register();
         GCBiomeTags.register();
         GCBlockTags.register();
+        GCDamageTypeTags.register();
         GCDimensionTypeTags.register();
         GCEntityTypeTags.register();
         GCFluidTags.register();

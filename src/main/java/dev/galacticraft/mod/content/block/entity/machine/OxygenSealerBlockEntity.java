@@ -197,7 +197,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
     }
 
     public int getSealTickTime() {
-        if (level == null) return 0;
-        return (int) (level.getGameTime() % SEAL_CHECK_TIME);
+        if (this.level == null) return 0;
+        return SEAL_CHECK_TIME - (int) (this.level.getGameTime() % SEAL_CHECK_TIME);
     }
 }

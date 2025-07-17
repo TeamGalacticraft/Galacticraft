@@ -74,6 +74,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.generateMachineStatusTranslations();
         this.generateCelestialSelectionTranslations();
         this.generateUiTranslations();
+        this.generateWailaTranslations();
         this.generateStatsTranslations();
         this.generateAdvancementsTranslations();
 
@@ -844,6 +845,8 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(Chat.CANNOT_EAT_IN_NO_ATMOSPHERE, "You can't eat that while holding your breath.");
         this.add(Chat.CANNOT_EAT_WITH_MASK, "You can't eat that while wearing a mask.");
+        this.add(Chat.CANNOT_FEED_IN_NO_ATMOSPHERE, "You can't feed a pet that is holding its breath.");
+        this.add(Chat.CANNOT_FEED_WITH_MASK, "You can't feed that to your pet while it is wearing a mask.");
 
         this.add(Subtitles.THROW_METEOR_CHUNK, "Meteor Chunk flies");
 
@@ -868,6 +871,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(GcHouston.SUCCESS, "You have been rescued. Better luck next time...");
 
         this.deathBy(GCDamageTypes.CRASH_LANDING, "%s came in too hot");
+        this.deathBy(GCDamageTypes.METEOR_STRIKE, "%s was struck by a meteor",
+                "%s was struck by a meteor hurled by %s");
         this.deathBy(GCDamageTypes.OIL_BOOM, "%s tried to put out fire with a very flammable material",
                 "%s tried to put out fire with a very flammable material while trying to escape %s");
         this.deathBy(GCDamageTypes.SUFFOCATION, "%s died from lack of oxygen",
@@ -937,6 +942,13 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.TITLE, "Galacticraft Config");
         this.add(Config.RESET, "Reset");
 
+        this.add(Config.CLIENT, "Client");
+        this.add(Config.SKYBOX, "Skybox");
+        this.add(Config.PLAYER, "Player");
+
+        this.add(Config.COMMANDS, "Commands");
+        this.add(Config.ENABLE_GC_HOUSTON, "Enable /gchouston");
+
         this.add(Config.DEBUG, "Debug");
         this.add(Config.DEBUG_LOGGING, "Debug Logging");
         this.add(Config.HIDE_ALPHA_WARNING, "Hide Alpha Warning");
@@ -960,19 +972,27 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE, "Oxygen Collector Energy Consumption Rate/t");
         this.add(Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE, "Oxygen Compressor Energy Consumption Rate/t");
         this.add(Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE, "Oxygen Decompressor Energy Consumption Rate/t");
+        this.add(Config.OXYGEN_SEALER_ENERGY_CONSUMPTION_RATE, "Oxygen Sealer Energy Consumption Rate/t");
+        this.add(Config.OXYGEN_SEALER_OXYGEN_CONSUMPTION_RATE, "Oxygen Sealer Oxygen Consumption Rate/t");
+        this.add(Config.MAX_SEALING_POWER, "Maximum Sealing Power");
         this.add(Config.REFINERY_ENERGY_CONSUMPTION_RATE, "Refinery Energy Consumption Rate/t");
         this.add(Config.FUEL_LOADER_ENERGY_CONSUMPTION_RATE, "Fuel Loader Energy Consumption Rate/t");
         this.add(Config.FOOD_CANNER_ENERGY_CONSUMPTION_RATE, "Food Canner Energy Consumption Rate/t");
 
-        this.add(Config.CLIENT, "Client");
-        this.add(Config.SKYBOX, "Skybox");
+        this.add(Config.LIFE_SUPPORT, "Life Support");
+        this.add(Config.SMALL_OXYGEN_TANK_CAPACITY, "Small Oxygen Tank Capacity");
+        this.add(Config.MEDIUM_OXYGEN_TANK_CAPACITY, "Medium Oxygen Tank Capacity");
+        this.add(Config.LARGE_OXYGEN_TANK_CAPACITY, "Large Oxygen Tank Capacity");
+        this.add(Config.PLAYER_OXYGEN_CONSUMPTION_RATE, "Player Oxygen Consumption Rate/t");
+        this.add(Config.WOLF_OXYGEN_CONSUMPTION_RATE, "Wolf Oxygen Consumption Rate/t");
+        this.add(Config.CAT_OXYGEN_CONSUMPTION_RATE, "Cat Oxygen Consumption Rate/t");
+        this.add(Config.PARROT_OXYGEN_CONSUMPTION_RATE, "Parrot Oxygen Consumption Rate/t");
+        this.add(Config.CANNOT_EAT_IN_NO_ATMOSPHERE, "Cannot Eat In No Atmosphere");
+        this.add(Config.CANNOT_EAT_WITH_MASK, "Cannot Eat With Mask Except From Cans");
 
-        this.add(Config.PLAYER, "Player");
-        this.add(Config.PLAYER_LIFE_SUPPORT, "Life Support");
-        this.add(Config.PLAYER_OXYGEN_CONSUMPTION_RATE, "Oxygen Consumption Rate/t");
-
-        this.add(Config.COMMANDS, "Commands");
-        this.add(Config.ENABLE_GC_HOUSTON, "Enable /gchouston");
+        this.add(Config.DIFFICULTY, "Difficulty");
+        this.add(Config.BOSS_HEALTH_MODIFIER, "Boss Health Modifier");
+        this.add(Config.BOSS_HEALTH_MODIFIER_DESC, "");
 
         this.add(Keybindings.ROCKET_INVENTORY, "Open Rocket Inventory");
         this.add(Keybindings.OPEN_CELESTIAL_SCREEN, "Open Celestial Map");
@@ -1127,6 +1147,12 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.SPACE_STATION_NAME, "%s's Space Station");
     }
 
+    protected void generateWailaTranslations() {
+        this.add(Waila.PLUGIN_GALACTICRAFT, "Galacticraft");
+        this.add(Waila.SHOW_OXYGEN_LEVEL, "Show Oxygen Tank Levels");
+        this.add(Waila.OXYGEN_TANK_LABEL, "O₂ Tank %s");
+    }
+
     protected void generateStatsTranslations() {
         this.stat(GCStats.OPEN_PARACHEST, "Parachests Opened");
         this.stat(GCStats.INTERACT_WITH_ROCKET_WORKBENCH, "Interactions with Rocket Workbench");
@@ -1156,8 +1182,10 @@ public class GCTranslationProvider extends TranslationProvider {
         this.advancement(Advancements.LEAVE_ROCKET_DURING_COUNTDOWN, "We've Forgotten the Crackers!", "Leave a rocket during the countdown");
         this.advancement(Advancements.LAUNCH_ROCKET, "We Have Liftoff", "Launch your first rocket");
         this.advancement(Advancements.MOON, "The Moon!", "Land on the Moon");
+        this.advancement(Advancements.PARROT_LANDING, "The Parrot has Landed", "Land on the moon with a parrot on your shoulder");
         this.advancement(Advancements.EAT_MOON_CHEESE_CURD, "It's Like No Cheese I've Ever Tasted...", "Eat moon cheese curd");
         this.advancement(Advancements.CHEESE_TAX, "Cheese Tax", "Give cheese to a pet wolf");
+        this.advancement(Advancements.THROW_METEOR_CHUNK, "Nice to Meteor You", "Hit a mob with a throwable meteor chunk");
         this.advancement(Advancements.SPACE_STATION, "Space Station", "Create your own space station!");
         this.advancement(Advancements.MOON_DUNGEON, "Worse than a Wither", "Find an evolved skeleton boss in a moon dungeon");
         this.advancement(Advancements.MOON_DUNGEON_KEY, "I Has the Key", "Kill the boss in the moon dungeon, and steal its key");

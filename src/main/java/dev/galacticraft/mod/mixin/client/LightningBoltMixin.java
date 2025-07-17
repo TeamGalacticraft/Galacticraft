@@ -20,25 +20,28 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.api.block.entity;
+package dev.galacticraft.mod.mixin.client;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.galacticraft.mod.Constant;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import org.jetbrains.annotations.NotNull;
+import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.player.Player;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
 
-import java.util.Objects;
-
-public interface Walkway extends Connected {
-    Direction getDirection();
-
-    void setDirection(@NotNull Direction direction);
-
-    default void writeWalkwayNbt(CompoundTag nbt) {
-        nbt.putByte(Constant.Nbt.DIRECTION, (byte) Objects.requireNonNullElse(this.getDirection(), Direction.UP).ordinal());
-    }
-
-    default void readWalkwayNbt(CompoundTag nbt) {
-        this.setDirection(Constant.Misc.DIRECTIONS[nbt.getByte(Constant.Nbt.DIRECTION)]);
+@Mixin(LightningBolt.class)
+@Environment(EnvType.CLIENT)
+public abstract class LightningBoltMixin {
+    @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;isClientSide()Z"))
+    private boolean gc$cancelThunder(boolean original) {
+        Player player = Minecraft.getInstance().player;
+        if (player.getVehicle() instanceof RocketEntity && player.getVehicle().getY() > Constant.CLOUD_LIMIT) {
+            return false;
+        }
+        return original;
     }
 }

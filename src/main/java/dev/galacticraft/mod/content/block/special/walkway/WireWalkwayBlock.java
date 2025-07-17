@@ -33,8 +33,11 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -42,21 +45,21 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class WireWalkwayBlock extends WireBlock implements FluidLoggable, WalkwayBlock {
+public class WireWalkwayBlock extends WireBlock implements AbstractWalkwayBlock, FluidLoggable {
     public WireWalkwayBlock(Properties settings) {
         super(0.125f, settings);
         BlockState defaultState = this.getStateDefinition().any();
         defaultState = FluidLoggable.applyDefaultState(defaultState);
-        defaultState = WalkwayBlock.applyDefaultState(defaultState);
+        defaultState = AbstractWalkwayBlock.applyDefaultState(defaultState);
         this.registerDefaultState(defaultState);
     }
 
     @Override
     public @NotNull VoxelShape getShape(BlockState blockState, BlockGetter level, BlockPos blockPos, CollisionContext context) {
         if (level.getBlockEntity(blockPos) instanceof Connected connected) {
-            return WalkwayBlock.getShape(connected, blockState);
+            return AbstractWalkwayBlock.getShape(connected, blockState);
         }
-        return WalkwayBlock.getShape(blockState);
+        return AbstractWalkwayBlock.getShape(blockState);
     }
 
     @Override
@@ -68,7 +71,7 @@ public class WireWalkwayBlock extends WireBlock implements FluidLoggable, Walkwa
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
         state = FluidLoggable.applyFluidState(context.getLevel(), state, context.getClickedPos());
-        state = WalkwayBlock.applyStateForPlacement(state, context);
+        state = AbstractWalkwayBlock.applyStateForPlacement(state, context);
         return state;
     }
 
@@ -86,7 +89,17 @@ public class WireWalkwayBlock extends WireBlock implements FluidLoggable, Walkwa
     @Override
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
         FluidLoggable.addStateDefinitions(stateBuilder);
-        WalkwayBlock.addStateDefinitions(stateBuilder);
+        AbstractWalkwayBlock.addStateDefinitions(stateBuilder);
+    }
+
+    @Override
+    protected BlockState rotate(BlockState blockState, Rotation rotation) {
+        return (BlockState)blockState.setValue(BlockStateProperties.FACING, rotation.rotate(blockState.getValue(BlockStateProperties.FACING)));
+    }
+
+    @Override
+    protected BlockState mirror(BlockState blockState, Mirror mirror) {
+        return blockState.rotate(mirror.getRotation(blockState.getValue(BlockStateProperties.FACING)));
     }
 
     @Override

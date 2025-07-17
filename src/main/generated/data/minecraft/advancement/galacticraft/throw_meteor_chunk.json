@@ -1,0 +1,39 @@
+{
+  "parent": "minecraft:galacticraft/moon",
+  "criteria": {
+    "throw_meteor_chunk": {
+      "conditions": {
+        "damage": {
+          "type": {
+            "tags": [
+              {
+                "expected": true,
+                "id": "galacticraft:is_meteor"
+              }
+            ]
+          }
+        }
+      },
+      "trigger": "minecraft:player_hurt_entity"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.galacticraft.throw_meteor_chunk.description"
+    },
+    "hidden": true,
+    "icon": {
+      "count": 1,
+      "id": "galacticraft:hot_throwable_meteor_chunk"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.throw_meteor_chunk.title"
+    }
+  },
+  "requirements": [
+    [
+      "throw_meteor_chunk"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

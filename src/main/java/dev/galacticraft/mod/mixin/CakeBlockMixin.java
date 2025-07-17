@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -51,9 +52,14 @@ public abstract class CakeBlockMixin extends Block {
         Vec3 playerEyePos = player.getEyePosition();
 
         if (player.galacticraft$hasMask()) {
-            player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_WITH_MASK).withStyle(Constant.Text.RED_STYLE), true);
-            cir.setReturnValue(InteractionResult.FAIL);
-        } else if (!level.getDefaultBreathable() && !level.isBreathable(new BlockPos((int) Math.floor(playerEyePos.x), (int) Math.floor(playerEyePos.y), (int) Math.floor(playerEyePos.z)))) { //sealed atmosphere check. they dont have a mask on so make sure they can breathe before eating
+            if (Galacticraft.CONFIG.cannotEatWithMask()) {
+                player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_WITH_MASK).withStyle(Constant.Text.RED_STYLE), true);
+                cir.setReturnValue(InteractionResult.FAIL);
+            }
+        } else if (Galacticraft.CONFIG.cannotEatInNoAtmosphere()
+                && !level.getDefaultBreathable()
+                && !level.isBreathable(new BlockPos((int) Math.floor(playerEyePos.x), (int) Math.floor(playerEyePos.y), (int) Math.floor(playerEyePos.z)))
+        ) {
             player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_IN_NO_ATMOSPHERE).withStyle(Constant.Text.RED_STYLE), true);
             cir.setReturnValue(InteractionResult.FAIL);
         }

@@ -23,16 +23,21 @@
 package dev.galacticraft.mod.content.entity;
 
 import dev.galacticraft.mod.content.GCEntityTypes;
+import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -100,19 +105,27 @@ public class ThrowableMeteorChunkEntity extends ThrowableItemProjectile {
     @Override
     protected void onHitEntity(EntityHitResult result) {
         super.onHitEntity(result);
+        Entity entity = result.getEntity();
+        Entity owner = this.getOwner();
+        // TODO: Find out why the owner isn't getting credited for the damage
+        DamageSource damage = new DamageSource(this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.METEOR_STRIKE), this, owner != null ? owner : this);
         if (this.entityData.get(HOT)) {
-            result.getEntity().hurt(this.damageSources().thrown(this, this.getOwner()), 4.0F);
-            result.getEntity().igniteForSeconds(3);
+            entity.hurt(damage, 4.0F);
+            entity.igniteForSeconds(3);
         } else {
-            result.getEntity().hurt(this.damageSources().thrown(this, this.getOwner()), 2.0F);
+            entity.hurt(damage, 2.0F);
+        }
+        if (owner instanceof LivingEntity livingEntity) {
+            livingEntity.setLastHurtMob(entity);
         }
     }
 
     @Override
     protected void onHitBlock(BlockHitResult result) {
         super.onHitBlock(result);
-        if (!this.level().isClientSide)
+        if (!this.level().isClientSide && !(this.getOwner() instanceof Player player && player.getAbilities().instabuild)) {
             this.level().addFreshEntity(new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), this.getItem()));
+        }
     }
 
     @Override
