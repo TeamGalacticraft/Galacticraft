@@ -30,7 +30,7 @@ import dev.galacticraft.mod.client.model.GCModel;
 import dev.galacticraft.mod.client.model.GCModelLoader;
 import dev.galacticraft.mod.client.model.GCModelState;
 import dev.galacticraft.mod.client.model.GCRenderTypes;
-import dev.galacticraft.mod.content.entity.Buggy;
+import dev.galacticraft.mod.content.entity.vehicle.Buggy;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

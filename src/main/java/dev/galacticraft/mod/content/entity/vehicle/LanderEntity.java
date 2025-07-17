@@ -20,9 +20,10 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity.orbital.lander;
+package dev.galacticraft.mod.content.entity.vehicle;
 
 import com.mojang.datafixers.util.Pair;
+import dev.galacticraft.api.entity.ControllableEntity;
 import dev.galacticraft.api.entity.IgnoreShift;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
@@ -31,7 +32,6 @@ import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
-import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.content.entity.ScalableFuelLevel;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.network.s2c.ResetPerspectivePacket;
