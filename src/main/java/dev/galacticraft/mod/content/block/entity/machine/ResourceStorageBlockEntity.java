@@ -26,6 +26,7 @@ import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.mod.content.block.machine.ResourceStorageBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Range;
@@ -47,7 +48,7 @@ public abstract class ResourceStorageBlockEntity extends MachineBlockEntity {
         int newAmount = this.calculateAmount();
         if (this.amount != newAmount && this.level != null && !this.level.isClientSide) {
             this.amount = newAmount;
-            this.level.setBlock(this.worldPosition, this.level.getBlockState(this.worldPosition).setValue(ResourceStorageBlock.AMOUNT, this.amount), 2);
+            this.level.setBlock(this.worldPosition, this.level.getBlockState(this.worldPosition).setValue(ResourceStorageBlock.AMOUNT, this.amount), Block.UPDATE_CLIENTS);
         }
     }
 }

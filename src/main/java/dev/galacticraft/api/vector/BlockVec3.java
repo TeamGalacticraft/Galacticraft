@@ -575,7 +575,7 @@ public class BlockVec3 implements Cloneable {
     }
 
     public void setBlock(Level worldObj, BlockState block) {
-        worldObj.setBlock(new BlockPos(x, y, z), block, 3);
+        worldObj.setBlock(new BlockPos(x, y, z), block, Block.UPDATE_ALL);
     }
 
     public boolean blockExists(Level world) {

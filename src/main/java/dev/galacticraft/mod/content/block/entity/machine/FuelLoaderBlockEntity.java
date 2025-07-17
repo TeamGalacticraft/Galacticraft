@@ -62,6 +62,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -146,7 +147,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
         int newAmount = this.calculateAmount();
         if (this.amount != newAmount && this.level != null && !this.level.isClientSide) {
             this.amount = newAmount;
-            this.level.setBlock(this.worldPosition, this.level.getBlockState(this.worldPosition).setValue(FuelLoaderBlock.AMOUNT, this.amount), 2);
+            this.level.setBlock(this.worldPosition, this.level.getBlockState(this.worldPosition).setValue(FuelLoaderBlock.AMOUNT, this.amount), Block.UPDATE_CLIENTS);
         }
     }
 
