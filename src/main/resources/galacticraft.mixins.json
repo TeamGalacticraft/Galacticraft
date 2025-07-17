@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "AbstractContainerMenuAccessor",
+    "AbstractFurnaceBlockEntityMixin",
     "AbstractHorseMixin",
     "AbstractSkeletonEntityAccessor",
     "AnimalMixin",
@@ -19,7 +20,6 @@
     "FlowingFluidMixin",
     "ItemEntityMixin",
     "ItemStackMixin",
-    "LanternBlockMixin",
     "LevelMixin",
     "LivingEntityMixin",
     "ModelProviderMixin",
@@ -27,8 +27,7 @@
     "PlayerMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
-    "SpiderMixin",
-    "TorchBlockMixin"
+    "SpiderMixin"
   ],
   "client": [
     "client.AbstractClientPlayerMixin",

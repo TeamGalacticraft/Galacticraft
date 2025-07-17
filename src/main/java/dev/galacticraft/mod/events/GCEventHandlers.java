@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.events;
 
+import dev.galacticraft.api.registry.ExtinguishableBlockRegistry;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
@@ -31,12 +32,15 @@ import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class GCEventHandlers {
     public static void init() {
@@ -69,5 +73,15 @@ public class GCEventHandlers {
             footprintManager.footprintBlockChanges.clear();
         }
         level.galacticraft$getSealerManager().tick();
+    }
+
+    public static boolean extinguishBlock(Level level, BlockPos pos, BlockState oldState) {
+        ExtinguishableBlockRegistry.Entry entry = ExtinguishableBlockRegistry.INSTANCE.get(oldState.getBlock());
+        if (entry == null) return false;
+        BlockState newState = entry.transform(oldState);
+        if (newState == null) return false;
+        level.setBlockAndUpdate(pos, newState);
+        entry.callback(new ExtinguishableBlockRegistry.Context(level, pos, oldState));
+        return true;
     }
 }
