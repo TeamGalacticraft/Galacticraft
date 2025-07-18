@@ -237,6 +237,8 @@ public abstract class EntityMixin implements EntityAccessor {
                             }
                         }
                     }
+                } else {
+                    damage = true;
                 }
 
                 if (damage) {
