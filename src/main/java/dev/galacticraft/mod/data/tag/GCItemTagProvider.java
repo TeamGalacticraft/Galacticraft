@@ -169,7 +169,9 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.INFINITE_OXYGEN_TANK);
 
         // Other accessories
-        this.addColorSet(GCItems.PARACHUTE, GCItemTags.PARACHUTES);
+        this.tag(GCItemTags.PARACHUTES)
+                .add(GCItems.PARACHUTE);
+        this.addColorSet(GCItems.DYED_PARACHUTES, GCItemTags.PARACHUTES);
         this.tag(GCItemTags.FREQUENCY_MODULES)
                 .add(GCItems.FREQUENCY_MODULE);
         this.tag(GCItemTags.SHIELD_CONTROLLERS)

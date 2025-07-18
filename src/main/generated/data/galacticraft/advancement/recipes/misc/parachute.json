@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_cyan_dye": {
+    "has_canvas": {
       "conditions": {
         "items": [
           {
-            "items": "galacticraft:parachute"
+            "items": "galacticraft:canvas"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "galacticraft:cyan_parachute"
+        "recipe": "galacticraft:parachute"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_cyan_dye"
+      "has_canvas"
     ]
   ],
   "rewards": {
     "recipes": [
-      "galacticraft:cyan_parachute"
+      "galacticraft:parachute"
     ]
   }
 }

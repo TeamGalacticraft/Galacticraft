@@ -1,18 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "minecraft:crafting_shapeless",
   "category": "misc",
-  "key": {
-    "C": {
-      "item": "galacticraft:canvas"
+  "ingredients": [
+    {
+      "item": "galacticraft:parachute"
     },
-    "S": {
-      "tag": "c:strings"
+    {
+      "item": "minecraft:white_dye"
     }
-  },
-  "pattern": [
-    "CCC",
-    "S S",
-    " S "
   ],
   "result": {
     "count": 1,

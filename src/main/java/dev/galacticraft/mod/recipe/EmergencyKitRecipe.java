@@ -47,14 +47,16 @@ public class EmergencyKitRecipe extends CustomRecipe {
         }
 
         DyeColor color = null;
-        for (int i = 0; i < craftingInput.ingredientCount(); ++i) {
-            ItemStack itemStack = craftingInput.getItem(i);
-            if (itemStack.getItem() instanceof ParachuteItem parachute) {
-                color = parachute.getColor();
-                break;
+        foundColor: {
+            for (int i = 0; i < craftingInput.ingredientCount(); ++i) {
+                ItemStack itemStack = craftingInput.getItem(i);
+                if (itemStack.getItem() instanceof ParachuteItem parachute) {
+                    color = parachute.getColor();
+                    break foundColor;
+                }
             }
+            if (color == null) return false;
         }
-        if (color == null) return false;
 
         boolean[] found = new boolean[9];
         for (ItemStack itemStack : EmergencyKitItem.getContents(color)) {
@@ -88,7 +90,9 @@ public class EmergencyKitRecipe extends CustomRecipe {
         }
 
         ItemStack output = GCItems.EMERGENCY_KIT.getDefaultInstance();
-        output.set(DataComponents.BASE_COLOR, color);
+        if (color != null) {
+            output.set(DataComponents.BASE_COLOR, color);
+        }
         return output;
     }
 

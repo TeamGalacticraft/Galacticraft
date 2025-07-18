@@ -67,4 +67,15 @@ public final class GCRecipeHelper {
                     .save(output);
         }
     }
+
+    public static void dyeColoring(RecipeOutput output, RecipeCategory category, Item base, GCRegistry.ColorSet<? extends Item> set) {
+        for (Item dye : DYES) {
+            DyeColor color = ((DyeItem) dye).getDyeColor();
+            ShapelessRecipeBuilder.shapeless(category, set.get(color))
+                    .requires(base)
+                    .requires(dye)
+                    .unlockedBy("has_" + BuiltInRegistries.ITEM.getKey(dye).getPath(), RecipeProvider.has(base))
+                    .save(output);
+        }
+    }
 }

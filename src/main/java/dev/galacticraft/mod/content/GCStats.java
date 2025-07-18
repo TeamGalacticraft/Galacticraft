@@ -30,6 +30,7 @@ import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
 
 public class GCStats {
+    public static final ResourceLocation CLEAN_PARACHUTE = register("clean_parachute", StatFormatter.DEFAULT);
     public static final ResourceLocation OPEN_PARACHEST = register("open_parachest", StatFormatter.DEFAULT);
     public static final ResourceLocation INTERACT_WITH_ROCKET_WORKBENCH = register("interact_with_rocket_workbench", StatFormatter.DEFAULT);
 
