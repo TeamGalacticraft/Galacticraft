@@ -37,6 +37,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -124,6 +125,20 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.HEAVY_DUTY_BOOTS)
                 .add(GCItems.DESH_BOOTS)
                 .add(GCItems.TITANIUM_BOOTS);
+
+        this.tag(GCItemTags.ACID_RESISTANT)
+                .add(Items.DIAMOND)
+                .add(Items.DIAMOND_BLOCK)
+                .add(Items.DIAMOND_AXE)
+                .add(Items.DIAMOND_HOE)
+                .add(Items.DIAMOND_PICKAXE)
+                .add(Items.DIAMOND_SHOVEL)
+                .add(Items.DIAMOND_SWORD)
+                .add(Items.DIAMOND_HELMET)
+                .add(Items.DIAMOND_CHESTPLATE)
+                .add(Items.DIAMOND_LEGGINGS)
+                .add(Items.DIAMOND_BOOTS)
+                .add(Items.DIAMOND_HORSE_ARMOR);
 
         // Thermal armor
         this.tag(ItemTags.FREEZE_IMMUNE_WEARABLES)
