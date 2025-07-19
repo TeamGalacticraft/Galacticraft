@@ -740,6 +740,17 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.tag(GCItemTags.ASTEROID_ROCKS, "Asteroid Rocks");
 
+        this.tag(GCItemTags.DECORATION_BLOCKS, "Decoration Blocks");
+        this.tag(GCItemTags.ALUMINUM_DECORATION_BLOCKS, "Aluminum Decoration Blocks");
+        this.tag(GCItemTags.BRONZE_DECORATION_BLOCKS, "Bronze Decoration Blocks");
+        this.tag(GCItemTags.COPPER_DECORATION_BLOCKS, "Copper Decoration Blocks");
+        this.tag(GCItemTags.DARK_DECORATION_BLOCKS, "Dark Decoration Blocks");
+        this.tag(GCItemTags.IRON_DECORATION_BLOCKS, "Iron Decoration Blocks");
+        this.tag(GCItemTags.METEORIC_IRON_DECORATION_BLOCKS, "Meteoric Iron Decoration Blocks");
+        this.tag(GCItemTags.STEEL_DECORATION_BLOCKS, "Steel Decoration Blocks");
+        this.tag(GCItemTags.TIN_DECORATION_BLOCKS, "Tin Decoration Blocks");
+        this.tag(GCItemTags.TITANIUM_DECORATION_BLOCKS, "Titanium Decoration Blocks");
+
         this.tag(GCItemTags.OIL_BUCKETS, "Oil Buckets");
         this.tag(GCItemTags.FUEL_BUCKETS, "Fuel Buckets");
         this.tag(GCItemTags.SULFURIC_ACID_BUCKETS, "Sulfuric Acid Buckets");

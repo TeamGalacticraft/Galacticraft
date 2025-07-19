@@ -188,21 +188,6 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.BATTERY)
                 .add(GCItems.INFINITE_BATTERY);
 
-        this.tag(GCItemTags.ROCKET_STORAGE_UPGRADE_ITEMS)
-                .forceAddTag(ConventionalItemTags.WOODEN_CHESTS)
-                .forceAddTag(ConventionalItemTags.WOODEN_BARRELS);
-
-        this.tag(ConventionalItemTags.MUSIC_DISCS)
-                .add(GCItems.LEGACY_MUSIC_DISC_MARS)
-                .add(GCItems.LEGACY_MUSIC_DISC_MIMAS)
-                .add(GCItems.LEGACY_MUSIC_DISC_ORBIT)
-                .add(GCItems.LEGACY_MUSIC_DISC_SPACERACE);
-        this.tag(GCItemTags.EVOLVED_CREEPER_DROP_MUSIC_DISCS)
-                .add(GCItems.LEGACY_MUSIC_DISC_MARS)
-                .add(GCItems.LEGACY_MUSIC_DISC_MIMAS)
-                .add(GCItems.LEGACY_MUSIC_DISC_ORBIT)
-                .add(GCItems.LEGACY_MUSIC_DISC_SPACERACE);
-
         // ORE TAGS
         this.tag(ItemTags.IRON_ORES)
                 .add(GCBlocks.MARS_IRON_ORE.asItem())
@@ -447,6 +432,21 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.MOON_CHEESE_CURD)
                 .add(GCItems.MOON_CHEESE_SLICE);
 
+        this.tag(GCItemTags.ROCKET_STORAGE_UPGRADE_ITEMS)
+                .forceAddTag(ConventionalItemTags.WOODEN_CHESTS)
+                .forceAddTag(ConventionalItemTags.WOODEN_BARRELS);
+
+        this.tag(ConventionalItemTags.MUSIC_DISCS)
+                .add(GCItems.LEGACY_MUSIC_DISC_MARS)
+                .add(GCItems.LEGACY_MUSIC_DISC_MIMAS)
+                .add(GCItems.LEGACY_MUSIC_DISC_ORBIT)
+                .add(GCItems.LEGACY_MUSIC_DISC_SPACERACE);
+        this.tag(GCItemTags.EVOLVED_CREEPER_DROP_MUSIC_DISCS)
+                .add(GCItems.LEGACY_MUSIC_DISC_MARS)
+                .add(GCItems.LEGACY_MUSIC_DISC_MIMAS)
+                .add(GCItems.LEGACY_MUSIC_DISC_ORBIT)
+                .add(GCItems.LEGACY_MUSIC_DISC_SPACERACE);
+
         this.tag(GCItemTags.OIL_BUCKETS).add(GCItems.CRUDE_OIL_BUCKET);
         this.tag(GCItemTags.FUEL_BUCKETS).add(GCItems.FUEL_BUCKET);
         this.tag(GCItemTags.SULFURIC_ACID_BUCKETS).add(GCItems.SULFURIC_ACID_BUCKET);
@@ -481,6 +481,17 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .addTag(GCItemTags.MARS_COBBLESTONES);
 
         this.copy(GCBlockTags.ASTEROID_ROCKS, GCItemTags.ASTEROID_ROCKS);
+
+        this.copy(GCBlockTags.DECORATION_BLOCKS, GCItemTags.DECORATION_BLOCKS);
+        this.copy(GCBlockTags.ALUMINUM_DECORATION_BLOCKS, GCItemTags.ALUMINUM_DECORATION_BLOCKS);
+        this.copy(GCBlockTags.BRONZE_DECORATION_BLOCKS, GCItemTags.BRONZE_DECORATION_BLOCKS);
+        this.copy(GCBlockTags.COPPER_DECORATION_BLOCKS, GCItemTags.COPPER_DECORATION_BLOCKS);
+        this.copy(GCBlockTags.DARK_DECORATION_BLOCKS, GCItemTags.DARK_DECORATION_BLOCKS);
+        this.copy(GCBlockTags.IRON_DECORATION_BLOCKS, GCItemTags.IRON_DECORATION_BLOCKS);
+        this.copy(GCBlockTags.METEORIC_IRON_DECORATION_BLOCKS, GCItemTags.METEORIC_IRON_DECORATION_BLOCKS);
+        this.copy(GCBlockTags.STEEL_DECORATION_BLOCKS, GCItemTags.STEEL_DECORATION_BLOCKS);
+        this.copy(GCBlockTags.TIN_DECORATION_BLOCKS, GCItemTags.TIN_DECORATION_BLOCKS);
+        this.copy(GCBlockTags.TITANIUM_DECORATION_BLOCKS, GCItemTags.TITANIUM_DECORATION_BLOCKS);
 
         this.tag(ItemTags.STONE_TOOL_MATERIALS)
                 .add(GCBlocks.COBBLED_MOON_ROCK.asItem())
