@@ -384,6 +384,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .requires(ConventionalItemTags.WHEAT_CROPS)
                 .requires(ConventionalItemTags.EGGS)
                 .requires(ConventionalItemTags.MILK_BUCKETS)
+                .requires(GCItemTags.BURGER_BUN_SEEDS)
                 .unlockedBy(getHasName(Items.EGG), has(ConventionalItemTags.EGGS))
                 .save(output);
 

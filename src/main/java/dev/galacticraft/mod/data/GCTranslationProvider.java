@@ -724,6 +724,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.CANNED_FOODS, "Canned Foods");
         this.tag(GCItemTags.UNCANNABLE_FOODS, "Uncannable Foods");
 
+        this.tag(GCItemTags.BURGER_BUN_SEEDS, "Burger Bun Seeds");
+
         this.tag(GCItemTags.ROCKET_STORAGE_UPGRADE_ITEMS, "Rocket Storage Upgrade Items");
 
         this.tag(GCItemTags.EVOLVED_CREEPER_DROP_MUSIC_DISCS, "Evolved Creeper Music Disc Drops");

@@ -132,6 +132,13 @@ public class GCItemTags {
     public static final TagKey<Item> CANNED_FOODS = commonTag("foods/canned");
     public static final TagKey<Item> UNCANNABLE_FOODS = galacticraftTag("uncannable_foods");
 
+    public static final TagKey<Item> SESAME_SEEDS = commonTag("seeds/sesame");
+    public static final TagKey<Item> POPPY_SEEDS = commonTag("seeds/poppy");
+    public static final TagKey<Item> SUNFLOWER_SEEDS = commonTag("seeds/sunflower");
+    public static final TagKey<Item> CHIA_SEEDS = commonTag("seeds/chia");
+    public static final TagKey<Item> FLAX_SEEDS = commonTag("seeds/flax");
+    public static final TagKey<Item> BURGER_BUN_SEEDS = galacticraftTag("burger_bun_seeds");
+
     public static final TagKey<Item> ROCKET_STORAGE_UPGRADE_ITEMS = galacticraftTag("rocket_storage_upgrade_items");
 
     public static final TagKey<Item> EVOLVED_CREEPER_DROP_MUSIC_DISCS = galacticraftTag("evolved_creeper_drop_music_discs");

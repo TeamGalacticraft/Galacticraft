@@ -435,6 +435,14 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         this.tag(GCItemTags.UNCANNABLE_FOODS)
                 .forceAddTag(ConventionalItemTags.DRINKS);
 
+        this.tag(GCItemTags.BURGER_BUN_SEEDS)
+                .forceAddTag(ConventionalItemTags.PUMPKIN_SEEDS)
+                .addOptionalTag(GCItemTags.SESAME_SEEDS)
+                .addOptionalTag(GCItemTags.POPPY_SEEDS)
+                .addOptionalTag(GCItemTags.SUNFLOWER_SEEDS)
+                .addOptionalTag(GCItemTags.CHIA_SEEDS)
+                .addOptionalTag(GCItemTags.FLAX_SEEDS);
+
         this.tag(ItemTags.WOLF_FOOD)
                 .add(GCItems.MOON_CHEESE_CURD)
                 .add(GCItems.MOON_CHEESE_SLICE);
