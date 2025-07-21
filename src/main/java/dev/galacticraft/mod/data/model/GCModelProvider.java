@@ -729,7 +729,8 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.SULFURIC_ACID_BUCKET, ModelTemplates.FLAT_ITEM);
 
         // GALACTICRAFT INVENTORY
-        GCItems.PARACHUTE.colorMap().forEach((color, parachute) -> generator.generateFlatItem(parachute, ModelTemplates.FLAT_ITEM));
+        generator.generateFlatItem(GCItems.PARACHUTE, ModelTemplates.FLAT_ITEM);
+        GCItems.DYED_PARACHUTES.colorMap().forEach((color, parachute) -> generator.generateFlatItem(parachute, ModelTemplates.FLAT_ITEM));
 
         generator.generateFlatItem(GCItems.OXYGEN_MASK, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.OXYGEN_GEAR, ModelTemplates.FLAT_ITEM);

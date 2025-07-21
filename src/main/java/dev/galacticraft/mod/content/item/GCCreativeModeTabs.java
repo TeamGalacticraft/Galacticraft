@@ -307,8 +307,9 @@ public class GCCreativeModeTabs {
                 output.accept(FREQUENCY_MODULE);
                 output.accept(SHIELD_CONTROLLER);
 
+                output.accept(PARACHUTE);
                 for (DyeColor color : GCBlockRegistry.COLOR_ORDER) {
-                    output.accept(PARACHUTE.get(color));
+                    output.accept(DYED_PARACHUTES.get(color));
                 }
 
                 output.accept(EMERGENCY_KIT);
