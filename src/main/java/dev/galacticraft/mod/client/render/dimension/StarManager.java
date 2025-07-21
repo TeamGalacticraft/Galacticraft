@@ -89,26 +89,21 @@ public class StarManager {
 
     }
 
-    public void render(PoseStack poseStack, Matrix4f projectionMatrix, Level level, float partialTicks) {
-        RenderSystem.setShaderColor(1.0F, 0.95F, 0.9F, getStarBrightness(level, partialTicks));
+    public void render(PoseStack poseStack, Matrix4f projectionMatrix, Level level, float partialTicks, float brightness) {
+        RenderSystem.setShaderColor(1.0F, 0.95F, 0.9F, brightness);
         FogRenderer.setupNoFog();
         this.starBuffer.bind();
         this.starBuffer.drawWithShader(poseStack.last().pose(), projectionMatrix, GameRenderer.getPositionShader());
         VertexBuffer.unbind();
     }
 
+    public void render(PoseStack poseStack, Matrix4f projectionMatrix, Level level, float partialTicks) {
+        this.render(poseStack, projectionMatrix, level, partialTicks, getStarBrightness(level, partialTicks));
+    }
+
     public float getStarBrightness(Level world, float delta) {
         final float skyAngle = world.getTimeOfDay(delta);
-        float brightness = 1.0F - (Mth.cos((float) (skyAngle * Math.PI * 2.0D) * 2.0F + 0.25F));
-
-        if (brightness < 0.0F) {
-            brightness = 0.0F;
-        }
-
-        if (brightness > 1.0F) {
-            brightness = 1.0F;
-        }
-
+        float brightness = Mth.clamp(1.0F - (Mth.cos((float) (skyAngle * Math.PI * 2.0D) * 2.0F + 0.25F)), 0.0F, 1.0F);
         return brightness * brightness * 0.5F + 0.3F;
     }
 }
