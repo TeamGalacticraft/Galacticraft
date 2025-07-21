@@ -68,7 +68,7 @@ public class OverworldCelestialTeleporterType<Config extends CelestialTeleporter
                     Container gearInv = player.galacticraft$getGearInv();
                     DyeColor color = DyeColor.WHITE;
                     for (int slot = 0; slot < gearInv.getContainerSize(); slot++) {
-                        if (gearInv.getItem(slot).getItem() instanceof ParachuteItem parachute) {
+                        if (gearInv.getItem(slot).getItem() instanceof ParachuteItem parachute && parachute.getColor() != null) {
                             color = parachute.getColor();
                             break;
                         }

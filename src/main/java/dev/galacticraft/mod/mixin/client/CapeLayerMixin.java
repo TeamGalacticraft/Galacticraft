@@ -65,7 +65,7 @@ public class CapeLayerMixin {
         return angle;
     }
 
-    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/math/Axis;rotationDegrees(F)Lorg/joml/Quaternionf;", ordinal = 0), remap = false)
+    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/math/Axis;rotationDegrees(F)Lorg/joml/Quaternionf;", ordinal = 0))
     private float galacticraft$limitBillowing(float angle, @Local AbstractClientPlayer player) {
         if (player.getVehicle() instanceof AdvancedVehicle) {
             return 0.0F;
