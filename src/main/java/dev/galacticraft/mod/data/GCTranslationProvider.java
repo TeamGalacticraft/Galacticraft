@@ -521,22 +521,23 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.SULFURIC_ACID_BUCKET, "Sulfuric Acid Bucket");
 
         // GALACTICRAFT INVENTORY
-        this.item(GCItems.PARACHUTE.get(DyeColor.WHITE), "Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.ORANGE), "Orange Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.MAGENTA), "Magenta Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.LIGHT_BLUE), "Light Blue Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.YELLOW), "Yellow Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.LIME), "Lime Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.PINK), "Pink Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.GRAY), "Gray Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.LIGHT_GRAY), "Light Gray Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.CYAN), "Cyan Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.PURPLE), "Purple Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.BLUE), "Blue Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.BROWN), "Brown Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.GREEN), "Green Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.RED), "Red Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.BLACK), "Black Parachute");
+        this.item(GCItems.PARACHUTE, "Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.WHITE), "White Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.ORANGE), "Orange Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.MAGENTA), "Magenta Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.LIGHT_BLUE), "Light Blue Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.YELLOW), "Yellow Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.LIME), "Lime Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.PINK), "Pink Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.GRAY), "Gray Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.LIGHT_GRAY), "Light Gray Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.CYAN), "Cyan Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.PURPLE), "Purple Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.BLUE), "Blue Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.BROWN), "Brown Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.GREEN), "Green Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.RED), "Red Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.BLACK), "Black Parachute");
 
         this.item(GCItems.OXYGEN_MASK, "Oxygen Mask");
         this.item(GCItems.OXYGEN_GEAR, "Oxygen Gear");
@@ -723,6 +724,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.CANNED_FOODS, "Canned Foods");
         this.tag(GCItemTags.UNCANNABLE_FOODS, "Uncannable Foods");
 
+        this.tag(GCItemTags.BURGER_BUN_SEEDS, "Burger Bun Seeds");
+
         this.tag(GCItemTags.ROCKET_STORAGE_UPGRADE_ITEMS, "Rocket Storage Upgrade Items");
 
         this.tag(GCItemTags.EVOLVED_CREEPER_DROP_MUSIC_DISCS, "Evolved Creeper Music Disc Drops");
@@ -736,6 +739,17 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.MARS_COBBLESTONES, "Mars Cobblestones");
 
         this.tag(GCItemTags.ASTEROID_ROCKS, "Asteroid Rocks");
+
+        this.tag(GCItemTags.DECORATION_BLOCKS, "Decoration Blocks");
+        this.tag(GCItemTags.ALUMINUM_DECORATION_BLOCKS, "Aluminum Decoration Blocks");
+        this.tag(GCItemTags.BRONZE_DECORATION_BLOCKS, "Bronze Decoration Blocks");
+        this.tag(GCItemTags.COPPER_DECORATION_BLOCKS, "Copper Decoration Blocks");
+        this.tag(GCItemTags.DARK_DECORATION_BLOCKS, "Dark Decoration Blocks");
+        this.tag(GCItemTags.IRON_DECORATION_BLOCKS, "Iron Decoration Blocks");
+        this.tag(GCItemTags.METEORIC_IRON_DECORATION_BLOCKS, "Meteoric Iron Decoration Blocks");
+        this.tag(GCItemTags.STEEL_DECORATION_BLOCKS, "Steel Decoration Blocks");
+        this.tag(GCItemTags.TIN_DECORATION_BLOCKS, "Tin Decoration Blocks");
+        this.tag(GCItemTags.TITANIUM_DECORATION_BLOCKS, "Titanium Decoration Blocks");
 
         this.tag(GCItemTags.OIL_BUCKETS, "Oil Buckets");
         this.tag(GCItemTags.FUEL_BUCKETS, "Fuel Buckets");
@@ -984,6 +998,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.WOLF_OXYGEN_CONSUMPTION_RATE, "Wolf Oxygen Consumption Rate/t");
         this.add(Config.CAT_OXYGEN_CONSUMPTION_RATE, "Cat Oxygen Consumption Rate/t");
         this.add(Config.PARROT_OXYGEN_CONSUMPTION_RATE, "Parrot Oxygen Consumption Rate/t");
+        this.add(Config.CANNOT_EAT_IN_NO_ATMOSPHERE, "Cannot Eat In No Atmosphere");
+        this.add(Config.CANNOT_EAT_WITH_MASK, "Cannot Eat With Mask Except From Cans");
 
         this.add(Config.DIFFICULTY, "Difficulty");
         this.add(Config.BOSS_HEALTH_MODIFIER, "Boss Health Modifier");
@@ -1149,6 +1165,7 @@ public class GCTranslationProvider extends TranslationProvider {
     }
 
     protected void generateStatsTranslations() {
+        this.stat(GCStats.CLEAN_PARACHUTE, "Parachutes Cleaned");
         this.stat(GCStats.OPEN_PARACHEST, "Parachests Opened");
         this.stat(GCStats.INTERACT_WITH_ROCKET_WORKBENCH, "Interactions with Rocket Workbench");
     }

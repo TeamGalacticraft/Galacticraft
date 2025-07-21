@@ -76,6 +76,8 @@ public class ConfigImpl implements Config {
     private long wolfOxygenConsumptionRate = 3 * FluidConstants.DROPLET;
     private long catOxygenConsumptionRate = 2 * FluidConstants.DROPLET;
     private long parrotOxygenConsumptionRate = 1 * FluidConstants.DROPLET;
+    private boolean cannotEatInNoAtmosphere = true;
+    private boolean cannotEatWithMask = true;
     private double bossHealthMultiplier = 1.0;
     private boolean hideAlphaWarning = false;
     private boolean enableGcHouston = true;
@@ -350,6 +352,24 @@ public class ConfigImpl implements Config {
 
     public void setParrotOxygenConsumptionRate(long amount) {
         this.parrotOxygenConsumptionRate = amount;
+    }
+
+    @Override
+    public boolean cannotEatInNoAtmosphere() {
+        return this.cannotEatInNoAtmosphere;
+    }
+
+    public void setCannotEatInNoAtmosphere(boolean cannotEatInNoAtmosphere) {
+        this.cannotEatInNoAtmosphere = cannotEatInNoAtmosphere;
+    }
+
+    @Override
+    public boolean cannotEatWithMask() {
+        return this.cannotEatWithMask;
+    }
+
+    public void setCannotEatWithMask(boolean cannotEatWithMask) {
+        this.cannotEatWithMask = cannotEatWithMask;
     }
 
     @Override
@@ -708,6 +728,24 @@ public class ConfigImpl implements Config {
                     .setDefaultValue(1 * FluidConstants.DROPLET)
                     .setMin(0)
                     .setMax(100000)
+                    .build()
+            );
+
+            lifeSupport.add(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.CANNOT_EAT_IN_NO_ATMOSPHERE),
+                    config.cannotEatInNoAtmosphere())
+                    .setSaveConsumer(config::setCannotEatInNoAtmosphere)
+                    .setDefaultValue(true)
+                    .build()
+            );
+
+            lifeSupport.add(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.CANNOT_EAT_WITH_MASK),
+                    config.cannotEatWithMask())
+                    .setSaveConsumer(config::setCannotEatWithMask)
+                    .setDefaultValue(true)
                     .build()
             );
 

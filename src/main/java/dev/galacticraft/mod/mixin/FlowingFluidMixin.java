@@ -28,6 +28,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 import org.spongepowered.asm.mixin.Mixin;
@@ -50,7 +51,7 @@ public abstract class FlowingFluidMixin {
         var blockState1 = level.getBlockState(blockPos);
         if (blockState1.getBlock() instanceof FluidLoggable drainable) {
             drainable.pickupBlock(null, level, blockPos, blockState1);
-            level.setBlock(blockPos, blockState1.setValue(FluidLoggable.FLUID, Constant.Misc.EMPTY).setValue(FlowingFluid.LEVEL, 1).setValue(FlowingFluid.FALLING, false), 3);
+            level.setBlock(blockPos, blockState1.setValue(FluidLoggable.FLUID, Constant.Misc.EMPTY).setValue(FlowingFluid.LEVEL, 1).setValue(FlowingFluid.FALLING, false), Block.UPDATE_ALL);
             return true;
         }
         return original.call(level, blockPos, blockState, flags);

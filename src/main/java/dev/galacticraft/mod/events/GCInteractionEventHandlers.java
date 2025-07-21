@@ -24,6 +24,7 @@ package dev.galacticraft.mod.events;
 
 import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.PetInventoryOpener;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.util.Translations;
@@ -41,6 +42,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.animal.Parrot;
@@ -63,15 +65,14 @@ public class GCInteractionEventHandlers {
     public static InteractionResultHolder<ItemStack> onPlayerUseItem(Player player, Level level, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
         if (CannedFoodItem.canAddToCan(itemStack.getItem())) {
-            Vec3 eyePos = player.getEyePosition();
-
             if (player.isCreative()) {
                 return InteractionResultHolder.pass(itemStack);
-            } else if (player.galacticraft$hasMask()) {
-                player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_WITH_MASK).withStyle(Constant.Text.RED_STYLE), true);
+            } else if (cannotEatWithMask(player) || cannotEatInNoAtmosphere(player, level)) {
                 return InteractionResultHolder.fail(itemStack);
-            } else if (!level.getDefaultBreathable() && !level.isBreathable(new BlockPos((int) Math.floor(eyePos.x), (int) Math.floor(eyePos.y), (int) Math.floor(eyePos.z)))) { //sealed atmosphere check. they dont have a mask on so make sure they can breathe before eating
-                player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_IN_NO_ATMOSPHERE).withStyle(Constant.Text.RED_STYLE), true);
+            }
+        }
+        if (CannedFoodItem.isCannedFoodItem(itemStack)) {
+            if (!player.galacticraft$hasMask() && cannotEatInNoAtmosphere(player, level)) {
                 return InteractionResultHolder.fail(itemStack);
             }
         }
@@ -119,11 +120,20 @@ public class GCInteractionEventHandlers {
     }
 
     public static InteractionResult feedAnimal(Player player, Level level, TamableAnimal animal, ItemStack itemStack) {
+        if (animal.isFood(itemStack) && CannedFoodItem.canAddToCan(itemStack.getItem())) {
+            if (cannotFeedWithMask(player, animal) || cannotFeedInNoAtmosphere(player, level, animal)) {
+                return InteractionResult.FAIL;
+            }
+        }
         if (CannedFoodItem.isCannedFoodItem(itemStack)) {
             ItemStack food = CannedFoodItem.getFirst(itemStack);
             if (food.isEmpty() || !animal.isFood(food)) return InteractionResult.PASS;
 
             if (animal.getHealth() < animal.getMaxHealth()) {
+                if (!animal.galacticraft$hasMask() && cannotFeedInNoAtmosphere(player, level, animal)) {
+                    return InteractionResult.FAIL;
+                }
+
                 FoodProperties foodProperties = food.get(DataComponents.FOOD);
                 float healAmount = foodProperties != null ? (float) foodProperties.nutrition() : 1.0F;
                 if (animal instanceof Wolf) {
@@ -135,24 +145,23 @@ public class GCInteractionEventHandlers {
                 }
                 return InteractionResult.sidedSuccess(level.isClientSide());
             }
-        } else if (animal.isFood(itemStack) && CannedFoodItem.canAddToCan(itemStack.getItem())) {
-            Vec3 eyePos = animal.getEyePosition();
-
-            if (animal.galacticraft$hasMask()) {
-                player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_FEED_WITH_MASK).withStyle(Constant.Text.RED_STYLE), true);
-                return InteractionResult.FAIL;
-            } else if (!level.getDefaultBreathable() && !level.isBreathable(new BlockPos((int) Math.floor(eyePos.x), (int) Math.floor(eyePos.y), (int) Math.floor(eyePos.z)))) { //sealed atmosphere check. they dont have a mask on so make sure they can breathe before eating
-                player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_FEED_IN_NO_ATMOSPHERE).withStyle(Constant.Text.RED_STYLE), true);
-                return InteractionResult.FAIL;
-            }
         }
         return InteractionResult.PASS;
     }
 
     public static InteractionResult feedParrot(Player player, Level level, Parrot parrot, ItemStack itemStack) {
+        if (itemStack.is(ItemTags.PARROT_POISONOUS_FOOD) && CannedFoodItem.canAddToCan(itemStack.getItem())) {
+            if (cannotFeedWithMask(player, parrot) || cannotFeedInNoAtmosphere(player, level, parrot)) {
+                return InteractionResult.FAIL;
+            }
+        }
         if (CannedFoodItem.isCannedFoodItem(itemStack)) {
             ItemStack food = CannedFoodItem.getFirst(itemStack);
             if (food.isEmpty() || !food.is(ItemTags.PARROT_POISONOUS_FOOD)) return InteractionResult.PASS;
+
+            if (!parrot.galacticraft$hasMask() && cannotFeedInNoAtmosphere(player, level, parrot)) {
+                return InteractionResult.FAIL;
+            }
 
             if (!player.isCreative()) {
                 CannedFoodItem.removeOne(itemStack);
@@ -162,18 +171,41 @@ public class GCInteractionEventHandlers {
                 parrot.hurt(parrot.damageSources().playerAttack(player), Float.MAX_VALUE);
             }
             return InteractionResult.sidedSuccess(level.isClientSide());
-        } else if (itemStack.is(ItemTags.PARROT_POISONOUS_FOOD) && CannedFoodItem.canAddToCan(itemStack.getItem())) {
-            Vec3 eyePos = parrot.getEyePosition();
-
-            // Attempted poisoning averted
-            if (parrot.galacticraft$hasMask()) {
-                player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_FEED_WITH_MASK).withStyle(Constant.Text.RED_STYLE), true);
-                return InteractionResult.FAIL;
-            } else if (!level.getDefaultBreathable() && !level.isBreathable(new BlockPos((int) Math.floor(eyePos.x), (int) Math.floor(eyePos.y), (int) Math.floor(eyePos.z)))) { //sealed atmosphere check. they dont have a mask on so make sure they can breathe before eating
-                player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_FEED_IN_NO_ATMOSPHERE).withStyle(Constant.Text.RED_STYLE), true);
-                return InteractionResult.FAIL;
-            }
         }
         return InteractionResult.PASS;
+    }
+
+    private static boolean cannotEatInNoAtmosphere(Player player, Level level) {
+        Vec3 eyePos = player.getEyePosition();
+        if (Galacticraft.CONFIG.cannotEatInNoAtmosphere() && !level.getDefaultBreathable() && !level.isBreathable(new BlockPos((int) Math.floor(eyePos.x), (int) Math.floor(eyePos.y), (int) Math.floor(eyePos.z)))) {
+            player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_IN_NO_ATMOSPHERE).withStyle(Constant.Text.RED_STYLE), true);
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean cannotFeedInNoAtmosphere(Player player, Level level, LivingEntity entity) {
+        Vec3 eyePos = entity.getEyePosition();
+        if (Galacticraft.CONFIG.cannotEatInNoAtmosphere() && !level.getDefaultBreathable() && !level.isBreathable(new BlockPos((int) Math.floor(eyePos.x), (int) Math.floor(eyePos.y), (int) Math.floor(eyePos.z)))) {
+            player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_FEED_IN_NO_ATMOSPHERE).withStyle(Constant.Text.RED_STYLE), true);
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean cannotEatWithMask(Player player) {
+        if (Galacticraft.CONFIG.cannotEatWithMask() && player.galacticraft$hasMask()) {
+            player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_WITH_MASK).withStyle(Constant.Text.RED_STYLE), true);
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean cannotFeedWithMask(Player player, LivingEntity entity) {
+        if (Galacticraft.CONFIG.cannotEatWithMask() && entity.galacticraft$hasMask()) {
+            player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_FEED_WITH_MASK).withStyle(Constant.Text.RED_STYLE), true);
+            return true;
+        }
+        return false;
     }
 }
