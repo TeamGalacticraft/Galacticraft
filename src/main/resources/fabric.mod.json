@@ -175,6 +175,7 @@
   },
   "suggests": {
     "modmenu": "*",
-    "waila": "*"
+    "waila": "*",
+    "omnishape": "*"
   }
 }

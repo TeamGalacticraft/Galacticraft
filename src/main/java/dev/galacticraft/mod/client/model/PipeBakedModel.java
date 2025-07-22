@@ -23,6 +23,8 @@
 package dev.galacticraft.mod.client.model;
 
 import dev.galacticraft.mod.api.block.entity.Connected;
+import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
+import dev.omnishape.BlockRotation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
@@ -44,6 +46,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -251,6 +254,17 @@ public class PipeBakedModel implements BakedModel {
                         .color(-1, -1, -1, -1).emit();
                 }
             }
+        }
+
+        if (getter.getBlockEntity(blockPos) instanceof WireBlockEntity wire
+                && wire.getOverlay() != null) {
+            dev.omnishape.client.api.OmnishapeRenderer.emitOverlay(
+                    wire.getOverlay(),
+                    context,
+                    blockPos,
+                    new BlockRotation(0, 0, 0), // No rotation for now todo: implement rotation later
+                    getter
+            );
         }
     }
     @Override

@@ -25,6 +25,7 @@ package dev.galacticraft.mod.content.block.entity.networked;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireNetwork;
 import dev.galacticraft.mod.api.wire.impl.WireNetworkImpl;
+import dev.omnishape.api.OmnishapeData;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
@@ -39,7 +40,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3f;
 import team.reborn.energy.api.EnergyStorage;
 
 public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage {
@@ -47,6 +51,25 @@ public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage 
     private WireNetwork network;
     private final int maxTransferRate;
     private final boolean[] connections = new boolean[6];
+
+    @Nullable
+    private VoxelShape cachedShape = null;
+
+    private @Nullable Boolean wasTargetingFrame;
+
+    // Call this during `getDestroyProgress`
+    public void setTargetingFrame(boolean targetingFrame) {
+        this.wasTargetingFrame = targetingFrame;
+    }
+
+    public @Nullable Boolean getAndClearTargetingFrame() {
+        Boolean result = this.wasTargetingFrame;
+        this.wasTargetingFrame = null;
+        return result;
+    }
+
+    @Nullable
+    private OmnishapeData frameOverlay = null;
 
     public WireBlockEntity(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state, int maxTransferRate) {
         super(type, pos, state);
@@ -121,12 +144,19 @@ public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage 
     protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         super.saveAdditional(nbt, registryLookup);
         this.writeConnectionNbt(nbt);
+        if (this.frameOverlay != null) {
+            nbt.put("Omnishape", this.frameOverlay.toNbt());
+        }
     }
 
     @Override
     protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         super.loadAdditional(nbt, registryLookup);
         this.readConnectionNbt(nbt);
+
+        if (nbt.contains("Omnishape", CompoundTag.TAG_COMPOUND)) {
+            this.frameOverlay = OmnishapeData.fromNbt(nbt.getCompound("Omnishape"));
+        }
 
         if (this.level != null && this.level.isClientSide) {
             this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_IMMEDIATE);
@@ -176,5 +206,38 @@ public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage 
     @Override
     public long getCapacity() {
         return this.maxTransferRate;
+    }
+
+    public void setOverlay(@Nullable OmnishapeData overlay) {
+        this.frameOverlay = overlay;
+        this.cachedShape = null;
+        this.setChanged();
+        if (this.level != null && !this.level.isClientSide) {
+            this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
+        }
+    }
+
+    @Nullable
+    public OmnishapeData getOverlay() {
+        return this.frameOverlay;
+    }
+
+    public boolean hasOverlay() {
+        return this.frameOverlay != null;
+    }
+
+    public Matrix3f getRotationMatrix() {
+        return new Matrix3f();
+    }
+
+    public VoxelShape getOrCreateHitbox(Matrix3f rotationMatrix) {
+        if (this.cachedShape == null && this.frameOverlay != null) {
+            this.cachedShape = OmnishapeData.generateVoxelShape(this.frameOverlay.corners(), rotationMatrix);
+        }
+        return this.cachedShape != null ? this.cachedShape : Shapes.empty();
+    }
+
+    public boolean isBreakingFrame() {
+        return wasTargetingFrame;
     }
 }
