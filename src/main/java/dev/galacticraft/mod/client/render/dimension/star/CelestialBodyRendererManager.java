@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2019-2025 Team Galacticraft
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package dev.galacticraft.mod.client.render.dimension.star;
 
 import dev.galacticraft.mod.client.render.dimension.star.data.CelestialBody;
@@ -97,7 +119,7 @@ public class CelestialBodyRendererManager {
     }
     /**
      * Adds a celestial body to the manager.
-     * 
+     *
      * @param type The type of celestial body
      * @param x X coordinate
      * @param y Y coordinate
@@ -114,7 +136,7 @@ public class CelestialBodyRendererManager {
 
     /**
      * Removes a celestial body from the manager.
-     * 
+     *
      * @param body The celestial body to remove
      * @return true if the body was removed, false otherwise
      */
@@ -124,7 +146,7 @@ public class CelestialBodyRendererManager {
 
     /**
      * Registers a custom renderer for a specific celestial body type.
-     * 
+     *
      * @param type The type of celestial body
      * @param renderer The renderer to use
      */
@@ -134,7 +156,7 @@ public class CelestialBodyRendererManager {
 
     /**
      * Gets all celestial bodies of a specific type.
-     * 
+     *
      * @param type The type of celestial body
      * @return List of celestial bodies of the specified type
      */
@@ -144,7 +166,7 @@ public class CelestialBodyRendererManager {
 
     /**
      * Gets all celestial bodies.
-     * 
+     *
      * @return List of all celestial bodies
      */
     public List<CelestialBody> getAllCelestialBodies() {
@@ -171,7 +193,7 @@ public class CelestialBodyRendererManager {
 
     /**
      * Gets the geographical solar position used for relative rendering.
-     * 
+     *
      * @return The geographical solar position
      */
     public GeographicalSolarPosition getSolarPosition() {
@@ -180,7 +202,7 @@ public class CelestialBodyRendererManager {
 
     /**
      * Sets the geographical solar position used for relative rendering.
-     * 
+     *
      * @param solarPosition The new geographical solar position
      */
     public void setSolarPosition(GeographicalSolarPosition solarPosition) {
@@ -189,7 +211,7 @@ public class CelestialBodyRendererManager {
 
     /**
      * Updates the geographical solar position with new coordinates.
-     * 
+     *
      * @param x The x coordinate
      * @param y The y coordinate
      * @param z The z coordinate
