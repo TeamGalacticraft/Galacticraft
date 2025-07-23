@@ -18,6 +18,7 @@
       "type": "galacticraft:icon",
       "config": {
         "height": 8,
+        "rocket_overlay": "galacticraft:textures/gui/rocket/moon_rocket_gui.png",
         "scale": 1.0,
         "texture": "galacticraft:textures/gui/celestialbodies/moon.png",
         "u": 0,

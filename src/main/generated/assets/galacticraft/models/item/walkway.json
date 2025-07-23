@@ -1,3 +1,6 @@
 {
-  "parent": "galacticraft:block/walkway"
+  "parent": "galacticraft:item/template_walkway_inventory",
+  "textures": {
+    "texture": "galacticraft:block/walkway_connector"
+  }
 }

@@ -23,15 +23,17 @@
 package dev.galacticraft.mod.mixin.client;
 
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.mod.content.entity.orbital.AdvancedVehicle;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import dev.galacticraft.mod.content.item.RocketItem;
+import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
-import org.joml.Math;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -98,21 +100,48 @@ public class HumanoidModelMixin<T extends LivingEntity> {
 
     @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
     private void gc$overridePlayerAnim(LivingEntity entity, float f, float g, float h, float i, float j, CallbackInfo ci) {
-        if (entity.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof RocketItem || entity.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof RocketItem) {
-            float armXRot = Mth.PI + 0.3F;
-            float armZRot = 0.1F * Mth.PI;
-            this.leftArm.setRotation(armXRot, 0.0F, armZRot);
-            this.rightArm.setRotation(armXRot, 0.0F, -armZRot);
+        boolean mainHand = entity.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof RocketItem;
+        boolean offHand = entity.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof RocketItem;
+        if (mainHand || offHand) {
+            if (entity.getVehicle() instanceof AdvancedVehicle) {
+                Holder<CelestialBody<?, ?>> holder = entity.level().galacticraft$getCelestialBody();
+                float angularSwingArm;
+                if (holder != null && holder.value().gravity() < 0.8) {
+                    angularSwingArm = Mth.cos(f * 0.1162F) * 2.0F * g;
+                } else {
+                    angularSwingArm = Mth.cos(f * 0.6662F) * g;
+                }
+
+                boolean rightHanded = entity.getMainArm() == HumanoidArm.RIGHT;
+                if ((mainHand && rightHanded) || (offHand && !rightHanded)) {
+                    this.rightArm.xRot = -angularSwingArm;
+                    this.rightArm.zRot = 0.0F;
+                    this.rightArm.yRot = 0.0F;
+                    AnimationUtils.bobModelPart(this.rightArm, h, 1.0f);
+                }
+                if ((offHand && rightHanded) || (mainHand && !rightHanded)) {
+                    this.leftArm.xRot = angularSwingArm;
+                    this.leftArm.zRot = 0.0F;
+                    this.leftArm.yRot = 0.0F;
+                    AnimationUtils.bobModelPart(this.leftArm, h, -1.0f);
+                }
+            } else {
+                // HANDS UP!
+                float armXRot = Mth.PI + 0.3F;
+                float armZRot = 0.1F * Mth.PI;
+                this.leftArm.setRotation(armXRot, 0.0F, armZRot);
+                this.rightArm.setRotation(armXRot, 0.0F, -armZRot);
+            }
         }
 
-        if (entity.isInCryoSleep()) { // TODO: possibly cleaner way of doing this?
+        if (entity.isInCryoSleep()) {
             this.head.setRotation(45.0F, 0.0F, 0.0F);
-            this.hat.setRotation(45.0F, 0.0F, 0.0F);
-            this.body.setRotation(0.0F, 0.0F, 0.0F);
-            this.leftArm.setRotation(0.0F, 0.0F, 0.0F);
-            this.rightArm.setRotation(0.0F, 0.0F, 0.0F);
-            this.leftLeg.setRotation(0.0F, 0.0F, 0.0F);
-            this.rightLeg.setRotation(0.0F, 0.0F, 0.0F);
+            this.hat.copyFrom(this.head);
+            this.body.resetPose();
+            this.leftArm.resetPose();
+            this.rightArm.resetPose();
+            this.leftLeg.resetPose();
+            this.rightLeg.resetPose();
         }
     }
 }

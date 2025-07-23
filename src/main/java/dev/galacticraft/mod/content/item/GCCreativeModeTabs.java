@@ -23,19 +23,13 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.component.GCDataComponents;
-import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlockRegistry;
-import dev.galacticraft.mod.content.item.OxygenTankItem;
-import dev.galacticraft.mod.storage.PlaceholderItemStorage;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -225,9 +219,12 @@ public class GCCreativeModeTabs {
                 output.accept(ALUMINUM_WIRE);
                 output.accept(SEALABLE_ALUMINUM_WIRE);
                 output.accept(HEAVY_SEALABLE_ALUMINUM_WIRE);
-                output.accept(GLASS_FLUID_PIPE);
+                for (PipeColor color : PipeColor.byRainbowOrder()) {
+                    output.accept(GLASS_FLUID_PIPES.get(color));
+                }
                 output.accept(ROCKET_LAUNCH_PAD);
                 output.accept(FUELING_PAD);
+                output.accept(ROCKET_WORKBENCH);
 
                 // MISC MACHINES
                 output.accept(CRYOGENIC_CHAMBER);
@@ -286,9 +283,12 @@ public class GCCreativeModeTabs {
             .builder()
             .icon(() -> new ItemStack(CANVAS))
             .title(Component.translatable(Translations.ItemGroup.ITEMS))
-            .displayItems((parameters, output) -> {                
+            .displayItems((parameters, output) -> {
                 // BATTERIES
                 output.accept(BATTERY);
+                ItemStack chargedBattery = new ItemStack(BATTERY);
+                BATTERY.setStoredEnergy(chargedBattery, BATTERY.getEnergyCapacity(chargedBattery));
+                output.accept(chargedBattery);
                 output.accept(INFINITE_BATTERY);
 
                 output.accept(SMALL_OXYGEN_TANK);
@@ -305,8 +305,9 @@ public class GCCreativeModeTabs {
                 output.accept(FREQUENCY_MODULE);
                 output.accept(SHIELD_CONTROLLER);
 
+                output.accept(PARACHUTE);
                 for (DyeColor color : GCBlockRegistry.COLOR_ORDER) {
-                    output.accept(PARACHUTE.get(color));
+                    output.accept(DYED_PARACHUTES.get(color));
                 }
 
                 output.accept(EMERGENCY_KIT);

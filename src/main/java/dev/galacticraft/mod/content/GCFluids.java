@@ -61,7 +61,7 @@ public class GCFluids {
         ));
         FluidVariantAttributes.register(FUEL, new GCFluidAttribute(
                 Component.translatable(GCBlocks.FUEL.getDescriptionId())
-                        .setStyle(Constant.Text.YELLOW_STYLE),
+                        .setStyle(Constant.Text.GOLD_STYLE),
                 2000,
                 false
         ));

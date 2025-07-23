@@ -46,56 +46,52 @@ import org.jetbrains.annotations.Nullable;
 
 public class EvolvedSpiderMaskRenderLayer<T extends EvolvedSpiderEntity, M extends SpiderModel<T>> extends RenderLayer<T, M> {
     private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/spider_gear.png");
+    private final @Nullable ModelPart head;
     private final @Nullable ModelPart mask;
+    private final @Nullable ModelPart body;
     private final @Nullable ModelPart pipe;
 
     public EvolvedSpiderMaskRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
-        ModelPart root, head, body;
+        ModelPart root;
         if (context.getModel() instanceof HierarchicalModel<?> model) {
             root = model.root();
-            head = root.getChild(PartNames.HEAD);
-            body = root.getChild("body1");
+            this.head = root.getChild(PartNames.HEAD);
+            this.body = root.getChild("body1");
         } else {
+            this.head = null;
             this.mask = null;
+            this.body = null;
             this.pipe = null;
             return;
         }
+
         MeshDefinition modelData = new MeshDefinition();
         PartDefinition modelPartData = modelData.getRoot();
-        if (head != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -9.0F, -5.0F, 10, 10, 10, CubeDeformation.NONE), PartPose.offset(head.x, head.y, head.z));
+        if (this.head != null) {
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -9.0F, -5.0F, 10, 10, 10, CubeDeformation.NONE), PartPose.ZERO);
         }
-        if (body != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 3).addBox(-2.0F, -14.0F, 4.0F, 4, 11, 6, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+        if (this.body != null) {
+            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 3).addBox(-2.0F, -14.0F, 4.0F, 4, 11, 6, CubeDeformation.NONE), PartPose.ZERO);
         }
 
         root = modelPartData.bake(64, 32);
-
-        if (head != null) {
-            this.mask = root.getChild(Constant.ModelPartName.OXYGEN_MASK);
-        } else {
-            this.mask = null;
-        }
-
-        if (body != null) {
-            this.pipe = root.getChild(Constant.ModelPartName.OXYGEN_PIPE);
-            this.pipe.xRot = Mth.HALF_PI;
-        } else {
-            this.pipe = null;
-        }
+        this.mask = this.head != null ? root.getChild(Constant.ModelPartName.OXYGEN_MASK) : null;
+        this.pipe = this.body != null ? root.getChild(Constant.ModelPartName.OXYGEN_PIPE) : null;
     }
 
     @Override
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
 
-        if (this.mask != null) {
-            this.mask.yRot = headYaw * Mth.DEG_TO_RAD;
-            this.mask.xRot = (headPitch + 90.0F) * Mth.DEG_TO_RAD;
+        if (this.mask != null && entity.galacticraft$hasMask()) {
+            this.mask.copyFrom(this.head);
+            this.mask.xRot += Mth.HALF_PI;
             this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
-        if (this.pipe != null) {
+        if (this.pipe != null && entity.galacticraft$hasGear()) {
+            this.pipe.copyFrom(this.body);
+            this.pipe.xRot += Mth.HALF_PI;
             this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
     }

@@ -24,19 +24,18 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCAccessorySlots;
-import dev.galacticraft.mod.content.item.CannedFoodItem;
-import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.content.item.OxygenTankItem;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
@@ -46,7 +45,7 @@ import java.util.List;
 
 public class EmergencyKitItem extends Item {
 
-    public static List<ItemStack> getContents() {
+    public static List<ItemStack> getContents(DyeColor color) {
         List<ItemStack> emergencyItems = new ArrayList<ItemStack>();
 
         ItemStack cannedFoodItem = GCItems.CANNED_FOOD.getDefaultInstance();
@@ -56,7 +55,11 @@ public class EmergencyKitItem extends Item {
         emergencyItems.add(GCItems.OXYGEN_MASK.getDefaultInstance());
         emergencyItems.add(GCItems.OXYGEN_GEAR.getDefaultInstance());
         emergencyItems.add(OxygenTankItem.getFullTank(GCItems.SMALL_OXYGEN_TANK));
-        emergencyItems.add(GCItems.PARACHUTE.get(DyeColor.RED).getDefaultInstance());
+        if (color != null) {
+            emergencyItems.add(GCItems.DYED_PARACHUTES.get(color).getDefaultInstance());
+        } else {
+            emergencyItems.add(GCItems.PARACHUTE.getDefaultInstance());
+        }
         emergencyItems.add(OxygenTankItem.getFullTank(GCItems.SMALL_OXYGEN_TANK));
         emergencyItems.add(cannedFoodItem);
         emergencyItems.add(PotionContents.createItemStack(Items.POTION, Potions.HEALING));
@@ -69,11 +72,22 @@ public class EmergencyKitItem extends Item {
         super(settings);
     }
 
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
+        if (stack.has(DataComponents.BASE_COLOR)) {
+            Component text = GCItems.DYED_PARACHUTES.get(stack.get(DataComponents.BASE_COLOR)).getDescription();
+            tooltip.add(text.copy().withStyle(Constant.Text.GRAY_STYLE));
+        }
+        super.appendHoverText(stack, context, tooltip, type);
+    }
+
     @Override //should sync with server
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         Container inv = player.galacticraft$getGearInv();
         int n = inv.getContainerSize();
-        for (ItemStack itemStack : getContents()) {
+        ItemStack emergencyKit = player.getItemInHand(hand);
+        DyeColor color = emergencyKit.get(DataComponents.BASE_COLOR);
+        for (ItemStack itemStack : getContents(color)) {
             for (int slot = 0; slot < n; ++slot) {
                 if (inv.getItem(slot).isEmpty() && itemStack.is(GCAccessorySlots.SLOT_TAGS.get(slot))) {
                     ItemStack itemStack2 = itemStack.split(1);
@@ -86,12 +100,11 @@ public class EmergencyKitItem extends Item {
             }
         }
 
-        ItemStack itemStack = player.getItemInHand(hand);
         if (!level.isClientSide()) {
-            player.awardStat(Stats.ITEM_USED.get(itemStack.getItem()));
+            player.awardStat(Stats.ITEM_USED.get(emergencyKit.getItem()));
         }
 
-        ItemStack itemStack2 = player.isCreative() ? itemStack.copy() : ItemStack.EMPTY;
+        ItemStack itemStack2 = player.isCreative() ? emergencyKit.copy() : ItemStack.EMPTY;
         return InteractionResultHolder.sidedSuccess(itemStack2, level.isClientSide());
     }
 }

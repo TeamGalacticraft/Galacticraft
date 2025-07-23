@@ -29,6 +29,8 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -55,6 +57,48 @@ public class VacuumGlassBlock extends Block {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(BlockStateProperties.HORIZONTAL_AXIS, BlockStateProperties.NORTH, BlockStateProperties.EAST, BlockStateProperties.SOUTH, BlockStateProperties.WEST, BlockStateProperties.UP, BlockStateProperties.DOWN);
+    }
+
+    @Override
+    protected BlockState rotate(BlockState state, Rotation rotation) {
+        switch (rotation) {
+            case CLOCKWISE_180: {
+                return state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.SOUTH))
+                        .setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.WEST))
+                        .setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.NORTH))
+                        .setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.EAST));
+            }
+            case COUNTERCLOCKWISE_90: {
+                return state.setValue(BlockStateProperties.HORIZONTAL_AXIS, state.getValue(BlockStateProperties.HORIZONTAL_AXIS) == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X)
+                        .setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.EAST))
+                        .setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.SOUTH))
+                        .setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.WEST))
+                        .setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.NORTH));
+            }
+            case CLOCKWISE_90: {
+                return state.setValue(BlockStateProperties.HORIZONTAL_AXIS, state.getValue(BlockStateProperties.HORIZONTAL_AXIS) == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X)
+                        .setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.WEST))
+                        .setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.NORTH))
+                        .setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.EAST))
+                        .setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.SOUTH));
+            }
+        }
+        return state;
+    }
+
+    @Override
+    protected BlockState mirror(BlockState state, Mirror mirror) {
+        switch (mirror) {
+            case LEFT_RIGHT: {
+                return state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.SOUTH))
+                        .setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.NORTH));
+            }
+            case FRONT_BACK: {
+                return state.setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.WEST))
+                        .setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.EAST));
+            }
+        }
+        return super.mirror(state, mirror);
     }
 
     @Override

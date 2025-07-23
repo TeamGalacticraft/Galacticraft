@@ -32,6 +32,7 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder;
 import me.shedaniel.clothconfig2.impl.builders.DoubleFieldBuilder;
+import me.shedaniel.clothconfig2.impl.builders.FloatFieldBuilder;
 import me.shedaniel.clothconfig2.impl.builders.LongFieldBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
@@ -50,23 +51,33 @@ public class ConfigImpl implements Config {
     private boolean debugLog = false;
     private long wireMaxTransferPerTick = 128;
     private long heavyWireMaxTransferPerTick = 256;
+    private long machineEnergyStorageSize = 30_000;
+    private long energyStorageModuleStorageSize = 300_000;
     private long coalGeneratorEnergyProductionRate = 120; // /t
     private long solarPanelEnergyProductionRate = 44;
     private long circuitFabricatorEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long electricCompressorEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
+    private long electricFurnaceEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
     private long electricArcFurnaceEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
+    private float electricArcFurnaceBonusChance = 0.25F;
     private long oxygenCollectorEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
+    private long oxygenCompressorEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
+    private long oxygenDecompressorEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long oxygenSealerEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long oxygenSealerOxygenConsumptionRate = 1000;
     private long maxSealingPower = 1024;
-    private long foodCannerEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long refineryEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
-    private long electricFurnaceEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
-    private long energyStorageModuleStorageSize = 300_000;
-    private long machineEnergyStorageSize = 30_000;
-    private long oxygenCompressorEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
-    private long oxygenDecompressorEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
-    private long playerOxygenConsumptionRate = FluidConstants.DROPLET;
+    private long fuelLoaderEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
+    private long foodCannerEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
+    private long smallOxygenTankCapacity = FluidConstants.BUCKET;
+    private long mediumOxygenTankCapacity = 2 * FluidConstants.BUCKET;
+    private long largeOxygenTankCapacity = 3 * FluidConstants.BUCKET;
+    private long playerOxygenConsumptionRate = 5 * FluidConstants.DROPLET;
+    private long wolfOxygenConsumptionRate = 3 * FluidConstants.DROPLET;
+    private long catOxygenConsumptionRate = 2 * FluidConstants.DROPLET;
+    private long parrotOxygenConsumptionRate = 1 * FluidConstants.DROPLET;
+    private boolean cannotEatInNoAtmosphere = true;
+    private boolean cannotEatWithMask = true;
     private double bossHealthMultiplier = 1.0;
     private boolean hideAlphaWarning = false;
     private boolean enableGcHouston = true;
@@ -119,6 +130,24 @@ public class ConfigImpl implements Config {
     }
 
     @Override
+    public long machineEnergyStorageSize() {
+        return machineEnergyStorageSize;
+    }
+
+    public void setMachineEnergyStorageSize(long amount) {
+        this.machineEnergyStorageSize = amount;
+    }
+
+    @Override
+    public long energyStorageModuleStorageSize() {
+        return energyStorageModuleStorageSize;
+    }
+
+    public void setEnergyStorageModuleStorageSize(long amount) {
+        this.energyStorageModuleStorageSize = amount;
+    }
+
+    @Override
     public long coalGeneratorEnergyProductionRate() {
         return coalGeneratorEnergyProductionRate;
     }
@@ -155,56 +184,6 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public long electricArcFurnaceEnergyConsumptionRate() {
-        return electricArcFurnaceEnergyConsumptionRate;
-    }
-
-    public void setElectricArcFurnaceEnergyConsumptionRate(long amount) {
-        this.electricArcFurnaceEnergyConsumptionRate = amount;
-    }
-
-    @Override
-    public long oxygenCollectorEnergyConsumptionRate() {
-        return oxygenCollectorEnergyConsumptionRate;
-    }
-
-    @Override
-    public long oxygenSealerEnergyConsumptionRate() {
-        return oxygenSealerEnergyConsumptionRate;
-    }
-
-    @Override
-    public long oxygenSealerOxygenConsumptionRate() {
-        return oxygenSealerOxygenConsumptionRate;
-    }
-
-    @Override
-    public long maxSealingPower() {
-        return maxSealingPower;
-    }
-
-    public void setOxygenCollectorEnergyConsumptionRate(long amount) {
-        this.oxygenCollectorEnergyConsumptionRate = amount;
-    }
-
-    public void setOxygenSealerEnergyConsumptionRate(long amount) {
-        this.oxygenSealerEnergyConsumptionRate = amount;
-    }
-
-    public void setOxygenSealerOxygenConsumptionRate(long amount) {
-        this.oxygenSealerOxygenConsumptionRate = amount;
-    }
-
-    @Override
-    public long refineryEnergyConsumptionRate() {
-        return refineryEnergyConsumptionRate;
-    }
-
-    public void setRefineryEnergyConsumptionRate(long amount) {
-        this.refineryEnergyConsumptionRate = amount;
-    }
-
-    @Override
     public long electricFurnaceEnergyConsumptionRate() {
         return electricFurnaceEnergyConsumptionRate;
     }
@@ -214,25 +193,30 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public long energyStorageModuleStorageSize() {
-        return energyStorageModuleStorageSize;
+    public long electricArcFurnaceEnergyConsumptionRate() {
+        return electricArcFurnaceEnergyConsumptionRate;
     }
 
-    public void setEnergyStorageModuleStorageSize(long amount) {
-        this.energyStorageModuleStorageSize = amount;
+    public void setElectricArcFurnaceEnergyConsumptionRate(long amount) {
+        this.electricArcFurnaceEnergyConsumptionRate = amount;
     }
 
     @Override
-    public long machineEnergyStorageSize() {
-        return machineEnergyStorageSize;
+    public float electricArcFurnaceBonusChance() {
+        return electricArcFurnaceBonusChance;
     }
 
-    public void setMachineEnergyStorageSize(long amount) {
-        this.machineEnergyStorageSize = amount;
+    public void setElectricArcFurnaceBonusChance(float prob) {
+        this.electricArcFurnaceBonusChance = prob;
     }
 
-    public void setMaxSealingPower(long amount) {
-        this.maxSealingPower = amount;
+    @Override
+    public long oxygenCollectorEnergyConsumptionRate() {
+        return oxygenCollectorEnergyConsumptionRate;
+    }
+
+    public void setOxygenCollectorEnergyConsumptionRate(long amount) {
+        this.oxygenCollectorEnergyConsumptionRate = amount;
     }
 
     @Override
@@ -245,15 +229,6 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public long foodCannerEnergyConsumptionRate() {
-        return foodCannerEnergyConsumptionRate;
-    }
-
-    public void setFoodCannerEnergyConsumptionRate(long amount) {
-        this.foodCannerEnergyConsumptionRate = amount;
-    }
-
-    @Override
     public long oxygenDecompressorEnergyConsumptionRate() {
         return oxygenDecompressorEnergyConsumptionRate;
     }
@@ -263,12 +238,138 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public long playerOxygenConsuptionRate() {
+    public long oxygenSealerEnergyConsumptionRate() {
+        return oxygenSealerEnergyConsumptionRate;
+    }
+
+    public void setOxygenSealerEnergyConsumptionRate(long amount) {
+        this.oxygenSealerEnergyConsumptionRate = amount;
+    }
+
+    @Override
+    public long oxygenSealerOxygenConsumptionRate() {
+        return oxygenSealerOxygenConsumptionRate;
+    }
+
+    public void setOxygenSealerOxygenConsumptionRate(long amount) {
+        this.oxygenSealerOxygenConsumptionRate = amount;
+    }
+
+    @Override
+    public long maxSealingPower() {
+        return maxSealingPower;
+    }
+
+    public void setMaxSealingPower(long amount) {
+        this.maxSealingPower = amount;
+    }
+
+    @Override
+    public long refineryEnergyConsumptionRate() {
+        return refineryEnergyConsumptionRate;
+    }
+
+    public void setRefineryEnergyConsumptionRate(long amount) {
+        this.refineryEnergyConsumptionRate = amount;
+    }
+
+    @Override
+    public long fuelLoaderEnergyConsumptionRate() {
+        return fuelLoaderEnergyConsumptionRate;
+    }
+
+    public void setFuelLoaderEnergyConsumptionRate(long amount) {
+        this.fuelLoaderEnergyConsumptionRate = amount;
+    }
+
+    @Override
+    public long foodCannerEnergyConsumptionRate() {
+        return foodCannerEnergyConsumptionRate;
+    }
+
+    public void setFoodCannerEnergyConsumptionRate(long amount) {
+        this.foodCannerEnergyConsumptionRate = amount;
+    }
+
+    @Override
+    public long smallOxygenTankCapacity() {
+        return this.smallOxygenTankCapacity;
+    }
+
+    public void setSmallOxygenTankCapacity(long capacity) {
+        this.smallOxygenTankCapacity = capacity;
+    }
+
+    @Override
+    public long mediumOxygenTankCapacity() {
+        return this.mediumOxygenTankCapacity;
+    }
+
+    public void setMediumOxygenTankCapacity(long capacity) {
+        this.mediumOxygenTankCapacity = capacity;
+    }
+
+    @Override
+    public long largeOxygenTankCapacity() {
+        return this.largeOxygenTankCapacity;
+    }
+
+    public void setLargeOxygenTankCapacity(long capacity) {
+        this.largeOxygenTankCapacity = capacity;
+    }
+
+    @Override
+    public long playerOxygenConsumptionRate() {
         return this.playerOxygenConsumptionRate;
     }
 
     public void setPlayerOxygenConsumptionRate(long amount) {
         this.playerOxygenConsumptionRate = amount;
+    }
+
+    @Override
+    public long wolfOxygenConsumptionRate() {
+        return this.wolfOxygenConsumptionRate;
+    }
+
+    public void setWolfOxygenConsumptionRate(long amount) {
+        this.wolfOxygenConsumptionRate = amount;
+    }
+
+    @Override
+    public long catOxygenConsumptionRate() {
+        return this.catOxygenConsumptionRate;
+    }
+
+    public void setCatOxygenConsumptionRate(long amount) {
+        this.catOxygenConsumptionRate = amount;
+    }
+
+    @Override
+    public long parrotOxygenConsumptionRate() {
+        return this.parrotOxygenConsumptionRate;
+    }
+
+    public void setParrotOxygenConsumptionRate(long amount) {
+        this.parrotOxygenConsumptionRate = amount;
+    }
+
+    @Override
+    public boolean cannotEatInNoAtmosphere() {
+        return this.cannotEatInNoAtmosphere;
+    }
+
+    public void setCannotEatInNoAtmosphere(boolean cannotEatInNoAtmosphere) {
+        this.cannotEatInNoAtmosphere = cannotEatInNoAtmosphere;
+    }
+
+    @Override
+    public boolean cannotEatWithMask() {
+        return this.cannotEatWithMask;
+    }
+
+    public void setCannotEatWithMask(boolean cannotEatWithMask) {
+        this.cannotEatWithMask = cannotEatWithMask;
     }
 
     @Override
@@ -372,6 +473,25 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.ENERGY_STORAGE_SIZE),
+                    config.machineEnergyStorageSize())
+                    .setSaveConsumer(config::setMachineEnergyStorageSize)
+                    .setDefaultValue(30_000)
+                    .requireRestart()
+                    .build()
+            );
+
+            machines.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE),
+                    config.energyStorageModuleStorageSize())
+                    .setSaveConsumer(config::setEnergyStorageModuleStorageSize)
+                    .setDefaultValue(500_000)
+                    .build()
+            );
+
+            machines.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
                     Component.translatable(Translations.Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE),
                     config.coalGeneratorEnergyProductionRate())
                     .setSaveConsumer(config::setCoalGeneratorEnergyProductionRate)
@@ -408,10 +528,59 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE),
+                    config.electricFurnaceEnergyConsumptionRate())
+                    .setSaveConsumer(config::setElectricFurnaceEnergyConsumptionRate)
+                    .setDefaultValue(20)
+                    .build()
+            );
+
+            machines.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.ELECTRIC_ARC_FURNACE_ENERGY_CONSUMPTION_RATE),
+                    config.electricArcFurnaceEnergyConsumptionRate())
+                    .setSaveConsumer(config::setElectricArcFurnaceEnergyConsumptionRate)
+                    .setDefaultValue(20)
+                    .build()
+            );
+
+            machines.add(new FloatFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.ELECTRIC_ARC_FURNACE_BONUS_CHANCE),
+                    config.electricArcFurnaceBonusChance())
+                    .setSaveConsumer(config::setElectricArcFurnaceBonusChance)
+                    .setDefaultValue(0.25F)
+                    .setMin(0.0F)
+                    .setMax(1.0F)
+                    .build()
+            );
+
+            machines.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
                     Component.translatable(Translations.Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE),
                     config.oxygenCollectorEnergyConsumptionRate())
                     .setSaveConsumer(config::setOxygenCollectorEnergyConsumptionRate)
                     .setDefaultValue(10)
+                    .build()
+            );
+
+            machines.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
+                    config.oxygenCompressorEnergyConsumptionRate())
+                    .setSaveConsumer(config::setOxygenCompressorEnergyConsumptionRate)
+                    .setDefaultValue(15)
+                    .requireRestart()
+                    .build()
+            );
+
+            machines.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE),
+                    config.oxygenDecompressorEnergyConsumptionRate())
+                    .setSaveConsumer(config::setOxygenDecompressorEnergyConsumptionRate)
+                    .setDefaultValue(15)
+                    .requireRestart()
                     .build()
             );
 
@@ -453,39 +622,10 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    Component.translatable(Translations.Config.ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE),
-                    config.electricFurnaceEnergyConsumptionRate())
-                    .setSaveConsumer(config::setElectricFurnaceEnergyConsumptionRate)
-                    .setDefaultValue(20)
-                    .build()
-            );
-
-            machines.add(new LongFieldBuilder(
-                    Component.translatable(Translations.Config.RESET),
-                    Component.translatable(Translations.Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE),
-                    config.energyStorageModuleStorageSize())
-                    .setSaveConsumer(config::setEnergyStorageModuleStorageSize)
-                    .setDefaultValue(500_000)
-                    .build()
-            );
-
-            machines.add(new LongFieldBuilder(
-                    Component.translatable(Translations.Config.RESET),
-                    Component.translatable(Translations.Config.ENERGY_STORAGE_SIZE),
-                    config.machineEnergyStorageSize())
-                    .setSaveConsumer(config::setMachineEnergyStorageSize)
-                    .setDefaultValue(30_000)
-                    .requireRestart()
-                    .build()
-            );
-
-            machines.add(new LongFieldBuilder(
-                    Component.translatable(Translations.Config.RESET),
-                    Component.translatable(Translations.Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
-                    config.oxygenCompressorEnergyConsumptionRate())
-                    .setSaveConsumer(config::setOxygenCompressorEnergyConsumptionRate)
+                    Component.translatable(Translations.Config.FUEL_LOADER_ENERGY_CONSUMPTION_RATE),
+                    config.fuelLoaderEnergyConsumptionRate())
+                    .setSaveConsumer(config::setFuelLoaderEnergyConsumptionRate)
                     .setDefaultValue(15)
-                    .requireRestart()
                     .build()
             );
 
@@ -511,24 +651,110 @@ public class ConfigImpl implements Config {
 
             SubCategoryBuilder skybox = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.SKYBOX));
 
-            SubCategoryBuilder lifeSupport = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.PLAYER_LIFE_SUPPORT));
 
-            // TODO: If set to 0, disable the player oxygen system
+            SubCategoryBuilder lifeSupport = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.LIFE_SUPPORT));
+
+            lifeSupport.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.SMALL_OXYGEN_TANK_CAPACITY),
+                    config.smallOxygenTankCapacity())
+                    .setSaveConsumer(config::setSmallOxygenTankCapacity)
+                    .setDefaultValue(FluidConstants.BUCKET)
+                    .setMin(0)
+                    .setMax(Long.MAX_VALUE)
+                    .build()
+            );
+
+            lifeSupport.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.MEDIUM_OXYGEN_TANK_CAPACITY),
+                    config.mediumOxygenTankCapacity())
+                    .setSaveConsumer(config::setMediumOxygenTankCapacity)
+                    .setDefaultValue(2 * FluidConstants.BUCKET)
+                    .setMin(0)
+                    .setMax(Long.MAX_VALUE)
+                    .build()
+            );
+
+            lifeSupport.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.LARGE_OXYGEN_TANK_CAPACITY),
+                    config.largeOxygenTankCapacity())
+                    .setSaveConsumer(config::setLargeOxygenTankCapacity)
+                    .setDefaultValue(3 * FluidConstants.BUCKET)
+                    .setMin(0)
+                    .setMax(Long.MAX_VALUE)
+                    .build()
+            );
+
             lifeSupport.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
                     Component.translatable(Translations.Config.PLAYER_OXYGEN_CONSUMPTION_RATE),
-                    config.playerOxygenConsuptionRate())
+                    config.playerOxygenConsumptionRate())
                     .setSaveConsumer(config::setPlayerOxygenConsumptionRate)
-                    .setDefaultValue(1)
+                    .setDefaultValue(5 * FluidConstants.DROPLET)
                     .setMin(0)
                     .setMax(100000)
                     .build()
             );
 
-            lifeSupport.add(new DoubleFieldBuilder(
+            lifeSupport.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.WOLF_OXYGEN_CONSUMPTION_RATE),
+                    config.wolfOxygenConsumptionRate())
+                    .setSaveConsumer(config::setWolfOxygenConsumptionRate)
+                    .setDefaultValue(3 * FluidConstants.DROPLET)
+                    .setMin(0)
+                    .setMax(100000)
+                    .build()
+            );
+
+            lifeSupport.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.CAT_OXYGEN_CONSUMPTION_RATE),
+                    config.catOxygenConsumptionRate())
+                    .setSaveConsumer(config::setCatOxygenConsumptionRate)
+                    .setDefaultValue(2 * FluidConstants.DROPLET)
+                    .setMin(0)
+                    .setMax(100000)
+                    .build()
+            );
+
+            lifeSupport.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.PARROT_OXYGEN_CONSUMPTION_RATE),
+                    config.parrotOxygenConsumptionRate())
+                    .setSaveConsumer(config::setParrotOxygenConsumptionRate)
+                    .setDefaultValue(1 * FluidConstants.DROPLET)
+                    .setMin(0)
+                    .setMax(100000)
+                    .build()
+            );
+
+            lifeSupport.add(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.CANNOT_EAT_IN_NO_ATMOSPHERE),
+                    config.cannotEatInNoAtmosphere())
+                    .setSaveConsumer(config::setCannotEatInNoAtmosphere)
+                    .setDefaultValue(true)
+                    .build()
+            );
+
+            lifeSupport.add(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.CANNOT_EAT_WITH_MASK),
+                    config.cannotEatWithMask())
+                    .setSaveConsumer(config::setCannotEatWithMask)
+                    .setDefaultValue(true)
+                    .build()
+            );
+
+            SubCategoryBuilder difficulty = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.DIFFICULTY));
+
+            difficulty.add(new DoubleFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
                     Component.translatable(Translations.Config.BOSS_HEALTH_MODIFIER),
-                    config.playerOxygenConsuptionRate())
+                    config.bossHealthMultiplier())
                     .setTooltip(Component.translatable(Translations.Config.BOSS_HEALTH_MODIFIER_DESC))
                     .setSaveConsumer(config::setBossHealthMultiplier)
                     .setDefaultValue(1)
@@ -537,7 +763,6 @@ public class ConfigImpl implements Config {
 
             b.getOrCreateCategory(Component.translatable(Translations.Config.DEBUG)).addEntry(dB.build());
             b.getOrCreateCategory(Component.translatable(Translations.Config.ENERGY)).addEntry(wires.build()).addEntry(machines.build());
-            b.getOrCreateCategory(Component.translatable(Translations.Config.PLAYER)).addEntry(lifeSupport.build());
 
             SubCategoryBuilder commands = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.COMMANDS));
 

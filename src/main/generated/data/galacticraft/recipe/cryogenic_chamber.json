@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "tag": "minecraft:beds"
+    },
+    "D": {
+      "item": "galacticraft:compressed_desh"
+    },
+    "P": {
+      "item": "galacticraft:heavy_plating_t2"
+    },
+    "T": {
+      "item": "minecraft:tinted_glass"
+    }
+  },
+  "pattern": [
+    "DTT",
+    "DBT",
+    "DPT"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:cryogenic_chamber"
+  }
+}

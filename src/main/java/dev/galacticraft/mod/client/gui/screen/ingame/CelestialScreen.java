@@ -26,7 +26,6 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.galacticraft.api.client.accessor.ClientSatelliteAccessor;
@@ -521,7 +520,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
                 this.setupMatrix(body, matrices, moon ? 0.25F : 1.0F, delta);
                 CelestialDisplay<?, ?> display = body.display();
                 RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
-                Vector4f vector4f = display.render(graphics, Tesselator.getInstance(), getWidthForCelestialBody(body), mouseX, mouseY, delta);
+                Vector4f vector4f = display.render(graphics, getWidthForCelestialBody(body), mouseX, mouseY, delta);
                 Matrix4f planetMatrix = matrices.last().pose();
 
                 Matrix4f matrix0 = RenderSystem.getProjectionMatrix().mul(planetMatrix, planetMatrix);

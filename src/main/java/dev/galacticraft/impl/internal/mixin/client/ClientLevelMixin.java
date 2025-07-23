@@ -22,9 +22,14 @@
 
 package dev.galacticraft.impl.internal.mixin.client;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.galacticraft.mod.api.dimension.GalacticDimensionEffects;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,9 +44,22 @@ public class ClientLevelMixin {
     @Final
     private DimensionSpecialEffects effects;
 
+    @Shadow
+    @Final
+    private Minecraft minecraft;
+
     @Inject(method = "getSkyColor", at = @At("HEAD"), cancellable = true)
-    private void getDimensionSkyColor(Vec3 pos, float partialTick, CallbackInfoReturnable<Vec3> cir) {
+    private void gc$getDimensionSkyColor(Vec3 pos, float partialTick, CallbackInfoReturnable<Vec3> cir) {
         if (effects instanceof GalacticDimensionEffects gcEffects)
             cir.setReturnValue(gcEffects.getSkyColor((ClientLevel) (Object) this, partialTick));
+    }
+
+    @ModifyReturnValue(method = "getSkyFlashTime", at = @At("RETURN"))
+    private int gc$hideLightningFlash(int original) {
+        Player player = this.minecraft.player;
+        if (player.getVehicle() instanceof RocketEntity && player.getVehicle().getY() > Constant.CLOUD_LIMIT) {
+            return 0;
+        }
+        return original;
     }
 }

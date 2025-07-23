@@ -25,6 +25,7 @@ package dev.galacticraft.mod.client.gui.overlay;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
 import net.minecraft.client.DeltaTracker;
@@ -34,15 +35,23 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.client.resources.PlayerSkin;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.PlayerModelPart;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Displays the rocket's progress to the left of the screen
  */
 public class RocketOverlay {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/gui/overworld_rocket_gui.png");
-    private static ResourceLocation playerHead;
+    /**
+     * The skin of the player in the rocket.
+     * Use one of the defaults if the skin cannot be found.
+     */
+    private static CompletableFuture<PlayerSkin> playerSkin;
 
     /**
      * Get the player's spaceship height off ground
@@ -60,90 +69,90 @@ public class RocketOverlay {
 
     public static void onHudRender(GuiGraphics graphics, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
-        if (playerHead == null) {
-            playerHead = mc.getSkinManager().getInsecureSkin(mc.player.getGameProfile()).texture();
-        }
-        if (Minecraft.getInstance().player.getVehicle() instanceof RocketEntity rocketEntity) {
+        if (mc.player.getVehicle() instanceof RocketEntity rocketEntity) {
+            if (playerSkin == null) {
+                playerSkin = mc.getSkinManager().getOrLoad(mc.player.getGameProfile());
+            }
+
+            Holder<CelestialBody<?, ?>> body = rocketEntity.level().galacticraft$getCelestialBody();
             final int height = mc.getWindow().getGuiScaledHeight();
             RenderSystem.depthMask(true);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.setShaderTexture(0, TEXTURE);
+            RenderSystem.setShaderTexture(0, body != null ? body.value().display().rocketOverlay() : Constant.CelestialOverlay.EARTH);
 
-            float var1 = 0F;
-            float var2 = height / 2 - 170 / 2;
-            float var3 = 0.0F;
-            float var3b = 0.0F;
-            float var4 = 0.0F;
-            float var5 = 1.0F;
-            float var6 = 1.0F;
-            float var7 = 1.0F;
-            float var8 = 1.0F;
-            float sizeScale = 0.65F;
+            float scale = 0.65F;
+            float x0 = 0.0F;
+            float x1 = x0 + 20.0F * scale;
+            float y0 = height / 2 - 170 / 2;
+            float y1 = y0 + 242.0F * scale;
+            float u0 = 0.0F;
+            float u1 = u0 + 1.0F;
+            float v0 = 0.0F;
+            float v1 = v0 + 1.0F;
 
             BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            buffer.addVertex(var1 + 0, var2 + 242.0F * sizeScale, 0.0F).setUv((var3 + 0) * var7, (var4 + var6) * var8)
-                    .addVertex(var1 + 20.0F * sizeScale, var2 + 242.0F * sizeScale, 0.0F).setUv((var3 + var5) * var7, (var4 + var6) * var8)
-                    .addVertex(var1 + 20.0F * sizeScale, var2 + 0, 0.0F).setUv((var3 + var5) * var7, (var4 + 0) * var8)
-                    .addVertex(var1 + 0, var2 + 0, 0.0F).setUv((var3 + 0) * var7, (var4 + 0) * var8);
+            buffer.addVertex(x0, y1, 0.0F).setUv(u0, v1)
+                    .addVertex(x1, y1, 0.0F).setUv(u1, v1)
+                    .addVertex(x1, y0, 0.0F).setUv(u1, v0)
+                    .addVertex(x0, y0, 0.0F).setUv(u0, v0);
             BufferUploader.drawWithShader(buffer.buildOrThrow());
 
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-
-            float headOffset = 5F;
-
             EntityRenderer<RocketEntity> spaceshipRender = (EntityRenderer<RocketEntity>) mc.getEntityRenderDispatcher().getRenderer(rocketEntity);
 
-            final int y1 = height / 2 + 60 - (int) Math.floor(getPlayerPositionY(mc.player) / 10.5F);
-            var1 = 2.5F;
-            var2 = y1;
-            var3 = 8;
-            var3b = 40;
-            var4 = 8;
-            var5 = 8;
-            var6 = 8;
-            var7 = 1.0F / 64.0F;
-            var8 = 1.0F / 64.0F;
+            final int h = height / 2 + 60 - (int) Math.floor(getPlayerPositionY(mc.player) / 10.5F);
+            scale = 1.0F / 8.0F;
+            x0 = 2.5F;
+            x1 = x0 + 8.0F;
+            y0 = h - 10.0F;
+            y1 = y0 + 8.0F;
+            u0 = 5.0F * scale;
+            u1 = u0 + scale;
+            v0 = scale;
+            v1 = v0 + scale;
 
             graphics.pose().pushPose();
 
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            graphics.pose().translate(var1 + 4, var2 + 6, 50F);
-            graphics.pose().scale(5F, 5F, 5F);
-            graphics.pose().mulPose(Axis.XP.rotationDegrees(180F));
-            graphics.pose().mulPose(Axis.YP.rotationDegrees(90F));
+            graphics.pose().translate(x0 + 4.0F, y0 + 16.0F, 50.0F);
+            graphics.pose().scale(5.0F, 5.0F, 5.0F);
+            graphics.pose().mulPose(Axis.XP.rotationDegrees(180.0F));
+            graphics.pose().mulPose(Axis.YP.rotationDegrees(90.0F));
 
             try {
-                MultiBufferSource.BufferSource source = Minecraft.getInstance().renderBuffers().bufferSource();
-                spaceshipRender.render(rocketEntity, rocketEntity.getYRot(), delta.getGameTimeDeltaTicks(), graphics.pose(), source, LightTexture.FULL_BRIGHT);
+                MultiBufferSource.BufferSource source = mc.renderBuffers().bufferSource();
+                spaceshipRender.render(rocketEntity, 0, 0, graphics.pose(), source, LightTexture.FULL_BRIGHT);
                 source.endBatch();
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            RenderSystem.setShaderTexture(0, playerHead);
+            RenderSystem.setShaderTexture(0, playerSkin.getNow(DefaultPlayerSkin.get(mc.player.getUUID())).texture());
 
             RenderSystem.enableBlend();
             RenderSystem.blendFunc(770, 771);
 
-            graphics.pose().translate(0F, -12F + headOffset, 60F);
+            graphics.pose().translate(0.0F, -7.0F, 60.0F);
 
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-            buffer.addVertex(var1 + 0, var2 + var6 - 10, 0.0F).setUv((var3 + 0) * var7, (var4 + var6) * var8)
-                    .addVertex(var1 + var5, var2 + var6 - 10, 0.0F).setUv((var3 + var5) * var7, (var4 + var6) * var8)
-                    .addVertex(var1 + var5, var2 - 10, 0.0F).setUv((var3 + var5) * var7, (var4 + 0) * var8)
-                    .addVertex(var1 + 0, var2 - 10, 0.0F).setUv((var3 + 0) * var7, (var4 + 0) * var8);
+            buffer.addVertex(x0, y1, 0.0F).setUv(v0, v1)
+                    .addVertex(x1, y1, 0.0F).setUv(v1, v1)
+                    .addVertex(x1, y0, 0.0F).setUv(v1, v0)
+                    .addVertex(x0, y0, 0.0F).setUv(v0, v0);
             BufferUploader.drawWithShader(buffer.buildOrThrow());
 
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-            buffer.addVertex(var1 + 0, var2 + var6, 0.0F).setUv((var3b + 0) * var7, (var4 + var6) * var8)
-                    .addVertex(var1 + var5, var2 + var6, 0.0F).setUv((var3b + var5) * var7, (var4 + var6) * var8)
-                    .addVertex(var1 + var5, var2 + 0, 0.0F).setUv((var3b + var5) * var7, (var4 + 0) * var8)
-                    .addVertex(var1 + 0, var2 + 0, 0.0F).setUv((var3b + 0) * var7, (var4 + 0) * var8);
-            BufferUploader.drawWithShader(buffer.buildOrThrow());
+            if (mc.player.isModelPartShown(PlayerModelPart.HAT)) {
+                RenderSystem.setShader(GameRenderer::getPositionTexShader);
+                buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+                buffer.addVertex(x0, y1, 0.0F).setUv(u0, v1)
+                        .addVertex(x1, y1, 0.0F).setUv(u1, v1)
+                        .addVertex(x1, y0, 0.0F).setUv(u1, v0)
+                        .addVertex(x0, y0, 0.0F).setUv(u0, v0);
+                BufferUploader.drawWithShader(buffer.buildOrThrow());
+            }
 
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.disableBlend();

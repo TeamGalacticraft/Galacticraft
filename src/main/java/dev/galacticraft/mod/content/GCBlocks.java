@@ -24,6 +24,7 @@ package dev.galacticraft.mod.content;
 
 import dev.galacticraft.machinelib.api.block.SimpleMachineBlock;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.block.boss.BossSpawner;
 import dev.galacticraft.mod.content.block.decoration.*;
@@ -36,12 +37,13 @@ import dev.galacticraft.mod.content.block.special.aluminumwire.tier2.HeavySealab
 import dev.galacticraft.mod.content.block.special.fluidpipe.GlassFluidPipeBlock;
 import dev.galacticraft.mod.content.block.special.launchpad.FuelPadBlock;
 import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlock;
-import dev.galacticraft.mod.content.block.special.walkway.FluidPipeWalkway;
+import dev.galacticraft.mod.content.block.special.walkway.GlassFluidPipeWalkwayBlock;
 import dev.galacticraft.mod.content.block.special.walkway.WalkwayBlock;
-import dev.galacticraft.mod.content.block.special.walkway.WireWalkway;
+import dev.galacticraft.mod.content.block.special.walkway.WireWalkwayBlock;
 import dev.galacticraft.mod.util.MultiBlockUtil;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FlattenableBlockRegistry;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.entity.EntityType;
@@ -54,6 +56,8 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.function.ToIntFunction;
 
 @SuppressWarnings("unused")
@@ -257,22 +261,60 @@ public class GCBlocks {
     // MOON VILLAGER SPECIAL
     public static final Block LUNAR_CARTOGRAPHY_TABLE = BLOCKS.registerWithItem(Constant.Block.LUNAR_CARTOGRAPHY_TABLE, new LunarCartographyTableBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).ignitedByLava().instrument(NoteBlockInstrument.BASS).strength(2.5F).sound(SoundType.WOOD)));
 
-    // MISC DECOR
-    public static final Block WALKWAY = BLOCKS.registerWithItem(Constant.Block.WALKWAY, new WalkwayBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0f, 5.0f).sound(SoundType.METAL).requiresCorrectToolForDrops()));
-    public static final Block FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.FLUID_PIPE_WALKWAY, new FluidPipeWalkway(BlockBehaviour.Properties.ofFullCopy(WALKWAY)));
-    public static final Block WIRE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.WIRE_WALKWAY, new WireWalkway(BlockBehaviour.Properties.ofFullCopy(WALKWAY)));
-    public static final Block TIN_LADDER = BLOCKS.registerWithItem(Constant.Block.TIN_LADDER, new TinLadderBlock(BlockBehaviour.Properties.of().forceSolidOff().noOcclusion().pushReaction(PushReaction.DESTROY).strength(1.0f, 1.0f).sound(SoundType.METAL).requiresCorrectToolForDrops()));
-    public static final Block IRON_GRATING = BLOCKS.registerWithItem(Constant.Block.IRON_GRATING, new IronGratingBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(2.5f, 6.0f).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
-
     // SPECIAL
-    public static final Block ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.ALUMINUM_WIRE, new AluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).forceSolidOn()));
-    public static final Block SEALABLE_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.SEALABLE_ALUMINUM_WIRE, new SealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(TIN_DECORATION.block())));
-    public static final Block HEAVY_SEALABLE_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE, new HeavySealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(TIN_DECORATION.block())));
-    public static final Block GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.GLASS_FLUID_PIPE, new GlassFluidPipeBlock(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).sound(SoundType.GLASS).requiresCorrectToolForDrops().forceSolidOn()));
     public static final Block ROCKET_LAUNCH_PAD = BLOCKS.registerWithItem(Constant.Block.ROCKET_LAUNCH_PAD, new LaunchPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 10.0F).requiresCorrectToolForDrops()));
     public static final Block FUELING_PAD = BLOCKS.registerWithItem(Constant.Block.FUELING_PAD, new FuelPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 10.0F).requiresCorrectToolForDrops()));
     public static final Block ROCKET_WORKBENCH = BLOCKS.registerWithItem(Constant.Block.ROCKET_WORKBENCH, new RocketWorkbench(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F).requiresCorrectToolForDrops()));
     public static final Block PARACHEST = BLOCKS.registerWithItem(Constant.Block.PARACHEST, new ParachestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST)));
+    public static final Block ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.ALUMINUM_WIRE, new AluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).forceSolidOn()));
+    public static final Block SEALABLE_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.SEALABLE_ALUMINUM_WIRE, new SealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(TIN_DECORATION.block())));
+    public static final Block HEAVY_SEALABLE_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE, new HeavySealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(TIN_DECORATION.block())));
+
+    // GLASS FLUID PIPES
+    public static final Block GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.GLASS_FLUID_PIPE, new GlassFluidPipeBlock(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).sound(SoundType.GLASS).requiresCorrectToolForDrops().forceSolidOn(), PipeColor.CLEAR));
+    public static final Block WHITE_GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.WHITE_GLASS_FLUID_PIPE, new GlassFluidPipeBlock(GLASS_FLUID_PIPE.properties(), PipeColor.WHITE));
+    public static final Block ORANGE_GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.ORANGE_GLASS_FLUID_PIPE, new GlassFluidPipeBlock(GLASS_FLUID_PIPE.properties(), PipeColor.ORANGE));
+    public static final Block MAGENTA_GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.MAGENTA_GLASS_FLUID_PIPE, new GlassFluidPipeBlock(GLASS_FLUID_PIPE.properties(), PipeColor.MAGENTA));
+    public static final Block LIGHT_BLUE_GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.LIGHT_BLUE_GLASS_FLUID_PIPE, new GlassFluidPipeBlock(GLASS_FLUID_PIPE.properties(), PipeColor.LIGHT_BLUE));
+    public static final Block YELLOW_GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.YELLOW_GLASS_FLUID_PIPE, new GlassFluidPipeBlock(GLASS_FLUID_PIPE.properties(), PipeColor.YELLOW));
+    public static final Block LIME_GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.LIME_GLASS_FLUID_PIPE, new GlassFluidPipeBlock(GLASS_FLUID_PIPE.properties(), PipeColor.LIME));
+    public static final Block PINK_GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.PINK_GLASS_FLUID_PIPE, new GlassFluidPipeBlock(GLASS_FLUID_PIPE.properties(), PipeColor.PINK));
+    public static final Block GRAY_GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.GRAY_GLASS_FLUID_PIPE, new GlassFluidPipeBlock(GLASS_FLUID_PIPE.properties(), PipeColor.GRAY));
+    public static final Block LIGHT_GRAY_GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.LIGHT_GRAY_GLASS_FLUID_PIPE, new GlassFluidPipeBlock(GLASS_FLUID_PIPE.properties(), PipeColor.LIGHT_GRAY));
+    public static final Block CYAN_GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.CYAN_GLASS_FLUID_PIPE, new GlassFluidPipeBlock(GLASS_FLUID_PIPE.properties(), PipeColor.CYAN));
+    public static final Block PURPLE_GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.PURPLE_GLASS_FLUID_PIPE, new GlassFluidPipeBlock(GLASS_FLUID_PIPE.properties(), PipeColor.PURPLE));
+    public static final Block BLUE_GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.BLUE_GLASS_FLUID_PIPE, new GlassFluidPipeBlock(GLASS_FLUID_PIPE.properties(), PipeColor.BLUE));
+    public static final Block BROWN_GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.BROWN_GLASS_FLUID_PIPE, new GlassFluidPipeBlock(GLASS_FLUID_PIPE.properties(), PipeColor.BROWN));
+    public static final Block GREEN_GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.GREEN_GLASS_FLUID_PIPE, new GlassFluidPipeBlock(GLASS_FLUID_PIPE.properties(), PipeColor.GREEN));
+    public static final Block RED_GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.RED_GLASS_FLUID_PIPE, new GlassFluidPipeBlock(GLASS_FLUID_PIPE.properties(), PipeColor.RED));
+    public static final Block BLACK_GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.BLACK_GLASS_FLUID_PIPE, new GlassFluidPipeBlock(GLASS_FLUID_PIPE.properties(), PipeColor.BLACK));
+
+    public static final Map<PipeColor, Block> GLASS_FLUID_PIPES = Util.make(new EnumMap<>(PipeColor.class), map -> {
+        map.put(PipeColor.CLEAR, GLASS_FLUID_PIPE);
+        map.put(PipeColor.WHITE, WHITE_GLASS_FLUID_PIPE);
+        map.put(PipeColor.ORANGE, ORANGE_GLASS_FLUID_PIPE);
+        map.put(PipeColor.MAGENTA, MAGENTA_GLASS_FLUID_PIPE);
+        map.put(PipeColor.LIGHT_BLUE, LIGHT_BLUE_GLASS_FLUID_PIPE);
+        map.put(PipeColor.YELLOW, YELLOW_GLASS_FLUID_PIPE);
+        map.put(PipeColor.LIME, LIME_GLASS_FLUID_PIPE);
+        map.put(PipeColor.PINK, PINK_GLASS_FLUID_PIPE);
+        map.put(PipeColor.GRAY, GRAY_GLASS_FLUID_PIPE);
+        map.put(PipeColor.LIGHT_GRAY, LIGHT_GRAY_GLASS_FLUID_PIPE);
+        map.put(PipeColor.CYAN, CYAN_GLASS_FLUID_PIPE);
+        map.put(PipeColor.PURPLE, PURPLE_GLASS_FLUID_PIPE);
+        map.put(PipeColor.BLUE, BLUE_GLASS_FLUID_PIPE);
+        map.put(PipeColor.BROWN, BROWN_GLASS_FLUID_PIPE);
+        map.put(PipeColor.GREEN, GREEN_GLASS_FLUID_PIPE);
+        map.put(PipeColor.RED, RED_GLASS_FLUID_PIPE);
+        map.put(PipeColor.BLACK, BLACK_GLASS_FLUID_PIPE);
+    });
+
+    // MISC DECOR
+    public static final Block WALKWAY = BLOCKS.registerWithItem(Constant.Block.WALKWAY, new WalkwayBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0f, 5.0f).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
+    public static final Block FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.FLUID_PIPE_WALKWAY, new GlassFluidPipeWalkwayBlock(BlockBehaviour.Properties.ofFullCopy(GLASS_FLUID_PIPE), PipeColor.CLEAR));
+    public static final Block WIRE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.WIRE_WALKWAY, new WireWalkwayBlock(BlockBehaviour.Properties.ofFullCopy(ALUMINUM_WIRE)));
+    public static final Block TIN_LADDER = BLOCKS.registerWithItem(Constant.Block.TIN_LADDER, new TinLadderBlock(BlockBehaviour.Properties.of().forceSolidOff().noOcclusion().pushReaction(PushReaction.DESTROY).strength(1.0f, 1.0f).sound(SoundType.METAL).requiresCorrectToolForDrops()));
+    public static final Block IRON_GRATING = BLOCKS.registerWithItem(Constant.Block.IRON_GRATING, new IronGratingBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(2.5f, 6.0f).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
 
     // LIGHT PANELS
     public static final Block SQUARE_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.SQUARE_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)));
@@ -304,8 +346,8 @@ public class GCBlocks {
     public static final Block COMPRESSOR = BLOCKS.registerWithItem(Constant.Block.COMPRESSOR, new CompressorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops().lightLevel(state -> state.getValue(CompressorBlock.ACTIVE) ? 13 : 0)));
     public static final Block ELECTRIC_COMPRESSOR = BLOCKS.registerWithItem(Constant.Block.ELECTRIC_COMPRESSOR, new ElectricGrillBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.ELECTRIC_COMPRESSOR)));
     public static final Block COAL_GENERATOR = BLOCKS.registerWithItem(Constant.Block.COAL_GENERATOR, new CoalGeneratorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops().lightLevel(state -> state.getValue(CoalGeneratorBlock.ACTIVE) ? 13 : 0)));
-    public static final Block BASIC_SOLAR_PANEL = BLOCKS.registerWithItem(Constant.Block.BASIC_SOLAR_PANEL, SimpleMultiBlockMachineBlock.create(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.BASIC_SOLAR_PANEL), MultiBlockUtil.generateSolarPanelParts(), GCBlocks.SOLAR_PANEL_PART));
-    public static final Block ADVANCED_SOLAR_PANEL = BLOCKS.registerWithItem(Constant.Block.ADVANCED_SOLAR_PANEL, SimpleMultiBlockMachineBlock.create(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.ADVANCED_SOLAR_PANEL), MultiBlockUtil.generateSolarPanelParts(), GCBlocks.SOLAR_PANEL_PART));
+    public static final Block BASIC_SOLAR_PANEL = BLOCKS.registerWithItem(Constant.Block.BASIC_SOLAR_PANEL, SimpleMultiBlockMachineBlock.create(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.BASIC_SOLAR_PANEL), MultiBlockUtil.generateSolarPanelParts(), SOLAR_PANEL_PART));
+    public static final Block ADVANCED_SOLAR_PANEL = BLOCKS.registerWithItem(Constant.Block.ADVANCED_SOLAR_PANEL, SimpleMultiBlockMachineBlock.create(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.ADVANCED_SOLAR_PANEL), MultiBlockUtil.generateSolarPanelParts(), SOLAR_PANEL_PART));
     public static final Block ENERGY_STORAGE_MODULE = BLOCKS.registerWithItem(Constant.Block.ENERGY_STORAGE_MODULE, new ResourceStorageBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.ENERGY_STORAGE_MODULE)));
     public static final Block ELECTRIC_FURNACE = BLOCKS.registerWithItem(Constant.Block.ELECTRIC_FURNACE, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.ELECTRIC_FURNACE)));
     public static final Block ELECTRIC_ARC_FURNACE = BLOCKS.registerWithItem(Constant.Block.ELECTRIC_ARC_FURNACE, new SimpleMachineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.ELECTRIC_ARC_FURNACE)));

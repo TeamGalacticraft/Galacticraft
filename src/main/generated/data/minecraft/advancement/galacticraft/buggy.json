@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:galacticraft/buggy_schematic",
+  "criteria": {
+    "crafted_buggy": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:buggy"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.galacticraft.buggy.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "galacticraft:buggy"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.buggy.title"
+    }
+  },
+  "requirements": [
+    [
+      "crafted_buggy"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

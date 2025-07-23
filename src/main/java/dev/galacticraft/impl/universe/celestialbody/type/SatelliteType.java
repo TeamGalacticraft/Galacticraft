@@ -156,7 +156,7 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
         CelestialBody<SatelliteConfig, SatelliteType> satellite = INSTANCE.configure(config);
 
         ((SatelliteAccessor) server).galacticraft$addSatellite(id, satellite);
-        ((DynamicDimensionRegistry) server).createDynamicDimension(id, generator, type);
+        DynamicDimensionRegistry.from(server).createDynamicDimension(id, generator, type);
 
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             ServerPlayNetworking.send(player, new AddSatellitePayload(id, satellite.config()));

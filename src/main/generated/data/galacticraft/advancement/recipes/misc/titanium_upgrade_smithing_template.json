@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraft:titanium_upgrade_smithing_template"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_titanium_upgrade_smithing_template": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:titanium_upgrade_smithing_template"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_titanium_upgrade_smithing_template"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraft:titanium_upgrade_smithing_template"
+    ]
+  }
+}

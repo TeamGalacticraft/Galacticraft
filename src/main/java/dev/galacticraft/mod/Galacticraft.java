@@ -32,6 +32,7 @@ import dev.galacticraft.mod.content.item.GCCreativeModeTabs;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.data.MaterialRuleDataProvider;
 import dev.galacticraft.mod.data.OxygenBlockDataManager;
+import dev.galacticraft.mod.events.GCCauldronInteraction;
 import dev.galacticraft.mod.events.GCEventHandlers;
 import dev.galacticraft.mod.lookup.GCApiLookupProviders;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
@@ -72,6 +73,7 @@ public class Galacticraft implements ModInitializer {
         MaterialRuleDataProvider.bootstrap(BuiltInRegistries.MATERIAL_CONDITION);
         GCBiomeTags.register();
         GCBlockTags.register();
+        GCDamageTypeTags.register();
         GCDimensionTypeTags.register();
         GCEntityTypeTags.register();
         GCFluidTags.register();
@@ -80,7 +82,6 @@ public class Galacticraft implements ModInitializer {
         GCFluids.register();
         GCBlocks.register();
         GCFluids.registerFluidVariantAttributes(); // Must be called after GCBlocks.register() so that grates can work
-        GCBlockEntityTypes.register();
         GCItems.register();
         GCTriggers.register();
         GCCreativeModeTabs.register();
@@ -113,6 +114,7 @@ public class Galacticraft implements ModInitializer {
         GCStats.register();
         GCCelestialHandlers.register();
         GCEventHandlers.init();
+        GCCauldronInteraction.init();
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(OxygenBlockDataManager.INSTANCE);
         Constant.LOGGER.info("Initialization complete. (Took {}ms).", System.currentTimeMillis() - startInitTime);
     }

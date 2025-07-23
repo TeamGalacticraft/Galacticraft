@@ -32,17 +32,16 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.api.EnergyStorage;
 
-public abstract class WireBlock extends Block implements EntityBlock {
-    public WireBlock(Properties settings) {
-        super(settings.pushReaction(PushReaction.BLOCK));
+public abstract class WireBlock extends PipeShapedBlock<WireBlockEntity> {
+    public WireBlock(float radius, Properties settings) {
+        super(radius, settings.pushReaction(PushReaction.BLOCK));
     }
 
     @Override
@@ -57,18 +56,15 @@ public abstract class WireBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos neighborPos, boolean notify) {
-        super.neighborChanged(state, level, pos, block, neighborPos, notify);
-        if (!level.isClientSide) {
-            var wire = (Wire) level.getBlockEntity(pos);
-            assert wire != null;
-            Direction direction = Direction.fromDelta(neighborPos.getX() - pos.getX(), neighborPos.getY() - pos.getY(), neighborPos.getZ() - pos.getZ());
-            assert direction != null;
-
-            if (wire.canConnect(direction)) {
-                wire.updateConnection(state, pos, neighborPos, direction);
-            }
+    protected void onConnectionChanged(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos) {
+        if (level.getBlockEntity(thisPos) instanceof WireBlockEntity wire) {
+            wire.updateConnection(level.getBlockState(thisPos), thisPos, neighborPos, direction);
         }
+    }
+
+    @Override
+    public boolean canConnectTo(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos, BlockState thisState) {
+        return EnergyStorage.SIDED.find(level, neighborPos, direction.getOpposite()) != null;
     }
 
     @Nullable

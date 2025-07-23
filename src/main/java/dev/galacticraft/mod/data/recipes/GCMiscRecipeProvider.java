@@ -32,7 +32,6 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
@@ -60,7 +59,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.OXYGEN_GEAR)
-                .define('Y', GCBlocks.GLASS_FLUID_PIPE)
+                .define('Y', GCItemTags.GLASS_FLUID_PIPES)
                 .define('X', GCItems.OXYGEN_CONCENTRATOR)
                 .pattern(" Y ")
                 .pattern("YXY")
@@ -109,7 +108,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItemTags.TIN_CANISTERS))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.PARACHUTE.get(DyeColor.WHITE))
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.PARACHUTE)
                 .define('S', ConventionalItemTags.STRINGS)
                 .define('C', GCItems.CANVAS)
                 .pattern("CCC")
@@ -117,7 +116,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .pattern(" S ")
                 .unlockedBy(getHasName(GCItems.CANVAS), has(GCItems.CANVAS))
                 .save(output);
-        GCRecipeHelper.dyeColoring(output, RecipeCategory.MISC, GCItems.PARACHUTE);
+        GCRecipeHelper.dyeColoring(output, RecipeCategory.MISC, GCItems.PARACHUTE, GCItems.DYED_PARACHUTES);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.FREQUENCY_MODULE)
                 .define('A', GCItems.COMPRESSED_ALUMINUM)
@@ -143,8 +142,8 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, GCItems.CARBON_FRAGMENTS, 3)
-                .requires(ConventionalItemTags.COAL)
-                .unlockedBy("has_coal", has(ConventionalItemTags.COAL))
+                .requires(ItemTags.COALS)
+                .unlockedBy("has_coal", has(ItemTags.COALS))
                 .save(output);
 
         SimpleCookingRecipeBuilder.generic(Ingredient.of(ItemTags.PLANKS), RecipeCategory.MISC, GCItems.CARBON_FRAGMENTS, 0.1f, 200, RecipeSerializer.SMELTING_RECIPE, SmeltingRecipe::new)
@@ -231,7 +230,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .define('P', GCItems.COMPRESSED_COPPER)
                 .define('A', GCItems.COMPRESSED_ALUMINUM)
                 .define('R', ConventionalItemTags.REDSTONE_DUSTS)
-                .define('C', ConventionalItemTags.COAL)
+                .define('C', ItemTags.COALS)
                 .pattern(" P ")
                 .pattern("ARA")
                 .pattern("ACA")
@@ -297,6 +296,14 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(Items.COPPER_INGOT), has(ConventionalItemTags.COPPER_INGOTS))
                 .save(output);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.EMPTY_CAN, 2)
+                .define('X', GCItemTags.ALUMINUM_INGOTS)
+                .pattern("X X")
+                .pattern("X X")
+                .pattern("XXX")
+                .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItemTags.ALUMINUM_INGOTS))
+                .save(output);
+
         ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCBlocks.ROCKET_LAUNCH_PAD, 9)
                 .define('C', GCItems.COMPRESSED_IRON)
                 .define('I', ConventionalItemTags.STORAGE_BLOCKS_IRON)
@@ -341,7 +348,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.COMPRESSED_IRON), has(GCItems.COMPRESSED_IRON))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BUGGY_WHEEL)
+        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.BUGGY_WHEEL)
                 .define('L', ConventionalItemTags.LEATHERS)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .pattern(" L ")
@@ -350,7 +357,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BUGGY_SEAT)
+        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.BUGGY_SEAT)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('I', GCItems.COMPRESSED_IRON)
                 .pattern("  S")
@@ -359,7 +366,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.BUGGY_STORAGE)
+        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.BUGGY_STORAGE)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('I', GCItems.COMPRESSED_IRON)
                 .define('C', ConventionalItemTags.WOODEN_CHESTS)
@@ -377,6 +384,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .requires(ConventionalItemTags.WHEAT_CROPS)
                 .requires(ConventionalItemTags.EGGS)
                 .requires(ConventionalItemTags.MILK_BUCKETS)
+                .requires(GCItemTags.BURGER_BUN_SEEDS)
                 .unlockedBy(getHasName(Items.EGG), has(ConventionalItemTags.EGGS))
                 .save(output);
 

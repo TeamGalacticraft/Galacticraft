@@ -37,7 +37,6 @@ public class LanderOverlay {
     public static final TickRateManager TICKS = new TickRateManager();
     private static long tickCount;
     private static final Component WARNING_TEXT = Component.translatable(Translations.Ui.LANDER_WARNING);
-    private static final Component INVALID_SETUP = Component.translatable(Translations.Ui.OXYGEN_SETUP_INVALID);
 
     public static void onRenderHud(GuiGraphics graphics, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();

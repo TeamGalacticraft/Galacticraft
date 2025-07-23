@@ -287,13 +287,31 @@ public interface Constant {
         String OXYGEN_DETECTOR = "oxygen_detector";
         String OXYGEN_SEALER = "oxygen_sealer";
         String FLUID_PIPE = "fluid_pipe";
-        String GLASS_FLUID_PIPE = "glass_fluid_pipe";
         String REFINERY = "refinery";
         String TERRAFORMER = "terraformer";
         String DECONSTRUCTOR = "deconstructor";
         String WATER_ELECTROLYZER = "water_electrolyzer";
         String METHANE_SYNTHESIZIER = "methane_synthesizer";
         String GAS_LIQUEFIER = "gas_liquefier";
+
+        // Glass fluid pipes
+        String GLASS_FLUID_PIPE = "glass_fluid_pipe";
+        String WHITE_GLASS_FLUID_PIPE = "white_glass_fluid_pipe";
+        String ORANGE_GLASS_FLUID_PIPE = "orange_glass_fluid_pipe";
+        String MAGENTA_GLASS_FLUID_PIPE = "magenta_glass_fluid_pipe";
+        String LIGHT_BLUE_GLASS_FLUID_PIPE = "light_blue_glass_fluid_pipe";
+        String YELLOW_GLASS_FLUID_PIPE = "yellow_glass_fluid_pipe";
+        String LIME_GLASS_FLUID_PIPE = "lime_glass_fluid_pipe";
+        String PINK_GLASS_FLUID_PIPE = "pink_glass_fluid_pipe";
+        String GRAY_GLASS_FLUID_PIPE = "gray_glass_fluid_pipe";
+        String LIGHT_GRAY_GLASS_FLUID_PIPE = "light_gray_glass_fluid_pipe";
+        String CYAN_GLASS_FLUID_PIPE = "cyan_glass_fluid_pipe";
+        String PURPLE_GLASS_FLUID_PIPE = "purple_glass_fluid_pipe";
+        String BLUE_GLASS_FLUID_PIPE = "blue_glass_fluid_pipe";
+        String BROWN_GLASS_FLUID_PIPE = "brown_glass_fluid_pipe";
+        String GREEN_GLASS_FLUID_PIPE = "green_glass_fluid_pipe";
+        String RED_GLASS_FLUID_PIPE = "red_glass_fluid_pipe";
+        String BLACK_GLASS_FLUID_PIPE = "black_glass_fluid_pipe";
 
         // Pad Blocks
         String FUELING_PAD = "fueling_pad";
@@ -575,6 +593,7 @@ public interface Constant {
         ResourceLocation ROCKET_SELECTION = id("textures/gui/rocket_part_selection.png");
 
         ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
+        ResourceLocation PET_INVENTORY_SCREEN = id("textures/gui/pet_inventory_screen.png");
         ResourceLocation ROCKET_INVENTORY = id("textures/gui/rocket.png");
         ResourceLocation OVERLAY = id("textures/gui/overlay.png");
         ResourceLocation WARNING_SIGN = id("textures/gui/warning.png");
@@ -719,6 +738,13 @@ public interface Constant {
         ResourceLocation NEPTUNE = id("textures/gui/celestialbodies/neptune.png");
     }
 
+    interface CelestialOverlay {
+        ResourceLocation EARTH = Constant.id("textures/gui/rocket/overworld_rocket_gui.png");
+        ResourceLocation MOON = Constant.id("textures/gui/rocket/moon_rocket_gui.png");
+        ResourceLocation MARS = Constant.id("textures/gui/rocket/mars_rocket_gui.png");
+        ResourceLocation VENUS = Constant.id("textures/gui/rocket/venus_rocket_gui.png");
+    }
+
     interface RecipeViewer {
         ResourceLocation RECIPE_VIEWER_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
         ResourceLocation ROCKET_WORKBENCH_DISPLAY_TEXTURE = id("textures/gui/rocket_workbench.png");
@@ -772,10 +798,7 @@ public interface Constant {
         ResourceLocation DIAMOND = ResourceLocation.withDefaultNamespace("item/empty_slot_diamond");
         ResourceLocation DUST = ResourceLocation.withDefaultNamespace("item/empty_slot_redstone_dust");
         ResourceLocation SILICON = id("slot/silicon");
-        ResourceLocation THERMAL_HEAD = id("slot/thermal_helmet");
-        ResourceLocation THERMAL_CHEST = id("slot/thermal_chestpiece");
-        ResourceLocation THERMAL_PANTS = id("slot/thermal_leggings");
-        ResourceLocation THERMAL_BOOTS = id("slot/thermal_boots");
+
         ResourceLocation OXYGEN_MASK = id("slot/oxygen_mask");
         ResourceLocation OXYGEN_GEAR = id("slot/oxygen_gear");
         ResourceLocation OXYGEN_TANK = id("slot/oxygen_tank");
@@ -783,6 +806,11 @@ public interface Constant {
         ResourceLocation PARACHUTE = id("slot/parachute");
         ResourceLocation SHIELD_CONTROLLER = id("slot/shield_controller");
         ResourceLocation GENERIC_ACCESSORY = null;
+        ResourceLocation THERMAL_HEAD = id("slot/thermal_helmet");
+        ResourceLocation THERMAL_CHEST = id("slot/thermal_chestpiece");
+        ResourceLocation THERMAL_PANTS = id("slot/thermal_leggings");
+        ResourceLocation THERMAL_BOOTS = id("slot/thermal_boots");
+        ResourceLocation WOLF_ARMOR = id("slot/wolf_armor");
 
         ResourceLocation ROCKET_CONE = id("slot/rocket_cone");
         ResourceLocation ROCKET_PLATING = id("slot/rocket_plating");
@@ -907,6 +935,7 @@ public interface Constant {
         String COMPRESSOR_MENU = "compressor_menu";
         String ELECTRIC_COMPRESSOR_MENU = "electric_compressor_menu";
         String PLAYER_INVENTORY_MENU = "player_inventory_menu";
+        String PET_INVENTORY_MENU = "pet_inventory_menu";
         String ENERGY_STORAGE_MODULE_MENU = "energy_storage_module_menu";
         String REFINERY_MENU = "refinery_menu";
         String ELECTRIC_FURNACE_MENU = "electric_furnace_menu";
@@ -967,6 +996,10 @@ public interface Constant {
         String CHANGE_COUNT = "Modified";
         String OXYGEN = "Inversion";
         String GEAR_INV = "GearInv";
+        String HAS_MASK = "HasMask";
+        String HAS_GEAR = "HasGear";
+        String OXYGEN_TANK_1 = "OxygenTank1";
+        String OXYGEN_TANK_2 = "OxygenTank2";
         String BLOCK_ENTITY_TAG = "BlockEntityTag";
         String NO_DROP = "NoDrop";
         String OWNER = "Owner";
@@ -1051,7 +1084,9 @@ public interface Constant {
     @Environment(EnvType.CLIENT)
     interface ModelPartName {
         String OXYGEN_MASK = "oxygen_mask";
+        String REAL_OXYGEN_MASK = "real_oxygen_mask";
         String OXYGEN_PIPE = "oxygen_pipe";
+        String OXYGEN_PIPE_SITTING = "oxygen_pipe_sitting";
         String OXYGEN_TANK = "oxygen_tank";
         String ILLAGER_NOSE_COMPARTMENT = "illager_nose_compartment";
         String MOON_VILLAGER_BRAIN = "moon_villager_brain";
@@ -1082,7 +1117,10 @@ public interface Constant {
 
     // Used in Data Generator
     interface BakedModel {
-        ResourceLocation WALKWAY_MARKER = id("autogenerated/walkway");
+        ResourceLocation WALKWAY_CONNECTOR_MARKER = id("autogenerated/walkway_connector");
+        ResourceLocation WALKWAY_CENTER_MARKER = id("autogenerated/walkway_center");
+        ResourceLocation PIPE_WALKWAY_CENTER_MARKER = id("autogenerated/glass_fluid_pipe_walkway_center");
+        ResourceLocation WIRE_WALKWAY_CENTER_MARKER = id("autogenerated/aluminum_wire_walkway_center");
         ResourceLocation FLUID_PIPE_WALKWAY_MARKER = id("autogenerated/fluid_pipe_walkway");
         ResourceLocation WIRE_WALKWAY_MARKER = id("autogenerated/wire_walkway");
         ResourceLocation WIRE_MARKER = id("autogenerated/aluminum_wire");
@@ -1141,7 +1179,9 @@ public interface Constant {
     }
 
     interface Triggers {
+        String LEAVE_ROCKET_DURING_COUNTDOWN = "leave_rocket_during_countdown";
         String ROCKET_LAUNCH = "launch_rocket";
+        String SAFE_LANDING = "safe_landing";
         String FIND_MOON_BOSS = "boss_moon";
         String CREATE_SPACE_STATION = "create_space_station";
     }
