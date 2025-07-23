@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.client.model;
 
 import dev.galacticraft.mod.api.block.entity.Connected;
+import dev.galacticraft.mod.compat.omnishape.OmnishapeCompat;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import dev.omnishape.BlockRotation;
 import net.fabricmc.api.EnvType;
@@ -256,15 +257,16 @@ public class PipeBakedModel implements BakedModel {
             }
         }
 
-        if (getter.getBlockEntity(blockPos) instanceof WireBlockEntity wire
-                && wire.getOverlay() != null) {
-            dev.omnishape.client.api.OmnishapeRenderer.emitOverlay(
-                    wire.getOverlay(),
-                    context,
-                    blockPos,
-                    new BlockRotation(0, 0, 0), // No rotation for now todo: implement rotation later
-                    getter
-            );
+        if (OmnishapeCompat.isLoaded()) {
+            if (getter.getBlockEntity(blockPos) instanceof WireBlockEntity wire && wire.getOverlay() != null) {
+                dev.omnishape.client.api.OmnishapeRenderer.emitOverlay(
+                        wire.getOverlay(),
+                        context,
+                        blockPos,
+                        new BlockRotation(0, 0, 0), // No rotation for now todo: implement rotation later
+                        getter
+                );
+            }
         }
     }
     @Override

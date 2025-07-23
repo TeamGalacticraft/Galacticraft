@@ -15,7 +15,6 @@
     "DimensionTransitionMixin",
     "DimensionTypeMixin",
     "EntityMixin",
-    "ExplosionDamageCalculatorMixin",
     "FireworkRocketItemMixin",
     "FlowingFluidMixin",
     "ItemEntityMixin",
@@ -27,7 +26,6 @@
     "MultiNoiseBiomeSourceParameterListPresetAccessor",
     "PlayerMixin",
     "ServerLevelMixin",
-    "ServerPlayerGameModeMixin",
     "ServerPlayerMixin",
     "SpiderMixin",
     "TorchBlockMixin"

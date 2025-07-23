@@ -25,6 +25,7 @@ package dev.galacticraft.mod.content.block.entity.networked;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireNetwork;
 import dev.galacticraft.mod.api.wire.impl.WireNetworkImpl;
+import dev.galacticraft.mod.compat.omnishape.OmnishapeCompat;
 import dev.omnishape.api.OmnishapeData;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
@@ -144,7 +145,7 @@ public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage 
     protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         super.saveAdditional(nbt, registryLookup);
         this.writeConnectionNbt(nbt);
-        if (this.frameOverlay != null) {
+        if (OmnishapeCompat.isLoaded() && this.frameOverlay != null) {
             nbt.put("Omnishape", this.frameOverlay.toNbt());
         }
     }
@@ -154,7 +155,7 @@ public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage 
         super.loadAdditional(nbt, registryLookup);
         this.readConnectionNbt(nbt);
 
-        if (nbt.contains("Omnishape", CompoundTag.TAG_COMPOUND)) {
+        if (OmnishapeCompat.isLoaded() && nbt.contains("Omnishape", CompoundTag.TAG_COMPOUND)) {
             this.frameOverlay = OmnishapeData.fromNbt(nbt.getCompound("Omnishape"));
         }
 
@@ -238,6 +239,9 @@ public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage 
     }
 
     public boolean isBreakingFrame() {
+        if (this.wasTargetingFrame == null) {
+            return false;
+        }
         return wasTargetingFrame;
     }
 }

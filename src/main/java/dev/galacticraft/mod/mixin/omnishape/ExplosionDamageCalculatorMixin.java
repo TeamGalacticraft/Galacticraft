@@ -1,8 +1,7 @@
-package dev.galacticraft.mod.mixin;
+package dev.galacticraft.mod.mixin.omnishape;
 
-import dev.galacticraft.mod.api.block.WireBlock;
+import dev.galacticraft.mod.compat.omnishape.OmnishapeCompat;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
-import dev.omnishape.block.entity.FrameBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
@@ -21,6 +20,8 @@ import java.util.Optional;
 public class ExplosionDamageCalculatorMixin {
     @Inject(method = "getBlockExplosionResistance", at = @At("HEAD"), cancellable = true)
     private void overrideCamoResistance(Explosion explosion, BlockGetter world, BlockPos pos, BlockState state, FluidState fluid, CallbackInfoReturnable<Optional<Float>> cir) {
+        if (!OmnishapeCompat.isLoaded()) return;
+
         BlockEntity be = world.getBlockEntity(pos);
         if (be instanceof WireBlockEntity wire && wire.getOverlay() != null) {
             BlockState camo = wire.getOverlay().camouflage();

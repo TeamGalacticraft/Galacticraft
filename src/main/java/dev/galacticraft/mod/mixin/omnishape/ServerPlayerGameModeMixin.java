@@ -1,33 +1,37 @@
-package dev.galacticraft.mod.mixin.client;
+package dev.galacticraft.mod.mixin.omnishape;
 
 import dev.galacticraft.mod.api.block.PipeShapedBlock;
 import dev.galacticraft.mod.compat.omnishape.OmnishapeCompat;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import dev.omnishape.api.OmnishapeData;
 import dev.omnishape.registry.OmnishapeBlocks;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.client.telemetry.TelemetryProperty;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayerGameMode;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static dev.galacticraft.mod.api.block.PipeShapedBlock.preciseHit;
 
-@Mixin(MultiPlayerGameMode.class)
-public abstract class MultiPlayerGameModeMixin {
+@Mixin(ServerPlayerGameMode.class)
+public abstract class ServerPlayerGameModeMixin {
+    @Shadow protected ServerLevel level;
+
+    @Shadow @Final protected ServerPlayer player;
+
     @Inject(
             method = "destroyBlock",
             at = @At("HEAD"),
@@ -35,10 +39,9 @@ public abstract class MultiPlayerGameModeMixin {
     )
     private void onDestroyBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         if (!OmnishapeCompat.isLoaded()) return;
-        Minecraft mc = Minecraft.getInstance();
 
-        Level level = mc.level;
-        Player player = mc.player;
+        ServerLevel level = this.level;
+        ServerPlayer player = this.player;
 
         BlockEntity be = level.getBlockEntity(pos);
         BlockState bs = level.getBlockState(pos);
@@ -58,14 +61,18 @@ public abstract class MultiPlayerGameModeMixin {
         boolean hitFrame = !hitWire && preciseHit(frameShape, localHit);
 
         if (hitFrame) {
-            // Only break frame overlay
-            //level.setBlock(pos, wire.getOverlay().camouflage(), 3);
+            if (!player.gameMode.isCreative()) {
+                // Drop the frame
+                ItemStack frameStack = new ItemStack(OmnishapeBlocks.FRAME_BLOCK);
+                OmnishapeData.writeToItem(frameStack, wire.getOverlay());
+                Block.popResource(level, pos, frameStack);
+            }
+
+            // Remove the overlay but keep the wire
             wire.setOverlay(null);
-            cir.setReturnValue(true);
-        } else {
-            // Break full block (wire + frame)
-            level.removeBlock(pos, false);
-            cir.setReturnValue(true);
+            level.sendBlockUpdated(pos, wire.getBlockState(), wire.getBlockState(), 3);
+            cir.setReturnValue(true); // Cancel normal block breaking
         }
+        // else allow breaking the entire block normally (wire + frame)
     }
 }

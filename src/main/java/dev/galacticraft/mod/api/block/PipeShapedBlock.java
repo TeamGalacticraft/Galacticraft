@@ -23,12 +23,11 @@
 package dev.galacticraft.mod.api.block;
 
 import dev.galacticraft.mod.api.block.entity.Connected;
+import dev.galacticraft.mod.compat.omnishape.OmnishapeCompat;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import dev.galacticraft.mod.tag.GCItemTags;
 import dev.omnishape.api.OmnishapeData;
-import dev.omnishape.block.entity.FrameBlockEntity;
 import dev.omnishape.registry.OmnishapeBlocks;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -66,6 +65,10 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
     protected PipeShapedBlock(float radius, BlockBehaviour.Properties properties) {
         super(properties);
         this.shapes = makeShapes(radius);
+    }
+
+    public VoxelShape makeShape(WireBlockEntity wire) {
+        return this.shapes[generateAABBIndex(wire)];
     }
 
     @Override
@@ -136,7 +139,7 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
         }
 
         // Add Omnishape overlay if present
-        if (FabricLoader.getInstance().isModLoaded("omnishape") && be instanceof WireBlockEntity wire && wire.getOverlay() != null) {
+        if (OmnishapeCompat.isLoaded() && be instanceof WireBlockEntity wire && wire.getOverlay() != null) {
             Matrix3f rot = wire.getRotationMatrix();
             VoxelShape overlayShape = wire.getOrCreateHitbox(rot);
             return Shapes.or(baseShape, overlayShape);
@@ -199,46 +202,48 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack1, BlockState state, Level level, BlockPos pos, Player player, InteractionHand interactionHand, BlockHitResult hit) {
-        BlockEntity be = level.getBlockEntity(pos);
-        ItemStack stack = player.getMainHandItem();
-        // --- Inject Omnishape frame placement ---
-        if (FabricLoader.getInstance().isModLoaded("omnishape") && OmnishapeData.canExtractFromItem(stack)) {
-            if (!level.isClientSide) {
-                if (be instanceof WireBlockEntity wireBe && wireBe.getOverlay() == null) {
-                    OmnishapeData data = OmnishapeData.extractFromItem(stack);
-                    wireBe.setOverlay(data);
-                    if (!player.getAbilities().instabuild) {
-                        stack.shrink(1); // Consume frame item in survival
+        if (OmnishapeCompat.isLoaded()) {
+            BlockEntity be = level.getBlockEntity(pos);
+            ItemStack stack = player.getMainHandItem();
+            // --- Inject Omnishape frame placement ---
+            if (OmnishapeCompat.canExtractFromItem(stack)) {
+                if (!level.isClientSide) {
+                    if (be instanceof WireBlockEntity wireBe && wireBe.getOverlay() == null) {
+                        OmnishapeData data = OmnishapeData.extractFromItem(stack);
+                        wireBe.setOverlay(data);
+                        if (!player.getAbilities().instabuild) {
+                            stack.shrink(1); // Consume frame item in survival
+                        }
+                        return ItemInteractionResult.SUCCESS;
                     }
-                    return ItemInteractionResult.SUCCESS;
-                }
-            } else {
-                if (be instanceof WireBlockEntity wireBe && wireBe.getOverlay() == null) {
-                    return ItemInteractionResult.SUCCESS; // client-side suppression
+                } else {
+                    if (be instanceof WireBlockEntity wireBe && wireBe.getOverlay() == null) {
+                        return ItemInteractionResult.SUCCESS; // client-side suppression
+                    }
                 }
             }
-        }
 
-        // --- Inject wrench-removal of overlay ---
-        if (be instanceof WireBlockEntity wire && wire.getOverlay() != null) {
-            Vec3 localHit = hit.getLocation().subtract(Vec3.atLowerCornerOf(pos));
-            VoxelShape wireShape = this.shapes[generateAABBIndex(wire)];
+            // --- Inject wrench-removal of overlay ---
+            if (be instanceof WireBlockEntity wire && wire.getOverlay() != null) {
+                Vec3 localHit = hit.getLocation().subtract(Vec3.atLowerCornerOf(pos));
+                VoxelShape wireShape = this.shapes[generateAABBIndex(wire)];
 
-            boolean hitWire = preciseHit(wireShape, localHit);
+                boolean hitWire = preciseHit(wireShape, localHit);
 
-            if (hitWire && isWrench(stack)) {
-                if (!level.isClientSide) {
-                    // Drop frame
-                    ItemStack frameStack = new ItemStack(OmnishapeBlocks.FRAME_BLOCK);
-                    OmnishapeData.writeToItem(frameStack, wire.getOverlay());
-                    Block.popResource(level, pos, frameStack);
+                if (hitWire && isWrench(stack)) {
+                    if (!level.isClientSide) {
+                        // Drop frame
+                        ItemStack frameStack = new ItemStack(OmnishapeBlocks.FRAME_BLOCK);
+                        OmnishapeData.writeToItem(frameStack, wire.getOverlay());
+                        Block.popResource(level, pos, frameStack);
+                    }
+
+                    wire.setOverlay(null);
+                    level.sendBlockUpdated(pos, state, state, Block.UPDATE_ALL);
+                    wire.setChanged();
+
+                    return ItemInteractionResult.SUCCESS;
                 }
-
-                wire.setOverlay(null);
-                level.sendBlockUpdated(pos, state, state, Block.UPDATE_ALL);
-                wire.setChanged();
-
-                return ItemInteractionResult.SUCCESS;
             }
         }
 
@@ -251,22 +256,24 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
 
     @Override
     public float getDestroyProgress(BlockState state, Player player, BlockGetter world, BlockPos pos) {
-        BlockEntity be = world.getBlockEntity(pos);
-        if (be instanceof WireBlockEntity wire && wire.hasOverlay()) {
-            BlockHitResult hitResult = (BlockHitResult) player.pick(5.0, 0.0F, false);
-            Vec3 localHit = hitResult.getLocation().subtract(pos.getX(), pos.getY(), pos.getZ());
+        if (OmnishapeCompat.isLoaded()) {
+            BlockEntity be = world.getBlockEntity(pos);
+            if (be instanceof WireBlockEntity wire && wire.hasOverlay()) {
+                BlockHitResult hitResult = (BlockHitResult) player.pick(5.0, 0.0F, false);
+                Vec3 localHit = hitResult.getLocation().subtract(pos.getX(), pos.getY(), pos.getZ());
 
-            VoxelShape wireShape = this.shapes[generateAABBIndex(wire)];
-            VoxelShape frameShape = wire.getOrCreateHitbox(wire.getRotationMatrix());
+                VoxelShape wireShape = this.shapes[generateAABBIndex(wire)];
+                VoxelShape frameShape = wire.getOrCreateHitbox(wire.getRotationMatrix());
 
-            boolean hitWire = preciseHit(wireShape, localHit);
-            boolean hitFrame = !hitWire && preciseHit(frameShape, localHit);
+                boolean hitWire = preciseHit(wireShape, localHit);
+                boolean hitFrame = !hitWire && preciseHit(frameShape, localHit);
 
-            wire.setTargetingFrame(hitFrame);
+                wire.setTargetingFrame(hitFrame);
 
-            if (hitFrame) {
-                BlockState camo = wire.getOverlay().camouflage();
-                return camo.getDestroyProgress(player, world, pos);
+                if (hitFrame) {
+                    BlockState camo = wire.getOverlay().camouflage();
+                    return camo.getDestroyProgress(player, world, pos);
+                }
             }
         }
 
@@ -287,24 +294,28 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
 
     @Override
     protected List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
-        BlockEntity be = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-        if (!(be instanceof WireBlockEntity wire) || !wire.hasOverlay()) {
-            return super.getDrops(state, builder);
+        if (OmnishapeCompat.isLoaded()) {
+            BlockEntity be = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+            if (!(be instanceof WireBlockEntity wire) || !wire.hasOverlay()) {
+                return super.getDrops(state, builder);
+            }
+
+            // Read targeting info
+            Boolean hitFrame = wire.getAndClearTargetingFrame();
+            ItemStack frameStack = new ItemStack(OmnishapeBlocks.FRAME_BLOCK);
+            OmnishapeData.writeToItem(frameStack, wire.getOverlay());
+
+            if (hitFrame != null && hitFrame) {
+                // Player was targeting the frame: drop only the frame
+                return List.of(frameStack);
+            }
+
+            // Player hit the wire (or fallback): drop both
+            List<ItemStack> baseDrops = super.getDrops(state, builder);
+            baseDrops.add(frameStack);
+            return baseDrops;
         }
 
-        // Read targeting info
-        Boolean hitFrame = wire.getAndClearTargetingFrame();
-        ItemStack frameStack = new ItemStack(OmnishapeBlocks.FRAME_BLOCK);
-        OmnishapeData.writeToItem(frameStack, wire.getOverlay());
-
-        if (hitFrame != null && hitFrame) {
-            // Player was targeting the frame: drop only the frame
-            return List.of(frameStack);
-        }
-
-        // Player hit the wire (or fallback): drop both
-        List<ItemStack> baseDrops = super.getDrops(state, builder);
-        baseDrops.add(frameStack);
-        return baseDrops;
+        return super.getDrops(state, builder);
     }
 }

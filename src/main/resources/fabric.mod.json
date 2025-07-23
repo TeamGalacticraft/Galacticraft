@@ -146,7 +146,8 @@
   },
   "mixins": [
     "galacticraft.mixins.json",
-    "galacticraft-api.mixins.json"
+    "galacticraft-api.mixins.json",
+    "galacticraft.omnishape.mixins.json"
   ],
   "accessWidener": "galacticraft.accesswidener",
   "custom": {
