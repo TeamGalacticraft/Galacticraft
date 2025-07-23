@@ -72,7 +72,7 @@ public class GCConfiguredCarvers {
                         0.0f)
         )));
         context.register(MOON_CRATER_CARVER, GCCarvers.CRATERS.configured(new CraterCarverConfig(
-                1f, //todo check probability?
+                0.05f,
                 ConstantHeight.of(VerticalAnchor.absolute(128)),
                 UniformFloat.of(0.4f, 0.6f),
                 CarverDebugSettings.DEFAULT,

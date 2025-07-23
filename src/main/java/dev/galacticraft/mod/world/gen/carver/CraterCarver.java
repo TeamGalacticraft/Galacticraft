@@ -79,16 +79,22 @@ public class CraterCarver extends WorldCarver<CraterCarverConfig> {
                         craterDepth *= depthMultiplier;
                         if (craterDepth > 0.0) {
                             toDig = craterDepth;
-                        }
+                        } else continue;
                     }
 
                     if (toDig >= 1) {
                         toDig++; // Increase crater depth, but for sum, not each crater
                         if (fresh) toDig++; // Dig one more block, because we're not replacing the top with turf
                     }
+
                     BlockPos.MutableBlockPos copy = new BlockPos.MutableBlockPos();
                     mutable.set(innerChunkX, y, innerChunkZ);
-                    BlockState top = null;
+                    BlockState top = chunk.getBlockState(mutable);
+                    BlockState above = chunk.getBlockState(mutable.move(Direction.UP));
+                    while (!above.isAir() && !top.isAir() && !carvingMask.get(innerChunkX, mutable.getY(), innerChunkZ)) {
+                        top = above;
+                        above = chunk.getBlockState(mutable.move(Direction.UP));
+                    }
                     for (int dug = 0; dug < toDig; dug++) {
                         mutable.move(Direction.DOWN);
                         BlockState state = chunk.getBlockState(mutable);
@@ -99,7 +105,7 @@ public class CraterCarver extends WorldCarver<CraterCarverConfig> {
                                 top = state;
                             }
                             if (!fresh && dug + 1 >= toDig && !chunk.getBlockState(copy.set(mutable.getX(), mutable.getY() - 2, mutable.getZ())).isAir()) {
-                                if (top != null) chunk.setBlockState(mutable.move(Direction.DOWN), top, false);
+                                chunk.setBlockState(mutable.move(Direction.DOWN), top, false);
                             }
                         } else {
                             dug--;
