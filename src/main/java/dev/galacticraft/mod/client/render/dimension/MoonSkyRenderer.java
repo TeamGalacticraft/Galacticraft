@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.client.render.dimension;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
@@ -35,22 +36,32 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
 
     @Override
     public void render(WorldRenderContext context) {
-        context.profiler().push("moon_sky_render");
+
         RenderSystem.disableBlend();
         RenderSystem.depthMask(false);
 
         PoseStack matrices = new PoseStack();
         matrices.mulPose(context.positionMatrix());
 
-        context.profiler().push("stars");
         matrices.pushPose();
+
+        context.profiler().push("celestial_render");
+
+
         matrices.mulPose(Axis.YP.rotationDegrees(-90.0F));
         matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks()) * 360.0f));
         matrices.mulPose(Axis.YP.rotationDegrees(-19.0F));
 
-        this.starManager.render(matrices, context.projectionMatrix(), context.world(), context.tickCounter().getRealtimeDeltaTicks());
+        // Update camera position for star rendering
+        this.celestialBodyRendererManager.updateSolarPosition(
+                0, 0, 0
+        );
+
+        this.celestialBodyRendererManager.render(context);
 
         matrices.popPose();
+        context.profiler().pop();
+        RenderSystem.setShaderColor(1.0f, 1.0F, 1.0F, 1.0F);
         context.profiler().pop();
 
         context.profiler().push("sun");
