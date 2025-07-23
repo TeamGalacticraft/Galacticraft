@@ -107,6 +107,7 @@ public class Galacticraft implements ModInitializer {
         GCCelestialHandlers.register();
         GCEventHandlers.init();
         GCCauldronInteraction.init();
+        GCExtinguishable.register();
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(OxygenBlockDataManager.INSTANCE);
         Constant.LOGGER.info("Initialization complete. (Took {}ms).", System.currentTimeMillis() - startInitTime);
     }

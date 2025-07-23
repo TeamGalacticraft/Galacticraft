@@ -1,6 +1,7 @@
 {
   "values": [
     "galacticraft:glowstone_torch",
-    "galacticraft:unlit_torch"
+    "galacticraft:unlit_torch",
+    "galacticraft:unlit_soul_torch"
   ]
 }

@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.block.environment;
 
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -36,17 +37,23 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.TorchBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 
 public class UnlitTorchBlock extends TorchBlock {
-    public static final MapCodec<UnlitTorchBlock> CODEC = simpleCodec(UnlitTorchBlock::new);
+    public static final MapCodec<UnlitTorchBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Block.CODEC.fieldOf("lit_block").forGetter(unlitTorch -> unlitTorch.litBlock),
+            propertiesCodec()
+    ).apply(instance, UnlitTorchBlock::new));
 
-    public UnlitTorchBlock(Properties properties) {
+    private final Block litBlock;
+
+    public UnlitTorchBlock(Block litBlock, Properties properties) {
         super(null, properties);
+        this.litBlock = litBlock;
     }
 
     @Override
@@ -55,7 +62,7 @@ public class UnlitTorchBlock extends TorchBlock {
 
         if (itemStack.is(ItemTags.CREEPER_IGNITERS)) {
             level.playSound(null, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
-            level.setBlockAndUpdate(pos, Blocks.TORCH.defaultBlockState());
+            level.setBlockAndUpdate(pos, this.litBlock.defaultBlockState());
             level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
 
             if (player instanceof ServerPlayer serverPlayer) {
