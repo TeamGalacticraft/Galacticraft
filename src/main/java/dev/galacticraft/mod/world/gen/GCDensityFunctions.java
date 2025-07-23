@@ -37,7 +37,6 @@ import net.minecraft.world.level.levelgen.Noises;
 import net.minecraft.world.level.levelgen.synth.BlendedNoise;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 
-import static javax.swing.Spring.constant;
 import static net.minecraft.world.level.levelgen.DensityFunctions.*;
 
 public class GCDensityFunctions {

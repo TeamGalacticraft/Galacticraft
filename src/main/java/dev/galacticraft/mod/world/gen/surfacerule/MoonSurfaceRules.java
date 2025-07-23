@@ -25,24 +25,22 @@ package dev.galacticraft.mod.world.gen.surfacerule;
 import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.world.biome.GCBiomes;
-import dev.galacticraft.mod.world.gen.GCNoiseData;
 import dev.galacticraft.mod.world.gen.ShiftedScaledNoiseThresholdConditionSource;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.levelgen.*;
+import net.minecraft.world.level.levelgen.Noises;
+import net.minecraft.world.level.levelgen.SurfaceRules;
 import net.minecraft.world.level.levelgen.SurfaceRules.ConditionSource;
 import net.minecraft.world.level.levelgen.SurfaceRules.RuleSource;
+import net.minecraft.world.level.levelgen.VerticalAnchor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import static dev.galacticraft.mod.world.gen.GCDensityFunctions.getFunction;
 
 public class MoonSurfaceRules {
     private static final ConditionSource IS_TUNDRA = continentalnessInRange(-1.2, -0.455);

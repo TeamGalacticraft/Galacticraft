@@ -20,7 +20,7 @@
     "ideal_range_offset": 8,
     "max_radius": 27,
     "min_radius": 8,
-    "probability": 1.0,
+    "probability": 0.05,
     "y": {
       "absolute": 128
     },

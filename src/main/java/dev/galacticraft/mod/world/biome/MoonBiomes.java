@@ -35,7 +35,6 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
-import net.minecraft.world.level.levelgen.carver.WorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public class MoonBiomes {
@@ -121,6 +120,7 @@ public class MoonBiomes {
     public static Biome createCheeseCaves(HolderGetter<PlacedFeature> featureLookup, HolderGetter<ConfiguredWorldCarver<?>> carverLookup) {
         BiomeGenerationSettings.Builder generation = new BiomeGenerationSettings.Builder(featureLookup, carverLookup);
         //generation.addCarver(GenerationStep.Carving.AIR, carverLookup.getOrThrow(Constant.key(Registries.CONFIGURED_CARVER, "cheese_cave_carver")));
+        generation.addCarver(GenerationStep.Carving.AIR, GCConfiguredCarvers.MOON_CRATER_CARVER);
 
         MoonBiomes.addDefaultMoonOres(generation);
         MoonBiomes.addDefaultSoftDisks(generation); // Keep if you plan to add disk features later
@@ -150,6 +150,7 @@ public class MoonBiomes {
     public static Biome createOlivineCaves(HolderGetter<PlacedFeature> features, HolderGetter<ConfiguredWorldCarver<?>> carvers) {
         BiomeGenerationSettings.Builder generation = new BiomeGenerationSettings.Builder(features, carvers);
         generation.addCarver(GenerationStep.Carving.AIR, carvers.getOrThrow(Constant.key(Registries.CONFIGURED_CARVER, "olivine_cave_carver")));
+        generation.addCarver(GenerationStep.Carving.AIR, GCConfiguredCarvers.MOON_CRATER_CARVER);
 
         // Add features
         MoonBiomes.addDefaultMoonOres(generation);
@@ -183,6 +184,7 @@ public class MoonBiomes {
         //generation.addCarver(GenerationStep.Carving.AIR, carvers.getOrThrow(Constant.key(Registries.CONFIGURED_CARVER, "glacial_cavern_carver")));
 
         MoonBiomes.addDefaultMoonOres(generation);
+        generation.addCarver(GenerationStep.Carving.AIR, GCConfiguredCarvers.MOON_CRATER_CARVER);
 
         MobSpawnSettings.Builder spawns = new MobSpawnSettings.Builder();
         MoonBiomes.monsters(spawns, 95, 5, 100);

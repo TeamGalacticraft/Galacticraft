@@ -46,7 +46,6 @@ import dev.galacticraft.mod.tag.*;
 import dev.galacticraft.mod.village.GCVillagerProfessions;
 import dev.galacticraft.mod.village.MoonVillagerTypes;
 import dev.galacticraft.mod.world.biome.source.GCMultiNoiseBiomeSourceParameterLists;
-import dev.galacticraft.mod.world.gen.ShiftedScaledNoiseThresholdConditionSource;
 import dev.galacticraft.mod.world.gen.carver.GCCarvers;
 import dev.galacticraft.mod.world.gen.feature.GCFeatures;
 import dev.galacticraft.mod.world.gen.feature.GCOrePlacedFeatures;
@@ -57,10 +56,8 @@ import dev.galacticraft.mod.world.poi.GCPointOfInterestTypes;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.world.level.levelgen.SurfaceRules;
 
 public class Galacticraft implements ModInitializer {
     public static final Config CONFIG = new ConfigImpl(FabricLoader.getInstance().getConfigDir().resolve("galacticraft.json").toFile());

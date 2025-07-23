@@ -32,11 +32,10 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.CarvingMask;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.Aquifer;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.carver.CarvingContext;
 import net.minecraft.world.level.levelgen.carver.WorldCarver;
 
@@ -49,13 +48,9 @@ public class CraterCarver extends WorldCarver<CraterCarverConfig> {
 
     @Override
     public boolean carve(CarvingContext context, CraterCarverConfig config, ChunkAccess chunk, Function<BlockPos, Holder<Biome>> posToBiome, RandomSource random, Aquifer aquiferSampler, ChunkPos pos, CarvingMask carvingMask) {
-        int x = random.nextInt(16);
-        int z = random.nextInt(16);
-        int surfaceY = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, x, z);
+        int y = config.y.sample(random, context);
         //pos = center chunk pos
-        BlockPos craterCenter = pos.getBlockAt(x, 200, z);
-        System.out.println(craterCenter);
-        chunk.setBlockState(craterCenter, Blocks.BLUE_WOOL.defaultBlockState(), false);
+        BlockPos craterCenter = pos.getBlockAt(random.nextInt(16), y, random.nextInt(16));
 
         if (!chunk.getReferencesForStructure(context.registryAccess().registryOrThrow(Registries.STRUCTURE).getOrThrow(GCStructures.Moon.VILLAGE)).isEmpty()) {
             return false;
@@ -92,16 +87,19 @@ public class CraterCarver extends WorldCarver<CraterCarverConfig> {
                         if (fresh) toDig++; // Dig one more block, because we're not replacing the top with turf
                     }
                     BlockPos.MutableBlockPos copy = new BlockPos.MutableBlockPos();
-                    mutable.set(innerChunkX, surfaceY, innerChunkZ);
+                    mutable.set(innerChunkX, y, innerChunkZ);
+                    BlockState top = null;
                     for (int dug = 0; dug < toDig; dug++) {
                         mutable.move(Direction.DOWN);
-                        if (true || carvingMask.get(innerChunkX, mutable.getY() + 64, innerChunkZ) || dug > 0) {  // !chunk.getBlockState(mutable).isAir() ||
-                            chunk.setBlockState(mutable, Blocks.RED_WOOL.defaultBlockState(), false);
+                        BlockState state = chunk.getBlockState(mutable);
+                        if (!state.isAir() || carvingMask.get(innerChunkX, mutable.getY(), innerChunkZ) || dug > 0) {
+                            chunk.setBlockState(mutable, AIR, false);
                             if (dug == 0) {
-                                carvingMask.set(innerChunkX, mutable.getY() + 64, innerChunkZ);
+                                carvingMask.set(innerChunkX, mutable.getY(), innerChunkZ);
+                                top = state;
                             }
-                            if (!fresh && dug + 1 >= toDig && !chunk.getBlockState(copy.set(mutable).move(Direction.DOWN, 2)).isAir()) {
-                                context.topMaterial(posToBiome, chunk, mutable, false).ifPresent(blockStatex -> chunk.setBlockState(mutable.move(Direction.DOWN), blockStatex, false));
+                            if (!fresh && dug + 1 >= toDig && !chunk.getBlockState(copy.set(mutable.getX(), mutable.getY() - 2, mutable.getZ())).isAir()) {
+                                if (top != null) chunk.setBlockState(mutable.move(Direction.DOWN), top, false);
                             }
                         } else {
                             dug--;

@@ -1,5 +1,7 @@
 {
-  "carvers": {},
+  "carvers": {
+    "air": "galacticraft:moon_crater_carver"
+  },
   "downfall": 0.0,
   "effects": {
     "fog_color": 10518688,
