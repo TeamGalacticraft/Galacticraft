@@ -183,6 +183,7 @@ public class GCCreativeModeTabs {
                 output.accept(SILICON_BLOCK);
                 output.accept(LUNAR_SAPPHIRE_BLOCK);
                 output.accept(OLIVINE_BLOCK);
+                output.accept(BUDDING_OLIVINE);
                 output.accept(OLIVINE_CLUSTER);
 
                 output.accept(TIN_BLOCK);

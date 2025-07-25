@@ -40,10 +40,6 @@
       "galacticraft:ore_cheese_moon",
       "galacticraft:ore_cheese_large_moon",
       "galacticraft:ore_lunar_sapphire_moon"
-    ],
-    [
-      "galacticraft:olivine_beam",
-      "galacticraft:basalt_beam"
     ]
   ],
   "has_precipitation": false,

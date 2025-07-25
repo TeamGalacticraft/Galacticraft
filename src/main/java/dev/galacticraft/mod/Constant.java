@@ -189,6 +189,7 @@ public interface Constant {
         String LEAD_BLOCK = "lead_block";
         String LUNAR_SAPPHIRE_BLOCK = "lunar_sapphire_block";
         String OLIVINE_BLOCK = "olivine_block";
+        String BUDDING_OLIVINE = "budding_olivine";
         String RAW_METEORIC_IRON_BLOCK = "raw_meteoric_iron_block";
         String RAW_DESH_BLOCK = "raw_desh_block";
         String RAW_ALUMINUM_BLOCK = "raw_aluminum_block";

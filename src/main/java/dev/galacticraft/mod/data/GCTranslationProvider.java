@@ -308,6 +308,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.LEAD_BLOCK, "Block of Lead");
         this.block(GCBlocks.LUNAR_SAPPHIRE_BLOCK, "Block of Lunar Sapphire");
         this.block(GCBlocks.OLIVINE_BLOCK, "Block of Olivine");
+        this.block(GCBlocks.BUDDING_OLIVINE, "Budding Olivine");
         this.block(GCBlocks.RAW_METEORIC_IRON_BLOCK, "Block of Raw Meteoric Iron");
         this.block(GCBlocks.RAW_DESH_BLOCK, "Block of Raw Desh");
         this.block(GCBlocks.RAW_ALUMINUM_BLOCK, "Block of Raw Aluminum");

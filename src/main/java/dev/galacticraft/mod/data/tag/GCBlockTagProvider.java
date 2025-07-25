@@ -110,6 +110,9 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.MOON_DIRT)
                 .add(GCBlocks.MOON_TURF)
                 .add(GCBlocks.LUNASLATE);
+        this.tag(GCBlockTags.OLIVINE_CAVE_REPLACEABLES)
+                .add(GCBlocks.LUNASLATE)
+                .add(GCBlocks.MOON_ROCK);
         this.tag(GCBlockTags.MOON_CRATER_CARVER_REPLACEABLES)
                 .add(Blocks.AIR) //fixme debug values remove when done
                 .add(Blocks.CAVE_AIR) //this as well
@@ -164,7 +167,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.DEEPSLATE_SILICON_ORE)
                 .add(GCBlocks.DEEPSLATE_TIN_ORE)
                 .add(GCBlocks.DEEPSLATE_ALUMINUM_ORE);
-        this.tag(GCBlockTags.ORES_IN_GROUND_MOON_STONE)
+            this.tag(GCBlockTags.ORES_IN_GROUND_MOON_STONE)
                 .add(GCBlocks.MOON_COPPER_ORE)
                 .add(GCBlocks.MOON_TIN_ORE)
                 .add(GCBlocks.MOON_CHEESE_ORE)
@@ -306,7 +309,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         this.tag(GCBlockTags.LUNAR_SAPPHIRE_BLOCKS)
                 .add(GCBlocks.LUNAR_SAPPHIRE_BLOCK);
         this.tag(GCBlockTags.OLIVINE_BLOCKS)
-                .add(GCBlocks.OLIVINE_BLOCK);
+                .add(GCBlocks.OLIVINE_BLOCK)
+                .add(GCBlocks.BUDDING_OLIVINE);
 
         this.tag(GCBlockTags.RAW_TIN_BLOCKS)
                 .add(GCBlocks.RAW_TIN_BLOCK);
@@ -597,6 +601,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.LEAD_BLOCK,
                         GCBlocks.LUNAR_SAPPHIRE_BLOCK,
                         GCBlocks.OLIVINE_BLOCK,
+                        GCBlocks.BUDDING_OLIVINE,
                         GCBlocks.RAW_METEORIC_IRON_BLOCK,
                         GCBlocks.RAW_DESH_BLOCK,
                         GCBlocks.RAW_ALUMINUM_BLOCK,

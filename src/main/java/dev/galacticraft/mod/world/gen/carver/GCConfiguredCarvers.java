@@ -24,6 +24,7 @@ package dev.galacticraft.mod.world.gen.carver;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.tag.GCBlockTags;
+import dev.galacticraft.mod.world.dimension.MoonConstants;
 import dev.galacticraft.mod.world.gen.carver.config.CraterCarverConfig;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -102,14 +103,14 @@ public class GCConfiguredCarvers {
         )));
 
         context.register(OLIVINE_CAVE_CARVER, GCCarvers.OLIVINE_CAVE.configured(new CaveCarverConfiguration(
-                0.25f,
-                UniformHeight.of(VerticalAnchor.aboveBottom(8), VerticalAnchor.absolute(180)),
-                UniformFloat.of(0.15f, 1.2f),
-                VerticalAnchor.aboveBottom(-64),
-                HolderSet.direct(), // can insert replaceable block tags here if needed
-                UniformFloat.of(1.0f, 2.2f),
-                UniformFloat.of(1.0f, 2.0f),
-                UniformFloat.of(-1.0f, -0.5f)
+                MoonConstants.OLIVINE_CAVE_PROBABILITY,
+                UniformHeight.of(VerticalAnchor.aboveBottom(MoonConstants.OLIVINE_CAVE_MIN_HEIGHT - MoonConstants.MOON_MIN_TERRAIN_HEIGHT), VerticalAnchor.aboveBottom(MoonConstants.OLIVINE_CAVE_MAX_HEIGHT - MoonConstants.MOON_MIN_TERRAIN_HEIGHT)),
+                UniformFloat.of(MoonConstants.OLIVINE_CAVE_Y_SCALE_MIN, MoonConstants.OLIVINE_CAVE_Y_SCALE_MAX),
+                VerticalAnchor.bottom(), //overridden inside the cave carver class
+                BuiltInRegistries.BLOCK.getOrCreateTag(GCBlockTags.OLIVINE_CAVE_REPLACEABLES),
+                UniformFloat.of(1.5f, 4.0f), // horizontal
+                UniformFloat.of(1.5f, 4.0f), // vertical (was 0.6f–3.0f)
+                UniformFloat.of(-1f, -0.5f)
         )));
     }
 }

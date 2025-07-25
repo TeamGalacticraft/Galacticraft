@@ -49,9 +49,9 @@ public class GCDimensionTypes {
                 1.0, // coordinateScale
                 true, // bedWorks (doesn't explode, we can cancel working later)
                 false, // respawnAnchorWorks (doesn't explode, we can cancel working later)
-                -32, // minY
-                384, // height
-                384, // logicalHeight
+                MoonConstants.MOON_MIN_TERRAIN_HEIGHT, // minY
+                MoonConstants.MOON_MAX_HEIGHT, // height
+                MoonConstants.MOON_MAX_HEIGHT, // logicalHeight
                 GCBlockTags.INFINIBURN_MOON, // infiniburn
                 Constant.id("moon"), // fixme: GCDimensionEffects somehow seems to load client classes
                 0.1f, // ambientLight

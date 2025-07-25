@@ -154,8 +154,8 @@ public class MoonBiomes {
 
         // Add features
         MoonBiomes.addDefaultMoonOres(generation);
-        generation.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, Constant.key(Registries.PLACED_FEATURE, "olivine_beam"));
-        generation.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, Constant.key(Registries.PLACED_FEATURE, "basalt_beam"));
+        //generation.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, Constant.key(Registries.PLACED_FEATURE, "olivine_beam"));
+        //generation.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, Constant.key(Registries.PLACED_FEATURE, "basalt_beam"));
 
         MobSpawnSettings.Builder spawns = new MobSpawnSettings.Builder();
         MoonBiomes.monsters(spawns, 95, 5, 100);

@@ -8,32 +8,32 @@
     },
     "horizontal_radius_multiplier": {
       "type": "minecraft:uniform",
-      "max_exclusive": 2.2,
-      "min_inclusive": 1.0
+      "max_exclusive": 4.0,
+      "min_inclusive": 1.5
     },
     "lava_level": {
-      "above_bottom": -64
+      "above_bottom": -128
     },
     "probability": 0.25,
-    "replaceable": [],
+    "replaceable": "#galacticraft:olivine_cave_replaceables",
     "vertical_radius_multiplier": {
       "type": "minecraft:uniform",
-      "max_exclusive": 2.0,
-      "min_inclusive": 1.0
+      "max_exclusive": 4.0,
+      "min_inclusive": 1.5
     },
     "y": {
       "type": "minecraft:uniform",
       "max_inclusive": {
-        "absolute": 180
+        "above_bottom": 188
       },
       "min_inclusive": {
-        "above_bottom": 8
+        "above_bottom": 60
       }
     },
     "yScale": {
       "type": "minecraft:uniform",
-      "max_exclusive": 1.2,
-      "min_inclusive": 0.15
+      "max_exclusive": 2.2,
+      "min_inclusive": 0.8
     }
   }
 }

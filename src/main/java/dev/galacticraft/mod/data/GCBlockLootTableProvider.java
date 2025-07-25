@@ -245,6 +245,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.LEAD_BLOCK);
         this.dropSelf(GCBlocks.LUNAR_SAPPHIRE_BLOCK);
         this.dropSelf(GCBlocks.OLIVINE_BLOCK);
+        this.dropSelf(GCBlocks.BUDDING_OLIVINE);
         this.dropSelf(GCBlocks.RAW_METEORIC_IRON_BLOCK);
         this.dropSelf(GCBlocks.RAW_DESH_BLOCK);
         this.dropSelf(GCBlocks.RAW_ALUMINUM_BLOCK);

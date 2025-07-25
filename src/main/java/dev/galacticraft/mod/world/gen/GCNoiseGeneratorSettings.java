@@ -24,6 +24,7 @@ package dev.galacticraft.mod.world.gen;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.world.dimension.MoonConstants;
 import dev.galacticraft.mod.world.gen.surfacerule.MoonSurfaceRules;
 import dev.galacticraft.mod.world.gen.surfacerule.VenusSurfaceRules;
 import net.minecraft.core.HolderGetter;
@@ -33,6 +34,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.OverworldBiomeBuilder;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.*;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -47,20 +49,23 @@ public class GCNoiseGeneratorSettings {
     public static void bootstrapRegistries(BootstrapContext<NoiseGeneratorSettings> context) {
         HolderGetter<DensityFunction> densityLookup = context.lookup(Registries.DENSITY_FUNCTION);
         HolderGetter<NormalNoise.NoiseParameters> noiseLookup = context.lookup(Registries.NOISE);
+        HolderGetter<PlacedFeature> placedFeatures = context.lookup(Registries.PLACED_FEATURE);
 
-        context.register(MOON, new NoiseGeneratorSettings(
-                NoiseSettings.create(-32, 256, 1, 2),
+        NoiseGeneratorSettings moonSettings = new NoiseGeneratorSettings(
+                NoiseSettings.create(MoonConstants.MOON_MIN_TERRAIN_HEIGHT, 256, 1, 2),
                 GCBlocks.MOON_ROCK.defaultBlockState(),
                 Blocks.AIR.defaultBlockState(),
                 GCNoiseGeneratorSettings.moon(densityLookup, noiseLookup),
                 MoonSurfaceRules.MOON,
                 new OverworldBiomeBuilder().spawnTarget(),
-                -32,
+                MoonConstants.MOON_MIN_TERRAIN_HEIGHT,
                 false,
                 false,
                 false,
                 false
-        ));
+        );
+
+        context.register(MOON, moonSettings);
 
         context.register(VENUS, new NoiseGeneratorSettings(
                 NoiseSettings.create(-32, 256, 1, 2),
