@@ -37,6 +37,10 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
 
     @Override
     public void render(WorldRenderContext context) {
+        super.render(context);
+
+        // render whole skybox black for when first loading into the dimension
+        RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 1.0F);
         RenderSystem.disableBlend();
         RenderSystem.depthMask(false);
 
@@ -44,22 +48,22 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
         PoseStack matrices = new PoseStack();
         matrices.mulPose(context.positionMatrix());
 
-        matrices.pushPose();
-        matrices.mulPose(Axis.ZP.rotationDegrees(context.world().getTimeOfDay(partialTicks) * 360.0f));
+        // matrices.pushPose();
+        // matrices.mulPose(Axis.ZP.rotationDegrees(context.world().getTimeOfDay(partialTicks) * 360.0f));
 
-        context.profiler().push("celestial_render");
+        // context.profiler().push("celestial_render");
 
-        // Update camera position for star rendering
-        this.celestialBodyRendererManager.updateSolarPosition(
-                0, 0, 0
-        );
+        // // Update camera position for star rendering
+        // this.celestialBodyRendererManager.updateSolarPosition(
+        //         0, 0, 0
+        // );
 
-        this.celestialBodyRendererManager.render(context);
+        // this.celestialBodyRendererManager.render(context);
 
-        matrices.popPose();
-        context.profiler().pop();
-        RenderSystem.setShaderColor(1.0f, 1.0F, 1.0F, 1.0F);
-        context.profiler().pop();
+        // matrices.popPose();
+        // context.profiler().pop();
+        // RenderSystem.setShaderColor(1.0f, 1.0F, 1.0F, 1.0F);
+        // context.profiler().pop();
 
         context.profiler().push("sun");
         matrices.pushPose();
