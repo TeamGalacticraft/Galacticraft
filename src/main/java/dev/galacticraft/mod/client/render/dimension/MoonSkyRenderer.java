@@ -37,7 +37,6 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
 
     @Override
     public void render(WorldRenderContext context) {
-        context.profiler().push("moon_sky_render");
         RenderSystem.disableBlend();
         RenderSystem.depthMask(false);
 
@@ -45,13 +44,21 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
         PoseStack matrices = new PoseStack();
         matrices.mulPose(context.positionMatrix());
 
-        context.profiler().push("stars");
         matrices.pushPose();
         matrices.mulPose(Axis.ZP.rotationDegrees(context.world().getTimeOfDay(partialTicks) * 360.0f));
 
-        this.starManager.render(matrices, context.projectionMatrix(), context.world(), partialTicks);
+        context.profiler().push("celestial_render");
+
+        // Update camera position for star rendering
+        this.celestialBodyRendererManager.updateSolarPosition(
+                0, 0, 0
+        );
+
+        this.celestialBodyRendererManager.render(context);
 
         matrices.popPose();
+        context.profiler().pop();
+        RenderSystem.setShaderColor(1.0f, 1.0F, 1.0F, 1.0F);
         context.profiler().pop();
 
         context.profiler().push("sun");
