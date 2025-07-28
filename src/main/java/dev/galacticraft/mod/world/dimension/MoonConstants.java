@@ -25,7 +25,7 @@ public class MoonConstants {
     // --OLIVINE CAVES--
     public static final float OLIVINE_CAVE_PROBABILITY = 0.25f;
     public static final int OLIVINE_CAVE_MIN_HEIGHT = -68;
-    public static final int OLIVINE_CAVE_MAX_HEIGHT = 60;
+    public static final int OLIVINE_CAVE_MAX_HEIGHT = 30;
     public static final float OLIVINE_CAVE_Y_SCALE_MIN = 0.8f;
     public static final float OLIVINE_CAVE_Y_SCALE_MAX = 2.2f;
 }

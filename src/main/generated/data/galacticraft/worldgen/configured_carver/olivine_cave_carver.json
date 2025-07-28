@@ -12,7 +12,7 @@
       "min_inclusive": 1.5
     },
     "lava_level": {
-      "above_bottom": -128
+      "above_bottom": 0
     },
     "probability": 0.25,
     "replaceable": "#galacticraft:olivine_cave_replaceables",
@@ -24,7 +24,7 @@
     "y": {
       "type": "minecraft:uniform",
       "max_inclusive": {
-        "above_bottom": 188
+        "above_bottom": 158
       },
       "min_inclusive": {
         "above_bottom": 60

@@ -24,6 +24,7 @@ package dev.galacticraft.mod.world.gen.carver;
 
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.tag.GCBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -31,6 +32,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.AmethystClusterBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -38,7 +40,6 @@ import net.minecraft.world.level.chunk.CarvingMask;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.Aquifer;
 import net.minecraft.world.level.levelgen.carver.*;
-import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import java.util.function.Function;
 
@@ -47,71 +48,121 @@ public class OlivineCaveCarver extends CaveWorldCarver {
         super(codec);
     }
 
+    private static final Block OLIVINE_BLOCK = GCBlocks.OLIVINE_BLOCK;
+    private static final Block BUDDING_OLIVINE_BLOCK = GCBlocks.BUDDING_OLIVINE;
+    private static final Block MOON_BASALT = GCBlocks.MOON_BASALT;
+    private static final Block OLIVINE_BASALT = GCBlocks.OLIVINE_BASALT;
+    private static final Block RICH_OLIVINE_BASALT = GCBlocks.RICH_OLIVINE_BASALT;
+    private static final Block OLIVINE_CLUSTER_BLOCK = GCBlocks.OLIVINE_CLUSTER;
+
     @Override
-    public boolean carve(CarvingContext context, CaveCarverConfiguration config, ChunkAccess chunk, Function<BlockPos, Holder<Biome>> posToBiome, RandomSource random, Aquifer aquifer, ChunkPos chunkPos, CarvingMask mask) {
-        boolean carved = super.carve(context, config, chunk, posToBiome, random, aquifer, chunkPos, mask);
+    protected boolean carveEllipsoid(CarvingContext context, CaveCarverConfiguration configuration, ChunkAccess chunkAccess, Function<BlockPos, Holder<Biome>> posToBiome, Aquifer aquifer, double x, double y, double z, double width, double height, CarvingMask mask, CarveSkipChecker carveSkipChecker) {
+        ChunkPos chunkPos = chunkAccess.getPos();
+        RandomSource random = context.randomState().aquiferRandom().at((int) Math.round(x), (int) Math.round(y), (int) Math.round(z));
+        boolean basaltInterior = random.nextBoolean();
+        double d = (double)chunkPos.getMiddleBlockX();
+        double e = (double)chunkPos.getMiddleBlockZ();
+        double f = (double)16.0F + width * (double)2.0F;
+        if (!(Math.abs(x - d) > f) && !(Math.abs(z - e) > f)) {
+            int i = chunkPos.getMinBlockX();
+            int j = chunkPos.getMinBlockZ();
+            int k = Math.max(Mth.floor(x - width) - i - 1, 0);
+            int l = Math.min(Mth.floor(x + width) - i, 15);
+            int m = Math.max(Mth.floor(y - height) - 1, context.getMinGenY() + 1);
+            int n = chunkAccess.isUpgrading() ? 0 : 7;
+            int o = Math.min(Mth.floor(y + height) + 1, context.getMinGenY() + context.getGenDepth() - 1 - n);
+            int p = Math.max(Mth.floor(z - width) - j - 1, 0);
+            int q = Math.min(Mth.floor(z + width) - j, 15);
+            boolean bl = false;
+            BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
 
-        if (carved) {
-            carveWalls(chunk, mask, context);
-        }
+            for(int r = k; r <= l; ++r) {
+                int s = chunkPos.getBlockX(r);
+                double g = ((double)s + (double)0.5F - x) / width;
 
-        return carved;
-    }
+                for(int t = p; t <= q; ++t) {
+                    int u = chunkPos.getBlockZ(t);
+                    double h = ((double)u + (double)0.5F - z) / width;
+                    for (int v = o; v > m; --v) {
+                        double w = ((double)v - 0.5D - y) / height;
+                        double distance = g * g + h * h + w * w;
 
-    private void carveWalls(ChunkAccess chunk, CarvingMask mask, CarvingContext context) {
-        Block olivine = GCBlocks.OLIVINE_BLOCK;
-        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+                        mutableBlockPos.set(s, v, u);
+                        BlockState blockState = chunkAccess.getBlockState(mutableBlockPos);
+                        if (distance < 0.88) {
+                            if (!carveSkipChecker.shouldSkip(context, g, w, h, v) && (!mask.get(r, v, t) || blockState.is(GCBlockTags.OLIVINE_CAVE_INTERNALS))) {
+                                mask.set(r, v, t);
+                                if (blockState.is(BUDDING_OLIVINE_BLOCK)) {
+                                    for (Direction direction : Direction.values()) {
+                                        BlockPos crystalPos = mutableBlockPos.relative(direction);
 
-        int minY = context.getMinGenY();
-        int maxY = minY + context.getGenDepth();
+                                        if (crystalPos.getX() >= chunkAccess.getPos().getMinBlockX() && crystalPos.getX() <= chunkAccess.getPos().getMaxBlockX()
+                                                && crystalPos.getZ() >= chunkAccess.getPos().getMinBlockZ() && crystalPos.getZ() <= chunkAccess.getPos().getMaxBlockZ()
+                                                && crystalPos.getY() >= context.getMinGenY() && crystalPos.getY() < context.getMinGenY() + context.getGenDepth()) {
 
-        for (int x = 0; x < 16; x++) {
-            for (int z = 0; z < 16; z++) {
-                for (int y = minY; y < maxY; y++) {
-                    // For every carved block...
-                    if (mask.get(x, y, z)) {
-                        int worldX = chunk.getPos().getMinBlockX() + x;
-                        int worldZ = chunk.getPos().getMinBlockZ() + z;
-
-                        // Check each neighbor for solid uncarved blocks
-                        for (Direction dir : Direction.values()) {
-                            int dx = x + dir.getStepX();
-                            int dy = y + dir.getStepY();
-                            int dz = z + dir.getStepZ();
-
-                            if (dx >= 0 && dx < 16 && dz >= 0 && dz < 16 && dy >= minY && dy < maxY) {
-                                if (!mask.get(dx, dy, dz)) {
-                                    int neighborWorldX = chunk.getPos().getMinBlockX() + dx;
-                                    int neighborWorldZ = chunk.getPos().getMinBlockZ() + dz;
-                                    pos.set(neighborWorldX, dy, neighborWorldZ);
-
-                                    BlockState state = chunk.getBlockState(pos);
-                                    if (!state.isAir() && state.getFluidState().isEmpty()) {
-                                        chunk.setBlockState(pos, olivine.defaultBlockState(), false);
+                                            BlockState neighborState = chunkAccess.getBlockState(crystalPos);
+                                            if (neighborState.is(OLIVINE_CLUSTER_BLOCK)) {
+                                                Direction facing = neighborState.getValue(AmethystClusterBlock.FACING);
+                                                if (facing == direction) {
+                                                    chunkAccess.setBlockState(crystalPos, Blocks.AIR.defaultBlockState(), false);
+                                                }
+                                            }
+                                        }
                                     }
                                 }
+                                chunkAccess.setBlockState(mutableBlockPos, Blocks.AIR.defaultBlockState(), true);
+                                bl = true;
+                            }
+                        } else if (distance < 0.9) {
+                            if ((blockState.is(GCBlockTags.OLIVINE_CAVE_REPLACEABLES) && !blockState.isAir()) || blockState.is(GCBlockTags.OLIVINE_CAVE_INTERNALS)) {
+                                chunkAccess.setBlockState(mutableBlockPos, BUDDING_OLIVINE_BLOCK.defaultBlockState(), true);
+                                for (Direction direction : Direction.values()) {
+                                    BlockPos crystalPos = mutableBlockPos.relative(direction);
+
+                                    int relX = crystalPos.getX() - chunkAccess.getPos().getMinBlockX();
+                                    int relZ = crystalPos.getZ() - chunkAccess.getPos().getMinBlockZ();
+                                    int crystalPosY = crystalPos.getY();
+
+                                    if (relX >= 0 && relX < 16 && relZ >= 0 && relZ < 16 &&
+                                            crystalPosY >= context.getMinGenY() && crystalPosY < context.getMinGenY() + context.getGenDepth()) {
+
+                                        BlockState neighborState = chunkAccess.getBlockState(crystalPos);
+                                        if (neighborState.isAir() && random.nextFloat() < 0.75f) {
+                                            chunkAccess.setBlockState(
+                                                    crystalPos,
+                                                    OLIVINE_CLUSTER_BLOCK.defaultBlockState().setValue(AmethystClusterBlock.FACING, direction),
+                                                    true
+                                            );
+                                        }
+                                    }
+                                }
+                            }
+                        } else if (distance < 1.5) {
+                            if ((blockState.is(GCBlockTags.OLIVINE_CAVE_REPLACEABLES) || blockState.is(MOON_BASALT)) && !blockState.isAir()) {
+                                if (basaltInterior) {
+                                    float pr = random.nextFloat();
+                                    if (pr < 0.95f) {
+                                        chunkAccess.setBlockState(mutableBlockPos, MOON_BASALT.defaultBlockState(), true);
+                                    } else if (pr < 0.995f) {
+                                        chunkAccess.setBlockState(mutableBlockPos, OLIVINE_BASALT.defaultBlockState(), true);
+                                    } else {
+                                        chunkAccess.setBlockState(mutableBlockPos, RICH_OLIVINE_BASALT.defaultBlockState(), true);
+                                    }
+                                } else {
+                                    chunkAccess.setBlockState(mutableBlockPos, OLIVINE_BLOCK.defaultBlockState(), true);
+                                }
+                            }
+                        } else if (distance < 2) {
+                            if (blockState.is(GCBlockTags.OLIVINE_CAVE_REPLACEABLES) && !blockState.isAir()) {
+                                chunkAccess.setBlockState(mutableBlockPos, MOON_BASALT.defaultBlockState(), true);
                             }
                         }
                     }
                 }
             }
+            return bl;
+        } else {
+            return false;
         }
     }
-
-    private boolean hasAdjacentCarvedBlock(CarvingMask mask, int x, int y, int z, int minY, int maxY) {
-        for (Direction dir : Direction.values()) {
-            int dx = x + dir.getStepX();
-            int dy = y + dir.getStepY();
-            int dz = z + dir.getStepZ();
-
-            if (dy < minY || dy >= maxY) continue;
-            if (dx < 0 || dx >= 16 || dz < 0 || dz >= 16) continue; // Don't trust padded areas
-
-            if (mask.get(dx, dy, dz)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 }

@@ -44,6 +44,7 @@ public class GCBlockTags {
     public static final TagKey<Block> MOON_CRATER_CARVER_REPLACEABLES = galacticraftTag("moon_crater_carver_replaceables");
 
     public static final TagKey<Block> OLIVINE_CAVE_REPLACEABLES = galacticraftTag("olivine_cave_replaceables");
+    public static final TagKey<Block> OLIVINE_CAVE_INTERNALS = galacticraftTag("olivine_cave_internals");
 
     public static final TagKey<Block> MOON_STONE_ORE_REPLACEABLES = galacticraftTag("moon_stone_ore_replaceables");
     public static final TagKey<Block> MOON_BASALT_ORE_REPLACEABLES = galacticraftTag("moon_basalt_ore_replaceables");

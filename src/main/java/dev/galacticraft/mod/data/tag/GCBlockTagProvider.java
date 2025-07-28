@@ -113,9 +113,11 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         this.tag(GCBlockTags.OLIVINE_CAVE_REPLACEABLES)
                 .add(GCBlocks.LUNASLATE)
                 .add(GCBlocks.MOON_ROCK);
+        this.tag(GCBlockTags.OLIVINE_CAVE_INTERNALS)
+                .add(GCBlocks.OLIVINE_BLOCK)
+                .add(GCBlocks.OLIVINE_CLUSTER)
+                .add(GCBlocks.BUDDING_OLIVINE);
         this.tag(GCBlockTags.MOON_CRATER_CARVER_REPLACEABLES)
-                .add(Blocks.AIR) //fixme debug values remove when done
-                .add(Blocks.CAVE_AIR) //this as well
                 .add(GCBlocks.MOON_ROCK)
                 .add(GCBlocks.MOON_SURFACE_ROCK)
                 .add(GCBlocks.MOON_BASALT)
