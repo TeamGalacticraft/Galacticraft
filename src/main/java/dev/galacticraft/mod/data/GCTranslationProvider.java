@@ -1169,7 +1169,11 @@ public class GCTranslationProvider extends TranslationProvider {
         this.stat(GCStats.CLEAN_PARACHUTE, "Parachutes Cleaned");
         this.stat(GCStats.OPEN_PARACHEST, "Parachests Opened");
         this.stat(GCStats.INTERACT_WITH_ROCKET_WORKBENCH, "Interactions with Rocket Workbench");
-        this.stat(GCStats.CHEESE_SLICED, "Cheese Sliced");
+        this.stat(GCStats.LAUNCH_ROCKET, "Rockets Launched");
+        this.stat(GCStats.CRASH_LANDING, "Crash Landings");
+        this.stat(GCStats.SAFE_LANDING, "Safe Landings");
+        this.stat(GCStats.EAT_CHEESE_WHEEL_SLICE, "Cheese Wheel Slices Eaten");
+        this.stat(GCStats.CHEESE_SLICED, "Cheese Wheels Sliced");
     }
 
     protected void generateAdvancementsTranslations() {

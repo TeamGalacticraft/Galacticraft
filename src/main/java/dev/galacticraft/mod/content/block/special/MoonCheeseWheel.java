@@ -102,6 +102,19 @@ public class MoonCheeseWheel extends CakeBlock {
     }
 
     public static InteractionResult eat(LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState, Player player) {
-        return CakeBlock.eat(levelAccessor, blockPos, blockState, player);
+        if (!player.canEat(false)) {
+            return InteractionResult.PASS;
+        }
+        player.awardStat(GCStats.EAT_CHEESE_WHEEL_SLICE);
+        player.getFoodData().eat(2, 0.1F);
+        int n = blockState.getValue(BITES);
+        levelAccessor.gameEvent(player, GameEvent.EAT, blockPos);
+        if (n < 6) {
+            levelAccessor.setBlock(blockPos, blockState.setValue(BITES, n + 1), Block.UPDATE_ALL);
+        } else {
+            levelAccessor.removeBlock(blockPos, false);
+            levelAccessor.gameEvent(player, GameEvent.BLOCK_DESTROY, blockPos);
+        }
+        return InteractionResult.SUCCESS;
     }
 }
