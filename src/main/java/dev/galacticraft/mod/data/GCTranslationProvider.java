@@ -621,6 +621,7 @@ public class GCTranslationProvider extends TranslationProvider {
 
     protected void generateTagTranslations() {
         this.tag(GCItemTags.WRENCHES, "Wrenches");
+        this.tag(GCItemTags.CUTS_CHEESE, "Cuts Cheese");
 
         this.tag(GCItemTags.THERMAL_HEAD, "Thermal Padding Helmets");
         this.tag(GCItemTags.THERMAL_CHEST, "Thermal Padding Chestpieces");
@@ -1168,6 +1169,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.stat(GCStats.CLEAN_PARACHUTE, "Parachutes Cleaned");
         this.stat(GCStats.OPEN_PARACHEST, "Parachests Opened");
         this.stat(GCStats.INTERACT_WITH_ROCKET_WORKBENCH, "Interactions with Rocket Workbench");
+        this.stat(GCStats.CHEESE_SLICED, "Cheese Sliced");
     }
 
     protected void generateAdvancementsTranslations() {

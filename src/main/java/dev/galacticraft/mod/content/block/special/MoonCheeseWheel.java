@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.content.block.special;
 
+import dev.galacticraft.mod.content.GCStats;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -30,6 +32,8 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -42,6 +46,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
+
+import static dev.galacticraft.mod.content.item.GCItems.MOON_CHEESE_SLICE;
 
 public class MoonCheeseWheel extends CakeBlock {
     public MoonCheeseWheel(BlockBehaviour.Properties properties) {
@@ -71,6 +77,23 @@ public class MoonCheeseWheel extends CakeBlock {
             level.playSound(null, pos, SoundEvents.CAKE_ADD_CANDLE, SoundSource.BLOCKS, 1.0F, 1.0F);
             level.setBlockAndUpdate(pos, CandleMoonCheeseWheel.byCandle(candleBlock));
             level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+            player.awardStat(Stats.ITEM_USED.get(item));
+            return ItemInteractionResult.SUCCESS;
+        } else if (stack.is(GCItemTags.CUTS_CHEESE)) {
+            if (stack.isDamageableItem()) {
+                stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
+            }
+            level.playSound(null, pos, SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.BLOCKS, 1.0F, 1.0F);
+            int n = state.getValue(BITES);
+            if (n < 6) {
+                level.setBlock(pos, state.setValue(BITES, n + 1), Block.UPDATE_ALL);
+                level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+            } else {
+                level.removeBlock(pos, false);
+                level.gameEvent(player, GameEvent.BLOCK_DESTROY, pos);
+            }
+            level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.125D * n, pos.getY() + 0.25D, pos.getZ() + 0.5D, MOON_CHEESE_SLICE.getDefaultInstance()));
+            player.awardStat(GCStats.CHEESE_SLICED);
             player.awardStat(Stats.ITEM_USED.get(item));
             return ItemInteractionResult.SUCCESS;
         } else {

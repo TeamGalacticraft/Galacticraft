@@ -33,6 +33,7 @@ public class GCStats {
     public static final ResourceLocation CLEAN_PARACHUTE = register("clean_parachute", StatFormatter.DEFAULT);
     public static final ResourceLocation OPEN_PARACHEST = register("open_parachest", StatFormatter.DEFAULT);
     public static final ResourceLocation INTERACT_WITH_ROCKET_WORKBENCH = register("interact_with_rocket_workbench", StatFormatter.DEFAULT);
+    public static final ResourceLocation CHEESE_SLICED = register("cheese_cut", StatFormatter.DEFAULT);
 
     public static ResourceLocation register(String id, StatFormatter formatter) {
         ResourceLocation resourceLocation = Constant.id(id);
