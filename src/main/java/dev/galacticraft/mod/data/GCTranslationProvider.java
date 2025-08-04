@@ -453,8 +453,11 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.EMPTY_CAN, "Empty Can");
 
         this.item(GCItems.MOON_CHEESE_CURD, "Moon Cheese Curd");
-
         this.item(GCItems.MOON_CHEESE_SLICE, "Moon Cheese Slice");
+
+        this.item(GCItems.CRACKER, "Cracker");
+        this.item(GCItems.CHEESE_CRACKER, "Cracker with Moon Cheese");
+
         this.item(GCItems.BURGER_BUN, "Burger Bun");
         this.item(GCItems.GROUND_BEEF, "Raw Beef Patty");
         this.item(GCItems.BEEF_PATTY, "Cooked Beef Patty");

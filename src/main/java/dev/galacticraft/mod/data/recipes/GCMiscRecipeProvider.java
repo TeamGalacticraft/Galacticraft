@@ -379,6 +379,12 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
         // Food
         cookingRecipes(output, 100, GCItems.GROUND_BEEF, GCItems.BEEF_PATTY, 0.35F);
 
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CHEESE_CRACKER)
+                .requires(GCItems.CRACKER)
+                .requires(GCItems.MOON_CHEESE_SLICE)
+                .unlockedBy(getHasName(GCItems.CRACKER), has(GCItems.CRACKER))
+                .save(output);
+
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.BURGER_BUN, 2)
                 .requires(ConventionalItemTags.WHEAT_CROPS)
                 .requires(ConventionalItemTags.WHEAT_CROPS)

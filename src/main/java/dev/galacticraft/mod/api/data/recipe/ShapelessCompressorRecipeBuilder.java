@@ -49,6 +49,7 @@ public class ShapelessCompressorRecipeBuilder implements RecipeBuilder {
     private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
     @Nullable
     private String group;
+    private int time;
 
     public ShapelessCompressorRecipeBuilder(ItemLike itemLike, int i) {
         this.result = itemLike.asItem();
@@ -91,6 +92,11 @@ public class ShapelessCompressorRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
+    public ShapelessCompressorRecipeBuilder time(int time) {
+        this.time = time;
+        return this;
+    }
+
     @Override
     public ShapelessCompressorRecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
         this.criteria.put(name, criterion);
@@ -115,6 +121,6 @@ public class ShapelessCompressorRecipeBuilder implements RecipeBuilder {
                 .rewards(AdvancementRewards.Builder.recipe(recipeId))
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(builder::addCriterion);
-        output.accept(ResourceLocation.fromNamespaceAndPath(recipeId.getNamespace(), "compressing/" + recipeId.getPath()), new ShapelessCompressingRecipe(this.group == null ? "" : this.group, new ItemStack(this.result, count), this.ingredients, 200), builder.build(recipeId.withPrefix("recipes/")));
+        output.accept(ResourceLocation.fromNamespaceAndPath(recipeId.getNamespace(), "compressing/" + recipeId.getPath()), new ShapelessCompressingRecipe(this.group == null ? "" : this.group, new ItemStack(this.result, count), this.ingredients, this.time > 1 ? this.time : 200), builder.build(recipeId.withPrefix("recipes/")));
     }
 }

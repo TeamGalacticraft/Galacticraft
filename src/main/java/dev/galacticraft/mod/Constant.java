@@ -449,6 +449,8 @@ public interface Constant {
         String MOON_CHEESE_WHEEL = "moon_cheese_wheel";
         String MOON_CHEESE_CURD = "moon_cheese_curd";
         String MOON_CHEESE_SLICE = "moon_cheese_slice";
+        String CRACKER = "cracker";
+        String CHEESE_CRACKER = "cheese_cracker";
         String BURGER_BUN = "burger_bun";
         String GROUND_BEEF = "ground_beef";
         String BEEF_PATTY = "beef_patty";
