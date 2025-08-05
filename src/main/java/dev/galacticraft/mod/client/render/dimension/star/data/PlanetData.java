@@ -36,12 +36,12 @@ public class PlanetData extends CelestialBody {
     //  we could feed the apoapsis, periapsis, orbit degree, world tick, etc, and render from there
 
     public PlanetData(int x, int y, int z, double size, double rotation) {
-        super(x, y, z, size, rotation, CelestialBodyType.PLANET);
+        super(x, y, z, size, rotation, CelestialBodyType.PLANET2D);
         this.texture = CelestialBodyTextures.EARTH; // Default texture
     }
 
     public PlanetData(int x, int y, int z, double size, double rotation, ResourceLocation texture) {
-        super(x, y, z, size, rotation, CelestialBodyType.PLANET);
+        super(x, y, z, size, rotation, CelestialBodyType.PLANET2D);
         this.texture = texture;
     }
 

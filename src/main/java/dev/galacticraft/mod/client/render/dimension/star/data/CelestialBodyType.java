@@ -27,5 +27,6 @@ package dev.galacticraft.mod.client.render.dimension.star.data;
  */
 public enum CelestialBodyType {
     STAR,
-    PLANET
+    PLANET2D,
+    PLANET3D
 }

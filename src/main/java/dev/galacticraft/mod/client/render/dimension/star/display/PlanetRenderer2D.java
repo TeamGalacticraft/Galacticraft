@@ -126,18 +126,18 @@ public class PlanetRenderer2D implements CelestialBodyRenderer {
         // Draw the planet
         PoseStack matrices = new PoseStack();
         matrices.mulPose(worldRenderContext.positionMatrix());
-        
+
         // Create a temporary VertexBuffer to draw with shader
         VertexBuffer vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
         vertexBuffer.bind();
         vertexBuffer.upload(buffer.build());
-        
+
         vertexBuffer.drawWithShader(
                 matrices.last().pose(),
                 worldRenderContext.projectionMatrix(),
                 GameRenderer.getPositionTexShader()
         );
-        
+
         VertexBuffer.unbind();
         RenderSystem.enableCull();
     }

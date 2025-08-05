@@ -25,9 +25,11 @@ package dev.galacticraft.mod.client.render.dimension.star;
 import dev.galacticraft.mod.client.render.dimension.CelestialBodyTextures;
 import dev.galacticraft.mod.client.render.dimension.star.data.CelestialBody;
 import dev.galacticraft.mod.client.render.dimension.star.data.CelestialBodyType;
+import dev.galacticraft.mod.client.render.dimension.star.data.Planet3DData;
 import dev.galacticraft.mod.client.render.dimension.star.data.PlanetData;
 import dev.galacticraft.mod.client.render.dimension.star.display.CelestialBodyRenderer;
 import dev.galacticraft.mod.client.render.dimension.star.display.PlanetRenderer2D;
+import dev.galacticraft.mod.client.render.dimension.star.display.PlanetRenderer3D;
 import dev.galacticraft.mod.client.render.dimension.star.display.StarRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.resources.ResourceLocation;
@@ -67,11 +69,15 @@ public class CelestialBodyRendererManager {
 
         // Register default renderers
         renderers.put(CelestialBodyType.STAR, new StarRenderer());
-        renderers.put(CelestialBodyType.PLANET, new PlanetRenderer2D());
+        renderers.put(CelestialBodyType.PLANET2D, new PlanetRenderer2D());
+        renderers.put(CelestialBodyType.PLANET3D, new PlanetRenderer3D());
 
         // FIXME: VERY TEMPORARY, we should setup from a generated map of stars or something
         this.setStarPositions();
-        this.addPlanet(10, 10, 0, 10, 0, CelestialBodyTextures.EARTH);
+        // this.add2DPlanet(10, 10, 0, 10, 0, CelestialBodyTextures.EARTH);
+
+        // Add a sample 3D planet with Earth texture and 80% opacity
+        this.add3DPlanet(0, 0, 0, 15, 0, CelestialBodyTextures.EARTH, 1F);
     }
 
     // TODO: temp
@@ -149,9 +155,46 @@ public class CelestialBodyRendererManager {
      * @param texture Texture to use for the planet
      * @return The created planet
      */
-    public PlanetData addPlanet(int x, int y, int z, double size, double rotation, ResourceLocation texture) {
+    public PlanetData add2DPlanet(int x, int y, int z, double size, double rotation, ResourceLocation texture) {
         PlanetData planet = factory.createPlanet(x, y, z, size, rotation, texture);
-        celestialBodies.get(CelestialBodyType.PLANET).add(planet);
+        celestialBodies.get(CelestialBodyType.PLANET2D).add(planet);
+        return planet;
+    }
+
+    /**
+     * Adds a 3D planet with the same texture for all faces and specified opacity to the manager.
+     *
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param z Z coordinate
+     * @param size Size of the planet
+     * @param rotation Rotation of the planet
+     * @param texture Texture to use for all faces of the planet
+     * @param opacity Opacity of the planet (0.0f to 1.0f)
+     * @return The created 3D planet
+     */
+    public Planet3DData add3DPlanet(int x, int y, int z, double size, double rotation, ResourceLocation texture, float opacity) {
+        Planet3DData planet = factory.create3DPlanet(x, y, z, size, rotation, texture, opacity);
+        celestialBodies.get(CelestialBodyType.PLANET3D).add(planet);
+        return planet;
+    }
+
+    /**
+     * Adds a 3D planet with different textures for each face and specified opacity to the manager.
+     *
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param z Z coordinate
+     * @param size Size of the planet
+     * @param rotation Rotation of the planet
+     * @param textures Map of textures for each face of the planet
+     * @param opacity Opacity of the planet (0.0f to 1.0f)
+     * @return The created 3D planet
+     */
+    public Planet3DData add3DPlanet(int x, int y, int z, double size, double rotation,
+                                   java.util.Map<Planet3DData.Face, ResourceLocation> textures, float opacity) {
+        Planet3DData planet = factory.create3DPlanet(x, y, z, size, rotation, textures, opacity);
+        celestialBodies.get(CelestialBodyType.PLANET3D).add(planet);
         return planet;
     }
 
