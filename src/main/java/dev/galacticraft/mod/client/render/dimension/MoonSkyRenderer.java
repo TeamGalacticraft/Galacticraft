@@ -54,9 +54,9 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
 
         // Update camera position for star rendering
         this.celestialBodyRendererManager.updateSolarPosition(
-                Math.cos(System.currentTimeMillis() / 5000.0 * Math.PI * 2) * 30,
-                -10,
-                Math.sin(System.currentTimeMillis() / 5000.0 * Math.PI * 2) * 30
+                0, // Math.cos(System.currentTimeMillis() / 5000.0 * Math.PI * 2) * 30,
+                0, // -10,
+                0  // Math.sin(System.currentTimeMillis() / 5000.0 * Math.PI * 2) * 30
         );
 
         this.celestialBodyRendererManager.render(context);

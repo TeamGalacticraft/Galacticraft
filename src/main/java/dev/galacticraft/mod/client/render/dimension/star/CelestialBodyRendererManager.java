@@ -77,7 +77,7 @@ public class CelestialBodyRendererManager {
         // this.add2DPlanet(10, 10, 0, 10, 0, Constant.CelestialBody.EARTH);
 
         // Add a sample 3D planet with Earth texture and 80% opacity
-        this.add3DPlanet(0, 0, 0, 15, 0, Constant.CelestialBody.EARTH, 1F);
+        // this.add3DPlanet(0, 0, 0, 15, 0, Constant.CelestialBody.EARTH, 1F);
     }
 
     // TODO: temp

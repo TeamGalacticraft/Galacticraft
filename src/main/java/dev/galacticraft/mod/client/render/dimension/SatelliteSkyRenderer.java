@@ -43,8 +43,6 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
 
     @Override
     public void render(WorldRenderContext context) {
-        super.render(context);
-
         context.profiler().push("satellite_sky_renderer");
         RenderSystem.disableBlend();
         RenderSystem.depthMask(false);
@@ -54,14 +52,14 @@ public class SatelliteSkyRenderer extends SpaceSkyRenderer {
         matrices.mulPose(context.positionMatrix());
         Tesselator tesselator = Tesselator.getInstance();
 
-        // context.profiler().push("stars");
-        // matrices.pushPose();
-        // matrices.mulPose(Axis.ZP.rotationDegrees(context.world().getTimeOfDay(partialTicks) * 360.0f));
+        context.profiler().push("stars");
+        matrices.pushPose();
+        matrices.mulPose(Axis.ZP.rotationDegrees(context.world().getTimeOfDay(partialTicks) * 360.0f));
 
-        // this.starManager.render(matrices, context.projectionMatrix(), context.world(), partialTicks);
+        this.starManager.render(matrices, context.projectionMatrix(), context.world(), partialTicks);
 
-        // matrices.popPose();
-        // context.profiler().pop();
+        matrices.popPose();
+        context.profiler().pop();
 
         context.profiler().push("sun");
         matrices.pushPose();
