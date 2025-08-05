@@ -379,6 +379,12 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
         // Food
         cookingRecipes(output, 100, GCItems.GROUND_BEEF, GCItems.BEEF_PATTY, 0.35F);
 
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CHEESE_CRACKER)
+                .requires(GCItems.CRACKER)
+                .requires(GCItems.MOON_CHEESE_SLICE)
+                .unlockedBy(getHasName(GCItems.CRACKER), has(GCItems.CRACKER))
+                .save(output);
+
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.BURGER_BUN, 2)
                 .requires(ConventionalItemTags.WHEAT_CROPS)
                 .requires(ConventionalItemTags.WHEAT_CROPS)
@@ -400,7 +406,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.GROUND_BEEF), has(GCItems.GROUND_BEEF))
                 .save(output);
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.MOON_CHEESE_SLICE, 7)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.MOON_CHEESE_SLICE, 6)
                 .requires(GCBlocks.MOON_CHEESE_WHEEL)
                 .unlockedBy(getHasName(GCBlocks.MOON_CHEESE_WHEEL), has(GCBlocks.MOON_CHEESE_WHEEL))
                 .save(output);

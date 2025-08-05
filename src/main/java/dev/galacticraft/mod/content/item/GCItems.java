@@ -134,6 +134,8 @@ public class GCItems {
     public static final Item MOON_CHEESE_CURD = ITEMS.register(Constant.Item.MOON_CHEESE_CURD, new Item(new Item.Properties().food(GCFoodComponent.MOON_CHEESE_CURD)));
     public static final Item MOON_CHEESE_WHEEL = ITEMS.register(Constant.Item.MOON_CHEESE_WHEEL, new BlockItem(GCBlocks.MOON_CHEESE_WHEEL, new Item.Properties())); // Special case
     public static final Item MOON_CHEESE_SLICE = ITEMS.register(Constant.Item.MOON_CHEESE_SLICE, new Item(new Item.Properties().food(GCFoodComponent.MOON_CHEESE_SLICE)));
+    public static final Item CRACKER = ITEMS.register(Constant.Item.CRACKER, new Item(new Item.Properties().food(GCFoodComponent.CRACKER)));
+    public static final Item CHEESE_CRACKER = ITEMS.register(Constant.Item.CHEESE_CRACKER, new Item(new Item.Properties().food(GCFoodComponent.CHEESE_CRACKER)));
     public static final Item GROUND_BEEF = ITEMS.register(Constant.Item.GROUND_BEEF, new Item(new Item.Properties().food(GCFoodComponent.GROUND_BEEF)));
     public static final Item BEEF_PATTY = ITEMS.register(Constant.Item.BEEF_PATTY, new Item(new Item.Properties().food(GCFoodComponent.BEEF_PATTY)));
     public static final Item BURGER_BUN = ITEMS.register(Constant.Item.BURGER_BUN, new Item(new Item.Properties().food(GCFoodComponent.BURGER_BUN)));

@@ -29,6 +29,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.attachments.GCServerPlayer;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
+import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.content.entity.ScalableFuelLevel;
@@ -238,6 +239,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
                 for (Entity entity : this.getPassengers()) {
                     entity.removeVehicle();
                     if (entity instanceof ServerPlayer player) {
+                        player.awardStat(GCStats.CRASH_LANDING);
                         ServerPlayNetworking.send(player, new ResetPerspectivePacket());
                     }
                     entity.setDeltaMovement(Vec3.ZERO);
@@ -259,6 +261,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
             } else {
                 for (Entity entity : this.getPassengers()) {
                     if (entity instanceof ServerPlayer player) {
+                        player.awardStat(GCStats.SAFE_LANDING);
                         GCTriggers.SAFE_LANDING.trigger(player);
                     }
                 }

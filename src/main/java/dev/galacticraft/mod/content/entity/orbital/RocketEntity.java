@@ -36,6 +36,7 @@ import dev.galacticraft.mod.api.block.entity.FuelDock;
 import dev.galacticraft.mod.attachments.GCServerPlayer;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
+import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.entity.ControllableEntity;
@@ -428,6 +429,10 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                 if (getTimeAsState() >= getPreLaunchWait()) {
                     this.setLaunchStage(LaunchStage.LAUNCHED);
                     this.setThrust(Mth.SQRT_OF_TWO / 2.0F);
+                    if (passenger instanceof ServerPlayer player) {
+                        player.awardStat(GCStats.LAUNCH_ROCKET);
+                    }
+
                     BlockPos dockPos = this.getLinkedPad();
                     if (dockPos != BlockPos.ZERO) {
                         if (passenger instanceof ServerPlayer player) {
@@ -499,6 +504,12 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         if (getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
             if (ticksSinceJump > 1000 && this.onGround()) {
                 boolean createFire = this.level().getDefaultBreathable();
+
+                for (Entity entity : this.getPassengers()) {
+                    if (entity instanceof ServerPlayer player) {
+                        player.awardStat(GCStats.CRASH_LANDING);
+                    }
+                }
 
                 for (int i = 0; i < 4; i++) {
                     this.level().explode(

@@ -626,8 +626,11 @@ public class GCModelProvider extends FabricModelProvider {
 
         // FOOD
         generator.generateFlatItem(GCItems.MOON_CHEESE_CURD, ModelTemplates.FLAT_ITEM);
-
         generator.generateFlatItem(GCItems.MOON_CHEESE_SLICE, ModelTemplates.FLAT_ITEM);
+
+        generator.generateFlatItem(GCItems.CRACKER, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.CHEESE_CRACKER, ModelTemplates.FLAT_ITEM);
+
         generator.generateFlatItem(GCItems.BURGER_BUN, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.GROUND_BEEF, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.BEEF_PATTY, ModelTemplates.FLAT_ITEM);

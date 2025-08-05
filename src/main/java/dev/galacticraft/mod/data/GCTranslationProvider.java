@@ -453,8 +453,11 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.EMPTY_CAN, "Empty Can");
 
         this.item(GCItems.MOON_CHEESE_CURD, "Moon Cheese Curd");
-
         this.item(GCItems.MOON_CHEESE_SLICE, "Moon Cheese Slice");
+
+        this.item(GCItems.CRACKER, "Cracker");
+        this.item(GCItems.CHEESE_CRACKER, "Cracker with Moon Cheese");
+
         this.item(GCItems.BURGER_BUN, "Burger Bun");
         this.item(GCItems.GROUND_BEEF, "Raw Beef Patty");
         this.item(GCItems.BEEF_PATTY, "Cooked Beef Patty");
@@ -621,6 +624,7 @@ public class GCTranslationProvider extends TranslationProvider {
 
     protected void generateTagTranslations() {
         this.tag(GCItemTags.WRENCHES, "Wrenches");
+        this.tag(GCItemTags.CUTS_CHEESE, "Cuts Cheese");
 
         this.tag(GCItemTags.THERMAL_HEAD, "Thermal Padding Helmets");
         this.tag(GCItemTags.THERMAL_CHEST, "Thermal Padding Chestpieces");
@@ -1168,6 +1172,11 @@ public class GCTranslationProvider extends TranslationProvider {
         this.stat(GCStats.CLEAN_PARACHUTE, "Parachutes Cleaned");
         this.stat(GCStats.OPEN_PARACHEST, "Parachests Opened");
         this.stat(GCStats.INTERACT_WITH_ROCKET_WORKBENCH, "Interactions with Rocket Workbench");
+        this.stat(GCStats.LAUNCH_ROCKET, "Rockets Launched");
+        this.stat(GCStats.CRASH_LANDING, "Crash Landings");
+        this.stat(GCStats.SAFE_LANDING, "Safe Landings");
+        this.stat(GCStats.EAT_CHEESE_WHEEL_SLICE, "Cheese Wheel Slices Eaten");
+        this.stat(GCStats.CHEESE_SLICED, "Cheese Wheels Sliced");
     }
 
     protected void generateAdvancementsTranslations() {
