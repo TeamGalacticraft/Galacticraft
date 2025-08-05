@@ -63,7 +63,6 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
         matrices.popPose();
         context.profiler().pop();
         RenderSystem.setShaderColor(1.0f, 1.0F, 1.0F, 1.0F);
-        context.profiler().pop();
 
         context.profiler().push("sun");
         matrices.pushPose();
@@ -111,6 +110,5 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
         matrices.popPose();
 
         RenderSystem.depthMask(true);
-        context.profiler().pop();
     }
 }
