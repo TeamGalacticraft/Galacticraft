@@ -27,6 +27,7 @@ import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.world.gen.carver.GCConfiguredCarvers;
 import dev.galacticraft.mod.world.gen.feature.GCOrePlacedFeatures;
+import dev.galacticraft.mod.world.gen.feature.GCPlacedFeatures;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.Carvers;
@@ -154,11 +155,13 @@ public class MoonBiomes {
 
         // Add features
         MoonBiomes.addDefaultMoonOres(generation);
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, GCPlacedFeatures.OLI_GRUB_EGG);
         //generation.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, Constant.key(Registries.PLACED_FEATURE, "olivine_beam"));
         //generation.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, Constant.key(Registries.PLACED_FEATURE, "basalt_beam"));
 
         MobSpawnSettings.Builder spawns = new MobSpawnSettings.Builder();
         MoonBiomes.monsters(spawns, 95, 5, 100);
+        spawns.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(GCEntityTypes.OLI_GRUB, 1000, 2, 5));
 
         BiomeSpecialEffects effects = new BiomeSpecialEffects.Builder()
                 .fogColor(10518688)

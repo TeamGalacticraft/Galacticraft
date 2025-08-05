@@ -33,7 +33,7 @@ public class MoonDimensionEffects extends DimensionSpecialEffects {
     public static final MoonDimensionEffects INSTANCE = new MoonDimensionEffects();
 
     private MoonDimensionEffects() {
-        super(Float.NaN, false, SkyType.NORMAL, true, true);
+        super(384.0F, false, SkyType.NONE, false, true);
     }
 
     @Override

@@ -40,6 +40,11 @@
       "galacticraft:ore_cheese_moon",
       "galacticraft:ore_cheese_large_moon",
       "galacticraft:ore_lunar_sapphire_moon"
+    ],
+    [],
+    [],
+    [
+      "galacticraft:oli_grub_egg"
     ]
   ],
   "has_precipitation": false,
@@ -85,6 +90,12 @@
         "maxCount": 1,
         "minCount": 1,
         "weight": 5
+      },
+      {
+        "type": "galacticraft:oli_grub",
+        "maxCount": 5,
+        "minCount": 2,
+        "weight": 1000
       }
     ],
     "underground_water_creature": [],

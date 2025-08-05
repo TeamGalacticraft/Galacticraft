@@ -54,7 +54,7 @@ public class GCDimensionTypes {
                 MoonConstants.MOON_MAX_HEIGHT, // logicalHeight
                 GCBlockTags.INFINIBURN_MOON, // infiniburn
                 Constant.id("moon"), // fixme: GCDimensionEffects somehow seems to load client classes
-                0.1f, // ambientLight
+                0.0f, // ambientLight
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)
         ));
 

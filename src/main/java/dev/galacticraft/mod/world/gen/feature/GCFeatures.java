@@ -24,6 +24,7 @@ package dev.galacticraft.mod.world.gen.feature;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.world.gen.feature.features.BasaltBeamFeature;
+import dev.galacticraft.mod.world.gen.feature.features.OliGrubEggPlacedFeature;
 import dev.galacticraft.mod.world.gen.feature.features.OlivineBeamFeature;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -35,12 +36,15 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 public class GCFeatures {
     public static Feature<NoneFeatureConfiguration> OLIVINE_BEAM;
     public static Feature<NoneFeatureConfiguration> BASALT_BEAM;
+    public static Feature<NoneFeatureConfiguration> OLI_GRUB_EGG;
 
     public static final ResourceKey<Feature<?>> OLIVINE_BEAM_KEY = ResourceKey.create(Registries.FEATURE, Constant.id("olivine_beam"));
     public static final ResourceKey<Feature<?>> BASALT_BEAM_KEY = ResourceKey.create(Registries.FEATURE, Constant.id("basalt_beam"));
+    public static final ResourceKey<Feature<?>> OLI_GRUB_EGG_KEY = ResourceKey.create(Registries.FEATURE, Constant.id("oli_grub_egg"));
 
     public static void register() {
         OLIVINE_BEAM = Registry.register(BuiltInRegistries.FEATURE, OLIVINE_BEAM_KEY, new OlivineBeamFeature(NoneFeatureConfiguration.CODEC));
         BASALT_BEAM = Registry.register(BuiltInRegistries.FEATURE, BASALT_BEAM_KEY, new BasaltBeamFeature(NoneFeatureConfiguration.CODEC));
+        OLI_GRUB_EGG = Registry.register(BuiltInRegistries.FEATURE, OLI_GRUB_EGG_KEY, new OliGrubEggPlacedFeature(NoneFeatureConfiguration.CODEC));
     }
 }

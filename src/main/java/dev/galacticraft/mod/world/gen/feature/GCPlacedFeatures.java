@@ -45,6 +45,7 @@ public class GCPlacedFeatures {
     // --- OLIVINE BIOME ---
     public static final ResourceKey<PlacedFeature> OLIVINE_BEAM = ResourceKey.create(Registries.PLACED_FEATURE, Constant.id("olivine_beam"));
     public static final ResourceKey<PlacedFeature> BASALT_BEAM = ResourceKey.create(Registries.PLACED_FEATURE, Constant.id("basalt_beam"));
+    public static final ResourceKey<PlacedFeature> OLI_GRUB_EGG = ResourceKey.create(Registries.PLACED_FEATURE, Constant.id("oli_grub_egg"));
 
     public static void bootstrapRegistries(BootstrapContext<PlacedFeature> context) {
         HolderGetter<ConfiguredFeature<?, ?>> configuredFeatureLookup = context.lookup(Registries.CONFIGURED_FEATURE);
@@ -70,6 +71,16 @@ public class GCPlacedFeatures {
                 configuredFeatureLookup.getOrThrow(GCConfiguredFeature.BASALT_BEAM),
                 List.of(
                         RarityFilter.onAverageOnceEvery(120),  //todo tweak rarities
+                        InSquarePlacement.spread(),
+                        PlacementUtils.FULL_RANGE,
+                        BiomeFilter.biome()
+                )
+        ));
+
+        context.register(OLI_GRUB_EGG, new PlacedFeature(
+                configuredFeatureLookup.getOrThrow(GCConfiguredFeature.OLI_GRUB_EGG),
+                List.of(
+                        RarityFilter.onAverageOnceEvery(1),
                         InSquarePlacement.spread(),
                         PlacementUtils.FULL_RANGE,
                         BiomeFilter.biome()

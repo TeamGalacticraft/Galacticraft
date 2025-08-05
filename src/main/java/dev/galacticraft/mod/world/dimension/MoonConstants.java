@@ -28,4 +28,7 @@ public class MoonConstants {
     public static final int OLIVINE_CAVE_MAX_HEIGHT = 30;
     public static final float OLIVINE_CAVE_Y_SCALE_MIN = 0.8f;
     public static final float OLIVINE_CAVE_Y_SCALE_MAX = 2.2f;
+    public static final float OLIVINE_CAVE_BASALT_INTERIOR_CHANCE = 0.95f; //95%
+    public static final int OLI_GRUB_MAX_EGG_SPAWN = 50;
+    public static final int OLI_GRUB_MIN_EGG_SPAWN = -50; //95%
 }

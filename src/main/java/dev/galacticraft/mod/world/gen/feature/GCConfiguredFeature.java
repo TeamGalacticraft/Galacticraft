@@ -40,6 +40,7 @@ public class GCConfiguredFeature {
     // --- OLIVINE BIOME ---
     public static final ResourceKey<ConfiguredFeature<?, ?>> OLIVINE_BEAM = ResourceKey.create(Registries.CONFIGURED_FEATURE, Constant.id("olivine_beam"));
     public static final ResourceKey<ConfiguredFeature<?, ?>> BASALT_BEAM = ResourceKey.create(Registries.CONFIGURED_FEATURE, Constant.id("basalt_beam"));
+    public static final ResourceKey<ConfiguredFeature<?, ?>> OLI_GRUB_EGG = ResourceKey.create(Registries.CONFIGURED_FEATURE, Constant.id("oli_grub_egg"));
 
     public static void bootstrapRegistries(BootstrapContext<ConfiguredFeature<?, ?>> context) {
         context.register(OIL_LAKE, new ConfiguredFeature<>(
@@ -57,6 +58,11 @@ public class GCConfiguredFeature {
 
         context.register(BASALT_BEAM, new ConfiguredFeature<>(
                 GCFeatures.BASALT_BEAM,
+                NoneFeatureConfiguration.INSTANCE
+        ));
+
+        context.register(OLI_GRUB_EGG, new ConfiguredFeature<>(
+                GCFeatures.OLI_GRUB_EGG,
                 NoneFeatureConfiguration.INSTANCE
         ));
     }
