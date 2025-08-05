@@ -449,6 +449,8 @@ public interface Constant {
         String MOON_CHEESE_WHEEL = "moon_cheese_wheel";
         String MOON_CHEESE_CURD = "moon_cheese_curd";
         String MOON_CHEESE_SLICE = "moon_cheese_slice";
+        String CRACKER = "cracker";
+        String CHEESE_CRACKER = "cheese_cracker";
         String BURGER_BUN = "burger_bun";
         String GROUND_BEEF = "ground_beef";
         String BEEF_PATTY = "beef_patty";
@@ -633,7 +635,7 @@ public interface Constant {
         int BORDER_EDGE_TOP_LEFT = FastColor.ARGB32.color(255, 40, 40, 40);
         int BORDER_EDGE_BOTTOM_RIGHT = FastColor.ARGB32.color(255, 80, 80, 80);
         int BORDER_GREY = FastColor.ARGB32.color(255, 100, 100, 100);
-        int BORDER_Z = 9900;
+        int BORDER_Z = 799; // Just below text in toasts to prevent clipping
 
         int MAX_SPACE_STATION_NAME_LENGTH = 32;
 

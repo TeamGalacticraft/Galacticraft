@@ -50,6 +50,7 @@ public interface Translations {
         String MOON = "advancement.galacticraft.moon";
         String PARROT_LANDING = "advancement.galacticraft.parrot_landing";
         String EAT_MOON_CHEESE_CURD = "advancement.galacticraft.eat_moon_cheese_curd";
+        String CHEESE_AND_CRACKERS = "advancement.galacticraft.cheese_and_crackers";
         String CHEESE_TAX = "advancement.galacticraft.cheese_tax";
         String THROW_METEOR_CHUNK = "advancement.galacticraft.throw_meteor_chunk";
         String SPACE_STATION = "advancement.galacticraft.space_station";

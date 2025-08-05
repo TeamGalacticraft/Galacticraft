@@ -24,11 +24,15 @@ package dev.galacticraft.mod.content.item;
 
 import net.minecraft.world.food.FoodProperties;
 
+import static net.minecraft.world.food.FoodConstants.*;
+
 public class GCFoodComponent {
-    public static final FoodProperties MOON_CHEESE_CURD = new FoodProperties.Builder().nutrition(1).saturationModifier(0.1F).build();
-    public static final FoodProperties MOON_CHEESE_SLICE = new FoodProperties.Builder().nutrition(2).saturationModifier(0.1F).build();
-    public static final FoodProperties BURGER_BUN = new FoodProperties.Builder().nutrition(2).saturationModifier(0.3F).build();
-    public static final FoodProperties GROUND_BEEF = new FoodProperties.Builder().nutrition(3).saturationModifier(0.6F).build();
-    public static final FoodProperties BEEF_PATTY = new FoodProperties.Builder().nutrition(4).saturationModifier(0.8F).build();
-    public static final FoodProperties CHEESEBURGER = new FoodProperties.Builder().nutrition(14).saturationModifier(1.0F).build();
+    public static final FoodProperties MOON_CHEESE_CURD = new FoodProperties.Builder().nutrition(1).saturationModifier(FOOD_SATURATION_POOR).build();
+    public static final FoodProperties MOON_CHEESE_SLICE = new FoodProperties.Builder().nutrition(2).saturationModifier(FOOD_SATURATION_POOR).build();
+    public static final FoodProperties CRACKER = new FoodProperties.Builder().nutrition(3).saturationModifier(FOOD_SATURATION_NORMAL).fast().build();
+    public static final FoodProperties CHEESE_CRACKER = new FoodProperties.Builder().nutrition(6).saturationModifier(FOOD_SATURATION_GOOD).fast().build();
+    public static final FoodProperties BURGER_BUN = new FoodProperties.Builder().nutrition(2).saturationModifier(FOOD_SATURATION_LOW).build();
+    public static final FoodProperties GROUND_BEEF = new FoodProperties.Builder().nutrition(3).saturationModifier(FOOD_SATURATION_NORMAL).build();
+    public static final FoodProperties BEEF_PATTY = new FoodProperties.Builder().nutrition(4).saturationModifier(FOOD_SATURATION_GOOD).build();
+    public static final FoodProperties CHEESEBURGER = new FoodProperties.Builder().nutrition(14).saturationModifier(FOOD_SATURATION_MAX).build();
 }

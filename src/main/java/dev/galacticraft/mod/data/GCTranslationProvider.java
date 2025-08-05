@@ -453,8 +453,11 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.EMPTY_CAN, "Empty Can");
 
         this.item(GCItems.MOON_CHEESE_CURD, "Moon Cheese Curd");
-
         this.item(GCItems.MOON_CHEESE_SLICE, "Moon Cheese Slice");
+
+        this.item(GCItems.CRACKER, "Cracker");
+        this.item(GCItems.CHEESE_CRACKER, "Cracker with Moon Cheese");
+
         this.item(GCItems.BURGER_BUN, "Burger Bun");
         this.item(GCItems.GROUND_BEEF, "Raw Beef Patty");
         this.item(GCItems.BEEF_PATTY, "Cooked Beef Patty");
@@ -621,6 +624,7 @@ public class GCTranslationProvider extends TranslationProvider {
 
     protected void generateTagTranslations() {
         this.tag(GCItemTags.WRENCHES, "Wrenches");
+        this.tag(GCItemTags.CUTS_CHEESE, "Cuts Cheese");
 
         this.tag(GCItemTags.THERMAL_HEAD, "Thermal Padding Helmets");
         this.tag(GCItemTags.THERMAL_CHEST, "Thermal Padding Chestpieces");
@@ -1168,6 +1172,11 @@ public class GCTranslationProvider extends TranslationProvider {
         this.stat(GCStats.CLEAN_PARACHUTE, "Parachutes Cleaned");
         this.stat(GCStats.OPEN_PARACHEST, "Parachests Opened");
         this.stat(GCStats.INTERACT_WITH_ROCKET_WORKBENCH, "Interactions with Rocket Workbench");
+        this.stat(GCStats.LAUNCH_ROCKET, "Rockets Launched");
+        this.stat(GCStats.CRASH_LANDING, "Crash Landings");
+        this.stat(GCStats.SAFE_LANDING, "Safe Landings");
+        this.stat(GCStats.EAT_CHEESE_WHEEL_SLICE, "Cheese Wheel Slices Eaten");
+        this.stat(GCStats.CHEESE_SLICED, "Cheese Wheels Sliced");
     }
 
     protected void generateAdvancementsTranslations() {
@@ -1195,7 +1204,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.advancement(Advancements.LAUNCH_ROCKET, "We Have Liftoff", "Launch your first rocket");
         this.advancement(Advancements.MOON, "The Moon!", "Land on the Moon");
         this.advancement(Advancements.PARROT_LANDING, "The Parrot has Landed", "Land on the moon with a parrot on your shoulder");
-        this.advancement(Advancements.EAT_MOON_CHEESE_CURD, "It's Like No Cheese I've Ever Tasted...", "Eat moon cheese curd");
+        this.advancement(Advancements.EAT_MOON_CHEESE_CURD, "Wensleydale? Stilton?", "Eat moon cheese curd");
+        this.advancement(Advancements.CHEESE_AND_CRACKERS, "It's Like No Cheese I've Ever Tasted...", "Eat cheese and crackers");
         this.advancement(Advancements.CHEESE_TAX, "Cheese Tax", "Give cheese to a pet wolf");
         this.advancement(Advancements.THROW_METEOR_CHUNK, "Nice to Meteor You", "Hit a mob with a throwable meteor chunk");
         this.advancement(Advancements.SPACE_STATION, "Space Station", "Create your own space station!");

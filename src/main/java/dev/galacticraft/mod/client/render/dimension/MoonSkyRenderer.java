@@ -37,46 +37,47 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
 
     @Override
     public void render(WorldRenderContext context) {
-        super.render(context);
-
-        // render whole skybox black for when first loading into the dimension
-        RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 1.0F);
         RenderSystem.disableBlend();
         RenderSystem.depthMask(false);
 
-        float partialTicks = context.tickCounter().getGameTimeDeltaPartialTick(true);
         PoseStack matrices = new PoseStack();
         matrices.mulPose(context.positionMatrix());
 
-        // matrices.pushPose();
-        // matrices.mulPose(Axis.ZP.rotationDegrees(context.world().getTimeOfDay(partialTicks) * 360.0f));
+        matrices.pushPose();
 
-        // context.profiler().push("celestial_render");
+        context.profiler().push("celestial_render");
 
-        // // Update camera position for star rendering
-        // this.celestialBodyRendererManager.updateSolarPosition(
-        //         0, 0, 0
-        // );
 
-        // this.celestialBodyRendererManager.render(context);
+        matrices.mulPose(Axis.YP.rotationDegrees(-90.0F));
+        matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks()) * 360.0f));
+        matrices.mulPose(Axis.YP.rotationDegrees(-19.0F));
 
-        // matrices.popPose();
-        // context.profiler().pop();
-        // RenderSystem.setShaderColor(1.0f, 1.0F, 1.0F, 1.0F);
-        // context.profiler().pop();
+        // Update camera position for star rendering
+        this.celestialBodyRendererManager.updateSolarPosition(
+                Math.cos(System.currentTimeMillis() / 5000.0 * Math.PI * 2) * 30,
+                -10,
+                Math.sin(System.currentTimeMillis() / 5000.0 * Math.PI * 2) * 30
+        );
+
+        this.celestialBodyRendererManager.render(context);
+
+        matrices.popPose();
+        context.profiler().pop();
+        RenderSystem.setShaderColor(1.0f, 1.0F, 1.0F, 1.0F);
 
         context.profiler().push("sun");
         matrices.pushPose();
 
-        matrices.mulPose(Axis.ZP.rotationDegrees(context.world().getTimeOfDay(partialTicks) * 360.0f));
+        matrices.mulPose(Axis.YP.rotationDegrees(-90.0F));
+        matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks()) * 360.0f));
 
         Matrix4f matrix = matrices.last().pose();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(
                 GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO
         );
         float size = 30.0F;
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, Constant.Skybox.SUN_MOON);
         BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
@@ -103,10 +104,11 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
         matrices.pushPose();
         matrix = matrices.last().pose();
 
-        size = 20.0F;
+        size = 10.0F;
         assert Minecraft.getInstance().player != null;
         float earthRotation = (float) (context.world().getSharedSpawnPos().getZ() - Minecraft.getInstance().player.getZ()) * 0.01F;
-        matrices.mulPose(Axis.XP.rotationDegrees((context.world().getTimeOfDay(partialTicks) * 360.0F) * 0.001F));
+        matrices.scale(0.6F, 0.6F, 0.6F);
+        matrices.mulPose(Axis.XP.rotationDegrees((context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks()) * 360.0F) * 0.001F));
         matrices.mulPose(Axis.XP.rotationDegrees(earthRotation + 200.0F));
         matrices.mulPose(Axis.YP.rotationDegrees(180.0F));
 
@@ -123,6 +125,5 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
         matrices.popPose();
 
         RenderSystem.depthMask(true);
-        context.profiler().pop();
     }
 }

@@ -24,8 +24,10 @@ package dev.galacticraft.mod.client.render.dimension.star;
 
 import dev.galacticraft.mod.client.render.dimension.star.data.CelestialBody;
 import dev.galacticraft.mod.client.render.dimension.star.data.CelestialBodyType;
+import dev.galacticraft.mod.client.render.dimension.star.data.Planet3DData;
 import dev.galacticraft.mod.client.render.dimension.star.data.PlanetData;
 import dev.galacticraft.mod.client.render.dimension.star.data.StarData;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Factory for creating different types of celestial bodies.
@@ -37,10 +39,60 @@ public class CelestialBodyFactory {
             case STAR:
                 float brightness = 1.0F;
                 return new StarData(x, y, z, size, rotation, brightness);
-            case PLANET:
+            case PLANET2D:
                 return new PlanetData(x, y, z, size, rotation);
+            case PLANET3D:
+                return new Planet3DData(x, y, z, size, rotation);
             default:
                 throw new IllegalArgumentException("Unknown celestial body type: " + type);
         }
+    }
+
+    /**
+     * Creates a planet with a specific texture.
+     *
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param z Z coordinate
+     * @param size Size of the planet
+     * @param rotation Rotation of the planet
+     * @param texture Texture to use for the planet
+     * @return The created planet
+     */
+    public PlanetData createPlanet(int x, int y, int z, double size, double rotation, ResourceLocation texture) {
+        return new PlanetData(x, y, z, size, rotation, texture);
+    }
+
+    /**
+     * Creates a 3D planet with the same texture for all faces and specified opacity.
+     *
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param z Z coordinate
+     * @param size Size of the planet
+     * @param rotation Rotation of the planet
+     * @param texture Texture to use for all faces of the planet
+     * @param opacity Opacity of the planet (0.0f to 1.0f)
+     * @return The created 3D planet
+     */
+    public Planet3DData create3DPlanet(int x, int y, int z, double size, double rotation, ResourceLocation texture, float opacity) {
+        return new Planet3DData(x, y, z, size, rotation, texture, opacity);
+    }
+
+    /**
+     * Creates a 3D planet with different textures for each face and specified opacity.
+     *
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param z Z coordinate
+     * @param size Size of the planet
+     * @param rotation Rotation of the planet
+     * @param textures Map of textures for each face of the planet
+     * @param opacity Opacity of the planet (0.0f to 1.0f)
+     * @return The created 3D planet
+     */
+    public Planet3DData create3DPlanet(int x, int y, int z, double size, double rotation,
+                                      java.util.Map<Planet3DData.Face, ResourceLocation> textures, float opacity) {
+        return new Planet3DData(x, y, z, size, rotation, textures, opacity);
     }
 }
