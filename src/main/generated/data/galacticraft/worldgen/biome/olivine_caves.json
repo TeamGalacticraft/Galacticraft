@@ -41,7 +41,9 @@
       "galacticraft:ore_cheese_large_moon",
       "galacticraft:ore_lunar_sapphire_moon"
     ],
-    [],
+    [
+      "galacticraft:olivine_pillar_spike"
+    ],
     [],
     [
       "galacticraft:oli_grub_egg"
@@ -52,7 +54,14 @@
   "spawners": {
     "ambient": [],
     "axolotls": [],
-    "creature": [],
+    "creature": [
+      {
+        "type": "galacticraft:oli_grub",
+        "maxCount": 5,
+        "minCount": 2,
+        "weight": 1000
+      }
+    ],
     "misc": [],
     "monster": [
       {
@@ -90,12 +99,6 @@
         "maxCount": 1,
         "minCount": 1,
         "weight": 5
-      },
-      {
-        "type": "galacticraft:oli_grub",
-        "maxCount": 5,
-        "minCount": 2,
-        "weight": 1000
       }
     ],
     "underground_water_creature": [],

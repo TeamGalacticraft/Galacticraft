@@ -1,9 +1,9 @@
 {
-  "feature": "galacticraft:olivine_beam",
+  "feature": "galacticraft:olivine_pillar_spike",
   "placement": [
     {
       "type": "minecraft:rarity_filter",
-      "chance": 70
+      "chance": 1
     },
     {
       "type": "minecraft:in_square"

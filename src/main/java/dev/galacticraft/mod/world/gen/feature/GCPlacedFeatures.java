@@ -43,9 +43,8 @@ public class GCPlacedFeatures {
     public static final ResourceKey<PlacedFeature> OIL_LAKE = ResourceKey.create(Registries.PLACED_FEATURE, Constant.id("oil_lake"));
 
     // --- OLIVINE BIOME ---
-    public static final ResourceKey<PlacedFeature> OLIVINE_BEAM = ResourceKey.create(Registries.PLACED_FEATURE, Constant.id("olivine_beam"));
-    public static final ResourceKey<PlacedFeature> BASALT_BEAM = ResourceKey.create(Registries.PLACED_FEATURE, Constant.id("basalt_beam"));
     public static final ResourceKey<PlacedFeature> OLI_GRUB_EGG = ResourceKey.create(Registries.PLACED_FEATURE, Constant.id("oli_grub_egg"));
+    public static final ResourceKey<PlacedFeature> OLIVINE_PILLAR_SPIKE = ResourceKey.create(Registries.PLACED_FEATURE, Constant.id("olivine_pillar_spike"));
 
     public static void bootstrapRegistries(BootstrapContext<PlacedFeature> context) {
         HolderGetter<ConfiguredFeature<?, ?>> configuredFeatureLookup = context.lookup(Registries.CONFIGURED_FEATURE);
@@ -57,28 +56,18 @@ public class GCPlacedFeatures {
                 BiomeFilter.biome()
         )));
 
-        context.register(OLIVINE_BEAM, new PlacedFeature(
-                configuredFeatureLookup.getOrThrow(GCConfiguredFeature.OLIVINE_BEAM),
-                List.of(
-                        RarityFilter.onAverageOnceEvery(70),
-                        InSquarePlacement.spread(),
-                        PlacementUtils.FULL_RANGE,
-                        BiomeFilter.biome()
-                )
-        ));
-
-        context.register(BASALT_BEAM, new PlacedFeature(
-                configuredFeatureLookup.getOrThrow(GCConfiguredFeature.BASALT_BEAM),
-                List.of(
-                        RarityFilter.onAverageOnceEvery(120),  //todo tweak rarities
-                        InSquarePlacement.spread(),
-                        PlacementUtils.FULL_RANGE,
-                        BiomeFilter.biome()
-                )
-        ));
-
         context.register(OLI_GRUB_EGG, new PlacedFeature(
                 configuredFeatureLookup.getOrThrow(GCConfiguredFeature.OLI_GRUB_EGG),
+                List.of(
+                        RarityFilter.onAverageOnceEvery(1),
+                        InSquarePlacement.spread(),
+                        PlacementUtils.FULL_RANGE,
+                        BiomeFilter.biome()
+                )
+        ));
+
+        context.register(OLIVINE_PILLAR_SPIKE, new PlacedFeature(
+                configuredFeatureLookup.getOrThrow(GCConfiguredFeature.OLIVINE_PILLAR_SPIKE),
                 List.of(
                         RarityFilter.onAverageOnceEvery(1),
                         InSquarePlacement.spread(),

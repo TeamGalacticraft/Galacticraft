@@ -29,12 +29,12 @@ public class OliGrubEggPlacedFeature extends Feature<NoneFeatureConfiguration> {
         for (int i = 0; i < 6; i++) {
             int dx = origin.getX() + random.nextInt(16);
             int dz = origin.getZ() + random.nextInt(16);
-            int dy = MoonConstants.OLI_GRUB_MIN_EGG_SPAWN + random.nextInt(MoonConstants.OLI_GRUB_MAX_EGG_SPAWN - MoonConstants.OLI_GRUB_MIN_EGG_SPAWN);
+            int dy = MoonConstants.MIN_FEATURE_SPAWN + random.nextInt(MoonConstants.MAX_FEATURE_SPAWN - MoonConstants.MIN_FEATURE_SPAWN);
 
             BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(dx, dy, dz);
 
             // Skip if already above surface Y limit
-            if (dy > MoonConstants.OLI_GRUB_MAX_EGG_SPAWN) continue;
+            if (dy > MoonConstants.MAX_FEATURE_SPAWN) continue;
 
             // Step down until we hit air
             while (pos.getY() > level.getMinBuildHeight() + 1 && !level.isEmptyBlock(pos)) {
@@ -51,7 +51,7 @@ public class OliGrubEggPlacedFeature extends Feature<NoneFeatureConfiguration> {
 
             BlockState floorState = level.getBlockState(floorPos);
 
-            if (!floorState.isAir() && level.isEmptyBlock(eggPos) && floorPos.getY() < MoonConstants.OLI_GRUB_MAX_EGG_SPAWN) {
+            if (!floorState.isAir() && level.isEmptyBlock(eggPos) && floorPos.getY() < MoonConstants.MAX_FEATURE_SPAWN) {
                 level.setBlock(eggPos, Blocks.SNIFFER_EGG.defaultBlockState(), 2);
                 placedAny = true;
             }
