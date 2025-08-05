@@ -53,7 +53,7 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
 
         // Update camera position for star rendering
         this.celestialBodyRendererManager.updateSolarPosition(
-                0, 0, 0
+                -20, 0, 0
         );
 
         this.celestialBodyRendererManager.render(context);

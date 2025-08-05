@@ -22,15 +22,34 @@
 
 package dev.galacticraft.mod.client.render.dimension.star.data;
 
+import net.minecraft.resources.ResourceLocation;
+import dev.galacticraft.mod.client.render.dimension.CelestialBodyTextures;
+
 /**
  * Planet implementation of CelestialBody.
  */
 public class PlanetData extends CelestialBody {
+
+    private ResourceLocation texture;
 
     // TODO: we should retrieve some information about the planet (ex: orbit path)
     //  we could feed the apoapsis, periapsis, orbit degree, world tick, etc, and render from there
 
     public PlanetData(int x, int y, int z, double size, double rotation) {
         super(x, y, z, size, rotation, CelestialBodyType.PLANET);
+        this.texture = CelestialBodyTextures.EARTH; // Default texture
+    }
+
+    public PlanetData(int x, int y, int z, double size, double rotation, ResourceLocation texture) {
+        super(x, y, z, size, rotation, CelestialBodyType.PLANET);
+        this.texture = texture;
+    }
+
+    public ResourceLocation getTexture() {
+        return texture;
+    }
+
+    public void setTexture(ResourceLocation texture) {
+        this.texture = texture;
     }
 }

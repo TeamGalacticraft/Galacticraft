@@ -22,12 +22,15 @@
 
 package dev.galacticraft.mod.client.render.dimension.star;
 
+import dev.galacticraft.mod.client.render.dimension.CelestialBodyTextures;
 import dev.galacticraft.mod.client.render.dimension.star.data.CelestialBody;
 import dev.galacticraft.mod.client.render.dimension.star.data.CelestialBodyType;
+import dev.galacticraft.mod.client.render.dimension.star.data.PlanetData;
 import dev.galacticraft.mod.client.render.dimension.star.display.CelestialBodyRenderer;
-import dev.galacticraft.mod.client.render.dimension.star.display.PlanetRenderer;
+import dev.galacticraft.mod.client.render.dimension.star.display.PlanetRenderer2D;
 import dev.galacticraft.mod.client.render.dimension.star.display.StarRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.minecraft.resources.ResourceLocation;
 import org.joml.SimplexNoise;
 import org.joml.Vector3d;
 
@@ -64,10 +67,11 @@ public class CelestialBodyRendererManager {
 
         // Register default renderers
         renderers.put(CelestialBodyType.STAR, new StarRenderer());
-        renderers.put(CelestialBodyType.PLANET, new PlanetRenderer());
+        renderers.put(CelestialBodyType.PLANET, new PlanetRenderer2D());
 
         // FIXME: VERY TEMPORARY, we should setup from a generated map of stars or something
         this.setStarPositions();
+        this.addPlanet(10, 10, 0, 10, 0, CelestialBodyTextures.EARTH);
     }
 
     // TODO: temp
@@ -132,6 +136,23 @@ public class CelestialBodyRendererManager {
         CelestialBody body = factory.createCelestialBody(type, x, y, z, size, rotation);
         celestialBodies.get(type).add(body);
         return body;
+    }
+
+    /**
+     * Adds a planet with a specific texture to the manager.
+     *
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param z Z coordinate
+     * @param size Size of the planet
+     * @param rotation Rotation of the planet
+     * @param texture Texture to use for the planet
+     * @return The created planet
+     */
+    public PlanetData addPlanet(int x, int y, int z, double size, double rotation, ResourceLocation texture) {
+        PlanetData planet = factory.createPlanet(x, y, z, size, rotation, texture);
+        celestialBodies.get(CelestialBodyType.PLANET).add(planet);
+        return planet;
     }
 
     /**
