@@ -40,17 +40,13 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
         RenderSystem.disableBlend();
         RenderSystem.depthMask(false);
 
+        float partialTicks = context.tickCounter().getGameTimeDeltaPartialTick(true);
         PoseStack matrices = new PoseStack();
         matrices.mulPose(context.positionMatrix());
 
-        matrices.pushPose();
-
         context.profiler().push("celestial_render");
-
-
-        matrices.mulPose(Axis.YP.rotationDegrees(-90.0F));
-        matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks()) * 360.0f));
-        matrices.mulPose(Axis.YP.rotationDegrees(-19.0F));
+        matrices.pushPose();
+        matrices.mulPose(Axis.ZP.rotationDegrees(context.world().getTimeOfDay(partialTicks) * 360.0F));
 
         // Update camera position for star rendering
         this.celestialBodyRendererManager.updateSolarPosition(
@@ -61,15 +57,10 @@ public class MoonSkyRenderer extends SpaceSkyRenderer {
 
         this.celestialBodyRendererManager.render(context);
 
-        matrices.popPose();
         context.profiler().pop();
         RenderSystem.setShaderColor(1.0f, 1.0F, 1.0F, 1.0F);
 
         context.profiler().push("sun");
-        matrices.pushPose();
-
-        matrices.mulPose(Axis.YP.rotationDegrees(-90.0F));
-        matrices.mulPose(Axis.XP.rotationDegrees(context.world().getTimeOfDay(context.tickCounter().getRealtimeDeltaTicks()) * 360.0f));
 
         Matrix4f matrix = matrices.last().pose();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

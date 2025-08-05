@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.client.render.dimension.star;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.render.dimension.star.data.CelestialBody;
 import dev.galacticraft.mod.client.render.dimension.star.data.CelestialBodyType;
 import dev.galacticraft.mod.client.render.dimension.star.data.Planet3DData;
