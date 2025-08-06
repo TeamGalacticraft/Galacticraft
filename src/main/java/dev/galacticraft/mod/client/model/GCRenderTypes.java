@@ -69,9 +69,13 @@ public class GCRenderTypes {
                         .setShaderState(BUBBLE_SHADER)
                         .setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
                         .setTransparencyState(RenderType.TRANSLUCENT_TRANSPARENCY)
+                        .setDepthTestState(new RenderStateShard.DepthTestStateShard("less", 513))
                         .setCullState(RenderType.NO_CULL)
                         .setWriteMaskState(RenderType.COLOR_WRITE)
                         .setOverlayState(RenderType.OVERLAY)
+                        .setTargetState(new RenderStateShard.TargetStateShard("translucent", () -> {
+                        }, () -> {
+                        }))
                         .createCompositeState(composite);
                 return RenderType.create("entity_bubble", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, RenderType.TRANSIENT_BUFFER_SIZE, false, true, compositeState);
             })
