@@ -496,7 +496,7 @@ public interface Constant {
         String TITANIUM_HOE = "titanium_hoe";
 
         String STANDARD_WRENCH = "standard_wrench";
-        String GRAPPLING_HOOK = "grappling_hook";
+        // String GRAPPLING_HOOK = "grappling_hook";
         String TITANTIUM_UPGRADE_SMITHING_TEMPLATE = "titanium_upgrade_smithing_template";
         String BATTERY = "battery";
         String INFINITE_BATTERY = "infinite_battery";
@@ -847,8 +847,7 @@ public interface Constant {
         String OLI_GRUB = "oli_grub";
         String COMET_CUBE = "comet_cube";
         String GAZER = "gazer";
-        String SKELETON_BOSS = "evolved_skeleton_boss";
-        String GRAPPLE_HOOK = "grapple_hook";
+        String EVOLVED_SKELETON_BOSS = "evolved_skeleton_boss";
     }
 
     interface SpawnEgg {

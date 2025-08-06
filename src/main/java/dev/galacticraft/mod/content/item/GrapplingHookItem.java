@@ -6,7 +6,6 @@
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
-
  * furnished to do so, subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in all
@@ -23,15 +22,10 @@
 
 package dev.galacticraft.mod.content.item;
 
-import dev.galacticraft.mod.content.entity.GrappleHookEntity;
-import dev.galacticraft.mod.content.entity.PlayerGrapple;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 
+
+
+/*
 public class GrapplingHookItem extends Item {
     public GrapplingHookItem(Properties properties) {
         super(properties);
@@ -58,3 +52,4 @@ public class GrapplingHookItem extends Item {
         return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
     }
 }
+*/

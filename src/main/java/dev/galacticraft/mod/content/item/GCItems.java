@@ -165,7 +165,7 @@ public class GCItems {
     public static final Item TITANIUM_HOE = ITEMS.register(Constant.Item.TITANIUM_HOE, new HoeItem(GCTiers.TITANIUM, new Item.Properties().attributes(HoeItem.createAttributes(GCTiers.TITANIUM, -3.0F, -1.0F))));
 
     public static final Item STANDARD_WRENCH = ITEMS.register(Constant.Item.STANDARD_WRENCH, new StandardWrenchItem(new Item.Properties().durability(256)));
-    public static final Item GRAPPLING_HOOK = ITEMS.register(Constant.Item.GRAPPLING_HOOK, new GrapplingHookItem(new Item.Properties().stacksTo(1)));
+    // public static final Item GRAPPLING_HOOK = ITEMS.register(Constant.Item.GRAPPLING_HOOK, new GrapplingHookItem(new Item.Properties().stacksTo(1)));
 
     // ARMOR
     public static final Item HEAVY_DUTY_HELMET = ITEMS.register(Constant.Item.HEAVY_DUTY_HELMET, new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1)));

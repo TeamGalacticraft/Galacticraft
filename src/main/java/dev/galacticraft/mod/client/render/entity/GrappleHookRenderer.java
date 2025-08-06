@@ -22,17 +22,9 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import dev.galacticraft.mod.content.entity.GrappleHookEntity;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
-import org.joml.Matrix4f;
 
+
+/*
 public class GrappleHookRenderer extends EntityRenderer<GrappleHookEntity> {
     public GrappleHookRenderer(EntityRendererProvider.Context context) {
         super(context);
@@ -62,3 +54,4 @@ public class GrappleHookRenderer extends EntityRenderer<GrappleHookEntity> {
         return null;
     }
 }
+*/

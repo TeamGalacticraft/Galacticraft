@@ -22,17 +22,9 @@
 
 package dev.galacticraft.mod.content.entity;
 
-import dev.galacticraft.mod.content.GCEntityTypes;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
 
+/*
 public class GrappleHookEntity extends Projectile {
     private Player player;
     private boolean attached = false;
@@ -90,3 +82,4 @@ public class GrappleHookEntity extends Projectile {
         }
     }
 }
+*/

@@ -22,7 +22,8 @@
 
 package dev.galacticraft.mod.content.entity;
 
+/**
+ * @author <a href="https://github.com/TeamGalacticraft">TeamGalacticraft</a>
+ */
 public interface PlayerGrapple {
-    GrappleHookEntity getGrapple();
-    void setGrapple(GrappleHookEntity grapple);
 }
