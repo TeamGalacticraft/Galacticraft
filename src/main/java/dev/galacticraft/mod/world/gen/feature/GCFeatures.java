@@ -31,7 +31,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
@@ -50,6 +49,6 @@ public class GCFeatures {
         OLIVINE_BEAM = Registry.register(BuiltInRegistries.FEATURE, OLIVINE_BEAM_KEY, new OlivineBeamFeature(NoneFeatureConfiguration.CODEC));
         BASALT_BEAM = Registry.register(BuiltInRegistries.FEATURE, BASALT_BEAM_KEY, new BasaltBeamFeature(NoneFeatureConfiguration.CODEC));
         OLI_GRUB_EGG = Registry.register(BuiltInRegistries.FEATURE, OLI_GRUB_EGG_KEY, new OliGrubEggPlacedFeature(NoneFeatureConfiguration.CODEC));
-        OLIVINE_PILLAR_SPIKE = Registry.register(BuiltInRegistries.FEATURE, OLIVINE_PILLAR_SPIKE_KEY, new PillarSpikeFeature(NoneFeatureConfiguration.CODEC, Blocks.GLOWSTONE.defaultBlockState(), 8));
+        OLIVINE_PILLAR_SPIKE = Registry.register(BuiltInRegistries.FEATURE, OLIVINE_PILLAR_SPIKE_KEY, new PillarSpikeFeature(NoneFeatureConfiguration.CODEC, 32));
     }
 }

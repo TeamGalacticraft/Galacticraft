@@ -12,6 +12,7 @@
     "BucketItemAccessor",
     "BucketItemMixin",
     "CakeBlockMixin",
+    "ChunkMapMixin",
     "DimensionTransitionMixin",
     "DimensionTypeMixin",
     "EntityMixin",
