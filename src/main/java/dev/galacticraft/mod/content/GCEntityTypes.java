@@ -161,13 +161,13 @@ public class GCEntityTypes {
             .sized(0.25F, 0.25F)
             .build());
     // Bosses
-    public static final EntityType<SkeletonBoss> SKELETON_BOSS = ENTITIES.register(Entity.EVOLVED_SKELETON_BOSS, EntityType.Builder.of(SkeletonBoss::new, MobCategory.MONSTER)
-            .sized(1.5F, 4.0F)
-            .fireImmune()
-            .clientTrackingRange(80)
-            .updateInterval(3)
-            .alwaysUpdateVelocity(true)
-            .build());
+    // public static final EntityType<SkeletonBoss> SKELETON_BOSS = ENTITIES.register(Entity.EVOLVED_SKELETON_BOSS, EntityType.Builder.of(SkeletonBoss::new, MobCategory.MONSTER)
+    //         .sized(1.5F, 4.0F)
+    //         .fireImmune()
+    //         .clientTrackingRange(80)
+    //         .updateInterval(3)
+    //         .alwaysUpdateVelocity(true)
+    //         .build());
 
     public static void register() {
         FabricDefaultAttributeRegistry.register(MOON_VILLAGER, MoonVillagerEntity.createMobAttributes().add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D));

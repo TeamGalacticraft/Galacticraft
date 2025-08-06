@@ -52,7 +52,7 @@ public class GrapplingHookItem extends Item {
             GrappleHookEntity grappleHookEntity = new GrappleHookEntity(level, player);
             grappleHookEntity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
             level.addFreshEntity(grappleHookEntity);
-            player.getCooldowns().addCooldown(this, 20);
+            // player.getItemCooldownManager().set(this, 20);
             playerGrapple.setGrapple(grappleHookEntity);
         }
         return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());

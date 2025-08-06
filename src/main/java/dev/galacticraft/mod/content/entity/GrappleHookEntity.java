@@ -27,6 +27,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -47,7 +48,7 @@ public class GrappleHookEntity extends Projectile {
     }
 
     @Override
-    protected void defineSynchedData() {
+    protected void initDataTracker() {
     }
 
     @Override

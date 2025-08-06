@@ -49,8 +49,8 @@ public class GrappleHookRenderer extends EntityRenderer<GrappleHookEntity> {
         VertexConsumer consumer = vertexConsumers.getBuffer(RenderType.lines());
         Matrix4f pose = matrices.last().pose();
 
-        consumer.vertex(pose, 0, 0, 0).color(0, 0, 0, 255).normal(1, 0, 0).endVertex();
-        consumer.vertex(pose, (float) (player.getX() - entity.getX()), (float) (player.getEyeY() - entity.getY()), (float) (player.getZ() - entity.getZ())).color(0, 0, 0, 255).normal(1, 0, 0).endVertex();
+        // consumer.vertex(pose, 0, 0, 0).color(0, 0, 0, 255).normal(1, 0, 0).endVertex();
+        // consumer.vertex(pose, (float) (player.getX() - entity.getX()), (float) (player.getEyeY() - entity.getY()), (float) (player.getZ() - entity.getZ())).color(0, 0, 0, 255).normal(1, 0, 0).endVertex();
 
         matrices.popPose();
 
