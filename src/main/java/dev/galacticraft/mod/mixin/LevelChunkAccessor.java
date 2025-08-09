@@ -20,32 +20,14 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.api.wire;
+package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.api.block.entity.Connected;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import org.jetbrains.annotations.Contract;
+import net.minecraft.world.level.chunk.LevelChunk;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-
-public interface Wire extends Connected {
-    void setNetwork(long network);
-
-    @Contract(pure = true)
-    long getNetwork();
-
-    /**
-     * @param direction the direction offset to the block to check adjacency to
-     * {@return Whether this wire is able to connect to another block on the specified face/direction}
-     */
-    default boolean canConnect(Direction direction) {
-        return true; // CALLERS: ((Wire)world.getBlockEntity(pos.offset(direction)).canConnect(direction.getOpposite());
-    }
-
-    /**
-     * {@return the maximum amount of energy (in gJ) allowed to be transferred through this wire}
-     */
-    int getMaxTransferRate();
-
-    BlockPos getBlockPos();
+@Mixin(LevelChunk.class)
+public interface LevelChunkAccessor {
+    @Accessor
+    boolean isLoaded();
 }

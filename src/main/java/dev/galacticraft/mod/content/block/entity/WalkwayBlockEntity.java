@@ -42,16 +42,6 @@ public class WalkwayBlockEntity extends BlockEntity implements Connected {
     }
 
     @Override
-    public boolean[] getConnections() {
-        return this.connections;
-    }
-
-    @Override
-    public void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction) {
-
-    }
-
-    @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider registryLookup) {
         super.loadAdditional(compound, registryLookup);
         this.readConnectionNbt(compound);
@@ -75,5 +65,15 @@ public class WalkwayBlockEntity extends BlockEntity implements Connected {
     @Override
     public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
         return this.saveWithoutMetadata(registryLookup);
+    }
+
+    @Override
+    public void setConnected(@NotNull Direction direction, boolean connected) {
+        this.connections[direction.get3DDataValue()] = connected;
+    }
+
+    @Override
+    public boolean isConnected(@NotNull Direction direction) {
+        return this.connections[direction.get3DDataValue()];
     }
 }

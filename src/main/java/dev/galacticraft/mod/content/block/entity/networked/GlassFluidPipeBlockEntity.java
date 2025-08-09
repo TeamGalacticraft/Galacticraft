@@ -71,5 +71,4 @@ public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Connec
     public void setPull(boolean pull) {
         this.pull = pull;
     }
-
 }

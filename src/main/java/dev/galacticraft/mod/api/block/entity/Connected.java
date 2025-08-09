@@ -23,19 +23,14 @@
 package dev.galacticraft.mod.api.block.entity;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 public interface Connected {
-    boolean[/*6*/] getConnections();
+    void setConnected(@NotNull Direction direction, boolean connected);
 
-    void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction);
-
-    default boolean isConnected(Direction direction) {
-        return this.getConnections()[direction.get3DDataValue()];
-    }
+    boolean isConnected(@NotNull Direction direction);
 
     default void writeConnectionNbt(CompoundTag nbt) {
         for (Direction direction : Constant.Misc.DIRECTIONS) {
@@ -45,7 +40,7 @@ public interface Connected {
 
     default void readConnectionNbt(CompoundTag nbt) {
         for (Direction direction : Constant.Misc.DIRECTIONS) {
-            this.getConnections()[direction.get3DDataValue()] = nbt.getBoolean(direction.getSerializedName());
+            this.setConnected(direction, nbt.getBoolean(direction.getSerializedName()));
         }
     }
 }

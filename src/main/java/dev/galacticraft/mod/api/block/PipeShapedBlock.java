@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.api.block;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.Connected;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -54,9 +55,10 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
 
     public abstract boolean canConnectTo(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos, BlockState thisState);
 
+    // direction TOWARDS neighbor
     protected abstract void onConnectionChanged(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos);
 
-    protected boolean updateConnection(BlockState currentState, BlockPos pos, Direction side, BlockPos neighborPos, Level level) {
+    protected boolean updateConnection(BlockState currentState, BlockPos pos, Direction side, BlockPos neighborPos, Level level, boolean update) {
         if (level.getBlockEntity(pos) instanceof Connected pipe) {
             boolean canConnect = this.canConnectTo(level, pos, side, neighborPos, currentState);
 
@@ -65,9 +67,9 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
                 canConnect &= neighbor.canConnectTo(level, neighborPos, side.getOpposite(), pos, neighborState);
             }
 
-            boolean currentlyConnected = pipe.getConnections()[side.get3DDataValue()];
-            pipe.getConnections()[side.get3DDataValue()] = canConnect;
-            level.sendBlockUpdated(pos, currentState, currentState, Block.UPDATE_IMMEDIATE);
+            boolean currentlyConnected = pipe.isConnected(side);
+            pipe.setConnected(side, canConnect);
+            if (update) level.sendBlockUpdated(pos, currentState, currentState, Block.UPDATE_IMMEDIATE);
             return canConnect != currentlyConnected;
         } else {
             return false;
@@ -78,8 +80,16 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.setPlacedBy(level, pos, state, placer, itemStack);
 
+        boolean updated = false;
         for (Direction direction : Direction.values()) {
-            this.updateConnection(state, pos, direction, pos.relative(direction), level);
+            BlockPos neighborPos = pos.relative(direction);
+            if (this.updateConnection(state, pos, direction, neighborPos, level, false)) {
+                updated = true;
+                this.onConnectionChanged(level, pos, direction, neighborPos);
+            }
+        }
+        if (updated) {
+            level.sendBlockUpdated(pos, state, state, Block.UPDATE_IMMEDIATE);
         }
     }
 
@@ -91,7 +101,7 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
         if (direction == null)
             return;
 
-        if (this.updateConnection(state, pos, direction, neighborPos, level)) {
+        if (this.updateConnection(state, pos, direction, neighborPos, level, true)) {
             this.onConnectionChanged(level, pos, direction, neighborPos);
         }
     }
@@ -99,7 +109,7 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
     @Override
     protected @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos pos, BlockPos neighborPos) {
         if (levelAccessor instanceof Level level) {
-            if (this.updateConnection(state, pos, direction, neighborPos, level)) {
+            if (this.updateConnection(state, pos, direction, neighborPos, level, true)) {
                 this.onConnectionChanged(level, pos, direction, neighborPos);
             }
         }
@@ -157,9 +167,8 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
     public static int generateAABBIndex(Connected connected) {
         int i = 0;
 
-        Direction[] directions = Direction.values();
-        for (int j = 0; j < directions.length; j++) {
-            if (connected.getConnections()[directions[j].ordinal()]) {
+        for (int j = 0; j < Constant.Misc.DIRECTIONS.length; j++) {
+            if (connected.isConnected(Constant.Misc.DIRECTIONS[j])) {
                 i |= 1 << j;
             }
         }

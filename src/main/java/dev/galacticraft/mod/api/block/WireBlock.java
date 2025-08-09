@@ -24,6 +24,7 @@ package dev.galacticraft.mod.api.block;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.accessor.WireNetworkAccessor;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import net.fabricmc.loader.api.FabricLoader;
@@ -38,6 +39,8 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
+
+import java.util.Objects;
 
 public abstract class WireBlock extends PipeShapedBlock<WireBlockEntity> {
     public WireBlock(float radius, Properties settings) {
@@ -57,14 +60,26 @@ public abstract class WireBlock extends PipeShapedBlock<WireBlockEntity> {
 
     @Override
     protected void onConnectionChanged(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos) {
-        if (level.getBlockEntity(thisPos) instanceof WireBlockEntity wire) {
-            wire.updateConnection(level.getBlockState(thisPos), thisPos, neighborPos, direction);
+        if (!level.isClientSide && level.getBlockEntity(thisPos) instanceof WireBlockEntity wire) {
+            ((WireNetworkAccessor) level).galacticraft$getWireNetworkManager().wireUpdated(thisPos, wire, direction);
         }
     }
 
     @Override
     public boolean canConnectTo(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos, BlockState thisState) {
-        return EnergyStorage.SIDED.find(level, neighborPos, direction.getOpposite()) != null;
+        return EnergyStorage.SIDED.find(level, neighborPos, direction.getOpposite()) != null || level.getBlockEntity(neighborPos) instanceof WireBlockEntity wire && wire.getMaxTransferRate() == ((WireBlockEntity) Objects.requireNonNull(level.getBlockEntity(thisPos))).getMaxTransferRate();
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
+        if (!level.isClientSide) ((WireNetworkAccessor) level).galacticraft$getWireNetworkManager().wireRemoved(pos);
+        super.onRemove(state, level, pos, newState, moved);
+    }
+
+    @Override
+    protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean notify) {
+        super.onPlace(state, level, pos, oldState, notify);
+        if (!level.isClientSide) ((WireNetworkAccessor) level).galacticraft$getWireNetworkManager().wirePlaced(pos, (Wire) level.getBlockEntity(pos));
     }
 
     @Nullable

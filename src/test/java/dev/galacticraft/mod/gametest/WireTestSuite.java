@@ -23,63 +23,94 @@
 package dev.galacticraft.mod.gametest;
 
 import dev.galacticraft.mod.api.wire.Wire;
-import dev.galacticraft.mod.api.wire.impl.WireNetworkImpl;
+import dev.galacticraft.mod.api.wire.WireNetworkManager;
 import dev.galacticraft.mod.content.GCBlocks;
+import it.unimi.dsi.fastutil.longs.LongArraySet;
+import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 
 public class WireTestSuite implements GalacticraftGameTest {
     @GameTest(template = EMPTY_STRUCTURE)
     public void wireConnectionTest(GameTestHelper context) {
-        final var pos0 = new BlockPos(0, 1, 0);
-        final var pos1 = new BlockPos(0, 2, 0);
-        final var pos2 = new BlockPos(0, 3, 0);
-        context.setBlock(pos0, GCBlocks.ALUMINUM_WIRE);
-        context.setBlock(pos1, GCBlocks.ALUMINUM_WIRE);
-        context.setBlock(pos2, GCBlocks.ALUMINUM_WIRE);
-        final var be0 = context.getBlockEntity(pos0);
-        final var be1 = context.getBlockEntity(pos1);
-        final var be2 = context.getBlockEntity(pos2);
-        if (!(be0 instanceof Wire wire0)) {
-            context.fail(String.format("Expected a wire but found %s!", be0), pos0);
-        } else if (!(be1 instanceof Wire wire1)) {
-            context.fail(String.format("Expected a wire but found %s!", be1), pos1);
-        } else if (!(be2 instanceof Wire wire2)) {
-            context.fail(String.format("Expected a wire but found %s!", be2), pos2);
-        } else {
-            if (wire0.getNetwork() == null) {
-                context.fail("Expected a wire network but got null!", pos0);
-            } else if (wire1.getNetwork() == null) {
-                context.fail("Expected a wire network but got null!", pos1);
-            } else if (wire2.getNetwork() == null) {
-                context.fail("Expected a wire network but got null!", pos2);
-            } else {
-                if (wire0.getNetwork() != wire1.getNetwork()) {
-                    context.fail(String.format("Expected wire networks at %s and %s to be the same!", pos0, pos1));
-                } else if (wire1.getNetwork() != wire2.getNetwork()) {
-                    context.fail(String.format("Expected wire networks at %s and %s to be the same!", pos1, pos2));
-                } else {
-                    if (((WireNetworkImpl) wire0.getNetwork()).getWires().size() != 3) {
-                        context.fail("Not all wires are registered in the network!");
-                    } else {
-                        context.succeedWhen(() -> {
-                            context.destroyBlock(pos1);
-                            if (((WireNetworkImpl) wire0.getNetwork()).getWires().size() != 1) {
-                                context.fail(String.format("Expected wire network with 1 wire but found %s wires!", ((WireNetworkImpl) wire0.getNetwork()).getWires().size()), pos0);
-                            } else if (((WireNetworkImpl) wire2.getNetwork()).getWires().size() != 1) {
-                                context.fail(String.format("Expected wire network with 1 wire but found %s wires!", ((WireNetworkImpl) wire2.getNetwork()).getWires().size()), pos2);
-                            } else if (!wire1.getNetwork().markedForRemoval()) {
-                                if (!be1.isRemoved()) {
-                                    context.fail("Expected wire to be removed!", pos1);
-                                } else {
-                                    context.fail("Expected removed wire network to be marked for removal!", pos1);
-                                }
-                            }
-                        });
-                    }
-                }
+        var bottom = new BlockPos(0, 1, 0);
+        var mid = new BlockPos(0, 2, 0);
+        var top = new BlockPos(0, 3, 0);
+
+        context.setBlock(bottom, GCBlocks.ALUMINUM_WIRE);
+        context.setBlock(mid, GCBlocks.ALUMINUM_WIRE);
+        context.setBlock(top, GCBlocks.ALUMINUM_WIRE);
+        var beBottom = (Wire) context.getBlockEntity(bottom);
+        var beMid = (Wire) context.getBlockEntity(mid);
+        var beTop = (Wire) context.getBlockEntity(top);
+
+        if (beBottom.getNetwork() != beMid.getNetwork()) context.fail("Expected bottom and middle wires to connect!");
+        if (beMid.getNetwork() != beTop.getNetwork()) context.fail("Expected middle and top wires to connect!");
+
+        context.destroyBlock(mid);
+        if (beBottom.getNetwork() == beMid.getNetwork()) context.fail("Expected bottom and top wires to separate into different networks!");
+
+        context.succeed();
+    }
+
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void wireNetworkMergeTest(GameTestHelper context) {
+        var center = new BlockPos(4, 4, 4);
+
+        for (Direction direction : Direction.values()) {
+            context.setBlock(center.relative(direction), GCBlocks.ALUMINUM_WIRE);
+            context.setBlock(center.relative(direction, 2), GCBlocks.ALUMINUM_WIRE);
+
+            if (((Wire) context.getBlockEntity(center.relative(direction))).getNetwork()
+                    != ((Wire) context.getBlockEntity(center.relative(direction, 2))).getNetwork()
+                    || ((Wire) context.getBlockEntity(center.relative(direction))).getNetwork() == WireNetworkManager.INVALID_NETWORK_ID) {
+                context.fail("Expected network to be created!", center.relative(direction));
             }
         }
+
+        context.setBlock(center, GCBlocks.ALUMINUM_WIRE);
+        long network = ((Wire) context.getBlockEntity(center)).getNetwork();
+        if (network == WireNetworkManager.INVALID_NETWORK_ID) context.fail("Expected network to be created!");
+        for (Direction direction : Direction.values()) {
+            if (((Wire) context.getBlockEntity(center.relative(direction))).getNetwork() != network) {
+                context.fail("Expected network to be merged!", center.relative(direction));
+            }
+            if (((Wire) context.getBlockEntity(center.relative(direction, 2))).getNetwork() != network) {
+                context.fail("Expected merged network to extend outwards!", center.relative(direction));
+            }
+        }
+
+        context.succeed();
+    }
+
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void wireNetworkBreakTest(GameTestHelper context) {
+        var center = new BlockPos(4, 4, 4);
+
+        context.setBlock(center, GCBlocks.ALUMINUM_WIRE);
+        for (Direction direction : Direction.values()) {
+            context.setBlock(center.relative(direction), GCBlocks.ALUMINUM_WIRE);
+            context.setBlock(center.relative(direction, 2), GCBlocks.ALUMINUM_WIRE);
+
+            if (((Wire) context.getBlockEntity(center.relative(direction))).getNetwork()
+                    != ((Wire) context.getBlockEntity(center.relative(direction, 2))).getNetwork()
+                    || ((Wire) context.getBlockEntity(center.relative(direction))).getNetwork() == WireNetworkManager.INVALID_NETWORK_ID) {
+                context.fail("Expected network to be created!", center.relative(direction));
+            }
+        }
+
+        context.destroyBlock(center);
+        LongSet set = new LongArraySet();
+        for (Direction direction : Direction.values()) {
+            long network = ((Wire) context.getBlockEntity(center.relative(direction))).getNetwork();
+            if (!set.add(network)) context.fail("Expected network to break into separate subnetworks!", center.relative(direction));
+            if (network
+                    != ((Wire) context.getBlockEntity(center.relative(direction, 2))).getNetwork()) {
+                context.fail("Expected edge networks to be connected!", center.relative(direction));
+            }
+        }
+        context.succeed();
     }
 }

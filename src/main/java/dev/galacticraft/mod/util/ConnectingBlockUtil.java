@@ -115,23 +115,22 @@ public class ConnectingBlockUtil {
     public static VoxelShape getVoxelShape(Connected connected, VoxelShape north, VoxelShape south, VoxelShape east, VoxelShape west, VoxelShape up, VoxelShape down, VoxelShape none) {
         VoxelShape shape = none;
 
-        final boolean[] connections = connected.getConnections();
-        if (connections[2]) {
+        if (connected.isConnected(Direction.NORTH)) {
             shape = Shapes.join(shape, north, BooleanOp.OR);
         }
-        if (connections[3]) {
+        if (connected.isConnected(Direction.SOUTH)) {
             shape = Shapes.join(shape, south, BooleanOp.OR);
         }
-        if (connections[5]) {
+        if (connected.isConnected(Direction.EAST)) {
             shape = Shapes.join(shape, east, BooleanOp.OR);
         }
-        if (connections[4]) {
+        if (connected.isConnected(Direction.WEST)) {
             shape = Shapes.join(shape, west, BooleanOp.OR);
         }
-        if (connections[1]) {
+        if (connected.isConnected(Direction.UP)) {
             shape = Shapes.join(shape, up, BooleanOp.OR);
         }
-        if (connections[0]) {
+        if (connected.isConnected(Direction.DOWN)) {
             shape = Shapes.join(shape, down, BooleanOp.OR);
         }
         return shape;

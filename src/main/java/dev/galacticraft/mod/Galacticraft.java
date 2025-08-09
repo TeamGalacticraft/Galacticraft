@@ -23,6 +23,7 @@
 package dev.galacticraft.mod;
 
 import dev.galacticraft.mod.api.config.Config;
+import dev.galacticraft.mod.api.wire.WireNetworkManager;
 import dev.galacticraft.mod.command.GCCommands;
 import dev.galacticraft.mod.config.ConfigImpl;
 import dev.galacticraft.mod.content.*;
@@ -108,6 +109,7 @@ public class Galacticraft implements ModInitializer {
         GCEventHandlers.init();
         GCCauldronInteraction.init();
         GCExtinguishable.register();
+        WireNetworkManager.registerHooks();
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(OxygenBlockDataManager.INSTANCE);
         Constant.LOGGER.info("Initialization complete. (Took {}ms).", System.currentTimeMillis() - startInitTime);
     }

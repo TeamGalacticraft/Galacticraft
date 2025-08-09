@@ -21,6 +21,7 @@
     "FlowingFluidMixin",
     "ItemEntityMixin",
     "ItemStackMixin",
+    "LevelChunkAccessor",
     "LevelMixin",
     "LivingEntityMixin",
     "ModelProviderMixin",
@@ -28,7 +29,8 @@
     "PlayerMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
-    "SpiderMixin"
+    "SpiderMixin",
+    "wire.ServerLevelMixin"
   ],
   "client": [
     "client.AbstractClientPlayerMixin",

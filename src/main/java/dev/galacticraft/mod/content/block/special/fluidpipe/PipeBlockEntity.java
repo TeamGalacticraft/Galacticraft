@@ -97,19 +97,24 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
     }
 
     @Override
-    public boolean[] getConnections() {
-        return this.connections;
+    public void setConnected(@NotNull Direction direction, boolean connected) {
+        this.connections[direction.get3DDataValue()] = connected;
     }
 
     @Override
-    public void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction) {
-        if (this.network == null || this.network.markedForRemoval()) {
-            this.createNetwork();
-        }
-        if (this.network != null) {
-            this.network.updateConnection(pos, neighborPos, direction);
-        }
+    public boolean isConnected(@NotNull Direction direction) {
+        return this.connections[direction.get3DDataValue()];
     }
+
+//    @Override
+//    public void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction) {
+//        if (this.network == null || this.network.markedForRemoval()) {
+//            this.createNetwork();
+//        }
+//        if (this.network != null) {
+//            this.network.updateConnection(pos, neighborPos, direction);
+//        }
+//    } //fixme
 
     @Override
     public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {

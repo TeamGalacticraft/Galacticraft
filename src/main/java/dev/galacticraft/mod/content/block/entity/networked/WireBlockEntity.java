@@ -22,11 +22,10 @@
 
 package dev.galacticraft.mod.content.block.entity.networked;
 
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.accessor.WireNetworkAccessor;
 import dev.galacticraft.mod.api.wire.Wire;
-import dev.galacticraft.mod.api.wire.WireNetwork;
-import dev.galacticraft.mod.api.wire.impl.WireNetworkImpl;
-import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import dev.galacticraft.mod.api.wire.WireNetworkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -34,17 +33,14 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
-import team.reborn.energy.api.EnergyStorage;
+import org.jetbrains.annotations.NotNull;
 
-public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage {
-    @Nullable
-    private WireNetwork network;
+public class WireBlockEntity extends BlockEntity implements Wire {
+    private long network = WireNetworkManager.INVALID_NETWORK_ID;
     private final int maxTransferRate;
     private final boolean[] connections = new boolean[6];
 
@@ -62,39 +58,13 @@ public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage 
     }
 
     @Override
-    public void forceCreateNetwork() {
-        this.createNetwork();
-    }
-
-    public void createNetwork() {
-        assert this.network == null || this.network.markedForRemoval();
-        if (!this.level.isClientSide) {
-            this.network = new WireNetworkImpl((ServerLevel) this.level, this.maxTransferRate, this.getBlockPos());
-        }
-    }
-
-    @Override
-    public void setNetwork(@Nullable WireNetwork network) {
-        if ((this.network == null || this.network.markedForRemoval()) && (network != null && !network.markedForRemoval())) {
-            this.network = network;
-            this.level.updateNeighborsAt(this.getBlockPos(), this.getBlockState().getBlock());
-        } else {
-            this.network = network;
-        }
-    }
-
-    @Override
-    @Nullable
-    public WireNetwork getNetwork() {
+    public long getNetwork() {
         return this.network;
     }
 
     @Override
-    public EnergyStorage getInsertable() {
-        if (this.network == null || this.network.markedForRemoval()) {
-            this.createNetwork();
-        }
-        return this;
+    public void setNetwork(long network) {
+        this.network = network;
     }
 
     @Override
@@ -103,30 +73,17 @@ public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage 
     }
 
     @Override
-    public boolean[] getConnections() {
-        return this.connections;
-    }
-
-    @Override
-    public void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction) {
-        if (this.network == null || this.network.markedForRemoval()) {
-            this.createNetwork();
-        }
-        if (this.network != null) {
-            this.network.updateConnection(pos, neighborPos, direction);
-        }
-    }
-
-    @Override
     protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         super.saveAdditional(nbt, registryLookup);
         this.writeConnectionNbt(nbt);
+        nbt.putLong(Constant.Nbt.NETWORK, this.network);
     }
 
     @Override
     protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         super.loadAdditional(nbt, registryLookup);
         this.readConnectionNbt(nbt);
+        this.network = nbt.contains(Constant.Nbt.NETWORK, CompoundTag.TAG_LONG) ? nbt.getLong(Constant.Nbt.NETWORK) : WireNetworkManager.INVALID_NETWORK_ID;
 
         if (this.level != null && this.level.isClientSide) {
             this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_IMMEDIATE);
@@ -134,8 +91,18 @@ public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage 
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
-        return this.saveWithoutMetadata(registryLookup);
+    public void clearRemoved() {
+        super.clearRemoved();
+        if (this.level != null && !this.level.isClientSide) {
+            ((WireNetworkAccessor) this.level).galacticraft$getWireNetworkManager().enqueueWireLoaded(this.worldPosition, this);
+        }
+    }
+
+    @Override
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        CompoundTag tag = this.saveWithoutMetadata(registryLookup);
+        tag.remove(Constant.Nbt.NETWORK);
+        return tag;
     }
 
     @Override
@@ -144,37 +111,12 @@ public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage 
     }
 
     @Override
-    public boolean supportsInsertion() {
-        return this.maxTransferRate > 0;
+    public void setConnected(@NotNull Direction direction, boolean connected) {
+        this.connections[direction.get3DDataValue()] = connected;
     }
 
     @Override
-    public long insert(long maxAmount, TransactionContext transaction) {
-        StoragePreconditions.notNegative(maxAmount);
-        if (this.network != null) {
-            return this.network.insert(Math.min(this.maxTransferRate, maxAmount), transaction);
-        }
-
-        return 0;
-    }
-
-    @Override
-    public boolean supportsExtraction() {
-        return true; //todo: do we want to expose extraction since we push energy out?
-    }
-
-    @Override
-    public long extract(long maxAmount, TransactionContext transaction) {
-        return 0;
-    }
-
-    @Override
-    public long getAmount() {
-        return 0;
-    }
-
-    @Override
-    public long getCapacity() {
-        return this.maxTransferRate;
+    public boolean isConnected(@NotNull Direction direction) {
+        return this.connections[direction.get3DDataValue()];
     }
 }

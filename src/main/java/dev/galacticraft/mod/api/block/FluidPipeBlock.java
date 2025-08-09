@@ -142,9 +142,9 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
 
     @Override
     protected void onConnectionChanged(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos) {
-        if (level.getBlockEntity(thisPos) instanceof FluidPipe pipe) {
-            pipe.updateConnection(level.getBlockState(thisPos), thisPos, neighborPos, direction);
-        }
+//        if (level.getBlockEntity(thisPos) instanceof FluidPipe pipe) {
+//            pipe.updateConnection(level.getBlockState(thisPos), thisPos, neighborPos, direction);
+//        } //fixme
     }
 
     // Taken from AE2's Color Applicator implementation
@@ -169,7 +169,7 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
         BlockState newState = this.setColor(state, color);
         level.setBlockAndUpdate(pos, newState);
         for (Direction direction : Direction.values()) {
-            ((FluidPipeBlock)newState.getBlock()).updateConnection(newState, pos, direction, pos.relative(direction), level);
+            ((FluidPipeBlock)newState.getBlock()).updateConnection(newState, pos, direction, pos.relative(direction), level, true);
         }
     }
 

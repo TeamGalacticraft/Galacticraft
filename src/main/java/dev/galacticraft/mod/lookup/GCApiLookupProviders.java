@@ -26,14 +26,12 @@ import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.item.SingleVariantFixedItemBackedFluidStorage;
 import dev.galacticraft.mod.api.pipe.FluidPipe;
-import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.item.OxygenTankItem;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import team.reborn.energy.api.EnergyStorage;
 
 @SuppressWarnings("UnstableApiUsage")
 public class GCApiLookupProviders {
@@ -75,11 +73,6 @@ public class GCApiLookupProviders {
             if (direction == null || !((FluidPipe) blockEntity).canConnect(direction)) return null;
             return ((FluidPipe) blockEntity).getInsertable();
         }, PIPE_TYPES);
-
-        EnergyStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
-            if (direction == null || !((Wire) blockEntity).canConnect(direction)) return null;
-            return ((Wire) blockEntity).getInsertable();
-        }, WIRE_TYPES);
 
         FluidStorage.ITEM.registerForItems((itemStack, context) -> {
             long capacity = ((OxygenTankItem) itemStack.getItem()).capacity;
