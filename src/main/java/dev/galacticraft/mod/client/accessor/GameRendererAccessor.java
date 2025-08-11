@@ -20,17 +20,10 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.render.dimension;
+package dev.galacticraft.mod.client.accessor;
 
-import dev.galacticraft.mod.Constant;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.Camera;
 
-public final class CelestialBodyTextures {
-    public static final ResourceLocation SUN_VENUS = Constant.id("textures/environment/sun_venus.png");
-    public static final ResourceLocation SUN_MOON = Constant.id("textures/environment/sun_moon.png");
-    public static final ResourceLocation SUN = ResourceLocation.withDefaultNamespace("textures/environment/sun.png");
-    public static final ResourceLocation EARTH = Constant.id("textures/environment/earth.png");
-
-    private CelestialBodyTextures() {
-    }
+public interface GameRendererAccessor {
+    void galacticraft$overworldProjectionMatrix(float partialTicks, Camera camera);
 }

@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.client.render.dimension.star.data;
 
+import dev.galacticraft.mod.Constant;
 import net.minecraft.resources.ResourceLocation;
-import dev.galacticraft.mod.client.render.dimension.CelestialBodyTextures;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +49,7 @@ public class Planet3DData extends CelestialBody {
         this.textures = new HashMap<>();
         // Set default texture for all faces
         for (Face face : Face.values()) {
-            this.textures.put(face, CelestialBodyTextures.EARTH);
+            this.textures.put(face, Constant.CelestialBody.EARTH);
         }
         this.opacity = 1.0f; // Full opacity by default
     }
@@ -76,7 +76,7 @@ public class Planet3DData extends CelestialBody {
         // Set default texture for any missing faces
         for (Face face : Face.values()) {
             if (!this.textures.containsKey(face)) {
-                this.textures.put(face, CelestialBodyTextures.EARTH);
+                this.textures.put(face, Constant.CelestialBody.EARTH);
             }
         }
         this.opacity = opacity;
@@ -86,7 +86,7 @@ public class Planet3DData extends CelestialBody {
      * Gets the texture for a specific face.
      */
     public ResourceLocation getTexture(Face face) {
-        return textures.getOrDefault(face, CelestialBodyTextures.EARTH);
+        return textures.getOrDefault(face, Constant.CelestialBody.EARTH);
     }
 
     /**

@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.client.render.dimension.star;
 
-import dev.galacticraft.mod.client.render.dimension.CelestialBodyTextures;
 import dev.galacticraft.mod.client.render.dimension.star.data.CelestialBody;
 import dev.galacticraft.mod.client.render.dimension.star.data.CelestialBodyType;
 import dev.galacticraft.mod.client.render.dimension.star.data.Planet3DData;
@@ -74,10 +73,10 @@ public class CelestialBodyRendererManager {
 
         // FIXME: VERY TEMPORARY, we should setup from a generated map of stars or something
         this.setStarPositions();
-        // this.add2DPlanet(10, 10, 0, 10, 0, CelestialBodyTextures.EARTH);
+        // this.add2DPlanet(10, 10, 0, 10, 0, Constant.CelestialBody.EARTH);
 
         // Add a sample 3D planet with Earth texture and 80% opacity
-        this.add3DPlanet(0, 0, 0, 15, 0, CelestialBodyTextures.EARTH, 1F);
+        // this.add3DPlanet(0, 0, 0, 15, 0, Constant.CelestialBody.EARTH, 1F);
     }
 
     // TODO: temp

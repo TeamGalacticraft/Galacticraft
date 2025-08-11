@@ -35,6 +35,7 @@ import net.minecraft.client.renderer.RenderBuffers;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -55,11 +56,8 @@ public class LevelRendererMixin {
     @Inject(method = "renderSky", at = @At("HEAD"), cancellable = true)
     public void gc$renderSky(Matrix4f matrix4f, Matrix4f projectionMatrix, float tickDelta, Camera camera, boolean thickFog, Runnable fogCallback, CallbackInfo ci) {
         Player player = Minecraft.getInstance().player;
-        if (player.getVehicle() instanceof RocketEntity && player.getVehicle().getY() > Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT) {
-            fogCallback.run();
-            PoseStack poseStack = new PoseStack();
-            poseStack.mulPose(matrix4f);
-            this.worldRenderer.renderOverworldSky(player, poseStack, matrix4f, tickDelta, camera, thickFog, fogCallback);
+        if (player.getVehicle() instanceof RocketEntity && player.getVehicle().getY() > Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT && player.level().dimension() == Level.OVERWORLD) {
+            this.worldRenderer.renderOverworldSky(player, matrix4f, projectionMatrix, tickDelta, camera, thickFog, fogCallback);
             ci.cancel();
         }
     }

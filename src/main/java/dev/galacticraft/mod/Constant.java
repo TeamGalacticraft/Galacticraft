@@ -47,7 +47,7 @@ public interface Constant {
 
     int OVERWORLD_SKYPROVIDER_STARTHEIGHT = 200;
     int CLOUD_HEIGHT = 200;
-    int CLOUD_LIMIT = CLOUD_HEIGHT + 100;
+    int CLOUD_LIMIT = CLOUD_HEIGHT + 50;
     int SPACE_HEIGHT = 1000;
     int REENTRY_HEIGHT = 1100;
     int ESCAPE_HEIGHT = 1200;
@@ -745,6 +745,16 @@ public interface Constant {
         ResourceLocation MOON = Constant.id("textures/gui/rocket/moon_rocket_gui.png");
         ResourceLocation MARS = Constant.id("textures/gui/rocket/mars_rocket_gui.png");
         ResourceLocation VENUS = Constant.id("textures/gui/rocket/venus_rocket_gui.png");
+    }
+
+    interface Skybox {
+        ResourceLocation MOON_PHASES = ResourceLocation.withDefaultNamespace("textures/environment/moon_phases.png");
+        ResourceLocation SUN = ResourceLocation.withDefaultNamespace("textures/environment/sun.png");
+        ResourceLocation SUN_MOON = id("textures/environment/sun_moon.png");
+        ResourceLocation SUN_VENUS = id("textures/environment/sun_venus.png");
+        ResourceLocation EARTH = id("textures/environment/earth.png");
+        ResourceLocation CLOUDS = id("textures/environment/clouds.png");
+        ResourceLocation ATMOSPHERE = id("textures/environment/atmosphere.png");
     }
 
     interface RecipeViewer {
