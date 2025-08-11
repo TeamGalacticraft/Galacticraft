@@ -106,7 +106,7 @@ public class TinLadderBlock extends LadderBlock {
     @Override
     public boolean canSurvive(BlockState blockState, LevelReader level, BlockPos blockPos)
     {
-        return true; // return isSupported(blockState, level, blockPos, blockState.getValue(FACING));
+        return isSupported(blockState, level, blockPos, blockState.getValue(FACING));
     }
 
 
