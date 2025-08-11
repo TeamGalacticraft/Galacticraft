@@ -39,8 +39,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class TinLadderBlock extends LadderBlock {
@@ -67,6 +67,7 @@ public class TinLadderBlock extends LadderBlock {
     }
 
     @Override
+    @NotNull
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (stack.is(GCBlocks.TIN_LADDER.asItem())) { // checks stack in hand is a tin ladder.
             if (player.getXRot() < 0f) { // if looking above horizontal
@@ -93,6 +94,7 @@ public class TinLadderBlock extends LadderBlock {
     // need to override this method because LAddBlock is only interested in the block behind the ladder, which is useful functionality
     // be we want to pay attention to blocks above and below the ladders as well.
     @Override
+    @NotNull
     protected BlockState updateShape(BlockState state, Direction axisDirection, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos)
     {
         if(!isSupported(state, level, pos, axisDirection.getOpposite()))
