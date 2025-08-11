@@ -25,6 +25,7 @@ package dev.galacticraft.mod.mixin;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.CryogenicAccessor;
 import dev.galacticraft.mod.accessor.PetInventoryOpener;
+
 import dev.galacticraft.mod.content.entity.orbital.AdvancedVehicle;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -36,7 +37,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin extends LivingEntity implements CryogenicAccessor, PetInventoryOpener {
-
     PlayerMixin() {
         super(null, null);
     }

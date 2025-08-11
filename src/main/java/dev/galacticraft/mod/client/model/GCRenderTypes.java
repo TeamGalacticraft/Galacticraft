@@ -69,6 +69,7 @@ public class GCRenderTypes {
                         .setShaderState(BUBBLE_SHADER)
                         .setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
                         .setTransparencyState(RenderType.TRANSLUCENT_TRANSPARENCY)
+                        .setDepthTestState(new RenderStateShard.DepthTestStateShard("less", 513))
                         .setCullState(RenderType.NO_CULL)
                         .setWriteMaskState(RenderType.COLOR_WRITE)
                         .setOverlayState(RenderType.OVERLAY)

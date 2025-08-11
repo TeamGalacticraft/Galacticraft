@@ -3,6 +3,7 @@
 #moj_import <fog.glsl>
 
 uniform sampler2D Sampler0;
+uniform sampler2D Sampler2;
 
 uniform vec2 ScreenSize;
 uniform vec4 ColorModulator;
@@ -19,6 +20,12 @@ in vec3 viewDir;
 out vec4 fragColor;
 
 void main() {
+    // Depth test
+    float depth = texelFetch(Sampler2, ivec2(gl_FragCoord.xy), 0).r;
+    if (gl_FragCoord.z >= depth) {
+        discard;
+    }
+
     // - Rim lighting -
     vec3 viewAngle = normalize(-viewDir);
 
