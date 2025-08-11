@@ -102,7 +102,7 @@ public class TinLadderBlock extends LadderBlock {
         return super.updateShape(state, axisDirection, neighborState, level, pos, neighborPos);
     }
 
-    // this method never gets called due to the way
+    // Only called from the super updateShape class if the supporting block behind a ladder is broken.
     @Override
     public boolean canSurvive(BlockState blockState, LevelReader level, BlockPos blockPos)
     {
