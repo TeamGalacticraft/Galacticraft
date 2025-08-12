@@ -29,8 +29,6 @@ import dev.galacticraft.mod.content.block.entity.AirlockControllerBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class AirlockControllerMenu extends MachineMenu<AirlockControllerBlockEntity> {
