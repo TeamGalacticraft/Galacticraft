@@ -1007,7 +1007,7 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(Config.DIFFICULTY, "Difficulty");
         this.add(Config.BOSS_HEALTH_MODIFIER, "Boss Health Modifier");
-        this.add(Config.BOSS_HEALTH_MODIFIER_DESC, "");
+        this.add(Config.BOSS_HEALTH_MODIFIER_DESC, "Multiplies All GC5 Bosses Health By This Value");
 
         this.add(Keybindings.ROCKET_INVENTORY, "Open Rocket Inventory");
         this.add(Keybindings.OPEN_CELESTIAL_SCREEN, "Open Celestial Map");
