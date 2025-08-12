@@ -117,9 +117,6 @@ public class TinLadderBlock extends LadderBlock {
         // If the current block we are looking at is solid, then the ladder is either supported underneath or above -> true
         if (blockState.canOcclude()) return true;
 
-        // If out of bounds, then not supported -> false
-        if (!insideBounds(blockPos, level)) return false;
-
         // If this isn't a tin ladder block and we know it isn't solid, then not supported.
         // Change this to instanceof LadderBlock if you want wooden (and other ladders) to be considered support.
         if (!blockState.is(GCBlocks.TIN_LADDER)) return false;
@@ -138,14 +135,5 @@ public class TinLadderBlock extends LadderBlock {
         // If was horizontal direction, then need to look up and down to ensure find supported ladders there
         return isSupported(level.getBlockState(blockPos.relative(Direction.UP)), level, blockPos.above(), Direction.UP, facingDirection)
                 || isSupported(level.getBlockState(blockPos.relative(Direction.DOWN)), level, blockPos.below(), Direction.DOWN, facingDirection);
-    }
-
-    // Returns true if the pos is inside the world/level boundaries.
-    public boolean insideBounds(BlockPos pos, LevelReader level) {
-        WorldBorder border = level.getWorldBorder();
-        return pos.getY() >= level.getMinBuildHeight() && pos.getY() <= level.getMaxBuildHeight()
-                && pos.getX() >= border.getMinX() && pos.getX() <= border.getMaxX()
-                && pos.getZ() >= border.getMinZ() && pos.getZ() <= border.getMaxZ();
-
     }
 }
