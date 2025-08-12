@@ -26,10 +26,12 @@ import com.mojang.authlib.GameProfile;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.configuration.RedstoneMode;
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.storage.MachineEnergyStorage;
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.content.AirlockState;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCSounds;
@@ -43,6 +45,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.MenuProvider;
@@ -58,37 +61,39 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static dev.galacticraft.mod.content.block.special.AirlockSealBlock.FACING;
 
 public class AirlockControllerBlockEntity extends MachineBlockEntity {
-    // Proximity setting (0..5). 0 = off.
+    // --- UI-config (persisted) ---
     private byte proximityOpen = 0;
 
-    // DUMMY storage so MachineLib doesn't crash on zero-slot specs
     private static final StorageSpec SPEC = StorageSpec.of(
-            MachineEnergyStorage.spec(
-                    0, 0
-            )
+            MachineEnergyStorage.spec(0, 0)
     );
 
-    // runtime
-    public boolean active;
-    public boolean lastActive;
-    private List<AirlockFrameScanner.Result> lastFrames = java.util.Collections.emptyList();
-    public int ticks = 0;
+    // --- Runtime ---
+    private List<AirlockFrameScanner.Result> lastFrames = Collections.emptyList();
+    private Map<Long, AirlockFrameScanner.Result> lastFrameMap = Collections.emptyMap();
+    private final Set<Long> sealedFrames = new HashSet<>();
+
+    private AirlockState state = AirlockState.NONE;
+    private int ticks = 0;
 
     public AirlockControllerBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.AIRLOCK_CONTROLLER, pos, state, SPEC);
     }
 
+    // --- Persisted config ---
+
     public byte getProximityOpen() { return this.proximityOpen; }
-    public void setProximityOpen(byte v) { this.proximityOpen = (byte)Math.max(0, Math.min(5, v)); setChanged(); }
+    public void setProximityOpen(byte v) {
+        this.proximityOpen = (byte) Math.max(0, Math.min(5, v));
+        setChanged();
+    }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
@@ -102,70 +107,105 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         if (tag.contains("ProximityOpen")) this.proximityOpen = tag.getByte("ProximityOpen");
     }
 
+    // --- Core logic ---
+
     private void serverTick() {
-        if (this.level == null || this.level.isClientSide()) return;
-        this.ticks++;
+        if (!(this.level instanceof ServerLevel server)) return;
+        if ((++this.ticks % 5) != 0) return; // tick every 5
 
-        if (this.ticks % 5 != 0) return;
-
-        // Re-scan frames
-        List<AirlockFrameScanner.Result> frames = AirlockFrameScanner.scanAll(this.level, this.worldPosition);
+        List<AirlockFrameScanner.Result> frames = AirlockFrameScanner.scanAll(server, this.worldPosition);
+        Map<Long, AirlockFrameScanner.Result> frameMap = indexFrames(frames);
         boolean framesChanged = !sameFrames(frames, this.lastFrames);
 
-        // RedstoneMode: true = machine should be "active" given powered state
-        boolean powered = this.level.getBestNeighborSignal(this.worldPosition) > 0;
+        boolean powered = server.getBestNeighborSignal(this.worldPosition) > 0;
         RedstoneMode mode = this.getRedstoneMode();
         boolean redstoneAllows = mode.isActive(powered);
 
-        // Proximity: open (disable) only for *authorized* nearby players
-        boolean near = false;
-        if (!frames.isEmpty() && this.proximityOpen > 0) {
-            double r = this.proximityOpen;
-            AABB big = null;
-            for (var f : frames) {
-                AABB expanded = getExpanded(f, r);
-                big = (big == null) ? expanded : big.minmax(expanded);
-            }
-            if (big != null) {
-                // ONLY count players who are allowed by MachineLib security
-                var players = this.level.getEntitiesOfClass(Player.class, big);
-                for (Player p : players) {
-                    if (this.getSecurity().hasAccess(p)) {
-                        near = true;
-                        break;
+        Set<Long> nextSealed = new HashSet<>();
+        if (redstoneAllows && !frames.isEmpty()) {
+            final double r = this.proximityOpen;
+            for (AirlockFrameScanner.Result f : frames) {
+                boolean anyAuthorizedNear = false;
+                if (r > 0) {
+                    AABB expanded = expandedInterior(f, r);
+                    for (Player p : server.getEntitiesOfClass(Player.class, expanded)) {
+                        if (this.getSecurity().hasAccess(p)) {
+                            anyAuthorizedNear = true;
+                            break;
+                        }
                     }
+                }
+                if (!anyAuthorizedNear) {
+                    nextSealed.add(frameId(f));
                 }
             }
         }
 
-        boolean newActive = redstoneAllows && !near;
-        boolean activeChanged = (newActive != this.active);
+        boolean anyChange = false;
 
-        if (activeChanged || framesChanged) {
-            // Unseal old frames
-            for (var f : this.lastFrames) unseal(f);
-
-            // Seal new if active
-            if (newActive) {
-                for (var f : frames) seal(f);
+        for (long id : new HashSet<>(this.sealedFrames)) {
+            if (!nextSealed.contains(id)) {
+                AirlockFrameScanner.Result f = this.lastFrameMap.getOrDefault(id, frameMap.get(id));
+                if (f != null) {
+                    unseal(f);
+                    this.sealedFrames.remove(id);
+                    anyChange = true;
+                }
             }
+        }
 
-            this.active = newActive;
+        for (long id : nextSealed) {
+            if (!this.sealedFrames.contains(id)) {
+                AirlockFrameScanner.Result f = frameMap.get(id);
+                if (f != null) {
+                    seal(f);
+                    this.sealedFrames.add(id);
+                    anyChange = true;
+                }
+            }
+        }
+
+        AirlockState newState;
+        if (frames.isEmpty() || this.sealedFrames.isEmpty()) newState = AirlockState.NONE;
+        else if (this.sealedFrames.size() == frames.size()) newState = AirlockState.ALL;
+        else newState = AirlockState.PARTIAL;
+
+        boolean stateChanged = (newState != this.state);
+        this.state = newState;
+
+        if (anyChange || framesChanged || stateChanged) {
             this.lastFrames = frames;
+            this.lastFrameMap = frameMap;
 
-            BlockState s = this.level.getBlockState(this.worldPosition);
-            this.level.sendBlockUpdated(this.worldPosition, s, s, Block.UPDATE_CLIENTS);
+            BlockState s = server.getBlockState(this.worldPosition);
+            server.sendBlockUpdated(this.worldPosition, s, s, Block.UPDATE_CLIENTS);
+            setChanged();
         }
     }
 
-    private static @NotNull AABB getExpanded(AirlockFrameScanner.Result f, double r) {
+    // --- Helpers ---
+
+    private static Map<Long, AirlockFrameScanner.Result> indexFrames(List<AirlockFrameScanner.Result> list) {
+        Map<Long, AirlockFrameScanner.Result> out = new HashMap<>(list.size());
+        for (AirlockFrameScanner.Result r : list) out.put(frameId(r), r);
+        return out;
+    }
+
+    private static long frameId(AirlockFrameScanner.Result f) {
+        int h = 1;
+        h = 31 * h + f.plane.ordinal();
+        h = 31 * h + f.minX; h = 31 * h + f.minY; h = 31 * h + f.minZ;
+        h = 31 * h + f.maxX; h = 31 * h + f.maxY; h = 31 * h + f.maxZ;
+        return (h & 0xffffffffL);
+    }
+
+    private static AABB expandedInterior(AirlockFrameScanner.Result f, double r) {
         AABB interior = switch (f.plane) {
             case XY -> new AABB(f.minX + 1, f.minY + 1, f.minZ,     f.maxX,     f.maxY,     f.maxZ);
             case XZ -> new AABB(f.minX + 1, f.minY,     f.minZ + 1, f.maxX,     f.maxY,     f.maxZ);
             case YZ -> new AABB(f.minX,     f.minY + 1, f.minZ + 1, f.maxX,     f.maxY,     f.maxZ);
         };
-        interior.inflate(0.0001); // avoid zero-thickness issues on the plane
-        return interior.inflate(r);
+        return interior.inflate(Math.max(r, 0) + 1.0e-4);
     }
 
     private static boolean sameFrames(List<AirlockFrameScanner.Result> a, List<AirlockFrameScanner.Result> b) {
@@ -181,152 +221,180 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
     }
 
     private void seal(AirlockFrameScanner.Result f) {
+        if (!(this.level instanceof ServerLevel server)) return;
+
         boolean anyAir = false;
         switch (f.plane) {
             case XY -> {
-                int z = f.minZ;
+                final int z = f.minZ;
                 for (int x = f.minX + 1; x <= f.maxX - 1; x++)
                     for (int y = f.minY + 1; y <= f.maxY - 1; y++)
-                        if (this.level.getBlockState(new BlockPos(x, y, z)).isAir()) anyAir = true;
+                        if (server.getBlockState(new BlockPos(x, y, z)).isAir()) anyAir = true;
             }
             case XZ -> {
-                int y = f.minY;
+                final int y = f.minY;
                 for (int x = f.minX + 1; x <= f.maxX - 1; x++)
                     for (int z = f.minZ + 1; z <= f.maxZ - 1; z++)
-                        if (this.level.getBlockState(new BlockPos(x, y, z)).isAir()) anyAir = true;
+                        if (server.getBlockState(new BlockPos(x, y, z)).isAir()) anyAir = true;
             }
             case YZ -> {
-                int x = f.minX;
+                final int x = f.minX;
                 for (int y = f.minY + 1; y <= f.maxY - 1; y++)
                     for (int z = f.minZ + 1; z <= f.maxZ - 1; z++)
-                        if (this.level.getBlockState(new BlockPos(x, y, z)).isAir()) anyAir = true;
+                        if (server.getBlockState(new BlockPos(x, y, z)).isAir()) anyAir = true;
             }
         }
         if (anyAir) {
-            BlockPos center = new BlockPos((f.minX + f.maxX)/2, (f.minY + f.maxY)/2, (f.minZ + f.maxZ)/2);
-            this.level.playSound(null, center, GCSounds.PLAYER_CLOSEAIRLOCK, SoundSource.BLOCKS, 1.0F, 1.0F);
+            BlockPos center = new BlockPos((f.minX + f.maxX) / 2, (f.minY + f.maxY) / 2, (f.minZ + f.maxZ) / 2);
+            server.playSound(null, center, GCSounds.PLAYER_CLOSEAIRLOCK, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
 
         switch (f.plane) {
             case XY -> {
-                int z = f.minZ;
+                final int z = f.minZ;
                 for (int x = f.minX + 1; x <= f.maxX - 1; x++)
                     for (int y = f.minY + 1; y <= f.maxY - 1; y++) {
                         BlockPos p = new BlockPos(x, y, z);
-                        if (this.level.getBlockState(p).isAir())
-                            this.level.setBlock(p, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, f.sealFacing), Block.UPDATE_ALL);
+                        if (server.getBlockState(p).isAir())
+                            server.setBlock(p, GCBlocks.AIR_LOCK_SEAL.defaultBlockState()
+                                            .setValue(dev.galacticraft.mod.content.block.special.AirlockSealBlock.FACING, f.sealFacing),
+                                    Block.UPDATE_ALL);
                     }
             }
             case XZ -> {
-                int y = f.minY;
+                final int y = f.minY;
                 for (int x = f.minX + 1; x <= f.maxX - 1; x++)
                     for (int z = f.minZ + 1; z <= f.maxZ - 1; z++) {
                         BlockPos p = new BlockPos(x, y, z);
-                        if (this.level.getBlockState(p).isAir())
-                            this.level.setBlock(p, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, f.sealFacing), Block.UPDATE_ALL);
+                        if (server.getBlockState(p).isAir())
+                            server.setBlock(p, GCBlocks.AIR_LOCK_SEAL.defaultBlockState()
+                                            .setValue(dev.galacticraft.mod.content.block.special.AirlockSealBlock.FACING, f.sealFacing),
+                                    Block.UPDATE_ALL);
                     }
             }
             case YZ -> {
-                int x = f.minX;
+                final int x = f.minX;
                 for (int y = f.minY + 1; y <= f.maxY - 1; y++)
                     for (int z = f.minZ + 1; z <= f.maxZ - 1; z++) {
                         BlockPos p = new BlockPos(x, y, z);
-                        if (this.level.getBlockState(p).isAir())
-                            this.level.setBlock(p, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, f.sealFacing), Block.UPDATE_ALL);
+                        if (server.getBlockState(p).isAir())
+                            server.setBlock(p, GCBlocks.AIR_LOCK_SEAL.defaultBlockState()
+                                            .setValue(dev.galacticraft.mod.content.block.special.AirlockSealBlock.FACING, f.sealFacing),
+                                    Block.UPDATE_ALL);
                     }
             }
         }
     }
 
-    public void unseal(AirlockFrameScanner.Result f) {
+    private void unseal(AirlockFrameScanner.Result f) {
+        if (!(this.level instanceof ServerLevel server)) return;
+
         boolean hadSeal = false;
         switch (f.plane) {
             case XY -> {
-                int z = f.minZ;
+                final int z = f.minZ;
                 for (int x = f.minX + 1; x <= f.maxX - 1; x++)
                     for (int y = f.minY + 1; y <= f.maxY - 1; y++) {
                         BlockPos p = new BlockPos(x, y, z);
-                        if (this.level.getBlockState(p).is(GCBlocks.AIR_LOCK_SEAL)) {
+                        if (server.getBlockState(p).is(GCBlocks.AIR_LOCK_SEAL)) {
                             hadSeal = true;
-                            this.level.setBlock(p, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+                            server.setBlock(p, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
                         }
                     }
             }
             case XZ -> {
-                int y = f.minY;
+                final int y = f.minY;
                 for (int x = f.minX + 1; x <= f.maxX - 1; x++)
                     for (int z = f.minZ + 1; z <= f.maxZ - 1; z++) {
                         BlockPos p = new BlockPos(x, y, z);
-                        if (this.level.getBlockState(p).is(GCBlocks.AIR_LOCK_SEAL)) {
+                        if (server.getBlockState(p).is(GCBlocks.AIR_LOCK_SEAL)) {
                             hadSeal = true;
-                            this.level.setBlock(p, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+                            server.setBlock(p, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
                         }
                     }
             }
             case YZ -> {
-                int x = f.minX;
+                final int x = f.minX;
                 for (int y = f.minY + 1; y <= f.maxY - 1; y++)
                     for (int z = f.minZ + 1; z <= f.maxZ - 1; z++) {
                         BlockPos p = new BlockPos(x, y, z);
-                        if (this.level.getBlockState(p).is(GCBlocks.AIR_LOCK_SEAL)) {
+                        if (server.getBlockState(p).is(GCBlocks.AIR_LOCK_SEAL)) {
                             hadSeal = true;
-                            this.level.setBlock(p, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+                            server.setBlock(p, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
                         }
                     }
             }
         }
         if (hadSeal) {
-            BlockPos center = new BlockPos((f.minX + f.maxX)/2, (f.minY + f.maxY)/2, (f.minZ + f.maxZ)/2);
-            this.level.playSound(null, center, GCSounds.PLAYER_OPENAIRLOCK, SoundSource.BLOCKS, 1.0F, 1.0F);
+            BlockPos center = new BlockPos((f.minX + f.maxX) / 2, (f.minY + f.maxY) / 2, (f.minZ + f.maxZ) / 2);
+            server.playSound(null, center, GCSounds.PLAYER_OPENAIRLOCK, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
     }
 
+    // --- UI / Status ---
+
+    public AirlockState getAirlockState() { return this.state; }
+    public List<AirlockFrameScanner.Result> getLastFrames() { return this.lastFrames; }
+
     @Override
     public @NotNull Component getDisplayName() {
-        UUID owner = this.getSecurity().getOwner();
-        String displayName;
-
-        if (owner == null) {
+        // If no owner, default name
+        var security = this.getSecurity();
+        if (security.getOwner() == null) {
             return Component.translatable(Translations.Ui.AIRLOCK_DEFAULT_NAME);
-        } else {
-            Optional<GameProfile> profile = SkullBlockEntity.fetchGameProfile(owner).getNow(null);
-            if (profile != null && profile.isPresent()) {
-                displayName = profile.get().getName();
-            } else {
-                return Component.translatable(Translations.Ui.AIRLOCK_DEFAULT_NAME);
+        }
+
+        // Try server cache
+        String ownerName = null;
+        if (this.level != null && this.level.getServer() != null) {
+            GameProfileCache cache = this.level.getServer().getProfileCache();
+            if (cache != null) {
+                Optional<GameProfile> prof = cache.get(security.getOwner());
+                ownerName = prof.map(GameProfile::getName).orElse(null);
             }
         }
 
-        return Component.translatable(Translations.Ui.AIRLOCK_OWNER, displayName);
+        // As a last resort, attempt skull fetch
+        if (ownerName == null) {
+            Optional<GameProfile> prof = SkullBlockEntity.fetchGameProfile(security.getOwner()).getNow(Optional.empty());
+            ownerName = prof.map(GameProfile::getName).orElse(null);
+        }
+
+        if (ownerName == null || ownerName.isBlank()) {
+            return Component.translatable(Translations.Ui.AIRLOCK_DEFAULT_NAME);
+        }
+        return Component.translatable(Translations.Ui.AIRLOCK_OWNER, ownerName);
     }
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         serverTick();
-        return GCMachineStatuses.SEALED;
+        return switch (this.state) {
+            case ALL -> GCMachineStatuses.AIRLOCK_ENABLED;
+            case PARTIAL -> GCMachineStatuses.AIRLOCK_PARTIAL;
+            case NONE -> GCMachineStatuses.AIRLOCK_DISABLED;
+        };
+    }
+
+    @Override
+    public @Nullable MachineMenu<? extends MachineBlockEntity> createMenu(int syncId, Inventory inventory, Player player) {
+        return new AirlockControllerMenu(syncId, player, this);
     }
 
     @Override
     protected void tickDisabled(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         serverTick();
-
         super.tickDisabled(level, pos, state, profiler);
     }
 
     @Override
-    public AirlockControllerMenu createMenu(int syncId, Inventory inventory, Player player) {
-        return new AirlockControllerMenu(syncId, player, this);
-    }
-
-    public List<AirlockFrameScanner.Result> getLastFrames() {
-        return this.lastFrames;
-    }
-
-    /** Unseal on BE removal (block broken / replaced). */
-    @Override
     public void setRemoved() {
-        if (!this.level.isClientSide() && this.lastFrames != null) {
-            for (var f : this.lastFrames) unseal(f);
+        if (this.level instanceof ServerLevel && this.lastFrameMap != null) {
+            for (long id : this.sealedFrames) {
+                AirlockFrameScanner.Result f = this.lastFrameMap.get(id);
+                if (f != null) unseal(f);
+            }
+            this.sealedFrames.clear();
         }
         super.setRemoved();
     }

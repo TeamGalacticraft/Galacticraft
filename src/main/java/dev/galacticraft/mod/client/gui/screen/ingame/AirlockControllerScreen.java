@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import dev.galacticraft.mod.content.AirlockState;
 import dev.galacticraft.mod.network.c2s.AirlockSetProximityPayload;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
@@ -98,11 +99,20 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
 
     @Override
     protected void renderMachineBackground(GuiGraphics g, int mouseX, int mouseY, float delta) {
-        boolean enabled = this.menu.enabled;
-        Component label = enabled
-                ? Component.translatable(Translations.Ui.AIRLOCK_ENABLED)
-                : Component.translatable(Translations.Ui.AIRLOCK_DISABLED);
-        int color = enabled ? ChatFormatting.GREEN.getColor() : ChatFormatting.RED.getColor();
+        AirlockState enabled = this.menu.state;
+        Component label;
+        int color;
+        if (enabled.equals(AirlockState.ALL)) {
+            label = Component.translatable(Translations.Ui.AIRLOCK_ENABLED);
+            color = ChatFormatting.GREEN.getColor();
+        } else if (enabled.equals(AirlockState.PARTIAL)) {
+            label = Component.translatable(Translations.Ui.AIRLOCK_PARTIAL);
+            color = ChatFormatting.YELLOW.getColor();
+        } else {
+            label = Component.translatable(Translations.Ui.AIRLOCK_DISABLED);
+            color = ChatFormatting.RED.getColor();
+        }
+
         g.drawCenteredString(this.font, label.getString(), this.leftPos + 90, this.topPos + 22, color);
 
         int upX = this.leftPos + 158, upY = this.topPos + 65;

@@ -386,6 +386,7 @@ public interface Translations {
 
         String AIRLOCK_DEFAULT_NAME = "ui.galacticraft.airlock.default_name";
         String AIRLOCK_ENABLED = "ui.galacticraft.airlock.enabled";
+        String AIRLOCK_PARTIAL = "ui.galacticraft.airlock.partial";
         String AIRLOCK_DISABLED = "ui.galacticraft.airlock.disabled";
         String AIRLOCK_OPEN_WHEN_NEAR = "ui.galacticraft.airlock.open_when_near";
         String AIRLOCK_OWNER = "ui.galacticraft.airlock.owner";

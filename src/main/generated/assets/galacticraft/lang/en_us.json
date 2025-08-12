@@ -887,6 +887,7 @@
   "ui.galacticraft.airlock.enabled": "Airlock Enabled",
   "ui.galacticraft.airlock.open_when_near": "Airlock opens near player",
   "ui.galacticraft.airlock.owner": "%s's Airlock Controller",
+  "ui.galacticraft.airlock.partial": "Airlock Partially Enabled",
   "ui.galacticraft.alpha_warning.content1": "Galacticraft is currently in ALPHA.",
   "ui.galacticraft.alpha_warning.content2": "Please report all issues you find.",
   "ui.galacticraft.alpha_warning.content3": "Press [ESC] or click to continue.",

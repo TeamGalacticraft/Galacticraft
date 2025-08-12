@@ -24,6 +24,7 @@ package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.menu.MenuData;
+import dev.galacticraft.mod.content.AirlockState;
 import dev.galacticraft.mod.content.block.entity.AirlockControllerBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -33,13 +34,13 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class AirlockControllerMenu extends MachineMenu<AirlockControllerBlockEntity> {
-    public byte proximityOpen = 0; // 0..5
-    public boolean enabled = false;
+    public byte proximityOpen;
+    public AirlockState state;
 
     public AirlockControllerMenu(int syncId, Player player, AirlockControllerBlockEntity be) {
         super(GCMenuTypes.AIRLOCK_CONTROLLER_MENU, syncId, player, be);
         this.proximityOpen = be.getProximityOpen();
-        this.enabled = be.active;
+        this.state = be.getAirlockState();
     }
 
     public AirlockControllerMenu(int syncId, Inventory inv, BlockPos pos) {
@@ -50,6 +51,6 @@ public class AirlockControllerMenu extends MachineMenu<AirlockControllerBlockEnt
     public void registerData(@NotNull MenuData data) {
         super.registerData(data);
         data.registerByte(this.be::getProximityOpen, b -> this.proximityOpen = (byte) b);
-        data.registerBoolean(() -> this.be.active, b -> this.enabled = b);
+        data.registerInt(() -> this.be.getAirlockState().ordinal(), b -> this.state = AirlockState.values()[b]);
     }
 }
