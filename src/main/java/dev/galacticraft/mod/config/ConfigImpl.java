@@ -449,7 +449,7 @@ public class ConfigImpl implements Config {
                     key -> ellipsize(Component.translatable(key), font, maxLabelWidth - 15);
 
             // Use for tooltips with description e.g. (name, description)
-            BiFunction<String, String, Component> toolTipWithDesc =
+            BiFunction<String, String, Component> tooltipWithDesc =
                     (id, optDescId) -> buildTooltip(
                             Component.translatable(id),
                             font,
@@ -460,11 +460,11 @@ public class ConfigImpl implements Config {
                     );
 
             // Use for configs with no description e.g. (name)
-            Function<String, Component> toolTipSingular =
-                    id -> toolTipWithDesc.apply(id, null);
+            Function<String, Component> tooltipSingular =
+                    id -> tooltipWithDesc.apply(id, null);
 
             // Same but for subcategories
-            BiFunction<String, String, Component> toolTipWithDescSub =
+            BiFunction<String, String, Component> tooltipWithDescSub =
                     (id, optDescId) -> buildTooltip(
                             Component.translatable(id),
                             font,
@@ -475,8 +475,8 @@ public class ConfigImpl implements Config {
                     );
 
             // Same but for subcategories
-            Function<String, Component> toolTipSingularSub =
-                    id -> toolTipWithDescSub.apply(id, null);
+            Function<String, Component> tooltipSingularSub =
+                    id -> tooltipWithDescSub.apply(id, null);
 
             // --- DEBUG CONFIG ---
             ConfigCategory dB = b.getOrCreateCategory(Component.translatable(Translations.Config.DEBUG));
@@ -485,7 +485,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     label.apply(Translations.Config.DEBUG_LOGGING),
                     config.isDebugLogEnabled())
-                    .setTooltip(toolTipSingular.apply(Translations.Config.RESET))
+                    .setTooltip(tooltipSingular.apply(Translations.Config.RESET))
                     .setSaveConsumer(config::setDebugLog)
                     .setDefaultValue(false)
                     .build()
@@ -495,7 +495,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     label.apply(Translations.Config.HIDE_ALPHA_WARNING),
                     config.isAlphaWarningHidden())
-                    .setTooltip(toolTipSingular.apply(Translations.Config.HIDE_ALPHA_WARNING))
+                    .setTooltip(tooltipSingular.apply(Translations.Config.HIDE_ALPHA_WARNING))
                     .setSaveConsumer(config::setAlphaWarningHidden)
                     .setDefaultValue(false)
                     .build()
@@ -509,7 +509,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.WIRE_ENERGY_TRANSFER_LIMIT),
                     config.wireTransferLimit())
-                    .setTooltip(toolTipSingularSub.apply(Translations.Config.WIRE_ENERGY_TRANSFER_LIMIT))
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.WIRE_ENERGY_TRANSFER_LIMIT))
                     .setSaveConsumer(config::setWireTransferLimit)
                     .setDefaultValue(480)
                     .build()
@@ -519,7 +519,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT),
                     config.heavyWireTransferLimit())
-                    .setTooltip(toolTipSingularSub.apply(Translations.Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT))
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT))
                     .setSaveConsumer(config::setHeavyWireTransferLimit)
                     .setDefaultValue(1440)
                     .build()
@@ -533,7 +533,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.ENERGY_STORAGE_SIZE),
                     config.machineEnergyStorageSize())
-                    .setTooltip(toolTipSingularSub.apply(Translations.Config.ENERGY_STORAGE_SIZE))
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.ENERGY_STORAGE_SIZE))
                     .setSaveConsumer(config::setMachineEnergyStorageSize)
                     .setDefaultValue(30_000)
                     .requireRestart()
@@ -544,7 +544,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE),
                     config.energyStorageModuleStorageSize())
-                    .setTooltip(toolTipSingularSub.apply(Translations.Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE))
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE))
                     .setSaveConsumer(config::setEnergyStorageModuleStorageSize)
                     .setDefaultValue(500_000)
                     .build()
@@ -554,7 +554,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE),
                     config.coalGeneratorEnergyProductionRate())
-                    .setTooltip(toolTipSingularSub.apply(Translations.Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE))
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE))
                     .setSaveConsumer(config::setCoalGeneratorEnergyProductionRate)
                     .setDefaultValue(120)
                     .build()
@@ -564,7 +564,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE),
                     config.solarPanelEnergyProductionRate())
-                    .setTooltip(toolTipSingularSub.apply(Translations.Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE))
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE))
                     .setSaveConsumer(config::setSolarPanelEnergyProductionRate)
                     .setDefaultValue(44)
                     .build()
@@ -574,7 +574,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE),
                     config.circuitFabricatorEnergyConsumptionRate())
-                    .setTooltip(toolTipSingularSub.apply(Translations.Config.CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE))
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setCircuitFabricatorEnergyConsumptionRate)
                     .setDefaultValue(20)
                     .build()
@@ -584,7 +584,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
                     config.electricCompressorEnergyConsumptionRate())
-                    .setTooltip(toolTipSingularSub.apply(Translations.Config.ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE))
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setElectricCompressorEnergyConsumptionRate)
                     .setDefaultValue(75)
                     .build()
@@ -594,7 +594,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE),
                     config.electricFurnaceEnergyConsumptionRate())
-                    .setTooltip(toolTipSingularSub.apply(Translations.Config.ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE))
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setElectricFurnaceEnergyConsumptionRate)
                     .setDefaultValue(20)
                     .build()
@@ -604,7 +604,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.ELECTRIC_ARC_FURNACE_ENERGY_CONSUMPTION_RATE),
                     config.electricArcFurnaceEnergyConsumptionRate())
-                    .setTooltip(toolTipSingularSub.apply(Translations.Config.ELECTRIC_ARC_FURNACE_ENERGY_CONSUMPTION_RATE))
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.ELECTRIC_ARC_FURNACE_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setElectricArcFurnaceEnergyConsumptionRate)
                     .setDefaultValue(20)
                     .build()
@@ -614,7 +614,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.ELECTRIC_ARC_FURNACE_BONUS_CHANCE),
                     config.electricArcFurnaceBonusChance())
-                    .setTooltip(toolTipSingularSub.apply(Translations.Config.ELECTRIC_ARC_FURNACE_BONUS_CHANCE))
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.ELECTRIC_ARC_FURNACE_BONUS_CHANCE))
                     .setSaveConsumer(config::setElectricArcFurnaceBonusChance)
                     .setDefaultValue(0.25F)
                     .setMin(0.0F)
@@ -626,7 +626,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE),
                     config.oxygenCollectorEnergyConsumptionRate())
-                    .setTooltip(toolTipSingularSub.apply(Translations.Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE))
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setOxygenCollectorEnergyConsumptionRate)
                     .setDefaultValue(10)
                     .build()
@@ -636,7 +636,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
                     config.oxygenCompressorEnergyConsumptionRate())
-                    .setTooltip(toolTipSingularSub.apply(Translations.Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE))
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setOxygenCompressorEnergyConsumptionRate)
                     .setDefaultValue(15)
                     .requireRestart()
@@ -647,7 +647,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE),
                     config.oxygenDecompressorEnergyConsumptionRate())
-                    .setTooltip(toolTipSingularSub.apply(Translations.Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE))
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setOxygenDecompressorEnergyConsumptionRate)
                     .setDefaultValue(15)
                     .requireRestart()
@@ -658,7 +658,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.OXYGEN_SEALER_ENERGY_CONSUMPTION_RATE),
                     config.oxygenSealerEnergyConsumptionRate())
-                    .setTooltip(toolTipSingularSub.apply(Translations.Config.OXYGEN_SEALER_ENERGY_CONSUMPTION_RATE))
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.OXYGEN_SEALER_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setOxygenSealerEnergyConsumptionRate)
                     .setDefaultValue(10)
                     .build()
@@ -668,7 +668,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.OXYGEN_SEALER_OXYGEN_CONSUMPTION_RATE),
                     config.oxygenSealerOxygenConsumptionRate())
-                    .setTooltip(toolTipSingularSub.apply(Translations.Config.OXYGEN_SEALER_OXYGEN_CONSUMPTION_RATE))
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.OXYGEN_SEALER_OXYGEN_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setOxygenSealerOxygenConsumptionRate)
                     .setDefaultValue(1000)
                     .build()
@@ -678,7 +678,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.MAX_SEALING_POWER),
                     config.maxSealingPower())
-                    .setTooltip(toolTipSingularSub.apply(Translations.Config.MAX_SEALING_POWER))
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.MAX_SEALING_POWER))
                     .setSaveConsumer(config::setMaxSealingPower)
                     .setDefaultValue(1024)
                     .build()
@@ -688,7 +688,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.REFINERY_ENERGY_CONSUMPTION_RATE),
                     config.refineryEnergyConsumptionRate())
-                    .setTooltip(toolTipSingularSub.apply(Translations.Config.REFINERY_ENERGY_CONSUMPTION_RATE))
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.REFINERY_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setRefineryEnergyConsumptionRate)
                     .setDefaultValue(60)
                     .build()
@@ -698,7 +698,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.FUEL_LOADER_ENERGY_CONSUMPTION_RATE),
                     config.fuelLoaderEnergyConsumptionRate())
-                    .setTooltip(toolTipSingularSub.apply(Translations.Config.FUEL_LOADER_ENERGY_CONSUMPTION_RATE))
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.FUEL_LOADER_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setFuelLoaderEnergyConsumptionRate)
                     .setDefaultValue(15)
                     .build()
@@ -708,7 +708,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.FOOD_CANNER_ENERGY_CONSUMPTION_RATE),
                     config.foodCannerEnergyConsumptionRate())
-                    .setTooltip(toolTipSingularSub.apply(Translations.Config.FOOD_CANNER_ENERGY_CONSUMPTION_RATE))
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.FOOD_CANNER_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setFoodCannerEnergyConsumptionRate)
                     .setDefaultValue(15)
                     .requireRestart()
@@ -719,7 +719,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE),
                     config.oxygenDecompressorEnergyConsumptionRate())
-                    .setTooltip(toolTipSingularSub.apply(Translations.Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE))
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setOxygenDecompressorEnergyConsumptionRate)
                     .setDefaultValue(15)
                     .requireRestart()
@@ -740,7 +740,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     label.apply(Translations.Config.SMALL_OXYGEN_TANK_CAPACITY),
                     config.smallOxygenTankCapacity())
-                    .setTooltip(toolTipSingular.apply(Translations.Config.SMALL_OXYGEN_TANK_CAPACITY))
+                    .setTooltip(tooltipSingular.apply(Translations.Config.SMALL_OXYGEN_TANK_CAPACITY))
                     .setSaveConsumer(config::setSmallOxygenTankCapacity)
                     .setDefaultValue(FluidConstants.BUCKET)
                     .setMin(0)
@@ -752,7 +752,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     label.apply(Translations.Config.MEDIUM_OXYGEN_TANK_CAPACITY),
                     config.mediumOxygenTankCapacity())
-                    .setTooltip(toolTipSingular.apply(Translations.Config.MEDIUM_OXYGEN_TANK_CAPACITY))
+                    .setTooltip(tooltipSingular.apply(Translations.Config.MEDIUM_OXYGEN_TANK_CAPACITY))
                     .setSaveConsumer(config::setMediumOxygenTankCapacity)
                     .setDefaultValue(2 * FluidConstants.BUCKET)
                     .setMin(0)
@@ -764,7 +764,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     label.apply(Translations.Config.LARGE_OXYGEN_TANK_CAPACITY),
                     config.largeOxygenTankCapacity())
-                    .setTooltip(toolTipSingular.apply(Translations.Config.LARGE_OXYGEN_TANK_CAPACITY))
+                    .setTooltip(tooltipSingular.apply(Translations.Config.LARGE_OXYGEN_TANK_CAPACITY))
                     .setSaveConsumer(config::setLargeOxygenTankCapacity)
                     .setDefaultValue(3 * FluidConstants.BUCKET)
                     .setMin(0)
@@ -776,7 +776,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     label.apply(Translations.Config.PLAYER_OXYGEN_CONSUMPTION_RATE),
                     config.playerOxygenConsumptionRate())
-                    .setTooltip(toolTipSingular.apply(Translations.Config.PLAYER_OXYGEN_CONSUMPTION_RATE))
+                    .setTooltip(tooltipSingular.apply(Translations.Config.PLAYER_OXYGEN_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setPlayerOxygenConsumptionRate)
                     .setDefaultValue(5 * FluidConstants.DROPLET)
                     .setMin(0)
@@ -788,7 +788,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     label.apply(Translations.Config.WOLF_OXYGEN_CONSUMPTION_RATE),
                     config.wolfOxygenConsumptionRate())
-                    .setTooltip(toolTipSingular.apply(Translations.Config.WOLF_OXYGEN_CONSUMPTION_RATE))
+                    .setTooltip(tooltipSingular.apply(Translations.Config.WOLF_OXYGEN_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setWolfOxygenConsumptionRate)
                     .setDefaultValue(3 * FluidConstants.DROPLET)
                     .setMin(0)
@@ -800,7 +800,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     label.apply(Translations.Config.CAT_OXYGEN_CONSUMPTION_RATE),
                     config.catOxygenConsumptionRate())
-                    .setTooltip(toolTipSingular.apply(Translations.Config.CAT_OXYGEN_CONSUMPTION_RATE))
+                    .setTooltip(tooltipSingular.apply(Translations.Config.CAT_OXYGEN_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setCatOxygenConsumptionRate)
                     .setDefaultValue(2 * FluidConstants.DROPLET)
                     .setMin(0)
@@ -812,7 +812,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     label.apply(Translations.Config.PARROT_OXYGEN_CONSUMPTION_RATE),
                     config.parrotOxygenConsumptionRate())
-                    .setTooltip(toolTipSingular.apply(Translations.Config.PARROT_OXYGEN_CONSUMPTION_RATE))
+                    .setTooltip(tooltipSingular.apply(Translations.Config.PARROT_OXYGEN_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setParrotOxygenConsumptionRate)
                     .setDefaultValue(FluidConstants.DROPLET)
                     .setMin(0)
@@ -824,7 +824,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     label.apply(Translations.Config.CANNOT_EAT_IN_NO_ATMOSPHERE),
                     config.cannotEatInNoAtmosphere())
-                    .setTooltip(toolTipSingular.apply(Translations.Config.CANNOT_EAT_IN_NO_ATMOSPHERE))
+                    .setTooltip(tooltipSingular.apply(Translations.Config.CANNOT_EAT_IN_NO_ATMOSPHERE))
                     .setSaveConsumer(config::setCannotEatInNoAtmosphere)
                     .setDefaultValue(true)
                     .build()
@@ -834,7 +834,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     label.apply(Translations.Config.CANNOT_EAT_WITH_MASK),
                     config.cannotEatWithMask())
-                    .setTooltip(toolTipSingular.apply(Translations.Config.CANNOT_EAT_WITH_MASK))
+                    .setTooltip(tooltipSingular.apply(Translations.Config.CANNOT_EAT_WITH_MASK))
                     .setSaveConsumer(config::setCannotEatWithMask)
                     .setDefaultValue(true)
                     .build()
@@ -848,7 +848,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     label.apply(Translations.Config.ENABLE_GC_HOUSTON),
                     config.enableGcHouston())
-                    .setTooltip(toolTipSingular.apply(Translations.Config.ENABLE_GC_HOUSTON))
+                    .setTooltip(tooltipSingular.apply(Translations.Config.ENABLE_GC_HOUSTON))
                     .setSaveConsumer(config::setEnableGcHouston)
                     .setDefaultValue(true)
                     .build()
@@ -862,7 +862,7 @@ public class ConfigImpl implements Config {
                     Component.translatable(Translations.Config.RESET),
                     label.apply(Translations.Config.BOSS_HEALTH_MODIFIER),
                     config.bossHealthMultiplier())
-                    .setTooltip(toolTipWithDesc.apply(Translations.Config.BOSS_HEALTH_MODIFIER, Translations.Config.BOSS_HEALTH_MODIFIER_DESC))
+                    .setTooltip(tooltipWithDesc.apply(Translations.Config.BOSS_HEALTH_MODIFIER, Translations.Config.BOSS_HEALTH_MODIFIER_DESC))
                     .setSaveConsumer(config::setBossHealthMultiplier)
                     .setDefaultValue(1)
                     .build()
@@ -894,7 +894,7 @@ public class ConfigImpl implements Config {
             if (ell >= maxPx) return Component.literal("");
 
             String cut = font.plainSubstrByWidth(s, maxPx - ell);
-            return Component.literal(cut + "…");
+            return Component.literal(cut.trim() + "…");
         }
     }
 }
