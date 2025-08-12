@@ -434,10 +434,15 @@ public class ConfigImpl implements Config {
                     .setSavingRunnable(config::save);
 
             var font = net.minecraft.client.Minecraft.getInstance().font;
-            final int MAX_LW = computeMaxLabelWidthPx();
+            final int MAX_LW = computeMaxLabelWidthPx(font);
 
+            //used for normal category labels
             java.util.function.Function<String, Component> L =
                     key -> ellipsize(Component.translatable(key), font, MAX_LW);
+
+            //used for subcategory labels
+            java.util.function.Function<String, Component> LS =
+                    key -> ellipsize(Component.translatable(key), font, MAX_LW - 15);
 
             java.util.function.BiFunction<String, String, Component> TT =
                     (id, optDescId) -> buildTooltip(
@@ -481,7 +486,7 @@ public class ConfigImpl implements Config {
 
             wires.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    L.apply(Translations.Config.WIRE_ENERGY_TRANSFER_LIMIT),
+                    LS.apply(Translations.Config.WIRE_ENERGY_TRANSFER_LIMIT),
                     config.wireTransferLimit())
                     .setTooltip(TT1.apply(Translations.Config.WIRE_ENERGY_TRANSFER_LIMIT))
                     .setSaveConsumer(config::setWireTransferLimit)
@@ -491,7 +496,7 @@ public class ConfigImpl implements Config {
 
             wires.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    L.apply(Translations.Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT),
+                    LS.apply(Translations.Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT),
                     config.heavyWireTransferLimit())
                     .setTooltip(TT1.apply(Translations.Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT))
                     .setSaveConsumer(config::setHeavyWireTransferLimit)
@@ -505,7 +510,7 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    L.apply(Translations.Config.ENERGY_STORAGE_SIZE),
+                    LS.apply(Translations.Config.ENERGY_STORAGE_SIZE),
                     config.machineEnergyStorageSize())
                     .setTooltip(TT1.apply(Translations.Config.ENERGY_STORAGE_SIZE))
                     .setSaveConsumer(config::setMachineEnergyStorageSize)
@@ -516,7 +521,7 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    L.apply(Translations.Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE),
+                    LS.apply(Translations.Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE),
                     config.energyStorageModuleStorageSize())
                     .setTooltip(TT1.apply(Translations.Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE))
                     .setSaveConsumer(config::setEnergyStorageModuleStorageSize)
@@ -526,7 +531,7 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    L.apply(Translations.Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE),
+                    LS.apply(Translations.Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE),
                     config.coalGeneratorEnergyProductionRate())
                     .setTooltip(TT1.apply(Translations.Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE))
                     .setSaveConsumer(config::setCoalGeneratorEnergyProductionRate)
@@ -536,7 +541,7 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    L.apply(Translations.Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE),
+                    LS.apply(Translations.Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE),
                     config.solarPanelEnergyProductionRate())
                     .setTooltip(TT1.apply(Translations.Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE))
                     .setSaveConsumer(config::setSolarPanelEnergyProductionRate)
@@ -546,7 +551,7 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    L.apply(Translations.Config.CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE),
+                    LS.apply(Translations.Config.CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE),
                     config.circuitFabricatorEnergyConsumptionRate())
                     .setTooltip(TT1.apply(Translations.Config.CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setCircuitFabricatorEnergyConsumptionRate)
@@ -556,7 +561,7 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    L.apply(Translations.Config.ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
+                    LS.apply(Translations.Config.ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
                     config.electricCompressorEnergyConsumptionRate())
                     .setTooltip(TT1.apply(Translations.Config.ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setElectricCompressorEnergyConsumptionRate)
@@ -566,7 +571,7 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    L.apply(Translations.Config.ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE),
+                    LS.apply(Translations.Config.ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE),
                     config.electricFurnaceEnergyConsumptionRate())
                     .setTooltip(TT1.apply(Translations.Config.ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setElectricFurnaceEnergyConsumptionRate)
@@ -576,7 +581,7 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    L.apply(Translations.Config.ELECTRIC_ARC_FURNACE_ENERGY_CONSUMPTION_RATE),
+                    LS.apply(Translations.Config.ELECTRIC_ARC_FURNACE_ENERGY_CONSUMPTION_RATE),
                     config.electricArcFurnaceEnergyConsumptionRate())
                     .setTooltip(TT1.apply(Translations.Config.ELECTRIC_ARC_FURNACE_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setElectricArcFurnaceEnergyConsumptionRate)
@@ -586,7 +591,7 @@ public class ConfigImpl implements Config {
 
             machines.add(new FloatFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    L.apply(Translations.Config.ELECTRIC_ARC_FURNACE_BONUS_CHANCE),
+                    LS.apply(Translations.Config.ELECTRIC_ARC_FURNACE_BONUS_CHANCE),
                     config.electricArcFurnaceBonusChance())
                     .setTooltip(TT1.apply(Translations.Config.ELECTRIC_ARC_FURNACE_BONUS_CHANCE))
                     .setSaveConsumer(config::setElectricArcFurnaceBonusChance)
@@ -598,7 +603,7 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    L.apply(Translations.Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE),
+                    LS.apply(Translations.Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE),
                     config.oxygenCollectorEnergyConsumptionRate())
                     .setTooltip(TT1.apply(Translations.Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setOxygenCollectorEnergyConsumptionRate)
@@ -608,7 +613,7 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    L.apply(Translations.Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
+                    LS.apply(Translations.Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
                     config.oxygenCompressorEnergyConsumptionRate())
                     .setTooltip(TT1.apply(Translations.Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setOxygenCompressorEnergyConsumptionRate)
@@ -619,7 +624,7 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    L.apply(Translations.Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE),
+                    LS.apply(Translations.Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE),
                     config.oxygenDecompressorEnergyConsumptionRate())
                     .setTooltip(TT1.apply(Translations.Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setOxygenDecompressorEnergyConsumptionRate)
@@ -630,7 +635,7 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    L.apply(Translations.Config.OXYGEN_SEALER_ENERGY_CONSUMPTION_RATE),
+                    LS.apply(Translations.Config.OXYGEN_SEALER_ENERGY_CONSUMPTION_RATE),
                     config.oxygenSealerEnergyConsumptionRate())
                     .setTooltip(TT1.apply(Translations.Config.OXYGEN_SEALER_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setOxygenSealerEnergyConsumptionRate)
@@ -640,7 +645,7 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    L.apply(Translations.Config.OXYGEN_SEALER_OXYGEN_CONSUMPTION_RATE),
+                    LS.apply(Translations.Config.OXYGEN_SEALER_OXYGEN_CONSUMPTION_RATE),
                     config.oxygenSealerOxygenConsumptionRate())
                     .setTooltip(TT1.apply(Translations.Config.OXYGEN_SEALER_OXYGEN_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setOxygenSealerOxygenConsumptionRate)
@@ -650,7 +655,7 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    L.apply(Translations.Config.MAX_SEALING_POWER),
+                    LS.apply(Translations.Config.MAX_SEALING_POWER),
                     config.maxSealingPower())
                     .setTooltip(TT1.apply(Translations.Config.MAX_SEALING_POWER))
                     .setSaveConsumer(config::setMaxSealingPower)
@@ -660,7 +665,7 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    L.apply(Translations.Config.REFINERY_ENERGY_CONSUMPTION_RATE),
+                    LS.apply(Translations.Config.REFINERY_ENERGY_CONSUMPTION_RATE),
                     config.refineryEnergyConsumptionRate())
                     .setTooltip(TT1.apply(Translations.Config.REFINERY_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setRefineryEnergyConsumptionRate)
@@ -670,7 +675,7 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    L.apply(Translations.Config.FUEL_LOADER_ENERGY_CONSUMPTION_RATE),
+                    LS.apply(Translations.Config.FUEL_LOADER_ENERGY_CONSUMPTION_RATE),
                     config.fuelLoaderEnergyConsumptionRate())
                     .setTooltip(TT1.apply(Translations.Config.FUEL_LOADER_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setFuelLoaderEnergyConsumptionRate)
@@ -680,7 +685,7 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    L.apply(Translations.Config.FOOD_CANNER_ENERGY_CONSUMPTION_RATE),
+                    LS.apply(Translations.Config.FOOD_CANNER_ENERGY_CONSUMPTION_RATE),
                     config.foodCannerEnergyConsumptionRate())
                     .setTooltip(TT1.apply(Translations.Config.FOOD_CANNER_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setFoodCannerEnergyConsumptionRate)
@@ -691,7 +696,7 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    L.apply(Translations.Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE),
+                    LS.apply(Translations.Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE),
                     config.oxygenDecompressorEnergyConsumptionRate())
                     .setTooltip(TT1.apply(Translations.Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setOxygenDecompressorEnergyConsumptionRate)
@@ -820,8 +825,9 @@ public class ConfigImpl implements Config {
 
             commands.addEntry(new BooleanToggleBuilder(
                     Component.translatable(Translations.Config.RESET),
-                    Component.translatable(Translations.Config.ENABLE_GC_HOUSTON),
+                    L.apply(Translations.Config.ENABLE_GC_HOUSTON),
                     config.enableGcHouston())
+                    .setTooltip(TT1.apply(Translations.Config.ENABLE_GC_HOUSTON))
                     .setSaveConsumer(config::setEnableGcHouston)
                     .setDefaultValue(true)
                     .build()
@@ -829,9 +835,9 @@ public class ConfigImpl implements Config {
 
             // --- DIFFICULTY CONFIG ---
 
-            SubCategoryBuilder difficulty = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.DIFFICULTY));
+            ConfigCategory difficulty = b.getOrCreateCategory(Component.translatable(Translations.Config.DIFFICULTY));
 
-            difficulty.add(new DoubleFieldBuilder(
+            difficulty.addEntry(new DoubleFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
                     L.apply(Translations.Config.BOSS_HEALTH_MODIFIER),
                     config.bossHealthMultiplier())
@@ -870,10 +876,10 @@ public class ConfigImpl implements Config {
             return Component.literal(cut + "…");
         }
 
-        private static int computeMaxLabelWidthPx() {
+        private static int computeMaxLabelWidthPx(Font font) {
             var win = net.minecraft.client.Minecraft.getInstance().getWindow();
-            int screenW = win.getGuiScaledWidth();
-            return Math.max(100, (screenW / 2) - 30);
+            int guiScaledWidth = win.getGuiScaledWidth();
+            return Math.max(80, guiScaledWidth - 240);
         }
     }
 }
