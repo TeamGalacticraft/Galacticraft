@@ -4,9 +4,7 @@ on:
   push:
     branches:
       - '**'
-      - '!chore/update-contributors'   # avoid loops if you also use a bot branch
-  pull_request:
-    types: [opened, reopened, synchronize]
+      - '!chore/update-contributors'  # avoid loops from bot updates
   workflow_dispatch: {}
 
 permissions:
@@ -15,10 +13,12 @@ permissions:
 
 jobs:
   build:
+    name: Spotless + Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
+        with:
+          fetch-depth: 0
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -28,14 +28,15 @@ jobs:
         run: ./gradlew --no-daemon spotlessCheck build
 
   update-contributors:
+    name: Update fabric.mod.json contributors
     needs: build
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/heads/') && github.actor != 'github-actions[bot]'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          # keep default credentials so we can push commits back
           persist-credentials: true
 
       - uses: actions/setup-java@v4
@@ -58,41 +59,15 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Figure out target branch
-        id: branch
-        run: |
-          if [ "${{ github.event_name }}" = "push" ]; then
-            echo "name=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
-          else
-            echo "name=${{ github.head_ref }}" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Configure git author
         if: steps.diff.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      # Push directly when we can (push events, or PRs from same repo)
-      - name: Commit & push update
-        if: >
-          steps.diff.outputs.changed == 'true' &&
-          (github.event_name == 'push' ||
-           github.event.pull_request.head.repo.full_name == github.repository)
+      - name: Commit & push update to same branch
+        if: steps.diff.outputs.changed == 'true'
         run: |
           git add src/main/resources/fabric.mod.json
           git commit -m "chore: update contributors in fabric.mod.json"
-          git push origin HEAD:${{ steps.branch.outputs.name }}
-
-      # For fork PRs, we can't push—leave a comment so maintainers know
-      - name: Comment on PR (fork; manual fix needed)
-        if: >
-          steps.diff.outputs.changed == 'true' &&
-          github.event_name == 'pull_request' &&
-          github.event.pull_request.head.repo.full_name != github.repository
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            The contributors list is outdated for this branch, but this is a fork PR so I can't push fixes.
-            A maintainer can run the workflow on the target branch or push the update manually.
+          git push origin HEAD:${{ github.ref_name }}
