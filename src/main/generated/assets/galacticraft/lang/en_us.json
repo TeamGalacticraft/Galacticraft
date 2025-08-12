@@ -882,7 +882,6 @@
   "tooltip.galacticraft.standard_wrench": "Most Galacticraft machines can be rotated by right-clicking with the Standard Wrench.",
   "tooltip.galacticraft.time_until_cool": "Time Until Cool: %s",
   "tooltip.galacticraft.waila_oxygen_tank": "O₂ Tank %s",
-  "ui.galacticraft.airlock.disable_with_redstone": "Disables from redstone.",
   "ui.galacticraft.airlock.disabled": "Airlock Disabled.",
   "ui.galacticraft.airlock.enabled": "Airlock Enabled.",
   "ui.galacticraft.airlock.open_when_near": "Airlock opens near player.",

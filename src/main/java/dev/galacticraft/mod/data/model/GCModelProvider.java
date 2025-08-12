@@ -472,8 +472,15 @@ public class GCModelProvider extends FabricModelProvider {
 
     private void createAirLockController(BlockModelGenerators generator) {
         var block = GCBlocks.AIR_LOCK_CONTROLLER;
-        var textureMapping = TextureMapping.column(TextureMapping.getBlockTexture(block), TextureMapping.getBlockTexture(GCBlocks.AIR_LOCK_FRAME));
-        generator.createTrivialBlock(block, textureMapping, ModelTemplates.CUBE_COLUMN);
+        ResourceLocation controller = TextureMapping.getBlockTexture(block);
+        ResourceLocation frame = TextureMapping.getBlockTexture(GCBlocks.AIR_LOCK_FRAME);
+        MachineModelGenerator.createTrivialMachine(generator, block, TextureProvider.builder(Constant.MOD_ID)
+                .sides(controller)
+                .top(frame)
+                .bottom(frame)
+                .particle(controller)
+                .build()
+        );
     }
 
     private void createRocketWorkbench(BlockModelGenerators generator) {
