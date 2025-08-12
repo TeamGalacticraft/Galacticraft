@@ -23,6 +23,9 @@ jobs:
       - name: Install Kotlin
         run: sudo apt-get update && sudo apt-get install -y kotlin
 
+      - name: Make script executable
+        run: chmod +x .github/scripts/update-contributors.main.kts
+
       - name: Run contributor updater
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
