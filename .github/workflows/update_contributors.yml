@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - '**'
-      - '!chore/update-contributors'  # avoid loops from bot updates
+      - '!chore/update-contributors'   # avoid loops from bot updates
   workflow_dispatch: {}
 
 permissions:
@@ -14,22 +14,19 @@ permissions:
 jobs:
   update-contributors:
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/heads/') && github.actor != 'github-actions[bot]'
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: true
 
-      - name: Install Kotlin
-        run: sudo apt-get update && sudo apt-get install -y kotlin
-
-      - name: Make script executable
-        run: chmod +x .github/scripts/update-contributors.main.kts
-
+      # Python is preinstalled; no setup needed
       - name: Run contributor updater
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: .github/scripts/update-contributors.main.kts
+        run: python3 .github/scripts/update_contributors.py
 
       - name: Detect changes
         id: diff
@@ -46,7 +43,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Commit & push
+      - name: Commit & push update to same branch
         if: steps.diff.outputs.changed == 'true'
         run: |
           git add src/main/resources/fabric.mod.json
