@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.config;
 
 import com.google.gson.*;
-import com.mojang.blaze3d.platform.Window;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
