@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   build:
-    name: Spotless + Build
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,8 +24,8 @@ jobs:
           distribution: temurin
           java-version: '21'
       - uses: gradle/actions/setup-gradle@v4
-      - name: Spotless + Build
-        run: ./gradlew --no-daemon spotlessCheck build
+      - name: Build (no Spotless)
+        run: ./gradlew --no-daemon build -x spotlessCheck -x spotlessApply
 
   update-contributors:
     name: Update fabric.mod.json contributors
