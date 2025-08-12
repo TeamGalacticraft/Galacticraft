@@ -21,7 +21,222 @@
     }
   ],
   "contributors": [
-
+    {
+      "name": "marcus8448",
+      "contact": {
+        "homepage": "https://github.com/marcus8448"
+      }
+    },
+    {
+      "name": "Roelymole",
+      "contact": {
+        "homepage": "https://github.com/Roelymole"
+      }
+    },
+    {
+      "name": "Blayyke",
+      "contact": {
+        "homepage": "https://github.com/Blayyke"
+      }
+    },
+    {
+      "name": "JustPyrrha",
+      "contact": {
+        "homepage": "https://github.com/JustPyrrha"
+      }
+    },
+    {
+      "name": "craftablescience",
+      "contact": {
+        "homepage": "https://github.com/craftablescience"
+      }
+    },
+    {
+      "name": "AlphaMode",
+      "contact": {
+        "homepage": "https://github.com/AlphaMode"
+      }
+    },
+    {
+      "name": "Sarinsa",
+      "contact": {
+        "homepage": "https://github.com/Sarinsa"
+      }
+    },
+    {
+      "name": "DMgaming100",
+      "contact": {
+        "homepage": "https://github.com/DMgaming100"
+      }
+    },
+    {
+      "name": "SebaSphere",
+      "contact": {
+        "homepage": "https://github.com/SebaSphere"
+      }
+    },
+    {
+      "name": "SteveKunG",
+      "contact": {
+        "homepage": "https://github.com/SteveKunG"
+      }
+    },
+    {
+      "name": "JustAPotota",
+      "contact": {
+        "homepage": "https://github.com/JustAPotota"
+      }
+    },
+    {
+      "name": "LemmaEOF",
+      "contact": {
+        "homepage": "https://github.com/LemmaEOF"
+      }
+    },
+    {
+      "name": "vos6434",
+      "contact": {
+        "homepage": "https://github.com/vos6434"
+      }
+    },
+    {
+      "name": "hYdos",
+      "contact": {
+        "homepage": "https://github.com/hYdos"
+      }
+    },
+    {
+      "name": "Littledog1229",
+      "contact": {
+        "homepage": "https://github.com/Littledog1229"
+      }
+    },
+    {
+      "name": "DuckyProgrammer",
+      "contact": {
+        "homepage": "https://github.com/DuckyProgrammer"
+      }
+    },
+    {
+      "name": "supersimple33",
+      "contact": {
+        "homepage": "https://github.com/supersimple33"
+      }
+    },
+    {
+      "name": "AlexIIL",
+      "contact": {
+        "homepage": "https://github.com/AlexIIL"
+      }
+    },
+    {
+      "name": "Jamiscus",
+      "contact": {
+        "homepage": "https://github.com/Jamiscus"
+      }
+    },
+    {
+      "name": "BeyondTheHorizons",
+      "contact": {
+        "homepage": "https://github.com/BeyondTheHorizons"
+      }
+    },
+    {
+      "name": "BeetMacol",
+      "contact": {
+        "homepage": "https://github.com/BeetMacol"
+      }
+    },
+    {
+      "name": "ChipWolf",
+      "contact": {
+        "homepage": "https://github.com/ChipWolf"
+      }
+    },
+    {
+      "name": "ROMVoid95",
+      "contact": {
+        "homepage": "https://github.com/ROMVoid95"
+      }
+    },
+    {
+      "name": "maxryan008",
+      "contact": {
+        "homepage": "https://github.com/maxryan008"
+      }
+    },
+    {
+      "name": "LeMayday",
+      "contact": {
+        "homepage": "https://github.com/LeMayday"
+      }
+    },
+    {
+      "name": "Dragon-Seeker",
+      "contact": {
+        "homepage": "https://github.com/Dragon-Seeker"
+      }
+    },
+    {
+      "name": "davo899",
+      "contact": {
+        "homepage": "https://github.com/davo899"
+      }
+    },
+    {
+      "name": "Codetoil",
+      "contact": {
+        "homepage": "https://github.com/Codetoil"
+      }
+    },
+    {
+      "name": "christopherweinhardt",
+      "contact": {
+        "homepage": "https://github.com/christopherweinhardt"
+      }
+    },
+    {
+      "name": "CoderFroty",
+      "contact": {
+        "homepage": "https://github.com/CoderFroty"
+      }
+    },
+    {
+      "name": "Domza64",
+      "contact": {
+        "homepage": "https://github.com/Domza64"
+      }
+    },
+    {
+      "name": "Geolykt",
+      "contact": {
+        "homepage": "https://github.com/Geolykt"
+      }
+    },
+    {
+      "name": "JunePrimavera",
+      "contact": {
+        "homepage": "https://github.com/JunePrimavera"
+      }
+    },
+    {
+      "name": "marquito73",
+      "contact": {
+        "homepage": "https://github.com/marquito73"
+      }
+    },
+    {
+      "name": "benreid24",
+      "contact": {
+        "homepage": "https://github.com/benreid24"
+      }
+    },
+    {
+      "name": "thackerdynasty",
+      "contact": {
+        "homepage": "https://github.com/thackerdynasty"
+      }
+    }
   ],
   "environment": "*",
   "entrypoints": {
