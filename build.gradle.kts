@@ -302,11 +302,11 @@ fun buildContributorsPayload(raw: List<ContributorApi>): List<Map<String, Any?>>
         !type.contains("bot") && !login.contains("bot")
     }.sortedByDescending { it.contributions ?: 0 }
 
+    // Only name + contact per FMJ
     return filtered.map { c ->
         mapOf(
             "name" to (c.login ?: ""),
-            "contact" to mapOf("homepage" to (c.html_url ?: "")),
-            "contributions" to (c.contributions ?: 0)
+            "contact" to mapOf("homepage" to (c.html_url ?: ""))
         )
     }
 }
@@ -395,12 +395,6 @@ tasks.register("updateContributorsForce") {
 
         println("Updated contributors (force) in fabric.mod.json (${newContrib.size})")
     }
-}
-
-// builds always force; dev runs are conditional.
-tasks.named("processResources") { dependsOn("updateContributorsForce") }
-tasks.matching { it.name in setOf("runClient", "runServer") }.configureEach {
-    dependsOn("updateContributorsConditional")
 }
 
 dependencies {

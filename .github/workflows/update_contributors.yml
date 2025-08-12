@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  build:
+    name: Spotless + Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Spotless + Build
+        run: ./gradlew --no-daemon spotlessCheck build
+
+  update-contributors:
+    name: Update fabric.mod.json contributors
+    needs: build
+    runs-on: ubuntu-latest
+    # Only on default branch; skip the PR branch and bot pushes to avoid loops
+    if: >
+      startsWith(github.ref, 'refs/heads/') &&
+      github.ref_name == 'main' &&
+      !startsWith(github.ref_name, 'chore/update-contributors') &&
+      github.actor != 'github-actions[bot]'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Update contributors (force)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew --no-daemon updateContributorsForce
+
+      - name: Detect changes
+        id: diff
+        run: |
+          if git diff --quiet --exit-code -- src/main/resources/fabric.mod.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create/Update PR
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: chore/update-contributors
+          commit-message: "chore: update contributors in fabric.mod.json"
+          title: "chore: update contributors in fabric.mod.json"
+          body: >
+            Automated update of `contributors` in `fabric.mod.json`.
+            Bots filtered; `contributions` field omitted (FMJ convention).
+          add-paths: |
+            src/main/resources/fabric.mod.json
+          labels: |
+            chore
+            automated
