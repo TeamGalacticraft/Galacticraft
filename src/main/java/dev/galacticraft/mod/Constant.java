@@ -594,7 +594,7 @@ public interface Constant {
         ResourceLocation ROCKET_WORKBENCH_SCREEN = id("textures/gui/rocket_workbench.png");
         ResourceLocation ROCKET_SELECTION = id("textures/gui/rocket_part_selection.png");
 
-        ResourceLocation AIRLOCK_CONTROLLER_SCREEN = id("textures/gui/airlock_controller_screen.png");
+        ResourceLocation AIRLOCK_CONTROLLER_SCREEN = id("textures/gui/air_lock_controller.png");
 
         ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
         ResourceLocation PET_INVENTORY_SCREEN = id("textures/gui/pet_inventory_screen.png");

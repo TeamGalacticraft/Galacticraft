@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.entity;
 
+import com.mojang.authlib.GameProfile;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.configuration.RedstoneMode;
@@ -36,6 +37,7 @@ import dev.galacticraft.mod.content.block.machine.airlock.AirlockFrameScanner;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.AirlockControllerMenu;
 import dev.galacticraft.mod.util.Translations;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -51,6 +53,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -58,6 +61,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static dev.galacticraft.mod.content.block.special.AirlockSealBlock.FACING;
 
@@ -278,7 +283,21 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
 
     @Override
     public @NotNull Component getDisplayName() {
-        return Component.translatable(Translations.Ui.AIRLOCK_OWNER, ""); // fill in owner if you track it
+        UUID owner = this.getSecurity().getOwner();
+        String displayName;
+
+        if (owner == null) {
+            return Component.translatable(Translations.Ui.AIRLOCK_DEFAULT_NAME);
+        } else {
+            Optional<GameProfile> profile = SkullBlockEntity.fetchGameProfile(owner).getNow(null);
+            if (profile != null && profile.isPresent()) {
+                displayName = profile.get().getName();
+            } else {
+                return Component.translatable(Translations.Ui.AIRLOCK_DEFAULT_NAME);
+            }
+        }
+
+        return Component.translatable(Translations.Ui.AIRLOCK_OWNER, displayName);
     }
 
     @Override

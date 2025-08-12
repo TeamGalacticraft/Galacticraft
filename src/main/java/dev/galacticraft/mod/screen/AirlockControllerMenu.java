@@ -33,8 +33,8 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class AirlockControllerMenu extends MachineMenu<AirlockControllerBlockEntity> {
-    public byte proximityOpen; // 0..5
-    public boolean enabled;
+    public byte proximityOpen = 0; // 0..5
+    public boolean enabled = false;
 
     public AirlockControllerMenu(int syncId, Player player, AirlockControllerBlockEntity be) {
         super(GCMenuTypes.AIRLOCK_CONTROLLER_MENU, syncId, player, be);
@@ -43,7 +43,7 @@ public class AirlockControllerMenu extends MachineMenu<AirlockControllerBlockEnt
     }
 
     public AirlockControllerMenu(int syncId, Inventory inv, BlockPos pos) {
-        super(GCMenuTypes.AIRLOCK_CONTROLLER_MENU, syncId, inv, pos, 8, 84);
+        super(GCMenuTypes.AIRLOCK_CONTROLLER_MENU, syncId, inv, pos, 8, 89);
     }
 
     @Override

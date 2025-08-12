@@ -31,34 +31,83 @@ import dev.galacticraft.mod.util.DrawableUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
 public class AirlockControllerScreen extends MachineScreen<AirlockControllerBlockEntity, AirlockControllerMenu> {
+    private final EditBox textField;
+
     public AirlockControllerScreen(AirlockControllerMenu menu, Inventory inv, Component title) {
         super(menu, title, Constant.ScreenTexture.AIRLOCK_CONTROLLER_SCREEN);
+
+        this.textField = new EditBox(
+                Minecraft.getInstance().font,
+                this.leftPos + 132, this.topPos + 65,
+                26, 20,
+                Component.literal("")
+        );
+        this.textField.setValue(String.valueOf(this.menu.proximityOpen));
+
+        this.textField.setFilter(s -> {
+            if (s.isEmpty()) return true;
+            try {
+                int v = Integer.parseInt(s);
+                return v >= 0 && v <= 5;
+            } catch (NumberFormatException ignore) {
+                return false;
+            }
+        });
+
+        this.textField.setResponder(s -> {
+            if (s.isEmpty()) return;
+            byte value;
+            try {
+                value = Byte.parseByte(s);
+            } catch (NumberFormatException ignore) {
+                return;
+            }
+            if (value < 0) value = 0;
+            if (value > 5) value = 5;
+
+            String clamped = String.valueOf(value);
+            if (!s.equals(clamped)) {
+                this.textField.setValue(clamped);
+                return;
+            }
+
+            if (value != this.menu.proximityOpen) {
+                this.menu.proximityOpen = value;
+                ClientPlayNetworking.send(new AirlockSetProximityPayload(value));
+            }
+        });
     }
 
     @Override
     protected void init() {
         super.init();
-        this.titleLabelX += 20;
-        // If MachineLib has its own redstone mode button bar, add it here if needed.
+        this.imageHeight = 171;
+        this.titleLabelX = 4;
+
+        this.textField.setX(this.leftPos + 132);
+        this.textField.setY(this.topPos + 65);
+        this.addRenderableWidget(this.textField);
     }
 
     @Override
     protected void renderMachineBackground(GuiGraphics g, int mouseX, int mouseY, float delta) {
-        // Status
         boolean enabled = this.menu.enabled;
-        var label = enabled ? Component.translatable(Translations.Ui.AIRLOCK_ENABLED)
+        Component label = enabled
+                ? Component.translatable(Translations.Ui.AIRLOCK_ENABLED)
                 : Component.translatable(Translations.Ui.AIRLOCK_DISABLED);
         int color = enabled ? ChatFormatting.GREEN.getColor() : ChatFormatting.RED.getColor();
-        g.drawString(this.font, label, this.leftPos + 60, this.topPos + 18, color, false);
+        g.drawCenteredString(this.font, label.getString(), this.leftPos + 90, this.topPos + 22, color);
 
-        // Proximity (up/down)
-        int upX = this.leftPos + 158, upY = this.topPos + 59;
-        int downX = this.leftPos + 158, downY = this.topPos + 69;
+        int upX = this.leftPos + 158, upY = this.topPos + 65;
+        int downX = this.leftPos + 158, downY = this.topPos + 75;
+
         boolean hoverUp = DrawableUtil.isWithin(mouseX, mouseY, upX, upY, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT);
         boolean hoverDown = DrawableUtil.isWithin(mouseX, mouseY, downX, downY, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT);
 
@@ -72,31 +121,45 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
                 hoverDown ? Constant.TextureCoordinate.ARROW_DOWN_HOVER_Y : Constant.TextureCoordinate.ARROW_DOWN_Y,
                 Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT);
 
-        g.drawString(this.font,
-                Component.translatable(Translations.Ui.AIRLOCK_OPEN_WHEN_NEAR, this.menu.proximityOpen),
-                this.leftPos + 60, this.topPos + 64, ChatFormatting.DARK_GRAY.getColor(), false);
+        g.drawString(this.font, Component.literal("Airlock Proximity:"), this.leftPos + 46, this.topPos + 71, ChatFormatting.DARK_GRAY.getColor(), false);
     }
+
+    @Override
+    protected void renderForeground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.renderForeground(graphics, mouseX, mouseY, delta);
+
+        this.textField.setX(this.leftPos + 132);
+        this.textField.setY(this.topPos + 65);
+
+        String shouldBe = String.valueOf(this.menu.proximityOpen);
+        if (!this.textField.getValue().equals(shouldBe) && !this.textField.isFocused()) {
+            this.textField.setValue(shouldBe);
+        }
+    }
+
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == 0) {
-            // Up
-            int upX = this.leftPos + 158, upY = this.topPos + 59;
+            int upX = this.leftPos + 158, upY = this.topPos + 65;
+            int downX = this.leftPos + 158, downY = this.topPos + 75;
+
             if (DrawableUtil.isWithin(mouseX, mouseY, upX, upY, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
                 if (this.menu.proximityOpen < 5) {
-                    byte next = (byte)(this.menu.proximityOpen + 1);
+                    byte next = (byte) (this.menu.proximityOpen + 1);
                     this.menu.proximityOpen = next;
+                    this.textField.setValue(String.valueOf(next));
                     ClientPlayNetworking.send(new AirlockSetProximityPayload(next));
                     this.playButtonSound();
                     return true;
                 }
             }
-            // Down
-            int downX = this.leftPos + 158, downY = this.topPos + 69;
+
             if (DrawableUtil.isWithin(mouseX, mouseY, downX, downY, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
                 if (this.menu.proximityOpen > 0) {
-                    byte next = (byte)(this.menu.proximityOpen - 1);
+                    byte next = (byte) (this.menu.proximityOpen - 1);
                     this.menu.proximityOpen = next;
+                    this.textField.setValue(String.valueOf(next));
                     ClientPlayNetworking.send(new AirlockSetProximityPayload(next));
                     this.playButtonSound();
                     return true;

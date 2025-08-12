@@ -384,6 +384,7 @@ public interface Translations {
         String UPGRADE = "ui.galacticraft.upgrade";
         String COLOR = "ui.galacticraft.color";
 
+        String AIRLOCK_DEFAULT_NAME = "ui.galacticraft.airlock.default_name";
         String AIRLOCK_ENABLED = "ui.galacticraft.airlock.enabled";
         String AIRLOCK_DISABLED = "ui.galacticraft.airlock.disabled";
         String AIRLOCK_OPEN_WHEN_NEAR = "ui.galacticraft.airlock.open_when_near";

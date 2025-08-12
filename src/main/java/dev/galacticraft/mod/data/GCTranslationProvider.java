@@ -1126,9 +1126,10 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.UPGRADE, "Upgrade");
         this.add(Ui.COLOR, "Color");
 
-        this.add(Ui.AIRLOCK_ENABLED, "Airlock Enabled.");
-        this.add(Ui.AIRLOCK_DISABLED, "Airlock Disabled.");
-        this.add(Ui.AIRLOCK_OPEN_WHEN_NEAR, "Airlock opens near player.");
+        this.add(Ui.AIRLOCK_DEFAULT_NAME, "Airlock Controller");
+        this.add(Ui.AIRLOCK_ENABLED, "Airlock Enabled");
+        this.add(Ui.AIRLOCK_DISABLED, "Airlock Disabled");
+        this.add(Ui.AIRLOCK_OPEN_WHEN_NEAR, "Airlock opens near player");
         this.add(Ui.AIRLOCK_OWNER, "%s's Airlock Controller");
         this.add(Ui.ALPHA_WARNING_1, "Galacticraft is currently in ALPHA.");
         this.add(Ui.ALPHA_WARNING_2, "Please report all issues you find.");
