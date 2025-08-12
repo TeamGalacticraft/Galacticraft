@@ -22,46 +22,87 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import dev.galacticraft.mod.network.c2s.AirlockSetProximityPayload;
+import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.gui.widget.CheckboxButton;
+import dev.galacticraft.mod.content.block.entity.AirlockControllerBlockEntity;
 import dev.galacticraft.mod.screen.AirlockControllerMenu;
+import dev.galacticraft.mod.util.DrawableUtil;
 import dev.galacticraft.mod.util.Translations;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class AirlockControllerScreen extends AbstractContainerScreen<AirlockControllerMenu> {
-
-    private static final ResourceLocation TEXTURE = Constant.id("textures/gui/air_lock_controller.png");
-
-
-    public AirlockControllerScreen(AirlockControllerMenu abstractContainerMenu, Inventory inventory, Component component) {
-        super(abstractContainerMenu, inventory, component);
+public class AirlockControllerScreen extends MachineScreen<AirlockControllerBlockEntity, AirlockControllerMenu> {
+    public AirlockControllerScreen(AirlockControllerMenu menu, Inventory inv, Component title) {
+        super(menu, title, Constant.ScreenTexture.AIRLOCK_CONTROLLER_SCREEN);
     }
 
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new CheckboxButton(this.leftPos + 8, this.topPos + 20));
+        this.titleLabelX += 20;
+        // If MachineLib has its own redstone mode button bar, add it here if needed.
     }
 
     @Override
-    protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
-        graphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 0, 256, 256);
-        graphics.drawString(this.font, Component.translatable(Translations.Ui.AIRLOCK_REDSTONE_SIGNAL), this.leftPos + 25, this.topPos + 23, ChatFormatting.DARK_GRAY.getColor(), false);
+    protected void renderMachineBackground(GuiGraphics g, int mouseX, int mouseY, float delta) {
+        // Status
+        boolean enabled = this.menu.enabled;
+        var label = enabled ? Component.translatable(Translations.Ui.AIRLOCK_ENABLED)
+                : Component.translatable(Translations.Ui.AIRLOCK_DISABLED);
+        int color = enabled ? ChatFormatting.GREEN.getColor() : ChatFormatting.RED.getColor();
+        g.drawString(this.font, label, this.leftPos + 60, this.topPos + 18, color, false);
+
+        // Proximity (up/down)
+        int upX = this.leftPos + 158, upY = this.topPos + 59;
+        int downX = this.leftPos + 158, downY = this.topPos + 69;
+        boolean hoverUp = DrawableUtil.isWithin(mouseX, mouseY, upX, upY, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT);
+        boolean hoverDown = DrawableUtil.isWithin(mouseX, mouseY, downX, downY, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT);
+
+        g.blit(Constant.ScreenTexture.OVERLAY, upX, upY,
+                hoverUp ? Constant.TextureCoordinate.ARROW_UP_HOVER_X : Constant.TextureCoordinate.ARROW_UP_X,
+                hoverUp ? Constant.TextureCoordinate.ARROW_UP_HOVER_Y : Constant.TextureCoordinate.ARROW_UP_Y,
+                Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT);
+
+        g.blit(Constant.ScreenTexture.OVERLAY, downX, downY,
+                hoverDown ? Constant.TextureCoordinate.ARROW_DOWN_HOVER_X : Constant.TextureCoordinate.ARROW_DOWN_X,
+                hoverDown ? Constant.TextureCoordinate.ARROW_DOWN_HOVER_Y : Constant.TextureCoordinate.ARROW_DOWN_Y,
+                Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT);
+
+        g.drawString(this.font,
+                Component.translatable(Translations.Ui.AIRLOCK_OPEN_WHEN_NEAR, this.menu.proximityOpen),
+                this.leftPos + 60, this.topPos + 64, ChatFormatting.DARK_GRAY.getColor(), false);
     }
 
     @Override
-    protected void renderLabels(GuiGraphics graphics, int i, int j) {
-        graphics.drawString(this.font, Component.translatable(Translations.Ui.AIRLOCK_OWNER, Minecraft.getInstance().player.getGameProfile().getName()), this.titleLabelX, this.titleLabelY, 4210752, false);
-    }
-
-    @Override
-    public boolean mouseClicked(double d, double e, int i) {
-        return super.mouseClicked(d, e, i);
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (button == 0) {
+            // Up
+            int upX = this.leftPos + 158, upY = this.topPos + 59;
+            if (DrawableUtil.isWithin(mouseX, mouseY, upX, upY, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
+                if (this.menu.proximityOpen < 5) {
+                    byte next = (byte)(this.menu.proximityOpen + 1);
+                    this.menu.proximityOpen = next;
+                    ClientPlayNetworking.send(new AirlockSetProximityPayload(next));
+                    this.playButtonSound();
+                    return true;
+                }
+            }
+            // Down
+            int downX = this.leftPos + 158, downY = this.topPos + 69;
+            if (DrawableUtil.isWithin(mouseX, mouseY, downX, downY, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
+                if (this.menu.proximityOpen > 0) {
+                    byte next = (byte)(this.menu.proximityOpen - 1);
+                    this.menu.proximityOpen = next;
+                    ClientPlayNetworking.send(new AirlockSetProximityPayload(next));
+                    this.playButtonSound();
+                    return true;
+                }
+            }
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 }

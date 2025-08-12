@@ -103,6 +103,8 @@ public class GCBlockTags {
     public static final TagKey<Block> GLASS_FLUID_PIPES = galacticraftTag("glass_fluid_pipes");
     public static final TagKey<Block> STAINED_GLASS_FLUID_PIPES = galacticraftTag("glass_fluid_pipes/stained");
 
+    public static final TagKey<Block> AIRLOCK_BLOCKS = galacticraftTag("airlock_blocks");
+
     public static final TagKey<Block> SLABS = galacticraftTag("slabs");
     public static final TagKey<Block> STAIRS = galacticraftTag("stairs");
     public static final TagKey<Block> WALLS = galacticraftTag("walls");

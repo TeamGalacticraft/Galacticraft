@@ -41,6 +41,7 @@ public class GCServerPacketReceivers {
         registerPacket(OpenRocketPayload.TYPE);
         registerPacket(PlanetTeleportPayload.TYPE);
         registerPacket(SatelliteCreationPayload.TYPE);
+        registerPacket(AirlockSetProximityPayload.TYPE);
     }
 
     public static <P extends C2SPayload> void registerPacket(CustomPacketPayload.Type<P> type) {

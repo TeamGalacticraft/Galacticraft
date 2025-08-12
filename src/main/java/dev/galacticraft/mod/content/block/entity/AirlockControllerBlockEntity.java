@@ -22,15 +22,27 @@
 
 package dev.galacticraft.mod.content.block.entity;
 
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.machine.configuration.RedstoneMode;
+import dev.galacticraft.machinelib.api.storage.MachineEnergyStorage;
+import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.StorageSpec;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCSounds;
+import dev.galacticraft.mod.content.block.machine.airlock.AirlockFrameScanner;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.AirlockControllerMenu;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -38,317 +50,265 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.List;
 
 import static dev.galacticraft.mod.content.block.special.AirlockSealBlock.FACING;
 
-public class AirlockControllerBlockEntity extends BlockEntity implements MenuProvider {
-    public boolean redstoneActivation;
-    public boolean playerDistanceActivation = true;
-    public int playerDistanceSelection;
-    public boolean playerNameMatches;
-    public String playerToOpenFor = "";
-    public boolean invertSelection;
-    public boolean horizontalModeEnabled;
-    public boolean lastHorizontalModeEnabled;
-    public String ownerName = "";
+public class AirlockControllerBlockEntity extends MachineBlockEntity {
+    // Proximity setting (0..5). 0 = off.
+    private byte proximityOpen = 0;
 
+    // DUMMY storage so MachineLib doesn't crash on zero-slot specs
+    private static final StorageSpec SPEC = StorageSpec.of(
+            MachineEnergyStorage.spec(
+                    0, 0
+            )
+    );
+
+    // runtime
     public boolean active;
     public boolean lastActive;
-    private int otherAirLocks;
-    private int lastOtherAirLocks;
-    private AirLockProtocol protocol;
-    private AirLockProtocol lastProtocol;
+    private List<AirlockFrameScanner.Result> lastFrames = java.util.Collections.emptyList();
     public int ticks = 0;
 
-    public AirlockControllerBlockEntity(BlockPos blockPos, BlockState blockState) {
-        super(GCBlockEntityTypes.AIRLOCK_CONTROLLER, blockPos, blockState);
+    public AirlockControllerBlockEntity(BlockPos pos, BlockState state) {
+        super(GCBlockEntityTypes.AIRLOCK_CONTROLLER, pos, state, SPEC);
     }
 
+    public byte getProximityOpen() { return this.proximityOpen; }
+    public void setProximityOpen(byte v) { this.proximityOpen = (byte)Math.max(0, Math.min(5, v)); setChanged(); }
 
-    public static void tick(Level level, BlockPos blockPos, BlockState blockState, AirlockControllerBlockEntity blockEntity) {
-        blockEntity.tick();
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
+        super.saveAdditional(tag, lookup);
+        tag.putByte("ProximityOpen", this.proximityOpen);
     }
 
-    public void tick() {
-        ticks++;
-        if (!this.level.isClientSide()) {
-            this.active = false;
-
-            if (this.redstoneActivation) {
-                this.active = this.level.getBestNeighborSignal(this.getBlockPos()) > 0;
-            }
-
-            if ((this.active || !this.redstoneActivation) && this.playerDistanceActivation) {
-                double distance = switch (this.playerDistanceSelection) {
-                    case 0 -> 1.0D;
-                    case 1 -> 2.0D;
-                    case 2 -> 5.0D;
-                    case 3 -> 10.0D;
-                    default -> 0D;
-                };
-
-                Vec3 minPos = new Vec3(getBlockPos().getX() + 0.5D - distance, getBlockPos().getY() + 0.5D - distance, getBlockPos().getZ() + 0.5D - distance);
-                Vec3 maxPos = new Vec3(getBlockPos().getX() + 0.5D + distance, getBlockPos().getY() + 0.5D + distance, getBlockPos().getZ() + 0.5D + distance);
-                AABB matchingRegion = new AABB(minPos.x, minPos.y, minPos.z, maxPos.x, maxPos.y, maxPos.z);
-                List<Player> playersWithin = this.level.getEntitiesOfClass(Player.class, matchingRegion);
-
-                if (this.playerNameMatches) {
-                    boolean foundPlayer = false;
-                    for (Player p : playersWithin) {
-                        if (p.getUUID().equals(this.playerToOpenFor)) {
-                            foundPlayer = true;
-                            break;
-                        }
-                    }
-                    this.active = foundPlayer;
-                } else {
-                    this.active = !playersWithin.isEmpty();
-                }
-            }
-
-            if (!this.invertSelection) {
-                this.active = !this.active;
-            }
-
-            if (this.protocol == null) {
-                this.protocol = this.lastProtocol = new AirLockProtocol(this);
-            }
-
-            if (this.ticks % 5 == 0) {
-                if (this.horizontalModeEnabled != this.lastHorizontalModeEnabled) {
-                    this.unsealAirLock();
-                } else if (this.active || this.lastActive) {
-                    this.lastOtherAirLocks = this.otherAirLocks;
-                    this.otherAirLocks = this.protocol.calculate(this.horizontalModeEnabled);
-
-                    if (this.active) {
-                        if (this.otherAirLocks != this.lastOtherAirLocks || !this.lastActive) {
-                            this.unsealAirLock();
-                            if (this.otherAirLocks >= 0) {
-                                this.sealAirLock();
-                            }
-                        }
-                    } else {
-                        if (this.lastActive) {
-                            this.unsealAirLock();
-                        }
-                    }
-                }
-
-                if (this.active != this.lastActive) {
-                    BlockState state = this.level.getBlockState(this.getBlockPos());
-                    this.level.sendBlockUpdated(this.getBlockPos(), state, state, 3);
-                }
-
-                this.lastActive = this.active;
-                this.lastProtocol = this.protocol;
-                this.lastHorizontalModeEnabled = this.horizontalModeEnabled;
-            }
-        }
+    @Override
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
+        super.loadAdditional(tag, lookup);
+        if (tag.contains("ProximityOpen")) this.proximityOpen = tag.getByte("ProximityOpen");
     }
 
-    private void sealAirLock() {
-        int x = (this.lastProtocol.maxX + this.lastProtocol.minX) / 2;
-        int y = (this.lastProtocol.maxY + this.lastProtocol.minY) / 2;
-        int z = (this.lastProtocol.maxZ + this.lastProtocol.minZ) / 2;
+    private void serverTick() {
+        if (this.level == null || this.level.isClientSide()) return;
+        this.ticks++;
 
-        boolean facingNorth = (this.lastProtocol.maxX - this.lastProtocol.minX) == 0;
+        if (this.ticks % 5 != 0) return;
 
-        BlockPos pos = new BlockPos(x, y, z);
-        if (this.level.getBlockState(pos).isAir()) {
-            this.level.playSound(null, pos, GCSounds.PLAYER_CLOSEAIRLOCK, SoundSource.BLOCKS, 1.0F, 1.0F);
-        }
+        // Re-scan frames
+        List<AirlockFrameScanner.Result> frames = AirlockFrameScanner.scanAll(this.level, this.worldPosition);
+        boolean framesChanged = !sameFrames(frames, this.lastFrames);
 
-        if (this.horizontalModeEnabled) {
-            if (this.protocol.minY == this.protocol.maxY && this.protocol.minX != this.protocol.maxX && this.protocol.minZ != this.protocol.maxZ) {
-                for (x = this.protocol.minX + 1; x <= this.protocol.maxX - 1; x++) {
-                    for (z = this.protocol.minZ + 1; z <= this.protocol.maxZ - 1; z++) {
-                        pos = new BlockPos(x, y, z);
-                        if (this.level.getBlockState(pos).isAir()) {
-                            if (facingNorth) {
-                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.EAST), Block.UPDATE_ALL);
-                            } else {
-                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.NORTH), Block.UPDATE_ALL);
-                            }
-                        }
-                    }
-                }
+        // RedstoneMode: true = machine should be "active" given powered state
+        boolean powered = this.level.getBestNeighborSignal(this.worldPosition) > 0;
+        RedstoneMode mode = this.getRedstoneMode();
+        boolean redstoneAllows = mode.isActive(powered);
+
+        // Proximity: open (disable) only for *authorized* nearby players
+        boolean near = false;
+        if (!frames.isEmpty() && this.proximityOpen > 0) {
+            double r = this.proximityOpen;
+            AABB big = null;
+            for (var f : frames) {
+                AABB expanded = getExpanded(f, r);
+                big = (big == null) ? expanded : big.minmax(expanded);
             }
-        } else {
-            if (this.protocol.minX != this.protocol.maxX) {
-                for (x = this.protocol.minX + 1; x <= this.protocol.maxX - 1; x++) {
-                    for (y = this.protocol.minY + 1; y <= this.protocol.maxY - 1; y++) {
-                        pos = new BlockPos(x, y, z);
-                        if (this.level.getBlockState(pos).isAir()) {
-                            if (facingNorth) {
-                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.EAST), Block.UPDATE_ALL);
-                            } else {
-                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.NORTH), Block.UPDATE_ALL);
-                            }
-                        }
-                    }
-                }
-            } else if (this.protocol.minZ != this.protocol.maxZ) {
-                for (z = this.protocol.minZ + 1; z <= this.protocol.maxZ - 1; z++) {
-                    for (y = this.protocol.minY + 1; y <= this.protocol.maxY - 1; y++) {
-                        pos = new BlockPos(x, y, z);
-                        if (this.level.getBlockState(pos).isAir()) {
-                            if (facingNorth) {
-                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.EAST), Block.UPDATE_ALL);
-                            } else {
-                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.NORTH), Block.UPDATE_ALL);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public void unsealAirLock() {
-        if (this.lastProtocol == null) {
-            return;
-        }
-
-        int x = this.lastProtocol.minX + (this.lastProtocol.maxX - this.lastProtocol.minX) / 2;
-        int y = this.lastProtocol.minY + (this.lastProtocol.maxY - this.lastProtocol.minY) / 2;
-        int z = this.lastProtocol.minZ + (this.lastProtocol.maxZ - this.lastProtocol.minZ) / 2;
-
-        BlockPos pos = new BlockPos(x, y, z);
-        if (this.level.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
-            this.level.playSound(null, pos, GCSounds.PLAYER_OPENAIRLOCK, SoundSource.BLOCKS, 1.0F, 1.0F);
-        }
-
-        boolean sealedSide = false;
-        boolean breathable;
-        if (this.lastHorizontalModeEnabled) {
-            if (this.protocol.minY == this.protocol.maxY && this.protocol.minX != this.protocol.maxX && this.protocol.minZ != this.protocol.maxZ) {
-                // First test if there is sealed air to either side
-                for (x = this.protocol.minX + 1; x <= this.protocol.maxX - 1; x++) {
-                    for (z = this.protocol.minZ + 1; z <= this.protocol.maxZ - 1; z++) {
-                        pos = new BlockPos(x, y, z);
-                        breathable = this.level.isBreathable(pos.above());
-                        if (breathable) {
-                            if (this.level.getBlockState(pos).getBlock() == GCBlocks.AIR_LOCK_SEAL) {
-                                sealedSide = true;
-                                break;
-                            }
-                            continue;
-                        }
-                        breathable = this.level.isBreathable(pos.below());
-                        if (breathable) {
-                            if (this.level.getBlockState(pos).getBlock() == GCBlocks.AIR_LOCK_SEAL) {
-                                sealedSide = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (sealedSide)
+            if (big != null) {
+                // ONLY count players who are allowed by MachineLib security
+                var players = this.level.getEntitiesOfClass(Player.class, big);
+                for (Player p : players) {
+                    if (this.getSecurity().hasAccess(p)) {
+                        near = true;
                         break;
-                }
-                // Now replace the airlock blocks with either air, or sealed air
-                for (x = this.protocol.minX + 1; x <= this.protocol.maxX - 1; x++) {
-                    for (z = this.protocol.minZ + 1; z <= this.protocol.maxZ - 1; z++) {
-                        pos = new BlockPos(x, y, z);
-                        if (this.level.getBlockState(pos).getBlock() == GCBlocks.AIR_LOCK_SEAL) {
-                            if (sealedSide)
-                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-                            else
-                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-                        }
                     }
                 }
             }
-        } else {
-            if (this.lastProtocol.minX != this.lastProtocol.maxX) {
-                // First test if there is sealed air to either side
-                for (x = this.lastProtocol.minX + 1; x <= this.lastProtocol.maxX - 1; x++) {
-                    for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++) {
-                        pos = new BlockPos(x, y, z);
-                        breathable = this.level.isBreathable(pos.north());
-                        if (breathable) {
-                            if (this.level.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
-                                sealedSide = true;
-                                break;
-                            }
-                            continue;
-                        }
-                        breathable = this.level.isBreathable(pos.south());
-                        if (breathable) {
-                            if (this.level.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
-                                sealedSide = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (sealedSide)
-                        break;
-                }
-                // Now replace the airlock blocks with either air, or sealed air
-                for (x = this.lastProtocol.minX + 1; x <= this.lastProtocol.maxX - 1; x++) {
-                    for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++) {
-                        pos = new BlockPos(x, y, z);
-                        if (this.level.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
-                            if (sealedSide)
-                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-                            else
-                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-                        }
-                    }
-                }
-            } else if (this.lastProtocol.minZ != this.lastProtocol.maxZ) {
-                // First test if there is sealed air to either side
-                for (z = this.lastProtocol.minZ + 1; z <= this.lastProtocol.maxZ - 1; z++) {
-                    for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++) {
-                        pos = new BlockPos(x, y, z);
-                        breathable = this.level.isBreathable(pos.west());
-                        if (breathable) {
-                            if (this.level.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
-                                sealedSide = true;
-                                break;
-                            }
-                            continue;
-                        }
-                        breathable = this.level.isBreathable(pos.east());
-                        if (breathable) {
-                            if (this.level.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
-                                sealedSide = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (sealedSide)
-                        break;
-                }
-                // Now replace the airlock blocks with either air, or sealed air
-                for (z = this.lastProtocol.minZ + 1; z <= this.lastProtocol.maxZ - 1; z++) {
-                    for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++) {
-                        pos = new BlockPos(x, y, z);
-                        if (this.level.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
-                            if (sealedSide)
-                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-                            else
-                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-                        }
-                    }
-                }
+        }
+
+        boolean newActive = redstoneAllows && !near;
+        boolean activeChanged = (newActive != this.active);
+
+        if (activeChanged || framesChanged) {
+            // Unseal old frames
+            for (var f : this.lastFrames) unseal(f);
+
+            // Seal new if active
+            if (newActive) {
+                for (var f : frames) seal(f);
             }
+
+            this.active = newActive;
+            this.lastFrames = frames;
+
+            BlockState s = this.level.getBlockState(this.worldPosition);
+            this.level.sendBlockUpdated(this.worldPosition, s, s, Block.UPDATE_CLIENTS);
+        }
+    }
+
+    private static @NotNull AABB getExpanded(AirlockFrameScanner.Result f, double r) {
+        AABB interior = switch (f.plane) {
+            case XY -> new AABB(f.minX + 1, f.minY + 1, f.minZ,     f.maxX,     f.maxY,     f.maxZ);
+            case XZ -> new AABB(f.minX + 1, f.minY,     f.minZ + 1, f.maxX,     f.maxY,     f.maxZ);
+            case YZ -> new AABB(f.minX,     f.minY + 1, f.minZ + 1, f.maxX,     f.maxY,     f.maxZ);
+        };
+        interior.inflate(0.0001); // avoid zero-thickness issues on the plane
+        return interior.inflate(r);
+    }
+
+    private static boolean sameFrames(List<AirlockFrameScanner.Result> a, List<AirlockFrameScanner.Result> b) {
+        if (a == b) return true;
+        if (a == null || b == null || a.size() != b.size()) return false;
+        for (int i = 0; i < a.size(); i++) {
+            var x = a.get(i); var y = b.get(i);
+            if (x.plane != y.plane) return false;
+            if (x.minX != y.minX || x.minY != y.minY || x.minZ != y.minZ) return false;
+            if (x.maxX != y.maxX || x.maxY != y.maxY || x.maxZ != y.maxZ) return false;
+        }
+        return true;
+    }
+
+    private void seal(AirlockFrameScanner.Result f) {
+        boolean anyAir = false;
+        switch (f.plane) {
+            case XY -> {
+                int z = f.minZ;
+                for (int x = f.minX + 1; x <= f.maxX - 1; x++)
+                    for (int y = f.minY + 1; y <= f.maxY - 1; y++)
+                        if (this.level.getBlockState(new BlockPos(x, y, z)).isAir()) anyAir = true;
+            }
+            case XZ -> {
+                int y = f.minY;
+                for (int x = f.minX + 1; x <= f.maxX - 1; x++)
+                    for (int z = f.minZ + 1; z <= f.maxZ - 1; z++)
+                        if (this.level.getBlockState(new BlockPos(x, y, z)).isAir()) anyAir = true;
+            }
+            case YZ -> {
+                int x = f.minX;
+                for (int y = f.minY + 1; y <= f.maxY - 1; y++)
+                    for (int z = f.minZ + 1; z <= f.maxZ - 1; z++)
+                        if (this.level.getBlockState(new BlockPos(x, y, z)).isAir()) anyAir = true;
+            }
+        }
+        if (anyAir) {
+            BlockPos center = new BlockPos((f.minX + f.maxX)/2, (f.minY + f.maxY)/2, (f.minZ + f.maxZ)/2);
+            this.level.playSound(null, center, GCSounds.PLAYER_CLOSEAIRLOCK, SoundSource.BLOCKS, 1.0F, 1.0F);
+        }
+
+        switch (f.plane) {
+            case XY -> {
+                int z = f.minZ;
+                for (int x = f.minX + 1; x <= f.maxX - 1; x++)
+                    for (int y = f.minY + 1; y <= f.maxY - 1; y++) {
+                        BlockPos p = new BlockPos(x, y, z);
+                        if (this.level.getBlockState(p).isAir())
+                            this.level.setBlock(p, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, f.sealFacing), Block.UPDATE_ALL);
+                    }
+            }
+            case XZ -> {
+                int y = f.minY;
+                for (int x = f.minX + 1; x <= f.maxX - 1; x++)
+                    for (int z = f.minZ + 1; z <= f.maxZ - 1; z++) {
+                        BlockPos p = new BlockPos(x, y, z);
+                        if (this.level.getBlockState(p).isAir())
+                            this.level.setBlock(p, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, f.sealFacing), Block.UPDATE_ALL);
+                    }
+            }
+            case YZ -> {
+                int x = f.minX;
+                for (int y = f.minY + 1; y <= f.maxY - 1; y++)
+                    for (int z = f.minZ + 1; z <= f.maxZ - 1; z++) {
+                        BlockPos p = new BlockPos(x, y, z);
+                        if (this.level.getBlockState(p).isAir())
+                            this.level.setBlock(p, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, f.sealFacing), Block.UPDATE_ALL);
+                    }
+            }
+        }
+    }
+
+    public void unseal(AirlockFrameScanner.Result f) {
+        boolean hadSeal = false;
+        switch (f.plane) {
+            case XY -> {
+                int z = f.minZ;
+                for (int x = f.minX + 1; x <= f.maxX - 1; x++)
+                    for (int y = f.minY + 1; y <= f.maxY - 1; y++) {
+                        BlockPos p = new BlockPos(x, y, z);
+                        if (this.level.getBlockState(p).is(GCBlocks.AIR_LOCK_SEAL)) {
+                            hadSeal = true;
+                            this.level.setBlock(p, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+                        }
+                    }
+            }
+            case XZ -> {
+                int y = f.minY;
+                for (int x = f.minX + 1; x <= f.maxX - 1; x++)
+                    for (int z = f.minZ + 1; z <= f.maxZ - 1; z++) {
+                        BlockPos p = new BlockPos(x, y, z);
+                        if (this.level.getBlockState(p).is(GCBlocks.AIR_LOCK_SEAL)) {
+                            hadSeal = true;
+                            this.level.setBlock(p, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+                        }
+                    }
+            }
+            case YZ -> {
+                int x = f.minX;
+                for (int y = f.minY + 1; y <= f.maxY - 1; y++)
+                    for (int z = f.minZ + 1; z <= f.maxZ - 1; z++) {
+                        BlockPos p = new BlockPos(x, y, z);
+                        if (this.level.getBlockState(p).is(GCBlocks.AIR_LOCK_SEAL)) {
+                            hadSeal = true;
+                            this.level.setBlock(p, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+                        }
+                    }
+            }
+        }
+        if (hadSeal) {
+            BlockPos center = new BlockPos((f.minX + f.maxX)/2, (f.minY + f.maxY)/2, (f.minZ + f.maxZ)/2);
+            this.level.playSound(null, center, GCSounds.PLAYER_OPENAIRLOCK, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
     }
 
     @Override
     public @NotNull Component getDisplayName() {
-        return Component.translatable(Translations.Ui.AIRLOCK_OWNER, ownerName);
+        return Component.translatable(Translations.Ui.AIRLOCK_OWNER, ""); // fill in owner if you track it
+    }
+
+    @Override
+    protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        serverTick();
+        return GCMachineStatuses.SEALED;
+    }
+
+    @Override
+    protected void tickDisabled(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        serverTick();
+
+        super.tickDisabled(level, pos, state, profiler);
     }
 
     @Override
     public AirlockControllerMenu createMenu(int syncId, Inventory inventory, Player player) {
-        return new AirlockControllerMenu(syncId, inventory);
+        return new AirlockControllerMenu(syncId, player, this);
+    }
+
+    public List<AirlockFrameScanner.Result> getLastFrames() {
+        return this.lastFrames;
+    }
+
+    /** Unseal on BE removal (block broken / replaced). */
+    @Override
+    public void setRemoved() {
+        if (!this.level.isClientSide() && this.lastFrames != null) {
+            for (var f : this.lastFrames) unseal(f);
+        }
+        super.setRemoved();
     }
 }
