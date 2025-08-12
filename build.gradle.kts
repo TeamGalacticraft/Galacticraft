@@ -322,8 +322,7 @@ fun readExistingContributors(root: JsonElement): List<Map<String, Any?>> {
             "name" to (o.get("name")?.asString ?: ""),
             "contact" to (o.getAsJsonObject("contact")?.let { cobj ->
                 mapOf("homepage" to (cobj.get("homepage")?.asString ?: ""))
-            } ?: emptyMap<String, Any?>()),
-            "contributions" to (o.get("contributions")?.asInt ?: 0)
+            } ?: emptyMap<String, Any?>())
         )
     }
 }
