@@ -13,26 +13,20 @@ permissions:
 
 jobs:
   update-contributors:
-    name: Update fabric.mod.json contributors
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/heads/') && github.actor != 'github-actions[bot]'
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: true
 
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '21'
-      - uses: gradle/actions/setup-gradle@v4
+      - name: Install Kotlin
+        run: sudo apt-get update && sudo apt-get install -y kotlin
 
-      - name: Update contributors (conditional)
+      - name: Run contributor updater
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew --no-daemon updateContributorsConditional
+        run: .github/scripts/update-contributors.main.kts
 
       - name: Detect changes
         id: diff
@@ -49,7 +43,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Commit & push update to same branch
+      - name: Commit & push
         if: steps.diff.outputs.changed == 'true'
         run: |
           git add src/main/resources/fabric.mod.json
