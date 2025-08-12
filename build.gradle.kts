@@ -485,11 +485,8 @@ tasks.test {
 
 spotless {
     lineEndings = com.diffplug.spotless.LineEnding.UNIX
-    ratchetFrom("origin/main")            // only check diffs in main
 
     java {
-        target("src/**/*.java")
-        targetExclude("src/main/generated/**", "**/build/**")
         licenseHeader(processLicenseHeader(rootProject.file("LICENSE")))
         leadingTabsToSpaces()
         removeUnusedImports()

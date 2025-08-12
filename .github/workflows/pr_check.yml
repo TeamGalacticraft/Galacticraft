@@ -10,8 +10,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Validate Gradle wrapper
         uses: gradle/actions/wrapper-validation@v4
@@ -22,27 +20,30 @@ jobs:
           java-version: 21
           distribution: temurin
 
-      - name: Setup Gradle (cache & config-cache)
-        uses: gradle/actions/setup-gradle@v4
-
-      # Only run Spotless if code changed in this PR
-      - name: Detect changed paths
-        id: changes
-        uses: dorny/paths-filter@v3
+      - name: Cache Gradle
+        uses: actions/cache@v4
         with:
-          filters: |
-            code:
-              - 'src/**/*.java'
-              - 'src/**/*.kt'
-              - 'src/**/*.kts'
-            
-      - name: Spotless check
-        if: steps.changes.outputs.code == 'true'
-        run: ./gradlew --no-daemon spotlessCheck
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            .gradle
+          key: ${{ runner.os }}-gradle-PR${{github.event.number}}-${{ hashFiles('gradle/gradle-wrapper.properties', 'settings.gradle.kts', '**/build.gradle.kts', '**/gradle.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-${{ hashFiles('gradle/gradle-wrapper.properties', 'settings.gradle.kts', '**/build.gradle.kts', '**/gradle.properties') }}
+            ${{ runner.os }}-gradle-PR${{github.event.number}}-
+            ${{ runner.os }}-gradle-
 
-      # Build & tests (exclude spotless to avoid double-run)
+      - name: Initialize build environment
+        run: ./gradlew
+
+      - name: Spotless check
+        run: ./gradlew spotlessCheck
+
       - name: Build
-        run: ./gradlew --no-daemon assemble testClasses -x spotlessCheck
+        id: build
+        if: ${{ !cancelled() }}
+        run: ./gradlew assemble testClasses -x spotlessCheck
 
       - name: Test
-        run: ./gradlew --no-daemon test -x spotlessCheck
+        if: ${{ steps.build.outcome == 'success' && !cancelled() }}
+        run: ./gradlew test -x spotlessCheck
