@@ -4,6 +4,7 @@
   "plugin": "dev.galacticraft.mod.GalacticraftMixinPlugin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "AbstractCandleBlockInvoker",
     "AbstractContainerMenuAccessor",
     "AbstractFurnaceBlockEntityMixin",
     "AbstractHorseMixin",

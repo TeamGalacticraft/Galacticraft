@@ -17,9 +17,6 @@ accessible field net/minecraft/world/level/levelgen/SurfaceRules$Context biome L
 # final classes
 extendable class net/minecraft/world/SimpleMenuProvider
 
-# private methods
-accessible method net/minecraft/world/level/block/AbstractCandleBlock      getParticleOffsets (Lnet/minecraft/world/level/block/state/BlockState;)Ljava/lang/Iterable;
-
 # static methods
 accessible method net/minecraft/data/models/model/ModelTemplates            createItem (Ljava/lang/String;[Lnet/minecraft/data/models/model/TextureSlot;)Lnet/minecraft/data/models/model/ModelTemplate;
 accessible method net/minecraft/world/level/block/BaseRailBlock             shouldBeRemoved (Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/block/state/properties/RailShape;)Z
