@@ -34,8 +34,6 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 public class ExtinguishableBlockRegistryImpl implements ExtinguishableBlockRegistry {
-    private static final ExtinguishableBlockRegistry.Entry REMOVED = new ExtinguishableBlockRegistry.Entry(state -> null);
-
     private final Map<Block, ExtinguishableBlockRegistry.Entry> registeredEntriesBlock = new IdentityHashMap<>();
     private final Map<TagKey<Block>, ExtinguishableBlockRegistry.Entry> registeredEntriesTag = new HashMap<>();
     private volatile Map<Block, ExtinguishableBlockRegistry.Entry> computedEntries = null;
@@ -63,7 +61,6 @@ public class ExtinguishableBlockRegistryImpl implements ExtinguishableBlockRegis
             }
 
             map.putAll(this.registeredEntriesBlock);
-
             this.computedEntries = map;
         }
 
@@ -77,39 +74,35 @@ public class ExtinguishableBlockRegistryImpl implements ExtinguishableBlockRegis
 
     @Override
     public void add(Block block, Entry value) {
-        registeredEntriesBlock.put(block, value);
-
-        computedEntries = null;
+        this.registeredEntriesBlock.put(block, value);
+        this.computedEntries = null;
     }
 
     @Override
     public void add(TagKey<Block> tag, Entry value) {
-        registeredEntriesTag.put(tag, value);
-
-        computedEntries = null;
+        this.registeredEntriesTag.put(tag, value);
+        this.computedEntries = null;
     }
 
     @Override
     public void remove(Block block) {
-        add(block, REMOVED);
+        this.clear(block);
     }
 
     @Override
     public void remove(TagKey<Block> tag) {
-        add(tag, REMOVED);
+        this.clear(tag);
     }
 
     @Override
     public void clear(Block block) {
-        registeredEntriesBlock.remove(block);
-
-        computedEntries = null;
+        this.registeredEntriesBlock.remove(block);
+        this.computedEntries = null;
     }
 
     @Override
     public void clear(TagKey<Block> tag) {
-        registeredEntriesTag.remove(tag);
-
-        computedEntries = null;
+        this.registeredEntriesTag.remove(tag);
+        this.computedEntries = null;
     }
 }
