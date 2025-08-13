@@ -1,0 +1,35 @@
+{
+  "bind": [
+    "galacticraft:air_lock_controller"
+  ],
+  "elements": [
+    {
+      "type": "text",
+      "align": "left",
+      "maxX": 334,
+      "maxY": 122,
+      "minX": 14,
+      "minY": 52,
+      "textKey": "doc.gc.airlock.overview"
+    },
+    {
+      "type": "button",
+      "h": 20,
+      "target": "galacticraft:home",
+      "textKey": "gc.docs.back",
+      "w": 120,
+      "x": 14,
+      "y": 130
+    }
+  ],
+  "id": "galacticraft:air_lock_controller",
+  "schema": 2,
+  "sections": [
+    {
+      "type": "overview",
+      "bodyKey": "doc.gc.airlock.overview",
+      "headingKey": "doc.common.overview"
+    }
+  ],
+  "titleKey": "doc.gc.airlock.title"
+}

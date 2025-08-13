@@ -1,0 +1,31 @@
+{
+  "elements": [
+    {
+      "type": "text",
+      "align": "left",
+      "maxX": 332,
+      "maxY": 108,
+      "minX": 12,
+      "minY": 48,
+      "textKey": "doc.gc.home.intro"
+    },
+    {
+      "type": "button",
+      "h": 20,
+      "target": "galacticraft:air_lock_controller",
+      "textKey": "doc.gc.home.btn.airlock",
+      "w": 160,
+      "x": 12,
+      "y": 120
+    }
+  ],
+  "links": [
+    "galacticraft:air_lock_controller"
+  ],
+  "schema": 2,
+  "titleKey": "doc.gc.home.title",
+  "titlePos": {
+    "x": 12,
+    "y": 18
+  }
+}
