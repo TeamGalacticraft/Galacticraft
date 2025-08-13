@@ -60,11 +60,12 @@ final class DocsJsonProvider implements DataProvider {
 
         JsonObject root = new HomePageBuilder(SCHEMA)
                 .setTitleText("doc.gc.home.title")
-                .setTitlePosition(12, 18)
-                .addTextBox(12, 48, 12 + 320, 48 + 60, "doc.gc.home.intro", "left")
-                .addRedirectButton(12, 120, 160, 20, "doc.gc.home.btn.airlock", AIRLOCK_PAGE)
-                .addFeatured(AIRLOCK_PAGE)
+                .addTextBox(5, 38, 319, 84, "doc.gc.home.intro", "left")
+                .addTextBox(12, 70, 460, 80, "doc.gc.home.category_label", "left")
+                .addRedirectButton(12, 120, 52, 44, "doc.gc.home.btn.airlock", AIRLOCK_PAGE)
+                .addTextBox(20, 60, 200, 120, "doc.gc.home.intro", "left")
                 .build();
+
 
         Path p = out.getOutputFolder().resolve("assets/galacticraft/docs/home.json");
         return save(cache, root, p);

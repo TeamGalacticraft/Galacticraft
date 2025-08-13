@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.api.documentation.client;
 
 import dev.galacticraft.mod.api.documentation.DocsApi;
+import dev.galacticraft.mod.api.documentation.client.pages.BlankPageScreen;
 import dev.galacticraft.mod.api.documentation.reload.DocsReloadListener;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -72,6 +73,9 @@ public final class DocsClient implements ClientModInitializer {
                             return;
                         }
                     }
+                } else if (scr instanceof BlankPageScreen bps) {
+                    INSPECT.setDown(true);
+                    return;
                 }
                 DocsApi.openHome();
             });

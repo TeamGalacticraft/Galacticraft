@@ -5,7 +5,8 @@
   "mixins": [
   ],
   "client": [
-    "AbstractContainerScreenAccessor"
+    "AbstractContainerScreenAccessor",
+    "ScreenAccessor"
   ],
   "minVersion": "0.8.0",
   "injectors": {

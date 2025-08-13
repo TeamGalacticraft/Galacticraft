@@ -3,29 +3,40 @@
     {
       "type": "text",
       "align": "left",
-      "maxX": 332,
-      "maxY": 108,
-      "minX": 12,
-      "minY": 48,
+      "maxX": 319,
+      "maxY": 84,
+      "minX": 5,
+      "minY": 38,
       "textKey": "doc.gc.home.intro"
     },
     {
+      "type": "text",
+      "align": "left",
+      "maxX": 460,
+      "maxY": 80,
+      "minX": 12,
+      "minY": 70,
+      "textKey": "doc.gc.home.category_label"
+    },
+    {
       "type": "button",
-      "h": 20,
+      "h": 44,
       "target": "galacticraft:air_lock_controller",
       "textKey": "doc.gc.home.btn.airlock",
-      "w": 160,
+      "w": 52,
       "x": 12,
       "y": 120
+    },
+    {
+      "type": "text",
+      "align": "left",
+      "maxX": 200,
+      "maxY": 120,
+      "minX": 20,
+      "minY": 60,
+      "textKey": "doc.gc.home.intro"
     }
   ],
-  "links": [
-    "galacticraft:air_lock_controller"
-  ],
   "schema": 2,
-  "titleKey": "doc.gc.home.title",
-  "titlePos": {
-    "x": 12,
-    "y": 18
-  }
+  "titleKey": "doc.gc.home.title"
 }

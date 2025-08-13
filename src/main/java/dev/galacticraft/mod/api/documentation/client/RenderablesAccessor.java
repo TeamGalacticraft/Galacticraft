@@ -20,23 +20,9 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.api.documentation.datagen;
+package dev.galacticraft.mod.api.documentation.client;
 
-import dev.galacticraft.mod.data.GCTranslationProvider;
+import net.minecraft.client.gui.components.Renderable;
+import java.util.List;
 
-public class DocsTranslations {
-    public static void generateDocsTranslations(GCTranslationProvider t) {
-        t.add("key.gc.inspect", "Inspect");
-        t.add("key.categories.galacticraft", "Galacticraft");
-        t.add("tooltip.gc.inspect_hint", "Press %s to inspect");
-        t.add("gc.docs.back", "Back");
-
-        t.add("doc.gc.home.title", "Galacticraft Documentation");
-        t.add("doc.gc.home.intro", "Galacticraft 5 Rewoven. The number 1 space mod rewritten for the latest version of Minecraft.");
-        t.add("doc.gc.home.category_label", "Categories");
-        t.add("doc.common.overview", "Overview");
-        t.add("doc.gc.airlock.title", "Airlock Controller");
-        t.add("doc.gc.airlock.overview", "Place the Airlock Controller and connect frames. Power it with redstone to toggle the door.");
-        t.add("doc.gc.home.btn.airlock", "Airlock Controller");
-    }
-}
+public interface RenderablesAccessor { List<Renderable> gc$getRenderables(); }
