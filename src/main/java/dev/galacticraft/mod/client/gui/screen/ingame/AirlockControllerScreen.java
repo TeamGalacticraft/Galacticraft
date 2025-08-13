@@ -33,10 +33,12 @@ import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import org.jetbrains.annotations.NotNull;
 
 public class AirlockControllerScreen extends MachineScreen<AirlockControllerBlockEntity, AirlockControllerMenu> {
     private final EditBox textField;
@@ -48,7 +50,7 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
                 Minecraft.getInstance().font,
                 this.leftPos + 132, this.topPos + 65,
                 26, 20,
-                Component.literal("")
+                Component.empty()
         );
         this.textField.setValue(String.valueOf(this.menu.proximityOpen));
 
@@ -90,7 +92,7 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
     protected void init() {
         super.init();
         this.imageHeight = 171;
-        this.titleLabelX = 4;
+        this.titleLabelX = 90;
 
         this.textField.setX(this.leftPos + 132);
         this.textField.setY(this.topPos + 65);
@@ -104,16 +106,16 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
         int color;
         if (enabled.equals(AirlockState.ALL)) {
             label = Component.translatable(Translations.Ui.AIRLOCK_ENABLED);
-            color = ChatFormatting.GREEN.getColor();
+            color = ChatFormatting.DARK_GREEN.getColor();
         } else if (enabled.equals(AirlockState.PARTIAL)) {
             label = Component.translatable(Translations.Ui.AIRLOCK_PARTIAL);
-            color = ChatFormatting.YELLOW.getColor();
+            color = ChatFormatting.DARK_PURPLE.getColor();
         } else {
             label = Component.translatable(Translations.Ui.AIRLOCK_DISABLED);
             color = ChatFormatting.RED.getColor();
         }
 
-        g.drawCenteredString(this.font, label.getString(), this.leftPos + 90, this.topPos + 22, color);
+        drawCenteredString(g, this.font, label, this.leftPos + 90, this.topPos + 22, color, false);
 
         int upX = this.leftPos + 158, upY = this.topPos + 65;
         int downX = this.leftPos + 158, downY = this.topPos + 75;
@@ -131,7 +133,7 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
                 hoverDown ? Constant.TextureCoordinate.ARROW_DOWN_HOVER_Y : Constant.TextureCoordinate.ARROW_DOWN_Y,
                 Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT);
 
-        g.drawString(this.font, Component.literal("Airlock Proximity:"), this.leftPos + 46, this.topPos + 71, ChatFormatting.DARK_GRAY.getColor(), false);
+        drawStringAlignedRight(g, this.font, Component.translatable(Translations.Ui.AIRLOCK_PROXIMITY_LABEL), this.leftPos + 130, this.topPos + 71, ChatFormatting.DARK_GRAY.getColor(), false);
     }
 
     @Override
@@ -147,6 +149,10 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
         }
     }
 
+    @Override
+    protected void drawTitle(@NotNull GuiGraphics graphics) {
+        drawCenteredString(graphics, this.font, this.title, this.titleLabelX, this.titleLabelY, 0xFF404040, false);
+    }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -177,5 +183,13 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
             }
         }
         return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    public void drawCenteredString(GuiGraphics g, Font font, Component text, int centerX, int y, int color, boolean shadow) {
+        g.drawString(font, text, centerX - font.width(text) / 2, y, color, shadow);
+    }
+    
+    public void drawStringAlignedRight(GuiGraphics g, Font font, Component text, int x, int y, int color, boolean shadow) {
+        g.drawString(font, text, x - this.font.width(text), y, color, shadow);
     }
 }

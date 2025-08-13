@@ -384,12 +384,12 @@ public interface Translations {
         String UPGRADE = "ui.galacticraft.upgrade";
         String COLOR = "ui.galacticraft.color";
 
+        String AIRLOCK_PROXIMITY_LABEL = "ui.galacticraft.airlock_proximity_label";
         String AIRLOCK_DEFAULT_NAME = "ui.galacticraft.airlock.default_name";
         String AIRLOCK_ENABLED = "ui.galacticraft.airlock.enabled";
         String AIRLOCK_PARTIAL = "ui.galacticraft.airlock.partial";
         String AIRLOCK_DISABLED = "ui.galacticraft.airlock.disabled";
         String AIRLOCK_OPEN_WHEN_NEAR = "ui.galacticraft.airlock.open_when_near";
-        String AIRLOCK_OWNER = "ui.galacticraft.airlock.owner";
         String ALPHA_WARNING_1 = "ui.galacticraft.alpha_warning.content1";
         String ALPHA_WARNING_2 = "ui.galacticraft.alpha_warning.content2";
         String ALPHA_WARNING_3 = "ui.galacticraft.alpha_warning.content3";

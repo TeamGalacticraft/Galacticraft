@@ -47,8 +47,10 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -59,6 +61,10 @@ import java.util.*;
 
 
 public class AirlockControllerBlockEntity extends MachineBlockEntity {
+    // --- NBT keys
+    private static final String NBT_PROX = "ProximityOpen";
+    private static final String NBT_SEALED = "SealedFrames";
+
     // --- UI-config (persisted) ---
     private byte proximityOpen = 0;
 
@@ -89,19 +95,67 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
         super.saveAdditional(tag, lookup);
-        tag.putByte("ProximityOpen", this.proximityOpen);
+        tag.putByte(NBT_PROX, this.proximityOpen);
+
+        // persist sealed frame IDs (longs)
+        long[] arr = this.sealedFrames.stream().mapToLong(Long::longValue).toArray();
+        tag.putLongArray(NBT_SEALED, arr);
     }
 
     @Override
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
         super.loadAdditional(tag, lookup);
-        if (tag.contains("ProximityOpen")) this.proximityOpen = tag.getByte("ProximityOpen");
+        if (tag.contains(NBT_PROX)) {
+            this.proximityOpen = tag.getByte(NBT_PROX);
+        }
+        // read sealed IDs; don't try to reseal yet (level may not be ready)
+        if (tag.contains(NBT_SEALED)) {
+            this.sealedFrames.clear();
+            for (long id : tag.getLongArray(NBT_SEALED)) this.sealedFrames.add(id);
+        }
+        onLoad();
     }
 
     // --- Core logic ---
 
-    private void serverTick() {
+    /** Re-apply seals after the chunk loads. */
+    public void onLoad() {
         if (!(this.level instanceof ServerLevel server)) return;
+
+        // Re-scan the frames for current geometry
+        List<AirlockFrameScanner.Result> frames = AirlockFrameScanner.scanAll(server, this.worldPosition);
+        Map<Long, AirlockFrameScanner.Result> frameMap = indexFrames(frames);
+
+        // Place seals for frames that were persisted as sealed
+        boolean changed = false;
+        for (long id : this.sealedFrames) {
+            AirlockFrameScanner.Result f = frameMap.get(id);
+            if (f != null) {
+                // Ensure they're sealed (idempotent: only places over air)
+                seal(f);
+                changed = true;
+            }
+        }
+
+        // restore runtime caches/state
+        this.lastFrames = frames;
+        this.lastFrameMap = frameMap;
+
+        // recompute state enum
+        if (this.sealedFrames.isEmpty() || frames.isEmpty()) this.state = AirlockState.NONE;
+        else if (this.sealedFrames.size() == frames.size()) this.state = AirlockState.ALL;
+        else this.state = AirlockState.PARTIAL;
+
+        if (changed) {
+            BlockState s = server.getBlockState(this.worldPosition);
+            server.sendBlockUpdated(this.worldPosition, s, s, Block.UPDATE_CLIENTS);
+            setChanged();
+        }
+    }
+
+    private void serverTick() {
+        ServerLevel server = (ServerLevel) this.level;
+        assert server != null;
         if ((++this.ticks % 5) != 0) return; // tick every 5
 
         List<AirlockFrameScanner.Result> frames = AirlockFrameScanner.scanAll(server, this.worldPosition);
@@ -329,37 +383,17 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
 
     @Override
     public @NotNull Component getDisplayName() {
-        // If no owner, default name
-        var security = this.getSecurity();
-        if (security.getOwner() == null) {
-            return Component.translatable(Translations.Ui.AIRLOCK_DEFAULT_NAME);
-        }
+        return Component.translatable(Translations.Ui.AIRLOCK_DEFAULT_NAME);
+    }
 
-        // Try server cache
-        String ownerName = null;
-        if (this.level != null && this.level.getServer() != null) {
-            GameProfileCache cache = this.level.getServer().getProfileCache();
-            if (cache != null) {
-                Optional<GameProfile> prof = cache.get(security.getOwner());
-                ownerName = prof.map(GameProfile::getName).orElse(null);
-            }
-        }
-
-        // As a last resort, attempt skull fetch
-        if (ownerName == null) {
-            Optional<GameProfile> prof = SkullBlockEntity.fetchGameProfile(security.getOwner()).getNow(Optional.empty());
-            ownerName = prof.map(GameProfile::getName).orElse(null);
-        }
-
-        if (ownerName == null || ownerName.isBlank()) {
-            return Component.translatable(Translations.Ui.AIRLOCK_DEFAULT_NAME);
-        }
-        return Component.translatable(Translations.Ui.AIRLOCK_OWNER, ownerName);
+    @Override
+    protected void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        serverTick();
+        super.tickConstant(level, pos, state, profiler);
     }
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        serverTick();
         return switch (this.state) {
             case ALL -> GCMachineStatuses.AIRLOCK_ENABLED;
             case PARTIAL -> GCMachineStatuses.AIRLOCK_PARTIAL;
@@ -373,20 +407,36 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected void tickDisabled(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        serverTick();
-        super.tickDisabled(level, pos, state, profiler);
-    }
-
-    @Override
     public void setRemoved() {
-        if (this.level instanceof ServerLevel && this.lastFrameMap != null) {
-            for (long id : this.sealedFrames) {
-                AirlockFrameScanner.Result f = this.lastFrameMap.get(id);
-                if (f != null) unseal(f);
+        try {
+            if (this.level instanceof ServerLevel server) {
+                boolean shouldUnseal = false;
+
+                boolean chunkLoaded;
+                chunkLoaded = server.isLoaded(this.worldPosition);
+
+                if (chunkLoaded) {
+                    BlockEntity current = server.getBlockEntity(this.worldPosition);
+                    if (current == null || current != this) {
+                        shouldUnseal = true;
+                    } else {
+                        var stateAtPos = server.getBlockState(this.worldPosition);
+                        if (stateAtPos.isAir()) {
+                            shouldUnseal = true;
+                        }
+                    }
+                }
+
+                if (shouldUnseal) {
+                    for (long id : this.sealedFrames) {
+                        var f = this.lastFrameMap.get(id);
+                        if (f != null) unseal(f);
+                    }
+                    this.sealedFrames.clear();
+                }
             }
-            this.sealedFrames.clear();
+        } finally {
+            super.setRemoved();
         }
-        super.setRemoved();
     }
 }

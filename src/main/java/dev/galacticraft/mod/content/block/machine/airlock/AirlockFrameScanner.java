@@ -68,8 +68,9 @@ public final class AirlockFrameScanner {
     }
 
     private static boolean isFrame(Level level, BlockPos pos) {
-        return level.getBlockState(pos).getBlock().defaultBlockState().is(GCBlockTags.AIRLOCK_BLOCKS);
+        return level.getBlockState(pos).is(GCBlockTags.AIRLOCK_BLOCKS);
     }
+
     private static boolean isController(Level level, BlockPos pos) {
         return level.getBlockEntity(pos) instanceof AirlockControllerBlockEntity;
     }
@@ -98,7 +99,7 @@ public final class AirlockFrameScanner {
     private record Axes(Axis u, Axis v, Axis wConst) {}
 
     private static List<Result> scanPlane(Level level, BlockPos controller, Plane plane) {
-        final int fixed = coord(controller, plane.normal);
+        final int fixed = controller.get(plane.normal);
         final Axes axes = axesFor(plane); // u,v are the in-plane axes
 
         // 1) Gather all frame blocks connected to controller within this plane
@@ -324,7 +325,7 @@ public final class AirlockFrameScanner {
             BlockPos p = q.removeFirst();
             for (Direction d : inPlaneDirections(plane)) {
                 BlockPos n = p.relative(d);
-                if (coord(n, plane.normal) != fixed) continue;
+                if (n.get(plane.normal) != fixed) continue;
                 if (!visited.contains(n) && isFrame(level, n)) {
                     visited.add(n);
                     q.add(n);
@@ -342,16 +343,10 @@ public final class AirlockFrameScanner {
         };
     }
 
-    private static int coord(BlockPos p, Axis a) {
-        return switch (a) {
-            case X -> p.getX();
-            case Y -> p.getY();
-            case Z -> p.getZ();
-        };
-    }
     private static int proj(BlockPos p, Axis axis) {
-        return coord(p, axis);
+        return p.get(axis);
     }
+
     private static BlockPos unproj(int u, int v, int wConst, Axes axes) {
         // inverse mapping from (u,v) back to (x,y,z)
         int x=0,y=0,z=0;
