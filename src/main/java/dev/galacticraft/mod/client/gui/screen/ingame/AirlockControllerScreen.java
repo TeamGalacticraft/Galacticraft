@@ -188,7 +188,7 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
     public void drawCenteredString(GuiGraphics g, Font font, Component text, int centerX, int y, int color, boolean shadow) {
         g.drawString(font, text, centerX - font.width(text) / 2, y, color, shadow);
     }
-    
+
     public void drawStringAlignedRight(GuiGraphics g, Font font, Component text, int x, int y, int color, boolean shadow) {
         g.drawString(font, text, x - this.font.width(text), y, color, shadow);
     }
