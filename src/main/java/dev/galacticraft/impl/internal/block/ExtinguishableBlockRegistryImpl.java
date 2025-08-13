@@ -36,7 +36,7 @@ import java.util.Map;
 public class ExtinguishableBlockRegistryImpl implements ExtinguishableBlockRegistry {
     private static final ExtinguishableBlockRegistry.Entry REMOVED = new ExtinguishableBlockRegistry.Entry(state -> null);
 
-    private final Map<Block, ExtinguishableBlockRegistry.Entry> registeredEntriesBlock = new HashMap<>();
+    private final Map<Block, ExtinguishableBlockRegistry.Entry> registeredEntriesBlock = new IdentityHashMap<>();
     private final Map<TagKey<Block>, ExtinguishableBlockRegistry.Entry> registeredEntriesTag = new HashMap<>();
     private volatile Map<Block, ExtinguishableBlockRegistry.Entry> computedEntries = null;
 

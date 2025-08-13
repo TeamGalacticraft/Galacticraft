@@ -152,7 +152,7 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
 
     @Override
     public @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        profiler.popPush("extinguish");
+        profiler.push("extinguish");
         if (this.fuelTime > 0 && this.shouldExtinguish(level, pos, state)) {
             this.fuelLength = 0;
             this.fuelTime = 0;
@@ -161,6 +161,8 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
 
             return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
         }
+        profiler.pop();
+
         RecipeHolder<CompressingRecipe> recipe = this.getActiveRecipe();
         if (recipe != null && this.getState().isActive()) {
             int maxProgress = this.getProcessingTime(recipe);

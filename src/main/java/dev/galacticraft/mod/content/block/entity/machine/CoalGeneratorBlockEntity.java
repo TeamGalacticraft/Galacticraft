@@ -59,6 +59,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.NotNull;
@@ -124,8 +125,6 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
             if (this.shouldExtinguish(level, pos, state)) {
                 this.fuelLength = 0;
                 this.fuelTime = 0;
-                this.heat = 0;
-                this.curr = false;
                 RandomSource randomSource = level.getRandom();
                 level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.25F, 2.6F + (randomSource.nextFloat() - randomSource.nextFloat()) * 0.8F);
                 return;
@@ -138,10 +137,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         if (this.lit != lit || this.curr != this.prev) {
             this.lit = lit;
             this.prev = this.curr;
-            BlockState blockState = this.level.getBlockState(this.worldPosition)
-                    .setValue(CoalGeneratorBlock.LIT, this.lit)
-                    .setValue(CoalGeneratorBlock.HOT, this.prev);
-            this.level.setBlock(this.worldPosition, blockState, 2);
+            level.setBlock(this.worldPosition, state.setValue(CoalGeneratorBlock.LIT, this.lit).setValue(CoalGeneratorBlock.HOT, this.prev), Block.UPDATE_CLIENTS);
         }
 
         profiler.push("cooling_tick");
@@ -151,6 +147,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
                 this.curr = this.heat > 0;
             }
         }
+        profiler.pop();
     }
 
     @Override
@@ -161,7 +158,6 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         profiler.popPush("fuel_reset");
         if (this.fuelLength == 0) {
             MachineStatus status = this.consumeFuel(level, pos, state);
-            this.curr = status == GCMachineStatuses.COOLING_DOWN;
             if (status != null) {
                 return status;
             }
