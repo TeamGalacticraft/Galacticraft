@@ -112,10 +112,13 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.GLOWSTONE_WALL_TORCH, "Glowstone Torch");
         this.block(GCBlocks.UNLIT_TORCH, "Unlit Torch");
         this.block(GCBlocks.UNLIT_WALL_TORCH, "Unlit Torch");
+        this.block(GCBlocks.UNLIT_SOUL_TORCH, "Unlit Soul Torch");
+        this.block(GCBlocks.UNLIT_SOUL_WALL_TORCH, "Unlit Soul Torch");
 
         // LANTERNS
         this.block(GCBlocks.GLOWSTONE_LANTERN, "Glowstone Lantern");
         this.block(GCBlocks.UNLIT_LANTERN, "Unlit Lantern");
+        this.block(GCBlocks.UNLIT_SOUL_LANTERN, "Unlit Soul Lantern");
 
         // FLUIDS
         this.block(GCBlocks.CRUDE_OIL, "Crude Oil");
