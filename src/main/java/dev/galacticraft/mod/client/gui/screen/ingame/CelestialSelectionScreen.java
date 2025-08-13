@@ -46,6 +46,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FastColor;
+import net.minecraft.util.Mth;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -925,7 +926,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
         for (int i = 0; i < children.size(); i++) {
             CelestialBody<?, ?> child = children.get(i);
             int xOffset = xOffsetBase + (child.equals(this.selectedBody) ? 5 : 0);
-            final int scale = (int) Math.min(95.0F, Math.max(0.0F, (this.ticksSinceMenuOpenF * 25.0F) - 95 * i));
+            final int scale = Mth.clamp((int) (this.ticksSinceMenuOpenF * 25.0F) - 95 * i, 0, 95);
 
             float brightness = child.equals(this.selectedBody) ? 0.2F : 0.0F;
             int color;

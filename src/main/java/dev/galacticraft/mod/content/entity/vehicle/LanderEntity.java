@@ -279,7 +279,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
             this.addDeltaMovement(new Vec3(0, (holder != null ? holder.value().gravity() : 1.0d) * -0.008D, 0));
         }
 
-        double motY = -1 * Math.sin(getXRot() / Constant.RADIANS_TO_DEGREES);
+        double motY = -Math.sin(getXRot() / Constant.RADIANS_TO_DEGREES);
         double motX = Math.cos(getYRot() / Constant.RADIANS_TO_DEGREES) * motY;
         double motZ = Math.sin(getYRot() / Constant.RADIANS_TO_DEGREES) * motY;
 
@@ -447,9 +447,9 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
     public void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown) {
         if (!onGround()) {
             if (up)
-                setXRot(Math.min(Math.max(getXRot() - 0.5F * turnFactor, -angle), angle));
+                setXRot(Mth.clamp(getXRot() - 0.5F * turnFactor, -angle, angle));
             if (down)
-                setXRot(Math.min(Math.max(getXRot() + 0.5F * turnFactor, -angle), angle));
+                setXRot(Mth.clamp(getXRot() + 0.5F * turnFactor, -angle, angle));
             if (left)
                 setYRot(getYRot() - 0.5F * turnFactor);
             if (right)
