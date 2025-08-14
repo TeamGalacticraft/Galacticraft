@@ -17,7 +17,7 @@
       "nx": 0.0043196543,
       "ny": 0.2992126,
       "order": 1,
-      "target": "galacticraft:home",
+      "target": "galacticraft:general_category",
       "textKey": "doc.gc.home.category_general"
     },
     {
@@ -37,7 +37,7 @@
       "nx": 0.0043196543,
       "ny": 0.38188976,
       "order": 3,
-      "target": "galacticraft:home",
+      "target": "galacticraft:machines_category",
       "textKey": "doc.gc.home.category_machines"
     },
     {
@@ -47,7 +47,7 @@
       "nx": 0.0043196543,
       "ny": 0.46456692,
       "order": 4,
-      "target": "galacticraft:home",
+      "target": "galacticraft:rockets_category",
       "textKey": "doc.gc.home.category_rockets"
     },
     {
@@ -57,7 +57,7 @@
       "nx": 0.0043196543,
       "ny": 0.5472441,
       "order": 5,
-      "target": "galacticraft:home",
+      "target": "galacticraft:planets_category",
       "textKey": "doc.gc.home.category_planets"
     },
     {
@@ -67,7 +67,7 @@
       "nx": 0.0043196543,
       "ny": 0.62992126,
       "order": 6,
-      "target": "galacticraft:home",
+      "target": "galacticraft:entities_category",
       "textKey": "doc.gc.home.category_entities"
     },
     {
@@ -77,7 +77,7 @@
       "nx": 0.0043196543,
       "ny": 0.71259844,
       "order": 7,
-      "target": "galacticraft:home",
+      "target": "galacticraft:blocks_category",
       "textKey": "doc.gc.home.category_blocks"
     },
     {
@@ -87,7 +87,7 @@
       "nx": 0.0043196543,
       "ny": 0.79527557,
       "order": 8,
-      "target": "galacticraft:home",
+      "target": "galacticraft:items_category",
       "textKey": "doc.gc.home.category_items"
     },
     {
@@ -97,7 +97,7 @@
       "nx": 0.0043196543,
       "ny": 0.87795275,
       "order": 9,
-      "target": "galacticraft:home",
+      "target": "galacticraft:fluids_and_gasses_category",
       "textKey": "doc.gc.home.category_fluids_and_gasses"
     }
   ],

@@ -25,26 +25,43 @@ package dev.galacticraft.mod.api.documentation.datagen;
 import dev.galacticraft.mod.data.GCTranslationProvider;
 
 public class DocsTranslations {
+    public static final String INSPECT_KEY = "key.gc.inspect";
+    public static final String INSPECT_HINT = "tooltip.gc.inspect_hint";
+    public static final String BACK = "gc.docs.back";
+    public static final String UNIMPLEMENTED = "doc.unimplemented";
+
+    public static final String HOME_TITLE = "doc.gc.home.title";
+    public static final String HOME_INTRO = "doc.gc.home.intro";
+    public static final String HOME_CATEGORY_LABEL = "doc.gc.home.category_label";
+
+    public static final String GENERAL_CATEGORY = "doc.gc.home.category_general";
+    public static final String MACHINES_CATEGORY = "doc.gc.home.category_machines";
+    public static final String ROCKETS_CATEGORY = "doc.gc.home.category_rockets";
+    public static final String PLANETS_CATEGORY = "doc.gc.home.category_planets";
+    public static final String ENTITIES_CATEGORY = "doc.gc.home.category_entities";
+    public static final String BLOCKS_CATEGORY = "doc.gc.home.category_blocks";
+    public static final String ITEMS_CATEGORY = "doc.gc.home.category_items";
+    public static final String FLUIDS_AND_GASSES_CATEGORY = "doc.gc.home.category_fluids_and_gasses";
+
     public static void generateDocsTranslations(GCTranslationProvider t) {
         // --- GENERAL ---
-        t.add("key.gc.inspect", "Inspect");
-        t.add("key.categories.galacticraft", "Galacticraft");
-        t.add("tooltip.gc.inspect_hint", "Press %s to inspect");
-        t.add("gc.docs.back", "Back");
-        t.add("doc.unimplemented", "Unimplemented");
+        t.add(INSPECT_KEY, "Inspect");
+        t.add(INSPECT_HINT, "Press %s to inspect");
+        t.add(BACK, "Back");
+        t.add(UNIMPLEMENTED, "Unimplemented");
 
         // --- HOME PAGE ---
-        t.add("doc.gc.home.title", "Galacticraft Documentation");
-        t.add("doc.gc.home.intro", "Galacticraft 5 Rewoven. The number 1 space mod rewritten for the latest version of Minecraft.");
-        t.add("doc.gc.home.category_label", "Categories");
-        t.add("doc.gc.home.category_general", "General");
-        t.add("doc.gc.home.category_machines", "Machines");
-        t.add("doc.gc.home.category_rockets", "Rockets");
-        t.add("doc.gc.home.category_planets", "Planets");
-        t.add("doc.gc.home.category_entities", "Entities");
-        t.add("doc.gc.home.category_blocks", "Blocks");
-        t.add("doc.gc.home.category_items", "Items");
-        t.add("doc.gc.home.category_fluids_and_gasses", "Fluids and Gasses");
+        t.add(HOME_TITLE, "Galacticraft Documentation");
+        t.add(HOME_INTRO, "Galacticraft 5 Rewoven. The number 1 space mod rewritten for the latest version of Minecraft.");
+        t.add(HOME_CATEGORY_LABEL, "Categories");
+        t.add(GENERAL_CATEGORY, "General");
+        t.add(MACHINES_CATEGORY, "Machines");
+        t.add(ROCKETS_CATEGORY, "Rockets");
+        t.add(PLANETS_CATEGORY, "Planets");
+        t.add(ENTITIES_CATEGORY, "Entities");
+        t.add(BLOCKS_CATEGORY, "Blocks");
+        t.add(ITEMS_CATEGORY, "Items");
+        t.add(FLUIDS_AND_GASSES_CATEGORY, "Fluids and Gasses");
 
         // --- OTHER ---
         t.add("doc.common.overview", "Overview");
