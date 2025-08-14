@@ -85,7 +85,7 @@ abstract class BasePageBuilder<T extends BasePageBuilder<T>> {
     @SuppressWarnings("unchecked")
     public T addRedirectButtonNormalized(float nx, float ny, float nw, float nh,
                                          String textTranslationKey, ResourceLocation targetPage, int order) {
-        com.google.gson.JsonObject btn = new com.google.gson.JsonObject();
+        JsonObject btn = new JsonObject();
         btn.addProperty("type", "button");
         btn.addProperty("nx", nx);
         btn.addProperty("ny", ny);
@@ -118,7 +118,7 @@ abstract class BasePageBuilder<T extends BasePageBuilder<T>> {
     @SuppressWarnings("unchecked")
     public T addTextBoxNormalized(float nminX, float nminY, float nmaxX, float nmaxY,
                                   String textTranslationKey, String align, int order) {
-        com.google.gson.JsonObject tb = new com.google.gson.JsonObject();
+        JsonObject tb = new JsonObject();
         tb.addProperty("type", "text");
         tb.addProperty("nminX", nminX);
         tb.addProperty("nminY", nminY);
@@ -154,7 +154,7 @@ abstract class BasePageBuilder<T extends BasePageBuilder<T>> {
     @SuppressWarnings("unchecked")
     public T addImageNormalized(float nx, float ny, float nw, float nh,
                                 ResourceLocation texture, int u, int v, int texW, int texH, int order) {
-        com.google.gson.JsonObject img = new com.google.gson.JsonObject();
+        JsonObject img = new JsonObject();
         img.addProperty("type", "image");
         img.addProperty("nx", nx);
         img.addProperty("ny", ny);

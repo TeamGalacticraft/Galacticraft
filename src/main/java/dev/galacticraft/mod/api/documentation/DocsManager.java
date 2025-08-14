@@ -22,13 +22,11 @@
 
 package dev.galacticraft.mod.api.documentation;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.documentation.client.pages.BlankPageScreen;
 import dev.galacticraft.mod.api.documentation.model.HomeDoc;
+import dev.galacticraft.mod.api.documentation.model.Section;
 import dev.galacticraft.mod.api.documentation.model.SectionOverview;
 import dev.galacticraft.mod.api.documentation.model.SubDoc;
 import dev.galacticraft.mod.api.documentation.model.elements.ButtonElement;
@@ -49,13 +47,13 @@ public final class DocsManager {
 
     public static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(ResourceLocation.class,
-                    (com.google.gson.JsonDeserializer<ResourceLocation>) (json, t, ctx) ->
+                    (JsonDeserializer<ResourceLocation>) (json, t, ctx) ->
                             ResourceLocation.parse(json.getAsString()))
             .registerTypeAdapter(ResourceLocation.class,
-                    (com.google.gson.JsonSerializer<ResourceLocation>) (src, t, ctx) ->
-                            new com.google.gson.JsonPrimitive(src.toString()))
-            .registerTypeAdapter(dev.galacticraft.mod.api.documentation.model.Section.class,
-                    (com.google.gson.JsonDeserializer<dev.galacticraft.mod.api.documentation.model.Section>) (json, t, ctx) -> {
+                    (JsonSerializer<ResourceLocation>) (src, t, ctx) ->
+                            new JsonPrimitive(src.toString()))
+            .registerTypeAdapter(Section.class,
+                    (JsonDeserializer<Section>) (json, t, ctx) -> {
                         JsonObject obj = json.getAsJsonObject();
                         String type = obj.get("type").getAsString();
                         if ("overview".equals(type)) {
@@ -66,8 +64,8 @@ public final class DocsManager {
                         throw new JsonParseException("Unknown docs section type: " + type);
                     })
             .registerTypeAdapter(Element.class,
-                    (com.google.gson.JsonDeserializer<Element>) (json, t, ctx) -> {
-                        com.google.gson.JsonObject obj = json.getAsJsonObject();
+                    (JsonDeserializer<Element>) (json, t, ctx) -> {
+                        JsonObject obj = json.getAsJsonObject();
                         String type = obj.get("type").getAsString();
 
                         switch (type) {
@@ -104,7 +102,7 @@ public final class DocsManager {
                                 int order = obj.get("order").getAsInt();
                                 return new ImageElement(type, nx, ny, nw, nh, texture, u, v, texW, texH, order);
                             }
-                            default -> throw new com.google.gson.JsonParseException("Unknown docs element type: " + type);
+                            default -> throw new JsonParseException("Unknown docs element type: " + type);
                         }
                     })
             .setPrettyPrinting()

@@ -97,8 +97,8 @@
       "nx": 0.0043196543,
       "ny": 0.87795275,
       "order": 9,
-      "target": "galacticraft:fluids_and_gasses_category",
-      "textKey": "doc.gc.home.category_fluids_and_gasses"
+      "target": "galacticraft:fluids_and_gases_category",
+      "textKey": "doc.gc.home.category_fluids_and_gases"
     }
   ],
   "schema": 2,

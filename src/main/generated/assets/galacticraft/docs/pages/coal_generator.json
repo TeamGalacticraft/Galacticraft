@@ -1,0 +1,9 @@
+{
+  "parent": "galacticraft:machines_category",
+  "bind": [
+    "galacticraft:coal_generator"
+  ],
+  "id": "galacticraft:coal_generator",
+  "schema": 2,
+  "titleKey": "doc.gc.coal_generator"
+}

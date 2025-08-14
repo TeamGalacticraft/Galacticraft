@@ -1,0 +1,9 @@
+{
+  "parent": "galacticraft:machines_category",
+  "bind": [
+    "galacticraft:oxygen_collector"
+  ],
+  "id": "galacticraft:oxygen_collector",
+  "schema": 2,
+  "titleKey": "doc.gc.oxygen_collector"
+}

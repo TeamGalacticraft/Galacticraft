@@ -1,0 +1,6 @@
+{
+  "parent": "galacticraft:machines_category",
+  "id": "galacticraft:airlock",
+  "schema": 2,
+  "titleKey": "doc.gc.airlock"
+}

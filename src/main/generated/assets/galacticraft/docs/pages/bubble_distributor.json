@@ -1,0 +1,9 @@
+{
+  "parent": "galacticraft:machines_category",
+  "bind": [
+    "galacticraft:oxygen_bubble_distributor"
+  ],
+  "id": "galacticraft:bubble_distributor",
+  "schema": 2,
+  "titleKey": "doc.gc.bubble_distributor"
+}

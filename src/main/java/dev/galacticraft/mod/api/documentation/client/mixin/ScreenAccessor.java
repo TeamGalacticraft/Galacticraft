@@ -35,5 +35,9 @@ import java.util.List;
 public class ScreenAccessor implements RenderablesAccessor {
 
     @Shadow @Final private List<Renderable> renderables;
-    @Override public List<Renderable> gc$getRenderables() { return renderables; }
+
+    @Override
+    public List<Renderable> gc$getRenderables() {
+        return renderables;
+    }
 }

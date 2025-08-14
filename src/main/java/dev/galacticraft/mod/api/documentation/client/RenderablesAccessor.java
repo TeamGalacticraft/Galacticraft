@@ -25,4 +25,6 @@ package dev.galacticraft.mod.api.documentation.client;
 import net.minecraft.client.gui.components.Renderable;
 import java.util.List;
 
-public interface RenderablesAccessor { List<Renderable> gc$getRenderables(); }
+public interface RenderablesAccessor {
+    List<Renderable> gc$getRenderables();
+}

@@ -1,0 +1,9 @@
+{
+  "parent": "galacticraft:machines_category",
+  "bind": [
+    "galacticraft:circuit_fabricator"
+  ],
+  "id": "galacticraft:circuit_fabricator",
+  "schema": 2,
+  "titleKey": "doc.gc.circuit_fabricator"
+}
