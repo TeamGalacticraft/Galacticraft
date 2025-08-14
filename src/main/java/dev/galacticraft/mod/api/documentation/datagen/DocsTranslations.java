@@ -38,5 +38,6 @@ public class DocsTranslations {
         t.add("doc.gc.airlock.title", "Airlock Controller");
         t.add("doc.gc.airlock.overview", "Place the Airlock Controller and connect frames. Power it with redstone to toggle the door.");
         t.add("doc.gc.home.btn.airlock", "Airlock Controller");
+        t.add("doc.unimplemented", "Unimplemented");
     }
 }

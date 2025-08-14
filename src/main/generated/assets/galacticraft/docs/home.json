@@ -3,42 +3,102 @@
     {
       "type": "text",
       "align": "left",
-      "nmaxX": 0.62,
-      "nmaxY": 0.42,
-      "nminX": 0.04,
-      "nminY": 0.18,
+      "nmaxX": 0.99568033,
+      "nmaxY": 0.3031496,
+      "nminX": 0.004319654,
+      "nminY": 0.2519685,
       "order": 0,
-      "textKey": "doc.gc.home.intro"
-    },
-    {
-      "type": "text",
-      "align": "left",
-      "nmaxX": 0.76,
-      "nmaxY": 0.52,
-      "nminX": 0.04,
-      "nminY": 0.46,
-      "order": 1,
       "textKey": "doc.gc.home.category_label"
     },
     {
       "type": "button",
-      "nh": 0.12,
-      "nw": 0.18,
-      "nx": 0.04,
-      "ny": 0.6,
-      "order": 2,
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.0043196543,
+      "ny": 0.2992126,
+      "order": 1,
       "target": "galacticraft:air_lock_controller",
-      "textKey": "doc.gc.home.btn.airlock"
+      "textKey": "doc.gc.airlock.title"
     },
     {
       "type": "text",
       "align": "left",
-      "nmaxX": 0.38,
-      "nmaxY": 0.5,
-      "nminX": 0.06,
-      "nminY": 0.24,
-      "order": 3,
+      "nmaxX": 0.99568033,
+      "nmaxY": 0.24015749,
+      "nminX": 0.0043196213,
+      "nminY": 0.122047246,
+      "order": 2,
       "textKey": "doc.gc.home.intro"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.0043196543,
+      "ny": 0.38188976,
+      "order": 3,
+      "target": "galacticraft:home",
+      "textKey": "doc.unimplemented"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.0043196543,
+      "ny": 0.46456692,
+      "order": 4,
+      "target": "galacticraft:home",
+      "textKey": "doc.unimplemented"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.0043196543,
+      "ny": 0.5472441,
+      "order": 5,
+      "target": "galacticraft:home",
+      "textKey": "doc.unimplemented"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.0043196543,
+      "ny": 0.62992126,
+      "order": 6,
+      "target": "galacticraft:home",
+      "textKey": "doc.unimplemented"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.0043196543,
+      "ny": 0.71259844,
+      "order": 7,
+      "target": "galacticraft:home",
+      "textKey": "doc.unimplemented"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.0043196543,
+      "ny": 0.79527557,
+      "order": 8,
+      "target": "galacticraft:home",
+      "textKey": "doc.unimplemented"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.0043196543,
+      "ny": 0.87795275,
+      "order": 9,
+      "target": "galacticraft:home",
+      "textKey": "doc.unimplemented"
     }
   ],
   "schema": 2,
